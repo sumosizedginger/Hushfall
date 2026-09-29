@@ -5,7 +5,10 @@
   "scripts": {
     "bake": "node tools/bake.mjs",
     "validate": "node tools/validate.mjs",
-    "status": "node tools/validate.mjs --status"
+    "status": "node tools/validate.mjs --status",
+    "look": "vite --port 5173",
+    "dev": "vite --port 5173",
+    "shoot": "node tools/dev/shoot-look.mjs"
   },
   "keywords": [],
   "author": "",

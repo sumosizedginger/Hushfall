@@ -25,3 +25,10 @@ Runtime/browser paths, Three.js load of baked assets, pointer lock, collision, c
 - MAJOR: enemy shading blobs read flat/blocky; grime lines look like black bars on the coat.
 - MINOR: title art tower is lost against dark clouds after the reseed; needs a lighter sky value behind it.
 - MINOR: bakes are slow (~10 s per page under SwiftShader).
+
+## Look demo (2026-09-29)
+- `npm run shoot`: headless Chrome (SwiftShader) drives the demo: 5 viewpoints, fire/impact/kill sequence, raw-vs-painted; 10 screenshots in review/look-demo/. Kill confirmed via state (kills: 1). No page errors after fixing a favicon 404.
+- Built-in browser pane: loaded http://localhost:5173/look.html, no console errors. Pointer lock, keyboard play and real-GPU frame rate NOT yet tested (headless SwiftShader measured ~35 fps at 1280x720; not a valid perf number).
+- Known look issues: post value-banding makes it read more posterised-pixel than brushy; coat is a plain cone; weapon receiver reads blocky; ceiling reuses floor texture; sky/floor colours untuned; edge-detect thresholds untuned; lighting is placeholder.
+- Bug found+fixed: clearing depth for the weapon pass wiped the world depth the outline shader needs (fixed by compressing weapon depth into the near range).
+- Bug found+fixed: a bake wrote translucent atlas cells because brush fills are washes (added opaque p5 base fills).

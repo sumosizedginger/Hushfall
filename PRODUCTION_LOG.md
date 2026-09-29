@@ -1,8 +1,8 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
-- Gate: **0 complete except Three.js load-through of assets; paused at the painterly-look review requested by the user.**
-- Blockers: none. Waiting on user: assess `review/gate-0/pipeline-sheet.png`; is the painterly direction right?
+- Gate: **0 (asset spike + 3D look demo built); waiting on user judgement of the look demo.**
+- Blockers: none. Waiting on user: run `npm run look` (or view review/look-demo/*.png) and say whether the painted-3D direction is right.
 - Exact next task: Three.js proof slice — room with painted wall tile, one part-rigged animated 3D Tollbearer with a p5-painted UV atlas, a 3D flare-cannon view-model, ink-outline post pass, nearest-upscaled low-res render. Then map format, then Gate 1.
 - Resume: `npm ci && npm run validate && npm run bake && node tools/preview.mjs`
 
@@ -13,3 +13,8 @@
 - Rejected: baking all recipes in one page (only first p5 instance renders); alpha from a single bake (brush draws nothing to a transparent canvas).
 - 68-slot manifest created (`tools/dev/gen-manifest.mjs`, run once). Validator + evidence-derived status implemented and negative-tested for status inflation.
 - Defects: see TESTING.md known defects.
+
+## 2026-09-29 (later)
+- User: painted look must be p5, world must be 3D. Built look demo: src/look/* (level grid -> geometry, models, post pass), tools/baker/recipes3d.js (atlases, floor, crate, pod, sky, paper), tools/dev/shoot-look.mjs.
+- Process incident: I ran taskkill by image name and closed the user's Chrome. Rule saved in memory; never again.
+- Bake times: tollbearer atlas ~100 s under SwiftShader; BAKE_PORT env allows parallel bakes (beware manifest write race).

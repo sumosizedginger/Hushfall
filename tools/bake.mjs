@@ -12,7 +12,7 @@ const outDir = path.join(root, 'assets', 'baked');
 fs.mkdirSync(outDir, { recursive: true });
 const want = process.argv.slice(2);
 
-const server = await createServer({ root: path.join(root, 'tools/baker'), logLevel: 'error', server: { port: 5199, strictPort: true, fs: { allow: [root] } } });
+const server = await createServer({ root: path.join(root, 'tools/baker'), logLevel: 'error', server: { port: Number(process.env.BAKE_PORT || 5199), strictPort: true, fs: { allow: [root] } } });
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const errors = [];
@@ -21,7 +21,7 @@ async function job(id, bg) {
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   // domcontentloaded: the bake runs synchronously in a module script and can outlast the load event
-  await page.goto(`http://localhost:5199/?asset=${id}&bg=${encodeURIComponent(bg)}`, { waitUntil: 'domcontentloaded', timeout: 0 });
+  await page.goto(`http://localhost:${process.env.BAKE_PORT || 5199}/?asset=${id}&bg=${encodeURIComponent(bg)}`, { waitUntil: 'domcontentloaded', timeout: 0 });
   await page.waitForFunction('window.__BAKE_DONE__ === true || window.__BAKE_ERROR__', { timeout: 300000 });
   const err = await page.evaluate('window.__BAKE_ERROR__');
   if (err) throw new Error(err);
@@ -31,7 +31,7 @@ async function job(id, bg) {
   return res;
 }
 let env;
-const recipeIds = (await import('./baker/recipes.js')).recipes;
+const recipeIds = (await import('./baker/all.js')).recipes;
 const ids = want.length ? want : Object.keys(recipeIds);
 const results = [];
 for (const id of ids) {

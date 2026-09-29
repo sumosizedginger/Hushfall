@@ -36,6 +36,62 @@
       "transparent": false,
       "sha256": "d010fc84959ef5bc5774753a46ab349c8db2348968aa4a8b8d5fc26225f1dcea",
       "bytes": 126114
+    },
+    "tollbearer_atlas": {
+      "seed": 5101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "55664dc3ccbc22fe54535f74e735c6123cb3f37fd9aeff6212c1d77d03bfe2a7",
+      "bytes": 42479
+    },
+    "paper_grain": {
+      "seed": 5701,
+      "width": 128,
+      "height": 128,
+      "transparent": false,
+      "sha256": "496c8f905f0a29fcd6d4a8781283cdd7e00e626579f13a283f13088e8120548a",
+      "bytes": 9723
+    },
+    "floor_planks_a": {
+      "seed": 5301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "162aeeaa1036089fe9eb142d7375558a8daf7cf75e07f9909f6bdbc39bd655fc",
+      "bytes": 109422
+    },
+    "crate_wood_a": {
+      "seed": 5401,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "9fa153eb7de6fd002665beb4b1d04215c22964585840ae51d55da790ce885fd1",
+      "bytes": 106498
+    },
+    "flarecannon_atlas": {
+      "seed": 5201,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "06287edb0f249bdb92452416f1db2b4680fce1daea5e69f2c4bd9cd4697a3b81",
+      "bytes": 40496
+    },
+    "pod_organic_a": {
+      "seed": 5501,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1d8c062b28ef77eac2c196d2943e222fe7cfe0e7f113b77284c8c5a2d8ffad7c",
+      "bytes": 73791
+    },
+    "sky_dusk": {
+      "seed": 5601,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "46db75e9f53243f83fa4e01ab05f4d12210fe6050dec03038f893c2ec74a9c1e",
+      "bytes": 249976
     }
   }
 }
