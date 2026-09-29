@@ -39,6 +39,15 @@ try {
   check('a real click unlocks audio (context running)', audioState === 'running', audioState);
   const live0 = await T('t.state()');
   check('real click on Normal starts a game and the live loop advances the sim', live0.mode === 'playing' && live0.tick > 10, `mode=${live0.mode} tick=${live0.tick}`);
+  await sleep(500);
+  const cardVisible = await page.$eval('#card', (e) => !e.classList.contains('hidden') && getComputedStyle(e).opacity > 0.3);
+  check('a fresh run shows the level title card', cardVisible && (await text('card-title')) === 'MARROW QUAY' && (await text('card-lines')).includes('Hush'), await text('card-title'));
+  await shot('00-intro-card');
+  await T('t.setup_teleport(23, 33, -Math.PI / 2)');
+  await page.waitForFunction("!document.getElementById('comms').classList.contains('hidden')", { timeout: 12000 }).catch(() => {});     // held back until the title card has cleared
+  const commsVis = await page.$eval('#comms', (e) => !e.classList.contains('hidden'));
+  check('walking into range shows an in-world transmission (speaker + text) and it is remembered', commsVis && (await text('comms-text')).toLowerCase().includes('teal') && (await T('t.state().messagesSeen')).includes('pier-tower'), (await text('comms-who')) + ': ' + (await text('comms-text')));
+  await shot('00b-transmission');
   await page.keyboard.down('KeyW'); await sleep(1000); await page.keyboard.up('KeyW');
   const live1 = await T('t.state()'); const moved = Math.hypot(live1.player.x - live0.player.x, live1.player.z - live0.player.z);
   check('holding a real W key moves the player (live input)', moved > 1.5, `moved ${moved.toFixed(2)} m`);

@@ -86,7 +86,8 @@ function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed,
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false;
   if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now() }));
-  g.mode = 'playing'; ui.show(null); if (note) ui.toast(note);
+  g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
+  if (!world) ui.card(map.intro);                                            // title card only on a fresh run, not when resuming a save
   audio.newLevel();
   requestLock();
 }
@@ -148,7 +149,7 @@ function frame(now) {
   let alpha = 0;
   if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead'); } }
-  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name }); } }
+  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro }); } }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);

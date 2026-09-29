@@ -3,12 +3,14 @@
 import { createWorld, carryOver } from './world.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 /** version N -> function producing version N+1. */
 export const MIGRATIONS = {
   // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
   // v2 -> v3 (2026-09-29): weapon switching + Gaunt lunge. Player gains switchT, projectiles record their weapon, enemies gain lunge state.
   // v3 -> v4 (2026-09-29): automap exploration state. Old worlds start with nothing explored (the sim re-creates the array).
+  // v4 -> v5 (2026-09-29): in-world messages remember which have been shown.
+  4: (s) => ({ ...s, version: 5, world: s.world ? { messagesSeen: [], ...s.world } : s.world }),
   3: (s) => ({ ...s, version: 4, world: s.world ? { explored: [], ...s.world } : s.world }),
   2: (s) => {
     const out = { ...s, version: 3 };

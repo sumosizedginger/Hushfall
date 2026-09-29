@@ -34,5 +34,25 @@ Sprites bake on black AND white (same seed); alpha is recovered by difference ma
 ## Commands
 `npm run bake` (all) · `node tools/bake.mjs <id>` · `node tools/preview.mjs` · `node tools/dev/determinism.mjs <id>` · `node tools/dev/clean-regen.mjs`.
 
+## Asset seeds, 3D set (2026-09-29; recipes in `tools/baker/recipes3d.js`)
+| asset | size | seed | use |
+|---|---|---|---|
+| tollbearer_atlas | 256 (4x4 cells) | 5101 | Tollbearer + Gaunt Runner skin/coat/bronze/jaw cells |
+| flarecannon_atlas | 256 (4x4) | 5201 | flare cannon + scattergun (brass, steel, leather, oilskin, wood) |
+| floor_planks_a | 256 tile | 5301 | interior floor, pier planks (tinted), ceilings |
+| crate_wood_a | 256 | 5401 | crates, barrels, beams, stalls |
+| pod_organic_a | 256 tile | 5501 | cradle pods |
+| sky_dusk | 512x256 | 5601 | sky dome |
+| paper_grain | 128 tile | 5701 | post-pass paper tooth |
+| door_hatch_a | 256 | 5801 | doors + exit gate |
+| props_atlas | 256 (4x4) | 5901 | pickups |
+| water_dusk | 256 tile | 6101 | harbour water (scrolled slowly) |
+| cobble_wet_a | 256 tile | 6201 | plaza cobble |
+| brick_warm_a | 256 tile | 6301 | brick buildings |
+| awning_stripe_a | 128 | 6401 | fish-stall awnings |
+| boat_hull_a | 256 tile | 6501 | moored boats |
+| tower_stone_a | 256 tile | 6601 | bell tower |
+Tile skins in the map grid: `#` slate bulkhead, `B` warm brick, `.` interior planks, `:` cobble, `p` pier planks, `~` water. Full-width `brush.rect` fills can crash p5.brush's scatter: use `g.solid` (native p5) for opaque bases.
+
 ## Not yet done
 Texel-density rules, per-episode palettes, UI/HUD rules, sprite direction sets (8-way vs billboard), animation frame counts, runtime Three.js material verification.

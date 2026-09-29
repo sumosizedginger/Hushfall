@@ -38,6 +38,7 @@ export function soundsForEvent(e) {
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
     case 'enemy_died': return [{ id: 'enemy_die', pos: at(e) }];
+    case 'message': return [{ id: 'radio' }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

@@ -1,5 +1,5 @@
 {
-  "when": "2026-09-29T22:56:37.572Z",
+  "when": "2026-09-29T22:59:01.569Z",
   "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
   "checks": [
     {
@@ -20,12 +20,22 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=39"
+      "detail": "mode=playing tick=38"
+    },
+    {
+      "name": "a fresh run shows the level title card",
+      "ok": true,
+      "detail": "MARROW QUAY"
+    },
+    {
+      "name": "walking into range shows an in-world transmission (speaker + text) and it is remembered",
+      "ok": false,
+      "detail": "INES: The bell tower's lit. Teal. That's no lamp of ours."
     },
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.05 m"
+      "detail": "moved 20.37 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -35,7 +45,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=6 last=ui_click,toll_alert,step_outdoor,step_outdoor,step_outdoor,flare_fire"
+      "detail": "played=13 last=radio,toll_alert,toll_alert,radio,toll_soft,step_outdoor,toll_soft,step_outdoor,wheeze_windup,step_outdoor,flare_fire,step_outdoor"
     },
     {
       "name": "Escape pauses (live)",
@@ -50,7 +60,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.06 m, sprint 6.61 m, ratio 1.63"
+      "detail": "walk 4.13 m, sprint 6.67 m, ratio 1.61"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -85,7 +95,7 @@
     {
       "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=101 exits=0"
+      "detail": "visible=true painted=230400 explored=165 exits=0"
     },
     {
       "name": "Tab again closes the automap",
@@ -145,7 +155,7 @@
     {
       "name": "browser sim == Node sim (state hash)",
       "ok": true,
-      "detail": "browser 60e13110 vs node 60e13110"
+      "detail": "browser 56c002b0 vs node 56c002b0"
     },
     {
       "name": "every enemy killed, key held",
@@ -155,7 +165,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=99 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,door_close,gaunt_screech,pump,weapon_switch,impact,scatter_fire,enemy_hit,pickup_key,level_complete"
+      "detail": "played=107 distinct(last40)=ui_click,radio,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,door_close,gaunt_screech,pump,weapon_switch,impact,scatter_fire,enemy_hit,pickup_key,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -200,7 +210,7 @@
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":272,\"triangles\":18204,\"geometries\":421,\"textures\":18,\"programs\":10},\"plaza\":{\"calls\":212,\"triangles\":16052,\"geometries\":421,\"textures\":18,\"programs\":10},\"warehouse\":{\"calls\":64,\"triangles\":8248,\"geometries\":421,\"textures\":18,\"programs\":10}}"
+      "detail": "{\"pier\":{\"calls\":271,\"triangles\":18284,\"geometries\":421,\"textures\":18,\"programs\":10},\"plaza\":{\"calls\":212,\"triangles\":16136,\"geometries\":421,\"textures\":18,\"programs\":10},\"warehouse\":{\"calls\":64,\"triangles\":8332,\"geometries\":421,\"textures\":18,\"programs\":10}}"
     },
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
@@ -210,13 +220,13 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=645 avg=28.2ms"
+      "detail": "frames=631 avg=28.9ms"
     }
   ],
   "errors": [],
   "perf": {
-    "frames": 645,
-    "avgMs": 28.182790697970105,
+    "frames": 631,
+    "avgMs": 28.886212361482322,
     "p95Ms": 100,
     "worstMs": 100
   },

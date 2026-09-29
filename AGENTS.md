@@ -31,15 +31,18 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm run validate` / `npm run status` — topology + evidence checks / derived status counts
 - `npm run bake` — regenerate baked assets into `assets/baked/` (headless Chrome; slow under software GL; `BAKE_PORT` allows parallel bakes)
 - `npm run audio-qa` — renders every SFX + the score offline in headless Chrome, measures them (finite/audible/no clipping/decays/reproducible), writes `review/audio/*.wav` (LISTEN to these) + `validation/audio.json`
+- `npm run shoot-level` — Marrow Quay vantage-point tour (review/level-c1e1m01/*.png)
+- `npm run gate1-bundle` — assemble review/gate-1/ from repository evidence (run verify, browsercheck, audio-qa, verify-map first)
+- `node tools/dev/refresh-manifest.mjs` — rebuild the asset manifest from disk after parallel bakes
 - `npm run shoot-weapons` — scattergun stances/flash/pump, Gaunt poses, new pickups (review/engine-skeleton/weapons-*.png)
 - `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
 
 ## Architecture (src/)
 - `engine/` pure JS, no DOM/Three: `world.js` fixed-step deterministic sim (plain-data state, seeded RNG, event queue), `mapformat.js` + `reach.js` (ASCII grid + entity list, validation, reachability with keys), `input.js` (devices -> actions -> per-tick cmd, tap latch, toggle mode), `automap.js` (sim-saved exploration + drawable model), `loop.js` (fixed-step accumulator), `save.js` (versioned, migrations, explicit invalidation), `bot.js` + `harness.js` (route bot acting only through InputState), `defs.js` (all tunables).
 - `audio/` WebAudio, all procedural: `synth.js` (recipes, run on any context), `events.js` (sim event -> sounds, pure/testable), `engine.js` (graph, unlock, positional play, footsteps, tension), `music.js`, `ambience.js`. It only reads sim state and drained events.
-- `render/` Three.js view of sim state: `view.js`, `levelmesh.js`, `models.js`, `post.js` (ink outline / paper grain / value banding), `textures.js`.
+- `render/` Three.js view of sim state: `view.js` (freezes sleeping enemies into one merged mesh), `levelmesh.js` (skins, water, scenery), `merge.js` (static-geometry merging: props share cached materials), `models.js`, `post.js` (ink outline / paper grain / value banding), `textures.js`.
 - `game/` runtime shell: state machine, DOM UI, settings, dev-only `testhook.js`.
-- Content: `maps/<ID>.json`, `routes/<ID>.<name>.route.json` (canonical semantic routes). `src/look/` = frozen look demo; delete when redundant.
+- Content: `maps/<ID>.json` (grid + entities + doors + secrets + scenery + messages + intro/outro), `routes/<ID>.<name>.route.json` (canonical semantic routes). Engine tests use FROZEN fixtures in `tests/fixtures/`; tests of the shipped level are `tests/shipped.test.js` + `tests/story.test.js`. `src/look/` = frozen look demo; delete when redundant.
 - Rule: render/UI/audio only read sim state and drain events; they never write it.
 
 ## Persistent files

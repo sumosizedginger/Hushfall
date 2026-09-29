@@ -29,6 +29,8 @@ export class MapData {
     this.props = this.entities.filter((e) => e.type === 'prop');
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
+    this.messages = (src.messages || []).map((m) => ({ ...m, x: (m.at[0] + 0.5) * this.cell, z: (m.at[1] + 0.5) * this.cell, r: (m.radius ?? 2) * this.cell }));
+    this.intro = src.intro ?? null; this.outro = src.outro ?? null;
     this.atmosphere = { fog: '#2a2244', fogDensity: 0.028, ...(src.atmosphere || {}) };
   }
   tile(cx, cz) { return (cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) ? '#' : this.tiles[cz][cx]; }
@@ -114,6 +116,15 @@ export function validateMap(src) {
     if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
     if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
   }
+  const msgIds = new Set();
+  for (const [i, m] of (src.messages || []).entries()) {
+    const tag = `message #${i} (${m.id})`;
+    if (!m.id || msgIds.has(m.id)) err(`${tag}: missing or duplicate id`); msgIds.add(m.id);
+    if (!Array.isArray(m.at) || m.at.length !== 2 || !m.at.every(Number.isFinite) || m.at[0] < 0 || m.at[1] < 0 || m.at[0] >= w || m.at[1] >= h) err(`${tag}: 'at' must be inside the grid`);
+    if (typeof m.text !== 'string' || !m.text.trim()) err(`${tag}: empty text`); else if (m.text.length > 180) err(`${tag}: text too long (${m.text.length} > 180)`);
+    if (m.radius != null && !(m.radius > 0 && m.radius <= 8)) err(`${tag}: radius must be in (0, 8] cells`);
+  }
+  if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
   return errors.length ? { ok: false, errors } : { ok: true, errors: [] };
 }

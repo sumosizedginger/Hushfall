@@ -1,5 +1,5 @@
 {
-  "when": "2026-09-29T22:25:41.223Z",
+  "when": "2026-09-29T22:58:16.314Z",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "sfx": [
     {
@@ -351,6 +351,18 @@
       "bitExact": true
     },
     {
+      "id": "radio",
+      "seconds": 0.6,
+      "peak": 0.142,
+      "rms": 0.0056,
+      "loudestWindowRms": 0.0275,
+      "tailRms": 0,
+      "audibleSeconds": 0.53,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
       "id": "ui_click",
       "seconds": 0.12,
       "peak": 0.079,
@@ -371,8 +383,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.71,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     }
   ],
   "music": {

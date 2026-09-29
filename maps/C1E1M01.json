@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M01",
- "version": 3,
+ "version": 5,
  "name": "Marrow Quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
@@ -490,6 +490,16 @@
   {
    "type": "exit",
    "at": [39, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [3, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [2, 23]
   }
  ],
  "scenery": [
@@ -519,5 +529,72 @@
  ],
  "par": {
   "time": 420
- }
+ },
+ "intro": {
+  "title": "MARROW QUAY",
+  "lines": [
+   "Port Marrow, the first night of the Hush.",
+   "Every soul in town has stopped running.",
+   "Tide-Warden Ines Calder is the only one who cannot hear it."
+  ]
+ },
+ "outro": "Next: Customs Hall. The tone is louder inland.",
+ "messages": [
+  {
+   "id": "pier-start",
+   "at": [8, 16],
+   "radius": 2,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, come in. The bells are ringing. Nobody rings the bells at night."
+  },
+  {
+   "id": "pier-tower",
+   "at": [11, 16],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "The bell tower's lit. Teal. That's no lamp of ours."
+  },
+  {
+   "id": "hut-log",
+   "at": [7, 22],
+   "radius": 2,
+   "speaker": "PILOT'S LOG",
+   "text": "They stopped running when the tone started. Just stood in the street, like they'd been called in to supper."
+  },
+  {
+   "id": "plaza",
+   "at": [21, 16],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "The harbour crew, still in their oilskins. Something is wearing them."
+  },
+  {
+   "id": "shed-manifest",
+   "at": [22, 5],
+   "radius": 3,
+   "speaker": "CUSTOMS MANIFEST",
+   "text": "212 persons received. 212 processed. Signed for by no one."
+  },
+  {
+   "id": "warehouse-cradles",
+   "at": [40, 10],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "Cradles. They hang them up like catch, and something grows in the chest of each one."
+  },
+  {
+   "id": "dock",
+   "at": [39, 29],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Ferry's dead in the water. Take Customs Hall up to Signal House. I'll keep the lamp lit."
+  },
+  {
+   "id": "net-loft",
+   "at": [2, 22],
+   "radius": 2,
+   "speaker": "NET-LOFT NOTE",
+   "text": "Your father hid this the night he learned the Hush was old. 'Sound is a door. Ring it wrong and it opens both ways.'"
+  }
+ ]
 }

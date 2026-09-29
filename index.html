@@ -22,6 +22,12 @@ body[data-stance=sprint] #cross{opacity:0}
 #hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
 #toasts{position:fixed;left:50%;top:14%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
 #toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000}
+#comms{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);width:min(640px,92vw);background:#0d0f14ec;border:1px solid var(--slate);border-left:3px solid var(--teal);padding:8px 14px;pointer-events:none;z-index:3;text-shadow:1px 1px 0 #000}
+#comms b{display:block;color:var(--teal);letter-spacing:.18em;font-size:11px;margin-bottom:2px}#comms span{color:var(--paper)}
+#comms.note{border-left-color:var(--bronze)}#comms.note b{color:var(--bronze)}
+#card{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:3;animation:cardfade 6.5s ease forwards;text-shadow:2px 2px 0 #000}
+#card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
+@keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 #hint{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);color:#9fb4b0;pointer-events:none}
 .screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#07080ccc;z-index:5}
 .panel{background:#0d0f14f2;border:2px solid var(--slate);padding:22px 28px;min-width:340px;max-width:92vw;box-shadow:0 0 0 2px var(--ink),0 12px 40px #000}
@@ -45,7 +51,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="cross"></div>
-<div id="toasts"></div><div id="hint"></div>
+<div id="toasts"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
   <div class="stat"><b id="hud-armor">0</b><small>ARMOR</small></div>
@@ -91,7 +97,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 </div>
 
 <div id="screen-complete" class="screen hidden">
-  <div class="panel"><h2 id="complete-title"></h2><div id="stat-rows" class="rows"></div><br><button id="btn-next">Continue</button></div>
+  <div class="panel"><h2 id="complete-title"></h2><div id="stat-rows" class="rows"></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><br><button id="btn-next">Continue</button></div>
 </div>
 <script type="module" src="/src/game/main.js"></script>
 </body></html>

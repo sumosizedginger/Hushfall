@@ -21,7 +21,7 @@ export function installTestHook(app) {
     return {
       mode: g.mode, mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, tick: w?.tick ?? null, status: w?.status ?? null, hash: w ? hashWorld(w) : null,
       fov: g.view?.cam.fov ?? null, player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, ads: p.ads, sprint: p.sprint, sprinting: p.sprinting, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, cooldown: p.cooldown },
-      explored: w ? w.explored.reduce((a, b) => a + b, 0) : null, stats: w?.stats ?? null, endStats: w?.endStats ?? null, secretsFound: w?.secretsFound ?? null,
+      messagesSeen: w?.messagesSeen ?? null, explored: w ? w.explored.reduce((a, b) => a + b, 0) : null, stats: w?.stats ?? null, endStats: w?.endStats ?? null, secretsFound: w?.secretsFound ?? null,
       enemies: w?.enemies.map((e) => ({ id: e.id, x: e.x, z: e.z, hp: e.hp, state: e.state })) ?? null, pickups: w?.pickups.length ?? null,
       doors: w?.doors.map((d) => ({ cx: d.cx, cz: d.cz, open: d.open, target: d.target })) ?? null,
       lockFailed: g.lockFailed, settings: g.settings, audio: { state: audio.state, played: audio.stats.played, dropped: audio.stats.dropped, last: audio.stats.log.slice(-12).map((x) => x.id) },
