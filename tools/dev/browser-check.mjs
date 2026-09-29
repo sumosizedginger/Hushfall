@@ -133,12 +133,12 @@ try {
   const useSlot = 'button.bind[data-a="use"][data-i="0"]';
   await page.click(useSlot); await sleep(100);
   check('clicking a control slot starts capture', (await page.$eval(useSlot, (e) => e.textContent)) === 'press a key…');
-  await page.keyboard.press('KeyF'); await sleep(150);
+  await page.keyboard.press('KeyG'); await sleep(150);
   const b1 = (await T('t.state().settings.bindings')).use;
-  check('pressing a key rebinds Use (persisted in settings)', b1[0] === 'KeyF' && b1[1] === 'Space' && (await text('bind-note')).includes('F assigned'), JSON.stringify(b1) + ' ' + (await text('bind-note')));
-  await page.click('button.bind[data-a="fire"][data-i="1"]'); await page.keyboard.press('KeyF'); await sleep(150);
+  check('pressing a key rebinds Use (persisted in settings)', b1[0] === 'KeyG' && b1[1] === 'Space' && (await text('bind-note')).includes('G assigned'), JSON.stringify(b1) + ' ' + (await text('bind-note')));
+  await page.click('button.bind[data-a="fire"][data-i="1"]'); await page.keyboard.press('KeyG'); await sleep(150);
   const st = await T('t.state().settings.bindings');
-  check('a conflicting key is taken from the other action and the player is told', st.fire[1] === 'KeyF' && !st.use.includes('KeyF') && (await text('bind-note')).includes('taken from: use'), JSON.stringify({ fire: st.fire, use: st.use }) + ' ' + (await text('bind-note')));
+  check('a conflicting key is taken from the other action and the player is told', st.fire[1] === 'KeyG' && !st.use.includes('KeyG') && (await text('bind-note')).includes('taken from: use'), JSON.stringify({ fire: st.fire, use: st.use }) + ' ' + (await text('bind-note')));
   await page.click(useSlot); await page.keyboard.press('Escape'); await sleep(150);
   check('Escape cancels capture without leaving the pause menu', (await text('bind-note')) === 'Cancelled.' && (await T('t.state().mode')) === 'paused');
   await page.click(useSlot); await page.keyboard.press('KeyG'); await sleep(150);
@@ -224,7 +224,9 @@ try {
   if (updateBaseline || !fs.existsSync(baseFile)) fs.writeFileSync(baseFile, JSON.stringify({ note: 'reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline', when: new Date().toISOString(), budget: Object.fromEntries(Object.entries(budget).map(([k, v]) => [k, { calls: v.calls, triangles: v.triangles }])) }, null, 2));
   const base = JSON.parse(fs.readFileSync(baseFile, 'utf8')).budget;
   check('render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles', Object.entries(budget).every(([k, b]) => base[k] && b.calls <= base[k].calls * 1.25 && b.triangles <= base[k].triangles * 1.25), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, [b.calls, base[k]?.calls, b.triangles, base[k]?.triangles]]))));
-  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.calls < 450 && b.triangles > 1000 && b.triangles < 60000), JSON.stringify(budget));
+  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.triangles > 1000 && b.triangles < 60000), JSON.stringify(budget));
+  // hard ceilings are engineering budgets, not measurements: 350 calls for sleeping enemies, 650 with the whole level awake (every awake rig is ~30 draw calls); UNVERIFIED on a real GPU
+  check('render budget ceilings: <= 350 draw calls asleep, <= 650 with every enemy awake', Object.entries(budget).every(([k, b]) => b.calls <= (k.includes('awake') ? 650 : 350)), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, b.calls]))));
   fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
 
   // ---- 5b. UX: prompts, quick save/load, pause layout at small windows ---------------------------------------------------
@@ -247,6 +249,11 @@ try {
   check('F9 loads the quick save (position restored)', Math.abs((await T('t.state().player.x')) - xBefore) < 1.5, 'x=' + (await T('t.state().player.x')));
   await T('t.pause()'); await sleep(150);
   check('Quick load appears once a quick save exists', (await page.$eval('#btn-load', (e) => getComputedStyle(e).display)) !== 'none');
+  // Retry after a LOAD must restore the inventory the level began with (audit F06): pick up a weapon and spend ammo AFTER loading, then restart from the pause menu
+  await T("t.setup_player({ weapons: ['flare', 'scattergun'], ammo: { flare: 1, shell: 9 }, hp: 33 })"); await page.click('#btn-restart'); await sleep(400);
+  const afterRetry = await T('t.state().player');
+  check('Retry after loading a save restores the level-start inventory (flare cannon only, 8 flares, full health), not the mid-level one', afterRetry.weapons.length === 1 && afterRetry.weapon === 'flare' && afterRetry.ammo.flare === 8 && afterRetry.hp === 100, JSON.stringify({ weapons: afterRetry.weapons, ammo: afterRetry.ammo, hp: afterRetry.hp }));
+  await T('t.setup_clearEnemies(); t.clearOverlays()'); await T('t.pause()'); await sleep(150);
   await page.evaluate(() => { document.getElementById('controls-box').open = true; document.getElementById('settings-box').open = true; });
   for (const [w, h] of [[1280, 720], [1280, 600], [800, 600], [1024, 480]]) {
     await page.setViewport({ width: w, height: h }); await sleep(150);
