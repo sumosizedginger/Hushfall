@@ -1,9 +1,9 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
-- Gate: **0 (asset spike + 3D look demo built); waiting on user judgement of the look demo.**
-- Blockers: none. Waiting on user: run `npm run look` (or view review/look-demo/*.png) and say whether the painted-3D direction is right.
-- Exact next task: Three.js proof slice — room with painted wall tile, one part-rigged animated 3D Tollbearer with a p5-painted UV atlas, a 3D flare-cannon view-model, ink-outline post pass, nearest-upscaled low-res render. Then map format, then Gate 1.
+- Gate: **0 complete (look approved by user 2026-09-29). Next: Gate 1, one real level (C1E1M01 Marrow Quay).**
+- Blockers: none. Note: look approval is NOT the Gate 1 creative approval; that comes after the Gate 1 evidence bundle.
+- Exact next task: Gate 1 milestone 1 — promote src/look into the real engine skeleton: map format (ASCII grid + props + triggers) with reachability checker, fixed-step sim, input-action layer, versioned save schema stub, dev-only __GAME_TEST__ hook, first validation evidence for C1E1M01.
 - Resume: `npm ci && npm run validate && npm run bake && node tools/preview.mjs`
 
 ## 2026-09-29
