@@ -1,25 +1,25 @@
 {
-  "when": "2026-09-29T22:56:24.827Z",
+  "when": "2026-09-29T22:58:49.011Z",
   "map": "C1E1M01",
   "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
   "budget": {
     "pier": {
-      "calls": 272,
-      "triangles": 18204,
+      "calls": 271,
+      "triangles": 18284,
       "geometries": 421,
       "textures": 18,
       "programs": 10
     },
     "plaza": {
       "calls": 212,
-      "triangles": 16052,
+      "triangles": 16136,
       "geometries": 421,
       "textures": 18,
       "programs": 10
     },
     "warehouse": {
       "calls": 64,
-      "triangles": 8248,
+      "triangles": 8332,
       "geometries": 421,
       "textures": 18,
       "programs": 10

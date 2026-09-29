@@ -1,10 +1,10 @@
 {
   "mapId": "C1E1M01",
-  "mapVersion": 3,
+  "mapVersion": 5,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "811c940",
+  "codeVersion": "24dbfaf",
   "dirtyTree": true,
-  "mapSha": "379b7f2ff7922675",
+  "mapSha": "9dbac505088b5007",
   "assetVersion": "0feb090adcf1930d",
   "loads": true,
   "validationErrors": [],
@@ -15,7 +15,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4242,
-      "finalHash": "c0aaa518",
+      "finalHash": "389789bf",
       "kills": 13,
       "secrets": 0,
       "items": 10,
@@ -27,7 +27,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4242,
-      "finalHash": "60e13110",
+      "finalHash": "735eadcf",
       "kills": 13,
       "secrets": 0,
       "items": 10,
@@ -39,7 +39,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4242,
-      "finalHash": "eeb5524d",
+      "finalHash": "b67c9396",
       "kills": 13,
       "secrets": 0,
       "items": 10,
@@ -51,7 +51,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4638,
-      "finalHash": "1f7d3558",
+      "finalHash": "df1c8802",
       "kills": 13,
       "secrets": 1,
       "items": 12,
@@ -63,7 +63,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4638,
-      "finalHash": "36bcbe74",
+      "finalHash": "0d38d8f2",
       "kills": 13,
       "secrets": 1,
       "items": 12,
@@ -75,7 +75,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4638,
-      "finalHash": "f8fd0b35",
+      "finalHash": "fe850e81",
       "kills": 13,
       "secrets": 1,
       "items": 12,
@@ -88,7 +88,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4242,
-    "finalHash": "60e13110",
+    "finalHash": "735eadcf",
     "expectedEvents": [
       "door_open",
       "pickup:key_brass",
@@ -103,14 +103,14 @@
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-29T22:56:37.572Z",
+    "when": "2026-09-29T22:59:01.569Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
-    "passed": 42,
-    "total": 42,
-    "allPassed": true
+    "passed": 43,
+    "total": 44,
+    "allPassed": false
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -159,8 +159,8 @@
       },
       {
         "name": "latest browser check passed",
-        "ok": true,
-        "detail": "42/42"
+        "ok": false,
+        "detail": "43/44"
       }
     ]
   },

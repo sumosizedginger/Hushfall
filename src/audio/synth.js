@@ -124,6 +124,12 @@ export const SFX = {
   gaunt_lunge(c, out, t, o) { noise(c, out, t, { dur: 0.32, a: 0.02, gain: 0.5, type: 'bandpass', f0: 1500, f1: 450, q: 0.8, off: o.r() }); tone(c, out, t, { f0: 400, f1: 150, d: 0.25, gain: 0.15 }); return 0.4; },
   creak(c, out, t, o) { tone(c, out, t, { type: 'sawtooth', f0: 58 + o.r() * 20, f1: 84 + o.r() * 30, a: 0.15, d: 0.9, gain: 0.07, lp: 300, vib: 3 }); return 1.2; },
   heartbeat(c, out, t) { thump(c, out, t, 66, 44, 0.14, 0.7); thump(c, out, t + 0.19, 58, 40, 0.16, 0.5); return 0.4; },
+  radio(c, out, t, o) {                                         // a transmission: squelch, two beeps, a little static
+    noise(c, out, t, { dur: 0.16, gain: 0.32, type: 'bandpass', f0: 2400, q: 0.9, off: o.r() });
+    tone(c, out, t + 0.14, { type: 'square', f0: 1046, d: 0.07, gain: 0.05, lp: 2600 }); tone(c, out, t + 0.24, { type: 'square', f0: 784, d: 0.09, gain: 0.05, lp: 2600 });
+    noise(c, out, t + 0.36, { dur: 0.22, a: 0.02, gain: 0.08, type: 'highpass', f0: 3200, off: o.r() });
+    return 0.6;
+  },
   // --- ui / meta ---
   ui_click(c, out, t) { tone(c, out, t, { type: 'square', f0: 920, d: 0.03, gain: 0.09 }); tone(c, out, t + 0.02, { f0: 1380, d: 0.06, gain: 0.09 }); return 0.12; },
   level_complete(c, out, t) { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => bell(c, out, t + i * 0.16, f, { decay: 1.8, gain: 0.2, ratio: 2, index: 0.8 })); return 3.0; },

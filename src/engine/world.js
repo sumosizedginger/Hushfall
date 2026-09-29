@@ -30,7 +30,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
     enemies: [], projectiles: [], pickups: [], doors: [],
-    secretsFound: [], explored: new Array(map.w * map.h).fill(0),
+    secretsFound: [], messagesSeen: [], explored: new Array(map.w * map.h).fill(0),
     stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
     endStats: null,
   };
@@ -286,7 +286,11 @@ export function step(w, cmd) {
     if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', { kind: it.kind }); }
   }
 
-  if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) updateExplored(w);          // automap: remember what has been seen
+  if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) {
+    updateExplored(w);
+    // in-world messages (transmissions, notes): shown once, the first time the player comes within range
+    for (const m of map.messages) if (!w.messagesSeen.includes(m.id) && Math.hypot(p.x - m.x, p.z - m.z) <= m.r) { w.messagesSeen.push(m.id); emit(w, 'message', { id: m.id, speaker: m.speaker || '', text: m.text }); }
+  }          // automap: remember what has been seen
 
   // secrets: found when the player stands in one of the secret's cells
   const pcx = Math.floor(p.x / map.cell), pcz = Math.floor(p.z / map.cell);

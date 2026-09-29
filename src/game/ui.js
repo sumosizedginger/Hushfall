@@ -47,11 +47,25 @@ export class UI {
     if (name === 'complete') {
       const s = data.stats, t = s.total;
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
-      $('complete-title').textContent = data.mapName + ' cleared';
+      $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || '';
     }
   }
   toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
-  events(events) { for (const e of events) { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } }
+  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } } }
+  /** in-world transmission/note: shown long enough to read (about 55 ms per character, 4 s minimum) */
+  comms(e) {
+    const wait = (this._cardUntil || 0) - performance.now();
+    if (wait > 0) { clearTimeout(this._commsDelay); this._commsDelay = setTimeout(() => this.comms(e), wait + 150); return; }           // never stack a transmission on top of the title card
+    const box = $('comms'); box.classList.remove('hidden'); box.classList.toggle('note', /NOTE|LOG|MANIFEST/.test(e.speaker)); $('comms-who').textContent = e.speaker; $('comms-text').textContent = e.text;
+    clearTimeout(this._commsT); this._commsT = setTimeout(() => box.classList.add('hidden'), Math.max(4000, e.text.length * 55));
+  }
+  /** level title card at the start of a fresh run */
+  card(intro) {
+    const c = $('card'); if (!intro) return c.classList.add('hidden');
+    $('card-title').textContent = intro.title; $('card-lines').innerHTML = intro.lines.map((l) => `<div>${l}</div>`).join('');
+    c.classList.remove('hidden'); c.style.animation = 'none'; void c.offsetWidth; c.style.animation = ''; this._cardUntil = performance.now() + 6300;
+  }
+  clearOverlays() { clearTimeout(this._commsDelay); this._cardUntil = 0; $('comms').classList.add('hidden'); $('card').classList.add('hidden'); }
   hud(w, visible) {
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
     const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.ads > 0.5 ? 'ads' : 'hip';
