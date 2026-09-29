@@ -13,7 +13,7 @@ export function installTestHook(app) {
     const w = g.world, p = w?.player;
     return {
       mode: g.mode, mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, tick: w?.tick ?? null, status: w?.status ?? null, hash: w ? hashWorld(w) : null,
-      player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, cooldown: p.cooldown },
+      fov: g.view?.cam.fov ?? null, player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, ads: p.ads, sprint: p.sprint, sprinting: p.sprinting, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, cooldown: p.cooldown },
       stats: w?.stats ?? null, endStats: w?.endStats ?? null, secretsFound: w?.secretsFound ?? null,
       enemies: w?.enemies.map((e) => ({ id: e.id, x: e.x, z: e.z, hp: e.hp, state: e.state })) ?? null, pickups: w?.pickups.length ?? null,
       doors: w?.doors.map((d) => ({ cx: d.cx, cz: d.cz, open: d.open, target: d.target })) ?? null,
@@ -39,6 +39,7 @@ export function installTestHook(app) {
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
     // -- low-level setup (state writers; tests only) --
     setup_teleport(x, z, yaw) { g.world.player.x = x; g.world.player.z = z; if (yaw != null) g.world.player.yaw = yaw; g.view.beforeStep(g.world); },
+    setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     // -- diagnostics --
     perf() { const t = [...g.frameTimes].sort((a, b) => a - b); const n = t.length; return { frames: n, avgMs: n ? t.reduce((a, b) => a + b, 0) / n : 0, p95Ms: t[Math.floor(n * 0.95)] ?? 0, worstMs: t[n - 1] ?? 0 }; },

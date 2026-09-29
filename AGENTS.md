@@ -26,11 +26,11 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm test` — node:test suite (engine, maps, saves, input, routes, settings, campaign/status model); headless, no browser
 - `npm run build` — production build to `dist/` (test hook is compiled out)
 - `npm run verify` — validate + test + build
-- `npm run browsercheck` — headless-Chrome run of the real game (live input, canonical routes, Node-vs-browser parity, save/load, death, GPU-leak check); writes `validation/browser-check.json` + `review/engine-skeleton/*.png`
+- `npm run browsercheck` (~5 min; do not wrap in a short timeout) — headless-Chrome run of the real game (live input incl. sprint/ADS, canonical routes, Node-vs-browser parity, save/load, death, GPU-leak check); writes `validation/browser-check.json` + `review/engine-skeleton/*.png`
 - `npm run verify-map -- <ID>` — regenerate `validation/maps/<ID>.json` evidence (status is derived by validate, never written)
 - `npm run validate` / `npm run status` — topology + evidence checks / derived status counts
 - `npm run bake` — regenerate baked assets into `assets/baked/` (headless Chrome; slow under software GL; `BAKE_PORT` allows parallel bakes)
-- `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
+- `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
 
 ## Architecture (src/)
 - `engine/` pure JS, no DOM/Three: `world.js` fixed-step deterministic sim (plain-data state, seeded RNG, event queue), `mapformat.js` + `reach.js` (ASCII grid + entity list, validation, reachability with keys), `input.js` (devices -> actions -> per-tick cmd, tap latch, remap), `loop.js` (fixed-step accumulator), `save.js` (versioned, migrations, explicit invalidation), `bot.js` + `harness.js` (route bot acting only through InputState), `defs.js` (all tunables).

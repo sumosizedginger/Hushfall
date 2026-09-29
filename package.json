@@ -13,7 +13,8 @@
     "build": "vite build",
     "verify": "npm run validate && npm test && npm run build",
     "browsercheck": "node tools/dev/browser-check.mjs",
-    "verify-map": "node tools/verify-map.mjs"
+    "verify-map": "node tools/verify-map.mjs",
+    "shoot-stances": "node tools/dev/shoot-stances.mjs"
   },
   "keywords": [],
   "author": "",

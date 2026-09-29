@@ -1,9 +1,9 @@
 # TESTING
 
 ## Commands
-- `npm test` — 48 node:test tests, headless (~3 s). Files in `tests/`: `mapformat` (validation + reachability, incl. negative cases), `sim` (determinism, frame-rate independence, collision, doors, damage, pickups, input layer, death/exit ordering, transitions), `save` (round-trip, migration machinery, corrupt/newer/incompatible, map-changed fallback, storage), `route` (canonical routes on all difficulties, reproducibility), `settings`, `campaign` (68-slot topology + the PLANNED/IMPLEMENTED/AGENT_VERIFIED/COMPLETE derivation, stale evidence).
+- `npm test` — 60 node:test tests, headless (~3 s). Files in `tests/`: `controls` (sprint, ADS, accuracy, toggle mode, v1->v2 save migration, settings repair), `mapformat` (validation + reachability, incl. negative cases), `sim` (determinism, frame-rate independence, collision, doors, damage, pickups, input layer, death/exit ordering, transitions), `save` (round-trip, migration machinery, corrupt/newer/incompatible, map-changed fallback, storage), `route` (canonical routes on all difficulties, reproducibility), `settings`, `campaign` (68-slot topology + the PLANNED/IMPLEMENTED/AGENT_VERIFIED/COMPLETE derivation, stale evidence).
 - `npm run validate` / `npm run status` — manifest topology + evidence-derived status + asset file check.
-- `npm run browsercheck` — headless Chrome (154, SwiftShader software GL, 1280x720) against the dev server, 22 checks; writes `validation/browser-check.json`, screenshots in `review/engine-skeleton/`.
+- `npm run browsercheck` — headless Chrome (154, SwiftShader software GL, 1280x720) against the dev server, 26 checks (takes ~5 min, run it without a short timeout); writes `validation/browser-check.json`, screenshots in `review/engine-skeleton/`.
 - `npm run verify-map -- C1E1M01` — generates map evidence (routes x 3 difficulties, reachability, latest browser check).
 - `npm run build` — production build; the dev test hook must not appear in `dist/` (checked by grep, 2026-09-29: 0 matches).
 - Asset tools: `node tools/dev/determinism.mjs <asset>`, `node tools/dev/clean-regen.mjs`.
@@ -11,9 +11,9 @@
 ## Results (2026-09-29, engine skeleton)
 | area | result |
 |---|---|
-| unit/integration tests | 48/48 pass |
-| browser check (real DOM input, live rAF loop) | 22/22 pass: click Normal starts a game; held real W key moves the player; real click fires; Esc pauses/resumes |
-| Node vs Chrome determinism | same route/seed: identical tick count (2813) and identical final state hash in Node and in Chrome |
+| unit/integration tests | 60/60 pass |
+| browser check (real DOM input, live rAF loop) | 26/26 pass: click Normal starts a game; held real W moves the player; real Shift+W is ~1.5x walk speed; a real click while sprinting does not fire; real right-mouse holds ADS (fov 70 -> 46, ads 0 -> 1) and release restores it; real click fires; Esc pauses/resumes |
+| Node vs Chrome determinism | same route/seed: identical tick count (2045) and identical final state hash (d0d311b7) in Node and in Chrome, with sprint + ADS + hip spread in the route |
 | canonical routes | main + secret routes complete on easy/normal/hard through the real input layer (bot acts only via InputState) |
 | save/resume | headless: resumed run equals uninterrupted run (hash); browser: quick save/load restores tick and position |
 | death/restart | dies, freezes, death screen, retry restores a live player with the key available again |
@@ -33,6 +33,8 @@ Death while holding the key (restart restores it), use/interact spam on locked a
 - Screenshots were reviewed by eye for appearance only.
 
 ## Known defects
+- MINOR: in ADS the yellow sleeves splay from the bottom centre in an inverted V (their geometry was built for the hip pose).
+- MINOR: sprint/ADS pose values were tuned by eye on screenshots only; no feel testing by a human yet.
 - MAJOR: value-banding post pass reads more posterised-pixel than brushy (look decision pending).
 - MAJOR: weapon view-model reads blocky; enemy coat is a plain cone.
 - MINOR: exterior is very dark away from lamp posts; lighting values are placeholders.
@@ -43,4 +45,5 @@ Death while holding the key (restart restores it), use/interact spam on locked a
 ## History
 - Gate 0 asset spike: p5 seeding, opaque bases and matting findings are recorded in `ART_BIBLE.md`; clean-env regeneration within 0.3% differing bytes (`review/gate-0/clean-regen.json`).
 - Look demo: two bugs fixed (weapon pass wiped world depth so outlines vanished; brush fills were translucent atlas cells).
+- Controls pass (sprint / ADS) bugs found by the checks and fixed in the game: the muzzle sat 16 cm right of the crosshair so aimed shots missed (muzzle now centres with ADS); the browser-check helper silently dropped any statement after the first (fixed; earlier teleports/addYaw in the script had not been running).
 - Engine skeleton bugs found by the checks and fixed in the game: hook and rAF loop both stepping the sim (added manual clock), one geometry leaked per level restart (post pass quad not disposed), keys tapped between ticks were dropped (tap latch).

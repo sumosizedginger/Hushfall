@@ -122,8 +122,9 @@ test('pickups respect caps: full health/ammo is not consumed; ammo is capped', (
 test('firing consumes ammo, a dry weapon clicks, and flares kill enemies with splash', () => {
   const w = createWorld(loadMap(), { seed: 1 });
   const e = w.enemies[1]; w.player.x = e.x - 7; w.player.z = e.z; w.player.yaw = -Math.PI / 2; w.player.pitch = 0.02;
-  step(w, { ...idle(), fire: true }); assert.equal(w.player.ammo.flare, 7);
-  for (let i = 0; i < 120; i++) step(w, idle());
+  for (let i = 0; i < 20; i++) step(w, { ...idle(), aim: true });                       // hip fire is deliberately inaccurate; aim for a reliable hit
+  step(w, { ...idle(), aim: true, fire: true }); assert.equal(w.player.ammo.flare, 7);
+  for (let i = 0; i < 120; i++) step(w, { ...idle(), aim: true });
   assert.ok(w.stats.kills >= 1 || w.enemies.some((x) => x.hp < 45), 'the flare hit something');
   w.player.ammo.flare = 0; w.player.cooldown = 0; drainEvents(w);
   step(w, { ...idle(), fire: true }); assert.ok(drainEvents(w).some((x) => x.type === 'dry'));

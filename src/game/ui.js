@@ -20,9 +20,10 @@ export class UI {
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.quitToTitle();
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value));
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
+    $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-outline').onchange = (e) => this.h.setSetting('outline', e.target.checked); $('set-paint').onchange = (e) => this.h.setSetting('paint', e.target.checked);
   }
-  syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-vol').value = s.masterVolume; $('set-res').value = s.internalWidth; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; }
+  syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-vol').value = s.masterVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; }
   syncBindings(b) { $('controls').innerHTML = Object.entries(b).map(([a, cs]) => `<div><b>${a}</b><span>${cs.map((c) => c.replace('Key', '').replace('Mouse0', 'Click')).join(' / ') || '-'}</span></div>`).join(''); }
   show(name, data = {}) {
     for (const el of document.querySelectorAll('.screen')) el.classList.add('hidden');
@@ -41,7 +42,7 @@ export class UI {
   events(events) { for (const e of events) { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } }
   hud(w, visible) {
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
-    const p = w.player;
+    const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.ads > 0.5 ? 'ads' : 'hip';
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
     $('hud-armor').textContent = Math.ceil(p.armor); $('hud-ammo').textContent = p.ammo.flare ?? 0; $('hud-ammo').parentElement.classList.toggle('low', (p.ammo.flare ?? 0) === 0);
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${KEYS[k].name}"></i>`).join('');

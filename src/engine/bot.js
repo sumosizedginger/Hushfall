@@ -52,7 +52,8 @@ export class Bot {
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight, pitchWant = Math.atan2(aimY - PLAYER.eye, t.d);
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
-    const shoot = Math.abs(yawErr) < 0.06 && t.d > 2.8 && (p.ammo[def.ammo] || 0) > 0;
+    this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
+    const shoot = Math.abs(yawErr) < 0.06 && t.d > 2.8 && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85;
     this.setHeld('fire', shoot);
     this.setHeld('back', t.d < 2.8);
     this.setHeld('forward', false);
@@ -85,6 +86,7 @@ export class Bot {
         if (Math.hypot(dx - p.x, dz - p.z) < 2.0) { this.setHeld('forward', false); this.aimAt(dx, dz); this.pressUse(); return false; }
       }
     }
+    this.setHeld('sprint', this.path.length > 3);                   // sprint the long stretches only
     this.steerTo((next[0] + 0.5) * m.cell, (next[1] + 0.5) * m.cell, 0.35);
     return false;
   }
@@ -102,7 +104,7 @@ export class Bot {
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     const t = this.combatTarget();
     if (t) { this.calm = 0; this.fight(t); if (op.op === 'kill') return; if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
-    else { this.setHeld('fire', false); this.setHeld('back', false); this.calm++; }
+    else { this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {
@@ -113,6 +115,6 @@ export class Bot {
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
     else this.failed = 'unknown op ' + op.op;
     if (this.stillFor > this.stuckTicks && op.op !== 'wait' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
-    if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.stillFor = 0; }
+    if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }

@@ -19,7 +19,8 @@ const page = await browser.newPage();
 await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e));
 page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
-const T = (expr) => page.evaluate(`(() => { const t = window.__GAME_TEST__; return ${expr}; })()`);
+// runs a single expression (returning its value) or a ';'-separated statement list (returning nothing). A second statement after `return` would never execute.
+const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
 const shot = (name) => page.screenshot({ path: path.join(shots, name + '.png') });
 const text = (id) => page.$eval('#' + id, (e) => e.textContent);
 const visible = (id) => page.$eval('#' + id, (e) => !e.classList.contains('hidden'));
@@ -47,6 +48,32 @@ try {
   check('Escape pauses (live)', escState.mode === 'paused' && (await visible('screen-pause')), escState.mode);
   await page.keyboard.press('Escape'); await sleep(200);
   check('Escape again resumes (live)', (await T('t.state()')).mode === 'playing');
+
+  // ---- 0b. sprint + aim-down-sights with REAL input in the live loop ----------------------------------------------------
+  const runDist = async (keys) => {
+    await T('t.setup_clearEnemies(); t.setup_teleport(4, 18, -Math.PI / 2)'); await sleep(120);
+    const s0 = await T('t.state()');
+    for (const k of keys) await page.keyboard.down(k);
+    await sleep(700);
+    for (const k of keys.slice().reverse()) await page.keyboard.up(k);
+    const s1 = await T('t.state()'); return { d: Math.hypot(s1.player.x - s0.player.x, s1.player.z - s0.player.z), s1 };
+  };
+  const walk = await runDist(['KeyW']), sprint = await runDist(['ShiftLeft', 'KeyW']);
+  check('holding real Shift+W sprints faster than W alone', sprint.d / walk.d > 1.25, `walk ${walk.d.toFixed(2)} m, sprint ${sprint.d.toFixed(2)} m, ratio ${(sprint.d / walk.d).toFixed(2)}`);
+  await T('t.setup_teleport(4, 18, -Math.PI / 2)');
+  const shotsBefore = (await T('t.state()')).stats.shots;
+  await page.keyboard.down('ShiftLeft'); await page.keyboard.down('KeyW'); await sleep(250);
+  await page.mouse.click(640, 360); await sleep(200);
+  const midSprint = await T('t.state()');
+  await page.keyboard.up('KeyW'); await page.keyboard.up('ShiftLeft');
+  check('firing is blocked while sprinting (real click during real sprint)', midSprint.player.sprinting && midSprint.stats.shots === shotsBefore, `sprinting=${midSprint.player.sprinting} shots ${shotsBefore}->${midSprint.stats.shots}`);
+  await sleep(400);
+  await page.mouse.down({ button: 'right' }); await sleep(500);
+  const adsOn = await T('t.state()');
+  check('holding the real right mouse button brings the sights up and zooms the view', adsOn.player.ads === 1 && adsOn.fov < 50, `ads=${adsOn.player.ads} fov=${adsOn.fov?.toFixed(1)}`);
+  await page.mouse.up({ button: 'right' }); await sleep(500);
+  const adsOff = await T('t.state()');
+  check('releasing right mouse lowers the sights and restores the field of view', adsOff.player.ads === 0 && adsOff.fov > 69, `ads=${adsOff.player.ads} fov=${adsOff.fov?.toFixed(1)}`);
 
   // ---- 1. canonical route in the browser vs the same route headless in Node -------------------------------------
   const map = loadMapFile(path.join(root, 'maps/C1E1M01.json')), route = loadRouteFile(path.join(root, 'routes/C1E1M01.main.route.json'));
@@ -104,6 +131,8 @@ try {
 
   // ---- 5. combat visuals + effects ----------------------------------------------------------------------------------
   await T("t.newGame('normal', 3)"); await T('t.tick(30)'); await shot('07-hall');
+  await T("t.press('aim')"); await T('t.tick(30)'); await shot('07b-ads'); await T("t.release('aim')"); await T('t.tick(30)');
+  await T("t.press('forward'); t.press('sprint')"); await T('t.tick(30)'); await shot('07c-sprint'); await T("t.release('forward'); t.release('sprint')"); await T('t.tick(30)');
   await T("t.setup_teleport(11, 13, -Math.PI / 2)"); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await shot('08-fire-muzzle');
   await T('t.tick(20)'); await shot('09-flare-flight'); await T('t.tick(25)'); await shot('10-aftermath');
   await T("t.setup_teleport(48, 8, -Math.PI / 2)"); await T('t.tick(10)'); await shot('11-quay');

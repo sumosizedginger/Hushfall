@@ -66,7 +66,7 @@ test('schema change: an old save with no migration is invalidated explicitly', (
 });
 
 test('schema change: registered migrations are applied in order (machinery test with synthetic v1->v3)', () => {
-  const s = makeSave(createWorld(loadMap(), { seed: 1 }), 'level-start');
+  const s = makeSave(createWorld(loadMap(), { seed: 1 }), 'level-start'); s.version = 1;
   const migrations = {
     1: (x) => ({ ...x, version: 2, campaign: { ...x.campaign, difficulty: x.campaign.difficulty ?? 'normal' } }),
     2: (x) => ({ ...x, version: 3, carry: { ...x.carry, migrated: true } }),
