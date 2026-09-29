@@ -80,6 +80,18 @@ try {
   const adsOff = await T('t.state()');
   check('releasing right mouse lowers the sights and restores the field of view', adsOff.player.ads === 0 && adsOff.fov > 69, `ads=${adsOff.player.ads} fov=${adsOff.fov?.toFixed(1)}`);
 
+  // ---- 0c. second weapon with REAL input: number key, click, mouse wheel ----------------------------------------------
+  await T("t.setup_clearEnemies(); t.setup_player({ weapons: ['flare', 'scattergun'], ammo: { flare: 8, shell: 10 } }); t.setup_teleport(4, 18, -Math.PI / 2)");
+  await page.keyboard.press('Digit2'); await sleep(700);
+  const sw = await T('t.state()');
+  check('real 2 key switches to the scattergun and the HUD follows', sw.player.weapon === 'scattergun' && (await text('hud-ammo-label')) === 'SHELLS' && (await text('hud-ammo')) === '10', `weapon=${sw.player.weapon} label=${await text('hud-ammo-label')} ammo=${await text('hud-ammo')}`);
+  await page.mouse.click(640, 360); await sleep(300);
+  const fired = await T('t.state()');
+  check('real click fires the scattergun (one shell, its own sound)', fired.player.ammo.shell === 9 && (await T('t.audioLog()')).some((x) => x.id === 'scatter_fire'), `shells=${fired.player.ammo.shell}`);
+  await sleep(1100); await page.mouse.move(640, 360); await page.mouse.wheel({ deltaY: 100 }); await sleep(700);
+  const wheel = await T('t.state()');
+  check('mouse wheel cycles weapons (wraps back to the flare cannon)', wheel.player.weapon === 'flare', wheel.player.weapon);
+
   // ---- 1. canonical route in the browser vs the same route headless in Node -------------------------------------
   const map = loadMapFile(path.join(root, 'maps/C1E1M01.json')), route = loadRouteFile(path.join(root, 'routes/C1E1M01.main.route.json'));
   const node = runRoute(map, route, { seed: 1, difficulty: 'normal' });
@@ -99,8 +111,8 @@ try {
   check('bot completes the canonical route in the browser', r.status === 'complete' && !r.failed, `status=${r.status} failed=${r.failed} ticks=${r.tick}`);
   check('browser sim == Node sim (tick count)', r.tick === node.ticks, `browser ${r.tick} vs node ${node.ticks}`);
   check('browser sim == Node sim (state hash)', r.hash === node.hash, `browser ${r.hash} vs node ${node.hash}`);
-  check('all 8 enemies killed, key held', r.stats.kills === 8 && r.player.keys.includes('brass'));
-  const heard = new Set((await T('t.audioLog()')).map((x) => x.id)), all = await T('t.state().audio.played');
+  check('every enemy killed, key held', r.stats.kills === r.stats.total.enemies && r.stats.total.enemies > 0 && r.player.keys.includes('brass'), `kills ${r.stats.kills}/${r.stats.total.enemies}`);
+  const heard = new Set((await T('t.audioLog(200)')).map((x) => x.id)), all = await T('t.state().audio.played');
   check('the route was audible: many sounds played incl. explosion, key, door, death, footsteps', all > 30 && ['flare_boom', 'pickup_key', 'door_open', 'enemy_die'].every((id) => heard.has(id)), `played=${all} distinct(last40)=${[...heard].join(',')}`);
   await page.waitForFunction("!document.getElementById('screen-complete').classList.contains('hidden')", { timeout: 15000 }).catch(() => {});
   check('intermission screen shows end-level statistics', (await visible('screen-complete')) && /Kills/.test(await text('stat-rows')), (await text('stat-rows')).replace(/\s+/g, ' '));

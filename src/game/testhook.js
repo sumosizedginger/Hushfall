@@ -2,7 +2,7 @@
 // builds contain none of it. Actions travel through the real input layer + fixed step; the only state writers are the
 // clearly-labelled setup_* helpers.
 import { Bot } from '../engine/bot.js';
-import { hashWorld } from '../engine/world.js';
+import { hashWorld, spawnEnemy } from '../engine/world.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
 
@@ -46,6 +46,9 @@ export function installTestHook(app) {
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
     // -- low-level setup (state writers; tests only) --
     setup_teleport(x, z, yaw) { g.world.player.x = x; g.world.player.z = z; if (yaw != null) g.world.player.yaw = yaw; g.view.beforeStep(g.world); },
+    setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
+    setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
+    setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     // -- diagnostics --
@@ -58,7 +61,7 @@ export function installTestHook(app) {
       return { rate, duration, ...pcm(samples) };
     },
     async audioMusic(seconds = 12, intensity = 0.8) { const { renderMusic } = await import('../audio/music.js'); const { rate, samples } = await renderMusic({ seconds, intensity }); return { rate, ...pcm(samples) }; },
-    audioUnlock: () => audio.unlock(), audioLog: () => audio.stats.log.slice(-40),
+    audioUnlock: () => audio.unlock(), audioLog: (n = 40) => audio.stats.log.slice(-n),
     sfxIds: async () => Object.keys((await import('../audio/synth.js')).SFX),
   };
 }

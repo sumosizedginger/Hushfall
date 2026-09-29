@@ -22,10 +22,12 @@ Ending (provisional): the Root Bell can be silenced, not destroyed — Ines ring
 ## Infection / transformation
 Hush (audible tone) -> docility -> herding -> **cradle** (suspended, neural taps) -> **Graft** (bell-chitin seeded at shoulder) -> **Tollbearer**. Bells resonate: nearby Tollbearers act together; silencing a Bell staggers the pack.
 
-## Weapon taxonomy (PROVISIONAL targets: planned 8, implemented 0, verified 0)
+## Weapon taxonomy (PROVISIONAL targets: planned 8, implemented 2, verified 0 by a human; 2 by automated tests + browser checks)
+Implemented 2026-09-29: **Flare cannon** (slow arcing projectile, splash, self-damage, area denial) and **Tidewarden scattergun** (hitscan, 9 pellets, falloff, no splash: close-range punch). They force different decisions: the flare rewards distance and leading targets, the scattergun rewards closing in.
 Melee/tool sidearm · **Flare cannon** (slow heavy projectile, splash, area denial by burning light) · Sawn pump gun (close burst) · Rapid rivet driver (sustained, low stagger) · Harpoon rifle (piercing, slow reload) · Charge-arc lamp (charge, chain) · Bell-breaker mortar (arc, splash) · Counter-tone emitter (late, alternate behaviour).
 
-## Enemy taxonomy (PROVISIONAL: standard 6, elite 4, boss 8, set-piece 3; implemented 0)
+## Enemy taxonomy (PROVISIONAL: standard 6, elite 4, boss 8, set-piece 3; implemented: standard 2)
+Implemented 2026-09-29: **Tollbearer** (slow, tough, readable arm-raise tell, bell that tolls) and **Gaunt Runner** (fast, fragile, crouch-then-dash tell that a strafe defeats; punishes standing still). Enemies steer around obstacles.
 Standard: Tollbearer (shambler) · Gaunt Runner (pursuit) · Bellhand (ranged tolling stun-shot) · Sexton (support, resurrects) · Chorister (suppression, flanking) · Drone-Gill (flyer).
 Elite: Warden-Graft, Cantor Acolyte, Bulwark Shell, Weeping Mother.
 Bosses: Cantor (E1), Graft-Mother (E2), Grand Cantor (E3), Gate Warden (E4), Sub-Cantor, Hive Cantor, Root Bell, plus one TBD.

@@ -7,8 +7,11 @@ import { loadMap, route } from './helpers.js';
 test('canonical main route: spawn -> key -> locked door -> exit, through the real input layer', () => {
   const r = runRoute(loadMap(), route('C1E1M01.main'), { seed: 1 });
   assert.equal(r.result, 'complete', r.failure);
-  assert.equal(r.world.stats.kills, 8);
+  assert.equal(r.world.stats.kills, 9);
   assert.deepEqual(r.world.player.keys, ['brass']);
+  assert.ok(r.world.player.weapons.includes('scattergun'), 'the route picks up the scattergun');
+  assert.ok(r.events.some((e) => e.type === 'weapon_pickup') && r.events.some((e) => e.type === 'fire' && e.weapon === 'scattergun') && r.events.some((e) => e.type === 'fire' && e.weapon === 'flare'), 'both weapons were fired');
+  assert.ok(r.world.enemies.some((e) => e.kind === 'gaunt') && r.world.enemies.every((e) => e.state === 'dead'), 'the Gaunts were among the kills');
   assert.ok(r.events.some((e) => e.type === 'door_open') && r.events.some((e) => e.type === 'level_complete'));
   assert.ok(r.world.endStats.time > 20 && r.world.endStats.time < 300);
 });

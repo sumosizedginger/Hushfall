@@ -31,6 +31,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm run validate` / `npm run status` — topology + evidence checks / derived status counts
 - `npm run bake` — regenerate baked assets into `assets/baked/` (headless Chrome; slow under software GL; `BAKE_PORT` allows parallel bakes)
 - `npm run audio-qa` — renders every SFX + the score offline in headless Chrome, measures them (finite/audible/no clipping/decays/reproducible), writes `review/audio/*.wav` (LISTEN to these) + `validation/audio.json`
+- `npm run shoot-weapons` — scattergun stances/flash/pump, Gaunt poses, new pickups (review/engine-skeleton/weapons-*.png)
 - `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
 
 ## Architecture (src/)

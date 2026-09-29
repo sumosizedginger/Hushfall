@@ -1,11 +1,18 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
-import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, ENEMIES, PICKUPS, PROPS, DOOR } from './defs.js';
+import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, PROPS, DOOR } from './defs.js';
 import { nextRandom, initialRngState } from './rng.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
 const hidden = (o, k, v) => Object.defineProperty(o, k, { value: v, enumerable: false, writable: true, configurable: true });
+
+/** the one place an enemy record is built (createWorld and tests both use it) */
+export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
+  const def = ENEMIES[kind], diff = DIFFICULTY[w.difficulty];
+  const e = { id: w.nextId++, kind, x, z, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false };
+  w.enemies.push(e); return e;
+}
 
 export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null } = {}) {
   const diff = DIFFICULTY[difficulty];
@@ -18,7 +25,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       x: map.spawn.x, z: map.spawn.z, yaw: map.spawn.yaw, pitch: 0, vx: 0, vz: 0, bob: 0,
       hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0,
       ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])], weapon: 'flare',
-      keys: [], cooldown: 0, hurt: 0, kick: 0,
+      keys: [], cooldown: 0, hurt: 0, kick: 0, switchT: 0,
       ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
     enemies: [], projectiles: [], pickups: [], doors: [],
@@ -28,10 +35,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') {
-      const def = ENEMIES[e.kind];
-      w.enemies.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, yaw: typeof e.facing === 'number' ? e.facing : Math.PI, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0 });
-    } else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z });
+    if (e.type === 'enemy') spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI);
+    else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z });
   }
   for (const d of map.doors.values()) w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: 0, target: 0, hold: 0, secret: false });
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
@@ -59,6 +64,15 @@ export function blockedCircle(w, x, z, r) {
   for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
   return false;
 }
+/** Chase movement with cheap obstacle avoidance: go straight if free, otherwise try angled headings, remembering the side that worked. */
+function chaseStep(w, e, def, dt) {
+  const spd = def.speed * dt, s = e.steer || (e.id % 2 ? 0.7 : -0.7);
+  for (const off of [0, s, -s, 2 * s, -2 * s]) {
+    const a = e.yaw + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+    if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius)) { e.x += sx; e.z += sz; if (off !== 0) e.steer = off; else if (e.steer) e.steer = 0; return true; }
+  }
+  return false;
+}
 function tryMove(w, o, dx, dz, r) { if (!blockedCircle(w, o.x + dx, o.z, r)) o.x += dx; if (!blockedCircle(w, o.x, o.z + dz, r)) o.z += dz; }
 export function hasLOS(w, x0, z0, x1, z1) {
   const S = w.map.cell, d = Math.hypot(x1 - x0, z1 - z0), n = Math.ceil(d / 0.4);
@@ -75,20 +89,69 @@ function hurtPlayer(w, dmg) {
   emit(w, 'hurt', { amount: real });
 }
 
-function explode(w, x, y, z, ownerIsPlayer) {
-  const def = WEAPONS[w.player.weapon];
+/** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
+function damageEnemy(w, e, dmg) {
+  e.hp -= dmg; e.flash = 1;
+  if (e.hp <= 0 && e.state !== 'dead') { e.state = 'dead'; e.attackT = -1; e.lungeT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
+  return false;
+}
+
+function explode(w, x, y, z, ownerIsPlayer, def) {
   emit(w, 'explode', { x, y, z });
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
     const d = Math.hypot(x - e.x, y - 1.0, z - e.z);
     if (d < def.splash) {
-      e.hp -= def.splashDamage * (1 - d / def.splash) + def.direct; e.flash = 1;
+      const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct);
       const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
-      if (e.hp <= 0) { e.state = 'dead'; e.attackT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } else emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+      if (!killed) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     }
   }
   const p = w.player, d = Math.hypot(x - p.x, y - PLAYER.eye, z - p.z);
   if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))));
+}
+
+// ---------------------------------------------------------------- weapons
+/** Scatter def.pellets rays from the eye. Pellets stop at walls, closed doors, solid props, and the first enemy they touch. */
+function fireHitscan(w, def, cone) {
+  const p = w.player, map = w.map, hits = new Map(), push = new Map(); let impacts = 0;
+  for (let i = 0; i < def.pellets; i++) {
+    const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone });
+    let x = p.x, y = PLAYER.eye, z = p.z, target = null, stop = false, dist = 0;
+    for (dist = 0.25; dist <= def.range && !target && !stop; dist += 0.25) {
+      x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
+      if (y < 0.02 || (map.isInterior(x, z) && y > map.ceiling) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
+      for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < 1.3) stop = true;
+      if (stop) break;
+      for (const e of w.enemies) { const d = ENEMIES[e.kind]; if (e.state !== 'dead' && Math.hypot(x - e.x, z - e.z) < d.radius + 0.05 && y > 0 && y < d.height) { target = e; break; } }
+    }
+    if (target) {
+      const fall = dist <= def.falloffStart ? 1 : 1 - (1 - def.falloffMin) * Math.min(1, (dist - def.falloffStart) / (def.range - def.falloffStart));
+      const killed = damageEnemy(w, target, def.damage * fall);
+      if (!killed) hits.set(target.id, target);
+      const k = push.get(target.id) || { e: target, x: 0, z: 0 }; k.x += f[0] * def.knock * fall; k.z += f[2] * def.knock * fall; push.set(target.id, k);      // applied after the volley: pellets are simultaneous
+    } else if (stop && impacts < 3 && i % 3 === 0) { emit(w, 'impact', { x, y, z }); impacts++; }
+  }
+  for (const k of push.values()) tryMove(w, k.e, k.x, k.z, ENEMIES[k.e.kind].radius);
+  for (const e of hits.values()) if (e.state !== 'dead') emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+}
+
+function fireWeapon(w) {
+  const p = w.player, def = WEAPONS[p.weapon];
+  if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); return; }
+  p.ammo[def.ammo]--; p.cooldown = def.cooldown; p.kick = def.kick ?? 0.06; w.stats.shots++;
+  // accuracy: hip spread grows with movement; aiming tightens it. RNG draws happen in a fixed order so replays are deterministic.
+  const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
+  const cone = (sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads;
+  if (def.kind === 'hitscan') fireHitscan(w, def, cone);
+  else {
+    const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
+    // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
+    const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
+    const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
+    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4 });
+  }
+  emit(w, 'fire', { weapon: p.weapon });
 }
 
 // ---------------------------------------------------------------- step
@@ -114,7 +177,12 @@ export function step(w, cmd) {
   tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
   p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
   p.cooldown = Math.max(0, p.cooldown - dt); p.hurt = Math.max(0, p.hurt - dt * 1.2); p.kick = Math.max(0, p.kick - dt * 0.4);
-  if (cmd.weapon != null && p.weapons[cmd.weapon]) p.weapon = p.weapons[cmd.weapon];
+  // weapon selection: slot key, or cycle through owned weapons (mouse wheel). Switching costs the new weapon's switchTime.
+  p.switchT = Math.max(0, (p.switchT || 0) - dt);
+  let want = null;
+  if (cmd.weapon != null) want = WEAPON_ORDER[cmd.weapon];
+  else if (cmd.weaponStep) { const owned = WEAPON_ORDER.filter((id) => p.weapons.includes(id)), i = owned.indexOf(p.weapon); if (owned.length) want = owned[(i + cmd.weaponStep + owned.length) % owned.length]; }
+  if (want && want !== p.weapon && p.weapons.includes(want)) { p.weapon = want; p.switchT = WEAPONS[want].switchTime; emit(w, 'weapon_switch', { weapon: want }); }
 
   // use: first door/secret panel along the view ray
   if (cmd.use) {
@@ -131,22 +199,7 @@ export function step(w, cmd) {
   }
 
   // fire
-  if (cmd.fire && p.cooldown <= 0 && !p.sprinting && p.recover <= 0) {          // no firing from the sprint pose
-    const def = WEAPONS[p.weapon];
-    if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); }
-    else {
-      p.ammo[def.ammo]--; p.cooldown = def.cooldown; p.kick = 0.06; w.stats.shots++;
-      // accuracy: hip spread grows with movement; aiming tightens it. Two RNG draws per shot keep replays deterministic.
-      const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
-      const cone = (sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads;
-      const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
-      // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
-      const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
-      const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
-      w.projectiles.push({ id: w.nextId++, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4 });
-      emit(w, 'fire', { weapon: p.weapon });
-    }
-  }
+  if (cmd.fire && p.cooldown <= 0 && p.switchT <= 0 && !p.sprinting && p.recover <= 0) fireWeapon(w);          // no firing mid-switch or from the sprint pose
 
   // doors
   for (const d of w.doors) {
@@ -167,8 +220,22 @@ export function step(w, cmd) {
     const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
     if (e.state === 'idle') { if (sees) { e.state = 'chase'; emit(w, 'enemy_alert', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } else continue; }
     let dy = Math.atan2(dx, dz) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
-    if (sees && e.attackT < 0) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
+    const dashing = def.lunge && (e.lungeT ?? -1) >= def.lunge.windup;                 // a dash keeps its heading: that is what makes it dodgeable
+    if (sees && e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
     e.cd = Math.max(0, e.cd - dt);
+    if (def.lunge) {
+      const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
+      if ((e.lungeT ?? -1) >= 0) {
+        e.lungeT += dt;
+        if (e.lungeT < L.windup) e.walk *= 0.8;                                        // crouch: the readable tell
+        else if (e.lungeT < L.windup + L.duration) {
+          tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
+          if (!e.lungeHit && dist < def.attack.reach * 0.7) { e.lungeHit = true; hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+        } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
+        continue;
+      }
+      if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); continue; }
+    }
     if (e.attackT >= 0) {
       e.attackT += dt; e.walk *= 0.85;
       if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
@@ -178,8 +245,8 @@ export function step(w, cmd) {
       }
       if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
     } else if (sees && dist > def.attack.range) {
-      tryMove(w, e, Math.sin(e.yaw) * def.speed * dt, Math.cos(e.yaw) * def.speed * dt, def.radius);
-      e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * 5.2;
+      chaseStep(w, e, def, dt);
+      e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
     } else {
       e.walk = Math.max(0, e.walk - dt * 3);
       if (sees && dist <= def.attack.range + 0.1 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
@@ -188,7 +255,7 @@ export function step(w, cmd) {
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {
-    const q = w.projectiles[i], def = WEAPONS[p.weapon]; q.life -= dt; q.vy -= def.gravity * dt;
+    const q = w.projectiles[i], def = WEAPONS[q.weapon ?? 'flare']; q.life -= dt; q.vy -= def.gravity * dt;      // projectiles keep their own weapon stats after you switch away
     const speed = Math.hypot(q.vx, q.vy, q.vz), n = Math.ceil(speed * dt / 0.25); let hit = q.life <= 0;
     for (let k = 0; k < n && !hit; k++) {
       q.x += q.vx * dt / n; q.y += q.vy * dt / n; q.z += q.vz * dt / n;
@@ -197,7 +264,7 @@ export function step(w, cmd) {
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < 1.3) hit = true;
       for (const e of w.enemies) if (e.state !== 'dead' && Math.hypot(q.x - e.x, q.z - e.z) < 0.5 && q.y > 0 && q.y < ENEMIES[e.kind].height) hit = true;
     }
-    if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true); }
+    if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def); }
   }
 
   // pickups
@@ -209,7 +276,11 @@ export function step(w, cmd) {
     else if (def.type === 'armor' && p.armor < PLAYER.maxArmor) { p.armor = Math.min(PLAYER.maxArmor, p.armor + def.amount); took = true; }
     else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo]) { p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup)); took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
-    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, 'pickup', { kind: it.kind }); }
+    else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo])) {
+      if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => WEAPON_ORDER.indexOf(a) - WEAPON_ORDER.indexOf(b)); p.weapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; }
+      p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup)); took = true;
+    }
+    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', { kind: it.kind }); }
   }
 
   // secrets: found when the player stands in one of the secret's cells

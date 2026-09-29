@@ -2,11 +2,11 @@
 // Keyboard/mouse and the automation bot/test hook all go through the same press()/release()/addYaw() path.
 import { TICK } from './defs.js';
 
-export const ACTIONS = ['forward', 'back', 'left', 'right', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'fire', 'aim', 'sprint', 'use', 'weapon1', 'weapon2', 'weapon3', 'pause'];
+export const ACTIONS = ['forward', 'back', 'left', 'right', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'fire', 'aim', 'sprint', 'use', 'weapon1', 'weapon2', 'weapon3', 'weaponNext', 'weaponPrev', 'pause'];
 export const DEFAULT_BINDINGS = {
   forward: ['KeyW'], back: ['KeyS'], left: ['KeyA'], right: ['KeyD'],
   turnLeft: ['ArrowLeft'], turnRight: ['ArrowRight'], lookUp: ['ArrowUp'], lookDown: ['ArrowDown'],
-  fire: ['Mouse0', 'ControlLeft'], aim: ['Mouse2'], sprint: ['ShiftLeft', 'ShiftRight'], use: ['KeyE', 'Space'], weapon1: ['Digit1'], weapon2: ['Digit2'], weapon3: ['Digit3'], pause: ['Escape', 'KeyP'],
+  fire: ['Mouse0', 'ControlLeft'], aim: ['Mouse2'], sprint: ['ShiftLeft', 'ShiftRight'], use: ['KeyE', 'Space'], weapon1: ['Digit1'], weapon2: ['Digit2'], weapon3: ['Digit3'], weaponNext: ['WheelDown'], weaponPrev: ['WheelUp'], pause: ['Escape', 'KeyP'],
 };
 const TURN_RATE = 2.2, LOOK_RATE = 1.6;              // rad/s for keyboard turning
 
@@ -49,6 +49,7 @@ export class InputState {
       pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK,
       fire: d.has('fire'), aim: d.has('aim'), sprint: d.has('sprint'), use: this.edge.has('use'), pause: this.edge.has('pause'),
       weapon: this.edge.has('weapon1') ? 0 : this.edge.has('weapon2') ? 1 : this.edge.has('weapon3') ? 2 : null,
+      weaponStep: (this.edge.has('weaponNext') ? 1 : 0) - (this.edge.has('weaponPrev') ? 1 : 0),
     };
     this.yaw = 0; this.pitch = 0; this.edge.clear(); this.tapped.clear();
     return cmd;

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M01",
- "version": 1,
+ "version": 2,
  "name": "Marrow Quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
@@ -223,12 +223,6 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [28, 12],
-   "facing": "west"
-  },
-  {
-   "type": "enemy",
-   "kind": "tollbearer",
    "at": [31, 9],
    "facing": "west"
   },
@@ -270,6 +264,38 @@
   {
    "type": "exit",
    "at": [33, 3]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 12],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 10],
+   "facing": "west"
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_scattergun",
+   "at": [6, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [10, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [2, 5]
   }
  ],
  "par": {

@@ -126,7 +126,7 @@ export function makeFlareCannon(tex) {
   const flash = new THREE.Group(); flash.position.z = -0.72; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xfff4d0 })));
-  return { group: g, flash };
+  return { group: g, flash, pump: null, adsY: -0.067 };
 }
 
 // -------------------------------------------------------------------- props
@@ -173,7 +173,7 @@ export function makeLampPost() {
 
 // ------------------------------------------------- Gate 1 additions: pickups, doors, exit
 /** kind: a PICKUPS key from engine/defs.js. Faces wear props_atlas cells. */
-export function makePickup(kind, tex) {
+export function makePickup(kind, tex, weaponTex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x201810 });
   const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
   const g = new THREE.Group();
@@ -181,9 +181,15 @@ export function makePickup(kind, tex) {
     const big = kind === 'health_large', s = big ? 1.35 : 1;
     const box = M(new THREE.BoxGeometry(0.42 * s, 0.26 * s, 0.3 * s), 0); box.position.y = 0.16 * s; g.add(box);
     const strap = M(new THREE.BoxGeometry(0.06, 0.29 * s, 0.32 * s), 4); strap.position.y = 0.16 * s; g.add(strap);
-  } else if (kind.startsWith('ammo')) {
+  } else if (kind === 'ammo_flare') {
     const box = M(new THREE.BoxGeometry(0.44, 0.24, 0.3), 1); box.position.y = 0.14; g.add(box);
     for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.045, 0.045, 0.2, 6), 3); shell.rotation.z = Math.PI / 2; shell.position.set(0, 0.3, i * 0.09); g.add(shell); }
+  } else if (kind === 'ammo_shell') {
+    const box = M(new THREE.BoxGeometry(0.4, 0.2, 0.28), 1); box.position.y = 0.12; g.add(box);
+    for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.04, 0.04, 0.16, 6), 4); shell.position.set(i * 0.09, 0.3, 0); g.add(shell); const cap = M(new THREE.CylinderGeometry(0.042, 0.042, 0.04, 6), 3); cap.position.set(i * 0.09, 0.22, 0); g.add(cap); }
+  } else if (kind === 'weapon_scattergun') {
+    const gun = makeScattergun(weaponTex || tex).group; gun.scale.setScalar(0.5); gun.rotation.set(0, Math.PI / 2, 0); gun.position.y = 0.3; g.add(gun);
+    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.62; g.add(glow);
   } else if (kind.startsWith('armor')) {
     const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2); body.position.y = 0.26; g.add(body);
     for (const x of [-0.14, 0.14]) { const strap = M(new THREE.BoxGeometry(0.06, 0.44, 0.18), 7); strap.position.set(x, 0.26, 0); g.add(strap); }
@@ -222,4 +228,91 @@ export function makeExitGate(tex, H) {
   const lintel = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 3.2), wood); lintel.position.set(0.05, 2.75, 0); g.add(lintel);
   const light = new THREE.PointLight(0xffb060, 60, 14, 2); light.position.set(-1.5, 1.6, 0); g.add(light);
   return { group: g, light };
+}
+
+// ------------------------------------------------------------ Gaunt Runner
+/** Low, bare-skinned sprinter with long arms: reads as a different animal from the upright, coated Tollbearer. */
+export function makeGaunt(atlasTex) {
+  const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
+  const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
+  const root = new THREE.Group();
+  const hips = new THREE.Group(); hips.position.y = 0.8; root.add(hips);
+  const legs = [-1, 1].map((s) => {
+    const thigh = new THREE.Group(); thigh.position.set(s * 0.09, 0, 0); hips.add(thigh);
+    const tm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.42, 6), 2); tm.position.y = -0.21; thigh.add(tm);
+    const shin = new THREE.Group(); shin.position.y = -0.42; thigh.add(shin);
+    const sm = M(new THREE.CylinderGeometry(0.05, 0.035, 0.42, 6), 2); sm.position.y = -0.21; shin.add(sm);
+    const foot = M(new THREE.BoxGeometry(0.08, 0.05, 0.22), 3); foot.position.set(0, -0.43, 0.06); shin.add(foot);
+    return { thigh, shin };
+  });
+  const spine = new THREE.Group(); spine.position.y = 0.04; hips.add(spine);
+  const torso = M(new THREE.CylinderGeometry(0.12, 0.16, 0.56, 6), 2); torso.scale.z = 0.8; torso.position.y = 0.28; spine.add(torso);
+  const rags = M(new THREE.BoxGeometry(0.2, 0.42, 0.03), 1); rags.position.set(0, 0.3, -0.13); rags.rotation.x = -0.15; spine.add(rags);            // torn oilskin still hanging off the back
+  const stub = M(new THREE.ConeGeometry(0.05, 0.22, 5), 6); stub.position.set(0.11, 0.5, -0.1); stub.rotation.set(-0.5, 0, -0.3); spine.add(stub);      // stunted Bell
+  const neck = new THREE.Group(); neck.position.set(0, 0.58, 0.02); spine.add(neck);
+  const head = new THREE.Group(); neck.add(head);
+  const skull = M(new THREE.IcosahedronGeometry(0.12, 1), 2); skull.scale.set(0.85, 1, 1.2); skull.position.y = 0.06; head.add(skull);
+  const jawPivot = new THREE.Group(); jawPivot.position.set(0, -0.03, 0.05); head.add(jawPivot);
+  const jaw = M(new THREE.BoxGeometry(0.1, 0.05, 0.13), 3); jaw.position.set(0, -0.025, 0.05); jawPivot.add(jaw);
+  const eyes = [-1, 1].map((s) => { const e = new THREE.Mesh(new THREE.SphereGeometry(0.026, 6, 4), glowMat); e.position.set(s * 0.05, 0.09, 0.12); head.add(e); return e; });
+  const arms = [-1, 1].map((s) => {
+    const sh = new THREE.Group(); sh.position.set(s * 0.2, 0.5, 0); spine.add(sh);
+    const ua = M(new THREE.CylinderGeometry(0.045, 0.035, 0.4, 6), 2); ua.position.y = -0.2; sh.add(ua);
+    const el = new THREE.Group(); el.position.y = -0.4; sh.add(el);
+    const fa = M(new THREE.CylinderGeometry(0.035, 0.028, 0.46, 6), 2); fa.position.y = -0.23; el.add(fa);
+    for (let i = -1; i <= 1; i++) { const c = M(new THREE.ConeGeometry(0.014, 0.16, 4), 6); c.position.set(i * 0.025, -0.53, 0.02); c.rotation.x = Math.PI; el.add(c); }   // bronze claws
+    return { sh, el };
+  });
+
+  /** p: {t, walk, phase, attack 0..1, lunge -1..1 (negative = crouch, 1 = dash), dead 0..1, flash} */
+  function pose(p) {
+    const w = p.walk, ph = p.phase, t = p.t, cr = Math.max(0, -p.lunge), ex = Math.max(0, p.lunge);
+    const swing = Math.sin(ph) * 1.0 * w;
+    legs[0].thigh.rotation.x = swing * (1 - ex) - ex * 0.9; legs[1].thigh.rotation.x = -swing * (1 - ex) - ex * 0.9;
+    legs[0].shin.rotation.x = 0.4 + Math.max(0, Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2; legs[1].shin.rotation.x = 0.4 + Math.max(0, -Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2;
+    hips.position.y = 0.8 - cr * 0.42 - ex * 0.12 + Math.abs(Math.sin(ph)) * 0.05 * w;                 // the tell: a deep squat...
+    spine.rotation.x = 0.85 + 0.1 * w + cr * 0.5 + ex * 0.45 + Math.sin(t * 1.8) * 0.03;
+    spine.rotation.y = -Math.sin(ph) * 0.15 * w; spine.rotation.z = Math.sin(ph) * 0.06 * w + Math.sin(t * 38) * 0.08 * cr;   // ...with a violent quiver
+    for (const e of eyes) e.scale.setScalar(1 + cr * 1.6 + ex * 0.8);                                              // ...and eyes that flare
+    let armX = -1.15 - Math.sin(ph) * 0.7 * w;                                     // hang forward and down; swing when running
+    arms[0].sh.rotation.x = armX; arms[1].sh.rotation.x = -1.15 + Math.sin(ph) * 0.7 * w;
+    arms[0].sh.rotation.z = -0.15; arms[1].sh.rotation.z = 0.15;
+    arms[0].el.rotation.x = -0.2; arms[1].el.rotation.x = -0.2;
+    if (cr > 0) { arms[0].sh.rotation.x = -0.4; arms[1].sh.rotation.x = -0.4; arms[0].el.rotation.x = -1.4; arms[1].el.rotation.x = -1.4; }     // coiled: arms drawn back
+    if (ex > 0) { arms[0].sh.rotation.x = -2.6; arms[1].sh.rotation.x = -2.6; arms[0].el.rotation.x = 0; arms[1].el.rotation.x = 0; }               // reaching
+    const a = p.attack;
+    if (a > 0) { const up = a < 0.4 ? ease(a / 0.4) : 1, sl = a < 0.4 ? 0 : ease(clamp01((a - 0.4) / 0.2)); arms[1].sh.rotation.x = -2.9 * up + 1.8 * sl; arms[0].sh.rotation.x = -2.9 * up * 0.6 + 1.4 * sl; }
+    head.rotation.x = -0.6 + Math.sin(t * 2.4) * 0.05; head.rotation.z = Math.sin(t * 1.3) * 0.08;
+    jawPivot.rotation.x = 0.35 + Math.max(cr, ex) * 0.6 + (a > 0 ? 0.5 : 0) + Math.sin(t * 5) * 0.05;
+    const d = ease(clamp01(p.dead));
+    root.rotation.z = d * 1.5; root.position.y = d * 0.22;
+    mat.emissive.setRGB(0.7 * p.flash, 0.55 * p.flash, 0.4 * p.flash);
+  }
+  return { root, pose, mat };
+}
+
+// ------------------------------------------------------- Tidewarden scattergun
+/** Double-barrelled pump shotgun. Same 4x4 atlas as the flare cannon (steel, wood, leather, oilskin cells). */
+export function makeScattergun(tex) {
+  const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x2a1c10 });        // lifts the dark wood so the stock stays readable
+  const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
+  const g = new THREE.Group();
+  for (const x of [-0.03, 0.03]) { const b = M(new THREE.CylinderGeometry(0.028, 0.03, 0.68, 8), 2); b.rotation.x = -Math.PI / 2; b.position.set(x, 0.005, -0.34); g.add(b); }
+  const rib = M(new THREE.BoxGeometry(0.03, 0.012, 0.62), 1); rib.position.set(0, 0.038, -0.33); g.add(rib);
+  const band = M(new THREE.BoxGeometry(0.15, 0.075, 0.03), 1); band.position.set(0, 0.005, -0.52); g.add(band);
+  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.026, 0.012), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.064, -0.66); g.add(bead);
+  const recv = M(new THREE.BoxGeometry(0.13, 0.115, 0.22), 5); recv.position.set(0, -0.01, 0.03); g.add(recv);
+  for (const x of [-0.02, 0.02]) { const post = M(new THREE.BoxGeometry(0.012, 0.028, 0.02), 5); post.position.set(x, 0.061, 0.1); g.add(post); }
+  const pump = new THREE.Group(); const fore = M(new THREE.BoxGeometry(0.1, 0.06, 0.2), 7); fore.position.set(0, -0.05, -0.26); pump.add(fore); g.add(pump);
+  const stock = M(new THREE.BoxGeometry(0.075, 0.11, 0.36), 7); stock.position.set(0, -0.055, 0.34); stock.rotation.x = 0.12; g.add(stock);
+  const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.14); grip.rotation.x = 0.3; g.add(grip);
+  const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.18, 0.16); g.add(handR);
+  const handL = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 3); handL.position.set(-0.005, -0.1, -0.26); pump.add(handL);
+  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4); sleeveR.position.set(0.09, -0.3, 0.36); sleeveR.rotation.x = -1.15; g.add(sleeveR);
+  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4); sleeveL.position.set(-0.14, -0.22, 0.02); sleeveL.rotation.set(-1.1, 0, 0.55); pump.add(sleeveL);
+  const flash = new THREE.Group(); flash.position.z = -0.78; flash.visible = false; g.add(flash);
+  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
+  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
+  return { group: g, flash, pump, adsY: -0.048 };
 }

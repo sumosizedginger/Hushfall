@@ -47,16 +47,25 @@ export class Bot {
     return best ? { e: best, d: bd } : null;
   }
   fight(t) {
-    const w = this.w, p = w.player, def = WEAPONS[p.weapon];
+    const w = this.w, p = w.player;
+    // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
+    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.e.kind === 'gaunt' || t.d < 7);
+    const wantId = wantScatter ? 'scattergun' : 'flare';
+    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { this.in.press(wantId === 'flare' ? 'weapon1' : 'weapon2'); this.lastSwitch = w.tick; }
+    const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
-    const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight, pitchWant = Math.atan2(aimY - PLAYER.eye, t.d);
+    let pitchWant;
+    if (hitscan) pitchWant = Math.atan2(Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
+    else { const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
-    const shoot = Math.abs(yawErr) < 0.06 && t.d > 2.8 && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85;
+    const inRange = hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
+    const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
     this.setHeld('fire', shoot);
-    this.setHeld('back', t.d < 2.8);
+    this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', false);
+    this.setHeld('right', (t.e.lungeT ?? -1) >= 0);                    // a crouching Gaunt is about to dash: sidestep it
   }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
   // -- steering --------------------------------------------------------
@@ -104,14 +113,15 @@ export class Bot {
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     const t = this.combatTarget();
     if (t) { this.calm = 0; this.fight(t); if (op.op === 'kill') return; if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
-    else { this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('aim', false); this.calm++; }
+    else { this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {
       const d = w.doors.find((q) => q.cx === op.at[0] && q.cz === op.at[1]);
       if (d && d.target === 1) done = true;
       else done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), this.pressUse(), false);
-    } else if (op.op === 'kill') done = this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle');
+    // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
+    } else if (op.op === 'kill') done = (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
     else this.failed = 'unknown op ' + op.op;
     if (this.stillFor > this.stuckTicks && op.op !== 'wait' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
