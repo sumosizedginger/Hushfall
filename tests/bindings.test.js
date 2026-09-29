@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyRebind, prettyCode, defaultBindings, ACTION_LABELS, RESERVED } from '../src/game/bindings.js';
+import { applyRebind, prettyCode, defaultBindings, ACTION_LABELS, RESERVED, legendText } from '../src/game/bindings.js';
 import { ACTIONS, InputState, DEFAULT_BINDINGS } from '../src/engine/input.js';
 import { sanitizeSettings, defaultSettings, SETTINGS_VERSION } from '../src/game/settings.js';
 
@@ -43,4 +43,10 @@ test('remapped bindings persist through settings sanitising; reset restores the 
   const r = sanitizeSettings(JSON.parse(JSON.stringify({ ...s, version: SETTINGS_VERSION })));
   assert.deepEqual(r.settings.bindings.use, ['KeyF', 'Space']); assert.deepEqual(r.notes, []);
   assert.deepEqual(defaultBindings(), DEFAULT_BINDINGS);
+});
+
+test('the controls legend is built from the CURRENT bindings, and default Fire avoids Ctrl (browser shortcuts)', () => {
+  const b = defaultBindings(); assert.match(legendText(b), /Move WASD/); assert.match(legendText(b), /Fire Mouse L/); assert.match(legendText(b), /Aim Mouse R/);
+  assert.ok(!b.fire.includes('ControlLeft') && !ACTIONS.includes('weapon3'), 'no Ctrl fire, no unused weapon3 action');
+  b.fire = ['KeyJ']; b.use = ['KeyR']; assert.match(legendText(b), /Fire J/); assert.match(legendText(b), /Use R/);
 });

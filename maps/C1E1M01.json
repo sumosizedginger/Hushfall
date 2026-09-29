@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M01",
- "version": 6,
+ "version": 7,
  "name": "Marrow Quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
@@ -12,13 +12,13 @@
  "grid": [
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~BBBBBBBBBBBB~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~B..........B~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~B..........B~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~B..........B~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~B..........B~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~~~~B..........B~~~~BBBBBBBBBBBBBB~",
-  "~~~~~~~~~~~~~~~~~BBBBBDBBBBBB~~~~B............B~",
+  "~~~~~~~~~~~~~~~~~############~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~#..........#~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~#..........#~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~#..........#~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~#..........#~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~#..........#~~~~BBBBBBBBBBBBBB~",
+  "~~~~~~~~~~~~~~~~~#####D######~~~~B............B~",
   "~~~~~~~~~~~~~~~::::::::::::::::::B............B~",
   "~~~~~~~~~~~~~~~::::::::::::::::::B............B~",
   "~~~~~~~~~~~~~~~::::::::::::::::::B............B~",
@@ -93,17 +93,17 @@
   {
    "type": "prop",
    "kind": "bollard",
-   "at": [9, 15]
+   "at": [10, 15]
   },
   {
    "type": "prop",
    "kind": "bollard",
-   "at": [13, 15]
+   "at": [14, 15]
   },
   {
    "type": "prop",
    "kind": "bollard",
-   "at": [5, 18]
+   "at": [6, 18]
   },
   {
    "type": "prop",
@@ -113,7 +113,7 @@
   {
    "type": "prop",
    "kind": "bollard",
-   "at": [13, 18]
+   "at": [12, 18]
   },
   {
    "type": "prop",
@@ -167,7 +167,7 @@
   },
   {
    "type": "pickup",
-   "kind": "health_large",
+   "kind": "armor_vest",
    "at": [3, 23]
   },
   {
@@ -324,12 +324,14 @@
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [20, 5]
+   "at": [20, 5],
+   "tint": "cool"
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [26, 5]
+   "at": [26, 5],
+   "tint": "cool"
   },
   {
    "type": "prop",
@@ -425,22 +427,26 @@
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [36, 17]
+   "at": [36, 17],
+   "tint": "teal"
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [44, 15]
+   "at": [44, 15],
+   "tint": "teal"
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [40, 10]
+   "at": [40, 10],
+   "tint": "teal"
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [40, 24]
+   "at": [40, 24],
+   "tint": "teal"
   },
   {
    "type": "prop",
@@ -518,6 +524,46 @@
    "kind": "bellhand",
    "at": [45, 23],
    "facing": "west"
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [16, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [17, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "stall",
+   "at": [24, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [22, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [23, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [16, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [16, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [31, 23]
   }
  ],
  "scenery": [
@@ -577,7 +623,7 @@
    "at": [7, 22],
    "radius": 2,
    "speaker": "PILOT'S LOG",
-   "text": "They stopped running when the tone started. Just stood in the street, like they'd been called in to supper."
+   "text": "They stopped running when the tone started, like they were called in to supper. The loft wall sounds hollow when you knock. Always did."
   },
   {
    "id": "plaza",

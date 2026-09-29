@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { validateMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
 import { runRoute } from '../src/engine/harness.js';
-import { PICKUPS, PLAYER, WEAPONS, DIFFICULTY } from '../src/engine/defs.js';
+import { PICKUPS, PLAYER, WEAPONS, DIFFICULTY, AMMO_MAX } from '../src/engine/defs.js';
 import { shippedSrc, shippedMap, shippedRoute } from './helpers.js';
 
 const map = shippedMap();
@@ -54,18 +54,19 @@ test('design contract: all three enemy kinds and both weapons matter (no unused 
   assert.ok(at('ammo_flare').length >= 4 && at('ammo_shell').length >= 5);
 });
 
-test('design contract: ammo is neither starving nor flooding at normal difficulty', () => {
+test('design contract: ammo is neither starving nor flooding, judged against what a perfect bot actually spends (normal, main route)', () => {
   const d = DIFFICULTY.normal, flare = PLAYER.startAmmo.flare + at('ammo_flare').length * Math.round(PICKUPS.ammo_flare.amount * d.ammoPickup);
-  const shells = (at('ammo_shell').length * PICKUPS.ammo_shell.amount + PICKUPS.weapon_scattergun.amount) * d.ammoPickup;
-  const enemies = map.counts().enemies, capacity = flare + shells;
-  assert.ok(capacity >= enemies * 2, `capacity ${capacity} shots for ${enemies} enemies (needs slack for misses)`);
-  assert.ok(capacity <= enemies * 8, `capacity ${capacity} would make ammo irrelevant`);
+  const shells = (at('ammo_shell').length * PICKUPS.ammo_shell.amount + PICKUPS.weapon_scattergun.amount) * d.ammoPickup, capacity = flare + shells;
+  const r = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1 }), spent = r.world.stats.shots;
+  assert.ok(capacity >= spent * 1.5, `a perfect bot fires ${spent} of ${capacity} available rounds: humans miss, so this needs at least 1.5x slack`);
+  assert.ok(capacity <= spent * 5, `${capacity} rounds available vs ${spent} needed by a perfect bot: ammo would be irrelevant`);
+  assert.ok(flare <= AMMO_MAX.flare * 3 && at('ammo_flare').length * PICKUPS.ammo_flare.amount <= AMMO_MAX.flare * 2, 'pickups are not wasted against the flare cap');
   assert.ok(WEAPONS.flare.cooldown > 0);
 });
 
-test('design contract: the secret pays out (armor, shells, health) and is worth finding', () => {
+test('design contract: the secret pays out (double armour + shells: valuable at any health) and is worth finding', () => {
   const inLoft = map.entities.filter((e) => e.type === 'pickup' && e.at[0] <= 3 && e.at[1] >= 21 && e.at[1] <= 23).map((e) => e.kind).sort();
-  assert.deepEqual(inLoft, ['ammo_shell', 'armor_vest', 'health_large']);
+  assert.deepEqual(inLoft, ['ammo_shell', 'armor_vest', 'armor_vest']);
 });
 
 test('canonical routes: main and secret complete on every difficulty with every enemy dead', () => {
@@ -106,6 +107,14 @@ test('the route exercises the level: doors, scattergun, flare, lunges are possib
   for (const t of ['door_open', 'weapon_pickup', 'pickup', 'secret', 'enemy_died', 'level_complete', 'explode', 'impact']) assert.ok(types.has(t), 'route should exercise ' + t);
   assert.ok(r.events.some((e) => e.type === 'fire' && e.weapon === 'flare') && r.events.some((e) => e.type === 'fire' && e.weapon === 'scattergun'));
   assert.ok(r.events.filter((e) => e.type === 'door_open').length >= 4, 'hut, shed, warehouse, net-loft/dock');
+});
+
+test('between them, a perfect fighter and a passive runner on hard exercise every enemy attack path on the shipped level', () => {
+  const route = shippedRoute('C1E1M01.main'), fighter = runRoute(map, route, { seed: 1, difficulty: 'hard' }), runner = runRoute(map, route, { seed: 1, difficulty: 'hard', fights: false });
+  const f = new Set(fighter.events.map((e) => e.type)), r = new Set(runner.events.map((e) => e.type));
+  for (const t of ['enemy_alert', 'enemy_windup', 'enemy_shot', 'hurt']) assert.ok(f.has(t), 'the fighter should see ' + t);
+  assert.ok(fighter.world.stats.damageTaken > 0, 'a perfect bot is still hurt on hard');
+  for (const t of ['enemy_lunge', 'enemy_strike']) assert.ok(r.has(t), 'the runner (who never kills the Gaunts) should meet ' + t + ': a perfect fighter kills them before they lunge, which is exactly why the runner exists');
 });
 
 test('routes are reproducible on the shipped level (same seed => same final state)', () => {

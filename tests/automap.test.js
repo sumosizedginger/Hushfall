@@ -56,7 +56,7 @@ test('the model reports doors with their key type, and the player pose', () => {
   const w = quiet(); Object.assign(w.player, { x: 53, z: 7, yaw: -Math.PI / 2 }); settle(w, 30);        // west of the locked boathouse door
   const m = automapModel(w); const d = m.doors.find((x) => x.cx === 27 && x.cz === 3);
   assert.ok(d && d.key === 'brass' && d.axis === 'z', 'brass door seen: ' + JSON.stringify(m.doors));
-  assert.equal(m.player.x, w.player.x); assert.equal(m.name, 'Marrow Quay'); assert.ok(m.exploredCount > 20);
+  assert.equal(m.player.x, w.player.x); assert.equal(m.name, 'Fixture Hall and Quay'); assert.ok(m.exploredCount > 20);
 });
 
 test('exploration survives save/load, and a save from before the automap migrates cleanly', () => {

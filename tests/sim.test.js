@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createWorld, step, drainEvents, hashWorld, carryOver } from '../src/engine/world.js';
 import { InputState, DEFAULT_BINDINGS } from '../src/engine/input.js';
 import { FixedLoop } from '../src/engine/loop.js';
-import { TICK, ENEMIES, PLAYER } from '../src/engine/defs.js';
+import { TICK, ENEMIES, PLAYER, AMMO_MAX } from '../src/engine/defs.js';
 import { loadMap } from './helpers.js';
 
 const idle = () => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, use: false, weapon: null });
@@ -21,12 +21,12 @@ test('simulation is deterministic: same seed + inputs => identical state hash', 
   assert.ok(a.stats.shots > 0, 'the script must actually do something');
 });
 
-test('different seeds diverge (RNG actually feeds the sim state)', () => {
-  const a = createWorld(loadMap(), { seed: 1 }), b = createWorld(loadMap(), { seed: 2 });
-  assert.notEqual(hashWorld(a), hashWorld(b));
+test('different seeds diverge: the RNG actually feeds the simulation (the same hip-fired flare flies differently; the same seed flies identically)', () => {
+  const shoot = (seed) => { const w = createWorld(loadMap(), { seed }); w.enemies.length = 0; step(w, { ...idle(), fire: true }); assert.equal(w.projectiles.length, 1); const q = w.projectiles[0]; return [q.vx, q.vy, q.vz]; };
+  assert.deepEqual(shoot(1), shoot(1)); assert.notDeepEqual(shoot(1), shoot(2), 'different seeds give a different spread');
 });
 
-test('frame-rate independence: render dt does not change sim results (60 / 144 / 30 / jittery)', () => {
+test('render-frame schedules (60 / 144 / 30 fps / jittery) that feed the same per-tick commands give identical sim states (scope: FixedLoop + step; mouse delivery and render-side timers are outside the sim)', () => {
   const N = 600; // ticks
   const run = (dtFn) => {
     const w = createWorld(loadMap(), { seed: 3 }); let tick = 0;
@@ -121,11 +121,12 @@ test('pickups respect caps: full health/ammo is not consumed; ammo is capped', (
 
 test('firing consumes ammo, a dry weapon clicks, and flares kill enemies with splash', () => {
   const w = createWorld(loadMap(), { seed: 1 });
-  const e = w.enemies[1]; w.player.x = e.x - 7; w.player.z = e.z; w.player.yaw = -Math.PI / 2; w.player.pitch = 0.02;
-  for (let i = 0; i < 20; i++) step(w, { ...idle(), aim: true });                       // hip fire is deliberately inaccurate; aim for a reliable hit
-  step(w, { ...idle(), aim: true, fire: true }); assert.equal(w.player.ammo.flare, 7);
-  for (let i = 0; i < 120; i++) step(w, { ...idle(), aim: true });
-  assert.ok(w.stats.kills >= 1 || w.enemies.some((x) => x.hp < 45), 'the flare hit something');
+  const e = w.enemies[1], hp0 = e.hp; w.player.x = e.x - 7; w.player.z = e.z; w.player.yaw = -Math.PI / 2; w.player.pitch = 0.02;
+  const ex = e.x, ez = e.z, pin = () => { e.x = ex; e.z = ez; };                          // the shot wakes it and it walks toward us (correct AI): pin it so the flare's geometry is what is tested
+  for (let i = 0; i < 20; i++) { pin(); step(w, { ...idle(), aim: true }); }               // hip fire is deliberately inaccurate; aim for a reliable hit
+  pin(); step(w, { ...idle(), aim: true, fire: true }); assert.equal(w.player.ammo.flare, 7);
+  for (let i = 0; i < 120; i++) { pin(); step(w, { ...idle(), aim: true }); }
+  assert.ok(e.state === 'dead' || e.hp < hp0, `the flare hurt the enemy it was aimed at (hp ${hp0} -> ${e.hp})`);
   w.player.ammo.flare = 0; w.player.cooldown = 0; drainEvents(w);
   step(w, { ...idle(), fire: true }); assert.ok(drainEvents(w).some((x) => x.type === 'dry'));
 });
@@ -142,7 +143,7 @@ test('input layer: keyboard path and semantic path produce identical commands', 
 test('input layer: opposing keys cancel, rebind steals codes and reports displaced actions', () => {
   const i = new InputState(); i.keyDown('KeyA'); i.keyDown('KeyD');
   assert.equal(i.sample().move[0], 0);
-  const displaced = i.rebind('use', ['KeyF', 'KeyW']);
+  const displaced = i.rebind('use', ['KeyG', 'KeyW']);
   assert.deepEqual(displaced, ['forward']);
   i.keyDown('KeyW'); assert.equal(i.sample().use, true);
   assert.deepEqual(new InputState().bindings, DEFAULT_BINDINGS);
@@ -178,14 +179,15 @@ test('after death the world is frozen and restart from level-start carry restore
   assert.ok(again.pickups.some((p) => p.kind === 'key_brass'), 'the key is available again: no softlock');
 });
 
-test('repeated map transitions are stable (no state growth, carry stays sane)', () => {
-  const map = loadMap(); let carry = null;
+test('a chain of 50 played levels: carry-over stays bounded, never invents weapons, and the serialised world does not grow', () => {
+  const map = loadMap(); let carry = null; const sizes = [];
   for (let i = 0; i < 50; i++) {
-    const w = createWorld(map, { seed: i, carry });
+    const w = createWorld(map, { seed: i, carry }); w.enemies.length = 0;
+    w.player.hp = Math.max(1, w.player.hp - 7); w.player.ammo.flare = Math.min(AMMO_MAX.flare, w.player.ammo.flare + 9);          // play the level: take damage, pick up ammo
     const ex = map.exits[0]; w.player.x = ex.x; w.player.z = ex.z; step(w, idle());
-    assert.equal(w.status, 'complete');
+    assert.equal(w.status, 'complete'); sizes.push(JSON.stringify(w).length);
     carry = carryOver(w);
-    assert.ok(carry.hp >= 1 && carry.hp <= 100 && carry.ammo.flare <= 30);
+    assert.ok(carry.hp >= 1 && carry.hp <= 100 && carry.ammo.flare <= AMMO_MAX.flare && carry.armor <= 100);
   }
-  assert.deepEqual(carry.weapons, ['flare']);
+  assert.deepEqual(carry.weapons, ['flare']); assert.ok(Math.abs(sizes[49] - sizes[5]) < 64, `world size drifted: ${sizes[5]} -> ${sizes[49]}`);
 });

@@ -11,7 +11,7 @@ const bad = (mutate, expect) => {
   assert.ok(v.errors.some((e) => expect.test(e)), `expected /${expect}/ in ${JSON.stringify(v.errors)}`);
 };
 
-test('C1E1M01 is a valid map with sane counts', () => {
+test('the frozen fixture layout (the hall-and-quay test map) is a valid map with the counts it was frozen with', () => {
   const v = validateMap(mapSrc());
   assert.deepEqual(v, { ok: true, errors: [] });
   const c = loadMap().counts();
@@ -34,7 +34,7 @@ test('map validation rejects broken maps (negative cases)', () => {
   assert.throws(() => parseMap({ format: 1 }), MapError);
 });
 
-test('reachability: exit, key and secret are reachable on the shipped map', () => {
+test('reachability on the frozen fixture: exit, key and secret are reachable', () => {
   const r = analyseReach(loadMap());
   assert.equal(r.exitReachable, true);
   assert.deepEqual(r.keysObtainable, ['brass']);

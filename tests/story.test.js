@@ -5,7 +5,8 @@ import { validateMap, parseMap } from '../src/engine/mapformat.js';
 import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { makeSave, parseSave, loadWorld } from '../src/engine/save.js';
 import { runRoute } from '../src/engine/harness.js';
-import { soundsForEvent } from '../src/audio/events.js';
+import { soundsForEvent, SILENT_EVENTS, RADIO_SOUND } from '../src/audio/events.js';
+import { SFX } from '../src/audio/synth.js';
 import { shippedMap, shippedSrc, shippedRoute } from './helpers.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...o });
@@ -40,8 +41,8 @@ test('messages remembered in a save do not replay after loading', () => {
   assert.deepEqual(loadWorld(r.save, () => m).world.messagesSeen, []);
 });
 
-test('every message makes a sound (radio) so it is noticed even when you are not looking at the text', () => {
-  assert.deepEqual(soundsForEvent({ type: 'message' }).map((s) => s.id), ['radio']);
+test('the radio blip belongs to the moment a message is SHOWN (queued by the UI), so the event itself is declared silent and the recipe exists', () => {
+  assert.deepEqual(soundsForEvent({ type: 'message' }), []); assert.match(SILENT_EVENTS.message, /UI plays/); assert.equal(typeof SFX[RADIO_SOUND], 'function');
 });
 
 test('shipped level: it has a title card, an outro, and short well-formed messages', () => {
@@ -64,4 +65,29 @@ test('messages are triggered in a sensible order on the required route (tower gl
   const r = runRoute(shippedMap(), shippedRoute('C1E1M01.main'), { seed: 1 }), order = r.events.filter((e) => e.type === 'message').map((e) => e.id);
   const at = (id) => order.indexOf(id);
   assert.ok(at('pier-start') < at('pier-tower') && at('pier-tower') < at('plaza') && at('plaza') < at('warehouse-cradles') && at('warehouse-cradles') < at('dock'), order.join(' > '));
+});
+
+// ---- the UI-side ordering rules (audit F02), on the pure queue with a fake clock
+import { CommsQueue, durationFor, GAP_MS } from '../src/game/commsqueue.js';
+const drive = (q, to, step = 50) => { const log = []; for (let t = 0; t <= to; t += step) { const r = q.update(t); if (r.show) log.push(['show', r.show.id, t]); if (r.hide) log.push(['hide', null, t]); } return log; };
+
+test('comms queue: two messages triggered 0.8 s apart during the title card show in order, one at a time, none dropped', () => {
+  const q = new CommsQueue(); q.blockUntil(6300); q.push({ id: 'pier-start', text: 'Calder, come in. The bells are ringing. Nobody rings the bells at night.' }); q.push({ id: 'pier-tower', text: "The bell tower's lit. Teal. That's no lamp of ours." });
+  const log = drive(q, 20000), shows = log.filter((l) => l[0] === 'show');
+  assert.deepEqual(shows.map((s) => s[1]), ['pier-start', 'pier-tower']); assert.ok(shows[0][2] >= 6300, 'nothing before the card is gone: ' + shows[0][2]);
+  const first = { text: 'Calder, come in. The bells are ringing. Nobody rings the bells at night.' };
+  assert.ok(shows[1][2] - shows[0][2] >= durationFor(first.text) + GAP_MS, 'the second waits for the first to be read: ' + (shows[1][2] - shows[0][2]));
+});
+
+test('comms queue: every message stays up at least 4 s, longer text stays proportionally longer, and a burst of messages is all delivered in order', () => {
+  assert.equal(durationFor('short'), 4000); assert.equal(durationFor('x'.repeat(180)), 180 * 55);
+  const q = new CommsQueue(); for (const id of ['a', 'b', 'c', 'd', 'e']) q.push({ id, text: 'x'.repeat(60) });
+  const log = drive(q, 60000), shows = log.filter((l) => l[0] === 'show');
+  assert.deepEqual(shows.map((s) => s[1]), ['a', 'b', 'c', 'd', 'e']); assert.equal(q.pending, 0);
+  for (let i = 1; i < shows.length; i++) assert.ok(shows[i][2] - shows[i - 1][2] >= 4000 + GAP_MS - 50);
+});
+
+test('comms queue: clear() (new level / restart) drops queued messages and the card block', () => {
+  const q = new CommsQueue(); q.blockUntil(9999); q.push({ id: 'a', text: 'hello there' }); q.clear();
+  assert.equal(q.pending, 0); q.push({ id: 'b', text: 'fresh' }); assert.equal(q.update(0).show.id, 'b');
 });

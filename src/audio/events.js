@@ -3,7 +3,12 @@
 import { PICKUPS } from '../engine/defs.js';
 
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
-export const SILENT_EVENTS = { enemy_alert_idle: 'reserved' };
+export const SILENT_EVENTS = {
+  enemy_alert_idle: 'reserved',
+  message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
+  shot_impact_silent: 'reserved',
+};
+export const RADIO_SOUND = 'radio';
 
 const WEAPON_FIRE = {
   flare: [{ id: 'flare_fire' }],
@@ -40,7 +45,6 @@ export function soundsForEvent(e) {
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
     case 'enemy_died': return [{ id: 'enemy_die', pos: at(e) }];
-    case 'message': return [{ id: 'radio' }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

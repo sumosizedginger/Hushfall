@@ -15,7 +15,8 @@ const sha = (f) => crypto.createHash('sha256').update(fs.readFileSync(f)).digest
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
 
 const v = validateMap(src);
-const evidence = { mapId: id, mapVersion: src.version, generatedBy: 'tools/verify-map.mjs', codeVersion: sh('git rev-parse --short HEAD') ?? 'uncommitted', dirtyTree: !!sh('git status --porcelain'), mapSha: sha(mapFile), assetVersion: fs.existsSync(path.join(root, 'assets/baked/manifest.json')) ? sha(path.join(root, 'assets/baked/manifest.json')) : null };
+const dirtySource = !!sh("git status --porcelain -- . ':!review' ':!validation'");           // evidence/screenshot churn does not make the SOURCE dirty
+const evidence = { mapId: id, mapVersion: src.version, generatedBy: 'tools/verify-map.mjs', codeVersion: sh('git rev-parse --short HEAD') ?? 'uncommitted', dirtyTree: !!sh('git status --porcelain'), dirtySource: false, mapSha: sha(mapFile), assetVersion: fs.existsSync(path.join(root, 'assets/baked/manifest.json')) ? sha(path.join(root, 'assets/baked/manifest.json')) : null };
 evidence.loads = v.ok; evidence.validationErrors = v.errors;
 const automated = { pass: false, checks: [] };
 const add = (name, ok, detail = '') => automated.checks.push({ name, ok: !!ok, detail });
@@ -34,16 +35,36 @@ if (v.ok) {
     }
   }
   const main = evidence.routes.find((r) => r.file.includes('.main.') && r.difficulty === 'normal');
-  if (main) evidence.canonicalRoute = { file: main.file, difficulty: 'normal', seed: 1, reachedExit: main.result === 'complete', ticks: main.ticks, finalHash: main.finalHash, expectedEvents: ['door_open', 'pickup:key_brass', 'level_complete'], proves: 'one valid tested path; not balance, fun, or full exploration' };
+  if (main) evidence.canonicalRoute = { sha: sha(path.join(root, main.file)), file: main.file, difficulty: 'normal', seed: 1, reachedExit: main.result === 'complete', ticks: main.ticks, finalHash: main.finalHash, expectedEvents: ['door_open', 'pickup:key_brass', 'level_complete'], proves: 'one valid tested path; not balance, fun, or full exploration' };
   evidence.counts = map.counts();
+  // ---- viability: the level must not be beatable by ignoring it, and a perfect fighter must still bleed (audit F01)
+  const mainRoute = JSON.parse(fs.readFileSync(path.join(root, 'routes', id + '.main.route.json'), 'utf8')), viability = {};
+  for (const difficulty of ['easy', 'normal', 'hard']) {
+    const runner = runRoute(map, mainRoute, { seed: 1, difficulty, fights: false }), fighter = runRoute(map, mainRoute, { seed: 1, difficulty });
+    viability[difficulty] = { runner: { result: runner.result, damage: runner.world.stats.damageTaken, hpLeft: runner.world.player.hp }, fighter: { result: fighter.result, damage: fighter.world.stats.damageTaken, seconds: +(fighter.ticks / 60).toFixed(1) } };
+    add(`viability ${difficulty}: a passive runner does not walk through (${runner.result}, ${runner.world.stats.damageTaken} damage)`, runner.result !== 'complete' || runner.world.stats.damageTaken >= 60);
+  }
+  add('viability: a perfect fighter takes real damage on normal and hard (>= 20 / >= 40)', viability.normal.fighter.damage >= 20 && viability.hard.fighter.damage >= 40, JSON.stringify({ normal: viability.normal.fighter.damage, hard: viability.hard.fighter.damage }));
+  add('viability: damage rises with difficulty', viability.easy.fighter.damage < viability.normal.fighter.damage && viability.normal.fighter.damage < viability.hard.fighter.damage);
+  const ratio = (src.par?.time ?? 0) / viability.normal.fighter.seconds; add(`par time is 2x-8x the bot's time (${ratio.toFixed(1)}x; placeholder until a human plays it)`, ratio >= 2 && ratio <= 8);
+  evidence.viability = viability;
 }
 const bc = path.join(root, 'validation/browser-check.json');
-if (fs.existsSync(bc)) { const b = JSON.parse(fs.readFileSync(bc, 'utf8')); evidence.browser = { file: 'validation/browser-check.json', when: b.when, env: b.env, passed: b.checks.filter((c) => c.ok).length, total: b.checks.length, allPassed: b.checks.every((c) => c.ok) }; add('latest browser check passed', evidence.browser.allPassed, `${evidence.browser.passed}/${evidence.browser.total}`); }
+if (fs.existsSync(bc)) {
+  const b = JSON.parse(fs.readFileSync(bc, 'utf8')), thisMap = sha(mapFile);
+  evidence.browser = { file: 'validation/browser-check.json', when: b.when, env: b.env, mapSha: b.mapSha ?? null, commit: b.commit ?? null, passed: b.checks.filter((c) => c.ok).length, total: b.checks.length, allPassed: b.checks.every((c) => c.ok) };
+  add('the browser check ran on THIS map file (sha matches)', b.mapSha === thisMap, `browser-check mapSha ${b.mapSha ?? 'missing'} vs ${thisMap}`);
+  add('latest browser check passed', evidence.browser.allPassed, `${evidence.browser.passed}/${evidence.browser.total}`);
+} else add('a browser check exists', false, 'run npm run browsercheck');
 automated.pass = automated.checks.every((c) => c.ok);
 evidence.automated = automated;
 evidence.humanReview = null;
-evidence.knownBlockers = [];
-evidence.notes = 'Layout is the engine-skeleton test level, not the polished Gate 1 level. No audio, automap or second weapon yet.';
+// blockers come from the audit's judgement file, never from this script: any open BLOCKER for this map is recorded, and stops AGENT_VERIFIED from ever becoming COMPLETE
+const kdFile = path.join(root, 'review/gate-1/known-defects.json');
+const kd = fs.existsSync(kdFile) ? JSON.parse(fs.readFileSync(kdFile, 'utf8')).defects || [] : [];
+evidence.knownBlockers = kd.filter((d) => d.severity === 'BLOCKER' && d.status !== 'fixed' && (!d.map || d.map === id)).map((d) => d.title);
+evidence.notes = `Generated: map v${src.version}, ${evidence.counts?.enemies ?? '?'} enemies, ${evidence.counts?.items ?? '?'} items, ${evidence.counts?.secrets ?? '?'} secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test.`;
+evidence.dirtySource = dirtySource;
 fs.mkdirSync(path.join(root, 'validation/maps'), { recursive: true });
 fs.writeFileSync(path.join(root, 'validation/maps', id + '.json'), JSON.stringify(evidence, null, 2) + '\n');
 for (const c of automated.checks) console.log(c.ok ? 'PASS' : 'FAIL', c.name, c.detail && !c.ok ? c.detail : '');

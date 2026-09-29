@@ -183,6 +183,17 @@ function fireWeapon(w) {
 }
 
 
+/** The door or secret panel that Use would act on right now (first one along the view ray within reach), or null. The UI reads this for its prompt. */
+export function useTarget(w) {
+  const p = w.player, map = w.map, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
+  for (let s = 0.3; s <= PLAYER.useReach; s += 0.25) {
+    const cx = Math.floor((p.x + fx * s) / map.cell), cz = Math.floor((p.z + fz * s) / map.cell), k = map.kind(cx, cz);
+    if (k === 'door' || k === 'secret') return doorAtCell(w, cx, cz);
+    if (k === 'wall') return null;
+  }
+  return null;
+}
+
 // ---------------------------------------------------------------- enemies
 function fireEnemyShot(w, e, def, diff) {
   const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = 1.5, oz = e.z + Math.cos(e.yaw) * 0.6;
@@ -287,12 +298,7 @@ export function step(w, cmd) {
 
   // use: first door/secret panel along the view ray
   if (cmd.use) {
-    let hit = null;
-    for (let s = 0.3; s <= PLAYER.useReach && !hit; s += 0.25) {
-      const cx = Math.floor((p.x + fx * s) / map.cell), cz = Math.floor((p.z + fz * s) / map.cell), k = map.kind(cx, cz);
-      if (k === 'door' || k === 'secret') hit = doorAtCell(w, cx, cz);
-      else if (k === 'wall') break;
-    }
+    const hit = useTarget(w);
     if (hit) {
       if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
       else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }

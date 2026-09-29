@@ -9,7 +9,12 @@ import { runRoute } from '../src/engine/harness.js';
 import { PICKUPS } from '../src/engine/defs.js';
 import { loadMap, route, ROOT } from './helpers.js';
 
-const emitted = () => [...new Set([...fs.readFileSync(path.join(ROOT, 'src/engine/world.js'), 'utf8').matchAll(/emit\(w, '([a-z_]+)'/g)].map((m) => m[1]))];
+// (for a ternary only the RESULT branches count, not the condition) every string literal in the type slot of an emit(w, <expr>, ...) call, so ternaries like emit(w, c ? 'a' : 'b', ...) are found too; a non-literal type is a test failure
+const emitted = () => {
+  const src = fs.readFileSync(path.join(ROOT, 'src/engine/world.js'), 'utf8'), types = new Set();
+  for (const m of src.matchAll(/emit\(w,\s*([^,)]+)[,)]/g)) { const slot = m[1].includes('?') ? m[1].slice(m[1].indexOf('?')) : m[1], lits = [...slot.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]); assert.ok(lits.length > 0, 'emit with a non-literal event type: ' + m[0]); lits.forEach((l) => types.add(l)); }
+  return [...types];
+};
 
 test('every event type the sim can emit has a sound (or is explicitly listed as silent)', () => {
   const types = emitted(); assert.ok(types.length >= 15, 'found the emit sites: ' + types.length);
@@ -63,4 +68,23 @@ test('recipes are individually deterministic given a seed (offline reproducibili
   const a = seededRandom(7), b = seededRandom(7), c = seededRandom(8);
   const A = [a(), a(), a()], B = [b(), b(), b()], C = [c(), c(), c()];
   assert.deepEqual(A, B); assert.notDeepEqual(A, C); assert.ok(A.every((v) => v >= 0 && v < 1));
+});
+
+// A fake AudioContext that records when every oscillator is told to start, so scheduling can be checked without a browser.
+function fakeCtx() {
+  const starts = [];
+  const param = () => new Proxy({ value: 0 }, { get: (t, k) => (k in t ? t[k] : () => {}), set: (t, k, v) => { t[k] = v; return true; } });
+  const node = (kind) => new Proxy({ kind }, { get: (t, k) => (k === 'start' ? (when = 0) => starts.push({ kind: t.kind, when }) : k in t ? t[k] : k === 'connect' ? () => {} : k === 'stop' || k === 'disconnect' ? () => {} : param()), set: (t, k, v) => { t[k] = v; return true; } });
+  const ctx = { currentTime: 0, sampleRate: 44100, starts, createOscillator: () => node('osc'), createGain: () => node('gain'), createBiquadFilter: () => node('bq'), createDelay: () => node('delay'), createBuffer: (c, n) => ({ getChannelData: () => new Float32Array(n) }), createBufferSource: () => node('src') };
+  return ctx;
+}
+
+test('music scheduler after a long stall skips the missed bells instead of dumping them all at once (audit F20)', async () => {
+  const { Music } = await import('../src/audio/music.js');
+  const ctx = fakeCtx(), m = new Music(ctx, { connect() {} }); m.setIntensity(0.9);
+  for (let t = 0; t < 10; t += 0.1) { ctx.currentTime = t; m.tick(); }                   // healthy playback for 10 s
+  const before = ctx.starts.length; ctx.currentTime = 200; ctx.starts.length = 0; m.tick();      // the tab was frozen for 3 minutes
+  const late = ctx.starts.filter((s) => s.when < ctx.currentTime - 0.05);
+  assert.equal(late.length, 0, 'nothing is scheduled in the past: ' + late.length);
+  assert.ok(ctx.starts.length <= 12, 'no burst of catch-up notes: ' + ctx.starts.length + ' starts after the stall (before the stall: ' + before + ')');
 });

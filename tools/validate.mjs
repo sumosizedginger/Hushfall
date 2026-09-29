@@ -62,6 +62,8 @@ function derive(id) {
   if (ev.mapId !== id) err(`${id}: evidence mapId mismatch`);
   const mapFile = path.join(root, 'maps', id + '.json');
   if (ev.mapSha && fs.existsSync(mapFile) && crypto.createHash('sha256').update(fs.readFileSync(mapFile)).digest('hex').slice(0, 16) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
+  const rf = ev.canonicalRoute?.file && path.join(root, ev.canonicalRoute.file);
+  if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && crypto.createHash('sha256').update(fs.readFileSync(rf)).digest('hex').slice(0, 16) !== ev.canonicalRoute.sha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
   let status = 'PLANNED', why = 'map does not load';
   if (ev.loads === true) { status = 'IMPLEMENTED'; why = 'loads; verification incomplete'; }
   if (status === 'IMPLEMENTED' && ev.automated?.pass === true && ev.canonicalRoute?.reachedExit === true && ev.canonicalRoute?.file && fs.existsSync(path.join(root, ev.canonicalRoute.file))) { status = 'AGENT_VERIFIED'; why = 'automated pass + canonical route reached exit'; }

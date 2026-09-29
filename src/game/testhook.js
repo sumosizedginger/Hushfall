@@ -14,7 +14,7 @@ function pcm(f32) {
 }
 
 export function installTestHook(app) {
-  const { g, MAPS, store, audio } = app;
+  const { g, MAPS, store, audio, ui } = app;
   let bot = null;
   const snap = () => {
     const w = g.world, p = w?.player;
@@ -50,6 +50,10 @@ export function installTestHook(app) {
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
+    /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */
+    clearOverlays() { ui.clearOverlays(); },
+    /** wake every sleeping enemy (worst-case render/CPU sampling: everything animating and chasing) */
+    setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     // -- diagnostics --
