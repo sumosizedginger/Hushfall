@@ -15,7 +15,7 @@ test('C1E1M01 is a valid map with sane counts', () => {
   const v = validateMap(mapSrc());
   assert.deepEqual(v, { ok: true, errors: [] });
   const c = loadMap().counts();
-  assert.deepEqual(c, { enemies: 8, items: 10, secrets: 1 });
+  assert.deepEqual(c, { enemies: 9, items: 14, secrets: 1 });
 });
 
 test('map validation rejects broken maps (negative cases)', () => {

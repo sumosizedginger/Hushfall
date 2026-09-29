@@ -21,24 +21,32 @@ export const PLAYER = {
 };
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
-export const AMMO_MAX = { flare: 30 };
+export const AMMO_MAX = { flare: 30, shell: 40 };
+/** fixed slot order (keys 1, 2, ...); a weapon occupies its slot once owned */
+export const WEAPON_ORDER = ['flare', 'scattergun'];
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' } };
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
 export const WEAPONS = {
-  flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
+  flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, switchTime: 0.4, muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
     spread: { hip: 0.035, ads: 0.003, moveFactor: 0.5 },   // radians (half-angle); hip spread grows with movement, aiming tightens it
   },
+  // hitscan close-range punch: instant, no splash, no self-damage, useless past ~15 m. The flare is the slow area-denial counterpart.
+  scattergun: { name: 'Tidewarden scattergun', kind: 'hitscan', ammo: 'shell', cooldown: 0.95, switchTime: 0.35, pellets: 9, damage: 9, range: 26, falloffStart: 5, falloffMin: 0.3, knock: 0.22, kick: 0.11, spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 }, muzzle: { fwd: 0.7, right: 0.12, down: 0.14 } },
 };
 
 export const ENEMIES = {
-  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.2, radius: 0.4, height: 1.95, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.2, gait: 5.2, radius: 0.4, height: 1.95, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
+  gaunt: { name: 'Gaunt Runner', hp: 24, speed: 3.4, gait: 11, radius: 0.34, height: 1.55, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
 };
 
 export const PICKUPS = {
   health_small: { type: 'health', amount: 15 },
   health_large: { type: 'health', amount: 40 },
   ammo_flare: { type: 'ammo', ammo: 'flare', amount: 4 },
+  ammo_shell: { type: 'ammo', ammo: 'shell', amount: 6 },
+  weapon_scattergun: { type: 'weapon', weapon: 'scattergun', ammo: 'shell', amount: 8 },
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };

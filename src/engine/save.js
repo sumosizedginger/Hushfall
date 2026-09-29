@@ -3,10 +3,16 @@
 import { createWorld, carryOver } from './world.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 /** version N -> function producing version N+1. */
 export const MIGRATIONS = {
   // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
+  // v2 -> v3 (2026-09-29): weapon switching + Gaunt lunge. Player gains switchT, projectiles record their weapon, enemies gain lunge state.
+  2: (s) => {
+    const out = { ...s, version: 3 };
+    if (s.world) out.world = { ...s.world, player: { switchT: 0, ...s.world.player }, projectiles: (s.world.projectiles || []).map((q) => ({ weapon: 'flare', ...q })), enemies: (s.world.enemies || []).map((e) => ({ lungeT: -1, lungeCd: 0, lungeHit: false, ...e })) };
+    return out;
+  },
   1: (s) => {
     const out = { ...s, version: 2 };
     if (s.world?.player) out.world = { ...s.world, player: { ads: 0, sprint: 0, recover: 0, sprinting: false, ...s.world.player } };

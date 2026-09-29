@@ -4,7 +4,7 @@
 - Gate: **1, milestone 1 (engine skeleton) DONE.** Gate 0 complete; look approved by the user 2026-09-29. That is NOT the Gate 1 creative approval, which comes after the Gate 1 evidence bundle.
 - Blockers: none. Waiting on user: nothing required. A controls pass (sprint + ADS) was added on request after the skeleton; see below.
 - Map status (derived): C1E1M01 AGENT_VERIFIED (skeleton test layout, map v1); 67 PLANNED. See `npm run status`.
-- Milestone 2 progress: (1) audio DONE 2026-09-29. Remaining: second weapon + enemy, automap, remap UI, real Marrow Quay, evidence bundle + audit.
+- Milestone 2 progress: (1) audio DONE, (2) second weapon (scattergun) + second enemy (Gaunt Runner) DONE 2026-09-29. Remaining: automap, remap UI, real Marrow Quay level, evidence bundle + adversarial audit.
 - Exact next task (original plan, audio now done): **Gate 1 milestone 2** — turn `C1E1M01` into the real Marrow Quay level and add the missing Gate 1 content, in this order: (1) original audio via the sim event queue (weapons, damage, enemies, pickups, doors, feedback; unlock on first gesture); (2) second tactically different weapon + a second behaviourally different enemy; (3) automap; (4) HUD/pause polish + key remapping UI; (5) proper Marrow Quay layout, lighting and set dressing (map v2 will invalidate the old evidence automatically); (6) Gate 1 evidence bundle `review/gate-1/` and the adversarial audit.
 - Do not start Gate 2. Do not change the look direction without asking.
 - Resume: `npm ci && npm run verify && npm run browsercheck && npm run dev` (game on http://localhost:5173/).
@@ -30,4 +30,5 @@ See `TESTING.md` known defects.
 - 2026-09-29 engine skeleton: `src/engine/*` (world, mapformat, reach, input, loop, save, bot, harness, defs, rng), `src/render/*`, `src/game/*`, `maps/C1E1M01.json`, routes, 48 tests, `tools/dev/browser-check.mjs` (22 checks), `tools/verify-map.mjs`. Two new bakes: `door_hatch_a`, `props_atlas`.
 - 2026-09-29 controls pass: sprint + ADS + accuracy cone, tap-latch-safe toggle mode, save v2 migration, per-action bindings repair in settings, crosshair stances, weapon poses (hip / ADS / sprint), 60 tests, 26 browser checks (incl. real Shift/right-mouse), `tools/dev/shoot-stances.mjs`.
 - 2026-09-29 audio: `src/audio/*` (31 recipes, generative score, ambience, positional engine, unlock handling), sim events carry positions, `tools/dev/audio-qa.mjs`, `tests/audio.test.js`, live-audio browser checks (30 total), volume sliders. Levels tuned after QA found clipping (flare_boom 1.32, scatter_fire 1.40) and a weak combat/calm contrast.
+- 2026-09-29 weapon/enemy: scattergun (hitscan pellets, falloff, pump anim), weapon slots + switching + wheel, weapon pickup, Gaunt Runner (lunge with tell), obstacle steering, save v3, HUD weapon strip, `shoot-weapons`, 82 tests, 33 browser checks. Map C1E1M01 v2 (test layout) gained the scattergun, shells, 2 Gaunts.
 - Commits: see `git log`.

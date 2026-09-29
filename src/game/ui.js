@@ -1,13 +1,17 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
-import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY } from '../engine/defs.js';
+import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER } from '../engine/defs.js';
+
+const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS' };
 import { RESOLUTIONS } from './settings.js';
 
 const $ = (id) => document.getElementById(id);
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const TOASTS = {
-  pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key' })[e.kind] || 'Picked up ' + e.kind,
+  pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key', ammo_shell: 'Shotgun shells (+6)' })[e.kind] || 'Picked up ' + e.kind,
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   secret: () => 'A secret!',
+  weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : 'Weapon'),
+  weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
 };
 
 export class UI {
@@ -44,7 +48,8 @@ export class UI {
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
     const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.ads > 0.5 ? 'ads' : 'hip';
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
-    $('hud-armor').textContent = Math.ceil(p.armor); $('hud-ammo').textContent = p.ammo.flare ?? 0; $('hud-ammo').parentElement.classList.toggle('low', (p.ammo.flare ?? 0) === 0);
+    $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], have = p.ammo[wd.ammo] ?? 0; $('hud-ammo').textContent = have; $('hud-ammo-label').textContent = AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', have === 0);
+    $('hud-weapons').innerHTML = WEAPON_ORDER.map((id, i) => (p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join('');
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${KEYS[k].name}"></i>`).join('');
     $('hud-kills').textContent = `${w.stats.kills}/${w.stats.total.enemies}`; $('hud-secrets').textContent = `${w.stats.secrets}/${w.stats.total.secrets}`;
   }

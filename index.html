@@ -16,6 +16,7 @@ body[data-stance=sprint] #cross{opacity:0}
 #hud .stat b{font-size:30px;line-height:1;color:var(--paper);text-shadow:2px 2px 0 var(--ink)}
 #hud .stat small{letter-spacing:.18em;font-size:10px;color:var(--bronze)}
 #hud .stat.low b{color:var(--red)}
+#hud-weapons{display:flex;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:2px 7px;font-size:11px;letter-spacing:.08em;color:#9fb4b0;background:#0d0f14b0}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}
 #hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
 #hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
 #toasts{position:fixed;left:50%;top:14%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
@@ -44,7 +45,8 @@ label{display:flex;justify-content:space-between;gap:16px;align-items:center;mar
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
   <div class="stat"><b id="hud-armor">0</b><small>ARMOR</small></div>
-  <div class="stat"><b id="hud-ammo">8</b><small>FLARES</small></div>
+  <div class="stat"><b id="hud-ammo">8</b><small id="hud-ammo-label">FLARES</small></div>
+  <div id="hud-weapons"></div>
   <div id="hud-keys"></div><div class="grow"></div>
   <div class="side">KILLS <span id="hud-kills"></span><br>SECRETS <span id="hud-secrets"></span></div>
 </div>

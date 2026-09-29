@@ -107,6 +107,7 @@ canvas.addEventListener('mousedown', (e) => {
   dragging = true; g.input.keyDown('Mouse' + e.button);
 });
 addEventListener('mouseup', (e) => { dragging = false; g.input.keyUp('Mouse' + e.button); });
+canvas.addEventListener('wheel', (e) => { if (g.mode !== 'playing') return; const code = e.deltaY < 0 ? 'WheelUp' : 'WheelDown'; g.input.keyDown(code); g.input.keyUp(code); e.preventDefault(); }, { passive: false });   // wheel = weapon cycle (tap-latched)
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
 const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };
