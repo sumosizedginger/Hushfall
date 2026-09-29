@@ -17,7 +17,7 @@ await page.goto('http://localhost:5220/', { waitUntil: 'domcontentloaded', timeo
 await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 120000 });
 // runs a single expression (returning its value) or a ';'-separated statement list (returning nothing). A second statement after `return` would never execute.
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
-await T("t.newGame('normal', 3)"); await T('t.setup_clearEnemies(); t.setup_teleport(4, 18, -Math.PI / 2)');
+await T("t.newGame('normal', 3)"); await T('t.setup_clearEnemies(); t.setup_teleport(11, 33, -Math.PI / 2); t.clearOverlays()');
 const shot = (n) => page.screenshot({ path: path.join(out, 'stance-' + n + '.png') });
 await T('t.tick(20)'); await shot('hip');
 await T("t.press('aim')"); await T('t.tick(30)'); await shot('ads'); await T("t.release('aim')"); await T('t.tick(30)');

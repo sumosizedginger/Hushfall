@@ -2,18 +2,19 @@
 import * as THREE from 'three';
 import { loadAll, titleArtUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
-import { createWorld, step, drainEvents } from '../engine/world.js';
+import { createWorld, step, drainEvents, useTarget } from '../engine/world.js';
 import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
-import { TICK, VIEW } from '../engine/defs.js';
+import { TICK, VIEW, KEYS } from '../engine/defs.js';
 import { UI } from './ui.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
 import { drawAutomap } from './automap.js';
 import { loadSettings, saveSettings } from './settings.js';
-import { applyRebind, defaultBindings, prettyCode } from './bindings.js';
+import { applyRebind, defaultBindings, prettyCode, legendText } from './bindings.js';
+import { RADIO_SOUND } from '../audio/events.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -29,9 +30,16 @@ const audio = new AudioEngine(settings);
 for (const evt of ['pointerdown', 'keydown']) addEventListener(evt, () => audio.unlock(), { capture: true });
 document.addEventListener('click', (e) => { if (e.target.closest?.('button')) audio.play('ui_click'); });
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+/** a failure the player must be told about (instead of a title screen whose buttons do nothing) */
+function fatal(msg) {
+  for (const el of document.querySelectorAll('.screen')) el.classList.add('hidden');
+  document.getElementById('error-text').textContent = msg; document.getElementById('screen-error').classList.remove('hidden');
+}
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false }); } catch (err) { fatal('WebGL is not available in this browser, so HUSHFALL cannot draw. Try a current Chrome, Edge or Firefox with hardware acceleration on. (' + err.message + ')'); throw err; }
 renderer.setPixelRatio(1); renderer.autoClear = false;
-const tex = await loadAll();
+canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode = 'title'; document.exitPointerLock?.(); fatal('The graphics context was lost (a GPU reset or driver hiccup). Reload the page to continue: a quick save is not affected.'); });
+const tex = await loadAll().catch((err) => { fatal('Could not load the painted textures: ' + err.message); throw err; });
 document.getElementById('title-art').src = titleArtUrl();
 
 const g = {
@@ -45,6 +53,7 @@ const ui = new UI({
   newGame: (d) => startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
+  playRadio: () => audio.play(RADIO_SOUND),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
@@ -64,6 +73,7 @@ function captureCode(code) {
 ui.syncSettings(settings); ui.syncBindings(settings.bindings);
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
+const hasQuick = () => store.read('quick').ok;
 function loadFirstSave() {
   for (const slot of ['quick', 'auto']) { const r = store.read(slot); if (r.ok) return applySave(r.save, slot); }
   return null;
@@ -86,7 +96,7 @@ function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed,
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false;
   if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now() }));
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
-  if (!world) ui.card(map.intro);                                            // title card only on a fresh run, not when resuming a save
+  if (!world) { ui.card(map.intro); ui.tip(legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
   requestLock();
 }
@@ -94,11 +104,28 @@ function quitToTitle() {
   g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
-function pause() { if (g.mode !== 'playing') return; audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause'); }
+function pause() { if (g.mode !== 'playing') return; audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
 function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
-function quickSave() { if (!g.world) return; try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now() })); ui.show('pause', { note: 'Saved.' }); } catch (e) { ui.show('pause', { note: 'Save failed: ' + e.message }); } }
-function quickLoad() { const r = store.read('quick'); if (!r.ok) return ui.show(g.mode === 'paused' ? 'pause' : g.mode === 'dying' || g.mode === 'dead' ? 'dead' : 'title', { note: `No quick save (${r.reason}).`, canContinue: canContinue() }); applySave(r.save, 'quick'); }
-function requestLock() { if (g.lockFailed) return; try { const p = canvas.requestPointerLock?.(); p?.catch?.(() => { g.lockFailed = true; ui.setPointerHint('pointer lock unavailable: drag to look'); }); } catch { g.lockFailed = true; } }
+function quickSave() {
+  if (!g.world) return;
+  const playing = g.mode === 'playing';                                     // F5 during play: save and keep playing, tell the player with a toast
+  try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now() })); if (playing) ui.toast('Quick saved'); else ui.show('pause', { note: 'Saved.', canLoad: true }); }
+  catch (e) { if (playing) ui.toast('Save failed: ' + e.message); else ui.show('pause', { note: 'Save failed: ' + e.message, canLoad: hasQuick() }); }
+}
+function quickLoad() {
+  const r = store.read('quick');
+  if (!r.ok) { if (g.mode === 'playing') return ui.toast('No quick save yet'); return ui.show(g.mode === 'paused' ? 'pause' : g.mode === 'dying' || g.mode === 'dead' ? 'dead' : 'title', { note: `No quick save (${r.reason}).`, canContinue: canContinue(), canLoad: false }); }
+  applySave(r.save, 'quick');
+}
+function lockDenied() {
+  if (g.lockClick) g.lockDenials = (g.lockDenials || 0) + 1;                // browsers refuse a re-lock for ~1 s after Esc: that must not disable the mouse for the whole session
+  if ((g.lockDenials || 0) >= 2) { g.lockFailed = true; ui.setPointerHint('Pointer lock is unavailable here: hold a mouse button and drag to look'); }
+  else ui.setPointerHint('Click the game to capture the mouse');
+}
+function requestLock(fromClick = false) {
+  if (g.lockFailed) return; g.lockClick = fromClick;
+  try { const p = canvas.requestPointerLock?.(); p?.catch?.(lockDenied); } catch { lockDenied(); }
+}
 
 /** One fixed simulation tick. Everything (keyboard, mouse, bot, test hook) reaches the sim through g.input. */
 function stepOnce() {
@@ -107,24 +134,33 @@ function stepOnce() {
   if (cmd.pause) { pause(); return; }
   if (cmd.map) g.mapOpen = !g.mapOpen;                                            // UI-only toggle: the sim keeps running under the map
   g.view.beforeStep(g.world); step(g.world, cmd);
-  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); g.events.push(...ev); }
+  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
 }
 
 // ---- devices ---------------------------------------------------------------
-document.addEventListener('pointerlockchange', () => { g.locked = document.pointerLockElement === canvas; if (!g.locked && g.mode === 'playing') pause(); });
-document.addEventListener('pointerlockerror', () => { g.lockFailed = true; ui.setPointerHint('pointer lock unavailable: drag to look'); });
+document.addEventListener('pointerlockchange', () => { g.locked = document.pointerLockElement === canvas; if (g.locked) { g.lockDenials = 0; ui.setPointerHint(''); } else if (g.mode === 'playing') pause(); });
+document.addEventListener('pointerlockerror', lockDenied);
 let dragging = false;
 canvas.addEventListener('mousedown', (e) => {
   if (g.mode !== 'playing') return;
-  if (!g.locked && !g.lockFailed) { requestLock(); return; }
+  if (!g.locked && !g.lockFailed) { requestLock(true); return; }
   dragging = true; g.input.keyDown('Mouse' + e.button);
 });
 addEventListener('mouseup', (e) => { dragging = false; g.input.keyUp('Mouse' + e.button); });
 document.addEventListener('mousedown', (e) => { if (g.capture && !e.target.closest?.('button.bind')) { e.preventDefault(); captureCode('Mouse' + e.button); } }, true);
 document.addEventListener('wheel', (e) => { if (g.capture) { e.preventDefault(); captureCode(e.deltaY < 0 ? 'WheelUp' : 'WheelDown'); } }, { passive: false, capture: true });
-canvas.addEventListener('wheel', (e) => { if (g.mode !== 'playing') return; const code = e.deltaY < 0 ? 'WheelUp' : 'WheelDown'; g.input.keyDown(code); g.input.keyUp(code); e.preventDefault(); }, { passive: false });   // wheel = weapon cycle (tap-latched)
+let wheelAcc = 0, wheelAt = 0, wheelStepAt = 0;
+canvas.addEventListener('wheel', (e) => {                                   // wheel = weapon cycle (tap-latched). A mouse notch is ~100 units; a trackpad flick is many small events: accumulate, then step once with a short cooldown
+  if (g.mode !== 'playing') return; e.preventDefault();
+  const now = performance.now(); if (now - wheelAt > 250) wheelAcc = 0; wheelAt = now;
+  wheelAcc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+  if (Math.abs(wheelAcc) < 80) return;
+  const code = wheelAcc < 0 ? 'WheelUp' : 'WheelDown'; wheelAcc = 0;
+  if (now - wheelStepAt < 160) return; wheelStepAt = now;
+  g.input.keyDown(code); g.input.keyUp(code);
+}, { passive: false });
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
 const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
@@ -132,9 +168,11 @@ addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || 
 addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
-  if (g.mode === 'paused' && (e.code === 'Escape' || e.code === 'KeyP')) { resume(); return; }
-  if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space')) { ui.h.restartLevel(); return; }
-  if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space')) { quitToTitle(); return; }
+  if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
+  if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
+  if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { quitToTitle(); return; }
+  if (e.code === 'F5' && g.mode === 'playing') { e.preventDefault(); quickSave(); return; }
+  if (e.code === 'F9' && (g.mode === 'playing' || g.mode === 'paused')) { e.preventDefault(); quickLoad(); return; }
   if (g.mode === 'playing') { g.input.keyDown(e.code); if (g.input.byCode.has(e.code)) e.preventDefault(); }
 });
 addEventListener('keyup', (e) => g.input.keyUp(e.code));
@@ -143,16 +181,23 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) pause
 
 // ---- frame loop --------------------------------------------------------------
 function frame(now) {
-  const dt = Math.min(0.1, (now - g.last) / 1000); g.last = now;
-  g.frameTimes.push(dt * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
+  const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
+  g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
   let alpha = 0;
   if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
-  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead'); } }
-  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro }); } }
+  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
+  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro, hasNext: false }); } }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
+  ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : '');
   requestAnimationFrame(frame);
+}
+/** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
+function doorPrompt(w) {
+  const t = useTarget(w); if (!t || t.secret || t.target === 1 || t.open > 0.05) return '';
+  if (t.key && !w.player.keys.includes(t.key)) return `Locked: needs the ${KEYS[t.key]?.name.toLowerCase() || 'key'}`;
+  return `[${prettyCode(g.input.bindings.use?.[0])}] open`;
 }
 resize(); ui.show('title', { canContinue: canContinue(), note: settingsNotes.join(' ') });
 requestAnimationFrame(frame);

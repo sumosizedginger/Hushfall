@@ -23,9 +23,11 @@ function travel(cmd, ticks = 60, yaw = -Math.PI / 2) {
   return { d: Math.hypot(w.player.x - x0, w.player.z - z0), w };
 }
 
-test('walking is faster than before and sprinting is faster still', () => {
+const OLD_WALK_SPEED = 5.6;                                      // m/s before the controls pass (git history: PLAYER.speed)
+test('steady-state walking is faster than the old 5.6 m/s, and sprinting is faster still', () => {
+  const steady = (cmd) => (travel(cmd, 60).d - travel(cmd, 40).d) / (20 / 60);         // m/s between tick 40 and 60: the 0.4 s acceleration ramp has finished
+  assert.ok(steady({ move: [0, 1] }) > OLD_WALK_SPEED * 1.05, 'walk m/s: ' + steady({ move: [0, 1] }));
   const walk = travel({ move: [0, 1] }, 45), sprint = travel({ move: [0, 1], sprint: true }, 45);
-  assert.ok(walk.d > 3.5, 'walk covers ground: ' + walk.d);
   assert.ok(sprint.d / walk.d > 1.35, `sprint/walk = ${(sprint.d / walk.d).toFixed(2)}`);
 });
 

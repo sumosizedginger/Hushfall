@@ -67,6 +67,13 @@ export function buildLevel(map, tex) {
     const skin = map.skin(s.panel[0] - 1, s.panel[1]) === 'B' || map.skin(s.panel[0], s.panel[1] - 1) === 'B' ? tex.brick_warm_a : tex.wall_bulkhead_a;          // match the wall it sits in
     const m = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: skin }));
     const holder = new THREE.Group(); holder.add(m); group.add(holder); doorViews.set(s.panel.join(','), holder);
+    // the tell: a hairline of lamplight leaking round the panel's seam on every open side. Easy to miss, easy to find if you look at the walls.
+    const leak = new THREE.MeshBasicMaterial({ color: 0xffb45a, transparent: true, opacity: 0.32 });
+    for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nk = map.kind(s.panel[0] + dx, s.panel[1] + dz); if (nk !== 'floor' && nk !== 'outdoor') continue;
+      const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 1.9), leak); strip.rotation.y = Math.atan2(dx, dz);
+      strip.position.set((s.panel[0] + 0.5) * S + dx * (S / 2 + 0.012), 1.1, (s.panel[1] + 0.5) * S + dz * (S / 2 + 0.012)); holder.add(strip);
+    }
   }
 
   const dressing = new THREE.Group(); group.add(dressing);              // all static props + scenery; merged into a few meshes at the end
@@ -81,7 +88,7 @@ export function buildLevel(map, tex) {
     else if (p.kind === 'stall') { m = makeStall(tex.crate_wood_a, tex.awning_stripe_a); m.position.set(p.x, 0, p.z); m.rotation.y = (p.yaw ?? 0) + yaw * 0.3; }
     else if (p.kind === 'pillar') { m = makePillar(tex.wall_bulkhead_a, H); m.position.set(p.x, 0, p.z); }
     else if (p.kind === 'pod') { const r = makePod(tex.pod_organic_a, H); m = r.group; m.position.set(p.x, H, p.z); r.light.position.set(p.x, H - 1.6, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'lamp') { const r = makeLamp(H); m = r.group; m.position.set(p.x, H, p.z); r.light.position.set(p.x, H - 0.9, p.z); group.add(r.light); lights.push(r.light); }
+    else if (p.kind === 'lamp') { const r = makeLamp(H, p.tint); m = r.group; m.position.set(p.x, H, p.z); r.light.position.set(p.x, H - 0.9, p.z); group.add(r.light); lights.push(r.light); }
     else if (p.kind === 'lamppost') { const r = makeLampPost(); m = r.group; m.position.set(p.x, 0, p.z); r.light.position.set(p.x, 3.2, p.z); group.add(r.light); lights.push(r.light); }
     if (m) dressing.add(m);
   }

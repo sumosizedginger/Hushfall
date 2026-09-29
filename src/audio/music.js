@@ -47,6 +47,8 @@ export class Music {
   tick(lookahead = 0.3) {
     const c = this.ctx, now = c.currentTime, horizon = now + lookahead;
     if (!this.started) { this.started = true; this.nextChord = now + 6; this.nextBell = now + 1.5; this.nextBeat = Math.ceil(now / BEAT) * BEAT; }
+    // After a stall (background tab, long frame) the schedule is in the past: WebAudio would play every missed bell at once. Skip what was missed instead of catching up.
+    this.nextChord = Math.max(this.nextChord, now); this.nextBell = Math.max(this.nextBell, now); this.nextBeat = Math.max(this.nextBeat, Math.ceil(now / BEAT) * BEAT);
     if (this.nextChord < horizon) {                               // slow harmonic movement
       this.chord = (this.chord + 1) % ROOTS.length; const r = ROOTS[this.chord];
       this.a.frequency.setTargetAtTime(r, this.nextChord, 1.5); this.b.frequency.setTargetAtTime(r * 1.5, this.nextChord, 1.5);

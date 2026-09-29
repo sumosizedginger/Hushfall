@@ -5,6 +5,9 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
+import crypto from 'node:crypto';
+import { execSync } from 'node:child_process';
+const updateBaseline = process.argv.includes('--update-baseline');
 
 const root = path.resolve(import.meta.dirname, '../..');
 const shots = path.join(root, 'review/engine-skeleton');
@@ -43,11 +46,22 @@ try {
   const cardVisible = await page.$eval('#card', (e) => !e.classList.contains('hidden') && getComputedStyle(e).opacity > 0.3);
   check('a fresh run shows the level title card', cardVisible && (await text('card-title')) === 'MARROW QUAY' && (await text('card-lines')).includes('Hush'), await text('card-title'));
   await shot('00-intro-card');
-  await T('t.setup_teleport(23, 33, -Math.PI / 2)');
-  await page.waitForFunction("!document.getElementById('comms').classList.contains('hidden')", { timeout: 12000 }).catch(() => {});     // held back until the title card has cleared
-  const commsVis = await page.$eval('#comms', (e) => !e.classList.contains('hidden'));
-  check('walking into range shows an in-world transmission (speaker + text) and it is remembered', commsVis && (await text('comms-text')).toLowerCase().includes('teal') && (await T('t.state().messagesSeen')).includes('pier-tower'), (await text('comms-who')) + ': ' + (await text('comms-text')));
+  // REAL walk down the pier (no teleport): the first two transmissions trigger back to back while the title card is still up; they must queue and show IN ORDER
+  await page.keyboard.down('KeyW'); await sleep(2600); await page.keyboard.up('KeyW');
+  const seenNow = await T('t.state().messagesSeen');
+  check('walking the pier for real triggers pier-start first, then pier-tower (no teleport)', seenNow[0] === 'pier-start' && seenNow.includes('pier-tower'), seenNow.join(','));
+  check('transmissions wait behind the title card instead of stacking on it', (await visible('card')) && !(await visible('comms')), 'card visible, comms hidden while the card is up');
+  await page.waitForFunction("!document.getElementById('comms').classList.contains('hidden')", { timeout: 12000 }).catch(() => {});
+  const first = await text('comms-who') + ': ' + await text('comms-text');
+  check('the FIRST transmission shown is the first one triggered (FIFO), with speaker and text', first.startsWith('SIGNAL HOUSE') && first.includes('Calder'), first);
+  const radio1 = (await T('t.audioLog()')).filter((x) => x.id === 'radio').length;
+  check('the radio blip plays when the message is shown (not before)', radio1 === 1, 'radio plays so far: ' + radio1);
   await shot('00b-transmission');
+  await page.waitForFunction("document.getElementById('comms-who').textContent === 'INES'", { timeout: 12000 }).catch(() => {});
+  const second = await text('comms-who') + ': ' + await text('comms-text');
+  check('the second transmission follows the first, one at a time', second.startsWith('INES') && second.toLowerCase().includes('teal') && (await T('t.audioLog()')).filter((x) => x.id === 'radio').length === 2, second);
+  await T('t.setup_clearEnemies()');                 // the Tollbearer at the end of the pier has woken while we walked: stand it down so the next checks are not a fight
+  await T('t.setup_teleport(9, 33, -Math.PI / 2)');
   await page.keyboard.down('KeyW'); await sleep(1000); await page.keyboard.up('KeyW');
   const live1 = await T('t.state()'); const moved = Math.hypot(live1.player.x - live0.player.x, live1.player.z - live0.player.z);
   check('holding a real W key moves the player (live input)', moved > 1.5, `moved ${moved.toFixed(2)} m`);
@@ -134,7 +148,7 @@ try {
   await T("t.newGame('normal', 1, { realtime: true })"); await sleep(200); await T("t.pause()");
   await page.click('#controls-box summary'); await page.click('#btn-reset-keys'); await sleep(150);
   const reset = await T('t.state().settings.bindings');
-  check('reset restores the default controls', reset.use[0] === 'KeyE' && reset.fire[1] === 'ControlLeft', JSON.stringify({ use: reset.use, fire: reset.fire }));
+  check('reset restores the default controls', reset.use[0] === 'KeyE' && reset.fire[1] === 'KeyF', JSON.stringify({ use: reset.use, fire: reset.fire }));
   await T('t.resume()');
 
   // ---- 1. canonical route in the browser vs the same route headless in Node -------------------------------------
@@ -202,11 +216,50 @@ try {
   await T("t.setup_teleport(36, 30, -Math.PI / 2 + 0.3)"); await T('t.tick(10)'); await shot('11-plaza');
   // performance budget: draw calls / triangles at three vantage points (counts, not fps; software GL cannot give real timings)
   const budget = {};
-  for (const [name, x, z, yaw] of [['pier', 8, 33, -Math.PI / 2], ['plaza', 34, 30, -Math.PI / 2 + 0.35], ['warehouse', 76, 24, -Math.PI / 2 + 0.25]]) {
-    await T('t.setup_openDoors()'); await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); budget[name] = await T('t.measureFrame()');
+  await T("t.newGame('hard', 8)");
+  for (const [name, x, z, yaw, awake] of [['pier', 8, 33, -Math.PI / 2], ['plaza', 34, 30, -Math.PI / 2 + 0.35], ['warehouse', 76, 24, -Math.PI / 2 + 0.25], ['plaza-all-awake', 34, 30, -Math.PI / 2 + 0.35, true], ['warehouse-all-awake', 76, 24, -Math.PI / 2 + 0.25, true]]) {
+    await T('t.setup_openDoors()'); await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); if (awake) { await T('t.setup_wakeAll(); t.tick(40)'); } budget[name] = await T('t.measureFrame()');
   }
-  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.calls < 900 && b.triangles > 1000 && b.triangles < 400000), JSON.stringify(budget));
+  const baseFile = path.join(root, 'validation/render-budget-baseline.json');
+  if (updateBaseline || !fs.existsSync(baseFile)) fs.writeFileSync(baseFile, JSON.stringify({ note: 'reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline', when: new Date().toISOString(), budget: Object.fromEntries(Object.entries(budget).map(([k, v]) => [k, { calls: v.calls, triangles: v.triangles }])) }, null, 2));
+  const base = JSON.parse(fs.readFileSync(baseFile, 'utf8')).budget;
+  check('render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles', Object.entries(budget).every(([k, b]) => base[k] && b.calls <= base[k].calls * 1.25 && b.triangles <= base[k].triangles * 1.25), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, [b.calls, base[k]?.calls, b.triangles, base[k]?.triangles]]))));
+  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.calls < 450 && b.triangles > 1000 && b.triangles < 60000), JSON.stringify(budget));
   fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
+
+  // ---- 5b. UX: prompts, quick save/load, pause layout at small windows ---------------------------------------------------
+  await T("t.newGame('normal', 12, { realtime: true })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); await sleep(200);
+  const hintAt = async (x, z, yaw) => { await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); await sleep(350); return text('use-hint'); };
+  check('looking at a closed door within reach shows how to open it', (await hintAt(15, 36.4, Math.PI)) === '[E] open', await text('use-hint'));
+  check('a locked door says what it needs', (await hintAt(79, 54.4, Math.PI)).includes('needs the brass key'), await text('use-hint'));
+  await T('t.setup_teleport(13.4, 45, Math.PI / 2)'); await sleep(350);
+  check('the secret panel gives NO prompt (it must stay a secret)', !(await visible('use-hint')), 'use-hint hidden facing the panel');
+  await T('t.setup_teleport(30, 33, -Math.PI / 2)'); await sleep(300);
+  check('no prompt when nothing is in reach', !(await visible('use-hint')));
+  await page.evaluate(() => { for (const k of Object.keys(localStorage)) if (k.startsWith('hushfall.save.quick')) localStorage.removeItem(k); });
+  await T('t.pause()'); await sleep(150);
+  check('Quick load is hidden while no quick save exists (no dead-end button)', (await page.$eval('#btn-load', (e) => getComputedStyle(e).display)) === 'none');
+  await page.keyboard.press('Escape'); await sleep(200);
+  await page.keyboard.press('F5'); await sleep(300);
+  check('F5 quick-saves without opening the pause menu and says so', (await T("t.saveSlot('quick').ok")) === true && (await T('t.state().mode')) === 'playing' && (await text('toasts')).includes('Quick saved'), await text('toasts'));
+  await T('t.setup_teleport(30, 33, -Math.PI / 2)'); const xBefore = (await T('t.state().player.x'));
+  await T('t.setup_teleport(10, 33, -Math.PI / 2)'); await page.keyboard.press('F9'); await sleep(400);
+  check('F9 loads the quick save (position restored)', Math.abs((await T('t.state().player.x')) - xBefore) < 1.5, 'x=' + (await T('t.state().player.x')));
+  await T('t.pause()'); await sleep(150);
+  check('Quick load appears once a quick save exists', (await page.$eval('#btn-load', (e) => getComputedStyle(e).display)) !== 'none');
+  await page.evaluate(() => { document.getElementById('controls-box').open = true; document.getElementById('settings-box').open = true; });
+  for (const [w, h] of [[1280, 720], [1280, 600], [800, 600], [1024, 480]]) {
+    await page.setViewport({ width: w, height: h }); await sleep(150);
+    const r = await page.$eval('#screen-pause .panel', (e) => { const b = e.getBoundingClientRect(); return { top: b.top, bottom: b.bottom, sh: e.scrollHeight, ch: e.clientHeight, ov: getComputedStyle(e).overflowY, ih: innerHeight }; });
+    const reach = await page.evaluate(() => { const p = document.querySelector('#screen-pause .panel'); const ok = (id) => { const el = document.getElementById(id); el.scrollIntoView({ block: 'center' }); const b = el.getBoundingClientRect(), pb = p.getBoundingClientRect(); return b.top >= pb.top - 1 && b.bottom <= pb.bottom + 1 && b.height > 0; }; return { resume: ok('btn-resume'), restart: ok('btn-restart'), quit: ok('btn-quit') }; });
+    check(`pause menu fits a ${w}x${h} window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)`, r.top >= 0 && r.bottom <= r.ih + 1 && (r.sh <= r.ch || r.ov === 'auto') && reach.resume && reach.restart && reach.quit, JSON.stringify({ ...r, ...reach }));
+    if (w === 800) await shot('05b-pause-800x600');
+  }
+  await page.setViewport({ width: 1280, height: 720 }); await page.keyboard.press('Escape'); await sleep(200);
+  // no WebGL: the player is told, instead of staring at a title screen whose buttons do nothing
+  { const b2 = await puppeteer.launch({ headless: true, args: ['--disable-gpu', '--disable-webgl', '--disable-3d-apis', '--disable-software-rasterizer'] }); const p2 = await b2.newPage();
+    await p2.goto('http://localhost:5210/', { waitUntil: 'domcontentloaded', timeout: 0 }); await p2.waitForFunction("!document.getElementById('screen-error').classList.contains('hidden')", { timeout: 60000 }).catch(() => {});
+    const msg = await p2.$eval('#error-text', (e) => e.textContent).catch(() => ''); check('with WebGL unavailable the game says so on screen (no inert title)', /WebGL/.test(msg), msg.slice(0, 90)); await b2.close(); }
 
   // ---- 6. lifecycle: repeated level transitions must not leak GPU resources --------------------------------------------
   await T("t.newGame('normal', 4)"); await T('t.tick(5)'); const g0 = await T('t.gl()');
@@ -220,8 +273,11 @@ try {
   const perf = await T('t.perf()'); const gl = await T('t.gl()');
   console.log('perf (SwiftShader, 1280x720):', JSON.stringify(perf), JSON.stringify(gl));
   check('real-time loop runs frames without exceptions', perf.frames > 20, `frames=${perf.frames} avg=${perf.avgMs.toFixed(1)}ms`);
+  check('no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)', perf.worstMs < 3000, `worst ${perf.worstMs.toFixed(0)} ms, p95 ${perf.p95Ms.toFixed(0)} ms`);
   await T("t.release('forward')");
-  fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
+  const sha16 = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 16);
+  const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
+  fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
 } catch (e) { errors.push('script: ' + (e.stack || e)); }
 check('no uncaught exceptions or console errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 await browser.close(); await server.close();

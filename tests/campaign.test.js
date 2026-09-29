@@ -20,7 +20,7 @@ function fixture(mutateManifest, evidence = {}) {
 const derived = (dir, id) => JSON.parse(fs.readFileSync(path.join(dir, 'validation/campaign.json'), 'utf8')).perMap[id];
 
 test('the real campaign manifest validates: 68 slots, 36 + 32, 62 main, 6 secret', () => {
-  const r = run(ROOT); assert.equal(r.status, 0, r.stdout + r.stderr);
+  const r = run(fixture(null)); assert.equal(r.status, 0, r.stdout + r.stderr);            // a copy of the real manifest in a temp dir: the test must not rewrite the tracked validation/campaign.json
   assert.match(r.stdout, /68 slots: C1 36, C2 32, main 62, secret 6/);
 });
 
@@ -31,7 +31,7 @@ test('topology negative cases fail validation', () => {
     [(m) => { m.maps.find((x) => x.id === 'C1E1S01').returnsTo = 'C1E1M08'; }, /returns to/],
     [(m) => { m.maps.find((x) => x.id === 'C1E2M04').secretExit = null; }, /does not point back/],
     [(m) => { m.maps.find((x) => x.id === 'C1E1M03').next = 'C1E1M05'; }, /main route visits/],
-    [(m) => { m.maps.find((x) => x.id === 'C2S02').kind = 'main'; }, /secret|main/],
+    [(m) => { m.maps.find((x) => x.id === 'C2S02').kind = 'main'; }, /C2M23: secretExit C2S02 is not a secret slot/],
   ];
   for (const [mut, re] of cases) { const r = run(fixture(mut)); assert.equal(r.status, 1); assert.match(r.stdout + r.stderr, re); }
 });
@@ -67,4 +67,15 @@ test('evidence goes stale when the map file changes after verification', () => {
   fs.mkdirSync(path.join(dir, 'routes'), { recursive: true }); fs.writeFileSync(path.join(dir, 'routes/x.json'), '[]');
   fs.mkdirSync(path.join(dir, 'maps'), { recursive: true }); fs.writeFileSync(path.join(dir, 'maps/C1E1M01.json'), '{\"different\": true}');
   run(dir); assert.equal(derived(dir, 'C1E1M01'), 'IMPLEMENTED');
+});
+
+test('evidence goes stale when the canonical ROUTE file changes after verification', () => {
+  const dir = fixture(null, { C1E1M01: { loads: true, automated: { pass: true }, canonicalRoute: { file: 'routes/x.json', reachedExit: true, sha: 'deadbeefdeadbeef' } } });
+  fs.mkdirSync(path.join(dir, 'routes'), { recursive: true }); fs.writeFileSync(path.join(dir, 'routes/x.json'), '[{"op":"kill"}]');
+  run(dir); assert.equal(derived(dir, 'C1E1M01'), 'IMPLEMENTED');
+});
+
+test('running the campaign tests leaves the tracked evidence files untouched (no side effects on the repository)', () => {
+  const f = path.join(ROOT, 'validation/campaign.json'), before = fs.readFileSync(f, 'utf8');
+  run(fixture(null)); assert.equal(fs.readFileSync(f, 'utf8'), before);
 });

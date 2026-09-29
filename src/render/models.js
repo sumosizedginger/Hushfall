@@ -118,6 +118,7 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
 // ------------------------------------------------------------- Flare cannon
 export function makeFlareCannon(tex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex });
+  const sleeveMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false });      // the oilskin sleeves fade out in the sights: they only ever hid the target
   const glassMat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1a6a60 });
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
   const g = new THREE.Group();
@@ -133,13 +134,13 @@ export function makeFlareCannon(tex) {
   const grip = M(new THREE.BoxGeometry(0.06, 0.18, 0.075), 7); grip.position.set(0, -0.15, 0.12); grip.rotation.x = 0.3; g.add(grip);
   const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.19, 0.13); g.add(handR);
   const handL = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 3); handL.position.set(-0.005, -0.1, -0.25); g.add(handL);
-  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4); sleeveR.position.set(0.09, -0.3, 0.34); sleeveR.rotation.x = -1.15; g.add(sleeveR);
-  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4); sleeveL.position.set(-0.14, -0.22, 0.0); sleeveL.rotation.set(-1.1, 0, 0.55); g.add(sleeveL);
+  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4, sleeveMat); sleeveR.position.set(0.09, -0.3, 0.34); sleeveR.rotation.x = -1.15; g.add(sleeveR);
+  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4, sleeveMat); sleeveL.position.set(-0.14, -0.22, 0.0); sleeveL.rotation.set(-1.1, 0, 0.55); g.add(sleeveL);
   // muzzle flash: real geometry, shown briefly
   const flash = new THREE.Group(); flash.position.z = -0.72; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xfff4d0 })));
-  return { group: g, flash, pump: null, adsY: -0.067 };
+  return { group: g, flash, pump: null, adsY: -0.067, sleeveMat };
 }
 
 // -------------------------------------------------------------------- props
@@ -163,13 +164,15 @@ export function makePod(tex, H) {
   return { group, light };
 }
 
-export function makeLamp(H) {
-  const group = new THREE.Group();
+/** lamp tint = the light of that room: warm oil lamps (hut, loft), cold customs tubes (shed), the pods' teal (warehouse) */
+const LAMP_TINTS = { warm: { bulb: 0xffd48a, light: 0xffb060 }, cool: { bulb: 0xd8f4ff, light: 0xa8dcff }, teal: { bulb: 0xa8ffee, light: 0x50ffd8 } };
+export function makeLamp(H, tint = 'warm') {
+  const T = LAMP_TINTS[tint] ?? LAMP_TINTS.warm, group = new THREE.Group();
   const shade = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.3, 8, 1, true), lam({ color: 0x2f3a3a, side: THREE.DoubleSide }));
   shade.position.y = -0.85; group.add(shade);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: 0xffd48a })); bulb.position.y = -0.92; group.add(bulb);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: T.bulb })); bulb.position.y = -0.92; group.add(bulb);
   const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), bas({ color: 0x14100c })); wire.position.y = -0.35; group.add(wire);
-  const light = new THREE.PointLight(0xffb060, 110, 16, 2);
+  const light = new THREE.PointLight(T.light, 110, 16, 2);
   light.userData.base = 110; light.userData.flicker = 'lamp';
   return { group, light };
 }
@@ -309,7 +312,8 @@ export function makeGaunt(atlasTex) {
 /** Double-barrelled pump shotgun. Same 4x4 atlas as the flare cannon (steel, wood, leather, oilskin cells). */
 export function makeScattergun(tex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x2a1c10 });        // lifts the dark wood so the stock stays readable
-  const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
+  const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
+  const sleeveMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false });      // the oilskin sleeves fade out in the sights: they only ever hid the target
   const g = new THREE.Group();
   for (const x of [-0.03, 0.03]) { const b = M(new THREE.CylinderGeometry(0.028, 0.03, 0.68, 8), 2); b.rotation.x = -Math.PI / 2; b.position.set(x, 0.005, -0.34); g.add(b); }
   const rib = M(new THREE.BoxGeometry(0.03, 0.012, 0.62), 1); rib.position.set(0, 0.038, -0.33); g.add(rib);
@@ -322,12 +326,12 @@ export function makeScattergun(tex) {
   const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.14); grip.rotation.x = 0.3; g.add(grip);
   const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.18, 0.16); g.add(handR);
   const handL = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 3); handL.position.set(-0.005, -0.1, -0.26); pump.add(handL);
-  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4); sleeveR.position.set(0.09, -0.3, 0.36); sleeveR.rotation.x = -1.15; g.add(sleeveR);
-  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4); sleeveL.position.set(-0.14, -0.22, 0.02); sleeveL.rotation.set(-1.1, 0, 0.55); pump.add(sleeveL);
+  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4, sleeveMat); sleeveR.position.set(0.09, -0.3, 0.36); sleeveR.rotation.x = -1.15; g.add(sleeveR);
+  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4, sleeveMat); sleeveL.position.set(-0.14, -0.22, 0.02); sleeveL.rotation.set(-1.1, 0, 0.55); pump.add(sleeveL);
   const flash = new THREE.Group(); flash.position.z = -0.78; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
-  return { group: g, flash, pump, adsY: -0.048 };
+  return { group: g, flash, pump, adsY: -0.048, sleeveMat };
 }
 
 // ------------------------------------------------ Marrow Quay: set dressing and scenery
