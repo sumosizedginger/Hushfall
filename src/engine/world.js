@@ -55,10 +55,12 @@ export function cellSolid(w, cx, cz) {
   if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); return !d || d.open < DOOR.passableAt; }
   return false;
 }
+/** blocks walking: walls, closed doors, and water. (Sight and projectiles use cellSolid, so they pass over water.) */
+function blocksMove(w, cx, cz) { return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water'; }
 export function blockedCircle(w, x, z, r) {
   const S = w.map.cell;
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
-    if (!cellSolid(w, cx, cz)) continue;
+    if (!blocksMove(w, cx, cz)) continue;
     const nx = clamp(x, cx * S, (cx + 1) * S), nz = clamp(z, cz * S, (cz + 1) * S);
     if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
   }

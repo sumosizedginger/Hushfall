@@ -1,11 +1,11 @@
 {
   "mapId": "C1E1M01",
-  "mapVersion": 2,
+  "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "bbe5292",
+  "codeVersion": "811c940",
   "dirtyTree": true,
-  "mapSha": "2ab20dccab0c37a9",
-  "assetVersion": "e0b96933b60b8f12",
+  "mapSha": "379b7f2ff7922675",
+  "assetVersion": "0feb090adcf1930d",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -14,11 +14,11 @@
       "difficulty": "easy",
       "seed": 1,
       "result": "complete",
-      "ticks": 2208,
-      "finalHash": "451769f4",
-      "kills": 9,
+      "ticks": 4242,
+      "finalHash": "c0aaa518",
+      "kills": 13,
       "secrets": 0,
-      "items": 4,
+      "items": 10,
       "damageTaken": 0
     },
     {
@@ -26,11 +26,11 @@
       "difficulty": "normal",
       "seed": 1,
       "result": "complete",
-      "ticks": 2208,
-      "finalHash": "ee44c777",
-      "kills": 9,
+      "ticks": 4242,
+      "finalHash": "60e13110",
+      "kills": 13,
       "secrets": 0,
-      "items": 4,
+      "items": 10,
       "damageTaken": 0
     },
     {
@@ -38,11 +38,11 @@
       "difficulty": "hard",
       "seed": 1,
       "result": "complete",
-      "ticks": 2265,
-      "finalHash": "36c6b381",
-      "kills": 9,
+      "ticks": 4242,
+      "finalHash": "eeb5524d",
+      "kills": 13,
       "secrets": 0,
-      "items": 4,
+      "items": 10,
       "damageTaken": 0
     },
     {
@@ -50,11 +50,11 @@
       "difficulty": "easy",
       "seed": 1,
       "result": "complete",
-      "ticks": 2426,
-      "finalHash": "f04a5f89",
-      "kills": 9,
+      "ticks": 4638,
+      "finalHash": "1f7d3558",
+      "kills": 13,
       "secrets": 1,
-      "items": 6,
+      "items": 12,
       "damageTaken": 0
     },
     {
@@ -62,11 +62,11 @@
       "difficulty": "normal",
       "seed": 1,
       "result": "complete",
-      "ticks": 2426,
-      "finalHash": "59771cd4",
-      "kills": 9,
+      "ticks": 4638,
+      "finalHash": "36bcbe74",
+      "kills": 13,
       "secrets": 1,
-      "items": 6,
+      "items": 12,
       "damageTaken": 0
     },
     {
@@ -74,11 +74,11 @@
       "difficulty": "hard",
       "seed": 1,
       "result": "complete",
-      "ticks": 2483,
-      "finalHash": "04672431",
-      "kills": 9,
+      "ticks": 4638,
+      "finalHash": "f8fd0b35",
+      "kills": 13,
       "secrets": 1,
-      "items": 6,
+      "items": 12,
       "damageTaken": 0
     }
   ],
@@ -87,8 +87,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 2208,
-    "finalHash": "ee44c777",
+    "ticks": 4242,
+    "finalHash": "60e13110",
     "expectedEvents": [
       "door_open",
       "pickup:key_brass",
@@ -97,16 +97,16 @@
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
-    "enemies": 9,
-    "items": 14,
+    "enemies": 13,
+    "items": 21,
     "secrets": 1
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-29T22:43:58.755Z",
+    "when": "2026-09-29T22:56:37.572Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
-    "passed": 41,
-    "total": 41,
+    "passed": 42,
+    "total": 42,
     "allPassed": true
   },
   "automated": {
@@ -125,42 +125,42 @@
       {
         "name": "all secrets reachable",
         "ok": true,
-        "detail": "[{\"id\":\"pocket\",\"reachable\":true}]"
+        "detail": "[{\"id\":\"net-loft\",\"reachable\":true}]"
       },
       {
         "name": "route C1E1M01.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "36.8 s"
+        "detail": "70.7 s"
       },
       {
         "name": "route C1E1M01.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "36.8 s"
+        "detail": "70.7 s"
       },
       {
         "name": "route C1E1M01.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "37.8 s"
+        "detail": "70.7 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "40.4 s"
+        "detail": "77.3 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "40.4 s"
+        "detail": "77.3 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "41.4 s"
+        "detail": "77.3 s"
       },
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "41/41"
+        "detail": "42/42"
       }
     ]
   },

@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs",
+  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -45,13 +45,13 @@
       "sha256": "55664dc3ccbc22fe54535f74e735c6123cb3f37fd9aeff6212c1d77d03bfe2a7",
       "bytes": 42479
     },
-    "paper_grain": {
-      "seed": 5701,
-      "width": 128,
-      "height": 128,
+    "flarecannon_atlas": {
+      "seed": 5201,
+      "width": 256,
+      "height": 256,
       "transparent": false,
-      "sha256": "496c8f905f0a29fcd6d4a8781283cdd7e00e626579f13a283f13088e8120548a",
-      "bytes": 9723
+      "sha256": "06287edb0f249bdb92452416f1db2b4680fce1daea5e69f2c4bd9cd4697a3b81",
+      "bytes": 40496
     },
     "floor_planks_a": {
       "seed": 5301,
@@ -69,14 +69,6 @@
       "sha256": "9fa153eb7de6fd002665beb4b1d04215c22964585840ae51d55da790ce885fd1",
       "bytes": 106498
     },
-    "flarecannon_atlas": {
-      "seed": 5201,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "06287edb0f249bdb92452416f1db2b4680fce1daea5e69f2c4bd9cd4697a3b81",
-      "bytes": 40496
-    },
     "pod_organic_a": {
       "seed": 5501,
       "width": 256,
@@ -93,6 +85,14 @@
       "sha256": "46db75e9f53243f83fa4e01ab05f4d12210fe6050dec03038f893c2ec74a9c1e",
       "bytes": 249976
     },
+    "paper_grain": {
+      "seed": 5701,
+      "width": 128,
+      "height": 128,
+      "transparent": false,
+      "sha256": "496c8f905f0a29fcd6d4a8781283cdd7e00e626579f13a283f13088e8120548a",
+      "bytes": 9723
+    },
     "door_hatch_a": {
       "seed": 5801,
       "width": 256,
@@ -108,6 +108,54 @@
       "transparent": false,
       "sha256": "5e0787a008b66b005aa36de2e706be6037ce6bab360b90f364a651f59f4b59ee",
       "bytes": 39069
+    },
+    "water_dusk": {
+      "seed": 6101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6cf8d5b953e397c9089ceb53975aa4cf6b82b1a12a586dcb7ef8e7dc5ddebf34",
+      "bytes": 86560
+    },
+    "cobble_wet_a": {
+      "seed": 6201,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "b58e413c522b69bde5e6e4b8c48a6aacbf905cfe8fd8009951d250c9cfac723e",
+      "bytes": 123081
+    },
+    "brick_warm_a": {
+      "seed": 6301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6eda321a24f32f3468b99a6db7764938f07d2574812ae275db5dfdfaac0c9dc0",
+      "bytes": 128224
+    },
+    "awning_stripe_a": {
+      "seed": 6401,
+      "width": 128,
+      "height": 128,
+      "transparent": false,
+      "sha256": "ef6fde8a81207f212f5106c789d6ca1a6e0a7fe78335570bc0492aab2351ae5a",
+      "bytes": 12576
+    },
+    "boat_hull_a": {
+      "seed": 6501,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "407e4bcc8d9b54ac463fe92480b8e49adbd3b9aaceb092a2ff44d5d3deb6927b",
+      "bytes": 40603
+    },
+    "tower_stone_a": {
+      "seed": 6601,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "52724271be316989c65b828619080998495d1f12cb5979e70454a982aabba38c",
+      "bytes": 98925
     }
   }
 }

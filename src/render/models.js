@@ -10,6 +10,12 @@ export function atlas(geom, cell) {
   for (let i = 0; i < uv.count; i++) uv.setXY(i, u0 + uv.getX(i) * (u1 - u0), v0 + uv.getY(i) * (v1 - v0));
   return geom;
 }
+
+// Shared, cached materials for STATIC props so they can be merged into one draw call per material (see render/merge.js).
+const matCache = new Map();
+const keyOf = (o) => JSON.stringify(o, (k, v) => (v && v.isTexture ? v.uuid : v));
+function lam(params) { const k = 'L' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshLambertMaterial(params)); return m; }
+function bas(params) { const k = 'B' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshBasicMaterial(params)); return m; }
 const ease = (t) => t * t * (3 - 2 * t);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
@@ -130,19 +136,19 @@ export function makeFlareCannon(tex) {
 }
 
 // -------------------------------------------------------------------- props
-export function makeCrate(tex) { return new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), new THREE.MeshLambertMaterial({ map: tex })); }
-export function makeBarrel(tex) { return new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.34, 1.0, 10), new THREE.MeshLambertMaterial({ map: tex, color: 0xb8a890 })); }
-export function makePillar(tex, H) { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, H, 1.1), new THREE.MeshLambertMaterial({ map: tex })); m.position.y = H / 2; const g = new THREE.Group(); g.add(m); return g; }
+export function makeCrate(tex) { return new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), lam({ map: tex })); }
+export function makeBarrel(tex) { return new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.34, 1.0, 10), lam({ map: tex, color: 0xb8a890 })); }
+export function makePillar(tex, H) { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, H, 1.1), lam({ map: tex })); m.position.y = H / 2; const g = new THREE.Group(); g.add(m); return g; }
 
 export function makePod(tex, H) {
   const group = new THREE.Group();
   const prof = [[0.001, -0.95], [0.26, -0.82], [0.5, -0.45], [0.56, 0.1], [0.44, 0.6], [0.2, 0.9], [0.001, 0.98]].map(([x, y]) => new THREE.Vector2(x, y));
-  const body = new THREE.Mesh(new THREE.LatheGeometry(prof, 10), new THREE.MeshLambertMaterial({ map: tex, emissive: 0x2a0f30 }));
+  const body = new THREE.Mesh(new THREE.LatheGeometry(prof, 10), lam({ map: tex, emissive: 0x2a0f30 }));
   body.position.y = -1.9; group.add(body);
-  const cable = new THREE.MeshLambertMaterial({ map: tex, color: 0x9a7aa0 });
+  const cable = lam({ map: tex, color: 0x9a7aa0 });
   for (const [dx, dz] of [[0.18, 0.1], [-0.15, 0.14], [0.02, -0.2]]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.045, 1.0, 5), cable); c.position.set(dx, -0.5, dz); group.add(c); }
   for (let i = 0; i < 6; i++) {                        // neural taps
-    const a = i * 1.047, spike = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.28, 5), new THREE.MeshBasicMaterial({ color: 0x3fd6c0 }));
+    const a = i * 1.047, spike = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.28, 5), bas({ color: 0x3fd6c0 }));
     spike.position.set(Math.cos(a) * 0.55, -1.7 + (i % 2) * 0.4, Math.sin(a) * 0.55); spike.rotation.z = -Math.cos(a) * 1.2; spike.rotation.x = Math.sin(a) * 1.2; group.add(spike);
   }
   const light = new THREE.PointLight(0x3fffe0, 40, 10, 2);
@@ -152,10 +158,10 @@ export function makePod(tex, H) {
 
 export function makeLamp(H) {
   const group = new THREE.Group();
-  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.3, 8, 1, true), new THREE.MeshLambertMaterial({ color: 0x2f3a3a, side: THREE.DoubleSide }));
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.3, 8, 1, true), lam({ color: 0x2f3a3a, side: THREE.DoubleSide }));
   shade.position.y = -0.85; group.add(shade);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), new THREE.MeshBasicMaterial({ color: 0xffd48a })); bulb.position.y = -0.92; group.add(bulb);
-  const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), new THREE.MeshBasicMaterial({ color: 0x14100c })); wire.position.y = -0.35; group.add(wire);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: 0xffd48a })); bulb.position.y = -0.92; group.add(bulb);
+  const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), bas({ color: 0x14100c })); wire.position.y = -0.35; group.add(wire);
   const light = new THREE.PointLight(0xffb060, 110, 16, 2);
   light.userData.base = 110; light.userData.flicker = 'lamp';
   return { group, light };
@@ -163,9 +169,9 @@ export function makeLamp(H) {
 
 export function makeLampPost() {
   const group = new THREE.Group();
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), new THREE.MeshLambertMaterial({ color: 0x24302f })); pole.position.y = 1.6; group.add(pole);
-  const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), new THREE.MeshLambertMaterial({ color: 0x1a201f })); cage.position.y = 3.3; group.add(cage);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffe0a0 })); bulb.position.y = 3.3; group.add(bulb);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), lam({ color: 0x24302f })); pole.position.y = 1.6; group.add(pole);
+  const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), lam({ color: 0x1a201f })); cage.position.y = 3.3; group.add(cage);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: 0xffe0a0 })); bulb.position.y = 3.3; group.add(bulb);
   const light = new THREE.PointLight(0xffc880, 120, 20, 2);
   light.userData.base = 120; light.userData.flicker = 'lamp';
   return { group, light };
@@ -315,4 +321,62 @@ export function makeScattergun(tex) {
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
   return { group: g, flash, pump, adsY: -0.048 };
+}
+
+// ------------------------------------------------ Marrow Quay: set dressing and scenery
+/** scale a primitive's UVs so a texture tile covers `tile` metres (walls of different sizes keep the same texel density) */
+function tileUV(geom, w, h, tile = 4) { const uv = geom.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (w / tile), uv.getY(i) * (h / tile)); return geom; }
+
+export function makeCrate2(tex) {
+  const g = new THREE.Group(), mat = lam({ map: tex });
+  const a = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), mat); a.position.y = 0.55; g.add(a);
+  const b = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mat); b.position.set(0.08, 1.6, -0.05); b.rotation.y = 0.35; g.add(b);
+  return g;
+}
+export function makeBollard() {
+  const g = new THREE.Group(), iron = lam({ color: 0x20262a });
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.19, 0.62, 8), iron); post.position.y = 0.31; g.add(post);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.1, 8), iron); cap.position.y = 0.66; g.add(cap);
+  const rope = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.03, 4, 10), lam({ color: 0x8a7a5a })); rope.rotation.x = Math.PI / 2; rope.position.y = 0.48; g.add(rope);
+  return g;
+}
+export function makeStall(woodTex, awningTex) {
+  const g = new THREE.Group(), wood = lam({ map: woodTex }), dark = lam({ color: 0x2a2018 });
+  const counter = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 0.9), wood); counter.position.y = 0.45; g.add(counter);
+  for (const [x, z] of [[-0.9, -0.4], [0.9, -0.4], [-0.9, 0.4], [0.9, 0.4]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.2, 0.07), dark); p.position.set(x, 1.1, z); g.add(p); }
+  const aw = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.6), lam({ map: awningTex, side: THREE.DoubleSide })); aw.position.set(0, 2.15, 0); aw.rotation.set(-Math.PI / 2 + 0.28, 0, 0); g.add(aw);
+  const fish = lam({ color: 0x8a9aa8 });
+  for (let i = 0; i < 5; i++) { const f = new THREE.Mesh(new THREE.IcosahedronGeometry(0.11, 0), fish); f.scale.set(1.8, 0.6, 0.8); f.position.set(-0.7 + i * 0.35, 0.98, ((i * 37) % 5) * 0.06 - 0.12); f.rotation.y = i; g.add(f); }
+  return g;
+}
+export function makeBoat(hullTex) {
+  const g = new THREE.Group(), hull = lam({ map: hullTex }), wood = lam({ color: 0x6a4a2a }), cloth = lam({ color: 0xcfc4a4, side: THREE.DoubleSide });
+  const body = new THREE.Mesh(tileUV(new THREE.CylinderGeometry(1.25, 0.55, 1.1, 10), 6, 2), hull); body.scale.set(3.2, 1, 1); body.position.y = 0.1; g.add(body);
+  const deck = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.06, 10), wood); deck.scale.set(3.15, 1, 0.95); deck.position.y = 0.66; g.add(deck);
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.2, 1.5), hull); cabin.position.set(-0.6, 1.25, 0); g.add(cabin);
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.09, 6.2, 6), wood); mast.position.set(1.4, 3.7, 0); g.add(mast);
+  const sail = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 4.2), cloth); sail.position.set(0.4, 3.6, 0.06); sail.rotation.y = 0.12; g.add(sail);
+  return g;
+}
+export function makeCrane() {
+  const g = new THREE.Group(), iron = lam({ color: 0x2b3438 });
+  for (const z of [-0.9, 0.9]) { const leg = new THREE.Mesh(new THREE.BoxGeometry(0.35, 14, 0.35), iron); leg.position.set(0, 7, z); g.add(leg); }
+  const brace = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 2.2), iron); brace.position.set(0, 9, 0); g.add(brace);
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(11, 0.35, 0.35), iron); arm.position.set(4.5, 14, 0); g.add(arm);
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 8, 4), iron); cable.position.set(8.5, 10, 0); g.add(cable);
+  const hook = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), iron); hook.position.set(8.5, 6, 0); g.add(hook);
+  return g;
+}
+/** The bell tower of St. Orrin, seen from everywhere in Port Marrow. The Bell at the top pulses teal: the Hush has a source. */
+export function makeTower(stoneTex, atlasTex) {
+  const g = new THREE.Group(), stone = lam({ map: stoneTex }), roof = lam({ color: 0x3a3438 });
+  let y = -0.6;
+  for (const [w, h] of [[9, 12], [7.4, 11], [6, 9]]) { const b = new THREE.Mesh(tileUV(new THREE.BoxGeometry(w, h, w), w, h, 5), stone); b.position.y = y + h / 2; g.add(b); y += h; }
+  for (const [dx, dz] of [[-2.4, -2.4], [2.4, -2.4], [-2.4, 2.4], [2.4, 2.4]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.9, 6, 0.9), stone); p.position.set(dx, y + 3, dz); g.add(p); }
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(4.6, 7, 4), roof); cap.position.y = y + 6 + 3.5; cap.rotation.y = Math.PI / 4; g.add(cap);
+  const prof = [[0.01, 0], [0.7, 0.2], [1.2, 1.0], [1.35, 1.7], [1.15, 2.0]].map(([x, yy]) => new THREE.Vector2(x, yy));
+  const bellMesh = new THREE.Mesh(atlas(new THREE.LatheGeometry(prof, 10), 6), lam({ map: atlasTex, emissive: 0x1a3a34 })); bellMesh.position.y = y + 1.5; bellMesh.rotation.x = Math.PI; bellMesh.position.y += 2; g.add(bellMesh);
+  const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), bas({ color: 0x3fffe0 })); glow.position.y = y + 2.6; g.add(glow);
+  glow.userData.keep = true; g.userData.glow = glow;
+  return g;
 }

@@ -56,7 +56,7 @@ try {
 
   // ---- 0b. sprint + aim-down-sights with REAL input in the live loop ----------------------------------------------------
   const runDist = async (keys) => {
-    await T('t.setup_clearEnemies(); t.setup_teleport(4, 18, -Math.PI / 2)'); await sleep(120);
+    await T('t.setup_clearEnemies(); t.setup_teleport(8, 34, -Math.PI / 2)'); await sleep(120);
     const s0 = await T('t.state()');
     for (const k of keys) await page.keyboard.down(k);
     await sleep(700);
@@ -65,7 +65,7 @@ try {
   };
   const walk = await runDist(['KeyW']), sprint = await runDist(['ShiftLeft', 'KeyW']);
   check('holding real Shift+W sprints faster than W alone', sprint.d / walk.d > 1.25, `walk ${walk.d.toFixed(2)} m, sprint ${sprint.d.toFixed(2)} m, ratio ${(sprint.d / walk.d).toFixed(2)}`);
-  await T('t.setup_teleport(4, 18, -Math.PI / 2)');
+  await T('t.setup_teleport(8, 34, -Math.PI / 2)');
   const shotsBefore = (await T('t.state()')).stats.shots;
   await page.keyboard.down('ShiftLeft'); await page.keyboard.down('KeyW'); await sleep(250);
   await page.mouse.click(640, 360); await sleep(200);
@@ -81,7 +81,7 @@ try {
   check('releasing right mouse lowers the sights and restores the field of view', adsOff.player.ads === 0 && adsOff.fov > 69, `ads=${adsOff.player.ads} fov=${adsOff.fov?.toFixed(1)}`);
 
   // ---- 0c. second weapon with REAL input: number key, click, mouse wheel ----------------------------------------------
-  await T("t.setup_clearEnemies(); t.setup_player({ weapons: ['flare', 'scattergun'], ammo: { flare: 8, shell: 10 } }); t.setup_teleport(4, 18, -Math.PI / 2)");
+  await T("t.setup_clearEnemies(); t.setup_player({ weapons: ['flare', 'scattergun'], ammo: { flare: 8, shell: 10 } }); t.setup_teleport(8, 34, -Math.PI / 2)");
   await page.keyboard.press('Digit2'); await sleep(700);
   const sw = await T('t.state()');
   check('real 2 key switches to the scattergun and the HUD follows', sw.player.weapon === 'scattergun' && (await text('hud-ammo-label')) === 'SHELLS' && (await text('hud-ammo')) === '10', `weapon=${sw.player.weapon} label=${await text('hud-ammo-label')} ammo=${await text('hud-ammo')}`);
@@ -93,12 +93,12 @@ try {
   check('mouse wheel cycles weapons (wraps back to the flare cannon)', wheel.player.weapon === 'flare', wheel.player.weapon);
 
   // ---- 0d. automap with REAL input -------------------------------------------------------------------------------------
-  await T("t.setup_clearEnemies(); t.setup_teleport(4, 12, -Math.PI / 2)"); await sleep(500);
+  await T("t.setup_clearEnemies(); t.setup_teleport(8, 34, -Math.PI / 2)"); await sleep(500);
   await page.keyboard.press('Tab'); await sleep(400);
   const mapVisible = await page.$eval('#automap', (e) => !e.classList.contains('hidden'));
   const painted = await page.$eval('#automap', (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++; return n; });
   const am = await T('t.automap()');
-  check('real Tab opens the automap, it paints, and it shows only what has been explored', mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('floor') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
+  check('real Tab opens the automap, it paints, and it shows only what has been explored', mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('outdoor') && am.kinds.includes('water') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
   await shot('01c-automap');
   await page.keyboard.press('Tab'); await sleep(300);
   check('Tab again closes the automap', (await page.$eval('#automap', (e) => e.classList.contains('hidden'))) && (await T('t.mapOpen()')) === false);
@@ -188,9 +188,16 @@ try {
   await T("t.newGame('normal', 3)"); await T('t.tick(30)'); await shot('07-hall');
   await T("t.press('aim')"); await T('t.tick(30)'); await shot('07b-ads'); await T("t.release('aim')"); await T('t.tick(30)');
   await T("t.press('forward'); t.press('sprint')"); await T('t.tick(30)'); await shot('07c-sprint'); await T("t.release('forward'); t.release('sprint')"); await T('t.tick(30)');
-  await T("t.setup_teleport(11, 13, -Math.PI / 2)"); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await shot('08-fire-muzzle');
+  await T("t.setup_teleport(20, 34, -Math.PI / 2)"); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await shot('08-fire-muzzle');
   await T('t.tick(20)'); await shot('09-flare-flight'); await T('t.tick(25)'); await shot('10-aftermath');
-  await T("t.setup_teleport(48, 8, -Math.PI / 2)"); await T('t.tick(10)'); await shot('11-quay');
+  await T("t.setup_teleport(36, 30, -Math.PI / 2 + 0.3)"); await T('t.tick(10)'); await shot('11-plaza');
+  // performance budget: draw calls / triangles at three vantage points (counts, not fps; software GL cannot give real timings)
+  const budget = {};
+  for (const [name, x, z, yaw] of [['pier', 8, 33, -Math.PI / 2], ['plaza', 34, 30, -Math.PI / 2 + 0.35], ['warehouse', 76, 24, -Math.PI / 2 + 0.25]]) {
+    await T('t.setup_openDoors()'); await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); budget[name] = await T('t.measureFrame()');
+  }
+  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.calls < 900 && b.triangles > 1000 && b.triangles < 400000), JSON.stringify(budget));
+  fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
 
   // ---- 6. lifecycle: repeated level transitions must not leak GPU resources --------------------------------------------
   await T("t.newGame('normal', 4)"); await T('t.tick(5)'); const g0 = await T('t.gl()');

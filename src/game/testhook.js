@@ -49,10 +49,13 @@ export function installTestHook(app) {
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
+    setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     // -- diagnostics --
     perf() { const t = [...g.frameTimes].sort((a, b) => a - b); const n = t.length; return { frames: n, avgMs: n ? t.reduce((a, b) => a + b, 0) / n : 0, p95Ms: t[Math.floor(n * 0.95)] ?? 0, worstMs: t[n - 1] ?? 0 }; },
+    /** render ONE full frame (world + weapon + post) and report its true draw-call/triangle totals (info auto-reset is off for the duration) */
+    measureFrame() { const i = app.renderer.info; i.autoReset = false; i.reset(); render(0.016); const r = { calls: i.render.calls, triangles: i.render.triangles, geometries: i.memory.geometries, textures: i.memory.textures, programs: i.programs?.length ?? 0 }; i.autoReset = true; return r; },
     gl: () => ({ ...app.renderer.info.memory, calls: app.renderer.info.render.calls, triangles: app.renderer.info.render.triangles, programs: app.renderer.info.programs?.length ?? 0 }),
     saveSlot: (slot) => store.read(slot),
     // -- audio QA (browser only): render a recipe offline and return 16-bit PCM as base64 --

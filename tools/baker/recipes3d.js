@@ -199,3 +199,98 @@ recipes3d.props_atlas = {
     for (let i = 8; i < 16; i++) cell(g, i, '#555', ['#666', '#444'], null);
   }),
 };
+
+// ---- Marrow Quay environment set (Gate 1 real level) ---------------------------------------------------------------
+recipes3d.water_dusk = {
+  seed: 6101, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#16303c'); g.solid(0, 0, 256, 256, '#16303c');
+    g.noStroke(); g.bleed(0.7, 'out');
+    for (let i = 0; i < 34; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256), r = g.rnd(26, 60); g.tile((dx, dy) => { g.fill(pick(g, ['#0f2430', '#1d4250', '#24525f', '#3b2a55']), g.rnd(70, 140)); g.circle(x + dx, y + dy, r); }); }
+    // sky reflections: long horizontal smears in dusk pink / amber / teal
+    for (const [col, n, wt] of [['#c0587a', 14, 1.6], ['#e8946a', 10, 1.4], ['#3fd6c0', 8, 1.0], ['#f0c8a0', 6, 0.8]]) {
+      g.stroke('marker', col, wt);
+      for (let i = 0; i < n; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256), l = g.rnd(14, 60); g.tile((dx, dy) => g.line(x + dx, y + dy, x + l + dx, y + g.rnd(-2, 2) + dy)); }
+    }
+    g.stroke('cpencil', '#0a1a22', 0.8);
+    for (let i = 0; i < 70; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256), l = g.rnd(8, 30); g.tile((dx, dy) => g.line(x + dx, y + dy, x + l + dx, y + dy)); }      // troughs
+  }),
+};
+recipes3d.cobble_wet_a = {
+  seed: 6201, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#2a2e33'); g.solid(0, 0, 256, 256, '#2a2e33');
+    const rows = 8, rh = 256 / rows;
+    for (let r = 0; r < rows; r++) {
+      const per = 7, cw = 256 / per, off = (r % 2) * cw / 2;
+      for (let c = 0; c < per; c++) {
+        const x = c * cw + off + g.rnd(-1.5, 1.5), y = r * rh + g.rnd(-1, 1), col = pick(g, ['#4a5057', '#3f454b', '#545b62', '#454b54', '#5a5f66']);
+        g.noStroke(); g.bleed(0.1, 'out');
+        g.tile((dx, dy) => { g.fill(col, 255); g.rect(x + 2 + dx, y + 2 + dy, cw - 4, rh - 4); });
+        g.stroke('cpencil', '#7f8890', 0.7); g.tile((dx, dy) => g.line(x + 4 + dx, y + 4 + dy, x + cw * 0.5 + dx, y + 4 + dy));
+      }
+    }
+    g.stroke('2B', '#0c0e10', 1.2);
+    for (let r = 0; r <= rows; r++) g.tile((dx, dy) => g.line(dx, r * rh + dy, 256 + dx, r * rh + dy));
+    g.noStroke(); g.bleed(0.7, 'out');
+    for (let i = 0; i < 10; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256), r = g.rnd(20, 44); g.tile((dx, dy) => { g.fill('#3b6a78', 70); g.circle(x + dx, y + dy, r); }); }        // wet sheen
+    for (let i = 0; i < 30; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); g.tile((dx, dy) => { g.fill('#4a6a3a', 130); g.circle(x + dx, y + dy, g.rnd(1.5, 3)); }); }          // moss
+  }),
+};
+recipes3d.brick_warm_a = {
+  seed: 6301, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#3a302c'); g.solid(0, 0, 256, 256, '#3a302c');
+    const rows = 12, rh = 256 / rows;
+    for (let r = 0; r < rows; r++) {
+      const per = 6, cw = 256 / per, off = (r % 2) * cw / 2;
+      for (let c = 0; c < per; c++) {
+        const x = c * cw + off, y = r * rh, col = pick(g, ['#7a4a3a', '#8a5a44', '#6a3e30', '#7a5240', '#5e382c']);
+        g.noStroke(); g.bleed(0.08, 'out'); g.tile((dx, dy) => { g.fill(col, 255); g.rect(x + 1.5 + dx, y + 1.5 + dy, cw - 3, rh - 3); });
+        g.stroke('cpencil', '#a8785a', 0.6); g.tile((dx, dy) => g.line(x + 3 + dx, y + 3 + dy, x + cw * 0.6 + dx, y + 3 + dy));
+      }
+    }
+    g.stroke('charcoal', '#1a1210', 0.9);
+    for (let i = 0; i < 14; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256), l = g.rnd(24, 70); g.tile((dx, dy) => g.line(x + dx, y + dy, x + g.rnd(-2, 2) + dx, y + l + dy)); }      // soot runs
+    g.stroke('cpencil', '#c9d6d0', 0.6);
+    for (let i = 0; i < 30; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); g.tile((dx, dy) => g.line(x + dx, y + dy, x + g.rnd(3, 9) + dx, y + dy)); }                            // salt bloom
+  }),
+};
+recipes3d.awning_stripe_a = {
+  seed: 6401, width: 128, height: 128,
+  draw: R((g) => {
+    g.bg('#e6dcc0');
+    for (let i = 0; i < 8; i++) g.solid(i * 16, 0, 16, 128, i % 2 ? '#e6dcc0' : '#b8322a');
+    g.noStroke(); g.bleed(0.6, 'out');
+    for (let i = 0; i < 10; i++) { g.fill('#2a1a10', g.rnd(40, 90)); g.circle(g.rnd(0, 128), g.rnd(60, 128), g.rnd(10, 26)); }
+    g.stroke('cpencil', '#1a120a', 0.8); for (let i = 0; i < 12; i++) { const x = g.rnd(0, 128), y = g.rnd(20, 90); g.line(x, y, x + g.rnd(-2, 2), y + g.rnd(10, 36)); }
+    g.stroke('2B', '#2a1a10', 1.0); for (let i = 0; i <= 8; i++) g.line(i * 16, 0, i * 16, 128);
+  }),
+};
+recipes3d.boat_hull_a = {
+  seed: 6501, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#2c4a58'); g.solid(0, 0, 256, 256, '#2c4a58');
+    const rows = 8, rh = 256 / rows;
+    for (let r = 0; r < rows; r++) g.solid(0, r * rh, 256, rh, pick(g, ['#2c4a58', '#345666', '#264352', '#3a5c6c']));      // opaque native fills: full-width brush rects crash p5.brush's scatter
+    g.stroke('2B', '#0c1a20', 1.3); for (let r = 0; r <= rows; r++) g.tile((dx, dy) => g.line(dx, r * rh + dy, 256 + dx, r * rh + dy));
+    g.noStroke(); g.bleed(0.5, 'out');
+    for (let i = 0; i < 26; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); g.tile((dx, dy) => { g.fill(pick(g, ['#7a4a2b', '#8c5a30', '#c9d6d0']), 200); g.circle(x + dx, y + dy, g.rnd(2, 6)); }); }            // chipped paint + barnacles
+    for (let i = 0; i < 9; i++) { g.fill('#0e2a1e', 90); g.circle(i * 32 + g.rnd(-6, 6), 214 + g.rnd(-10, 10), g.rnd(26, 40)); }        // weed stain along the waterline                                                                                                            // weed stain at the waterline
+    g.stroke('charcoal', '#1a120a', 0.9); for (let i = 0; i < 12; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 200); g.tile((dx, dy) => g.line(x + dx, y + dy, x + dx, y + g.rnd(14, 40) + dy)); }
+  }),
+};
+recipes3d.tower_stone_a = {
+  seed: 6601, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#585a64'); g.solid(0, 0, 256, 256, '#585a64');
+    const rows = 6, rh = 256 / rows;
+    for (let r = 0; r < rows; r++) {
+      const per = 3 + (r % 2), cw = 256 / per;
+      for (let c = 0; c < per; c++) { g.noStroke(); g.bleed(0.1, 'out'); g.tile((dx, dy) => { g.fill(pick(g, ['#7a7c86', '#6c6e78', '#8a8c96', '#62646e']), 255); g.rect(c * cw + 2 + dx, r * rh + 2 + dy, cw - 4, rh - 4); }); }
+    }
+    g.stroke('2B', '#1a1c22', 1.4); for (let r = 0; r <= rows; r++) g.tile((dx, dy) => g.line(dx, r * rh + dy, 256 + dx, r * rh + dy));
+    g.stroke('cpencil', '#c8c8d0', 0.7); for (let i = 0; i < 30; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); g.tile((dx, dy) => g.line(x + dx, y + dy, x + dx + g.rnd(-2, 2), y + g.rnd(8, 24) + dy)); }
+    g.noStroke(); g.bleed(0.6, 'out'); for (let i = 0; i < 14; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); g.tile((dx, dy) => { g.fill('#3f6a52', 110); g.circle(x + dx, y + dy, g.rnd(8, 20)); }); }        // verdigris / moss
+  }),
+};
