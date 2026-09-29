@@ -1,5 +1,5 @@
 {
-  "when": "2026-09-29T20:55:21.588Z",
+  "when": "2026-09-29T22:26:25.787Z",
   "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
   "checks": [
     {
@@ -8,9 +8,19 @@
       "detail": ""
     },
     {
+      "name": "audio is locked until the player makes a gesture (no context at startup)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a real click unlocks audio (context running)",
+      "ok": true,
+      "detail": "running"
+    },
+    {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=40"
+      "detail": "mode=playing tick=43"
     },
     {
       "name": "holding a real W key moves the player (live input)",
@@ -21,6 +31,11 @@
       "name": "real mouse click fires the flare cannon (ammo consumed)",
       "ok": true,
       "detail": "shots=1 ammo=7 lockFailed=false"
+    },
+    {
+      "name": "firing plays the flare cannon sound through the live audio engine",
+      "ok": true,
+      "detail": "played=10 last=ui_click,toll_alert,toll_alert,step_plank,toll_soft,toll_soft,step_plank,step_plank,flare_fire,wheeze_windup"
     },
     {
       "name": "Escape pauses (live)",
@@ -35,7 +50,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.44 m, ratio 1.52"
+      "detail": "walk 4.24 m, sprint 6.27 m, ratio 1.48"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -76,6 +91,11 @@
       "name": "all 8 enemies killed, key held",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
+      "ok": true,
+      "detail": "played=71 distinct(last40)=step_plank,door_open,toll_alert,flare_fire,flare_boom,enemy_die,pickup_key,pickup_ammo,door_close,step_outdoor,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -125,14 +145,14 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=872 avg=25.7ms"
+      "detail": "frames=900 avg=23.4ms"
     }
   ],
   "errors": [],
   "perf": {
-    "frames": 872,
-    "avgMs": 25.695298165082882,
-    "p95Ms": 50.099999999998545,
+    "frames": 900,
+    "avgMs": 23.370444444444413,
+    "p95Ms": 50,
     "worstMs": 100
   },
   "gl": {

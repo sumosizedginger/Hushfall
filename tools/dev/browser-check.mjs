@@ -32,8 +32,11 @@ try {
 
   // ---- 0. REAL input path: DOM click -> live rAF loop -> fixed-step sim (no test-hook stepping) -------------------------
   const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+  check('audio is locked until the player makes a gesture (no context at startup)', (await T('t.state().audio.state')) === 'locked');
   await page.click('#btn-normal');
   await sleep(700);
+  const audioState = await T('t.state().audio.state');
+  check('a real click unlocks audio (context running)', audioState === 'running', audioState);
   const live0 = await T('t.state()');
   check('real click on Normal starts a game and the live loop advances the sim', live0.mode === 'playing' && live0.tick > 10, `mode=${live0.mode} tick=${live0.tick}`);
   await page.keyboard.down('KeyW'); await sleep(1000); await page.keyboard.up('KeyW');
@@ -42,6 +45,8 @@ try {
   await page.mouse.click(640, 360); await sleep(150); await page.mouse.click(640, 360); await sleep(400);   // first click may request pointer lock
   const live2 = await T('t.state()');
   check('real mouse click fires the flare cannon (ammo consumed)', live2.stats.shots >= 1 && live2.player.ammo.flare < 8, `shots=${live2.stats.shots} ammo=${live2.player.ammo.flare} lockFailed=${live2.lockFailed}`);
+  const audioAfterFire = await T('t.state().audio');
+  check('firing plays the flare cannon sound through the live audio engine', audioAfterFire.played > 0 && (await T('t.audioLog()')).some((x) => x.id === 'flare_fire'), `played=${audioAfterFire.played} last=${audioAfterFire.last.join(',')}`);
   await shot('01b-live-input');
   await page.keyboard.press('Escape'); await sleep(300);
   const escState = await T('t.state()');
@@ -95,6 +100,8 @@ try {
   check('browser sim == Node sim (tick count)', r.tick === node.ticks, `browser ${r.tick} vs node ${node.ticks}`);
   check('browser sim == Node sim (state hash)', r.hash === node.hash, `browser ${r.hash} vs node ${node.hash}`);
   check('all 8 enemies killed, key held', r.stats.kills === 8 && r.player.keys.includes('brass'));
+  const heard = new Set((await T('t.audioLog()')).map((x) => x.id)), all = await T('t.state().audio.played');
+  check('the route was audible: many sounds played incl. explosion, key, door, death, footsteps', all > 30 && ['flare_boom', 'pickup_key', 'door_open', 'enemy_die'].every((id) => heard.has(id)), `played=${all} distinct(last40)=${[...heard].join(',')}`);
   await page.waitForFunction("!document.getElementById('screen-complete').classList.contains('hidden')", { timeout: 15000 }).catch(() => {});
   check('intermission screen shows end-level statistics', (await visible('screen-complete')) && /Kills/.test(await text('stat-rows')), (await text('stat-rows')).replace(/\s+/g, ' '));
   await shot('04-intermission');

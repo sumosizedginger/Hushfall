@@ -9,6 +9,7 @@ import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
 import { TICK, VIEW } from '../engine/defs.js';
 import { UI } from './ui.js';
+import { AudioEngine } from '../audio/engine.js';
 import { loadSettings, saveSettings } from './settings.js';
 
 const canvas = document.getElementById('c');
@@ -19,6 +20,11 @@ const memory = new Map();
 const storage = (() => { try { localStorage.setItem('_hf', '1'); localStorage.removeItem('_hf'); return localStorage; } catch { return { getItem: (k) => memory.get(k) ?? null, setItem: (k, v) => memory.set(k, v), removeItem: (k) => memory.delete(k) }; } })();
 const store = new SaveStore(storage);
 const { settings, notes: settingsNotes } = loadSettings(storage);
+
+const audio = new AudioEngine(settings);
+// browsers keep audio locked until a gesture: every real key/pointer press tries to unlock (idempotent, cheap once running)
+for (const evt of ['pointerdown', 'keydown']) addEventListener(evt, () => audio.unlock(), { capture: true });
+document.addEventListener('click', (e) => { if (e.target.closest?.('button')) audio.play('ui_click'); });
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
 renderer.setPixelRatio(1); renderer.autoClear = false;
@@ -38,7 +44,7 @@ const ui = new UI({
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.startCarry }),
   quitToTitle: () => quitToTitle(),
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 ui.syncSettings(settings); ui.syncBindings(settings.bindings);
@@ -67,14 +73,15 @@ function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed,
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0;
   if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now() }));
   g.mode = 'playing'; ui.show(null); if (note) ui.toast(note);
+  audio.newLevel();
   requestLock();
 }
 function quitToTitle() {
   g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
-  renderer.setRenderTarget(null); renderer.clear(); ui.show('title', { canContinue: canContinue() });
+  renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
-function pause() { if (g.mode !== 'playing') return; g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause'); }
-function resume() { if (g.mode !== 'paused') return; g.mode = 'playing'; ui.show(null); requestLock(); }
+function pause() { if (g.mode !== 'playing') return; audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause'); }
+function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
 function quickSave() { if (!g.world) return; try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now() })); ui.show('pause', { note: 'Saved.' }); } catch (e) { ui.show('pause', { note: 'Save failed: ' + e.message }); } }
 function quickLoad() { const r = store.read('quick'); if (!r.ok) return ui.show(g.mode === 'paused' ? 'pause' : g.mode === 'dying' || g.mode === 'dead' ? 'dead' : 'title', { note: `No quick save (${r.reason}).`, canContinue: canContinue() }); applySave(r.save, 'quick'); }
 function requestLock() { if (g.lockFailed) return; try { const p = canvas.requestPointerLock?.(); p?.catch?.(() => { g.lockFailed = true; ui.setPointerHint('pointer lock unavailable: drag to look'); }); } catch { g.lockFailed = true; } }
@@ -85,7 +92,7 @@ function stepOnce() {
   const cmd = g.input.sample();
   if (cmd.pause) { pause(); return; }
   g.view.beforeStep(g.world); step(g.world, cmd);
-  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); g.events.push(...ev); }
+  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); g.events.push(...ev); }
   if (g.world.status === 'dead') { g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
 }
@@ -123,10 +130,11 @@ function frame(now) {
   if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead'); } }
   else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name }); } }
+  audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
   requestAnimationFrame(frame);
 }
 resize(); ui.show('title', { canContinue: canContinue(), note: settingsNotes.join(' ') });
 requestAnimationFrame(frame);
 
-if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));
+if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));

@@ -14,7 +14,8 @@
     "verify": "npm run validate && npm test && npm run build",
     "browsercheck": "node tools/dev/browser-check.mjs",
     "verify-map": "node tools/verify-map.mjs",
-    "shoot-stances": "node tools/dev/shoot-stances.mjs"
+    "shoot-stances": "node tools/dev/shoot-stances.mjs",
+    "audio-qa": "node tools/dev/audio-qa.mjs"
   },
   "keywords": [],
   "author": "",
