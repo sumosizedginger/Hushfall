@@ -1,0 +1,41 @@
+{
+  "generatedBy": "tools/bake.mjs",
+  "env": {
+    "p5": "2.3.4",
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
+  },
+  "assets": {
+    "wall_bulkhead_a": {
+      "seed": 1101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "fc3a49cbf47060b00b6128cf68bebd6da9a0986b0a30e8f24b6a4af0cb3837ca",
+      "bytes": 98562
+    },
+    "enemy_tollbearer_idle": {
+      "seed": 2201,
+      "width": 128,
+      "height": 128,
+      "transparent": true,
+      "sha256": "211fceeb6a4ea7875f1cd9a2cc958854d0616870427f529663df7b02928e2905",
+      "bytes": 17832
+    },
+    "weapon_flarecannon": {
+      "seed": 3301,
+      "width": 256,
+      "height": 160,
+      "transparent": true,
+      "sha256": "735021f33efeee770560450b736b4d3fc3f0b659b98aa96f725899aaaff8e191",
+      "bytes": 37892
+    },
+    "ui_title_art": {
+      "seed": 4401,
+      "width": 320,
+      "height": 200,
+      "transparent": false,
+      "sha256": "d010fc84959ef5bc5774753a46ab349c8db2348968aa4a8b8d5fc26225f1dcea",
+      "bytes": 126114
+    }
+  }
+}

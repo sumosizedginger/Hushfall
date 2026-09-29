@@ -1,0 +1,84 @@
+{
+  "date": "2026-09-29",
+  "purpose": "Gate 0 asset-pipeline acceptance evidence",
+  "versions": {
+    "p5": "2.3.4",
+    "p5.brush": "2.2.3 (p5-integrated, ESM instance mode)",
+    "three": "0.186.1",
+    "node": "v24.21.0",
+    "chrome": "154.0.8037.57 headless, SwiftShader"
+  },
+  "commands": {
+    "install": "npm ci",
+    "bake": "npm run bake",
+    "cleanRegen": "node tools/dev/clean-regen.mjs",
+    "determinism": "node tools/dev/determinism.mjs <id>"
+  },
+  "assets": {
+    "wall_bulkhead_a": {
+      "seed": 1101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "fc3a49cbf47060b00b6128cf68bebd6da9a0986b0a30e8f24b6a4af0cb3837ca",
+      "bytes": 98562
+    },
+    "enemy_tollbearer_idle": {
+      "seed": 2201,
+      "width": 128,
+      "height": 128,
+      "transparent": true,
+      "sha256": "211fceeb6a4ea7875f1cd9a2cc958854d0616870427f529663df7b02928e2905",
+      "bytes": 17832
+    },
+    "weapon_flarecannon": {
+      "seed": 3301,
+      "width": 256,
+      "height": 160,
+      "transparent": true,
+      "sha256": "735021f33efeee770560450b736b4d3fc3f0b659b98aa96f725899aaaff8e191",
+      "bytes": 37892
+    },
+    "ui_title_art": {
+      "seed": 4401,
+      "width": 320,
+      "height": 200,
+      "transparent": false,
+      "sha256": "d010fc84959ef5bc5774753a46ab349c8db2348968aa4a8b8d5fc26225f1dcea",
+      "bytes": 126114
+    }
+  },
+  "cleanEnvRegen": {
+    "enemy_tollbearer_idle.png": {
+      "differingBytes": 161,
+      "totalBytes": 65536,
+      "fractionDiffering": 0.00246,
+      "maxChannelDelta": 21
+    },
+    "ui_title_art.png": {
+      "differingBytes": 72,
+      "totalBytes": 256000,
+      "fractionDiffering": 0.00028,
+      "maxChannelDelta": 3
+    },
+    "wall_bulkhead_a.png": {
+      "differingBytes": 238,
+      "totalBytes": 262144,
+      "fractionDiffering": 0.00091,
+      "maxChannelDelta": 11
+    },
+    "weapon_flarecannon.png": {
+      "differingBytes": 455,
+      "totalBytes": 163840,
+      "fractionDiffering": 0.00278,
+      "maxChannelDelta": 150
+    }
+  },
+  "tolerance": "Not bit-exact. Clean-env regen differs in <=0.3% of bytes per asset (max channel delta up to 150 on sparse edge pixels). Compare with tolerance, not hashes.",
+  "verified": {
+    "transparencyInspected": true,
+    "scalingNearestNeighborPreview": true,
+    "wallSeamless2x2Preview": true,
+    "loadedThroughThreeJsGamePath": false
+  }
+}
