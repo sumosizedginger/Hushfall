@@ -4,7 +4,7 @@
 // and on white (same seed) and bake.mjs recovers exact alpha by difference matting.
 import p5 from 'p5';
 import * as brush from 'p5.brush';
-import { recipes } from './recipes.js';
+import { recipes } from './all.js';
 
 const params = new URLSearchParams(location.search);
 const id = params.get('asset');

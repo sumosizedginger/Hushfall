@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,"><title>HUSHFALL look demo</title>
+<style>
+html,body{margin:0;height:100%;background:#0b0b10;overflow:hidden;color:#cfe8e4;font:12px/1.5 ui-monospace,Consolas,monospace}
+canvas{display:block;width:100vw;height:100vh}
+#hud{position:fixed;left:12px;bottom:12px;background:#0b0b10cc;padding:8px 12px;border:1px solid #2a3a40;white-space:pre;pointer-events:none}
+#cross{position:fixed;left:50%;top:50%;width:7px;height:7px;margin:-4px 0 0 -4px;border:1px solid #3fffe0;border-radius:50%;opacity:.75;pointer-events:none}
+#msg{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;font-size:16px;text-shadow:0 0 8px #000}
+</style></head>
+<body><canvas id="c"></canvas><div id="cross"></div><div id="msg">loading…</div><div id="hud"></div>
+<script type="module" src="/src/look/main.js"></script></body></html>

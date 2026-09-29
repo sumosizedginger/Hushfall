@@ -1,11 +1,13 @@
 // Asset recipes. Coordinates are authored top-left (px) and mapped to p5.brush's centred WEBGL origin by wrap().
 // All randomness flows from p.randomSeed(seed) so bakes are seed-reproducible.
 
-function wrap(p, b, w, h) {
+export function wrap(p, b, w, h) {
   const X = (x) => x - w / 2, Y = (y) => y - h / 2;
   return {
     p, raw: b,
     bg: (c) => p.background(c),
+    // truly opaque rect via plain p5 (brush fills are translucent washes)
+    solid: (x, y, ww, hh, col) => { p.push(); p.noStroke(); p.fill(col); p.rect(X(x), Y(y), ww, hh); p.pop(); },
     stroke: (name, col, wt) => b.set(name, col, wt),
     fill: (col, a) => b.fill(col, a), noFill: () => b.noFill(), noStroke: () => b.noStroke(),
     bleed: (s, d) => b.fillBleed(s, d),
@@ -25,7 +27,7 @@ function wrap(p, b, w, h) {
     rnd: (a, c) => p.random(a, c),
   };
 }
-const R = (fn) => (p, b, w, h) => fn(wrap(p, b, w, h), w, h);
+export const R = (fn) => (p, b, w, h) => fn(wrap(p, b, w, h), w, h);
 
 export const recipes = {
   // 1. Wall / environment texture: salt-eaten harbour bulkhead, tiles seamlessly.
