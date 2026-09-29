@@ -1,0 +1,30 @@
+{
+  "cleanDir": "C:\\Users\\sumos\\AppData\\Local\\Temp\\hushfall-clean-GD7AyK",
+  "node": "v24.21.0",
+  "results": {
+    "enemy_tollbearer_idle.png": {
+      "differingBytes": 161,
+      "totalBytes": 65536,
+      "fractionDiffering": 0.00246,
+      "maxChannelDelta": 21
+    },
+    "ui_title_art.png": {
+      "differingBytes": 72,
+      "totalBytes": 256000,
+      "fractionDiffering": 0.00028,
+      "maxChannelDelta": 3
+    },
+    "wall_bulkhead_a.png": {
+      "differingBytes": 238,
+      "totalBytes": 262144,
+      "fractionDiffering": 0.00091,
+      "maxChannelDelta": 11
+    },
+    "weapon_flarecannon.png": {
+      "differingBytes": 455,
+      "totalBytes": 163840,
+      "fractionDiffering": 0.00278,
+      "maxChannelDelta": 150
+    }
+  }
+}
