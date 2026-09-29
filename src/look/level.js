@@ -1,6 +1,6 @@
 // Grid-authored level -> Three.js geometry. This is the seed of the real map format (ASCII grid + props).
 import * as THREE from 'three';
-import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar } from './models.js';
+import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar } from '../render/models.js';
 
 export const S = 2;          // metres per cell
 export const H = 3.6;        // interior wall height

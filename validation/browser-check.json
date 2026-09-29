@@ -1,0 +1,126 @@
+{
+  "when": "2026-09-29T20:21:39.340Z",
+  "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
+  "checks": [
+    {
+      "name": "title screen shown at startup",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "real click on Normal starts a game and the live loop advances the sim",
+      "ok": true,
+      "detail": "mode=playing tick=42"
+    },
+    {
+      "name": "holding a real W key moves the player (live input)",
+      "ok": true,
+      "detail": "moved 5.39 m"
+    },
+    {
+      "name": "real mouse click fires the flare cannon (ammo consumed)",
+      "ok": true,
+      "detail": "shots=1 ammo=7 lockFailed=false"
+    },
+    {
+      "name": "Escape pauses (live)",
+      "ok": true,
+      "detail": "paused"
+    },
+    {
+      "name": "Escape again resumes (live)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "game starts and HUD is visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bot completes the canonical route in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=2813"
+    },
+    {
+      "name": "browser sim == Node sim (tick count)",
+      "ok": true,
+      "detail": "browser 2813 vs node 2813"
+    },
+    {
+      "name": "browser sim == Node sim (state hash)",
+      "ok": true,
+      "detail": "browser 548f699f vs node 548f699f"
+    },
+    {
+      "name": "all 8 enemies killed, key held",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "intermission screen shows end-level statistics",
+      "ok": true,
+      "detail": "Kills8 / 8Items4 / 10Secrets0 / 1Time0:46 (par 5:00)Damage taken26DifficultyNormal"
+    },
+    {
+      "name": "secret route: secret found and level completed",
+      "ok": true,
+      "detail": "secrets=1"
+    },
+    {
+      "name": "quick load restores the saved state (hp back, tick back)",
+      "ok": true,
+      "detail": "tick=240 hp=100"
+    },
+    {
+      "name": "resumed play equals uninterrupted play except the deliberate hp edit",
+      "ok": true,
+      "detail": "x 45.893 vs 45.893"
+    },
+    {
+      "name": "pause shows the pause menu",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "player death is detected",
+      "ok": true,
+      "detail": "dead/dying"
+    },
+    {
+      "name": "death screen appears",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "retry restarts the level with a live player",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
+      "ok": true,
+      "detail": "geometries 341->341, textures 12->12, programs 7->7"
+    },
+    {
+      "name": "real-time loop runs frames without exceptions",
+      "ok": true,
+      "detail": "frames=706 avg=25.9ms"
+    }
+  ],
+  "errors": [],
+  "perf": {
+    "frames": 706,
+    "avgMs": 25.87039660043145,
+    "p95Ms": 99.90000000000146,
+    "worstMs": 100
+  },
+  "gl": {
+    "geometries": 341,
+    "textures": 12,
+    "calls": 1,
+    "triangles": 2,
+    "programs": 7
+  },
+  "note": "perf numbers are software-GL and are NOT a performance claim"
+}

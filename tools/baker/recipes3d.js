@@ -166,3 +166,36 @@ export const recipes3d = {
     }),
   },
 };
+
+// ---- Gate 1 engine skeleton additions -------------------------------------
+recipes3d.door_hatch_a = {
+  seed: 5801, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#3a2a1a');
+    g.noStroke(); g.bleed(0.06, 'out');
+    for (let i = 0; i < 6; i++) { g.solid(i * 42.6, 0, 43, 256, pick(g, ['#4a3420', '#3e2c1a', '#54402a'])); }
+    g.stroke('2B', '#140c06', 1.4); for (let i = 0; i <= 6; i++) g.line(i * 42.6, 0, i * 42.6, 256);
+    g.stroke('cpencil', '#20140a', 0.8); for (let i = 0; i < 40; i++) { const x = g.rnd(4, 252), y = g.rnd(4, 200); g.line(x, y, x + g.rnd(-2, 2), y + g.rnd(20, 50)); }
+    for (const y of [40, 200]) { g.solid(0, y - 10, 256, 20, '#2a2e32'); g.stroke('2B', '#0a0c0e', 1.4); g.line(0, y - 10, 256, y - 10); g.line(0, y + 10, 256, y + 10);
+      g.stroke('HB', '#8a9a9a', 1.0); for (let x = 16; x < 256; x += 32) g.circle(x, y, 2); }
+    g.solid(96, 108, 64, 44, '#7a5a1c'); g.stroke('2B', '#1a1208', 1.4); g.rect(96, 108, 64, 44);
+    g.noStroke(); g.fill('#c9a44c', 220); g.circle(128, 126, 9); g.fill('#141416', 255); g.circle(128, 126, 3);
+    g.noStroke(); g.bleed(0.6, 'out'); for (let i = 0; i < 6; i++) { g.fill('#0a0806', g.rnd(40, 90)); g.circle(g.rnd(10, 246), g.rnd(10, 246), g.rnd(14, 30)); }
+  }),
+};
+
+recipes3d.props_atlas = {
+  seed: 5901, width: 256, height: 256,
+  draw: R((g) => {
+    g.bg('#333');
+    cell(g, 0, '#d8d2c0', ['#c8c2b0', '#e8e2d0'], (c) => { g.noStroke(); g.fill('#b8322a', 255); c.rect(22, 10, 20, 44); c.rect(10, 22, 44, 20); g.stroke('cpencil', '#7a6a50', 0.8); for (let i = 0; i < 4; i++) { const y = g.rnd(6, 58); c.line(6, y, 30, y + 2); } });
+    cell(g, 1, '#6b5a2c', ['#54461f', '#7a683a'], (c) => { g.stroke('cpencil', '#e0be6a', 1.0); c.circle(32, 32, 12); c.line(32, 12, 32, 52); c.line(20, 32, 44, 32); });
+    cell(g, 2, '#4a5a44', ['#3a4a36', '#5a6a54'], (c) => { g.stroke('2B', '#1e281c', 1.0); for (let i = 0; i < 4; i++) c.line(8 + i * 16, 4, 8 + i * 16, 60); });
+    cell(g, 3, '#c9a44c', ['#e0be6a', '#a07a2c'], (c) => { g.stroke('cpencil', '#fff0c0', 0.8); c.line(8, 10, 8, 54); c.line(20, 8, 24, 54); });
+    cell(g, 4, '#b8322a', ['#8a2018', '#d04a3a'], null);
+    cell(g, 5, '#e6e0d0', ['#d0c8b4', '#f4f0e4'], null);
+    cell(g, 6, '#3fd6c0', ['#7fffe8', '#1fa090'], null);
+    cell(g, 7, '#8a7a5a', ['#6a5a3a', '#a08a64'], (c) => { g.stroke('cpencil', '#4a3a20', 0.8); for (let i = 0; i < 6; i++) c.line(4, 6 + i * 9, 60, 8 + i * 9); });
+    for (let i = 8; i < 16; i++) cell(g, i, '#555', ['#666', '#444'], null);
+  }),
+};

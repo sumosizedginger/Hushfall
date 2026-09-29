@@ -1,20 +1,29 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
-- Gate: **0 complete (look approved by user 2026-09-29). Next: Gate 1, one real level (C1E1M01 Marrow Quay).**
-- Blockers: none. Note: look approval is NOT the Gate 1 creative approval; that comes after the Gate 1 evidence bundle.
-- Exact next task: Gate 1 milestone 1 — promote src/look into the real engine skeleton: map format (ASCII grid + props + triggers) with reachability checker, fixed-step sim, input-action layer, versioned save schema stub, dev-only __GAME_TEST__ hook, first validation evidence for C1E1M01.
-- Resume: `npm ci && npm run validate && npm run bake && node tools/preview.mjs`
+- Gate: **1, milestone 1 (engine skeleton) DONE.** Gate 0 complete; look approved by the user 2026-09-29. That is NOT the Gate 1 creative approval, which comes after the Gate 1 evidence bundle.
+- Blockers: none. Waiting on user: nothing required; optional feedback on the skeleton.
+- Map status (derived): C1E1M01 AGENT_VERIFIED (skeleton test layout, map v1); 67 PLANNED. See `npm run status`.
+- Exact next task: **Gate 1 milestone 2** — turn `C1E1M01` into the real Marrow Quay level and add the missing Gate 1 content, in this order: (1) original audio via the sim event queue (weapons, damage, enemies, pickups, doors, feedback; unlock on first gesture); (2) second tactically different weapon + a second behaviourally different enemy; (3) automap; (4) HUD/pause polish + key remapping UI; (5) proper Marrow Quay layout, lighting and set dressing (map v2 will invalidate the old evidence automatically); (6) Gate 1 evidence bundle `review/gate-1/` and the adversarial audit.
+- Do not start Gate 2. Do not change the look direction without asking.
+- Resume: `npm ci && npm run verify && npm run browsercheck && npm run dev` (game on http://localhost:5173/).
 
-## 2026-09-29
-- Repo was empty, no git history. Initialised git. Node 24.21, npm 11.19. Installed p5 2.3.4, p5.brush 2.2.3, three 0.186.1, vite, puppeteer (Chrome 154), pngjs.
-- Instruction policy: `CLAUDE.md` = `@AGENTS.md` (single copy). Not yet verified in a fresh session; verify at next session start.
-- Asset spike: found and documented four p5.brush facts (see ART_BIBLE): explicit `brush.seed`, one instance per page, no transparent-canvas compositing (black/white matting), centred origin.
-- Rejected: baking all recipes in one page (only first p5 instance renders); alpha from a single bake (brush draws nothing to a transparent canvas).
-- 68-slot manifest created (`tools/dev/gen-manifest.mjs`, run once). Validator + evidence-derived status implemented and negative-tested for status inflation.
-- Defects: see TESTING.md known defects.
+## Recent decisions
+- 2026-09-29: sim is headless and deterministic (plain-data state, seeded RNG, event queue) so tests run in Node with no browser; the renderer only reads it. Verified Node and Chrome give identical state hashes.
+- 2026-09-29: map format v1 = ASCII grid (# wall, . interior, : outdoor, D door, S secret panel) + entity list (player, enemy, pickup, prop, exit) + doors/secrets tables. Reachability considers keys.
+- 2026-09-29: death beats exit when both happen on the same tick (documented + tested).
+- 2026-09-29: save policy: migrate or reject with an explicit reason; mid-level saves fall back to level start if the map version changed. Settings are versioned the same way.
+- 2026-09-29: dev test hook is compiled out of production via `import.meta.env.DEV`; its only state writers are labelled `setup_*`.
 
-## 2026-09-29 (later)
-- User: painted look must be p5, world must be 3D. Built look demo: src/look/* (level grid -> geometry, models, post pass), tools/baker/recipes3d.js (atlases, floor, crate, pod, sky, paper), tools/dev/shoot-look.mjs.
-- Process incident: I ran taskkill by image name and closed the user's Chrome. Rule saved in memory; never again.
-- Bake times: tollbearer atlas ~100 s under SwiftShader; BAKE_PORT env allows parallel bakes (beware manifest write race).
+## Rejected / removed
+- Baking several recipes in one page (only the first p5 instance renders); alpha from a single bake; one-page-per-asset kept.
+- Using the app browser pane for live-loop verification (it hides itself, suspending rAF). Headless Chrome is used.
+
+## Defects
+See `TESTING.md` known defects.
+
+## Log
+- 2026-09-29 Gate 0: repo initialised, docs, 68-slot manifest, validator/status, p5+p5.brush spike (clean-env regen within 0.3%).
+- 2026-09-29 look demo: painted-3D direction proven and approved. Process incident: I killed the user's Chrome with `taskkill /IM`; rule saved to memory and AGENTS.md.
+- 2026-09-29 engine skeleton: `src/engine/*` (world, mapformat, reach, input, loop, save, bot, harness, defs, rng), `src/render/*`, `src/game/*`, `maps/C1E1M01.json`, routes, 48 tests, `tools/dev/browser-check.mjs` (22 checks), `tools/verify-map.mjs`. Two new bakes: `door_hatch_a`, `props_atlas`.
+- Commits: see `git log`.

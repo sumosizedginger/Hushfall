@@ -8,7 +8,12 @@
     "status": "node tools/validate.mjs --status",
     "look": "vite --port 5173",
     "dev": "vite --port 5173",
-    "shoot": "node tools/dev/shoot-look.mjs"
+    "shoot": "node tools/dev/shoot-look.mjs",
+    "test": "node --test \"tests/*.test.js\"",
+    "build": "vite build",
+    "verify": "npm run validate && npm test && npm run build",
+    "browsercheck": "node tools/dev/browser-check.mjs",
+    "verify-map": "node tools/verify-map.mjs"
   },
   "keywords": [],
   "author": "",

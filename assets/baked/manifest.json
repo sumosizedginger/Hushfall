@@ -92,6 +92,22 @@
       "transparent": false,
       "sha256": "46db75e9f53243f83fa4e01ab05f4d12210fe6050dec03038f893c2ec74a9c1e",
       "bytes": 249976
+    },
+    "door_hatch_a": {
+      "seed": 5801,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d17af92b6ec4af054d097f1a1c6c2bf882a0204ad8b465de4bdae2453ebd618d",
+      "bytes": 40326
+    },
+    "props_atlas": {
+      "seed": 5901,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "5e0787a008b66b005aa36de2e706be6037ce6bab360b90f364a651f59f4b59ee",
+      "bytes": 39069
     }
   }
 }
