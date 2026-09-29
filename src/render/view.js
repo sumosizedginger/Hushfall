@@ -7,7 +7,7 @@ import { mergeStatic } from './merge.js';
 import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 
-const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas) };
+const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand') };
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
 const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
@@ -40,11 +40,15 @@ export class GameView {
     this.prev = { player: { x: 0, z: 0, yaw: 0, pitch: 0 }, enemies: new Map() };
     this.seed = 99; this.debGeo = new THREE.TetrahedronGeometry(0.09); this.debMat = new THREE.MeshBasicMaterial({ color: 0xff8a30 }); this.dustMat = new THREE.MeshBasicMaterial({ color: 0x9a8a72 });
     this.projGeo = new THREE.IcosahedronGeometry(0.13, 0); this.projMat = new THREE.MeshBasicMaterial({ color: 0xffb040 });
+    this.shotGeo = new THREE.IcosahedronGeometry(0.17, 1); this.shotRing = new THREE.TorusGeometry(0.3, 0.025, 4, 14); this.shotMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 }); this.shotViews = new Map();      // Bellhand toll-shots: teal, slow, readable
     this.beforeStep(world);
   }
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
   setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w))); }
-  setLook({ outline, paint }) { this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; }
+  setLook({ outline, paint, fov = VIEW.fov, brightness = 1 }) {
+    this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.post.uniforms.uExposure.value = 2.2 * brightness;
+    this.baseFov = fov; this.adsFov = fov * (VIEW.adsFov / VIEW.fov);                                                      // aiming keeps the same zoom ratio at any field of view
+  }
 
   /** call before each sim step so render can interpolate */
   beforeStep(w) {
@@ -75,7 +79,7 @@ export class GameView {
     if (w.status === 'dead') { this.deadT = Math.min(1, this.deadT + dt / 0.8); eye = lerp(PLAYER.eye, 0.35, this.deadT); roll = this.deadT * 0.5; } else this.deadT = 0;
     this.cam.position.set(lerp(pp.x, p.x, alpha), eye, lerp(pp.z, p.z, alpha));
     this.cam.rotation.set(lerp(pp.pitch, p.pitch, alpha) + p.kick, lerp(pp.yaw, p.yaw, alpha), roll);
-    const fov = lerp(VIEW.fov, VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
+    const fov = lerp(this.baseFov ?? VIEW.fov, this.adsFov ?? VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
@@ -111,6 +115,13 @@ export class GameView {
       m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK); lead = lead || m;
     }
     for (const [id, m] of this.projViews) if (!seen.has(id)) { this.scene.remove(m); this.projViews.delete(id); }
+    seen.clear();
+    for (const q of w.enemyShots) {
+      seen.add(q.id); let m = this.shotViews.get(q.id);
+      if (!m) { m = new THREE.Mesh(this.shotGeo, this.shotMat); const ring = new THREE.Mesh(this.shotRing, this.shotMat); m.add(ring); m.userData.ring = ring; this.scene.add(m); this.shotViews.set(q.id, m); }
+      m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK); m.userData.ring.rotation.set(this.time * 5, this.time * 3, 0); m.scale.setScalar(1 + 0.15 * Math.sin(this.time * 18));
+    }
+    for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = d.open * (this.map.ceiling - 0.05); }
@@ -151,7 +162,7 @@ export class GameView {
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
-    this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose();
+    this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose();
     this.post.dispose();
     this.scene.clear(); this.weaponScene.clear();
   }

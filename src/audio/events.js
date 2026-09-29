@@ -9,8 +9,8 @@ const WEAPON_FIRE = {
   flare: [{ id: 'flare_fire' }],
   scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
 };
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -36,6 +36,8 @@ export function soundsForEvent(e) {
     case 'enemy_windup': return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
     case 'enemy_lunge': return [{ id: 'gaunt_lunge', pos: at(e) }];
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
+    case 'enemy_shot': return [{ id: 'toll_shot', pos: at(e) }];
+    case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
     case 'enemy_died': return [{ id: 'enemy_die', pos: at(e) }];
     case 'message': return [{ id: 'radio' }];

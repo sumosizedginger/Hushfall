@@ -21,6 +21,8 @@ export const PLAYER = {
 };
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
+/** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
+export const NOISE = { flare: 22, scattergun: 26, explosion: 24, closeRange: 9 };
 export const AMMO_MAX = { flare: 30, shell: 40 };
 /** fixed slot order (keys 1, 2, ...); a weapon occupies its slot once owned */
 export const WEAPON_ORDER = ['flare', 'scattergun'];
@@ -36,9 +38,11 @@ export const WEAPONS = {
 };
 
 export const ENEMIES = {
-  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.2, gait: 5.2, radius: 0.4, height: 1.95, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 1.95, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
-  gaunt: { name: 'Gaunt Runner', hp: 24, speed: 3.4, gait: 11, radius: 0.34, height: 1.55, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
+  gaunt: { name: 'Gaunt Runner', hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.55, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
+  // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
+  bellhand: { name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 1.9, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
 };
 
 export const PICKUPS = {
@@ -54,11 +58,11 @@ export const PICKUPS = {
 // radius > 0 means a solid circular collider; blocksCell marks props that make a whole 2 m cell impassable for pathing.
 export const PROPS = {
   crate: { radius: 0.78, blocksCell: true },
-  crate2: { radius: 0.78, blocksCell: true },            // two stacked crates
+  crate2: { radius: 0.78, blocksCell: true, blocksSight: true },            // two stacked crates
   stall: { radius: 0.95, blocksCell: true },             // fish-market stall with an awning
   bollard: { radius: 0.22, blocksCell: false },          // mooring post
   barrel: { radius: 0.5, blocksCell: false },
-  pillar: { radius: 0.62, blocksCell: true },
+  pillar: { radius: 0.62, blocksCell: true, blocksSight: true },
   lamppost: { radius: 0.3, blocksCell: false },
   lamp: { radius: 0, blocksCell: false },
   pod: { radius: 0, blocksCell: false },

@@ -20,7 +20,9 @@ const ease = (t) => t * t * (3 - 2 * t);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
 // ---------------------------------------------------------------- Tollbearer
-export function makeTollbearer(atlasTex) {
+/** variant 'bellhand': same rig, dark coat and a bronze hand-bell on the striking arm (its tolled shot is the ranged attack). */
+export function makeTollbearer(atlasTex, variant = 'tollbearer') {
+  const bh = variant === 'bellhand';
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
@@ -37,9 +39,9 @@ export function makeTollbearer(atlasTex) {
   });
 
   const spine = new THREE.Group(); spine.position.y = 0.05; hips.add(spine);
-  const coat = M(new THREE.CylinderGeometry(0.2, 0.31, 0.78, 8), 0); coat.scale.z = 0.72; coat.position.y = 0.36; spine.add(coat);
-  const hem = M(new THREE.CylinderGeometry(0.31, 0.37, 0.24, 8, 1, true), 0); hem.scale.z = 0.72; hem.position.y = -0.09; spine.add(hem);
-  const placket = M(new THREE.BoxGeometry(0.07, 0.74, 0.03), 1); placket.position.set(0, 0.36, 0.19); spine.add(placket);
+  const coat = M(new THREE.CylinderGeometry(0.2, 0.31, 0.78, 8), bh ? 1 : 0); coat.scale.z = 0.72; coat.position.y = 0.36; spine.add(coat);
+  const hem = M(new THREE.CylinderGeometry(0.31, 0.37, 0.24, 8, 1, true), bh ? 1 : 0); hem.scale.z = 0.72; hem.position.y = -0.09; spine.add(hem);
+  const placket = M(new THREE.BoxGeometry(0.07, 0.74, 0.03), bh ? 5 : 1); placket.position.set(0, 0.36, 0.19); spine.add(placket);
 
   const arms = [-1, 1].map((s) => {
     const long = s < 0;
@@ -49,6 +51,11 @@ export function makeTollbearer(atlasTex) {
     const fl = long ? 0.5 : 0.4;
     const fa = M(new THREE.CylinderGeometry(0.052, 0.045, fl, 7), 0); fa.position.y = -fl / 2; el.add(fa);
     const hand = M(new THREE.BoxGeometry(0.09, 0.13, 0.05), 8); hand.position.y = -fl - 0.05; el.add(hand);
+    if (bh && !long) {                                                          // the hand-bell: a bronze cup hung from the wrist, glowing clapper
+      const cup = M(new THREE.CylinderGeometry(0.04, 0.16, 0.22, 9), 5); cup.position.y = -fl - 0.17; el.add(cup);
+      const lip = M(new THREE.TorusGeometry(0.16, 0.02, 4, 12), 5); lip.rotation.x = Math.PI / 2; lip.position.y = -fl - 0.28; el.add(lip);
+      const clap = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 4), glowMat); clap.position.y = -fl - 0.27; el.add(clap);
+    }
     return { sh, el };
   });
 
@@ -61,12 +68,12 @@ export function makeTollbearer(atlasTex) {
 
   // warden hat (a converted Tide-Warden), shoulder pads, belt
   const brim = M(new THREE.CylinderGeometry(0.27, 0.27, 0.025, 10), 1); brim.position.set(0, 0.2, 0.02); head.add(brim);
-  const crown = M(new THREE.CylinderGeometry(0.13, 0.16, 0.15, 10), 1); crown.position.set(0, 0.28, 0.02); head.add(crown);
+  const crown = M(new THREE.CylinderGeometry(0.13, 0.16, bh ? 0.26 : 0.15, 10), 1); crown.position.set(0, bh ? 0.33 : 0.28, 0.02); head.add(crown);          // the Bellhand wears a tall bellman's hat
   for (const s of [-1, 1]) { const pad = M(new THREE.IcosahedronGeometry(0.095, 0), 0); pad.position.set(s * 0.29, 0.7, 0); spine.add(pad); }
   const belt = M(new THREE.TorusGeometry(0.22, 0.022, 4, 10), 5); belt.rotation.x = Math.PI / 2; belt.scale.set(1.15, 0.72, 1); belt.position.y = 0.28; spine.add(belt);
 
   // the Bell: crystal growth from the right shoulder
-  const bell = new THREE.Group(); bell.position.set(0.3, 0.7, -0.02); spine.add(bell);
+  const bell = new THREE.Group(); bell.position.set(0.3, 0.7, -0.02); spine.add(bell); if (bh) bell.scale.setScalar(0.6);
   const mass = M(new THREE.IcosahedronGeometry(0.11, 0), 6); bell.add(mass);
   const big = M(new THREE.CylinderGeometry(0.015, 0.11, 0.52, 5), 6); big.position.set(0.05, 0.3, 0); big.rotation.z = -0.3; bell.add(big);
   const small = M(new THREE.CylinderGeometry(0.01, 0.07, 0.3, 5), 7); small.position.set(-0.03, 0.2, 0.08); small.rotation.set(0.4, 0, 0.25); bell.add(small);

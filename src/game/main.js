@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { loadAll, titleArtUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
-import { createWorld, step, drainEvents, carryOver } from '../engine/world.js';
+import { createWorld, step, drainEvents } from '../engine/world.js';
 import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
@@ -35,7 +35,7 @@ const tex = await loadAll();
 document.getElementById('title-art').src = titleArtUrl();
 
 const g = {
-  mode: 'title', world: null, view: null, loop: null, mapId: 'C1E1M01', difficulty: 'normal', seed: 1, startCarry: null, timer: 0,
+  mode: 'title', world: null, view: null, loop: null, mapId: 'C1E1M01', difficulty: 'normal', seed: 1, timer: 0,
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
   capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
@@ -45,11 +45,11 @@ const ui = new UI({
   newGame: (d) => startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
-  restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.startCarry }),
+  restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -71,7 +71,7 @@ function loadFirstSave() {
 function applySave(save, slot) {
   const r = loadWorld(save, (id) => MAPS[id]);
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
-  startLevel({ world: r.world, carry: save.carry, note: r.degraded }); return true;
+  startLevel({ world: r.world, note: r.degraded }); return true;
 }
 
 function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings.internalWidth); else renderer.setSize(innerWidth, innerHeight, false); }
@@ -82,7 +82,6 @@ function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed,
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry });
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
-  g.startCarry = carry || (world ? g.startCarry : carryOver(g.world));
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false;
   if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now() }));
@@ -128,7 +127,7 @@ document.addEventListener('wheel', (e) => { if (g.capture) { e.preventDefault();
 canvas.addEventListener('wheel', (e) => { if (g.mode !== 'playing') return; const code = e.deltaY < 0 ? 'WheelUp' : 'WheelDown'; g.input.keyDown(code); g.input.keyUp(code); e.preventDefault(); }, { passive: false });   // wheel = weapon cycle (tap-latched)
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
-const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };
+const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
 addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); });
 addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }

@@ -3,13 +3,15 @@
 import { createWorld, carryOver } from './world.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 /** version N -> function producing version N+1. */
 export const MIGRATIONS = {
   // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
   // v2 -> v3 (2026-09-29): weapon switching + Gaunt lunge. Player gains switchT, projectiles record their weapon, enemies gain lunge state.
   // v3 -> v4 (2026-09-29): automap exploration state. Old worlds start with nothing explored (the sim re-creates the array).
   // v4 -> v5 (2026-09-29): in-world messages remember which have been shown.
+  // v5 -> v6 (2026-09-29): levelStart (Retry restores the level-start inventory, not the mid-level one), enemy shots, hunt state. Old worlds get a fresh level start.
+  5: (s) => ({ ...s, version: 6, world: s.world ? { levelStart: { hp: 100, armor: 0, ammo: { flare: 8 }, weapons: ['flare'] }, enemyShots: [], ...s.world, enemies: (s.world.enemies || []).map((e) => ({ lastX: null, lastZ: null, lost: 0, steer: 0, ...e })) } : s.world }),
   4: (s) => ({ ...s, version: 5, world: s.world ? { messagesSeen: [], ...s.world } : s.world }),
   3: (s) => ({ ...s, version: 4, world: s.world ? { explored: [], ...s.world } : s.world }),
   2: (s) => {
@@ -25,7 +27,8 @@ export const MIGRATIONS = {
 };
 
 export function makeSave(w, kind, { now = 0 } = {}) {
-  const save = { magic: SAVE_MAGIC, version: SAVE_VERSION, savedAt: now, kind, campaign: { mapId: w.mapId, mapVersion: w.mapVersion, difficulty: w.difficulty, seed: w.seed }, carry: carryOver(w) };
+  const save = { magic: SAVE_MAGIC, version: SAVE_VERSION, savedAt: now, kind, campaign: { mapId: w.mapId, mapVersion: w.mapVersion, difficulty: w.difficulty, seed: w.seed },
+    carry: kind === 'mid-level' && w.levelStart ? JSON.parse(JSON.stringify(w.levelStart)) : carryOver(w) };          // a mid-level save's carry is what the LEVEL began with: it is what a map-changed fallback or Retry must restore
   if (kind === 'mid-level') save.world = JSON.parse(JSON.stringify(w));
   return save;
 }
