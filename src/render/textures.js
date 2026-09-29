@@ -20,7 +20,8 @@ export function loadTex(name, { repeat = true, srgb = true } = {}) {
   }, undefined, () => reject(new Error('failed to load texture ' + name))));
 }
 
-const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'sky_dusk', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art'];
+const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'sky_dusk', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art',
+  'water_dusk', 'cobble_wet_a', 'brick_warm_a', 'awning_stripe_a', 'boat_hull_a', 'tower_stone_a'];
 
 export async function loadAll() {
   const out = {};

@@ -16,7 +16,9 @@
     "verify-map": "node tools/verify-map.mjs",
     "shoot-stances": "node tools/dev/shoot-stances.mjs",
     "audio-qa": "node tools/dev/audio-qa.mjs",
-    "shoot-weapons": "node tools/dev/shoot-weapons.mjs"
+    "shoot-weapons": "node tools/dev/shoot-weapons.mjs",
+    "shoot-level": "node tools/dev/shoot-level.mjs",
+    "gate1-bundle": "node tools/gate1-bundle.mjs"
   },
   "keywords": [],
   "author": "",

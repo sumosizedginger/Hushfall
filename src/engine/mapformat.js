@@ -1,9 +1,15 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, ENEMIES, PICKUPS, PROPS, KEYS, FACING } from './defs.js';
+import { CELL, DEFAULT_CEILING, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY } from './defs.js';
 
 export const MAP_FORMAT = 1;
-const TILES = { '#': 'wall', '.': 'floor', ':': 'outdoor', D: 'door', S: 'secret' };
+// One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
+//   walls:   # bulkhead (slate)   B warm brick
+//   floors:  . interior planks    : cobble (open air)    p pier planks (open air)
+//   water:   ~ blocks walking, but not sight or projectiles
+//   D door   S secret panel (drawn as wall until opened)
+const TILES = { '#': 'wall', B: 'wall', '.': 'floor', ':': 'outdoor', p: 'outdoor', '~': 'water', D: 'door', S: 'secret' };
+const WALL_CHARS = new Set(['#', 'B']), WALKABLE_CHARS = new Set(['.', ':', 'p']);
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -22,12 +28,17 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit');
     this.props = this.entities.filter((e) => e.type === 'prop');
     this.par = src.par ?? null;
+    this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
+    this.atmosphere = { fog: '#2a2244', fogDensity: 0.028, ...(src.atmosphere || {}) };
   }
   tile(cx, cz) { return (cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) ? '#' : this.tiles[cz][cx]; }
   kind(cx, cz) { return TILES[this.tile(cx, cz)]; }
   /** solid for geometry purposes, ignoring door/secret state */
   isWall(cx, cz) { return this.kind(cx, cz) === 'wall'; }
   isOutdoor(cx, cz) { return this.kind(cx, cz) === 'outdoor'; }
+  isWater(cx, cz) { return this.kind(cx, cz) === 'water'; }
+  /** the raw tile char, for choosing a skin when drawing */
+  skin(cx, cz) { return this.tile(cx, cz); }
   /** interior = has a ceiling */
   isInterior(x, z) { const cx = Math.floor(x / this.cell), cz = Math.floor(z / this.cell); const k = this.kind(cx, cz); return k === 'floor' || k === 'door' || k === 'secret'; }
   doorAt(cx, cz) { return this.doors.get(cx + ',' + cz) || null; }
@@ -54,9 +65,10 @@ export function validateMap(src) {
     const c = tile(cx, cz);
     if (!(c in TILES)) err(`unknown tile '${c}' at ${cx},${cz}`);
     const edge = cx === 0 || cz === 0 || cx === w - 1 || cz === h - 1;
-    if (edge && c !== '#') err(`map edge at ${cx},${cz} is not a wall (level would leak)`);
+    if (edge && !WALL_CHARS.has(c) && c !== '~') err(`map edge at ${cx},${cz} is not a wall or water (level would leak)`);
   }
-  const walkable = (c) => c === '.' || c === ':';
+  const walkable = (c) => WALKABLE_CHARS.has(c);
+  const wallc = (c) => WALL_CHARS.has(c);
   // leaks: an outdoor cell may only touch walls or outdoor/floor cells (no void), already ensured by the edge check
   const doors = src.doors || [];
   const doorKeys = new Set();
@@ -69,7 +81,7 @@ export function validateMap(src) {
     const c = tile(cx, cz);
     if (c === 'D' && !doorKeys.has(cx + ',' + cz)) err(`'D' tile at ${cx},${cz} has no doors entry`);
     if (c === 'D' || c === 'S') {
-      const ew = tile(cx - 1, cz) === '#' && tile(cx + 1, cz) === '#', ns = tile(cx, cz - 1) === '#' && tile(cx, cz + 1) === '#';
+      const ew = wallc(tile(cx - 1, cz)) && wallc(tile(cx + 1, cz)), ns = wallc(tile(cx, cz - 1)) && wallc(tile(cx, cz + 1));
       const passEW = walkable(tile(cx - 1, cz)) || walkable(tile(cx + 1, cz)), passNS = walkable(tile(cx, cz - 1)) || walkable(tile(cx, cz + 1));
       if (!((ew && passNS) || (ns && passEW))) err(`door/secret at ${cx},${cz} is not set in a straight wall line`);
     }
@@ -98,6 +110,10 @@ export function validateMap(src) {
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit'].includes(e.type)) err(`${tag}: unknown entity type`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
   });
+  for (const [i, s] of (src.scenery || []).entries()) {
+    if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
+    if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
+  }
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
   return errors.length ? { ok: false, errors } : { ok: true, errors: [] };
 }

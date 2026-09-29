@@ -1,0 +1,45 @@
+// Level tour: screenshots of Marrow Quay from its key vantage points (appearance evidence, not correctness).
+// Writes review/level-c1e1m01/*.png
+import { createServer } from 'vite';
+import puppeteer from 'puppeteer';
+import fs from 'node:fs';
+import path from 'node:path';
+const root = path.resolve(import.meta.dirname, '../..');
+const out = path.join(root, 'review/level-c1e1m01');
+fs.mkdirSync(out, { recursive: true });
+const server = await createServer({ root, logLevel: 'error', server: { port: 5250, strictPort: true } });
+await server.listen();
+const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1280, height: 720 });
+const errors = [];
+page.on('pageerror', (e) => errors.push(String(e))); page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+await page.goto('http://localhost:5250/', { waitUntil: 'domcontentloaded', timeout: 0 });
+await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 120000 });
+const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
+await T("t.newGame('normal', 3)");
+const yawTo = (x, z, tx, tz) => Math.atan2(-(tx - x), -(tz - z));
+const VIEWS = [
+  ['01-pier-start', 8, 33, -Math.PI / 2, 0.0],
+  ['02-tower', 20, 34, yawTo(20, 34, 89, -7), 0.42],
+  ['03-boats', 16, 33.5, yawTo(16, 33.5, 13, 27.4), -0.08],
+  ['04-plaza', 34, 30, -Math.PI / 2 + 0.35, 0.0],
+  ['05-stalls', 40, 40, Math.PI, -0.04],
+  ['06-shed-door', 44, 24, 0, 0.0],
+  ['07-shed-inside', 44, 15, 0, -0.02, true],
+  ['08-hut', 15, 41, Math.PI, -0.05, true],
+  ['09-warehouse-entry', 68, 35, -Math.PI / 2, 0.0, true],
+  ['10-warehouse-pods', 76, 24, -Math.PI / 2 + 0.25, 0.0, true],
+  ['11-dock-gate', 79, 59.5, Math.PI, -0.03, true],
+  ['12-net-loft', 10, 45, Math.PI / 2, 0.0, true],
+  ['13-pier-water', 12, 31.5, Math.PI + 0.5, -0.32],
+];
+let opened = false;
+for (const [name, x, z, yaw, pitch, open] of VIEWS) {
+  if (open && !opened) { await T('t.setup_openDoors()'); opened = true; }
+  await T(`t.setup_teleport(${x}, ${z}, ${yaw}); t.setup_player({ pitch: ${pitch}, hp: 100, hurt: 0 })`); await T('t.render(0.02)');
+  await page.screenshot({ path: path.join(out, name + '.png') }); console.log('shot', name);
+}
+console.log(JSON.stringify({ errors }));
+await browser.close(); await server.close();
+process.exit(errors.length ? 1 : 0);

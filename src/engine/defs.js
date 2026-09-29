@@ -54,12 +54,18 @@ export const PICKUPS = {
 // radius > 0 means a solid circular collider; blocksCell marks props that make a whole 2 m cell impassable for pathing.
 export const PROPS = {
   crate: { radius: 0.78, blocksCell: true },
+  crate2: { radius: 0.78, blocksCell: true },            // two stacked crates
+  stall: { radius: 0.95, blocksCell: true },             // fish-market stall with an awning
+  bollard: { radius: 0.22, blocksCell: false },          // mooring post
   barrel: { radius: 0.5, blocksCell: false },
   pillar: { radius: 0.62, blocksCell: true },
   lamppost: { radius: 0.3, blocksCell: false },
   lamp: { radius: 0, blocksCell: false },
   pod: { radius: 0, blocksCell: false },
 };
+
+/** distant, non-colliding set dressing (may lie outside the playable grid) */
+export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {} };
 
 export const DOOR = { speed: 1.5, passableAt: 0.85, holdOpen: 5, autoCloseClearance: 1.3 };
 export const FACING = { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI };

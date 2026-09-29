@@ -3,12 +3,13 @@
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { buildLevel } from './levelmesh.js';
+import { mergeStatic } from './merge.js';
 import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 
 const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas) };
 
-const NEAR = 0.1, FAR = 90, LIGHT_BUDGET = 6;
+const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
 const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
 const SPRINT_POSE = { x: 0.13, y: -0.235, z: -0.42, rx: -0.3, ry: 0.65, rz: -0.28 };   // gun carried low and across the body
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -16,11 +17,11 @@ const lerp = (a, b, t) => a + (b - a) * t;
 export class GameView {
   constructor(renderer, tex, map, world) {
     this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9;
-    const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x2a2244, 0.028);
+    const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
     scene.add(new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4));
     const sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
-    this.sky = new THREE.Mesh(new THREE.SphereGeometry(80, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
+    this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
@@ -77,6 +78,8 @@ export class GameView {
     const fov = lerp(VIEW.fov, VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
+    this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
+    if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies
     const seen = new Set();
     for (const e of w.enemies) {
@@ -87,8 +90,12 @@ export class GameView {
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
       v.pose({ t, walk: e.walk, phase: e.phase, attack: e.attackT >= 0 ? e.attackT / def.attack.duration : 0, lunge, dead: e.dead, flash: e.flash });
+      // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
+      if (e.state === 'idle' && !v.frozen) {
+        v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.root.visible = false;
+      } else if (e.state !== 'idle' && v.frozen) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
     }
-    for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); this.enemyViews.delete(id); }
+    for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); }
     // pickups
     seen.clear();
     for (const it of w.pickups) {
