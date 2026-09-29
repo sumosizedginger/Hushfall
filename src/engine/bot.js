@@ -7,8 +7,9 @@ const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
 export class Bot {
-  constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90 } = {}) {
-    this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
+  /** fights:false makes a passive RUNNER: it follows the route but never fires and never dodges. Used to prove a level is not survivable by ignoring it. */
+  constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90, fights = true } = {}) {
+    this.fights = fights; this.fightTicks = 0; this.noFightUntil = 0; this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
     this.path = null; this.pathKey = ''; this.usePressed = false; this.fireHeld = false; this.lastPos = [world.player.x, world.player.z]; this.stillFor = 0; this.calm = 0; this.failed = null; this.log = [];
   }
   get done() { return this.i >= this.route.length; }
@@ -38,6 +39,7 @@ export class Bot {
   }
   // -- combat ----------------------------------------------------------
   combatTarget() {
+    if (!this.fights || this.w.tick < (this.noFightUntil ?? 0)) return null;
     const w = this.w, p = w.player; let best = null, bd = 16;
     for (const e of w.enemies) {
       if (e.state === 'dead' || e.state === 'idle') continue;
@@ -112,8 +114,12 @@ export class Bot {
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     const t = this.combatTarget();
-    if (t) { this.calm = 0; this.fight(t); if (op.op === 'kill') return; if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
-    else { this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
+    if (t) {
+      this.calm = 0; this.fight(t);
+      // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
+      if (op.op === 'goto' || op.op === 'use') { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }
+      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
+    else { this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {
@@ -121,7 +127,7 @@ export class Bot {
       if (d && d.target === 1) done = true;
       else done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), this.pressUse(), false);
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
-    } else if (op.op === 'kill') done = (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
+    } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
     else this.failed = 'unknown op ' + op.op;
     if (this.stillFor > this.stuckTicks && op.op !== 'wait' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;

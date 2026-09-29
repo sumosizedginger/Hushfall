@@ -5,7 +5,7 @@ export const SETTINGS_VERSION = 1;
 export const RESOLUTIONS = [320, 400, 480, 640, 800];
 export const defaultSettings = () => ({
   version: SETTINGS_VERSION, sensitivity: 1, masterVolume: 0.8, sfxVolume: 1, musicVolume: 0.6,
-  internalWidth: 480, outline: true, paint: true, aimToggle: false, sprintToggle: false, bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),
+  internalWidth: 480, outline: true, paint: true, aimToggle: false, sprintToggle: false, fov: 70, brightness: 1, bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),
 });
 const clamp = (x, a, b, d) => (Number.isFinite(x) ? Math.min(b, Math.max(a, x)) : d);
 
@@ -17,6 +17,7 @@ export function sanitizeSettings(raw) {
   s.sensitivity = clamp(raw.sensitivity, 0.1, 4, d.sensitivity);
   s.masterVolume = clamp(raw.masterVolume, 0, 1, d.masterVolume); s.sfxVolume = clamp(raw.sfxVolume, 0, 1, d.sfxVolume); s.musicVolume = clamp(raw.musicVolume, 0, 1, d.musicVolume);
   s.internalWidth = RESOLUTIONS.includes(raw.internalWidth) ? raw.internalWidth : d.internalWidth;
+  s.fov = clamp(raw.fov, 60, 105, d.fov); s.brightness = clamp(raw.brightness, 0.6, 1.8, d.brightness);
   s.outline = raw.outline !== false; s.paint = raw.paint !== false; s.aimToggle = raw.aimToggle === true; s.sprintToggle = raw.sprintToggle === true;
   // bindings are repaired per action: a missing/invalid action falls back to its default, custom ones are kept
   if (raw.bindings && typeof raw.bindings === 'object') {

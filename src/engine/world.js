@@ -1,6 +1,6 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
-import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, PROPS, DOOR } from './defs.js';
+import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, PROPS, DOOR, NOISE } from './defs.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 
@@ -11,7 +11,7 @@ const hidden = (o, k, v) => Object.defineProperty(o, k, { value: v, enumerable: 
 /** the one place an enemy record is built (createWorld and tests both use it) */
 export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
   const def = ENEMIES[kind], diff = DIFFICULTY[w.difficulty];
-  const e = { id: w.nextId++, kind, x, z, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false };
+  const e = { id: w.nextId++, kind, x, z, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0 };
   w.enemies.push(e); return e;
 }
 
@@ -29,7 +29,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       keys: [], cooldown: 0, hurt: 0, kick: 0, switchT: 0,
       ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
-    enemies: [], projectiles: [], pickups: [], doors: [],
+    enemies: [], projectiles: [], enemyShots: [], pickups: [], doors: [],
+    levelStart: { hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0, ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])] },      // what Retry restores (never the mid-level inventory)
     secretsFound: [], messagesSeen: [], explored: new Array(map.w * map.h).fill(0),
     stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
     endStats: null,
@@ -57,7 +58,8 @@ export function cellSolid(w, cx, cz) {
 }
 /** blocks walking: walls, closed doors, and water. (Sight and projectiles use cellSolid, so they pass over water.) */
 function blocksMove(w, cx, cz) { return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water'; }
-export function blockedCircle(w, x, z, r) {
+/** `self` = the moving entity (player or enemy): living enemies and the player then block it, so nothing walks through anyone. */
+export function blockedCircle(w, x, z, r, self = null) {
   const S = w.map.cell;
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
     if (!blocksMove(w, cx, cz)) continue;
@@ -65,21 +67,29 @@ export function blockedCircle(w, x, z, r) {
     if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
   }
   for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
+  if (self) {
+    for (const e of w.enemies) if (e !== self && e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2) return true;
+    if (self !== w.player && (x - w.player.x) ** 2 + (z - w.player.z) ** 2 < (r + PLAYER.radius) ** 2) return true;
+  }
   return false;
 }
 /** Chase movement with cheap obstacle avoidance: go straight if free, otherwise try angled headings, remembering the side that worked. */
 function chaseStep(w, e, def, dt) {
   const spd = def.speed * dt, s = e.steer || (e.id % 2 ? 0.7 : -0.7);
-  for (const off of [0, s, -s, 2 * s, -2 * s]) {
+  for (const off of [0, s, -s, 2 * s, -2 * s, 2.4 * s, -2.4 * s]) {                       // wide angles last: head-on against a round collider only a near-tangential step is free
     const a = e.yaw + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
-    if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius)) { e.x += sx; e.z += sz; if (off !== 0) e.steer = off; else if (e.steer) e.steer = 0; return true; }
+    if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; if (off !== 0) e.steer = off; else if (e.steer) e.steer = 0; return true; }
   }
   return false;
 }
-function tryMove(w, o, dx, dz, r) { if (!blockedCircle(w, o.x + dx, o.z, r)) o.x += dx; if (!blockedCircle(w, o.x, o.z + dz, r)) o.z += dz; }
+function tryMove(w, o, dx, dz, r) { if (!blockedCircle(w, o.x + dx, o.z, r, o)) o.x += dx; if (!blockedCircle(w, o.x, o.z + dz, r, o)) o.z += dz; }
 export function hasLOS(w, x0, z0, x1, z1) {
   const S = w.map.cell, d = Math.hypot(x1 - x0, z1 - z0), n = Math.ceil(d / 0.4);
-  for (let i = 1; i < n; i++) { const t = i / n; if (cellSolid(w, Math.floor((x0 + (x1 - x0) * t) / S), Math.floor((z0 + (z1 - z0) * t) / S))) return false; }
+  for (let i = 1; i < n; i++) {
+    const t = i / n, x = x0 + (x1 - x0) * t, z = z0 + (z1 - z0) * t;
+    if (cellSolid(w, Math.floor(x / S), Math.floor(z / S))) return false;
+    for (const p of w.map.props) if (PROPS[p.kind].blocksSight && (x - p.x) ** 2 + (z - p.z) ** 2 < PROPS[p.kind].radius ** 2) return false;      // pillars and stacked crates hide what is behind them
+  }
   return true;
 }
 const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
@@ -92,15 +102,30 @@ function hurtPlayer(w, dmg) {
   emit(w, 'hurt', { amount: real });
 }
 
+/** Wake an enemy (idle -> chase) remembering where the player is; enemies near the one that woke are alerted too. */
+function wakeEnemy(w, e, loud) {
+  e.state = 'chase'; e.lost = 0; e.lastX = w.player.x; e.lastZ = w.player.z;
+  if (loud) emit(w, 'enemy_alert', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+  for (const o of w.enemies) if (o.state === 'idle' && Math.hypot(o.x - e.x, o.z - e.z) < 12 && hasLOS(w, e.x, e.z, o.x, o.z)) { o.state = 'chase'; o.lost = 0; o.lastX = w.player.x; o.lastZ = w.player.z; }
+}
+/** Loud noise (gunfire, explosion): idle enemies within `radius` wake if nothing solid is between, or if it is very close. */
+function noise(w, x, z, radius) {
+  for (const e of w.enemies) {
+    if (e.state !== 'idle') continue; const d = Math.hypot(e.x - x, e.z - z);
+    if (d < radius && (d < NOISE.closeRange || hasLOS(w, x, z, e.x, e.z))) wakeEnemy(w, e, false);
+  }
+}
+
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
 function damageEnemy(w, e, dmg) {
   e.hp -= dmg; e.flash = 1;
+  if (e.state === 'idle' && e.hp > 0) wakeEnemy(w, e, true);                                       // being shot wakes you, whether or not you can see the shooter
   if (e.hp <= 0 && e.state !== 'dead') { e.state = 'dead'; e.attackT = -1; e.lungeT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
   return false;
 }
 
 function explode(w, x, y, z, ownerIsPlayer, def) {
-  emit(w, 'explode', { x, y, z });
+  emit(w, 'explode', { x, y, z }); noise(w, x, z, NOISE.explosion);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
     const d = Math.hypot(x - e.x, y - 1.0, z - e.z);
@@ -154,7 +179,80 @@ function fireWeapon(w) {
     const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
     w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4 });
   }
-  emit(w, 'fire', { weapon: p.weapon });
+  emit(w, 'fire', { weapon: p.weapon }); noise(w, p.x, p.z, NOISE[p.weapon] ?? 22);
+}
+
+
+// ---------------------------------------------------------------- enemies
+function fireEnemyShot(w, e, def, diff) {
+  const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = 1.5, oz = e.z + Math.cos(e.yaw) * 0.6;
+  const dx = p.x - ox, dy = R.aimHeight - oy, dz = p.z - oz, len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
+  w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: dx / len * R.speed, vy: dy / len * R.speed, vz: dz / len * R.speed, life: 4, dmg: Math.round(R.damage * diff.enemyDamage) });
+  emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+}
+
+function updateEnemyShots(w, diff, dt) {
+  const map = w.map, p = w.player;
+  for (let i = w.enemyShots.length - 1; i >= 0; i--) {
+    const q = w.enemyShots[i]; q.life -= dt; let gone = q.life <= 0;
+    const n = Math.ceil(Math.hypot(q.vx, q.vy, q.vz) * dt / 0.25);
+    for (let k = 0; k < n && !gone; k++) {
+      q.x += q.vx * dt / n; q.y += q.vy * dt / n; q.z += q.vz * dt / n;
+      if (q.y < 0.05 || (map.isInterior(q.x, q.z) && q.y > map.ceiling) || cellSolid(w, Math.floor(q.x / map.cell), Math.floor(q.z / map.cell))) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      for (const pr of map.props) if (!gone && PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < 1.3) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > 0.1 && q.y < 1.9) { gone = true; hurtPlayer(w, q.dmg); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+    }
+    if (gone) w.enemyShots.splice(i, 1);
+  }
+}
+
+function updateEnemy(w, e, diff, dt) {
+  const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4);
+  if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
+  const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz);
+  const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
+  if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
+  if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
+  else if (!sees) e.lost = (e.lost || 0) + dt;
+  // hunt: head for the last place the player was seen; give up after a while (or on arrival) and go back to sleep
+  const tx = sees ? p.x : (e.lastX ?? p.x), tz = sees ? p.z : (e.lastZ ?? p.z), tdist = Math.hypot(tx - e.x, tz - e.z);
+  if (!sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
+  let dy = Math.atan2(tx - e.x, tz - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+  const dashing = def.lunge && (e.lungeT ?? -1) >= def.lunge.windup;                 // a dash keeps its heading: that is what makes it dodgeable
+  if (e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
+  e.cd = Math.max(0, e.cd - dt);
+  if (def.lunge) {
+    const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
+    if ((e.lungeT ?? -1) >= 0) {
+      e.lungeT += dt;
+      if (e.lungeT < L.windup) e.walk *= 0.8;                                        // crouch: the readable tell
+      else if (e.lungeT < L.windup + L.duration) {
+        const hit = () => { if (!e.lungeHit) { e.lungeHit = true; hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } };
+        tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
+        if (dist < def.attack.reach * 0.7) hit();
+      } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
+      return;
+    }
+    if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return; }
+  }
+  const R = def.ranged, engage = R ? R.hold : def.attack.range;
+  if (e.attackT >= 0) {
+    e.attackT += dt; e.walk *= 0.85;
+    if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
+      e.struck = true;
+      if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
+      else { if (dist < def.attack.reach) hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+    }
+    if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
+  } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
+    e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+  } else if ((sees ? dist > engage : tdist > 1.2)) {
+    chaseStep(w, e, def, dt);
+    e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
+  } else {
+    e.walk = Math.max(0, e.walk - dt * 3);
+    if (sees && dist <= def.attack.range + 0.1 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+  }
 }
 
 // ---------------------------------------------------------------- step
@@ -215,46 +313,9 @@ export function step(w, cmd) {
     } else if (d.target === 0 && d.open > 0) d.open = Math.max(0, d.open - dt * DOOR.speed);
   }
 
-  // enemies
-  for (const e of w.enemies) {
-    const def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4);
-    if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; continue; }
-    const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz);
-    const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
-    if (e.state === 'idle') { if (sees) { e.state = 'chase'; emit(w, 'enemy_alert', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } else continue; }
-    let dy = Math.atan2(dx, dz) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
-    const dashing = def.lunge && (e.lungeT ?? -1) >= def.lunge.windup;                 // a dash keeps its heading: that is what makes it dodgeable
-    if (sees && e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
-    e.cd = Math.max(0, e.cd - dt);
-    if (def.lunge) {
-      const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
-      if ((e.lungeT ?? -1) >= 0) {
-        e.lungeT += dt;
-        if (e.lungeT < L.windup) e.walk *= 0.8;                                        // crouch: the readable tell
-        else if (e.lungeT < L.windup + L.duration) {
-          tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
-          if (!e.lungeHit && dist < def.attack.reach * 0.7) { e.lungeHit = true; hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
-        } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
-        continue;
-      }
-      if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); continue; }
-    }
-    if (e.attackT >= 0) {
-      e.attackT += dt; e.walk *= 0.85;
-      if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
-        e.struck = true;
-        if (dist < def.attack.reach) hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage));
-        emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z });
-      }
-      if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
-    } else if (sees && dist > def.attack.range) {
-      chaseStep(w, e, def, dt);
-      e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
-    } else {
-      e.walk = Math.max(0, e.walk - dt * 3);
-      if (sees && dist <= def.attack.range + 0.1 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
-    }
-  }
+  // enemies + their shots
+  for (const e of w.enemies) updateEnemy(w, e, diff, dt);
+  updateEnemyShots(w, diff, dt);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {
@@ -303,6 +364,9 @@ export function step(w, cmd) {
     emit(w, 'level_complete');
   }
 }
+
+/** A fresh run of the same level with the SAME seed and difficulty and the inventory the level began with (used by Retry). */
+export const restartWorld = (w) => createWorld(w.map, { seed: w.seed, difficulty: w.difficulty, carry: w.levelStart });
 
 /** Inventory carried into the next map / level-start checkpoint. Keys do not carry. */
 export const carryOver = (w) => ({ hp: Math.max(1, w.player.hp), armor: w.player.armor, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons] });

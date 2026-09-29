@@ -110,6 +110,11 @@ export const SFX = {
   // --- Tollbearers (bells) ---
   toll_alert(c, out, t, o) { bell(c, out, t, 92 + o.r() * 14, { decay: 2.4, gain: 0.55, ratio: 2.76, index: 1.6 }); tone(c, out, t, { type: 'sawtooth', f0: 170, f1: 88, d: 0.65, gain: 0.16, lp: 420 }); return 2.5; },
   toll_soft(c, out, t, o) { bell(c, out, t, 120 + o.r() * 90, { decay: 1.8, gain: 0.11, ratio: 2.76, index: 1.2 }); return 1.9; },
+  // Bellhand: a muted low strike on its own forearm bell (alert), a rising shimmer while it arms (charge), one bright toll when it fires, a dull ring on impact
+  bell_alert(c, out, t, o) { bell(c, out, t, 150 + o.r() * 10, { decay: 1.6, gain: 0.5, ratio: 2.4, index: 1.2 }); tone(c, out, t, { type: 'sawtooth', f0: 210, f1: 120, d: 0.4, gain: 0.12, lp: 380 }); return 1.7; },
+  bell_charge(c, out, t, o) { tone(c, out, t, { f0: 330, f1: 660, a: 0.35, d: 0.25, gain: 0.16, vib: 6 }); noise(c, out, t, { dur: 0.55, a: 0.3, gain: 0.12, type: 'bandpass', f0: 900, f1: 2600, q: 2, off: o.r() }); return 0.65; },
+  toll_shot(c, out, t, o) { bell(c, out, t, 262, { decay: 0.9, gain: 0.5, ratio: 3.1, index: 2.0 }); thump(c, out, t, 120, 60, 0.18, 0.4); return 1; },
+  shot_impact(c, out, t, o) { bell(c, out, t, 196, { decay: 0.35, gain: 0.3, ratio: 2.7, index: 1.0 }); noise(c, out, t, { dur: 0.1, gain: 0.2, type: 'bandpass', f0: 1800, q: 1.2, off: o.r() }); return 0.45; },
   wheeze_windup(c, out, t, o) { noise(c, out, t, { dur: 0.7, a: 0.15, gain: 0.32, type: 'bandpass', f0: 500, f1: 1500, q: 1.4, off: o.r() }); tone(c, out, t, { f0: 140, f1: 260, a: 0.2, d: 0.5, gain: 0.12 }); return 0.8; },
   strike(c, out, t, o) { noise(c, out, t, { dur: 0.26, gain: 0.55, type: 'bandpass', f0: 900, f1: 320, q: 0.9, off: o.r() }); thump(c, out, t + 0.06, 95, 38, 0.25, 0.85); return 0.4; },
   enemy_hit(c, out, t, o) { thump(c, out, t, 210, 70, 0.13, 0.7); noise(c, out, t, { dur: 0.14, gain: 0.45, type: 'lowpass', f0: 950, off: o.r() }); return 0.25; },

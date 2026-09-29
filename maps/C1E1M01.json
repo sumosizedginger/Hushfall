@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M01",
- "version": 5,
+ "version": 6,
  "name": "Marrow Quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
@@ -191,7 +191,7 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [30, 24],
+   "at": [29, 23],
    "facing": "north"
   },
   {
@@ -500,6 +500,24 @@
    "type": "prop",
    "kind": "barrel",
    "at": [2, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [31, 16],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 15],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 23],
+   "facing": "west"
   }
  ],
  "scenery": [
@@ -528,7 +546,7 @@
   }
  ],
  "par": {
-  "time": 420
+  "time": 300
  },
  "intro": {
   "title": "MARROW QUAY",

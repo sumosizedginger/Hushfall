@@ -47,9 +47,10 @@ test('design contract: the scattergun is at hand when the Gaunts wake in the cus
   for (const g of gaunts) assert.ok(cellDist(gun, g.at) >= 3, 'each Gaunt starts some distance from the gun');
 });
 
-test('design contract: both enemy kinds and both weapons matter (no unused content)', () => {
+test('design contract: all three enemy kinds and both weapons matter (no unused content)', () => {
   const kinds = new Set(map.entities.filter((e) => e.type === 'enemy').map((e) => e.kind));
-  assert.deepEqual([...kinds].sort(), ['gaunt', 'tollbearer']);
+  assert.deepEqual([...kinds].sort(), ['bellhand', 'gaunt', 'tollbearer']);
+  assert.ok(at('bellhand').length >= 3, 'the ranged enemy is a recurring threat, not a cameo');
   assert.ok(at('ammo_flare').length >= 4 && at('ammo_shell').length >= 5);
 });
 
@@ -71,9 +72,26 @@ test('canonical routes: main and secret complete on every difficulty with every 
   for (const name of ['C1E1M01.main', 'C1E1M01.secret']) for (const difficulty of ['easy', 'normal', 'hard']) {
     const r = runRoute(map, shippedRoute(name), { seed: 1, difficulty });
     assert.equal(r.result, 'complete', `${name} ${difficulty}: ${r.failure}`);
-    assert.equal(r.world.stats.kills, 13, `${name} ${difficulty}`);
+    assert.equal(r.world.stats.kills, map.counts().enemies, `${name} ${difficulty}`);
     assert.ok(r.world.player.keys.includes('brass'));
   }
+});
+
+// The level must not be playable by ignoring it (audit F01: a passive runner used to finish at 60% health) and a perfect bot must still bleed.
+test('viability: a passive runner cannot just walk through; even a perfect fighter takes real damage, and more on harder difficulties', () => {
+  const main = shippedRoute('C1E1M01.main'), dmg = {};
+  for (const d of ['easy', 'normal', 'hard']) {
+    const run = runRoute(map, main, { seed: 1, difficulty: d, fights: false });
+    assert.ok(run.result !== 'complete' || run.world.stats.damageTaken >= 60, `${d}: a runner that never fires finished with only ${run.world.stats.damageTaken} damage`);
+    const f = runRoute(map, main, { seed: 1, difficulty: d }); assert.equal(f.result, 'complete', `${d} fighter: ${f.failure}`); dmg[d] = f.world.stats.damageTaken;
+  }
+  assert.ok(dmg.normal >= 20, 'normal: the perfect bot took ' + dmg.normal + ' damage'); assert.ok(dmg.hard > dmg.normal && dmg.normal > dmg.easy, JSON.stringify(dmg));
+  assert.ok(dmg.hard < 140, 'hard is survivable by the bot with pickups: ' + dmg.hard);
+});
+
+test('par time is plausible against the bot: between 2x and 8x the required route time (placeholder until a human plays it)', () => {
+  const main = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1 }), t = main.world.endStats.time, ratio = map.par.time / t;
+  assert.ok(ratio >= 2 && ratio <= 8, `par ${map.par.time}s is ${ratio.toFixed(1)}x the bot's ${t.toFixed(0)}s`);
 });
 
 test('canonical routes: only the secret route finds the secret, and both stay within par', () => {

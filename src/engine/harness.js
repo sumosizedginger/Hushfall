@@ -8,9 +8,9 @@ import { parseMap } from './mapformat.js';
 export const loadMapFile = (file) => parseMap(JSON.parse(fs.readFileSync(file, 'utf8')));
 export const loadRouteFile = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 
-export function runRoute(map, route, { seed = 1, difficulty = 'normal', maxTicks = 60 * 60 * 6, world = null, onTick = null } = {}) {
+export function runRoute(map, route, { seed = 1, difficulty = 'normal', maxTicks = 60 * 60 * 6, world = null, onTick = null, fights = true } = {}) {
   const w = world || createWorld(map, { seed, difficulty });
-  const input = new InputState(), bot = new Bot(w, input, route), events = [];
+  const input = new InputState(), bot = new Bot(w, input, route, { fights }), events = [];
   let ticks = 0;
   while (!bot.done && !bot.failed && w.status === 'playing' && ticks < maxTicks) {
     bot.tick(); step(w, input.sample()); ticks++;

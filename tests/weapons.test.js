@@ -87,7 +87,7 @@ test('a flare already in flight keeps flare splash after you switch weapons (no 
   const e = spawnEnemy(w, 'tollbearer', 11, 18); e.hp = 1000; aimAt(w, e.x, e.z, 1.0); raise(w);
   step(w, idle({ aim: true, fire: true })); assert.equal(w.projectiles.length, 1);
   step(w, idle({ aim: true, weapon: 1 })); assert.equal(w.player.weapon, 'scattergun');
-  for (let i = 0; i < 150; i++) step(w, idle({ aim: true }));
+  for (let i = 0; i < 150; i++) { e.x = 11; e.z = 18; step(w, idle({ aim: true })); }          // the shot wakes it (correctly); pin it so the splash geometry is what is under test
   assert.equal(w.projectiles.length, 0); assert.ok(Number.isFinite(e.hp) && e.hp < 1000 - 12, 'flare splash applied: hp ' + e.hp);
 });
 

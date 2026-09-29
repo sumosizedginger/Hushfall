@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY } from './defs.js';
+import { CELL, DEFAULT_CEILING, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -112,6 +112,17 @@ export function validateMap(src) {
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit'].includes(e.type)) err(`${tag}: unknown entity type`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
   });
+  // nothing may spawn inside a solid prop (or inside another actor): a body embedded in a collider is stuck or unfair from tick 0
+  const cellM = src.cellSize ?? CELL, bodyR = (e) => (e.type === 'enemy' ? ENEMIES[e.kind]?.radius : e.type === 'player' ? PLAYER.radius : e.type === 'pickup' ? 0.25 : e.type === 'exit' ? 0.3 : 0) ?? 0;
+  const okAt = ents.filter((e) => Array.isArray(e.at) && e.at.length === 2 && e.at.every(Number.isFinite));
+  for (const [i, a] of okAt.entries()) {
+    const ar = bodyR(a), pa = PROPS[a.kind]; if (a.type === 'prop' || !ar) continue;
+    for (const [j, b] of okAt.entries()) {
+      if (i === j) continue; const dist = Math.hypot((a.at[0] - b.at[0]) * cellM, (a.at[1] - b.at[1]) * cellM);
+      if (b.type === 'prop') { const pr = PROPS[b.kind]?.radius ?? 0; if (pr > 0 && dist < ar + pr) err(`${a.type}${a.kind ? ':' + a.kind : ''} at ${a.at} overlaps solid prop ${b.kind} at ${b.at}`); }
+      else if ((a.type === 'enemy' || a.type === 'player') && (b.type === 'enemy' || b.type === 'player') && j > i && dist < ar + bodyR(b)) err(`${a.type} at ${a.at} overlaps ${b.type} at ${b.at}`);
+    }
+  }
   for (const [i, s] of (src.scenery || []).entries()) {
     if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
     if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
