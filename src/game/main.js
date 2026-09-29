@@ -7,7 +7,7 @@ import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
-import { TICK } from '../engine/defs.js';
+import { TICK, VIEW } from '../engine/defs.js';
 import { UI } from './ui.js';
 import { loadSettings, saveSettings } from './settings.js';
 
@@ -38,8 +38,9 @@ const ui = new UI({
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.startCarry }),
   quitToTitle: () => quitToTitle(),
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint') && g.view) g.view.setLook(settings); },
 });
+g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 ui.syncSettings(settings); ui.syncBindings(settings.bindings);
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
@@ -99,7 +100,10 @@ canvas.addEventListener('mousedown', (e) => {
   dragging = true; g.input.keyDown('Mouse' + e.button);
 });
 addEventListener('mouseup', (e) => { dragging = false; g.input.keyUp('Mouse' + e.button); });
-addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity); });
+canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
+// sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
+const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };
+addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); });
 addEventListener('keydown', (e) => {
   if (e.repeat) return;
   if (g.mode === 'paused' && (e.code === 'Escape' || e.code === 'KeyP')) { resume(); return; }

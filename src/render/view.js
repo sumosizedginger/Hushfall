@@ -4,9 +4,11 @@ import * as THREE from 'three';
 import { makeTollbearer, makeFlareCannon, makePickup } from './models.js';
 import { buildLevel } from './levelmesh.js';
 import { PostPass } from './post.js';
-import { PLAYER, ENEMIES, TICK } from '../engine/defs.js';
+import { PLAYER, ENEMIES, TICK, VIEW } from '../engine/defs.js';
 
 const NEAR = 0.1, FAR = 90, LIGHT_BUDGET = 6;
+const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
+const SPRINT_POSE = { x: 0.13, y: -0.235, z: -0.42, rx: -0.3, ry: 0.65, rz: -0.28 };   // gun carried low and across the body
 const lerp = (a, b, t) => a + (b - a) * t;
 
 export class GameView {
@@ -65,6 +67,8 @@ export class GameView {
     if (w.status === 'dead') { this.deadT = Math.min(1, this.deadT + dt / 0.8); eye = lerp(PLAYER.eye, 0.35, this.deadT); roll = this.deadT * 0.5; } else this.deadT = 0;
     this.cam.position.set(lerp(pp.x, p.x, alpha), eye, lerp(pp.z, p.z, alpha));
     this.cam.rotation.set(lerp(pp.pitch, p.pitch, alpha) + p.kick, lerp(pp.yaw, p.yaw, alpha), roll);
+    const fov = lerp(VIEW.fov, VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
+    if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
     // enemies
     const seen = new Set();
@@ -111,9 +115,11 @@ export class GameView {
     [...this.lvl.lights].sort((a, b) => a.userData.d - b.userData.d).forEach((l, i) => { l.visible = i < LIGHT_BUDGET; });
     // weapon overlay
     this.recoil = Math.max(0, this.recoil - dt * 4.5); this.flashT = Math.max(0, this.flashT - dt);
-    const sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed), r = this.recoil, W = this.WPOS;
-    this.cannon.group.position.set(W.x + sway, W.y + Math.abs(sway) * 0.6 - r * 0.02 - this.deadT * 0.6, W.z + r * 0.13);
-    this.cannon.group.rotation.set(-r * 0.12, 0.1, 0);
+    // weapon pose = hip, blended toward the sights, then toward the lowered sprint carry
+    const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed), r = this.recoil * (1 - 0.5 * a), W = this.WPOS;
+    const px = lerp(lerp(W.x, ADS_POSE.x, a), SPRINT_POSE.x, sp), py = lerp(lerp(W.y, ADS_POSE.y, a), SPRINT_POSE.y, sp), pz = lerp(lerp(W.z, ADS_POSE.z, a), SPRINT_POSE.z, sp);
+    this.cannon.group.position.set(px + sway, py + Math.abs(sway) * 0.6 - r * 0.02 - this.deadT * 0.6, pz + r * 0.13);
+    this.cannon.group.rotation.set(-r * 0.12 + SPRINT_POSE.rx * sp, lerp(lerp(0.1, 0, a), SPRINT_POSE.ry, sp), SPRINT_POSE.rz * sp);
     this.cannon.flash.visible = this.flashT > 0; if (this.cannon.flash.visible) this.cannon.flash.scale.setScalar(0.8 + this.rnd() * 0.6);
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
     this.post.uniforms.uDamage.value = p.hurt;

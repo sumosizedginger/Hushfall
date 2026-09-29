@@ -3,9 +3,16 @@
 import { createWorld, carryOver } from './world.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 1;
-/** version N -> function producing version N+1. Empty until the schema first changes. */
-export const MIGRATIONS = {};
+export const SAVE_VERSION = 2;
+/** version N -> function producing version N+1. */
+export const MIGRATIONS = {
+  // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
+  1: (s) => {
+    const out = { ...s, version: 2 };
+    if (s.world?.player) out.world = { ...s.world, player: { ads: 0, sprint: 0, recover: 0, sprinting: false, ...s.world.player } };
+    return out;
+  },
+};
 
 export function makeSave(w, kind, { now = 0 } = {}) {
   const save = { magic: SAVE_MAGIC, version: SAVE_VERSION, savedAt: now, kind, campaign: { mapId: w.mapId, mapVersion: w.mapVersion, difficulty: w.difficulty, seed: w.seed }, carry: carryOver(w) };

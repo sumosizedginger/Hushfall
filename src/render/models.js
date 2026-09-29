@@ -113,6 +113,9 @@ export function makeFlareCannon(tex) {
   for (const z of [-0.2, -0.4]) { const b = M(new THREE.TorusGeometry(0.066, 0.011, 4, 10), 5); b.position.z = z; g.add(b); }
   const recv = M(new THREE.BoxGeometry(0.17, 0.15, 0.32), 2); recv.position.set(0, -0.02, 0.02); g.add(recv);
   const plate = M(new THREE.BoxGeometry(0.12, 0.025, 0.25), 2); plate.position.set(0, 0.065, 0.02); g.add(plate);
+  // iron sights: a bright front bead on the muzzle ring and a two-post rear notch on the receiver
+  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.014), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.097, -0.62); g.add(bead);
+  for (const x of [-0.022, 0.022]) { const post = M(new THREE.BoxGeometry(0.012, 0.028, 0.02), 5); post.position.set(x, 0.0915, 0.1); g.add(post); }
   const tube = new THREE.Mesh(atlas(new THREE.CylinderGeometry(0.024, 0.024, 0.2, 6), 6), glassMat); tube.rotation.x = Math.PI / 2; tube.position.set(-0.105, -0.02, 0.03); g.add(tube);
   const grip = M(new THREE.BoxGeometry(0.06, 0.18, 0.075), 7); grip.position.set(0, -0.15, 0.12); grip.rotation.x = 0.3; g.add(grip);
   const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.19, 0.13); g.add(handR);

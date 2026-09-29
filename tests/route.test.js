@@ -42,6 +42,7 @@ test('the bot cannot skip the lock: a route that never takes the key fails inste
 test('player dying mid-route ends the run as dead, not as a hang', () => {
   const map = loadMap(); const w = createWorld(map, { seed: 1 });
   w.player.hp = 1;
+  const e = w.enemies[0]; e.x = w.player.x + 1.2; e.z = w.player.z; e.state = 'chase'; e.attackT = 0.96 - 1 / 120;      // an enemy that strikes on the very next tick
   const r = runRoute(map, route('C1E1M01.main'), { world: w, maxTicks: 60 * 120 });
   assert.equal(r.result, 'dead');
 });

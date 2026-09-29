@@ -19,6 +19,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0,
       ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])], weapon: 'flare',
       keys: [], cooldown: 0, hurt: 0, kick: 0,
+      ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
     enemies: [], projectiles: [], pickups: [], doors: [],
     secretsFound: [],
@@ -101,7 +102,15 @@ export function step(w, cmd) {
   let sx = clamp(cmd.move?.[0] || 0, -1, 1), sf = clamp(cmd.move?.[1] || 0, -1, 1);
   const len = Math.hypot(sx, sf); if (len > 1) { sx /= len; sf /= len; }
   const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
-  p.vx += ((fx * sf + rx * sx) * PLAYER.speed - p.vx) * a; p.vz += ((fz * sf + rz * sx) * PLAYER.speed - p.vz) * a;
+  // stance: aim wins over sprint; sprint needs forward input; a dead-on-arrival sprint (no forward) is not a sprint
+  const aimHeld = !!cmd.aim, wasSprinting = p.sprinting;
+  p.sprinting = !!cmd.sprint && sf >= PLAYER.sprintMinForward && !aimHeld;
+  if (wasSprinting && !p.sprinting) p.recover = PLAYER.sprintRecover;
+  p.recover = Math.max(0, p.recover - dt);
+  p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
+  p.sprint = clamp(p.sprint + (p.sprinting ? 1 : -1) * dt / PLAYER.sprintBlendTime, 0, 1);
+  const speed = PLAYER.speed * (1 - (1 - PLAYER.adsMoveMult) * p.ads), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
+  p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
   tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
   p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
   p.cooldown = Math.max(0, p.cooldown - dt); p.hurt = Math.max(0, p.hurt - dt * 1.2); p.kick = Math.max(0, p.kick - dt * 0.4);
@@ -122,13 +131,18 @@ export function step(w, cmd) {
   }
 
   // fire
-  if (cmd.fire && p.cooldown <= 0) {
+  if (cmd.fire && p.cooldown <= 0 && !p.sprinting && p.recover <= 0) {          // no firing from the sprint pose
     const def = WEAPONS[p.weapon];
     if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); }
     else {
       p.ammo[def.ammo]--; p.cooldown = def.cooldown; p.kick = 0.06; w.stats.shots++;
-      const f = forwardVec(p), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
-      const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * def.muzzle.right, PLAYER.eye + f[1] * def.muzzle.fwd - def.muzzle.down, p.z + f[2] * def.muzzle.fwd + r[2] * def.muzzle.right];
+      // accuracy: hip spread grows with movement; aiming tightens it. Two RNG draws per shot keep replays deterministic.
+      const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
+      const cone = (sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads;
+      const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
+      // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
+      const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
+      const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
       w.projectiles.push({ id: w.nextId++, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4 });
       emit(w, 'fire', { weapon: p.weapon });
     }
