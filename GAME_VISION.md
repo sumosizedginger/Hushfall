@@ -35,6 +35,9 @@ Art: wall/floor textures 256x256 source, sprites 128x128, weapon views 256x160, 
 Performance: 60 FPS mainstream desktop browser, one map live at a time.
 Map size: ~10-25 min per main map at first play; enemy placements 30-120 depending on thesis. Secrets vary by map.
 
+## Audio identity (implemented 2026-09-29, all procedural)
+Bronze bells are the alien voice: each awake Tollbearer tolls faintly and out of tune with its neighbours; the score is a low D-phrygian drone with sparse FM Bell motifs and, under tension, a pulse. The Hush is a faint beating sine pair that swells near alien growth (pods) and rings in the secret sting. Human/industrial sounds are dry and low (planks, iron, oilskin). Combat sounds are short and heavy so tells (wheeze, toll) stay readable.
+
 ## Major technical risks
 1. p5.brush output determinism and painterly-vs-crisp sprite quality (see ART_BIBLE).
 2. Authoring 68 distinct maps: needs a map format + reachability checker (decide in Gate 1).

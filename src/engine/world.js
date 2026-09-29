@@ -84,7 +84,7 @@ function explode(w, x, y, z, ownerIsPlayer) {
     if (d < def.splash) {
       e.hp -= def.splashDamage * (1 - d / def.splash) + def.direct; e.flash = 1;
       const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
-      if (e.hp <= 0) { e.state = 'dead'; e.attackT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind }); } else emit(w, 'enemy_hit', { id: e.id });
+      if (e.hp <= 0) { e.state = 'dead'; e.attackT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } else emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     }
   }
   const p = w.player, d = Math.hypot(x - p.x, y - PLAYER.eye, z - p.z);
@@ -125,8 +125,8 @@ export function step(w, cmd) {
       else if (k === 'wall') break;
     }
     if (hit) {
-      if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz });
-      else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret }); }
+      if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
+      else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }
     }
   }
 
@@ -155,7 +155,7 @@ export function step(w, cmd) {
       const cxw = (d.cx + 0.5) * map.cell, czw = (d.cz + 0.5) * map.cell;
       const occupied = [p, ...w.enemies.filter((e) => e.state !== 'dead')].some((o) => Math.hypot(o.x - cxw, o.z - czw) < DOOR.autoCloseClearance);
       d.hold = occupied ? 0 : d.hold + dt;
-      if (d.hold >= DOOR.holdOpen) { d.target = 0; emit(w, 'door_close', { cx: d.cx, cz: d.cz }); }
+      if (d.hold >= DOOR.holdOpen) { d.target = 0; emit(w, 'door_close', { cx: d.cx, cz: d.cz, x: cxw, z: czw }); }
     } else if (d.target === 0 && d.open > 0) d.open = Math.max(0, d.open - dt * DOOR.speed);
   }
 
@@ -165,7 +165,7 @@ export function step(w, cmd) {
     if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; continue; }
     const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz);
     const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
-    if (e.state === 'idle') { if (sees) { e.state = 'chase'; emit(w, 'enemy_alert', { id: e.id }); } else continue; }
+    if (e.state === 'idle') { if (sees) { e.state = 'chase'; emit(w, 'enemy_alert', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } else continue; }
     let dy = Math.atan2(dx, dz) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
     if (sees && e.attackT < 0) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
     e.cd = Math.max(0, e.cd - dt);
@@ -174,7 +174,7 @@ export function step(w, cmd) {
       if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
         e.struck = true;
         if (dist < def.attack.reach) hurtPlayer(w, Math.round(def.attack.damage * diff.enemyDamage));
-        emit(w, 'enemy_strike', { id: e.id });
+        emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z });
       }
       if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
     } else if (sees && dist > def.attack.range) {
@@ -182,7 +182,7 @@ export function step(w, cmd) {
       e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * 5.2;
     } else {
       e.walk = Math.max(0, e.walk - dt * 3);
-      if (sees && dist <= def.attack.range + 0.1 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id }); }
+      if (sees && dist <= def.attack.range + 0.1 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
   }
 
