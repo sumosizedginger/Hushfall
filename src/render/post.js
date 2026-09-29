@@ -71,6 +71,10 @@ export class PostPass {
     this.rt = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthTexture: depth, samples: 0 });
     this.uniforms.tColor.value = this.rt.texture; this.uniforms.tDepth.value = depth; this.uniforms.uRes.value.set(w, h);
   }
+  dispose() {
+    this.rt?.dispose(); this.rt?.depthTexture?.dispose(); this.rt = null;
+    this.scene.traverse((o) => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } });
+  }
   /** draw = () => renders world + weapon into the bound render target */
   render(draw) {
     const r = this.renderer;

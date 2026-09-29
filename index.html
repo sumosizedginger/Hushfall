@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,"><title>HUSHFALL</title>
+<style>
+:root{--ink:#0d0f14;--slate:#2b3a3f;--teal:#3fffe0;--bronze:#d9a04c;--oil:#c9a227;--paper:#e8e2d0;--red:#b8322a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#07080c;overflow:hidden;color:var(--paper);font:14px/1.5 ui-monospace,Consolas,"Courier New",monospace}
+canvas{display:block;width:100vw;height:100vh}
+.hidden{display:none!important}
+#cross{position:fixed;left:50%;top:50%;width:7px;height:7px;margin:-4px 0 0 -4px;border:1px solid var(--teal);border-radius:50%;opacity:.75;pointer-events:none}
+body:not([data-screen=""]) #cross{display:none}
+#hud{position:fixed;left:0;right:0;bottom:0;display:flex;gap:18px;align-items:flex-end;padding:10px 18px;pointer-events:none;background:linear-gradient(0deg,#07080ccc,transparent)}
+#hud .stat{display:flex;flex-direction:column;align-items:flex-start;min-width:76px}
+#hud .stat b{font-size:30px;line-height:1;color:var(--paper);text-shadow:2px 2px 0 var(--ink)}
+#hud .stat small{letter-spacing:.18em;font-size:10px;color:var(--bronze)}
+#hud .stat.low b{color:var(--red)}
+#hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
+#hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
+#toasts{position:fixed;left:50%;top:14%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+#toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000}
+#hint{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);color:#9fb4b0;pointer-events:none}
+.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#07080ccc;z-index:5}
+.panel{background:#0d0f14f2;border:2px solid var(--slate);padding:22px 28px;min-width:340px;max-width:92vw;box-shadow:0 0 0 2px var(--ink),0 12px 40px #000}
+h1{margin:0 0 4px;letter-spacing:.32em;color:var(--teal);font-size:34px;text-shadow:3px 3px 0 var(--ink)}
+h2{margin:0 0 10px;letter-spacing:.2em;color:var(--bronze);font-size:18px}
+.sub{color:#9fb4b0;margin-bottom:16px}
+button{display:block;width:100%;margin:6px 0;padding:9px 14px;background:#182126;color:var(--paper);border:2px solid var(--slate);font:inherit;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+button:hover,button:focus-visible{border-color:var(--teal);color:var(--teal);outline:none}
+.row{display:flex;gap:8px}.row button{margin:6px 0}
+label{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:8px 0}
+.rows div{display:flex;justify-content:space-between;gap:24px;border-bottom:1px dashed var(--slate);padding:3px 0}
+.rows b{color:var(--bronze);font-weight:normal}
+#screen-title{background:#07080c}
+#title-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(1.1)}
+#screen-title .panel{position:relative}
+.note{color:#e0a060;min-height:1.4em;margin-top:8px;font-size:12px}
+#screen-dead .panel{border-color:var(--red)}#screen-dead h2{color:var(--red)}
+</style></head>
+<body data-screen="">
+<canvas id="c"></canvas><div id="cross"></div>
+<div id="toasts"></div><div id="hint"></div>
+<div id="hud" class="hidden">
+  <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
+  <div class="stat"><b id="hud-armor">0</b><small>ARMOR</small></div>
+  <div class="stat"><b id="hud-ammo">8</b><small>FLARES</small></div>
+  <div id="hud-keys"></div><div class="grow"></div>
+  <div class="side">KILLS <span id="hud-kills"></span><br>SECRETS <span id="hud-secrets"></span></div>
+</div>
+
+<div id="screen-title" class="screen">
+  <img id="title-art" alt="">
+  <div class="panel">
+    <h1>HUSHFALL</h1><div class="sub">Port Marrow · first night · engine skeleton build</div>
+    <button id="btn-continue">Continue</button>
+    <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
+    <div class="note" id="title-note"></div>
+  </div>
+</div>
+
+<div id="screen-pause" class="screen hidden">
+  <div class="panel">
+    <h2>PAUSED</h2>
+    <button id="btn-resume">Resume</button>
+    <div class="row"><button id="btn-save">Quick save</button><button id="btn-load">Quick load</button></div>
+    <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"></label>
+    <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
+    <label>Render width <select id="set-res"></select></label>
+    <label>Ink outline <input id="set-outline" type="checkbox"></label>
+    <label>Paint pass <input id="set-paint" type="checkbox"></label>
+    <details><summary>Controls</summary><div id="controls" class="rows"></div></details>
+    <div class="row"><button id="btn-restart">Restart level</button><button id="btn-quit">Quit to title</button></div>
+    <div class="note" id="pause-note"></div>
+  </div>
+</div>
+
+<div id="screen-dead" class="screen hidden">
+  <div class="panel"><h2>YOU DIED</h2><div class="sub">The Hush takes another note.</div>
+    <button id="btn-retry">Retry level</button><button id="btn-dead-load">Load quick save</button></div>
+</div>
+
+<div id="screen-complete" class="screen hidden">
+  <div class="panel"><h2 id="complete-title"></h2><div id="stat-rows" class="rows"></div><br><button id="btn-next">Continue</button></div>
+</div>
+<script type="module" src="/src/game/main.js"></script>
+</body></html>

@@ -1,0 +1,118 @@
+// Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
+// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait.
+import { PLAYER, WEAPONS, ENEMIES, PROPS } from './defs.js';
+import { hasLOS } from './world.js';
+
+const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+
+export class Bot {
+  constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90 } = {}) {
+    this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
+    this.path = null; this.pathKey = ''; this.usePressed = false; this.fireHeld = false; this.lastPos = [world.player.x, world.player.z]; this.stillFor = 0; this.calm = 0; this.failed = null; this.log = [];
+  }
+  get done() { return this.i >= this.route.length; }
+  // -- nav -------------------------------------------------------------
+  passable(cx, cz, goal) {
+    const m = this.w.map, k = m.kind(cx, cz), p = this.w.player;
+    if (goal && cx === goal[0] && cz === goal[1]) return true;
+    if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
+    if (k === 'floor' || k === 'outdoor' || k === 'secret') return true;
+    if (k === 'door') { const d = m.doorAt(cx, cz); return !d.key || p.keys.includes(d.key); }
+    return false;
+  }
+  findPath(goal) {
+    const m = this.w.map, p = this.w.player, start = [Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)];
+    const key = (c) => c[0] + ',' + c[1], prev = new Map([[key(start), null]]), q = [start];
+    while (q.length) {
+      const c = q.shift();
+      if (c[0] === goal[0] && c[1] === goal[1]) break;
+      for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const n = [c[0] + dx, c[1] + dz];
+        if (!prev.has(key(n)) && this.passable(n[0], n[1], goal)) { prev.set(key(n), c); q.push(n); }
+      }
+    }
+    if (!prev.has(key(goal))) return null;
+    const out = []; for (let c = goal; c; c = prev.get(key(c))) out.push(c);
+    return out.reverse().slice(1);
+  }
+  // -- combat ----------------------------------------------------------
+  combatTarget() {
+    const w = this.w, p = w.player; let best = null, bd = 16;
+    for (const e of w.enemies) {
+      if (e.state === 'dead' || e.state === 'idle') continue;
+      const d = Math.hypot(e.x - p.x, e.z - p.z);
+      if (d < bd && hasLOS(w, p.x, p.z, e.x, e.z)) { best = e; bd = d; }
+    }
+    return best ? { e: best, d: bd } : null;
+  }
+  fight(t) {
+    const w = this.w, p = w.player, def = WEAPONS[p.weapon];
+    const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
+    this.in.addYaw(clamp(yawErr, -0.15, 0.15));
+    const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight, pitchWant = Math.atan2(aimY - PLAYER.eye, t.d);
+    this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
+    const shoot = Math.abs(yawErr) < 0.06 && t.d > 2.8 && (p.ammo[def.ammo] || 0) > 0;
+    this.setHeld('fire', shoot);
+    this.setHeld('back', t.d < 2.8);
+    this.setHeld('forward', false);
+  }
+  setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
+  // -- steering --------------------------------------------------------
+  steerTo(x, z, arrive) {
+    const p = this.w.player, dx = x - p.x, dz = z - p.z, d = Math.hypot(dx, dz);
+    if (d < arrive) { this.setHeld('forward', false); return true; }
+    const err = norm(Math.atan2(-dx, -dz) - p.yaw);
+    this.in.addYaw(clamp(err, -0.1, 0.1));
+    this.setHeld('forward', Math.abs(err) < 0.5);
+    return false;
+  }
+  follow(goal, arriveCells = 0.7, stopAt = null) {
+    const m = this.w.map, p = this.w.player, gx = (goal[0] + 0.5) * m.cell, gz = (goal[1] + 0.5) * m.cell;
+    if (stopAt != null && Math.hypot(gx - p.x, gz - p.z) < stopAt) { this.setHeld('forward', false); return true; }
+    const key = goal.join(',');
+    if (this.pathKey !== key || !this.path || this.w.tick % 30 === 0) { this.path = this.findPath(goal); this.pathKey = key; }
+    if (!this.path) { this.failed = `no path to ${key}`; return false; }
+    const here = [Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)];
+    while (this.path.length && this.path[0][0] === here[0] && this.path[0][1] === here[1]) this.path.shift();
+    const next = this.path[0];
+    if (!next) return this.steerTo(gx, gz, arriveCells * m.cell / 2);
+    const nk = m.kind(next[0], next[1]);
+    if ((nk === 'door' || nk === 'secret')) {                    // closed door ahead: open it
+      const d = this.w.doors.find((q) => q.cx === next[0] && q.cz === next[1]);
+      if (d && d.open < 0.85) {
+        const dx = (next[0] + 0.5) * m.cell, dz = (next[1] + 0.5) * m.cell;
+        if (Math.hypot(dx - p.x, dz - p.z) < 2.0) { this.setHeld('forward', false); this.aimAt(dx, dz); this.pressUse(); return false; }
+      }
+    }
+    this.steerTo((next[0] + 0.5) * m.cell, (next[1] + 0.5) * m.cell, 0.35);
+    return false;
+  }
+  aimAt(x, z) { const p = this.w.player; this.in.addYaw(clamp(norm(Math.atan2(-(x - p.x), -(z - p.z)) - p.yaw), -0.15, 0.15)); }
+  pressUse() { if (!this.usePressed) { this.in.press('use'); this.usePressed = true; } }
+  // -- tick ------------------------------------------------------------
+  /** Decide inputs for the next sim tick. */
+  tick() {
+    if (this.failed || this.done) return;
+    const w = this.w, p = w.player, op = this.route[this.i];
+    if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after
+    else if (this.usePressed) this.usePressed = false;
+    if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
+    const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
+    this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
+    const t = this.combatTarget();
+    if (t) { this.calm = 0; this.fight(t); if (op.op === 'kill') return; if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
+    else { this.setHeld('fire', false); this.setHeld('back', false); this.calm++; }
+    let done = false;
+    if (op.op === 'goto') done = this.follow(op.at, 0.6);
+    else if (op.op === 'use') {
+      const d = w.doors.find((q) => q.cx === op.at[0] && q.cz === op.at[1]);
+      if (d && d.target === 1) done = true;
+      else done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), this.pressUse(), false);
+    } else if (op.op === 'kill') done = this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle');
+    else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
+    else this.failed = 'unknown op ' + op.op;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.stillFor = 0; }
+  }
+}

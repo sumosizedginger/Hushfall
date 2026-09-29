@@ -167,3 +167,56 @@ export function makeLampPost() {
   light.userData.base = 120; light.userData.flicker = 'lamp';
   return { group, light };
 }
+
+// ------------------------------------------------- Gate 1 additions: pickups, doors, exit
+/** kind: a PICKUPS key from engine/defs.js. Faces wear props_atlas cells. */
+export function makePickup(kind, tex) {
+  const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x201810 });
+  const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
+  const g = new THREE.Group();
+  if (kind.startsWith('health')) {
+    const big = kind === 'health_large', s = big ? 1.35 : 1;
+    const box = M(new THREE.BoxGeometry(0.42 * s, 0.26 * s, 0.3 * s), 0); box.position.y = 0.16 * s; g.add(box);
+    const strap = M(new THREE.BoxGeometry(0.06, 0.29 * s, 0.32 * s), 4); strap.position.y = 0.16 * s; g.add(strap);
+  } else if (kind.startsWith('ammo')) {
+    const box = M(new THREE.BoxGeometry(0.44, 0.24, 0.3), 1); box.position.y = 0.14; g.add(box);
+    for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.045, 0.045, 0.2, 6), 3); shell.rotation.z = Math.PI / 2; shell.position.set(0, 0.3, i * 0.09); g.add(shell); }
+  } else if (kind.startsWith('armor')) {
+    const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2); body.position.y = 0.26; g.add(body);
+    for (const x of [-0.14, 0.14]) { const strap = M(new THREE.BoxGeometry(0.06, 0.44, 0.18), 7); strap.position.set(x, 0.26, 0); g.add(strap); }
+  } else if (kind.startsWith('key')) {
+    const ring = M(new THREE.TorusGeometry(0.11, 0.035, 5, 8), 3); ring.position.y = 0.55; g.add(ring);
+    const shaft = M(new THREE.BoxGeometry(0.06, 0.34, 0.05), 3); shaft.position.y = 0.3; g.add(shaft);
+    for (const y of [0.16, 0.24]) { const tooth = M(new THREE.BoxGeometry(0.14, 0.05, 0.05), 3); tooth.position.set(0.07, y, 0); g.add(tooth); }
+    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.05, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.55; g.add(glow);
+  }
+  return g;
+}
+
+/** Sliding door slab. axis 'x' = wall line runs east-west (slab spans x). keyed doors get a brass lock plate. */
+export function makeDoorSlab(tex, cell, H, axis, keyed) {
+  const thick = 0.36, w = axis === 'x' ? cell : thick, d = axis === 'x' ? thick : cell;
+  const g = new THREE.Group();
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, H, d), new THREE.MeshLambertMaterial({ map: tex }));
+  slab.position.y = H / 2; g.add(slab);
+  if (keyed) {
+    const plate = new THREE.MeshLambertMaterial({ color: 0xc9a44c, emissive: 0x3a2a08 });
+    for (const s of [-1, 1]) {
+      const p = new THREE.Mesh(new THREE.BoxGeometry(axis === 'x' ? 0.34 : 0.05, 0.34, axis === 'x' ? 0.05 : 0.34), plate);
+      p.position.set(axis === 'x' ? 0 : s * (thick / 2 + 0.02), 1.3, axis === 'x' ? s * (thick / 2 + 0.02) : 0); g.add(p);
+    }
+  }
+  return g;
+}
+
+/** The ferry gate: heavy hatch frame around a warm glow. faces: 'west' means the gate is on the east wall looking west. */
+export function makeExitGate(tex, H) {
+  const g = new THREE.Group();
+  const wood = new THREE.MeshLambertMaterial({ map: tex });
+  const glow = new THREE.MeshBasicMaterial({ color: 0xffc070 });
+  const panel = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.5, 2.4), glow); panel.position.set(0, 1.25, 0); g.add(panel);
+  for (const z of [-1.4, 1.4]) { const post = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.8, 0.35), wood); post.position.set(0.05, 1.4, z); g.add(post); }
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 3.2), wood); lintel.position.set(0.05, 2.75, 0); g.add(lintel);
+  const light = new THREE.PointLight(0xffb060, 60, 14, 2); light.position.set(-1.5, 1.6, 0); g.add(light);
+  return { group: g, light };
+}

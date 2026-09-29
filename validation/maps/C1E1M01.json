@@ -1,0 +1,170 @@
+{
+  "mapId": "C1E1M01",
+  "mapVersion": 1,
+  "generatedBy": "tools/verify-map.mjs",
+  "codeVersion": "a630413",
+  "dirtyTree": true,
+  "mapSha": "e34c403456be2c54",
+  "assetVersion": "e0b96933b60b8f12",
+  "loads": true,
+  "validationErrors": [],
+  "routes": [
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2813,
+      "finalHash": "543fbee0",
+      "kills": 8,
+      "secrets": 0,
+      "items": 4,
+      "damageTaken": 26
+    },
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2813,
+      "finalHash": "548f699f",
+      "kills": 8,
+      "secrets": 0,
+      "items": 4,
+      "damageTaken": 26
+    },
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2813,
+      "finalHash": "85c7ab74",
+      "kills": 8,
+      "secrets": 0,
+      "items": 4,
+      "damageTaken": 26
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 3050,
+      "finalHash": "2a14855f",
+      "kills": 8,
+      "secrets": 1,
+      "items": 6,
+      "damageTaken": 15
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 3050,
+      "finalHash": "bde9d734",
+      "kills": 8,
+      "secrets": 1,
+      "items": 6,
+      "damageTaken": 15
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 3050,
+      "finalHash": "158432db",
+      "kills": 8,
+      "secrets": 1,
+      "items": 6,
+      "damageTaken": 15
+    }
+  ],
+  "canonicalRoute": {
+    "file": "routes/C1E1M01.main.route.json",
+    "difficulty": "normal",
+    "seed": 1,
+    "reachedExit": true,
+    "ticks": 2813,
+    "finalHash": "548f699f",
+    "expectedEvents": [
+      "door_open",
+      "pickup:key_brass",
+      "level_complete"
+    ],
+    "proves": "one valid tested path; not balance, fun, or full exploration"
+  },
+  "counts": {
+    "enemies": 8,
+    "items": 10,
+    "secrets": 1
+  },
+  "browser": {
+    "file": "validation/browser-check.json",
+    "when": "2026-09-29T20:21:39.340Z",
+    "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
+    "passed": 21,
+    "total": 21,
+    "allPassed": true
+  },
+  "automated": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "exit reachable from spawn (keys considered)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "name": "no unreachable pickups/enemies",
+        "ok": true,
+        "detail": "[]"
+      },
+      {
+        "name": "all secrets reachable",
+        "ok": true,
+        "detail": "[{\"id\":\"pocket\",\"reachable\":true}]"
+      },
+      {
+        "name": "route C1E1M01.main.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "46.9 s"
+      },
+      {
+        "name": "route C1E1M01.main.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "46.9 s"
+      },
+      {
+        "name": "route C1E1M01.main.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "46.9 s"
+      },
+      {
+        "name": "route C1E1M01.secret.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "50.8 s"
+      },
+      {
+        "name": "route C1E1M01.secret.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "50.8 s"
+      },
+      {
+        "name": "route C1E1M01.secret.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "50.8 s"
+      },
+      {
+        "name": "latest browser check passed",
+        "ok": true,
+        "detail": "21/21"
+      }
+    ]
+  },
+  "humanReview": null,
+  "knownBlockers": [],
+  "notes": "Layout is the engine-skeleton test level, not the polished Gate 1 level. No audio, automap or second weapon yet."
+}

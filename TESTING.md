@@ -1,34 +1,46 @@
 # TESTING
 
 ## Commands
-- `npm run validate` — manifest topology (68/36/32/62/6, unique IDs, main chain, secret entrances/returns) + evidence-derived status + asset file check.
-- `npm run status` — status counts derived from `validation/maps/*.json`.
-- `node tools/dev/determinism.mjs <asset>` — bake twice, diff.
-- `node tools/dev/clean-regen.mjs` — `npm ci` in a fresh copy, bake, diff against `assets/baked/`.
+- `npm test` — 48 node:test tests, headless (~3 s). Files in `tests/`: `mapformat` (validation + reachability, incl. negative cases), `sim` (determinism, frame-rate independence, collision, doors, damage, pickups, input layer, death/exit ordering, transitions), `save` (round-trip, migration machinery, corrupt/newer/incompatible, map-changed fallback, storage), `route` (canonical routes on all difficulties, reproducibility), `settings`, `campaign` (68-slot topology + the PLANNED/IMPLEMENTED/AGENT_VERIFIED/COMPLETE derivation, stale evidence).
+- `npm run validate` / `npm run status` — manifest topology + evidence-derived status + asset file check.
+- `npm run browsercheck` — headless Chrome (154, SwiftShader software GL, 1280x720) against the dev server, 22 checks; writes `validation/browser-check.json`, screenshots in `review/engine-skeleton/`.
+- `npm run verify-map -- C1E1M01` — generates map evidence (routes x 3 difficulties, reachability, latest browser check).
+- `npm run build` — production build; the dev test hook must not appear in `dist/` (checked by grep, 2026-09-29: 0 matches).
+- Asset tools: `node tools/dev/determinism.mjs <asset>`, `node tools/dev/clean-regen.mjs`.
 
-## Results so far (2026-09-29, Gate 0)
-| check | result |
+## Results (2026-09-29, engine skeleton)
+| area | result |
 |---|---|
-| `npm run validate` | OK: 68 slots, C1 36, C2 32, main 62, secret 6 |
-| status | PLANNED 68 / IMPLEMENTED 0 / AGENT_VERIFIED 0 / COMPLETE 0 |
-| negative test: manifest claims `COMPLETE` without evidence | validator exits 1 (observed) |
-| clean-env asset regen | all 4 assets within 0.3% differing bytes; not bit-exact (`review/gate-0/clean-regen.json`) |
-| p5 seeding | without `brush.seed()` ~30% of bytes differed run to run; with it <0.3% |
-| transparency | enemy/weapon alpha recovered by difference matting; inspected on checkerboard |
-| nearest-neighbour scaling | preview sheet only; NOT yet verified through Three.js |
+| unit/integration tests | 48/48 pass |
+| browser check (real DOM input, live rAF loop) | 22/22 pass: click Normal starts a game; held real W key moves the player; real click fires; Esc pauses/resumes |
+| Node vs Chrome determinism | same route/seed: identical tick count (2813) and identical final state hash in Node and in Chrome |
+| canonical routes | main + secret routes complete on easy/normal/hard through the real input layer (bot acts only via InputState) |
+| save/resume | headless: resumed run equals uninterrupted run (hash); browser: quick save/load restores tick and position |
+| death/restart | dies, freezes, death screen, retry restores a live player with the key available again |
+| GPU lifecycle | 12 level restarts: geometries 341 -> 341, textures 12 -> 12, programs 7 -> 7 |
+| mutation check | flipping death-vs-exit ordering makes the "exit while fatal damage" test fail (then restored) |
+| production build | succeeds; dev hook absent from bundle |
 
-## Not yet tested (no game exists)
-Runtime/browser paths, Three.js load of baked assets, pointer lock, collision, combat, saves, performance, secret-exit routing negatives (only the status-inflation negative test was observed failing; other validator error branches are untested).
+## Failure-injection coverage
+Death while holding the key (restart restores it), use/interact spam on locked and unlocked doors (400 presses), exit reached on the same tick as fatal damage (death wins), save immediately after a transition, reload after finding a secret (no double count), 50 repeated transitions, corrupt/foreign/newer/old saves, map changed since save, unusable storage, key placed behind its own door (reachability catches it), walled-off exit, evidence gone stale after a map edit.
 
-## Known defects (asset spike)
-- MAJOR: weapon-view art: receiver/hands show coloured speckle from matting on low-coverage pixels; hands are translucent-looking.
-- MAJOR: enemy shading blobs read flat/blocky; grime lines look like black bars on the coat.
-- MINOR: title art tower is lost against dark clouds after the reseed; needs a lighter sky value behind it.
-- MINOR: bakes are slow (~10 s per page under SwiftShader).
+## Not tested / limits
+- Pointer lock (not available in the app browser pane; headless Chrome exercised the drag/click fallback path only).
+- Real-GPU frame rate and memory: the only numbers are software-GL (avg ~26 ms/frame at 1280x720) and are NOT a performance claim.
+- Audio does not exist yet. Automap does not exist yet. Only one weapon and one enemy type exist.
+- Bot aims perfectly and is never hit on the current routes, so difficulty balance is unproven; difficulty is only verified by unit test (damage/health multipliers).
+- The app browser pane hides itself and suspends animation frames, so it could not be used for live-loop verification; headless Chrome was used instead.
+- Screenshots were reviewed by eye for appearance only.
 
-## Look demo (2026-09-29)
-- `npm run shoot`: headless Chrome (SwiftShader) drives the demo: 5 viewpoints, fire/impact/kill sequence, raw-vs-painted; 10 screenshots in review/look-demo/. Kill confirmed via state (kills: 1). No page errors after fixing a favicon 404.
-- Built-in browser pane: loaded http://localhost:5173/look.html, no console errors. Pointer lock, keyboard play and real-GPU frame rate NOT yet tested (headless SwiftShader measured ~35 fps at 1280x720; not a valid perf number).
-- Known look issues: post value-banding makes it read more posterised-pixel than brushy; coat is a plain cone; weapon receiver reads blocky; ceiling reuses floor texture; sky/floor colours untuned; edge-detect thresholds untuned; lighting is placeholder.
-- Bug found+fixed: clearing depth for the weapon pass wiped the world depth the outline shader needs (fixed by compressing weapon depth into the near range).
-- Bug found+fixed: a bake wrote translucent atlas cells because brush fills are washes (added opaque p5 base fills).
+## Known defects
+- MAJOR: value-banding post pass reads more posterised-pixel than brushy (look decision pending).
+- MAJOR: weapon view-model reads blocky; enemy coat is a plain cone.
+- MINOR: exterior is very dark away from lamp posts; lighting values are placeholders.
+- MINOR: secret panel discoverability is untested/unstyled (flush wall, no hint).
+- MINOR: baking is slow (atlas ~100 s under software GL).
+- MINOR: concept sprites `enemy_tollbearer_idle.png` / `weapon_flarecannon.png` are unused leftovers (excluded from the build).
+
+## History
+- Gate 0 asset spike: p5 seeding, opaque bases and matting findings are recorded in `ART_BIBLE.md`; clean-env regeneration within 0.3% differing bytes (`review/gate-0/clean-regen.json`).
+- Look demo: two bugs fixed (weapon pass wiped world depth so outlines vanished; brush fills were translucent atlas cells).
+- Engine skeleton bugs found by the checks and fixed in the game: hook and rAF loop both stepping the sim (added manual clock), one geometry leaked per level restart (post pass quad not disposed), keys tapped between ticks were dropped (tap latch).

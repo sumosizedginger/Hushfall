@@ -1,0 +1,54 @@
+// Versioned save data. Policy: a save is either migrated to the current version or rejected with an explicit reason.
+// Nothing is ever silently coerced. Unknown/newer versions and corrupt files are reported, not loaded.
+import { createWorld, carryOver } from './world.js';
+
+export const SAVE_MAGIC = 'HUSHFALL_SAVE';
+export const SAVE_VERSION = 1;
+/** version N -> function producing version N+1. Empty until the schema first changes. */
+export const MIGRATIONS = {};
+
+export function makeSave(w, kind, { now = 0 } = {}) {
+  const save = { magic: SAVE_MAGIC, version: SAVE_VERSION, savedAt: now, kind, campaign: { mapId: w.mapId, mapVersion: w.mapVersion, difficulty: w.difficulty, seed: w.seed }, carry: carryOver(w) };
+  if (kind === 'mid-level') save.world = JSON.parse(JSON.stringify(w));
+  return save;
+}
+
+/** text -> {ok:true, save, migratedFrom} | {ok:false, reason, detail} */
+export function parseSave(text, migrations = MIGRATIONS, current = SAVE_VERSION) {
+  let s; try { s = JSON.parse(text); } catch (e) { return { ok: false, reason: 'corrupt', detail: e.message }; }
+  if (!s || s.magic !== SAVE_MAGIC) return { ok: false, reason: 'wrong-magic', detail: 'not a HUSHFALL save' };
+  if (!Number.isInteger(s.version) || s.version < 1) return { ok: false, reason: 'bad-version', detail: String(s.version) };
+  if (s.version > current) return { ok: false, reason: 'newer-version', detail: `save v${s.version}, game reads up to v${current}` };
+  const from = s.version;
+  while (s.version < current) {
+    const m = migrations[s.version];
+    if (!m) return { ok: false, reason: 'incompatible', detail: `no migration from v${s.version}; development save invalidated` };
+    try { s = m(s); } catch (e) { return { ok: false, reason: 'migration-failed', detail: e.message }; }
+    if (!s || s.version == null) return { ok: false, reason: 'migration-failed', detail: 'migration returned no version' };
+  }
+  if (!s.campaign?.mapId || !s.carry) return { ok: false, reason: 'corrupt', detail: 'missing campaign/carry' };
+  return { ok: true, save: s, migratedFrom: from === current ? null : from };
+}
+
+/** Rebuild a world from a save. mapLoader(id) -> MapData. Mid-level saves need the same map version; otherwise fall back to level start. */
+export function loadWorld(save, mapLoader) {
+  const map = mapLoader(save.campaign.mapId);
+  if (!map) return { ok: false, reason: 'unknown-map', detail: save.campaign.mapId };
+  const opts = { seed: save.campaign.seed, difficulty: save.campaign.difficulty, carry: save.carry };
+  if (save.kind === 'mid-level') {
+    if (map.version !== save.campaign.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
+    const w = createWorld(map, opts), snap = JSON.parse(JSON.stringify(save.world));
+    for (const k of Object.keys(w)) delete w[k];
+    Object.assign(w, snap);
+    return { ok: true, world: w };
+  }
+  return { ok: true, world: createWorld(map, opts) };
+}
+
+/** Slot storage over any localStorage-like object. */
+export class SaveStore {
+  constructor(storage, prefix = 'hushfall.save.') { this.s = storage; this.p = prefix; }
+  write(slot, save) { this.s.setItem(this.p + slot, JSON.stringify(save)); }
+  read(slot) { const t = this.s.getItem(this.p + slot); return t == null ? { ok: false, reason: 'empty', detail: slot } : parseSave(t); }
+  clear(slot) { this.s.removeItem(this.p + slot); }
+}

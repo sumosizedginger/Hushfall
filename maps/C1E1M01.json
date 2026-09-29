@@ -1,0 +1,278 @@
+{
+ "format": 1,
+ "id": "C1E1M01",
+ "version": 1,
+ "name": "Marrow Quay",
+ "cellSize": 2,
+ "ceilingHeight": 3.6,
+ "grid": [
+  "####################################",
+  "#..........####::::::::::::#.......#",
+  "#..........####::::::::::::#.......#",
+  "#..........S..#::::::::::::D.......#",
+  "#..........####::::::::::::#.......#",
+  "#..........####::::::::::::#.......#",
+  "#..........####::::::::::::#.......#",
+  "#..............::::::::::::#########",
+  "#..............::::::::::::::::::::#",
+  "#..........####::::::::::::::::::::#",
+  "#####D#########::::::::::::::::::::#",
+  "#..........####::::::::::::::::::::#",
+  "#..........####::::::::::::::::::::#",
+  "#..........####::::::::::::::::::::#",
+  "#..........####::::::::::::::::::::#",
+  "####################################"
+ ],
+ "doors": [
+  {
+   "at": [5, 10],
+   "key": null
+  },
+  {
+   "at": [27, 3],
+   "key": "brass"
+  }
+ ],
+ "secrets": [
+  {
+   "id": "pocket",
+   "panel": [11, 3],
+   "cells": [
+    [12, 3],
+    [13, 3]
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [3, 7],
+   "facing": "east"
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [3, 2]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [4, 2]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [4, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [8, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [9, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [5, 3]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [8, 3]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [7, 3],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 8],
+   "facing": "west"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 1]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [2, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [3, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [6, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [1, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [2, 14]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [3, 13],
+   "facing": "east"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 12],
+   "facing": "west"
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [9, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [5, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [12, 3]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [13, 3]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [17, 2]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [17, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [30, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [21, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [22, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [19, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [19, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [24, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [24, 11]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 3],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 7],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 12],
+   "facing": "west"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [31, 9],
+   "facing": "west"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [16, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [22, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [25, 2]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [30, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [31, 2]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [34, 1]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [29, 5]
+  },
+  {
+   "type": "exit",
+   "at": [33, 3]
+  }
+ ],
+ "par": {
+  "time": 300
+ }
+}

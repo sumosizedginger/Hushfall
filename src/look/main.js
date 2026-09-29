@@ -1,10 +1,10 @@
 // HUSHFALL look demo. NOT the game: a small playable slice to judge the painted-3D look.
 // Sim runs at a fixed 60 Hz step; rendering is decoupled (see loop()).
 import * as THREE from 'three';
-import { loadAll } from './textures.js';
+import { loadAll } from '../render/textures.js';
 import { parseMap, buildLevel, blocked, los, S, H } from './level.js';
-import { makeTollbearer, makeFlareCannon } from './models.js';
-import { PostPass } from './post.js';
+import { makeTollbearer, makeFlareCannon } from '../render/models.js';
+import { PostPass } from '../render/post.js';
 
 const NEAR = 0.1, FAR = 90, DT = 1 / 60;
 const canvas = document.getElementById('c'), hud = document.getElementById('hud'), msg = document.getElementById('msg');

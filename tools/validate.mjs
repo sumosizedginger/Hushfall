@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-const root = path.resolve(import.meta.dirname, '..');
+const root = process.env.HUSHFALL_ROOT ? path.resolve(process.env.HUSHFALL_ROOT) : path.resolve(import.meta.dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
 const errors = [], warnings = [];
 const err = (m) => errors.push(m), warn = (m) => warnings.push(m);
@@ -60,6 +60,8 @@ function derive(id) {
   if (!fs.existsSync(f)) return { status: 'PLANNED', why: 'no evidence file' };
   let ev; try { ev = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { err(`${id}: evidence unreadable: ${e.message}`); return { status: 'PLANNED', why: 'bad evidence' }; }
   if (ev.mapId !== id) err(`${id}: evidence mapId mismatch`);
+  const mapFile = path.join(root, 'maps', id + '.json');
+  if (ev.mapSha && fs.existsSync(mapFile) && crypto.createHash('sha256').update(fs.readFileSync(mapFile)).digest('hex').slice(0, 16) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
   let status = 'PLANNED', why = 'map does not load';
   if (ev.loads === true) { status = 'IMPLEMENTED'; why = 'loads; verification incomplete'; }
   if (status === 'IMPLEMENTED' && ev.automated?.pass === true && ev.canonicalRoute?.reachedExit === true && ev.canonicalRoute?.file && fs.existsSync(path.join(root, ev.canonicalRoute.file))) { status = 'AGENT_VERIFIED'; why = 'automated pass + canonical route reached exit'; }

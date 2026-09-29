@@ -4,15 +4,15 @@
   "main": 62,
   "secret": 6,
   "counts": {
-    "PLANNED": 68,
+    "PLANNED": 67,
     "IMPLEMENTED": 0,
-    "AGENT_VERIFIED": 0,
+    "AGENT_VERIFIED": 1,
     "COMPLETE": 0
   },
   "errors": [],
   "warnings": [],
   "perMap": {
-    "C1E1M01": "PLANNED",
+    "C1E1M01": "AGENT_VERIFIED",
     "C1E1M02": "PLANNED",
     "C1E1M03": "PLANNED",
     "C1E1M04": "PLANNED",
