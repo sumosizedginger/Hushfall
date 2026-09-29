@@ -3,7 +3,7 @@
 ## CURRENT STATE (read first)
 - Gate: **0 complete except Three.js load-through of assets; paused at the painterly-look review requested by the user.**
 - Blockers: none. Waiting on user: assess `review/gate-0/pipeline-sheet.png`; is the painterly direction right?
-- Exact next task (after user feedback): (1) improve sprite/weapon art quality (fix matting speckle, solid fills); (2) scaffold Vite + Three.js game shell that loads baked PNGs with NearestFilter to finish the pipeline acceptance test; (3) decide map data format + reachability checker; (4) begin Gate 1 level C1E1M01 "Marrow Quay".
+- Exact next task: Three.js proof slice — room with painted wall tile, one part-rigged animated 3D Tollbearer with a p5-painted UV atlas, a 3D flare-cannon view-model, ink-outline post pass, nearest-upscaled low-res render. Then map format, then Gate 1.
 - Resume: `npm ci && npm run validate && npm run bake && node tools/preview.mjs`
 
 ## 2026-09-29

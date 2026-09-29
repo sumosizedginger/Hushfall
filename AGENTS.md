@@ -5,6 +5,7 @@ Target: 68 maps (C1: 4 episodes x (8 main + 1 secret) = 36; C2: 30 main + 2 secr
 
 ## Non-negotiables
 - Stack: Three.js runtime renderer; Vite; Node scripts. Pin dependency versions, keep `package-lock.json`.
+- World is real 3D (no billboard sprites): code-authored low-poly Three.js meshes wearing p5-baked painted atlases + painterly post pass.
 - Art: painterly (approved by user). All visual art is baked from **p5.js 2.x + p5.js-integrated p5.brush** (never the standalone build) by `tools/bake.mjs`. No stock/downloaded/generative-service art. p5 is a baker, not the runtime.
 - Audio: original, synthesized/procedural only.
 - Everything game-specific is original. No Doom/classic assets, layouts, names, or text.

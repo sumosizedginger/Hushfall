@@ -43,3 +43,4 @@ Map size: ~10-25 min per main map at first play; enemy placements 30-120 dependi
 
 ## Dated design changes
 - 2026-09-29: User approved painterly look over strict pixel art; palette-lock/quantise step dropped.
+- 2026-09-29: **Everything in the world is real 3D** (levels, enemies, weapon view-models, props); no billboard sprites. The p5.js/p5.brush look is delivered as painted texture atlases on code-authored low-poly Three.js meshes plus a painterly post pass (ink outline, paper grain, low-res nearest upscale). Affects: enemy/weapon recipes become UV-atlas recipes; sprite 8-direction sets dropped; models are code-authored and part-rig animated. Migration: `enemy_tollbearer_idle` / `weapon_flarecannon` PNGs are concept references only until replaced by atlases.

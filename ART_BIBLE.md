@@ -1,6 +1,8 @@
 # ART BIBLE (Gate 0 draft)
 
-## Direction
+## Direction (updated 2026-09-29: all world content is 3D)
+World = real 3D Three.js meshes (levels, enemies, weapon view-models, props), code-authored low-poly, part-rigged. p5.brush bakes painted UV texture atlases for them; a post pass adds ink outline, paper grain and low-res nearest upscaling. Existing sprite recipes are concept references, to be replaced by atlas recipes.
+
 Painterly, hand-painted, 1990s-shooter structure: low internal render resolution with nearest-neighbour upscaling of the final frame. Assets keep visible brush character (washes, ink outlines, salt/rust grime) but with crisp alpha edges and solid bodies. User-approved 2026-09-29: painterly over strict pixel art.
 
 ## Palette anchors (per-map palettes are constrained subsets)
