@@ -2,7 +2,7 @@
   "mapId": "C1E1M01",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "2bc7b7a",
+  "codeVersion": "bbe5292",
   "dirtyTree": true,
   "mapSha": "2ab20dccab0c37a9",
   "assetVersion": "e0b96933b60b8f12",
@@ -15,7 +15,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2208,
-      "finalHash": "470c1a55",
+      "finalHash": "451769f4",
       "kills": 9,
       "secrets": 0,
       "items": 4,
@@ -27,7 +27,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2208,
-      "finalHash": "c56745bc",
+      "finalHash": "ee44c777",
       "kills": 9,
       "secrets": 0,
       "items": 4,
@@ -39,7 +39,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2265,
-      "finalHash": "683b0a6b",
+      "finalHash": "36c6b381",
       "kills": 9,
       "secrets": 0,
       "items": 4,
@@ -51,7 +51,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2426,
-      "finalHash": "7602e467",
+      "finalHash": "f04a5f89",
       "kills": 9,
       "secrets": 1,
       "items": 6,
@@ -63,7 +63,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2426,
-      "finalHash": "977020d8",
+      "finalHash": "59771cd4",
       "kills": 9,
       "secrets": 1,
       "items": 6,
@@ -75,7 +75,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2483,
-      "finalHash": "29a7979d",
+      "finalHash": "04672431",
       "kills": 9,
       "secrets": 1,
       "items": 6,
@@ -88,7 +88,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 2208,
-    "finalHash": "c56745bc",
+    "finalHash": "ee44c777",
     "expectedEvents": [
       "door_open",
       "pickup:key_brass",
@@ -103,10 +103,10 @@
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-29T22:39:39.506Z",
+    "when": "2026-09-29T22:43:58.755Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
-    "passed": 32,
-    "total": 32,
+    "passed": 41,
+    "total": 41,
     "allPassed": true
   },
   "automated": {
@@ -160,7 +160,7 @@
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "32/32"
+        "detail": "41/41"
       }
     ]
   },

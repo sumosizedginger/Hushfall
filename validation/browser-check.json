@@ -1,5 +1,5 @@
 {
-  "when": "2026-09-29T22:39:39.506Z",
+  "when": "2026-09-29T22:43:58.755Z",
   "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
   "checks": [
     {
@@ -20,12 +20,12 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=54"
+      "detail": "mode=playing tick=42"
     },
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.16 m"
+      "detail": "moved 6.05 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -50,7 +50,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.34 m, sprint 6.09 m, ratio 1.40"
+      "detail": "walk 4.24 m, sprint 6.44 m, ratio 1.52"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -83,6 +83,51 @@
       "detail": "flare"
     },
     {
+      "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
+      "ok": true,
+      "detail": "visible=true painted=230400 explored=96 exits=0"
+    },
+    {
+      "name": "Tab again closes the automap",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Escape opens the pause menu (live)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clicking a control slot starts capture",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "pressing a key rebinds Use (persisted in settings)",
+      "ok": true,
+      "detail": "[\"KeyF\",\"Space\"] F assigned."
+    },
+    {
+      "name": "a conflicting key is taken from the other action and the player is told",
+      "ok": true,
+      "detail": "{\"fire\":[\"Mouse0\",\"KeyF\"],\"use\":[\"Space\"]} F taken from: use."
+    },
+    {
+      "name": "Escape cancels capture without leaving the pause menu",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "remapped controls survive a real page reload",
+      "ok": true,
+      "detail": "[\"KeyG\"]"
+    },
+    {
+      "name": "reset restores the default controls",
+      "ok": true,
+      "detail": "{\"use\":[\"KeyE\",\"Space\"],\"fire\":[\"Mouse0\",\"ControlLeft\"]}"
+    },
+    {
       "name": "game starts and HUD is visible",
       "ok": true,
       "detail": ""
@@ -100,7 +145,7 @@
     {
       "name": "browser sim == Node sim (state hash)",
       "ok": true,
-      "detail": "browser c56745bc vs node c56745bc"
+      "detail": "browser ee44c777 vs node ee44c777"
     },
     {
       "name": "every enemy killed, key held",
@@ -110,7 +155,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=93 distinct(last40)=ui_click,toll_alert,step_plank,toll_soft,flare_fire,wheeze_windup,hurt,strike,flare_boom,creak,weapon_switch,impact,scatter_fire,pump,enemy_die,gaunt_screech,pickup_ammo,door_open,pickup_key,door_close,step_outdoor,level_complete"
+      "detail": "played=68 distinct(last40)=ui_click,toll_alert,flare_fire,flare_boom,enemy_die,gaunt_screech,pickup_ammo,step_plank,door_open,pickup_key,door_close,pump,impact,scatter_fire,weapon_switch,toll_soft,step_outdoor,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -160,14 +205,14 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=27.8ms"
+      "detail": "frames=631 avg=27.7ms"
     }
   ],
   "errors": [],
   "perf": {
-    "frames": 900,
-    "avgMs": 27.75811111111118,
-    "p95Ms": 50.10000000000218,
+    "frames": 631,
+    "avgMs": 27.680824089050258,
+    "p95Ms": 100,
     "worstMs": 100
   },
   "gl": {

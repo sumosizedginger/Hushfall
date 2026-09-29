@@ -2,6 +2,7 @@
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
 import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, PROPS, DOOR } from './defs.js';
 import { nextRandom, initialRngState } from './rng.js';
+import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -29,7 +30,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
     enemies: [], projectiles: [], pickups: [], doors: [],
-    secretsFound: [],
+    secretsFound: [], explored: new Array(map.w * map.h).fill(0),
     stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
     endStats: null,
   };
@@ -48,7 +49,7 @@ const emit = (w, type, data = {}) => w.events.push({ type, tick: w.tick, ...data
 
 // ---------------------------------------------------------------- collision
 const doorAtCell = (w, cx, cz) => w.doors.find((d) => d.cx === cx && d.cz === cz);
-function cellSolid(w, cx, cz) {
+export function cellSolid(w, cx, cz) {
   const m = w.map, k = m.kind(cx, cz);
   if (k === 'wall') return true;
   if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); return !d || d.open < DOOR.passableAt; }
@@ -282,6 +283,8 @@ export function step(w, cmd) {
     }
     if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', { kind: it.kind }); }
   }
+
+  if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) updateExplored(w);          // automap: remember what has been seen
 
   // secrets: found when the player stands in one of the secret's cells
   const pcx = Math.floor(p.x / map.cell), pcz = Math.floor(p.z / map.cell);

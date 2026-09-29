@@ -92,6 +92,42 @@ try {
   const wheel = await T('t.state()');
   check('mouse wheel cycles weapons (wraps back to the flare cannon)', wheel.player.weapon === 'flare', wheel.player.weapon);
 
+  // ---- 0d. automap with REAL input -------------------------------------------------------------------------------------
+  await T("t.setup_clearEnemies(); t.setup_teleport(4, 12, -Math.PI / 2)"); await sleep(500);
+  await page.keyboard.press('Tab'); await sleep(400);
+  const mapVisible = await page.$eval('#automap', (e) => !e.classList.contains('hidden'));
+  const painted = await page.$eval('#automap', (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++; return n; });
+  const am = await T('t.automap()');
+  check('real Tab opens the automap, it paints, and it shows only what has been explored', mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('floor') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
+  await shot('01c-automap');
+  await page.keyboard.press('Tab'); await sleep(300);
+  check('Tab again closes the automap', (await page.$eval('#automap', (e) => e.classList.contains('hidden'))) && (await T('t.mapOpen()')) === false);
+
+  // ---- 0e. key remapping with REAL input -------------------------------------------------------------------------------
+  await page.keyboard.press('Escape'); await sleep(300);
+  check('Escape opens the pause menu (live)', (await T('t.state().mode')) === 'paused');
+  await page.click('#controls-box summary'); await sleep(150);
+  const useSlot = 'button.bind[data-a="use"][data-i="0"]';
+  await page.click(useSlot); await sleep(100);
+  check('clicking a control slot starts capture', (await page.$eval(useSlot, (e) => e.textContent)) === 'press a key…');
+  await page.keyboard.press('KeyF'); await sleep(150);
+  const b1 = (await T('t.state().settings.bindings')).use;
+  check('pressing a key rebinds Use (persisted in settings)', b1[0] === 'KeyF' && b1[1] === 'Space' && (await text('bind-note')).includes('F assigned'), JSON.stringify(b1) + ' ' + (await text('bind-note')));
+  await page.click('button.bind[data-a="fire"][data-i="1"]'); await page.keyboard.press('KeyF'); await sleep(150);
+  const st = await T('t.state().settings.bindings');
+  check('a conflicting key is taken from the other action and the player is told', st.fire[1] === 'KeyF' && !st.use.includes('KeyF') && (await text('bind-note')).includes('taken from: use'), JSON.stringify({ fire: st.fire, use: st.use }) + ' ' + (await text('bind-note')));
+  await page.click(useSlot); await page.keyboard.press('Escape'); await sleep(150);
+  check('Escape cancels capture without leaving the pause menu', (await text('bind-note')) === 'Cancelled.' && (await T('t.state().mode')) === 'paused');
+  await page.click(useSlot); await page.keyboard.press('KeyG'); await sleep(150);
+  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 120000 });
+  const persisted = (await T('t.state().settings.bindings')).use;
+  check('remapped controls survive a real page reload', persisted[0] === 'KeyG', JSON.stringify(persisted));
+  await T("t.newGame('normal', 1, { realtime: true })"); await sleep(200); await T("t.pause()");
+  await page.click('#controls-box summary'); await page.click('#btn-reset-keys'); await sleep(150);
+  const reset = await T('t.state().settings.bindings');
+  check('reset restores the default controls', reset.use[0] === 'KeyE' && reset.fire[1] === 'ControlLeft', JSON.stringify({ use: reset.use, fire: reset.fire }));
+  await T('t.resume()');
+
   // ---- 1. canonical route in the browser vs the same route headless in Node -------------------------------------
   const map = loadMapFile(path.join(root, 'maps/C1E1M01.json')), route = loadRouteFile(path.join(root, 'routes/C1E1M01.main.route.json'));
   const node = runRoute(map, route, { seed: 1, difficulty: 'normal' });
