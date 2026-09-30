@@ -12,7 +12,7 @@ const updateBaseline = process.argv.includes('--update-baseline');
 const root = path.resolve(import.meta.dirname, '../..');
 const shots = path.join(root, 'review/engine-skeleton');
 fs.mkdirSync(shots, { recursive: true });
-const checks = [], errors = [];
+const checks = [], errors = []; let perf = null, gl = null;
 const check = (name, ok, detail = '') => { checks.push({ name, ok: !!ok, detail: String(detail) }); console.log(ok ? 'PASS' : 'FAIL', name, detail); };
 
 const server = await createServer({ root, logLevel: 'error', server: { port: 5210, strictPort: true } });
@@ -122,7 +122,7 @@ try {
   const painted = await page.$eval('#automap', (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++; return n; });
   const am = await T('t.automap()');
   check('real Tab opens the automap, it paints, and it shows only what has been explored', mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('outdoor') && am.kinds.includes('water') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
-  await shot('01c-automap');
+  await T('t.clearOverlays()'); await shot('01c-automap');
   await page.keyboard.press('Tab'); await sleep(300);
   check('Tab again closes the automap', (await page.$eval('#automap', (e) => e.classList.contains('hidden'))) && (await T('t.mapOpen()')) === false);
 
@@ -175,7 +175,7 @@ try {
   check('the route was audible: many sounds played incl. explosion, key, door, death, footsteps', all > 30 && ['flare_boom', 'pickup_key', 'door_open', 'enemy_die'].every((id) => heard.has(id)), `played=${all} distinct(last40)=${[...heard].join(',')}`);
   await page.waitForFunction("!document.getElementById('screen-complete').classList.contains('hidden')", { timeout: 15000 }).catch(() => {});
   check('intermission screen shows end-level statistics', (await visible('screen-complete')) && /Kills/.test(await text('stat-rows')), (await text('stat-rows')).replace(/\s+/g, ' '));
-  await shot('04-intermission');
+  await T('t.clearOverlays()'); await shot('04-intermission');
   console.log('route wall time (SwiftShader):', ((Date.now() - t0) / 1000).toFixed(1) + 's');
 
   // ---- 2. secret route -------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ try {
   await T("t.press('forward')");                                  // loading releases held keys (correct); a player re-presses
   await T('t.tick(180)'); const b = await T('t.state()');
   check('resumed play equals uninterrupted play except the deliberate hp edit', b.tick === a.tick && Math.abs(b.player.x - a.player.x) < 1e-6 && Math.abs(b.player.z - a.player.z) < 1e-6, `x ${a.player.x.toFixed(3)} vs ${b.player.x.toFixed(3)}`);
-  await T('t.pause()'); check('pause shows the pause menu', await visible('screen-pause')); await shot('05-pause');
+  await T('t.pause()'); check('pause shows the pause menu', await visible('screen-pause')); await T('t.clearOverlays()'); await shot('05-pause');
   await T('t.resume()');
 
   // ---- 4. death + recovery ------------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ try {
   const dead = await T('t.state()');
   check('player death is detected', dead.status === 'dead' && dead.mode === 'dying', `${dead.status}/${dead.mode}`);
   await page.waitForFunction("!document.getElementById('screen-dead').classList.contains('hidden')", { timeout: 15000 }).catch(() => {});
-  check('death screen appears', await visible('screen-dead')); await shot('06-death');
+  check('death screen appears', await visible('screen-dead')); await T('t.clearOverlays()'); await shot('06-death');
   await page.click('#btn-retry');
   const again = await T('t.state()'); check('retry restarts the level with a live player', again.status === 'playing' && again.player.hp > 0 && again.tick === 0);
 
@@ -277,16 +277,19 @@ try {
   // ---- 7. real-time frames: fps/frame time (software GL: NOT a valid perf number) --------------------------------------
   await T("t.newGame('normal', 6, { realtime: true })"); await T("t.press('forward')");
   await new Promise((res) => setTimeout(res, 6000));
-  const perf = await T('t.perf()'); const gl = await T('t.gl()');
+  perf = await T('t.perf()'); gl = await T('t.gl()');
   console.log('perf (SwiftShader, 1280x720):', JSON.stringify(perf), JSON.stringify(gl));
   check('real-time loop runs frames without exceptions', perf.frames > 20, `frames=${perf.frames} avg=${perf.avgMs.toFixed(1)}ms`);
   check('no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)', perf.worstMs < 3000, `worst ${perf.worstMs.toFixed(0)} ms, p95 ${perf.p95Ms.toFixed(0)} ms`);
   await T("t.release('forward')");
-  const sha16 = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 16);
-  const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
-  fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
+
 } catch (e) { errors.push('script: ' + (e.stack || e)); }
 check('no uncaught exceptions or console errors', errors.length === 0, errors.slice(0, 3).join(' | '));
+{
+const sha16 = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 16);
+const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
+fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
+}
 await browser.close(); await server.close();
 const failed = checks.filter((c) => !c.ok);
 console.log(`\n${checks.length - failed.length}/${checks.length} checks passed`);
