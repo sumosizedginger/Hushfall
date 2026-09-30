@@ -11,7 +11,8 @@ import { loadMap, route, ROOT } from './helpers.js';
 
 // (for a ternary only the RESULT branches count, not the condition) every string literal in the type slot of an emit(w, <expr>, ...) call, so ternaries like emit(w, c ? 'a' : 'b', ...) are found too; a non-literal type is a test failure
 const emitted = () => {
-  const src = fs.readFileSync(path.join(ROOT, 'src/engine/world.js'), 'utf8'), types = new Set();
+  // every engine file that emits events (world.js, script.js, ...): a new emit site anywhere in src/engine must be audible or declared silent (audit A21)
+  const src = fs.readdirSync(path.join(ROOT, 'src/engine')).filter((f) => f.endsWith('.js')).map((f) => fs.readFileSync(path.join(ROOT, 'src/engine', f), 'utf8')).join('\n'), types = new Set();
   for (const m of src.matchAll(/emit\(w,\s*([^,)]+)[,)]/g)) { const slot = m[1].includes('?') ? m[1].slice(m[1].indexOf('?')) : m[1], lits = [...slot.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]); assert.ok(lits.length > 0, 'emit with a non-literal event type: ' + m[0]); lits.forEach((l) => types.add(l)); }
   return [...types];
 };

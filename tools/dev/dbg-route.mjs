@@ -1,9 +1,9 @@
-// Debug aid: run a route and attribute the player's damage to enemy kinds (nearest awake enemy within 3 m = melee, else nearest Bellhand/Cantor = ranged), plus where and when.
+// Debug aid (env: HITS=1 lists every hit, AMMOSCALE=0.75, TREMOR=0.03): run a route and attribute the player's damage to enemy kinds (nearest awake enemy within 3 m = melee, else nearest Bellhand/Cantor = ranged), plus where and when.
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
 const [, , mapFile, routeFile, diff = 'normal', seed = '1'] = process.argv;
 const map = loadMapFile(mapFile), route = loadRouteFile(routeFile);
 let last = null; const by = {}; const where = [];
-const r = runRoute(map, route, { seed: Number(seed), difficulty: diff, onTick: (w, t) => {
+const r = runRoute(map, route, { seed: Number(seed), difficulty: diff, ...(process.env.AMMOSCALE ? { ammoScale: Number(process.env.AMMOSCALE) } : {}), ...(process.env.TREMOR ? { tremor: Number(process.env.TREMOR) } : {}), onTick: (w, t) => {
   const p = w.player, hp = p.hp + p.armor;
   if (last != null && hp < last) {
     const live = w.enemies.filter((e) => e.state !== 'dead' && e.state !== 'idle');

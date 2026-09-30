@@ -56,6 +56,7 @@ export function soundsForEvent(e) {
     case 'pulse_hit': return [{ id: 'pulse_hit' }];
     case 'switch': return [{ id: 'switch_click', pos: at(e) }];
     case 'switch_dead': return [{ id: 'switch_dead', pos: at(e) }];
+    case 'dry_feed': return [{ id: 'switch_click', gain: 0.8 }];
     case 'switch_need': return [{ id: 'switch_dead', pos: at(e) }];
     case 'lights': return [{ id: 'lift_thunk', gain: 0.9 }, { id: 'gate_unlock', delay: 0.15 }];
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];

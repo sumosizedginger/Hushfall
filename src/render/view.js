@@ -8,6 +8,7 @@ import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
+import { floorAt } from '../engine/terrain.js';
 
 const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand'), sexton: (t) => makeTollbearer(t.tollbearer_atlas, 'sexton'), wardengraft: (t) => makeTollbearer(t.tollbearer_atlas, 'warden'), cantor: (t) => makeTollbearer(t.tollbearer_atlas, 'cantor'), bellnode: () => makeBellNodeEnemy() };
 
@@ -165,7 +166,7 @@ export class GameView {
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
-    for (const [id, r] of this.lvl.switchViews) { const used = w.switchState?.[id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; }
+    for (const sw of this.map.switches) { const r = this.lvl.switchViews.get(sw.id); if (!r) continue; const used = w.switchState?.[sw.id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; r.group.position.y = floorAt(w, sw.x, sw.z) + 1.35; }        // a panel on a moving floor rides with it
     for (const [id, r] of this.lvl.exitViews) r.group.children[0].material.color.setHex(w.exitLocked?.[id] ? 0x7a2a22 : 0xffc070);      // a sealed gate glows dull red
     // debris + explosion light
     for (let i = this.debris.length - 1; i >= 0; i--) {

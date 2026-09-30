@@ -58,7 +58,7 @@ export class UI {
   toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
   /** hotkeys (Enter/Space on the death and complete screens) are ignored for half a second after a screen appears, so a held fire key cannot skip it */
   canAct() { return performance.now() - this.shownAt > 500; }
-  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
+  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'dry_feed') this.toast('Out of ammunition: the cannon feed clanks a flare home'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
   /** In-world transmissions/notes are shown IN ORDER, one at a time, each long enough to read (55 ms per character, 4 s minimum, then a short gap), never on top of the title card.
    *  The radio blip plays when a message is actually shown. */
   comms(e) { this.comq.push(e); this.pumpComms(); }
@@ -90,7 +90,7 @@ export class UI {
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
     $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle'), bossEl = $('boss');
-    bossEl.classList.toggle('hidden', !boss);
+    bossEl.classList.toggle('hidden', !boss); $('objective').style.top = boss ? '64px' : '';        // the objective panel must not sit on the boss bar (audit A15)
     if (boss) { const shielded = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead'), nodes = w.enemies.filter((n) => ENEMIES[n.kind].node && n.state !== 'dead').length; $('boss-name').textContent = ENEMIES[boss.kind].name.toUpperCase(); $('boss-fill').style.width = Math.max(0, boss.hp / (ENEMIES[boss.kind].hp * DIFFS[w.difficulty].enemyHp)) * 100 + '%'; bossEl.classList.toggle('shielded', shielded); $('boss-note').textContent = shielded ? `SHIELDED: ${nodes} BELL${nodes === 1 ? '' : 'S'} STILL RING` : (boss.stunT > 0 ? 'STAGGERED' : ''); }
     $('hud-kills').textContent = `${w.stats.kills}/${w.stats.total.enemies}`; $('hud-secrets').textContent = `${w.stats.secrets}/${w.stats.total.secrets}`;
   }

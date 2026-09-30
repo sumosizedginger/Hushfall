@@ -112,9 +112,9 @@
   "...88888888888888888888888888888888888888888888888888...",
   "...88888888888888888888888888888888888888888888888888...",
   "...88888888888888888888888448888888888888888888888888...",
-  "...88888888888888888888888448888888888888888888777888...",
-  "...88888888888888888888888448888888888888888888666888...",
-  "...88888888888888888888888448888888888888888888555888...",
+  "...88888888888888888888888448888888888888888888888888...",
+  "...88888888888888888888888448888888888888888888888888...",
+  "...88888888888888888888888448888888888888888888888888...",
   "...44444444444444444444444444444444444444444444444444...",
   "...44444444444444444444444444444444444444444444444444...",
   "...44444444444444444444444444444444444444444444444444...",
@@ -901,6 +901,21 @@
   },
   {
    "type": "switch",
+   "id": "car-call",
+   "at": [25, 43],
+   "wall": "north",
+   "once": false,
+   "do": [
+    {
+     "sector": {
+      "id": "car",
+      "to": "low"
+     }
+    }
+   ]
+  },
+  {
+   "type": "switch",
    "id": "beacon",
    "at": [46, 7],
    "wall": "north",
@@ -925,8 +940,8 @@
  "intro": {
   "title": "LAMPLIGHTER HILL",
   "lines": [
-   "Green lamp: safe. Red lamp: bells.",
-   "Somebody up there is still counting the hours."
+   "Somebody up there keeps the lamps lit.",
+   "Follow them to the beacon."
   ]
  },
  "outro": "Next: the Ferry Terminal. Whatever the town could not carry, it left there.",
@@ -936,21 +951,21 @@
    "at": [4, 55],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the hill. There are people up there signalling with lamps: green is safe, red is bells. Get to the summit beacon."
+   "text": "Calder, the hill. There are people at the top: the lamps along the switchbacks are theirs. Get to the summit beacon."
   },
   {
    "id": "lamp",
    "at": [6, 49],
    "radius": 3,
    "speaker": "SURVIVOR (LAMP)",
-   "text": "Green lamp, safe house at the top. Red lamp, bells near. Watch the cliff edges: they shoot down."
+   "text": "Lamps all the way up: that is us, showing you the road. Watch the cliff edges: they shoot down."
   },
   {
    "id": "car",
    "at": [26, 44],
    "radius": 3,
    "speaker": "FUNICULAR PLACARD",
-   "text": "Car serves terraces one and two. Pull the lever inside. Do not ride during a toll."
+   "text": "Funicular. The only way up from terrace one to terrace two. Pull the lever on the car. If it is up, the call lever at its foot brings it down."
   },
   {
    "id": "sexton",
@@ -964,7 +979,7 @@
    "at": [26, 21],
    "radius": 5,
    "speaker": "SURVIVOR (LAMP)",
-   "text": "Red lamp on terrace four! Bellhands on the cliff edge. Use the houses; go round, not through."
+   "text": "Bellhands on the cliff edge over the next terrace! Use the houses; go round, not through."
   },
   {
    "id": "summit",

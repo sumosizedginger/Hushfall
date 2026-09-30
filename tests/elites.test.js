@@ -52,10 +52,7 @@ test('a Warden charges in a straight line after a windup, and a player who steps
   assert.ok(go >= 0, 'it charged'); assert.ok(!ev2.some((x) => x.type === 'enemy_strike' && x.kind === 'wardengraft'), 'sidestepping the charge works');
 });
 test('a Warden that charges into a wall crashes and is stunned, takes 60% more damage while down, and does nothing meanwhile', () => {
-  const w = quiet(room(30, 13, {}, [{ type: 'prop', kind: 'crate', at: [8, 6] }])); at(w, 3, 6); const e = put(w, 'wardengraft', 16, 6, Math.PI); e.state = 'chase'; e.hp = 9999;
-  w.player.x = cell(3); w.player.z = cell(9);                                                        // player off to the side so the charge line passes through the crate
-  const ev = run(w, 60 * 6); assert.ok(ev.some((x) => x.type === 'warden_crash') || e.stunT > 0 || true);
-  // deterministic version: force a charge at a crate directly in its path
+  // a charge forced at a crate directly in its path
   const w2 = quiet(room(30, 13, {}, [{ type: 'prop', kind: 'crate', at: [8, 6] }])); at(w2, 3, 6); const e2 = put(w2, 'wardengraft', 14, 6, Math.atan2(-1, 0)); e2.state = 'chase'; e2.hp = 9999; e2.chargeT = 0.85; e2.chargeCd = 0;
   const ev2 = run(w2, 90); assert.ok(ev2.some((x) => x.type === 'warden_crash'), ev2.map((x) => x.type).join()); assert.ok(e2.stunT > 0 || ev2.some((x) => x.type === 'warden_crash'));
   const x0 = e2.x; run(w2, 20); assert.ok(Math.abs(e2.x - x0) < 0.01 || e2.stunT <= 0, 'it does not move while stunned');
@@ -90,8 +87,37 @@ test('the Cantor summons Gaunts from its listed points, keeps its distance, and 
   assert.equal(w2.enemyShots.length, 0, 'no shots while the ring stands');
 });
 test('pulses, stagger and channel state survive a save; a v7 save (before the roster) migrates and plays on', () => {
-  const m = arena(), w = quiet(m); at(w, 8, 10); const { c } = boss(w, 1); c.pulseCd = 0; run(w, 60 * 2); assert.ok(w.pulses.length > 0 || c.pulseT >= 0 || w.tick > 0);
+  const m = arena(), w = quiet(m); at(w, 8, 10); const { c } = boss(w, 1); c.pulseCd = 0; run(w, 60 * 2);
   const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world; assert.equal(back.pulses.length, w.pulses.length);
   const old = JSON.parse(JSON.stringify(makeSave(w, 'mid-level'))); old.version = 7; delete old.world.pulses; const r = parseSave(JSON.stringify(old)); assert.equal(r.ok, true, r.detail); assert.equal(r.migratedFrom, 7);
   const w2 = loadWorld(r.save, () => m).world; run(w2, 120); assert.ok(Array.isArray(w2.pulses));
+});
+
+// ----------------------------------------------------------------------------------------------------------------------- pinned numbers (audit A21: mutations of these constants used to survive)
+import { damageEnemy } from '../src/engine/world.js';
+test('pinned: the Warden plate takes 34% from the front, 100% from behind and from splash, and 160% while stunned; a crash stuns for about 2.6 s', () => {
+  const w = quiet(room()); at(w, 3, 6); const e = put(w, 'wardengraft', 10, 6, -Math.PI / 2); e.hp = 1000;
+  const lose = (f) => { const h = e.hp; f(); return +(h - e.hp).toFixed(3); };
+  assert.equal(lose(() => damageEnemy(w, e, 100)), 34, 'front (facing the player)');
+  assert.equal(lose(() => damageEnemy(w, e, 100, { splash: true })), 100, 'splash ignores the plate');
+  e.yaw = Math.PI / 2; assert.equal(lose(() => damageEnemy(w, e, 100)), 100, 'from behind');
+  e.yaw = -Math.PI / 2; e.stunT = 1; assert.equal(lose(() => damageEnemy(w, e, 100)), 160, 'stunned: the plate is exposed and it takes 60% more');
+  const w2 = quiet(room(30, 13, {}, [{ type: 'prop', kind: 'crate', at: [8, 6] }])); at(w2, 3, 6); const e2 = put(w2, 'wardengraft', 14, 6, Math.atan2(-1, 0)); e2.state = 'chase'; e2.hp = 9999; e2.chargeT = 0.85; e2.chargeCd = 0;
+  let stun = 0; const ev = []; for (let i = 0; i < 120; i++) { step(w2, idle()); ev.push(...drainEvents(w2)); if (!stun && ev.some((x) => x.type === 'warden_crash')) { stun = e2.stunT; } }
+  assert.ok(ev.some((x) => x.type === 'warden_crash'), 'it crashed into the crate'); assert.ok(stun > 2.3 && stun <= ENEMIES.wardengraft.charge.stun, 'stunned for about 2.6 s: ' + stun);
+});
+test('pinned: a Warden charge that lands throws the player back at least 2 m; a tone pulse costs 22 health at normal (armour takes half of it)', () => {
+  const w = quiet(room(30, 13)); at(w, 12, 6); const e = put(w, 'wardengraft', 6, 6, Math.PI / 2); e.state = 'chase'; e.hp = 9999; e.chargeT = 0.85; e.chargeCd = 0;
+  let big = 0, last = w.player.x; for (let i = 0; i < 90; i++) { step(w, idle()); drainEvents(w); big = Math.max(big, Math.abs(w.player.x - last)); last = w.player.x; }
+  assert.ok(big >= 2, 'the shove moved the player ' + big.toFixed(2) + ' m in one tick');
+  const ring = (ww) => ww.pulses.push({ id: 900, x: cell(30), z: cell(10), y: 0, r: 0.6, speed: 9.5, dmg: 22, width: 1.3, maxR: 40, hit: false });
+  const p1 = quiet(arena()); at(p1, 18, 10); p1.player.hp = 5000; ring(p1); run(p1, 60 * 3); assert.equal(5000 - p1.player.hp, 22, 'a pulse hit costs its damage');
+  const p2 = quiet(arena()); at(p2, 18, 10); p2.player.hp = 5000; p2.player.armor = 50; ring(p2); run(p2, 60 * 3); assert.equal(5000 - p2.player.hp, 11, 'armour takes half'); assert.equal(p2.player.armor, 39);
+});
+test('pinned: the Cantor\'s pulse rings really exist before a save is taken, and are identical after loading it', () => {
+  const m = arena(), w = quiet(m); at(w, 8, 10); const { c } = boss(w, 1); c.pulseCd = 0;
+  let n = 0; while (!w.pulses.length && n++ < 60 * 10) { step(w, idle()); drainEvents(w); }
+  assert.ok(w.pulses.length > 0, 'a ring is in flight'); step(w, idle()); drainEvents(w);
+  const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world;
+  assert.deepEqual(back.pulses, w.pulses); run(back, 60); run(w, 60); assert.deepEqual(back.pulses, w.pulses, 'and they keep travelling in step');
 });

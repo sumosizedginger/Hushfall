@@ -98,7 +98,7 @@ test('pickups on a ledge cannot be collected from the floor below', () => {
 });
 
 // ----------------------------------------------------------------------------------------------------------------------- sectors
-const LIFT = { sectors: [{ id: 'lift', cells: [[5, 1], [5, 2]], low: 0, high: 2, speed: 2, start: 'low' }], ceilingHeight: 6 };
+const LIFT = { triggers: [{ id: 'drive', when: 'time:9999', do: [{ sector: { id: 'lift', to: 'high' } }] }], sectors: [{ id: 'lift', cells: [[5, 1], [5, 2]], low: 0, high: 2, speed: 2, start: 'low' }], ceilingHeight: 6 };
 test('a lift raises whoever stands on it, reports its start and stop, and can be lowered again', () => {
   const w = mk(src(hall(10), LIFT)); w.enemies.length = 0; Object.assign(w.player, { x: cell(5), z: cell(1) });
   runAction(w, { sector: { id: 'lift', to: 'high' } }); const ev = run(w, 90);
@@ -106,7 +106,7 @@ test('a lift raises whoever stands on it, reports its start and stop, and can be
   runAction(w, { sector: { id: 'lift', to: 'low' } }); run(w, 90); assert.equal(w.player.y, 0);
 });
 test('a lowered lift beside a 1 m platform is a ledge you cannot climb; raised to platform height it carries you onto it', () => {
-  const s = { sectors: [{ id: 'lift', cells: [[5, 2]], low: 0, high: 1, speed: 4 }], heights: ['............', '............', '......22....', '............', '............'], ceilingHeight: 6 };
+  const s = { triggers: [{ id: 'drive', when: 'time:9999', do: [{ sector: { id: 'lift', to: 'high' } }] }], sectors: [{ id: 'lift', cells: [[5, 2]], low: 0, high: 1, speed: 4 }], heights: ['............', '............', '......22....', '............', '............'], ceilingHeight: 6 };
   const w = mk(src(hall(12), s)); w.enemies.length = 0; Object.assign(w.player, { x: cell(3), z: cell(2), yaw: -Math.PI / 2 }); run(w, 90, () => idle({ move: [0, 1] }));
   assert.ok(w.player.x < cell(5) + 1 && w.player.x > cell(5) - 1.5, 'stopped at the platform edge (x=12): ' + w.player.x.toFixed(2));
   const r = mk(src(hall(12), s)); r.enemies.length = 0; Object.assign(r.player, { x: cell(5), z: cell(2), yaw: -Math.PI / 2 }); runAction(r, { sector: { id: 'lift', to: 'high' } }); run(r, 60);
@@ -199,7 +199,7 @@ test('enemies climb stairs to a player on a terrace, and give up at a cliff with
 
 // ----------------------------------------------------------------------------------------------------------------------- persistence
 test('sectors, triggers, switches, exit locks and the objective survive a save; a v6 save (before the kit) migrates and plays on', () => {
-  const s = CLOSET(); s.triggers = [{ id: 't', when: 'start', do: [{ objective: 'go' }] }]; s.sectors = [{ id: 'lift', cells: [[8, 1]], low: 0, high: 1, speed: 1 }]; s.ceilingHeight = 5;
+  const s = CLOSET(); s.triggers = [{ id: 't', when: 'start', do: [{ objective: 'go' }] }, { id: 'drive', when: 'time:9999', do: [{ sector: { id: 'lift', to: 'high' } }] }]; s.sectors = [{ id: 'lift', cells: [[8, 1]], low: 0, high: 1, speed: 1 }]; s.ceilingHeight = 5;
   const m = parseMap(s), w = createWorld(m, { seed: 3 }); Object.assign(w.player, { x: cell(2), z: cell(1), yaw: 0 }); run(w, 3, (i) => idle({ use: i === 0 })); runAction(w, { sector: { id: 'lift', to: 'high' } }); run(w, 20);
   const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world;
   assert.equal(back.objective, 'go'); assert.equal(back.switchState.s1.used, true); assert.equal(back.triggerState.t.fired, true); assert.equal(back.sectors[0].target, 1); assert.ok(back.sectors[0].h > 0);
@@ -216,7 +216,7 @@ test('flat maps (no layers, no sectors) behave exactly as before: actors rest at
 import { runRoute } from '../src/engine/harness.js';
 import { analyseReach } from '../src/engine/reach.js';
 test('reachability understands the kit: a lift-only platform is reachable, a 4 m cliff top with no way up is not, and closets/remote doors count as passable', () => {
-  const lift = parseMap(src(hall(12), { sectors: [{ id: 'lift', cells: [[5, 2]], low: 0, high: 1, speed: 2 }], heights: ['............', '............', '......22....', '............', '............'], ceilingHeight: 6 },
+  const lift = parseMap(src(hall(12), { triggers: [{ id: 'drive', when: 'time:9999', do: [{ sector: { id: 'lift', to: 'high' } }] }], sectors: [{ id: 'lift', cells: [[5, 2]], low: 0, high: 1, speed: 2 }], heights: ['............', '............', '......22....', '............', '............'], ceilingHeight: 6 },
     [{ type: 'pickup', kind: 'health_small', at: [6, 2] }, { type: 'switch', id: 'go', at: [2, 3], wall: 'south', do: [{ sector: { id: 'lift', to: 'high' } }] }]));
   assert.deepEqual(analyseReach(lift).unreachable, [], 'the pickup on the platform is reachable through the lift');
   const cliff = parseMap(src(hall(12), { heights: ['............', '............', '......88....', '............', '............'], ceilingHeight: 9 }, [{ type: 'pickup', kind: 'health_small', at: [6, 2] }]));
@@ -224,7 +224,7 @@ test('reachability understands the kit: a lift-only platform is reachable, a 4 m
   assert.deepEqual(analyseReach(parseMap(CLOSET())).unreachable, []);
 });
 test('the route bot uses switches and lifts: stand on the lift, press the switch, wait for it to arrive, walk onto the platform and take the exit', () => {
-  const s = src(hall(12), { sectors: [{ id: 'lift', cells: [[5, 3]], low: 0, high: 1, speed: 2 }], heights: ['............', '............', '............', '......22222.', '............'], ceilingHeight: 6 },
+  const s = src(hall(12), { triggers: [{ id: 'drive', when: 'time:9999', do: [{ sector: { id: 'lift', to: 'high' } }] }], sectors: [{ id: 'lift', cells: [[5, 3]], low: 0, high: 1, speed: 2 }], heights: ['............', '............', '............', '......22222.', '............'], ceilingHeight: 6 },
     [{ type: 'switch', id: 'go', at: [5, 3], wall: 'south', do: [{ sector: { id: 'lift', to: 'high' } }] }]);
   s.entities = s.entities.filter((e) => e.type !== 'exit'); s.entities.push({ type: 'exit', at: [9, 3] });
   const m = parseMap(s);
@@ -236,7 +236,7 @@ test('the route bot uses switches and lifts: stand on the lift, press the switch
 // ----------------------------------------------------------------------------------------------------------------------- Signal House: fuses and the lights
 test('a switch that needs items refuses until the player has them all, then spends them; the lights action sets the ambient level', () => {
   const s = CLOSET(); s.atmosphere = { ambient: 0.3 }; s.keyLabels = { brass: 'Brass fuse', iron: 'Iron fuse' };
-  const si = s.entities.findIndex((e) => e.type === 'switch'); s.entities[si] = { ...s.entities[si], needs: ['brass', 'iron'], do: [{ open: [5, 1] }, { lights: 0.9 }] };
+  const si = s.entities.findIndex((e) => e.type === 'switch'); s.entities[si] = { ...s.entities[si], needs: ['brass', 'iron'], do: [{ open: [5, 1] }, { lights: 0.9 }] }; s.entities.push({ type: 'pickup', kind: 'key_brass', at: [7, 1] }, { type: 'pickup', kind: 'key_iron', at: [9, 1] });
   const m = parseMap(s), w = createWorld(m, { seed: 1 }); Object.assign(w.player, { x: cell(2), z: cell(1), yaw: 0 });
   assert.equal(w.ambient, undefined, 'the level default is used until a lights action fires'); assert.equal(m.atmosphere.ambient, 0.3);
   w.player.keys = ['brass']; let ev = run(w, 3, (i) => idle({ use: i === 0 }));
@@ -247,4 +247,93 @@ test('a switch that needs items refuses until the player has them all, then spen
   bad({ ...CLOSET(), atmosphere: { ambient: 3 } }, /ambient/); bad({ ...CLOSET(), keyLabels: { copper: 'x' } }, /keyLabels/);
   const t = CLOSET(); t.entities[si] = { ...t.entities[si], needs: ['copper'] }; bad(t, /needs must list known keys/);
   const u = CLOSET(); u.entities[si] = { ...u.entities[si], do: [{ lights: 9 }] }; bad(u, /lights must be a level/);
+});
+
+// ----------------------------------------------------------------------------------------------------------------------- gates that must gate (audit A01/A02)
+test('exit validation: two exits on one cell, a lock nothing can open, and a switch that needs an item the level lacks are all rejected', () => {
+  const two = CLOSET(); two.entities.push({ type: 'exit', at: [9, 1], locked: true }); bad(two, /two exits on cell 9,1/);
+  const locked = CLOSET(); const ei = locked.entities.findIndex((e) => e.type === 'exit'); locked.entities[ei] = { ...locked.entities[ei], locked: true }; bad(locked, /locked but no switch or trigger ever unlocks it/);
+  const need = CLOSET(); const si = need.entities.findIndex((e) => e.type === 'switch'); need.entities[si] = { ...need.entities[si], needs: ['iron'] }; bad(need, /needs 'iron' but the level has no such pickup/);
+});
+
+test('the gate-skip probe: the shipped Signal House and Bell Tower cannot be finished by walking to the exit, and the same map with its lock removed can', async () => {
+  const fs = await import('node:fs'); const { gateSkip } = await import('../src/engine/viability.js');
+  for (const id of ['C1E1M07', 'C1E1M08', 'C1E1M05']) {
+    const src = JSON.parse(fs.readFileSync(new URL(`../maps/${id}.json`, import.meta.url), 'utf8'));
+    assert.ok(gateSkip(parseMap(src)).every((g) => g.result !== 'complete'), id + ' is gated');
+    assert.equal(src.entities.some((e) => e.type === 'exit' && e.locked), true, id + ' declares a locked exit');
+  }
+  const open = JSON.parse(fs.readFileSync(new URL('../maps/C1E1M07.json', import.meta.url), 'utf8'));
+  for (const e of open.entities) if (e.type === 'exit') e.locked = false;
+  assert.ok(gateSkip(parseMap(open)).some((g) => g.result === 'complete'), 'the probe catches an exit whose lock does not lock');
+});
+
+test('knockback stops at a wall: a 3 m shove never carries an actor through a one-cell wall (audit A03)', async () => {
+  const { tryMove } = await import('../src/engine/world.js');
+  const w = mk(src(['#########', '#...#...#', '#...#...#', '#...#...#', '#########'])); const p = w.player;
+  Object.assign(p, { x: cell(3) - 0.2, z: cell(2) }); tryMove(w, p, 3.0, 0, PLAYER.radius);
+  assert.ok(p.x < cell(3) + 1 - PLAYER.radius + 1e-6 && Math.floor(p.x / 2) === 3, 'stopped in the cell before the wall, x=' + p.x);
+  Object.assign(p, { x: cell(1), z: cell(1) }); tryMove(w, p, 0.1, 0.1, PLAYER.radius); assert.ok(Math.abs(p.x - (cell(1) + 0.1)) < 1e-9, 'ordinary moves are unchanged');
+  // the real charge: a Warden hits a player standing beside the wall with clear ground behind it
+  const w2 = mk(src(['###########', '#....#....#', '#....#....#', '#....#....#', '###########'])), e = spawnEnemy(w2, 'wardengraft', cell(1), cell(2), -Math.PI / 2);
+  Object.assign(w2.player, { x: cell(4) - 0.1, z: cell(2), yaw: 0 }); e.state = 'chase'; e.chargeT = 0.85 + 0.01; e.chargeCd = 0; run(w2, 240);
+  assert.ok(Math.floor(w2.player.x / 2) <= 4, 'the charge did not throw the player into the far room, x=' + w2.player.x);
+});
+
+test('a structurally broken mid-level save is rejected with a reason instead of loading (audit A08)', () => {
+  const m = parseMap(src(hall(8))), w = createWorld(m, { seed: 1 }); run(w, 5);
+  const save = () => JSON.parse(JSON.stringify(makeSave(w, 'mid-level')));
+  assert.equal(loadWorld(save(), () => m).ok, true, 'a good save loads');
+  const broke = (f) => { const s = save(); f(s.world); const r = loadWorld(s, () => m); assert.equal(r.ok, false, 'rejected'); assert.equal(r.reason, 'corrupt'); return r.detail; };
+  assert.match(broke((x) => { delete x.enemies; }), /missing field enemies/);
+  assert.match(broke((x) => { x.player.x = null; }), /player\.x is not finite/);
+  assert.match(broke((x) => { x.tick = 'soon'; }), /field tick is a string/);
+  assert.match(broke((x) => { x.doors = [{}]; }), /doors count/);
+});
+
+test('validateMap never throws: malformed shapes are reported, absurd sizes and units are refused, an undriven sector is an error (audit A06)', () => {
+  const base = () => src(hall(8));
+  const shapes = { 'grid row null': (m) => { m.grid[1] = null; }, 'entities [null]': (m) => { m.entities = [null]; }, 'doors "x"': (m) => { m.doors = 'x'; }, 'sectors [null]': (m) => { m.sectors = [null]; }, 'triggers [null]': (m) => { m.triggers = [null]; }, 'trigger do [null]': (m) => { m.triggers = [{ id: 't', when: 'start', do: [null] }]; }, 'secrets [{}]': (m) => { m.secrets = [{}]; }, 'messages [null]': (m) => { m.messages = [null]; }, 'closets [null]': (m) => { m.closets = [null]; }, 'quality 7': (m) => { m.quality = 7; } };
+  for (const [name, f] of Object.entries(shapes)) { const m = base(); f(m); let v; assert.doesNotThrow(() => { v = validateMap(m); }, name); assert.equal(v.ok, false, name + ' is rejected'); }
+  bad({ ...base(), cellSize: -2 }, /cellSize/); bad({ ...base(), cellSize: 'big' }, /cellSize/); bad({ ...base(), ceilingHeight: 400 }, /ceilingHeight/);
+  const huge = base(); huge.grid = ['#'.repeat(3000), ...Array(20).fill('#' + '.'.repeat(2998) + '#'), '#'.repeat(3000)]; bad(huge, /too large/);
+  const undriven = src(hall(12), { sectors: [{ id: 'lift', cells: [[5, 2]], low: 0, high: 1, speed: 2 }], heights: ['............', '............', '......22....', '............', '............'], ceilingHeight: 6 }); bad(undriven, /never moved by any switch or trigger/);
+});
+
+test('a switch and a pickup on a moving floor ride with it: the lever stays in reach and the pickup can be collected after the lift moves (audit A22)', () => {
+  const g = ['###########', '#....#....#', '###########'];
+  const s = src(g, { triggers: [{ id: 'drive', when: 'time:9999', do: [{ sector: { id: 'car', to: 'high' } }] }], sectors: [{ id: 'car', cells: [[7, 1]], low: 0, high: 2, speed: 4, start: 'low' }], heights: ['...........', '...........', '...........'], ceilingHeight: 8 },
+    [{ type: 'switch', id: 'lever', at: [7, 1], wall: 'north', once: false, do: [{ sector: { id: 'car', to: 'high' } }] }, { type: 'pickup', kind: 'health_small', at: [7, 1] }]);
+  const w = mk(s); const sw = w.map.switches[0];
+  Object.assign(w.player, { x: cell(7), z: cell(1), yaw: 0 }); assert.equal(useTarget(w)?.switchId, 'lever', 'in reach on the low car');
+  runAction(w, { sector: { id: 'car', to: 'high' } }); run(w, 40); assert.ok(w.player.y > 1.9, 'the player rode up: y=' + w.player.y);
+  assert.equal(useTarget(w)?.switchId, 'lever', 'the lever is still in reach at the top (it followed the floor)');
+  assert.ok(Math.abs(w.pickups[0].y - w.player.y) < 0.6 || w.pickups.length === 0, 'the pickup rose with the car (or was already collected)');
+  assert.equal(sw.fy, 0, 'the static fy is the creation height only');
+});
+
+test('resuming from a save is identical to uninterrupted play on a map with terrain, moving floors and awake enemies (nav fields depend on state, not cache history; audit A07)', async () => {
+  const fs = await import('node:fs'); const { hashWorld } = await import('../src/engine/world.js');
+  const m = parseMap(JSON.parse(fs.readFileSync(new URL('../maps/C1E1M05.json', import.meta.url), 'utf8')));
+  const start = () => { const w = createWorld(m, { seed: 7, difficulty: 'hard' }); for (const e of w.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = w.player.x; e.lastZ = w.player.z; } return w; };
+  const cmd = (i) => idle({ move: [0, i % 90 < 45 ? 1 : 0], yaw: 0.02 * i });
+  const a = start(); run(a, 500, cmd);
+  const b = start(); run(b, 250, cmd); const c = loadWorld(parseSave(JSON.stringify(makeSave(b, 'mid-level'))).save, () => m).world; run(c, 250, (i) => cmd(i + 250));
+  assert.equal(hashWorld(c), hashWorld(a), 'a save/load in the middle changes nothing');
+});
+
+test('a player with no ammunition of any kind gets a flare after a few seconds, and another each time it is spent: nobody is stranded without a weapon (audit A04)', () => {
+  const w = mk(src(hall(8))); const p = w.player; p.ammo = { flare: 0, shell: 0, rivet: 0 };
+  let ev = run(w, 60 * 3); assert.equal(p.ammo.flare, 0, 'not yet'); ev = run(w, 60 * 2); assert.equal(p.ammo.flare, 1, 'fed after 4 s'); assert.ok(ev.some((e) => e.type === 'dry_feed'));
+  run(w, 60 * 6); assert.equal(p.ammo.flare, 1, 'no further feed while the flare is unspent');
+  p.ammo.flare = 0; run(w, 60 * 5); assert.equal(p.ammo.flare, 1, 'fed again once spent');
+  p.ammo = { flare: 0, shell: 3, rivet: 0 }; run(w, 60 * 6); assert.equal(p.ammo.flare, 0, 'no feed while any ammunition is left');
+});
+
+test('pinned (audit A21): a dead:<group> trigger waits for EVERY member; a sealed door cannot be opened by use until it is unsealed', () => {
+  const s = src(['##########', '#........#', '##########'], { triggers: [{ id: 'clear', when: 'dead:pack', do: [{ objective: 'all dead' }] }] }, [{ type: 'enemy', kind: 'gaunt', at: [6, 1], group: 'pack' }, { type: 'enemy', kind: 'gaunt', at: [7, 1], group: 'pack' }]);
+  const w = mk(s); w.player.hp = 5000; w.enemies[0].state = 'dead'; run(w, 3); assert.equal(w.triggerState.clear.fired, false, 'one of two is not enough'); w.enemies[1].state = 'dead'; run(w, 3); assert.equal(w.triggerState.clear.fired, true, 'both dead fires it');
+  const d = mk(src(['#######', '#..D..#', '#######'], { doors: [{ at: [3, 1] }] })); Object.assign(d.player, { x: cell(2), z: cell(1), yaw: -Math.PI / 2 });
+  runAction(d, { seal: [3, 1] }); assert.equal(d.doors[0].sealed, true); run(d, 40, (i) => idle({ use: i === 0 })); assert.ok(d.doors[0].open < 0.1, 'use does not open a sealed door');
+  runAction(d, { unseal: [3, 1] }); run(d, 40, (i) => idle({ use: i === 0 })); assert.ok(d.doors[0].open > 0.5, 'once unsealed it opens');
 });

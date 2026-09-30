@@ -1,6 +1,7 @@
 // Versioned save data. Policy: a save is either migrated to the current version or rejected with an explicit reason.
 // Nothing is ever silently coerced. Unknown/newer versions and corrupt files are reported, not loaded.
 import { createWorld, carryOver } from './world.js';
+import { ENEMIES } from './defs.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
 export const SAVE_VERSION = 8;
@@ -54,6 +55,22 @@ export function parseSave(text, migrations = MIGRATIONS, current = SAVE_VERSION)
   return { ok: true, save: s, migratedFrom: from === current ? null : from };
 }
 
+const kindOf = (v) => (v === null ? 'null' : Array.isArray(v) ? 'array' : typeof v);
+/** structural problems of a saved world relative to a fresh world of the same map: missing or mistyped fields, non-finite numbers, unknown enemy kinds, wrong door/sector counts (audit A08) */
+export function worldShapeErrors(fresh, snap) {
+  const bad = [];
+  if (!snap || typeof snap !== 'object') return ['world is not an object'];
+  for (const [k, v] of Object.entries(fresh)) {
+    if (!(k in snap)) { if (v !== undefined && v !== null) bad.push('missing field ' + k); continue; }
+    const a = kindOf(v), b = kindOf(snap[k]); if (a !== b && !(a === 'null' || b === 'null')) bad.push(`field ${k} is a ${b}, expected ${a}`);
+    if (b === 'number' && !Number.isFinite(snap[k])) bad.push(`field ${k} is not finite`);
+  }
+  const P = snap.player; if (!P || typeof P !== 'object') bad.push('player missing'); else for (const [k, v] of Object.entries(fresh.player)) if (typeof v === 'number' && !Number.isFinite(P[k])) bad.push('player.' + k + ' is not finite');
+  if (Array.isArray(snap.enemies)) for (const e of snap.enemies) { if (!ENEMIES[e?.kind]) bad.push('unknown enemy kind ' + e?.kind); else if (!Number.isFinite(e.x) || !Number.isFinite(e.z) || !Number.isFinite(e.hp)) bad.push('enemy ' + e.id + ' has a non-finite position or hp'); }
+  for (const k of ['doors', 'sectors']) if (Array.isArray(snap[k]) && Array.isArray(fresh[k]) && snap[k].length !== fresh[k].length) bad.push(`${k} count ${snap[k].length} differs from the map's ${fresh[k].length}`);
+  return bad.slice(0, 8);
+}
+
 /** Rebuild a world from a save. mapLoader(id) -> MapData. Mid-level saves need the same map version; otherwise fall back to level start. */
 export function loadWorld(save, mapLoader) {
   const map = mapLoader(save.campaign.mapId);
@@ -62,6 +79,7 @@ export function loadWorld(save, mapLoader) {
   if (save.kind === 'mid-level') {
     if (map.version !== save.campaign.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
     const w = createWorld(map, opts), snap = JSON.parse(JSON.stringify(save.world));
+    const shape = worldShapeErrors(w, snap); if (shape.length) return { ok: false, reason: 'corrupt', detail: shape.join('; ') };
     for (const k of Object.keys(w)) delete w[k];
     Object.assign(w, snap);
     return { ok: true, world: w };

@@ -8,10 +8,10 @@ const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
 export class Bot {
-  /** fights:false makes a passive RUNNER: it follows the route but never fires and never dodges. Used to prove a level is not survivable by ignoring it. */
-  constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90, fights = true } = {}) {
+  /** weave:true makes a COMPETENT fighter that strafes in alternating half-second runs while trading with a shooter (the default fighter stands still and shoots: the conservative baseline the damage gates are measured on). fights:false makes a passive RUNNER: it follows the route but never fires and never dodges. Used to prove a level is not survivable by ignoring it. */
+  constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90, fights = true, weave = false } = {}) {
     if (!fights) stuckTicks = Infinity;                          // a passive runner that is boxed in stays there and takes what comes (that is the point of the runner)
-    this.fights = fights; this.fightTicks = 0; this.noFightUntil = 0; this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
+    this.fights = fights; this.weave = weave; this.fightTicks = 0; this.noFightUntil = 0; this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
     this.path = null; this.pathKey = ''; this.usePressed = false; this.fireHeld = false; this.lastPos = [world.player.x, world.player.z]; this.stillFor = 0; this.calm = 0; this.failed = null; this.log = [];
   }
   get done() { return this.i >= this.route.length; }
@@ -90,7 +90,8 @@ export class Bot {
     this.setHeld('fire', shoot);
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
-    this.setHeld('right', (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
+    const dodge = (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0, shooter = this.weave && !!ENEMIES[t.e.kind].ranged && t.d > 5, weave = shooter && ((w.tick / 36) | 0) % 2 === 0;   // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
+    this.setHeld('right', dodge || weave); this.setHeld('left', shooter && !weave && !dodge);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
   /**
    * The boss op: cut the bell ring, then the singer. A tone pulse (windup or ring in flight) is answered by getting behind stone: cover is any nearby point the boss has no line to.
@@ -196,7 +197,7 @@ export class Bot {
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
       if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
-    else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
+    else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('left', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {

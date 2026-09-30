@@ -1,13 +1,19 @@
 // Enemy navigation: a breadth-first distance field over the cell grid, computed FROM the target cell outward, so every enemy that wants to
 // reach that target can just walk downhill. Respects walls, closed doors, water, cell-blocking props and ledges (an actor can step UP at most
 // STEP, and drop any distance). Cached on the world (non-enumerable: derived data, never saved) and refreshed when the target cell changes
-// or every 30 ticks (doors and sectors move). Pure and deterministic: a function of world state only.
+// or when a door or moving floor changes state. Pure and deterministic: a function of world state only.
 import { PROPS, STEP } from './defs.js';
 import { cellSolid } from './world.js';
+import { DOOR } from './defs.js';
 import { cellFloor } from './terrain.js';
 
 const NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
-const MAX_FIELDS = 4, REFRESH_TICKS = 30;
+const MAX_FIELDS = 4;
+/** everything a distance field depends on besides the target: which doors are passable and where each moving floor is. A field is valid exactly while this is unchanged, so it never depends on cache history (audit A07: resume == uninterrupted). */
+function navVersion(w) {
+  let v = ''; for (const d of w.doors) v += d.open < DOOR.passableAt ? '0' : '1';
+  for (const s of w.sectors) v += '|' + s.h; return v;
+}
 
 function blockedCells(m) {
   if (!m._navBlocked) { const s = new Set(); for (const p of m.props) if (PROPS[p.kind]?.blocksCell) s.add(Math.floor(p.at[0]) + ',' + Math.floor(p.at[1])); Object.defineProperty(m, '_navBlocked', { value: s, enumerable: false }); }
@@ -41,9 +47,9 @@ function buildField(w, tcx, tcz) {
 
 function fieldFor(w, tcx, tcz) {
   let nav = w._nav; if (!nav) { nav = { fields: new Map() }; Object.defineProperty(w, '_nav', { value: nav, enumerable: false, writable: true, configurable: true }); }
-  const key = tcx + ',' + tcz, f = nav.fields.get(key);
-  if (f && w.tick - f.tick < REFRESH_TICKS) return f.dist;
-  const dist = buildField(w, tcx, tcz); nav.fields.delete(key); nav.fields.set(key, { tick: w.tick, dist });
+  const key = tcx + ',' + tcz, f = nav.fields.get(key), ver = navVersion(w);
+  if (f && f.ver === ver) return f.dist;
+  const dist = buildField(w, tcx, tcz); nav.fields.delete(key); nav.fields.set(key, { ver, dist });
   while (nav.fields.size > MAX_FIELDS) nav.fields.delete(nav.fields.keys().next().value);
   return dist;
 }

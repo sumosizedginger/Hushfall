@@ -1,16 +1,17 @@
-// C1E1M05 LAMPLIGHTER HILL: vertical switchback streets, ranged pressure from above, survivors signalling by lamp.
+// C1E1M05 LAMPLIGHTER HILL: vertical switchback streets, ranged pressure from above.
 // New ideas: real height (five terraces, 10 m of climb; cliffs you can drop off but not climb), the funicular car (a moving floor you call with a lever), the Sexton (raises the fallen: kill it first),
-//            a sealed gate that only the summit beacon opens. Green lamp = safe, red lamp = bells.
-// Route: harbour road -> switchback stairs (west/east alternating) or the funicular between terraces 1 and 2 -> summit -> light the beacon -> the gate opens -> exit.
+//            a sealed gate that only the summit beacon opens. The survivors' lamps are dressing: they show the road, they carry no signal.
+// Route: harbour road -> stairs to terrace 1 -> the funicular car (the ONLY way from terrace 1 to 2) -> stairs west (T3) -> stairs east (T4) -> stairs west (summit) -> light the beacon -> the gate opens -> exit.
 import { Level } from '../tools/mapkit/builder.mjs';
 
 const L = new Level(56, 60);
 const TERR = [{ z0: 52, z1: 57, h: 0, f: ':' }, { z0: 43, z1: 51, h: 4, f: 's' }, { z0: 34, z1: 42, h: 8, f: ':' }, { z0: 25, z1: 33, h: 12, f: 's' }, { z0: 16, z1: 24, h: 16, f: ':' }, { z0: 5, z1: 15, h: 20, f: 'p' }];
 for (const t of TERR) { L.room([3, t.z0, 52, t.z1], { floor: t.f, wall: 'B' }); L.height([3, t.z0, 52, t.z1], t.h); }
 // switchback stairs: 4 steps (2 m) cut into the cliff, alternating west / east
-L.stairs([4, 48, 6, 51], 'z', 4, 1); L.stairs([47, 39, 49, 42], 'z', 8, 5); L.stairs([4, 30, 6, 33], 'z', 12, 9); L.stairs([47, 21, 49, 24], 'z', 16, 13); L.stairs([4, 12, 6, 15], 'z', 20, 17);
+L.stairs([4, 48, 6, 51], 'z', 4, 1); L.stairs([4, 30, 6, 33], 'z', 12, 9); L.stairs([47, 21, 49, 24], 'z', 16, 13); L.stairs([4, 12, 6, 15], 'z', 20, 17);
 // the funicular shaft between terraces 1 and 2: iron walls either side, a grated car that rides 2 m
 L.wall([25, 39, 25, 42], 'I'); L.wall([28, 39, 28, 42], 'I'); L.rect([26, 39, 27, 42], 'p'); L.height([26, 39, 27, 42], 4);
+// (terrace 1 -> 2 has NO stairs: the funicular car is the way up; a player who drops back down calls it with the lever at its foot)
 // houses: solid blocks for cover and sight lines, two or three to a terrace
 for (const r of [[12, 45, 17, 47], [32, 45, 38, 47], [13, 36, 19, 38], [34, 36, 41, 38], [12, 27, 18, 29], [31, 27, 37, 29], [42, 27, 47, 29], [13, 18, 20, 20], [33, 18, 40, 20], [14, 8, 22, 11], [30, 8, 36, 10]]) L.wall(r, 'W');
 L.wall([44, 6, 52, 6], 'C');
@@ -44,7 +45,7 @@ export default {
   id: 'C1E1M05', name: 'Lamplighter Hill', version: 1, ceilingHeight: 4.2, par: { time: 900 },
   atmosphere: { fog: '#30303e', fogDensity: 0.011, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
-  intro: { title: 'LAMPLIGHTER HILL', lines: ['Green lamp: safe. Red lamp: bells.', 'Somebody up there is still counting the hours.'] },
+  intro: { title: 'LAMPLIGHTER HILL', lines: ['Somebody up there keeps the lamps lit.', 'Follow them to the beacon.'] },
   outro: 'Next: the Ferry Terminal. Whatever the town could not carry, it left there.',
   objective: 'Climb the hill. Stairs on the terraces, or take the funicular car',
   ...layers,
@@ -54,14 +55,15 @@ export default {
     { type: 'exit', at: [51, 10], locked: true, dest: 'next' },
     { type: 'switch', id: 'car-up', at: [26, 42], wall: 'west', once: false, do: [{ sector: { id: 'car', to: 'high' } }, { objective: 'Riding up. Bellhands will be waiting on the top terrace' }] },
     { type: 'switch', id: 'car-down', at: [24, 41], wall: 'east', once: false, do: [{ sector: { id: 'car', to: 'low' } }] },
+    { type: 'switch', id: 'car-call', at: [25, 43], wall: 'north', once: false, do: [{ sector: { id: 'car', to: 'low' } }] },
     { type: 'switch', id: 'beacon', at: [46, 7], wall: 'north', do: [{ exit: { set: 'unlock' } }, { objective: 'The beacon burns green. The gate is open: east end of the summit' }, { shake: 1 }] },
   ],
   messages: [
-    { id: 'start', at: [4, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the hill. There are people up there signalling with lamps: green is safe, red is bells. Get to the summit beacon.' },
-    { id: 'lamp', at: [6, 49], radius: 3, speaker: 'SURVIVOR (LAMP)', text: 'Green lamp, safe house at the top. Red lamp, bells near. Watch the cliff edges: they shoot down.' },
-    { id: 'car', at: [26, 44], radius: 3, speaker: 'FUNICULAR PLACARD', text: 'Car serves terraces one and two. Pull the lever inside. Do not ride during a toll.' },
+    { id: 'start', at: [4, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the hill. There are people at the top: the lamps along the switchbacks are theirs. Get to the summit beacon.' },
+    { id: 'lamp', at: [6, 49], radius: 3, speaker: 'SURVIVOR (LAMP)', text: 'Lamps all the way up: that is us, showing you the road. Watch the cliff edges: they shoot down.' },
+    { id: 'car', at: [26, 44], radius: 3, speaker: 'FUNICULAR PLACARD', text: 'Funicular. The only way up from terrace one to terrace two. Pull the lever on the car. If it is up, the call lever at its foot brings it down.' },
     { id: 'sexton', at: [30, 32], radius: 5, speaker: 'INES', text: 'That one is not fighting. It is waiting for something to fall. Kill it first, and quickly.' },
-    { id: 'high', at: [26, 21], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'Red lamp on terrace four! Bellhands on the cliff edge. Use the houses; go round, not through.' },
+    { id: 'high', at: [26, 21], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'Bellhands on the cliff edge over the next terrace! Use the houses; go round, not through.' },
     { id: 'summit', at: [40, 12], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'You made it up! Light the beacon: the lever on the north wall of the summit. We will open the gate.' },
     { id: 'gate', at: [50, 10], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there.' },
   ],

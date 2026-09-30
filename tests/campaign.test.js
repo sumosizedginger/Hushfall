@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { ROOT } from './helpers.js';
 
 const run = (root, ...args) => spawnSync(process.execPath, [path.join(ROOT, 'tools/validate.mjs'), ...args], { env: { ...process.env, HUSHFALL_ROOT: root }, encoding: 'utf8' });
@@ -78,4 +79,12 @@ test('evidence goes stale when the canonical ROUTE file changes after verificati
 test('running the campaign tests leaves the tracked evidence files untouched (no side effects on the repository)', () => {
   const f = path.join(ROOT, 'validation/campaign.json'), before = fs.readFileSync(f, 'utf8');
   run(fixture(null)); assert.equal(fs.readFileSync(f, 'utf8'), before);
+});
+
+test('evidence goes stale when the SIMULATION changes after verification (audit A10): a map verified by other engine code is only IMPLEMENTED', () => {
+  const ev = (engineSha) => ({ C1E1M01: { loads: true, engineSha, automated: { pass: true }, canonicalRoute: { file: 'routes/x.json', reachedExit: true } } });
+  const setup = (engineSha) => { const dir = fixture(null, ev(engineSha)); fs.mkdirSync(path.join(dir, 'routes'), { recursive: true }); fs.writeFileSync(path.join(dir, 'routes/x.json'), '[]'); fs.mkdirSync(path.join(dir, 'src/engine'), { recursive: true }); fs.writeFileSync(path.join(dir, 'src/engine/world.js'), '// engine v1'); return dir; };
+  const sha = (dir) => { const h = crypto.createHash('sha256'); for (const n of fs.readdirSync(path.join(dir, 'src/engine')).sort()) h.update(n).update(fs.readFileSync(path.join(dir, 'src/engine', n))); return h.digest('hex').slice(0, 16); };
+  const good = setup('x'); const s = sha(good); fs.writeFileSync(path.join(good, 'validation/maps/C1E1M01.json'), JSON.stringify({ mapId: 'C1E1M01', ...ev(s).C1E1M01 })); run(good); assert.equal(derived(good, 'C1E1M01'), 'AGENT_VERIFIED', 'same engine: still verified');
+  fs.writeFileSync(path.join(good, 'src/engine/world.js'), '// engine v2'); run(good); assert.equal(derived(good, 'C1E1M01'), 'IMPLEMENTED', 'the engine changed: evidence is stale');
 });

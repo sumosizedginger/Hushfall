@@ -216,6 +216,17 @@ try {
   }
   check('Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse', sawObjective && sawBoss && sawShield && sawFuse, JSON.stringify({ sawObjective, sawBoss, sawShield, sawFuse }));
   g2 = g2report;
+  // ---- 2c. flow (audit A17/A18): New Game always starts at C1E1M01; Continue takes the NEWEST save ------------------------------------
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M05' })"); await T('t.clearOverlays()'); await T('t.pause()'); await page.$eval('#btn-quit', (e) => e.click());
+  check('Gate 2 flow: Quit to title returns to the title screen', (await T('t.state().mode')) === 'title');
+  await page.$eval('#btn-normal', (e) => e.click()); const fresh = await T('t.state()');
+  check('Gate 2 flow: New Game after playing another map starts C1E1M01 from tick 0 (not the last map)', fresh.mapId === 'C1E1M01' && fresh.tick < 10 && fresh.mode === 'playing', fresh.mapId + ' tick ' + fresh.tick);
+  await page.evaluate(() => localStorage.clear());
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M02' })"); await T('t.tick(30)'); await T("t.saveSlot('quick')"); await sleep(80);
+  await T("t.newGame('normal', 2, { mapId: 'C1E1M06' })"); await T('t.pause()'); await page.$eval('#btn-quit', (e) => e.click()); await page.$eval('#btn-continue', (e) => e.click());
+  const cont = await T('t.state()');
+  check('Gate 2 flow: Continue loads the newest save (the auto-save of C1E1M06), not an older quick save of C1E1M02', cont.mapId === 'C1E1M06' && cont.mode === 'playing', cont.mapId + '/' + cont.mode);
+  await page.evaluate(() => localStorage.clear());
   await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // the sections below use the current map: back to the Gate 1 map
 
   // ---- 3. save / resume determinism in the browser ----------------------------------------------------------------

@@ -22,7 +22,7 @@ L.rect([46, 12, 54, 16], '.');
 // doors
 L.door(8, 23); L.door(10, 16); L.door(20, 16); L.door(18, 30); L.door(29, 23); L.door(43, 23);
 // the exit hatch inside the radio room, sealed until the radio is repaired
-L.put(24, 9, '>');
+// (the exit is the explicit locked entity below: a '>' glyph here would create a second, unlocked exit on the same cell)
 
 // ---- objects -------------------------------------------------------------------------------------------------------------
 L.put(3, 23, '@');
@@ -32,7 +32,7 @@ L.put(6, 22, 'n'); L.putAll('t', [[5, 24], [6, 25]]); L.put(4, 22, 'h');
 L.putAll('F', [[12, 20], [13, 20], [14, 20], [12, 26], [13, 26], [14, 26], [23, 20], [24, 20], [25, 20], [23, 26], [24, 26], [25, 26]]);
 L.putAll('f', [[17, 22], [18, 22], [19, 22], [17, 24], [18, 24], [19, 24]]); L.putAll('m', [[10, 18], [27, 18], [10, 28], [27, 28], [18, 23]]);
 L.putAll('t', [[14, 23], [22, 19], [22, 27], [26, 23], [12, 28], [27, 26]]); L.putAll('g', [[16, 18], [20, 28], [10, 21]]); L.put(25, 24, 'x');
-L.putAll('e', [[11, 24], [21, 18]]); L.put(27, 20, 'r'); L.put(11, 27, 'h');
+L.putAll('e', [[11, 24], [21, 18]]); L.putAll('r', [[27, 20], [15, 21]]); L.put(11, 27, 'h');
 // radio room: a bench, the set, two Tollbearers in the dark; the radio lever on the north wall
 L.putAll('f', [[18, 11], [22, 11]]); L.putAll('t', [[19, 13], [23, 13]]); L.putAll('m', [[17, 9], [23, 9]]); L.put(20, 14, 'h');
 // generator cellar: pods, the brass fuse in the far corner, a Sexton over the fallen
@@ -41,12 +41,12 @@ L.putAll('D', [[4, 8], [6, 12], [10, 8]]); L.put(4, 7, 'k'); L.putAll('t', [[6, 
 L.putAll('f', [[11, 34], [12, 34], [14, 34], [15, 34], [17, 34], [18, 34], [20, 34], [21, 34], [23, 34], [24, 34], [26, 34], [27, 34], [11, 38], [12, 38], [14, 38], [15, 38], [20, 38], [21, 38], [23, 38], [24, 38]]);
 L.put(27, 38, 'i'); L.putAll('t', [[13, 36], [19, 36], [25, 36], [16, 38], [22, 36]]); L.putAll('g', [[10, 33]]); L.putAll('m', [[10, 32], [27, 32], [10, 39], [27, 39], [18, 36]]);
 L.putAll('t', [[12, 42]]); L.putAll('g', [[18, 42], [24, 42]]);
-L.putAll('e', [[19, 32], [26, 39]]); L.put(16, 32, 'r'); L.put(20, 39, 'H'); L.put(12, 39, 'h');
+L.putAll('e', [[19, 32], [26, 39]]); L.put(16, 32, 'r'); L.put(20, 39, 'H'); L.put(12, 39, 'h'); L.put(22, 32, 'r');
 // east corridor: two Bellhands at the top of the stairs
 L.putAll('n', [[33, 21], [33, 25]]); L.putAll('t', [[35, 23]]); L.put(32, 23, 'a');
 // attic: a long dark gallery. rafters, crates, three Tollbearers, two Bellhands on the gantry, the bell fuse beyond them
 L.putAll('C', [[48, 26], [52, 26], [48, 30], [52, 30], [46, 33], [54, 33]]); L.putAll('c', [[49, 26], [53, 30]]); L.putAll('o', [[50, 24], [50, 34]]); L.putAll('n', [[45, 24], [55, 24], [50, 28], [45, 34], [55, 34]]);
-L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]]); L.putAll('b', [[48, 13], [52, 13]]); L.put(50, 11, 'q'); L.putAll('h', [[46, 23], [55, 22]]); L.put(50, 22, 'e'); L.put(45, 13, 'r'); L.put(55, 15, 'H');
+L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]]); L.putAll('b', [[48, 13], [52, 13]]); L.put(50, 11, 'q'); L.putAll('h', [[46, 23], [55, 22]]); L.put(50, 22, 'e'); L.putAll('r', [[45, 13], [52, 22]]); L.put(55, 15, 'H');
 
 const layers = L.layers();
 

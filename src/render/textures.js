@@ -25,9 +25,25 @@ const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic
   // Gate 2 kit
   'wall_timber_a', 'wall_plaster_a', 'wall_concrete_a', 'wall_iron_a', 'wall_resin_a', 'floor_tile_a', 'floor_grate_a', 'floor_carpet_a', 'floor_flag_a', 'floor_silt_a', 'floor_slate_a', 'sky_night', 'sky_overcast'];
 
+/**
+ * The painted skies are not periodic: wrapped round the dome their left and right edges meet in a hard vertical seam (audit A12). Cross-fade the last B columns into the first B and drop them, so the
+ * image tiles horizontally. (Browser only: it draws through a canvas.)
+ */
+function makeSeamless(t) {
+  const img = t.image; if (typeof document === 'undefined' || !img?.width) return t;
+  const W = img.width, H = img.height, B = Math.round(W * 0.125), W2 = W - B, src = document.createElement('canvas'); src.width = W; src.height = H;
+  const sc = src.getContext('2d'); sc.drawImage(img, 0, 0); const a = sc.getImageData(0, 0, W, H).data, out = new Uint8ClampedArray(W2 * H * 4);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W2; x++) for (let c = 0; c < 4; c++) {
+    const o = a[(y * W + x) * 4 + c]; out[(y * W2 + x) * 4 + c] = x >= B ? o : Math.round(a[(y * W + W2 + x) * 4 + c] * (1 - x / B) + o * (x / B));
+  }
+  const dst = document.createElement('canvas'); dst.width = W2; dst.height = H; dst.getContext('2d').putImageData(new ImageData(out, W2, H), 0, 0);
+  const nt = new THREE.CanvasTexture(dst); nt.magFilter = t.magFilter; nt.minFilter = t.minFilter; nt.wrapS = nt.wrapT = t.wrapS; nt.colorSpace = t.colorSpace; nt.anisotropy = t.anisotropy; t.dispose(); return nt;
+}
+
 export async function loadAll() {
   const out = {};
   await Promise.all(NAMES.map(async (n) => { out[n] = await loadTex(n, { repeat: !ATLASES.has(n) && n !== 'ui_title_art' && n !== 'door_hatch_a' }); }));
+  for (const n of ['sky_dusk', 'sky_night', 'sky_overcast']) out[n] = makeSeamless(out[n]);
   out.wall_plaster_a.wrapT = THREE.ClampToEdgeWrapping;        // the wainscot is at the bottom of the tile and plain plaster above it: it must not repeat up a tall wall
   out.paper_grain = await loadTex('paper_grain', { srgb: false });
   out.paper_grain.magFilter = out.paper_grain.minFilter = THREE.LinearFilter;
