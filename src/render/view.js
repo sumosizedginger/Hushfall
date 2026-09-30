@@ -2,6 +2,7 @@
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
+import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { PostPass } from './post.js';
@@ -21,7 +22,7 @@ export class GameView {
     scene.add(new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4));
     const sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
-    this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
+    this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
@@ -30,7 +31,7 @@ export class GameView {
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
-    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas) };
+    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas) };
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(0.62); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
@@ -52,15 +53,16 @@ export class GameView {
 
   /** call before each sim step so render can interpolate */
   beforeStep(w) {
-    const p = w.player; Object.assign(this.prev.player, { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch });
-    for (const e of w.enemies) { let s = this.prev.enemies.get(e.id); if (!s) this.prev.enemies.set(e.id, s = {}); s.x = e.x; s.z = e.z; s.yaw = e.yaw; }
+    const p = w.player; Object.assign(this.prev.player, { x: p.x, z: p.z, y: p.y ?? 0, yaw: p.yaw, pitch: p.pitch }); if (this.eyeBase == null) this.eyeBase = p.y ?? 0;
+    for (const e of w.enemies) { let s = this.prev.enemies.get(e.id); if (!s) this.prev.enemies.set(e.id, s = {}); s.x = e.x; s.z = e.z; s.y = e.y ?? 0; s.yaw = e.yaw; }
   }
   handleEvents(events) {
     for (const e of events) {
-      if (e.type === 'fire') { const sg = e.weapon === 'scattergun'; this.recoil = sg ? 1.6 : 1; this.flashT = sg ? 0.09 : 0.07; if (sg) this.pumpT = 0.9; }
+      if (e.type === 'fire') { const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet'; this.recoil = sg ? 1.6 : rv ? 0.35 : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : 0.07; if (sg) this.pumpT = 0.9; if (rv) this.spinKick = 1; }
       else if (e.type === 'impact') {
         for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.scale.setScalar(0.6); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.2, this.rnd() - 0.5).multiplyScalar(2.6), life: 0.3 + this.rnd() * 0.2 }); }
       }
+      else if (e.type === 'shake') { this.shakeT = 0.5; this.shakeAmp = e.amount ?? 1; }
       else if (e.type === 'explode') {
         this.boomT = 0; this.boomLight.position.set(e.x, e.y, e.z);
         for (let i = 0; i < 14; i++) {
@@ -77,7 +79,9 @@ export class GameView {
     const speed = Math.hypot(p.vx, p.vz), bob = Math.sin(p.bob * 2) * 0.035 * Math.min(1, speed / PLAYER.speed);
     let eye = PLAYER.eye + bob, roll = 0;
     if (w.status === 'dead') { this.deadT = Math.min(1, this.deadT + dt / 0.8); eye = lerp(PLAYER.eye, 0.35, this.deadT); roll = this.deadT * 0.5; } else this.deadT = 0;
-    this.cam.position.set(lerp(pp.x, p.x, alpha), eye, lerp(pp.z, p.z, alpha));
+    this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
+    let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
+    this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
     this.cam.rotation.set(lerp(pp.pitch, p.pitch, alpha) + p.kick, lerp(pp.yaw, p.yaw, alpha), roll);
     const fov = lerp(this.baseFov ?? VIEW.fov, this.adsFov ?? VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
@@ -90,7 +94,7 @@ export class GameView {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
       if (!v) { v = ENEMY_MODELS[e.kind](this.tex); this.scene.add(v.root); this.enemyViews.set(e.id, v); }
       const s = this.prev.enemies.get(e.id) || e;
-      v.root.position.set(lerp(s.x, e.x, alpha), 0, lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
+      v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
       v.pose({ t, walk: e.walk, phase: e.phase, attack: e.attackT >= 0 ? e.attackT / def.attack.duration : 0, lunge, dead: e.dead, flash: e.flash });
@@ -104,8 +108,8 @@ export class GameView {
     seen.clear();
     for (const it of w.pickups) {
       seen.add(it.id); let v = this.pickupViews.get(it.id);
-      if (!v) { v = makePickup(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
-      v.position.set(it.x, 0.18 + Math.sin(this.time * 2.2 + it.id) * 0.05 + (it.kind.startsWith('key') ? 0.25 : 0), it.z); v.rotation.y = this.time * 0.9 + it.id;
+      if (!v) { v = (it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
+      v.position.set(it.x, (it.y ?? 0) + 0.18 + Math.sin(this.time * 2.2 + it.id) * 0.05 + (it.kind.startsWith('key') ? 0.25 : 0), it.z); v.rotation.y = this.time * 0.9 + it.id;
     }
     for (const [id, v] of this.pickupViews) if (!seen.has(id)) { this.scene.remove(v); this.pickupViews.delete(id); }
     // projectiles
@@ -124,7 +128,11 @@ export class GameView {
     for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
     // doors
-    for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = d.open * (this.map.ceiling - 0.05); }
+    for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
+    w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
+    if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
+    for (const [id, r] of this.lvl.switchViews) { const used = w.switchState?.[id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; }
+    for (const [id, r] of this.lvl.exitViews) r.group.children[0].material.color.setHex(w.exitLocked?.[id] ? 0x7a2a22 : 0xffc070);      // a sealed gate glows dull red
     // debris + explosion light
     for (let i = this.debris.length - 1; i >= 0; i--) {
       const d = this.debris[i]; d.life -= dt; d.v.y -= 16 * dt; d.m.position.addScaledVector(d.v, dt); d.m.rotation.x += dt * 9; d.m.rotation.y += dt * 7;
@@ -154,6 +162,7 @@ export class GameView {
     rig.group.position.set(px + sway, py + Math.abs(sway) * 0.6 - r * 0.02 - this.deadT * 0.6 + dip, pz + r * 0.13);
     rig.group.rotation.set(-r * 0.12 + SPRINT_POSE.rx * sp, lerp(lerp(0.1, 0, a), SPRINT_POSE.ry, sp), SPRINT_POSE.rz * sp);
     rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a));      // small in the sights: it must not hide the target
+    if (rig.spin) { this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6); rig.spin.rotation.z += dt * (6 + 40 * this.spinKick); }                    // the barrel cluster winds up while it fires
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
     this.pumpT = Math.max(0, this.pumpT - dt);
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;

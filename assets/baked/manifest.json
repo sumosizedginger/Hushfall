@@ -156,6 +156,110 @@
       "transparent": false,
       "sha256": "52724271be316989c65b828619080998495d1f12cb5979e70454a982aabba38c",
       "bytes": 98925
+    },
+    "wall_timber_a": {
+      "seed": 7101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "73285748005b0d838e7db89ce0bd289369f83df2772f359964cfe6871ffdb87d",
+      "bytes": 104340
+    },
+    "wall_plaster_a": {
+      "seed": 7201,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "578cf940246d1eff67a64d9817cee1afa40eb6da4e258113679f7660afaa7415",
+      "bytes": 60602
+    },
+    "wall_concrete_a": {
+      "seed": 7301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f0cb00e8146840c38c626127cee22ffb2b4abe47d2a74e3e8c96f69b4cd7ac20",
+      "bytes": 45838
+    },
+    "wall_iron_a": {
+      "seed": 7401,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ecab8cac8fabcd5bfc28a7ea8707605e02696ab0d3e67eaaa5b331327310519b",
+      "bytes": 71020
+    },
+    "wall_resin_a": {
+      "seed": 7501,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ffc470d2365097a6b7f8aa8b503bcafe637cafe043790668e6fc287e9228c0bb",
+      "bytes": 86007
+    },
+    "floor_tile_a": {
+      "seed": 7601,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "844d244cac49387089ea08d7a2c4e8ef469a64a8855c96cad4f40534ed4d1927",
+      "bytes": 102356
+    },
+    "floor_grate_a": {
+      "seed": 7701,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "734c19190d3c3371520b6b3a2ba05ea415ce576a2e6a6e1a8d7e3b7bc301cf4b",
+      "bytes": 90179
+    },
+    "floor_carpet_a": {
+      "seed": 7801,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "addc15e229a540cb4a7e0500401bcd82696fa4ebc1bfadef9fc8f0f3ecce5cb7",
+      "bytes": 49237
+    },
+    "floor_flag_a": {
+      "seed": 7901,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "92d683589d81dafe5ba1f7e8d3f2274bdb4c54851da43c229aae3dfa81b90114",
+      "bytes": 93844
+    },
+    "floor_silt_a": {
+      "seed": 8001,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6043c4e94e0cedab0af67e46a76e0aa44b08e75272af021e922f5642241ed09b",
+      "bytes": 75115
+    },
+    "floor_slate_a": {
+      "seed": 8101,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a7de0770b1af84c25debf26139f3f192b8f26a8200a1cfd9c14f2a2c678ed3af",
+      "bytes": 105289
+    },
+    "sky_night": {
+      "seed": 8201,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1d5cbe96b10079f6cf7a620ec595581318ecd695e29064628e3a715268c87558",
+      "bytes": 255820
+    },
+    "sky_overcast": {
+      "seed": 8301,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "67f1193b53ac4e36e36129c60fa18f3fa41f0db66ce85702c353987f801d2857",
+      "bytes": 226602
     }
   }
 }

@@ -14,8 +14,8 @@ export function atlas(geom, cell) {
 // Shared, cached materials for STATIC props so they can be merged into one draw call per material (see render/merge.js).
 const matCache = new Map();
 const keyOf = (o) => JSON.stringify(o, (k, v) => (v && v.isTexture ? v.uuid : v));
-function lam(params) { const k = 'L' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshLambertMaterial(params)); return m; }
-function bas(params) { const k = 'B' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshBasicMaterial(params)); return m; }
+export function lam(params) { const k = 'L' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshLambertMaterial(params)); return m; }
+export function bas(params) { const k = 'B' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshBasicMaterial(params)); return m; }
 const ease = (t) => t * t * (3 - 2 * t);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
@@ -210,6 +210,7 @@ export function makePickup(kind, tex, weaponTex) {
     const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2); body.position.y = 0.26; g.add(body);
     for (const x of [-0.14, 0.14]) { const strap = M(new THREE.BoxGeometry(0.06, 0.44, 0.18), 7); strap.position.set(x, 0.26, 0); g.add(strap); }
   } else if (kind.startsWith('key')) {
+    if (kind === 'key_iron') mat.color.set(0x9fb4d0); else if (kind === 'key_bell') mat.color.set(0x60f0d8);          // brass / iron / bell keys read as different colours from across a room
     const ring = M(new THREE.TorusGeometry(0.11, 0.035, 5, 8), 3); ring.position.y = 0.55; g.add(ring);
     const shaft = M(new THREE.BoxGeometry(0.06, 0.34, 0.05), 3); shaft.position.y = 0.3; g.add(shaft);
     for (const y of [0.16, 0.24]) { const tooth = M(new THREE.BoxGeometry(0.14, 0.05, 0.05), 3); tooth.position.set(0.07, y, 0); g.add(tooth); }

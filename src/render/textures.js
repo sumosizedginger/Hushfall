@@ -21,7 +21,9 @@ export function loadTex(name, { repeat = true, srgb = true } = {}) {
 }
 
 const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'sky_dusk', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art',
-  'water_dusk', 'cobble_wet_a', 'brick_warm_a', 'awning_stripe_a', 'boat_hull_a', 'tower_stone_a'];
+  'water_dusk', 'cobble_wet_a', 'brick_warm_a', 'awning_stripe_a', 'boat_hull_a', 'tower_stone_a',
+  // Gate 2 kit
+  'wall_timber_a', 'wall_plaster_a', 'wall_concrete_a', 'wall_iron_a', 'wall_resin_a', 'floor_tile_a', 'floor_grate_a', 'floor_carpet_a', 'floor_flag_a', 'floor_silt_a', 'floor_slate_a', 'sky_night', 'sky_overcast'];
 
 export async function loadAll() {
   const out = {};

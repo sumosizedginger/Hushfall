@@ -24,3 +24,24 @@ test('rooms are lit differently: warm oil lamps, cold customs tubes and teal pod
 test('static scene budget: the merged level stays small (regression guard; real draw calls are measured in the browser check)', () => {
   const n = countMeshes(level.group); assert.ok(n < 260, `level scene has ${n} meshes`);
 });
+
+// ---- Gate 2 terrain: the level mesh builder understands heights, sectors, hazards, switches and closets
+import { parseMap } from '../src/engine/mapformat.js';
+const kitMap = () => parseMap({
+  format: 1, id: 'R1', version: 1, name: 'Render kit', ceilingHeight: 6,
+  grid: ['############', '#..........#', '#...#X#....#', '#..........#', '############'], heights: ['............', '.......12344', '............', '............', '............'], fx: ['............', '............', '.ww.........', '.xx.........', '............'],
+  sectors: [{ id: 'lift', cells: [[8, 3]], low: 0, high: 1, speed: 1 }], closets: [{ at: [5, 2] }], doors: [],
+  entities: [{ type: 'player', at: [1, 1] }, { type: 'exit', at: [10, 3] }, { type: 'switch', id: 's', at: [3, 3], wall: 'south', do: [{ open: [5, 2] }, { sector: { id: 'lift', to: 'high' } }] }, { type: 'prop', kind: 'cart', at: [2, 1] }, { type: 'prop', kind: 'cradle', at: [9, 1] }, { type: 'prop', kind: 'lantern', at: [1, 3] }],
+});
+test('terrain level mesh: risers for the stairs, a moving-floor group per sector, hazard overlays, a switch panel, a closet that looks like wall, a lantern light', () => {
+  const m = kitMap(), lv = buildLevel(m, tex);
+  assert.equal(lv.sectorViews.length, 1); assert.ok(lv.sectorViews[0].children.length >= 2, 'top + skirts');
+  assert.ok(lv.fxMats.w && lv.fxMats.x, 'wading and toxic overlays'); assert.equal(lv.switchViews.size, 1); assert.ok(lv.switchViews.get('s').lamp.material.color, 'lamp colour is per panel');
+  assert.ok(lv.doorViews.get('5,2'), 'the closet has a panel that opens like a door'); assert.ok(lv.exitViews.get('exit0'));
+  assert.ok(lv.lights.length >= 2, 'lantern and cradle lights: ' + lv.lights.length);
+  let tris = 0; lv.group.traverse((o) => { if (o.isMesh) tris += (o.geometry.index?.count ?? 0) / 3; }); assert.ok(tris > 60, 'geometry exists: ' + tris);
+  let bad = 0; lv.group.traverse((o) => { if (o.isMesh) for (const v of o.geometry.attributes.position.array) if (!Number.isFinite(v)) bad++; }); assert.equal(bad, 0, 'no NaN in any vertex');
+});
+test('flat maps build exactly as before (no sector groups, no overlays, no switch views)', () => {
+  assert.equal(level.sectorViews.length, 0); assert.deepEqual(Object.keys(level.fxMats), []); assert.equal(level.switchViews.size, 0);
+});

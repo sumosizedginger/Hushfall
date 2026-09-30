@@ -1,7 +1,7 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER } from '../engine/defs.js';
 
-const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS' };
+const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS' };
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { ACTIONS } from '../engine/input.js';
@@ -10,10 +10,10 @@ import { CommsQueue } from './commsqueue.js';
 const $ = (id) => document.getElementById(id);
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const TOASTS = {
-  pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key', ammo_shell: 'Shotgun shells (+6)' })[e.kind] || 'Picked up ' + e.kind,
+  pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key', ammo_shell: 'Shotgun shells (+6)', ammo_rivet: 'Rivets (+30)', key_iron: 'Iron key', key_bell: 'Bell key' })[e.kind] || 'Picked up ' + e.kind,
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   secret: () => 'A secret!',
-  weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : 'Weapon'),
+  weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : 'Weapon'),
   weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
 };
 

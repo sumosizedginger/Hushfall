@@ -16,6 +16,7 @@ export const RADIO_SOUND = 'radio';
 
 const WEAPON_FIRE = {
   flare: [{ id: 'flare_fire' }],
+  rivet: [{ id: 'rivet_fire', gain: 0.8 }],
   scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
 };
 const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert' };
