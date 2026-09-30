@@ -33,12 +33,15 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm run audio-qa` — renders every SFX + the score offline in headless Chrome, measures them (finite/audible/no clipping/decays/reproducible), writes `review/audio/*.wav` (LISTEN to these) + `validation/audio.json`
 - `npm run shoot-level` — Marrow Quay vantage-point tour (review/level-c1e1m01/*.png)
 - `npm run gate1-bundle` — assemble review/gate-1/ from repository evidence (run verify, browsercheck, audio-qa, shoot-level, shoot-stances, verify-map first, from a clean commit; it fails if the defect list is empty or evidence is from another commit)
+- `node tools/mapkit/compile.mjs <ID>` — compile `maps-src/<ID>.level.mjs` (the `Level` builder in `tools/mapkit/builder.mjs`) into a validated `maps/<ID>.json` · `node tools/mapkit/mapview.mjs <ID> [scale]` — top-down plan `review/maps/<ID>.png` (enemies, pickups, switches, lifts, triggers) · `node tools/dev/shoot-map.mjs <ID> [view]` — vantage tour from `maps-src/<ID>.views.json` (`open`, `wake`, `ticks`, `ambient` options) into `review/level-<id>/*.png`
+- `node tools/dev/dbg-route.mjs <map.json> <route.json> [difficulty] [seed]` — run a route and attribute the damage taken (`HITS=1` lists every hit); the fast way to tune a level for the bot
+- `npm run gate2-bundle` — assemble `review/gate-2/` (all nine Episode 1 maps) from evidence; same exit codes as gate1-bundle. Run `npm run verify`, `browsercheck`, `audio-qa`, `verify-map` for every map and `npm run validate` first, from a clean commit
 - `node tools/dev/refresh-manifest.mjs` — rebuild the asset manifest from disk after parallel bakes
 - `npm run shoot-weapons` — scattergun stances/flash/pump, Gaunt poses, new pickups (review/engine-skeleton/weapons-*.png)
 - `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
 
 ## Architecture (src/)
-- `engine/` pure JS, no DOM/Three: `world.js` fixed-step deterministic sim (plain-data state, seeded RNG, event queue), `mapformat.js` + `reach.js` (ASCII grid + entity list, validation, reachability with keys), `input.js` (devices -> actions -> per-tick cmd, tap latch, toggle mode), `automap.js` (sim-saved exploration + drawable model), `loop.js` (fixed-step accumulator), `save.js` (versioned, migrations, explicit invalidation), `bot.js` + `harness.js` (route bot acting only through InputState), `defs.js` (all tunables).
+- `engine/` pure JS, no DOM/Three (Gate 2 added `terrain.js` heights/ceilings/step rules, `nav.js` BFS distance field for enemies, `script.js` switches/triggers/actions/sector movement, `viability.js` the shared viability + quality gates): `world.js` fixed-step deterministic sim (plain-data state, seeded RNG, event queue), `mapformat.js` + `reach.js` (ASCII grid + entity list, validation, reachability with keys), `input.js` (devices -> actions -> per-tick cmd, tap latch, toggle mode), `automap.js` (sim-saved exploration + drawable model), `loop.js` (fixed-step accumulator), `save.js` (versioned, migrations, explicit invalidation), `bot.js` + `harness.js` (route bot acting only through InputState), `defs.js` (all tunables).
 - `audio/` WebAudio, all procedural: `synth.js` (recipes, run on any context), `events.js` (sim event -> sounds, pure/testable), `engine.js` (graph, unlock, positional play, footsteps, tension), `music.js`, `ambience.js`. It only reads sim state and drained events.
 - `render/` Three.js view of sim state: `view.js` (freezes sleeping enemies into one merged mesh), `levelmesh.js` (skins, water, scenery), `merge.js` (static-geometry merging: props share cached materials), `models.js`, `post.js` (ink outline / paper grain / value banding), `textures.js`.
 - `game/` runtime shell: state machine, DOM UI, settings, dev-only `testhook.js`.
@@ -46,7 +49,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - Rule: render/UI/audio only read sim state and drain events; they never write it.
 
 ## Persistent files
-`GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
+`design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
 `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
 
 ## p5.brush facts learned (see ART_BIBLE.md)

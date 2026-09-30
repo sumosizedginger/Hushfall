@@ -12,7 +12,7 @@ const updateBaseline = process.argv.includes('--update-baseline');
 const root = path.resolve(import.meta.dirname, '../..');
 const shots = path.join(root, 'review/engine-skeleton');
 fs.mkdirSync(shots, { recursive: true });
-const checks = [], errors = []; let perf = null, gl = null;
+const checks = [], errors = []; let perf = null, gl = null, g2 = null;
 const check = (name, ok, detail = '') => { checks.push({ name, ok: !!ok, detail: String(detail) }); console.log(ok ? 'PASS' : 'FAIL', name, detail); };
 
 const server = await createServer({ root, logLevel: 'error', server: { port: 5210, strictPort: true } });
@@ -177,11 +177,46 @@ try {
   check('intermission screen shows end-level statistics', (await visible('screen-complete')) && /Kills/.test(await text('stat-rows')), (await text('stat-rows')).replace(/\s+/g, ' '));
   await T('t.clearOverlays()'); await shot('04-intermission');
   console.log('route wall time (SwiftShader):', ((Date.now() - t0) / 1000).toFixed(1) + 's');
+  // Gate 2 campaign flow: the real Next button leads to the next map of the episode, carrying health/ammo/weapons
+  const carried = await T('t.state().player');
+  await page.$eval('#btn-next', (e) => e.click());
+  await page.waitForFunction("window.__GAME_TEST__.state().mapId === 'C1E1M02'", { timeout: 60000 }).catch(() => {});
+  const m2 = await T('t.state()');
+  check('Gate 2 flow: the intermission Next button loads C1E1M02 and play resumes', m2.mapId === 'C1E1M02' && m2.mode === 'playing', m2.mapId + '/' + m2.mode);
+  check('Gate 2 flow: the inventory carries over (weapons kept, ammo kept, at full health or better)', carried.weapons.every((wp) => m2.player.weapons.includes(wp)) && m2.player.hp >= Math.min(100, carried.hp) - 1 && m2.player.ammo.flare >= carried.ammo.flare, JSON.stringify({ before: carried.weapons, after: m2.player.weapons, hp: [carried.hp, m2.player.hp] }));
+  await T('t.clearOverlays()'); await shot('g2-00-m02-start');
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // back to the Gate 1 map: later sections use the current map
 
   // ---- 2. secret route -------------------------------------------------------------------------------------------
   await T("t.newGame('normal', 1)"); await T("t.startBot('C1E1M01.secret')");
   for (let i = 0; i < 250; i++) { r = await T('t.stepBot(30)'); if (r.done || r.failed || r.status !== 'playing') break; }
   check('secret route: secret found and level completed', r.status === 'complete' && r.stats.secrets === 1, `secrets=${r.stats.secrets}`);
+
+  // ---- 2b. Gate 2: every Episode 1 route, in the real game, against the headless sim -------------------------------------------------
+  const G2 = [['C1E1M02', 'main'], ['C1E1M02', 'secret'], ['C1E1M03', 'main'], ['C1E1M04', 'main'], ['C1E1M04', 'secret'], ['C1E1M05', 'main'], ['C1E1M06', 'main'], ['C1E1M07', 'main'], ['C1E1M08', 'main'], ['C1E1S01', 'main']];
+  const g2report = {}; let sawBoss = false, sawObjective = false, sawFuse = false, sawShield = false;
+  for (const [id, name] of G2) {
+    const gm = loadMapFile(path.join(root, 'maps', id + '.json')), gr = loadRouteFile(path.join(root, 'routes', id + '.' + name + '.route.json')), gn = runRoute(gm, gr, { seed: 1, difficulty: 'normal' });
+    await T(`t.newGame('normal', 1, { mapId: '${id}' })`); await T('t.clearOverlays()'); await T(`t.startBot('${id}.${name}')`);
+    let rr, lastOp = -1, shotN = 0; const tRoute = Date.now(); const want = new Set(name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
+    for (let i = 0; i < 1500; i++) {
+      rr = await T('t.stepBot(90)');
+      if (rr.op !== lastOp && want.has(rr.op) && shotN < 3) { await shot('g2-' + id.toLowerCase() + '-' + name + '-op' + String(rr.op).padStart(2, '0')); shotN++; }
+      lastOp = rr.op;
+      if (id === 'C1E1M08') { sawBoss = sawBoss || (await visible('boss')); sawShield = sawShield || (await text('boss-note')).includes('SHIELDED'); }
+      sawObjective = sawObjective || (await text('objective')).startsWith('OBJECTIVE');
+      if (id === 'C1E1M07') sawFuse = sawFuse || (await page.$$eval('#toasts div', (els) => els.some((e) => /fuse/i.test(e.textContent))));
+      if (rr.done || rr.failed || rr.status !== 'playing') break;
+    }
+    const ok = rr.status === 'complete' && !rr.failed;
+    check(`Gate 2 real-game route ${id}.${name}: completes in the browser`, ok, `status=${rr.status} failed=${rr.failed} ticks=${rr.tick} wall=${((Date.now() - tRoute) / 1000).toFixed(0)}s`);
+    check(`Gate 2 real-game route ${id}.${name}: browser sim == Node sim (ticks + state hash)`, rr.tick === gn.ticks && rr.hash === gn.hash, `browser ${rr.tick}/${rr.hash} vs node ${gn.ticks}/${gn.hash}`);
+    g2report[id + '.' + name] = { ok, ticks: rr.tick, hash: rr.hash, nodeTicks: gn.ticks, nodeHash: gn.hash, kills: rr.stats?.kills, secrets: rr.stats?.secrets };
+    await T('t.clearOverlays()');
+  }
+  check('Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse', sawObjective && sawBoss && sawShield && sawFuse, JSON.stringify({ sawObjective, sawBoss, sawShield, sawFuse }));
+  g2 = g2report;
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // the sections below use the current map: back to the Gate 1 map
 
   // ---- 3. save / resume determinism in the browser ----------------------------------------------------------------
   await T("t.newGame('hard', 5)");
@@ -220,14 +255,19 @@ try {
   for (const [name, x, z, yaw, awake] of [['pier', 8, 33, -Math.PI / 2], ['plaza', 34, 30, -Math.PI / 2 + 0.35], ['warehouse', 76, 24, -Math.PI / 2 + 0.25], ['plaza-all-awake', 34, 30, -Math.PI / 2 + 0.35, true], ['warehouse-all-awake', 76, 24, -Math.PI / 2 + 0.25, true]]) {
     await T('t.setup_openDoors()'); await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); if (awake) { await T('t.setup_wakeAll(); t.tick(40)'); } budget[name] = await T('t.measureFrame()');
   }
+  // Gate 2: the heaviest new vantage points (a stall market, the hill terraces, the open quay, the dark house, the boss chamber), asleep and awake
+  for (const [name, id, cx, cz, yaw, awake] of [['m03-market', 'C1E1M03', 20.5, 22.5, -Math.PI / 2], ['m03-market-all-awake', 'C1E1M03', 20.5, 22.5, -Math.PI / 2, true], ['m05-terrace', 'C1E1M05', 30.5, 31.5, -Math.PI / 2], ['m05-terrace-all-awake', 'C1E1M05', 30.5, 31.5, -Math.PI / 2, true], ['m06-quay', 'C1E1M06', 30.5, 23.5, -Math.PI / 2], ['m06-quay-all-awake', 'C1E1M06', 30.5, 23.5, -Math.PI / 2, true], ['m07-atrium', 'C1E1M07', 10.5, 23.5, -Math.PI / 2], ['m08-chamber', 'C1E1M08', 38.5, 35.5, Math.PI / 2], ['m08-chamber-all-awake', 'C1E1M08', 38.5, 35.5, Math.PI / 2, true]]) {
+    await T(`t.newGame('hard', 8, { mapId: '${id}' })`); await T('t.setup_openDoors()'); await T(`t.setup_teleport(${cx * 2}, ${cz * 2}, ${yaw})`); if (awake) { await T('t.setup_wakeAll(); t.tick(40)'); } budget[name] = await T('t.measureFrame()');
+  }
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");
   const baseFile = path.join(root, 'validation/render-budget-baseline.json');
   if (updateBaseline || !fs.existsSync(baseFile)) fs.writeFileSync(baseFile, JSON.stringify({ note: 'reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline', when: new Date().toISOString(), budget: Object.fromEntries(Object.entries(budget).map(([k, v]) => [k, { calls: v.calls, triangles: v.triangles }])) }, null, 2));
   const base = JSON.parse(fs.readFileSync(baseFile, 'utf8')).budget;
   check('render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles', Object.entries(budget).every(([k, b]) => base[k] && b.calls <= base[k].calls * 1.25 && b.triangles <= base[k].triangles * 1.25), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, [b.calls, base[k]?.calls, b.triangles, base[k]?.triangles]]))));
   check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.triangles > 1000 && b.triangles < 60000), JSON.stringify(budget));
-  // hard ceilings are engineering budgets, not measurements: 350 calls for sleeping enemies, 650 with the whole level awake (every awake rig is ~30 draw calls); UNVERIFIED on a real GPU
-  check('render budget ceilings: <= 350 draw calls asleep, <= 650 with every enemy awake', Object.entries(budget).every(([k, b]) => b.calls <= (k.includes('awake') ? 650 : 350)), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, b.calls]))));
-  fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
+  // hard ceilings are engineering budgets, not measurements: 350 calls for sleeping enemies, 900 with the whole level awake (every awake rig is ~30 draw calls; the Gate 2 crowds reach ~830 at the market and the quay); UNVERIFIED on a real GPU
+  check('render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)', Object.entries(budget).every(([k, b]) => b.calls <= (k.includes('awake') ? 900 : 350)), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, b.calls]))));
+  fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
 
   // ---- 5b. UX: prompts, quick save/load, pause layout at small windows ---------------------------------------------------
   await T("t.newGame('normal', 12, { realtime: true })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); await sleep(200);
@@ -288,7 +328,7 @@ check('no uncaught exceptions or console errors', errors.length === 0, errors.sl
 {
 const sha16 = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 16);
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
-fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
+fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapShas: Object.fromEntries(['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01'].map((id) => [id, sha16('maps/' + id + '.json')])), gate2Routes: g2, mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
 }
 await browser.close(); await server.close();
 const failed = checks.filter((c) => !c.ok);

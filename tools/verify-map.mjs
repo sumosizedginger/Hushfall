@@ -49,16 +49,16 @@ if (v.ok) {
 const bc = path.join(root, 'validation/browser-check.json');
 if (fs.existsSync(bc)) {
   const b = JSON.parse(fs.readFileSync(bc, 'utf8')), thisMap = sha(mapFile);
-  evidence.browser = { file: 'validation/browser-check.json', when: b.when, env: b.env, mapSha: b.mapSha ?? null, commit: b.commit ?? null, passed: b.checks.filter((c) => c.ok).length, total: b.checks.length, allPassed: b.checks.every((c) => c.ok) };
-  add('the browser check ran on THIS map file (sha matches)', b.mapSha === thisMap, `browser-check mapSha ${b.mapSha ?? 'missing'} vs ${thisMap}`);
+  evidence.browser = { file: 'validation/browser-check.json', when: b.when, env: b.env, mapSha: b.mapShas?.[id] ?? (id === 'C1E1M01' ? b.mapSha : null), commit: b.commit ?? null, passed: b.checks.filter((c) => c.ok).length, total: b.checks.length, allPassed: b.checks.every((c) => c.ok) };
+  const bsha = b.mapShas?.[id] ?? (id === 'C1E1M01' ? b.mapSha : undefined);
+  add('the browser check ran on THIS map file (sha matches)', bsha === thisMap, `browser-check sha for ${id}: ${bsha ?? 'missing'} vs ${thisMap}`);
   add('latest browser check passed', evidence.browser.allPassed, `${evidence.browser.passed}/${evidence.browser.total}`);
 } else add('a browser check exists', false, 'run npm run browsercheck');
 automated.pass = automated.checks.every((c) => c.ok);
 evidence.automated = automated;
 evidence.humanReview = null;
 // blockers come from the audit's judgement file, never from this script: any open BLOCKER for this map is recorded, and stops AGENT_VERIFIED from ever becoming COMPLETE
-const kdFile = path.join(root, 'review/gate-1/known-defects.json');
-const kd = fs.existsSync(kdFile) ? JSON.parse(fs.readFileSync(kdFile, 'utf8')).defects || [] : [];
+const kd = ['review/gate-1/known-defects.json', 'review/gate-2/known-defects.json'].flatMap((f) => (fs.existsSync(path.join(root, f)) ? JSON.parse(fs.readFileSync(path.join(root, f), 'utf8')).defects || [] : []));
 evidence.knownBlockers = kd.filter((d) => d.severity === 'BLOCKER' && d.status !== 'fixed' && (!d.map || d.map === id)).map((d) => d.title);
 evidence.notes = `Generated: map v${src.version}, ${evidence.counts?.enemies ?? '?'} enemies, ${evidence.counts?.items ?? '?'} items, ${evidence.counts?.secrets ?? '?'} secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test.`;
 evidence.dirtySource = dirtySource;
