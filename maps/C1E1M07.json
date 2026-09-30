@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M07",
- "version": 1,
+ "version": 2,
  "name": "Signal House",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -490,6 +490,11 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [24, 22]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_shell",
    "at": [50, 22]
   },
@@ -550,6 +555,11 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [11, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [15, 24]
   },
   {
    "type": "prop",

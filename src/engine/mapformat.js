@@ -263,9 +263,9 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   for (const d of src.doors || []) if (d.remote && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);
   const exitIds = new Set(), exitCells = new Map(); let exitN = 0;
-  for (const e of ents) if (e.type === 'exit') {
+  for (const e of ents) if (e.type === 'exit') {           // ids: explicit, else 'exit' + the exit's index among ALL exits (exactly what MapData does; audit R04)
     if (e.dest != null && e.dest !== 'next' && e.dest !== 'secret') err(`exit at ${e.at}: dest must be 'next' or 'secret'`);
-    const id = e.id ?? 'exit' + exitN++; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
+    const id = e.id ?? 'exit' + exitN; exitN++; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
     // two exits on one cell: the sim takes the first, so a locked exit under an unlocked one never locks (a '>' glyph plus an explicit exit entity did exactly that)
     if (Array.isArray(e.at)) { const k = Math.floor(e.at[0]) + ',' + Math.floor(e.at[1]); if (exitCells.has(k)) err(`two exits on cell ${k} ('${exitCells.get(k)}' and '${id}'): the sim uses the first, so a lock on the second never applies`); exitCells.set(k, id); }
     // a locked exit needs something that can unlock it

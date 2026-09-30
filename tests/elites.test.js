@@ -72,6 +72,7 @@ test('a tone pulse is a ring that hurts once: cover stops it, and so does standi
   const ring = (w, x, z) => w.pulses.push({ id: 900, x, z, y: 0, r: 0.6, speed: 9.5, dmg: 22, width: 1.3, maxR: 40, hit: false });
   const exposed = quiet(arena()); at(exposed, 18, 10); const a = boss(exposed, 0).c; a.pulseCd = 0;
   const evA = run(exposed, 60 * 4, () => { if (exposed.pulses.length) a.pulseCd = 99; return idle(); }); assert.ok(evA.some((e) => e.type === 'pulse'), 'it sang'); assert.equal(evA.filter((e) => e.type === 'pulse_hit').length, 1, 'the ring hits once');
+  assert.equal(5000 - exposed.player.hp, 22, "the Cantor's own pulse costs its configured damage at normal (audit R02: this pin used to be missing)");
   // cover: the Cantor sings while it can see us; then we step behind a pillar and the ring is cut (ring injected at the Cantor so the geometry is exact)
   const covered = quiet(arena([{ type: 'prop', kind: 'pillar', at: [24, 10] }])); at(covered, 18, 10); ring(covered, cell(30), cell(10)); const evB = run(covered, 60 * 4);
   assert.equal(evB.filter((e) => e.type === 'pulse_hit').length, 0, 'a pillar between the Cantor and us breaks the ring');

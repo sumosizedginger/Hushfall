@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M06",
- "version": 1,
+ "version": 2,
  "name": "Ferry Terminal",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -281,6 +281,16 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [41, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [42, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [44, 6]
   },
   {
    "type": "pickup",

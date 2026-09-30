@@ -144,7 +144,10 @@ function stepOnce() {
   const cmd = g.input.sample();
   if (cmd.pause) { pause(); return; }
   if (cmd.map) g.mapOpen = !g.mapOpen;                                            // UI-only toggle: the sim keeps running under the map
-  g.view.beforeStep(g.world); step(g.world, cmd);
+  try { g.view.beforeStep(g.world); step(g.world, cmd); }
+  catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
+    console.error(e); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' }); return;
+  }
   const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }

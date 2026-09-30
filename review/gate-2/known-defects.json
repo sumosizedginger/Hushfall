@@ -1,38 +1,346 @@
 {
-  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the independent adversarial audit (review/gate-2/audit/AUDIT.md, code f79bf59) with what was done about each; G2-U* are the author's own unverified/open items.",
+  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the first independent adversarial audit (review/gate-2/audit/, code f79bf59); R01-R15 are the findings of the second, focused audit of the repairs (review/gate-2/reaudit/, code 07f456e); G2-U* are the author's own unverified/open items. \"fixed\" means fixed in mechanism AND guarded by a test or gate that was shown to fail on the unrepaired code.",
   "auditedCommit": "f79bf59",
   "defects": [
-    { "id": "A01", "severity": "BLOCKER", "status": "fixed", "title": "M07 and M08 exits were never locked (two exit entities on one cell; the unlocked one won)", "how": "The duplicate '>' glyphs are gone. validateMap now rejects two exits on one cell, a locked exit nothing can unlock, and a switch that needs an item the level lacks. tests/kit.test.js pins all three, plus the shipped M05/M07/M08 being gated." },
-    { "id": "A02", "severity": "MAJOR", "status": "fixed", "title": "No check that a level cannot be finished without its designed gate", "how": "viability.js gateSkip(): a fighting bot sent straight at each main exit must not complete the level; runs in verify-map and in the generic per-map test; a test proves the probe catches an exit whose lock does not lock. validateMap also rejects a sector no switch or trigger ever moves.", "remaining": "reach.js is still optimistic about switches, sectors and locks (it says so); the probe and the canonical route are what prove gating." },
-    { "id": "A03", "severity": "MAJOR", "status": "fixed", "title": "Warden knockback tunnelled through walls (end-point-only collision)", "how": "tryMove moves in steps of at most 0.25 m and stops at the wall; test: a 3 m shove and a real Warden charge beside a wall never cross it." },
-    { "id": "A04", "severity": "MAJOR", "status": "partially-fixed", "title": "Bot-tuned maps had almost no margin for a weaker player", "how": "Every map now needs rounds available >= 1.5x what the perfect bot fires (M07 and M08 gained ammo, M06 gained ammo on its route); a strafing fighter with 0.03 rad aim error, and one whose ammo pickups are worth 25% less, must complete every map on normal (viability gate); a last-resort flare feed means a player with no ammunition of any kind is never left without a weapon.", "remaining": "Hard difficulty is still fragile under degraded play (M06 hard with both handicaps and M08 hard with less ammo or aim error kill the strafing bot). Nobody human has played it (G2-U1)." },
-    { "id": "A05", "severity": "MINOR", "status": "fixed", "title": "Stale and inconsistent documentation (TESTING.md still reported Gate 1 numbers)", "how": "TESTING.md, PRODUCTION_LOG.md, README table refreshed from the final evidence." },
-    { "id": "A06", "severity": "MINOR", "status": "fixed", "title": "validateMap threw on malformed shapes and accepted nonsense values", "how": "validateMap wraps its checks (never throws), refuses maps over 400 per side or 25,600 cells, and range-checks cellSize, ceilingHeight and quality; test covers ten malformed shapes. The audit fuzz script now reports 0 throws, 0 hangs." },
-    { "id": "A07", "severity": "MINOR", "status": "fixed", "title": "Resuming a save was not identical to uninterrupted play (nav-field cache history)", "how": "Distance fields are keyed by the target cell AND a version of everything they depend on (door passability, sector heights), not by age; test: save/load mid-run on M05 with awake enemies gives an identical state hash." },
-    { "id": "A08", "severity": "MINOR", "status": "fixed", "title": "Broken saves could throw or freeze the shell", "how": "loadWorld checks the saved world's structure (missing/mistyped fields, non-finite numbers, unknown enemy kinds, door/sector counts) and returns a reason; the shell guards loadWorld and falls through to the next slot." },
-    { "id": "A09", "severity": "MINOR", "status": "open", "title": "The render-budget baseline check was vacuous for the Gate 2 vantage points (baseline recorded from the same run) and the awake ceiling was set just above the measured maximum", "remaining": "The baseline is now recorded once (at the Gate 2 evidence run) and compares from then on; the 900-call awake-crowd ceiling is an engineering budget, not a measurement (see G2-U3)." },
-    { "id": "A10", "severity": "MINOR", "status": "fixed", "title": "AGENT_VERIFIED survived engine changes", "how": "Evidence carries a hash of src/engine/*.js; npm run validate downgrades any map whose evidence was produced by other engine code (test in campaign.test.js)." },
-    { "id": "A11", "severity": "MINOR", "status": "fixed", "title": "M05's funicular was optional", "how": "The east stairs between terraces one and two are gone: the car is the only way up (a call lever at its foot brings it back down); the lever on the car rides with it (A22)." },
-    { "id": "A12", "severity": "MINOR", "status": "partially-fixed", "title": "Sky texture seam, dark secret-level horizon, mislabelled or in-collider screenshots", "how": "Skies are cross-faded into a horizontally periodic texture at load; M08 chamber views were re-taken from clear positions and every tour was regenerated.", "remaining": "The sea beyond the Lighthouse Cellar and the hill's outer wall is still a near-black horizon band (dark water under a dark fog); not judged by a person." },
-    { "id": "A13", "severity": "MINOR", "status": "partially-fixed", "title": "Repository hygiene: ~117 MB of tracked review images, loose git objects", "how": "git gc run (no history rewrite).", "remaining": "review/ still holds the screenshot tours twice (per-map folders and the gate bundle copies); prune or LFS them before the repository grows further." },
-    { "id": "A14", "severity": "MINOR", "status": "open", "title": "Explosion splash ignores walls and cover (flares hurt and wake enemies through walls)", "remaining": "Not fixed: changing splash rules re-tunes every map and the Warden's plate design assumes splash gets through; needs a design decision (line of sight from the blast, not from the projectile)." },
-    { "id": "A15", "severity": "MINOR", "status": "fixed", "title": "The objective panel covered the Cantor's health bar", "how": "The objective line moves below the boss bar while a boss is awake.", "remaining": "Stacked toasts can still cover the middle of the screen in a busy fight." },
-    { "id": "A16", "severity": "MAJOR", "status": "fixed", "title": "Balance evidence started each map cold but the game carries inventory between maps", "how": "Arrival inventory is the carried one FLOORED at the map's authored loadout (health, each ammo type, weapons): the cold-start evidence is a lower bound on every arrival, and nobody starts a map at 1 HP with an empty gun. tests/chain.test.js plays M01->M08 carried on hard (seed 2, the audit's failing case) and on normal." },
-    { "id": "A17", "severity": "MAJOR", "status": "fixed", "title": "New Game restarted the last-played map", "how": "New Game and the default of startLevel are C1E1M01; the browser check plays a map, quits, clicks a difficulty and asserts C1E1M01." },
-    { "id": "A18", "severity": "MAJOR", "status": "fixed", "title": "Continue loaded the quick-save even when the auto-save was newer", "how": "Continue loads the newest readable slot by savedAt and falls through on a corrupt one; the browser check asserts it." },
-    { "id": "A19", "severity": "MINOR", "status": "fixed", "title": "canonicalRoute.expectedEvents was a hard-coded, never-checked constant", "how": "Removed from the evidence." },
-    { "id": "A20", "severity": "MINOR", "status": "fixed", "title": "M05 taught a lamp-signal system that does not exist; brief items undelivered", "how": "M05's text no longer promises signalling lamps; design/EPISODE1.md has an 'As built' section listing what was dropped or changed (lamp signals, trap drops, M08's rising platforms)." },
-    { "id": "A21", "severity": "MINOR", "status": "partially-fixed", "title": "Test-suite weaknesses (vacuous assertions, audio coverage not reading script.js, 8 of 22 surviving mutations)", "how": "The two vacuous assertions are real assertions; the audio coverage test scans every src/engine file; new pinned-number tests cover the Warden plate/stun/knockback, pulse damage, armour, the dead:<group> rule and the seal action (the mutations M11, M13, M14, M18, M19, M20, M21 each now fail a test).", "remaining": "M12 (melee ignores the height difference) is not pinned by a test; the mutation run was not repeated in full." },
-    { "id": "A22", "severity": "MINOR", "status": "fixed", "title": "Pickups and switches on moving floors kept their creation height", "how": "Pickups follow the floor each tick, switch reach and the panel's drawn height use the floor under the switch; test rides a lever and a pickup up a car." },
-    { "id": "G2-U1", "severity": "MAJOR", "status": "unverified", "title": "Nobody has played any of the nine maps", "remaining": "Difficulty, ammunition economy, encounter pacing, the Warden and Cantor fights and every par time were tuned against a bot (a stationary perfect shot, plus a strafing variant under handicaps). Needs a hand playthrough and a recorded review per map (only that can make a map COMPLETE)." },
-    { "id": "G2-U2", "severity": "MAJOR", "status": "unverified", "title": "Audio has never been heard by a person", "remaining": "54 effects pass the offline measurements (finite, audible, below full scale, decaying) but nobody has listened to them or to the mix; the tone pulse, bell node, ramp, lift, lights-surge and dry-feed sounds are the least certain." },
-    { "id": "G2-U3", "severity": "MAJOR", "status": "open", "title": "Real-GPU performance is unmeasured; crowds are expensive", "remaining": "Only software-GL numbers exist. Each awake enemy rig is about 30 draw calls; with every enemy awake and in view the market (M03) reaches ~820 and the ferry quay (M06) ~830 draw calls (ceiling 900, an engineering budget). Sleeping enemies are merged, so quiet play is cheap. A rig LOD is the obvious fix if a real GPU disagrees." },
-    { "id": "G2-U4", "severity": "MAJOR", "status": "unverified", "title": "Pointer lock has never been exercised in a real browser session", "remaining": "Carried over from Gate 1 (F14). The retry logic exists; the Esc -> Resume -> click flow needs a hand test in real Chrome." },
-    { "id": "G2-U5", "severity": "MINOR", "status": "open", "title": "Par times are placeholders", "remaining": "Every par is 2x-8x the bot's time by rule, not from a human run." },
-    { "id": "G2-U6", "severity": "MINOR", "status": "open", "title": "Enemy and boss models are code-authored variants on one rig, reviewed only in stills", "remaining": "The Sexton, Warden-Graft and Cantor differ by silhouette (extra meshes), not by animation. Never judged in motion by a person; in the chamber screenshots the Cantor is largely hidden by its own shield wireframe and the cover pillars." },
-    { "id": "G2-U7", "severity": "MINOR", "status": "open", "title": "The per-map 'damage rises with difficulty' check is a loose proxy", "remaining": "It now allows hard >= 60% of normal (M06 measures 54 vs 70) because a deterministic bot takes a handful of hits and per-map hit counts jitter; the sim's difficulty multipliers themselves are unit-tested. The bundle reports the episode totals." },
-    { "id": "G2-U8", "severity": "MINOR", "status": "open", "title": "The bot is the only judge of the boss fight", "remaining": "The bot takes cover behind pillars from tone pulses and cuts the ring first; a human may find a dominant tactic (high ground, door camping) or an unfair one. The chamber door seals behind the player and only reopens when the Cantor dies." },
-    { "id": "G2-U9", "severity": "MINOR", "status": "open", "title": "Set dressing repeats; some spaces read as rectangles", "remaining": "Terrace streets, the quay and the tower legs are long rectangles with props on a grid. Verticality and hazards vary the maps, but the level art is still a kit, not hand-dressed. The Signal House 'beds' are tables." },
-    { "id": "G2-U10", "severity": "MINOR", "status": "open", "title": "Only Episode 1 exists; C1E2-C2 (59 maps) are not started", "remaining": "By design: Gate 3 has not been approved." }
-  ]
+    {
+      "id": "A01",
+      "severity": "BLOCKER",
+      "status": "fixed",
+      "title": "M07 and M08 exits were never locked (two exit entities on one cell; the unlocked one won)",
+      "how": "The duplicate '>' glyphs are gone. validateMap now rejects two exits on one cell, a locked exit nothing can unlock, and a switch that needs an item the level lacks. tests/kit.test.js pins all three, plus the shipped M05/M07/M08 being gated."
+    },
+    {
+      "id": "A02",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "No check that a level cannot be finished without its designed gate",
+      "how": "viability.js gateSkip(): a fighting bot sent straight at each main exit must not complete the level; runs in verify-map and in the generic per-map test; a test proves the probe catches an exit whose lock does not lock. validateMap also rejects a sector no switch or trigger ever moves.",
+      "remaining": "reach.js is still optimistic about switches, sectors and locks (it says so); the probe and the canonical route are what prove gating."
+    },
+    {
+      "id": "A03",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Warden knockback tunnelled through walls (end-point-only collision)",
+      "how": "tryMove moves in steps of at most 0.25 m and stops at the wall; test: a 3 m shove and a real Warden charge beside a wall never cross it."
+    },
+    {
+      "id": "A04",
+      "severity": "MAJOR",
+      "status": "partially-fixed",
+      "title": "Bot-tuned maps had almost no margin for a weaker player",
+      "how": "Every map now needs rounds available >= 1.5x what the perfect bot fires (M07 and M08 gained ammo, M06 gained ammo on its route); a strafing fighter with 0.03 rad aim error, and one whose ammo pickups are worth 25% less, must complete every map on normal (viability gate); a last-resort flare feed means a player with no ammunition of any kind is never left without a weapon.",
+      "remaining": "Hard difficulty is still fragile when the player is degraded (M06 hard with both handicaps kills the strafing bot). Per-type ammo slack is now gated (>= 1.5x per ammunition type the bot fires >= 5 times) and M08 hard now completes on 8 of 8 seeds (it was 4 of 8). Nobody human has played it (G2-U1)."
+    },
+    {
+      "id": "A05",
+      "severity": "MINOR",
+      "status": "partially-fixed",
+      "title": "Stale and inconsistent documentation (TESTING.md still reported Gate 1 numbers)",
+      "how": "TESTING.md, PRODUCTION_LOG.md, README table refreshed from the final evidence.",
+      "remaining": "Docs were refreshed twice from evidence; small drift keeps reappearing where numbers are typed by hand (see R12). The bundle README is generated; TESTING.md is not."
+    },
+    {
+      "id": "A06",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "validateMap threw on malformed shapes and accepted nonsense values",
+      "how": "validateMap wraps its checks (never throws), refuses maps over 400 per side or 25,600 cells, and range-checks cellSize, ceilingHeight and quality; test covers ten malformed shapes. The audit fuzz script now reports 0 throws, 0 hangs."
+    },
+    {
+      "id": "A07",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Resuming a save was not identical to uninterrupted play (nav-field cache history)",
+      "how": "Distance fields are keyed by the target cell AND a version of everything they depend on (door passability, sector heights), not by age; test: save/load mid-run on M05 with awake enemies gives an identical state hash."
+    },
+    {
+      "id": "A08",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Broken saves could throw or freeze the shell",
+      "how": "loadWorld checks the saved world's structure (missing/mistyped fields, non-finite numbers, unknown enemy kinds, door/sector counts) and returns a reason; the shell guards loadWorld and falls through to the next slot.",
+      "remaining": "A null in a required field is now rejected and a crash inside the sim step drops to the title with a reason; a save that is structurally valid but semantically wrong (another map's world inside a save, an unknown sector id) can still load."
+    },
+    {
+      "id": "A09",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "The render-budget baseline check was vacuous for the Gate 2 vantage points (baseline recorded from the same run) and the awake ceiling was set just above the measured maximum",
+      "remaining": "The baseline is now recorded once (at the Gate 2 evidence run) and compares from then on; the 900-call awake-crowd ceiling is an engineering budget, not a measurement (see G2-U3)."
+    },
+    {
+      "id": "A10",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "AGENT_VERIFIED survived engine changes",
+      "how": "Evidence carries a hash of src/engine/*.js; npm run validate downgrades any map whose evidence was produced by other engine code (test in campaign.test.js)."
+    },
+    {
+      "id": "A11",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "M05's funicular was optional",
+      "how": "The east stairs between terraces one and two are gone: the car is the only way up (a call lever at its foot brings it back down); the lever on the car rides with it (A22)."
+    },
+    {
+      "id": "A12",
+      "severity": "MINOR",
+      "status": "partially-fixed",
+      "title": "Sky texture seam, dark secret-level horizon, mislabelled or in-collider screenshots",
+      "how": "Skies are cross-faded into a horizontally periodic texture at load; M08 chamber views were re-taken from clear positions and every tour was regenerated.",
+      "remaining": "The sea beyond the Lighthouse Cellar and the hill's outer wall is still a near-black horizon band (dark water under a dark fog); not judged by a person."
+    },
+    {
+      "id": "A13",
+      "severity": "MINOR",
+      "status": "partially-fixed",
+      "title": "Repository hygiene: ~117 MB of tracked review images, loose git objects",
+      "how": "git gc run (no history rewrite).",
+      "remaining": "review/ still holds the screenshot tours twice (per-map folders and the gate bundle copies); prune or LFS them before the repository grows further."
+    },
+    {
+      "id": "A14",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Explosion splash ignores walls and cover (flares hurt and wake enemies through walls)",
+      "remaining": "Not fixed: changing splash rules re-tunes every map and the Warden's plate design assumes splash gets through; needs a design decision (line of sight from the blast, not from the projectile)."
+    },
+    {
+      "id": "A15",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "The objective panel covered the Cantor's health bar",
+      "how": "The objective line moves below the boss bar while a boss is awake.",
+      "remaining": "Stacked toasts can still cover the middle of the screen in a busy fight."
+    },
+    {
+      "id": "A16",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Balance evidence started each map cold but the game carries inventory between maps",
+      "how": "Arrival inventory is the carried one FLOORED at the map's authored loadout (health, each ammo type, weapons): the cold-start evidence is a lower bound on every arrival, and nobody starts a map at 1 HP with an empty gun. tests/chain.test.js plays M01->M08 carried on hard (seed 2, the audit's failing case) and on normal."
+    },
+    {
+      "id": "A17",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "New Game restarted the last-played map",
+      "how": "New Game and the default of startLevel are C1E1M01; the browser check plays a map, quits, clicks a difficulty and asserts C1E1M01."
+    },
+    {
+      "id": "A18",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Continue loaded the quick-save even when the auto-save was newer",
+      "how": "Continue loads the newest readable slot by savedAt and falls through on a corrupt one; the browser check asserts it."
+    },
+    {
+      "id": "A19",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "canonicalRoute.expectedEvents was a hard-coded, never-checked constant",
+      "how": "Removed from the evidence."
+    },
+    {
+      "id": "A20",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "M05 taught a lamp-signal system that does not exist; brief items undelivered",
+      "how": "M05's text no longer promises signalling lamps; design/EPISODE1.md has an 'As built' section listing what was dropped or changed (lamp signals, trap drops, M08's rising platforms)."
+    },
+    {
+      "id": "A21",
+      "severity": "MINOR",
+      "status": "partially-fixed",
+      "title": "Test-suite weaknesses (vacuous assertions, audio coverage not reading script.js, 8 of 22 surviving mutations)",
+      "how": "The two vacuous assertions are real assertions; the audio coverage test scans every src/engine file; new pinned-number tests cover the Warden plate/stun/knockback, pulse damage, armour, the dead:<group> rule and the seal action (the mutations M11, M13, M14, M18, M19, M20, M21 each now fail a test).",
+      "remaining": "M12 (melee ignores the height difference) is not pinned by a test. After the second audit the seven surviving mutations were re-checked one by one: M21 (Cantor pulse damage) had still survived and is now pinned to the literal 22; the tryMove and nav guards were mutation-tested (each new test fails on the old code). The full 22-mutation run was not repeated."
+    },
+    {
+      "id": "A22",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Pickups and switches on moving floors kept their creation height",
+      "how": "Pickups follow the floor each tick, switch reach and the panel's drawn height use the floor under the switch; test rides a lever and a pickup up a car."
+    },
+    {
+      "id": "R01",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Three repairs were guarded by tests that passed on the unrepaired code (A18 browser check never wrote the quick save; the A03 tests started the player inside the wall / ran the Warden away; the A07 resume test could not see the old cache)",
+      "how": "The A18 check now writes the quick save with t.save() and asserts it exists; the A03 test starts the player 0.6 m before the wall and fires a real Warden charge eastward at a player 0.55 m from it (asserts an enemy_strike and that the player stays in the near room); the A07 test opens a door while a cached field exists and requires the running world to agree with a fresh one. Each guard was verified by mutating the repaired code back to the old behaviour: the new tests fail (tryMove, nav cache)."
+    },
+    {
+      "id": "R02",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "M21 (Cantor pulse damage) still survived; the robustness/gate glue and navVersion were pinned by nothing",
+      "how": "The pulse test pins the literal 22 (a pin against the config itself was vacuous; the mutation now fails). tests/viability.test.js turns every viabilityChecks gate red with synthetic evidence, exercises gateSkip on mutated shipped maps, checks ammo bookkeeping per type and proves ammoScale/tremor degrade only the player."
+    },
+    {
+      "id": "R03",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "The gate-skip probe treated a dead or stuck bot as gated, skipped maps whose enemies all arrive by script, and let quality.safe switch every check off",
+      "how": "The probe now uses an invulnerable bot with 5 simulated minutes; only a finished level counts as a skipped gate (and a death is not accepted as proof); scripted spawns count as threats; a safe room must really contain no enemies."
+    },
+    {
+      "id": "R04",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Exit id schemes disagreed between the validator and MapData",
+      "how": "One scheme: explicit id, else \"exit\" + index among all exits; a two-exit test pins it."
+    },
+    {
+      "id": "R05",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "M05-M08 changed without a version bump, so an old mid-level save kept the old world (including the unlocked exit)",
+      "how": "M05, M06, M07 and M08 are version 2; a save made against version 1 resumes from the level start."
+    },
+    {
+      "id": "R06",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Ammo slack summed unlike ammunition types",
+      "how": "Slack is gated per type (>= 1.5x for every type the bot fires 5 or more times) as well as in total; M06, M07 and M08 gained pickups to satisfy it."
+    },
+    {
+      "id": "R07",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "The arrival floor makes carried health meaningless and lets a rich player skip authored scarcity, while docs said \"inventory carried\"",
+      "how": "Stated plainly in GAME_VISION.md: every map starts at full health; ammunition and weapons carry over floored at the authored loadout; scarcity is a floor, not a ceiling.",
+      "remaining": "A design decision worth a human opinion: dying and retrying always restores the arrival loadout, never worse."
+    },
+    {
+      "id": "R08",
+      "severity": "MINOR",
+      "status": "partially-fixed",
+      "title": "The last-resort flare feed makes scarcity soft (an unlimited stream of flares completes a map with zero pickups)",
+      "how": "The feed is slower (one flare per 10 s, only with no ammunition of any kind) so it cannot compete with playing normally.",
+      "remaining": "It still makes total starvation survivable by an extremely patient player; that is the intent (no soft-lock), recorded here as a known effect."
+    },
+    {
+      "id": "R09",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Nav fields were rebuilt every tick while a moving floor moved (19-30x the old cost in a synthetic case)",
+      "how": "A moving floor is treated as standing at the nearest quarter metre by the navigation field and its version, so a field is rebuilt a few times per metre of travel; still a pure function of state."
+    },
+    {
+      "id": "R10",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "makeSeamless had no fallback and stretches the sky 12.5% horizontally",
+      "how": "Any canvas failure keeps the original sky; the stretch is accepted (clouds only)."
+    },
+    {
+      "id": "R11",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Evidence freshness was weaker than it read (no engine hash = never stale; raw-byte hashes go stale on a CRLF checkout)",
+      "how": "validate treats evidence without an engine hash as stale, and tools/textsha.mjs hashes text with CRLF folded to LF for map, route, engine and browser-check stamps."
+    },
+    {
+      "id": "R12",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Documentation still contradicted the evidence in several places",
+      "how": "TESTING.md budget/perf/baseline/save-migration lines, GAME_VISION.md length statement, AGENTS.md verify-map description and the bundle sentences corrected; volatile timings now point at the evidence file instead of being copied."
+    },
+    {
+      "id": "R13",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "A null array field passed the save structure check and then threw in step()",
+      "how": "Null is accepted only where a fresh world is null too; a crash inside the sim step now drops to the title with a reason."
+    },
+    {
+      "id": "R14",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Continue can prefer the auto-save over an older manual quick save (every level entry and Retry rewrites auto)",
+      "remaining": "Plausible rather than reproduced in a browser: after an F5, dying and pressing Retry rewrites the auto slot with a newer time, so Continue loads the level start of the retry, not the F5. Newest-wins is the documented rule; a save-slot picker would remove the ambiguity."
+    },
+    {
+      "id": "R15",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Completion was judged on ONE seed; the perfect bot died on 4 of 8 seeds on Bell Tower hard, and the carried chain died there on hard seeds 3 and 4",
+      "how": "The viability gate needs all three simulated seeds to finish on easy and normal and two of three on hard; M08 gained armour, health and ammunition (hard now completes 8 of 8 seeds, damage ~180 instead of 200-270); the carried-chain test covers hard seeds 2, 3 and 4 and normal seed 1."
+    },
+    {
+      "id": "G2-U1",
+      "severity": "MAJOR",
+      "status": "unverified",
+      "title": "Nobody has played any of the nine maps",
+      "remaining": "Difficulty, ammunition economy, encounter pacing, the Warden and Cantor fights and every par time were tuned against a bot (a stationary perfect shot, plus a strafing variant under handicaps). Needs a hand playthrough and a recorded review per map (only that can make a map COMPLETE)."
+    },
+    {
+      "id": "G2-U2",
+      "severity": "MAJOR",
+      "status": "unverified",
+      "title": "Audio has never been heard by a person",
+      "remaining": "54 effects pass the offline measurements (finite, audible, below full scale, decaying) but nobody has listened to them or to the mix; the tone pulse, bell node, ramp, lift, lights-surge and dry-feed sounds are the least certain."
+    },
+    {
+      "id": "G2-U3",
+      "severity": "MAJOR",
+      "status": "open",
+      "title": "Real-GPU performance is unmeasured; crowds are expensive",
+      "remaining": "Only software-GL numbers exist. Each awake enemy rig is about 30 draw calls; with every enemy awake and in view the market (M03) reaches ~820 and the ferry quay (M06) ~830 draw calls (ceiling 900, an engineering budget). Sleeping enemies are merged, so quiet play is cheap. A rig LOD is the obvious fix if a real GPU disagrees."
+    },
+    {
+      "id": "G2-U4",
+      "severity": "MAJOR",
+      "status": "unverified",
+      "title": "Pointer lock has never been exercised in a real browser session",
+      "remaining": "Carried over from Gate 1 (F14). The retry logic exists; the Esc -> Resume -> click flow needs a hand test in real Chrome."
+    },
+    {
+      "id": "G2-U5",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Par times are placeholders",
+      "remaining": "Every par is 2x-8x the bot's time by rule, not from a human run."
+    },
+    {
+      "id": "G2-U6",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Enemy and boss models are code-authored variants on one rig, reviewed only in stills",
+      "remaining": "The Sexton, Warden-Graft and Cantor differ by silhouette (extra meshes), not by animation. Never judged in motion by a person; in the chamber screenshots the Cantor is largely hidden by its own shield wireframe and the cover pillars."
+    },
+    {
+      "id": "G2-U7",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "The per-map 'damage rises with difficulty' check is a loose proxy",
+      "remaining": "It now allows hard >= 60% of normal (M06 measures 54 vs 70) because a deterministic bot takes a handful of hits and per-map hit counts jitter; the sim's difficulty multipliers themselves are unit-tested. The bundle reports the episode totals."
+    },
+    {
+      "id": "G2-U8",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "The bot is the only judge of the boss fight",
+      "remaining": "The bot takes cover behind pillars from tone pulses and cuts the ring first; a human may find a dominant tactic (high ground, door camping) or an unfair one. The chamber door seals behind the player and only reopens when the Cantor dies."
+    },
+    {
+      "id": "G2-U9",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Set dressing repeats; some spaces read as rectangles",
+      "remaining": "Terrace streets, the quay and the tower legs are long rectangles with props on a grid. Verticality and hazards vary the maps, but the level art is still a kit, not hand-dressed. The Signal House 'beds' are tables."
+    },
+    {
+      "id": "G2-U10",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Only Episode 1 exists; C1E2-C2 (59 maps) are not started",
+      "remaining": "By design: Gate 3 has not been approved."
+    }
+  ],
+  "reauditedCommit": "07f456e"
 }

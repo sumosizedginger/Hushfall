@@ -1,0 +1,328 @@
+[
+  {
+    "id": "R01",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "Three of the repairs are 'proven' by guards that pass on the UNREPAIRED code: the A18 browser check never writes the quick save, the two A03 knock-back tests cannot see the old tunnelling, and the A07 resume test cannot see the old cache behaviour",
+    "files": [
+      "tools/dev/browser-check.mjs (section 2c)",
+      "src/game/testhook.js:67",
+      "tests/kit.test.js ('knockback stops at a wall', 'resuming from a save is identical...')",
+      "review/gate-2/known-defects.json (A03, A07, A18 'how')"
+    ],
+    "evidence": "(1) A18: the check does t.saveSlot('quick') to 'save', but testhook.js defines saveSlot: (slot) => store.read(slot): it READS. The quick slot is never written, so 'Continue' picks the auto slot on both the old and the new code. r14_continue_slot_check replays the check's slot operations against the real SaveStore and both loadFirstSave variants: as written old -> C1E1M06, new -> C1E1M06 (passes on both); with the quick save really written old -> C1E1M02 (the bug), new -> C1E1M06. (2) A03: the first test starts the player 0.2 m before the wall so the 3 m shove lands INSIDE the wall (x 9.8 in cell 8..10), which the pre-repair destination test also refuses; the 'real charge' half spawns the Warden with yaw -pi/2, i.e. running AWAY from the player, so it crashes into the west wall and never touches him (r01b_kit_test_scenario_trace replays the test's exact setup on both trees: 'warden_crash', player hp 100, no strike; with yaw +pi/2 the strike lands (hp 34) but at the test's player position, 0.1 m from the wall, even the pre-repair tree does not tunnel; r01 (a) starts the player 0.55 m from the wall and reproduces the 3.00 m jump on the pre-repair tree and none on the repaired one). Proof the tests cannot fail: mutation X2 (tryMove back to the end-point test) leaves the WHOLE 236-test suite at 236 pass / 0 fail, and a copy of HEAD with the pre-repair tryMove passes kit+elites 46/46. (3) A07: a copy of HEAD with the pre-repair nav.js (30-tick refresh) passes kit.test.js 34/34 including the new resume test; with navVersion a constant only an unrelated map test (M06 viability) fails, by accident.",
+    "repro": "node review/gate-2/reaudit/repro/r14_continue_slot_check.mjs ; node review/gate-2/reaudit/repro/r01_knockback_tunnel_fuzz.mjs [preRepairRoot] ; node review/gate-2/reaudit/repro/r01b_kit_test_scenario_trace.mjs [preRepairRoot] ; PRISTINE_DIR=.. MUT_DIR=.. node review/gate-2/reaudit/repro/r09_mutation_runner.mjs X2 X4",
+    "impact": "Three fixes (one MAJOR-level user flow, one MAJOR sim bug, one MINOR) are reported as guarded (92/92 browser checks, 236/236 tests) but a regression of any of them passes every automated check. The first audit's A21 and the Gate 1 audit's weak-test finding are the same class; 'rewritten so they can fail' was not applied to these.",
+    "fix": "A18: call t.save() (or write the slot through the store) before the second newGame and assert both maps; also extract the slot choice into a pure function under src/game or src/engine and unit-test it. A03: start the player 0.5 m from the wall with clear ground behind it (destination in the far room) and fire the Warden at yaw +pi/2 (assert an enemy_strike happened). A07: use a checkpoint where the old cache history diverges (M06 hard, tick 4279, active input: r12_resume_fuzz finds it) and assert equality there. Re-run the mutation runner against the pre-repair code paths to prove each guard fails."
+  },
+  {
+    "id": "R02",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "TESTING.md and known-defects say the seven surviving mutations 'now each fail a test': M21 still survives the whole suite; the new robustness/gate glue and navVersion are pinned by nothing",
+    "files": [
+      "TESTING.md ('Not tested / limits')",
+      "review/gate-2/known-defects.json (A21)",
+      "src/engine/world.js (ammoScale), src/engine/harness.js (tremor), src/engine/viability.js"
+    ],
+    "evidence": "r09_mutation_runner on a hermetic copy of HEAD: M11 M13 M14 M18 M19 M20 each fail exactly one 'pinned' test (true); M21 (defs.js pulse damage 22 -> 0) => 236 pass / 0 fail on ALL test files (the 'pinned' pulse test pushes a ring object with dmg: 22 into w.pulses, so the definition is never read). M12 survives (admitted). New code: X14 ammoScale ignored, X15 tremor ignored, X16 gate check made lenient (ok: true), X17 ammo slack 1.5x -> 0.05x each leave maps.test.js at 30 pass / 0 fail; X4 navVersion constant is caught only by an unrelated M06 viability test (full suite 235/236).",
+    "repro": "PRISTINE_DIR=<hermetic HEAD copy> MUT_DIR=<second copy> ALL_TESTS=1 node review/gate-2/reaudit/repro/r09_mutation_runner.mjs M21 X4 ; node r09_mutation_runner.mjs X14 X15 X16 X17",
+    "impact": "A stated verification claim is false for one of seven mutations, and the robustness gates (the repair for A04) could silently stop degrading the player without any test failing.",
+    "fix": "Build the pulse in the test from ENEMIES.cantor.pulse.damage; add a test that runs the same route with tremor / ammoScale and asserts fewer hits land / fewer rounds are collected than without; correct the sentence in TESTING.md and known-defects."
+  },
+  {
+    "id": "R03",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The gate-skip probe has blind spots: a dead or stuck bot counts as 'gated', quality.safe switches every viability check off, and maps whose enemies all arrive by trigger are skipped",
+    "files": [
+      "src/engine/viability.js (gateSkip, viabilityChecks, evaluateViability)"
+    ],
+    "evidence": "r02_gateskip_mutations (23 single mutations over the nine maps): 13 caught; of the 10 misses one is genuine: C1E1M06 with the ramp starting lowered: gateSkip says 'dead' (the naive bot dies on the quay), yet an invulnerable copy of the same bot completes (ground truth 'complete'); ok is `result !== 'complete'`, so death, a timeout or 'stuck' all count as a proof of gating. r15: (1) the Signal House with its lock removed (finishable without the fuses) and quality.safe = true passes all 3 remaining viability checks (with safe false it fails the gate check); nothing checks that a 'safe' map has no enemies. (2) The Bell Tower with every static enemy converted to tick-1 spawn actions and the lock removed: validateMap ok, gateSkip returns [] (keys on map.entities.some(enemy)); the robustness runs are skipped the same way. (3) There is no opt-out for a legitimately ungated exit except safe. (4) A 'timeout' also counts as gated: the probe stops after 120 s of simulated time and the Bell Tower bot needs 88 s to reach its exit, so a slower map would pass for the wrong reason.",
+    "repro": "node review/gate-2/reaudit/repro/r02_gateskip_mutations.mjs ; node review/gate-2/reaudit/repro/r15_safe_flag_and_spawn_only_loopholes.mjs",
+    "impact": "None of the nine shipped maps is affected (r03_physical_flood: the exits of M01/M02/M04 need their keys, those of M03/M05/M06 are not reachable without their switches or lift, those of M07/M08 are reachable but locked). It is a weakness of the check Gate 3 will run on every new map.",
+    "fix": "Treat only 'route-ended at a locked exit' and 'no path at tick 0' as gated; rerun a 'dead'/'timeout' result with an invulnerable player (as r02 does) before accepting it; count enemies including spawn actions; make quality.safe require zero enemies and still run the gate check."
+  },
+  {
+    "id": "R04",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Exit id schemes disagree: the validator numbers id-less exits differently from MapData, so a valid map is rejected and an unwinnable one is accepted",
+    "files": [
+      "src/engine/mapformat.js:~48 (MapData exits: 'exit' + index among all exits)",
+      "src/engine/mapformat.js:~267 (validateKit: 'exit' + count of id-less exits)"
+    ],
+    "evidence": "r05_exit_id_scheme on a copy of M07 with an extra explicit-id exit listed before the locked, id-less one: the sim's id for the locked exit is 'exit1'. An unlock aimed at 'exit1' (correct) is REJECTED ('exit exit0 is locked but no switch or trigger ever unlocks it'); an unlock aimed at 'exit0' (matches nothing in the sim) is ACCEPTED and the locked exit can never open. Adjacent exits are also never compared (code reading: validation is per cell; the sim takes the first exit within 1.4 m).",
+    "repro": "node review/gate-2/reaudit/repro/r05_exit_id_scheme.mjs",
+    "impact": "Latent authoring trap for Gate 3 (needs a mixed explicit/implicit exit list); the canonical route would catch the accepted case, late.",
+    "fix": "Use one id function for both (index among all exits) or require explicit ids on every exit of a map with more than one; add a two-exit test."
+  },
+  {
+    "id": "R05",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "M05-M08 were changed by the repairs without bumping `version`, so a mid-level save made by the pre-repair build resumes with the old world state, including the unlocked exit of audit A01",
+    "files": [
+      "maps-src/C1E1M05..M08.level.mjs",
+      "maps/C1E1M05..M08.json (version 1)",
+      "src/engine/save.js (loadWorld compares map.version only)"
+    ],
+    "evidence": "r16_old_save_into_repaired_map: a mid-level save taken by the f79bf59 build on M07 (exitLocked {exit0:false, exit1:true}) loads into the repaired M07 (version 1 == 1) as 'resumed mid-level (old world state kept)' with exitLocked {exit0:false,exit1:true}; standing on the exit with no fuses then gives status = complete. M08 identical; M05 (layout changed) also resumes. The new worldShapeErrors does not compare exit ids, pickup lists or trigger ids.",
+    "repro": "node review/gate-2/reaudit/repro/r16_old_save_into_repaired_map.mjs <dir with a git archive of f79bf59>",
+    "impact": "Only for a save made by the old build (nobody but the author has one), but it resurrects the BLOCKER through localStorage and the same will happen after every future map edit (A08 suggested a content hash; not done).",
+    "fix": "Bump version to 2 on M05-M08 now; derive mapVersion from a content hash (or have verify-map fail when a map's content changed and its version did not)."
+  },
+  {
+    "id": "R06",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The 'ammo slack >= 1.5x' gate sums rounds of unlike ammo types; per type three map/difficulty pairs are below 1.5x (M07 hard flares x1.17)",
+    "files": [
+      "src/engine/viability.js (ammoCapacity, viabilityChecks)"
+    ],
+    "evidence": "r10_ammo_per_type (cold-start loadout + pickups per type / fire events per type on the canonical route): M06 normal rivet 300/202 = x1.49, M07 hard flare 7/6 = x1.17, M08 hard rivet 496/336 = x1.48; the aggregate the gate checks is comfortable (M07 hard 304/193 = x1.58). A shell, a flare and a rivet are counted as one 'round' each.",
+    "repro": "node review/gate-2/reaudit/repro/r10_ammo_per_type.mjs",
+    "impact": "Weapons are partly substitutable so this is a proxy, but the README/TESTING wording ('rounds available >= 1.5x what the perfect bot fires') reads stronger than what is checked.",
+    "fix": "Check per ammo type (over the types the route actually fires) or weight rounds by damage; say 'aggregate' in the docs."
+  },
+  {
+    "id": "R07",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The arrival floor makes carried health meaningless (every entryLoadout has hp 100: every map starts at full health) and the authored scarcity of M07 never applies to a campaign run; docs still say 'inventory carried'",
+    "files": [
+      "src/engine/world.js (arrivalInventory)",
+      "maps/C1E1M02..M08.json (entryLoadout.hp = 100)",
+      "TESTING.md, PRODUCTION_LOG.md, known-defects A16"
+    ],
+    "evidence": "r07_secret_chain_and_retry and the original a16 chain print every arrival: hp100 on M02..M08 in all nine chains regardless of what the previous map cost (M03 arrives at hp 100 after M02 hard cost 108 damage); M07 arrives with f20-30 / s40 / r40-145 where the authored loadout is 4 / 8 / 40 (only the cold start has it). Retry restores the floored arrival (idempotent, cannot be farmed for more). Old level-start saves with poor carries load upgraded to the entry loadout (a real, if consistent, silent change). The evidence stays valid because the floor is a lower bound; it is also why the original a04 script's start-loadout cut no longer has any effect.",
+    "repro": "node review/gate-2/reaudit/repro/r07_secret_chain_and_retry.mjs ; node review/gate-2/reaudit/repro/r04_chain_seeds.mjs",
+    "impact": "Design consequence to be aware of, not a bug: per-map difficulty is independent of the previous map's outcome (no attrition), and the carry-over code path for health is dead. The wording 'inventory carried' overstates it.",
+    "fix": "State it plainly in the docs (a full-health start on every map), or floor health at a fraction if attrition is wanted."
+  },
+  {
+    "id": "R08",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The last-resort flare feed makes ammunition scarcity soft: an unlimited stream of one splash flare per 4 s (about 70-80 damage) completes a whole map with zero pickups",
+    "files": [
+      "src/engine/world.js (dryFeed)",
+      "src/engine/defs.js (PLAYER.dryFeed)"
+    ],
+    "evidence": "r11_dry_feed_only_run (canonical route, zero starting ammo, every ammo/weapon pickup worth 0): C1E1M03 completes in 234 s on 38 fed flares (103 damage taken); the naive bot dies on the other maps because it walks into fights, not because the feed is insufficient. The flare's splash ignores the Warden's plate and (with A14 open) walls, and is 5% effective against a shielded Cantor, so 20 sustained dps is available to any player who can hide. p.feedT is saved and hashed like other player state (a resumed save is identical: r12).",
+    "repro": "node review/gate-2/reaudit/repro/r11_dry_feed_only_run.mjs",
+    "impact": "Intended as a safety net (and it does remove a real trap: a sealed boss chamber with an empty gun), but it removes ammunition as a hard constraint everywhere (M07's 'scarce ammunition' included) and no evidence measures how much easier hard difficulty gets for a patient player.",
+    "fix": "Cap the feed (only while the level has no ammo pickup left, or a per-level budget), or make it a slow refill of a weaker weapon."
+  },
+  {
+    "id": "R09",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "navVersion rebuilds a whole-map BFS on every tick while a moving floor is in motion: 19-30x the old nav cost in a synthetic case, scaling with the map size the validator now permits",
+    "files": [
+      "src/engine/nav.js (navVersion, fieldFor)",
+      "src/engine/mapformat.js (MAX_CELLS 25,600)"
+    ],
+    "evidence": "r09b_nav_cost_by_map_size, one hunting enemy that cannot see the player and a lift in motion: 56x56 cells 1.52 ms/tick (pre-repair 0.08), 100x100 5.05 (0.18), 160x160 = the cap 13.0 ms/tick (0.44). Shipped maps (<= 3,360 cells) stay <= ~2 ms/tick: navsingle scenario on M05/M06 with 44 enemies and a moving floor 1.6-2.1 ms/tick vs 0.4-0.7 before. Canonical route wall-times are not slower than pre-repair (M03 1.41 s vs 1.55, M05 1.12 vs 1.27, M06 1.61 vs 1.79). Separate, pre-existing: with more than 4 distinct hunt targets (MAX_FIELDS = 4) the cache thrashes (44 enemies on distinct cells: 33 ms/tick M06, 59 ms M05 on the repaired tree; 37 and 70 ms before).",
+    "repro": "node review/gate-2/reaudit/repro/r09b_nav_cost_by_map_size.mjs [preRepairRoot]",
+    "impact": "No shipped map is at risk; the price is paid by the bigger maps Gate 3/4 plans to build (25,600-cell cap) and would first show as sim frame time while a lift or ramp moves.",
+    "fix": "Quantise the version (rebuild only when a sector crosses a step-height boundary or every N ticks while moving), or update fields incrementally; raise MAX_FIELDS or share fields between nearby targets."
+  },
+  {
+    "id": "R10",
+    "severity": "MINOR",
+    "status": "PLAUSIBLE",
+    "title": "makeSeamless() has no fallback: any canvas failure aborts texture loading (the whole game) for a cosmetic fix, and it stretches the sky 12.5% horizontally",
+    "files": [
+      "src/render/textures.js (makeSeamless, loadAll)"
+    ],
+    "evidence": "loadAll() calls makeSeamless synchronously for three skies with no try/catch; main.js turns any rejection into the fatal 'Could not load the painted textures' screen. getImageData/ImageData/putImageData are used with no availability check (only typeof document). The image is cropped to 87.5% of its width. The seam maths is right (r08_sky_seam_math: ratio 14.8/14.4/20.3 -> 1.25/1.81/1.23 in a canvas-free replay); CanvasTexture wiring, filters and mipmaps were not run (no Chrome).",
+    "repro": "node review/gate-2/reaudit/repro/r08_sky_seam_math.mjs (maths only)",
+    "impact": "Low probability, high blast radius, cosmetic benefit.",
+    "fix": "try { ... } catch { return t; } around makeSeamless; bake the sky as a periodic image instead."
+  },
+  {
+    "id": "R11",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Evidence freshness is weaker than it reads: evidence without engineSha is never stale, and every hash is over raw bytes, so a CRLF checkout turns all nine AGENT_VERIFIED maps into IMPLEMENTED",
+    "files": [
+      "tools/validate.mjs (derive)",
+      "tools/verify-map.mjs (engineSha, sha)",
+      ".gitattributes (absent)"
+    ],
+    "evidence": "derive() only compares when ev.engineSha is truthy (a file without the field, e.g. the evidence committed at HEAD, is treated as fresh for the engine); no engine subdirectory or tools/ file is hashed. `git archive HEAD` on this machine (core.autocrlf=true) writes CRLF files. A scratch copy holding those CRLF sources plus the regenerated evidence (validation/maps/*.json stamped 07f456e, engineSha 32736b82ea91d43f) gives `node tools/validate.mjs --status` = AGENT_VERIFIED 0/68, IMPLEMENTED 9/68 (map, route and engine shas all differ) although nothing changed but line endings; the same evidence beside the author's LF working tree gives 9/68 (git ls-files --eol: i/lf w/lf). There is no .gitattributes.",
+    "repro": "git archive HEAD | tar -x in a scratch dir (CRLF), copy validation/maps/*.json from the working tree, node tools/validate.mjs --status there",
+    "impact": "A fresh clone on a Windows machine with autocrlf (the default for Git for Windows) cannot reproduce the recorded status; AGENTS.md lists `npm ci` + `npm run verify` as the reproducible path.",
+    "fix": "Add .gitattributes (* text=auto eol=lf) or hash after normalising line endings; treat a missing engineSha as stale."
+  },
+  {
+    "id": "R12",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Documentation still contradicts the evidence in places the repairs were supposed to clean up",
+    "files": [
+      "TESTING.md:26,34,35,42",
+      "GAME_VISION.md:40",
+      "AGENTS.md:30",
+      "tools/gate2-bundle.mjs (bundle sentence)",
+      "PRODUCTION_LOG.md"
+    ],
+    "evidence": "(1) TESTING.md line 26 says the render budget covers '5 vantage points ... 350 asleep / 650 awake' while lines 33-34 and the evidence say 14 vantage points and a 900 ceiling. (2) TESTING.md line 35 '900 frames, avg 45 ms, p95 167 ms, worst 650 ms' vs validation/browser-check.json perf: avg 46.4, p95 166.7, worst 683 (a different sample; the file wins). (3) TESTING.md says the baseline 'was recorded at this evidence run'; the baseline is stamped 07:53Z, the run 11:25Z. (4) GAME_VISION.md line 40 still reports the Gate 1 measurement (perfect bot ~77 s on Marrow Quay; evidence 71.4 s) and 'Reaching the length target is Gate 2 work' with no Gate 2 statement of whether the 10-25 min target was met (bot 71-182 s per map, placeholder pars 5-18 min). (5) tools/gate2-bundle.mjs will print 'all seven BLOCKER/MAJOR findings and most MINORs were repaired' immediately before listing A04 as partially-fixed, and 'nobody has re-audited the repaired code' (no longer true after this report); the template still says 'a passive runner that never fires does not walk through any map' above a table whose S01 row is 'complete' with 0 damage (A05's original point, unchanged). (6) TESTING.md's failure-injection paragraph still says old saves 'v1..v5 migrate to v6' (the save version is 8). (7) AGENTS.md (the file every session loads) still describes verify-map as 'routes, reachability, viability (passive runner ...), browser evidence ..., open BLOCKERs from review/gate-1/known-defects.json' with no mention of the gate-skip probe, the ammo-slack and robustness gates, the engine hash, or that tools/verify-map.mjs now also reads review/gate-2/known-defects.json. (8) At the commit 07f456e the docs quote 236 tests / 92 checks while the validation/ and review/gate-2 files committed at that commit are still the f79bf59 (220 / 89) ones; the regenerated evidence only appeared in the working tree at 04:25-04:28.",
+    "repro": "grep -n '5 vantage\\|650' TESTING.md ; sed -n 40p GAME_VISION.md ; git show HEAD:validation/browser-check.json | head",
+    "impact": "Reviewer-facing numbers disagree with each other; the same drift the first audit flagged in A05.",
+    "fix": "Regenerate the numeric tables from evidence in the bundle tool, update GAME_VISION line 40, reword the bundle sentence, and commit evidence and docs together."
+  },
+  {
+    "id": "R13",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The save structure check exempts null, so a save with world.enemies = null (or any array field null) still loads and then throws inside step(), which the shell does not guard",
+    "files": [
+      "src/engine/save.js (worldShapeErrors: `a !== b && !(a === 'null' || b === 'null')`)",
+      "src/game/main.js (stepOnce has no try/catch)"
+    ],
+    "evidence": "a08_hostile_saves re-run on HEAD: 'world.enemies = null: loaded -> step THROWS: w.enemies is not iterable'; also accepted: world.status = 'complete', a world of another map inside a save, an unknown sector id, triggerState missing an id, difficulty 'godmode' (throws in loadWorld, now caught by the shell).",
+    "repro": "node review/gate-2/audit/repro/a08_hostile_saves.mjs",
+    "impact": "Only reachable through a hand-edited or corrupt localStorage entry; the failure mode (frozen loop) is the one A08 named.",
+    "fix": "Allow null only for the fields that are legitimately nullable (endStats, objective, ...); wrap stepOnce in try/catch that drops to the title with the reason."
+  },
+  {
+    "id": "R14",
+    "severity": "MINOR",
+    "status": "PLAUSIBLE",
+    "title": "Continue can still shadow a manual quick save: every Retry and level entry rewrites the 'auto' slot with a newer timestamp",
+    "files": [
+      "src/game/main.js (loadFirstSave, restartLevel -> startLevel writes 'auto')"
+    ],
+    "evidence": "Code reading: F5 at 90% of a level (quick, T2), die, press Retry (startLevel writes auto = level start at T3 > T2), Quit, Continue picks the newest slot (auto at level start) and the quick save is reachable only through F9 inside a game. The savedAt ordering itself is correct (r14 with the quick slot really written). Not run in a browser.",
+    "repro": "read src/game/main.js:56-60, 82-86, 103",
+    "impact": "Design choice more than bug ('newest wins'); the audit's A18 scenario (older F5 shadowing newer progress) is fixed, its mirror image is not.",
+    "fix": "Do not rewrite 'auto' on Retry, or show both slots on the title screen."
+  },
+  {
+    "id": "R15",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Completion is judged on ONE seed: the perfect bot dies on 4 of 8 seeds on Bell Tower hard (cold start), and the carried M01-M08 chain dies in M08 on hard seeds 3 and 4; the documents say a perfect fighter completes every map on every difficulty",
+    "files": [
+      "src/engine/viability.js (evaluateViability: completion required for the seed-1 run only; the other two seeds only feed meanDamage)",
+      "tests/chain.test.js (hard seed 2, normal seed 1 only)",
+      "review/gate-2/README (bundle template), TESTING.md (level viability row)"
+    ],
+    "evidence": "r17_seed_completion_rates (canonical main route, cold start, seeds 1-8): every map completes 8/8 on easy and normal and M02-M07 8/8 on hard, but C1E1M08 hard completes 4/8 (4 dead, damage 202-272; normal survives with 143-170 damage). r04_chain_seeds (the carried chain of the A16 fix): hard seeds 3 and 4 die in M08 (250 damage) while the test covers hard seed 2 and normal seed 1 (both complete). The recorded evidence is the deterministic seed-1 run, so it reads as always completing.",
+    "repro": "node review/gate-2/reaudit/repro/r17_seed_completion_rates.mjs 8 C1E1M08 ; SEEDS=3,4 DIFFS=hard node review/gate-2/reaudit/repro/r04_chain_seeds.mjs",
+    "impact": "The known-defects entry for A04 admits M08 hard is fragile under degraded play; it is fragile for the unmodified perfect bot as well, which is a stronger statement than the docs make. Seeds only change the sim RNG (pellet spread, enemy choices), so this is the natural variance a human will also see.",
+    "fix": "Require completion on at least k of n seeds (the first three are already simulated), retune M08 hard (or its armour/health pickups), and run the carried chain over several seeds in the test."
+  },
+  {
+    "id": "A01",
+    "verdict": "FIXED",
+    "evidence": "a01_duplicate_exit / a01b_skip_route / a01c_m08_run_past_boss re-run: M07 and M08 each now have ONE exit, locked at tick 0 (exitLocked {exit0:true}); standing on the exit at tick 3 leaves status 'playing'; the fighting bot sent at the exit ends 'route-ended' at the locked exit (M07 21 s, M08 88 s); the run-past-the-boss bot no longer completes (status playing after 9.4 s, Cantor untouched). Mutation 'exit lock ignored' now fails 2 tests including the shipped-map gate test. r03_physical_flood: M07/M08 exits are physically reachable but locked; nothing else opens them."
+  },
+  {
+    "id": "A02",
+    "verdict": "FIXED",
+    "evidence": "gateSkip() exists (viability.js), runs in verify-map, in the generic per-map test and in a kit test; a02_gate_skip_all_maps re-run: M01-M06 refuse ('no path'), M05 refuses, M07/M08 'route-ended' at the locked exit, M04's secret exit reachable by design. validateMap now rejects unwinnable M05/M06/M07/M08 variants (a06 last four lines). r02_gateskip_mutations (23 single 'open the gate' mutations over the nine maps): 13 caught; of the 10 misses only ONE is a genuine false negative (M06 with the ramp starting lowered: the probe bot dies, an invulnerable copy completes), 2 are S01 (no enemies, skipped by design) and 7 change nothing or leave an independent gate in place (M02's key triggers, M05's car, M07/M08's lock). The genuine miss and two structural loopholes are R03 (new, MINOR)."
+  },
+  {
+    "id": "A03",
+    "verdict": "FIXED",
+    "evidence": "The mechanism is fixed: r01_knockback_tunnel_fuzz (real Warden charge 0.55 m from a 2 m wall): pre-repair tree throws the player 3.00 m into the far room, repaired tree leaves the player in place; 15,328 random 3 m / 6 m knock-backs on the nine shipped maps: 171 wall crossings pre-repair, 14 after (corner slides; every accepted 0.25 m sub-step is collision-checked, so a wall cannot be crossed). BUT the two regression tests added for it pass on the unrepaired code (R01)."
+  },
+  {
+    "id": "A04",
+    "verdict": "PARTIALLY",
+    "evidence": "As the author says. Original a04_weaker_player re-run (stationary bot; note the arrival floor now undoes its start-loadout cut, so only pickups are degraded): -30% ammo DEAD on M05 hard, M08 normal, M08 hard (3 of 14, was 5); tremor DEAD on M06 normal, M08 hard (2, was 1); both DEAD on M06 normal, M06 hard, M08 hard (3, was 7). r13_robustness_matrix (the gate's strafing bot): everything completes on normal; on hard M06 (aim+ammo) and M08 (ammo x0.75, x0.7, aim+ammo) die. New evidence: ammo slack is aggregated across unlike ammo types (R06). The perfect stationary bot itself completes M08 hard on only 4 of 8 seeds from the cold start (R15)."
+  },
+  {
+    "id": "A05",
+    "verdict": "PARTIALLY",
+    "evidence": "TESTING.md counts (236 tests, 92 checks, 54 effects, 14 vantage points in the lower table) and known-defects (54 effects) are fixed. Still stale: TESTING.md line 26 ('5 vantage points ... 650 awake'), GAME_VISION.md line 40 (Gate 1 measurement '~77 s'; evidence 71.4 s), frame-time sample (TESTING 45/167/650 vs evidence 46.4/166.7/683). See R12."
+  },
+  {
+    "id": "A06",
+    "verdict": "FIXED",
+    "evidence": "a06_validator_fuzz re-run: THROW 0, HANG 0; cellSize -2/'big', 4000x4000 grid, quality=7 rejected; the four unwinnable mutants rejected. Two mutants still ACCEPTED (ceilingHeight null, keyLabels null) are harmless (null = default). Caveat R04 (exit-id scheme) is a new validator bug."
+  },
+  {
+    "id": "A07",
+    "verdict": "FIXED",
+    "evidence": "a07_save_load_fidelity re-run: 24 checkpoints, 0 divergent (was 1); a07b_save_mid_events all identical; r12_resume_fuzz (active input stream, 60 random checkpoints on M03/M05/M06/M07/M08, normal+hard): 0 diverge on the repaired tree, 1 diverges on the pre-repair tree (M06 hard, +300 ticks). navVersion covers every mutable input the field reads (door passability, sector heights). The regression test added for it cannot fail on the old code (R01); the versioning has a cost (R09)."
+  },
+  {
+    "id": "A08",
+    "verdict": "PARTIALLY",
+    "evidence": "a08_hostile_saves re-run: missing/mistyped/NaN/unknown-kind/count-mismatch saves are now rejected with a reason and the shell guards loadWorld. Still accepted: a null-valued field (world.enemies = null loads, then step() throws 'w.enemies is not iterable' and the shell's loop is unguarded), world.status = 'complete', a world of another map inside a save, unknown sector id, triggerState missing an id. See R13."
+  },
+  {
+    "id": "A09",
+    "verdict": "PARTIALLY",
+    "evidence": "As the author says (open). The baseline is now a file recorded in a run before the checking run (validation/render-budget-baseline.json 'when' 07:53Z vs check 11:25Z) so the comparison is no longer self-referential, but the mechanism still auto-writes a missing baseline in the checking run and the 900-call awake ceiling is still an engineering number."
+  },
+  {
+    "id": "A10",
+    "verdict": "FIXED",
+    "evidence": "validate.mjs downgrades evidence whose engineSha differs (test in campaign.test.js; mutation removing the check fails it). Regenerated evidence carries engineSha 32736b82ea91d43f == sha of src/engine at HEAD. Caveats R11 (missing engineSha counts as fresh; byte-hash breaks under CRLF checkout)."
+  },
+  {
+    "id": "A11",
+    "verdict": "FIXED",
+    "evidence": "a11_m05_funicular_state_space: exit reachable with the car never used: false; 4754 states, 0 softlock states. a11b: the route without the car ops now 'bot-failed no path to 26,38'. r03_physical_flood: with the car low the exit is not physically reachable. A call lever at the foot (car-call) removes the strand risk."
+  },
+  {
+    "id": "A12",
+    "verdict": "PARTIALLY",
+    "evidence": "As the author says. Sky seam: r08_sky_seam_math replays makeSeamless() on the three baked skies: wrap-edge jump 14.8x / 14.4x / 20.3x of a normal column difference before, 1.25x / 1.81x / 1.23x after. The browser wiring (canvas, mipmaps, wrap) cannot be verified without Chrome; the S01 dark horizon is open. See R10."
+  },
+  {
+    "id": "A13",
+    "verdict": "PARTIALLY",
+    "evidence": "As the author says: git gc packed the 1352 loose objects (1 pack, 122.9 MiB), .git is still 124 MB, review/ still tracks 446 files."
+  },
+  {
+    "id": "A14",
+    "verdict": "NOT FIXED",
+    "evidence": "As the author says (open by design decision). a14_splash_through_walls re-run: enemy 45 -> 21.8 hp through a full wall, player 100 -> 83."
+  },
+  {
+    "id": "A15",
+    "verdict": "FIXED",
+    "evidence": "ui.js moves #objective to top:64px while a boss bar is showing; index.html: #boss top 14 px, name ~16 px + 19 px bar + 13 px note = ~62 px. PLAUSIBLE only (code + CSS; no browser run)."
+  },
+  {
+    "id": "A16",
+    "verdict": "FIXED",
+    "evidence": "a16_campaign_chain re-run: easy/normal/hard x seeds 1,2 all eight maps complete (the audit's hard seed 2 now takes 27 damage on M06, was 179 and death). r04_chain_seeds / r07_secret_chain_and_retry: M01-M04(secret)-S01-M05 completes on normal seed 1 and hard seeds 2, 3; every arrival >= the authored loadout; Retry restores the floored arrival (idempotent). Design consequence R07 (health always 100)."
+  },
+  {
+    "id": "A17",
+    "verdict": "FIXED",
+    "evidence": "main.js FIRST_MAP; startLevel default mapId = FIRST_MAP; the browser check drives the real Quit and difficulty buttons and asserts C1E1M01 tick 0 (would fail on the old code)."
+  },
+  {
+    "id": "A18",
+    "verdict": "FIXED",
+    "evidence": "loadFirstSave sorts readable slots by savedAt and falls through on a failed load: r14_continue_slot_check with the quick slot really written: old code -> C1E1M02, new code -> C1E1M06. The browser check that claims to prove it never writes the quick slot (R01)."
+  },
+  {
+    "id": "A19",
+    "verdict": "FIXED",
+    "evidence": "grep: no 'expectedEvents' left in tools, src, tests or the regenerated validation/maps/*.json."
+  },
+  {
+    "id": "A20",
+    "verdict": "FIXED",
+    "evidence": "design/EPISODE1.md has an 'As built' table (lamp signals, trap drops, rising platforms listed as not built); M05 intro/messages no longer promise lamp signals."
+  },
+  {
+    "id": "A21",
+    "verdict": "PARTIALLY",
+    "evidence": "Audio coverage now scans every src/engine file (a new emit in script.js fails it: verified). The two vacuous assertions are real. Of the seven named survivors, M11 M13 M14 M18 M19 M20 now fail a test; M21 (Cantor pulse damage 22 -> 0) still survives the WHOLE 236-test suite, so the claim in TESTING.md/known-defects that all seven fail a test is false (R02). M12 unpinned as admitted."
+  },
+  {
+    "id": "A22",
+    "verdict": "FIXED",
+    "evidence": "a22_pickup_on_sector no longer runs (its lift is now rejected for having no driver); r06_pickup_switch_on_lift: repaired tree: lift at 2 m, pack y 2, collected (hp 50 -> 90), lever usable at the top; pre-repair tree: pack y 0, hp stays 50, lever unusable."
+  }
+]

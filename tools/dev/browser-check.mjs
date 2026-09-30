@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
 import crypto from 'node:crypto';
+import { textSha } from '../textsha.mjs';
 import { execSync } from 'node:child_process';
 const updateBaseline = process.argv.includes('--update-baseline');
 
@@ -222,7 +223,8 @@ try {
   await page.$eval('#btn-normal', (e) => e.click()); const fresh = await T('t.state()');
   check('Gate 2 flow: New Game after playing another map starts C1E1M01 from tick 0 (not the last map)', fresh.mapId === 'C1E1M01' && fresh.tick < 10 && fresh.mode === 'playing', fresh.mapId + ' tick ' + fresh.tick);
   await page.evaluate(() => localStorage.clear());
-  await T("t.newGame('normal', 1, { mapId: 'C1E1M02' })"); await T('t.tick(30)'); await T("t.saveSlot('quick')"); await sleep(80);
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M02' })"); await T('t.tick(30)'); await T('t.save()'); await sleep(80);       // t.save() WRITES the quick slot (saveSlot only reads: the audit found the check never wrote it)
+  check('Gate 2 flow: the quick save really exists before the second level starts (the check would be vacuous otherwise)', (await T("t.saveSlot('quick').ok")) === true);
   await T("t.newGame('normal', 2, { mapId: 'C1E1M06' })"); await T('t.pause()'); await page.$eval('#btn-quit', (e) => e.click()); await page.$eval('#btn-continue', (e) => e.click());
   const cont = await T('t.state()');
   check('Gate 2 flow: Continue loads the newest save (the auto-save of C1E1M06), not an older quick save of C1E1M02', cont.mapId === 'C1E1M06' && cont.mode === 'playing', cont.mapId + '/' + cont.mode);
@@ -337,7 +339,7 @@ try {
 } catch (e) { errors.push('script: ' + (e.stack || e)); }
 check('no uncaught exceptions or console errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 {
-const sha16 = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 16);
+const sha16 = (f) => textSha(path.join(root, f));
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
 fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapShas: Object.fromEntries(['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01'].map((id) => [id, sha16('maps/' + id + '.json')])), gate2Routes: g2, mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
 }

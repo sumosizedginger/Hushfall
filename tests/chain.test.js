@@ -26,5 +26,5 @@ test('arrival inventory is the carried one floored at the level\'s authored load
   assert.deepEqual(arrivalInventory(a, entry), a, 'idempotent: Retry from a level start restores the same arrival');
 });
 
-test('the whole of Episode 1 is completable in one carried run on hard (the difficulty with the least ammo and the hardest hits)', () => { chain('hard', 2); });
+for (const seed of [2, 3, 4]) test(`the whole of Episode 1 is completable in one carried run on hard, seed ${seed} (the difficulty with the least ammo and the hardest hits; seeds 3 and 4 died in the Bell Tower before the re-audit repairs)`, () => { chain('hard', seed); });
 test('the whole of Episode 1 is completable in one carried run on normal', () => { chain('normal', 1); });

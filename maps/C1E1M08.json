@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M08",
- "version": 1,
+ "version": 2,
  "name": "Bell Tower of St. Orrin",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -331,6 +331,11 @@
    "at": [19, 14]
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [26, 14]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [37, 14]
@@ -367,6 +372,11 @@
    "type": "pickup",
    "kind": "ammo_rivet",
    "at": [14, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [38, 19]
   },
   {
    "type": "pickup",
@@ -589,6 +599,11 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [19, 31]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_shell",
    "at": [37, 31]
   },
@@ -602,6 +617,11 @@
    "kind": "tollbearer",
    "at": [42, 31],
    "facing": -0.464
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [18, 32]
   },
   {
    "type": "enemy",
@@ -655,6 +675,11 @@
    "type": "prop",
    "kind": "lantern",
    "at": [19, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [30, 36]
   },
   {
    "type": "prop",

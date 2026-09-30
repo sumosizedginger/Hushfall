@@ -29,7 +29,7 @@ const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic
  * The painted skies are not periodic: wrapped round the dome their left and right edges meet in a hard vertical seam (audit A12). Cross-fade the last B columns into the first B and drop them, so the
  * image tiles horizontally. (Browser only: it draws through a canvas.)
  */
-function makeSeamless(t) {
+function makeSeamlessUnsafe(t) {
   const img = t.image; if (typeof document === 'undefined' || !img?.width) return t;
   const W = img.width, H = img.height, B = Math.round(W * 0.125), W2 = W - B, src = document.createElement('canvas'); src.width = W; src.height = H;
   const sc = src.getContext('2d'); sc.drawImage(img, 0, 0); const a = sc.getImageData(0, 0, W, H).data, out = new Uint8ClampedArray(W2 * H * 4);
@@ -39,6 +39,9 @@ function makeSeamless(t) {
   const dst = document.createElement('canvas'); dst.width = W2; dst.height = H; dst.getContext('2d').putImageData(new ImageData(out, W2, H), 0, 0);
   const nt = new THREE.CanvasTexture(dst); nt.magFilter = t.magFilter; nt.minFilter = t.minFilter; nt.wrapS = nt.wrapT = t.wrapS; nt.colorSpace = t.colorSpace; nt.anisotropy = t.anisotropy; t.dispose(); return nt;
 }
+
+/** a cosmetic fix must never take the game down: any canvas failure keeps the original sky (audit R10) */
+function makeSeamless(t) { try { return makeSeamlessUnsafe(t); } catch { return t; } }
 
 export async function loadAll() {
   const out = {};
