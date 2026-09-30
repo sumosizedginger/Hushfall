@@ -1,0 +1,11 @@
+[{"op":"goto","at":[10,55]},{"op":"kill"},{"op":"goto","at":[16,54]},{"op":"kill"},{"op":"goto","at":[5,53]},{"op":"goto","at":[5,50]},{"op":"goto","at":[5,47]},
+{"op":"goto","at":[9,47]},{"op":"kill"},{"op":"goto","at":[15,49]},{"op":"kill"},{"op":"goto","at":[21,48]},{"op":"kill"},{"op":"goto","at":[28,44]},{"op":"kill"},{"op":"goto","at":[24,44]},{"op":"goto","at":[26,43]},{"op":"goto","at":[26,41]},
+{"op":"switch","id":"car-up"},{"op":"waitsector","id":"car","to":"high"},{"op":"goto","at":[26,38]},{"op":"kill"},
+{"op":"goto","at":[22,39]},{"op":"kill"},{"op":"goto","at":[18,40]},{"op":"kill"},{"op":"goto","at":[10,39]},{"op":"kill"},{"op":"goto","at":[5,36]},
+{"op":"goto","at":[5,33]},{"op":"goto","at":[5,30]},{"op":"goto","at":[7,28]},{"op":"goto","at":[7,31]},
+{"op":"goto","at":[9,31]},{"op":"kill"},{"op":"goto","at":[16,31]},{"op":"kill"},{"op":"goto","at":[22,31]},{"op":"kill"},{"op":"goto","at":[28,31]},{"op":"kill"},{"op":"goto","at":[34,31]},{"op":"kill"},{"op":"goto","at":[40,31]},{"op":"kill"},{"op":"goto","at":[48,26]},
+{"op":"goto","at":[48,24]},{"op":"goto","at":[48,21]},{"op":"goto","at":[47,19]},{"op":"kill"},
+{"op":"goto","at":[44,22]},{"op":"kill"},{"op":"goto","at":[38,22]},{"op":"kill"},{"op":"goto","at":[30,23]},{"op":"kill"},{"op":"goto","at":[26,22]},{"op":"kill"},{"op":"goto","at":[20,22]},{"op":"kill"},{"op":"goto","at":[12,22]},{"op":"kill"},
+{"op":"goto","at":[5,17]},{"op":"goto","at":[5,13]},{"op":"goto","at":[6,11]},
+{"op":"goto","at":[12,10]},{"op":"kill"},{"op":"goto","at":[18,12]},{"op":"kill"},{"op":"goto","at":[26,13]},{"op":"kill"},{"op":"goto","at":[32,13]},{"op":"kill"},{"op":"goto","at":[38,12]},{"op":"kill"},{"op":"goto","at":[44,10]},{"op":"kill"},
+{"op":"switch","id":"beacon"},{"op":"kill"},{"op":"goto","at":[51,10]}]

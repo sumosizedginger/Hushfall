@@ -69,7 +69,7 @@ export class Bot {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
     const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
-    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr));
+    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
     const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
     const wantId = wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
@@ -121,6 +121,13 @@ export class Bot {
     this.steerTo((next[0] + 0.5) * m.cell, (next[1] + 0.5) * m.cell, 0.35);
     return false;
   }
+  /** standing at the lever/door of a switch or use op: a human pulls it even with something shooting at them */
+  atUsePoint(op) {
+    const w = this.w, p = w.player;
+    if (op.op === 'switch') { const sw = w.map.switches.find((q) => q.id === op.id); return !!sw && Math.hypot(sw.px - p.x, sw.pz - p.z) < 3.5 && !this.done; }
+    if (op.op === 'use') return Math.hypot((op.at[0] + 0.5) * w.map.cell - p.x, (op.at[1] + 0.5) * w.map.cell - p.z) < 3.0;
+    return false;
+  }
   aimAt(x, z) { const p = this.w.player; this.in.addYaw(clamp(norm(Math.atan2(-(x - p.x), -(z - p.z)) - p.yaw), -0.15, 0.15)); }
   pressUse() { if (!this.usePressed) { this.in.press('use'); this.usePressed = true; } }
   // -- tick ------------------------------------------------------------
@@ -134,12 +141,12 @@ export class Bot {
     if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
-    const t = this.combatTarget();
+    const t = this.atUsePoint(op) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
-      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
+      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
     else { this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
@@ -153,7 +160,7 @@ export class Bot {
     else if (op.op === 'switch') {
       const sw = w.map.switches.find((s) => s.id === op.id);
       if (!sw) this.failed = 'no switch ' + op.id;
-      else if (w.switchState[op.id]?.used && sw.once) done = true;
+      else if (w.switchState[op.id]?.used) done = true;
       else done = this.follow([Math.floor(sw.at[0]), Math.floor(sw.at[1])], 0.6, 1.3) && (this.aimAt(sw.px, sw.pz), this.pressUse(), false);
     } else if (op.op === 'waitsector') {
       const s = w.sectors.find((q) => q.id === op.id), def = w.map.sectors.find((q) => q.id === op.id), goal = op.to === 'high' ? def?.high : def?.low;
