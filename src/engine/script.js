@@ -32,6 +32,7 @@ export function runAction(w, a) {
   else if (k === 'exit') { const id = v.id; for (const x of m.exits) if (!id || x.id === id) w.exitLocked[x.id] = v.set === 'lock'; emit(w, v.set === 'lock' ? 'exit_lock' : 'exit_unlock', {}); }
   else if (k === 'alert') { for (const e of w.enemies) if (e.state === 'idle') wakeEnemy(w, e, false, true); emit(w, 'alarm', {}); }
   else if (k === 'shake') emit(w, 'shake', { amount: v });
+  else if (k === 'lights') { w.ambient = v; emit(w, 'lights', { level: v }); }                      // the view eases toward this (a dark level brightening as the power comes back)
   else if (k === 'objective') { w.objective = v; emit(w, 'objective', { text: v }); }
 }
 export function runActions(w, list) { for (const a of list || []) runAction(w, a); }
@@ -70,6 +71,11 @@ export function updateTriggers(w) {
 export function activateSwitch(w, sw) {
   const st = w.switchState[sw.id]; if (!st) return;
   if (sw.once && st.used) { emit(w, 'switch_dead', { id: sw.id, x: sw.px, z: sw.pz }); return; }
+  if (sw.needs?.length) {                                                                          // a switch that wants items (fuses): refuse until the player has them all, then spend them
+    const missing = sw.needs.filter((k) => !w.player.keys.includes(k));
+    if (missing.length) { emit(w, 'switch_need', { id: sw.id, missing, x: sw.px, z: sw.pz }); return; }
+    w.player.keys = w.player.keys.filter((k) => !sw.needs.includes(k));
+  }
   st.used = true; st.on = !st.on; emit(w, 'switch', { id: sw.id, on: st.on, x: sw.px, z: sw.pz });
   runActions(w, sw.do);
 }

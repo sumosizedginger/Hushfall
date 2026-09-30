@@ -20,8 +20,9 @@ export class GameView {
   constructor(renderer, tex, map, world) {
     this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9;
     const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
-    scene.add(new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4));
-    const sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
+    const hemi = this.hemi = new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4); scene.add(hemi);
+    const sun = this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
+    this.ambient = map.atmosphere.ambient ?? 1; hemi.intensity = 2.4 * this.ambient; sun.intensity = 1.3 * this.ambient;       // dark levels (Signal House) dim the general light: the lamps carry the scene
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
@@ -97,6 +98,7 @@ export class GameView {
     const fov = lerp(this.baseFov ?? VIEW.fov, this.adsFov ?? VIEW.adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights, a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
+    { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = 2.4 * this.ambient; this.sun.intensity = 1.3 * this.ambient; }
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
     if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies

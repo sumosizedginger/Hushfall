@@ -103,6 +103,7 @@ export class Bot {
   follow(goal, arriveCells = 0.7, stopAt = null) {
     const m = this.w.map, p = this.w.player, gx = (goal[0] + 0.5) * m.cell, gz = (goal[1] + 0.5) * m.cell;
     if (stopAt != null && Math.hypot(gx - p.x, gz - p.z) < stopAt) { this.setHeld('forward', false); return true; }
+    if (this.stillFor > 60 && Math.hypot(gx - p.x, gz - p.z) < 2.5 * m.cell) { this.setHeld('forward', false); return true; }        // something (a body, a prop) sits on the exact spot: close enough is arrived
     const key = goal.join(',');
     if (this.pathKey !== key || !this.path || this.w.tick % 30 === 0) { this.path = this.findPath(goal); this.pathKey = key; }
     if (!this.path) { this.failed = `no path to ${key}`; return false; }

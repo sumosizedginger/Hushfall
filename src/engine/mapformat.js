@@ -18,7 +18,7 @@ for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
 const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
 const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle'];
+export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights'];
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -50,6 +50,7 @@ export class MapData {
     this.messages = (src.messages || []).map((m) => ({ ...m, x: (m.at[0] + 0.5) * this.cell, z: (m.at[1] + 0.5) * this.cell, r: (m.radius ?? 2) * this.cell }));
     this.intro = src.intro ?? null; this.outro = src.outro ?? null;
     this.atmosphere = { fog: '#2a2244', fogDensity: 0.028, ...(src.atmosphere || {}) };
+    this.keyLabels = src.keyLabels || {};                     // optional display names for the keys on this level (the Signal House calls them fuses)
   }
   tile(cx, cz) { return (cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) ? '#' : this.tiles[cz][cx]; }
   kind(cx, cz) { return TILES[this.tile(cx, cz)]; }
@@ -217,6 +218,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (k === 'message') { if (!msgIds.has(v)) err(`${tag}: message '${v}' does not exist`); }
     else if (k === 'exit') { if (!v || !['unlock', 'lock'].includes(v.set)) err(`${tag}: exit needs {set: 'unlock'|'lock', id?}`); }
     else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
+    else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
     else if (k === 'objective') { if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`); }
   };
   const swIds = new Set();
@@ -227,8 +229,11 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!dir) err(`${tag}: wall must be north|south|east|west`);
     else if (Array.isArray(e.at) && !WALL_CHARS.has(tile(Math.floor(e.at[0]) + dir[0], Math.floor(e.at[1]) + dir[1]))) err(`${tag}: is not mounted on a wall (the ${e.wall ?? 'north'} neighbour is not a wall)`);
     if (!Array.isArray(e.do) || !e.do.length) err(`${tag}: needs a non-empty do[] list`);
+    if (e.needs != null && (!Array.isArray(e.needs) || !e.needs.length || !e.needs.every((k) => KEYS[k]))) err(`${tag}: needs must list known keys (${Object.keys(KEYS).join(', ')})`);
     for (const a of actionsOf(e.do)) checkAction(tag, a);
   }
+  if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
+  if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   const trIds = new Set();
   for (const t of src.triggers || []) {
     const tag = `trigger '${t.id}'`;

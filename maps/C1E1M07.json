@@ -1,0 +1,1097 @@
+{
+ "format": 1,
+ "id": "C1E1M07",
+ "version": 1,
+ "name": "Signal House",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#0e1218",
+  "fogDensity": 0.03,
+  "sky": "night",
+  "ambient": 0.3
+ },
+ "grid": [
+  "############################################################",
+  "############################################################",
+  "############################################################",
+  "############################################################",
+  "############################################################",
+  "##IIIIIIIIIIII##############################################",
+  "##InnnnnnnnnnI##############################################",
+  "##InnnnnnnnnnI#WWWWWWWWWWW##################################",
+  "##InnnnnnnnnnI#WtttttttttW##################################",
+  "##InnnnnnnnnnI#WtttttttttW#################TTTTTTTTTTTTTTT##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
+  "##IIIIIIIIDIIIWWWWWWDWWWWWWWWW#############T.............T##",
+  "########W....................W#############T.............T##",
+  "########W....................W#############T.............T##",
+  "########W....................W#############T.............T##",
+  "#BBBBBBBW....................IIIIIIIIIIIIIIT.............T##",
+  "#B::::::W....................IgggggggggggggT.............T##",
+  "#B::::::W....................IgggggggggggggT.............T##",
+  "#B::::::D....................DgggggggggggggD.............T##",
+  "#B::::::W....................IgggggggggggggT.............T##",
+  "#B::::::W....................IgggggggggggggT.............T##",
+  "#BBBBBBBW....................IIIIIIIIIIIIIIT.............T##",
+  "########W....................W#############T.............T##",
+  "########W....................W#############T.............T##",
+  "########W....................W#############T.............T##",
+  "########PPPPPPPPPPDPPPPPPPPPPP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############T.............T##",
+  "########PccccccccccccccccccccP#############TTTTTTTTTTTTTTT##",
+  "########PccccccccccccccccccccP##############################",
+  "########PccccccccccccccccccccP##############################",
+  "########PccccccccccccccccccccP##############################",
+  "########PPPPXPPPPPXPPPPPXPPPPP##############################",
+  "############.#####.#####.###################################",
+  "############################################################",
+  "############################################################",
+  "############################################################"
+ ],
+ "heights": [
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6699999999966...",
+  "............................................6699999999966...",
+  "............................................6699999999966...",
+  "............................................6699999999966...",
+  "............................................6699999999966...",
+  "............................................6699999999966...",
+  "............................................6688888888866...",
+  "............................................6677777777766...",
+  "............................................6666666666666...",
+  ".....................................123456.6666666666666...",
+  ".....................................123456.6666666666666...",
+  ".....................................12345666666666666666...",
+  ".....................................123456.6666666666666...",
+  ".....................................123456.6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................6666666666666...",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................"
+ ],
+ "ceilings": [
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "..............................ggggggggggggg.iiiiiiiiiiiii...",
+  "..............................ggggggggggggg.iiiiiiiiiiiii...",
+  "..............................ggggggggggggg.iiiiiiiiiiiii...",
+  "..............................ggggggggggggg.iiiiiiiiiiiii...",
+  "..............................ggggggggggggg.iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................iiiiiiiiiiiii...",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................"
+ ],
+ "doors": [
+  {
+   "at": [10, 16]
+  },
+  {
+   "at": [20, 16]
+  },
+  {
+   "at": [8, 23]
+  },
+  {
+   "at": [29, 23]
+  },
+  {
+   "at": [43, 23]
+  },
+  {
+   "at": [18, 30]
+  }
+ ],
+ "secrets": [],
+ "closets": [
+  {
+   "at": [12, 41]
+  },
+  {
+   "at": [18, 41]
+  },
+  {
+   "at": [24, 41]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "p1",
+   "when": "key:brass",
+   "do": [
+    {
+     "lights": 0.4
+    },
+    {
+     "objective": "Brass fuse. Now the dormitory (south) and the attic (east)"
+    }
+   ]
+  },
+  {
+   "id": "p2",
+   "when": "key:iron",
+   "do": [
+    {
+     "lights": 0.5
+    },
+    {
+     "wake": "niche"
+    },
+    {
+     "open": [12, 41]
+    },
+    {
+     "open": [18, 41]
+    },
+    {
+     "open": [24, 41]
+    },
+    {
+     "shake": 0.7
+    },
+    {
+     "objective": "Iron fuse. They were waiting in the walls. The attic is left (east)"
+    }
+   ]
+  },
+  {
+   "id": "p3",
+   "when": "key:bell",
+   "do": [
+    {
+     "lights": 0.6
+    },
+    {
+     "objective": "All three fuses. Back to the radio room, north of the atrium"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [4, 7]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [8, 7],
+   "facing": -0.303
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [11, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [4, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [6, 8],
+   "facing": -0.197
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [10, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [11, 9],
+   "facing": -0.519
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [17, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [23, 9]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [24, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [9, 10],
+   "facing": -0.432
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [5, 11],
+   "facing": -0.165
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [22, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_bell",
+   "at": [50, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [6, 12]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 12],
+   "facing": -0.499
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [19, 13],
+   "facing": -1.012
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [23, 13],
+   "facing": -1.107
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [45, 13]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [48, 13],
+   "facing": -1.352
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [52, 13],
+   "facing": -1.369
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [5, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [7, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [11, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [20, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [55, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 18],
+   "facing": -1.204
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [21, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [27, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 19],
+   "facing": -1.363
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [12, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [13, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [14, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [23, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [24, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [10, 21],
+   "facing": -1.292
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [33, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [4, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [6, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [17, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [19, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [50, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 22]
+  },
+  {
+   "type": "player",
+   "at": [3, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [14, 23],
+   "facing": -1.571
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [18, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 23],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [32, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [35, 23],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [46, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [5, 24],
+   "facing": -2.034
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [11, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [17, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [19, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [25, 24],
+   "facing": -1.616
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [47, 24],
+   "facing": -1.594
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [50, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [53, 24],
+   "facing": -1.591
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [55, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [6, 25],
+   "facing": -2.159
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [33, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [12, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [13, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [14, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [23, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [24, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [27, 26],
+   "facing": -1.695
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [48, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [49, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [52, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [11, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 27],
+   "facing": -1.778
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 28],
+   "facing": -2.078
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 28],
+   "facing": -1.857
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [27, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [48, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [52, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [53, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 31],
+   "facing": -1.739
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [16, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [19, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [27, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [47, 32],
+   "facing": -1.773
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [53, 32],
+   "facing": -1.749
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [10, 33],
+   "facing": -2.531
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [46, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [54, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [11, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [12, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [17, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [23, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [26, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [27, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [50, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [55, 34]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 36],
+   "facing": -2.486
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [18, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [19, 36],
+   "facing": -2.253
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 36],
+   "facing": -2.171
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [25, 36],
+   "facing": -2.105
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [11, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [12, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 38],
+   "facing": -2.428
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [23, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [27, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [12, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [20, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [27, 39]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 42],
+   "facing": -2.699,
+   "group": "niche"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 42],
+   "facing": -2.473,
+   "group": "niche"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 42],
+   "facing": -2.306,
+   "group": "niche"
+  },
+  {
+   "type": "exit",
+   "at": [24, 9],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "radio",
+   "at": [20, 8],
+   "wall": "north",
+   "needs": [
+    "brass",
+    "iron",
+    "bell"
+   ],
+   "do": [
+    {
+     "lights": 1
+    },
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "shake": 1.4
+    },
+    {
+     "message": "vael"
+    },
+    {
+     "objective": "The set is live. The hatch in the radio room is open"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 800
+ },
+ "intro": {
+  "title": "SIGNAL HOUSE",
+  "lines": [
+   "The lamps went out at dusk.",
+   "Somebody is still keying the set."
+  ]
+ },
+ "outro": "Next: the Bell Tower of St. Orrin. The transmission gave the hour.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [3, 23],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Signal House. The generator is down and the set is dead. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short. Do not waste it."
+  },
+  {
+   "id": "dark",
+   "at": [12, 23],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "It is dark on purpose. They cut the lamps so we cannot see them. The lanterns are yours: stay near them."
+  },
+  {
+   "id": "radio-locked",
+   "at": [20, 12],
+   "radius": 3,
+   "speaker": "RADIO SET",
+   "text": "The set is cold. Three fuse sockets, all empty: brass, iron, bell. The lever on the north wall waits for them."
+  },
+  {
+   "id": "cellar",
+   "at": [7, 10],
+   "radius": 3.5,
+   "speaker": "INES",
+   "text": "That bell-carrier is feeding the fallen back into the line. Kill it before it finishes."
+  },
+  {
+   "id": "dorm",
+   "at": [18, 33],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Beds. All made. Whatever slept here got up in the night and did not undo them."
+  },
+  {
+   "id": "attic",
+   "at": [50, 30],
+   "radius": 4,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The last fuse is on the gantry above the antenna hatch. Two on the rails; take the high ground last."
+  },
+  {
+   "id": "vael",
+   "at": [20, 12],
+   "radius": 6,
+   "speaker": "UNKNOWN (VAEL)",
+   "text": "TOLL RECEIVED. THE FIRST BELL HAS RUNG. PORT MARROW IS NOT THE END OF THE LINE. IT IS THE MIDDLE OF IT. SING WHEN THE BELL SINGS."
+  },
+  {
+   "id": "hatch",
+   "at": [23, 10],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "That was not a station. That was a summons. Go: the tower on the ridge is next, and it is already ringing."
+  }
+ ],
+ "objective": "The power is out. Find three fuses: generator cellar, dormitory, attic",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 4,
+   "shell": 8,
+   "rivet": 40
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [30, 60],
+  "botSeconds": [80, 600],
+  "mechanics": [
+   "heights",
+   "switches",
+   "triggers",
+   "closets"
+  ],
+  "skins": 6,
+  "enemyKinds": {
+   "sexton": 2
+  }
+ }
+}

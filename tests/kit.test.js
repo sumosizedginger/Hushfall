@@ -232,3 +232,19 @@ test('the route bot uses switches and lifts: stand on the lift, press the switch
   const r = runRoute(m, route, { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.ok(r.events.some((e) => e.type === 'sector_stop'));
   const skip = runRoute(m, [{ op: 'goto', at: [9, 3] }], { seed: 1 }); assert.notEqual(skip.result, 'complete', 'without the switch the platform cannot be reached');
 });
+
+// ----------------------------------------------------------------------------------------------------------------------- Signal House: fuses and the lights
+test('a switch that needs items refuses until the player has them all, then spends them; the lights action sets the ambient level', () => {
+  const s = CLOSET(); s.atmosphere = { ambient: 0.3 }; s.keyLabels = { brass: 'Brass fuse', iron: 'Iron fuse' };
+  const si = s.entities.findIndex((e) => e.type === 'switch'); s.entities[si] = { ...s.entities[si], needs: ['brass', 'iron'], do: [{ open: [5, 1] }, { lights: 0.9 }] };
+  const m = parseMap(s), w = createWorld(m, { seed: 1 }); Object.assign(w.player, { x: cell(2), z: cell(1), yaw: 0 });
+  assert.equal(w.ambient, undefined, 'the level default is used until a lights action fires'); assert.equal(m.atmosphere.ambient, 0.3);
+  w.player.keys = ['brass']; let ev = run(w, 3, (i) => idle({ use: i === 0 }));
+  const need = ev.find((e) => e.type === 'switch_need'); assert.ok(need && need.missing.join() === 'iron', 'refused, and says what is missing'); assert.equal(w.switchState.s1.used, false); assert.deepEqual(w.player.keys, ['brass'], 'nothing is spent on a refusal');
+  w.player.keys = ['brass', 'iron']; ev = run(w, 3, (i) => idle({ use: i === 0 }));
+  assert.ok(ev.some((e) => e.type === 'switch') && ev.some((e) => e.type === 'lights'), ev.map((e) => e.type).join()); assert.equal(w.ambient, 0.9); assert.deepEqual(w.player.keys, [], 'the fuses are spent');
+  const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world; assert.equal(back.ambient, 0.9, 'the light level survives a save');
+  bad({ ...CLOSET(), atmosphere: { ambient: 3 } }, /ambient/); bad({ ...CLOSET(), keyLabels: { copper: 'x' } }, /keyLabels/);
+  const t = CLOSET(); t.entities[si] = { ...t.entities[si], needs: ['copper'] }; bad(t, /needs must list known keys/);
+  const u = CLOSET(); u.entities[si] = { ...u.entities[si], do: [{ lights: 9 }] }; bad(u, /lights must be a level/);
+});

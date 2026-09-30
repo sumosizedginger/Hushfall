@@ -1,0 +1,15 @@
+[
+  { "name": "01-porch", "x": 3.5, "z": 23.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "02-atrium", "x": 10.5, "z": 23.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "03-shelf-lanes", "x": 20.5, "z": 19.5, "yaw": "west", "pitch": 0.0, "open": true },
+  { "name": "04-radio-room", "x": 20.5, "z": 13.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "05-radio-lit", "x": 20.5, "z": 13.5, "yaw": "north", "pitch": 0.0, "open": true, "ambient": 1.0 },
+  { "name": "06-generator", "x": 8.5, "z": 13.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "07-cellar-fuse", "x": 6.5, "z": 9.5, "yaw": "west", "pitch": 0.0, "open": true },
+  { "name": "08-dormitory", "x": 18.5, "z": 32.5, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "09-niches", "x": 18.5, "z": 38.5, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "10-corridor", "x": 32.5, "z": 23.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "11-attic", "x": 46.5, "z": 27.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "12-gantry", "x": 50.5, "z": 21.5, "yaw": "north", "pitch": 0.1, "open": true },
+  { "name": "13-atrium-lit", "x": 10.5, "z": 23.5, "yaw": "east", "pitch": 0.0, "open": true, "ambient": 1.0 }
+]
