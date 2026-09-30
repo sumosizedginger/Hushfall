@@ -19,6 +19,7 @@ export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
 }
 
 export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null } = {}) {
+  carry = carry ?? map.entryLoadout ?? null;
   const diff = DIFFICULTY[difficulty];
   if (!diff) throw new Error('unknown difficulty ' + difficulty);
   const w = {

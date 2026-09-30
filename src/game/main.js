@@ -2,7 +2,9 @@
 import * as THREE from 'three';
 import { loadAll, titleArtUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
-import { createWorld, step, drainEvents, useTarget } from '../engine/world.js';
+import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
+import CAMPAIGN from '../../CAMPAIGN_MANIFEST.json';
+import { nextMapId, mapName } from './campaign.js';
 import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
@@ -56,6 +58,7 @@ const ui = new UI({
   playRadio: () => audio.play(RADIO_SOUND),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
+  nextLevel: () => nextLevel(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
@@ -99,6 +102,11 @@ function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed,
   if (!world) { ui.card(map.intro); ui.tip(legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
   requestLock();
+}
+/** the level after the one just finished (a secret exit goes to the secret map; a secret map returns to the main route), carrying the inventory over */
+function nextLevel() {
+  const id = g.nextId; if (!id) return quitToTitle();
+  startLevel({ mapId: id, difficulty: g.difficulty, seed: g.seed + 1, carry: carryOver(g.world) });
 }
 function quitToTitle() {
   g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
@@ -170,7 +178,7 @@ addEventListener('keydown', (e) => {
   if (e.repeat) return;
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
-  if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { quitToTitle(); return; }
+  if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.nextLevel(); return; }
   if (e.code === 'F5' && g.mode === 'playing') { e.preventDefault(); quickSave(); return; }
   if (e.code === 'F9' && (g.mode === 'playing' || g.mode === 'paused')) { e.preventDefault(); quickLoad(); return; }
   if (g.mode === 'playing') { g.input.keyDown(e.code); if (g.input.byCode.has(e.code)) e.preventDefault(); }
@@ -186,7 +194,7 @@ function frame(now) {
   let alpha = 0;
   if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
-  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; ui.show('complete', { stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro, hasNext: false }); } }
+  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]); ui.show('complete', { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro, hasNext: !!g.nextId }); } }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
