@@ -1,0 +1,1014 @@
+{
+ "format": 1,
+ "id": "C1E1M05",
+ "version": 1,
+ "name": "Lamplighter Hill",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#30303e",
+  "fogDensity": 0.011,
+  "sky": "overcast"
+ },
+ "grid": [
+  "########################################################",
+  "########################################################",
+  "########################################################",
+  "########################################################",
+  "##BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##BpppppppppppppppppppppppppppppppppppppppppCCCCCCCCCB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
+  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
+  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
+  "##BpppppppppppWWWWWWWWWppppppppppppppppppppppppppppppB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
+  "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
+  "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
+  "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
+  "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
+  "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
+  "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
+  "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
+  "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
+  "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB##",
+  "########################################################"
+ ],
+ "heights": [
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kjjjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...kiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...khhhkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "...ggggggggggggggggggggggggggggggggggggggggggggfffggg...",
+  "...ggggggggggggggggggggggggggggggggggggggggggggeeeggg...",
+  "...ggggggggggggggggggggggggggggggggggggggggggggdddggg...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...cbbbcccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...caaacccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...c999cccccccccccccccccccccccccccccccccccccccccccccc...",
+  "...88888888888888888888888888888888888888888888888888...",
+  "...88888888888888888888888888888888888888888888888888...",
+  "...88888888888888888888888888888888888888888888888888...",
+  "...88888888888888888888888888888888888888888888888888...",
+  "...88888888888888888888888888888888888888888888888888...",
+  "...88888888888888888888888448888888888888888888888888...",
+  "...88888888888888888888888448888888888888888888777888...",
+  "...88888888888888888888888448888888888888888888666888...",
+  "...88888888888888888888888448888888888888888888555888...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...44444444444444444444444444444444444444444444444444...",
+  "...43334444444444444444444444444444444444444444444444...",
+  "...42224444444444444444444444444444444444444444444444...",
+  "...41114444444444444444444444444444444444444444444444...",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................",
+  "........................................................"
+ ],
+ "doors": [],
+ "secrets": [],
+ "sectors": [
+  {
+   "id": "car",
+   "cells": [
+    [26, 39],
+    [27, 39],
+    [26, 40],
+    [27, 40],
+    [26, 41],
+    [27, 41],
+    [26, 42],
+    [27, 42]
+   ],
+   "low": 2,
+   "high": 4,
+   "speed": 0.8,
+   "start": "low"
+  }
+ ],
+ "triggers": [
+  {
+   "id": "lift-top",
+   "when": "sector:car:high",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 36],
+      "group": "ambush-t2",
+      "facing": "east"
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [30, 36],
+      "group": "ambush-t2",
+      "facing": "west"
+     }
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "objective": "Climb on: the next stairs are at the west end (terrace three)"
+    }
+   ]
+  },
+  {
+   "id": "summit",
+   "when": "enter",
+   "at": [40, 10],
+   "radius": 6,
+   "do": [
+    {
+     "objective": "Light the beacon: the lever on the summit north wall (east)"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [28, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [8, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [40, 8],
+   "facing": -0.654
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [46, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 9],
+   "facing": -0.41
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [44, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [10, 12]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 12],
+   "facing": -0.473
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [32, 12],
+   "facing": -0.577
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [34, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [48, 12]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 13],
+   "facing": -0.278
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 13]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 13],
+   "facing": -0.681
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [8, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [10, 17],
+   "facing": -0.157
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [12, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 17],
+   "facing": -0.353
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [38, 17],
+   "facing": -0.73
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [44, 17],
+   "facing": -0.811
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [48, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [9, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [50, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [8, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [21, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 19],
+   "facing": -0.838
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [47, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [10, 21],
+   "facing": -0.175
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [16, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [26, 21],
+   "facing": -0.574
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [32, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [46, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 22],
+   "facing": -0.499
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [40, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [42, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 22],
+   "facing": -0.948
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 23],
+   "facing": -0.682
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [42, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [48, 24],
+   "facing": -0.957
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [10, 26],
+   "facing": -0.204
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [25, 26],
+   "facing": -0.627
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [35, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 26],
+   "facing": -0.893
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [44, 26],
+   "facing": -0.943
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 27],
+   "facing": -0.519
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [51, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [7, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [11, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [30, 29],
+   "facing": -0.785
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 30],
+   "facing": -0.197
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [46, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 30],
+   "facing": -1.073
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [7, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [15, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [22, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 31],
+   "facing": -0.695
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [40, 31],
+   "facing": -0.983
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [48, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [8, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [18, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [20, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [45, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [9, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 36],
+   "facing": -1.117
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [50, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [10, 37],
+   "facing": -0.322
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [26, 37]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 37],
+   "facing": -1.148
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [22, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [31, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [32, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [43, 39]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [8, 40],
+   "facing": -0.261
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [40, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 40],
+   "facing": -1.228
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [16, 41],
+   "facing": -0.709
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [22, 41],
+   "facing": -0.91
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [36, 41],
+   "facing": -1.158
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [42, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [24, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [28, 44]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 44],
+   "facing": -1.219
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [40, 44]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [10, 45],
+   "facing": -0.54
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [24, 45]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [44, 45],
+   "facing": -1.326
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 46],
+   "facing": -1.107
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 46]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [9, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [46, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [40, 48]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 49],
+   "facing": -1.107
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [20, 49]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 49],
+   "facing": -1.414
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [44, 49]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 50],
+   "facing": -1.268
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [27, 50]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 50],
+   "facing": -1.406
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [8, 51]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [18, 51]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [26, 53]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [14, 54]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [18, 54],
+   "facing": -1.499
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [22, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [34, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [40, 54]
+  },
+  {
+   "type": "player",
+   "at": [4, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [10, 55]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [24, 55]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 55],
+   "facing": -1.571
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 55]
+  },
+  {
+   "type": "exit",
+   "at": [51, 10],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "car-up",
+   "at": [26, 42],
+   "wall": "west",
+   "once": false,
+   "do": [
+    {
+     "sector": {
+      "id": "car",
+      "to": "high"
+     }
+    },
+    {
+     "objective": "Riding up. Bellhands will be waiting on the top terrace"
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "car-down",
+   "at": [24, 41],
+   "wall": "east",
+   "once": false,
+   "do": [
+    {
+     "sector": {
+      "id": "car",
+      "to": "low"
+     }
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "beacon",
+   "at": [46, 7],
+   "wall": "north",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The beacon burns green. The gate is open: east end of the summit"
+    },
+    {
+     "shake": 1
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 900
+ },
+ "intro": {
+  "title": "LAMPLIGHTER HILL",
+  "lines": [
+   "Green lamp: safe. Red lamp: bells.",
+   "Somebody up there is still counting the hours."
+  ]
+ },
+ "outro": "Next: the Ferry Terminal. Whatever the town could not carry, it left there.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [4, 55],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the hill. There are people up there signalling with lamps: green is safe, red is bells. Get to the summit beacon."
+  },
+  {
+   "id": "lamp",
+   "at": [6, 49],
+   "radius": 3,
+   "speaker": "SURVIVOR (LAMP)",
+   "text": "Green lamp, safe house at the top. Red lamp, bells near. Watch the cliff edges: they shoot down."
+  },
+  {
+   "id": "car",
+   "at": [26, 44],
+   "radius": 3,
+   "speaker": "FUNICULAR PLACARD",
+   "text": "Car serves terraces one and two. Pull the lever inside. Do not ride during a toll."
+  },
+  {
+   "id": "sexton",
+   "at": [30, 32],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "That one is not fighting. It is waiting for something to fall. Kill it first, and quickly."
+  },
+  {
+   "id": "high",
+   "at": [26, 21],
+   "radius": 5,
+   "speaker": "SURVIVOR (LAMP)",
+   "text": "Red lamp on terrace four! Bellhands on the cliff edge. Use the houses; go round, not through."
+  },
+  {
+   "id": "summit",
+   "at": [40, 12],
+   "radius": 5,
+   "speaker": "SURVIVOR (LAMP)",
+   "text": "You made it up! Light the beacon: the lever on the north wall of the summit. We will open the gate."
+  },
+  {
+   "id": "gate",
+   "at": [50, 10],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there."
+  }
+ ],
+ "objective": "Climb the hill. Stairs on the terraces, or take the funicular car",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 8,
+   "shell": 12,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [40, 66],
+  "botSeconds": [110, 540],
+  "mechanics": [
+   "heights",
+   "switches",
+   "sectors",
+   "triggers"
+  ],
+  "skins": 6,
+  "enemyKinds": {
+   "sexton": 2,
+   "bellhand": 8
+  }
+ }
+}
