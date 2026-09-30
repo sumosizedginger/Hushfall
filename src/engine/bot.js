@@ -69,8 +69,9 @@ export class Bot {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
     const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
-    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
-    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
+    const plated = !!ENEMIES[t.e.kind].armor, wantFlare = plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
+    const wantScatter = !wantFlare && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
+    const wantRivet = !wantScatter && !wantFlare && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
     const wantId = wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
     const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
@@ -87,7 +88,7 @@ export class Bot {
     this.setHeld('fire', shoot);
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
-    this.setHeld('right', (t.e.lungeT ?? -1) >= 0);                    // a crouching Gaunt is about to dash: sidestep it
+    this.setHeld('right', (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
   // -- steering --------------------------------------------------------
@@ -143,11 +144,11 @@ export class Bot {
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     const t = this.atUsePoint(op) ? null : this.combatTarget();
     if (t) {
-      this.calm = 0; this.fight(t);
+      this.calm = 0; this.wasFighting = true; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
       if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
-    else { this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
+    else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {
