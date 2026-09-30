@@ -23,7 +23,7 @@ Format: `PT-NNN` id · map · severity (BLOCKER/MAJOR/MINOR, my classification) 
 1. **Dead bodies sink into the floor.** The second screenshot looks like a corpse whose pose pivots at the feet, so a body lying flat is half below the floor plane. If so it affects every map, and Gate 1 (flat) would have shown it too, unless the pose offset was only ever tuned by eye on M01. Check the death pose in `models.js` (`dead` blend) against body thickness.
 2. **The frozen (sleeping) merge loses or double-applies the y offset.** Only affects enemies that never woke. Check `mergeStatic` baking of `matrixWorld` when the root is at y > 0 (M02 gallery, M04 raised cells).
 3. **Floor mesh and sim floor disagree by a step** in some rooms (heights layer read with a different unit or an off-by-one on stairs/risers), so a correctly placed enemy looks sunk. Compare `levelmesh.js` floor quad y against `cellFloor` for every cell of M02/M04.
-4. **Water overlay (M04 only).** 25 of M04's 44 enemies stand in wading water; the translucent water quad sits 0.07 m above the floor and would make legs look submerged. That is not "underground" but may be what was seen there.
+4. ~~Water overlay (M04 only)~~ **RULED OUT by the owner (2026-09-30): "it was not enemies in the water".** Enemies were underground on dry floor too (M02 has no water under any enemy). Do not chase this.
 
 **Why my checks missed it:** nothing asserts where an enemy mesh is relative to the floor; browser check compares sim hashes only; my screenshots never framed enemies up close on raised floors or dead bodies.
 
@@ -32,8 +32,8 @@ Format: `PT-NNN` id · map · severity (BLOCKER/MAJOR/MINOR, my classification) 
 ## PT-002 · C1E1M04 The Drowned Chandlery · MAJOR · OPEN (same symptom, cause not yet confirmed)
 **Reported (2026-09-30):** "Same with level 4" (enemies underground). No screenshot.
 **Facts:** M04 has 3 tollbearers at y = 2.0 m (24.5,6.5), (18.5,8.5), (22.5,11.5) and 3 bellhands at y = 1.0 m (17.5,40.5), (37.5,43.5), (17.5,46.5); 38 at y = 0; 25 enemies stand in wading water (`w`), 4 on toxic residue (`x`). M03 (also raised floors and water) was not reported, but may simply not have been reached yet.
-**Suspects:** as PT-001, plus the water overlay (4). Ask the owner which enemies (idle, walking, corpses) and where (in water or on dry raised floor).
-**Guard required:** the same feet-above-floor check, plus the case "enemy standing in wading water".
+**Suspects:** as PT-001 (1-3). The water overlay is ruled out (owner: not enemies in the water). Still worth asking the owner which enemies (idle, walking, corpses) and roughly where.
+**Guard required:** the same feet-above-floor check.
 
 ---
 
