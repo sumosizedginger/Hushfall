@@ -3,12 +3,13 @@
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
+import { makeBellNodeEnemy } from './models_g2.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 
-const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand') };
+const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand'), sexton: (t) => makeTollbearer(t.tollbearer_atlas, 'sexton'), wardengraft: (t) => makeTollbearer(t.tollbearer_atlas, 'warden'), cantor: (t) => makeTollbearer(t.tollbearer_atlas, 'cantor'), bellnode: () => makeBellNodeEnemy() };
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
 const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
@@ -42,6 +43,10 @@ export class GameView {
     this.seed = 99; this.debGeo = new THREE.TetrahedronGeometry(0.09); this.debMat = new THREE.MeshBasicMaterial({ color: 0xff8a30 }); this.dustMat = new THREE.MeshBasicMaterial({ color: 0x9a8a72 });
     this.projGeo = new THREE.IcosahedronGeometry(0.13, 0); this.projMat = new THREE.MeshBasicMaterial({ color: 0xffb040 });
     this.shotGeo = new THREE.IcosahedronGeometry(0.17, 1); this.shotRing = new THREE.TorusGeometry(0.3, 0.025, 4, 14); this.shotMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 }); this.shotViews = new Map();      // Bellhand toll-shots: teal, slow, readable
+    // Gate 2 effects: channel beams and node links (thin teal cylinders), the Cantor's shield, expanding tone-pulse rings
+    this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); this.beamMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.55, depthWrite: false }); this.beams = new Map();
+    this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
+    this.shieldGeo = new THREE.IcosahedronGeometry(1, 1); this.shieldMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.2, wireframe: true, depthWrite: false }); this.shield = null;
     this.beforeStep(world);
   }
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
@@ -55,6 +60,12 @@ export class GameView {
   beforeStep(w) {
     const p = w.player; Object.assign(this.prev.player, { x: p.x, z: p.z, y: p.y ?? 0, yaw: p.yaw, pitch: p.pitch }); if (this.eyeBase == null) this.eyeBase = p.y ?? 0;
     for (const e of w.enemies) { let s = this.prev.enemies.get(e.id); if (!s) this.prev.enemies.set(e.id, s = {}); s.x = e.x; s.z = e.z; s.y = e.y ?? 0; s.yaw = e.yaw; }
+  }
+  /** a thin teal cylinder from a to b (created on first use, moved every frame) */
+  beam(key, ax, ay, az, bx, by, bz, radius) {
+    let m = this.beams.get(key); if (!m) { m = new THREE.Mesh(this.beamGeo, this.beamMat); this.scene.add(m); this.beams.set(key, m); }
+    const dx = bx - ax, dy = by - ay, dz = bz - az, len = Math.hypot(dx, dy, dz) || 1;
+    m.position.set((ax + bx) / 2, (ay + by) / 2, (az + bz) / 2); m.scale.set(radius, len, radius); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx / len, dy / len, dz / len));
   }
   handleEvents(events) {
     for (const e of events) {
@@ -97,13 +108,34 @@ export class GameView {
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
-      v.pose({ t, walk: e.walk, phase: e.phase, attack: e.attackT >= 0 ? e.attackT / def.attack.duration : 0, lunge, dead: e.dead, flash: e.flash });
+      // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
+      let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
+      if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if (def.boss && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash });
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       if (e.state === 'idle' && !v.frozen) {
         v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.root.visible = false;
       } else if (e.state !== 'idle' && v.frozen) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
     }
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); }
+    // channel beams (Sexton -> corpse), node links (ring -> Cantor), the shield, tone pulses
+    { const live = new Set(); let boss = null; const nodes = [];
+      for (const e of w.enemies) {
+        const def = ENEMIES[e.kind];
+        if (def.support && (e.channelT ?? -1) >= 0) { const c = w.enemies.find((o) => o.id === e.channelTarget); if (c) { this.beam('ch' + e.id, e.x, (e.y ?? 0) + 1.7, e.z, c.x, (c.y ?? 0) + 0.3, c.z, 0.05 + 0.03 * Math.sin(this.time * 22)); live.add('ch' + e.id); } }
+        if (def.node && e.state !== 'dead') nodes.push(e); if (def.boss && e.state !== 'dead') boss = e;
+      }
+      if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 1.7, n.z, boss.x, (boss.y ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
+      for (const [k, m] of this.beams) if (!live.has(k)) { this.scene.remove(m); this.beams.delete(k); }
+      if (boss && nodes.length) { if (!this.shield) { this.shield = new THREE.Mesh(this.shieldGeo, this.shieldMat); this.scene.add(this.shield); } this.shield.visible = true; this.shield.position.set(boss.x, (boss.y ?? 0) + 2.1, boss.z); this.shield.scale.setScalar(2.4 + 0.08 * Math.sin(this.time * 5)); this.shield.rotation.y = this.time * 0.6; } else if (this.shield) this.shield.visible = false;
+      const pseen = new Set();
+      for (const q of w.pulses || []) {
+        pseen.add(q.id); let m = this.pulseViews.get(q.id);
+        if (!m) { m = new THREE.Mesh(this.ringGeo, new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false })); m.rotation.x = -Math.PI / 2; this.scene.add(m); this.pulseViews.set(q.id, m); }
+        m.position.set(q.x, (q.y ?? 0) + 0.16, q.z); m.scale.setScalar(Math.max(0.01, q.r + q.speed * alpha * TICK)); m.material.opacity = 0.9 * Math.max(0, 1 - q.r / q.maxR);
+      }
+      for (const [id, m] of this.pulseViews) if (!pseen.has(id)) { this.scene.remove(m); m.material.dispose(); this.pulseViews.delete(id); }
+    }
     // pickups
     seen.clear();
     for (const it of w.pickups) {
@@ -173,7 +205,7 @@ export class GameView {
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
-    this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose();
+    this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); this.shieldGeo.dispose(); this.shieldMat.dispose(); for (const m of this.pulseViews.values()) m.material.dispose();
     this.post.dispose();
     this.scene.clear(); this.weaponScene.clear();
   }

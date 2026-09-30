@@ -82,3 +82,13 @@ export function makeSwitchPanel() {
   const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), new THREE.MeshBasicMaterial({ color: 0xff4a3a })); lamp.position.set(0, 0.26, 0.09); g.add(lamp);
   return { group: g, lamp, lever };
 }
+
+/** the enemy-view of a bell node: the bronze bell on its frame, a pulsing teal core; it tips and dims when severed */
+export function makeBellNodeEnemy() {
+  const root = makeBellNode(), core = root.children.find((c) => c.geometry?.type === 'SphereGeometry');
+  function pose(p) {
+    const d = Math.min(1, p.dead || 0); root.rotation.z = d * 0.5; root.scale.set(1, 1 - 0.55 * d, 1);
+    if (core) core.scale.setScalar(d > 0 ? 0.001 : 1 + 0.25 * Math.sin(p.t * 4) + 0.6 * (p.flash || 0));
+  }
+  return { root, pose, mat: null };
+}

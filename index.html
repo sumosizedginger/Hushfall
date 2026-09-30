@@ -28,6 +28,11 @@ body[data-stance=sprint] #cross{opacity:0}
 #card{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:3;animation:cardfade 6.5s ease forwards;text-shadow:2px 2px 0 #000}
 #card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
+#objective{position:fixed;left:16px;top:12px;max-width:min(520px,60vw);font-size:12px;color:#c4d4d0;background:#0d0f14b8;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
+#objective:empty{display:none}
+#boss{position:fixed;left:50%;top:14px;transform:translateX(-50%);width:min(560px,80vw);pointer-events:none;text-align:center;text-shadow:1px 1px 0 #000}
+#boss b{letter-spacing:.32em;color:var(--bronze);font-size:13px}#boss-bar{height:12px;border:2px solid var(--slate);background:#0d0f14cc;margin-top:3px}#boss-fill{display:block;height:100%;background:var(--red)}
+#boss.shielded #boss-fill{background:#5a6b70}#boss small{color:var(--teal);font-size:11px;letter-spacing:.14em}
 #hint{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);color:#9fb4b0;pointer-events:none}
 .screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#07080ccc;z-index:5}
 .panel{background:#0d0f14f2;border:2px solid var(--slate);padding:22px 28px;min-width:340px;max-width:92vw;max-height:calc(100vh - 20px);overflow-y:auto;box-shadow:0 0 0 2px var(--ink),0 12px 40px #000}
@@ -55,7 +60,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="cross"></div>
-<div id="toasts"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
+<div id="toasts"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
   <div class="stat"><b id="hud-armor">0</b><small>ARMOR</small></div>
