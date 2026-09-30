@@ -51,7 +51,7 @@ test('shipped level: it has a title card, an outro, and short well-formed messag
   for (const x of m.messages) assert.ok(x.text.length > 20 && x.text.length <= 180 && x.speaker, x.id);
 });
 
-test('narrative contract: the REQUIRED route delivers the premise; the secret note is optional depth', () => {
+test('narrative contract (sim events only; UI ordering is tested on CommsQueue below and in the browser check): the REQUIRED route triggers the premise beats; the secret note is optional depth', () => {
   const m = shippedMap(), main = runRoute(m, shippedRoute('C1E1M01.main'), { seed: 1 }), sec = runRoute(m, shippedRoute('C1E1M01.secret'), { seed: 1 });
   const seenMain = new Set(main.world.messagesSeen), seenSec = new Set(sec.world.messagesSeen);
   for (const id of ['pier-start', 'pier-tower', 'plaza', 'shed-manifest', 'warehouse-cradles', 'dock', 'hut-log']) assert.ok(seenMain.has(id), 'main route must deliver ' + id);
@@ -61,7 +61,7 @@ test('narrative contract: the REQUIRED route delivers the premise; the secret no
   assert.ok(main.events.filter((e) => e.type === 'message').length >= 7);
 });
 
-test('messages are triggered in a sensible order on the required route (tower glimpse before the plaza, cradles before the dock)', () => {
+test('sim event order on the required route (tower glimpse before the plaza, cradles before the dock); whether the UI shows them in that order is the CommsQueue tests', () => {
   const r = runRoute(shippedMap(), shippedRoute('C1E1M01.main'), { seed: 1 }), order = r.events.filter((e) => e.type === 'message').map((e) => e.id);
   const at = (id) => order.indexOf(id);
   assert.ok(at('pier-start') < at('pier-tower') && at('pier-tower') < at('plaza') && at('plaza') < at('warehouse-cradles') && at('warehouse-cradles') < at('dock'), order.join(' > '));

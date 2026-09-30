@@ -26,13 +26,13 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm test` — node:test suite (engine, maps, saves, input, routes, settings, campaign/status model); headless, no browser
 - `npm run build` — production build to `dist/` (test hook is compiled out)
 - `npm run verify` — validate + test + build
-- `npm run browsercheck` (~5 min; do not wrap in a short timeout) — headless-Chrome run of the real game (live input incl. sprint/ADS, canonical routes, Node-vs-browser parity, save/load, death, GPU-leak check); writes `validation/browser-check.json` + `review/engine-skeleton/*.png`
-- `npm run verify-map -- <ID>` — regenerate `validation/maps/<ID>.json` evidence (status is derived by validate, never written)
+- `npm run browsercheck` (1-5 min; do not wrap in a short timeout; `-- --update-baseline` rewrites the render-budget baseline) — headless-Chrome run of the real game (live input incl. sprint/ADS, un-teleported walk + ordered transmissions, prompts, canonical routes, Node-vs-browser parity, save/load, pause layout, GPU-leak check); writes `validation/browser-check.json` (stamped with commit + map sha) + `review/engine-skeleton/*.png`
+- `npm run verify-map -- <ID>` — regenerate `validation/maps/<ID>.json` evidence: routes x 3 difficulties, reachability, viability (passive runner must not get through, perfect bot must take damage, par plausible), browser evidence bound to the map sha, open BLOCKERs from `review/gate-1/known-defects.json` (status is derived by validate, never written)
 - `npm run validate` / `npm run status` — topology + evidence checks / derived status counts
 - `npm run bake` — regenerate baked assets into `assets/baked/` (headless Chrome; slow under software GL; `BAKE_PORT` allows parallel bakes)
 - `npm run audio-qa` — renders every SFX + the score offline in headless Chrome, measures them (finite/audible/no clipping/decays/reproducible), writes `review/audio/*.wav` (LISTEN to these) + `validation/audio.json`
 - `npm run shoot-level` — Marrow Quay vantage-point tour (review/level-c1e1m01/*.png)
-- `npm run gate1-bundle` — assemble review/gate-1/ from repository evidence (run verify, browsercheck, audio-qa, verify-map first)
+- `npm run gate1-bundle` — assemble review/gate-1/ from repository evidence (run verify, browsercheck, audio-qa, shoot-level, shoot-stances, verify-map first, from a clean commit; it fails if the defect list is empty or evidence is from another commit)
 - `node tools/dev/refresh-manifest.mjs` — rebuild the asset manifest from disk after parallel bakes
 - `npm run shoot-weapons` — scattergun stances/flash/pump, Gaunt poses, new pickups (review/engine-skeleton/weapons-*.png)
 - `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet

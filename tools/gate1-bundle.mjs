@@ -9,6 +9,7 @@ import { pathToFileURL } from 'node:url';
 
 const root = path.resolve(import.meta.dirname, '..');
 const out = path.join(root, 'review/gate-1');
+fs.rmSync(path.join(out, 'screenshots'), { recursive: true, force: true });             // never keep images from an earlier build
 fs.mkdirSync(path.join(out, 'screenshots'), { recursive: true });
 const readJson = (f) => (fs.existsSync(path.join(root, f)) ? JSON.parse(fs.readFileSync(path.join(root, f), 'utf8')) : null);
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
