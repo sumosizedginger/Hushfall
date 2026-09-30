@@ -48,14 +48,14 @@ L.putAll('h', [[41, 12], [45, 30]]); L.putAll('e', [[44, 18], [41, 33]]); L.put(
 L.putAll('B', [[28, 18], [34, 21], [34, 29], [28, 32], [22, 29], [22, 21]]);
 
 L.putAll('P', [[24, 25], [32, 25], [28, 22], [28, 28], [25, 22], [31, 22], [25, 28], [31, 28]]);
-L.putAll('r', [[38, 33], [38, 27], [38, 23], [18, 24], [18, 26], [38, 31], [18, 22], [18, 28]]); L.putAll('e', [[37, 31], [37, 25], [19, 25]]); L.putAll('a', [[38, 21], [19, 27], [38, 29]]); L.putAll('H', [[38, 25], [18, 30], [18, 20]]); L.putAll('v', [[38, 35]]);
+L.putAll('r', [[38, 33], [38, 27], [38, 23], [18, 24], [18, 26], [38, 31], [18, 22], [18, 28]]); L.putAll('e', [[37, 31], [37, 25], [19, 25]]); L.putAll('a', [[38, 21], [19, 27], [38, 29]]); L.putAll('H', [[38, 25], [18, 30], [18, 20]]); L.putAll('v', [[38, 35], [38, 19], [18, 32]]); L.putAll('H', [[30, 36], [26, 14]]); L.put(19, 31, 'r');
 L.putAll('n', [[19, 14], [37, 14], [19, 36], [37, 36]]);
 // (the exit is the explicit locked entity below; no '>' glyph)
 
 const layers = L.layers();
 
 export default {
-  id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 1, ceilingHeight: 4.2, par: { time: 1100 },
+  id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 2, ceilingHeight: 4.2, par: { time: 1100 },
   atmosphere: { fog: '#1a1428', fogDensity: 0.014, sky: 'night' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { B: { type: 'enemy', kind: 'bellnode' } },

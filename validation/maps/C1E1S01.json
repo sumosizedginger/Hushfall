@@ -2,11 +2,12 @@
   "mapId": "C1E1S01",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "f79bf59",
+  "codeVersion": "07f456e",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "78ffb66aa02e4389",
   "assetVersion": "b802ce1a6831da76",
+  "engineSha": "32736b82ea91d43f",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -55,11 +56,6 @@
     "reachedExit": true,
     "ticks": 2677,
     "finalHash": "a3a11d3a",
-    "expectedEvents": [
-      "door_open",
-      "pickup:key_brass",
-      "level_complete"
-    ],
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -101,6 +97,10 @@
         "damage": 0,
         "hpLeft": 100
       },
+      "ammo": {
+        "capacity": 350,
+        "fired": 0
+      },
       "fighter": {
         "result": "complete",
         "damage": 0,
@@ -115,6 +115,10 @@
         "result": "complete",
         "damage": 0,
         "hpLeft": 100
+      },
+      "ammo": {
+        "capacity": 260,
+        "fired": 0
       },
       "fighter": {
         "result": "complete",
@@ -131,6 +135,10 @@
         "damage": 0,
         "hpLeft": 100
       },
+      "ammo": {
+        "capacity": 224,
+        "fired": 0
+      },
       "fighter": {
         "result": "complete",
         "damage": 0,
@@ -139,16 +147,17 @@
         "kills": 0,
         "failure": null
       }
-    }
+    },
+    "gate": []
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-30T04:15:48.896Z",
+    "when": "2026-09-30T11:25:31.163Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
     "mapSha": "78ffb66aa02e4389",
-    "commit": "f79bf59",
-    "passed": 89,
-    "total": 89,
+    "commit": "07f456e",
+    "passed": 92,
+    "total": 92,
     "allPassed": true
   },
   "automated": {
@@ -227,7 +236,7 @@
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "89/89"
+        "detail": "92/92"
       }
     ]
   },

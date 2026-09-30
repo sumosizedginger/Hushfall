@@ -10,7 +10,7 @@ export const DIFFICULTY = {
 };
 
 export const PLAYER = {
-  radius: 0.32, eye: 1.6, accel: 14, maxHp: 100, maxArmor: 100, startAmmo: { flare: 8 }, dryFeed: { every: 4, amount: 1 }, useReach: 2.3, armorAbsorb: 0.5,
+  radius: 0.32, eye: 1.6, accel: 14, maxHp: 100, maxArmor: 100, startAmmo: { flare: 8 }, dryFeed: { every: 10, amount: 1 }, useReach: 2.3, armorAbsorb: 0.5,
   speed: 6.4,               // walk, m/s
   sprintMult: 1.55,         // applies to the forward component only; strafing and backing up stay at walk speed
   sprintMinForward: 0.3,    // sprint needs this much forward input

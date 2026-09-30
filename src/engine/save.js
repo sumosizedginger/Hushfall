@@ -62,7 +62,7 @@ export function worldShapeErrors(fresh, snap) {
   if (!snap || typeof snap !== 'object') return ['world is not an object'];
   for (const [k, v] of Object.entries(fresh)) {
     if (!(k in snap)) { if (v !== undefined && v !== null) bad.push('missing field ' + k); continue; }
-    const a = kindOf(v), b = kindOf(snap[k]); if (a !== b && !(a === 'null' || b === 'null')) bad.push(`field ${k} is a ${b}, expected ${a}`);
+    const a = kindOf(v), b = kindOf(snap[k]); if (a !== b && a !== 'null') bad.push(`field ${k} is a ${b}, expected ${a}`);
     if (b === 'number' && !Number.isFinite(snap[k])) bad.push(`field ${k} is not finite`);
   }
   const P = snap.player; if (!P || typeof P !== 'object') bad.push('player missing'); else for (const [k, v] of Object.entries(fresh.player)) if (typeof v === 'number' && !Number.isFinite(P[k])) bad.push('player.' + k + ' is not finite');

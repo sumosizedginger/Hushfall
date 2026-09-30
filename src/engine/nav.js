@@ -7,12 +7,17 @@ import { cellSolid } from './world.js';
 import { DOOR } from './defs.js';
 import { cellFloor } from './terrain.js';
 
+const QUANT = 0.25;   // metres: a moving floor is treated as standing at the nearest quarter metre, so a field is rebuilt a few times per metre of travel, not every tick (audit R09)
+const q = (h) => Math.round(h / QUANT) * QUANT;
+/** floor height as the navigation field sees it: moving floors quantised, static floors exact */
+function navFloor(w, cx, cz) { const m = w.map; if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return q(w.sectors[si].h); } return cellFloor(w, cx, cz); }
+
 const NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
 const MAX_FIELDS = 4;
 /** everything a distance field depends on besides the target: which doors are passable and where each moving floor is. A field is valid exactly while this is unchanged, so it never depends on cache history (audit A07: resume == uninterrupted). */
 function navVersion(w) {
   let v = ''; for (const d of w.doors) v += d.open < DOOR.passableAt ? '0' : '1';
-  for (const s of w.sectors) v += '|' + s.h; return v;
+  for (const s of w.sectors) v += '|' + q(s.h); return v;
 }
 
 function blockedCells(m) {
@@ -33,11 +38,11 @@ function buildField(w, tcx, tcz) {
   const m = w.map, W = m.w, dist = new Int32Array(W * m.h).fill(-1), q = new Int32Array(W * m.h);
   let head = 0, tail = 0; dist[tcz * W + tcx] = 0; q[tail++] = tcz * W + tcx;
   while (head < tail) {
-    const i = q[head++], cx = i % W, cz = (i / W) | 0, fa = cellFloor(w, cx, cz);
+    const i = q[head++], cx = i % W, cz = (i / W) | 0, fa = navFloor(w, cx, cz);
     for (const [dx, dz] of NB) {
       const nx = cx + dx, nz = cz + dz; if (!walkableCell(w, nx, nz)) continue;
       const j = nz * W + nx; if (dist[j] >= 0) continue;
-      if (fa - cellFloor(w, nx, nz) > STEP + 1e-6) continue;                                  // the neighbour would have to step UP from n to here: too high
+      if (fa - navFloor(w, nx, nz) > STEP + 1e-6) continue;                                  // the neighbour would have to step UP from n to here: too high
       if (dx && dz && !(walkableCell(w, cx + dx, cz) && walkableCell(w, cx, cz + dz))) continue;   // no cutting corners
       dist[j] = dist[i] + 1; q[tail++] = j;
     }

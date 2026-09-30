@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { textSha, engineSha } from './textsha.mjs';
 
 const root = process.env.HUSHFALL_ROOT ? path.resolve(process.env.HUSHFALL_ROOT) : path.resolve(import.meta.dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -61,11 +62,13 @@ function derive(id) {
   let ev; try { ev = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { err(`${id}: evidence unreadable: ${e.message}`); return { status: 'PLANNED', why: 'bad evidence' }; }
   if (ev.mapId !== id) err(`${id}: evidence mapId mismatch`);
   const mapFile = path.join(root, 'maps', id + '.json');
-  if (ev.mapSha && fs.existsSync(mapFile) && crypto.createHash('sha256').update(fs.readFileSync(mapFile)).digest('hex').slice(0, 16) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
-  if (ev.engineSha && fs.existsSync(path.join(root, 'src/engine'))) { const dir = path.join(root, 'src/engine'), h = crypto.createHash('sha256'); for (const n of fs.readdirSync(dir).filter((x) => x.endsWith('.js')).sort()) h.update(n).update(fs.readFileSync(path.join(dir, n)));
-    if (ev.engineSha && h.digest('hex').slice(0, 16) !== ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the simulation (src/engine) changed since it was generated; re-run verify-map' }; }
+  if (ev.mapSha && fs.existsSync(mapFile) && textSha(mapFile) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
+  if (fs.existsSync(path.join(root, 'src/engine'))) {       // evidence must say which simulation produced it (audit A10/R11): none recorded, or a different one, is stale
+    if (!ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: it records no engine hash; re-run verify-map' };
+    if (engineSha(root) !== ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the simulation (src/engine) changed since it was generated; re-run verify-map' };
+  }
   const rf = ev.canonicalRoute?.file && path.join(root, ev.canonicalRoute.file);
-  if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && crypto.createHash('sha256').update(fs.readFileSync(rf)).digest('hex').slice(0, 16) !== ev.canonicalRoute.sha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
+  if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && textSha(rf) !== ev.canonicalRoute.sha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
   let status = 'PLANNED', why = 'map does not load';
   if (ev.loads === true) { status = 'IMPLEMENTED'; why = 'loads; verification incomplete'; }
   if (status === 'IMPLEMENTED' && ev.automated?.pass === true && ev.canonicalRoute?.reachedExit === true && ev.canonicalRoute?.file && fs.existsSync(path.join(root, ev.canonicalRoute.file))) { status = 'AGENT_VERIFIED'; why = 'automated pass + canonical route reached exit'; }

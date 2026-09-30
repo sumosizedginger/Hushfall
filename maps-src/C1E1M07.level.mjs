@@ -32,7 +32,7 @@ L.put(6, 22, 'n'); L.putAll('t', [[5, 24], [6, 25]]); L.put(4, 22, 'h');
 L.putAll('F', [[12, 20], [13, 20], [14, 20], [12, 26], [13, 26], [14, 26], [23, 20], [24, 20], [25, 20], [23, 26], [24, 26], [25, 26]]);
 L.putAll('f', [[17, 22], [18, 22], [19, 22], [17, 24], [18, 24], [19, 24]]); L.putAll('m', [[10, 18], [27, 18], [10, 28], [27, 28], [18, 23]]);
 L.putAll('t', [[14, 23], [22, 19], [22, 27], [26, 23], [12, 28], [27, 26]]); L.putAll('g', [[16, 18], [20, 28], [10, 21]]); L.put(25, 24, 'x');
-L.putAll('e', [[11, 24], [21, 18]]); L.putAll('r', [[27, 20], [15, 21]]); L.put(11, 27, 'h');
+L.putAll('e', [[11, 24], [21, 18]]); L.putAll('a', [[15, 24], [24, 22]]); L.putAll('r', [[27, 20], [15, 21]]); L.put(11, 27, 'h');
 // radio room: a bench, the set, two Tollbearers in the dark; the radio lever on the north wall
 L.putAll('f', [[18, 11], [22, 11]]); L.putAll('t', [[19, 13], [23, 13]]); L.putAll('m', [[17, 9], [23, 9]]); L.put(20, 14, 'h');
 // generator cellar: pods, the brass fuse in the far corner, a Sexton over the fallen
@@ -51,7 +51,7 @@ L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]
 const layers = L.layers();
 
 export default {
-  id: 'C1E1M07', name: 'Signal House', version: 1, ceilingHeight: 4.2, par: { time: 800 },
+  id: 'C1E1M07', name: 'Signal House', version: 2, ceilingHeight: 4.2, par: { time: 800 },
   atmosphere: { fog: '#0e1218', fogDensity: 0.03, sky: 'night', ambient: 0.3 },
   keyLabels: { brass: 'Brass fuse', iron: 'Iron fuse', bell: 'Bell fuse' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 4, shell: 8, rivet: 40 }, weapons: ['flare', 'scattergun', 'rivet'] },

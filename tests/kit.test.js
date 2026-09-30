@@ -268,16 +268,18 @@ test('the gate-skip probe: the shipped Signal House and Bell Tower cannot be fin
   assert.ok(gateSkip(parseMap(open)).some((g) => g.result === 'complete'), 'the probe catches an exit whose lock does not lock');
 });
 
-test('knockback stops at a wall: a 3 m shove never carries an actor through a one-cell wall (audit A03)', async () => {
+test('knockback stops at a wall: a 3 m shove never carries an actor through a one-cell wall, and a real Warden charge cannot throw the player into the next room (audit A03/R01)', async () => {
   const { tryMove } = await import('../src/engine/world.js');
+  // the shove lands BEYOND the wall (start 0.6 m before it, wall cell = x 8..10): the pre-repair end-point test let this through
   const w = mk(src(['#########', '#...#...#', '#...#...#', '#...#...#', '#########'])); const p = w.player;
-  Object.assign(p, { x: cell(3) - 0.2, z: cell(2) }); tryMove(w, p, 3.0, 0, PLAYER.radius);
-  assert.ok(p.x < cell(3) + 1 - PLAYER.radius + 1e-6 && Math.floor(p.x / 2) === 3, 'stopped in the cell before the wall, x=' + p.x);
+  Object.assign(p, { x: cell(3) + 0.6, z: cell(2) }); tryMove(w, p, 3.0, 0, PLAYER.radius);
+  assert.ok(p.x < 8, 'stopped before the wall, x=' + p.x);
   Object.assign(p, { x: cell(1), z: cell(1) }); tryMove(w, p, 0.1, 0.1, PLAYER.radius); assert.ok(Math.abs(p.x - (cell(1) + 0.1)) < 1e-9, 'ordinary moves are unchanged');
-  // the real charge: a Warden hits a player standing beside the wall with clear ground behind it
-  const w2 = mk(src(['###########', '#....#....#', '#....#....#', '#....#....#', '###########'])), e = spawnEnemy(w2, 'wardengraft', cell(1), cell(2), -Math.PI / 2);
-  Object.assign(w2.player, { x: cell(4) - 0.1, z: cell(2), yaw: 0 }); e.state = 'chase'; e.chargeT = 0.85 + 0.01; e.chargeCd = 0; run(w2, 240);
-  assert.ok(Math.floor(w2.player.x / 2) <= 4, 'the charge did not throw the player into the far room, x=' + w2.player.x);
+  // the real charge: the Warden faces the player (yaw +pi/2 = east), who stands 0.55 m from a one-cell wall with the far room behind it
+  const w2 = mk(src(['###########', '#....#....#', '#....#....#', '#....#....#', '###########'])), e = spawnEnemy(w2, 'wardengraft', cell(1), cell(2), Math.PI / 2);
+  Object.assign(w2.player, { x: 10 - 0.55, z: cell(2), yaw: Math.PI / 2, hp: 5000 }); e.state = 'chase'; e.chargeT = 0.86; e.chargeCd = 0;
+  const ev = run(w2, 240); assert.ok(ev.some((x) => x.type === 'enemy_strike' && x.kind === 'wardengraft'), 'the charge landed');
+  assert.ok(w2.player.x < 12, 'the player is still in the near room, x=' + w2.player.x);
 });
 
 test('a structurally broken mid-level save is rejected with a reason instead of loading (audit A08)', () => {
@@ -286,6 +288,8 @@ test('a structurally broken mid-level save is rejected with a reason instead of 
   assert.equal(loadWorld(save(), () => m).ok, true, 'a good save loads');
   const broke = (f) => { const s = save(); f(s.world); const r = loadWorld(s, () => m); assert.equal(r.ok, false, 'rejected'); assert.equal(r.reason, 'corrupt'); return r.detail; };
   assert.match(broke((x) => { delete x.enemies; }), /missing field enemies/);
+  assert.match(broke((x) => { x.enemies = null; }), /field enemies is a null, expected array/);
+  assert.match(broke((x) => { x.pickups = null; }), /field pickups is a null/);
   assert.match(broke((x) => { x.player.x = null; }), /player\.x is not finite/);
   assert.match(broke((x) => { x.tick = 'soon'; }), /field tick is a string/);
   assert.match(broke((x) => { x.doors = [{}]; }), /doors count/);
@@ -324,9 +328,9 @@ test('resuming from a save is identical to uninterrupted play on a map with terr
 
 test('a player with no ammunition of any kind gets a flare after a few seconds, and another each time it is spent: nobody is stranded without a weapon (audit A04)', () => {
   const w = mk(src(hall(8))); const p = w.player; p.ammo = { flare: 0, shell: 0, rivet: 0 };
-  let ev = run(w, 60 * 3); assert.equal(p.ammo.flare, 0, 'not yet'); ev = run(w, 60 * 2); assert.equal(p.ammo.flare, 1, 'fed after 4 s'); assert.ok(ev.some((e) => e.type === 'dry_feed'));
-  run(w, 60 * 6); assert.equal(p.ammo.flare, 1, 'no further feed while the flare is unspent');
-  p.ammo.flare = 0; run(w, 60 * 5); assert.equal(p.ammo.flare, 1, 'fed again once spent');
+  let ev = run(w, 60 * 8); assert.equal(p.ammo.flare, 0, 'not yet'); ev = run(w, 60 * 3); assert.equal(p.ammo.flare, 1, 'fed after 10 s'); assert.ok(ev.some((e) => e.type === 'dry_feed'));
+  run(w, 60 * 12); assert.equal(p.ammo.flare, 1, 'no further feed while the flare is unspent');
+  p.ammo.flare = 0; run(w, 60 * 11); assert.equal(p.ammo.flare, 1, 'fed again once spent');
   p.ammo = { flare: 0, shell: 3, rivet: 0 }; run(w, 60 * 6); assert.equal(p.ammo.flare, 0, 'no feed while any ammunition is left');
 });
 
@@ -336,4 +340,21 @@ test('pinned (audit A21): a dead:<group> trigger waits for EVERY member; a seale
   const d = mk(src(['#######', '#..D..#', '#######'], { doors: [{ at: [3, 1] }] })); Object.assign(d.player, { x: cell(2), z: cell(1), yaw: -Math.PI / 2 });
   runAction(d, { seal: [3, 1] }); assert.equal(d.doors[0].sealed, true); run(d, 40, (i) => idle({ use: i === 0 })); assert.ok(d.doors[0].open < 0.1, 'use does not open a sealed door');
   runAction(d, { unseal: [3, 1] }); run(d, 40, (i) => idle({ use: i === 0 })); assert.ok(d.doors[0].open > 0.5, 'once unsealed it opens');
+});
+
+test('navigation fields follow the world, not cache age: a door that opens is seen at once, and a resumed world agrees with the running one (audit A07/R01)', () => {
+  const grid = ['###########', '#...#.....#', '#...D.....#', '#...#.....#', '###########'], s = () => src(grid, { doors: [{ at: [4, 2] }] });
+  const a = mk(s()), b = mk(s()); const from = [cell(2), cell(2)], to = [cell(8), cell(2)];
+  assert.equal(navWaypoint(a, ...from, ...to), null, 'closed door: no way through'); a.doors[0].open = 1; a.doors[0].target = 1; b.doors[0].open = 1; b.doors[0].target = 1;
+  const ra = navWaypoint(a, ...from, ...to), rb = navWaypoint(b, ...from, ...to);
+  assert.ok(rb && rb.x > from[0], 'a fresh world sees the open door'); assert.deepEqual(ra, rb, 'the running world (which cached the closed door a moment ago) agrees at once');
+});
+
+test('exit ids: an id-less exit is named "exit" + its index among ALL exits, in the validator exactly as in the sim (audit R04)', () => {
+  const g = ['###########', '#.........#', '###########'];
+  const mk2 = (unlockId) => src(g, { triggers: [{ id: 'u', when: 'time:1', do: [{ exit: { set: 'unlock', id: unlockId } }] }] }, []);
+  const withExits = (unlockId) => { const s = mk2(unlockId); s.entities = s.entities.filter((e) => e.type !== 'exit'); s.entities.push({ type: 'exit', id: 'front', at: [8, 1] }, { type: 'exit', at: [9, 1], locked: true }); return s; };
+  assert.equal(parseMap(withExits('exit1')).exits[1].id, 'exit1', 'the sim names the second exit exit1');
+  assert.equal(validateMap(withExits('exit1')).ok, true, 'an unlock aimed at exit1 is accepted');
+  bad(withExits('exit0'), /locked but no switch or trigger ever unlocks it/);
 });

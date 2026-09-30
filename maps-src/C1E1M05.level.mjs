@@ -42,7 +42,7 @@ const layers = L.layers();
 const carCells = [[26, 39], [27, 39], [26, 40], [27, 40], [26, 41], [27, 41], [26, 42], [27, 42]];
 
 export default {
-  id: 'C1E1M05', name: 'Lamplighter Hill', version: 1, ceilingHeight: 4.2, par: { time: 900 },
+  id: 'C1E1M05', name: 'Lamplighter Hill', version: 2, ceilingHeight: 4.2, par: { time: 900 },
   atmosphere: { fog: '#30303e', fogDensity: 0.011, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'LAMPLIGHTER HILL', lines: ['Somebody up there keeps the lamps lit.', 'Follow them to the beacon.'] },

@@ -43,7 +43,7 @@ L.putAll('n', [[30, 22], [30, 26], [52, 23], [52, 25], [36, 10], [36, 38]]);
 L.putAll('t', [[33, 18], [33, 30], [40, 12], [40, 38], [46, 14], [46, 34], [37, 19], [37, 29], [50, 20], [49, 34], [43, 33], [30, 32], [36, 32], [36, 16]]); L.putAll('g', [[35, 24], [43, 30], [48, 32], [39, 16], [44, 20]]); L.putAll('b', [[47, 34], [51, 34]]);                           // two Bellhands on the tower deck
 L.putAll('h', [[29, 12], [29, 36], [52, 10], [52, 38]]); L.putAll('e', [[32, 24], [42, 24], [49, 14]]); L.putAll('r', [[31, 20], [31, 28]]); L.putAll('a', [[33, 22], [33, 26], [45, 38]]); L.put(49, 35, 'H'); L.put(51, 36, 'v'); L.put(44, 22, 'H');
 // winch cabin
-L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putAll('r', [[41, 5], [45, 5]]); L.putAll('e', [[41, 6], [45, 6], [51, 22], [51, 26]]); L.putAll('a', [[49, 22], [49, 26]]); L.putAll('h', [[41, 4], [45, 4]]);
+L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putAll('r', [[41, 5], [45, 5], [42, 6], [44, 6]]); L.putAll('e', [[41, 6], [45, 6], [51, 22], [51, 26]]); L.putAll('a', [[49, 22], [49, 26]]); L.putAll('h', [[41, 4], [45, 4]]);
 // the ferry hold: idle until the winch; the Warden at the back, the rest close behind the ramp; lanterns aboard
 L.put(61, 24, 'w'); L.putAll('t', [[58, 20], [58, 28], [60, 20], [60, 28], [62, 22], [62, 26]]); L.putAll('g', [[58, 22], [58, 26], [60, 22]]); L.putAll('n', [[57, 19], [57, 29], [63, 24]]); L.putAll('C', [[62, 20], [62, 28]]);
 L.put(62, 24, '>');
@@ -52,7 +52,7 @@ const layers = L.layers();
 const rampCells = [[54, 22], [55, 22], [54, 23], [55, 23], [54, 24], [55, 24], [54, 25], [55, 25], [54, 26], [55, 26]];
 
 export default {
-  id: 'C1E1M06', name: 'Ferry Terminal', version: 1, ceilingHeight: 4.2, par: { time: 700 },
+  id: 'C1E1M06', name: 'Ferry Terminal', version: 2, ceilingHeight: 4.2, par: { time: 700 },
   atmosphere: { fog: '#2a2c38', fogDensity: 0.01, sky: 'dusk' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'FERRY TERMINAL', lines: ['The last boat is still at the quay.', 'It never left. Nobody on it did either.'] },

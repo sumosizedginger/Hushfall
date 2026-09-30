@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { textSha, engineSha } from './textsha.mjs';
 import { execSync } from 'node:child_process';
 import { validateMap, parseMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
@@ -12,15 +13,13 @@ import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '.
 const root = path.resolve(import.meta.dirname, '..');
 const id = process.argv[2]; if (!id) { console.error('usage: verify-map.mjs <MAP_ID>'); process.exit(2); }
 const mapFile = path.join(root, 'maps', id + '.json'), src = JSON.parse(fs.readFileSync(mapFile, 'utf8'));
-/** hash of every source file of the simulation: evidence produced by other engine code than the current one is stale (audit A10). tools/validate.mjs recomputes this. */
-const engineSha = () => { const dir = path.join(root, 'src/engine'), h = crypto.createHash('sha256'); for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.js')).sort()) h.update(f).update(fs.readFileSync(path.join(dir, f))); return h.digest('hex').slice(0, 16); };
-const sha = (f) => crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex').slice(0, 16);
+const sha = (f) => textSha(f);
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
 
 const v = validateMap(src);
 const dirtySource = !!sh("git status --porcelain -- . ':!review' ':!validation'");           // evidence/screenshot churn does not make the SOURCE dirty
 const evidence = { mapId: id, mapVersion: src.version, generatedBy: 'tools/verify-map.mjs', codeVersion: sh('git rev-parse --short HEAD') ?? 'uncommitted', dirtyTree: !!sh('git status --porcelain'), dirtySource: false, mapSha: sha(mapFile), assetVersion: fs.existsSync(path.join(root, 'assets/baked/manifest.json')) ? sha(path.join(root, 'assets/baked/manifest.json')) : null };
-evidence.engineSha = engineSha(); evidence.loads = v.ok; evidence.validationErrors = v.errors;
+evidence.engineSha = engineSha(root); evidence.loads = v.ok; evidence.validationErrors = v.errors;
 const automated = { pass: false, checks: [] };
 const add = (name, ok, detail = '') => automated.checks.push({ name, ok: !!ok, detail });
 if (v.ok) {

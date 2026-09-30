@@ -1,0 +1,339 @@
+[
+  {
+    "id": "A01",
+    "severity": "BLOCKER",
+    "status": "CONFIRMED",
+    "title": "M07 and M08 exits are never locked: each map declares two exit entities on the same cell and the unlocked one wins, so the radio/fuse gate and the Cantor gate can be skipped",
+    "files": [
+      "maps/C1E1M07.json",
+      "maps/C1E1M08.json",
+      "maps-src/C1E1M07.level.mjs:25,64",
+      "maps-src/C1E1M08.level.mjs:53,68",
+      "src/engine/world.js:535-537",
+      "src/engine/mapformat.js:43"
+    ],
+    "evidence": "maps-src/C1E1M07.level.mjs puts the '>' glyph at (24,9) (L.put(24, 9, '>') = an unlocked {type:'exit',dest:'next'}) AND lists { type: 'exit', at: [24, 9], locked: true } in entities (M08: line 53 and line 68, cell (28,15)). The compiled maps therefore hold two exits on one cell (exit0 locked=false, exit1 locked=true). world.step() does `map.exits.find(...)` (first match) and then tests w.exitLocked[near.id]; the first match is the unlocked exit0, so the lock, and the exit-unlock actions of the radio switch and the dead:cantor trigger, are dead code. Reproduced: (a) a01_duplicate_exit.mjs puts the player on the exit cell at tick 0 with no fuses and no boss kill: status = complete on both maps. (b) a01b_skip_route.mjs plays the real bot (through InputState) with one 'goto exit' op: C1E1M07 completes in 21 s, 14 kills, 0 damage, keys [] (no fuse picked up, radio never used, the first Vael transmission never triggered); C1E1M08 completes in 88 s with the Cantor ALIVE (hp 476/720), triggers {sealed: fired, cantor-dead: not fired}, chamber door still sealed. (c) a01c_m08_run_past_boss.mjs starts a full-health player just inside the sealed chamber door and lets a bot that NEVER fires walk to the hatch via three waypoints round the bell node that stands in front of it: status complete after 9.2 s on easy, normal and hard, damage 13 / 22 / 28, all six bell nodes still ringing and the Cantor at full health (540/540, 720/720, 864/864), trigger cantor-dead not fired. The exit sits inside the chamber, so the player must cross it, but nothing forces the fight.",
+    "repro": "node review/gate-2/audit/repro/a01_duplicate_exit.mjs ; node review/gate-2/audit/repro/a01b_skip_route.mjs ; node review/gate-2/audit/repro/a01c_m08_run_past_boss.mjs",
+    "impact": "Two of the eight main maps of the episode, including the boss level, can be finished without doing the map's designed objective (three fuses + radio; sever the ring + kill the Cantor). The canonical routes still pass, the passive-runner gate still passes (a player who never fires dies), and all 220 tests pass, so every piece of automated evidence in the Gate 2 bundle is consistent with maps whose central gate does not work. README claims about the Cantor fight ('shielded while any node rings', boss bar, 'the exit gate opens') describe behaviour the player is never forced to meet. Both maps are AGENT_VERIFIED in the derived status.",
+    "fix": "Remove the duplicate (delete the L.put(...,'>') glyph or the explicit locked entry; keep one exit with locked:true). Make validateMap reject two exits on the same or overlapping cells and make world.step() treat the level as locked if ANY exit within reach is locked. Add the gate-skip check of A02 and a shipped-map test that the exit is locked at tick 0 and unlocked only after the gate events."
+  },
+  {
+    "id": "A02",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "No automated check that a level cannot be finished without its designed gate; the viability gate only tests a PASSIVE runner, and reach.js is blind to switches, sectors and exit locks, so A01 passed every check",
+    "files": [
+      "src/engine/viability.js:24-34",
+      "src/engine/reach.js:5-45",
+      "tools/verify-map.mjs",
+      "tests/maps.test.js"
+    ],
+    "evidence": "viability.js compares only a route bot with fights:false (never fires). reach.js treats sector cells as passable at EITHER height, remote doors as passable, ignores switch prerequisites and exit locks; quality.mechanics only asserts that a map declares >=1 switch/sector/trigger, not that any of them gates progress. No test or gate runs a fighting bot straight at the exit. Running that experiment (a02_gate_skip_all_maps.mjs: one 'goto exit' op per exit, fights on and off, all nine maps) gives: M07 completes (21 s), M08 completes (88 s) (A01); M01, M02, M03, M06 and the M04 main exit correctly refuse (no path); M05's locked exit times out; M04's secret exit is reached because the bot knows where the panel is (expected). a06_validator_fuzz.mjs adds four mutated-but-valid maps that validateMap AND analyseReach accept with exitReachable=true although unwinnable: M07 with the three fuses deleted, M05 with no unlock action, M06 with the winch deleted, M08 with the Cantor deleted and the exit locked.",
+    "repro": "node review/gate-2/audit/repro/a02_gate_skip_all_maps.mjs ; node review/gate-2/audit/repro/a06_validator_fuzz.mjs (last four lines before the summary)",
+    "impact": "The README claim 'a passive runner that never fires does not walk through any map' is true only for a player who does not shoot; the verification loop that Gate 3 would industrialise has a blind spot for the most common authoring error (a lock that does not lock). The evidence line 'exit reachable from spawn (keys considered)' carries no information about gates.",
+    "fix": "Add a shared gate-skip check to viability.js, verify-map and the generic per-map test: a fighting 'goto exit' route on the shipped map must NOT complete unless the map declares quality.freeExit. Give reach.js a state-aware mode (sector states, switch order, exit locks, 'needs' items) or state plainly in the evidence that it is optimistic. Validate that a switch's `needs` keys and an exit lock each have a satisfying pickup/action."
+  },
+  {
+    "id": "A03",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "A Warden-Graft charge throws the player 3 m in a single tick with a destination-only collision test: the player is thrown through a 2 m wall",
+    "files": [
+      "src/engine/world.js:94 (tryMove)",
+      "src/engine/world.js:287 (charge knockback)",
+      "src/engine/defs.js:73 (charge.knock = 3.0)"
+    ],
+    "evidence": "tryMove(w, o, dx, dz, r) does `if (!blockedCircle(w, o.x + dx, o.z, r, o)) o.x += dx;` i.e. it tests only the end point. The Warden's charge hit calls tryMove(w, p, sin(yaw)*3.0, cos(yaw)*3.0, radius) while every map cell is 2 m. a03_warden_knockback_tunnels.mjs (real world.step on shipped M06, level cleared, one Warden, player standing 0.6 m from the one-cell wall between the quay and the winch cabin): 'tick 84 KNOCKBACK: player moved 3.00 m in ONE tick from z=16.60 to z=13.60 (row 8 -> 6)', i.e. from the outdoor quay into the interior cabin across wall row 7. (The Warden does not charge a player pressed closer than r*0.9 to a wall because moveClear needs clearance, so the repro uses 0.6 m; any player who stands near a wall with clear ground in front qualifies.) Enemy knockback is smaller (a point-blank scattergun volley pushes at most 9 x 0.22 = 2 m, splash at most 0.8 m), which is less than a one-cell wall plus a body radius, so in shipped content only the Warden's 3.0 m player knockback crosses a wall; the destination-only tryMove pattern would let any larger knock do the same. (Mutation M20 in A21: removing the Warden charge knockback entirely fails no test, so this rule has no test at all.)",
+    "repro": "node review/gate-2/audit/repro/a03_warden_knockback_tunnels.mjs",
+    "impact": "Collision integrity is broken by the flagship elite of Episode 1: a player can be teleported through a one-cell wall into a room or closet the layout keeps separate. In shipped content the exposure is real on M06 (the Warden runs the quay beside the winch cabin's one-cell wall, the repro) and small on M08 (the east leg's one-cell wall to the chamber is mostly protected because the chamber floor is 2 m higher and the tooHigh test still applies at the end point). Likelihood in normal play is low but it is a sim rule bug, not a tuning issue.",
+    "fix": "Sub-step knockback (move in <= 0.25 m increments, stopping at the first blocked step) or reuse the swept test used for walking; apply to tryMove generally. Add a kit test: knockback larger than a cell never crosses a wall."
+  },
+  {
+    "id": "A04",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "The bot-tuned maps have almost no margin: 30% less ammo alone kills the same bot in 5 of 14 map/difficulty runs, and ammo cut plus a small aim tremor in 7 of 14",
+    "files": [
+      "maps/C1E1M06.json",
+      "maps/C1E1M07.json",
+      "maps/C1E1M05.json",
+      "src/engine/viability.js",
+      "tests/shipped.test.js:56-63 (the 1.5x ammo-slack rule applies to Marrow Quay only)"
+    ],
+    "evidence": "a04_weaker_player.mjs replays each canonical main route (M02-M08, normal and hard, seed 1) through the same InputState path with the input stream degraded: start loadout and every ammo pickup x0.7 and/or a +-0.03 rad tremor added to yaw/pitch on fire ticks. Baseline: 14/14 complete. With 30% less ammo: DEAD on M05 hard, M06 normal, M06 hard, M07 normal, M07 hard (5 of 14; baseline minimum hp on M06 normal was 44). Tremor alone: DEAD on M06 normal (1 of 14). Ammo cut + tremor: DEAD on M03 hard, M05 normal, M05 hard, M06 normal, M06 hard, M07 hard, M08 hard (7 of 14). Static margin (a04b_ammo_economy.mjs): rough realistic damage the ammo on the map can deal divided by enemy HP is x2.3 (M06 normal), x2.0 (M07 normal), x1.4 (M07 hard), x1.7 (M06 and M08 hard), assuming half the pellets/splash connect. The quality gates accept any route that completes for a perfect fighter; nothing tests a margin. The Gate 1 audit repair added a rule for Marrow Quay only (tests/shipped.test.js: rounds available >= 1.5 x rounds a perfect bot fires, \"humans miss\"); a04c_ammo_slack_vs_gate1_standard.mjs applies it to every Gate 2 map: M07 normal x1.34, M07 hard x1.28 and M08 hard x1.30 are BELOW it (M06 x1.83/1.62, M08 normal x1.90 barely above); M02-M05 are x2.7-5.7. The generic maps.test.js bar contains no ammo check at all.",
+    "repro": "node review/gate-2/audit/repro/a04_weaker_player.mjs (about 4 min) ; node review/gate-2/audit/repro/a04b_ammo_economy.mjs ; node review/gate-2/audit/repro/a04c_ammo_slack_vs_gate1_standard.mjs",
+    "impact": "known-defects G2-U1 says balance is 'unverified'; this quantifies it: the maps sit on the edge of the bot's ability, and the game has no melee weapon, so a human who wastes a third of their ammo or aims worse than the bot can be left unable to finish (M06/M07) or dies. The README's 'perfect fighter completes on easy/normal/hard' says nothing about players who are not perfect. The bot is also omniscient about pickups (forage) and never fails to notice enemies.",
+    "fix": "Apply the shipped.test.js ammo-slack rule (or a stricter one) to every map in maps.test.js and viability.js; add a margin gate: the route must still complete with 25% less ammo and a modest aim error; retune M06/M07/M08 ammo or add guaranteed refills. Consider a melee/sidearm so ammo exhaustion is not a hard stop."
+  },
+  {
+    "id": "A05",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Stale and inconsistent documentation: TESTING.md still reports Gate 1 numbers; README table and known-defects disagree with their own evidence in small ways",
+    "files": [
+      "TESTING.md:3,6,8,24-26,33-37,48",
+      "review/gate-2/README.md:44,59,96",
+      "review/gate-2/known-defects.json (G2-U2)",
+      "GAME_VISION.md:40"
+    ],
+    "evidence": "TESTING.md line 3 says 'Numbers below were read from the evidence files at the commit named in validation/browser-check.json'. Line 6: 'npm test - 151 node:test tests' (measured now: tests 220, pass 220, fail 0). Lines 8/32: 66 browser checks (evidence: 89). Lines 25/37: 36 audio effects (evidence: 54). Line 26: 5 render vantage points, ceilings 350/650 (browser-check.mjs: 14 vantage points, 350/900). Line 48: 'Enemy AI is chase-and-steer ... no pathfinding' (src/engine/nav.js is a BFS distance field). README: the fighter-damage columns e/n/h are 3-seed means (a05_readme_numbers.mjs: 6 of 9 rows differ from the single-seed `damage` field, e.g. M08 normal 138 vs 159) with no label; the sentence 'a passive runner ... does not walk through any map' sits above a table whose S01 row is 'complete, 0 damage' (a safe room, excluded from the gate); known-defects G2-U2 says '53 effects' where README/audio-qa say 54. GAME_VISION.md:40 still carries the Gate 1 measurement (\"Marrow Quay has 16 enemies and a perfect bot needs ~77 s ... Reaching the length target is Gate 2 work\") and the Gate 2 README never says whether the 10-25 min per-map target was met: the bot needs 71-164 s per map and the placeholder pars are 5-18 min (4.2-7.8x the bot), so map length is unmeasured, not achieved.",
+    "repro": "node review/gate-2/audit/repro/a05_readme_numbers.mjs ; grep -n \"151\\|66 \\|36 \\|no pathfinding\\|650\" TESTING.md",
+    "impact": "AGENTS.md makes TESTING.md a persistent evidence document and it self-declares the file wins over it; a reviewer reading it gets Gate 1 numbers for a Gate 2 claim. Low harm, but exactly the kind of drift the Gate 1 audit already reported.",
+    "fix": "Regenerate TESTING.md numbers from evidence (or drop the numbers and link the JSON); label the README damage columns 'mean of 3 seeds'; fix the S01 sentence and the 53/54 mismatch. Update GAME_VISION line 40 with the Gate 2 numbers and add the length target to the README uncertainty list."
+  },
+  {
+    "id": "A06",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "validateMap is documented as 'never throws' but throws on 15 malformed shapes, accepts nonsense values (cellSize -2 / 'big', null ceilingHeight) and has no size cap",
+    "files": [
+      "src/engine/mapformat.js:80-266"
+    ],
+    "evidence": "a06_validator_fuzz.mjs mutates shipped maps: THROWS TypeError for grid[0]=null, doors=[null] / 'x', entities=[null] / {}, secrets cells [null] / [{}], sectors='x' / [null], sector.cells=[5] / [[NaN,NaN]], triggers=[null], messages=[null], scenery=[null], closets=[null] (15 cases). ACCEPTED: cellSize=-2, cellSize='big', ceilingHeight=null, a 4000x4000 grid (validation took 3.0 s and would allocate a 16M-cell world). Also accepted (valid but unwinnable, see A02): switch `needs` keys with no pickup, exit lock with no unlock action, winch removed, boss removed.",
+    "repro": "node review/gate-2/audit/repro/a06_validator_fuzz.mjs",
+    "impact": "Gate 3 is about repeatable authoring; the compiler feeds validateMap, and a crash instead of a list of errors (or a silently accepted bad number) makes authoring mistakes harder to find. No player-facing impact.",
+    "fix": "Type-guard every list/field at the top of validateMap (Array.isArray, Number.isFinite), cap grid size and cellSize range, validate `needs` against key pickups, and add a fuzz test that asserts validateMap never throws."
+  },
+  {
+    "id": "A07",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Resuming a saved game is not identical to uninterrupted play: derived nav-field cache history changes enemy steering",
+    "files": [
+      "src/engine/nav.js:43-49",
+      "src/engine/save.js:58-70",
+      "AGENTS.md (deterministic sim)"
+    ],
+    "evidence": "nav.js caches BFS distance fields on a non-enumerable w._nav and reuses a field for up to 30 ticks even if doors/sectors changed; save/load drops the cache, so a loaded world rebuilds fields at different ticks. a07_save_load_fidelity.mjs (23 mid-level checkpoints on M02/M03/M05/M06/M07/M08 through makeSave -> JSON -> parseSave -> loadWorld, then 900 idle ticks in both worlds): 22 identical, 1 diverges (M06 tick 4200, first difference +102 ticks); deleting the original's w._nav at the save point makes it identical again (scratch experiment nav.mjs: 'original nav cache dropped at the save point: null'). a07b_save_mid_events.mjs shows the NEW serialised state itself round-trips faithfully (pulse in flight, mid-channel Sexton, mid-charge Warden, revived enemy, sector mid-move, lights level): all identical.",
+    "repro": "node review/gate-2/audit/repro/a07_save_load_fidelity.mjs ; node review/gate-2/audit/repro/a07b_save_mid_events.mjs",
+    "impact": "Minor: gameplay after a load can differ slightly from the run that made the save. It contradicts 'plain-data state' (behaviour depends on hidden cache history) and would break any future replay/regression test that saves mid-route. The browser check 'resumed play equals uninterrupted play' tests one simple position.",
+    "fix": "Key the cache to state (tick % 30 aligned to absolute ticks and rebuilt on load) or serialise/rebuild it deterministically; add a route-level save/load equivalence test."
+  },
+  {
+    "id": "A08",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "parseSave/loadWorld accept structurally broken worlds; the game shell does not guard loadWorld or the sim step, so a corrupt quick-save can throw on load or freeze the loop",
+    "files": [
+      "src/engine/save.js:41-70",
+      "src/game/main.js:84-88"
+    ],
+    "evidence": "a08_hostile_saves.mjs on valid-JSON saves with the right magic and version 8: difficulty 'godmode' -> loadWorld THROWS (createWorld); world.enemies=null, world.sectors deleted, unknown enemy kind, pulses='x' -> loaded OK, then step() THROWS; world={} -> loaded OK, step() silently does nothing (status undefined) and the view/HUD then dereference w.player; player.x=null / enemy.x=null -> loaded, NaN/null propagate; world.status='complete' injected -> loads as finished; player.hp='lots' accepted; a world whose mapId differs from campaign.mapId (M08 world in an M06 save) is accepted and plays. main.js applySave() calls loadWorld without try/catch and startLevel builds the view from the loaded world. Also: mapVersion is a hand-bumped integer (all Gate 2 maps are v1), so a map edited without a bump loads an old world with mismatched triggerState/enemy ids (a missing triggerState id silently disables that trigger, see the 'triggerState missing an id' case).",
+    "repro": "node review/gate-2/audit/repro/a08_hostile_saves.mjs",
+    "impact": "Only reachable through hand-edited or foreign localStorage data, or a map revised without a version bump (likely after a REVISE decision). Result is a crash or a silently dead trigger rather than a clean 'could not load'.",
+    "fix": "Validate the world shape in loadWorld (arrays, finite numbers, known enemy kinds, mapId match), wrap load in try/catch in the shell, and derive mapVersion from a content hash of the map."
+  },
+  {
+    "id": "A09",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "The render-budget 'within 25% of a recorded baseline' check is vacuous for 9 of the 14 vantage points, and the 900-call ceiling was set just above the measured 826",
+    "files": [
+      "tools/dev/browser-check.mjs:257-269",
+      "validation/render-budget-baseline.json",
+      "review/gate-2/README.md:45"
+    ],
+    "evidence": "At f79bf59 the baseline file held the 5 Gate 1 vantage points (git show 5b55c6c:validation/render-budget-baseline.json, 'when' 2026-09-29T23:43). The evidence commit 3495524 replaced it with 14 entries whose 'when' (04:15:30.568) equals the render-budget.json measurement (04:15:30.575): browser-check.mjs writes the baseline from the same run (`if (updateBaseline || !exists) writeFileSync(...)`) and then compares the run with itself, so the check passes by construction for m03/m05/m06/m07/m08 (the committed detail shows current == baseline for every vantage). The old warehouse-all-awake baseline (117 calls) was also re-based to 145 (+24%, just inside the 25% limit). The ceiling for 'all awake' went from 650 to 900 with measured 819/826/533 (known-defects G2-U3 records the raise but not that the baseline is self-referential).",
+    "repro": "git show 5b55c6c:validation/render-budget-baseline.json ; cat validation/render-budget-baseline.json validation/render-budget.json | grep when",
+    "impact": "README says draw calls are 'compared with a recorded baseline'; for the Gate 2 maps there is no independent baseline, so a future 2x regression would only be caught by the fitted ceilings. Real-GPU performance remains unmeasured (already disclosed).",
+    "fix": "Commit the baseline in the commit BEFORE the code it guards, never regenerate it in the same run that checks it; state the fitted ceilings as such."
+  },
+  {
+    "id": "A10",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Derived status AGENT_VERIFIED is only invalidated by a change to the map or route file, never by a change to the engine that produced the evidence",
+    "files": [
+      "tools/validate.mjs:58-72",
+      "AGENTS.md (status semantics)"
+    ],
+    "evidence": "derive() compares sha256 of maps/<ID>.json and of the canonical route only. validation/maps/*.json records codeVersion ('f79bf59') but validate never compares it to anything. Consequently fixing A01/A03 in src/engine/world.js would leave every map at AGENT_VERIFIED on evidence produced by the buggy engine; `npm run status` reports 'AGENT_VERIFIED 9/68' regardless. (gate2-bundle does check provenance, but only when run.) The passing state is also just `ev.automated.pass === true`, a boolean in a file the agent writes.",
+    "repro": "read tools/validate.mjs lines 58-72; node tools/validate.mjs --status (in a copy)",
+    "impact": "'Status is derived, never typed' is true but the derivation goes stale silently when the sim changes; Gate 3 will change the sim repeatedly.",
+    "fix": "Include a hash of src/engine/** (or the engine commit) in the evidence and compare it in derive(); treat mismatch as stale."
+  },
+  {
+    "id": "A11",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "M05's funicular (the map's headline mechanic) is optional: the whole hill is walkable without ever using the car",
+    "files": [
+      "maps/C1E1M05.json",
+      "maps-src/C1E1M05.level.mjs",
+      "routes/C1E1M05.main.route.json"
+    ],
+    "evidence": "a11_m05_funicular_state_space.mjs (state search over player cell x car position): exit reachable with the car never used: true; no softlock states (4754 states, 0 without a route to the exit). a11b_m05_route_without_car.mjs deletes the car-up/waitsector ops from the canonical route and plays it: still 'complete' (9595 ticks), and the 'lift-top' ambush trigger never fires. quality.mechanics 'sectors' passes because the map declares one sector, not because it gates progress. Similar reading of design/EPISODE1 ('a funicular lift you call with a switch') and README ('moving floors ... the funicular car') overstates its role. Note the in-game objective line on M05 already says \"Climb the hill. Stairs on the terraces, or take the funicular car\" (screenshots/C1E1M05/05-in-the-car.png), so the level is honest about it; the docs (README kit list, EPISODE1.md M05 brief, GAME_VISION dated change) are what over-state it.",
+    "repro": "node review/gate-2/audit/repro/a11_m05_funicular_state_space.mjs ; node review/gate-2/audit/repro/a11b_m05_route_without_car.mjs",
+    "impact": "Design, not a bug: the Gate 2 kit item 'moving floors' is only forced (proven necessary) on M06's ramp. No softlock: dropping off the car's terrace and re-climbing by stairs always works.",
+    "fix": "Make the terrace connection depend on the car, or say in the docs that it is a shortcut."
+  },
+  {
+    "id": "A12",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Visual defects and evidence gaps: sky textures wrap with a hard vertical seam, the secret level shows a black band at the horizon, and several review screenshots do not show what their names say or are taken from inside colliders",
+    "files": [
+      "assets/baked/sky_night.png",
+      "assets/baked/sky_dusk.png",
+      "assets/baked/sky_overcast.png",
+      "review/gate-2/screenshots/C1E1M08/09-chamber.png",
+      "review/gate-2/screenshots/C1E1M08/11-pulse.png",
+      "review/gate-2/screenshots/C1E1M08/13-hatch.png",
+      "maps-src/C1E1M08.views.json",
+      "review/gate-2/screenshots/C1E1S01/06-the-sea.png"
+    ],
+    "evidence": "a12_texture_seams.mjs: the horizontal wrap-edge difference of the three sky textures is 12-18x the ordinary neighbouring-column difference (night 12.7, dusk 12.8, overcast 18.3); tiling the baked sky_night.png 2x2 (scratch tiled_sky_night.png) shows a visible discontinuity, and it is visible in review/gate-2/screenshots/C1E1M08/09-chamber.png as a straight vertical brightness edge at x=640. The M08 tour lists 16 views but only 14 PNGs exist (11b-pulse-late is missing); '11-pulse.png' shows no tone-pulse ring (teal dashes on the horizon only), so no committed image demonstrates the pulse rendering; '13-hatch.png' frames a bell node, not the exit hatch; the HUD in the M08 shots still reads 'Enter the tower (south-east door) and climb' and 'KILLS 0/41' because the camera was teleported. README 'Screenshots: 148 images' is correct as a count (148 counted). t07_screenshot_viewpoints.mjs checks all 107 tour vantages against the real collision code: 3 are inside a collider although the README says the images are taken \"from positions a player can stand in\": C1E1M02 11-excise-office (38,20), and C1E1M06 09-ramp-up and 13-look-back (50.5,24.5), which is the cell of a pillar prop. review/gate-2/screenshots/C1E1S01/06-the-sea.png (the secret level's showpiece view) shows a solid black band about 18 px tall across the whole width between the sky dome and the water plane: the water plane ends short of the horizon and the sky dome starts above the clear colour, leaving an unrendered strip (rendering bug or fog/plane-size mismatch; not listed in known-defects).",
+    "repro": "node review/gate-2/audit/repro/a12_texture_seams.mjs ; read the three PNGs above ; node review/gate-2/audit/repro/t07_screenshot_viewpoints.mjs",
+    "impact": "Cosmetic, but a human reviewer looking at the boss level images cannot verify the pulse or the exit, and the sky seam will be visible in play in five of the nine maps (night sky: M03, M04, M07, M08, S01).",
+    "fix": "Bake the sky with wrapped drawing (like the g.tile textures) or blend the seam; make the tour fail when a view is skipped; capture the pulse ring at a tick where it is on screen."
+  },
+  {
+    "id": "A13",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Repository hygiene: 117 MB of tracked review artefacts, 153 duplicate copies, loose objects unpacked (.git 134 MB)",
+    "files": [
+      "review/",
+      ".gitignore"
+    ],
+    "evidence": "git ls-files review: 446 files, 122,989,412 bytes (117 MB); 153 of them are byte-identical duplicates of another tracked file (the same screenshots copied to review/level-*, review/engine-skeleton, review/gate-1 and review/gate-2/screenshots); git count-objects -vH: 1352 loose objects, size 130 MiB, no packs; du -sh .git = 134M for 636 tracked files. Every evidence regeneration commits ~100 MB of new PNGs. No secrets or tokens found (git ls-files matched only files named *secret*, which are map secrets); dependencies are pinned exactly (package.json) with a lockfile.",
+    "repro": "git count-objects -vH ; git ls-files -s review | awk '{print $2}' | sort | uniq -c | awk '$1>1{d+=$1-1} END{print d}'",
+    "impact": "Slow clones and a repo that grows by ~100 MB per gate; not a correctness issue.",
+    "fix": "Keep screenshots in one place, gitignore regenerated tours, or store only the bundle; gc/pack the repo."
+  },
+  {
+    "id": "A14",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Explosion splash ignores walls and cover: a flare damages (and wakes) enemies on the far side of a wall, and hurts the player through it",
+    "files": [
+      "src/engine/world.js:150-163 (explode)"
+    ],
+    "evidence": "explode() damages every enemy with 3D distance < splash (3.4 m) and applies self damage using distance only; it never calls hasLOS or checks solid cells. a14_splash_through_walls.mjs (synthetic map, real world.step): an idle Tollbearer on the far side of a full 2 m wall cell (hasLOS = false, 3.45 m from the player) goes from 45 to 21.8 hp and is woken when a flare bursts against the near face of the wall; the player standing beside the burst takes 17 self damage through no obstacle at all (expected) . Pillars, crates and the bell-node stone are equally transparent to splash. Direct hits and pellets DO stop at walls, and noise() does require line of sight, so only splash is inconsistent.",
+    "repro": "node review/gate-2/audit/repro/a14_splash_through_walls.mjs",
+    "impact": "Ambush closets, Sextons behind walls and the Cantor ring nodes can be hurt through stone; the flare becomes a wall-piercing weapon at 3.4 m. It also means the bot (which uses splash on plated targets) can be getting damage the level design says cover prevents. Balance/exploit, not a crash.",
+    "fix": "Scale or cancel splash damage when hasLOS(explosion, target) is false (Doom-style), and add a kit test."
+  },
+  {
+    "id": "A15",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "HUD overlap during the boss fight: the objective panel covers the left third of the Cantor health bar; four stacked toasts and a queued transmission cover the middle of the screen",
+    "files": [
+      "index.html:31-35 (#objective, #boss)",
+      "review/gate-2/screenshots/_runtime/g2-c1e1m08-main-op87.png",
+      "review/gate-2/screenshots/C1E1M08/09-chamber.png"
+    ],
+    "evidence": "#objective is position:fixed left:16px, max-width min(520px,60vw); #boss is centred, width min(560px,80vw) at top:14px. At 1280 px the panels overlap horizontally from x=360 to x=536. In the committed boss-fight screenshot (g2-c1e1m08-main-op87.png) the two-line objective \"Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone\" visibly sits on the left end of the Cantor bar; the same frame shows four toasts (New objective / Riveter driver / A bell falls silent / Rivets (+30)) stacked in the middle of the view and the 3-line SIGNAL HOUSE transmission over the lower centre of the screen. The bundle README claims the objective line and boss bar were checked (browser check: sawObjective/sawBoss true) but the check only reads DOM text, not layout.",
+    "repro": "read the two PNGs; compute the CSS boxes above",
+    "impact": "Cosmetic but on the most important screen of the episode; narrower windows (800 px) overlap more (objective 480 px vs bar 640 px).",
+    "fix": "Anchor the boss bar below the objective panel or cap the objective width while #boss is visible; add a layout check (getBoundingClientRect intersection) to the browser check; cap simultaneous toasts."
+  },
+  {
+    "id": "A16",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "All balance evidence starts each map cold from its authored entryLoadout, but the game carries the inventory between maps: M07's authored scarcity (4/8/40) never occurs in a campaign run, and the whole-episode chain kills the same bot on hard",
+    "files": [
+      "src/engine/world.js:22",
+      "src/game/main.js:105-110 (nextLevel)",
+      "maps/C1E1M07.json (entryLoadout)",
+      "tools/verify-map.mjs",
+      "tests/maps.test.js"
+    ],
+    "evidence": "createWorld does `carry = carry ?? map.entryLoadout`, so entryLoadout applies only to a cold start; nextLevel() passes carryOver(world). verify-map, viability and every per-map test call createWorld without carry. a16_campaign_chain.mjs plays M01 -> M08 with the canonical routes and carryOver between maps (the same bot, seeds 1 and 2). Arrival inventories (hp/armour, flare/shell/rivet): NORMAL seed 1: M07 arrives with f13/s39/r0 (authored: 4/8/40) and M08 with f2/s38/r37 (authored 8/12/80); HARD seed 1: M08 arrives with armour 0, f0/s32/r32. Results: easy 2/2 chains complete, normal 2/2 complete (M08 damage 124-166), hard seed 1 completes, hard seed 2 DIES in M06 (179 damage; the standalone hard M06 evidence shows 72 damage and min HP 46). On normal, shells arrive at 34-40 (cap 40) from M02 on, so most shell pickups are wasted; rivets arrive at 200 on M03/M05 and at 0 on M07.",
+    "repro": "node review/gate-2/audit/repro/a16_campaign_chain.mjs",
+    "impact": "The README/design claims about M07 (ammo scarcity by design; the rivet driver and melee-range scattergun decide) and about per-map difficulty describe a state a campaign player is not in: they arrive with ~39 shells and 0 rivets instead of 8 shells and 40 rivets, a different problem. In the shipped game a new game always starts at M01 (but see A17) and every later map arrives through carry-over, so the authored entryLoadout of M02-M08, which all the balance evidence is measured from, is never what a player starts with. The 89-check browser run exercises the M01 -> M02 carry only. Related design risk (code reading, not run): carryOver keeps hp >= 1 and Retry restores that arrival state (levelStart), so a player who finishes a map at a few HP with an empty gun re-starts every retry of the next map from that state; there is no pistol/health reset and no test of minimal arrival states.",
+    "fix": "Verify each map from the arrival inventory the previous map actually produces (run the chain in verify-map / a test), or reset the loadout at each map (Doom-style pistol start) so evidence and play agree; cap-aware pickup placement."
+  },
+  {
+    "id": "A17",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "New Game from the title screen starts the LAST-PLAYED map, not the first: g.mapId survives Quit to title and finishing the episode",
+    "files": [
+      "src/game/main.js:48 (g.mapId), 55 (newGame), 93 (startLevel default), 111-113 (quitToTitle)"
+    ],
+    "evidence": "newGame is `(d) => startLevel({ difficulty: d, seed: ... })` and startLevel defaults `mapId = g.mapId`; g.mapId is only ever assigned from the loaded world and quitToTitle() does not reset it. Reproduced in the dev build (in-app browser on the running dev server, one page load): (1) game started in C1E1M05 through the game's own startLevel; (2) pause -> click #btn-quit (\"Quit to title\"): state {mode: title, mapId: C1E1M05}; (3) click the title's #btn-normal: state {mode: playing, mapId: C1E1M05, tick 0, ammo flare 8 / shell 12 / rivet 60 (the map's authored cold entryLoadout)}. A second attempt then ran the M01 canonical route on that world and the bot failed (\"stuck during op 2\"), confirming the wrong map was loaded. By code reading (not played through, the pane cannot run rAF) the same follows after finishing M08: the intermission button is \"Back to title\" (nextLevel -> quitToTitle, which also leaves g.mapId) (no C1E2M01 yet), after which Normal restarts C1E1M08. The browser check only clicks Normal on a fresh page, and its route/flow checks call the test hook (newGame with an explicit mapId).",
+    "repro": "open http://localhost:5173/ (dev), in the console: t=__GAME_TEST__; t.newGame(\"normal\",5,{mapId:\"C1E1M05\"}); t.pause(); btn-quit.click(); btn-normal.click(); t.state().mapId  // -> \"C1E1M05\"",
+    "impact": "A player who quits mid-episode, or finishes Episode 1 and returns to the title, cannot start a new game from the beginning: every difficulty button re-enters the last map with a cold loadout. There is no map select. Also makes the entryLoadout of later maps reachable by ordinary play, silently bypassing the campaign carry-over the balance assumes (A16).",
+    "fix": "Reset g.mapId to the first map (or take mapId explicitly) in newGame and quitToTitle; add a browser check that plays a level, quits, clicks a difficulty and asserts C1E1M01."
+  },
+  {
+    "id": "A18",
+    "severity": "MAJOR",
+    "status": "CONFIRMED",
+    "title": "Continue always loads the quick-save slot first, even when the auto-save is newer, so progress made after an old F5 is unreachable",
+    "files": [
+      "src/game/main.js:80-83 (loadFirstSave)",
+      "src/engine/save.js:34 (savedAt is written but never read)"
+    ],
+    "evidence": "loadFirstSave() loops `for (const slot of [\"quick\", \"auto\"])` and applies the first readable one; the saves carry savedAt (Date.now()) but nothing compares it. startLevel() (any fresh level entry, including Next) overwrites the \"auto\" slot; nothing ever clears or ages \"quick\". Reproduced in the dev build (in-app browser, localStorage cleared first): F5 in C1E1M02 (quick = M02 tick 30), then a new level start in C1E1M06 (auto = M06 tick 0), pause -> Quit to title -> Continue: state {mode: playing, mapId: C1E1M02, tick: 30}. The Ferry Terminal auto-save is not loadable through the UI; it is overwritten the next time any level starts.",
+    "repro": "dev build console: t=__GAME_TEST__; t.newGame(\"normal\",1,{mapId:\"C1E1M02\"}); t.tick(30); t.save(); t.newGame(\"normal\",2,{mapId:\"C1E1M06\"}); t.pause(); btn-quit.click(); btn-continue.click(); t.state().mapId  // -> C1E1M02",
+    "impact": "A player who quick-saved once early and then progressed through several maps loses their place on Continue (the newer auto-save is shadowed). Combined with A17 (New Game re-enters the last map) the save/start flow is unreliable for a campaign the Gate 2 bundle presents as playable end to end.",
+    "fix": "Choose the slot with the newest savedAt (or show both slots), and clear or age the quick slot when a new level starts."
+  },
+  {
+    "id": "A19",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Evidence field canonicalRoute.expectedEvents is a hard-coded constant copied into every map (including maps with no key) and is never checked",
+    "files": [
+      "tools/verify-map.mjs:39",
+      "validation/maps/*.json (canonicalRoute.expectedEvents)"
+    ],
+    "evidence": "verify-map.mjs writes expectedEvents: [\"door_open\",\"pickup:key_brass\",\"level_complete\"] for every map. All nine evidence files carry it; C1E1M06 (facts.keys = 0) and C1E1S01 (no key, no fight) therefore \"expect\" a brass-key pickup that does not exist on them. grep shows nothing reads the field (only review/gate-1/play-path.json, a Gate 1 artefact, has it). The adjacent `proves` text is honest (\"one valid tested path\"), but the field reads as verified evidence.",
+    "repro": "grep -rn expectedEvents tools src tests ; node -e \"console.log(require('./validation/maps/C1E1M06.json').canonicalRoute.expectedEvents)\"",
+    "impact": "Misleading evidence bookkeeping for a reviewer skimming validation/maps/*.json; no runtime effect.",
+    "fix": "Derive the list from the route run (events actually seen) and assert them in a test, or delete the field."
+  },
+  {
+    "id": "A20",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Design brief items not delivered, and M05 instructs the player to read a lamp signal system that does not exist",
+    "files": [
+      "design/EPISODE1.md:12,31,37",
+      "maps-src/C1E1M05.level.mjs:3,47,60-64",
+      "maps/C1E1M05.json",
+      "src/render/models_g2.js:46-54 (makeLantern)",
+      "maps/C1E1M08.json"
+    ],
+    "evidence": "M05's intro card says \"Green lamp: safe. Red lamp: bells.\" and two in-world transmissions refer to \"Red lamp on terrace four!\" and \"Green lamp, safe house at the top\". All 13 lantern props in maps/C1E1M05.json have only {type, kind, at}: no tint or state, and makeLantern() builds one warm lamp (0xffd48a glow, 0xffb060 point light). Nothing changes colour or reacts to the player, so the promised signalling (and EPISODE1.md line 31 \"lamps that survivors light as you pass\", \"drop-downs as shortcuts and traps\": there are no trap drops, see t02_trap_cells.mjs: 0 trap cells on every map) does not exist. EPISODE1.md line 12 and line 37 list \"tower platforms\" and \"rising platforms\" for the Bell Tower; maps/C1E1M08.json has no sectors (the spiral is static stairs). GAME_VISION and README do not claim these, so this is design-versus-delivery drift rather than a false status claim.",
+    "repro": "node -e \"const m=require('./maps/C1E1M05.json');console.log(m.entities.filter(e=>e.kind==='lantern').map(e=>Object.keys(e).join()).filter((v,i,a)=>a.indexOf(v)===i))\" ; node review/gate-2/audit/repro/t02_trap_cells.mjs",
+    "impact": "The level text teaches a rule the game does not follow; a human reviewer comparing the brief with the maps will find M05's identity mechanic and M08's moving platforms missing.",
+    "fix": "Either implement red/green lamps (a trigger-driven tint), or remove the lamp lines from the intro/messages and the brief; update EPISODE1.md to what shipped."
+  },
+  {
+    "id": "A22",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Kit trap: pickups and switches placed on a moving-floor cell keep their creation-time height, and validateMap accepts them",
+    "files": [
+      "src/engine/world.js:48 (pickup y = floorAt at tick 0)",
+      "src/engine/world.js:507 (|it.y - p.y| <= 1)",
+      "src/engine/mapformat.js:44 (switch fy = static floor)",
+      "src/engine/mapformat.js:183-195 (sector validation)"
+    ],
+    "evidence": "a22_pickup_on_sector.mjs: a health_large placed on a lift cell; validateMap returns {ok:true}; after the lift rises 2 m the pickup still has y = 0, the player standing beside it on the lift (y = 2) cannot take it (hp stays 40 instead of 80) and the view draws it at y = 0 under the raised slab. The same rule (fy taken from the static floor) means a switch mounted on a sector cell cannot be used once the sector is more than 1.5 m from its static height: M05's own `car-up` lever sits on the car (fy = 2, car high = 4), which is harmless there only because the player never needs it at the top. No shipped map places a pickup on a sector, so nothing is broken today.",
+    "repro": "node review/gate-2/audit/repro/a22_pickup_on_sector.mjs",
+    "impact": "A trap for Gate 3 authors (lift-borne pickups are a natural design); the validator and t01-style reachability say nothing.",
+    "fix": "Make pickup y (and switch fy) follow the sector, or make validateMap reject pickups/switches on sector cells; add a kit test."
+  },
+  {
+    "id": "A21",
+    "severity": "MINOR",
+    "status": "CONFIRMED",
+    "title": "Test-suite weaknesses: vacuous assertions, an audio-coverage test that never reads script.js, exit locks proven only on a synthetic map, and 8 of 22 sim mutations that no test notices",
+    "files": [
+      "tests/elites.test.js:57,93",
+      "tests/audio.test.js:12-16",
+      "tests/maps.test.js",
+      "tests/sim.test.js:105-110"
+    ],
+    "evidence": "(1) Vacuous assertions in tests/elites.test.js: line 57 `assert.ok(ev.some(warden_crash) || e.stunT > 0 || true)` can never fail; line 93 `assert.ok(w.pulses.length > 0 || c.pulseT >= 0 || w.tick > 0)` is true whenever the sim has ticked, so the \"pulses survive a save\" test does not require a pulse to exist (my a07b probe shows it does round-trip, the test just cannot tell). The Warden test title promises \"takes 60% more damage while down\" but asserts no damage number. (2) tests/audio.test.js emitted() scans only src/engine/world.js; a scratchpad copy with a new event emitted from src/engine/script.js (which emits switch, lights, sector_start/stop, exit_unlock, enemy_spawn, ...) and no sound/silent entry still passes all 8 audio tests, contradicting the SILENT_EVENTS comment that a new event without a sound fails the coverage test. (3) The generic tests/maps.test.js bar contains no ammo, gate or design-contract test; the only per-map design contracts (gated exit, 1.5x ammo slack, safe start) exist for Marrow Quay in shipped.test.js. Removing exit locks entirely (mutation M10) fails exactly one test, the synthetic-fixture one in kit.test.js; on the shipped maps it changes nothing, which is what A01 makes true. (4) Determinism tests run the same route twice with one seed and compare hashes (true by construction on one engine). (5) Mutation testing (22 one-line mutations applied to a scratchpad copy, the whole 220-test suite run after each; baseline 220/220): 8 of 22 completed mutations survived: M11 (armour absorbs nothing); M12 (melee ignores height difference (dyv<1.6 always true)); M13 (warden crash does not stun (stun 2.6 -> 0)); M14 (seal action does nothing); M18 (dead:<group> trigger fires on ANY dead member); M19 (warden takes no extra damage while stunned (stunMult 1.6 -> 1)); M20 (warden charge has no knockback (knock 3 -> 0)); M21 (cantor pulse does no damage (22 -> 0)). Killed: M01 by 1, M02 by 2, M03 by 1, M04 by 2, M05 by 1, M06 by 4, M07 by 1, M08 by 1, M09 by 1, M10 by 1, M15 by 8, M16 by 2, M17 by 1, M22 by 1. Full list: M01 warden plate does nothing (armor.front 0.34 -> 1): 1 test(s) fail | M02 tone pulse ignores cover (drop hasLOS in updatePulses): 2 test(s) fail | M03 tone pulse ignores height (drop |dy|<1): 1 test(s) fail | M04 enter-triggers re-fire every tick (fire-once guard dropped for enter): 2 test(s) fail | M05 switch `needs` never refuses: 1 test(s) fail | M06 hard enemyDamage 1.25 -> 1.0: 4 test(s) fail | M07 Sexton revive cap removed: 1 test(s) fail | M08 toxic residue does no damage (dps 6 -> 0): 1 test(s) fail | M09 Cantor shield does nothing (reduce 0.05 -> 1): 1 test(s) fail | M10 exit lock ignored: 1 test(s) fail | M11 armour absorbs nothing: SURVIVED (220/220 still pass) | M12 melee ignores height difference (dyv<1.6 always true): SURVIVED (220/220 still pass) | M13 warden crash does not stun (stun 2.6 -> 0): SURVIVED (220/220 still pass) | M14 seal action does nothing: SURVIVED (220/220 still pass) | M15 sectors never move: 8 test(s) fail | M16 enemies cannot climb (nav ignores STEP rule): 2 test(s) fail | M17 sexton channel is not interrupted by damage: 1 test(s) fail | M18 dead:<group> trigger fires on ANY dead member: SURVIVED (220/220 still pass) | M19 warden takes no extra damage while stunned (stunMult 1.6 -> 1): SURVIVED (220/220 still pass) | M20 warden charge has no knockback (knock 3 -> 0): SURVIVED (220/220 still pass) | M21 cantor pulse does no damage (22 -> 0): SURVIVED (220/220 still pass) | M22 cantor never summons (max 8 -> 0): 1 test(s) fail. Note M11-style survivors are partly an artefact of constant mutation: tests/sim.test.js:105-110 derives its expected value from PLAYER.armorAbsorb itself, so a re-tuned constant is invisible even though a logic regression would be caught. Reading the survivors: M12 is probably an equivalent mutant (the same height guard also gates the start of the melee windup); M11 is the constant-mutation artefact above; the substantive survivors are M13 (a Warden that crashes into a wall is not stunned), M14 (the seal action does nothing: no test checks that the M08 chamber door seals behind the player), M18 (dead:<group> should need ALL members dead; the tests only use one-member groups), M19 (the 60% extra damage while stunned), M20 (the Warden charge knockback, the mechanism of A03: removing it fails no test) and M21 (a tone pulse that does 0 damage).",
+    "repro": "grep -n \"|| true\\|w.tick > 0)\" tests/elites.test.js ; the runner is review/gate-2/audit/repro/mutation_runner.mjs (run it on a scratch copy: MUT_DIR=<copy> node mutation_runner.mjs), results are summarised above; audio gap: add emit(w, 'bogus_event', {}) to src/engine/script.js in a copy and run node --test tests/audio.test.js",
+    "impact": "The 220/220 headline is weaker for the Gate 2 kit than for Gate 1 content: several new rules are covered by tests that cannot fail or by no test, and nothing in the suite would catch a lock that does not lock on a shipped map. Gate 3 will lean on this suite for regression protection.",
+    "fix": "Replace the two vacuous assertions with real ones (assert a crash event/stun and a pulse in flight before saving); scan src/engine/*.js in the audio coverage test; add per-map gate tests via the A02 check; pin tuned constants in tests where the number is the contract; add a Warden stun-multiplier assertion."
+  }
+]

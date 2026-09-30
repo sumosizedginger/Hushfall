@@ -1,6 +1,6 @@
 {
-  "when": "2026-09-30T04:15:48.896Z",
-  "commit": "f79bf59",
+  "when": "2026-09-30T11:25:31.163Z",
+  "commit": "07f456e",
   "dirtySource": false,
   "mapSha": "aafbb26f67fe1cb1",
   "mapShas": {
@@ -8,92 +8,92 @@
     "C1E1M02": "229709eccc79904d",
     "C1E1M03": "fb24bf3783be85d9",
     "C1E1M04": "90c806a4c8f82434",
-    "C1E1M05": "91edfe68c3733850",
-    "C1E1M06": "5fba349b2cdacf16",
-    "C1E1M07": "9d272ea2befd8665",
-    "C1E1M08": "4ed1523e145cbb7a",
+    "C1E1M05": "4a10f5824964697c",
+    "C1E1M06": "a3f4c6bcbf3dbb36",
+    "C1E1M07": "3705ffb4b4090816",
+    "C1E1M08": "56cb4c4047bc684f",
     "C1E1S01": "78ffb66aa02e4389"
   },
   "gate2Routes": {
     "C1E1M02.main": {
       "ok": true,
-      "ticks": 7444,
-      "hash": "414d5792",
-      "nodeTicks": 7444,
-      "nodeHash": "414d5792",
+      "ticks": 7441,
+      "hash": "dcd1f537",
+      "nodeTicks": 7441,
+      "nodeHash": "dcd1f537",
       "kills": 30,
       "secrets": 0
     },
     "C1E1M02.secret": {
       "ok": true,
-      "ticks": 8168,
-      "hash": "0a3ecc90",
-      "nodeTicks": 8168,
-      "nodeHash": "0a3ecc90",
+      "ticks": 8165,
+      "hash": "01966ea3",
+      "nodeTicks": 8165,
+      "nodeHash": "01966ea3",
       "kills": 30,
       "secrets": 1
     },
     "C1E1M03.main": {
       "ok": true,
-      "ticks": 9147,
-      "hash": "805d3c1e",
-      "nodeTicks": 9147,
-      "nodeHash": "805d3c1e",
+      "ticks": 9143,
+      "hash": "04f104c4",
+      "nodeTicks": 9143,
+      "nodeHash": "04f104c4",
       "kills": 41,
       "secrets": 0
     },
     "C1E1M04.main": {
       "ok": true,
-      "ticks": 8161,
-      "hash": "f641a736",
-      "nodeTicks": 8161,
-      "nodeHash": "f641a736",
+      "ticks": 8159,
+      "hash": "697eceeb",
+      "nodeTicks": 8159,
+      "nodeHash": "697eceeb",
       "kills": 32,
       "secrets": 0
     },
     "C1E1M04.secret": {
       "ok": true,
       "ticks": 6240,
-      "hash": "29c948a3",
+      "hash": "5a725247",
       "nodeTicks": 6240,
-      "nodeHash": "29c948a3",
+      "nodeHash": "5a725247",
       "kills": 26,
       "secrets": 1
     },
     "C1E1M05.main": {
       "ok": true,
       "ticks": 8155,
-      "hash": "9f38b6a5",
+      "hash": "ed951d75",
       "nodeTicks": 8155,
-      "nodeHash": "9f38b6a5",
-      "kills": 39,
+      "nodeHash": "ed951d75",
+      "kills": 40,
       "secrets": 0
     },
     "C1E1M06.main": {
       "ok": true,
-      "ticks": 5405,
-      "hash": "ae3146c9",
-      "nodeTicks": 5405,
-      "nodeHash": "ae3146c9",
-      "kills": 47,
+      "ticks": 6233,
+      "hash": "32d46837",
+      "nodeTicks": 6233,
+      "nodeHash": "32d46837",
+      "kills": 46,
       "secrets": 0
     },
     "C1E1M07.main": {
       "ok": true,
-      "ticks": 9730,
-      "hash": "841cc893",
-      "nodeTicks": 9730,
-      "nodeHash": "841cc893",
+      "ticks": 9674,
+      "hash": "ceada123",
+      "nodeTicks": 9674,
+      "nodeHash": "ceada123",
       "kills": 37,
       "secrets": 0
     },
     "C1E1M08.main": {
       "ok": true,
-      "ticks": 9834,
-      "hash": "a60fef0b",
-      "nodeTicks": 9834,
-      "nodeHash": "a60fef0b",
-      "kills": 44,
+      "ticks": 10899,
+      "hash": "cf9d3006",
+      "nodeTicks": 10899,
+      "nodeHash": "cf9d3006",
+      "kills": 47,
       "secrets": 0
     },
     "C1E1S01.main": {
@@ -127,7 +127,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=36"
+      "detail": "mode=playing tick=37"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -187,7 +187,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.13 m, sprint 6.62 m, ratio 1.60"
+      "detail": "walk 4.24 m, sprint 6.61 m, ratio 1.56"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -282,7 +282,7 @@
     {
       "name": "browser sim == Node sim (state hash)",
       "ok": true,
-      "detail": "browser f078a6e2 vs node f078a6e2"
+      "detail": "browser 6d0e7965 vs node 6d0e7965"
     },
     {
       "name": "every enemy killed, key held",
@@ -317,42 +317,42 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7444 wall=3s"
+      "detail": "status=complete failed=null ticks=7441 wall=3s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7444/414d5792 vs node 7444/414d5792"
+      "detail": "browser 7441/dcd1f537 vs node 7441/dcd1f537"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8168 wall=3s"
+      "detail": "status=complete failed=null ticks=8165 wall=2s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8168/0a3ecc90 vs node 8168/0a3ecc90"
+      "detail": "browser 8165/01966ea3 vs node 8165/01966ea3"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9147 wall=5s"
+      "detail": "status=complete failed=null ticks=9143 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9147/805d3c1e vs node 9147/805d3c1e"
+      "detail": "browser 9143/04f104c4 vs node 9143/04f104c4"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8161 wall=3s"
+      "detail": "status=complete failed=null ticks=8159 wall=3s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8161/f641a736 vs node 8161/f641a736"
+      "detail": "browser 8159/697eceeb vs node 8159/697eceeb"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
@@ -362,47 +362,47 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6240/29c948a3 vs node 6240/29c948a3"
+      "detail": "browser 6240/5a725247 vs node 6240/5a725247"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8155 wall=5s"
+      "detail": "status=complete failed=null ticks=8155 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8155/9f38b6a5 vs node 8155/9f38b6a5"
+      "detail": "browser 8155/ed951d75 vs node 8155/ed951d75"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=5405 wall=5s"
+      "detail": "status=complete failed=null ticks=6233 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5405/ae3146c9 vs node 5405/ae3146c9"
+      "detail": "browser 6233/32d46837 vs node 6233/32d46837"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9730 wall=3s"
+      "detail": "status=complete failed=null ticks=9674 wall=3s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9730/841cc893 vs node 9730/841cc893"
+      "detail": "browser 9674/ceada123 vs node 9674/ceada123"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9834 wall=4s"
+      "detail": "status=complete failed=null ticks=10899 wall=5s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9834/a60fef0b vs node 9834/a60fef0b"
+      "detail": "browser 10899/cf9d3006 vs node 10899/cf9d3006"
     },
     {
       "name": "Gate 2 real-game route C1E1S01.main: completes in the browser",
@@ -418,6 +418,21 @@
       "name": "Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse",
       "ok": true,
       "detail": "{\"sawObjective\":true,\"sawBoss\":true,\"sawShield\":true,\"sawFuse\":true}"
+    },
+    {
+      "name": "Gate 2 flow: Quit to title returns to the title screen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Gate 2 flow: New Game after playing another map starts C1E1M01 from tick 0 (not the last map)",
+      "ok": true,
+      "detail": "C1E1M01 tick 0"
+    },
+    {
+      "name": "Gate 2 flow: Continue loads the newest save (the auto-save of C1E1M06), not an older quick save of C1E1M02",
+      "ok": true,
+      "detail": "C1E1M06/playing"
     },
     {
       "name": "quick load restores the saved state (hp back, tick back)",
@@ -452,17 +467,17 @@
     {
       "name": "render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles",
       "ok": true,
-      "detail": "{\"pier\":[191,191,21474,21474],\"plaza\":[161,161,19338,19338],\"warehouse\":[68,68,9508,9508],\"plaza-all-awake\":[493,493,19338,19338],\"warehouse-all-awake\":[145,145,9616,9616],\"m03-market\":[234,234,38916,38916],\"m03-market-all-awake\":[819,819,38916,38916],\"m05-terrace\":[121,121,18458,18458],\"m05-terrace-all-awake\":[419,419,18458,18458],\"m06-quay\":[147,147,31610,31610],\"m06-quay-all-awake\":[826,826,31610,31610],\"m07-atrium\":[196,196,29522,29522],\"m08-chamber\":[184,184,20694,20694],\"m08-chamber-all-awake\":[533,533,21638,21638]}"
+      "detail": "{\"pier\":[191,191,21474,21474],\"plaza\":[161,161,19338,19338],\"warehouse\":[68,68,9508,9508],\"plaza-all-awake\":[493,493,19338,19338],\"warehouse-all-awake\":[145,145,9616,9616],\"m03-market\":[234,234,38916,38916],\"m03-market-all-awake\":[819,819,38916,38916],\"m05-terrace\":[121,121,18428,18428],\"m05-terrace-all-awake\":[419,419,18428,18428],\"m06-quay\":[180,180,31398,31398],\"m06-quay-all-awake\":[830,830,31398,31398],\"m07-atrium\":[210,210,29810,29810],\"m08-chamber\":[196,196,20918,20918],\"m08-chamber-all-awake\":[537,537,21698,21698]}"
     },
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":191,\"triangles\":21474,\"geometries\":1329,\"textures\":31,\"programs\":12},\"plaza\":{\"calls\":161,\"triangles\":19338,\"geometries\":1329,\"textures\":31,\"programs\":12},\"warehouse\":{\"calls\":68,\"triangles\":9508,\"geometries\":1329,\"textures\":31,\"programs\":12},\"plaza-all-awake\":{\"calls\":493,\"triangles\":19338,\"geometries\":1655,\"textures\":31,\"programs\":12},\"warehouse-all-awake\":{\"calls\":145,\"triangles\":9616,\"geometries\":1655,\"textures\":31,\"programs\":12},\"m03-market\":{\"calls\":234,\"triangles\":38916,\"geometries\":1471,\"textures\":31,\"programs\":13},\"m03-market-all-awake\":{\"calls\":819,\"triangles\":38916,\"geometries\":2029,\"textures\":31,\"programs\":13},\"m05-terrace\":{\"calls\":121,\"triangles\":18458,\"geometries\":1370,\"textures\":31,\"programs\":10},\"m05-terrace-all-awake\":{\"calls\":419,\"triangles\":18458,\"geometries\":1636,\"textures\":31,\"programs\":10},\"m06-quay\":{\"calls\":147,\"triangles\":31610,\"geometries\":1398,\"textures\":31,\"programs\":11},\"m06-quay-all-awake\":{\"calls\":826,\"triangles\":31610,\"geometries\":2051,\"textures\":31,\"programs\":11},\"m07-atrium\":{\"calls\":196,\"triangles\":29522,\"geometries\":1382,\"textures\":31,\"programs\":11},\"m08-chamber\":{\"calls\":184,\"triangles\":20694,\"geometries\":1355,\"textures\":31,\"programs\":11},\"m08-chamber-all-awake\":{\"calls\":533,\"triangles\":21638,\"geometries\":1698,\"textures\":31,\"programs\":11}}"
+      "detail": "{\"pier\":{\"calls\":191,\"triangles\":21474,\"geometries\":1387,\"textures\":31,\"programs\":12},\"plaza\":{\"calls\":161,\"triangles\":19338,\"geometries\":1387,\"textures\":31,\"programs\":12},\"warehouse\":{\"calls\":68,\"triangles\":9508,\"geometries\":1387,\"textures\":31,\"programs\":12},\"plaza-all-awake\":{\"calls\":493,\"triangles\":19338,\"geometries\":1713,\"textures\":31,\"programs\":12},\"warehouse-all-awake\":{\"calls\":145,\"triangles\":9616,\"geometries\":1713,\"textures\":31,\"programs\":12},\"m03-market\":{\"calls\":234,\"triangles\":38916,\"geometries\":1529,\"textures\":31,\"programs\":13},\"m03-market-all-awake\":{\"calls\":819,\"triangles\":38916,\"geometries\":2087,\"textures\":31,\"programs\":13},\"m05-terrace\":{\"calls\":121,\"triangles\":18428,\"geometries\":1432,\"textures\":31,\"programs\":10},\"m05-terrace-all-awake\":{\"calls\":419,\"triangles\":18428,\"geometries\":1698,\"textures\":31,\"programs\":10},\"m06-quay\":{\"calls\":180,\"triangles\":31398,\"geometries\":1502,\"textures\":31,\"programs\":11},\"m06-quay-all-awake\":{\"calls\":830,\"triangles\":31398,\"geometries\":2126,\"textures\":31,\"programs\":11},\"m07-atrium\":{\"calls\":210,\"triangles\":29810,\"geometries\":1454,\"textures\":31,\"programs\":11},\"m08-chamber\":{\"calls\":196,\"triangles\":20918,\"geometries\":1425,\"textures\":31,\"programs\":11},\"m08-chamber-all-awake\":{\"calls\":537,\"triangles\":21698,\"geometries\":1759,\"textures\":31,\"programs\":11}}"
     },
     {
       "name": "render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)",
       "ok": true,
-      "detail": "{\"pier\":191,\"plaza\":161,\"warehouse\":68,\"plaza-all-awake\":493,\"warehouse-all-awake\":145,\"m03-market\":234,\"m03-market-all-awake\":819,\"m05-terrace\":121,\"m05-terrace-all-awake\":419,\"m06-quay\":147,\"m06-quay-all-awake\":826,\"m07-atrium\":196,\"m08-chamber\":184,\"m08-chamber-all-awake\":533}"
+      "detail": "{\"pier\":191,\"plaza\":161,\"warehouse\":68,\"plaza-all-awake\":493,\"warehouse-all-awake\":145,\"m03-market\":234,\"m03-market-all-awake\":819,\"m05-terrace\":121,\"m05-terrace-all-awake\":419,\"m06-quay\":180,\"m06-quay-all-awake\":830,\"m07-atrium\":210,\"m08-chamber\":196,\"m08-chamber-all-awake\":537}"
     },
     {
       "name": "looking at a closed door within reach shows how to open it",
@@ -537,17 +552,17 @@
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
       "ok": true,
-      "detail": "geometries 1336->1336, textures 31->31, programs 12->12"
+      "detail": "geometries 1394->1394, textures 31->31, programs 12->12"
     },
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=44.2ms"
+      "detail": "frames=900 avg=46.4ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 767 ms, p95 167 ms"
+      "detail": "worst 683 ms, p95 167 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -558,12 +573,12 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 44.16588888888889,
+    "avgMs": 46.40666666666667,
     "p95Ms": 166.6999999999971,
-    "worstMs": 766.6999999999971
+    "worstMs": 683.3000000000029
   },
   "gl": {
-    "geometries": 1388,
+    "geometries": 1446,
     "textures": 31,
     "calls": 1,
     "triangles": 2,

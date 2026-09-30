@@ -27,7 +27,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm run build` — production build to `dist/` (test hook is compiled out)
 - `npm run verify` — validate + test + build
 - `npm run browsercheck` (1-5 min; do not wrap in a short timeout; `-- --update-baseline` rewrites the render-budget baseline) — headless-Chrome run of the real game (live input incl. sprint/ADS, un-teleported walk + ordered transmissions, prompts, canonical routes, Node-vs-browser parity, save/load, pause layout, GPU-leak check); writes `validation/browser-check.json` (stamped with commit + map sha) + `review/engine-skeleton/*.png`
-- `npm run verify-map -- <ID>` — regenerate `validation/maps/<ID>.json` evidence: routes x 3 difficulties, reachability, viability (passive runner must not get through, perfect bot must take damage, par plausible), browser evidence bound to the map sha, open BLOCKERs from `review/gate-1/known-defects.json` (status is derived by validate, never written)
+- `npm run verify-map -- <ID>` — regenerate `validation/maps/<ID>.json` evidence: routes x 3 difficulties, reachability, viability (passive runner must not get through, perfect bot must take damage and finish on enough seeds, par plausible), the gate-skip probe (an invulnerable fighting bot sent at each main exit must not finish), ammo slack (1.5x, total and per type), robustness (a strafing bot with aim error / 25% less ammo pickups must finish on normal), browser evidence bound to the map sha, an engine hash (evidence made by other `src/engine` code is stale), open BLOCKERs from both known-defects files (status is derived by validate, never written)
 - `npm run validate` / `npm run status` — topology + evidence checks / derived status counts
 - `npm run bake` — regenerate baked assets into `assets/baked/` (headless Chrome; slow under software GL; `BAKE_PORT` allows parallel bakes)
 - `npm run audio-qa` — renders every SFX + the score offline in headless Chrome, measures them (finite/audible/no clipping/decays/reproducible), writes `review/audio/*.wav` (LISTEN to these) + `validation/audio.json`
@@ -50,7 +50,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 
 ## Persistent files
 `design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
-`PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
+`PLAYTEST_NOTES.md` human playtest reports with causes, guards and the next work list (read before any code work) · `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
 
 ## p5.brush facts learned (see ART_BIBLE.md)
 - ESM instance mode: call `brush.instance(p)` before setup AND `brush.seed(n)` + `brush.noiseSeed(n)` explicitly; the `p.randomSeed` hook does not reach brush.
