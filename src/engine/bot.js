@@ -1,7 +1,8 @@
 // Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
-// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait.
-import { PLAYER, WEAPONS, ENEMIES, PROPS } from './defs.js';
+// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to}.
+import { PLAYER, WEAPONS, ENEMIES, PROPS, STEP } from './defs.js';
 import { hasLOS } from './world.js';
+import { cellFloor } from './terrain.js';
 
 const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -9,6 +10,7 @@ const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 export class Bot {
   /** fights:false makes a passive RUNNER: it follows the route but never fires and never dodges. Used to prove a level is not survivable by ignoring it. */
   constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90, fights = true } = {}) {
+    if (!fights) stuckTicks = Infinity;                          // a passive runner that is boxed in stays there and takes what comes (that is the point of the runner)
     this.fights = fights; this.fightTicks = 0; this.noFightUntil = 0; this.w = world; this.in = input; this.route = route; this.i = 0; this.opTicks = 0; this.maxOp = maxTicksPerOp; this.stuckTicks = stuckTicks;
     this.path = null; this.pathKey = ''; this.usePressed = false; this.fireHeld = false; this.lastPos = [world.player.x, world.player.z]; this.stillFor = 0; this.calm = 0; this.failed = null; this.log = [];
   }
@@ -18,8 +20,9 @@ export class Bot {
     const m = this.w.map, k = m.kind(cx, cz), p = this.w.player;
     if (goal && cx === goal[0] && cz === goal[1]) return true;
     if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
-    if (k === 'floor' || k === 'outdoor' || k === 'secret') return true;
-    if (k === 'door') { const d = m.doorAt(cx, cz); return !d.key || p.keys.includes(d.key); }
+    if (k === 'secret') { const d = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !d?.closet || d.open > 0.85; }     // a closet panel is a wall until an event opens it
+    if (k === 'floor' || k === 'outdoor') return true;
+    if (k === 'door') { const d = m.doorAt(cx, cz); if (d.remote) { const wd = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !!wd && wd.open > 0.85; } return !d.key || p.keys.includes(d.key); }
     return false;
   }
   findPath(goal) {
@@ -30,7 +33,7 @@ export class Bot {
       if (c[0] === goal[0] && c[1] === goal[1]) break;
       for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const n = [c[0] + dx, c[1] + dz];
-        if (!prev.has(key(n)) && this.passable(n[0], n[1], goal)) { prev.set(key(n), c); q.push(n); }
+        if (!prev.has(key(n)) && this.passable(n[0], n[1], goal) && cellFloor(this.w, n[0], n[1]) - cellFloor(this.w, c[0], c[1]) <= STEP + 1e-6) { prev.set(key(n), c); q.push(n); }
       }
     }
     if (!prev.has(key(goal))) return null;
@@ -58,8 +61,9 @@ export class Bot {
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
-    if (hitscan) pitchWant = Math.atan2(Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
-    else { const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(aimY - PLAYER.eye, t.d); }
+    const dyE = t.e.y - p.y;                                                                                // target and player may stand at different heights
+    if (hitscan) pitchWant = Math.atan2(dyE + Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
+    else { const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
     const inRange = hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
@@ -129,8 +133,17 @@ export class Bot {
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
+    else if (op.op === 'switch') {
+      const sw = w.map.switches.find((s) => s.id === op.id);
+      if (!sw) this.failed = 'no switch ' + op.id;
+      else if (w.switchState[op.id]?.used && sw.once) done = true;
+      else done = this.follow([Math.floor(sw.at[0]), Math.floor(sw.at[1])], 0.6, 1.3) && (this.aimAt(sw.px, sw.pz), this.pressUse(), false);
+    } else if (op.op === 'waitsector') {
+      const s = w.sectors.find((q) => q.id === op.id), def = w.map.sectors.find((q) => q.id === op.id), goal = op.to === 'high' ? def?.high : def?.low;
+      if (!s) this.failed = 'no sector ' + op.id; else done = Math.abs(s.h - goal) < 1e-6 && Math.abs(s.target - goal) < 1e-6;
+    }
     else this.failed = 'unknown op ' + op.op;
-    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
     if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }

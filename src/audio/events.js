@@ -7,6 +7,10 @@ export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
   shot_impact_silent: 'reserved',
+  shake: 'view-only effect (camera shake): the view reads it',
+  objective: 'shown as HUD text',
+  trigger: 'bookkeeping: what a trigger DOES makes the sound',
+  exit_lock: 'bookkeeping',
 };
 export const RADIO_SOUND = 'radio';
 
@@ -41,6 +45,16 @@ export function soundsForEvent(e) {
     case 'enemy_windup': return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
     case 'enemy_lunge': return [{ id: 'gaunt_lunge', pos: at(e) }];
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
+    case 'switch': return [{ id: 'switch_click', pos: at(e) }];
+    case 'switch_dead': return [{ id: 'switch_dead', pos: at(e) }];
+    case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
+    case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
+    case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'wade': return [{ id: 'splash' }];
+    case 'alarm': return [{ id: 'alarm_bell' }];
+    case 'enemy_spawn': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
+    case 'exit_unlock': return [{ id: 'gate_unlock' }];
+    case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
     case 'enemy_shot': return [{ id: 'toll_shot', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];

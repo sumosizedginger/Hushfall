@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { validateMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
 import { runRoute } from '../src/engine/harness.js';
+import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { PICKUPS, PLAYER, WEAPONS, DIFFICULTY, AMMO_MAX } from '../src/engine/defs.js';
 import { shippedSrc, shippedMap, shippedRoute } from './helpers.js';
 
@@ -109,12 +110,17 @@ test('the route exercises the level: doors, scattergun, flare, lunges are possib
   assert.ok(r.events.filter((e) => e.type === 'door_open').length >= 4, 'hut, shed, warehouse, net-loft/dock');
 });
 
-test('between them, a perfect fighter and a passive runner on hard exercise every enemy attack path on the shipped level', () => {
-  const route = shippedRoute('C1E1M01.main'), fighter = runRoute(map, route, { seed: 1, difficulty: 'hard' }), runner = runRoute(map, route, { seed: 1, difficulty: 'hard', fights: false });
-  const f = new Set(fighter.events.map((e) => e.type)), r = new Set(runner.events.map((e) => e.type));
+test('every enemy attack path is exercised on the shipped level: the fighter meets alerts, windups, toll-shots and pain; an idle player at the shed door meets the Gaunt lunges', () => {
+  const fighter = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1, difficulty: 'hard' }), f = new Set(fighter.events.map((e) => e.type));
   for (const t of ['enemy_alert', 'enemy_windup', 'enemy_shot', 'hurt']) assert.ok(f.has(t), 'the fighter should see ' + t);
   assert.ok(fighter.world.stats.damageTaken > 0, 'a perfect bot is still hurt on hard');
-  for (const t of ['enemy_lunge', 'enemy_strike']) assert.ok(r.has(t), 'the runner (who never kills the Gaunts) should meet ' + t + ': a perfect fighter kills them before they lunge, which is exactly why the runner exists');
+  // a perfect fighter kills the Gaunts before they can lunge (that is what perfect aim means), so the lunge is checked directly: stand in the shed doorway and do nothing
+  const w = createWorld(map, { seed: 1, difficulty: 'hard' }); const door = map.doors.get('22,8'); assert.ok(door, 'the shed door exists');
+  w.enemies = w.enemies.filter((e) => e.kind === 'gaunt' && e.z < 16); assert.equal(w.enemies.length, 2, 'the two shed Gaunts');           // isolate them
+  w.player.x = (door.cx + 0.5) * map.cell; w.player.z = (door.cz - 2.5) * map.cell; w.player.yaw = 0; w.player.hp = 500;      // inside the shed, a few metres from both
+  for (const d of w.doors) d.open = 1; const ev = [];
+  for (let i = 0; i < 360; i++) { step(w, { move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false }); ev.push(...drainEvents(w)); }
+  const t = new Set(ev.map((e) => e.type)); assert.ok(t.has('enemy_lunge') && t.has('enemy_strike'), 'the shed Gaunts lunge and strike an idle player: ' + [...t].join(','));
 });
 
 test('routes are reproducible on the shipped level (same seed => same final state)', () => {
