@@ -60,6 +60,10 @@ const open = defects.filter((d) => d.status !== 'fixed'), sev = (s, list = open)
 const line = (d) => `- **${d.severity}** [${d.status}] ${d.id ? d.id + ' ' : ''}${d.title}${d.remaining ? ` — remaining: ${d.remaining}` : ''}`;
 const bc = browser ? `${browser.checks.filter((c) => c.ok).length}/${browser.checks.length}` : 'not run';
 const g2r = browser?.gate2Routes ?? {}, g2ok = Object.values(g2r).filter((r) => r.ok && r.ticks === r.nodeTicks && r.hash === r.nodeHash).length;
+const tot = (k) => mapTable.filter((m) => m.status !== 'PLANNED' && m.fighterDamage && m.id !== 'C1E1S01').reduce((a, m) => a + (m.fighterDamage[k] ?? 0), 0);
+const audit = fs.existsSync(path.join(out, 'audit/findings.json')) ? JSON.parse(fs.readFileSync(path.join(out, 'audit/findings.json'), 'utf8')) : null;
+const auditCount = (sv) => audit?.filter((f) => f.severity === sv).length ?? 0;
+const repaired = (id) => defects.find((d) => d.id === id)?.status ?? 'unrecorded';
 const rows = mapTable.map((m) => `| ${m.id} | ${m.name ?? '?'} | ${m.status} | ${m.counts?.enemies ?? '?'} | ${m.botSecondsNormal ?? '?'} | ${m.fighterDamage ? `${m.fighterDamage.easy}/${m.fighterDamage.normal}/${m.fighterDamage.hard}` : '?'} | ${m.runner?.normal ?? '?'} |`).join('\n');
 const readme = `# Gate 2 review bundle: Episode 1, Port Marrow (C1E1M01-M08 + secret C1E1S01)
 
@@ -81,6 +85,8 @@ Controls (rebindable in Pause > Controls): WASD move, mouse look, left click fir
 | map | name | derived status | enemies | bot s (normal) | fighter damage e/n/h | passive runner (normal) |
 |---|---|---|---|---|---|---|
 ${rows}
+
+Perfect-fighter damage summed over M01-M08 (mean of 3 seeds): easy ${tot('easy')}, normal ${tot('normal')}, hard ${tot('hard')} (the per-map ordering check is loose; the episode total is the real trend).
 
 Derived campaign status: PLANNED ${campaign?.counts?.PLANNED ?? '?'} / IMPLEMENTED ${campaign?.counts?.IMPLEMENTED ?? '?'} / AGENT_VERIFIED ${campaign?.counts?.AGENT_VERIFIED ?? '?'} / COMPLETE ${campaign?.counts?.COMPLETE ?? '?'} of 68. Agents cannot award COMPLETE.
 
@@ -106,7 +112,7 @@ ${['- **Real-GPU performance is unmeasured.** Headless software rendering only; 
   '- **Only Episode 1 exists.** Nothing here proves 68 maps of this quality are achievable; Gate 3 is about making the process repeatable, and Gate 4 about volume.'].join('\n')}
 
 ## Independent audit and known defects
-${fs.existsSync(path.join(out, 'audit')) ? 'An independent adversarial audit is in `audit/`.' : '_No independent audit has been recorded yet._'} What is open, partial or unverified is listed from \`known-defects.json\`:
+${audit ? `An independent adversarial audit of code f79bf59 (the report audit/AUDIT.md, audit/findings.json, reproduction scripts in audit/repro/) found **${auditCount('BLOCKER')} BLOCKER, ${auditCount('MAJOR')} MAJOR, ${auditCount('MINOR')} MINOR** (all confirmed by script). The BLOCKER (two exits on one cell, so the fuse and Cantor gates never locked) was the author's own error that every test and check missed; all seven BLOCKER/MAJOR findings and most MINORs were repaired afterwards (A01 ${repaired('A01')}, A02 ${repaired('A02')}, A03 ${repaired('A03')}, A04 ${repaired('A04')}, A16 ${repaired('A16')}, A17 ${repaired('A17')}, A18 ${repaired('A18')}). The audit ran BEFORE the repairs; nobody has re-audited the repaired code independently.` : '_No independent audit has been recorded yet._'} What is open, partial or unverified is listed from \`known-defects.json\`:
 ${defects.length ? `- Open/partial/unverified: BLOCKER ${sev('BLOCKER').length} · MAJOR ${sev('MAJOR').length} · MINOR ${sev('MINOR').length} (of ${defects.length} recorded; ${defects.length - open.length} fixed)\n${open.map(line).join('\n')}` : '- **NO DEFECT LIST RECORDED. This bundle is incomplete: do not present it.**'}
 
 ## Files
