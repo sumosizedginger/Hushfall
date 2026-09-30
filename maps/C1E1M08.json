@@ -1,0 +1,1016 @@
+{
+ "format": 1,
+ "id": "C1E1M08",
+ "version": 1,
+ "name": "Bell Tower of St. Orrin",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#1a1428",
+  "fogDensity": 0.014,
+  "sky": "night"
+ },
+ "grid": [
+  "######################################################",
+  "######################################################",
+  "######################################################",
+  "######################################################",
+  "######################################################",
+  "######################################################",
+  "##########BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#######",
+  "##########BffffffffffffffffffffffffffffffgggggB#######",
+  "##########BffffffffffffffffffffffffffffffgggggB#######",
+  "##########BffffffffffffffffffffffffffffffgggggB#######",
+  "##########BffffffffffffffffffffffffffffffgggggB#######",
+  "##########BffffffffffffffffffffffffffffffgggggB#######",
+  "##########BtttttBBBBBBBBBBBBBBBBBBBBBBBBBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppDgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "##########BtttttBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#######",
+  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBDBBBBB####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################B:::::::::::::::::::::::::::::B####",
+  "###################BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB####",
+  "######################################################",
+  "######################################################",
+  "######################################################"
+ ],
+ "heights": [
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "...........cccddddddeeeeeefffffgggggghhhhiiiii........",
+  "...........cccddddddeeeeeefffffgggggghhhhiiiii........",
+  "...........cccddddddeeeeeefffffgggggghhhhiiiii........",
+  "...........cccddddddeeeeeefffffgggggghhhhjjjjj........",
+  "...........cccddddddeeeeeefffffgggggghhhhjjjjj........",
+  "...........bbbbb.........................jjjjj........",
+  "...........bbbbb.ooooooooooooooooooooooo.jjjjj........",
+  "...........bbbbb.orrrrqpooooooooopqrrrro.jjjjj........",
+  "...........aaaaa.orrrrqpooooooooopqrrrro.kkkkk........",
+  "...........aaaaa.orrrrqpooooooooopqrrrro.kkkkk........",
+  "...........aaaaa.ooooooooooooooooooooooo.kkkkk........",
+  "...........aaaaa.ooooooooooooooooooooooo.kkkkk........",
+  "...........aaaaa.ooooooooooooooooooooooo.kkkkk........",
+  "...........99999.ooooooooooooooooooooooo.lllll........",
+  "...........99999.ooooooooooooooooooooooo.lllll........",
+  "...........99999.ooooooooooooooooooooooo.lllll........",
+  "...........99999.ooooooooooooooooooooooo.lllll........",
+  "...........99999.ooooooooooooooooooooooo.lllll........",
+  "...........99999.ooooooooooooooooooooooo.mmmmm........",
+  "...........88888.ooooooooooooooooooooooo.mmmmm........",
+  "...........88888.ooooooooooooooooooooooo.mmmmm........",
+  "...........88888.ooooooooooooooooooooooo.mmmmm........",
+  "...........88888.ooooooooooooooooooooooo.mmmmm........",
+  "...........88888.ooooooooooooooooooooooo.nnnnn........",
+  "...........77777.ooooooooooooooooooooooo.nnnnn........",
+  "...........77777.ooooooooooooooooooooooo.nnnnn........",
+  "...........77777.ooooooooooooooooooooooo.nnnnn........",
+  "...........77777.orrrrqpooooooooopqrrrro.nnnnn........",
+  "...........77777.orrrrqpooooooooopqrrrrooooooo........",
+  "...........66666.orrrrqpooooooooopqrrrro.ooooo........",
+  "...........66666.ooooooooooooooooooooooo.ooooo........",
+  "...........66666......................................",
+  "...........66655555544444433333222222111111...........",
+  "...........66655555544444433333222222111111...........",
+  "...........66655555544444433333222222111111...........",
+  "...........66655555544444433333222222111111...........",
+  "...........66655555544444433333222222111111...........",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................",
+  "......................................................"
+ ],
+ "doors": [
+  {
+   "at": [40, 35]
+  },
+  {
+   "at": [44, 44]
+  }
+ ],
+ "secrets": [],
+ "triggers": [
+  {
+   "id": "sealed",
+   "when": "enter",
+   "at": [37, 33],
+   "radius": 3,
+   "do": [
+    {
+     "seal": [40, 35]
+    },
+    {
+     "message": "chamber"
+    },
+    {
+     "objective": "Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone"
+    },
+    {
+     "shake": 1.2
+    }
+   ]
+  },
+  {
+   "id": "cantor-dead",
+   "when": "dead:cantor",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "unseal": [40, 35]
+    },
+    {
+     "message": "quiet"
+    },
+    {
+     "objective": "The Cantor falls. The belfry hatch is open, north side of the chamber"
+    },
+    {
+     "shake": 2
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [18, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [24, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [40, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [14, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [32, 8],
+   "facing": -0.043
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [13, 9],
+   "facing": 0.354
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 9],
+   "facing": 0.214
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [22, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 9],
+   "facing": 0.043
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [34, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 9],
+   "facing": -0.13
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [41, 9],
+   "facing": -0.235
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [44, 9],
+   "facing": -0.295
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [16, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 10],
+   "facing": 0.133
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [42, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [41, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [42, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [13, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [19, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [37, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 15]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [28, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [43, 15],
+   "facing": -0.314
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 17],
+   "facing": 0.421
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [28, 18],
+   "facing": 0.054
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [14, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [18, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [42, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [14, 21],
+   "facing": 0.44
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [22, 21],
+   "facing": 0.231
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [34, 21],
+   "facing": -0.117
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [38, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [11, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [31, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 23],
+   "facing": -0.386
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [11, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [18, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [44, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 25],
+   "facing": 0.516
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [19, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [24, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [32, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [38, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [18, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [41, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [14, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [19, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [44, 27],
+   "facing": -0.464
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [31, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [42, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [12, 29],
+   "facing": 0.606
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [13, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [22, 29],
+   "facing": 0.298
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [34, 29],
+   "facing": -0.153
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [38, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [18, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [43, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [45, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [12, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 31],
+   "facing": -0.464
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [28, 32],
+   "facing": 0.087
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 33],
+   "facing": 0.658
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [41, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 34]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 34],
+   "facing": -0.588
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [11, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [38, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [19, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [37, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 36],
+   "facing": -0.6
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [41, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [15, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 40],
+   "facing": 0.49
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [26, 40],
+   "facing": 0.261
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 40],
+   "facing": -0.261
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [44, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [12, 41],
+   "facing": 0.91
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [19, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [31, 41]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [40, 41],
+   "facing": -0.62
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 42],
+   "facing": 0.822
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 42],
+   "facing": 0.153
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 42],
+   "facing": -0.432
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [20, 43]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [42, 43]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [22, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [46, 46]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 47],
+   "facing": -0.245
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [22, 48],
+   "facing": 0.852
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [30, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [40, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [26, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [27, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [34, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [35, 50]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 50],
+   "facing": -1.176
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 52],
+   "facing": 0.927
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 52],
+   "facing": -1.212
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [42, 52]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [30, 53]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [24, 54]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 54],
+   "facing": 1.107
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [34, 54]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 54],
+   "facing": -1.471
+  },
+  {
+   "type": "player",
+   "at": [30, 55]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [22, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [36, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [44, 56]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [46, 56]
+  },
+  {
+   "type": "exit",
+   "at": [28, 15],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "cantor",
+   "at": [28, 25],
+   "group": "cantor",
+   "facing": "east",
+   "summons": [
+    [19, 20],
+    [37, 20],
+    [19, 30],
+    [37, 30]
+   ]
+  }
+ ],
+ "par": {
+  "time": 1100
+ },
+ "intro": {
+  "title": "BELL TOWER OF ST. ORRIN",
+  "lines": [
+   "The bell has rung for three days.",
+   "Nobody is pulling the rope."
+  ]
+ },
+ "outro": "Port Marrow is quiet. The signal is not: it is going somewhere. Episode one ends here.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [30, 55],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Bell Tower. It has rung since the transmission. The signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top."
+  },
+  {
+   "id": "door",
+   "at": [44, 42],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it."
+  },
+  {
+   "id": "warden",
+   "at": [43, 12],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Another plate-bearer. Pillars in the corridor: that is your friend, again."
+  },
+  {
+   "id": "sexton",
+   "at": [38, 9],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first."
+  },
+  {
+   "id": "chamber",
+   "at": [38, 35],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "That is it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone will not go through stone."
+  },
+  {
+   "id": "ring",
+   "at": [28, 18],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "One bell down. The Cantor staggered when it broke. Keep cutting the ring."
+  },
+  {
+   "id": "quiet",
+   "at": [28, 17],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The tower is silent. The signal did not stop: it went somewhere else. The hatch is open. Go."
+  }
+ ],
+ "objective": "Enter the tower (south-east door) and climb",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 8,
+   "shell": 12,
+   "rivet": 80
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [40, 70],
+  "botSeconds": [120, 720],
+  "mechanics": [
+   "heights",
+   "triggers"
+  ],
+  "skins": 6,
+  "enemyKinds": {
+   "cantor": 1,
+   "bellnode": 6,
+   "wardengraft": 1,
+   "sexton": 1
+  }
+ }
+}

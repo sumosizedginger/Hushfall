@@ -1,0 +1,133 @@
+[
+ {
+  "name": "01-courtyard",
+  "x": 30.5,
+  "z": 55.5,
+  "yaw": "north",
+  "pitch": 0.15
+ },
+ {
+  "name": "02-tower-door",
+  "x": 44.5,
+  "z": 46.5,
+  "yaw": "north",
+  "pitch": 0.1
+ },
+ {
+  "name": "03-south-leg",
+  "x": 44.5,
+  "z": 41.5,
+  "yaw": "west",
+  "pitch": 0,
+  "open": true
+ },
+ {
+  "name": "04-west-leg",
+  "x": 13.5,
+  "z": 37.5,
+  "yaw": "north",
+  "pitch": 0.05
+ },
+ {
+  "name": "05-north-leg",
+  "x": 13.5,
+  "z": 9.5,
+  "yaw": "east",
+  "pitch": 0
+ },
+ {
+  "name": "06-warden-corridor",
+  "x": 43.5,
+  "z": 9.5,
+  "yaw": "south",
+  "pitch": 0
+ },
+ {
+  "name": "07-warden-awake",
+  "x": 43.5,
+  "z": 9.5,
+  "yaw": "south",
+  "pitch": 0,
+  "wake": true
+ },
+ {
+  "name": "08-chamber-door",
+  "x": 42.5,
+  "z": 35.5,
+  "yaw": "west",
+  "pitch": 0,
+  "open": true
+ },
+ {
+  "name": "09-chamber",
+  "x": 38.5,
+  "z": 35.5,
+  "yaw": "west",
+  "pitch": 0.1,
+  "open": true,
+  "wake": true
+ },
+ {
+  "name": "10-cantor-close",
+  "x": 36.5,
+  "z": 27.5,
+  "yaw": "west",
+  "pitch": 0.15,
+  "open": true,
+  "wake": true
+ },
+ {
+  "name": "10-cantor-close",
+  "x": 34.5,
+  "z": 34.5,
+  "yaw": 0.59,
+  "pitch": 0.12,
+  "open": true,
+  "wake": true
+ },
+ {
+  "name": "10b-cantor-north",
+  "x": 30.5,
+  "z": 17.5,
+  "yaw": 2.9,
+  "pitch": 0.02,
+  "open": true,
+  "wake": true
+ },
+ {
+  "name": "11-pulse",
+  "x": 34.5,
+  "z": 34.5,
+  "yaw": 0.59,
+  "pitch": 0.05,
+  "open": true,
+  "wake": true,
+  "ticks": 130
+ },
+ {
+  "name": "11b-pulse-late",
+  "x": 34.5,
+  "z": 34.5,
+  "yaw": 0.59,
+  "pitch": 0.05,
+  "open": true,
+  "wake": true,
+  "ticks": 190
+ },
+ {
+  "name": "12-ring-node",
+  "x": 28.5,
+  "z": 31.5,
+  "yaw": "south",
+  "pitch": 0.1,
+  "open": true
+ },
+ {
+  "name": "13-hatch",
+  "x": 28.5,
+  "z": 19.5,
+  "yaw": "north",
+  "pitch": 0,
+  "open": true
+ }
+]

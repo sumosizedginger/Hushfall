@@ -97,7 +97,7 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
     const shield = M(new THREE.BoxGeometry(0.07, 0.56, 0.36), 5); shield.position.set(-0.07, -0.28, 0.06); arms[0].el.add(shield);
     const shieldRim = M(new THREE.BoxGeometry(0.09, 0.6, 0.06), 6); shieldRim.position.set(-0.07, -0.28, 0.24); arms[0].el.add(shieldRim);
   } else if (variant === 'cantor') {                                                             // the Cantor: robed, crowned in bells, a great bell on its chest
-    root.scale.setScalar(1.7);
+    root.scale.setScalar(2.0);
     const skirt = M(new THREE.CylinderGeometry(0.34, 0.66, 0.95, 10, 1, true), 1); skirt.position.set(0, -0.15, 0); spine.add(skirt);
     for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2, cb = M(new THREE.ConeGeometry(0.06, 0.18, 6), 6); cb.position.set(Math.cos(a) * 0.22, 0.34, Math.sin(a) * 0.22); cb.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5); head.add(cb); }
     const gb = M(new THREE.CylinderGeometry(0.08, 0.3, 0.52, 10), 6); gb.position.set(0, 0.42, 0.24); spine.add(gb);
