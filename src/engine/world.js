@@ -224,7 +224,7 @@ export function useTarget(w) {
   return best ? { switchId: best.id, used: !!w.switchState[best.id]?.used, once: best.once, secret: false, target: 0, open: 0, key: null, remote: false, sealed: false } : null;
 }
 /** can a body of radius r walk the straight line from (x0,z0) to (x1,z1) past walls, closed doors and solid props? (actors are ignored: they move) */
-function moveClear(w, x0, z0, x1, z1, r) {
+export function moveClear(w, x0, z0, x1, z1, r) {
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, z1 - z0) / 0.45));
   for (let i = 1; i <= n; i++) if (blockedCircle(w, x0 + (x1 - x0) * i / n, z0 + (z1 - z0) * i / n, r * 0.9)) return false;
   return true;

@@ -129,7 +129,7 @@ export class GameView {
       }
       if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 1.7, n.z, boss.x, (boss.y ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
       for (const [k, m] of this.beams) if (!live.has(k)) { this.scene.remove(m); this.beams.delete(k); }
-      if (boss && nodes.length) { if (!this.shield) { this.shield = new THREE.Mesh(this.shieldGeo, this.shieldMat); this.scene.add(this.shield); } this.shield.visible = true; this.shield.position.set(boss.x, (boss.y ?? 0) + 2.1, boss.z); this.shield.scale.setScalar(2.4 + 0.08 * Math.sin(this.time * 5)); this.shield.rotation.y = this.time * 0.6; } else if (this.shield) this.shield.visible = false;
+      if (boss && nodes.length) { if (!this.shield) { this.shield = new THREE.Mesh(this.shieldGeo, this.shieldMat); this.scene.add(this.shield); } this.shield.visible = true; this.shield.position.set(boss.x, (boss.y ?? 0) + 2.4, boss.z); this.shield.scale.setScalar(2.9 + 0.08 * Math.sin(this.time * 5)); this.shield.rotation.y = this.time * 0.6; } else if (this.shield) this.shield.visible = false;
       const pseen = new Set();
       for (const q of w.pulses || []) {
         pseen.add(q.id); let m = this.pulseViews.get(q.id);

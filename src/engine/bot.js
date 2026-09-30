@@ -1,7 +1,7 @@
 // Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
 // human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to}.
-import { PLAYER, WEAPONS, ENEMIES, PROPS, STEP } from './defs.js';
-import { hasLOS } from './world.js';
+import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP } from './defs.js';
+import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 
 const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -58,8 +58,10 @@ export class Bot {
   combatTarget() {
     if (!this.fights || this.w.tick < (this.noFightUntil ?? 0)) return null;
     const w = this.w, p = w.player; let best = null, bd = 16;
+    const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead');
     for (const e of w.enemies) {
-      if (e.state === 'dead' || e.state === 'idle') continue;
+      if (e.state === 'dead' || (e.state === 'idle' && !ENEMIES[e.kind].node)) continue;
+      if (ringUp && ENEMIES[e.kind].boss) continue;                                                // shielded: cut the ring first
       const d = Math.hypot(e.x - p.x, e.z - p.z);
       if (d < bd && hasLOS(w, p.x, p.z, e.x, e.z)) { best = e; bd = d; }
     }
@@ -89,6 +91,51 @@ export class Bot {
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
     this.setHeld('right', (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
+  }
+  /**
+   * The boss op: cut the bell ring, then the singer. A tone pulse (windup or ring in flight) is answered by getting behind stone: cover is any nearby point the boss has no line to.
+   * Otherwise fight the nearest thing in view; with nothing in view, walk toward the next node (or the boss once the ring is broken).
+   */
+  bossTick() {
+    const w = this.w, p = w.player, boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead');
+    if (!boss) { for (const a of ['fire', 'aim', 'forward', 'back', 'right', 'sprint']) this.setHeld(a, false); return true; }
+    const danger = (boss.pulseT ?? -1) >= 0 || w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5);
+    if (danger) {
+      if (hasLOS(w, boss.x, boss.z, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
+      if (this.cover && hasLOS(w, boss.x, boss.z, p.x, p.z)) {                                       // still exposed: go
+        const t = this.combatTarget(); if (t && t.d < 5) this.fight(t); else { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false); }
+        this.steerTo(this.cover[0], this.cover[1], 0.4); this.setHeld('sprint', true); return false;
+      }
+      if (this.cover) { const t = this.combatTarget(); if (t && t.d < 5) this.fight(t); else for (const a of ['fire', 'forward', 'sprint']) this.setHeld(a, false); return false; }   // safe: hold until it passes
+    } else this.cover = null;
+    const t = this.combatTarget();
+    if (t) { this.calm = 0; this.fight(t); return false; }
+    this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false);
+    const want = this.forage(); if (want) { this.follow([Math.floor(want.x / w.map.cell), Math.floor(want.z / w.map.cell)], 0.5); return false; }              // quiet moment: top up
+    const nodes = w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
+    const goal = nodes[0] ?? boss, m = w.map;
+    this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, 7);
+    return false;
+  }
+  /** a pickup worth walking to when nothing is shooting: health when hurt, armour when bare, ammo when low (within 16 m) */
+  forage() {
+    const w = this.w, p = w.player; let best = null, bd = 16;
+    for (const it of w.pickups) {
+      const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;
+      const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
+      if (low) { best = it; bd = d; }
+    }
+    return best;
+  }
+  /** the nearest point within 9 m that the boss has no line to (behind a pillar), or null */
+  findCover(boss) {
+    const w = this.w, p = w.player; let best = null, bd = 1e9;
+    for (const r of [2, 3, 4, 5.5, 7, 9]) for (let k = 0; k < 16; k++) {
+      const a = k / 16 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r;
+      if (hasLOS(w, boss.x, boss.z, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue;
+      const d = r + 0.3 * Math.hypot(x - boss.x, z - boss.z); if (d < bd) { bd = d; best = [x, z]; }
+    }
+    return best;
   }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
   // -- steering --------------------------------------------------------
@@ -143,7 +190,7 @@ export class Bot {
     if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
-    const t = this.atUsePoint(op) ? null : this.combatTarget();
+    const t = op.op === 'killboss' || this.atUsePoint(op) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.wasFighting = true; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
@@ -159,6 +206,7 @@ export class Bot {
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
+    else if (op.op === 'killboss') done = this.bossTick();
     else if (op.op === 'switch') {
       const sw = w.map.switches.find((s) => s.id === op.id);
       if (!sw) this.failed = 'no switch ' + op.id;
@@ -169,7 +217,7 @@ export class Bot {
       if (!s) this.failed = 'no sector ' + op.id; else done = Math.abs(s.h - goal) < 1e-6 && Math.abs(s.target - goal) < 1e-6;
     }
     else this.failed = 'unknown op ' + op.op;
-    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'killboss' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
     if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }

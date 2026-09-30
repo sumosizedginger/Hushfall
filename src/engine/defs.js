@@ -74,7 +74,7 @@ ENEMIES.wardengraft = { name: 'Warden-Graft', hp: 260, speed: 1.5, gait: 5, radi
 // Bell node: one of the ring the Cantor sings through. Immobile; destroying them all breaks the Cantor's shield.
 ENEMIES.bellnode = { name: 'Bell node', hp: 120, speed: 0, gait: 0, radius: 0.7, height: 2.4, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
 // Cantor: the boss. Shielded (5% damage) while any bell node stands. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and fans toll-shots once its ring is broken.
-ENEMIES.cantor = { name: 'Cantor', hp: 720, speed: 1.3, gait: 4.5, radius: 0.65, height: 2.7, sight: 70, turnRate: 2, attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 }, boss: true,
+ENEMIES.cantor = { name: 'Cantor', hp: 720, speed: 1.3, gait: 4.5, radius: 0.65, height: 3.2, sight: 70, turnRate: 2, attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 }, boss: true,
   shield: { reduce: 0.05 }, pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 }, enragedPulseCooldown: 3.6,
   shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 }, summon: { kind: 'gaunt', count: 3, every: 18, max: 8 }, stagger: 3.0 };
 

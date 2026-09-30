@@ -1,5 +1,5 @@
 // Level tour for any map: screenshots from the vantage points listed in maps-src/<ID>.views.json (appearance evidence, not correctness).
-// Views use CELL coordinates: {name, x, z, yaw (radians or east|west|north|south), pitch, y?, open?, wake?, ambient?, hp?}. `open: true` opens every door/closet first.
+// Views use CELL coordinates: {name, x, z, yaw (radians or east|west|north|south), pitch, y?, open?, wake?, ticks? (run the sim that long before the shot), ambient?, hp?}. `open: true` opens every door/closet first.
 // Usage: node tools/dev/shoot-map.mjs <ID> [only-view-name]   ->  review/level-<id>/<name>.png
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
@@ -32,6 +32,7 @@ for (const v of views) {
   const yaw = typeof v.yaw === 'string' ? YAW[v.yaw] : v.yaw;
   await T(`t.setup_teleport(${v.x * 2}, ${v.z * 2}, ${yaw}); t.setup_player({ pitch: ${v.pitch ?? 0}, hp: 100, hurt: 0 })`);
   if (v.wake) await T('t.setup_wakeAll()');
+  if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100 })'); }
   if (v.ambient != null) await T(`t.setup_ambient(${v.ambient})`);
   await T('t.clearOverlays(); t.render(0.02)');
   await page.screenshot({ path: path.join(out, v.name + '.png') }); console.log('shot', v.name);
