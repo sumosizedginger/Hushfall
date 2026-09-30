@@ -2,7 +2,7 @@
   "mapId": "C1E1M06",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "31e5e94",
+  "codeVersion": "f79bf59",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "5fba349b2cdacf16",
@@ -149,16 +149,16 @@
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-30T01:26:35.261Z",
+    "when": "2026-09-30T04:15:48.896Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
-    "mapSha": "aafbb26f67fe1cb1",
-    "commit": "d10df0f",
-    "passed": 66,
-    "total": 66,
+    "mapSha": "5fba349b2cdacf16",
+    "commit": "f79bf59",
+    "passed": 89,
+    "total": 89,
     "allPassed": true
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -282,13 +282,13 @@
       },
       {
         "name": "the browser check ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "browser-check mapSha aafbb26f67fe1cb1 vs 5fba349b2cdacf16"
+        "ok": true,
+        "detail": "browser-check sha for C1E1M06: 5fba349b2cdacf16 vs 5fba349b2cdacf16"
       },
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "66/66"
+        "detail": "89/89"
       }
     ]
   },

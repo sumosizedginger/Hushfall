@@ -2,11 +2,11 @@
   "mapId": "C1E1M01",
   "mapVersion": 7,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "d10df0f",
+  "codeVersion": "f79bf59",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "aafbb26f67fe1cb1",
-  "assetVersion": "0feb090adcf1930d",
+  "assetVersion": "b802ce1a6831da76",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -15,72 +15,72 @@
       "difficulty": "easy",
       "seed": 1,
       "result": "complete",
-      "ticks": 4513,
-      "finalHash": "7cf16cfd",
+      "ticks": 4288,
+      "finalHash": "1d38350f",
       "kills": 16,
       "secrets": 0,
       "items": 11,
-      "damageTaken": 24
+      "damageTaken": 8
     },
     {
       "file": "routes/C1E1M01.main.route.json",
       "difficulty": "normal",
       "seed": 1,
       "result": "complete",
-      "ticks": 4602,
-      "finalHash": "1924e14d",
+      "ticks": 4286,
+      "finalHash": "f078a6e2",
       "kills": 16,
       "secrets": 0,
       "items": 11,
-      "damageTaken": 54
+      "damageTaken": 14
     },
     {
       "file": "routes/C1E1M01.main.route.json",
       "difficulty": "hard",
       "seed": 1,
       "result": "complete",
-      "ticks": 4747,
-      "finalHash": "825d3224",
+      "ticks": 4284,
+      "finalHash": "499dee0c",
       "kills": 16,
       "secrets": 0,
       "items": 11,
-      "damageTaken": 80
+      "damageTaken": 36
     },
     {
       "file": "routes/C1E1M01.secret.route.json",
       "difficulty": "easy",
       "seed": 1,
       "result": "complete",
-      "ticks": 4849,
-      "finalHash": "28ed861f",
+      "ticks": 4688,
+      "finalHash": "ddcfe955",
       "kills": 16,
       "secrets": 1,
       "items": 14,
-      "damageTaken": 12
+      "damageTaken": 4
     },
     {
       "file": "routes/C1E1M01.secret.route.json",
       "difficulty": "normal",
       "seed": 1,
       "result": "complete",
-      "ticks": 4981,
-      "finalHash": "f85ab0fa",
+      "ticks": 4686,
+      "finalHash": "3fa22a55",
       "kills": 16,
       "secrets": 1,
       "items": 14,
-      "damageTaken": 27
+      "damageTaken": 7
     },
     {
       "file": "routes/C1E1M01.secret.route.json",
       "difficulty": "hard",
       "seed": 1,
       "result": "complete",
-      "ticks": 5218,
-      "finalHash": "9d6cd93f",
+      "ticks": 4736,
+      "finalHash": "93473ac1",
       "kills": 16,
       "secrets": 1,
-      "items": 14,
-      "damageTaken": 40
+      "items": 15,
+      "damageTaken": 27
     }
   ],
   "canonicalRoute": {
@@ -89,8 +89,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 4602,
-    "finalHash": "1924e14d",
+    "ticks": 4286,
+    "finalHash": "f078a6e2",
     "expectedEvents": [
       "door_open",
       "pickup:key_brass",
@@ -103,52 +103,90 @@
     "items": 21,
     "secrets": 1
   },
+  "facts": {
+    "enemies": 16,
+    "enemyKinds": {
+      "tollbearer": 8,
+      "gaunt": 5,
+      "bellhand": 3
+    },
+    "keys": 1,
+    "closets": 0,
+    "triggers": 0,
+    "switches": 0,
+    "sectors": 0,
+    "heights": false,
+    "maxFloor": 0,
+    "fxCells": 0,
+    "skins": 5,
+    "wallSkins": [
+      "#",
+      "B"
+    ],
+    "floorSkins": [
+      ".",
+      ":",
+      "p"
+    ],
+    "props": 54,
+    "secrets": 1,
+    "cells": 1632
+  },
   "viability": {
     "easy": {
       "runner": {
-        "result": "bot-failed",
-        "damage": 45,
-        "hpLeft": 55
+        "result": "dead",
+        "damage": 110,
+        "hpLeft": 0
       },
       "fighter": {
         "result": "complete",
-        "damage": 24,
-        "seconds": 75.2
+        "damage": 8,
+        "meanDamage": 8,
+        "seconds": 71.5,
+        "kills": 16,
+        "failure": null
       }
     },
     "normal": {
       "runner": {
-        "result": "bot-failed",
-        "damage": 77,
-        "hpLeft": 23
+        "result": "dead",
+        "damage": 108,
+        "hpLeft": 0
       },
       "fighter": {
         "result": "complete",
-        "damage": 54,
-        "seconds": 76.7
+        "damage": 14,
+        "meanDamage": 14,
+        "seconds": 71.4,
+        "kills": 16,
+        "failure": null
       }
     },
     "hard": {
       "runner": {
         "result": "dead",
-        "damage": 109,
+        "damage": 115,
         "hpLeft": 0
       },
       "fighter": {
         "result": "complete",
-        "damage": 80,
-        "seconds": 79.1
+        "damage": 36,
+        "meanDamage": 36,
+        "seconds": 71.4,
+        "kills": 16,
+        "failure": null
       }
     }
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-30T01:26:35.261Z",
+    "when": "2026-09-30T04:15:48.896Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
     "mapSha": "aafbb26f67fe1cb1",
-    "commit": "d10df0f",
-    "passed": 66,
-    "total": 66,
+    "commit": "f79bf59",
+    "passed": 89,
+    "total": 89,
     "allPassed": true
   },
   "automated": {
@@ -172,72 +210,87 @@
       {
         "name": "route C1E1M01.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "75.2 s"
+        "detail": "71.5 s"
       },
       {
         "name": "route C1E1M01.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "76.7 s"
+        "detail": "71.4 s"
       },
       {
         "name": "route C1E1M01.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "79.1 s"
+        "detail": "71.4 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "80.8 s"
+        "detail": "78.1 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "83.0 s"
+        "detail": "78.1 s"
       },
       {
         "name": "route C1E1M01.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "87.0 s"
+        "detail": "78.9 s"
       },
       {
-        "name": "viability easy: a passive runner does not walk through (bot-failed, 45 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 110 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability normal: a passive runner does not walk through (bot-failed, 77 damage)",
+        "name": "viability normal: a passive runner does not walk through (dead, 108 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability hard: a passive runner does not walk through (dead, 109 damage)",
+        "name": "viability hard: a passive runner does not walk through (dead, 115 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability: a perfect fighter takes real damage on normal and hard (>= 20 / >= 40)",
+        "name": "viability easy: a perfect fighter completes the level",
         "ok": true,
-        "detail": "{\"normal\":54,\"hard\":80}"
+        "detail": "complete"
       },
       {
-        "name": "viability: damage rises with difficulty",
+        "name": "viability normal: a perfect fighter completes the level",
         "ok": true,
-        "detail": ""
+        "detail": "complete"
       },
       {
-        "name": "par time is 2x-8x the bot's time (3.9x; placeholder until a human plays it)",
+        "name": "viability hard: a perfect fighter completes the level",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
+        "ok": true,
+        "detail": "{\"normal\":14,\"hard\":36}"
+      },
+      {
+        "name": "viability: damage rises with difficulty (easy < normal, easy < hard, hard >= 80% of normal: a deterministic bot takes a handful of hits, so hit counts jitter)",
+        "ok": true,
+        "detail": "8 < 14 < 36 (mean of 3 seeds)"
+      },
+      {
+        "name": "par time is 2x-8x the bot's time (4.2x; placeholder until a human plays it)",
         "ok": true,
         "detail": ""
       },
       {
         "name": "the browser check ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "browser-check mapSha aafbb26f67fe1cb1 vs aafbb26f67fe1cb1"
+        "detail": "browser-check sha for C1E1M01: aafbb26f67fe1cb1 vs aafbb26f67fe1cb1"
       },
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "66/66"
+        "detail": "89/89"
       }
     ]
   },
