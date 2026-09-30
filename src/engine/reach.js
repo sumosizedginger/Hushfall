@@ -1,10 +1,13 @@
 // Static reachability on the cell grid: can the player get from spawn to the exit, given keys and doors?
 // Conservative: 4-connected cell walking; cells holding cell-blocking props are impassable.
-import { PICKUPS, PROPS } from './defs.js';
+import { PICKUPS, PROPS, STEP } from './defs.js';
 
 export function analyseReach(map) {
   const blocked = new Set(map.props.filter((p) => PROPS[p.kind]?.blocksCell).map((p) => Math.floor(p.at[0]) + ',' + Math.floor(p.at[1])));
   const keys = new Set(), reach = new Set();
+  // heights a cell can have: a sector cell may be at either end of its travel; anything else has one static height
+  const floors = (cx, cz) => { const si = map.sectorAt(cx, cz); return si >= 0 ? [map.sectors[si].low, map.sectors[si].high] : [map.floor(cx, cz)]; };
+  const canStep = (ax, az, bx, bz) => { for (const fa of floors(ax, az)) for (const fb of floors(bx, bz)) if (fb - fa <= STEP + 1e-6) return true; return false; };
   const cellOf = (e) => [Math.floor(e.at[0]), Math.floor(e.at[1])];
   const passable = (cx, cz) => {
     const k = map.kind(cx, cz);
@@ -23,7 +26,7 @@ export function analyseReach(map) {
       const [cx, cz] = q.pop();
       for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = cx + dx, nz = cz + dz, k = nx + ',' + nz;
-        if (!reach.has(k) && passable(nx, nz)) { reach.add(k); q.push([nx, nz]); }
+        if (!reach.has(k) && passable(nx, nz) && canStep(cx, cz, nx, nz)) { reach.add(k); q.push([nx, nz]); }
       }
     }
     for (const e of map.entities) if (e.type === 'pickup' && PICKUPS[e.kind].key) {

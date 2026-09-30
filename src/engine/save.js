@@ -3,7 +3,7 @@
 import { createWorld, carryOver } from './world.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 /** version N -> function producing version N+1. */
 export const MIGRATIONS = {
   // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
@@ -11,6 +11,8 @@ export const MIGRATIONS = {
   // v3 -> v4 (2026-09-29): automap exploration state. Old worlds start with nothing explored (the sim re-creates the array).
   // v4 -> v5 (2026-09-29): in-world messages remember which have been shown.
   // v5 -> v6 (2026-09-29): levelStart (Retry restores the level-start inventory, not the mid-level one), enemy shots, hunt state. Old worlds get a fresh level start.
+  // v6 -> v7 (2026-09-30, Gate 2 kit): terrain height for actors/pickups, moving floors, triggers/switches/exit locks, objective, remote doors, hazard state.
+  6: (s) => ({ ...s, version: 7, world: s.world ? { sectors: [], triggerState: {}, switchState: {}, exitLocked: {}, objective: null, ...s.world, player: { y: 0, hazardT: 0, fx: null, ...s.world.player }, enemies: (s.world.enemies || []).map((e) => ({ y: 0, group: null, ...e })), pickups: (s.world.pickups || []).map((p) => ({ y: 0, ...p })), doors: (s.world.doors || []).map((d) => ({ remote: false, closet: false, sealed: false, ...d })) } : s.world }),
   5: (s) => ({ ...s, version: 6, world: s.world ? { levelStart: { hp: 100, armor: 0, ammo: { flare: 8 }, weapons: ['flare'] }, enemyShots: [], ...s.world, enemies: (s.world.enemies || []).map((e) => ({ lastX: null, lastZ: null, lost: 0, steer: 0, ...e })) } : s.world }),
   4: (s) => ({ ...s, version: 5, world: s.world ? { messagesSeen: [], ...s.world } : s.world }),
   3: (s) => ({ ...s, version: 4, world: s.world ? { explored: [], ...s.world } : s.world }),

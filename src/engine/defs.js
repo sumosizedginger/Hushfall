@@ -6,7 +6,7 @@ export const DEFAULT_CEILING = 3.6;
 export const DIFFICULTY = {
   easy: { name: 'Easy', enemyHp: 0.75, enemyDamage: 0.6, ammoPickup: 1.5, reaction: 1.3 },
   normal: { name: 'Normal', enemyHp: 1, enemyDamage: 1, ammoPickup: 1, reaction: 1 },
-  hard: { name: 'Hard', enemyHp: 1.25, enemyDamage: 1.4, ammoPickup: 0.75, reaction: 0.8 },
+  hard: { name: 'Hard', enemyHp: 1.2, enemyDamage: 1.25, ammoPickup: 0.8, reaction: 0.85 },
 };
 
 export const PLAYER = {
@@ -26,7 +26,22 @@ export const NOISE = { flare: 22, scattergun: 26, explosion: 24, closeRange: 9 }
 export const AMMO_MAX = { flare: 30, shell: 40 };
 /** fixed slot order (keys 1, 2, ...); a weapon occupies its slot once owned */
 export const WEAPON_ORDER = ['flare', 'scattergun'];
-export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' } };
+export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
+
+// ---- terrain (Gate 2 production kit) ----------------------------------------------------------------------------------
+/** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
+export const HEIGHT_UNIT = 0.5, STEP = 0.6;
+/** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
+export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 } };
+/** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
+export const MIN_HEADROOM = 2.4;
+/** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a' };
+export const FLOOR_SKINS = {
+  '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
+  t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
+  m: { kind: 'outdoor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
+};
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
 export const WEAPONS = {
@@ -46,6 +61,8 @@ export const ENEMIES = {
 };
 
 export const PICKUPS = {
+  key_iron: { type: 'key', key: 'iron' },
+  key_bell: { type: 'key', key: 'bell' },
   health_small: { type: 'health', amount: 15 },
   health_large: { type: 'health', amount: 40 },
   ammo_flare: { type: 'ammo', ammo: 'flare', amount: 4 },
@@ -66,6 +83,15 @@ export const PROPS = {
   lamppost: { radius: 0.3, blocksCell: false },
   lamp: { radius: 0, blocksCell: false },
   pod: { radius: 0, blocksCell: false },
+  // Gate 2 set dressing
+  cart: { radius: 0.85, blocksCell: true },              // handcart / luggage trolley
+  sack: { radius: 0.45, blocksCell: false },             // grain / salt sacks
+  cradle: { radius: 0.6, blocksCell: false },            // a Vael cradle: suspended captive (tall, ceiling-hung)
+  rope: { radius: 0.3, blocksCell: false },              // coil of rope
+  table: { radius: 0.8, blocksCell: true },
+  shelf: { radius: 0.7, blocksCell: true, blocksSight: true },
+  lantern: { radius: 0, blocksCell: false },             // small lamp on a hook: warm light, survivors' signal
+  bellnode: { radius: 0.7, blocksCell: false },          // decor twin of the boss ring nodes
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
