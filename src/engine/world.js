@@ -14,7 +14,7 @@ const hidden = (o, k, v) => Object.defineProperty(o, k, { value: v, enumerable: 
 /** the one place an enemy record is built (createWorld and tests both use it) */
 export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
   const def = ENEMIES[kind], diff = DIFFICULTY[w.difficulty];
-  const e = { id: w.nextId++, kind, x, z, y: groundAt(w, x, z, def.radius), group: null, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0 };
+  const e = { id: w.nextId++, kind, x, z, y: groundAt(w, x, z, def.radius), group: null, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0, stunT: 0, chargeT: -1, chargeCd: 0, channelT: -1, supCd: 0, revived: 0, pulseCd: 2, pulseT: -1, summonCd: 8, shotCd: 2 };
   w.enemies.push(e); return e;
 }
 
@@ -33,7 +33,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       keys: [], cooldown: 0, hurt: 0, kick: 0, switchT: 0,
       ads: 0, sprint: 0, recover: 0, sprinting: false,      // ads/sprint are 0..1 blends the view reads; sprinting = sprint active this tick
     },
-    enemies: [], projectiles: [], enemyShots: [], pickups: [], doors: [],
+    enemies: [], projectiles: [], enemyShots: [], pulses: [], pickups: [], doors: [],
     sectors: map.sectors.map((s) => { const h = s.start === 'high' ? s.high : s.low; return { id: s.id, h, target: h, speed: s.speed }; }),      // moving floors (lifts, ramps)
     triggerState: Object.fromEntries(map.triggers.map((t) => [t.id, { fired: false }])), switchState: Object.fromEntries(map.switches.map((s) => [s.id, { used: false, on: false }])),
     exitLocked: Object.fromEntries(map.exits.map((x) => [x.id, !!x.locked])), objective: map.objective ?? null,
@@ -44,7 +44,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -128,10 +128,22 @@ function noise(w, x, z, radius) {
 }
 
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
-function damageEnemy(w, e, dmg) {
+function damageEnemy(w, e, dmg, opts = {}) {
+  const def = ENEMIES[e.kind];
+  if (def.armor && !opts.splash) {                                                  // plate on the front arc: only the shooter's side counts, splash ignores it
+    if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
+    else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
+  }
+  if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
+  else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
+  if ((e.channelT ?? -1) >= 0 && dmg > 0) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
   e.hp -= dmg; e.flash = 1;
-  if (e.state === 'idle' && e.hp > 0) wakeEnemy(w, e, true);                                       // being shot wakes you, whether or not you can see the shooter
-  if (e.hp <= 0 && e.state !== 'dead') { e.state = 'dead'; e.attackT = -1; e.lungeT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
+  if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, true);                                       // being shot wakes you, whether or not you can see the shooter
+  if (e.hp <= 0 && e.state !== 'dead') {
+    e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+    if (def.node) { emit(w, 'node_severed', { id: e.id, x: e.x, z: e.z }); for (const c of w.enemies) if (ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
+    return true;
+  }
   return false;
 }
 
@@ -141,7 +153,7 @@ function explode(w, x, y, z, ownerIsPlayer, def) {
     if (e.state === 'dead') continue;
     const d = Math.hypot(x - e.x, y - (e.y + 1.0), z - e.z);
     if (d < def.splash) {
-      const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct);
+      const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct, { splash: true });
       const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
       if (!killed) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     }
@@ -248,9 +260,117 @@ function updateEnemyShots(w, diff, dt) {
   }
 }
 
+// ---------------------------------------------------------------- elites and the boss
+const isNode = (n) => ENEMIES[n.kind].node && n.state !== 'dead';
+const nodesAlive = (w) => w.enemies.filter(isNode).length;
+
+/** step away from the player (Sextons and the Cantor keep their distance) */
+function retreatStep(w, e, def, dt) {
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)), away = Math.atan2(e.x - w.player.x, e.z - w.player.z);
+  for (const off of [0, 0.7, -0.7, 1.4, -1.4]) {
+    const a = away + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+    if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); return true; }
+  }
+  return false;
+}
+
+/** Warden-Graft: windup -> straight-line charge -> (hit the player | crash into geometry and stagger | give way to another body) */
+function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
+  const C = def.charge, p = w.player; e.chargeCd = Math.max(0, (e.chargeCd || 0) - dt);
+  if ((e.chargeT ?? -1) >= 0) {
+    e.chargeT += dt;
+    if (e.chargeT < C.windup) { e.walk *= 0.85; return true; }                                       // the tell: it stops and lowers its shoulder
+    if (e.chargeT < C.windup + C.duration) {
+      const step = C.speed * dt, nx = Math.sin(e.yaw) * step, nz = Math.cos(e.yaw) * step; e.walk = 1; e.phase += dt * def.gait * 2;
+      if (!e.chargeHit && Math.hypot(p.x - e.x, p.z - e.z) < def.radius + PLAYER.radius + 0.45 && Math.abs(p.y - e.y) < 1.4 && p.hp > 0) {
+        hurtPlayer(w, Math.round(C.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+        tryMove(w, p, Math.sin(e.yaw) * C.knock, Math.cos(e.yaw) * C.knock, PLAYER.radius);
+        e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return true;
+      }
+      if (blockedCircle(w, e.x + nx, e.z + nz, def.radius) || tooHigh(w, e, e.x + nx, e.z + nz, def.radius)) {          // walls, doors, props, ledges: it crashes and is stunned
+        e.stunT = C.stun; e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; emit(w, 'warden_crash', { id: e.id, x: e.x, z: e.z }); return true;
+      }
+      if (blockedCircle(w, e.x + nx, e.z + nz, def.radius, e)) { e.chargeT = -1; e.chargeCd = 1; return true; }        // another body in the way: it gives up the charge
+      e.x += nx; e.z += nz; e.y = groundAt(w, e.x, e.z, def.radius); return true;
+    }
+    e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return false;
+  }
+  if (sees && e.attackT < 0 && e.chargeCd <= 0 && dist >= C.min && dist <= C.max && dyv < 1.2 && moveClear(w, e.x, e.z, p.x, p.z, def.radius)) {
+    e.chargeT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true;
+  }
+  return false;
+}
+
+function reviveEnemy(w, c, S) {
+  c.state = 'chase'; c.hp = ENEMIES[c.kind].hp * DIFFICULTY[w.difficulty].enemyHp * S.reviveHp; c.dead = 0; c.attackT = -1; c.lungeT = -1; c.stunT = 0; c.revived = (c.revived || 0) + 1; c.lost = 0; c.lastX = w.player.x; c.lastZ = w.player.z;
+  w.stats.kills--; emit(w, 'enemy_revived', { id: c.id, kind: c.kind, x: c.x, z: c.z });
+}
+/** Sexton: channel over a corpse to raise it; keep away from the player; hurting it mid-channel breaks the rite (see damageEnemy) */
+function supportStep(w, e, def, dt, sees, dist) {
+  const S = def.support; e.supCd = Math.max(0, (e.supCd || 0) - dt);
+  if ((e.channelT ?? -1) >= 0) {
+    const c = w.enemies.find((o) => o.id === e.channelTarget);
+    if (!c || c.state !== 'dead' || Math.hypot(c.x - e.x, c.z - e.z) > S.range * 1.3) { e.channelT = -1; return false; }
+    e.channelT += dt; e.walk *= 0.85;
+    if (e.channelT >= S.channel) { reviveEnemy(w, c, S); e.channelT = -1; e.supCd = S.cooldown; }
+    return true;
+  }
+  if (e.supCd <= 0) {
+    let best = null, bd = 1e9;
+    for (const o of w.enemies) if (o.state === 'dead' && o.dead >= 1 && S.kinds.includes(o.kind) && (o.revived || 0) < S.maxRevives) { const d = Math.hypot(o.x - e.x, o.z - e.z); if (d < S.range && d < bd && hasLOS(w, e.x, e.z, o.x, o.z)) { best = o; bd = d; } }
+    if (best) { e.channelT = 0; e.channelTarget = best.id; emit(w, 'sexton_channel', { id: e.id, x: e.x, z: e.z, tx: best.x, tz: best.z }); return true; }
+  }
+  if (sees && dist < S.keepAway) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  if (sees && dist < S.keepAway + 5) { e.walk = Math.max(0, e.walk - dt * 3); return true; }             // holds its ground at range, waiting for someone to fall
+  return false;
+}
+
+/** Cantor: tone pulses (windup -> ring), Gaunt summons, and once the ring is broken, fans of toll-shots. It keeps its distance. */
+function bossStep(w, e, def, diff, dt, sees, dist) {
+  const p = w.player, enraged = nodesAlive(w) === 0, P = def.pulse;
+  e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt); e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
+  if ((e.pulseT ?? -1) >= 0) {
+    e.pulseT += dt; e.walk *= 0.85;
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; }
+    return true;
+  }
+  if (sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
+  if (def.summon && e.summons?.length && sees && e.summonCd <= 0) {
+    const S = def.summon;
+    if (w.enemies.filter((o) => o.kind === S.kind && o.state !== 'dead').length < S.max) for (let i = 0; i < S.count; i++) {
+      e.summonN = (e.summonN ?? -1) + 1; const [sx, sz] = e.summons[e.summonN % e.summons.length], g = spawnEnemy(w, S.kind, sx, sz, Math.atan2(p.x - sx, p.z - sz)); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z });
+    }
+    e.summonCd = S.every * (enraged ? 0.7 : 1);
+  }
+  if (enraged && def.shots && sees && e.shotCd <= 0 && dist > 4) {
+    const Sh = def.shots, ox = e.x + Math.sin(e.yaw) * 0.8, oz = e.z + Math.cos(e.yaw) * 0.8, oy = e.y + 1.9, base = Math.atan2(p.x - ox, p.z - oz);
+    for (let i = -Math.floor(Sh.count / 2); i <= Math.floor(Sh.count / 2); i++) {
+      const a = base + i * Sh.spread, dy = p.y + Sh.aimHeight - oy, hz = Math.hypot(p.x - ox, p.z - oz) || 1, len = Math.hypot(hz, dy);
+      w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: Math.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: Math.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage) });
+    }
+    emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z }); e.shotCd = Sh.cooldown;
+  }
+  if (sees && dist < 6) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  return false;
+}
+
+function updatePulses(w, dt) {
+  const p = w.player;
+  for (let i = w.pulses.length - 1; i >= 0; i--) {
+    const q = w.pulses[i]; q.r += q.speed * dt;
+    if (!q.hit && p.hp > 0) {
+      const d = Math.hypot(p.x - q.x, p.z - q.z);
+      if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < 1.0 && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, q.dmg); emit(w, 'pulse_hit', {}); }      // cover breaks the line; standing a metre above the floor clears the ring
+    }
+    if (q.r > q.maxR) w.pulses.splice(i, 1);
+  }
+}
+
 function updateEnemy(w, e, diff, dt) {
   const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4);
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; return; }          // staggered: it does nothing
+  if (def.node) return;
   e.y = groundAt(w, e.x, e.z, def.radius);
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
@@ -264,9 +384,12 @@ function updateEnemy(w, e, diff, dt) {
   let ax = tx, az = tz;
   if (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius)) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
-  const dashing = def.lunge && (e.lungeT ?? -1) >= def.lunge.windup;                 // a dash keeps its heading: that is what makes it dodgeable
+  const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
   if (e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
   e.cd = Math.max(0, e.cd - dt);
+  if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
+  if (def.support && supportStep(w, e, def, dt, sees, dist)) return;
+  if (def.boss && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.lunge) {
     const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
     if ((e.lungeT ?? -1) >= 0) {
@@ -362,7 +485,7 @@ export function step(w, cmd) {
 
   // enemies + their shots
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
-  updateEnemyShots(w, diff, dt);
+  updateEnemyShots(w, diff, dt); updatePulses(w, dt);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {

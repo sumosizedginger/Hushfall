@@ -1,5 +1,5 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
-import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER } from '../engine/defs.js';
+import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS' };
 import { RESOLUTIONS } from './settings.js';
@@ -57,7 +57,7 @@ export class UI {
   toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
   /** hotkeys (Enter/Space on the death and complete screens) are ignored for half a second after a screen appears, so a held fire key cannot skip it */
   canAct() { return performance.now() - this.shownAt > 500; }
-  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } } }
+  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } } }
   /** In-world transmissions/notes are shown IN ORDER, one at a time, each long enough to read (55 ms per character, 4 s minimum, then a short gap), never on top of the title card.
    *  The radio blip plays when a message is actually shown. */
   comms(e) { this.comq.push(e); this.pumpComms(); }
@@ -86,6 +86,10 @@ export class UI {
     $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], have = p.ammo[wd.ammo] ?? 0; $('hud-ammo').textContent = have; $('hud-ammo-label').textContent = AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', have === 0);
     $('hud-weapons').innerHTML = WEAPON_ORDER.map((id, i) => (p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join('');
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${KEYS[k].name}"></i>`).join('');
+    $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
+    const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle'), bossEl = $('boss');
+    bossEl.classList.toggle('hidden', !boss);
+    if (boss) { const shielded = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead'), nodes = w.enemies.filter((n) => ENEMIES[n.kind].node && n.state !== 'dead').length; $('boss-name').textContent = ENEMIES[boss.kind].name.toUpperCase(); $('boss-fill').style.width = Math.max(0, boss.hp / (ENEMIES[boss.kind].hp * DIFFS[w.difficulty].enemyHp)) * 100 + '%'; bossEl.classList.toggle('shielded', shielded); $('boss-note').textContent = shielded ? `SHIELDED: ${nodes} BELL${nodes === 1 ? '' : 'S'} STILL RING` : (boss.stunT > 0 ? 'STAGGERED' : ''); }
     $('hud-kills').textContent = `${w.stats.kills}/${w.stats.total.enemies}`; $('hud-secrets').textContent = `${w.stats.secrets}/${w.stats.total.secrets}`;
   }
   setPointerHint(text) { $('hint').textContent = text || ''; }

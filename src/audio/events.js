@@ -19,8 +19,8 @@ const WEAPON_FIRE = {
   rivet: [{ id: 'rivet_fire', gain: 0.8 }],
   scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
 };
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -46,6 +46,14 @@ export function soundsForEvent(e) {
     case 'enemy_windup': return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
     case 'enemy_lunge': return [{ id: 'gaunt_lunge', pos: at(e) }];
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
+    case 'armor_hit': return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
+    case 'shield_hit': return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];
+    case 'node_severed': return [{ id: 'node_sever', pos: at(e) }];
+    case 'warden_crash': return [{ id: 'warden_crash', pos: at(e) }];
+    case 'sexton_channel': return [{ id: 'sexton_channel', pos: at(e) }];
+    case 'enemy_revived': return [{ id: 'revive', pos: at(e) }];
+    case 'pulse': return [{ id: 'tone_pulse', pos: at(e) }];
+    case 'pulse_hit': return [{ id: 'pulse_hit' }];
     case 'switch': return [{ id: 'switch_click', pos: at(e) }];
     case 'switch_dead': return [{ id: 'switch_dead', pos: at(e) }];
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];

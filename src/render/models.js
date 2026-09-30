@@ -79,6 +79,33 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   const small = M(new THREE.CylinderGeometry(0.01, 0.07, 0.3, 5), 7); small.position.set(-0.03, 0.2, 0.08); small.rotation.set(0.4, 0, 0.25); bell.add(small);
   const glow = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 4), glowMat); glow.position.set(0.02, 0.07, 0.1); bell.add(glow);
 
+  // ---- Gate 2 variants: the same rig, different silhouettes (this is a 3D game: a new enemy is a new shape, not a recoloured sprite) ----
+  if (variant === 'sexton') {                                                                    // a stooped bellman with a tall staff: bell on top, teal in the bell
+    root.scale.set(0.94, 1.0, 0.94);
+    const hood = M(new THREE.ConeGeometry(0.2, 0.36, 7), 1); hood.position.set(0, 0.33, -0.02); head.add(hood);
+    const staff = M(new THREE.CylinderGeometry(0.018, 0.022, 2.0, 5), 5); staff.position.set(0.02, -0.2, 0.05); arms[1].el.add(staff);
+    const sbell = M(new THREE.CylinderGeometry(0.03, 0.14, 0.22, 8), 6); sbell.position.y = 1.0; staff.add(sbell);
+    const sglow = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 4), glowMat); sglow.position.y = 0.9; staff.add(sglow);
+    const censer = M(new THREE.SphereGeometry(0.07, 6, 4), 6); censer.position.set(-0.28, 0.02, 0.16); spine.add(censer);
+  } else if (variant === 'warden') {                                                             // a converted Tide-Warden in plate: broad, slow, faceless
+    root.scale.setScalar(1.28);
+    for (const s of [-1, 1]) { const pd = M(new THREE.SphereGeometry(0.17, 7, 5), 6); pd.scale.set(1.25, 0.8, 1.1); pd.position.set(s * 0.34, 0.74, 0); spine.add(pd); }
+    const chest = M(new THREE.BoxGeometry(0.42, 0.44, 0.1), 5); chest.position.set(0, 0.5, 0.2); spine.add(chest);
+    const rim = M(new THREE.BoxGeometry(0.44, 0.06, 0.12), 6); rim.position.set(0, 0.74, 0.2); spine.add(rim);
+    const mask = M(new THREE.BoxGeometry(0.22, 0.26, 0.06), 5); mask.position.set(0, 0.03, 0.16); head.add(mask);
+    const crest = M(new THREE.ConeGeometry(0.06, 0.3, 5), 6); crest.position.set(0, 0.38, 0.02); head.add(crest);
+    const shield = M(new THREE.BoxGeometry(0.07, 0.56, 0.36), 5); shield.position.set(-0.07, -0.28, 0.06); arms[0].el.add(shield);
+    const shieldRim = M(new THREE.BoxGeometry(0.09, 0.6, 0.06), 6); shieldRim.position.set(-0.07, -0.28, 0.24); arms[0].el.add(shieldRim);
+  } else if (variant === 'cantor') {                                                             // the Cantor: robed, crowned in bells, a great bell on its chest
+    root.scale.setScalar(1.7);
+    const skirt = M(new THREE.CylinderGeometry(0.34, 0.66, 0.95, 10, 1, true), 1); skirt.position.set(0, -0.15, 0); spine.add(skirt);
+    for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2, cb = M(new THREE.ConeGeometry(0.06, 0.18, 6), 6); cb.position.set(Math.cos(a) * 0.22, 0.34, Math.sin(a) * 0.22); cb.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5); head.add(cb); }
+    const gb = M(new THREE.CylinderGeometry(0.08, 0.3, 0.52, 10), 6); gb.position.set(0, 0.42, 0.24); spine.add(gb);
+    const gbRim = M(new THREE.TorusGeometry(0.3, 0.03, 4, 12), 7); gbRim.rotation.x = Math.PI / 2; gbRim.position.set(0, 0.16, 0.24); spine.add(gbRim);
+    const gbCore = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), glowMat); gbCore.position.set(0, 0.2, 0.24); spine.add(gbCore);
+    for (const s of [-1, 1]) { const cr = M(new THREE.ConeGeometry(0.1, 0.5, 5), 6); cr.position.set(s * 0.42, 0.9, -0.06); cr.rotation.z = -s * 0.5; spine.add(cr); }
+  }
+
   root.traverse((o) => { if (o.isMesh) o.frustumCulled = true; });
 
   /** p: {t, walk 0..1, phase, attack 0..1 (0 = not attacking), dead 0..1, flash 0..1} */
