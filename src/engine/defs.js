@@ -40,7 +40,7 @@ export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
-  m: { kind: 'outdoor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
+  m: { kind: 'outdoor', tex: 'floor_silt_a' }, n: { kind: 'floor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
 };
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
@@ -91,7 +91,7 @@ export const PROPS = {
   // Gate 2 set dressing
   cart: { radius: 0.85, blocksCell: true },              // handcart / luggage trolley
   sack: { radius: 0.45, blocksCell: false },             // grain / salt sacks
-  cradle: { radius: 0.6, blocksCell: false },            // a Vael cradle: suspended captive (tall, ceiling-hung)
+  cradle: { radius: 0, blocksCell: false },              // a Vael cradle: a captive hung from the ceiling (nothing to bump into)
   rope: { radius: 0.3, blocksCell: false },              // coil of rope
   table: { radius: 0.8, blocksCell: true },
   shelf: { radius: 0.7, blocksCell: true, blocksSight: true },

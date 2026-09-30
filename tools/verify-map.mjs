@@ -41,7 +41,7 @@ if (v.ok) {
   // ---- viability + quality (shared with tests/maps.test.js through src/engine/viability.js): the level must not be beatable by ignoring it, a perfect fighter must still bleed,
   //      and the map's own `quality` contract (enemy count, bot time, mechanics, skins) must hold
   const mainRoute = JSON.parse(fs.readFileSync(path.join(root, 'routes', id + '.main.route.json'), 'utf8')), viability = evaluateViability(map, mainRoute);
-  for (const c of viabilityChecks(viability, src.par?.time)) add(c.name, c.ok, c.detail);
+  for (const c of viabilityChecks(viability, src.par?.time, { safe: !!src.quality?.safe })) add(c.name, c.ok, c.detail);
   const facts = levelFacts(map); evidence.facts = facts;
   for (const c of qualityChecks(map, src.quality, facts, viability.normal.fighter.seconds)) add(c.name, c.ok, c.detail);
   evidence.viability = viability;

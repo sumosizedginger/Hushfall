@@ -211,6 +211,12 @@ export function useTarget(w) {
   }
   return best ? { switchId: best.id, used: !!w.switchState[best.id]?.used, once: best.once, secret: false, target: 0, open: 0, key: null, remote: false, sealed: false } : null;
 }
+/** can a body of radius r walk the straight line from (x0,z0) to (x1,z1) past walls, closed doors and solid props? (actors are ignored: they move) */
+function moveClear(w, x0, z0, x1, z1, r) {
+  const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, z1 - z0) / 0.45));
+  for (let i = 1; i <= n; i++) if (blockedCircle(w, x0 + (x1 - x0) * i / n, z0 + (z1 - z0) * i / n, r * 0.9)) return false;
+  return true;
+}
 /** can an actor walk in a straight line from (x0,z0) to (x1,z1) without meeting a ledge more than a step high? (always true on flat maps) */
 function stepClear(w, x0, z0, x1, z1) {
   if (w.map.flat && w.map.sectors.length === 0) return true;
@@ -256,7 +262,7 @@ function updateEnemy(w, e, diff, dt) {
   if (!sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
   // steering: straight at the target when it is in view and the ground allows it; otherwise follow the distance field around walls, doors and ledges
   let ax = tx, az = tz;
-  if (!sees || !stepClear(w, e.x, e.z, tx, tz)) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
+  if (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius)) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
   const dashing = def.lunge && (e.lungeT ?? -1) >= def.lunge.windup;                 // a dash keeps its heading: that is what makes it dodgeable
   if (e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);

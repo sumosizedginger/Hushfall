@@ -1,0 +1,16 @@
+[
+  { "name": "01-shop", "x": 6.5, "z": 14.5, "yaw": "east" },
+  { "name": "02-stairs-down", "x": 13.5, "z": 15.5, "yaw": "south", "pitch": -0.25 },
+  { "name": "03-undercroft-landing", "x": 13.5, "z": 23.5, "yaw": "south", "pitch": -0.1 },
+  { "name": "04-wading", "x": 19.5, "z": 28.5, "yaw": "east", "pitch": -0.08 },
+  { "name": "05-cistern-archway", "x": 21.5, "z": 34.5, "yaw": "south", "open": true },
+  { "name": "06-catwalk", "x": 19.5, "z": 43.5, "yaw": "east", "pitch": -0.03, "open": true },
+  { "name": "07-platform", "x": 17.5, "z": 41.5, "yaw": "east", "pitch": -0.1, "open": true },
+  { "name": "08-toxic-pool", "x": 25.5, "z": 39.0, "yaw": "south", "pitch": -0.35, "open": true },
+  { "name": "09-office", "x": 43.5, "z": 24.5, "yaw": "east", "open": true },
+  { "name": "10-vault", "x": 48.5, "z": 35.0, "yaw": "south", "open": true },
+  { "name": "11-vault-panel", "x": 53.5, "z": 39.5, "yaw": "east", "open": true },
+  { "name": "12-tunnel", "x": 56.5, "z": 39.5, "yaw": "east", "open": true },
+  { "name": "13-drain-gate", "x": 30.5, "z": 47.5, "yaw": "south", "open": true },
+  { "name": "14-rope-store", "x": 8.5, "z": 36.5, "yaw": "south", "open": true }
+]

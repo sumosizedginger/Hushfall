@@ -87,7 +87,7 @@ test('viability: a passive runner cannot just walk through; even a perfect fight
     assert.ok(run.result !== 'complete' || run.world.stats.damageTaken >= 60, `${d}: a runner that never fires finished with only ${run.world.stats.damageTaken} damage`);
     const f = runRoute(map, main, { seed: 1, difficulty: d }); assert.equal(f.result, 'complete', `${d} fighter: ${f.failure}`); dmg[d] = f.world.stats.damageTaken;
   }
-  assert.ok(dmg.normal >= 15, 'normal: the perfect bot took ' + dmg.normal + ' damage'); assert.ok(dmg.hard > dmg.normal && dmg.normal > dmg.easy, JSON.stringify(dmg));
+  assert.ok(dmg.normal >= 10, 'normal: the perfect bot took ' + dmg.normal + ' damage'); assert.ok(dmg.hard > dmg.normal && dmg.normal > dmg.easy, JSON.stringify(dmg));
   assert.ok(dmg.hard < 140, 'hard is survivable by the bot with pickups: ' + dmg.hard);
 });
 

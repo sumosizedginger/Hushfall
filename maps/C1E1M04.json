@@ -1,0 +1,1200 @@
+{
+ "format": 1,
+ "id": "C1E1M04",
+ "version": 1,
+ "name": "The Drowned Chandlery",
+ "ceilingHeight": 3.2,
+ "atmosphere": {
+  "fog": "#0a1c1e",
+  "fogDensity": 0.028,
+  "sky": "night"
+ },
+ "grid": [
+  "############################################################",
+  "############################################################",
+  "############################################################",
+  "###WWWWWWWWWWWWWWWWWWWWWWWWW################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###W.......................W################################",
+  "###WWWWWWWWW....WWWWWWWWWWWW################################",
+  "###########W....W###########################################",
+  "###########W....W###########################################",
+  "###########W....W###########################################",
+  "###WWWWWWWWW....WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffD.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffW.............W####",
+  "###WfffffffffffffffffffffffffffffffffffffWWWWWWRDRWWWWWW####",
+  "###WfffffffffffffffffffffffffffffffffffffW#####RnR##########",
+  "###WfffffffffffffffffffffffffffffffffffffRRRRRRRnRRRRRRR####",
+  "###WfffffffffffffffffffffffffffffffffffffRnnnnnngnnnnnnR####",
+  "###WWWWWnWWWWWWRRRRRffffRRRRRRRRffffRRRRWRnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnRRRRR",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnSfffR",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnRRRRR",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffgggggggggggggggggfffR#RnnnnnngnnnnnnR####",
+  "###WnnnnnnnnnW#RfffffffffffffffffffffffR#RnnnnnngnnnnnnR####",
+  "###WWWWWWWWWWW#RfffffffffffffffffffffffR#RRRRRRRRRRRRRRR####",
+  "###############RfffffffffffffffffffffffR####################",
+  "###############RfffffffffffffffffffffffR####################",
+  "###############RfffffffffffffffffffffffR####################",
+  "###############RfffffffffffffffffffffffR####################",
+  "###############RfffffffffffffffffffffffR####################",
+  "###############RRRRIXIRIXIRIIIDIIIRIXIRR####################",
+  "###################IfI#IfI#IfffffI#IfI######################",
+  "###################III#III#IIIIIII#III######################"
+ ],
+ "heights": [
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "....44444444444444444444444.................................",
+  "............4444............................................",
+  "............3333............................................",
+  "............2222............................................",
+  "............1111............................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "................221.................122.....................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................"
+ ],
+ "ceilings": [
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "....eeeeeeeeeeeeeeeeeeeeeee.................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "..........................................aaaaaaaaaaaaa.....",
+  "..........................................aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaa.....",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "................aaaaaaaaaaaaaaaaaaaaaaa.....................",
+  "............................................................",
+  "............................................................",
+  "............................................................"
+ ],
+ "fx": [
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "............................................................",
+  "....wwwwwww......wwwwwwwwwwwwwwwwwwwwwwww...................",
+  "....wwwwwww......wwwwwwwwwwwwwwwwwwww.......................",
+  "....wwwwwww......wwwwwwwwwwwwwwwwwwww.......................",
+  "....wwwwwww......wwwwwwwwwwwwwwwwwwww.......................",
+  "....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......................",
+  "....wwwwwwwwwwwwwwwww......wwwwwwwwww.......................",
+  "....wwwwwwwwwwwwwwwww......wwwwwwwwww.......................",
+  "....wwwwwwwwwwwwwwwww......wwwwwwwwww.......................",
+  "....wwwwwwwwwwwwwwwww......wwwwwwwwwwwwww...................",
+  "....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...................",
+  "....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...................",
+  "....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...................",
+  "....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...wwww.wwwwww.....",
+  "............................................wwww.wwwwww.....",
+  "....wwwwwwwww...wwwwwwwwwwwwwwwwwwwwwww.....xxxx.xxxxww.....",
+  "....wwwwwwwww......wwwwwwwwwwwwwwwww........xxxx.xxxxww.....",
+  "....wwwwwwwww......wwwwwwwwwwwwwwwww........xxxx.xxxxww.....",
+  "....wwwwwwwww......wwwwwwwwwwwwwwwww........xxxx.xxxxww.....",
+  "....wwwwwwwww......wwxxxxxxxxxxxxxww........xxxx.xxxxww.....",
+  "....wwwwwwwww......wwxxxxxxxxxxxxxww........xxxx.xxxxww.....",
+  "....wwwwwwwww......wwxxxxxxxxxxxxxww........xxxx.xxxxww.....",
+  "....wwwwwwwww...............................wwww.wwwwww.....",
+  "....wwwwwwwww......wwxxxxxxxxxxxxxww........wwww.wwwwww.....",
+  "...................wwxxxxxxxxxxxxxww........................",
+  "...................wwxxxxxxxxxxxxxww........................",
+  "...................wwwwwwwwwwwwwwwww........................",
+  "...................wwwwwwwwwwwwwwwww........................",
+  "...................wwwwwwwwwwwwwwwww........................",
+  "................wwwwwwwwwwwwwwwwwwwwwww.....................",
+  "............................................................",
+  "............................................................",
+  "............................................................"
+ ],
+ "doors": [
+  {
+   "at": [41, 26]
+  },
+  {
+   "at": [48, 31]
+  },
+  {
+   "at": [30, 51],
+   "key": "iron"
+  }
+ ],
+ "secrets": [
+  {
+   "id": "lighthouse-tunnel",
+   "panel": [55, 39],
+   "cells": [
+    [56, 39],
+    [57, 39]
+   ]
+  }
+ ],
+ "closets": [
+  {
+   "at": [20, 51]
+  },
+  {
+   "at": [24, 51]
+  },
+  {
+   "at": [36, 51]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "cellar",
+   "when": "enter",
+   "at": [13, 22],
+   "radius": 2,
+   "do": [
+    {
+     "objective": "Iron key: the chandler's office, east side of the undercroft"
+    }
+   ]
+  },
+  {
+   "id": "iron",
+   "when": "key:iron",
+   "do": [
+    {
+     "open": [20, 51]
+    },
+    {
+     "open": [24, 51]
+    },
+    {
+     "open": [36, 51]
+    },
+    {
+     "wake": "cistern-closet"
+    },
+    {
+     "shake": 1.2
+    },
+    {
+     "objective": "The drain gate, south wall of the cistern. Stay on the catwalk."
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [10, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [16, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [20, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [5, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [5, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 6]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 6],
+   "facing": -1.153
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [20, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [5, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [18, 8],
+   "facing": -1.107
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [5, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [10, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 11],
+   "facing": -1.385
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [8, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [22, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [5, 14]
+  },
+  {
+   "type": "player",
+   "at": [6, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [15, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [20, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [24, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [12, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [43, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [46, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [53, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 24],
+   "facing": -2.944
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [13, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [15, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [39, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [45, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 24],
+   "facing": -1.816
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [50, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [51, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [52, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [13, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 25],
+   "facing": -2.237
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [26, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 25],
+   "facing": -2.001
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 25],
+   "facing": -1.945
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [10, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [18, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [34, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [23, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [52, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [53, 27],
+   "facing": -1.841
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [22, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [23, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [39, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [45, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 28],
+   "facing": -1.879
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [14, 29],
+   "facing": -2.652
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [25, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [43, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 30],
+   "facing": -2.2
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [10, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 31],
+   "facing": -2.527
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [34, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 31],
+   "facing": -2.059
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [18, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 32],
+   "facing": -2.415
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [26, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [10, 33],
+   "facing": -2.934
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 33],
+   "facing": -2.135
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [43, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [53, 35]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 36],
+   "facing": -2.096
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [48, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [52, 36],
+   "facing": -2.017
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [54, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [5, 37]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 37],
+   "facing": -2.928
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [46, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "rope",
+   "at": [6, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "rope",
+   "at": [10, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [17, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [21, 38],
+   "facing": -2.583
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 38],
+   "facing": -2.498
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 38],
+   "facing": -2.356
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [37, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 38],
+   "facing": -2.146
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [45, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [51, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [22, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [32, 39]
+  },
+  {
+   "type": "exit",
+   "dest": "secret",
+   "at": [57, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [5, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [9, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [11, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [17, 40],
+   "facing": -2.741
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 40],
+   "facing": -2.319
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [43, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [53, 40],
+   "facing": -2.076
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [7, 41],
+   "facing": -3.105
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [27, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [45, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [50, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [51, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "rope",
+   "at": [6, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [10, 42],
+   "facing": -3
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [43, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [52, 42],
+   "facing": -2.118
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [8, 43]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [11, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [17, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [23, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [30, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [33, 43]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [37, 43],
+   "facing": -2.323
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [43, 43]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 43],
+   "facing": -2.198
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [53, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [54, 43]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [6, 44],
+   "facing": 3.142
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 44],
+   "facing": -2.705
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [27, 45]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [17, 46],
+   "facing": -2.81
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 46],
+   "facing": -2.539
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [37, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [22, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "skin": "R",
+   "at": [32, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [17, 48]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [19, 48],
+   "facing": -2.776
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 48],
+   "facing": -2.61
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 48],
+   "facing": -2.489
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 50]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 52],
+   "facing": -2.789,
+   "group": "cistern-closet"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 52],
+   "facing": -2.699,
+   "group": "cistern-closet"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [29, 52],
+   "facing": -2.597,
+   "group": "cistern-closet"
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [30, 52]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [31, 52],
+   "facing": -2.56,
+   "group": "cistern-closet"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 52],
+   "facing": -2.473,
+   "group": "cistern-closet"
+  }
+ ],
+ "par": {
+  "time": 800
+ },
+ "intro": {
+  "title": "THE DROWNED CHANDLERY",
+  "lines": [
+   "The ebb has gone out of the harbour. It has not gone out of the cellars.",
+   "Something is growing in the water table."
+  ]
+ },
+ "outro": "Next: Lamplighter Hill. The survivors are signalling by lamp.",
+ "messages": [
+  {
+   "id": "shop",
+   "at": [6, 13],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the chandlery. The cellars run under half the quay. Somewhere down there is the drain gate; it needs the chandler's iron key."
+  },
+  {
+   "id": "stairs",
+   "at": [13, 19],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "Water at the third step. It is warm. Water is never warm in Port Marrow."
+  },
+  {
+   "id": "under",
+   "at": [20, 28],
+   "radius": 4,
+   "speaker": "CHANDLER'S LOG",
+   "text": "Ebb tide, no ebb. The wall in the east store weeps a green wet. Told the harbourmaster. He laughed, then he stopped laughing."
+  },
+  {
+   "id": "office",
+   "at": [48, 26],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Iron key on the desk. The blotter has one line: \"Do not drain the cistern.\""
+  },
+  {
+   "id": "cistern",
+   "at": [27, 38],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Green pool, catwalk across it. Something sings under the surface. Stay on the grating."
+  },
+  {
+   "id": "vault",
+   "at": [48, 38],
+   "radius": 4,
+   "speaker": "RESIN LOG",
+   "text": "It grows where the water is loud. It grows toward the tone. It has started to grow toward us."
+  },
+  {
+   "id": "tunnel",
+   "at": [57, 39],
+   "radius": 2,
+   "speaker": "LIGHTHOUSE KEEPER",
+   "text": "If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. Come up."
+  },
+  {
+   "id": "gate",
+   "at": [30, 50],
+   "radius": 2,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Lamplighter Hill is the way up. The survivors there signal by lamp: green for safe, red for bells."
+  }
+ ],
+ "objective": "Find the stairs down (south of the shop)",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 8,
+   "shell": 12,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [34, 56],
+  "botSeconds": [120, 480],
+  "mechanics": [
+   "heights",
+   "hazards",
+   "closets",
+   "triggers",
+   "secret",
+   "keys>=1"
+  ],
+  "skins": 7
+ }
+}

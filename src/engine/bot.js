@@ -19,13 +19,16 @@ export class Bot {
   passable(cx, cz, goal) {
     const m = this.w.map, k = m.kind(cx, cz), p = this.w.player;
     if (goal && cx === goal[0] && cz === goal[1]) return true;
+    if (this.avoidToxic && m.fx(cx, cz) === 'x') return false;
     if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
     if (k === 'secret') { const d = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !d?.closet || d.open > 0.85; }     // a closet panel is a wall until an event opens it
     if (k === 'floor' || k === 'outdoor') return true;
     if (k === 'door') { const d = m.doorAt(cx, cz); if (d.remote) { const wd = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !!wd && wd.open > 0.85; } return !d.key || p.keys.includes(d.key); }
     return false;
   }
-  findPath(goal) {
+  /** paths avoid toxic residue when there is any other way round (a player would); if there is none the shortest path is used */
+  findPath(goal) { this.avoidToxic = true; const a = this.findPath0(goal); if (a) { this.avoidToxic = false; return a; } this.avoidToxic = false; return this.findPath0(goal); }
+  findPath0(goal) {
     const m = this.w.map, p = this.w.player;
     let start = [Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)];
     // a dodge can leave the bot standing at the corner of a prop's cell: that cell is not passable, so start from the nearest cell that is (the walk out is the first step)
@@ -65,8 +68,9 @@ export class Bot {
   fight(t) {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
-    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.e.kind === 'gaunt' || t.d < 7);
-    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
+    const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
+    const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr));
+    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
     const wantId = wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
     const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
@@ -82,7 +86,7 @@ export class Bot {
     const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
     this.setHeld('fire', shoot);
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
-    this.setHeld('forward', false);
+    this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
     this.setHeld('right', (t.e.lungeT ?? -1) >= 0);                    // a crouching Gaunt is about to dash: sidestep it
   }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
