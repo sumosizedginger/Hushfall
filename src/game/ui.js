@@ -12,6 +12,7 @@ const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padSt
 const TOASTS = {
   pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key', ammo_shell: 'Shotgun shells (+6)', ammo_rivet: 'Rivets (+30)', key_iron: 'Iron key', key_bell: 'Bell key' })[e.kind] || 'Picked up ' + e.kind,
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
+  switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',
   weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : 'Weapon'),
   weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
@@ -19,7 +20,7 @@ const TOASTS = {
 
 export class UI {
   constructor(handlers) {
-    this.h = handlers; this.screen = null; this.toastQueue = []; this.comq = new CommsQueue(); this.shownAt = 0; this._useHint = null;
+    this.h = handlers; this.screen = null; this.toastQueue = []; this.comq = new CommsQueue(); this.shownAt = 0; this._useHint = null; this.keyLabels = {};
     $('btn-easy').onclick = () => this.h.newGame('easy'); $('btn-normal').onclick = () => this.h.newGame('normal'); $('btn-hard').onclick = () => this.h.newGame('hard');
     $('btn-continue').onclick = () => this.h.continueGame();
     $('btn-resume').onclick = () => this.h.resume(); $('btn-save').onclick = () => this.h.quickSave(); $('btn-load').onclick = () => this.h.quickLoad();
@@ -57,7 +58,7 @@ export class UI {
   toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
   /** hotkeys (Enter/Space on the death and complete screens) are ignored for half a second after a screen appears, so a held fire key cannot skip it */
   canAct() { return performance.now() - this.shownAt > 500; }
-  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else { const f = TOASTS[e.type]; if (f) this.toast(f(e)); } } }
+  events(events) { for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'pickup' && String(e.kind).startsWith('key_') && this.keyLabels?.[e.kind.slice(4)]) this.toast(this.keyLabels[e.kind.slice(4)]); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
   /** In-world transmissions/notes are shown IN ORDER, one at a time, each long enough to read (55 ms per character, 4 s minimum, then a short gap), never on top of the title card.
    *  The radio blip plays when a message is actually shown. */
   comms(e) { this.comq.push(e); this.pumpComms(); }
@@ -80,12 +81,13 @@ export class UI {
   /** a controls reminder that appears after `delay` ms and stays `dur` ms (cancelled by clearOverlays) */
   tip(text, delay, dur) { clearTimeout(this._tipT); this._tipT = setTimeout(() => { const el = $('tips'); el.textContent = text; el.classList.remove('hidden'); this._tipT = setTimeout(() => el.classList.add('hidden'), dur); }, delay); }
   hud(w, visible) {
+    this.keyLabels = w?.map?.keyLabels || {};
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
     const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.ads > 0.5 ? 'ads' : 'hip';
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
     $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], have = p.ammo[wd.ammo] ?? 0; $('hud-ammo').textContent = have; $('hud-ammo-label').textContent = AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', have === 0);
     $('hud-weapons').innerHTML = WEAPON_ORDER.map((id, i) => (p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join('');
-    $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${KEYS[k].name}"></i>`).join('');
+    $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
     $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle'), bossEl = $('boss');
     bossEl.classList.toggle('hidden', !boss);

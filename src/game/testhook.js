@@ -51,6 +51,7 @@ export function installTestHook(app) {
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
+    setup_ambient(v) { g.world.ambient = v; if (g.view) g.view.ambient = v; },
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */
     clearOverlays() { ui.clearOverlays(); },
