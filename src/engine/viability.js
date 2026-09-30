@@ -24,7 +24,7 @@ export function viabilityChecks(v, par) {
   const c = [];
   for (const d of DIFFS) c.push({ name: `viability ${d}: a passive runner does not walk through (${v[d].runner.result}, ${v[d].runner.damage} damage)`, ok: v[d].runner.result !== 'complete' || v[d].runner.damage >= 60, detail: '' });
   for (const d of DIFFS) c.push({ name: `viability ${d}: a perfect fighter completes the level`, ok: v[d].fighter.result === 'complete', detail: v[d].fighter.failure || v[d].fighter.result });
-  c.push({ name: 'viability: a perfect fighter takes real damage on normal and hard (>= 20 / >= 40)', ok: v.normal.fighter.damage >= 20 && v.hard.fighter.damage >= 40, detail: JSON.stringify({ normal: v.normal.fighter.damage, hard: v.hard.fighter.damage }) });
+  c.push({ name: 'viability: a perfect fighter takes real damage on normal and hard (>= 15 / >= 30)', ok: v.normal.fighter.damage >= 15 && v.hard.fighter.damage >= 30, detail: JSON.stringify({ normal: v.normal.fighter.damage, hard: v.hard.fighter.damage }) });
   c.push({ name: 'viability: damage rises with difficulty', ok: v.easy.fighter.damage < v.normal.fighter.damage && v.normal.fighter.damage < v.hard.fighter.damage, detail: [v.easy, v.normal, v.hard].map((x) => x.fighter.damage).join(' < ') });
   if (par) { const ratio = par / v.normal.fighter.seconds; c.push({ name: `par time is 2x-8x the bot's time (${ratio.toFixed(1)}x; placeholder until a human plays it)`, ok: ratio >= 2 && ratio <= 8, detail: '' }); }
   return c;

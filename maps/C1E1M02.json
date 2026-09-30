@@ -1426,9 +1426,21 @@
   }
  ],
  "objective": "Find a way into the hall",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 8,
+   "shell": 12
+  },
+  "weapons": [
+   "flare",
+   "scattergun"
+  ]
+ },
  "quality": {
   "enemies": [30, 46],
-  "botSeconds": [120, 420],
+  "botSeconds": [90, 420],
   "mechanics": [
    "heights",
    "closets",

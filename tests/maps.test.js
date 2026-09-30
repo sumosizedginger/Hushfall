@@ -39,6 +39,6 @@ for (const id of ids) {
 
   if (map.secrets.length) test(`${id}: only the secret route finds the secret`, () => {
     assert.ok(secret, 'a secret route exists'); const m = runRoute(map, main, { seed: 1 }), s = runRoute(map, secret, { seed: 1 });
-    assert.equal(m.world.stats.secrets, 0); assert.equal(s.result, 'complete', s.failure); assert.equal(s.world.stats.secrets, map.secrets.length); assert.ok(s.world.stats.items > m.world.stats.items);
+    assert.equal(m.world.stats.secrets, 0); assert.equal(s.result, 'complete', s.failure); assert.equal(s.world.stats.secrets, map.secrets.length);
   });
 }

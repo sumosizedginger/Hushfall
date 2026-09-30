@@ -143,7 +143,7 @@ export function buildLevel(map, tex) {
   // wall switches: an iron panel with a lamp (red = waiting, green = used)
   for (const sw of map.switches) {
     const r = makeSwitchPanel(); const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[sw.wallDir] || [0, -1];
-    r.group.position.set(sw.px - dir[0] * 0.07, sw.fy + 1.35, sw.pz - dir[1] * 0.07); r.group.rotation.y = Math.atan2(-dir[0], -dir[1]) + Math.PI;
+    r.group.position.set(sw.px, sw.fy + 1.35, sw.pz); r.group.rotation.y = Math.atan2(-dir[0], -dir[1]);           // faces away from the wall (local +z)
     group.add(r.group); switchViews.set(sw.id, r);
   }
 
