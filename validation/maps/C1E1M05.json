@@ -2,7 +2,7 @@
   "mapId": "C1E1M05",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "c8a2ad9",
+  "codeVersion": "f79bf59",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "91edfe68c3733850",
@@ -104,7 +104,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 100,
+        "damage": 117,
         "hpLeft": 0
       },
       "fighter": {
@@ -119,7 +119,7 @@
     "normal": {
       "runner": {
         "result": "dead",
-        "damage": 117,
+        "damage": 126,
         "hpLeft": 0
       },
       "fighter": {
@@ -134,7 +134,7 @@
     "hard": {
       "runner": {
         "result": "dead",
-        "damage": 113,
+        "damage": 123,
         "hpLeft": 0
       },
       "fighter": {
@@ -149,16 +149,16 @@
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-30T01:26:35.261Z",
+    "when": "2026-09-30T04:15:48.896Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
-    "mapSha": "aafbb26f67fe1cb1",
-    "commit": "d10df0f",
-    "passed": 66,
-    "total": 66,
+    "mapSha": "91edfe68c3733850",
+    "commit": "f79bf59",
+    "passed": 89,
+    "total": 89,
     "allPassed": true
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -191,17 +191,17 @@
         "detail": "138.1 s"
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 100 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 117 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability normal: a passive runner does not walk through (dead, 117 damage)",
+        "name": "viability normal: a passive runner does not walk through (dead, 126 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability hard: a passive runner does not walk through (dead, 113 damage)",
+        "name": "viability hard: a passive runner does not walk through (dead, 123 damage)",
         "ok": true,
         "detail": ""
       },
@@ -226,7 +226,7 @@
         "detail": "{\"normal\":28,\"hard\":69}"
       },
       {
-        "name": "viability: damage rises with difficulty",
+        "name": "viability: damage rises with difficulty (easy < normal, easy < hard, hard >= 80% of normal: a deterministic bot takes a handful of hits, so hit counts jitter)",
         "ok": true,
         "detail": "16 < 28 < 69 (mean of 3 seeds)"
       },
@@ -282,13 +282,13 @@
       },
       {
         "name": "the browser check ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "browser-check mapSha aafbb26f67fe1cb1 vs 91edfe68c3733850"
+        "ok": true,
+        "detail": "browser-check sha for C1E1M05: 91edfe68c3733850 vs 91edfe68c3733850"
       },
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "66/66"
+        "detail": "89/89"
       }
     ]
   },

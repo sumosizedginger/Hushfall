@@ -1,0 +1,314 @@
+{
+  "note": "read from validation/maps/<ID>.json (tools/verify-map.mjs). Status is derived by npm run validate; agents cannot award COMPLETE.",
+  "maps": [
+    {
+      "id": "C1E1M01",
+      "name": "Marrow Quay",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 7,
+      "counts": {
+        "enemies": 16,
+        "items": 21,
+        "secrets": 1
+      },
+      "botSecondsNormal": 71.4,
+      "fighterDamage": {
+        "easy": 8,
+        "normal": 14,
+        "hard": 36
+      },
+      "runner": {
+        "easy": "dead, 110 damage",
+        "normal": "dead, 108 damage",
+        "hard": "dead, 115 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M01.main.route.json",
+          "result": "complete",
+          "seconds": 71.4,
+          "kills": 16,
+          "secrets": 0
+        },
+        {
+          "file": "routes/C1E1M01.secret.route.json",
+          "result": "complete",
+          "seconds": 78.1,
+          "kills": 16,
+          "secrets": 1
+        }
+      ]
+    },
+    {
+      "id": "C1E1M02",
+      "name": "Customs Hall",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 38,
+        "items": 49,
+        "secrets": 1
+      },
+      "botSecondsNormal": 124.1,
+      "fighterDamage": {
+        "easy": 40,
+        "normal": 56,
+        "hard": 108
+      },
+      "runner": {
+        "easy": "dead, 100 damage",
+        "normal": "dead, 108 damage",
+        "hard": "dead, 101 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M02.main.route.json",
+          "result": "complete",
+          "seconds": 124.1,
+          "kills": 30,
+          "secrets": 0
+        },
+        {
+          "file": "routes/C1E1M02.secret.route.json",
+          "result": "complete",
+          "seconds": 136.1,
+          "kills": 30,
+          "secrets": 1
+        }
+      ]
+    },
+    {
+      "id": "C1E1M03",
+      "name": "Fishmarket Rows",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 37,
+        "items": 41,
+        "secrets": 0
+      },
+      "botSecondsNormal": 152.4,
+      "fighterDamage": {
+        "easy": 12,
+        "normal": 35,
+        "hard": 49
+      },
+      "runner": {
+        "easy": "dead, 102 damage",
+        "normal": "dead, 100 damage",
+        "hard": "dead, 102 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M03.main.route.json",
+          "result": "complete",
+          "seconds": 152.4,
+          "kills": 41,
+          "secrets": 0
+        }
+      ]
+    },
+    {
+      "id": "C1E1M04",
+      "name": "The Drowned Chandlery",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 44,
+        "items": 40,
+        "secrets": 1
+      },
+      "botSecondsNormal": 136,
+      "fighterDamage": {
+        "easy": 4,
+        "normal": 14,
+        "hard": 40
+      },
+      "runner": {
+        "easy": "dead, 110 damage",
+        "normal": "dead, 108 damage",
+        "hard": "dead, 115 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M04.main.route.json",
+          "result": "complete",
+          "seconds": 136,
+          "kills": 32,
+          "secrets": 0
+        },
+        {
+          "file": "routes/C1E1M04.secret.route.json",
+          "result": "complete",
+          "seconds": 104,
+          "kills": 26,
+          "secrets": 1
+        }
+      ]
+    },
+    {
+      "id": "C1E1M05",
+      "name": "Lamplighter Hill",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 45,
+        "items": 52,
+        "secrets": 0
+      },
+      "botSecondsNormal": 135.9,
+      "fighterDamage": {
+        "easy": 16,
+        "normal": 28,
+        "hard": 69
+      },
+      "runner": {
+        "easy": "dead, 117 damage",
+        "normal": "dead, 126 damage",
+        "hard": "dead, 123 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M05.main.route.json",
+          "result": "complete",
+          "seconds": 135.9,
+          "kills": 39,
+          "secrets": 0
+        }
+      ]
+    },
+    {
+      "id": "C1E1M06",
+      "name": "Ferry Terminal",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 41,
+        "items": 31,
+        "secrets": 0
+      },
+      "botSecondsNormal": 90.1,
+      "fighterDamage": {
+        "easy": 19,
+        "normal": 84,
+        "hard": 72
+      },
+      "runner": {
+        "easy": "dead, 100 damage",
+        "normal": "dead, 117 damage",
+        "hard": "dead, 101 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M06.main.route.json",
+          "result": "complete",
+          "seconds": 90.1,
+          "kills": 47,
+          "secrets": 0
+        }
+      ]
+    },
+    {
+      "id": "C1E1M07",
+      "name": "Signal House",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 37,
+        "items": 19,
+        "secrets": 0
+      },
+      "botSecondsNormal": 162.2,
+      "fighterDamage": {
+        "easy": 23,
+        "normal": 92,
+        "hard": 87
+      },
+      "runner": {
+        "easy": "dead, 126 damage",
+        "normal": "dead, 135 damage",
+        "hard": "dead, 147 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M07.main.route.json",
+          "result": "complete",
+          "seconds": 162.2,
+          "kills": 37,
+          "secrets": 0
+        }
+      ]
+    },
+    {
+      "id": "C1E1M08",
+      "name": "Bell Tower of St. Orrin",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 41,
+        "items": 46,
+        "secrets": 0
+      },
+      "botSecondsNormal": 163.9,
+      "fighterDamage": {
+        "easy": 49,
+        "normal": 138,
+        "hard": 230
+      },
+      "runner": {
+        "easy": "dead, 110 damage",
+        "normal": "dead, 104 damage",
+        "hard": "dead, 107 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1M08.main.route.json",
+          "result": "complete",
+          "seconds": 163.9,
+          "kills": 44,
+          "secrets": 0
+        }
+      ]
+    },
+    {
+      "id": "C1E1S01",
+      "name": "The Lighthouse Cellar",
+      "status": "AGENT_VERIFIED",
+      "automatedPass": true,
+      "mapVersion": 1,
+      "counts": {
+        "enemies": 0,
+        "items": 14,
+        "secrets": 0
+      },
+      "botSecondsNormal": 44.6,
+      "fighterDamage": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      },
+      "runner": {
+        "easy": "complete, 0 damage",
+        "normal": "complete, 0 damage",
+        "hard": "complete, 0 damage"
+      },
+      "routes": [
+        {
+          "file": "routes/C1E1S01.main.route.json",
+          "result": "complete",
+          "seconds": 44.6,
+          "kills": 0,
+          "secrets": 0
+        }
+      ]
+    }
+  ]
+}

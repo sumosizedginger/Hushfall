@@ -1,0 +1,237 @@
+{
+  "mapId": "C1E1S01",
+  "mapVersion": 1,
+  "generatedBy": "tools/verify-map.mjs",
+  "codeVersion": "f79bf59",
+  "dirtyTree": true,
+  "dirtySource": false,
+  "mapSha": "78ffb66aa02e4389",
+  "assetVersion": "b802ce1a6831da76",
+  "loads": true,
+  "validationErrors": [],
+  "routes": [
+    {
+      "file": "routes/C1E1S01.main.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2677,
+      "finalHash": "61f5a388",
+      "kills": 0,
+      "secrets": 0,
+      "items": 9,
+      "damageTaken": 0
+    },
+    {
+      "file": "routes/C1E1S01.main.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2677,
+      "finalHash": "a3a11d3a",
+      "kills": 0,
+      "secrets": 0,
+      "items": 10,
+      "damageTaken": 0
+    },
+    {
+      "file": "routes/C1E1S01.main.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2677,
+      "finalHash": "beb328f5",
+      "kills": 0,
+      "secrets": 0,
+      "items": 10,
+      "damageTaken": 0
+    }
+  ],
+  "canonicalRoute": {
+    "sha": "de3b6e6685a1f7d0",
+    "file": "routes/C1E1S01.main.route.json",
+    "difficulty": "normal",
+    "seed": 1,
+    "reachedExit": true,
+    "ticks": 2677,
+    "finalHash": "a3a11d3a",
+    "expectedEvents": [
+      "door_open",
+      "pickup:key_brass",
+      "level_complete"
+    ],
+    "proves": "one valid tested path; not balance, fun, or full exploration"
+  },
+  "counts": {
+    "enemies": 0,
+    "items": 14,
+    "secrets": 0
+  },
+  "facts": {
+    "enemies": 0,
+    "enemyKinds": {},
+    "keys": 0,
+    "closets": 0,
+    "triggers": 0,
+    "switches": 0,
+    "sectors": 0,
+    "heights": true,
+    "maxFloor": 4,
+    "fxCells": 0,
+    "skins": 7,
+    "wallSkins": [
+      "#",
+      "C",
+      "W",
+      "P"
+    ],
+    "floorSkins": [
+      "s",
+      "f",
+      "t"
+    ],
+    "props": 24,
+    "secrets": 0,
+    "cells": 840
+  },
+  "viability": {
+    "easy": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 44.6,
+        "kills": 0,
+        "failure": null
+      }
+    },
+    "normal": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 44.6,
+        "kills": 0,
+        "failure": null
+      }
+    },
+    "hard": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 44.6,
+        "kills": 0,
+        "failure": null
+      }
+    }
+  },
+  "browser": {
+    "file": "validation/browser-check.json",
+    "when": "2026-09-30T04:15:48.896Z",
+    "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
+    "mapSha": "78ffb66aa02e4389",
+    "commit": "f79bf59",
+    "passed": 89,
+    "total": 89,
+    "allPassed": true
+  },
+  "automated": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "exit reachable from spawn (keys considered)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "name": "no unreachable pickups/enemies",
+        "ok": true,
+        "detail": "[]"
+      },
+      {
+        "name": "all secrets reachable",
+        "ok": true,
+        "detail": "[]"
+      },
+      {
+        "name": "route C1E1S01.main.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "44.6 s"
+      },
+      {
+        "name": "route C1E1S01.main.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "44.6 s"
+      },
+      {
+        "name": "route C1E1S01.main.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "44.6 s"
+      },
+      {
+        "name": "safe room easy: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "safe room normal: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "safe room hard: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "quality: enemy count in [0,0]",
+        "ok": true,
+        "detail": 0
+      },
+      {
+        "name": "quality: perfect-bot time in [20,180] s",
+        "ok": true,
+        "detail": "44.6 s"
+      },
+      {
+        "name": "quality: uses at least 4 distinct wall/floor skins",
+        "ok": true,
+        "detail": 7
+      },
+      {
+        "name": "quality: uses mechanic 'heights'",
+        "ok": true,
+        "detail": "max floor 4"
+      },
+      {
+        "name": "the browser check ran on THIS map file (sha matches)",
+        "ok": true,
+        "detail": "browser-check sha for C1E1S01: 78ffb66aa02e4389 vs 78ffb66aa02e4389"
+      },
+      {
+        "name": "latest browser check passed",
+        "ok": true,
+        "detail": "89/89"
+      }
+    ]
+  },
+  "humanReview": null,
+  "knownBlockers": [],
+  "notes": "Generated: map v1, 0 enemies, 14 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+}
