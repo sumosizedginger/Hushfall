@@ -25,7 +25,7 @@ for (const id of ids) {
   test(`${id}: has a canonical main route; viability gates pass (runner blocked, fighter completes on all difficulties, damage rises, par plausible)`, () => {
     assert.ok(main, 'routes/' + id + '.main.route.json exists');
     const v = evaluateViability(map, main);
-    for (const c of viabilityChecks(v, map.par?.time)) assert.ok(c.ok, c.name + ' ' + c.detail);
+    for (const c of viabilityChecks(v, map.par?.time, { safe: !!src.quality?.safe })) assert.ok(c.ok, c.name + ' ' + c.detail);
     const facts = levelFacts(map);
     for (const c of qualityChecks(map, src.quality, facts, v.normal.fighter.seconds)) assert.ok(c.ok, c.name + ' ' + c.detail);
   });

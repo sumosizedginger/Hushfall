@@ -8,7 +8,7 @@ export const MAP_FORMAT = 1;
 //   floors:  . interior planks    : cobble (open air)    p pier planks (open air)
 //   water:   ~ blocks walking, but not sight or projectiles
 //   D door   S secret panel (drawn as wall until opened)
-//   Gate 2 skins: walls W timber, P plaster, C concrete, I iron plate, R Vael resin, T tower stone; floors t tile, g grating, c carpet, f flagstone (indoor), m silt, s slate (outdoor)
+//   Gate 2 skins: walls W timber, P plaster, C concrete, I iron plate, R Vael resin, T tower stone; floors t tile, g grating, c carpet, f flagstone, n silt (indoor), m silt, s slate (outdoor)
 //   X = a trigger-only panel (a closet door drawn as wall); listed in `closets`
 // Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z), `ceilings` (absolute ceiling height in
 // 0.5 m units, '.' = floor + ceilingHeight), `fx` (floor effect: w wading water, x toxic residue). Lists: `sectors` (moving floors), `closets`, `triggers`,
@@ -246,10 +246,10 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   }
   for (const d of src.doors || []) if (d.remote && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);
-  const exitIds = new Set();
+  const exitIds = new Set(); let exitN = 0;
   for (const e of ents) if (e.type === 'exit') {
     if (e.dest != null && e.dest !== 'next' && e.dest !== 'secret') err(`exit at ${e.at}: dest must be 'next' or 'secret'`);
-    const id = e.id ?? 'exit'; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
+    const id = e.id ?? 'exit' + exitN++; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
   }
   const p = ents.find((e) => e.type === 'player');
   if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX) err('the player starts on a floor effect (wading water / toxic residue)');

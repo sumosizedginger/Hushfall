@@ -17,7 +17,7 @@ export class Level {
     this.#each([r[0] - 1, r[1] - 1, r[2] + 1, r[3] + 1], (x, z) => { const inside = x >= r[0] && x <= r[2] && z >= r[1] && z <= r[3]; if (inside) this.g[z][x] = floor; else if (!this.#floorLike(this.g[z][x]) && this.g[z][x] !== 'D' && this.g[z][x] !== 'X' && this.g[z][x] !== 'S' && this.g[z][x] !== '~') this.g[z][x] = wall; });
     if (height != null) this.height(r, height); return this;
   }
-  #floorLike(c) { return '.:ptgcfms'.includes(c); }
+  #floorLike(c) { return '.:ptgcfmns'.includes(c); }
   /** put a wall skin on a rectangle (solid blocks: pillars, counters, partitions) */
   wall(r, c = '#') { return this.rect(r, c); }
   /** floor height (0.5 m units) over a rectangle */

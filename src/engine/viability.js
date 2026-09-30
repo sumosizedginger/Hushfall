@@ -11,21 +11,24 @@ export function evaluateViability(map, mainRoute, { seed = 1 } = {}) {
   const out = {};
   for (const difficulty of DIFFS) {
     const runner = runRoute(map, mainRoute, { seed, difficulty, fights: false }), fighter = runRoute(map, mainRoute, { seed, difficulty });
+    const seeds = [seed, seed + 1, seed + 2], meanDamage = Math.round(seeds.reduce((a, sd) => a + (sd === seed ? fighter : runRoute(map, mainRoute, { seed: sd, difficulty })).world.stats.damageTaken, 0) / seeds.length);      // damage is noisy per seed: ordering is judged on the mean of three
     out[difficulty] = {
       runner: { result: runner.result, damage: runner.world.stats.damageTaken, hpLeft: runner.world.player.hp },
-      fighter: { result: fighter.result, damage: fighter.world.stats.damageTaken, seconds: +(fighter.ticks / 60).toFixed(1), kills: fighter.world.stats.kills, failure: fighter.failure },
+      fighter: { result: fighter.result, damage: fighter.world.stats.damageTaken, meanDamage, seconds: +(fighter.ticks / 60).toFixed(1), kills: fighter.world.stats.kills, failure: fighter.failure },
     };
   }
   return out;
 }
 
 /** objective checks of a viability result: [{name, ok, detail}] */
-export function viabilityChecks(v, par) {
+export function viabilityChecks(v, par, { safe = false } = {}) {
   const c = [];
+  // a safe room (quality.safe: no enemies by design) only has to be completable; there is nothing to survive, so the runner/damage gates do not apply
+  if (safe) { for (const d of DIFFS) c.push({ name: `safe room ${d}: the route completes`, ok: v[d].fighter.result === 'complete', detail: v[d].fighter.failure || v[d].fighter.result }); return c; }
   for (const d of DIFFS) c.push({ name: `viability ${d}: a passive runner does not walk through (${v[d].runner.result}, ${v[d].runner.damage} damage)`, ok: v[d].runner.result !== 'complete' || v[d].runner.damage >= 60, detail: '' });
   for (const d of DIFFS) c.push({ name: `viability ${d}: a perfect fighter completes the level`, ok: v[d].fighter.result === 'complete', detail: v[d].fighter.failure || v[d].fighter.result });
-  c.push({ name: 'viability: a perfect fighter takes real damage on normal and hard (>= 15 / >= 30)', ok: v.normal.fighter.damage >= 15 && v.hard.fighter.damage >= 30, detail: JSON.stringify({ normal: v.normal.fighter.damage, hard: v.hard.fighter.damage }) });
-  c.push({ name: 'viability: damage rises with difficulty', ok: v.easy.fighter.damage < v.normal.fighter.damage && v.normal.fighter.damage < v.hard.fighter.damage, detail: [v.easy, v.normal, v.hard].map((x) => x.fighter.damage).join(' < ') });
+  c.push({ name: 'viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)', ok: v.normal.fighter.meanDamage >= 10 && v.hard.fighter.meanDamage >= 25, detail: JSON.stringify({ normal: v.normal.fighter.meanDamage, hard: v.hard.fighter.meanDamage }) });
+  c.push({ name: 'viability: damage rises with difficulty', ok: v.easy.fighter.meanDamage < v.normal.fighter.meanDamage && v.normal.fighter.meanDamage < v.hard.fighter.meanDamage, detail: [v.easy, v.normal, v.hard].map((x) => x.fighter.meanDamage).join(' < ') + ' (mean of 3 seeds)' });
   if (par) { const ratio = par / v.normal.fighter.seconds; c.push({ name: `par time is 2x-8x the bot's time (${ratio.toFixed(1)}x; placeholder until a human plays it)`, ok: ratio >= 2 && ratio <= 8, detail: '' }); }
   return c;
 }

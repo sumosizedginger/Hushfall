@@ -8,7 +8,7 @@ import { HEIGHT_UNIT } from '../../src/engine/defs.js';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const WALL = { '#': [58, 70, 76], B: [124, 76, 60], W: [104, 82, 60], P: [200, 190, 150], C: [130, 132, 128], I: [90, 96, 104], R: [110, 70, 160], T: [110, 116, 130] };
-const FLOOR = { '.': [92, 74, 56], ':': [70, 76, 84], p: [110, 92, 64], t: [180, 172, 150], g: [40, 56, 64], c: [130, 60, 56], f: [96, 100, 100], m: [82, 70, 52], s: [64, 72, 84] };
+const FLOOR = { '.': [92, 74, 56], ':': [70, 76, 84], p: [110, 92, 64], t: [180, 172, 150], g: [40, 56, 64], c: [130, 60, 56], f: [96, 100, 100], m: [82, 70, 52], n: [78, 66, 50], s: [64, 72, 84] };
 const KEYC = { brass: [230, 190, 70], iron: [150, 180, 220], bell: [70, 240, 210] };
 const ENEMY = { tollbearer: [220, 60, 50], gaunt: [255, 150, 40], bellhand: [240, 60, 200], sexton: [160, 90, 240], wardengraft: [255, 255, 255], cantor: [255, 0, 90] };
 const PICK = (k) => (k.startsWith('key') ? KEYC[k.slice(4)] || [255, 220, 90] : k.startsWith('weapon') ? [255, 255, 120] : k.startsWith('health') ? [90, 230, 110] : k.startsWith('armor') ? [90, 160, 255] : [90, 210, 220]);

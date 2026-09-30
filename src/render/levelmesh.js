@@ -52,7 +52,7 @@ export function buildLevel(map, tex) {
 
   const walls = new Map(), floors = new Map(), risers = new Map(), ceil = new Quads(), ceilSteps = new Quads(), fascia = new Quads();
   const bucket = (m, key) => { let q = m.get(key); if (!q) m.set(key, q = new Quads()); return q; };
-  const fxQuads = { w: new Quads(), x: new Quads() }, wsize = 700;
+  const fxQuads = { w: new Quads(), x: new Quads() }, wsize = 3000;         // the sea reaches past the fog: no black gap at the horizon from a high vantage
   const sectorQ = map.sectors.map(() => ({ top: new Map(), skirt: new Map() }));
 
   for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
