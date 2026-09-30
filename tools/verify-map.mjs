@@ -7,6 +7,7 @@ import { execSync } from 'node:child_process';
 import { validateMap, parseMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
 import { runRoute } from '../src/engine/harness.js';
+import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '../src/engine/viability.js';
 
 const root = path.resolve(import.meta.dirname, '..');
 const id = process.argv[2]; if (!id) { console.error('usage: verify-map.mjs <MAP_ID>'); process.exit(2); }
@@ -37,16 +38,12 @@ if (v.ok) {
   const main = evidence.routes.find((r) => r.file.includes('.main.') && r.difficulty === 'normal');
   if (main) evidence.canonicalRoute = { sha: sha(path.join(root, main.file)), file: main.file, difficulty: 'normal', seed: 1, reachedExit: main.result === 'complete', ticks: main.ticks, finalHash: main.finalHash, expectedEvents: ['door_open', 'pickup:key_brass', 'level_complete'], proves: 'one valid tested path; not balance, fun, or full exploration' };
   evidence.counts = map.counts();
-  // ---- viability: the level must not be beatable by ignoring it, and a perfect fighter must still bleed (audit F01)
-  const mainRoute = JSON.parse(fs.readFileSync(path.join(root, 'routes', id + '.main.route.json'), 'utf8')), viability = {};
-  for (const difficulty of ['easy', 'normal', 'hard']) {
-    const runner = runRoute(map, mainRoute, { seed: 1, difficulty, fights: false }), fighter = runRoute(map, mainRoute, { seed: 1, difficulty });
-    viability[difficulty] = { runner: { result: runner.result, damage: runner.world.stats.damageTaken, hpLeft: runner.world.player.hp }, fighter: { result: fighter.result, damage: fighter.world.stats.damageTaken, seconds: +(fighter.ticks / 60).toFixed(1) } };
-    add(`viability ${difficulty}: a passive runner does not walk through (${runner.result}, ${runner.world.stats.damageTaken} damage)`, runner.result !== 'complete' || runner.world.stats.damageTaken >= 60);
-  }
-  add('viability: a perfect fighter takes real damage on normal and hard (>= 20 / >= 40)', viability.normal.fighter.damage >= 20 && viability.hard.fighter.damage >= 40, JSON.stringify({ normal: viability.normal.fighter.damage, hard: viability.hard.fighter.damage }));
-  add('viability: damage rises with difficulty', viability.easy.fighter.damage < viability.normal.fighter.damage && viability.normal.fighter.damage < viability.hard.fighter.damage);
-  const ratio = (src.par?.time ?? 0) / viability.normal.fighter.seconds; add(`par time is 2x-8x the bot's time (${ratio.toFixed(1)}x; placeholder until a human plays it)`, ratio >= 2 && ratio <= 8);
+  // ---- viability + quality (shared with tests/maps.test.js through src/engine/viability.js): the level must not be beatable by ignoring it, a perfect fighter must still bleed,
+  //      and the map's own `quality` contract (enemy count, bot time, mechanics, skins) must hold
+  const mainRoute = JSON.parse(fs.readFileSync(path.join(root, 'routes', id + '.main.route.json'), 'utf8')), viability = evaluateViability(map, mainRoute);
+  for (const c of viabilityChecks(viability, src.par?.time)) add(c.name, c.ok, c.detail);
+  const facts = levelFacts(map); evidence.facts = facts;
+  for (const c of qualityChecks(map, src.quality, facts, viability.normal.fighter.seconds)) add(c.name, c.ok, c.detail);
   evidence.viability = viability;
 }
 const bc = path.join(root, 'validation/browser-check.json');

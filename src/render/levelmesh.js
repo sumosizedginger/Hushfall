@@ -19,13 +19,14 @@ class Quads {
 }
 const DIRS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
 
-/** One vertical face of cell (cx,cz) toward neighbour (dx,dz), spanning y0..y1. UVs are in world units so textures line up across heights and between walls and secret panels. */
-function face(q, S, cx, cz, dx, dz, y0, y1) {
+/** One vertical face of cell (cx,cz) toward neighbour (dx,dz), spanning y0..y1. UVs are in world units; the vertical coordinate counts up from `vBase` (the floor the face rises from),
+ *  so a wall's texture starts at its own floor: a plaster wainscot sits at the bottom of a wall on a raised gallery too, and walls beside a panel line up with it. */
+function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0) {
   const x = cx * S, z = cz * S, u = (px, pz) => (px + pz) / S;
   let p0, a;
   if (dz === -1) { p0 = [x + S, z]; a = [-1, 0]; } else if (dz === 1) { p0 = [x, z + S]; a = [1, 0]; } else if (dx === -1) { p0 = [x, z]; a = [0, 1]; } else { p0 = [x + S, z + S]; a = [0, -1]; }
   const p = [[p0[0], y0, p0[1]], [p0[0] + a[0] * S, y0, p0[1] + a[1] * S], [p0[0] + a[0] * S, y1, p0[1] + a[1] * S], [p0[0], y1, p0[1]]];
-  q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), r[1] / S]));
+  q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]));
 }
 const flatQuad = (q, S, cx, cz, y, up) => {
   const x = cx * S, z = cz * S, p = up ? [[x, y, z], [x, y, z + S], [x + S, y, z + S], [x + S, y, z]] : [[x, y, z], [x + S, y, z], [x + S, y, z + S], [x, y, z + S]];
@@ -59,7 +60,7 @@ export function buildLevel(map, tex) {
     if (k === 'water') continue;                                                    // one big water plane below covers all water cells
     if (k === 'wall') {
       const top = wallTop(cx, cz); if (top === -Infinity) continue;
-      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : fl(cx + dx, cz + dz) - 0.05; face(bucket(walls, WALL_SKINS[skin] ? skin : '#'), S, cx, cz, dx, dz, base, top); }
+      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : fl(cx + dx, cz + dz) - 0.05; face(bucket(walls, WALL_SKINS[skin] ? skin : '#'), S, cx, cz, dx, dz, base, top, nk === 'water' ? 0 : fl(cx + dx, cz + dz)); }
       continue;
     }
     const fs = floorSkinAt(cx, cz), si = sectorOf(cx, cz), y = si >= 0 ? 0 : fl(cx, cz);
@@ -120,7 +121,7 @@ export function buildLevel(map, tex) {
   for (const d of map.doors.values()) {
     const fy = fl(d.cx, d.cz), span = ce(d.cx, d.cz) - fy, pos = [(d.cx + 0.5) * S, fy, (d.cz + 0.5) * S];
     if (d.closet) {                                                                 // a closet panel is drawn exactly like the wall it sits in
-      const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, d.cx, d.cz, dx, dz, fy, fy + span);
+      const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, d.cx, d.cz, dx, dz, fy, fy + span, fy);
       const holder = new THREE.Group(); holder.add(new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(d.cx, d.cz)]) }))); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(d.cx + ',' + d.cz, holder); continue;
     }
     const m = makeDoorSlab(T('door_hatch_a'), S, span, map.doorAxis(d.cx, d.cz), !!d.key);
@@ -128,7 +129,7 @@ export function buildLevel(map, tex) {
   }
   for (const s of map.secrets) {
     const fy = fl(s.panel[0], s.panel[1]), span = ce(s.panel[0], s.panel[1]) - fy;
-    const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, s.panel[0], s.panel[1], dx, dz, fy, fy + span);
+    const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, s.panel[0], s.panel[1], dx, dz, fy, fy + span, fy);
     const m = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(s.panel[0], s.panel[1])]) }));                 // match the wall it sits in
     const holder = new THREE.Group(); holder.add(m); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(s.panel.join(','), holder);
     // the tell: a hairline of lamplight leaking round the panel's seam on every open side. Easy to miss, easy to find if you look at the walls.

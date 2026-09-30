@@ -28,6 +28,7 @@ const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic
 export async function loadAll() {
   const out = {};
   await Promise.all(NAMES.map(async (n) => { out[n] = await loadTex(n, { repeat: !ATLASES.has(n) && n !== 'ui_title_art' && n !== 'door_hatch_a' }); }));
+  out.wall_plaster_a.wrapT = THREE.ClampToEdgeWrapping;        // the wainscot is at the bottom of the tile and plain plaster above it: it must not repeat up a tall wall
   out.paper_grain = await loadTex('paper_grain', { srgb: false });
   out.paper_grain.magFilter = out.paper_grain.minFilter = THREE.LinearFilter;
   out.paper_grain.generateMipmaps = false;

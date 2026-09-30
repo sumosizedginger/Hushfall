@@ -1,0 +1,18 @@
+[
+  { "name": "01-arrival", "x": 3.5, "z": 44.5, "yaw": "east" },
+  { "name": "02-yard-screen", "x": 6.5, "z": 47.5, "yaw": 1.9, "pitch": 0.0 },
+  { "name": "03-bond-store", "x": 8.5, "z": 34.0, "yaw": "north", "open": true },
+  { "name": "04-vestibule", "x": 18.0, "z": 43.5, "yaw": "east", "open": true },
+  { "name": "05-hall-entry", "x": 23.5, "z": 43.5, "yaw": "east", "open": true },
+  { "name": "06-hall-gallery-up", "x": 26.0, "z": 45.5, "yaw": 0.55, "pitch": 0.22, "open": true },
+  { "name": "07-west-stairs", "x": 24.0, "z": 37.0, "yaw": "north", "pitch": 0.1, "open": true },
+  { "name": "08-on-the-gallery", "x": 36.0, "z": 31.0, "yaw": "south", "pitch": -0.3, "open": true },
+  { "name": "09-brass-door", "x": 35.5, "z": 31.0, "yaw": "north", "open": true },
+  { "name": "10-registry-stacks", "x": 34.5, "z": 20.5, "yaw": "west", "open": true },
+  { "name": "11-excise-office", "x": 38.0, "z": 20.0, "yaw": "east", "open": true },
+  { "name": "12-iron-dais", "x": 40.0, "z": 14.0, "yaw": -1.0, "open": true },
+  { "name": "13-excise-stair", "x": 48.5, "z": 17.5, "yaw": "east", "pitch": -0.05, "open": true },
+  { "name": "14-exit", "x": 59.5, "z": 17.5, "yaw": "east", "open": true },
+  { "name": "15-hall-closets", "x": 33.5, "z": 46.5, "yaw": "south", "open": true },
+  { "name": "16-lost-property", "x": 19.5, "z": 36.5, "yaw": "north", "open": true }
+]

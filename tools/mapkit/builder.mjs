@@ -25,7 +25,7 @@ export class Level {
   /** a ramp/stair: heights step from `from` to `to` (0.5 m units) along an axis across the rectangle, one unit per cell (or per `per` cells) */
   stairs(r, axis, from, to, per = 1) {
     this.usedHeights = true; const len = axis === 'x' ? r[2] - r[0] + 1 : r[3] - r[1] + 1, dir = to >= from ? 1 : -1;
-    this.#each(r, (x, z) => { const i = axis === 'x' ? x - r[0] : z - r[1]; this.ht[z][x] = from + dir * Math.min(Math.abs(to - from), Math.floor(i / per) + 1) * (i < 0 ? 0 : 1); });
+    this.#each(r, (x, z) => { const i = axis === 'x' ? x - r[0] : z - r[1]; this.ht[z][x] = from + dir * Math.min(Math.abs(to - from), Math.floor(i / per)); });
     return this;
   }
   /** absolute ceiling (metres) over a rectangle (interior cells); '.' elsewhere = floor + the map's ceilingHeight */
@@ -42,6 +42,8 @@ export class Level {
   line(c, [x0, z0], [x1, z1], step = 1) { const n = Math.max(Math.abs(x1 - x0), Math.abs(z1 - z0)); for (let i = 0; i <= n; i += step) this.put(Math.round(x0 + (x1 - x0) * i / Math.max(1, n)), Math.round(z0 + (z1 - z0) * i / Math.max(1, n)), c); return this; }
   get(x, z) { return this.g[z]?.[x]; }
   layers() {
+    // doors, closet panels and secret panels sit on level ground: take the height of the first floor cell beside them
+    for (let z = 0; z < this.h; z++) for (let x = 0; x < this.w; x++) if ('DXS'.includes(this.g[z][x])) for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (this.#floorLike(this.g[z + dz]?.[x + dx] ?? '#')) { this.ht[z][x] = this.ht[z + dz][x + dx]; break; }
     const rows = (a, f = (v) => v) => a.map((r) => r.map(f).join(''));
     return { geometry: rows(this.g), heights: this.usedHeights ? rows(this.ht, hchar) : undefined, ceilings: this.usedCeil ? rows(this.ce) : undefined, fx: this.usedFx ? rows(this.fxl) : undefined, objects: rows(this.ob), doorKeys: this.doorKeys, remoteDoors: this.remoteDoors };
   }

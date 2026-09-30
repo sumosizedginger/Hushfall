@@ -3,6 +3,8 @@
 // clearly-labelled setup_* helpers.
 import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
+import { groundAt } from '../engine/terrain.js';
+import { PLAYER } from '../engine/defs.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
 
@@ -34,7 +36,7 @@ export function installTestHook(app) {
     state: snap,
     drainEvents() { const e = g.events; g.events = []; return e; },
     // -- semantic actions (same path as the keyboard) --
-    newGame(difficulty = 'normal', seed = 1, { realtime = false } = {}) { app.startLevel({ difficulty, seed }); g.lockFailed = true; g.manual = !realtime; return snap(); },
+    newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null } = {}) { app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.lockFailed = true; g.manual = !realtime; return snap(); },
     realtime(on) { g.manual = !on; },
     press: (a) => g.input.press(a), release: (a) => g.input.release(a), addYaw: (r) => g.input.addYaw(r), addPitch: (r) => g.input.addPitch(r),
     tick(n = 1) { for (let i = 0; i < n; i++) { app.stepOnce(); if (g.mode !== 'playing') break; } render(); return snap(); },
@@ -45,7 +47,7 @@ export function installTestHook(app) {
     startBot(name) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name); return { ops: bot.route.length }; },
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
     // -- low-level setup (state writers; tests only) --
-    setup_teleport(x, z, yaw) { g.world.player.x = x; g.world.player.z = z; if (yaw != null) g.world.player.yaw = yaw; g.view.beforeStep(g.world); },
+    setup_teleport(x, z, yaw) { const p = g.world.player; p.x = x; p.z = z; if (yaw != null) p.yaw = yaw; p.y = groundAt(g.world, x, z, PLAYER.radius); g.view.eyeBase = p.y; g.view.beforeStep(g.world); },
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
