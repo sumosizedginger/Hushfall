@@ -1,0 +1,15 @@
+[
+  { "name": "01-vestibule", "x": 4.5, "z": 22.5, "yaw": "east", "pitch": 0.05 },
+  { "name": "02-colonnade", "x": 10.5, "z": 24.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "03-mezzanine", "x": 22.5, "z": 22.5, "yaw": "north", "pitch": 0.28 },
+  { "name": "04-arch", "x": 24.5, "z": 23.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "05-quay", "x": 30.5, "z": 23.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "06-pillars", "x": 38.5, "z": 20.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "07-cabin-door", "x": 43.5, "z": 10.5, "yaw": "north", "pitch": 0.05 },
+  { "name": "08-winch", "x": 43.5, "z": 5.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "09-ramp-up", "x": 50.5, "z": 24.5, "yaw": "east", "pitch": 0.1 },
+  { "name": "10-hold-warden", "x": 57.5, "z": 24.5, "yaw": "east", "pitch": 0.05 },
+  { "name": "11-hold-awake", "x": 57.5, "z": 24.5, "yaw": "east", "pitch": 0.05, "wake": true },
+  { "name": "12-watchtower", "x": 42.5, "z": 30.5, "yaw": "east", "pitch": 0.25 },
+  { "name": "13-look-back", "x": 50.5, "z": 24.5, "yaw": "west", "pitch": 0.0 }
+]

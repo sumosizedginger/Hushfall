@@ -10,7 +10,7 @@ const r = runRoute(map, route, { seed: Number(seed), difficulty: diff, onTick: (
     const melee = live.filter((e) => Math.hypot(e.x - p.x, e.z - p.z) < 3.2).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0];
     const ranged = live.filter((e) => ['bellhand', 'cantor'].includes(e.kind)).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0];
     const src = melee ? melee.kind + '(melee)' : ranged ? ranged.kind + '(shot)' : 'other';
-    by[src] = (by[src] || 0) + (last - hp);
+    by[src] = (by[src] || 0) + (last - hp); if (process.env.HITS) console.log('hit', (t / 60).toFixed(1) + 's', src, (last - hp).toFixed(0), 'cell', (p.x / map.cell).toFixed(0) + ',' + (p.z / map.cell).toFixed(0));
   }
   if (t % 300 === 0) where.push(`${(t / 60).toFixed(0)}s op${'?'} cell ${(p.x / map.cell).toFixed(0)},${(p.z / map.cell).toFixed(0)} hp ${p.hp | 0}`);
   last = hp;
