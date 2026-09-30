@@ -54,5 +54,28 @@ Sprites bake on black AND white (same seed); alpha is recovered by difference ma
 | tower_stone_a | 256 tile | 6601 | bell tower |
 Tile skins in the map grid: `#` slate bulkhead, `B` warm brick, `.` interior planks, `:` cobble, `p` pier planks, `~` water. Full-width `brush.rect` fills can crash p5.brush's scatter: use `g.solid` (native p5) for opaque bases.
 
+
+## Asset seeds, Gate 2 set (2026-09-30; recipes in `tools/baker/recipes_g2.js`, all opaque and tiling)
+| asset | size | seed | use |
+|---|---|---|---|
+| wall_timber_a | 256 tile | 7101 | weathered vertical siding: fishing sheds, cellars (`T`) |
+| wall_plaster_a | 256 tile | 7201 | cream plaster over a green wainscot: Customs Hall, dormitory (`P`; per-face vertical UVs, clamped) |
+| wall_concrete_a | 256 tile | 7301 | poured concrete: ferry hull, signal house (`C`) |
+| wall_iron_a | 256 tile | 7401 | riveted iron plate: ferry, funicular shaft, gantries (`I`) |
+| wall_resin_a | 256 tile | 7501 | Vael resin, teal-violet, veined and faintly luminous (`R`) |
+| floor_tile_a | 256 tile | 7601 | black-and-cream checker (`t`) |
+| floor_grate_a | 256 tile | 7701 | iron grating over black water (`g`) |
+| floor_carpet_a | 256 tile | 7801 | worn red-brown runner (`c`) |
+| floor_flag_a | 256 tile | 7901 | indoor flagstones (`f`) |
+| floor_silt_a | 256 tile | 8001 | wet silt: outdoor gutters (`m`) and indoor cellar floors (`n`) |
+| floor_slate_a | 256 tile | 8101 | outdoor slate flags: hill terraces (`s`) |
+| sky_night | 512x256 | 8201 | the Hush by night: indigo, faint teal aurora |
+| sky_overcast | 512x256 | 8301 | low fog-bound cloud, grey-lilac |
+
+Code-authored (no texture): the Sexton (stooped, hooded, staff-bell), the Warden-Graft (plate: pauldrons, chest plate, mask, shield arm), the Cantor (robed, bell crown, chest bell) and the bell nodes are extra meshes on the Tollbearer rig (`models.js`, `models_g2.js`); set dressing (cart, sack, rope, table, shelf, lantern, cradle, bell node, switch panel) and the Riveter driver (`models_rivet.js`) are geometry wearing the existing atlases. Effects are drawn from sim state: channel beams and node links (thin teal cylinders), the Cantor's shield (teal wire icosahedron), tone-pulse rings (expanding flat rings).
+
+Lighting: `atmosphere.ambient` (0.05-1.5, default 1) scales the hemisphere and sun light; a dark level (Signal House, 0.3) is carried by lantern pools and brightens through the `lights` action. Skies in use: `dusk` (ferry quay), `night`, `overcast` (hill).
+
+
 ## Not yet done
 Texel-density rules, per-episode palettes, UI/HUD rules, sprite direction sets (8-way vs billboard), animation frame counts, runtime Three.js material verification.

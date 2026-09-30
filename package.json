@@ -18,7 +18,11 @@
     "audio-qa": "node tools/dev/audio-qa.mjs",
     "shoot-weapons": "node tools/dev/shoot-weapons.mjs",
     "shoot-level": "node tools/dev/shoot-level.mjs",
-    "gate1-bundle": "node tools/gate1-bundle.mjs"
+    "gate1-bundle": "node tools/gate1-bundle.mjs",
+    "gate2-bundle": "node tools/gate2-bundle.mjs",
+    "build-map": "node tools/mapkit/compile.mjs",
+    "mapview": "node tools/mapkit/mapview.mjs",
+    "shoot-map": "node tools/dev/shoot-map.mjs"
   },
   "keywords": [],
   "author": "",
