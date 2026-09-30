@@ -115,6 +115,7 @@ export const SFX = {
   bell_charge(c, out, t, o) { tone(c, out, t, { f0: 330, f1: 660, a: 0.35, d: 0.25, gain: 0.16, vib: 6 }); noise(c, out, t, { dur: 0.55, a: 0.3, gain: 0.12, type: 'bandpass', f0: 900, f1: 2600, q: 2, off: o.r() }); return 0.65; },
   toll_shot(c, out, t, o) { bell(c, out, t, 262, { decay: 0.9, gain: 0.5, ratio: 3.1, index: 2.0 }); thump(c, out, t, 120, 60, 0.18, 0.4); return 1; },
   shot_impact(c, out, t, o) { bell(c, out, t, 196, { decay: 0.35, gain: 0.3, ratio: 2.7, index: 1.0 }); noise(c, out, t, { dur: 0.1, gain: 0.2, type: 'bandpass', f0: 1800, q: 1.2, off: o.r() }); return 0.45; },
+  rivet_fire(c, out, t, o) { const f = 1500 + o.r() * 700; tone(c, out, t, { type: 'square', f0: f, f1: f * 0.4, d: 0.035, gain: 0.16, lp: 3600 }); noise(c, out, t, { dur: 0.05, gain: 0.34, type: 'bandpass', f0: 2400 + o.r() * 800, q: 1.2, off: o.r() }); thump(c, out, t, 210, 70, 0.06, 0.32); return 0.12; },
   // Gate 2 mechanics: switches, moving floors, wading, alarms, gates
   switch_click(c, out, t, o) { tone(c, out, t, { type: 'square', f0: 1500, f1: 700, d: 0.03, gain: 0.12, lp: 3000 }); thump(c, out, t + 0.03, 180, 70, 0.1, 0.35); noise(c, out, t + 0.05, { dur: 0.05, gain: 0.15, type: 'bandpass', f0: 2500, q: 2, off: o.r() }); return 0.2; },
   switch_dead(c, out, t, o) { thump(c, out, t, 120, 60, 0.08, 0.25); return 0.12; },

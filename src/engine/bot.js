@@ -55,8 +55,9 @@ export class Bot {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
     const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.e.kind === 'gaunt' || t.d < 7);
-    const wantId = wantScatter ? 'scattergun' : 'flare';
-    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { this.in.press(wantId === 'flare' ? 'weapon1' : 'weapon2'); this.lastSwitch = w.tick; }
+    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 10 && t.d < 20;                 // mid-range: the driver's steady stream (flares are for range and crowds)
+    const wantId = wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
+    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { this.in.press(wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'); this.lastSwitch = w.tick; }
     const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));

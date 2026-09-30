@@ -47,6 +47,6 @@ test('remapped bindings persist through settings sanitising; reset restores the 
 
 test('the controls legend is built from the CURRENT bindings, and default Fire avoids Ctrl (browser shortcuts)', () => {
   const b = defaultBindings(); assert.match(legendText(b), /Move WASD/); assert.match(legendText(b), /Fire Mouse L/); assert.match(legendText(b), /Aim Mouse R/);
-  assert.ok(!b.fire.includes('ControlLeft') && !ACTIONS.includes('weapon3'), 'no Ctrl fire, no unused weapon3 action');
+  assert.ok(!b.fire.includes('ControlLeft') && ACTIONS.includes('weapon3') && !ACTIONS.includes('weapon4'), 'no Ctrl fire; one weapon action per weapon slot (three weapons, three slots)');
   b.fire = ['KeyJ']; b.use = ['KeyR']; assert.match(legendText(b), /Fire J/); assert.match(legendText(b), /Use R/);
 });
