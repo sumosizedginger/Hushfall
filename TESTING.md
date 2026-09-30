@@ -1,58 +1,61 @@
 # TESTING
 
+Numbers below were read from the evidence files at the commit named in `validation/browser-check.json` (`commit`). If a number here disagrees with a file in `validation/`, the file wins and this page is stale.
+
 ## Commands
-- `npm test` — 122 node:test tests (incl. `shipped` (Marrow Quay design contracts + routes), `story` (messages), `tiles` (water/skins/scenery);  `automap`: fog of war/secret panels/persistence/old-save migration; `bindings`: remap rules;  `weapons`: scattergun falloff/spread/wall-blocking, switching, pickups, in-flight-flare regression, Gaunt tell/dodge/cooldown, obstacle steering, save v2->v3; `audio`: every sim event is audible, every mapped sound exists, positional vs local, panning), headless (~3 s). Files in `tests/`: `controls` (sprint, ADS, accuracy, toggle mode, v1->v2 save migration, settings repair), `mapformat` (validation + reachability, incl. negative cases), `sim` (determinism, frame-rate independence, collision, doors, damage, pickups, input layer, death/exit ordering, transitions), `save` (round-trip, migration machinery, corrupt/newer/incompatible, map-changed fallback, storage), `route` (canonical routes on all difficulties, reproducibility), `settings`, `campaign` (68-slot topology + the PLANNED/IMPLEMENTED/AGENT_VERIFIED/COMPLETE derivation, stale evidence).
-- `npm run validate` / `npm run status` — manifest topology + evidence-derived status + asset file check.
-- `npm run browsercheck` — headless Chrome (154, SwiftShader software GL, 1280x720) against the dev server, 45 checks (takes ~9 min, run it without a short timeout); writes `validation/browser-check.json`, screenshots in `review/engine-skeleton/`.
-- `npm run verify-map -- C1E1M01` — generates map evidence (routes x 3 difficulties, reachability, latest browser check).
-- `npm run build` — production build; the dev test hook must not appear in `dist/` (checked by grep, 2026-09-29: 0 matches).
+- `npm test` — 151 node:test tests, headless (no browser, no GPU). Areas: `sim` (determinism, RNG, loop scheduling, saves, carry-over), `ai` (waking, alerts, noise, hunting, cover, actor collision, Bellhand, Retry inventory, spawn-overlap validation), `weapons`, `controls` (sprint/ADS/accuracy), `bindings`, `settings`, `automap`, `audio` (event coverage, recipes, music-stall regression), `story` (message format, sim delivery, UI queue rules on a fake clock), `tiles`, `render` (level-mesh structure built headless), `mapformat`, `save`, `route`, `campaign`, `shipped` (Marrow Quay design contracts, canonical routes, viability gates, par plausibility). Engine tests run on FROZEN fixtures in `tests/fixtures/` (the old hall-and-quay layout); only `shipped`/`story`/`render` read the level that ships.
+- `npm run validate` / `npm run status` — manifest topology + evidence-derived status + asset file check. `npm test` no longer touches tracked evidence files (a test asserts that).
+- `npm run browsercheck` — headless Chrome (SwiftShader software GL, 1280x720) against the dev server, 66 checks, about 1-5 minutes; writes `validation/browser-check.json` (stamped with commit, map sha, map version), `validation/render-budget.json`, screenshots in `review/engine-skeleton/`. `-- --update-baseline` rewrites `validation/render-budget-baseline.json` (the reference the budget check compares against; do it deliberately).
+- `npm run verify-map -- C1E1M01` — map evidence: reachability, routes x 3 difficulties, **viability** (passive runner must not get through; perfect fighter must bleed; damage rises with difficulty; par is 2x-8x the bot's time), browser evidence bound to this map file's sha, open BLOCKERs from `review/gate-1/known-defects.json`.
+- `npm run audio-qa`, `npm run shoot-level`, `npm run shoot-stances`, `npm run shoot-weapons` — evidence/screenshot tools; they clear the title card and overlays so the images show what a player sees.
+- `npm run gate1-bundle` — assembles `review/gate-1/` from evidence; exits non-zero if tests fail (1), the defect list is empty (2), or evidence/code provenance differs or source is dirty (3).
+- `npm run build` — production build; the dev test hook must not appear in `dist/`.
 - Asset tools: `node tools/dev/determinism.mjs <asset>`, `node tools/dev/clean-regen.mjs`.
 
-## Results (2026-09-29, engine skeleton)
+## What each layer proves (and what it does not)
+| layer | proves | does NOT prove |
+|---|---|---|
+| unit/integration tests | sim rules, determinism, AI behaviours, save migrations, UI queue ordering, level structure | that anything is fun, readable or fast |
+| route bot (`fights:true`) | one valid path per difficulty completes through the real input layer; a perfect fighter takes 24/54/80 damage (easy/normal/hard) | balance for humans: the bot has perfect aim |
+| runner bot (`fights:false`) | a player who never shoots cannot simply walk through: dies (hard) or is blocked (easy/normal) after 45/77/109 damage | that the level is fair |
+| headless Chrome check | the real game runs: real key/mouse input, un-teleported walk with ordered transmissions, prompts, F5/F9, pause layout at four window sizes, WebGL-unavailable message, Node-vs-Chrome identical state (tick count 4602, hash 1924e14d), GPU-leak check | pointer lock, real GPU speed, how it feels |
+| audio QA | each of 36 effects rendered ALONE is finite, non-silent, below full scale, decays; 2 score renders (combat louder than calm) | mixed loudness, overlap, music-vs-effects balance, that it sounds good |
+| render budget | draw calls / triangles at 5 vantage points incl. all-enemies-awake are within 25% of a recorded baseline and under ceilings (350 asleep / 650 awake: engineering budgets, not measurements) | frame rate on any real machine |
+
+## Results (see validation/*.json for the source)
 | area | result |
 |---|---|
-| unit/integration tests | 122/122 pass |
-| render budget (renderer.info, one full frame) | pier view: 636 draw calls before optimisation -> 182 after material sharing + static merge + frozen sleeping enemies (structural counts; NOT frame timings) |
-| automap + remap (real input, headless Chrome) | real Tab opens/closes the map and it paints only explored cells; remap: click slot -> press key -> assigned; conflict takes the key from the other action; Esc cancels without leaving pause; bindings survive a real page reload; reset restores defaults |
-| audio QA (offline render, Chrome) | 31 SFX + 2 score renders: all finite, audible, decay to silence, peak <= 0.93; reproducible within 1 LSB (27/31 bit-exact); combat score ~50% louder than calm. WAVs in `review/audio/` |
-| live audio (headless Chrome) | locked at startup; a real click unlocks (context running); real firing plays `flare_fire`; a full route plays 71 sounds incl. explosion/key/door/death/footsteps |
-| browser check (real DOM input, live rAF loop) | 26/26 pass: click Normal starts a game; held real W moves the player; real Shift+W is ~1.5x walk speed; a real click while sprinting does not fire; real right-mouse holds ADS (fov 70 -> 46, ads 0 -> 1) and release restores it; real click fires; Esc pauses/resumes |
-| Node vs Chrome determinism | same route/seed: identical tick count (2045) and identical final state hash (d0d311b7) in Node and in Chrome, with sprint + ADS + hip spread in the route |
-| canonical routes | main + secret routes complete on easy/normal/hard through the real input layer (bot acts only via InputState) |
-| save/resume | headless: resumed run equals uninterrupted run (hash); browser: quick save/load restores tick and position |
-| death/restart | dies, freezes, death screen, retry restores a live player with the key available again |
-| GPU lifecycle | 12 level restarts: geometries 341 -> 341, textures 12 -> 12, programs 7 -> 7 |
-| mutation check | flipping death-vs-exit ordering makes the "exit while fatal damage" test fail (then restored) |
-| production build | succeeds; dev hook absent from bundle |
+| unit/integration tests | 151/151 pass |
+| browser check | 66/66 pass (software GL) |
+| render budget | pier 191 calls / 21.5k tris; plaza 161 / 19.3k; warehouse 68 / 9.5k; plaza with every enemy awake 493 calls (each awake rig is ~30 draw calls; asleep enemies are merged); warehouse awake 117 |
+| software-GL frames (unclamped) | 837 frames in the 6 s sample, avg 46.5 ms, p95 217 ms, worst 1000 ms (first-frame shader compile). NOT a performance claim |
+| GPU lifecycle | 12 level restarts: geometries 352 -> 352, textures 18 -> 18, programs 12 -> 12 |
+| level viability (normal) | runner: blocked after 77 damage; fighter: completes, 54 damage, 77 s; par 300 s = 3.9x the bot |
+| audio QA | 36 SFX + 2 score renders, peaks <= 0.93 |
+| production build | succeeds |
 
 ## Failure-injection coverage
-Death while holding the key (restart restores it), use/interact spam on locked and unlocked doors (400 presses), exit reached on the same tick as fatal damage (death wins), save immediately after a transition, reload after finding a secret (no double count), 50 repeated transitions, corrupt/foreign/newer/old saves, map changed since save, unusable storage, key placed behind its own door (reachability catches it), walled-off exit, evidence gone stale after a map edit.
+Death while holding the key (restart restores it), use/interact spam on locked and unlocked doors, exit on the same tick as fatal damage (death wins), save immediately after a transition, reload after finding a secret (no double count), a 50-level carry-over chain (bounded, no growth), corrupt/foreign/newer/old saves (v1..v5 migrate to v6), map changed since save, unusable storage, key placed behind its own door (reachability catches it), a body spawned inside a solid prop (validation rejects it), a music scheduler stalled for 3 minutes (no burst of catch-up notes; the test fails without the fix), WebGL unavailable (browser check), Retry after a load (unit + browser check).
 
-## Not tested / limits
-- Audio: whether it SOUNDS good is unverified (no human has listened yet); levels were balanced by measurement only. Headless Chrome has no real output device, so live playback was verified by engine state and log, not by ear. Music/ambience mixing in a real session is untested.
-- Pointer lock (not available in the app browser pane; headless Chrome exercised the drag/click fallback path only).
-- Real-GPU frame rate and memory: the only numbers are software-GL (avg ~26 ms/frame at 1280x720) and are NOT a performance claim.
-- Bug found by review of my own check: the first render-budget check was VACUOUS (it read only the final full-screen pass: 1 call, 2 triangles). Fixed with `measureFrame()`, which counts a whole frame.
-- Automap: keyboard/visual verified only in headless Chrome; the map is a whole-level fit with no zoom/pan; it does not show pickups or enemies by design.
-- Balance: the route bot has perfect aim and dodges lunges, so it is never hurt; scattergun/Gaunt numbers are unproven by a human.
-- Enemy AI is chase-and-steer only (no real pathfinding): an enemy can still get stuck on concave geometry or behind a wall it cannot open.
-- Bot aims perfectly and is never hit on the current routes, so difficulty balance is unproven; difficulty is only verified by unit test (damage/health multipliers).
-- The app browser pane hides itself and suspends animation frames, so it could not be used for live-loop verification; headless Chrome was used instead.
-- Screenshots were reviewed by eye for appearance only.
+## Not tested / limits (honest list)
+- **Pointer lock**: cannot be granted in headless Chrome or the app browser pane. The Esc -> Resume -> click flow, and whether a rejected request recovers, need a hand test in real Chrome.
+- **Real-GPU performance**: only software-GL numbers exist.
+- **Audio has never been heard by a person.** Live playback was verified by engine state and log only.
+- **Balance and feel**: enemy speeds, damage, ammo/health flow and the Bellhand toll-shot's readability were tuned with bots and unit tests. Par time (5:00) is a placeholder.
+- Enemy AI is chase-and-steer to the last known position: no pathfinding, so an enemy can still be held up by concave geometry.
+- Automap: whole-level fit, no zoom/pan; shows no pickups/enemies by design.
+- Screenshots were reviewed by eye for appearance only. The app browser pane suspends animation frames when hidden, so live verification uses headless Chrome.
 
 ## Known defects
-- MINOR: in ADS the yellow sleeves splay from the bottom centre in an inverted V (their geometry was built for the hip pose).
-- MINOR: sprint/ADS pose values were tuned by eye on screenshots only; no feel testing by a human yet.
+Authoritative list: `review/gate-1/known-defects.json` (audit findings F01-F20 with their repair status, plus unverified items). Still open or partial: F10 (only two wall skins and one interior floor; layout variety beyond this is production-kit work), F12 (real-GPU performance unmeasured), F14 (pointer lock unverified), plus U1-U4 (balance/feel unplayed, audio unheard, placeholder par, one level only). Other standing issues:
 - MAJOR: value-banding post pass reads more posterised-pixel than brushy (look decision pending).
 - MAJOR: weapon view-model reads blocky; enemy coat is a plain cone.
 - MINOR: exterior is very dark away from lamp posts; lighting values are placeholders.
-- MINOR: secret panel discoverability is untested/unstyled (flush wall, no hint).
-- MINOR: baking is slow (atlas ~100 s under software GL).
-- MINOR: concept sprites `enemy_tollbearer_idle.png` / `weapon_flarecannon.png` are unused leftovers (excluded from the build).
+- MINOR: in ADS the receiver's rear face still sits under the sight line (sleeves now fade out; the ADS pose was reclassified MAJOR by the audit and then reduced).
+- MINOR: baking is slow (atlas ~100 s under software GL). Concept sprites `enemy_tollbearer_idle.png` / `weapon_flarecannon.png` are unused leftovers (excluded from the build).
 
 ## History
-- Gate 0 asset spike: p5 seeding, opaque bases and matting findings are recorded in `ART_BIBLE.md`; clean-env regeneration within 0.3% differing bytes (`review/gate-0/clean-regen.json`).
+- Gate 0 asset spike: p5 seeding, opaque bases and matting findings are in `ART_BIBLE.md`; clean-env regeneration within 0.3% differing bytes (`review/gate-0/clean-regen.json`).
 - Look demo: two bugs fixed (weapon pass wiped world depth so outlines vanished; brush fills were translucent atlas cells).
-- Second weapon/enemy bugs found by tests and fixed in the game: knockback compounded within one pellet volley (pellets are now simultaneous); a Gaunt got stuck pushing into a barrel forever (added obstacle steering); a flare in flight used the CURRENT weapon's stats after a switch (projectiles now carry their weapon).
-- Controls pass (sprint / ADS) bugs found by the checks and fixed in the game: the muzzle sat 16 cm right of the crosshair so aimed shots missed (muzzle now centres with ADS); the browser-check helper silently dropped any statement after the first (fixed; earlier teleports/addYaw in the script had not been running).
-- Engine skeleton bugs found by the checks and fixed in the game: hook and rAF loop both stepping the sim (added manual clock), one geometry leaked per level restart (post pass quad not disposed), keys tapped between ticks were dropped (tap latch).
+- Second weapon/enemy, controls pass, engine skeleton: bugs found by tests/checks and fixed in the game (pellet knockback compounding, Gaunt stuck on a barrel, flare in flight using the current weapon's stats, muzzle offset missing aimed shots, hook + rAF both stepping the sim, a per-restart geometry leak, dropped sub-tick key taps).
+- Gate 1 audit (commit 7bf03a9, independent): 0 verified BLOCKER, 15 MAJOR, 5 MINOR; 18 weak tests; 9 unsupported doc claims. Repairs: hunting AI + Bellhand + viability gates (the level used to play itself), message queue, UI prompts, pause layout, Retry inventory (save v6), spawn-overlap validation, pointer-lock retry, honest perf sampling, evidence provenance, and the weak tests rewritten so they can fail (e.g. seeds-diverge now compares real shots; the flare test asserts on the enemy it aimed at; par is checked against the bot; ammo against what the bot spends).
