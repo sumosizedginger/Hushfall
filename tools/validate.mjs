@@ -62,6 +62,8 @@ function derive(id) {
   if (ev.mapId !== id) err(`${id}: evidence mapId mismatch`);
   const mapFile = path.join(root, 'maps', id + '.json');
   if (ev.mapSha && fs.existsSync(mapFile) && crypto.createHash('sha256').update(fs.readFileSync(mapFile)).digest('hex').slice(0, 16) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
+  if (ev.engineSha && fs.existsSync(path.join(root, 'src/engine'))) { const dir = path.join(root, 'src/engine'), h = crypto.createHash('sha256'); for (const n of fs.readdirSync(dir).filter((x) => x.endsWith('.js')).sort()) h.update(n).update(fs.readFileSync(path.join(dir, n)));
+    if (ev.engineSha && h.digest('hex').slice(0, 16) !== ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the simulation (src/engine) changed since it was generated; re-run verify-map' }; }
   const rf = ev.canonicalRoute?.file && path.join(root, ev.canonicalRoute.file);
   if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && crypto.createHash('sha256').update(fs.readFileSync(rf)).digest('hex').slice(0, 16) !== ev.canonicalRoute.sha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
   let status = 'PLANNED', why = 'map does not load';

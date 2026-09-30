@@ -294,11 +294,6 @@
    "at": [23, 9]
   },
   {
-   "type": "exit",
-   "dest": "next",
-   "at": [24, 9]
-  },
-  {
    "type": "enemy",
    "kind": "sexton",
    "at": [9, 10],
@@ -459,6 +454,11 @@
    "facing": -1.292
   },
   {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [15, 21]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [33, 21]
@@ -492,6 +492,11 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [50, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [52, 22]
   },
   {
    "type": "pickup",
@@ -729,6 +734,11 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [19, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [22, 32]
   },
   {
    "type": "prop",

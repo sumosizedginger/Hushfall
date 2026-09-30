@@ -263,9 +263,29 @@
    "at": [45, 4]
   },
   {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [41, 5]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [43, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [45, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [41, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [45, 6]
   },
   {
    "type": "pickup",
@@ -603,6 +623,16 @@
    "at": [46, 22]
   },
   {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [49, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [51, 22]
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [58, 22],
@@ -767,6 +797,16 @@
    "type": "prop",
    "kind": "crate",
    "at": [46, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [49, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [51, 26]
   },
   {
    "type": "enemy",
@@ -1096,12 +1136,6 @@
    "at": [48, 36]
   },
   {
-   "type": "enemy",
-   "kind": "bellhand",
-   "at": [49, 36],
-   "facing": -1.872
-  },
-  {
    "type": "pickup",
    "kind": "armor_vest",
    "at": [51, 36]
@@ -1241,7 +1275,7 @@
   "skins": 6,
   "enemyKinds": {
    "wardengraft": 1,
-   "bellhand": 5
+   "bellhand": 4
   }
  }
 }

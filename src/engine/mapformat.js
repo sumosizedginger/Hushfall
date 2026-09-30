@@ -77,10 +77,18 @@ export class MapData {
   }
 }
 
+/** Validate a map source. Never throws: a malformed shape the checks did not anticipate is reported as an error (audit A06), and absurd sizes are refused before anything walks the grid. */
 export function validateMap(src) {
+  try { return validateMapChecks(src); } catch (e) { return { ok: false, errors: ['malformed map (' + (e && e.message ? e.message : e) + ')'] }; }
+}
+const MAX_CELLS = 160 * 160, MAX_SIDE = 400;
+function validateMapChecks(src) {
   const errors = [];
   const err = (m) => errors.push(m);
   if (!src || typeof src !== 'object') return { ok: false, errors: ['map is not an object'] };
+  if (src.cellSize != null && !(typeof src.cellSize === 'number' && src.cellSize >= 1 && src.cellSize <= 8)) err('cellSize must be a number in [1, 8] metres');
+  if (src.ceilingHeight != null && !(typeof src.ceilingHeight === 'number' && src.ceilingHeight >= 2 && src.ceilingHeight <= 40)) err('ceilingHeight must be a number in [2, 40] metres');
+  if (Array.isArray(src.grid) && (src.grid.length > MAX_SIDE || (typeof src.grid[0] === 'string' && (src.grid[0].length > MAX_SIDE || src.grid.length * src.grid[0].length > MAX_CELLS)))) return { ok: false, errors: [...errors, `map is too large (limit ${MAX_SIDE} per side, ${MAX_CELLS} cells)`] };
   if (src.format !== MAP_FORMAT) err(`unsupported format ${src.format} (expected ${MAP_FORMAT})`);
   for (const f of ['id', 'name']) if (typeof src[f] !== 'string' || !src[f]) err(`missing ${f}`);
   if (!Number.isInteger(src.version) || src.version < 1) err('version must be a positive integer');
@@ -207,6 +215,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   const owners = [...ents.filter((e) => e.type === 'switch').map((e) => ({ tag: `switch '${e.id}'`, do: e.do })), ...(src.triggers || []).map((t) => ({ tag: `trigger '${t.id}'`, do: t.do }))];
   for (const o of owners) for (const a of actionsOf(o.do)) if (a?.spawn?.group) groups.add(a.spawn.group);
   const doorCells = new Set([...(src.doors || []).map((d) => d.at.join(',')), ...closetCells, ...(src.secrets || []).map((s) => s.panel.join(','))]), opened = new Set();
+  const drivenSectors = new Set();
   const checkAction = (tag, a) => {
     if (!a || typeof a !== 'object') return err(`${tag}: action must be an object`);
     const keys = Object.keys(a); if (keys.length !== 1 || !ACTION_KEYS.includes(keys[0])) return err(`${tag}: an action has exactly one of ${ACTION_KEYS.join(', ')} (got ${keys.join(',') || 'nothing'})`);
@@ -214,7 +223,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (['open', 'close', 'unlock', 'seal', 'unseal', 'toggle'].includes(k)) { if (!Array.isArray(v) || v.length !== 2 || !doorCells.has(v.join(','))) err(`${tag}: ${k} needs the [cx,cz] of a door, closet or secret panel (got ${JSON.stringify(v)})`); else if (k === 'open' || k === 'toggle' || k === 'unlock') opened.add(v.join(',')); }
     else if (k === 'wake') { if (!groups.has(v)) err(`${tag}: wake refers to unknown group '${v}'`); }
     else if (k === 'spawn') { if (!v || !ENEMIES[v.kind]) err(`${tag}: spawn needs a known enemy kind`); else if (!Array.isArray(v.at) || !walkable(tile(Math.floor(v.at[0]), Math.floor(v.at[1])))) err(`${tag}: spawn point ${JSON.stringify(v.at)} is not on a floor cell`); }
-    else if (k === 'sector') { if (!v || !sectorIds.has(v.id) || !['low', 'high', 'toggle'].includes(v.to)) err(`${tag}: sector needs {id, to: low|high|toggle} for a known sector`); }
+    else if (k === 'sector') { if (!v || !sectorIds.has(v.id) || !['low', 'high', 'toggle'].includes(v.to)) err(`${tag}: sector needs {id, to: low|high|toggle} for a known sector`); else drivenSectors.add(v.id); }
     else if (k === 'message') { if (!msgIds.has(v)) err(`${tag}: message '${v}' does not exist`); }
     else if (k === 'exit') { if (!v || !['unlock', 'lock'].includes(v.set)) err(`${tag}: exit needs {set: 'unlock'|'lock', id?}`); }
     else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
@@ -249,13 +258,21 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);
   }
+  for (const id of sectorIds) if (!drivenSectors.has(id)) err(`sector '${id}' is never moved by any switch or trigger`);
+  if (src.quality != null && (typeof src.quality !== 'object' || Array.isArray(src.quality))) err('quality must be an object');
   for (const d of src.doors || []) if (d.remote && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);
-  const exitIds = new Set(); let exitN = 0;
+  const exitIds = new Set(), exitCells = new Map(); let exitN = 0;
   for (const e of ents) if (e.type === 'exit') {
     if (e.dest != null && e.dest !== 'next' && e.dest !== 'secret') err(`exit at ${e.at}: dest must be 'next' or 'secret'`);
     const id = e.id ?? 'exit' + exitN++; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
+    // two exits on one cell: the sim takes the first, so a locked exit under an unlocked one never locks (a '>' glyph plus an explicit exit entity did exactly that)
+    if (Array.isArray(e.at)) { const k = Math.floor(e.at[0]) + ',' + Math.floor(e.at[1]); if (exitCells.has(k)) err(`two exits on cell ${k} ('${exitCells.get(k)}' and '${id}'): the sim uses the first, so a lock on the second never applies`); exitCells.set(k, id); }
+    // a locked exit needs something that can unlock it
+    if (e.locked) { const unlocks = owners.some((o) => actionsOf(o.do).some((a) => a?.exit?.set === 'unlock' && (!a.exit.id || a.exit.id === id))); if (!unlocks) err(`exit '${id}' is locked but no switch or trigger ever unlocks it`); }
   }
+  // a switch that needs items needs those items to exist on the level
+  for (const e of ents) if (e.type === 'switch' && Array.isArray(e.needs)) for (const k of e.needs) if (KEYS[k] && !ents.some((q) => q.type === 'pickup' && PICKUPS[q.kind]?.key === k)) err(`switch '${e.id}' needs '${k}' but the level has no such pickup`);
   const p = ents.find((e) => e.type === 'player');
   if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX) err('the player starts on a floor effect (wading water / toxic residue)');
 }

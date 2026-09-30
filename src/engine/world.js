@@ -18,11 +18,23 @@ export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
   w.enemies.push(e); return e;
 }
 
-export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null } = {}) {
-  carry = carry ?? map.entryLoadout ?? null;
+/**
+ * What a player has when a level starts: a cold start gets the map's authored entryLoadout; arriving from the previous map they keep what they carry, FLOORED at that loadout (health, each ammo type, weapons).
+ * The floor makes the authored loadout a lower bound on every arrival, so the balance evidence measured from it holds in a campaign run (audit A16), and a player who limps out of one map is never stranded at 1 HP with an empty gun.
+ */
+export function arrivalInventory(carry, entry) {
+  if (!carry) return entry ?? null; if (!entry) return carry;
+  const ammo = { ...(carry.ammo ?? {}) }; for (const [k, v] of Object.entries(entry.ammo ?? {})) ammo[k] = Math.max(ammo[k] ?? 0, v);
+  const weapons = [...new Set([...(carry.weapons ?? []), ...(entry.weapons ?? [])])].sort((x, y) => WEAPON_ORDER.indexOf(x) - WEAPON_ORDER.indexOf(y));
+  return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons };
+}
+
+export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null, ammoScale = null } = {}) {
+  carry = arrivalInventory(carry, map.entryLoadout ?? null);
   const diff = DIFFICULTY[difficulty];
   if (!diff) throw new Error('unknown difficulty ' + difficulty);
   const w = {
+    ...(ammoScale != null ? { ammoScale } : {}),                        // robustness testing only: a level whose ammo pickups are scaled (a player who wastes shots)
     v: 1, mapId: map.id, mapVersion: map.version, seed, difficulty, rngState: initialRngState(seed), tick: 0, time: 0,
     status: 'playing',                       // playing | dead | complete
     nextId: 1,
@@ -91,7 +103,17 @@ function chaseStep(w, e, def, dt) {
   }
   return false;
 }
-function tryMove(w, o, dx, dz, r) { if (!blockedCircle(w, o.x + dx, o.z, r, o)) o.x += dx; if (!blockedCircle(w, o.x, o.z + dz, r, o)) o.z += dz; o.y = groundAt(w, o.x, o.z, r); }
+/** move with axis-sliding collision, in steps of at most 0.25 m: a displacement larger than a wall is thick (the Warden's 3 m knockback) must stop AT the wall, not test only where it would land (audit A03) */
+export function tryMove(w, o, dx, dz, r) {
+  const n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / 0.25)), sx = dx / n, sz = dz / n;
+  for (let i = 0; i < n; i++) {
+    let moved = false;
+    if (!blockedCircle(w, o.x + sx, o.z, r, o)) { o.x += sx; moved = true; }
+    if (!blockedCircle(w, o.x, o.z + sz, r, o)) { o.z += sz; moved = true; }
+    if (!moved) break;
+  }
+  o.y = groundAt(w, o.x, o.z, r);
+}
 export function hasLOS(w, x0, z0, x1, z1) {
   const S = w.map.cell, d = Math.hypot(x1 - x0, z1 - z0), n = Math.ceil(d / 0.4), flat = w.map.flat && w.map.sectors.length === 0;
   const ya = flat ? 0 : floorAt(w, x0, z0) + 1.4, yb = flat ? 0 : floorAt(w, x1, z1) + 1.4;                     // eye line from head to head; a ledge above it blocks the view, a step below it does not
@@ -128,7 +150,7 @@ function noise(w, x, z, radius) {
 }
 
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
-function damageEnemy(w, e, dmg, opts = {}) {
+export function damageEnemy(w, e, dmg, opts = {}) {
   const def = ENEMIES[e.kind];
   if (def.armor && !opts.splash) {                                                  // plate on the front arc: only the shooter's side counts, splash ignores it
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
@@ -219,7 +241,7 @@ export function useTarget(w) {
   let best = null, bd = 1e9;
   for (const sw of map.switches) {
     const dx = sw.px - p.x, dz = sw.pz - p.z, d = Math.hypot(dx, dz);
-    if (d < PLAYER.useReach && Math.abs(sw.fy - p.y) < 1.5 && (dx * fx + dz * fz) / (d || 1) > 0.55 && d < bd) { bd = d; best = sw; }
+    if (d < PLAYER.useReach && Math.abs(floorAt(w, sw.x, sw.z) - p.y) < 1.5 && (dx * fx + dz * fz) / (d || 1) > 0.55 && d < bd) { bd = d; best = sw; }
   }
   return best ? { switchId: best.id, used: !!w.switchState[best.id]?.used, once: best.once, secret: false, target: 0, open: 0, key: null, remote: false, sealed: false } : null;
 }
@@ -430,6 +452,7 @@ export function step(w, cmd) {
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
   w.tick++; w.time = w.tick * dt;
   updateSectors(w, dt); p.y = groundAt(w, p.x, p.z, PLAYER.radius);                       // moving floors carry whoever stands on them
+  if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
   // look + move
   p.yaw += cmd.yaw || 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -1.3, 1.3);
@@ -501,6 +524,8 @@ export function step(w, cmd) {
     if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def); }
   }
 
+  // last-resort feed: a player with no ammunition of ANY kind is never left with nothing (there is no melee weapon): the flare cannon's feed drops one flare after a few seconds (and again each time it is spent)
+  if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0)) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; p.ammo.flare = (p.ammo.flare || 0) + PLAYER.dryFeed.amount; emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
   // pickups
   for (let i = w.pickups.length - 1; i >= 0; i--) {
     const it = w.pickups[i], def = PICKUPS[it.kind];
@@ -508,11 +533,11 @@ export function step(w, cmd) {
     let took = false;
     if (def.type === 'health' && p.hp < PLAYER.maxHp) { p.hp = Math.min(PLAYER.maxHp, p.hp + def.amount); took = true; }
     else if (def.type === 'armor' && p.armor < PLAYER.maxArmor) { p.armor = Math.min(PLAYER.maxArmor, p.armor + def.amount); took = true; }
-    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo]) { p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup)); took = true; }
+    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo]) { p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
     else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo])) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => WEAPON_ORDER.indexOf(a) - WEAPON_ORDER.indexOf(b)); p.weapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; }
-      p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup)); took = true;
+      p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true;
     }
     if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
   }

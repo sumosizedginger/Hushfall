@@ -44,8 +44,9 @@ canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode 
 const tex = await loadAll().catch((err) => { fatal('Could not load the painted textures: ' + err.message); throw err; });
 document.getElementById('title-art').src = titleArtUrl();
 
+const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
-  mode: 'title', world: null, view: null, loop: null, mapId: 'C1E1M01', difficulty: 'normal', seed: 1, timer: 0,
+  mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
   capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
@@ -77,12 +78,14 @@ ui.syncSettings(settings); ui.syncBindings(settings.bindings);
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
+/** Continue: the NEWEST readable slot wins (quick-save and auto-save both exist; the auto-save is rewritten at every level entry, so an old F5 must not shadow it, audit A18); a corrupt one falls through to the next */
 function loadFirstSave() {
-  for (const slot of ['quick', 'auto']) { const r = store.read(slot); if (r.ok) return applySave(r.save, slot); }
+  const slots = ['quick', 'auto'].map((slot) => [slot, store.read(slot)]).filter(([, r]) => r.ok).sort((a, b) => (b[1].save.savedAt ?? 0) - (a[1].save.savedAt ?? 0));
+  for (const [slot, r] of slots) if (applySave(r.save, slot)) return true;
   return null;
 }
 function applySave(save, slot) {
-  const r = loadWorld(save, (id) => MAPS[id]);
+  let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
   startLevel({ world: r.world, note: r.degraded }); return true;
 }
@@ -90,7 +93,7 @@ function applySave(save, slot) {
 function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings.internalWidth); else renderer.setSize(innerWidth, innerHeight, false); }
 addEventListener('resize', resize);
 
-function startLevel({ mapId = g.mapId, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
+function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry });

@@ -40,10 +40,10 @@ L.putAll('h', [[5, 24], [24, 30], [14, 13]]); L.putAll('e', [[7, 20], [21, 26], 
 L.putAll('P', [[34, 12], [34, 20], [34, 28], [34, 36], [41, 17], [41, 31], [47, 18], [47, 30], [50, 24], [44, 36], [44, 15]]);
 L.putAll('C', [[31, 14], [31, 16], [31, 32], [31, 34], [37, 24], [38, 14], [38, 34], [45, 22], [45, 26], [48, 12], [48, 36]]); L.putAll('c', [[32, 15], [32, 33], [38, 15], [38, 35], [46, 22], [46, 26]]); L.putAll('o', [[36, 18], [36, 30], [42, 20], [42, 28]]); L.putAll('z', [[30, 38], [30, 10], [39, 26], [40, 22]]);
 L.putAll('n', [[30, 22], [30, 26], [52, 23], [52, 25], [36, 10], [36, 38]]);
-L.putAll('t', [[33, 18], [33, 30], [40, 12], [40, 38], [46, 14], [46, 34], [37, 19], [37, 29], [50, 20], [49, 34], [43, 33], [30, 32], [36, 32], [36, 16]]); L.putAll('g', [[35, 24], [43, 30], [48, 32], [39, 16], [44, 20]]); L.putAll('b', [[47, 34], [49, 36], [51, 34]]);                           // two Bellhands on the tower deck
+L.putAll('t', [[33, 18], [33, 30], [40, 12], [40, 38], [46, 14], [46, 34], [37, 19], [37, 29], [50, 20], [49, 34], [43, 33], [30, 32], [36, 32], [36, 16]]); L.putAll('g', [[35, 24], [43, 30], [48, 32], [39, 16], [44, 20]]); L.putAll('b', [[47, 34], [51, 34]]);                           // two Bellhands on the tower deck
 L.putAll('h', [[29, 12], [29, 36], [52, 10], [52, 38]]); L.putAll('e', [[32, 24], [42, 24], [49, 14]]); L.putAll('r', [[31, 20], [31, 28]]); L.putAll('a', [[33, 22], [33, 26], [45, 38]]); L.put(49, 35, 'H'); L.put(51, 36, 'v'); L.put(44, 22, 'H');
 // winch cabin
-L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putAll('h', [[41, 4], [45, 4]]);
+L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putAll('r', [[41, 5], [45, 5]]); L.putAll('e', [[41, 6], [45, 6], [51, 22], [51, 26]]); L.putAll('a', [[49, 22], [49, 26]]); L.putAll('h', [[41, 4], [45, 4]]);
 // the ferry hold: idle until the winch; the Warden at the back, the rest close behind the ramp; lanterns aboard
 L.put(61, 24, 'w'); L.putAll('t', [[58, 20], [58, 28], [60, 20], [60, 28], [62, 22], [62, 26]]); L.putAll('g', [[58, 22], [58, 26], [60, 22]]); L.putAll('n', [[57, 19], [57, 29], [63, 24]]); L.putAll('C', [[62, 20], [62, 28]]);
 L.put(62, 24, '>');
@@ -76,5 +76,5 @@ export default {
     { id: 'ramp-down', when: 'sector:ramp:low', do: [{ spawn: { kind: 'gaunt', at: [59, 23], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'gaunt', at: [59, 25], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'tollbearer', at: [60, 22], group: 'wave1', facing: 'west' } }, { message: 'warden' }] },
     { id: 'warden-down', when: 'dead:warden', do: [{ spawn: { kind: 'tollbearer', at: [58, 19], group: 'wave2', facing: 'west' } }, { spawn: { kind: 'tollbearer', at: [58, 29], group: 'wave2', facing: 'west' } }, { spawn: { kind: 'gaunt', at: [62, 22], group: 'wave2', facing: 'west' } }, { objective: 'The Warden is down. The ferry deck, east: the way out' }, { shake: 0.8 }] },
   ],
-  quality: { enemies: [40, 66], botSeconds: [80, 600], mechanics: ['heights', 'switches', 'sectors', 'triggers'], skins: 6, enemyKinds: { wardengraft: 1, bellhand: 5 } },
+  quality: { enemies: [40, 66], botSeconds: [80, 600], mechanics: ['heights', 'switches', 'sectors', 'triggers'], skins: 6, enemyKinds: { wardengraft: 1, bellhand: 4 } },
 };

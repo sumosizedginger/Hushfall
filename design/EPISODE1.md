@@ -40,3 +40,20 @@ One long night in Port Marrow. The player begins as a harbour pilot on an empty 
 
 ## Per-map acceptance (checked by tools, not by me saying so)
 Loads and validates; every pickup/enemy reachable; canonical route completes on all three difficulties; a passive runner cannot get through; the perfect bot takes damage; main route time is within the target band; the map uses at least its thesis's mechanics; distinct skin mix; headroom valid; no body spawns inside a collider; keys/doors are solvable; par is 2x-8x the bot; secret found only by the secret route.
+
+
+## As built (2026-09-30, after the Gate 2 audit)
+The maps above are design intent; this section says what shipped, so a reviewer can compare the two honestly.
+
+| map | delivered | dropped or changed against the brief |
+|---|---|---|
+| M02 Customs Hall | keys (brass, iron), ambush closets, a gallery, the Riveter driver, a secret office | none of note |
+| M03 Fishmarket Rows | two hoist switches that open the auction shutters, Bellhand packs on a raised boardwalk, gutter wading, waves | none of note |
+| M04 Drowned Chandlery | wading water, toxic pools with a dry catwalk, resin walls, a hidden panel to the secret exit | darkness is fog and lamps, not a lighting system |
+| M05 Lamplighter Hill | five terraces, switchback stairs, a funicular car (the only way from terrace one to two, with call levers), Sextons, a summit beacon that opens the gate | **the survivors' lamp signals were not built** (the lanterns are dressing; the text no longer promises signals); **no drop-down traps or shortcuts** |
+| M06 Ferry Terminal | a concourse, a pillared quay, a winch cabin, a bow-ramp slab that a winch drops, waves off the ferry, the first Warden-Graft, a watchtower with Bellhands | the ramp is a slab that drops to deck level (a wall while raised), not a sloped gangway |
+| M07 Signal House | a dark level that brightens as fuses are found, three fuses (keys with fuse names) spent by a switch that needs them, scarce ammunition, the first Vael transmission, dormitory closets | none of note |
+| M08 Bell Tower of St. Orrin | a counter-clockwise spiral ascent, a Warden among pillars, a Sexton, a sealed open-air chamber with six bell nodes and the Cantor, cover pillars and 1.5 m platforms | **no rising platforms** (the spiral and the chamber platforms are static); the ring is six nodes on a hexagon rather than nodes on the tower's stair |
+| S01 Lighthouse Cellar | a quiet cache reached from M04, returning to M05 | none of note |
+
+Rules learned while building (all enforced by tests or gates now): a level must not be finishable without its gate (gate-skip probe); one exit per cell; every sector needs something that moves it; balance evidence must hold from the arrival inventory (arrival is floored at the authored loadout) and for a weaker player (aim error, 25% less ammunition on pickups).
