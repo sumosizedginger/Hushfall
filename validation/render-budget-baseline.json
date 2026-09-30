@@ -1,0 +1,26 @@
+{
+  "note": "reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline",
+  "when": "2026-09-29T23:43:42.877Z",
+  "budget": {
+    "pier": {
+      "calls": 191,
+      "triangles": 21474
+    },
+    "plaza": {
+      "calls": 161,
+      "triangles": 19338
+    },
+    "warehouse": {
+      "calls": 68,
+      "triangles": 9510
+    },
+    "plaza-all-awake": {
+      "calls": 493,
+      "triangles": 19338
+    },
+    "warehouse-all-awake": {
+      "calls": 117,
+      "triangles": 8826
+    }
+  }
+}

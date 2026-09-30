@@ -1,28 +1,42 @@
 {
-  "when": "2026-09-29T22:58:49.011Z",
+  "when": "2026-09-30T01:26:14.419Z",
   "map": "C1E1M01",
   "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
   "budget": {
     "pier": {
-      "calls": 271,
-      "triangles": 18284,
-      "geometries": 421,
+      "calls": 191,
+      "triangles": 21474,
+      "geometries": 352,
       "textures": 18,
-      "programs": 10
+      "programs": 12
     },
     "plaza": {
-      "calls": 212,
-      "triangles": 16136,
-      "geometries": 421,
+      "calls": 161,
+      "triangles": 19338,
+      "geometries": 352,
       "textures": 18,
-      "programs": 10
+      "programs": 12
     },
     "warehouse": {
-      "calls": 64,
-      "triangles": 8332,
-      "geometries": 421,
+      "calls": 68,
+      "triangles": 9510,
+      "geometries": 352,
       "textures": 18,
-      "programs": 10
+      "programs": 12
+    },
+    "plaza-all-awake": {
+      "calls": 493,
+      "triangles": 19338,
+      "geometries": 678,
+      "textures": 18,
+      "programs": 12
+    },
+    "warehouse-all-awake": {
+      "calls": 117,
+      "triangles": 8826,
+      "geometries": 678,
+      "textures": 18,
+      "programs": 12
     }
   }
 }

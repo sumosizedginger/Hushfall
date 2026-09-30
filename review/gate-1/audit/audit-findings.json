@@ -1,0 +1,344 @@
+{
+  "auditedCommit": "7bf03a9",
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "MAJOR",
+      "area": "encounters / pacing / balance",
+      "title": "The level plays itself: nothing can hurt a moving player and the whole level takes about a minute",
+      "evidence": "validation/maps/C1E1M01.json: damageTaken is 0 in all six canonical route runs (easy/normal/hard, main and secret). Read-only experiment (scratchpad exp1.mjs): a bot that NEVER fires (combatTarget disabled, sprint on long stretches) completes the exit in 3257 ticks (54 s) with 0 kills and total damage 10 / 18 / 26 on easy / normal / hard. src/engine/defs.js:14-15,39-41: player walks 6.4 m/s and sprints about 9.9 m/s; Tollbearer moves 1.2 m/s, Gaunt 3.4 m/s; a connecting flare (about 72 dmg) exceeds the highest enemy HP (56 on Hard). Canonical route = 70.7 s against par 7:00 (maps/C1E1M01.json par.time 420) and GAME_VISION.md:38 'about 10-25 min per main map'.",
+      "failure_scenario": "A first-time player sprints past all 13 enemies (or one-shots them at range), reaches the dock in 1-3 minutes and reads 'Damage taken 0' on the intermission. The 'fast readable combat, movement is the defence' pillar is never tested because nothing forces or punishes movement; the Gaunt tell and the scattergun choice are optional flavour.",
+      "suggested_fix": "Add a passive 'runner' bot to tools/verify-map.mjs and refuse AGENT_VERIFIED unless the runner takes real damage and the fighting bot takes some on Hard. Then raise threat (faster or ranged/flanking enemies, encounters that gate the route, arena locks), and re-derive par from human-paced play.",
+      "verified": true
+    },
+    {
+      "id": "F02",
+      "severity": "MAJOR",
+      "area": "story delivery / UI feedback",
+      "title": "The opening radio call and the tower beat are lost: transmissions collide with the 6.3 s title card and with each other",
+      "evidence": "src/game/ui.js:57-60 comms(): while the card is up (_cardUntil = start + 6300 ms, ui.js:66) each message calls clearTimeout(this._commsDelay) and schedules itself, so only the LAST message inside the card window survives; after the card a new message overwrites the box immediately (no queue). Sim timings for a player who just walks/sprints east (scratchpad exp2.mjs): pier-start 0.70 s (x=13.1), pier-tower 1.50 s, plaza 4.20 s (sprint 0.50 / 1.00 / 2.70 s), i.e. all three inside the card window, so the UI shows only 'plaza' at about 6.45 s. Even outside the card window pier-tower fires 0.8 s (0.5 s sprinting) after pier-start against a 4 s minimum display. messagesSeen marks all three seen (world.js:292) and the radio blip plays for each (audio/events.js message->radio), so the text never comes back. Timers are wall-clock setTimeout, so they also run while paused.",
+      "failure_scenario": "The game's hook, 'SIGNAL HOUSE: Calder, come in. The bells are ringing', and the teal tower line are never read by anyone who moves in the first seconds; the player hears three radio blips and reads one line about 'the harbour crew'. The tests report the narrative contract as delivered.",
+      "suggested_fix": "Queue messages (FIFO, per-message minimum display, pause-aware clock or sim-tick driven), sequence card then first call, and add a browser check that starts a real game, holds W without teleporting, and asserts each of the first three messages is displayed once, in order.",
+      "verified": true
+    },
+    {
+      "id": "F03",
+      "severity": "MAJOR",
+      "area": "review evidence / process",
+      "title": "The Gate 1 review images do not show what a player sees, and the bundle mixes builds",
+      "evidence": "All 13 review/level-c1e1m01/*.png carry the MARROW QUAY title card across the centre of the frame: tools/dev/shoot-level.mjs:38-41 screenshots within milliseconds of newGame and never waits out or dismisses the 6.5 s card (index.html:28). 03-route-op12.png (KILLS 5/13) and 06-death.png also carry it, plus four stacked identical 'Flare shells (+4)' toasts. 12-net-loft.png is shot from x=10.0 m (shoot-level.mjs:34), exactly the wall plane (wall column 4 spans x 8-10) that a player of radius 0.32 can never reach, giving two huge untextured orange planes. tools/gate1-bundle.mjs:40 copies stance-ads.png (HUD KILLS 0/8), weapons-scatter-ads.png and weapons-gaunt-crouch.png (KILLS 0/9), which come from the pre-Marrow-Quay skeleton hall (file times 13:54 and 15:37) as if they were the current build. gate1-bundle.mjs:48 seeds known-defects.json with an empty list, so the README prints 'none recorded' unless hand-edited, and :74 hard-codes 'C1E1M01 = AGENT_VERIFIED' instead of reading validation/campaign.json.",
+      "failure_scenario": "The user makes the APPROVE / REVISE / STOP call from images that hide the centre of every frame, include an impossible camera and older-layout shots, next to a README that can say there are no known defects.",
+      "suggested_fix": "Call ui.clearOverlays() (or wait out the card) before each shot, use camera positions at least 0.32 m from walls, regenerate every shot from one commit and delete stale ones, fill known-defects.json from this audit, and read status from validation/campaign.json.",
+      "verified": true
+    },
+    {
+      "id": "F04",
+      "severity": "MAJOR",
+      "area": "enemies / map authoring",
+      "title": "The first Gaunt in the plaza is embedded in a lamppost and can never move",
+      "evidence": "maps/C1E1M01.json:191-196 places a gaunt at [30,24]; maps/C1E1M01.json:287-291 places a lamppost (collider radius 0.3, defs.js:62) in the same cell [30,24]. Read-only experiment (scratchpad exp3.mjs, exp4.mjs): blockedCircle() is true at its spawn, and an awake Gaunt with the player 9 m away in line of sight moved 0.000 m in 12 s (state 'chase', no damage). mapformat.js:104-114 validates entity tiles but never entity-versus-prop overlap, and the canonical routes hide it because the bot shoots it from range.",
+      "failure_scenario": "The player reaches the plaza, hears the Gaunt screech, and the level's fast pursuer, the enemy whose crouch-then-dash tell is the reason for the second enemy type, crouches or stands in place forever. Its introduction is a non-event and looks like a bug.",
+      "suggested_fix": "Move the lamppost or the Gaunt, add an authoring check that no entity's collision circle overlaps a solid prop or wall (validateMap plus a shipped-map test), and a 'every awake enemy can reach the player from its spawn' flood-fill test.",
+      "verified": true
+    },
+    {
+      "id": "F05",
+      "severity": "MAJOR",
+      "area": "enemies / collisions",
+      "title": "Enemy AI is sight-only: it freezes when line of sight breaks, never reacts to being shot, and nothing collides with the player",
+      "evidence": "world.js:250: an awake enemy only advances while sees is true, otherwise it stands still. Experiment (exp3.mjs): an awake Tollbearer whose player stood behind the shed wall moved 0.00 m in 20 s. world.js:224: idle to chase only via sight; damageEnemy (world.js:96-100) does not wake or alert anyone, so a survivor of splash stays idle. hasLOS (world.js:80-84) ignores props, so enemies see through crates and stalls. blockedCircle (world.js:61-69) has no entity check: the player walks through enemies and enemies stack on one point. TESTING.md:38 admits 'chase-and-steer only' but not the freeze. Awake but frozen enemies still count toward music tension (audio/engine.js:100-107).",
+      "failure_scenario": "Break line of sight once and every chaser stops in the open, tolling forever, with the combat music still running. Shoot an unaware Tollbearer from 23 m and it does not react. Walk through a Tollbearer without body-blocking. It reads as toy AI.",
+      "suggested_fix": "Give enemies a last-known-position hunt with a timeout, wake on damage and on nearby gunfire/alerts, add simple actor separation or player-blocking, and let cover props block sight.",
+      "verified": true
+    },
+    {
+      "id": "F06",
+      "severity": "MAJOR",
+      "area": "save/load / menus",
+      "title": "Loading a quick save corrupts the 'Retry level' starting inventory",
+      "evidence": "main.js:74 applySave() calls startLevel({ world, carry: save.carry }); main.js:85 sets g.startCarry = carry || ..., so after a load g.startCarry is the carry stored in the save. makeSave (save.js:28) stores carryOver(w) = the inventory at save time, also for kind 'mid-level'. restartLevel (main.js:48) then creates a fresh world with that carry. Reproduced the data flow in Node (scratchpad exp5.mjs): after quick-saving at 7 HP with the scattergun, loading, dying and clicking Retry, the fresh level starts at tick 0 with hp 7, weapons flare+scattergun, 8 shells, and the scattergun pickup is still on the floor. Expected: hp 100, flare only. No test covers retry-after-load (browser-check.mjs:194 retries only after a fresh newGame).",
+      "failure_scenario": "A player who quick-saves at low health and later retries starts every attempt at that health, or exploits it to farm ammo and weapons by saving at level end and retrying.",
+      "suggested_fix": "Keep g.startCarry as a separate level-start value: persist it in the save (carry for level start) and never overwrite it from a mid-level save's current inventory. Add a browser or headless UI-state test for load then retry.",
+      "verified": true
+    },
+    {
+      "id": "F07",
+      "severity": "MAJOR",
+      "area": "menus / visual identity",
+      "title": "The title screen still says 'engine skeleton build'",
+      "evidence": "index.html:67 (<div class=sub>Port Marrow - first night - engine skeleton build</div>), visible in review/engine-skeleton/01-title.png and in the built dist/index.html. The title art is dimmed to 0.55 opacity behind a plain dark box (index.html:44).",
+      "failure_scenario": "The very first screen of a public release announces it is a prototype.",
+      "suggested_fix": "Replace the subtitle, give the title screen a real presentation, and add a grep-style release check for 'skeleton' and 'placeholder' in shipped strings.",
+      "verified": true
+    },
+    {
+      "id": "F08",
+      "severity": "MAJOR",
+      "area": "navigation / UI / onboarding",
+      "title": "Nothing tells the player how to play: no Use prompt, no control hints, doors are inert until E/Space",
+      "evidence": "Grep of index.html and src/game/*.js finds no 'Press E', tutorial, or control legend; the only hint element (#hint) is used for the pointer-lock failure text (main.js:102). The list of keys exists only inside the collapsed 'Controls (click a key to change it)' block of the pause menu (index.html:88). The hut door (7,19) and shed door (22,8) need Use; door_locked feedback appears only after a press (world.js:199). The crosshair does not change over doors or pickups.",
+      "failure_scenario": "A player walks into the first door, nothing happens, and they have no way to learn that E/Space opens it, that right mouse aims, that 2 selects the scattergun, or that Tab is a map.",
+      "suggested_fix": "Add a look-at-door 'E: open / locked' prompt, first-minute contextual hints (move, look, fire, use, aim, weapon 2) and a visible controls legend on the title/pause screens.",
+      "verified": true
+    },
+    {
+      "id": "F09",
+      "severity": "MAJOR",
+      "area": "menus / small window sizes",
+      "title": "The pause menu overflows the viewport with no scroll; Resume and Restart/Quit go off-screen once Controls is expanded, and the in-progress FOV/Brightness rows make it taller",
+      "evidence": "review/engine-skeleton/05-pause.png at 1280x720: 'RESUME' is cut off at the top edge and 'RESTART LEVEL / QUIT TO TITLE' at the bottom; the 'PAUSED' title is not visible. index.html:32-33 .screen centres a .panel that has no max-height or overflow; only #controls scrolls (index.html:48, 34vh), which is not enough. The uncommitted working-tree change adds two more range rows (index.html set-fov, set-bright), by my estimate about 60 px taller (estimate, not measured), so the collapsed panel is about 625 px and clips on viewports shorter than that. Native blue range inputs and a white <select> also break the palette (05-pause.png).",
+      "failure_scenario": "On a 1366x768 laptop with browser chrome, or after opening Controls at any common size, the player cannot reach Resume or Quit with the mouse and top/bottom controls are clipped rather than scrollable.",
+      "suggested_fix": "Make .panel max-height: 100vh with overflow-y: auto, collapse the settings into tabs or sections, style the sliders and select, and add a browser check at 1280x600 and 800x600.",
+      "verified": true
+    },
+    {
+      "id": "F10",
+      "severity": "MAJOR",
+      "area": "layout / art / repetition",
+      "title": "The spaces read as one kit on a flat grid: identical brick-plank-lamp interiors, a 44% empty plaza, props on a lattice",
+      "evidence": "Screenshots 07-shed-inside.png, 08-hut.png, 09-warehouse-entry.png and 10-warehouse-pods.png all use the same brick wall, plank floor, timber beams and conical hanging lamp; only the pods differ. maps/C1E1M01.json:88-117 puts six bollards on an exact 4-cell lattice (x 5/9/13, z 15 and 18); plaza lampposts sit at four corners plus the centre. The plaza is 306 of 689 walkable cells (44%) and holds 5 of the 13 enemies and a handful of crates (computed from the grid). Every floor is y=0, every wall 3.6 m (levelmesh.js), every room an axis-aligned box: no steps, ramps, elevation, thresholds or sightline set-pieces. AGENTS/GAME_VISION pillar 4 is 'authored spaces, no cloned mazes'.",
+      "failure_scenario": "A reviewer sees a symmetrical, generated-looking harbour: three interchangeable rooms and a large empty courtyard, with no space that has its own silhouette or story beyond the tower.",
+      "suggested_fix": "Give each interior its own material, light colour and landmark, break up the plaza with cover and level changes, hand-place props off-lattice, and add at least one vertical space.",
+      "verified": true
+    },
+    {
+      "id": "F11",
+      "severity": "MAJOR",
+      "area": "weapons / view-model",
+      "title": "The aim-down-sights pose, used in every fight, fills the lower frame with a yellow V and a slab",
+      "evidence": "review/engine-skeleton/07b-ads.png, stance-ads.png and weapons-scatter-ads.png: yellow inverted-V sleeves and a dark block cover roughly the lower-centre 40% of the screen and sit on the crosshair. TESTING.md:44 rates this MINOR, but ADS is the stance the bot fights from (bot.js:62) and the design rewards (accuracy cone 0.035 to 0.003).",
+      "failure_scenario": "Holding right mouse hides the target area and reads as broken geometry, so the tactical advantage of aiming feels like a penalty.",
+      "suggested_fix": "Rework the ADS pose and sleeves (or remove sleeves in ADS), keep the sight line below 25% of frame height, and re-shoot from the current build.",
+      "verified": true
+    },
+    {
+      "id": "F12",
+      "severity": "MAJOR",
+      "area": "performance",
+      "title": "Performance is effectively unmeasured: frame-time stats are clamped at 100 ms, the budget check would pass a 5x regression, and the worst case (awake enemies) is never sampled",
+      "evidence": "main.js:147-148 records dt after clamping it to 0.1 s, so validation/browser-check.json perf shows p95Ms = worstMs = 100 (the clamp) with avg 28.9 ms; the number cannot show a hitch. browser-check.mjs:208 accepts 20 < calls < 900 and triangles < 400000; browser-check.mjs:222 passes with frames > 20 in 6 s. validation/render-budget.json measures the pier at 274 calls (the 24dbfaf commit's own file says 272) while TESTING.md:15 claims 182. The budget is taken with every enemy asleep and merged into one mesh (view.js:93-94: an awake enemy is about 35 draw calls), so a plaza fight adds about 5 x 35 calls that no check covers. Everything ran on SwiftShader; no real-GPU number exists (TESTING.md:34 admits this).",
+      "failure_scenario": "A frame-rate or draw-call regression, or a heavy combat frame on a modest GPU, ships with every performance check green.",
+      "suggested_fix": "Record unclamped frame times, assert tight budgets (for example calls <= 1.25x baseline) at combat vantage points with enemies awake, and take at least one real-GPU trace (integrated GPU, 1080p) before the Gate 1 decision.",
+      "verified": true
+    },
+    {
+      "id": "F13",
+      "severity": "MAJOR",
+      "area": "verification pipeline",
+      "title": "The evidence pipeline cannot record a failure: blockers are hard-coded empty, notes are stale, and AGENT_VERIFIED needs no combat viability",
+      "evidence": "tools/verify-map.mjs:44-46 always writes humanReview null, knownBlockers [] and the note 'Layout is the engine-skeleton test level, not the polished Gate 1 level. No audio, automap or second weapon yet.' into validation/maps/C1E1M01.json (false for map v5; gate1-bundle copies notes into play-path.json). verify-map.mjs:41 accepts whatever validation/browser-check.json exists with no check that it ran on this map, commit or asset set. validate.mjs:64 only invalidates evidence when the map file's sha changes; codeVersion and assetVersion are recorded but never compared, and dirtyTree is true with codeVersion 7bf03a9 baked in. validate.mjs:67 grants AGENT_VERIFIED for a route reaching the exit and a passing browser check, which the F01 runner shows says nothing about combat.",
+      "failure_scenario": "Engine or asset changes leave the map AGENT_VERIFIED, an old or unrelated browser run is accepted, and defects found by review have nowhere to live in the evidence file.",
+      "suggested_fix": "Stale evidence on code/asset hash changes, bind browser-check.json to mapSha and commit, let a known-blockers file feed knownBlockers, generate notes from data, and add viability checks (runner, idle, fixed-aim bots).",
+      "verified": true
+    },
+    {
+      "id": "F14",
+      "severity": "MAJOR",
+      "area": "browser quirks / controls",
+      "title": "Pointer lock, the primary mouse-look path, has never been exercised, and one rejected request latches the game into drag-to-look for the session",
+      "evidence": "main.js:102 requestLock() sets g.lockFailed = true on any rejection and it is never cleared; main.js:118 does the same on pointerlockerror; main.js:136 resumes from pause on a keydown Escape and main.js:99 immediately calls requestLock(). testhook.js:37 newGame sets g.lockFailed = true, TESTING.md:33 states pointer lock was not tested, and the headless browser check only uses the click/drag fallback. Chrome does not treat Escape as a user activation and rejects a re-lock after an Esc exit without one.",
+      "failure_scenario": "Player presses Esc to pause (browser releases the mouse), presses Esc again to resume: the re-lock request is rejected, g.lockFailed latches, the cursor stays visible and the game says 'pointer lock unavailable: drag to look' for the rest of the session.",
+      "suggested_fix": "Do not latch on failure (retry on the next click), resume via a click-to-continue overlay when lock is missing, and hand-test Esc/Esc, alt-tab and click-resume in real Chrome, Firefox and Edge.",
+      "verified": false
+    },
+    {
+      "id": "F15",
+      "severity": "MAJOR",
+      "area": "browser quirks / controls",
+      "title": "Default Fire includes Left Ctrl, so the natural forward-plus-fire combination is the browser's close-tab shortcut",
+      "evidence": "src/engine/input.js:9 DEFAULT_BINDINGS fire: ['Mouse0', 'ControlLeft'] with forward: ['KeyW']. Ctrl+W, Ctrl+T and Ctrl+N are reserved shortcuts in Chrome, Edge and Firefox that page code cannot cancel with preventDefault. Not exercised here: no browser runs were allowed, so the tab-close itself is standard browser behaviour, not something I observed.",
+      "failure_scenario": "A keyboard-only or claw-grip player who presses W and Left Ctrl closes the tab in the middle of a fight and loses the unsaved level.",
+      "suggested_fix": "Remove ControlLeft from the defaults (offer Space/Mouse4 or a non-reserved key), and warn in the remap UI when a modifier is bound to fire.",
+      "verified": false
+    },
+    {
+      "id": "F16",
+      "severity": "MINOR",
+      "area": "menus / transitions",
+      "title": "Dead-end menu flows: the death screen's 'Load quick save' silently does nothing, the intermission promises a level that does not exist, and Use/Space also dismisses those screens",
+      "evidence": "main.js:101 quickLoad() failure calls ui.show('dead', { note }) but ui.js:45-46 only renders notes for title and pause and index.html:94-97 has no note element, so the button does nothing visible; there is no quick-save hotkey (input.js:5-9), only the pause-menu button, so most players never have a quick save. maps/C1E1M01.json:541 outro says 'Next: Customs Hall' and ui.js:27 sends CONTINUE to the title. main.js:137-138 make Enter/Space restart on death and quit on completion, and Space is also the default Use key.",
+      "failure_scenario": "A dying player clicks 'Load quick save' and nothing happens. A player who finishes and taps Use skips the intermission to the title, and the outro leads nowhere.",
+      "suggested_fix": "Hide or disable 'Load quick save' when no save exists (and show the reason), add F5/F9, label the end of the slice honestly, and ignore hotkeys for 0.5 s after the screen appears.",
+      "verified": true
+    },
+    {
+      "id": "F17",
+      "severity": "MINOR",
+      "area": "input edge cases",
+      "title": "Wheel input has no accumulation, pause-resume ignores rebinding, and Weapon 3 exists with two weapons",
+      "evidence": "main.js:128 turns every wheel event into one weapon step with no deltaY threshold, so smooth or trackpad scrolling flips weapons repeatedly and each change restarts switchT (world.js:188). main.js:136 resumes only on literal Escape/KeyP although pause is remappable (bindings.js:35). input.js:5,9 and the remap list expose 'Weapon 3' (Digit3) while defs.js:26 has only two weapons. keyUp of either Shift/Ctrl releases the action even if the other is held (input.js:27-28).",
+      "failure_scenario": "A trackpad player scrolls once and ends up on a random weapon during the switch lock; a player who rebinds pause finds the new key cannot unpause.",
+      "suggested_fix": "Accumulate wheel deltas to a per-notch threshold, resume on any key bound to pause, hide unused weapon slots, and track physical keys per action.",
+      "verified": false
+    },
+    {
+      "id": "F18",
+      "severity": "MINOR",
+      "area": "technical debt / robustness / deployment",
+      "title": "Startup and deployment are brittle: inert title until textures load, no WebGL or context-loss handling, absolute asset paths, an unbounded event log, and dev-only deps in dependencies",
+      "evidence": "main.js:34 awaits loadAll() before new UI(...) (main.js:44), so the visible title buttons are dead until all textures load and forever if one fails (no try/catch, no error text). main.js:32 constructs the WebGLRenderer unguarded; there is no webglcontextlost handler (grep of src) and frame() (main.js:146-157) has no try/catch, so one render exception stops the rAF loop for good. dist/index.html loads /assets/index-*.js with an absolute path and vite.config.js sets no base, so a sub-path or file:// deployment shows a blank page; the production bundle has never been run in a browser (browser-check.mjs:15 uses the dev server). main.js:111 pushes every sim event into g.events, which only the dev hook ever clears, so the production session grows without bound. package.json lists puppeteer, p5 and p5.brush under dependencies. tests/campaign.test.js:23 runs validate on the real repo root, rewriting validation/campaign.json during npm test.",
+      "failure_scenario": "A player on a slow connection clicks a dead Normal button, one without WebGL2 or after a GPU reset sees a frozen or blank game with no message, and a sub-path host serves nothing.",
+      "suggested_fix": "Show a loading/error state, guard renderer creation and add contextlost/restored handling, set base: './', run a production-build smoke check in headless Chrome, clear or cap g.events outside dev, and move tooling to devDependencies.",
+      "verified": true
+    },
+    {
+      "id": "F19",
+      "severity": "MINOR",
+      "area": "layout / secrets",
+      "title": "The secret has no tell and its reward is wasted by placement",
+      "evidence": "levelmesh.js:65-70 draws the panel with the same skin and UVs as the wall it sits in and automap.js:43 hides it, by design; there is no light, sound or prop cue and the hut-log message gives no hint (maps/C1E1M01.json messages). TESTING.md:49 already lists discoverability as untested. The loft holds armor, shells and a large health pickup (secret block maps/C1E1M01.json:66-75, pickups :158-172) in the first optional room before any damage can occur, and the health pickup cannot even be taken at full HP.",
+      "failure_scenario": "Most players never find it, and those who do (by pressing Use along every wall) get armor they do not need at minute one.",
+      "suggested_fix": "Add a subtle tell (draught, cracked brick, scuffed floor, out-of-place lamp glow, audio), and move the reward later or make it a weapon or upgrade.",
+      "verified": true
+    },
+    {
+      "id": "F20",
+      "severity": "MINOR",
+      "area": "sound / browser quirks",
+      "title": "The score scheduler may dump a burst of bells after a tab or animation-frame stall",
+      "evidence": "audio/music.js:47-60: tick() runs from the rAF loop and its while (this.nextBell < horizon) loop schedules bells at times already in the past after a long gap (bells are not guarded the way the beat layer is, music.js:63). WebAudio starts past-dated notes immediately. Not exercised: audio QA renders offline with the whole span scheduled up front (music.js:74-82).",
+      "failure_scenario": "Alt-tab away for a minute, come back and press Resume: dozens of missed FM bells sound at once.",
+      "suggested_fix": "Clamp nextBell/nextChord/nextBeat to >= now on every tick and add an offline test with a simulated stall.",
+      "verified": false
+    }
+  ],
+  "unsupportedClaims": [
+    {
+      "claim": "Map status 'C1E1M01 AGENT_VERIFIED (skeleton test layout, map v1)'; 'Remaining: real Marrow Quay level'; milestone-1 framing",
+      "where": "PRODUCTION_LOG.md:4-8",
+      "why": "The shipped map is version 5, the real level exists, and the 'exact next task' list is out of date; the log header a fresh session is told to read first describes a build that no longer exists."
+    },
+    {
+      "claim": "Map evidence note 'Layout is the engine-skeleton test level, not the polished Gate 1 level. No audio, automap or second weapon yet.'",
+      "where": "validation/maps/C1E1M01.json notes (generated by tools/verify-map.mjs:46; copied into play-path.json by tools/gate1-bundle.mjs)",
+      "why": "Hard-coded string that is false for the current build (audio, automap, two weapons and the real level exist); evidence contradicts itself."
+    },
+    {
+      "claim": "Render budget: 'pier view: 636 draw calls before optimisation -> 182 after'",
+      "where": "TESTING.md:15 (and the 24dbfaf commit message)",
+      "why": "validation/render-budget.json at HEAD reports 274 calls at the pier (272 in the committed file at 24dbfaf) and 215 at the plaza. The measurement also has every enemy asleep and merged, so it is not a combat worst case."
+    },
+    {
+      "claim": "Browser check '26/26 pass' and '45 checks'; Node-vs-Chrome 'tick count (2045) ... hash (d0d311b7)'; GPU lifecycle 'geometries 341, textures 12, programs 7'",
+      "where": "TESTING.md:6,19,20,24",
+      "why": "validation/browser-check.json has 44 checks; the current route is 4242 ticks with hash 735eadcf; the leak check reports geometries 336, textures 18, programs 10. Numbers are from older builds."
+    },
+    {
+      "claim": "Par 7:00 and 'about 10-25 min per main map at first play'",
+      "where": "maps/C1E1M01.json par.time (420); GAME_VISION.md:38; shipped.test.js:79-84 ('within par')",
+      "why": "No data supports either figure: the canonical bot needs 70.7 s and a non-firing runner 54 s, so the par check cannot fail and the length target is missed by an order of magnitude."
+    },
+    {
+      "claim": "'Map status derived from evidence: C1E1M01 = AGENT_VERIFIED' and, by default, 'Known defects: none recorded'",
+      "where": "tools/gate1-bundle.mjs:74 (typed into the README template) and :48 (empty known-defects.json seed)",
+      "why": "The status is typed rather than read from validation/campaign.json, and the README will present zero known defects unless someone edits a side file, although TESTING.md lists MAJOR defects and this audit adds more."
+    },
+    {
+      "claim": "Audio QA: 'every effect finite, audible, unclipped' and combat score louder than calm",
+      "where": "TESTING.md:17; validation/audio.json; tools/dev/audio-qa.mjs",
+      "why": "Each recipe is rendered alone in an OfflineAudioContext without the live master gain, compressor, panner, reverb or overlapping sounds and music, so peak 0.93 says nothing about the mixed output; 'reproducible offline' is irrelevant to live play (live recipes continue a seeded stream). Nobody has listened (TESTING.md admits this)."
+    },
+    {
+      "claim": "Narrative contract: the REQUIRED route delivers the premise; 'messages are triggered in a sensible order'",
+      "where": "tests/story.test.js:53-67",
+      "why": "Only proves the sim emitted the events on a bot route that detours through the hut; the UI drops or overwrites the first beats (F02), so the story is not delivered to a player."
+    },
+    {
+      "claim": "'Weapon view-models read blocky' and ADS sleeve splay classed as MINOR",
+      "where": "TESTING.md:44-47",
+      "why": "The ADS pose is the primary combat stance and visibly covers about 40% of the lower frame in three review screenshots (F11); it should be MAJOR."
+    }
+  ],
+  "weakTests": [
+    {
+      "test": "different seeds diverge (RNG actually feeds the sim state)",
+      "file": "tests/sim.test.js:24-27",
+      "problem": "Vacuous: compares hashWorld of two freshly created worlds with no steps. The hash includes seed and rngState, so it differs even if the RNG never influences the simulation."
+    },
+    {
+      "test": "firing consumes ammo, a dry weapon clicks, and flares kill enemies with splash",
+      "file": "tests/sim.test.js:122-131",
+      "problem": "The 'flare hit something' assertion is kills >= 1 || some enemy hp < 45. The fixture contains two Gaunts with hp 24, so it is true before any shot (checked, scratchpad exp3.mjs). The test passes even if the flare misses everything."
+    },
+    {
+      "test": "repeated map transitions are stable (no state growth, carry stays sane)",
+      "file": "tests/sim.test.js:181-191",
+      "problem": "Each iteration builds a fresh world, so nothing can grow; the only assertions are hp <= 100 and flare <= 30, which cannot fail. The name claims more than is tested."
+    },
+    {
+      "test": "frame-rate independence: render dt does not change sim results",
+      "file": "tests/sim.test.js:29-44",
+      "problem": "step() takes no dt, so this proves only that FixedLoop calls it N times; the frame-rate-dependent parts (mouse accumulation, interpolation, render-side timers) are not covered."
+    },
+    {
+      "test": "walking is faster than before and sprinting is faster still",
+      "file": "tests/controls.test.js:26-30",
+      "problem": "Asserts walk distance > 3.5 m in 45 ticks. The old 5.6 m/s speed covers about 3.8 m in that time, so the 'faster than before' claim is not tested."
+    },
+    {
+      "test": "C1E1M01 is a valid map with sane counts; reachability: exit, key and secret are reachable on the shipped map",
+      "file": "tests/mapformat.test.js:14-19,37-43",
+      "problem": "Both load tests/fixtures (skeleton hall: 9 enemies, secret id 'pocket'), not the shipped map, and the fixture reuses the id C1E1M01 and the name 'Marrow Quay'. The names are misleading and magic numbers are tied to the old layout."
+    },
+    {
+      "test": "canonical routes: only the secret route finds the secret, and both stay within par",
+      "file": "tests/shipped.test.js:79-84",
+      "problem": "Par is 420 s against a 70.7 s route, so the 'within par' assertion cannot fail; it also validates par against itself rather than against play."
+    },
+    {
+      "test": "design contract: ammo is neither starving nor flooding at normal difficulty",
+      "file": "tests/shipped.test.js:56-63",
+      "problem": "Allows up to 8 shots per enemy while any connecting shot kills (real capacity is about 72 for 13 enemies, 5.5 per kill), ignores AMMO_MAX caps that waste pickups, and never checks health starvation, so 'flooding' cannot be detected."
+    },
+    {
+      "test": "the route exercises the level: doors, scattergun, flare, lunges are possible, pickups, exit",
+      "file": "tests/shipped.test.js:86-91",
+      "problem": "The name promises lunges but nothing asserts enemy_lunge; the bot is never hit (damageTaken 0), so no enemy attack path is exercised on the shipped level."
+    },
+    {
+      "test": "narrative contract: the REQUIRED route delivers the premise / messages are triggered in a sensible order",
+      "file": "tests/story.test.js:53-67",
+      "problem": "Checks sim events only. The route detours through the hut, so pier-start and pier-tower are never seen 0.8 s apart, and the UI overwrite/drop (F02) is untestable at this level."
+    },
+    {
+      "test": "walking into range shows an in-world transmission ... and it is remembered",
+      "file": "tools/dev/browser-check.mjs:46-49",
+      "problem": "Teleports to x=23 m, past the first message, and waits for the card to clear, so it can never observe a dropped or overwritten transmission."
+    },
+    {
+      "test": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
+      "file": "tools/dev/browser-check.mjs:204-208",
+      "problem": "Thresholds are 20 < calls < 900 and triangles < 400000 (measured 274 and 18k), so a 3x regression passes; taken with all enemies asleep and merged."
+    },
+    {
+      "test": "real-time loop runs frames without exceptions",
+      "file": "tools/dev/browser-check.mjs:217-222",
+      "problem": "Passes at frames > 20 in 6 s (3.3 fps). Frame times recorded after the 0.1 s dt clamp (main.js:147-148) are censored, so perf.p95Ms and worstMs both read 100."
+    },
+    {
+      "test": "retry restarts the level with a live player",
+      "file": "tools/dev/browser-check.mjs:188-194",
+      "problem": "Only tests retry after a fresh newGame; does not cover retry after loading a save (F06) or that the inventory is the level-start inventory."
+    },
+    {
+      "test": "topology negative cases fail validation (C2S02 case)",
+      "file": "tests/campaign.test.js:35",
+      "problem": "The expected message regex /secret|main/ matches almost any validate error, so the case cannot distinguish the intended failure."
+    },
+    {
+      "test": "the real campaign manifest validates: 68 slots, 36 + 32, 62 main, 6 secret",
+      "file": "tests/campaign.test.js:22-25",
+      "problem": "Runs tools/validate.mjs against the real repository root, which rewrites the tracked validation/campaign.json as a side effect of npm test."
+    },
+    {
+      "test": "every event type the sim can emit has a sound (or is explicitly listed as silent)",
+      "file": "tests/audio.test.js:12-20",
+      "problem": "Finds emit sites with a regex for emit(w, 'literal'); the ternary emit at world.js:286 (pickup / weapon_pickup) and any future non-literal emit are invisible to it."
+    },
+    {
+      "test": "Audio QA (reproducible within 1 LSB, peaks <= 0.93)",
+      "file": "tools/dev/audio-qa.mjs",
+      "problem": "Measures isolated recipes offline with no master chain, panner, reverb or overlap; 'reproducible offline' is unrelated to live play; nothing measures the mixed output or the music-versus-SFX balance."
+    }
+  ]
+}
