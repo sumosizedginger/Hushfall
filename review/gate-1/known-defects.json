@@ -24,7 +24,7 @@
     { "id": "F20", "severity": "MINOR", "status": "fixed", "title": "Score scheduler could dump a burst of bells after a stall", "how": "Schedule clamped to the audio clock (tests/audio.test.js fails without it)." },
 
     { "id": "U1", "severity": "MAJOR", "status": "unverified", "title": "Balance and feel have never been played by a human", "remaining": "The bot has perfect aim and never misjudges. Enemy speeds, damage, the Bellhand toll-shot readability, ammo and health flow were tuned with bots and unit tests only." },
-    { "id": "U2", "severity": "MAJOR", "status": "unverified", "title": "Audio has never been heard by a person", "remaining": "31 effects and 2 score renders exist as WAV files for listening (review/audio/); mix-level loudness and music-versus-effects balance are not measured (audio QA renders each effect in isolation)." },
+    { "id": "U2", "severity": "MAJOR", "status": "unverified", "title": "Audio has never been heard by a person", "remaining": "36 effects and 2 score renders exist as WAV files for listening (review/audio/); mix-level loudness and music-versus-effects balance are not measured (audio QA renders each effect in isolation)." },
     { "id": "U3", "severity": "MINOR", "status": "open", "title": "Par time (5:00) is a placeholder", "remaining": "It is 2x-8x the bot's time by a test; no human run has informed it." },
     { "id": "U4", "severity": "MINOR", "status": "open", "title": "Only one level exists", "remaining": "Nothing here proves 68 maps of this quality are achievable; that is precisely what Gate 2 would test." }
   ]
