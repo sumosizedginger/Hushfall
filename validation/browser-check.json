@@ -1,5 +1,9 @@
 {
-  "when": "2026-09-29T22:59:01.569Z",
+  "when": "2026-09-30T01:26:35.261Z",
+  "commit": "d10df0f",
+  "dirtySource": false,
+  "mapSha": "aafbb26f67fe1cb1",
+  "mapVersion": 7,
   "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
   "checks": [
     {
@@ -28,14 +32,34 @@
       "detail": "MARROW QUAY"
     },
     {
-      "name": "walking into range shows an in-world transmission (speaker + text) and it is remembered",
-      "ok": false,
+      "name": "walking the pier for real triggers pier-start first, then pier-tower (no teleport)",
+      "ok": true,
+      "detail": "pier-start,pier-tower"
+    },
+    {
+      "name": "transmissions wait behind the title card instead of stacking on it",
+      "ok": true,
+      "detail": "card visible, comms hidden while the card is up"
+    },
+    {
+      "name": "the FIRST transmission shown is the first one triggered (FIFO), with speaker and text",
+      "ok": true,
+      "detail": "SIGNAL HOUSE: Calder, come in. The bells are ringing. Nobody rings the bells at night."
+    },
+    {
+      "name": "the radio blip plays when the message is shown (not before)",
+      "ok": true,
+      "detail": "radio plays so far: 1"
+    },
+    {
+      "name": "the second transmission follows the first, one at a time",
+      "ok": true,
       "detail": "INES: The bell tower's lit. Teal. That's no lamp of ours."
     },
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 20.37 m"
+      "detail": "moved 6.05 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -45,7 +69,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=13 last=radio,toll_alert,toll_alert,radio,toll_soft,step_outdoor,toll_soft,step_outdoor,wheeze_windup,step_outdoor,flare_fire,step_outdoor"
+      "detail": "played=32 last=hurt,strike,toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire"
     },
     {
       "name": "Escape pauses (live)",
@@ -60,7 +84,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.13 m, sprint 6.67 m, ratio 1.61"
+      "detail": "walk 4.13 m, sprint 6.62 m, ratio 1.60"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -95,7 +119,7 @@
     {
       "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=165 exits=0"
+      "detail": "visible=true painted=230400 explored=146 exits=0"
     },
     {
       "name": "Tab again closes the automap",
@@ -115,12 +139,12 @@
     {
       "name": "pressing a key rebinds Use (persisted in settings)",
       "ok": true,
-      "detail": "[\"KeyF\",\"Space\"] F assigned."
+      "detail": "[\"KeyG\",\"Space\"] G assigned."
     },
     {
       "name": "a conflicting key is taken from the other action and the player is told",
       "ok": true,
-      "detail": "{\"fire\":[\"Mouse0\",\"KeyF\"],\"use\":[\"Space\"]} F taken from: use."
+      "detail": "{\"fire\":[\"Mouse0\",\"KeyG\"],\"use\":[\"Space\"]} G taken from: use."
     },
     {
       "name": "Escape cancels capture without leaving the pause menu",
@@ -135,7 +159,7 @@
     {
       "name": "reset restores the default controls",
       "ok": true,
-      "detail": "{\"use\":[\"KeyE\",\"Space\"],\"fire\":[\"Mouse0\",\"ControlLeft\"]}"
+      "detail": "{\"use\":[\"KeyE\",\"Space\"],\"fire\":[\"Mouse0\",\"KeyF\"]}"
     },
     {
       "name": "game starts and HUD is visible",
@@ -145,32 +169,32 @@
     {
       "name": "bot completes the canonical route in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4242"
+      "detail": "status=complete failed=null ticks=4602"
     },
     {
       "name": "browser sim == Node sim (tick count)",
       "ok": true,
-      "detail": "browser 4242 vs node 4242"
+      "detail": "browser 4602 vs node 4602"
     },
     {
       "name": "browser sim == Node sim (state hash)",
       "ok": true,
-      "detail": "browser 56c002b0 vs node 56c002b0"
+      "detail": "browser 1924e14d vs node 1924e14d"
     },
     {
       "name": "every enemy killed, key held",
       "ok": true,
-      "detail": "kills 13/13"
+      "detail": "kills 16/16"
     },
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=107 distinct(last40)=ui_click,radio,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,door_close,gaunt_screech,pump,weapon_switch,impact,scatter_fire,enemy_hit,pickup_key,level_complete"
+      "detail": "played=139 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,toll_soft,gaunt_screech,bell_charge,door_close,toll_shot,shot_impact,pump,weapon_switch,impact,scatter_fire,hurt,strike,pickup_key,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
       "ok": true,
-      "detail": "Kills13 / 13Items10 / 21Secrets0 / 1Time1:10 (par 7:00)Damage taken0DifficultyNormal"
+      "detail": "Kills16 / 16Items11 / 21Secrets0 / 1Time1:16 (par 5:00)Damage taken54DifficultyNormal"
     },
     {
       "name": "secret route: secret found and level completed",
@@ -185,7 +209,7 @@
     {
       "name": "resumed play equals uninterrupted play except the deliberate hp edit",
       "ok": true,
-      "detail": "x 49.449 vs 49.449"
+      "detail": "x 38.544 vs 38.544"
     },
     {
       "name": "pause shows the pause menu",
@@ -208,34 +232,124 @@
       "detail": ""
     },
     {
+      "name": "render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles",
+      "ok": true,
+      "detail": "{\"pier\":[191,191,21474,21474],\"plaza\":[161,161,19338,19338],\"warehouse\":[68,68,9510,9510],\"plaza-all-awake\":[493,493,19338,19338],\"warehouse-all-awake\":[117,117,8826,8826]}"
+    },
+    {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":271,\"triangles\":18284,\"geometries\":421,\"textures\":18,\"programs\":10},\"plaza\":{\"calls\":212,\"triangles\":16136,\"geometries\":421,\"textures\":18,\"programs\":10},\"warehouse\":{\"calls\":64,\"triangles\":8332,\"geometries\":421,\"textures\":18,\"programs\":10}}"
+      "detail": "{\"pier\":{\"calls\":191,\"triangles\":21474,\"geometries\":352,\"textures\":18,\"programs\":12},\"plaza\":{\"calls\":161,\"triangles\":19338,\"geometries\":352,\"textures\":18,\"programs\":12},\"warehouse\":{\"calls\":68,\"triangles\":9510,\"geometries\":352,\"textures\":18,\"programs\":12},\"plaza-all-awake\":{\"calls\":493,\"triangles\":19338,\"geometries\":678,\"textures\":18,\"programs\":12},\"warehouse-all-awake\":{\"calls\":117,\"triangles\":8826,\"geometries\":678,\"textures\":18,\"programs\":12}}"
+    },
+    {
+      "name": "render budget ceilings: <= 350 draw calls asleep, <= 650 with every enemy awake",
+      "ok": true,
+      "detail": "{\"pier\":191,\"plaza\":161,\"warehouse\":68,\"plaza-all-awake\":493,\"warehouse-all-awake\":117}"
+    },
+    {
+      "name": "looking at a closed door within reach shows how to open it",
+      "ok": true,
+      "detail": "[E] open"
+    },
+    {
+      "name": "a locked door says what it needs",
+      "ok": true,
+      "detail": "Locked: needs the brass key"
+    },
+    {
+      "name": "the secret panel gives NO prompt (it must stay a secret)",
+      "ok": true,
+      "detail": "use-hint hidden facing the panel"
+    },
+    {
+      "name": "no prompt when nothing is in reach",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Quick load is hidden while no quick save exists (no dead-end button)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "F5 quick-saves without opening the pause menu and says so",
+      "ok": true,
+      "detail": "Quick saved"
+    },
+    {
+      "name": "F9 loads the quick save (position restored)",
+      "ok": true,
+      "detail": "x=30"
+    },
+    {
+      "name": "Quick load appears once a quick save exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Retry after loading a save restores the level-start inventory (flare cannon only, 8 flares, full health), not the mid-level one",
+      "ok": true,
+      "detail": "{\"weapons\":[\"flare\"],\"ammo\":{\"flare\":8},\"hp\":100}"
+    },
+    {
+      "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
+      "ok": true,
+      "detail": "{\"top\":10,\"bottom\":710,\"sh\":1024,\"ch\":696,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+    },
+    {
+      "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
+      "ok": true,
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":983,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+    },
+    {
+      "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
+      "ok": true,
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":983,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+    },
+    {
+      "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
+      "ok": true,
+      "detail": "{\"top\":10,\"bottom\":470,\"sh\":942,\"ch\":456,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+    },
+    {
+      "name": "with WebGL unavailable the game says so on screen (no inert title)",
+      "ok": true,
+      "detail": "WebGL is not available in this browser, so HUSHFALL cannot draw. Try a current Chrome, Edg"
     },
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
       "ok": true,
-      "detail": "geometries 336->336, textures 18->18, programs 10->10"
+      "detail": "geometries 352->352, textures 18->18, programs 12->12"
     },
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=631 avg=28.9ms"
+      "detail": "frames=833 avg=48.5ms"
+    },
+    {
+      "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
+      "ok": true,
+      "detail": "worst 1017 ms, p95 217 ms"
+    },
+    {
+      "name": "no uncaught exceptions or console errors",
+      "ok": true,
+      "detail": ""
     }
   ],
   "errors": [],
   "perf": {
-    "frames": 631,
-    "avgMs": 28.886212361482322,
-    "p95Ms": 100,
-    "worstMs": 100
+    "frames": 833,
+    "avgMs": 48.517406962727826,
+    "p95Ms": 216.6999999999971,
+    "worstMs": 1016.7000000000008
   },
   "gl": {
-    "geometries": 461,
+    "geometries": 404,
     "textures": 18,
     "calls": 1,
     "triangles": 2,
-    "programs": 10
+    "programs": 12
   },
   "note": "perf numbers are software-GL and are NOT a performance claim"
 }

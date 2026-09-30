@@ -1,6 +1,8 @@
 {
-  "when": "2026-09-29T22:58:16.314Z",
+  "when": "2026-09-30T01:26:38.899Z",
+  "commit": "d10df0f",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
+  "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
     {
       "id": "flare_fire",
@@ -35,8 +37,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.24,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "pump",
@@ -107,8 +109,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "step_plank",
@@ -255,6 +257,54 @@
       "bitExact": true
     },
     {
+      "id": "bell_alert",
+      "seconds": 1.7,
+      "peak": 0.499,
+      "rms": 0.057,
+      "loudestWindowRms": 0.2443,
+      "tailRms": 0,
+      "audibleSeconds": 1.04,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "bell_charge",
+      "seconds": 0.65,
+      "peak": 0.15,
+      "rms": 0.0121,
+      "loudestWindowRms": 0.0761,
+      "tailRms": 0,
+      "audibleSeconds": 0.57,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "toll_shot",
+      "seconds": 1,
+      "peak": 0.65,
+      "rms": 0.0446,
+      "loudestWindowRms": 0.2337,
+      "tailRms": 0,
+      "audibleSeconds": 0.59,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "shot_impact",
+      "seconds": 0.45,
+      "peak": 0.312,
+      "rms": 0.0165,
+      "loudestWindowRms": 0.1083,
+      "tailRms": 0,
+      "audibleSeconds": 0.24,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
       "id": "wheeze_windup",
       "seconds": 0.8,
       "peak": 0.149,
@@ -299,8 +349,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.05,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "gaunt_screech",

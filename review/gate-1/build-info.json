@@ -1,0 +1,27 @@
+{
+  "git": "d10df0f",
+  "dirtySource": false,
+  "node": "v24.21.0",
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "p5": "2.3.4",
+    "p5.brush": "2.2.3",
+    "pngjs": "7.0.0",
+    "puppeteer": "25.12.0",
+    "vite": "8.3.1"
+  },
+  "status": {
+    "PLANNED": 67,
+    "IMPLEMENTED": 0,
+    "AGENT_VERIFIED": 1,
+    "COMPLETE": 0
+  },
+  "evidenceStamps": {
+    "code": "d10df0f",
+    "browserCheck": "d10df0f",
+    "mapEvidence": "d10df0f",
+    "audioQa": "d10df0f"
+  }
+}

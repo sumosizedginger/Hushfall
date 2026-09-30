@@ -1,0 +1,141 @@
+{
+  "map": "C1E1M01",
+  "mapVersion": 7,
+  "codeVersion": "d10df0f",
+  "dirtySource": false,
+  "assetVersion": "0feb090adcf1930d",
+  "canonicalRoute": {
+    "sha": "630e8b7a923c3cac",
+    "file": "routes/C1E1M01.main.route.json",
+    "difficulty": "normal",
+    "seed": 1,
+    "reachedExit": true,
+    "ticks": 4602,
+    "finalHash": "1924e14d",
+    "expectedEvents": [
+      "door_open",
+      "pickup:key_brass",
+      "level_complete"
+    ],
+    "proves": "one valid tested path; not balance, fun, or full exploration"
+  },
+  "routes": [
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 4513,
+      "finalHash": "7cf16cfd",
+      "kills": 16,
+      "secrets": 0,
+      "items": 11,
+      "damageTaken": 24
+    },
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 4602,
+      "finalHash": "1924e14d",
+      "kills": 16,
+      "secrets": 0,
+      "items": 11,
+      "damageTaken": 54
+    },
+    {
+      "file": "routes/C1E1M01.main.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 4747,
+      "finalHash": "825d3224",
+      "kills": 16,
+      "secrets": 0,
+      "items": 11,
+      "damageTaken": 80
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 4849,
+      "finalHash": "28ed861f",
+      "kills": 16,
+      "secrets": 1,
+      "items": 14,
+      "damageTaken": 12
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 4981,
+      "finalHash": "f85ab0fa",
+      "kills": 16,
+      "secrets": 1,
+      "items": 14,
+      "damageTaken": 27
+    },
+    {
+      "file": "routes/C1E1M01.secret.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 5218,
+      "finalHash": "9d6cd93f",
+      "kills": 16,
+      "secrets": 1,
+      "items": 14,
+      "damageTaken": 40
+    }
+  ],
+  "viability": {
+    "easy": {
+      "runner": {
+        "result": "bot-failed",
+        "damage": 45,
+        "hpLeft": 55
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 24,
+        "seconds": 75.2
+      }
+    },
+    "normal": {
+      "runner": {
+        "result": "bot-failed",
+        "damage": 77,
+        "hpLeft": 23
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 54,
+        "seconds": 76.7
+      }
+    },
+    "hard": {
+      "runner": {
+        "result": "dead",
+        "damage": 109,
+        "hpLeft": 0
+      },
+      "fighter": {
+        "result": "complete",
+        "damage": 80,
+        "seconds": 79.1
+      }
+    }
+  },
+  "counts": {
+    "enemies": 16,
+    "items": 21,
+    "secrets": 1
+  },
+  "notes": "Generated: map v7, 16 enemies, 21 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test.",
+  "proves": "One valid tested path per difficulty, played by a bot through the real input layer, plus a passive runner that must NOT get through. Not balance, fun, or full exploration."
+}

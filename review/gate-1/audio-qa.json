@@ -1,0 +1,10 @@
+{
+  "when": "2026-09-30T01:26:38.899Z",
+  "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
+  "sfxCount": 36,
+  "maxPeak": 0.93,
+  "failures": [],
+  "listen": "review/audio/*.wav",
+  "scope": "each effect rendered ALONE offline: finite, non-silent, peak below full scale. Mixed output (master chain, overlapping sounds, music vs effects) is NOT measured.",
+  "note": "objective metrics only; subjective quality needs a human listen (review/audio/*.wav)"
+}
