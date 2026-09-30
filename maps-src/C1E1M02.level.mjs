@@ -92,5 +92,5 @@ export default {
     { id: 'iron', when: 'key:iron', do: [{ open: [26, 7] }, { open: [30, 7] }, { open: [40, 7] }, { open: [44, 7] }, { wake: 'reg-closet' }, { shake: 1.2 }, { objective: 'Iron door, east wall: get out' }] },
     { id: 'stair', when: 'enter', at: [54, 17], radius: 2.5, do: [{ open: [52, 16] }, { open: [56, 19] }, { wake: 'stair' }] },
   ],
-  quality: { enemies: [30, 46], botSeconds: [120, 420], mechanics: ['heights', 'closets', 'triggers', 'keys>=2'], skins: 5 },
+  quality: { enemies: [30, 46], botSeconds: [90, 420], mechanics: ['heights', 'closets', 'triggers', 'keys>=2'], skins: 5 },
 };

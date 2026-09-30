@@ -48,7 +48,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
-  for (const d of map.doors.values()) w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: 0, target: 0, hold: 0, secret: !!d.closet, remote: !!d.remote, closet: !!d.closet, sealed: false });
+  for (const d of map.doors.values()) w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: 0, target: 0, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false });
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   return w;
 }

@@ -26,7 +26,18 @@ export class Bot {
     return false;
   }
   findPath(goal) {
-    const m = this.w.map, p = this.w.player, start = [Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)];
+    const m = this.w.map, p = this.w.player;
+    let start = [Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)];
+    // a dodge can leave the bot standing at the corner of a prop's cell: that cell is not passable, so start from the nearest cell that is (the walk out is the first step)
+    if (!this.passable(start[0], start[1], null)) {
+      let best = null, bd = 1e9;
+      for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) { const c = [start[0] + dx, start[1] + dz]; if (!this.passable(c[0], c[1], null)) continue; const d = Math.hypot((c[0] + 0.5) * m.cell - p.x, (c[1] + 0.5) * m.cell - p.z); if (d < bd) { bd = d; best = c; } }
+      if (best) { const rest = this.findPathFrom(best, goal); return rest ? [best, ...rest] : null; }
+    }
+    return this.findPathFrom(start, goal);
+  }
+  findPathFrom(start, goal) {
+    const m = this.w.map;
     const key = (c) => c[0] + ',' + c[1], prev = new Map([[key(start), null]]), q = [start];
     while (q.length) {
       const c = q.shift();
@@ -55,9 +66,9 @@ export class Bot {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
     const wantScatter = p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.e.kind === 'gaunt' || t.d < 7);
-    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 10 && t.d < 20;                 // mid-range: the driver's steady stream (flares are for range and crowds)
+    const wantRivet = !wantScatter && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
     const wantId = wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
-    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { this.in.press(wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'); this.lastSwitch = w.tick; }
+    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : 'weapon3'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
     const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
@@ -111,6 +122,7 @@ export class Bot {
   // -- tick ------------------------------------------------------------
   /** Decide inputs for the next sim tick. */
   tick() {
+    if (this.pendingRelease) { this.in.release(this.pendingRelease); this.pendingRelease = null; }
     if (this.failed || this.done) return;
     const w = this.w, p = w.player, op = this.route[this.i];
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after
@@ -122,8 +134,8 @@ export class Bot {
     if (t) {
       this.calm = 0; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
-      if (op.op === 'goto' || op.op === 'use') { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }
-      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks) this.failed = 'stuck in combat'; return; } }
+      if ((op.op === 'goto' || op.op === 'use') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
+      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
     else { this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);

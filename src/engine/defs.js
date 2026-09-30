@@ -71,8 +71,8 @@ export const PICKUPS = {
   ammo_flare: { type: 'ammo', ammo: 'flare', amount: 4 },
   ammo_shell: { type: 'ammo', ammo: 'shell', amount: 6 },
   weapon_scattergun: { type: 'weapon', weapon: 'scattergun', ammo: 'shell', amount: 8 },
-  weapon_rivet: { type: 'weapon', weapon: 'rivet', ammo: 'rivet', amount: 45 },
-  ammo_rivet: { type: 'ammo', ammo: 'rivet', amount: 30 },
+  weapon_rivet: { type: 'weapon', weapon: 'rivet', ammo: 'rivet', amount: 60 },
+  ammo_rivet: { type: 'ammo', ammo: 'rivet', amount: 40 },
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };

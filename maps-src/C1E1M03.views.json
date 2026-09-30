@@ -1,0 +1,17 @@
+[
+  { "name": "01-west-gate", "x": 4.5, "z": 24.5, "yaw": "east" },
+  { "name": "02-market-from-gate", "x": 8.0, "z": 24.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "03-stall-rows", "x": 20.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "04-gutter", "x": 24.5, "z": 19.5, "yaw": "east", "pitch": -0.15 },
+  { "name": "05-west-stairs", "x": 9.5, "z": 17.5, "yaw": "north", "pitch": 0.25 },
+  { "name": "06-boardwalk", "x": 9.5, "z": 9.0, "yaw": "east", "pitch": 0.0 },
+  { "name": "07-boardwalk-cover", "x": 20.0, "z": 9.0, "yaw": "east", "pitch": -0.02 },
+  { "name": "08-boardwalk-drop", "x": 30.0, "z": 9.0, "yaw": "south", "pitch": -0.35 },
+  { "name": "09-north-switch", "x": 52.5, "z": 9.5, "yaw": "north", "pitch": 0.0 },
+  { "name": "10-east-lane", "x": 52.5, "z": 20.0, "yaw": "south", "pitch": 0.0 },
+  { "name": "11-smokehouse", "x": 14.5, "z": 42.5, "yaw": "south", "open": true },
+  { "name": "12-south-switch", "x": 14.5, "z": 44.5, "yaw": "south", "open": true },
+  { "name": "13-shutters", "x": 53.5, "z": 25.5, "yaw": "east", "open": true },
+  { "name": "14-auction-hall", "x": 58.5, "z": 25.5, "yaw": "east", "open": true },
+  { "name": "15-market-night-wide", "x": 30.5, "z": 30.5, "yaw": 0.6, "pitch": 0.1 }
+]
