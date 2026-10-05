@@ -339,7 +339,7 @@
       "severity": "MINOR",
       "status": "open",
       "title": "Only Episode 1 exists; C1E2-C2 (59 maps) are not started",
-      "remaining": "By design: Gate 3 has not been approved."
+      "remaining": "Gate 3 is open (owner approved Gate 2, 2026-10-05). Episode 2 has ONE pilot map so far, C1E2M01 Brine Gate (AGENT_VERIFIED by the gates, never played). C1E2M02-C2 (58 slots) are not started; Gate 4 has not been approved."
     },
     {
       "id": "PT-001",
@@ -395,6 +395,20 @@
       "title": "Owner 2026-10-05: the first outline pass drew wireframe-like lines over the enemies (a regression I shipped)",
       "how": "The corner ink could not tell an enemy from the level, so it traced every box edge of every rig. Enemies and the weapon now write alpha 0 and keep the original ink (src/render/entityflag.js + post.js). Guarded by tests/entityflag.test.js and a real-game check of the ink inside an enemy body (red with the marking disabled, green now).",
       "remaining": "CLOSED: the owner, 2026-10-05: \"Perfect look, love it now. approved\"."
+    },
+    {
+      "id": "G3-U1",
+      "severity": "MAJOR",
+      "status": "unverified",
+      "title": "Gate 3 pilot C1E2M01 Brine Gate has never been played by a person",
+      "remaining": "Balance, readability of the pan and the dyke, the look of the three new Episode 2 skins and the pale sky, and the fun of the towers and the Warden are all unjudged: the bots cannot judge them."
+    },
+    {
+      "id": "G3-U2",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Adding a skin invalidates every map's evidence",
+      "remaining": "A skin is a row in src/engine/defs.js and a baked asset, both hashed into all evidence: the full regeneration after the pilot took about 15 minutes for ten maps (about an hour for 68). Candidate fix not built: skins as data outside the hashed engine files and per-map freshness of only the assets a map uses. Owner choice."
     }
   ],
   "reauditedCommit": "07f456e"
