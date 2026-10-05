@@ -216,4 +216,11 @@ function doorPrompt(w) {
 resize(); ui.show('title', { canContinue: canContinue(), note: settingsNotes.join(' ') });
 requestAnimationFrame(frame);
 
+if (import.meta.env.DEV) {                                                 // dev-only title-screen level picker (index.html #dev-levels): any map, any difficulty, no need to play Episode 1 first
+  const box = document.getElementById('dev-levels'), sel = document.getElementById('dev-map'), diff = document.getElementById('dev-diff'), go = document.getElementById('dev-go');
+  if (box && sel && diff && go) {
+    sel.innerHTML = Object.keys(MAPS).sort().map((id) => `<option value="${id}">${id} ${MAPS[id].name ?? ''}</option>`).join(''); box.classList.remove('hidden');
+    go.onclick = () => startLevel({ mapId: sel.value, difficulty: diff.value, seed: 1 + Math.floor(Math.random() * 1e6) });
+  }
+}
 if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));

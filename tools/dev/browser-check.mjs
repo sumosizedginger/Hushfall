@@ -190,6 +190,10 @@ try {
   check('Gate 2 flow: the intermission Next button loads C1E1M02 and play resumes', m2.mapId === 'C1E1M02' && m2.mode === 'playing', m2.mapId + '/' + m2.mode);
   check('Gate 2 flow: the inventory carries over (weapons kept, ammo kept, at full health or better)', carried.weapons.every((wp) => m2.player.weapons.includes(wp)) && m2.player.hp >= Math.min(100, carried.hp) - 1 && m2.player.ammo.flare >= carried.ammo.flare, JSON.stringify({ before: carried.weapons, after: m2.player.weapons, hp: [carried.hp, m2.player.hp] }));
   await T('t.clearOverlays()'); await shot('g2-00-m02-start');
+  // the dev-only level picker (title screen): any map starts from it, on the chosen difficulty
+  { await page.$eval('#dev-map', (s) => { s.value = 'C1E2M01'; }); await page.$eval('#dev-diff', (s) => { s.value = 'hard'; }); await page.$eval('#dev-go', (b) => b.click());
+    await page.waitForFunction("window.__GAME_TEST__.state().mapId === 'C1E2M01'", { timeout: 60000 }).catch(() => {}); const dp = await T('t.state()');
+    check('the dev level picker starts any map on the chosen difficulty (C1E2M01 on hard)', dp.mapId === 'C1E2M01' && dp.difficulty === 'hard' && dp.mode === 'playing', dp.mapId + '/' + dp.difficulty + '/' + dp.mode); await T('t.clearOverlays()'); }
   await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // back to the Gate 1 map: later sections use the current map
 
   // ---- 2. secret route -------------------------------------------------------------------------------------------

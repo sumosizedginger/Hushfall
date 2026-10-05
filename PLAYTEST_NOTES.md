@@ -91,6 +91,9 @@ The owner wanted clearer, more readable outlines in the existing style, nothing 
 - Not addressed: a dark Gaunt against a dark wall is still dark on dark (ink is near-black); that needs a palette decision, not an outline one. The in-game Outline toggle (Settings) still turns the whole pass off.
 - If it is too heavy, the knobs are `CREASE_LO`/`CREASE_HI` and the break factor in `post.js`; if too light, the same.
 
+## Gate 3 pilot: C1E2M01 Brine Gate: built, awaiting the owner (2026-10-05)
+Verified by the bots and the real-game evidence only; nobody has played it. What to look at, and what I do NOT know: (1) the look: three new skins (salt-caked brick, rusted corrugated sheet, salt crust) under the pale overcast sky: the pan may read too pale or too flat; (2) the dyke (a line of stacked crates) is meant to make the pan one engagement at a time: unplayed; (3) whether the tower Bellhands, the rank and the gap are fun or cruel at normal; (4) the north ditch to the guardhouse and the kennels; (5) the Warden in the yard. Log findings here BEFORE any code.
+
 ## Gate 2 APPROVED (owner, 2026-10-05, on the revised build)
 Their words: "Perfect look, love it now. approved". That approves the build as a whole: the hit volumes (PT-005, no separate comment), the clearer outlines on the level and the enemies back to the original ink (PT-006, G2-R2). It closes those three. It does NOT mark any map COMPLETE (that needs a recorded per-map review) and does not close G2-U2/U4/U5/U8 (audio, pointer lock, par times, the boss) which they did not mention. **Gate 3 (proving a repeatable production pipeline for the remaining 59 maps) is open** (`design/GATE3.md`); Gate 4 is not.
 
