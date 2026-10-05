@@ -1,7 +1,7 @@
 // Gate 2 set dressing: code-authored low-poly props for the new maps. Static props use the shared cached materials from models.js so they
 // merge into a few draw calls; the switch panel keeps its own lamp material because its colour changes with game state.
 import * as THREE from 'three';
-import { lam, bas } from './models.js';
+import { lam, bas, makeRigGrounder } from './models.js';
 
 const box = (w, h, d, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); return m; };
 const cyl = (rt, rb, h, seg, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); return m; };
@@ -85,10 +85,13 @@ export function makeSwitchPanel() {
 
 /** the enemy-view of a bell node: the bronze bell on its frame, a pulsing teal core; it tips and dims when severed */
 export function makeBellNodeEnemy() {
-  const root = makeBellNode(), core = root.children.find((c) => c.geometry?.type === 'SphereGeometry');
+  const model = makeBellNode(), core = model.children.find((c) => c.geometry?.type === 'SphereGeometry');
+  const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig); rig.add(model);        // root = world placement (the view owns it); rig = the tip-over
+  const ground = makeRigGrounder(root, rig);
   function pose(p) {
-    const d = Math.min(1, p.dead || 0); root.rotation.z = d * 0.5; root.scale.set(1, 1 - 0.55 * d, 1);
+    const d = Math.min(1, p.dead || 0); rig.rotation.z = d * 0.5; rig.scale.set(1, 1 - 0.55 * d, 1);
     if (core) core.scale.setScalar(d > 0 ? 0.001 : 1 + 0.25 * Math.sin(p.t * 4) + 0.6 * (p.flash || 0));
+    ground();                                                                       // a severed node tips over ON the floor, not into it
   }
-  return { root, pose, mat: null };
+  return { root, rig, pose, mat: null };
 }

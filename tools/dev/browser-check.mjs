@@ -6,14 +6,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
 import crypto from 'node:crypto';
-import { textSha } from '../textsha.mjs';
+import { textSha, sourceShas } from '../textsha.mjs';
+import { runRenderCensus } from './render-census.mjs';
 import { execSync } from 'node:child_process';
 const updateBaseline = process.argv.includes('--update-baseline');
 
 const root = path.resolve(import.meta.dirname, '../..');
 const shots = path.join(root, 'review/engine-skeleton');
 fs.mkdirSync(shots, { recursive: true });
-const checks = [], errors = []; let perf = null, gl = null, g2 = null;
+const checks = [], errors = []; let perf = null, gl = null, g2 = null, renderGround = null;
 const check = (name, ok, detail = '') => { checks.push({ name, ok: !!ok, detail: String(detail) }); console.log(ok ? 'PASS' : 'FAIL', name, detail); };
 
 const server = await createServer({ root, logLevel: 'error', server: { port: 5210, strictPort: true } });
@@ -231,6 +232,16 @@ try {
   await page.evaluate(() => localStorage.clear());
   await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // the sections below use the current map: back to the Gate 1 map
 
+  // ---- 2d. RENDER TRUTH (PT-001/PT-002): the sim gate above proves where actors ARE; this proves where they are DRAWN ------------------
+  // Every enemy of every shipped map, asleep / awake / in every pose / dying / dead / on moving floors, and the Cantor's body + shield + ring, against the sim's ground.
+  const rgShots = path.join(root, 'review/render-ground'); fs.mkdirSync(rgShots, { recursive: true });
+  renderGround = await runRenderCensus({ T, root, check, shot: async (name) => { await page.screenshot({ path: path.join(rgShots, name + '.png') }); return name + '.png'; } });
+  // debris lands on the terrain under it: an explosion over the M02 gallery (floor 3 m) must not let a chip fall more than a frame's travel below that floor
+  await T("t.newGame('normal', 3, { mapId: 'C1E1M02' })"); await T("t.emitView([{ type: 'explode', x: 52.4, y: 3.9, z: 13.6 }, { type: 'impact', x: 52.4, y: 3.6, z: 13.6 }])");
+  { let minRel = Infinity, seen = 0; for (let i = 0; i < 40; i++) { await T('t.render(0.016)'); for (const p of await T('t.debrisProbe()')) if (p.floor != null) { seen++; minRel = Math.min(minRel, p.y - p.floor); } }
+    check('debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame\'s travel below it)', seen > 20 && minRel > -0.4 && (await T('t.debrisProbe()')).length === 0, `${seen} samples, lowest chip ${minRel.toFixed(3)} m relative to its floor, remaining after 0.64 s: ${(await T('t.debrisProbe()')).length}`); }
+  await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // the sections below use the current map
+
   // ---- 3. save / resume determinism in the browser ----------------------------------------------------------------
   await T("t.newGame('hard', 5)");
   await T("t.press('forward'); t.addYaw(0.4)"); await T('t.tick(240)');
@@ -313,6 +324,10 @@ try {
     const r = await page.$eval('#screen-pause .panel', (e) => { const b = e.getBoundingClientRect(); return { top: b.top, bottom: b.bottom, sh: e.scrollHeight, ch: e.clientHeight, ov: getComputedStyle(e).overflowY, ih: innerHeight }; });
     const reach = await page.evaluate(() => { const p = document.querySelector('#screen-pause .panel'); const ok = (id) => { const el = document.getElementById(id); el.scrollIntoView({ block: 'center' }); const b = el.getBoundingClientRect(), pb = p.getBoundingClientRect(); return b.top >= pb.top - 1 && b.bottom <= pb.bottom + 1 && b.height > 0; }; return { resume: ok('btn-resume'), restart: ok('btn-restart'), quit: ok('btn-quit') }; });
     check(`pause menu fits a ${w}x${h} window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)`, r.top >= 0 && r.bottom <= r.ih + 1 && (r.sh <= r.ch || r.ov === 'auto') && reach.resume && reach.restart && reach.quit, JSON.stringify({ ...r, ...reach }));
+    // the control list used to sit in its own 34vh scroller: rows were clipped against the Reset button (a half row at the edge, 350+ px hidden). One scroll region, every row visible, a gap above the button.
+    const lay = await page.evaluate(() => { const c = document.getElementById('controls'), btn = document.getElementById('btn-reset-keys'), rows = [...c.children], bb = btn.getBoundingClientRect(), cb = c.getBoundingClientRect(), last = rows[rows.length - 1].getBoundingClientRect();
+      return { rows: rows.length, hiddenInList: c.scrollHeight - c.clientHeight, rowsOverlappingButton: rows.filter((x) => { const b = x.getBoundingClientRect(); return b.height > 0 && b.bottom > bb.top && b.top < bb.bottom; }).length, gapToButton: Math.round(bb.top - last.bottom), partialRow: rows.some((x) => { const b = x.getBoundingClientRect(); return b.top < cb.bottom && b.bottom > cb.bottom + 1; }) }; });
+    check(`pause menu ${w}x${h}: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it`, lay.rows >= 15 && lay.hiddenInList <= 1 && lay.rowsOverlappingButton === 0 && lay.gapToButton >= 6 && !lay.partialRow, JSON.stringify(lay));
     if (w === 800) await shot('05b-pause-800x600');
   }
   await page.setViewport({ width: 1280, height: 720 }); await page.keyboard.press('Escape'); await sleep(200);
@@ -341,7 +356,8 @@ check('no uncaught exceptions or console errors', errors.length === 0, errors.sl
 {
 const sha16 = (f) => textSha(path.join(root, f));
 const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } };
-fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapShas: Object.fromEntries(['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01'].map((id) => [id, sha16('maps/' + id + '.json')])), gate2Routes: g2, mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
+if (renderGround) fs.writeFileSync(path.join(root, 'validation/render-ground.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), sources: sourceShas(root), checks: checks.filter((c) => c.name.startsWith('render truth')), report: renderGround }, null, 2));
+fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), sources: sourceShas(root), renderGround: renderGround && { band: renderGround.band, totals: renderGround.totals, violationCount: renderGround.violationCount, hitVolume: renderGround.hitVolume, cantor: renderGround.cantor && { problems: renderGround.cantor.problems, body: renderGround.cantor.body, shield: renderGround.cantor.shield, nodes: renderGround.cantor.nodes } }, dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapShas: Object.fromEntries(['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01'].map((id) => [id, sha16('maps/' + id + '.json')])), gate2Routes: g2, mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
 }
 await browser.close(); await server.close();
 const failed = checks.filter((c) => !c.ok);

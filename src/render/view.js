@@ -6,6 +6,7 @@ import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeBellNodeEnemy } from './models_g2.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
+import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
@@ -68,6 +69,7 @@ export class GameView {
     let m = this.beams.get(key); if (!m) { m = new THREE.Mesh(this.beamGeo, this.beamMat); this.scene.add(m); this.beams.set(key, m); }
     const dx = bx - ax, dy = by - ay, dz = bz - az, len = Math.hypot(dx, dy, dz) || 1;
     m.position.set((ax + bx) / 2, (ay + by) / 2, (az + bz) / 2); m.scale.set(radius, len, radius); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx / len, dy / len, dz / len));
+    m.userData.a = [ax, ay, az]; m.userData.b = [bx, by, bz];
   }
   handleEvents(events) {
     for (const e of events) {
@@ -108,6 +110,7 @@ export class GameView {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
       if (!v) { v = ENEMY_MODELS[e.kind](this.tex); this.scene.add(v.root); this.enemyViews.set(e.id, v); }
       const s = this.prev.enemies.get(e.id) || e;
+      // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
@@ -116,9 +119,11 @@ export class GameView {
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if (def.boss && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
       v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash });
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
-      if (e.state === 'idle' && !v.frozen) {
-        v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.root.visible = false;
-      } else if (e.state !== 'idle' && v.frozen) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
+      // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
+      const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
+      if (e.state === 'idle' && !v.frozen && steady) {
+        v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false;
+      } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
     }
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); }
     // channel beams (Sexton -> corpse), node links (ring -> Cantor), the shield, tone pulses
@@ -171,7 +176,8 @@ export class GameView {
     // debris + explosion light
     for (let i = this.debris.length - 1; i >= 0; i--) {
       const d = this.debris[i]; d.life -= dt; d.v.y -= 16 * dt; d.m.position.addScaledVector(d.v, dt); d.m.rotation.x += dt * 9; d.m.rotation.y += dt * 7;
-      if (d.life <= 0 || d.m.position.y < 0) { this.scene.remove(d.m); this.debris.splice(i, 1); }
+      if (d.ground == null) d.ground = spawnGround(w, d.m.position.x, d.m.position.z);
+      if (d.life <= 0 || d.m.position.y < debrisFloor(w, d.m.position.x, d.m.position.z, d.ground)) { this.scene.remove(d.m); this.debris.splice(i, 1); }       // lands on the terrain under it, not on world y = 0
     }
     this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)

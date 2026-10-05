@@ -6,11 +6,12 @@ import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
+import { pickupToast } from './toasts.js';
 
 const $ = (id) => document.getElementById(id);
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const TOASTS = {
-  pickup: (e) => ({ health_small: 'Field dressing (+15)', health_large: 'Medical satchel (+40)', ammo_flare: 'Flare shells (+4)', armor_vest: 'Canvas flak vest (+50)', key_brass: 'Brass key', ammo_shell: 'Shotgun shells (+6)', ammo_rivet: 'Rivets (+30)', key_iron: 'Iron key', key_bell: 'Bell key' })[e.kind] || 'Picked up ' + e.kind,
+  pickup: (e) => pickupToast(e.kind),                                         // amounts come from PICKUPS (toasts.js)
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',

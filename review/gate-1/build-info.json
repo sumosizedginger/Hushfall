@@ -23,5 +23,9 @@
     "browserCheck": "d10df0f",
     "mapEvidence": "d10df0f",
     "audioQa": "d10df0f"
+  },
+  "historical": {
+    "supersededBy": "review/gate-2",
+    "note": "Frozen snapshot of the Gate 1 decision. Its status counts describe that moment, not the current derived status (npm run status)."
   }
 }

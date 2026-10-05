@@ -1,3 +1,5 @@
+> **Historical snapshot (Gate 1).** The numbers below describe the repository when the Gate 1 decision was made. They are NOT the current status: run `npm run status`, and see `review/gate-2/` for the live bundle.
+
 # Gate 1 review bundle: Marrow Quay (C1E1M01)
 
 Generated 2026-09-30T01:27:08.045Z by `node tools/gate1-bundle.mjs` from repository evidence. Code: `d10df0f`.

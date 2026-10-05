@@ -1,6 +1,7 @@
 // Audio QA: renders every SFX recipe and the score offline in headless Chrome, measures them, and writes WAVs for listening.
 // Objective checks only (finite, audible, not clipped, deterministic, decays). Whether it SOUNDS good needs a human: listen to review/audio/*.wav.
 // Usage: node tools/dev/audio-qa.mjs   -> review/audio/*.wav + validation/audio.json
+import { sourceShas } from '../textsha.mjs';
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
@@ -65,7 +66,7 @@ check('combat layer is louder than calm (tension is audible)', music.combat.rms 
 check('no page errors', errors.length === 0, errors.slice(0, 2).join(' | '));
 console.table(rows.map((r) => ({ id: r.id, sec: r.seconds, peak: r.peak, rms: r.rms, loud50ms: r.loudestWindowRms, tail: r.tailRms })));
 console.log('music', JSON.stringify(music));
-fs.writeFileSync(path.join(root, 'validation/audio.json'), JSON.stringify({ when: new Date().toISOString(), commit: (() => { try { return execSync('git rev-parse --short HEAD', { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } })(), env: 'headless Chrome 154, OfflineAudioContext 44.1 kHz mono', scope: 'each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured', sfx: rows, music, failures, note: 'objective metrics only; subjective quality needs a human listen (review/audio/*.wav)' }, null, 2));
+fs.writeFileSync(path.join(root, 'validation/audio.json'), JSON.stringify({ when: new Date().toISOString(), sources: sourceShas(root), commit: (() => { try { return execSync('git rev-parse --short HEAD', { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { return null; } })(), env: 'headless Chrome 154, OfflineAudioContext 44.1 kHz mono', scope: 'each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured', sfx: rows, music, failures, note: 'objective metrics only; subjective quality needs a human listen (review/audio/*.wav)' }, null, 2));
 await browser.close(); await server.close();
 console.log(failures.length ? 'FAILURES:\n' + failures.join('\n') : `audio QA OK: ${rows.length} sounds + 2 music renders`);
 process.exit(failures.length ? 1 : 0);
