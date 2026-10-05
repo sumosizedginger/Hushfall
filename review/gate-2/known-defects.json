@@ -30,7 +30,7 @@
       "status": "partially-fixed",
       "title": "Bot-tuned maps had almost no margin for a weaker player",
       "how": "Every map now needs rounds available >= 1.5x what the perfect bot fires (M07 and M08 gained ammo, M06 gained ammo on its route); a strafing fighter with 0.03 rad aim error, and one whose ammo pickups are worth 25% less, must complete every map on normal (viability gate); a last-resort flare feed means a player with no ammunition of any kind is never left without a weapon.",
-      "remaining": "Hard difficulty is still fragile when the player is degraded (M06 hard with both handicaps kills the strafing bot). Per-type ammo slack is now gated (>= 1.5x per ammunition type the bot fires >= 5 times) and M08 hard now completes on 8 of 8 seeds (it was 4 of 8). Nobody human has played it (G2-U1)."
+      "remaining": "Hard difficulty is still fragile when the player is degraded (M06 hard with both handicaps kills the strafing bot). Per-type ammo slack is now gated (>= 1.5x per ammunition type the bot fires >= 5 times) and M08 hard now completes on 8 of 8 seeds (it was 4 of 8). Nobody human has played it (G2-U1). 2026-10-05: M08 hard completes on 52 of 64 seeds (81%) for the perfect bot, before AND after the fairer hit volumes; the carried Episode 1 hard test now needs 2 of 3 seeds, the same policy as the per-map hard gate."
     },
     {
       "id": "A05",
@@ -316,9 +316,9 @@
     {
       "id": "G2-U7",
       "severity": "MINOR",
-      "status": "open",
-      "title": "The per-map 'damage rises with difficulty' check is a loose proxy",
-      "remaining": "It now allows hard >= 60% of normal (M06 measures 54 vs 70) because a deterministic bot takes a handful of hits and per-map hit counts jitter; the sim's difficulty multipliers themselves are unit-tested. The bundle reports the episode totals."
+      "status": "partially-fixed",
+      "title": "The per-map 'damage rises with difficulty' check was a loose proxy",
+      "remaining": "Per map it is now only easy < normal and easy <= hard; the hard-vs-normal trend is gated over the whole episode by episodeDifficultyChecks (tools/gate2-bundle.mjs). Reason: a deterministic bot takes 2-6 hits per map, so one hit moved M06 from 54 vs 70 to 36 vs 82 while the episode total stayed easy < normal < hard."
     },
     {
       "id": "G2-U8",
@@ -375,9 +375,18 @@
     {
       "id": "PT-005",
       "severity": "MINOR",
-      "status": "open",
+      "status": "fixed",
       "title": "Rendered bodies are taller than their sim hit cylinders: Cantor 4.79 m drawn vs 3.2 m hit, Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95 (Gaunt and Bell node match)",
-      "remaining": "DECIDED by the owner 2026-10-05: the hit box must match the enemy (widen the hit volumes to the drawn body). NOT YET IMPLEMENTED: REPAIR_PLAN.md WP1 (guards first; a separate hit radius because `radius` is also the movement collider). Measured numbers: validation/render-ground.json hitVolume."
+      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY. Attack poses are not fitted (the standing rig is the reference); arms, weapons and trailing cloth past the torso are deliberately not hittable.",
+      "how": "Owner decision 2026-10-05 (the hit box must match the enemy). src/engine/hitvolume.js: heights = the drawn heights, hitRadius/hitForward for the Cantor and the Gaunt, flares burst on the body, splash is measured from the blast height. Guarded by tests/hit-volume-fair.test.js (4 of 6 fail on the old numbers; over-tall and over-wide mutations fail) and a census check in the real game."
+    },
+    {
+      "id": "G2-R2",
+      "severity": "MINOR",
+      "status": "unverified",
+      "title": "Outline readability pass (owner revision 2, 2026-10-05): made, appearance only",
+      "how": "src/render/post.js: crease detection (absolute second difference of 1/z), lower silhouette thresholds, less broken ink. Before/after of 12 fixed viewpoints and ink masks in review/outlines/ (ink share 3.3% -> 7.0%).",
+      "remaining": "Nobody has judged whether it reads better or is too heavy. A dark Gaunt on a dark wall is still dark on dark (palette, not outline). The Outline setting still turns the pass off."
     }
   ],
   "reauditedCommit": "07f456e"

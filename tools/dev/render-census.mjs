@@ -78,7 +78,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
       }
     }
     entry.matrix = judge(matrixRows, id + ' pose'); all.matrix.push(entry.matrix);
-    for (const r of matrixRows) if (r.label.endsWith(' stand') && !hitVolume[r.kind]) hitVolume[r.kind] = { drawnHeight: r3(r.max[1] - r.min[1]), hitHeight: r.hit.height, drawnAboveHit: r3(Math.max(0, r.max[1] - (r.sim.y + r.hit.height))), hitCoversFractionOfDrawn: r3(Math.min(1, r.hit.height / (r.max[1] - r.min[1]))), hitRadius: r.hit.radius, drawnWidthX: r3(r.max[0] - r.min[0]) };
+    for (const r of matrixRows) if (r.label.endsWith(' stand') && !hitVolume[r.kind]) hitVolume[r.kind] = { drawnHeight: r3(r.max[1] - r.min[1]), hitHeight: r.hit.height, drawnAboveHit: r3(Math.max(0, r.max[1] - (r.sim.y + r.hit.height))), hitCoversFractionOfDrawn: r3(Math.min(1, r.hit.height / (r.max[1] - r.min[1]))), hitRadius: r.hit.hitRadius, hitForward: r.hit.hitForward, colliderRadius: r.hit.radius, drawnWidthX: r3(r.max[0] - r.min[0]) };
     // 4. the death blend and the corpses it leaves, from the real AI/sim path (a body is drawn for the rest of the level)
     await T(`t.newGame('normal', 3, { mapId: '${id}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)');
     await T(`for (const e of window.__GAME_TEST__.enemyBounds()) window.__GAME_TEST__.setup_enemy(e.id, { state: 'dead', hp: 0, attackT: -1, lungeT: -1, chargeT: -1, channelT: -1, pulseT: -1 });`);
@@ -167,6 +167,9 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
   check('render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)', tot.dying.bad.length === 0 && tot.corpses.bad.length === 0 && tot.corpses.n >= totalEnemies && tot.dying.n >= totalEnemies, `dying: ${line(tot.dying)} || corpses: ${line(tot.corpses)}`);
   check('render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)', report.movingFloors.length >= 2 && moving.bad.length === 0 && moving.n >= 40, line(moving));
   check('render truth: the Cantor\'s body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links', !!report.cantor && report.cantor.problems.length === 0 && report.cantor.nodes === 6, report.cantor ? (report.cantor.problems.join(' | ') || `body ${report.cantor.body.height} m tall on ${report.cantor.body.ground} m, shield r ${report.cantor.shield?.r}, ${report.cantor.nodes} nodes`) : 'none');
+  // PT-005 (owner decision 2026-10-05: the hit box matches the enemy): the sim's hit height is the drawn height. Width is judged vertex by vertex in tests/hit-volume-fair.test.js (the census only sees bounding boxes).
+  const hvBad = need.filter((k) => !hitVolume[k] || Math.abs(hitVolume[k].hitHeight - hitVolume[k].drawnHeight) > 0.10);
+  check("render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)", hvBad.length === 0, need.map((k) => `${k} ${hitVolume[k]?.drawnHeight} drawn / ${hitVolume[k]?.hitHeight} hit`).join('; '));
   report.hitVolume = hitVolume;
   report.totals = Object.fromEntries(Object.entries(tot).map(([k, s]) => [k, { rows: s.n, raised: s.raised, violations: s.bad.length, deepest: s.worstBuried, highest: s.worstFloat }])); report.totals.movingFloors = { rows: moving.n, violations: moving.bad.length, deepest: moving.worstBuried, highest: moving.worstFloat };
   report.violations = [...Object.values(tot).flatMap((s) => s.bad), ...moving.bad].slice(0, 60); report.violationCount = [...Object.values(tot), moving].reduce((a, s) => a + s.bad.length, 0);

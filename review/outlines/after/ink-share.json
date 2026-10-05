@@ -1,0 +1,18 @@
+{
+ "note": "share of pixels carrying ink (3D view, HUD strips and weapon excluded)",
+ "scenes": {
+  "m02-hall-entry": 0.0866,
+  "m02-gallery-up": 0.0445,
+  "m02-west-stairs": 0.0339,
+  "m02-hall-enemies": 0.1044,
+  "m02-dais-enemies": 0.083,
+  "m04-shop": 0.0697,
+  "m04-wading": 0.0783,
+  "m04-shop-enemies": 0.0929,
+  "m05-terrace-one": 0.0516,
+  "m05-terrace-enemies": 0.0759,
+  "m08-chamber": 0.0535,
+  "m08-ring-node": 0.0677
+ },
+ "mean": 0.0702
+}

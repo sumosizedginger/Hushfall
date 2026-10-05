@@ -1,0 +1,98 @@
+✖ HEIGHT: a shot at the drawn head (85%, 95%, 99% of the rendered height) registers on every enemy kind, on a flat floor and on a 3 m floor (60.1688ms)
+✔ HEIGHT: a shot 0.2 m above the drawn head does not register (no phantom body above the enemy) (16.6688ms)
+✖ HEIGHT: every enemy kind's hit height equals its drawn height within 0.10 m (6.1556ms)
+✖ WIDTH: the hit cylinder covers 85% of the drawn rig horizontally and is at most 0.15 m wider than that needs (every kind, flat and raised) (11.9504ms)
+✖ SPLASH: a flare that strikes the head of the Cantor hurts it nearly as much as one that strikes its torso (splash is measured from the blast on the body) (3.8009ms)
+✔ insideHit: the cylinder is centred hitForward ahead of the feet along the facing, and uses the shot's own pad (0.231ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 2
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 192.7219
+
+✖ failing tests:
+
+test at tests\hit-volume-fair.test.js:56:1
+✖ HEIGHT: a shot at the drawn head (85%, 95%, 99% of the rendered height) registers on every enemy kind, on a flat floor and on a 3 m floor (60.1688ms)
+  AssertionError [ERR_ASSERTION]: tollbearer on the flat floor: a shot 95% up the DRAWN body (2.15 m of 2.26 m) passes over it (hit volume is 1.95 m tall) | tollbearer on the flat floor: a shot 99% up the DRAWN body (2.24 m of 2.26 m) passes over it (hit volume is 1.95 m tall) | tollbearer on the 3 m floor: a shot 95% up the DRAWN body (2.15 m of 2.26 m) passes over it (hit volume is 1.95 m tall) | tollbearer on the 3 m floor: a shot 99% up the DRAWN body (2.24 m of 2.26 m) passes over it (hit volume is 1.95 m tall) | bellhand on the flat floor: a shot 85% up the DRAWN body (1.99 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | bellhand on the flat floor: a shot 95% up the DRAWN body (2.23 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | bellhand on the flat floor: a shot 99% up the DRAWN body (2.32 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | bellhand on the 3 m floor: a shot 85% up the DRAWN body (1.99 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | bellhand on the 3 m floor: a shot 95% up the DRAWN body (2.23 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | bellhand on the 3 m floor: a shot 99% up the DRAWN body (2.32 m of 2.34 m) passes over it (hit volume is 1.9 m tall) | sexton on the flat floor: a shot 85% up the DRAWN body (1.98 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | sexton on the flat floor: a shot 95% up the DRAWN body (2.22 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | sexton on the flat floor: a shot 99% up the DRAWN body (2.31 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | sexton on the 3 m floor: a shot 85% up the DRAWN body (1.98 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | sexton on the 3 m floor: a shot 95% up the DRAWN body (2.22 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | sexton on the 3 m floor: a shot 99% up the DRAWN body (2.31 m of 2.33 m) passes over it (hit volume is 1.85 m tall) | wardengraft on the flat floor: a shot 85% up the DRAWN body (2.53 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | wardengraft on the flat floor: a shot 95% up the DRAWN body (2.83 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | wardengraft on the flat floor: a shot 99% up the DRAWN body (2.95 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | wardengraft on the 3 m floor: a shot 85% up the DRAWN body (2.53 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | wardengraft on the 3 m floor: a shot 95% up the DRAWN body (2.83 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | wardengraft on the 3 m floor: a shot 99% up the DRAWN body (2.95 m of 2.98 m) passes over it (hit volume is 2.3 m tall) | cantor on the flat floor: a shot 85% up the DRAWN body (4.06 m of 4.78 m) passes over it (hit volume is 3.2 m tall) | cantor on the flat floor: a shot 95% up the DRAWN body (4.54 m of 4.78 m) passes over it (hit volume is 3.2 m tall) | cantor on the flat floor: a shot 99% up the DRAWN body (4.73 m of 4.78 m) passes over it (hit volume is 3.2 m tall) | cantor on the 3 m floor: a shot 85% up the DRAWN body (4.06 m of 4.78 m) passes over it (hit volume is 3.2 m tall) | cantor on the 3 m floor: a shot 95% up the DRAWN body (4.54 m of 4.78 m) passes over it (hit volume is 3.2 m tall) | cantor on the 3 m floor: a shot 99% up the DRAWN body (4.73 m of 4.78 m) passes over it (hit volume is 3.2 m tall)
+  
+  28 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/hit-volume-fair.test.js:62:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 28,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\hit-volume-fair.test.js:74:1
+✖ HEIGHT: every enemy kind's hit height equals its drawn height within 0.10 m (6.1556ms)
+  AssertionError [ERR_ASSERTION]: tollbearer: drawn 2.261 m, hit volume 1.95 m (off by -0.311) | bellhand: drawn 2.344 m, hit volume 1.9 m (off by -0.444) | sexton: drawn 2.335 m, hit volume 1.85 m (off by -0.485) | wardengraft: drawn 2.981 m, hit volume 2.3 m (off by -0.681) | cantor: drawn 4.782 m, hit volume 3.2 m (off by -1.582)
+  
+  5 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/hit-volume-fair.test.js:80:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\hit-volume-fair.test.js:83:1
+✖ WIDTH: the hit cylinder covers 85% of the drawn rig horizontally and is at most 0.15 m wider than that needs (every kind, flat and raised) (11.9504ms)
+  AssertionError [ERR_ASSERTION]: cantor on the flat floor: the hit cylinder (r 0.65 + 0.05 = 0.70, centred 0 m ahead) is narrower than the body needs (85% of the drawn vertices lie within 0.84 m of its axis) | cantor on the 3 m floor: the hit cylinder (r 0.65 + 0.05 = 0.70, centred 0 m ahead) is narrower than the body needs (85% of the drawn vertices lie within 0.84 m of its axis) | gaunt on the flat floor: the hit cylinder (r 0.34 + 0.05 = 0.39, centred 0 m ahead) is narrower than the body needs (85% of the drawn vertices lie within 0.77 m of its axis) | gaunt on the 3 m floor: the hit cylinder (r 0.34 + 0.05 = 0.39, centred 0 m ahead) is narrower than the body needs (85% of the drawn vertices lie within 0.77 m of its axis)
+  
+  4 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/hit-volume-fair.test.js:91:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 4,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\hit-volume-fair.test.js:94:1
+✖ SPLASH: a flare that strikes the head of the Cantor hurts it nearly as much as one that strikes its torso (splash is measured from the blast on the body) (3.8009ms)
+  AssertionError [ERR_ASSERTION]: flat floor: a flare at the Cantor's head (4.2 m) did 0.0 damage, against 69.1 at its torso | 3 m floor: a flare at the Cantor's head (4.2 m) did 0.0 damage, against 69.1 at its torso
+  
+  2 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/hit-volume-fair.test.js:107:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
