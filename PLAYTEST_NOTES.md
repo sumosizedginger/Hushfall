@@ -59,5 +59,11 @@ The sim hits an enemy inside a cylinder of `defs.js` height; the rig is drawn ta
 2. Visual professionalisation is Phase D of the owner's brief (the grounding condition is now met); REPAIR_PLAN.md section 6 sequences it after the defect work. It is a single slice on C1E1M02 and stops for their decision before any propagation.
 3. Do NOT start Gate 3. The Gate 2 decision belongs to the owner after they have played it.
 
+## Gate 2 decision (owner, 2026-10-05)
+**APPROVE DIRECTION with two limited revisions before Gate 3.** Their words: they played Episode 1, approve the current gameplay and visual direction, "gameplay is solid"; they do NOT want the broad C1E1M02 visual-professionalisation redesign; the only visual revision they want now is clearer, more readable outlines while preserving the existing Hushfall style.
+1. WP1: hit volumes must match the visible enemy fairly (PT-005).
+2. A focused outline-readability pass.
+WP2's floor/pickup render checks are kept as regression protection, not a major phase. WP3-WP9 are deferred unless one becomes necessary because of an actual player-facing problem. After WP1 + outlines + the regression checks I stop and give them the build; if they approve it, Gate 3 (proving a repeatable production pipeline for the remaining 59 maps) starts. Not recorded by them: which maps/difficulties they played, audio, pointer lock, par times (G2-U1/U2/U4/U5 are not closed beyond what is written in known-defects.json).
+
 ## Open question for the owner
 "You were only supposed to do gate 1 m2?": I read "APPROVE DIRECTION ... be braver" as approval of all of Gate 2 (a full episode) and built M01-M08 plus the secret map, the boss and two audit rounds. If they wanted map-by-map, the M02-only state is commit `2fd83c8`. The owner said they are not angry and wanted to playtest as we went; no rollback was requested.

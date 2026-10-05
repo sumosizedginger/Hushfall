@@ -2,6 +2,13 @@
 
 This file is self-contained: it is written for someone (or an agent) who has ONLY this repository as of the last push. Nothing here depends on a chat. Where a number is quoted, the file that holds it is named; the file wins over this page.
 
+## DECISION OF 2026-10-05 (the owner's Gate 2 decision; it overrides the order and scope below)
+**Gate 2 = APPROVE DIRECTION with two limited revisions before Gate 3.** The owner played Episode 1; gameplay is solid; the gameplay and visual direction are approved.
+- IN SCOPE now: **WP1** (hit volumes match the visible enemy fairly) and **WP-O** (a focused outline-readability pass, same Hushfall style), plus **WP2 reduced to regression protection** (floor and pickup render checks in the existing census; not a production phase) and **WP10** (one clean regeneration and a report). Then STOP and give the owner the build to play.
+- DEFERRED unless an actual player-facing problem makes one necessary: **WP3-WP9**.
+- CANCELLED: section 6 (the broad C1E1M02 visual-professionalisation pass). The owner does not want it.
+- GATE 3 (a repeatable production pipeline for the remaining 59 maps) starts only if the owner approves the revised build. Do not begin it before.
+
 ## 0. Cold start
 
 1. `git clone https://github.com/sumosizedginger/Hushfall` (branch `main`; the author's local branch is `master`, pushed as `master:main`), then `npm ci`.
@@ -44,7 +51,7 @@ Steps:
 5. Close PT-005 in `review/gate-2/known-defects.json` only when the guard passes and the census check is in the browser gate.
 Done when: guards fail on the old numbers and pass on the new; census check present; `hitVolume` in the new `validation/render-ground.json` shows no kind more than 0.10 m apart.
 
-### WP2. Prove the drawn FLOOR and PICKUPS (the two things PT-001's fix did not assert)
+### WP2 (REDUCED 2026-10-05: regression protection only). Prove the drawn FLOOR and PICKUPS (the two things PT-001's fix did not assert)
 Goal: remove the last two "hypotheses" in `PLAYTEST_NOTES.md` / PT-001: nothing asserts the drawn floor surface equals the sim floor; pickups riding a moving deck are not covered.
 Steps:
 1. Floor-mesh truth in the census: for every shipped map, cast a ray straight down at every walkable cell centre plus four offsets (and each moving sector at both ends of travel: M05 `car` low 2 / high 4, M06 `ramp` 0.5 / 4) against the level's floor meshes (`src/render/levelmesh.js`; exclude props, scenery and water) and compare the top hit with the sim's `floorAt`. Tolerance: 0.02 m on flat quads; stairs and ramps get a documented band like `src/render/ground-contract.js`.
@@ -52,37 +59,40 @@ Steps:
 3. Guard: offset a floor mesh by 0.2 m in a test (a deliberate mutation) and show the new check fails; same for a pickup.
 Done when both checks are in `npm run browsercheck`, fail on the mutation, and report 0 violations on the shipped maps. If they find a real mismatch, log it in `PLAYTEST_NOTES.md` first, then fix.
 
-### WP3. A14 explosion splash through walls (decision D2)
+### WP3 (DEFERRED 2026-10-05). A14 explosion splash through walls (decision D2)
 Facts: `src/engine/world.js` splash loop (around lines 170-184) damages, pushes and wakes every enemy within `def.splash` with no line-of-sight test. The Warden's plate design assumes splash gets through (`damageEnemy(..., { splash: true })` ignores the plate): keep that.
 Steps: (1) failing test first: a flare explodes on the far side of a wall from an enemy; today it hurts and wakes it. (2) Apply the sim's own `hasLOS` from the BLAST point to the enemy (centre, or any of feet / middle / head so corner cases do not flicker), with a small close-range exception (about 0.8 m) so a flare at a doorway still counts. Knockback and the wake rule follow the same test. (3) `npm test`, then `verify-map` for every map; the bot uses flares, so read viability and par, do not assume. (4) If a map fails its gates, stop and report; do not retune maps inside this package.
 Done when: the new test fails before and passes after; all nine maps still derive AGENT_VERIFIED; A14 text in known-defects updated with what changed.
 
-### WP4. R14 Continue prefers the auto-save (decision D3)
+### WP4 (DEFERRED 2026-10-05). R14 Continue prefers the auto-save (decision D3)
 Facts: `src/game/main.js` `loadFirstSave`: the NEWEST readable slot among `quick` and `auto` wins; `auto` is rewritten at every level entry and Retry. Recorded as "plausible, not reproduced".
 Steps: (1) reproduce in the browser check: quick-save with F5, die, Retry, Continue; record which slot loaded. (2) If it reproduces, add a pure `listSlots(store)` (testable in Node) and show a Continue chooser with map name and age per slot, the newest highlighted; keep newest-wins as the default. If it does not reproduce, close R14 as "not reproduced, rule documented" with the recorded steps.
 Done when: the reproduction (or its absence) is recorded in `PLAYTEST_NOTES.md`; if a chooser was added, a Node test covers it and the browser gate drives it.
 
-### WP5. A21 test-suite weaknesses
+### WP5 (DEFERRED 2026-10-05). A21 test-suite weaknesses
 Steps: (1) pin mutation M12 ("melee ignores the height difference", see `review/gate-2/audit/AUDIT.md`): a test where the player stands 3 m above/below a melee enemy and is not hit (and cannot hit it) must fail when the height check is removed. Find the melee height check in `src/engine/world.js` before writing the test; the Warden charge has its own `Math.abs(p.y - e.y) < 1.4`. (2) Re-run the full 22-mutation harness: `review/gate-2/audit/repro/mutation_runner.mjs` and `review/gate-2/reaudit/repro/r09_mutation_runner.mjs`. READ THEM FIRST and run them on a COPY (a separate checkout), never on your working tree. (3) Every surviving mutant gets a test or a written "equivalent mutant" justification.
 Done when: M12 is pinned and a full mutation run is recorded under `review/playtest/<date>/`.
 
-### WP6. A04 hard difficulty is fragile for a degraded player
+### WP6 (DEFERRED 2026-10-05). A04 hard difficulty is fragile for a degraded player
 Facts: `known-defects.json` A04: "M06 hard with both handicaps (aim error and 25% less ammo pickups) kills the strafing bot." The owner reports normal-difficulty play as solid; nobody human has played hard.
 Steps: reproduce with the viability tooling (`node tools/dev/dbg-route.mjs maps/C1E1M06.json routes/C1E1M06.main.route.json hard <seed>`, `HITS=1` lists every hit); find the damage source; make the smallest change (ammo or one encounter) that lets the degraded bot finish on hard; `verify-map -- C1E1M06`. If the fix needs a design change beyond a few pickups, stop and ask the owner. Lowest priority.
 
-### WP7. Hand-typed numbers (A05, R12): make drift fail loudly
+### WP7 (DEFERRED 2026-10-05). Hand-typed numbers (A05, R12): make drift fail loudly
 Facts: numbers in `TESTING.md`, `PRODUCTION_LOG.md` and `GAME_VISION.md` are typed by hand and drift every time.
 Steps: generate the evidence-derived block of `TESTING.md` (test counts, browser-check count, derived status counts, census totals) from `validation/*.json` between marker comments, and make `npm run validate` fail when the committed block differs from what the evidence says. Keep `PRODUCTION_LOG.md` prose free of counts; point to `npm run status`.
 Done when: editing a number in the block makes `validate` fail (show it), and restoring it makes `validate` pass.
 
-### WP8. Measure real-GPU cost (G2-U3, F12, A09)
+### WP8 (DEFERRED 2026-10-05). Measure real-GPU cost (G2-U3, F12, A09)
 Goal: turn "unmeasured" into numbers from the owner's machine, with no guessing about optimisation.
 Steps: (1) a dev-only perf overlay (compiled out of production like `src/game/testhook.js`; toggle with a key, `?perf=1` in dev) showing frame ms p50/p95/p99 over the last 600 frames, `renderer.info` draw calls and triangles, awake-enemy count, and the milliseconds spent in `pose()` plus the contact solver (`makeRigGrounder` in `src/render/models.js`; measured only in Node so far: 0.34 ms per frame for 45 awake rigs). A key prints one JSON line to copy. (2) Add a test that the production build contains none of it (the same `grep -c` check used for `enemyBounds`). (3) The owner plays the heaviest spots (M02 gallery, M06, the M08 boss with Gaunts) and pastes the lines into `PLAYTEST_NOTES.md`.
 Done when: the numbers are recorded as MEASURED with the hardware named. Only if p95 exceeds 16.7 ms anywhere do you optimise, and then the measured hot spot first (candidates: solve fewer vertices, crowd LOD, merge more statics).
 
-### WP9. Repository hygiene (A13, decision D4)
+### WP9 (DEFERRED 2026-10-05). Repository hygiene (A13, decision D4)
 Facts: `du -sh review` = 137 MB; `known-defects.json` A13 says the screenshot tours exist twice (per-map folders such as `review/level-*/` and the bundle copies in `review/gate-2/screenshots/`).
 Steps: (1) hash every candidate pair; only byte-identical duplicates are removable. (2) Keep the files the Gate bundle validates; stop tracking regenerable per-map tours via `.gitignore` plus a note on the command that recreates them (`node tools/dev/shoot-map.mjs <ID>`). (3) `npm run validate` must still print OK. No history rewrite, no force-push, no LFS without the owner.
+
+### WP-O (IN SCOPE 2026-10-05). Focused outline-readability pass
+Details are filled in below when the pass is done (what was measured, what changed, before/after shots).
 
 ### WP10. Regenerate evidence and report (see section 5), then STOP for the owner
 
@@ -105,7 +115,7 @@ Log the answer in `PLAYTEST_NOTES.md`, then update `known-defects.json`.
 4. Commit ONLY `validation/` and `review/`; push to `main`.
 5. Write `review/playtest/<date>/REPORT.md` (failing-before / passing-after output, the census, derived status, hashes, what is still unproven) and put the game in the owner's hands: `npm run dev`, http://localhost:5173/. Then STOP. Do not start Phase D until they have played it and said so.
 
-## 6. Phase D: one visual slice (authorised by the owner's brief once grounding is confirmed; sequence it AFTER WP10 unless the owner says otherwise)
+## 6. Phase D: one visual slice. CANCELLED 2026-10-05: the owner does not want the broad visual redesign; the text below is kept only as history and must not be executed
 
 Scope: C1E1M02 Customs Hall only. Goal: raise professional polish without destroying the approved painterly low-poly look (`ART_BIBLE.md`).
 Rules: (1) capture the BEFORE shots first, from fixed viewpoints, with `node tools/dev/shoot-map.mjs C1E1M02` (`maps-src/C1E1M02.views.json`); the AFTER shots use the SAME viewpoints; produce a side-by-side contact sheet. (2) Art only through the p5.js 2.x + p5.brush baker (`npm run bake`) and code-authored meshes; no stock or generated art. (3) Draw-call and triangle counts stay inside the recorded render budget (`validation/render-budget*`, checked by browsercheck); the census stays at 0 violations. (4) Enemy silhouettes must stay readable against the new surfaces. (5) Never write "visual quality accepted": the owner decides. (6) STOP after the slice. Nothing propagates to M03-M08 without the owner's explicit approval.
@@ -114,6 +124,6 @@ Rules: (1) capture the BEFORE shots first, from fixed viewpoints, with `node too
 
 Phase E items from the owner's brief, Gate 3 (repeatable production), Gate 4, Episode 2 and later maps (59 of 68 slots still PLANNED), any COMPLETE status, any history rewrite or force-push, deleting or committing the owner's audit notes.
 
-## 8. Recommended order at a glance
+## 8. Order of work (as revised 2026-10-05)
 
-WP1 -> WP3 -> WP5 (engine) -> WP2 -> WP4 -> WP7 -> WP8 -> WP9 -> WP6 (optional, last) -> WP10 regenerate + report -> owner plays (collect section 4 answers and the WP8 numbers) -> Phase D on their word.
+WP1 (hit volumes) -> WP-O (outline readability) -> WP2 (regression checks only) -> WP10 (one clean regeneration, report) -> STOP and hand the owner the build. Gate 3 only if they approve it. WP3-WP9 deferred; section 6 cancelled.

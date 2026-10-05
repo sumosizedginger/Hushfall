@@ -4,10 +4,10 @@ Generated 2026-10-05T05:56:37.883Z by `node tools/gate2-bundle.mjs` from reposit
 
 Evidence provenance: browser check, audio QA and all 9 map evidence files are stamped with the same commit as the code (`5b7b070`).
 
-## Decision requested
-> **Not yet asked.** The owner is playtesting Episode 1 map by map (PLAYTEST_NOTES.md). The first playtest found enemies drawn under raised floors (PT-001 / PT-002); they are FIXED IN CODE and guarded by the render-truth census below, but the owner has not yet confirmed in play that the problem is gone. Nothing beyond that is built until they do, and this decision is theirs to open when they have played enough. Human play outranks every number in this bundle.
+## Decision (recorded 2026-10-05)
+> **APPROVE DIRECTION, with two limited revisions before Gate 3.** The owner played Episode 1 and approved the gameplay ("Gameplay is solid") and the visual direction; PT-001 / PT-002 (enemies drawn under raised floors) are gone in play. Revisions required before Gate 3: (1) enemy hit volumes must match the visible enemy fairly (PT-005); (2) a focused outline-readability pass that keeps the existing Hushfall style. Not wanted: the broad C1E1M02 visual-professionalisation redesign. Deferred unless an actual player-facing problem makes them necessary: the other repair-plan items (REPAIR_PLAN.md WP3-WP9). The floor and pickup render checks stay as regression protection only.
 
-**APPROVE**, **REVISE**, or **STOP PROJECT**. Approval means the production process may move to Gate 3: turning what Episode 1 proved (the map kit, the roster, the verification loop) into a repeatable pipeline for the remaining episodes. It does not mark any map COMPLETE (that needs a recorded human review of the map), erase the known defects below, or override a failing test. Silence is neither approval nor rejection.
+After the two revisions and the regression checks the owner plays the build again; only if they approve it does Gate 3 (a repeatable production pipeline for the remaining 59 maps) begin. This does not mark any map COMPLETE (that needs a recorded human review of the map), erase the known defects below, or override a failing test. Human play outranks every number in this bundle.
 
 ## Two ways to look
 - **Screenshots** (`screenshots/<map>/`, 169 images incl. a top-down plan per map): appearance only. Taken with the title card and transmissions cleared, from positions a player can stand in.
