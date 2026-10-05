@@ -19,6 +19,22 @@ export function bas(params) { const k = 'B' + keyOf(params); let m = matCache.ge
 const ease = (t) => t * t * (3 - 2 * t);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
+/** WORLD vs POSE (contract: ground-contract.js). The view places `root` (x, z, yaw and y = the sim's authoritative ground); a model animates inside
+ *  `rig`, a child of root: scale, topple, joints. `ground()` runs at the end of every pose and lifts the rig by the depth of its lowest rendered vertex
+ *  below root's plane, so no animation (a body toppling backwards, a Gaunt crouching, a Cantor at 2x scale) can bury the mesh. It only ever lifts. */
+export function makeRigGrounder(root, rig, maxLift = 3) {
+  const parts = []; rig.traverse((o) => { const pos = o.isMesh && o.geometry?.attributes?.position; if (pos) parts.push({ o, a: pos.array, n: pos.count, s: pos.itemSize }); });
+  return function ground() {
+    rig.position.y = 0; root.updateMatrixWorld(true);
+    const base = root.matrixWorld.elements[13]; let low = Infinity;
+    for (const { o, a, n, s } of parts) {
+      const e = o.matrixWorld.elements, m1 = e[1], m5 = e[5], m9 = e[9], m13 = e[13];
+      for (let i = 0, k = 0; i < n; i++, k += s) { const y = m1 * a[k] + m5 * a[k + 1] + m9 * a[k + 2] + m13; if (y < low) low = y; }
+    }
+    rig.position.y = low < base ? Math.min(maxLift, base - low) : 0;
+  };
+}
+
 // ---------------------------------------------------------------- Tollbearer
 /** variant 'bellhand': same rig, dark coat and a bronze hand-bell on the striking arm (its tolled shot is the ranged attack). */
 export function makeTollbearer(atlasTex, variant = 'tollbearer') {
@@ -26,8 +42,8 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
-  const root = new THREE.Group();
-  const hips = new THREE.Group(); hips.position.y = 0.96; root.add(hips);
+  const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);        // root = world placement (the view owns it); rig = everything a pose may change
+  const hips = new THREE.Group(); hips.position.y = 0.96; rig.add(hips);
 
   const legs = [-1, 1].map((s) => {
     const thigh = new THREE.Group(); thigh.position.set(s * 0.11, 0, 0); hips.add(thigh);
@@ -81,14 +97,14 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
 
   // ---- Gate 2 variants: the same rig, different silhouettes (this is a 3D game: a new enemy is a new shape, not a recoloured sprite) ----
   if (variant === 'sexton') {                                                                    // a stooped bellman with a tall staff: bell on top, teal in the bell
-    root.scale.set(0.94, 1.0, 0.94);
+    rig.scale.set(0.94, 1.0, 0.94);
     const hood = M(new THREE.ConeGeometry(0.2, 0.36, 7), 1); hood.position.set(0, 0.33, -0.02); head.add(hood);
     const staff = M(new THREE.CylinderGeometry(0.018, 0.022, 2.0, 5), 5); staff.position.set(0.02, -0.2, 0.05); arms[1].el.add(staff);
     const sbell = M(new THREE.CylinderGeometry(0.03, 0.14, 0.22, 8), 6); sbell.position.y = 1.0; staff.add(sbell);
     const sglow = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 4), glowMat); sglow.position.y = 0.9; staff.add(sglow);
     const censer = M(new THREE.SphereGeometry(0.07, 6, 4), 6); censer.position.set(-0.28, 0.02, 0.16); spine.add(censer);
   } else if (variant === 'warden') {                                                             // a converted Tide-Warden in plate: broad, slow, faceless
-    root.scale.setScalar(1.28);
+    rig.scale.setScalar(1.28);
     for (const s of [-1, 1]) { const pd = M(new THREE.SphereGeometry(0.17, 7, 5), 6); pd.scale.set(1.25, 0.8, 1.1); pd.position.set(s * 0.34, 0.74, 0); spine.add(pd); }
     const chest = M(new THREE.BoxGeometry(0.42, 0.44, 0.1), 5); chest.position.set(0, 0.5, 0.2); spine.add(chest);
     const rim = M(new THREE.BoxGeometry(0.44, 0.06, 0.12), 6); rim.position.set(0, 0.74, 0.2); spine.add(rim);
@@ -97,7 +113,7 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
     const shield = M(new THREE.BoxGeometry(0.07, 0.56, 0.36), 5); shield.position.set(-0.07, -0.28, 0.06); arms[0].el.add(shield);
     const shieldRim = M(new THREE.BoxGeometry(0.09, 0.6, 0.06), 6); shieldRim.position.set(-0.07, -0.28, 0.24); arms[0].el.add(shieldRim);
   } else if (variant === 'cantor') {                                                             // the Cantor: robed, crowned in bells, a great bell on its chest
-    root.scale.setScalar(2.0);
+    rig.scale.setScalar(2.0);
     const skirt = M(new THREE.CylinderGeometry(0.34, 0.66, 0.95, 10, 1, true), 1); skirt.position.set(0, -0.15, 0); spine.add(skirt);
     for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2, cb = M(new THREE.ConeGeometry(0.06, 0.18, 6), 6); cb.position.set(Math.cos(a) * 0.22, 0.34, Math.sin(a) * 0.22); cb.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5); head.add(cb); }
     const gb = M(new THREE.CylinderGeometry(0.08, 0.3, 0.52, 10), 6); gb.position.set(0, 0.42, 0.24); spine.add(gb);
@@ -107,8 +123,9 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   }
 
   root.traverse((o) => { if (o.isMesh) o.frustumCulled = true; });
+  const ground = makeRigGrounder(root, rig);
 
-  /** p: {t, walk 0..1, phase, attack 0..1 (0 = not attacking), dead 0..1, flash 0..1} */
+  /** p: {t, walk 0..1, phase, attack 0..1 (0 = not attacking), dead 0..1, flash 0..1}. Writes the RIG only: root is the view's. */
   function pose(p) {
     const w = p.walk, ph = p.phase, t = p.t;
     const swing = Math.sin(ph) * 0.65 * w;
@@ -133,13 +150,13 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
     } else jawPivot.rotation.x = 0.15 + 0.1 * Math.sin(t * 2);
     head.rotation.x = 0.35 + Math.sin(t * 0.8) * 0.04; head.rotation.z = Math.sin(t * 0.6) * 0.05;
     glow.scale.setScalar(bellPulse);
-    // death: topple backwards about the feet
+    // death: topple backwards about the feet, then rest ON the floor (ground() lifts the rig by however deep the toppled body sank)
     const d = ease(clamp01(p.dead));
-    root.rotation.x = -d * 1.5 + (p.dead > 0.85 ? Math.sin((p.dead - 0.85) * 40) * 0.02 : 0);
-    root.position.y = d * 0.12;
+    rig.rotation.x = -d * 1.5 + (p.dead > 0.85 ? Math.sin((p.dead - 0.85) * 40) * 0.02 : 0);
+    ground();
     mat.emissive.setRGB(0.7 * p.flash, 0.55 * p.flash, 0.4 * p.flash);
   }
-  return { root, pose, mat };
+  return { root, rig, pose, mat };
 }
 
 // ------------------------------------------------------------- Flare cannon
@@ -280,8 +297,8 @@ export function makeGaunt(atlasTex) {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
   const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
-  const root = new THREE.Group();
-  const hips = new THREE.Group(); hips.position.y = 0.8; root.add(hips);
+  const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);        // root = world placement (the view owns it); rig = everything a pose may change
+  const hips = new THREE.Group(); hips.position.y = 0.8; rig.add(hips);
   const legs = [-1, 1].map((s) => {
     const thigh = new THREE.Group(); thigh.position.set(s * 0.09, 0, 0); hips.add(thigh);
     const tm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.42, 6), 2); tm.position.y = -0.21; thigh.add(tm);
@@ -309,7 +326,8 @@ export function makeGaunt(atlasTex) {
     return { sh, el };
   });
 
-  /** p: {t, walk, phase, attack 0..1, lunge -1..1 (negative = crouch, 1 = dash), dead 0..1, flash} */
+  const ground = makeRigGrounder(root, rig);
+  /** p: {t, walk, phase, attack 0..1, lunge -1..1 (negative = crouch, 1 = dash), dead 0..1, flash}. Writes the RIG only: root is the view's. */
   function pose(p) {
     const w = p.walk, ph = p.phase, t = p.t, cr = Math.max(0, -p.lunge), ex = Math.max(0, p.lunge);
     const swing = Math.sin(ph) * 1.0 * w;
@@ -330,10 +348,11 @@ export function makeGaunt(atlasTex) {
     head.rotation.x = -0.6 + Math.sin(t * 2.4) * 0.05; head.rotation.z = Math.sin(t * 1.3) * 0.08;
     jawPivot.rotation.x = 0.35 + Math.max(cr, ex) * 0.6 + (a > 0 ? 0.5 : 0) + Math.sin(t * 5) * 0.05;
     const d = ease(clamp01(p.dead));
-    root.rotation.z = d * 1.5; root.position.y = d * 0.22;
+    rig.rotation.z = d * 1.5;
+    ground();                                                                       // a crouch, a leap or the death roll must never bury a claw or a shoulder
     mat.emissive.setRGB(0.7 * p.flash, 0.55 * p.flash, 0.4 * p.flash);
   }
-  return { root, pose, mat };
+  return { root, rig, pose, mat };
 }
 
 // ------------------------------------------------------- Tidewarden scattergun

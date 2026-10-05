@@ -5,6 +5,7 @@ import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER } from '../engine/defs.js';
+import { enemyBounds, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
 
@@ -51,6 +52,15 @@ export function installTestHook(app) {
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
+    /** render truth: per enemy, the sim's x/y/z + ground (groundAt) next to the world-space bounds and root position actually drawn (see GameView.enemyBounds) */
+    enemyBounds() { return g.view && g.world ? enemyBounds(g.view, g.world) : []; },
+    /** feed events to the view as the game does (impact / explode make debris) and read the debris back */
+    emitView(events) { g.view.handleEvents(events); },
+    debrisProbe() { return g.view && g.world ? debrisProbe(g.view, g.world) : []; },
+    /** where the Cantor's shield and the ring beams are drawn (world space) */
+    encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
+    /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */
+    setup_sectorTo(id, pos) { const s = g.world.sectors.find((q) => q.id === id), def = g.world.map.sectors.find((q) => q.id === id); s.target = pos === 'high' ? def.high : def.low; },
     setup_ambient(v) { g.world.ambient = v; if (g.view) g.view.ambient = v; },
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */

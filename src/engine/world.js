@@ -390,10 +390,10 @@ function updatePulses(w, dt) {
 
 function updateEnemy(w, e, diff, dt) {
   const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4);
+  e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; return; }          // staggered: it does nothing
   if (def.node) return;
-  e.y = groundAt(w, e.x, e.z, def.radius);
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
