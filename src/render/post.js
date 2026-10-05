@@ -9,7 +9,7 @@ const frag = /* glsl */`
 precision highp float;
 uniform sampler2D tColor, tDepth, tPaper;
 uniform vec2 uRes;
-uniform float uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uOutline, uPaint, uDamage;
+uniform float uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uOutline, uPaint, uDamage, uDebug;
 varying vec2 vUv;
 
 float invZ(vec2 uv) {
@@ -41,9 +41,14 @@ void main() {
     float l = invZ(vUv - vec2(px.x, 0.0)), r = invZ(vUv + vec2(px.x, 0.0));
     float u = invZ(vUv + vec2(0.0, px.y)), d = invZ(vUv - vec2(0.0, px.y));
     float e = (abs(l + r - 2.0 * c) + abs(u + d - 2.0 * c)) / max(c, 1e-4);
-    float edge = smoothstep(uEdgeLo, uEdgeHi, e);
-    edge *= clamp(0.45 + p1 * 1.1, 0.0, 1.0);                          // hand-inked, slightly broken line
+    float edge = smoothstep(uEdgeLo, uEdgeHi, e);                       // silhouettes: a step in depth, relative to how far away it is
+    // creases: where two planes meet (floor and wall, wall and ceiling, a prop's foot on the floor) 1/z is continuous and only its SLOPE changes, so the step test above never sees them.
+    // At such a corner the absolute second difference is a roughly constant ~1/(eye height x focal length) at ANY distance, so one absolute threshold inks every corner alike.
+    float d2 = max(abs(l + r - 2.0 * c), abs(u + d - 2.0 * c));
+    edge = max(edge, smoothstep(uCreaseLo, uCreaseHi, d2));
+    edge *= clamp(0.6 + p1 * 0.9, 0.0, 1.0);                           // hand-inked, slightly broken line (less broken than before: the line is read, not lost in the paper tooth)
     col = mix(col, vec3(0.035, 0.04, 0.06), edge * 0.94);
+    if (uDebug > 0.5) { gl_FragColor = vec4(vec3(edge), 1.0); return; }          // dev measurement only: the ink mask (tools/dev/shoot-outlines.mjs)
   }
 
   vec2 q = vUv - 0.5;
@@ -52,6 +57,8 @@ void main() {
   gl_FragColor = vec4(col, 1.0);
 }`;
 
+const CREASE_LO = 0.0007, CREASE_HI = 0.0014;       // 1/z units per pixel at 480 px wide: about 40% / 80% of a floor-wall corner seen from eye height
+
 export class PostPass {
   constructor(renderer, paperTex, near, far) {
     this.renderer = renderer;
@@ -59,8 +66,8 @@ export class PostPass {
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.uniforms = {
       tColor: { value: null }, tDepth: { value: null }, tPaper: { value: paperTex }, uRes: { value: new THREE.Vector2(1, 1) },
-      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.1 }, uEdgeHi: { value: 0.3 },
-      uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 },
+      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 },
+      uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 },
     };
     this.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: this.uniforms, vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false })));
     this.rt = null;
@@ -70,6 +77,7 @@ export class PostPass {
     const depth = new THREE.DepthTexture(w, h); depth.type = THREE.UnsignedIntType; depth.minFilter = depth.magFilter = THREE.NearestFilter;
     this.rt = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthTexture: depth, samples: 0 });
     this.uniforms.tColor.value = this.rt.texture; this.uniforms.tDepth.value = depth; this.uniforms.uRes.value.set(w, h);
+    this.uniforms.uCreaseLo.value = CREASE_LO * 480 / w; this.uniforms.uCreaseHi.value = CREASE_HI * 480 / w;      // a corner's slope change in 1/z per pixel shrinks with the internal resolution
   }
   dispose() {
     this.rt?.dispose(); this.rt?.depthTexture?.dispose(); this.rt = null;

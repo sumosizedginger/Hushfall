@@ -6,6 +6,7 @@ import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch } from './script.js';
+import { insideHit, insideFuse } from './hitvolume.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -173,7 +174,7 @@ function explode(w, x, y, z, ownerIsPlayer, def) {
   emit(w, 'explode', { x, y, z }); noise(w, x, z, NOISE.explosion);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
-    const d = Math.hypot(x - e.x, y - (e.y + 1.0), z - e.z);
+    const body = ENEMIES[e.kind].height, d = Math.hypot(x - e.x, y - (e.y + Math.min(Math.max(y - e.y, 1.0), Math.max(1.0, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
       const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct, { splash: true });
       const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
@@ -196,7 +197,7 @@ function fireHitscan(w, def, cone) {
       if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
       if (stop) break;
-      for (const e of w.enemies) { const d = ENEMIES[e.kind]; if (e.state !== 'dead' && Math.hypot(x - e.x, z - e.z) < d.radius + 0.05 && y > e.y && y < e.y + d.height) { target = e; break; } }
+      for (const e of w.enemies) if (e.state !== 'dead' && insideHit(e, x, y, z, 0.05)) { target = e; break; }
     }
     if (target) {
       const fall = dist <= def.falloffStart ? 1 : 1 - (1 - def.falloffMin) * Math.min(1, (dist - def.falloffStart) / (def.range - def.falloffStart));
@@ -519,7 +520,7 @@ export function step(w, cmd) {
       const cx = Math.floor(q.x / map.cell), cz = Math.floor(q.z / map.cell);
       if (q.y < floorAt(w, q.x, q.z) + 0.05 || q.y > ceilingAt(w, q.x, q.z) || cellSolid(w, cx, cz)) hit = true;
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < floorAt(w, pr.x, pr.z) + 1.3) hit = true;
-      for (const e of w.enemies) if (e.state !== 'dead' && Math.hypot(q.x - e.x, q.z - e.z) < 0.5 && q.y > e.y && q.y < e.y + ENEMIES[e.kind].height) hit = true;
+      for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) hit = true;
     }
     if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def); }
   }

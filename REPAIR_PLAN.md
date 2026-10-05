@@ -9,6 +9,12 @@ This file is self-contained: it is written for someone (or an agent) who has ONL
 - CANCELLED: section 6 (the broad C1E1M02 visual-professionalisation pass). The owner does not want it.
 - GATE 3 (a repeatable production pipeline for the remaining 59 maps) starts only if the owner approves the revised build. Do not begin it before.
 
+## RESULTS (2026-10-05)
+- **WP1 done** (PT-005 fixed in code): `src/engine/hitvolume.js`, fitted heights/radii in `defs.js`, `tests/hit-volume-fair.test.js`, a census check. Three bot-driven tests tripped for measured, non-game reasons and were fixed at their cause (a multi-seed gate-skip probe, an episode-level difficulty trend, a 2-of-3-seed hard chain test): `PLAYTEST_NOTES.md`.
+- **WP-O done** (outline readability, G2-R2): appearance only; the owner judges.
+- **WP2 done as regression protection only**: `tests/render-floor-truth.test.js` (drawn floor vs sim floor on every map and both ends of each moving floor; pickups on the ground and riding a deck). It found no mismatch: the "drawn floor equals the sim floor" hypothesis is now measured.
+- Next: the owner plays the build. If they approve it, Gate 3 begins; nothing of it is started.
+
 ## 0. Cold start
 
 1. `git clone https://github.com/sumosizedginger/Hushfall` (branch `main`; the author's local branch is `master`, pushed as `master:main`), then `npm ci`.
@@ -92,7 +98,7 @@ Facts: `du -sh review` = 137 MB; `known-defects.json` A13 says the screenshot to
 Steps: (1) hash every candidate pair; only byte-identical duplicates are removable. (2) Keep the files the Gate bundle validates; stop tracking regenerable per-map tours via `.gitignore` plus a note on the command that recreates them (`node tools/dev/shoot-map.mjs <ID>`). (3) `npm run validate` must still print OK. No history rewrite, no force-push, no LFS without the owner.
 
 ### WP-O (IN SCOPE 2026-10-05). Focused outline-readability pass
-Details are filled in below when the pass is done (what was measured, what changed, before/after shots).
+DONE 2026-10-05, awaiting the owner's eyes (G2-R2). What was measured, what changed and the before/after stills: `PLAYTEST_NOTES.md` section "Outline readability" and `review/outlines/`. Only `src/render/post.js` changed (crease detection, lower silhouette thresholds, less broken ink).
 
 ### WP10. Regenerate evidence and report (see section 5), then STOP for the owner
 

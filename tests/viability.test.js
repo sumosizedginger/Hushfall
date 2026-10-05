@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import { parseMap } from '../src/engine/mapformat.js';
 import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { runRoute } from '../src/engine/harness.js';
-import { viabilityChecks, gateSkip, threatCount, ammoCapacityBy, firedBy } from '../src/engine/viability.js';
+import { viabilityChecks, gateSkip, threatCount, ammoCapacityBy, firedBy, episodeDifficultyChecks } from '../src/engine/viability.js';
 import { hashWorld } from '../src/engine/world.js';
 
 const shipped = (id) => JSON.parse(fs.readFileSync(new URL(`../maps/${id}.json`, import.meta.url), 'utf8'));
@@ -40,6 +40,17 @@ test('gateSkip: an invulnerable bot is used, so dying on the way cannot pass a g
   assert.ok(gateSkip(parseMap(tiny)).some((g) => g.result === 'complete'), 'and its ungated exit is caught by the probe (the old probe returned nothing for it)');
   assert.deepEqual(gateSkip(parseMap({ ...tiny, triggers: [] })), [], 'no enemies and no spawns: nothing to gate');
   for (const id of ['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08']) assert.ok(gateSkip(parseMap(shipped(id))).every((g) => g.result !== 'complete' && g.result !== 'dead'), id + ': every main exit is gated');
+});
+
+test('damage vs difficulty: per map only easy < normal and easy <= hard; the hard-vs-normal trend is judged over the episode (a map where one hit flips the ratio, like M06, does not fail; an episode where difficulty does nothing does)', () => {
+  let v = okEvidence(); v.hard.fighter.meanDamage = 20; v.normal.fighter.meanDamage = 82; v.easy.fighter.meanDamage = 10;
+  assert.ok(!failing(v).some((n) => /damage rises with difficulty/.test(n)), 'hard well below normal on ONE map is no longer a per-map failure (M06: 36 vs 82 after a fairer Gaunt hit volume)');
+  v = okEvidence(); v.hard.fighter.meanDamage = 20; v.easy.fighter.meanDamage = 30; assert.ok(failing(v).some((n) => /damage rises with difficulty/.test(n)), 'but hard easier than easy still fails the map');
+  const m06Shape = [{ id: 'a', easy: 8, normal: 14, hard: 60 }, { id: 'b', easy: 36, normal: 82, hard: 36 }, { id: 'c', easy: 12, normal: 35, hard: 70 }];      // 56 / 131 / 166: hard well above normal over the episode although map b alone is inverted
+  assert.ok(episodeDifficultyChecks(m06Shape).every((c) => c.ok), 'the trend holds over the episode although one map is inverted');
+  assert.ok(episodeDifficultyChecks(m06Shape.map((r) => ({ ...r, hard: r.easy }))).some((c) => !c.ok), 'an episode where hard hurts no more than easy fails');
+  assert.ok(episodeDifficultyChecks(m06Shape.map((r) => ({ ...r, hard: Math.round(r.normal * 0.7) }))).some((c) => !c.ok), 'an episode where hard hurts less than normal fails');
+  assert.ok(episodeDifficultyChecks([m06Shape[0]]).some((c) => !c.ok), 'one map is not an episode');
 });
 
 test('ammo bookkeeping: capacity is counted per type from the entry loadout and every ammo/weapon pickup; fired rounds are counted per type from the fire events', () => {

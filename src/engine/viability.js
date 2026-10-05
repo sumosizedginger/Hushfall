@@ -51,13 +51,18 @@ export function evaluateViability(map, mainRoute, { seed = 1 } = {}) {
  * (reach.js treats moving floors, remote doors and locks optimistically), and a lock that silently does not lock (two exits on one cell) passed every other gate once.
  * Maps with no enemies and no scripted spawns (safe rooms) have nothing to gate. A timeout or a stuck bot is not proof of gating: only a run that ends at a locked exit, or with no path, is (the bot is invulnerable and given 5 simulated minutes). Secret exits are meant to be found and are not probed.
  */
-export function gateSkip(map) {
+export function gateSkip(map, { seeds = [1, 2, 3, 4] } = {}) {
   if (threatCount(map) === 0) return [];
   return map.exits.filter((x) => x.dest !== 'secret').map((x) => {
     // an invulnerable bot: dying on the way must not read as "gated" (audit R03). Only finishing the level counts as skipping the gate.
-    const cold = map.entryLoadout ?? null, w = createWorld(map, { seed: 1, difficulty: 'normal', carry: cold ? { ...cold, hp: 1e9 } : { hp: 1e9, armor: 0, ammo: { ...PLAYER.startAmmo }, weapons: ['flare'] } });
-    const r = runRoute(map, [{ op: 'goto', at: [Math.floor(x.at[0]), Math.floor(x.at[1])] }, { op: 'wait', seconds: 3 }], { world: w, seed: 1, difficulty: 'normal', maxTicks: 60 * 300 });
-    return { exit: x.id, result: r.result, failure: r.failure || null, ticks: r.ticks };
+    // Several seeds: whether an invulnerable bot with the authored loadout wins a 40-enemy swarm, or stalls in it ("stuck in combat"), is chaotic (M06 with its ramp lowered: 4 of 8 seeds
+    // finished before the fairer hit volumes of 2026-10-05, 1 of 8 after). One seed asserted luck; a gate is skippable if ANY of the seeds gets through it.
+    const cold = map.entryLoadout ?? null, runs = seeds.map((seed) => {
+      const w = createWorld(map, { seed, difficulty: 'normal', carry: cold ? { ...cold, hp: 1e9 } : { hp: 1e9, armor: 0, ammo: { ...PLAYER.startAmmo }, weapons: ['flare'] } });
+      const r = runRoute(map, [{ op: 'goto', at: [Math.floor(x.at[0]), Math.floor(x.at[1])] }, { op: 'wait', seconds: 3 }], { world: w, seed, difficulty: 'normal', maxTicks: 60 * 300 });
+      return { seed, result: r.result, failure: r.failure || null, ticks: r.ticks };
+    }), r = runs.find((q) => q.result === 'complete') ?? runs[0];
+    return { exit: x.id, result: r.result, failure: r.failure, ticks: r.ticks, seeds: runs.map((q) => q.seed + ':' + q.result) };
   });
 }
 
@@ -75,7 +80,8 @@ export function viabilityChecks(v, par, { safe = false } = {}) {
   // one seed is an anecdote: the three seeds already simulated must mostly finish (all of them on easy and normal, two of three on hard)
   for (const d of DIFFS) if (v[d].fighter.seeds) { const need = d === 'hard' ? 2 : v[d].fighter.seeds; c.push({ name: `viability ${d}: the perfect fighter completes on ${need} of ${v[d].fighter.seeds} seeds (${v[d].fighter.completedSeeds} did)`, ok: v[d].fighter.completedSeeds >= need, detail: '' }); }
   c.push({ name: 'viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)', ok: v.normal.fighter.meanDamage >= 10 && v.hard.fighter.meanDamage >= 25, detail: JSON.stringify({ normal: v.normal.fighter.meanDamage, hard: v.hard.fighter.meanDamage }) });
-  c.push({ name: 'viability: damage rises with difficulty (easy < normal, easy < hard, hard >= 60% of normal: a deterministic bot takes a handful of hits, so per-map hit counts jitter; the episode totals are reported by the bundle)', ok: v.easy.fighter.meanDamage < v.normal.fighter.meanDamage && v.easy.fighter.meanDamage < v.hard.fighter.meanDamage && v.hard.fighter.meanDamage >= 0.6 * v.normal.fighter.meanDamage, detail: [v.easy, v.normal, v.hard].map((x) => x.fighter.meanDamage).join(' < ') + ' (mean of 3 seeds)' });
+  // per map only what is stable. A deterministic bot takes 2-6 hits on a map, so ONE hit moves a single map's hard/normal ratio by a quarter (M06 measured 54 vs 70, then 36 vs 82 after a fairer Gaunt hit volume, while the episode total stayed 182 < 418 < 651): the hard-vs-normal trend is judged over the whole episode by episodeDifficultyChecks (the Gate bundle).
+  c.push({ name: 'viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)', ok: v.easy.fighter.meanDamage < v.normal.fighter.meanDamage && v.easy.fighter.meanDamage <= v.hard.fighter.meanDamage, detail: [v.easy, v.normal, v.hard].map((x) => x.fighter.meanDamage).join(' / ') + ' (mean of 3 seeds)' });
   if (par) { const ratio = par / v.normal.fighter.seconds; c.push({ name: `par time is 2x-8x the bot's time (${ratio.toFixed(1)}x; placeholder until a human plays it)`, ok: ratio >= 2 && ratio <= 8, detail: '' }); }
   return c;
 }
@@ -111,3 +117,9 @@ export function qualityChecks(map, q, facts, botSeconds) {
 }
 
 export { analyseReach };
+
+/** The damage-vs-difficulty relation, judged over a whole episode where it is stable. rows: [{ id, easy, normal, hard }] = the perfect fighter's mean damage per map (maps with no enemies left out). */
+export function episodeDifficultyChecks(rows) {
+  const sum = (k) => rows.reduce((a, r) => a + (r[k] ?? 0), 0), e = sum('easy'), n = sum('normal'), h = sum('hard');
+  return [{ name: `episode: damage rises with difficulty (summed over ${rows.length} maps: easy < normal, easy < hard, hard >= normal)`, ok: rows.length >= 2 && e < n && e < h && h >= n, detail: `${e} / ${n} / ${h}` }];
+}

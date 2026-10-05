@@ -69,6 +69,7 @@ export function installTestHook(app) {
     setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
+    setup_postDebug(on) { g.view.post.uniforms.uDebug.value = on ? 1 : 0; },                                            // the ink mask instead of the picture (tools/dev/shoot-outlines.mjs)
     // -- diagnostics --
     perf() { const t = [...g.frameTimes].sort((a, b) => a - b); const n = t.length; return { frames: n, avgMs: n ? t.reduce((a, b) => a + b, 0) / n : 0, p95Ms: t[Math.floor(n * 0.95)] ?? 0, worstMs: t[n - 1] ?? 0 }; },
     /** render ONE full frame (world + weapon + post) and report its true draw-call/triangle totals (info auto-reset is off for the duration) */
