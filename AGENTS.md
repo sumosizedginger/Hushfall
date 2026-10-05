@@ -52,7 +52,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 
 ## Persistent files
 `design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
-`PLAYTEST_NOTES.md` human playtest reports with causes, guards and the next work list (read before any code work) · `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
+`REPAIR_PLAN.md` the current work plan (self-contained, in order) · `PLAYTEST_NOTES.md` human playtest reports with causes, guards and the next work list (read before any code work) · `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
 
 ## p5.brush facts learned (see ART_BIBLE.md)
 - ESM instance mode: call `brush.instance(p)` before setup AND `brush.seed(n)` + `brush.noiseSeed(n)` explicitly; the `p.randomSeed` hook does not reach brush.
