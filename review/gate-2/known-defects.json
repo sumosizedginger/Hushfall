@@ -1,5 +1,5 @@
 {
-  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the first independent adversarial audit (review/gate-2/audit/, code f79bf59); R01-R15 are the findings of the second, focused audit of the repairs (review/gate-2/reaudit/, code 07f456e); G2-U* are the author's own unverified/open items. \"fixed\" means fixed in mechanism AND guarded by a test or gate that was shown to fail on the unrepaired code.",
+  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the first independent adversarial audit (review/gate-2/audit/, code f79bf59); R01-R15 are the findings of the second, focused audit of the repairs (review/gate-2/reaudit/, code 07f456e); G2-U* are the author's own unverified/open items. \"fixed\" means fixed in mechanism AND guarded by a test or gate that was shown to fail on the unrepaired code. 2026-10-05: the owner approved Gate 2 as APPROVE DIRECTION with two limited revisions (hit volumes match the visible enemy, PT-005; a focused outline-readability pass). Items A04, A09, A13, A14, R14, A21 (M12) and the real-GPU measurement are DEFERRED by that decision unless an actual player-facing problem makes one necessary (REPAIR_PLAN.md WP3-WP9).",
   "auditedCommit": "f79bf59",
   "defects": [
     {
@@ -274,9 +274,9 @@
     {
       "id": "G2-U1",
       "severity": "MAJOR",
-      "status": "unverified",
-      "title": "Nobody has played any of the nine maps",
-      "remaining": "Difficulty, ammunition economy, encounter pacing, the Warden and Cantor fights and every par time were tuned against a bot (a stationary perfect shot, plus a strafing variant under handicaps). Needs a hand playthrough and a recorded review per map (only that can make a map COMPLETE)."
+      "status": "partially-fixed",
+      "title": "Hand play of the nine maps: the owner played Episode 1 (2026-10-05) and reports solid gameplay; per-map and per-difficulty detail was not recorded",
+      "remaining": "The owner (2026-10-05): played Episode 1, \"gameplay is solid\", approved the gameplay and visual direction. Not recorded: which of the nine maps, which difficulties, par times, the Cantor fight. Hard difficulty and every par time were still tuned against a bot only."
     },
     {
       "id": "G2-U2",
