@@ -87,7 +87,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     log(`census ${id}: ${entry.enemies} enemies (${rs.filter((r) => r.ground > RAISED).length} raised) asleep ${entry.asleep.bad.length} bad / awake ${entry.awake.bad.length} / poses ${entry.matrix.n} rows ${entry.matrix.bad.length} bad / corpses ${entry.corpses.bad.length} bad`);
 
     // screenshots of the encounters the owner reported: the highest floor with enemies, awake and chasing, then the corpse it leaves
-    if (shot && ['C1E1M01', 'C1E1M02', 'C1E1M04', 'C1E1M05', 'C1E1M08'].includes(id)) {
+    if (shot && entry.enemies > 0) {
       await T(`t.newGame('normal', 3, { mapId: '${id}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)');
       const cand = (await rows()).filter((r) => r.kind !== 'bellnode' && (id !== 'C1E1M08' || r.kind === 'wardengraft' || r.kind === 'sexton')).sort((x, y) => y.ground - x.ground || x.id - y.id);
       for (const c of cand) { const vp = vantage(m, c.sim.x, c.sim.z, id === 'C1E1M01' ? 6 : 4.5); if (!vp) continue;
