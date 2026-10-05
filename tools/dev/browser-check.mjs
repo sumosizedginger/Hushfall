@@ -241,7 +241,7 @@ try {
   await T("t.newGame('normal', 3, { mapId: 'C1E1M05' })"); await T('t.clearOverlays()');
   { const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare', 'scattergun', 'rivet'], ammo: { flare: 8, shell: 6, rivet: 0 } })"); await T(`t.setup_addPickup('ammo_rivet', ${p.x}, ${p.z})`); await T('t.tick(3)');
     const st = await T('t.state()'), toast = await text('toasts');
-    check('picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets)', toast.includes('Rivets (+40)') && st.player.ammo.rivet === 40, `toast: "${toast.replace(/s+/g, ' ').trim()}", rivets ${st.player.ammo.rivet}`); }
+    check('picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets)', toast.includes('Rivets (+40)') && st.player.ammo.rivet === 40, `toast: "${toast.replace(/\s+/g, ' ').trim()}", rivets ${st.player.ammo.rivet}`); }
   // debris lands on the terrain under it: an explosion over the M02 gallery (floor 3 m) must not let a chip fall more than a frame's travel below that floor
   await T("t.newGame('normal', 3, { mapId: 'C1E1M02' })"); await T("t.emitView([{ type: 'explode', x: 52.4, y: 3.9, z: 13.6 }, { type: 'impact', x: 52.4, y: 3.6, z: 13.6 }])");
   { let minRel = Infinity, seen = 0; for (let i = 0; i < 40; i++) { await T('t.render(0.016)'); for (const p of await T('t.debrisProbe()')) if (p.floor != null) { seen++; minRel = Math.min(minRel, p.y - p.floor); } }
