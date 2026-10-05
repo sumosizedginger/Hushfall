@@ -344,18 +344,18 @@
     {
       "id": "PT-001",
       "severity": "MAJOR",
-      "status": "partially-fixed",
+      "status": "fixed",
       "title": "Playtest 2026-09-30: awake enemies drawn UNDER raised floors (C1E1M02 gallery, 3 m) and corpses sunk into the floor",
       "how": "Root cause: pose() overwrote the world root height after the view placed it (also: death/crouch buried the mesh, scale on the root mis-placed sleeping Wardens/Sextons/Cantor, dead/stunned enemies ignored moving floors). Fixed by splitting world root from pose rig + a contact solver; guarded by tests/rig-grounding, enemy-hit-volume, sim-sector-ground and the render-truth census in the browser gate (2/8 census checks passed on the old code, 0 violations now).",
-      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY. Not asserted by any check: that the drawn floor surface equals the sim floor; pickups on moving decks."
+      "remaining": "CONFIRMED BY THE OWNER IN PLAY 2026-10-05 (\"my issues were resolved and gameplay is solid\"). Still not asserted by any check: that the drawn floor surface equals the sim floor; pickups on moving decks (REPAIR_PLAN.md WP2)."
     },
     {
       "id": "PT-002",
       "severity": "MAJOR",
-      "status": "partially-fixed",
+      "status": "fixed",
       "title": "Playtest 2026-09-30: same symptom in C1E1M04 (the raised shop, 2 m)",
       "how": "Same causes and guards as PT-001.",
-      "remaining": "Awaiting the owner confirming in play."
+      "remaining": "CONFIRMED BY THE OWNER IN PLAY 2026-10-05."
     },
     {
       "id": "PT-003",
@@ -377,7 +377,7 @@
       "severity": "MINOR",
       "status": "open",
       "title": "Rendered bodies are taller than their sim hit cylinders: Cantor 4.79 m drawn vs 3.2 m hit, Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95 (Gaunt and Bell node match)",
-      "remaining": "Measured (validation/render-ground.json hitVolume), deliberately NOT changed: it is gameplay tuning. Shots at the visible torso register on every kind (tests/enemy-hit-volume); shots at the head of the tall kinds pass over. Owner decision: widen the hit volumes or accept torso-only hits."
+      "remaining": "DECIDED by the owner 2026-10-05: the hit box must match the enemy (widen the hit volumes to the drawn body). NOT YET IMPLEMENTED: REPAIR_PLAN.md WP1 (guards first; a separate hit radius because `radius` is also the movement collider). Measured numbers: validation/render-ground.json hitVolume."
     }
   ],
   "reauditedCommit": "07f456e"

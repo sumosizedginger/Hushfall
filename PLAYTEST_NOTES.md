@@ -12,7 +12,7 @@ Format: `PT-NNN` id · map · severity (BLOCKER/MAJOR/MINOR, my classification) 
 
 ---
 
-## PT-001 · C1E1M02 Customs Hall ("the library") · MAJOR · FIXED-IN-CODE (2026-10-04) — awaiting the owner's confirmation in play
+## PT-001 · C1E1M02 Customs Hall ("the library") · MAJOR · CLOSED (the owner confirmed in play, 2026-10-05; fixed in code 2026-10-04)
 **Reported (2026-09-30):** "2nd level in the library like this, enemies are underground." Screenshots: `review/playtest/2026-09-30/pt001-customs-hall-library.png` and `pt001b-half-sunk-body-closeup.png` (a yellow-coated body half inside the floor).
 **Clarification (2026-09-30, second message):** the enemies underground are **AWAKE ENEMIES CHASING THE PLAYER**, drawn under the floor. Not sleeping enemies, not corpses, not water. In C1E1M02 it was the "library" (reading room / gallery, floor 3 m up); in C1E1M04 the first room (the chandlery shop, floor 2 m up).
 
@@ -32,9 +32,9 @@ Format: `PT-NNN` id · map · severity (BLOCKER/MAJOR/MINOR, my classification) 
 - Tolerance and why: buried <= 0.03 m, floating <= 0.30 m of the lowest rendered vertex around the sim's `groundAt(world, x, z, radius)` (NOT the centre-cell `floorAt`; they differ on stairs and ledges). Reasons are written next to the constants in `ground-contract.js`.
 **Why my checks missed it:** nothing asserted where a mesh is drawn; the browser check compared sim hashes only; screenshots never framed an awake enemy up close on a raised floor.
 **Not examined / still hypothesis:** whether the DRAWN FLOOR surface (level mesh) always equals the sim's floor height (the census measures rigs against the sim's ground, not floor quads against the sim). The before/after screenshots of M02 and M04 show the feet on the carpet/floor, which supports it, but no check asserts it.
-**Owner action:** play C1E1M02's library and C1E1M04's shop; tell me if any enemy, awake or dead, is still below or above the floor. Until then this stays FIXED-IN-CODE.
+**Owner confirmation (2026-10-05, their words):** "my issues were resolved and gameplay is solid." Closes PT-001 and PT-002. They did not say which maps they played, so nothing else is closed by it (G2-U1 stays open). Still not asserted by any check: that the drawn floor surface equals the sim floor, and pickups on moving decks (REPAIR_PLAN.md WP2).
 
-## PT-002 · C1E1M04 The Drowned Chandlery · MAJOR · FIXED-IN-CODE (2026-10-04) — awaiting the owner's confirmation in play
+## PT-002 · C1E1M04 The Drowned Chandlery · MAJOR · CLOSED (the owner confirmed in play, 2026-10-05; fixed in code 2026-10-04)
 **Reported (2026-09-30):** "Same with level 4" (enemies underground), clarified as awake enemies chasing in the first room (the shop, floor 2 m). Same causes and guards as PT-001 (A1; the shop's three Tollbearers are among the 129 raised-floor enemies). Water was ruled out by the owner and is not a factor.
 
 ## Other defects found while fixing PT-001/PT-002 (2026-10-04), small and verified
@@ -47,14 +47,16 @@ Format: `PT-NNN` id · map · severity (BLOCKER/MAJOR/MINOR, my classification) 
 - Now: source SETS with one dependency table (`tools/textsha.mjs`), recorded as `sources` in map evidence, `browser-check.json`, `render-ground.json` and `audio.json`; `validate` marks map evidence stale for any dependent change (engine / render / game shell / audio / baked assets / map / ANY route) and for a browser check that lacks the render-truth census; `validate` also fails when a LIVE bundle's counts, per-map rows or README claim a status the derived evidence does not support (an earlier gate's bundle must say it is a "Historical snapshot"). `tests/freshness.test.js` (13 tests; 9 fail against the old validator, `freshness-tests-vs-OLD-validator.txt`).
 - Still hand-typed and therefore unguarded: numbers inside `TESTING.md`, `PRODUCTION_LOG.md` and the prose of `GAME_VISION.md`.
 
-## Open measured finding for the owner (NOT changed: it is gameplay tuning)
-The sim hits an enemy inside a cylinder of `defs.js` height; the rig is drawn taller for several kinds (`hitVolume` in `validation/render-ground.json`): Cantor drawn 4.79 m vs 3.2 m hit (its head and crown are above anything a shot can hit), Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95; the Gaunt (1.48 vs 1.55) and the Bell node (2.45 vs 2.4) match. Shots at the visible torso register on every kind (tested); shots at the head of a Cantor, Warden or Tollbearer pass over. Decision for the owner: widen the hit volumes to the drawn body, or accept torso-only hits as the rule.
+## PT-005 · hit volumes vs drawn bodies · MINOR · DECIDED 2026-10-05, NOT YET IMPLEMENTED (REPAIR_PLAN.md WP1)
+**Owner decision (2026-10-05, their words):** "your hit box should match the enemy." Widen the hit volumes to the drawn body; torso-only is rejected.
+Measurement that led here:
+The sim hits an enemy inside a cylinder of `defs.js` height; the rig is drawn taller for several kinds (`hitVolume` in `validation/render-ground.json`): Cantor drawn 4.79 m vs 3.2 m hit (its head and crown are above anything a shot can hit), Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95; the Gaunt (1.48 vs 1.55) and the Bell node (2.45 vs 2.4) match. Shots at the visible torso register on every kind (tested); shots at the head of a Cantor, Warden or Tollbearer pass over. Decided: widen to the drawn body (see the heading). Radius is also the movement collider, so the plan adds a separate hit radius instead of widening `radius` (REPAIR_PLAN.md WP1).
 
 ---
 
-## Sunday work list (superseded 2026-10-04; what is left)
-1. Owner confirms or reports against PT-001/PT-002 in play. Log anything new HERE before touching code.
-2. Visual professionalisation is Phase D of the owner's brief and is NOT started: it begins only after the owner says the grounding problem is gone in play, as a single slice on C1E1M02, and stops for their decision before any propagation.
+## Work list (superseded 2026-10-05 by REPAIR_PLAN.md, which is the current plan)
+1. DONE 2026-10-05: the owner confirmed PT-001/PT-002 in play.
+2. Visual professionalisation is Phase D of the owner's brief (the grounding condition is now met); REPAIR_PLAN.md section 6 sequences it after the defect work. It is a single slice on C1E1M02 and stops for their decision before any propagation.
 3. Do NOT start Gate 3. The Gate 2 decision belongs to the owner after they have played it.
 
 ## Open question for the owner
