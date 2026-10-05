@@ -1,0 +1,16 @@
+shot 01-west-gate
+shot 02-market-from-gate
+shot 03-stall-rows
+shot 04-gutter
+shot 05-west-stairs
+shot 06-boardwalk
+shot 07-boardwalk-cover
+shot 08-boardwalk-drop
+shot 09-north-switch
+shot 10-east-lane
+shot 11-smokehouse
+shot 12-south-switch
+shot 13-shutters
+shot 14-auction-hall
+shot 15-market-night-wide
+{"errors":[]}

@@ -1,0 +1,14 @@
+shot 01-harbour-start
+shot 02-first-stairs
+shot 03-terrace-one
+shot 04-funicular-below
+shot 05-in-the-car
+shot 06-cliff-above
+shot 07-terrace-two
+shot 08-terrace-three
+shot 09-terrace-four
+shot 10-look-down
+shot 11-summit
+shot 12-beacon-lever
+shot 13-gate
+{"errors":[]}

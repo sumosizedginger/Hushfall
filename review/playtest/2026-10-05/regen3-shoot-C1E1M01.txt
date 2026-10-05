@@ -1,0 +1,15 @@
+shot 01-pier-start
+shot 02-tower
+shot 03-boats
+shot 04-plaza
+shot 05-stalls
+shot 06-shed-door
+shot 12a-secret-tell
+shot 07-shed-inside
+shot 08-hut
+shot 09-warehouse-entry
+shot 10-warehouse-pods
+shot 11-dock-gate
+shot 12b-net-loft
+shot 13-pier-water
+{"errors":[]}

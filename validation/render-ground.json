@@ -1,10 +1,10 @@
 {
-  "when": "2026-10-05T05:51:02.022Z",
-  "commit": "5b7b070",
+  "when": "2026-10-05T20:56:55.246Z",
+  "commit": "964c207",
   "sources": {
-    "engine": "35624a331b1471c1",
-    "render": "1340a26faded2f43",
-    "game": "3265f3cc2a144b43",
+    "engine": "a01a633c05680695",
+    "render": "8b03082a29460933",
+    "game": "a3c3070a753b2eb6",
     "audio": "030538561ae23a94",
     "assets": "be7f0f55628a7b04"
   },
@@ -42,7 +42,12 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.959, 6 nodes"
+      "detail": "body 4.788 m tall on 12 m, shield r 2.955, 6 nodes"
+    },
+    {
+      "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
+      "ok": true,
+      "detail": "tollbearer 2.264 drawn / 2.25 hit; gaunt 1.476 drawn / 1.5 hit; bellhand 2.366 drawn / 2.35 hit; sexton 2.365 drawn / 2.35 hit; wardengraft 3.003 drawn / 3 hit; cantor 4.788 drawn / 4.8 hit; bellnode 2.45 drawn / 2.45 hit"
     }
   ],
   "report": {
@@ -519,7 +524,7 @@
         ],
         "height": 4.788,
         "ground": 12,
-        "hitHeight": 3.2,
+        "hitHeight": 4.8,
         "hitRadius": 0.65
       },
       "bodyCentreOffsetFromSim": 0.134,
@@ -527,7 +532,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.959
+        "r": 2.955
       },
       "farthestBodyCornerFromShieldCentre": 3.127,
       "ring": [
@@ -594,58 +599,72 @@
     "hitVolume": {
       "tollbearer": {
         "drawnHeight": 2.264,
-        "hitHeight": 1.95,
-        "drawnAboveHit": 0.314,
-        "hitCoversFractionOfDrawn": 0.861,
+        "hitHeight": 2.25,
+        "drawnAboveHit": 0.014,
+        "hitCoversFractionOfDrawn": 0.994,
         "hitRadius": 0.4,
+        "hitForward": 0,
+        "colliderRadius": 0.4,
         "drawnWidthX": 0.84
       },
       "gaunt": {
         "drawnHeight": 1.476,
-        "hitHeight": 1.55,
+        "hitHeight": 1.5,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
-        "hitRadius": 0.34,
+        "hitRadius": 0.5,
+        "hitForward": 0.3,
+        "colliderRadius": 0.34,
         "drawnWidthX": 0.746
       },
       "bellhand": {
         "drawnHeight": 2.366,
-        "hitHeight": 1.9,
-        "drawnAboveHit": 0.466,
-        "hitCoversFractionOfDrawn": 0.803,
+        "hitHeight": 2.35,
+        "drawnAboveHit": 0.016,
+        "hitCoversFractionOfDrawn": 0.993,
         "hitRadius": 0.38,
+        "hitForward": 0,
+        "colliderRadius": 0.38,
         "drawnWidthX": 0.983
       },
       "sexton": {
         "drawnHeight": 2.365,
-        "hitHeight": 1.85,
-        "drawnAboveHit": 0.515,
-        "hitCoversFractionOfDrawn": 0.782,
+        "hitHeight": 2.35,
+        "drawnAboveHit": 0.015,
+        "hitCoversFractionOfDrawn": 0.994,
         "hitRadius": 0.38,
+        "hitForward": 0,
+        "colliderRadius": 0.38,
         "drawnWidthX": 0.774
       },
       "wardengraft": {
         "drawnHeight": 3.003,
-        "hitHeight": 2.3,
-        "drawnAboveHit": 0.703,
-        "hitCoversFractionOfDrawn": 0.766,
+        "hitHeight": 3,
+        "drawnAboveHit": 0.003,
+        "hitCoversFractionOfDrawn": 0.999,
         "hitRadius": 0.55,
+        "hitForward": 0,
+        "colliderRadius": 0.55,
         "drawnWidthX": 1.085
       },
       "bellnode": {
         "drawnHeight": 2.45,
-        "hitHeight": 2.4,
-        "drawnAboveHit": 0.05,
-        "hitCoversFractionOfDrawn": 0.98,
+        "hitHeight": 2.45,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
         "hitRadius": 0.7,
+        "hitForward": 0,
+        "colliderRadius": 0.7,
         "drawnWidthX": 1.455
       },
       "cantor": {
         "drawnHeight": 4.788,
-        "hitHeight": 3.2,
-        "drawnAboveHit": 1.588,
-        "hitCoversFractionOfDrawn": 0.668,
-        "hitRadius": 0.65,
+        "hitHeight": 4.8,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 0.8,
+        "hitForward": 0,
+        "colliderRadius": 0.65,
         "drawnWidthX": 2.511
       }
     },
