@@ -1,6 +1,7 @@
 // Level tour for any map: screenshots from the vantage points listed in maps-src/<ID>.views.json (appearance evidence, not correctness).
 // Views use CELL coordinates: {name, x, z, yaw (radians or east|west|north|south), pitch, y?, open?, wake?, ticks? (run the sim that long before the shot), ambient?, hp?}. `open: true` opens every door/closet first.
 // Usage: node tools/dev/shoot-map.mjs <ID> [only-view-name]   ->  review/level-<id>/<name>.png
+import { savePng } from './savepng.mjs';
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
@@ -35,7 +36,7 @@ for (const v of views) {
   if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100 })'); }
   if (v.ambient != null) await T(`t.setup_ambient(${v.ambient})`);
   await T('t.clearOverlays(); t.render(0.02)');
-  await page.screenshot({ path: path.join(out, v.name + '.png') }); console.log('shot', v.name);
+  await savePng(page, path.join(out, v.name + '.png')); console.log('shot', v.name);
 }
 console.log(JSON.stringify({ errors }));
 await browser.close(); await server.close();

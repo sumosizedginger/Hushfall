@@ -2,6 +2,7 @@
 //   node tools/dev/render-ground.mjs [--root <project dir>] [--out <json>] [--shots <dir>] [--port <n>]
 // The same census is part of `npm run browsercheck`; this is the fast way to run only it (about a minute), and `--root` points it at another
 // checkout (the "before" evidence is this census run against the unrepaired code in a separate git worktree).
+import { savePng } from './savepng.mjs';
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
@@ -22,7 +23,7 @@ const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swi
 const page = await browser.newPage(); await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e)); page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
-const shot = async (name) => { await page.screenshot({ path: path.join(shots, name + '.png') }); return name + '.png'; };
+const shot = async (name) => { await savePng(page, path.join(shots, name + '.png')); return name + '.png'; };
 let report = null;
 try {
   await page.goto(`http://localhost:${port}/`, { waitUntil: 'domcontentloaded', timeout: 0 });
