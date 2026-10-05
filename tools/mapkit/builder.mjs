@@ -1,5 +1,7 @@
 // Level builder: draw rooms, halls, stairs and doors with calls instead of typing every cell, then read the layers back as ASCII for the compiler.
 // All coordinates are cell coordinates (x = column, z = row), rectangles are inclusive [x0,z0,x1,z1]. Later calls overwrite earlier ones.
+import { FLOOR_SKINS } from '../../src/engine/defs.js';
+const FLOOR_CHARS = Object.keys(FLOOR_SKINS).join('');                      // every floor skin the engine knows: a new skin needs no edit here
 const hchar = (n) => (n <= 0 ? '.' : n < 10 ? String(n) : String.fromCharCode(87 + n));
 
 export class Level {
@@ -17,7 +19,7 @@ export class Level {
     this.#each([r[0] - 1, r[1] - 1, r[2] + 1, r[3] + 1], (x, z) => { const inside = x >= r[0] && x <= r[2] && z >= r[1] && z <= r[3]; if (inside) this.g[z][x] = floor; else if (!this.#floorLike(this.g[z][x]) && this.g[z][x] !== 'D' && this.g[z][x] !== 'X' && this.g[z][x] !== 'S' && this.g[z][x] !== '~') this.g[z][x] = wall; });
     if (height != null) this.height(r, height); return this;
   }
-  #floorLike(c) { return '.:ptgcfmns'.includes(c); }
+  #floorLike(c) { return FLOOR_CHARS.includes(c); }
   /** put a wall skin on a rectangle (solid blocks: pillars, counters, partitions) */
   wall(r, c = '#') { return this.rect(r, c); }
   /** floor height (0.5 m units) over a rectangle */

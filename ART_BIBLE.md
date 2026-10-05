@@ -77,5 +77,14 @@ Code-authored (no texture): the Sexton (stooped, hooded, staff-bell), the Warden
 Lighting: `atmosphere.ambient` (0.05-1.5, default 1) scales the hemisphere and sun light; a dark level (Signal House, 0.3) is carried by lantern pools and brightens through the `lights` action. Skies in use: `dusk` (ferry quay), `night`, `overcast` (hill).
 
 
+## Asset seeds, Episode 2 set: The Salt Works (2026-10-05; recipes in `tools/baker/recipes_e2.js`, all opaque and tiling; Gate 3 pilot, `design/GATE3.md`)
+| asset | size | seed | use |
+|---|---|---|---|
+| wall_saltbrick_a | 256 tile | 9101 | salt-caked brick, pale with rust weeping from the joints: boundary walls, gatehouse, kiln stacks (`L`) |
+| wall_corrugated_a | 256 tile | 9102 | rusted corrugated sheet with copper-green bloom: pump houses, kennels, the guardhouse, fences (`K`) |
+| floor_saltcrust_a | 256 tile | 9201 | cracked salt crust over rust stains and shallow brine: the open pans (`l`, outdoor) |
+
+Adding a skin is now: a recipe (new seed in this table), ONE row in `WALL_SKINS`/`FLOOR_SKINS` in `src/engine/defs.js`, and `node tools/bake.mjs <asset ids>`. The level builder's floor characters and the texture list in `src/render/textures.js` are derived from those tables (a floor-character string in the builder and a hand-kept name list used to need edits too). Known p5.brush limit (again): narrow or full-size brush rects crash its scatter; flat opaque areas use `g.solid`.
+
 ## Not yet done
 Texel-density rules, per-episode palettes, UI/HUD rules, sprite direction sets (8-way vs billboard), animation frame counts, runtime Three.js material verification.

@@ -1,8 +1,18 @@
 [
-  {
-    "name": "01-arrival",
-    "x": 4.5,
-    "z": 15.5,
-    "yaw": "east"
-  }
+  { "name": "01-arrival", "x": 4.5, "z": 24.5, "yaw": "east" },
+  { "name": "02-the-pan", "x": 8.5, "z": 24.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "03-north-ditch", "x": 8.5, "z": 7.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "04-guardhouse-door", "x": 25.5, "z": 6.8, "yaw": "south", "pitch": 0.0 },
+  { "name": "05-guardhouse-inside", "x": 25.5, "z": 9.5, "yaw": "south", "pitch": -0.05, "open": true },
+  { "name": "06-sluice-wheel", "x": 24.5, "z": 10.5, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "07-the-road", "x": 27.5, "z": 24.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "08-the-dyke", "x": 31.5, "z": 20.0, "yaw": "east", "pitch": 0.0 },
+  { "name": "09-dyke-gap", "x": 33.5, "z": 24.5, "yaw": "east", "pitch": 0.03 },
+  { "name": "10-the-towers", "x": 34.0, "z": 28.0, "yaw": 1.9, "pitch": 0.2 },
+  { "name": "11-the-gate", "x": 40.5, "z": 24.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "12-the-yard", "x": 52.5, "z": 24.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "13-the-warden", "x": 56.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true, "wake": true, "ticks": 20 },
+  { "name": "14-exit", "x": 64.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "15-pump-house", "x": 23.5, "z": 38.5, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "16-south-ditch", "x": 12.5, "z": 41.5, "yaw": "east", "pitch": 0.0 }
 ]

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { WALL_SKINS, FLOOR_SKINS } from '../engine/defs.js';
 
 // Vite resolves + hashes these at build time, so dev and production builds use the same code path.
 const urls = import.meta.glob(['../../assets/baked/*.png', '!../../assets/baked/enemy_tollbearer_idle.png', '!../../assets/baked/weapon_flarecannon.png'], { eager: true, query: '?url', import: 'default' });
@@ -20,10 +21,11 @@ export function loadTex(name, { repeat = true, srgb = true } = {}) {
   }, undefined, () => reject(new Error('failed to load texture ' + name))));
 }
 
-const NAMES = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'sky_dusk', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art',
-  'water_dusk', 'cobble_wet_a', 'brick_warm_a', 'awning_stripe_a', 'boat_hull_a', 'tower_stone_a',
-  // Gate 2 kit
-  'wall_timber_a', 'wall_plaster_a', 'wall_concrete_a', 'wall_iron_a', 'wall_resin_a', 'floor_tile_a', 'floor_grate_a', 'floor_carpet_a', 'floor_flag_a', 'floor_silt_a', 'floor_slate_a', 'sky_night', 'sky_overcast'];
+// Textures that are not skins (props, atlases, the title art, water) are listed here. Wall and floor SKINS come from the skin tables in defs.js and SKIES from the baked files themselves,
+// so adding a skin or a sky means a recipe, a defs row and a bake: no list to edit (Gate 3).
+const FIXED = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art', 'water_dusk', 'awning_stripe_a', 'boat_hull_a'];
+const SKIES = Object.keys(URL_BY_NAME).filter((n) => n.startsWith('sky_'));
+const NAMES = [...new Set([...FIXED, ...SKIES, ...Object.values(WALL_SKINS), ...Object.values(FLOOR_SKINS).map((f) => f.tex)])];
 
 /**
  * The painted skies are not periodic: wrapped round the dome their left and right edges meet in a hard vertical seam (audit A12). Cross-fade the last B columns into the first B and drop them, so the
