@@ -1,0 +1,117 @@
+PASS [C1E1M01] real-game route C1E1M01.main: completes in the browser status=complete failed=null ticks=4284 wall=1s
+PASS [C1E1M01] real-game route C1E1M01.main: browser sim == Node sim (ticks + state hash) browser 4284/47e36270 vs node 4284/47e36270
+PASS [C1E1M01] real-game route C1E1M01.secret: completes in the browser status=complete failed=null ticks=4684 wall=1s
+PASS [C1E1M01] real-game route C1E1M01.secret: browser sim == Node sim (ticks + state hash) browser 4684/1159d4cb vs node 4684/1159d4cb
+PASS [C1E1M01] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 16 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 16 enemies was measured: true
+PASS [C1E1M01] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 32 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 16 enemies: true
+PASS [C1E1M01] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 42 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M01] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 16 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 16 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M01] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M01] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M01] render truth: the census ran on this map (its enemies were really measured) 16 enemies measured of 16 placed
+PASS [C1E1M01] no uncaught exceptions or console errors while this map was played 
+C1E1M01: 12/12 real-game checks passed (8s) -> validation/browser/C1E1M01.json
+PASS [C1E1M02] real-game route C1E1M02.main: completes in the browser status=complete failed=null ticks=7441 wall=3s
+PASS [C1E1M02] real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash) browser 7441/0590fdeb vs node 7441/0590fdeb
+PASS [C1E1M02] real-game route C1E1M02.secret: completes in the browser status=complete failed=null ticks=8165 wall=3s
+PASS [C1E1M02] real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash) browser 8165/eb3db235 vs node 8165/eb3db235
+PASS [C1E1M02] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 38 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 38 enemies was measured: true
+PASS [C1E1M02] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 76 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 38 enemies: true
+PASS [C1E1M02] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 84 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M02] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 38 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 38 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M02] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M02] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M02] render truth: the census ran on this map (its enemies were really measured) 38 enemies measured of 38 placed
+PASS [C1E1M02] no uncaught exceptions or console errors while this map was played 
+C1E1M02: 12/12 real-game checks passed (16s) -> validation/browser/C1E1M02.json
+PASS [C1E1M03] real-game route C1E1M03.main: completes in the browser status=complete failed=null ticks=9142 wall=3s
+PASS [C1E1M03] real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash) browser 9142/948a0298 vs node 9142/948a0298
+PASS [C1E1M03] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 37 rows (5 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 37 enemies was measured: true
+PASS [C1E1M03] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 74 rows (5 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 37 enemies: true
+PASS [C1E1M03] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 55 rows (26 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M03] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 37 rows (5 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 37 rows (5 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M03] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M03] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M03] render truth: the census ran on this map (its enemies were really measured) 37 enemies measured of 37 placed
+PASS [C1E1M03] no uncaught exceptions or console errors while this map was played 
+C1E1M03: 10/10 real-game checks passed (11s) -> validation/browser/C1E1M03.json
+PASS [C1E1M04] real-game route C1E1M04.main: completes in the browser status=complete failed=null ticks=8169 wall=2s
+PASS [C1E1M04] real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash) browser 8169/f16b0160 vs node 8169/f16b0160
+PASS [C1E1M04] real-game route C1E1M04.secret: completes in the browser status=complete failed=null ticks=6239 wall=2s
+PASS [C1E1M04] real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash) browser 6239/d96040a8 vs node 6239/d96040a8
+PASS [C1E1M04] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 44 rows (6 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 44 enemies was measured: true
+PASS [C1E1M04] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 88 rows (6 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 44 enemies: true
+PASS [C1E1M04] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 68 rows (26 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M04] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 44 rows (6 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 44 rows (6 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M04] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M04] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M04] render truth: the census ran on this map (its enemies were really measured) 44 enemies measured of 44 placed
+PASS [C1E1M04] no uncaught exceptions or console errors while this map was played 
+C1E1M04: 12/12 real-game checks passed (12s) -> validation/browser/C1E1M04.json
+PASS [C1E1M05] real-game route C1E1M05.main: completes in the browser status=complete failed=null ticks=8155 wall=4s
+PASS [C1E1M05] real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash) browser 8155/94729b3f vs node 8155/94729b3f
+PASS [C1E1M05] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 45 rows (43 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 45 enemies was measured: true
+PASS [C1E1M05] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 90 rows (43 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 45 enemies: true
+PASS [C1E1M05] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 112 rows (99 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M05] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 45 rows (43 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 45 rows (43 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M05] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 20 rows (20 on raised floors), 0 violations, deepest 0 m, highest 0.121 m
+PASS [C1E1M05] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M05] render truth: the census ran on this map (its enemies were really measured) 45 enemies measured of 45 placed
+PASS [C1E1M05] no uncaught exceptions or console errors while this map was played 
+C1E1M05: 10/10 real-game checks passed (12s) -> validation/browser/C1E1M05.json
+PASS [C1E1M06] real-game route C1E1M06.main: completes in the browser status=complete failed=null ticks=6234 wall=5s
+PASS [C1E1M06] real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash) browser 6234/5e4e0b77 vs node 6234/5e4e0b77
+PASS [C1E1M06] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 40 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 40 enemies was measured: true
+PASS [C1E1M06] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 80 rows (17 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 40 enemies: true
+PASS [C1E1M06] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 98 rows (69 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M06] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 43 rows (20 on raised floors), 0 violations, deepest 0 m, highest 0.008 m || corpses: 43 rows (20 on raised floors), 0 violations, deepest 0 m, highest 0
+PASS [C1E1M06] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 20 rows (20 on raised floors), 0 violations, deepest 0 m, highest 0.069 m
+PASS [C1E1M06] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M06] render truth: the census ran on this map (its enemies were really measured) 40 enemies measured of 40 placed
+PASS [C1E1M06] no uncaught exceptions or console errors while this map was played 
+C1E1M06: 10/10 real-game checks passed (19s) -> validation/browser/C1E1M06.json
+PASS [C1E1M07] real-game route C1E1M07.main: completes in the browser status=complete failed=null ticks=9674 wall=4s
+PASS [C1E1M07] real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash) browser 9674/e01cf37f vs node 9674/e01cf37f
+PASS [C1E1M07] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 37 rows (7 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 37 enemies was measured: true
+PASS [C1E1M07] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 74 rows (7 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 37 enemies: true
+PASS [C1E1M07] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 85 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E1M07] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 37 rows (7 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 37 rows (7 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M07] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M07] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1M07] render truth: the census ran on this map (its enemies were really measured) 37 enemies measured of 37 placed
+PASS [C1E1M07] no uncaught exceptions or console errors while this map was played 
+C1E1M07: 10/10 real-game checks passed (12s) -> validation/browser/C1E1M07.json
+PASS [C1E1M08] real-game route C1E1M08.main: completes in the browser status=complete failed=null ticks=11039 wall=6s
+PASS [C1E1M08] real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash) browser 11039/46493b09 vs node 11039/46493b09
+PASS [C1E1M08] C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands {"objective":true,"boss":true,"shield":true}
+PASS [C1E1M08] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 41 enemies was measured: true
+PASS [C1E1M08] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 82 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0.242 m; two samples of all 41 enemies: true
+PASS [C1E1M08] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 139 rows (97 on raised floors), 0 violations, deepest 0 m, highest 0.201 m
+PASS [C1E1M08] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M08] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1M08] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links body 4.788 m tall on 12 m, shield r 2.971, 6 nodes
+PASS [C1E1M08] render truth: the census ran on this map (its enemies were really measured) 41 enemies measured of 41 placed
+PASS [C1E1M08] no uncaught exceptions or console errors while this map was played 
+C1E1M08: 11/11 real-game checks passed (15s) -> validation/browser/C1E1M08.json
+PASS [C1E1S01] real-game route C1E1S01.main: completes in the browser status=complete failed=null ticks=2677 wall=0s
+PASS [C1E1S01] real-game route C1E1S01.main: browser sim == Node sim (ticks + state hash) browser 2677/a3a11d3a vs node 2677/a3a11d3a
+PASS [C1E1S01] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 0 enemies was measured: true
+PASS [C1E1S01] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m; two samples of all 0 enemies: true
+PASS [C1E1S01] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1S01] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1S01] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E1S01] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E1S01] render truth: the census ran on this map (its enemies were really measured) 0 enemies measured of 0 placed
+PASS [C1E1S01] no uncaught exceptions or console errors while this map was played 
+C1E1S01: 10/10 real-game checks passed (2s) -> validation/browser/C1E1S01.json
+PASS [C1E2M01] real-game route C1E2M01.main: completes in the browser status=complete failed=null ticks=5432 wall=2s
+PASS [C1E2M01] real-game route C1E2M01.main: browser sim == Node sim (ticks + state hash) browser 5432/c9adf2d5 vs node 5432/c9adf2d5
+PASS [C1E2M01] render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 30 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 30 enemies was measured: true
+PASS [C1E2M01] render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 60 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 30 enemies: true
+PASS [C1E2M01] render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 56 rows (13 on raised floors), 0 violations, deepest 0 m, highest 0.156 m
+PASS [C1E2M01] render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 30 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 30 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E2M01] render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m
+PASS [C1E2M01] render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links none
+PASS [C1E2M01] render truth: the census ran on this map (its enemies were really measured) 30 enemies measured of 30 placed
+PASS [C1E2M01] no uncaught exceptions or console errors while this map was played 
+C1E2M01: 10/10 real-game checks passed (9s) -> validation/browser/C1E2M01.json
