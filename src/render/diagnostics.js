@@ -8,6 +8,17 @@ import { debrisFloor } from './debris.js';
 /** per enemy, the sim's numbers next to what is actually DRAWN, in world space (PT-001/PT-002). `min`/`max` are the exact vertex bounds of the mesh on screen (the live rig,
  *  or the merged mesh of a sleeper), `root` is the rig's world position. `ground` is the sim's own contract (groundAt over the actor's footprint, what e.y is kept equal to);
  *  `floorCentre` is the centre-cell floor, kept only to show where the two differ. */
+/** an enemy's drawn bounding box on screen as fractions of the canvas { x0, y0, x1, y1 } (y down), or null when it is off screen / behind the camera (outline checks) */
+export function enemyScreenRect(view, w, id) {
+  const b = enemyBounds(view, w).find((q) => q.id === id); if (!b) return null;
+  view.cam.updateMatrixWorld(true); const v = new THREE.Vector3(); let x0 = 1, y0 = 1, x1 = 0, y1 = 0, n = 0;
+  for (const X of [b.min[0], b.max[0]]) for (const Y of [b.min[1], b.max[1]]) for (const Z of [b.min[2], b.max[2]]) {
+    v.set(X, Y, Z).project(view.cam); if (v.z > 1) continue; n++;
+    x0 = Math.min(x0, (v.x + 1) / 2); x1 = Math.max(x1, (v.x + 1) / 2); y0 = Math.min(y0, (1 - v.y) / 2); y1 = Math.max(y1, (1 - v.y) / 2);
+  }
+  return n === 8 ? { x0, y0, x1, y1 } : null;
+}
+
 export function enemyBounds(view, w) {
   const out = [], b = new THREE.Box3(), wp = new THREE.Vector3();
   for (const e of w.enemies) {

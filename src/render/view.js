@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeBellNodeEnemy } from './models_g2.js';
+import { markEntity, patchEntityFragment } from './entityflag.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
@@ -39,7 +40,7 @@ export class GameView {
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(0.62); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
-    for (const rig of Object.values(this.rigs)) rig.group.traverse((o) => { if (!o.isMesh) return; o.material.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace('#include <project_vertex>', nearDepth); }; o.material.customProgramCacheKey = () => 'weapon-depth'; });
+    for (const rig of Object.values(this.rigs)) rig.group.traverse((o) => { if (!o.isMesh) return; const m = o.material; m.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace('#include <project_vertex>', nearDepth); if (!m.transparent) patchEntityFragment(s); }; m.customProgramCacheKey = () => 'weapon-depth'; });       // the weapon keeps the classic ink too (entityflag.js)
     this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR);
     this.enemyViews = new Map(); this.pickupViews = new Map(); this.projViews = new Map(); this.debris = [];
     this.prev = { player: { x: 0, z: 0, yaw: 0, pitch: 0 }, enemies: new Map() };
@@ -108,7 +109,7 @@ export class GameView {
     const seen = new Set();
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
-      if (!v) { v = ENEMY_MODELS[e.kind](this.tex); this.scene.add(v.root); this.enemyViews.set(e.id, v); }
+      if (!v) { v = ENEMY_MODELS[e.kind](this.tex); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);

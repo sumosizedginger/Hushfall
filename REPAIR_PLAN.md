@@ -11,7 +11,7 @@ This file is self-contained: it is written for someone (or an agent) who has ONL
 
 ## RESULTS (2026-10-05)
 - **WP1 done** (PT-005 fixed in code): `src/engine/hitvolume.js`, fitted heights/radii in `defs.js`, `tests/hit-volume-fair.test.js`, a census check. Three bot-driven tests tripped for measured, non-game reasons and were fixed at their cause (a multi-seed gate-skip probe, an episode-level difficulty trend, a 2-of-3-seed hard chain test): `PLAYTEST_NOTES.md`.
-- **WP-O done** (outline readability, G2-R2): appearance only; the owner judges.
+- **WP-O done** (outline readability, G2-R2): appearance only; the owner judges. The first version also inked the enemies and read as a wireframe (PT-006, the owner's complaint): enemies and the weapon are back to the original ink; only the level gets the corner ink.
 - **WP2 done as regression protection only**: `tests/render-floor-truth.test.js` (drawn floor vs sim floor on every map and both ends of each moving floor; pickups on the ground and riding a deck). It found no mismatch: the "drawn floor equals the sim floor" hypothesis is now measured.
 - Next: the owner plays the build. If they approve it, Gate 3 begins; nothing of it is started.
 

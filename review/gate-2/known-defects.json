@@ -385,8 +385,16 @@
       "severity": "MINOR",
       "status": "unverified",
       "title": "Outline readability pass (owner revision 2, 2026-10-05): made, appearance only",
-      "how": "src/render/post.js: crease detection (absolute second difference of 1/z), lower silhouette thresholds, less broken ink. Before/after of 12 fixed viewpoints and ink masks in review/outlines/ (ink share 3.3% -> 7.0%).",
-      "remaining": "Nobody has judged whether it reads better or is too heavy. A dark Gaunt on a dark wall is still dark on dark (palette, not outline). The Outline setting still turns the pass off."
+      "how": "src/render/post.js: crease ink on the LEVEL and its props only (absolute second difference of 1/z), lower silhouette thresholds there, less broken ink there; enemies and the weapon keep the original ink exactly (src/render/entityflag.js, PT-006). Before/after in review/outlines/ (whole-view ink share 3.4% -> 6.4%; enemy body ink unchanged).",
+      "remaining": "Nobody has judged whether the level reads better or is too heavy: only the enemies were complained about, and those are back to the original. A dark Gaunt on a dark wall is still dark on dark (palette, not outline). The Outline setting still turns the pass off; ?outline=classic restores the original pass to compare."
+    },
+    {
+      "id": "PT-006",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Owner 2026-10-05: the first outline pass drew wireframe-like lines over the enemies (a regression I shipped)",
+      "how": "The corner ink could not tell an enemy from the level, so it traced every box edge of every rig. Enemies and the weapon now write alpha 0 and keep the original ink (src/render/entityflag.js + post.js). Guarded by tests/entityflag.test.js and a real-game check of the ink inside an enemy body (red with the marking disabled, green now).",
+      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY."
     }
   ],
   "reauditedCommit": "07f456e"

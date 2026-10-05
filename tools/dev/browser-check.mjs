@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
 import crypto from 'node:crypto';
+import { PNG } from 'pngjs';
 import { textSha, sourceShas } from '../textsha.mjs';
 import { runRenderCensus } from './render-census.mjs';
 import { execSync } from 'node:child_process';
@@ -246,6 +247,16 @@ try {
   await T("t.newGame('normal', 3, { mapId: 'C1E1M02' })"); await T("t.emitView([{ type: 'explode', x: 52.4, y: 3.9, z: 13.6 }, { type: 'impact', x: 52.4, y: 3.6, z: 13.6 }])");
   { let minRel = Infinity, seen = 0; for (let i = 0; i < 40; i++) { await T('t.render(0.016)'); for (const p of await T('t.debrisProbe()')) if (p.floor != null) { seen++; minRel = Math.min(minRel, p.y - p.floor); } }
     check('debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame\'s travel below it)', seen > 20 && minRel > -0.4 && (await T('t.debrisProbe()')).length === 0, `${seen} samples, lowest chip ${minRel.toFixed(3)} m relative to its floor, remaining after 0.64 s: ${(await T('t.debrisProbe()')).length}`); }
+  // outlines (PT-006): enemies keep the ORIGINAL ink. The corner ink added for the level traced every box edge of a rig and read as a wireframe. Measured in the real game: the ink INSIDE an enemy's body
+  // (the ink mask, its screen box shrunk 20% per side) in the normal picture must not exceed the same frame drawn entirely on the original pass (uClassic) by more than 15% (the wireframe version: +90% on a Tollbearer).
+  await T("t.newGame('normal', 3, { mapId: 'C1E1M02' })"); await T('t.clearOverlays(); t.setup_openDoors()');
+  { const inkIn = (buf, r) => { const png = PNG.sync.read(buf), w = png.width, h = png.height, dx = 0.2 * (r.x1 - r.x0), dy = 0.2 * (r.y1 - r.y0), x0 = Math.round((r.x0 + dx) * w), x1 = Math.round((r.x1 - dx) * w), y0 = Math.round((r.y0 + dy) * h), y1 = Math.round((r.y1 - dy) * h); let ink = 0, n = 0; for (let y = Math.max(0, y0); y < Math.min(h, y1); y++) for (let x = Math.max(0, x0); x < Math.min(w, x1); x++) { n++; if (png.data[(y * w + x) * 4] > 128) ink++; } return { n, share: n ? ink / n : 0 }; };
+    await T('t.setup_teleport(47, 87, -Math.PI / 2); t.setup_player({ pitch: 0, hp: 100000, hurt: 0 })');
+    const placed = JSON.parse(await T('const p = t.state().player, b = t.enemyBounds(), used = []; for (const [kind, ahead, side] of [["tollbearer", 4, -1.0], ["bellhand", 7, 1.2]]) { const e = b.find((q) => q.kind === kind && !used.includes(q.id)); if (!e) continue; used.push(e.id); t.setup_enemy(e.id, { x: p.x - Math.sin(p.yaw) * ahead + Math.cos(p.yaw) * side, z: p.z - Math.cos(p.yaw) * ahead - Math.sin(p.yaw) * side, yaw: p.yaw, state: "chase", hp: 100000, attackT: -1, lungeT: -1, lastX: p.x, lastZ: p.z, lost: 0 }); } t.tick(1); for (const id of used) t.setup_enemy(id, { walk: 1, phase: 1.3 }); return JSON.stringify(used.map((id) => ({ id, kind: t.enemyBounds().find((q) => q.id === id).kind })))'));
+    const mask = async (classic) => { await T(`t.setup_postClassic(${classic}); t.setup_postDebug(true); t.clearOverlays(); t.render(0.02)`); const b = await page.screenshot(); await T('t.setup_postDebug(false); t.setup_postClassic(false)'); return b; };
+    const normal = await mask(false), classic = await mask(true), rows = [];
+    for (const p of placed) { const rect = JSON.parse(await T(`JSON.stringify(t.enemyScreenRect(${p.id}))`)); if (!rect) continue; const a = inkIn(normal, rect), c = inkIn(classic, rect); rows.push({ kind: p.kind, n: a.n, normal: +a.share.toFixed(3), classic: +c.share.toFixed(3) }); }
+    check('outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)', rows.length === 2 && rows.every((r) => r.n > 400 && r.classic > 0.05 && r.normal <= r.classic * 1.15 + 0.01), JSON.stringify(rows)); }
   await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");                       // the sections below use the current map
 
   // ---- 3. save / resume determinism in the browser ----------------------------------------------------------------
