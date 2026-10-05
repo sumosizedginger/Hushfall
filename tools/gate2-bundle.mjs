@@ -8,6 +8,8 @@ import { execSync, spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { staleSets, describeStale } from './textsha.mjs';
 import { episodeDifficultyChecks } from '../src/engine/viability.js';
+// Gate 2 is closed (approved 2026-10-05): its bundle is a frozen historical snapshot and is never rewritten (campaign-wide counts change every time a map is added).
+{ const prev = path.join(path.resolve(import.meta.dirname, '..'), 'review/gate-2/build-info.json'); if (fs.existsSync(prev) && JSON.parse(fs.readFileSync(prev, 'utf8')).historical) { console.error('review/gate-2 is a historical snapshot (Gate 2 was approved); it is not regenerated. Gate 3 reports live in review/gate-3/.'); process.exit(5); } }
 
 const root = path.resolve(import.meta.dirname, '..');
 const out = path.join(root, 'review/gate-2');

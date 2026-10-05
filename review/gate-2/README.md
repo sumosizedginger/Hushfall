@@ -1,3 +1,5 @@
+> **Historical snapshot (Gate 2, approved 2026-10-05).** The numbers below describe Episode 1 and the repository when the owner approved Gate 2. They are NOT the current campaign status: run `npm run status`; Gate 3 reports are in `review/gate-3/`.
+
 # Gate 2 review bundle: Episode 1, Port Marrow (C1E1M01-M08 + secret C1E1S01)
 
 Generated 2026-10-05T21:49:49.062Z by `node tools/gate2-bundle.mjs` from repository evidence. Code: `90c5319`.

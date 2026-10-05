@@ -1,0 +1,21 @@
+✖ baseline: a project whose evidence matches every source set is AGENT_VERIFIED (79.0973ms)
+✔ a RENDER change makes the evidence stale (the old gate hashed only src/engine and kept it AGENT_VERIFIED) (58.3448ms)
+✖ a GAME-SHELL change (UI, test hook, index.html) makes the browser evidence stale (124.4812ms)
+✔ an AUDIO-code change makes the browser evidence stale (the browser check drives the live audio engine) (56.0668ms)
+✔ a BAKED-ASSET change makes the evidence stale: re-baked art, or a replaced atlas with an untouched manifest (assetVersion is validated, not decoration) (113.7688ms)
+✔ a MAP change makes the evidence stale (54.6009ms)
+✔ a change to ANY route of the map makes the evidence stale, not only the canonical one (secret route here) (57.0002ms)
+✔ evidence that records no route hash, or real-game evidence (shared or per map) that records no source hashes, is stale (missing = unknown = stale) (177.7037ms)
+✔ a map needs ITS OWN real-game evidence that passed: none, failing, or no routes played cannot support AGENT_VERIFIED, and a failing shared check cannot either (239.2536ms)
+✖ GATE 3 (R3/R4): a changed or NEW map invalidates only itself; changed shared code invalidates every map (61.51ms)
+✔ text hashing folds CRLF (a Windows checkout does not stale everything) but source sets still see real edits; sets absent from a root are skipped (19.4662ms)
+✔ a bundle that claims AGENT_VERIFIED while the derived status is lower fails validation, and says what the evidence supports (60.7418ms)
+✖ a bundle that matches the derived status passes; --no-bundles (used by the bundle tools while they rewrite it) skips the comparison (59.9061ms)
+✔ a historical bundle is exempt only if it says so in its README; an unmarked stale one is an error (110.7825ms)
+ℹ pass 10
+ℹ fail 4
+✖ failing tests:
+✖ baseline: a project whose evidence matches every source set is AGENT_VERIFIED (79.0973ms)
+✖ a GAME-SHELL change (UI, test hook, index.html) makes the browser evidence stale (124.4812ms)
+✖ GATE 3 (R3/R4): a changed or NEW map invalidates only itself; changed shared code invalidates every map (61.51ms)
+✖ a bundle that matches the derived status passes; --no-bundles (used by the bundle tools while they rewrite it) skips the comparison (59.9061ms)

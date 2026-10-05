@@ -38,4 +38,12 @@ The owner approved Gate 2 on the revised build ("Perfect look, love it now. appr
 brief in `design/` -> `maps-src` source + views + route -> `npm run map -- <ID> --browser` green -> owner plays it (findings logged first) -> only the owner can mark it COMPLETE. A batch is small (the owner sets the size) and is played before the next begins. Shared code changes (engine, render, shell, audio, assets) invalidate every map's evidence by design: they are regenerated together, from one clean commit.
 
 ## Pilot log and results
-(filled in as the work happens)
+### G3-A / G3-B (2026-10-05): done
+- Gates are discovered, not listed: `tools/mapset.mjs` (the maps that exist, their routes, kind and episode); `tools/dev/route-parity.mjs` is the ONE implementation of "play a route in the real game and compare it with the Node sim" (the Episode 1 browser check and the new per-map tool both use it); `tools/dev/render-census.mjs` takes `{ only: [ids] }` and finds moving floors and the boss encounter from the maps themselves (the last Episode 1 literals are gone from it).
+- Per-map real-game evidence: `tools/dev/browser-map.mjs` -> `validation/browser/<ID>.json`. `validate` and `verify-map` now judge the SHARED browser check (code) and the map's OWN file; the old `mapShas` list is no longer read. Tests: `tests/freshness.test.js` (a changed or new map invalidates only itself; changed shared code invalidates every map; 4 of 14 fail on the old validator, `review/gate-3/freshness-tests-vs-OLD-validator.txt`), `tests/mapset.test.js`.
+- One command per map: `npm run map -- <ID> [--browser]`, `npm run map:new -- <ID>`, `npm run map -- --list`.
+- MEASURED on the nine Episode 1 maps: real-game evidence 2-16 s per map (all nine in about 110 s; a map's routes and census, software GL), the sim loop 1-32 s per map (verify-map; compile 0.1 s). All nine derive AGENT_VERIFIED through the new per-map evidence. The shared browser check (10+ minutes) is about code and is not re-run for a new map.
+- Known cost kept for the record: the shared browser check still carries the Episode 1 route parity and the all-maps census as regression fixtures (duplicated by `browser-maps`); and adding a baked skin changes `src/engine/defs.js` (the skin tables) and `src/render/textures.js` (the texture list), which invalidates every map's evidence by design. The pilot measures that cost; making skins data (and per-map asset freshness) is the candidate fix.
+
+### G3-D pilot: C1E2M01 Brine Gate
+(scaffolded 2026-10-05 with `npm run map:new`; the log continues here)

@@ -24,6 +24,7 @@ export const SOURCE_SETS = {
 export const DEPENDS = {
   mapSim: ['engine'],                                                               // validation/maps/<ID>.json (bots, viability, reachability run the sim)
   browser: ['engine', 'render', 'game', 'audio', 'assets'],                         // validation/browser-check.json: drives the real game, incl. the render-truth census
+  browserMap: ['engine', 'render', 'game', 'audio', 'assets'],                       // validation/browser/<ID>.json: ONE map played in the real game + its census (also depends on that map's file and routes)
   renderGround: ['engine', 'render', 'game', 'assets'],                             // validation/render-ground.json
   audio: ['audio'],                                                                 // validation/audio.json
 };
