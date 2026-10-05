@@ -1,105 +1,105 @@
 {
   "note": "No real-GPU frame rate was measured (headless Chrome + software GL only). Counts are structural; timings are software-GL and UNCLAMPED; neither is a 60 FPS claim.",
   "renderBudget": {
-    "when": "2026-09-30T04:15:30.575Z",
+    "when": "2026-10-05T05:50:42.870Z",
     "map": "C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)",
     "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
     "budget": {
       "pier": {
         "calls": 191,
         "triangles": 21474,
-        "geometries": 1329,
+        "geometries": 1402,
         "textures": 31,
         "programs": 12
       },
       "plaza": {
         "calls": 161,
         "triangles": 19338,
-        "geometries": 1329,
+        "geometries": 1402,
         "textures": 31,
         "programs": 12
       },
       "warehouse": {
         "calls": 68,
         "triangles": 9508,
-        "geometries": 1329,
+        "geometries": 1402,
         "textures": 31,
         "programs": 12
       },
       "plaza-all-awake": {
         "calls": 493,
         "triangles": 19338,
-        "geometries": 1655,
+        "geometries": 1728,
         "textures": 31,
         "programs": 12
       },
       "warehouse-all-awake": {
         "calls": 145,
         "triangles": 9616,
-        "geometries": 1655,
+        "geometries": 1728,
         "textures": 31,
         "programs": 12
       },
       "m03-market": {
         "calls": 234,
         "triangles": 38916,
-        "geometries": 1471,
+        "geometries": 1544,
         "textures": 31,
         "programs": 13
       },
       "m03-market-all-awake": {
         "calls": 819,
         "triangles": 38916,
-        "geometries": 2029,
+        "geometries": 2102,
         "textures": 31,
         "programs": 13
       },
       "m05-terrace": {
         "calls": 121,
-        "triangles": 18458,
-        "geometries": 1370,
+        "triangles": 18428,
+        "geometries": 1447,
         "textures": 31,
         "programs": 10
       },
       "m05-terrace-all-awake": {
         "calls": 419,
-        "triangles": 18458,
-        "geometries": 1636,
+        "triangles": 18428,
+        "geometries": 1713,
         "textures": 31,
         "programs": 10
       },
       "m06-quay": {
-        "calls": 147,
-        "triangles": 31610,
-        "geometries": 1398,
+        "calls": 186,
+        "triangles": 31510,
+        "geometries": 1529,
         "textures": 31,
         "programs": 11
       },
       "m06-quay-all-awake": {
-        "calls": 826,
-        "triangles": 31610,
-        "geometries": 2051,
+        "calls": 836,
+        "triangles": 31510,
+        "geometries": 2153,
         "textures": 31,
         "programs": 11
       },
       "m07-atrium": {
-        "calls": 196,
-        "triangles": 29522,
-        "geometries": 1382,
+        "calls": 218,
+        "triangles": 29978,
+        "geometries": 1477,
         "textures": 31,
         "programs": 11
       },
       "m08-chamber": {
-        "calls": 184,
-        "triangles": 20694,
-        "geometries": 1355,
+        "calls": 209,
+        "triangles": 22190,
+        "geometries": 1451,
         "textures": 31,
         "programs": 11
       },
       "m08-chamber-all-awake": {
-        "calls": 533,
-        "triangles": 21638,
-        "geometries": 1698,
+        "calls": 563,
+        "triangles": 22166,
+        "geometries": 1799,
         "textures": 31,
         "programs": 11
       }
@@ -136,40 +136,40 @@
     },
     "m05-terrace": {
       "calls": 121,
-      "triangles": 18458
+      "triangles": 18428
     },
     "m05-terrace-all-awake": {
       "calls": 419,
-      "triangles": 18458
+      "triangles": 18428
     },
     "m06-quay": {
-      "calls": 147,
-      "triangles": 31610
+      "calls": 180,
+      "triangles": 31398
     },
     "m06-quay-all-awake": {
-      "calls": 826,
-      "triangles": 31610
+      "calls": 830,
+      "triangles": 31398
     },
     "m07-atrium": {
-      "calls": 196,
-      "triangles": 29522
+      "calls": 210,
+      "triangles": 29810
     },
     "m08-chamber": {
-      "calls": 184,
-      "triangles": 20694
+      "calls": 196,
+      "triangles": 20918
     },
     "m08-chamber-all-awake": {
-      "calls": 533,
-      "triangles": 21638
+      "calls": 537,
+      "triangles": 21698
     }
   },
   "softwareGl": {
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
     "perf": {
       "frames": 900,
-      "avgMs": 44.16588888888889,
-      "p95Ms": 166.6999999999971,
-      "worstMs": 766.6999999999971
+      "avgMs": 70.55466666666666,
+      "p95Ms": 416.6999999999971,
+      "worstMs": 950
     }
   },
   "target": "60 FPS on a mainstream desktop browser (UNVERIFIED)"

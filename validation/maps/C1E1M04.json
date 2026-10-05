@@ -2,12 +2,20 @@
   "mapId": "C1E1M04",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "07f456e",
+  "codeVersion": "5b7b070",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "90c806a4c8f82434",
-  "assetVersion": "b802ce1a6831da76",
-  "engineSha": "32736b82ea91d43f",
+  "assetVersion": "be7f0f55628a7b04",
+  "engineSha": "35624a331b1471c1",
+  "sources": {
+    "engine": "35624a331b1471c1",
+    "render": "1340a26faded2f43",
+    "game": "3265f3cc2a144b43",
+    "audio": "030538561ae23a94",
+    "assets": "be7f0f55628a7b04"
+  },
+  "routesSha": "363a18a77b5ae18d",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -140,9 +148,20 @@
       },
       "ammo": {
         "capacity": 962,
-        "fired": 130
+        "fired": 130,
+        "capacityBy": {
+          "flare": 38,
+          "shell": 84,
+          "rivet": 840
+        },
+        "firedBy": {
+          "flare": 3,
+          "rivet": 127
+        }
       },
       "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
         "result": "complete",
         "damage": 4,
         "meanDamage": 4,
@@ -159,9 +178,21 @@
       },
       "ammo": {
         "capacity": 668,
-        "fired": 169
+        "fired": 169,
+        "capacityBy": {
+          "flare": 28,
+          "shell": 60,
+          "rivet": 580
+        },
+        "firedBy": {
+          "flare": 4,
+          "rivet": 163,
+          "shell": 2
+        }
       },
       "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
         "result": "complete",
         "damage": 14,
         "meanDamage": 14,
@@ -178,9 +209,21 @@
       },
       "ammo": {
         "capacity": 551,
-        "fired": 204
+        "fired": 204,
+        "capacityBy": {
+          "flare": 23,
+          "shell": 52,
+          "rivet": 476
+        },
+        "firedBy": {
+          "flare": 5,
+          "rivet": 197,
+          "shell": 2
+        }
       },
       "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
         "result": "complete",
         "damage": 40,
         "meanDamage": 43,
@@ -189,6 +232,7 @@
         "failure": null
       }
     },
+    "threats": 44,
     "gate": [
       {
         "exit": "exit1",
@@ -212,12 +256,12 @@
   },
   "browser": {
     "file": "validation/browser-check.json",
-    "when": "2026-09-30T11:25:31.163Z",
+    "when": "2026-10-05T05:51:02.101Z",
     "env": "headless Chrome 154, SwiftShader software GL, 1280x720",
     "mapSha": "90c806a4c8f82434",
-    "commit": "07f456e",
-    "passed": 92,
-    "total": 92,
+    "commit": "5b7b070",
+    "passed": 106,
+    "total": 106,
     "allPassed": true
   },
   "automated": {
@@ -279,7 +323,7 @@
         "detail": "complete"
       },
       {
-        "name": "gate: a fighting bot sent straight at exit 'exit1' cannot complete the level (bot-failed: no path to 30,52)",
+        "name": "gate: an invulnerable fighting bot sent straight at exit 'exit1' cannot complete the level (bot-failed: no path to 30,52)",
         "ok": true,
         "detail": ""
       },
@@ -297,6 +341,26 @@
         "name": "viability hard: a passive runner does not walk through (dead, 115 damage)",
         "ok": true,
         "detail": ""
+      },
+      {
+        "name": "ammo easy: rivet rounds available (840) are at least 1.5x what the perfect bot fires (127)",
+        "ok": true,
+        "detail": "x6.61"
+      },
+      {
+        "name": "ammo normal: rivet rounds available (580) are at least 1.5x what the perfect bot fires (163)",
+        "ok": true,
+        "detail": "x3.56"
+      },
+      {
+        "name": "ammo hard: flare rounds available (23) are at least 1.5x what the perfect bot fires (5)",
+        "ok": true,
+        "detail": "x4.60"
+      },
+      {
+        "name": "ammo hard: rivet rounds available (476) are at least 1.5x what the perfect bot fires (197)",
+        "ok": true,
+        "detail": "x2.42"
       },
       {
         "name": "ammo easy: rounds available (962) are at least 1.5x what the perfect bot fires (130): humans miss",
@@ -327,6 +391,21 @@
         "name": "viability hard: a perfect fighter completes the level",
         "ok": true,
         "detail": "complete"
+      },
+      {
+        "name": "viability easy: the perfect fighter completes on 3 of 3 seeds (3 did)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "name": "viability normal: the perfect fighter completes on 3 of 3 seeds (3 did)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "name": "viability hard: the perfect fighter completes on 2 of 3 seeds (3 did)",
+        "ok": true,
+        "detail": ""
       },
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
@@ -396,7 +475,17 @@
       {
         "name": "latest browser check passed",
         "ok": true,
-        "detail": "92/92"
+        "detail": "106/106"
+      },
+      {
+        "name": "the browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
+        "ok": true,
+        "detail": "source hashes match"
+      },
+      {
+        "name": "the browser check includes the render-truth census (enemies drawn on the floor the sim stands them on) and it passed",
+        "ok": true,
+        "detail": "7/7 render-truth checks"
       }
     ]
   },

@@ -1,5 +1,5 @@
 {
-  "git": "f79bf59",
+  "git": "5b7b070",
   "dirtySource": false,
   "node": "v24.21.0",
   "dependencies": {
@@ -18,18 +18,30 @@
     "AGENT_VERIFIED": 9,
     "COMPLETE": 0
   },
+  "statusPerMap": {
+    "C1E1M01": "AGENT_VERIFIED",
+    "C1E1M02": "AGENT_VERIFIED",
+    "C1E1M03": "AGENT_VERIFIED",
+    "C1E1M04": "AGENT_VERIFIED",
+    "C1E1M05": "AGENT_VERIFIED",
+    "C1E1M06": "AGENT_VERIFIED",
+    "C1E1M07": "AGENT_VERIFIED",
+    "C1E1M08": "AGENT_VERIFIED",
+    "C1E1S01": "AGENT_VERIFIED"
+  },
   "evidenceStamps": {
-    "code": "f79bf59",
-    "browserCheck": "f79bf59",
-    "audioQa": "f79bf59",
-    "map:C1E1M01": "f79bf59",
-    "map:C1E1M02": "f79bf59",
-    "map:C1E1M03": "f79bf59",
-    "map:C1E1M04": "f79bf59",
-    "map:C1E1M05": "f79bf59",
-    "map:C1E1M06": "f79bf59",
-    "map:C1E1M07": "f79bf59",
-    "map:C1E1M08": "f79bf59",
-    "map:C1E1S01": "f79bf59"
-  }
+    "code": "5b7b070",
+    "browserCheck": "5b7b070",
+    "audioQa": "5b7b070",
+    "map:C1E1M01": "5b7b070",
+    "map:C1E1M02": "5b7b070",
+    "map:C1E1M03": "5b7b070",
+    "map:C1E1M04": "5b7b070",
+    "map:C1E1M05": "5b7b070",
+    "map:C1E1M06": "5b7b070",
+    "map:C1E1M07": "5b7b070",
+    "map:C1E1M08": "5b7b070",
+    "map:C1E1S01": "5b7b070"
+  },
+  "staleBySource": []
 }

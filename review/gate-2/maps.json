@@ -51,7 +51,7 @@
         "items": 49,
         "secrets": 1
       },
-      "botSecondsNormal": 124.1,
+      "botSecondsNormal": 124,
       "fighterDamage": {
         "easy": 40,
         "normal": 56,
@@ -66,7 +66,7 @@
         {
           "file": "routes/C1E1M02.main.route.json",
           "result": "complete",
-          "seconds": 124.1,
+          "seconds": 124,
           "kills": 30,
           "secrets": 0
         },
@@ -126,7 +126,7 @@
       "fighterDamage": {
         "easy": 4,
         "normal": 14,
-        "hard": 40
+        "hard": 43
       },
       "runner": {
         "easy": "dead, 110 damage",
@@ -155,7 +155,7 @@
       "name": "Lamplighter Hill",
       "status": "AGENT_VERIFIED",
       "automatedPass": true,
-      "mapVersion": 1,
+      "mapVersion": 2,
       "counts": {
         "enemies": 45,
         "items": 52,
@@ -163,9 +163,9 @@
       },
       "botSecondsNormal": 135.9,
       "fighterDamage": {
-        "easy": 16,
+        "easy": 11,
         "normal": 28,
-        "hard": 69
+        "hard": 84
       },
       "runner": {
         "easy": "dead, 117 damage",
@@ -177,7 +177,7 @@
           "file": "routes/C1E1M05.main.route.json",
           "result": "complete",
           "seconds": 135.9,
-          "kills": 39,
+          "kills": 40,
           "secrets": 0
         }
       ]
@@ -187,17 +187,17 @@
       "name": "Ferry Terminal",
       "status": "AGENT_VERIFIED",
       "automatedPass": true,
-      "mapVersion": 1,
+      "mapVersion": 2,
       "counts": {
-        "enemies": 41,
-        "items": 31,
+        "enemies": 40,
+        "items": 41,
         "secrets": 0
       },
-      "botSecondsNormal": 90.1,
+      "botSecondsNormal": 103.9,
       "fighterDamage": {
-        "easy": 19,
-        "normal": 84,
-        "hard": 72
+        "easy": 36,
+        "normal": 70,
+        "hard": 54
       },
       "runner": {
         "easy": "dead, 100 damage",
@@ -208,8 +208,8 @@
         {
           "file": "routes/C1E1M06.main.route.json",
           "result": "complete",
-          "seconds": 90.1,
-          "kills": 47,
+          "seconds": 103.9,
+          "kills": 46,
           "secrets": 0
         }
       ]
@@ -219,16 +219,16 @@
       "name": "Signal House",
       "status": "AGENT_VERIFIED",
       "automatedPass": true,
-      "mapVersion": 1,
+      "mapVersion": 2,
       "counts": {
         "enemies": 37,
-        "items": 19,
+        "items": 24,
         "secrets": 0
       },
-      "botSecondsNormal": 162.2,
+      "botSecondsNormal": 161.2,
       "fighterDamage": {
         "easy": 23,
-        "normal": 92,
+        "normal": 73,
         "hard": 87
       },
       "runner": {
@@ -240,7 +240,7 @@
         {
           "file": "routes/C1E1M07.main.route.json",
           "result": "complete",
-          "seconds": 162.2,
+          "seconds": 161.2,
           "kills": 37,
           "secrets": 0
         }
@@ -251,17 +251,17 @@
       "name": "Bell Tower of St. Orrin",
       "status": "AGENT_VERIFIED",
       "automatedPass": true,
-      "mapVersion": 1,
+      "mapVersion": 2,
       "counts": {
         "enemies": 41,
-        "items": 46,
+        "items": 54,
         "secrets": 0
       },
-      "botSecondsNormal": 163.9,
+      "botSecondsNormal": 177.3,
       "fighterDamage": {
-        "easy": 49,
-        "normal": 138,
-        "hard": 230
+        "easy": 48,
+        "normal": 128,
+        "hard": 190
       },
       "runner": {
         "easy": "dead, 110 damage",
@@ -272,8 +272,8 @@
         {
           "file": "routes/C1E1M08.main.route.json",
           "result": "complete",
-          "seconds": 163.9,
-          "kills": 44,
+          "seconds": 177.3,
+          "kills": 47,
           "secrets": 0
         }
       ]

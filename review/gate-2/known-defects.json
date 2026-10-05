@@ -340,6 +340,44 @@
       "status": "open",
       "title": "Only Episode 1 exists; C1E2-C2 (59 maps) are not started",
       "remaining": "By design: Gate 3 has not been approved."
+    },
+    {
+      "id": "PT-001",
+      "severity": "MAJOR",
+      "status": "partially-fixed",
+      "title": "Playtest 2026-09-30: awake enemies drawn UNDER raised floors (C1E1M02 gallery, 3 m) and corpses sunk into the floor",
+      "how": "Root cause: pose() overwrote the world root height after the view placed it (also: death/crouch buried the mesh, scale on the root mis-placed sleeping Wardens/Sextons/Cantor, dead/stunned enemies ignored moving floors). Fixed by splitting world root from pose rig + a contact solver; guarded by tests/rig-grounding, enemy-hit-volume, sim-sector-ground and the render-truth census in the browser gate (2/8 census checks passed on the old code, 0 violations now).",
+      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY. Not asserted by any check: that the drawn floor surface equals the sim floor; pickups on moving decks."
+    },
+    {
+      "id": "PT-002",
+      "severity": "MAJOR",
+      "status": "partially-fixed",
+      "title": "Playtest 2026-09-30: same symptom in C1E1M04 (the raised shop, 2 m)",
+      "how": "Same causes and guards as PT-001.",
+      "remaining": "Awaiting the owner confirming in play."
+    },
+    {
+      "id": "PT-003",
+      "severity": "MINOR",
+      "status": "fixed",
+      "title": "Rivet pickup toast said +30 while the pickup grants 40; debris used world y = 0 as the floor; the 800x600 pause control list was clipped against the Reset button",
+      "how": "Toast amounts derive from PICKUPS (tests/pickup-toasts + a real-game browser check); debris lands on the terrain under it (tests/debris-floor + a browser check over the 3 m gallery); the nested scroller is gone and the browser check measures four window sizes."
+    },
+    {
+      "id": "PT-004",
+      "severity": "MAJOR",
+      "status": "fixed",
+      "title": "Evidence freshness covered only src/engine; assetVersion was recorded and never checked; only the main route was hashed; a bundle could claim 9 AGENT_VERIFIED while the derived status was 0 (the old validate printed OK for exactly that at 8dc307c)",
+      "how": "tools/textsha.mjs source sets + dependency table; evidence records `sources`; validate marks stale on engine/render/game/audio/asset/map/ANY-route changes and on a browser check without the census; validate fails when a live bundle contradicts the derived status; tests/freshness.test.js (9 of 13 fail on the old validator).",
+      "remaining": "Numbers typed by hand in TESTING.md / PRODUCTION_LOG.md / GAME_VISION.md prose are still unguarded."
+    },
+    {
+      "id": "PT-005",
+      "severity": "MINOR",
+      "status": "open",
+      "title": "Rendered bodies are taller than their sim hit cylinders: Cantor 4.79 m drawn vs 3.2 m hit, Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95 (Gaunt and Bell node match)",
+      "remaining": "Measured (validation/render-ground.json hitVolume), deliberately NOT changed: it is gameplay tuning. Shots at the visible torso register on every kind (tests/enemy-hit-volume); shots at the head of the tall kinds pass over. Owner decision: widen the hit volumes or accept torso-only hits."
     }
   ],
   "reauditedCommit": "07f456e"

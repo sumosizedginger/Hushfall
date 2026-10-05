@@ -1,0 +1,30 @@
+census C1E1M01: 16 enemies (0 raised) asleep 16 bad / awake 0 / poses 42 rows 33 bad / corpses 16 bad
+census C1E1M02: 38 enemies (17 raised) asleep 38 bad / awake 34 / poses 84 rows 75 bad / corpses 38 bad
+census C1E1M03: 37 enemies (5 raised) asleep 37 bad / awake 11 / poses 55 rows 49 bad / corpses 37 bad
+census C1E1M04: 44 enemies (6 raised) asleep 44 bad / awake 12 / poses 68 rows 59 bad / corpses 44 bad
+census C1E1M05: 45 enemies (43 raised) asleep 45 bad / awake 86 / poses 112 rows 109 bad / corpses 45 bad
+census C1E1M06: 40 enemies (20 raised) asleep 40 bad / awake 35 / poses 98 rows 92 bad / corpses 43 bad
+census C1E1M07: 37 enemies (7 raised) asleep 37 bad / awake 15 / poses 85 rows 76 bad / corpses 37 bad
+census C1E1M08: 41 enemies (34 raised) asleep 35 bad / awake 60 / poses 139 rows 121 bad / corpses 41 bad
+census C1E1S01: 0 enemies (0 raised) asleep 0 bad / awake 0 / poses 0 rows 0 bad / corpses 0 bad
+census moving floor C1E1M05/car: 4/4/4/4/4 bad per phase
+census moving floor C1E1M06/ramp: 4/4/4/4/4 bad per phase
+census Cantor: rendered body centre is 76.642 m from the sim position (hit radius 0.65) | shield centre y 14.4 is outside the body -0.154..9.421 | the body pokes out of the shield (corner 81.714 m from its centre, radius 2.971) | node 22's link ends at (57,14.6,51), outside the Cantor's drawn body | node 28's link ends at (57,14.6,51), outside the Cantor's drawn body | node 29's link ends at (57,14.6,51), outside the Cantor's drawn body | node 47's link ends at (57,14.6,51), outside the Cantor's drawn body | node 48's link ends at (57,14.6,51), outside the Cantor's drawn body | node 59's link ends at (57,14.6,51), outside the Cantor's drawn body | 35 chamber enemies violate the ground contract | after severing, 7 rigs violate the ground contract
+PASS render truth coverage: 9 maps, all 7 enemy kinds, 129 enemies on raised floors (a census that saw nothing would pass vacuously) 
+      kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor; raised 129; pose rows 683
+FAIL render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 
+      298 rows (129 on raised floors), 292 violations, deepest -12.154 m, highest 0 m | e.g. tollbearer#1 contact: lowest vertex -0.039 is buried 0.039 m (band -0.03/+0.3) ; tollbearer#8 contact: lowest vertex -0.039 is buried 0.039 m (band -0.03/+0.3); every one of the 298 enemies was measured: true
+FAIL render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 
+      596 rows (129 on raised floors), 253 violations, deepest -12.018 m, highest 0.127 m | e.g. gaunt#1 placement: root (52.37, 0, 13.642) != sim (52.37, 3, 13.642) ; gaunt#2 placement: root (60.418, 0, 13.625) != sim (60.418, 3, 13.625); two samples of all 298 enemies: true
+FAIL render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 
+      683 rows (401 on raised floors), 614 violations, deepest -12.925 m, highest 0.156 m | e.g. tollbearer#1@0m stand contact: lowest vertex -0.039 is buried 0.039 m (band -0.03/+0.3) ; tollbearer#1@0m attack-windup contact: lowest vertex -0.039 is buried 0.039 m (band -0.03/+0.3)
+FAIL render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) 
+      dying: 301 rows (132 on raised floors), 301 violations, deepest -12.107 m, highest 0 m | e.g. tollbearer#1 placement: root (31, 0.015, 33) != sim (31, 0, 33) ; tollbearer#8 placement: root (43, 0.015, 25) != sim (43, 0, 25) || corpses: 301 rows (132 on raised floors), 301 violations, deepest -12.939 m, highest 0 m | e.g. tollbearer#1 placement: root (31, 0.12, 33) != sim (31, 0, 33) ; tollbearer#8 placement: root (43, 0.12, 25) != sim (43, 0, 25)
+FAIL render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 
+      40 rows (40 on raised floors), 40 violations, deepest -4.306 m, highest 0 m | e.g. C1E1M05/car idle at rest placement: root (53, 0, 79) != sim (53, 2, 79) ; C1E1M05/car stunned at rest placement: root (55, 0, 79) != sim (55, 2, 79)
+FAIL render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links 
+      rendered body centre is 76.642 m from the sim position (hit radius 0.65) | shield centre y 14.4 is outside the body -0.154..9.421 | the body pokes out of the shield (corner 81.714 m from its centre, radius 2.971) | node 22's link ends at (57,14.6,51), outside the Cantor's drawn body | node 28's link ends at (57,14.6,51), outside the Cantor's drawn body | node 29's link ends at (57,14.6,51), outside the Cantor's drawn body | node 47's link ends at (57,14.6,51), outside the Cantor's drawn body | node 48's link ends at (57,14.6,51), outside the Cantor's drawn body | node 59's link ends at (57,14.6,51), outside the Cantor's drawn body | 35 chamber enemies violate the ground contract | after seve
+PASS no uncaught exceptions or console errors 
+      
+
+2/8 render-truth checks passed (report: D:\Doom\review\playtest\2026-10-04\render-ground-BEFORE-fix.json)

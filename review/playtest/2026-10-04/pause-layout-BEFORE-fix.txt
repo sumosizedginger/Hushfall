@@ -1,0 +1,4 @@
+1280x720 {"rows":19,"hiddenInList":354,"listOverflow":"auto","rowsOverlappingButton":3,"fullyVisibleRows":7,"gapLastRowToButton":-348,"partialRowAtEdge":true}
+1280x600 {"rows":19,"hiddenInList":395,"listOverflow":"auto","rowsOverlappingButton":3,"fullyVisibleRows":6,"gapLastRowToButton":-388,"partialRowAtEdge":true}
+800x600 {"rows":19,"hiddenInList":395,"listOverflow":"auto","rowsOverlappingButton":3,"fullyVisibleRows":6,"gapLastRowToButton":-388,"partialRowAtEdge":true}
+1024x480 {"rows":19,"hiddenInList":436,"listOverflow":"auto","rowsOverlappingButton":2,"fullyVisibleRows":5,"gapLastRowToButton":-429,"partialRowAtEdge":true}
