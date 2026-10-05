@@ -43,5 +43,9 @@
     "map:C1E1M08": "90c5319",
     "map:C1E1S01": "90c5319"
   },
-  "staleBySource": []
+  "staleBySource": [],
+  "historical": {
+    "supersededBy": "review/gate-3",
+    "note": "Frozen snapshot of the Gate 2 decision (Episode 1, approved by the owner 2026-10-05). The campaign-wide counts here describe that moment; adding maps (Gate 3 onward) changes them. Gate 3 reports live in review/gate-3/."
+  }
 }

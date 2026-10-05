@@ -10,6 +10,7 @@ import crypto from 'node:crypto';
 import { PNG } from 'pngjs';
 import { textSha, sourceShas } from '../textsha.mjs';
 import { runRenderCensus } from './render-census.mjs';
+import { runRouteParity } from './route-parity.mjs';
 import { execSync } from 'node:child_process';
 const updateBaseline = process.argv.includes('--update-baseline');
 
@@ -200,23 +201,14 @@ try {
   const G2 = [['C1E1M02', 'main'], ['C1E1M02', 'secret'], ['C1E1M03', 'main'], ['C1E1M04', 'main'], ['C1E1M04', 'secret'], ['C1E1M05', 'main'], ['C1E1M06', 'main'], ['C1E1M07', 'main'], ['C1E1M08', 'main'], ['C1E1S01', 'main']];
   const g2report = {}; let sawBoss = false, sawObjective = false, sawFuse = false, sawShield = false;
   for (const [id, name] of G2) {
-    const gm = loadMapFile(path.join(root, 'maps', id + '.json')), gr = loadRouteFile(path.join(root, 'routes', id + '.' + name + '.route.json')), gn = runRoute(gm, gr, { seed: 1, difficulty: 'normal' });
-    await T(`t.newGame('normal', 1, { mapId: '${id}' })`); await T('t.clearOverlays()'); await T(`t.startBot('${id}.${name}')`);
-    let rr, lastOp = -1, shotN = 0; const tRoute = Date.now(); const want = new Set(name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
-    for (let i = 0; i < 1500; i++) {
-      rr = await T('t.stepBot(90)');
-      if (rr.op !== lastOp && want.has(rr.op) && shotN < 3) { await shot('g2-' + id.toLowerCase() + '-' + name + '-op' + String(rr.op).padStart(2, '0')); shotN++; }
-      lastOp = rr.op;
+    const p = await runRouteParity({ T, root, shot }, id, name, { shots: true, onStep: async () => {
       if (id === 'C1E1M08') { sawBoss = sawBoss || (await visible('boss')); sawShield = sawShield || (await text('boss-note')).includes('SHIELDED'); }
       sawObjective = sawObjective || (await text('objective')).startsWith('OBJECTIVE');
       if (id === 'C1E1M07') sawFuse = sawFuse || (await page.$$eval('#toasts div', (els) => els.some((e) => /fuse/i.test(e.textContent))));
-      if (rr.done || rr.failed || rr.status !== 'playing') break;
-    }
-    const ok = rr.status === 'complete' && !rr.failed;
-    check(`Gate 2 real-game route ${id}.${name}: completes in the browser`, ok, `status=${rr.status} failed=${rr.failed} ticks=${rr.tick} wall=${((Date.now() - tRoute) / 1000).toFixed(0)}s`);
-    check(`Gate 2 real-game route ${id}.${name}: browser sim == Node sim (ticks + state hash)`, rr.tick === gn.ticks && rr.hash === gn.hash, `browser ${rr.tick}/${rr.hash} vs node ${gn.ticks}/${gn.hash}`);
-    g2report[id + '.' + name] = { ok, ticks: rr.tick, hash: rr.hash, nodeTicks: gn.ticks, nodeHash: gn.hash, kills: rr.stats?.kills, secrets: rr.stats?.secrets };
-    await T('t.clearOverlays()');
+    } });
+    check(`Gate 2 real-game route ${id}.${name}: completes in the browser`, p.ok, `status=${p.status} failed=${p.failed} ticks=${p.ticks} wall=${p.wallSeconds}s`);
+    check(`Gate 2 real-game route ${id}.${name}: browser sim == Node sim (ticks + state hash)`, p.agree, `browser ${p.ticks}/${p.hash} vs node ${p.nodeTicks}/${p.nodeHash}`);
+    g2report[id + '.' + name] = { ok: p.ok, ticks: p.ticks, hash: p.hash, nodeTicks: p.nodeTicks, nodeHash: p.nodeHash, kills: p.kills, secrets: p.secrets };
   }
   check('Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse', sawObjective && sawBoss && sawShield && sawFuse, JSON.stringify({ sawObjective, sawBoss, sawShield, sawFuse }));
   g2 = g2report;

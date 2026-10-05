@@ -43,10 +43,11 @@ function vantage(m, ex, ez, dist = 5) {
   return null;
 }
 
-export async function runRenderCensus({ T, root, check, shot = null, log = console.log }) {
+export async function runRenderCensus({ T, root, check, shot = null, log = console.log, only = null }) {
   const defs = await import(pathToFileURL(path.join(root, 'src/engine/defs.js')).href), { ENEMIES } = defs;
   const { parseMap } = await import(pathToFileURL(path.join(root, 'src/engine/mapformat.js')).href);
-  const mapIds = fs.readdirSync(path.join(root, 'maps')).filter((f) => /^C\dE\d[MS]\d\d\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
+  const allIds = fs.readdirSync(path.join(root, 'maps')).filter((f) => /^C\dE\d[MS]\d\d\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
+  const mapIds = only ? allIds.filter((i) => only.includes(i)) : allIds;           // `only`: one map (or a few) checked on their own; the campaign-wide coverage rules below then do not apply
   const rows = async () => T('t.enemyBounds()');
   const report = { band: GROUND_BAND, maps: {}, movingFloors: [], cantor: null, shots: [] };
   const all = { asleep: [], awake: [], matrix: [], dying: [], corpses: [] }, kindsSeen = new Set(), hitVolume = {}; let raisedEnemies = 0, totalEnemies = 0;
@@ -89,15 +90,16 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     // screenshots of the encounters the owner reported: the highest floor with enemies, awake and chasing, then the corpse it leaves
     if (shot && entry.enemies > 0) {
       await T(`t.newGame('normal', 3, { mapId: '${id}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)');
-      const cand = (await rows()).filter((r) => r.kind !== 'bellnode' && (id !== 'C1E1M08' || r.kind === 'wardengraft' || r.kind === 'sexton')).sort((x, y) => y.ground - x.ground || x.id - y.id);
-      for (const c of cand) { const vp = vantage(m, c.sim.x, c.sim.z, id === 'C1E1M01' ? 6 : 4.5); if (!vp) continue;
+      const cand = (await rows()).filter((r) => r.kind !== 'bellnode' && r.kind !== 'cantor').sort((x, y) => y.ground - x.ground || x.id - y.id);
+      for (const c of cand) { const vp = vantage(m, c.sim.x, c.sim.z, 4.5); if (!vp) continue;
         await T(`t.setup_teleport(${vp.x}, ${vp.z}, ${vp.yaw}); t.setup_enemy(${c.id}, { state: 'chase', lastX: ${vp.x}, lastZ: ${vp.z} }); t.clearOverlays(); t.tick(14)`); report.shots.push(await shot(`${id}-${c.kind}-on-${r3(c.ground)}m-awake`));
         await T(`t.setup_enemy(${c.id}, { state: 'dead', hp: 0, attackT: -1, lungeT: -1 }); t.tick(45)`); report.shots.push(await shot(`${id}-${c.kind}-on-${r3(c.ground)}m-corpse`)); break; }
     }
   }
 
   // 5. MOVING FLOORS: sleepers, a staggered enemy, a corpse and a chaser stand on a lift while it travels both ways
-  for (const [mapId, secId] of [['C1E1M05', 'car'], ['C1E1M06', 'ramp']]) {
+  const movers = []; for (const mapId of mapIds) for (const sec of JSON.parse(fs.readFileSync(path.join(root, 'maps', mapId + '.json'), 'utf8')).sectors ?? []) movers.push([mapId, sec.id]);
+  for (const [mapId, secId] of movers) {
     const src = JSON.parse(fs.readFileSync(path.join(root, 'maps', mapId + '.json'), 'utf8')), sec = src.sectors?.find((s) => s.id === secId); if (!sec) continue;
     const S = parseMap(src).cell, cells = sec.cells.slice(0, 4).map(([cx, cz]) => [(cx + 0.5) * S, (cz + 0.5) * S]), entry = { map: mapId, sector: secId, low: sec.low, high: sec.high, phases: [] };
     await T(`t.newGame('normal', 3, { mapId: '${mapId}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)');
@@ -119,9 +121,10 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     log(`census moving floor ${mapId}/${secId}: ${entry.phases.map((p) => p.bad.length).join('/')} bad per phase`);
   }
 
-  // 6. THE CANTOR: body, shield and ring occupy the same space; severing the ring takes the shield and the beams with it
-  {
-    await T(`t.newGame('normal', 3, { mapId: 'C1E1M08' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(3)');
+  // 6. THE CANTOR: body, shield and ring occupy the same space; severing the ring takes the shield and the beams with it (the map that has one; a boss with a different encounter is its own kit item and gets its own block)
+  const cantorMap = mapIds.find((id) => (JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8')).entities ?? []).some((e) => e.kind === 'cantor'));
+  if (cantorMap) {
+    await T(`t.newGame('normal', 3, { mapId: '${cantorMap}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(3)');
     const rs = await rows(), boss = rs.find((r) => r.kind === 'cantor'), nodes = rs.filter((r) => r.kind === 'bellnode'), probe = await T('t.encounterProbe()'), c = { found: !!boss, nodes: nodes.length, problems: [] };
     if (boss) {
       const cx = (boss.min[0] + boss.max[0]) / 2, cz = (boss.min[2] + boss.max[2]) / 2; c.body = { min: boss.min.map(r3), max: boss.max.map(r3), height: r3(boss.max[1] - boss.min[1]), ground: boss.ground, hitHeight: boss.hit.height, hitRadius: boss.hit.radius };
@@ -143,15 +146,15 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
         if (!inside(beam.a, n, 0.2)) c.problems.push(`node ${n.id}'s link starts at (${beam.a.map(r3)}), outside that node's drawn body`);
       }
       if (nodes.length < 6) c.problems.push(`only ${nodes.length} ring nodes found`);
-      const ringRows = judge(rs, 'C1E1M08 chamber'); c.contact = { bad: ringRows.bad.length, worstBuried: ringRows.worstBuried, worstFloat: ringRows.worstFloat }; if (ringRows.bad.length) c.problems.push(`${ringRows.bad.length} chamber enemies violate the ground contract`);
-      if (shot) { const m = parseMap(JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M08.json'), 'utf8'))), vp = vantage(m, boss.sim.x, boss.sim.z, 9);
-        if (vp) { await T(`t.setup_teleport(${vp.x}, ${vp.z}, ${vp.yaw}); t.clearOverlays(); t.tick(4)`); report.shots.push(await shot('C1E1M08-cantor-body-shield-ring')); } }
+      const ringRows = judge(rs, cantorMap + ' chamber'); c.contact = { bad: ringRows.bad.length, worstBuried: ringRows.worstBuried, worstFloat: ringRows.worstFloat }; if (ringRows.bad.length) c.problems.push(`${ringRows.bad.length} chamber enemies violate the ground contract`);
+      if (shot) { const m = parseMap(JSON.parse(fs.readFileSync(path.join(root, 'maps', cantorMap + '.json'), 'utf8'))), vp = vantage(m, boss.sim.x, boss.sim.z, 9);
+        if (vp) { await T(`t.setup_teleport(${vp.x}, ${vp.z}, ${vp.yaw}); t.clearOverlays(); t.tick(4)`); report.shots.push(await shot(cantorMap + '-cantor-body-shield-ring')); } }
       // severing the ring: shield and links go
       await T(`for (const n of window.__GAME_TEST__.enemyBounds().filter((r) => r.kind === 'bellnode')) window.__GAME_TEST__.setup_enemy(n.id, { state: 'dead', hp: 0 });`); await T('t.tick(30)');
       const after = await T('t.encounterProbe()'); c.afterSevering = { shield: after.shield, beams: after.beams.length };
       if (after.shield || after.beams.length) c.problems.push('the shield or ring links are still drawn after every node is severed');
-      const rsAfter = await rows(), bossAfter = rsAfter.find((r) => r.kind === 'cantor'), nodesAfter = rsAfter.filter((r) => r.kind === 'bellnode'); const ja = judge([bossAfter, ...nodesAfter], 'C1E1M08 severed'); if (ja.bad.length) c.problems.push(`after severing, ${ja.bad.length} rigs violate the ground contract`);
-    } else c.problems.push('no Cantor in C1E1M08');
+      const rsAfter = await rows(), bossAfter = rsAfter.find((r) => r.kind === 'cantor'), nodesAfter = rsAfter.filter((r) => r.kind === 'bellnode'); const ja = judge([bossAfter, ...nodesAfter], cantorMap + ' severed'); if (ja.bad.length) c.problems.push(`after severing, ${ja.bad.length} rigs violate the ground contract`);
+    } else c.problems.push('no Cantor in ' + cantorMap);
     report.cantor = c; log(`census Cantor: ${c.problems.length ? c.problems.join(' | ') : 'body, shield and ring agree'}`);
   }
 
@@ -160,16 +163,16 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
   const moving = sum(report.movingFloors.flatMap((f) => f.phases)), tot = Object.fromEntries(Object.entries(all).map(([k, v]) => [k, sum(v)]));
   const line = (s) => `${s.n} rows (${s.raised} on raised floors), ${s.bad.length} violations, deepest ${s.worstBuried} m, highest ${s.worstFloat} m` + (s.bad.length ? ' | e.g. ' + s.bad.slice(0, 2).map((b) => `${b.label ?? b.kind + '#' + b.id} ${b.problems[0]}`).join(' ; ') : '');
   const need = ['tollbearer', 'gaunt', 'bellhand', 'sexton', 'wardengraft', 'cantor', 'bellnode'];
-  check(`render truth coverage: ${mapIds.length} maps, all 7 enemy kinds, ${raisedEnemies} enemies on raised floors (a census that saw nothing would pass vacuously)`, mapIds.length >= 9 && need.every((k) => kindsSeen.has(k)) && raisedEnemies >= 60 && tot.matrix.n >= 300, `kinds ${[...kindsSeen].join(',')}; raised ${raisedEnemies}; pose rows ${tot.matrix.n}`);
-  check('render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor', tot.asleep.bad.length === 0 && tot.asleep.n === totalEnemies && totalEnemies > 0, line(tot.asleep) + `; every one of the ${totalEnemies} enemies was measured: ${tot.asleep.n === totalEnemies}`);
-  check('render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor', tot.awake.bad.length === 0 && tot.awake.n === 2 * totalEnemies && totalEnemies > 0, line(tot.awake) + `; two samples of all ${totalEnemies} enemies: ${tot.awake.n === 2 * totalEnemies}`);
+  if (!only) check(`render truth coverage: ${mapIds.length} maps, all 7 enemy kinds, ${raisedEnemies} enemies on raised floors (a census that saw nothing would pass vacuously)`, mapIds.length >= 9 && need.every((k) => kindsSeen.has(k)) && raisedEnemies >= 60 && tot.matrix.n >= 300, `kinds ${[...kindsSeen].join(',')}; raised ${raisedEnemies}; pose rows ${tot.matrix.n}`);
+  check('render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor', tot.asleep.bad.length === 0 && tot.asleep.n === totalEnemies && (!!only || totalEnemies > 0), line(tot.asleep) + `; every one of the ${totalEnemies} enemies was measured: ${tot.asleep.n === totalEnemies}`);
+  check('render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor', tot.awake.bad.length === 0 && tot.awake.n === 2 * totalEnemies && (!!only || totalEnemies > 0), line(tot.awake) + `; two samples of all ${totalEnemies} enemies: ${tot.awake.n === 2 * totalEnemies}`);
   check('render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band', tot.matrix.bad.length === 0, line(tot.matrix));
   check('render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)', tot.dying.bad.length === 0 && tot.corpses.bad.length === 0 && tot.corpses.n >= totalEnemies && tot.dying.n >= totalEnemies, `dying: ${line(tot.dying)} || corpses: ${line(tot.corpses)}`);
-  check('render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)', report.movingFloors.length >= 2 && moving.bad.length === 0 && moving.n >= 40, line(moving));
-  check('render truth: the Cantor\'s body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links', !!report.cantor && report.cantor.problems.length === 0 && report.cantor.nodes === 6, report.cantor ? (report.cantor.problems.join(' | ') || `body ${report.cantor.body.height} m tall on ${report.cantor.body.ground} m, shield r ${report.cantor.shield?.r}, ${report.cantor.nodes} nodes`) : 'none');
+  check('render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)', moving.bad.length === 0 && (only ? true : report.movingFloors.length >= 2 && moving.n >= 40), line(moving));
+  check('render truth: the Cantor\'s body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links', (only && !report.cantor) || (!!report.cantor && report.cantor.problems.length === 0 && report.cantor.nodes === 6), report.cantor ? (report.cantor.problems.join(' | ') || `body ${report.cantor.body.height} m tall on ${report.cantor.body.ground} m, shield r ${report.cantor.shield?.r}, ${report.cantor.nodes} nodes`) : 'none');
   // PT-005 (owner decision 2026-10-05: the hit box matches the enemy): the sim's hit height is the drawn height. Width is judged vertex by vertex in tests/hit-volume-fair.test.js (the census only sees bounding boxes).
-  const hvBad = need.filter((k) => !hitVolume[k] || Math.abs(hitVolume[k].hitHeight - hitVolume[k].drawnHeight) > 0.10);
-  check("render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)", hvBad.length === 0, need.map((k) => `${k} ${hitVolume[k]?.drawnHeight} drawn / ${hitVolume[k]?.hitHeight} hit`).join('; '));
+  const hvBad = only ? [] : need.filter((k) => !hitVolume[k] || Math.abs(hitVolume[k].hitHeight - hitVolume[k].drawnHeight) > 0.10);
+  if (!only) check("render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)", hvBad.length === 0, need.map((k) => `${k} ${hitVolume[k]?.drawnHeight} drawn / ${hitVolume[k]?.hitHeight} hit`).join('; '));
   report.hitVolume = hitVolume;
   report.totals = Object.fromEntries(Object.entries(tot).map(([k, s]) => [k, { rows: s.n, raised: s.raised, violations: s.bad.length, deepest: s.worstBuried, highest: s.worstFloat }])); report.totals.movingFloors = { rows: moving.n, violations: moving.bad.length, deepest: moving.worstBuried, highest: moving.worstFloat };
   report.violations = [...Object.values(tot).flatMap((s) => s.bad), ...moving.bad].slice(0, 60); report.violationCount = [...Object.values(tot), moving].reduce((a, s) => a + s.bad.length, 0);

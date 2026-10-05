@@ -13,19 +13,24 @@ const VALIDATOR = process.env.HF_VALIDATOR ?? path.join(ROOT, 'tools/validate.mj
 const run = (root, ...args) => spawnSync(process.execPath, [VALIDATOR, ...args], { env: { ...process.env, HUSHFALL_ROOT: root }, encoding: 'utf8' });
 const put = (dir, rel, body) => { fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true }); fs.writeFileSync(path.join(dir, rel), body); };
 const status = (dir, id = 'C1E1M01') => JSON.parse(fs.readFileSync(path.join(dir, 'validation/campaign.json'), 'utf8')).perMap[id];
-const RT = ['coverage', 'sleeping', 'awake', 'poses', 'corpses', 'moving floors', 'cantor'].map((n) => ({ name: 'render truth: ' + n, ok: true }));
 
-/** a project root with every source set, one map with fully valid evidence (so the baseline status is AGENT_VERIFIED) */
-function project({ browserChecks = [...RT, { name: 'other', ok: true }] } = {}) {
+const shared = (dir, over = {}) => put(dir, 'validation/browser-check.json', JSON.stringify({ sources: sourceShas(dir), checks: [{ name: 'game starts', ok: true }], ...over }));
+const browserOf = (dir, id, over = {}) => put(dir, `validation/browser/${id}.json`, JSON.stringify({ mapId: id, sources: sourceShas(dir), mapSha: textSha(path.join(dir, 'maps', id + '.json')), routesSha: routesSha(dir, id), routes: { main: { ok: true, agree: true } }, checks: [{ name: 'real-game route: completes in the browser', ok: true }, { name: 'render truth: the census passed on this map', ok: true }], ...over }));
+
+/** a project root with every source set and, for each id, a map with fully valid evidence (so the baseline status is AGENT_VERIFIED) */
+function project({ ids = ['C1E1M01'] } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-fresh-'));
   put(dir, 'CAMPAIGN_MANIFEST.json', fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
   put(dir, 'src/engine/world.js', '// engine'); put(dir, 'src/render/view.js', '// render'); put(dir, 'src/game/ui.js', '// game'); put(dir, 'src/audio/synth.js', '// audio');
   put(dir, 'assets/baked/atlas.png', Buffer.from([137, 80, 78, 71, 1, 2, 3])); put(dir, 'assets/baked/manifest.json', '{"assets":{}}');
-  put(dir, 'maps/C1E1M01.json', '{"map":1}'); put(dir, 'routes/C1E1M01.main.route.json', '[]'); put(dir, 'routes/C1E1M01.secret.route.json', '[{"op":"wait"}]');
-  const src = sourceShas(dir);
-  put(dir, 'validation/browser-check.json', JSON.stringify({ sources: src, mapShas: { C1E1M01: textSha(path.join(dir, 'maps/C1E1M01.json')) }, checks: browserChecks }));
-  put(dir, 'validation/maps/C1E1M01.json', JSON.stringify({ mapId: 'C1E1M01', loads: true, mapSha: textSha(path.join(dir, 'maps/C1E1M01.json')), engineSha: src.engine, assetVersion: src.assets, routesSha: routesSha(dir, 'C1E1M01'),
-    browser: { file: 'validation/browser-check.json' }, automated: { pass: true }, canonicalRoute: { file: 'routes/C1E1M01.main.route.json', sha: textSha(path.join(dir, 'routes/C1E1M01.main.route.json')), reachedExit: true } }));
+  for (const id of ids) { put(dir, `maps/${id}.json`, `{"map":"${id}"}`); put(dir, `routes/${id}.main.route.json`, '[]'); }
+  put(dir, 'routes/C1E1M01.secret.route.json', '[{"op":"wait"}]');
+  const src = sourceShas(dir); shared(dir);
+  for (const id of ids) {
+    browserOf(dir, id);
+    put(dir, `validation/maps/${id}.json`, JSON.stringify({ mapId: id, loads: true, mapSha: textSha(path.join(dir, 'maps', id + '.json')), engineSha: src.engine, assetVersion: src.assets, routesSha: routesSha(dir, id),
+      browser: { file: `validation/browser/${id}.json` }, automated: { pass: true }, canonicalRoute: { file: `routes/${id}.main.route.json`, sha: textSha(path.join(dir, `routes/${id}.main.route.json`)), reachedExit: true } }));
+  }
   return dir;
 }
 
@@ -37,7 +42,11 @@ test('a RENDER change makes the evidence stale (the old gate hashed only src/eng
   const dir = project(); put(dir, 'src/render/view.js', '// render, changed'); run(dir); assert.equal(status(dir), 'IMPLEMENTED');
 });
 test('a GAME-SHELL change (UI, test hook, index.html) makes the browser evidence stale', () => {
-  for (const [rel, body] of [['src/game/ui.js', '// game, changed'], ['index.html', '<html></html>']]) { const dir = project(); if (rel === 'index.html') { put(dir, rel, '<html>a</html>'); const src = sourceShas(dir); put(dir, 'validation/browser-check.json', JSON.stringify({ sources: src, mapShas: { C1E1M01: textSha(path.join(dir, 'maps/C1E1M01.json')) }, checks: [...RT] })); run(dir); assert.equal(status(dir), 'AGENT_VERIFIED', 'recorded with index.html present'); } put(dir, rel, body); run(dir); assert.equal(status(dir), 'IMPLEMENTED', rel); }
+  for (const [rel, body] of [['src/game/ui.js', '// game, changed'], ['index.html', '<html></html>']]) {
+    const dir = project();
+    if (rel === 'index.html') { put(dir, rel, '<html>a</html>'); shared(dir); browserOf(dir, 'C1E1M01'); run(dir); assert.equal(status(dir), 'AGENT_VERIFIED', 'recorded with index.html present'); }
+    put(dir, rel, body); run(dir); assert.equal(status(dir), 'IMPLEMENTED', rel);
+  }
 });
 test('an AUDIO-code change makes the browser evidence stale (the browser check drives the live audio engine)', () => {
   const dir = project(); put(dir, 'src/audio/synth.js', '// audio, changed'); run(dir); assert.equal(status(dir), 'IMPLEMENTED');
@@ -52,13 +61,23 @@ test('a MAP change makes the evidence stale', () => {
 test('a change to ANY route of the map makes the evidence stale, not only the canonical one (secret route here)', () => {
   const dir = project(); put(dir, 'routes/C1E1M01.secret.route.json', '[{"op":"wait"},{"op":"use"}]'); run(dir); assert.equal(status(dir), 'IMPLEMENTED');
 });
-test('evidence that records no route hash, or browser evidence that records no source hashes, is stale (missing = unknown = stale)', () => {
+test('evidence that records no route hash, or real-game evidence (shared or per map) that records no source hashes, is stale (missing = unknown = stale)', () => {
   let dir = project(); const f = path.join(dir, 'validation/maps/C1E1M01.json'), ev = JSON.parse(fs.readFileSync(f, 'utf8')); delete ev.routesSha; fs.writeFileSync(f, JSON.stringify(ev)); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no routesSha');
-  dir = project(); const b = path.join(dir, 'validation/browser-check.json'), bj = JSON.parse(fs.readFileSync(b, 'utf8')); delete bj.sources; fs.writeFileSync(b, JSON.stringify(bj)); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no browser sources');
+  dir = project(); const b = path.join(dir, 'validation/browser-check.json'), bj = JSON.parse(fs.readFileSync(b, 'utf8')); delete bj.sources; fs.writeFileSync(b, JSON.stringify(bj)); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no shared browser sources');
+  dir = project(); const p = path.join(dir, 'validation/browser/C1E1M01.json'), pj = JSON.parse(fs.readFileSync(p, 'utf8')); delete pj.sources; fs.writeFileSync(p, JSON.stringify(pj)); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no per-map browser sources');
 });
-test('a browser check that predates the render-truth census, or has a failing check, cannot support AGENT_VERIFIED', () => {
-  let dir = project({ browserChecks: [{ name: 'game starts', ok: true }] }); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no render-truth checks');
-  dir = project({ browserChecks: [...RT.slice(1), { name: 'render truth: awake', ok: false }] }); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'a render-truth check failed');
+test('a map needs ITS OWN real-game evidence that passed: none, failing, or no routes played cannot support AGENT_VERIFIED, and a failing shared check cannot either', () => {
+  let dir = project(); fs.rmSync(path.join(dir, 'validation/browser/C1E1M01.json')); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no validation/browser/<ID>.json');
+  dir = project(); browserOf(dir, 'C1E1M01', { checks: [{ name: 'render truth: awake', ok: false }] }); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'a per-map check failed');
+  dir = project(); browserOf(dir, 'C1E1M01', { routes: {} }); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'no route was played in the real game');
+  dir = project(); shared(dir, { checks: [{ name: 'pause menu fits', ok: false }] }); run(dir); assert.equal(status(dir), 'IMPLEMENTED', 'the shared browser check failed');
+});
+test('GATE 3 (R3/R4): a changed or NEW map invalidates only itself; changed shared code invalidates every map', () => {
+  let dir = project({ ids: ['C1E1M01', 'C1E1M02'] }); let r = run(dir); assert.equal(r.status, 0, r.stdout + r.stderr); assert.equal(status(dir, 'C1E1M01'), 'AGENT_VERIFIED'); assert.equal(status(dir, 'C1E1M02'), 'AGENT_VERIFIED');
+  put(dir, 'maps/C1E1M02.json', '{"map":"edited"}'); run(dir); assert.equal(status(dir, 'C1E1M01'), 'AGENT_VERIFIED', 'the other map is untouched'); assert.equal(status(dir, 'C1E1M02'), 'IMPLEMENTED', 'the edited map is stale');
+  put(dir, 'routes/C1E1M02.main.route.json', '[{"op":"wait"}]'); run(dir); assert.equal(status(dir, 'C1E1M01'), 'AGENT_VERIFIED', 'a route change elsewhere does not touch this map');
+  dir = project({ ids: ['C1E1M01'] }); put(dir, 'maps/C1E1M02.json', '{"map":"new"}'); put(dir, 'routes/C1E1M02.main.route.json', '[]'); run(dir); assert.equal(status(dir, 'C1E1M01'), 'AGENT_VERIFIED', 'adding a map (even one with no evidence yet) does not stale the existing ones'); assert.equal(status(dir, 'C1E1M02'), 'PLANNED', 'a map with no evidence file is PLANNED');
+  dir = project({ ids: ['C1E1M01', 'C1E1M02'] }); put(dir, 'src/render/view.js', '// render, changed'); run(dir); assert.equal(status(dir, 'C1E1M01'), 'IMPLEMENTED'); assert.equal(status(dir, 'C1E1M02'), 'IMPLEMENTED', 'shared code invalidates every map');
 });
 test('text hashing folds CRLF (a Windows checkout does not stale everything) but source sets still see real edits; sets absent from a root are skipped', () => {
   const a = project(), b = project(), lf = ['// render', '// more', ''].join('\n'), crlf = ['// render', '// more', ''].join('\r\n');
