@@ -1,0 +1,9 @@
+✖ every enemy state keeps e.y equal to groundAt() while the floor under it moves (idle, staggered, dead, ring node) (8.6804ms)
+✖ and back down: from the raised lift, a corpse and a stunned enemy follow it to the bottom (a corpse that never updates would stay at 2 m) (2.9516ms)
+ℹ pass 0
+ℹ fail 2
+✖ failing tests:
+✖ every enemy state keeps e.y equal to groundAt() while the floor under it moves (idle, staggered, dead, ring node) (8.6804ms)
+  AssertionError [ERR_ASSERTION]: 240 stale heights, e.g. tick 1 stunned: e.y 0.000 but the floor under it is 0.025 | tick 1 dead: e.y 0.000 but the floor under it is 0.025 | tick 1 node: e.y 0.000 but the floor under it is 0.025
+✖ and back down: from the raised lift, a corpse and a stunned enemy follow it to the bottom (a corpse that never updates would stay at 2 m) (2.9516ms)
+  AssertionError [ERR_ASSERTION]: stunned is back at the bottom (y 2)

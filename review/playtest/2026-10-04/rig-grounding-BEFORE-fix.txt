@@ -1,0 +1,75 @@
+✖ a pose never writes the WORLD placement: the root keeps the position, yaw and scale the view gave it (37.7627ms)
+✖ in every pose the lowest rendered vertex sits on the authoritative ground, never buried and never hovering (all rigs, floors 0 / 0.5 / 1 / 3 m) (78.4795ms)
+✖ a corpse lies ON the floor: the dead pose is lifted onto the contact plane, not left floating or half-sunk (every rig) (7.3924ms)
+✔ resurrection stands the rig back up: dead 1 -> 0 returns to exactly the idle pose (no leftover topple, scale or lift) (3.3515ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 216.5763
+
+✖ failing tests:
+
+test at tests\rig-grounding.test.js:28:1
+✖ a pose never writes the WORLD placement: the root keeps the position, yaw and scale the view gave it (37.7627ms)
+  AssertionError [ERR_ASSERTION]: 634 pose(s) overwrote the world root, e.g. tollbearer on 0 m, pose "dead 0.05": root 0.37,0,-0.21,0,0.8,0,1,1,1 -> 0.37,0.001,-0.21,-0.011,0.8,0,1,1,1 | tollbearer on 0 m, pose "dead 0.10": root 0.37,0.001,-0.21,-0.011,0.8,0,1,1,1 -> 0.37,0.003,-0.21,-0.042,0.8,0,1,1,1 | tollbearer on 0 m, pose "dead 0.15": root 0.37,0.003,-0.21,-0.042,0.8,0,1,1,1 -> 0.37,0.007,-0.21,-0.091,0.8,0,1,1,1
+  
+  634 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/rig-grounding.test.js:39:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 634,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\rig-grounding.test.js:42:1
+✖ in every pose the lowest rendered vertex sits on the authoritative ground, never buried and never hovering (all rigs, floors 0 / 0.5 / 1 / 3 m) (78.4795ms)
+  AssertionError [ERR_ASSERTION]: 1499 grounding violation(s) of the band -0.03/+0.3 m; deepest {"off":-4.294755122884193,"kind":"cantor","g":3,"name":"dead 1.00"}; highest {"off":0.24212218739563363,"kind":"cantor","g":0,"name":"walk@6"}; first: tollbearer on 0 m, "idle": lowest vertex -0.039 (-0.039 from the ground) | tollbearer on 0 m, "walk@0": lowest vertex -0.039 (-0.039 from the ground) | tollbearer on 0 m, "half-walk@0": lowest vertex -0.030 (-0.030 from the ground) | tollbearer on 0 m, "half-walk@3": lowest vertex -0.039 (-0.039 from the ground)
+  
+  1499 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/rig-grounding.test.js:52:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1499,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\rig-grounding.test.js:55:1
+✖ a corpse lies ON the floor: the dead pose is lifted onto the contact plane, not left floating or half-sunk (every rig) (7.3924ms)
+  AssertionError [ERR_ASSERTION]: tollbearer on 0 m: lowest vertex -0.174 from the floor | tollbearer on 3 m: lowest vertex -3.174 from the floor | bellhand on 0 m: lowest vertex -0.263 from the floor | bellhand on 3 m: lowest vertex -3.263 from the floor | sexton on 0 m: lowest vertex -0.155 from the floor | sexton on 3 m: lowest vertex -3.155 from the floor | wardengraft on 0 m: lowest vertex -0.257 from the floor | wardengraft on 3 m: lowest vertex -3.257 from the floor | cantor on 0 m: lowest vertex -1.295 from the floor | cantor on 3 m: lowest vertex -4.295 from the floor | gaunt on 0 m: lowest vertex -0.134 from the floor | gaunt on 3 m: lowest vertex -3.134 from the floor | bellnode on 0 m: lowest vertex -0.316 from the floor | bellnode on 3 m: lowest vertex -0.316 from the floor
+  
+  14 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Doom/tests/rig-grounding.test.js:62:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 14,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

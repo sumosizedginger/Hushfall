@@ -1,0 +1,4 @@
+1280x720 {"rows":19,"hiddenInList":0,"listOverflow":"visible","rowsOverlappingButton":0,"fullyVisibleRows":19,"gapLastRowToButton":10,"partialRowAtEdge":false}
+1280x600 {"rows":19,"hiddenInList":0,"listOverflow":"visible","rowsOverlappingButton":0,"fullyVisibleRows":19,"gapLastRowToButton":10,"partialRowAtEdge":false}
+800x600 {"rows":19,"hiddenInList":0,"listOverflow":"visible","rowsOverlappingButton":0,"fullyVisibleRows":19,"gapLastRowToButton":10,"partialRowAtEdge":false}
+1024x480 {"rows":19,"hiddenInList":0,"listOverflow":"visible","rowsOverlappingButton":0,"fullyVisibleRows":19,"gapLastRowToButton":10,"partialRowAtEdge":false}

@@ -1,0 +1,7 @@
+Maps  PLANNED 59/68  IMPLEMENTED 9/68  AGENT_VERIFIED 0/68  COMPLETE 0/68
+Secret maps in manifest: 6/6 (verified: 0)
+validate: OK (topology 68 slots: C1 36, C2 32, main 62, secret 6)
+validate exit code: 0
+
+--- what the committed gate-2 bundle claims at the same commit:
+review/gate-2/build-info.json status = {"PLANNED":59,"IMPLEMENTED":0,"AGENT_VERIFIED":9,"COMPLETE":0}
