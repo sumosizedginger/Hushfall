@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M05",
-  "when": "2026-10-05T22:53:36.308Z",
-  "commit": "cb9355b",
+  "when": "2026-10-05T23:46:21.549Z",
+  "commit": "0a81186",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,11 +11,11 @@
   "mapSha": "ca88c434394ca789",
   "routesSha": "80ddf76e16c07610",
   "sources": {
-    "engine": "a01a633c05680695",
-    "render": "5f2dc4330b716085",
-    "game": "4d9f7cc49a1a76ed",
+    "engine": "2078aef21477631f",
+    "render": "aafd5384bba8940b",
+    "game": "80bbc167614f6d05",
     "audio": "030538561ae23a94",
-    "assets": "be7f0f55628a7b04"
+    "assets": "d7df902a581fccc8"
   },
   "routes": {
     "main": {
@@ -27,7 +27,7 @@
       "agree": true,
       "kills": 40,
       "secrets": 0,
-      "wallSeconds": 3
+      "wallSeconds": 4
     }
   },
   "hud": {
@@ -122,7 +122,7 @@
     {
       "name": "real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8155 wall=3s"
+      "detail": "status=complete failed=null ticks=8155 wall=4s"
     },
     {
       "name": "real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -170,5 +170,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 11
+  "wallSeconds": 12
 }
