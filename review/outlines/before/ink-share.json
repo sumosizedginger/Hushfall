@@ -1,18 +1,51 @@
 {
- "note": "share of pixels carrying ink (3D view, HUD strips and weapon excluded)",
+ "note": "share of pixels carrying ink (3D view, HUD strips and weapon excluded); enemyBodyInk = ink INSIDE an enemy body (its screen box shrunk 20% per side), by scene and mean per kind",
  "scenes": {
   "m02-hall-entry": 0.0369,
   "m02-gallery-up": 0.0115,
-  "m02-west-stairs": 0.013,
-  "m02-hall-enemies": 0.0463,
-  "m02-dais-enemies": 0.0312,
+  "m02-west-stairs": 0.0129,
+  "m02-library-closeup": 0.0468,
+  "m02-hall-enemies": 0.0471,
+  "m02-dais-enemies": 0.0311,
   "m04-shop": 0.0206,
   "m04-wading": 0.0372,
   "m04-shop-enemies": 0.0369,
   "m05-terrace-one": 0.0381,
   "m05-terrace-enemies": 0.0503,
   "m08-chamber": 0.0372,
-  "m08-ring-node": 0.0381
+  "m08-ring-node": 0.038
  },
- "mean": 0.0331
+ "enemyBodyInk": {
+  "m02-library-closeup": {
+   "tollbearer": 0.1445
+  },
+  "m02-hall-enemies": {
+   "tollbearer": 0.1749,
+   "bellhand": 0.1161,
+   "gaunt": 0.4595
+  },
+  "m02-dais-enemies": {
+   "tollbearer": 0.1819,
+   "bellhand": 0.3108,
+   "gaunt": 0.4644
+  },
+  "m04-shop-enemies": {
+   "tollbearer": 0.1716,
+   "bellhand": 0.2659,
+   "gaunt": 0.4691
+  },
+  "m05-terrace-enemies": {
+   "tollbearer": 0.1718,
+   "bellhand": 0.2744,
+   "gaunt": 0,
+   "sexton": 0
+  }
+ },
+ "enemyBodyInkMean": {
+  "tollbearer": 0.1689,
+  "bellhand": 0.2418,
+  "gaunt": 0.3483,
+  "sexton": 0
+ },
+ "mean": 0.0342
 }

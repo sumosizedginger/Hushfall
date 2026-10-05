@@ -5,7 +5,7 @@ import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER } from '../engine/defs.js';
-import { enemyBounds, encounterProbe, debrisProbe } from '../render/diagnostics.js';
+import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
 
@@ -54,6 +54,7 @@ export function installTestHook(app) {
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
     /** render truth: per enemy, the sim's x/y/z + ground (groundAt) next to the world-space bounds and root position actually drawn (see GameView.enemyBounds) */
     enemyBounds() { return g.view && g.world ? enemyBounds(g.view, g.world) : []; },
+    enemyScreenRect(id) { return g.view && g.world ? enemyScreenRect(g.view, g.world, id) : null; },
     /** feed events to the view as the game does (impact / explode make debris) and read the debris back */
     emitView(events) { g.view.handleEvents(events); },
     debrisProbe() { return g.view && g.world ? debrisProbe(g.view, g.world) : []; },
@@ -69,6 +70,7 @@ export function installTestHook(app) {
     setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
+    setup_postClassic(on) { g.view.post.uniforms.uClassic.value = on ? 1 : 0; },                                        // the whole picture on the original ink pass (outline guard in browser-check)
     setup_postDebug(on) { g.view.post.uniforms.uDebug.value = on ? 1 : 0; },                                            // the ink mask instead of the picture (tools/dev/shoot-outlines.mjs)
     // -- diagnostics --
     perf() { const t = [...g.frameTimes].sort((a, b) => a - b); const n = t.length; return { frames: n, avgMs: n ? t.reduce((a, b) => a + b, 0) / n : 0, p95Ms: t[Math.floor(n * 0.95)] ?? 0, worstMs: t[n - 1] ?? 0 }; },
