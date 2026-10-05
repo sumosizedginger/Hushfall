@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-10-05T21:07:48.210Z",
-  "codeCommit": "964c207",
+  "ranAt": "2026-10-05T21:49:48.750Z",
+  "codeCommit": "90c5319",
   "exitCode": 0,
-  "tests": 281,
-  "pass": 281,
+  "tests": 284,
+  "pass": 284,
   "fail": 0,
   "failures": [],
   "names": [
@@ -87,6 +87,9 @@
     "pinned: the Cantor's pulse rings really exist before a save is taken, and are identical after loading it",
     "hitscan aimed at the DRAWN lower body",
     "the drawn body stands on the hit volume: the sim axis passes through it, its centre is within a hit diameter, its base is on e.y, its middle is inside the hit height",
+    "markEntity flags every opaque material of every enemy rig and patches its fragment shader to write alpha 0",
+    "blended effects keep their real alpha; a clone",
+    "patchEntityFragment only touches the opaque_fragment chunk",
     "the normal exit leads to the next map in the manifest, and only if that map exists",
     "a secret exit goes to the secret map; the secret map returns to the main route; a map without a secret exit ignores dest=secret",
     "every secret slot points back into the main chain consistently",

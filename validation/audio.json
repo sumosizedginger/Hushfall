@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-05T20:56:59.145Z",
+  "when": "2026-10-05T21:42:58.795Z",
   "sources": {
     "engine": "a01a633c05680695",
-    "render": "8b03082a29460933",
-    "game": "a3c3070a753b2eb6",
+    "render": "5f2dc4330b716085",
+    "game": "4d9f7cc49a1a76ed",
     "audio": "030538561ae23a94",
     "assets": "be7f0f55628a7b04"
   },
-  "commit": "964c207",
+  "commit": "90c5319",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -116,8 +116,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "step_plank",
@@ -404,8 +404,8 @@
       "tailRms": 0.00004,
       "audibleSeconds": 1.81,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "pulse_hit",

@@ -1,0 +1,17 @@
+shot 01-arrival
+shot 02-yard-screen
+shot 03-bond-store
+shot 04-vestibule
+shot 05-hall-entry
+shot 06-hall-gallery-up
+shot 07-west-stairs
+shot 08-on-the-gallery
+shot 09-brass-door
+shot 10-registry-stacks
+shot 11-excise-office
+shot 12-iron-dais
+shot 13-excise-stair
+shot 14-exit
+shot 15-hall-closets
+shot 16-lost-property
+{"errors":[]}

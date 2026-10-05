@@ -1,0 +1,42 @@
+regen4 from 90c5319, source dirty lines: 0
+=== START browsercheck
+=== EXIT 0 (browsercheck)
+=== START audio-qa
+=== EXIT 0 (audio-qa)
+=== START verify-map C1E1M01
+=== EXIT 0 (verify-C1E1M01)
+=== START verify-map C1E1M02
+=== EXIT 0 (verify-C1E1M02)
+=== START verify-map C1E1M03
+=== EXIT 0 (verify-C1E1M03)
+=== START verify-map C1E1M04
+=== EXIT 0 (verify-C1E1M04)
+=== START verify-map C1E1M05
+=== EXIT 0 (verify-C1E1M05)
+=== START verify-map C1E1M06
+=== EXIT 0 (verify-C1E1M06)
+=== START verify-map C1E1M07
+=== EXIT 0 (verify-C1E1M07)
+=== START verify-map C1E1M08
+=== EXIT 0 (verify-C1E1M08)
+=== START verify-map C1E1S01
+=== EXIT 0 (verify-C1E1S01)
+=== START shoot-level (M01)
+=== EXIT 0 (shoot-C1E1M01)
+=== START shoot-map C1E1M02
+=== EXIT 0 (shoot-C1E1M02)
+=== START shoot-map C1E1M03
+=== EXIT 0 (shoot-C1E1M03)
+=== START shoot-map C1E1M04
+=== EXIT 0 (shoot-C1E1M04)
+=== START shoot-map C1E1M05
+=== EXIT 0 (shoot-C1E1M05)
+=== START shoot-map C1E1M06
+=== EXIT 0 (shoot-C1E1M06)
+=== START shoot-map C1E1M07
+=== EXIT 0 (shoot-C1E1M07)
+=== START shoot-map C1E1M08
+=== EXIT 0 (shoot-C1E1M08)
+=== START shoot-map C1E1S01
+=== EXIT 0 (shoot-C1E1S01)
+=== ALL DONE
