@@ -1,5 +1,5 @@
 {
-  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the first independent adversarial audit (review/gate-2/audit/, code f79bf59); R01-R15 are the findings of the second, focused audit of the repairs (review/gate-2/reaudit/, code 07f456e); G2-U* are the author's own unverified/open items. \"fixed\" means fixed in mechanism AND guarded by a test or gate that was shown to fail on the unrepaired code. 2026-10-05: the owner approved Gate 2 as APPROVE DIRECTION with two limited revisions (hit volumes match the visible enemy, PT-005; a focused outline-readability pass). Items A04, A09, A13, A14, R14, A21 (M12) and the real-GPU measurement are DEFERRED by that decision unless an actual player-facing problem makes one necessary (REPAIR_PLAN.md WP3-WP9).",
+  "note": "Judgement file for Gate 2 (Episode 1). Never overwritten by tools/gate2-bundle.mjs; open BLOCKERs are read by tools/verify-map.mjs. A01-A22 are the findings of the first independent adversarial audit (review/gate-2/audit/, code f79bf59); R01-R15 are the findings of the second, focused audit of the repairs (review/gate-2/reaudit/, code 07f456e); G2-U* are the author's own unverified/open items. \"fixed\" means fixed in mechanism AND guarded by a test or gate that was shown to fail on the unrepaired code. 2026-10-05: the owner approved Gate 2 as APPROVE DIRECTION with two limited revisions (hit volumes match the visible enemy, PT-005; a focused outline-readability pass). Items A04, A09, A13, A14, R14, A21 (M12) and the real-GPU measurement are DEFERRED by that decision unless an actual player-facing problem makes one necessary (REPAIR_PLAN.md WP3-WP9). 2026-10-05: Gate 2 APPROVED by the owner on the revised build; Gate 3 opened.",
   "auditedCommit": "f79bf59",
   "defects": [
     {
@@ -276,7 +276,7 @@
       "severity": "MAJOR",
       "status": "partially-fixed",
       "title": "Hand play of the nine maps: the owner played Episode 1 (2026-10-05) and reports solid gameplay; per-map and per-difficulty detail was not recorded",
-      "remaining": "The owner (2026-10-05): played Episode 1, \"gameplay is solid\", approved the gameplay and visual direction. Not recorded: which of the nine maps, which difficulties, par times, the Cantor fight. Hard difficulty and every par time were still tuned against a bot only."
+      "remaining": "The owner (2026-10-05): played Episode 1, \"gameplay is solid\", approved the gameplay and visual direction. Not recorded: which of the nine maps, which difficulties, par times, the Cantor fight. Hard difficulty and every par time were still tuned against a bot only. 2026-10-05: the owner approved the revised build (Gate 2 APPROVED); per-map detail is still not recorded."
     },
     {
       "id": "G2-U2",
@@ -377,16 +377,16 @@
       "severity": "MINOR",
       "status": "fixed",
       "title": "Rendered bodies are taller than their sim hit cylinders: Cantor 4.79 m drawn vs 3.2 m hit, Warden 3.00 vs 2.3, Sexton 2.37 vs 1.85, Bellhand 2.37 vs 1.9, Tollbearer 2.26 vs 1.95 (Gaunt and Bell node match)",
-      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY. Attack poses are not fitted (the standing rig is the reference); arms, weapons and trailing cloth past the torso are deliberately not hittable.",
+      "remaining": "CLOSED: the owner approved the revised build 2026-10-05 (\"Perfect look, love it now. approved\"); no separate comment on the hit boxes. Attack poses are not fitted (the standing rig is the reference); arms, weapons and trailing cloth past the torso are deliberately not hittable.",
       "how": "Owner decision 2026-10-05 (the hit box must match the enemy). src/engine/hitvolume.js: heights = the drawn heights, hitRadius/hitForward for the Cantor and the Gaunt, flares burst on the body, splash is measured from the blast height. Guarded by tests/hit-volume-fair.test.js (4 of 6 fail on the old numbers; over-tall and over-wide mutations fail) and a census check in the real game."
     },
     {
       "id": "G2-R2",
       "severity": "MINOR",
-      "status": "unverified",
+      "status": "fixed",
       "title": "Outline readability pass (owner revision 2, 2026-10-05): made, appearance only",
       "how": "src/render/post.js: crease ink on the LEVEL and its props only (absolute second difference of 1/z), lower silhouette thresholds there, less broken ink there; enemies and the weapon keep the original ink exactly (src/render/entityflag.js, PT-006). Before/after in review/outlines/ (whole-view ink share 3.4% -> 6.4%; enemy body ink unchanged).",
-      "remaining": "Nobody has judged whether the level reads better or is too heavy: only the enemies were complained about, and those are back to the original. A dark Gaunt on a dark wall is still dark on dark (palette, not outline). The Outline setting still turns the pass off; ?outline=classic restores the original pass to compare."
+      "remaining": "CLOSED: the owner confirmed the look 2026-10-05 (\"Perfect look, love it now. approved\"). A dark Gaunt on a dark wall is still dark on dark (palette, not outline). The Outline setting still turns the pass off; ?outline=classic restores the original pass."
     },
     {
       "id": "PT-006",
@@ -394,7 +394,7 @@
       "status": "fixed",
       "title": "Owner 2026-10-05: the first outline pass drew wireframe-like lines over the enemies (a regression I shipped)",
       "how": "The corner ink could not tell an enemy from the level, so it traced every box edge of every rig. Enemies and the weapon now write alpha 0 and keep the original ink (src/render/entityflag.js + post.js). Guarded by tests/entityflag.test.js and a real-game check of the ink inside an enemy body (red with the marking disabled, green now).",
-      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY."
+      "remaining": "CLOSED: the owner, 2026-10-05: \"Perfect look, love it now. approved\"."
     }
   ],
   "reauditedCommit": "07f456e"
