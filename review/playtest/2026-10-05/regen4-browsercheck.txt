@@ -1,0 +1,137 @@
+PASS title screen shown at startup 
+PASS audio is locked until the player makes a gesture (no context at startup) 
+PASS a real click unlocks audio (context running) running
+PASS real click on Normal starts a game and the live loop advances the sim mode=playing tick=33
+PASS a fresh run shows the level title card MARROW QUAY
+PASS walking the pier for real triggers pier-start first, then pier-tower (no teleport) pier-start,pier-tower
+PASS transmissions wait behind the title card instead of stacking on it card visible, comms hidden while the card is up
+PASS the FIRST transmission shown is the first one triggered (FIFO), with speaker and text SIGNAL HOUSE: Calder, come in. The bells are ringing. Nobody rings the bells at night.
+PASS the radio blip plays when the message is shown (not before) radio plays so far: 1
+PASS the second transmission follows the first, one at a time INES: The bell tower's lit. Teal. That's no lamp of ours.
+PASS holding a real W key moves the player (live input) moved 6.05 m
+PASS real mouse click fires the flare cannon (ammo consumed) shots=1 ammo=7 lockFailed=false
+PASS firing plays the flare cannon sound through the live audio engine played=32 last=hurt,strike,toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire
+PASS Escape pauses (live) paused
+PASS Escape again resumes (live) 
+PASS holding real Shift+W sprints faster than W alone walk 4.13 m, sprint 6.61 m, ratio 1.60
+PASS firing is blocked while sprinting (real click during real sprint) sprinting=true shots 1->1
+PASS holding the real right mouse button brings the sights up and zooms the view ads=1 fov=46.0
+PASS releasing right mouse lowers the sights and restores the field of view ads=0 fov=70.0
+PASS real 2 key switches to the scattergun and the HUD follows weapon=scattergun label=SHELLS ammo=10
+PASS real click fires the scattergun (one shell, its own sound) shells=9
+PASS mouse wheel cycles weapons (wraps back to the flare cannon) flare
+PASS real Tab opens the automap, it paints, and it shows only what has been explored visible=true painted=230400 explored=146 exits=0
+PASS Tab again closes the automap 
+PASS Escape opens the pause menu (live) 
+PASS clicking a control slot starts capture 
+PASS pressing a key rebinds Use (persisted in settings) ["KeyG","Space"] G assigned.
+PASS a conflicting key is taken from the other action and the player is told {"fire":["Mouse0","KeyG"],"use":["Space"]} G taken from: use.
+PASS Escape cancels capture without leaving the pause menu 
+PASS remapped controls survive a real page reload ["KeyG"]
+PASS reset restores the default controls {"use":["KeyE","Space"],"fire":["Mouse0","KeyF"]}
+PASS game starts and HUD is visible 
+PASS bot completes the canonical route in the browser status=complete failed=null ticks=4284
+PASS browser sim == Node sim (tick count) browser 4284 vs node 4284
+PASS browser sim == Node sim (state hash) browser 47e36270 vs node 47e36270
+PASS every enemy killed, key held kills 16/16
+PASS the route was audible: many sounds played incl. explosion, key, door, death, footsteps played=126 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,toll_soft,bell_alert,gaunt_screech,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete
+PASS intermission screen shows end-level statistics Kills16 / 16Items11 / 21Secrets0 / 1Time1:11 (par 5:00)Damage taken14DifficultyNormal
+route wall time (SwiftShader): 7.6s
+PASS Gate 2 flow: the intermission Next button loads C1E1M02 and play resumes C1E1M02/playing
+PASS Gate 2 flow: the inventory carries over (weapons kept, ammo kept, at full health or better) {"before":["flare","scattergun"],"after":["flare","scattergun"],"hp":[100,100]}
+PASS secret route: secret found and level completed secrets=1
+PASS Gate 2 real-game route C1E1M02.main: completes in the browser status=complete failed=null ticks=7441 wall=4s
+PASS Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash) browser 7441/0590fdeb vs node 7441/0590fdeb
+PASS Gate 2 real-game route C1E1M02.secret: completes in the browser status=complete failed=null ticks=8165 wall=4s
+PASS Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash) browser 8165/eb3db235 vs node 8165/eb3db235
+PASS Gate 2 real-game route C1E1M03.main: completes in the browser status=complete failed=null ticks=9142 wall=7s
+PASS Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash) browser 9142/948a0298 vs node 9142/948a0298
+PASS Gate 2 real-game route C1E1M04.main: completes in the browser status=complete failed=null ticks=8169 wall=5s
+PASS Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash) browser 8169/f16b0160 vs node 8169/f16b0160
+PASS Gate 2 real-game route C1E1M04.secret: completes in the browser status=complete failed=null ticks=6239 wall=3s
+PASS Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash) browser 6239/d96040a8 vs node 6239/d96040a8
+PASS Gate 2 real-game route C1E1M05.main: completes in the browser status=complete failed=null ticks=8155 wall=6s
+PASS Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash) browser 8155/94729b3f vs node 8155/94729b3f
+PASS Gate 2 real-game route C1E1M06.main: completes in the browser status=complete failed=null ticks=6234 wall=7s
+PASS Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash) browser 6234/5e4e0b77 vs node 6234/5e4e0b77
+PASS Gate 2 real-game route C1E1M07.main: completes in the browser status=complete failed=null ticks=9674 wall=5s
+PASS Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash) browser 9674/e01cf37f vs node 9674/e01cf37f
+PASS Gate 2 real-game route C1E1M08.main: completes in the browser status=complete failed=null ticks=11039 wall=8s
+PASS Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash) browser 11039/46493b09 vs node 11039/46493b09
+PASS Gate 2 real-game route C1E1S01.main: completes in the browser status=complete failed=null ticks=2677 wall=1s
+PASS Gate 2 real-game route C1E1S01.main: browser sim == Node sim (ticks + state hash) browser 2677/a3a11d3a vs node 2677/a3a11d3a
+PASS Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse {"sawObjective":true,"sawBoss":true,"sawShield":true,"sawFuse":true}
+PASS Gate 2 flow: Quit to title returns to the title screen 
+PASS Gate 2 flow: New Game after playing another map starts C1E1M01 from tick 0 (not the last map) C1E1M01 tick 0
+PASS Gate 2 flow: the quick save really exists before the second level starts (the check would be vacuous otherwise) 
+PASS Gate 2 flow: Continue loads the newest save (the auto-save of C1E1M06), not an older quick save of C1E1M02 C1E1M06/playing
+census C1E1M01: 16 enemies (0 raised) asleep 0 bad / awake 0 / poses 42 rows 0 bad / corpses 0 bad
+census C1E1M02: 38 enemies (17 raised) asleep 0 bad / awake 0 / poses 84 rows 0 bad / corpses 0 bad
+census C1E1M03: 37 enemies (5 raised) asleep 0 bad / awake 0 / poses 55 rows 0 bad / corpses 0 bad
+census C1E1M04: 44 enemies (6 raised) asleep 0 bad / awake 0 / poses 68 rows 0 bad / corpses 0 bad
+census C1E1M05: 45 enemies (43 raised) asleep 0 bad / awake 0 / poses 112 rows 0 bad / corpses 0 bad
+census C1E1M06: 40 enemies (20 raised) asleep 0 bad / awake 0 / poses 98 rows 0 bad / corpses 0 bad
+census C1E1M07: 37 enemies (7 raised) asleep 0 bad / awake 0 / poses 85 rows 0 bad / corpses 0 bad
+census C1E1M08: 41 enemies (34 raised) asleep 0 bad / awake 0 / poses 139 rows 0 bad / corpses 0 bad
+census C1E1S01: 0 enemies (0 raised) asleep 0 bad / awake 0 / poses 0 rows 0 bad / corpses 0 bad
+census moving floor C1E1M05/car: 0/0/0/0/0 bad per phase
+census moving floor C1E1M06/ramp: 0/0/0/0/0 bad per phase
+census Cantor: body, shield and ring agree
+PASS render truth coverage: 9 maps, all 7 enemy kinds, 129 enemies on raised floors (a census that saw nothing would pass vacuously) kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor; raised 129; pose rows 683
+PASS render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor 298 rows (129 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 298 enemies was measured: true
+PASS render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor 596 rows (129 on raised floors), 0 violations, deepest 0 m, highest 0.242 m; two samples of all 298 enemies: true
+PASS render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band 683 rows (401 on raised floors), 0 violations, deepest 0 m, highest 0.201 m
+PASS render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses) dying: 301 rows (132 on raised floors), 0 violations, deepest 0 m, highest 0.008 m || corpses: 301 rows (132 on raised floors), 0 violations, deepest 0 m, highest 0.064 m
+PASS render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp) 40 rows (40 on raised floors), 0 violations, deepest 0 m, highest 0.121 m
+PASS render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links body 4.788 m tall on 12 m, shield r 2.967, 6 nodes
+PASS render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy) tollbearer 2.264 drawn / 2.25 hit; gaunt 1.476 drawn / 1.5 hit; bellhand 2.366 drawn / 2.35 hit; sexton 2.365 drawn / 2.35 hit; wardengraft 3.003 drawn / 3 hit; cantor 4.788 drawn / 4.8 hit; bellnode 2.45 drawn / 2.45 hit
+PASS picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets) toast: "Rivets (+40)", rivets 40
+PASS debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it) 381 samples, lowest chip 0.000 m relative to its floor, remaining after 0.64 s: 0
+PASS outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only) [{"kind":"tollbearer","n":19602,"normal":0.179,"classic":0.175},{"kind":"bellhand","n":6588,"normal":0.123,"classic":0.116}]
+PASS quick load restores the saved state (hp back, tick back) tick=240 hp=100
+PASS resumed play equals uninterrupted play except the deliberate hp edit x 47.878 vs 47.878
+PASS pause shows the pause menu 
+PASS player death is detected dead/dying
+PASS death screen appears 
+PASS retry restarts the level with a live player 
+PASS render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles {"pier":[191,191,21474,21474],"plaza":[161,161,19338,19338],"warehouse":[68,68,9508,9508],"plaza-all-awake":[493,493,19338,19338],"warehouse-all-awake":[145,145,9616,9616],"m03-market":[234,234,38916,38916],"m03-market-all-awake":[819,819,38916,38916],"m05-terrace":[121,121,18428,18428],"m05-terrace-all-awake":[419,419,18428,18428],"m06-quay":[186,180,31510,31398],"m06-quay-all-awake":[836,830,31510,31398],"m07-atrium":[218,210,29978,29810],"m08-chamber":[209,196,22190,20918],"m08-chamber-all-awake":[563,537,22166,21698]}
+PASS render budget: draw calls and triangles stay modest at the heaviest vantage points {"pier":{"calls":191,"triangles":21474,"geometries":1400,"textures":31,"programs":14},"plaza":{"calls":161,"triangles":19338,"geometries":1400,"textures":31,"programs":14},"warehouse":{"calls":68,"triangles":9508,"geometries":1400,"textures":31,"programs":14},"plaza-all-awake":{"calls":493,"triangles":19338,"geometries":1726,"textures":31,"programs":14},"warehouse-all-awake":{"calls":145,"triangles":9616,"geometries":1726,"textures":31,"programs":14},"m03-market":{"calls":234,"triangles":38916,"geometries":1542,"textures":31,"programs":15},"m03-market-all-awake":{"calls":819,"triangles":38916,"geometries":2100,"textures":31,"programs":15},"m05-terrace":{"calls":121,"triangles":18428,"geometries":1445,"textures":31,"programs":12},"m05-terrace-all-awake":{"calls":419,"triangles":18428,"geometries":1711,"textures":31,"programs":12},"m06-quay":{"calls":186,"triangles":31510,"geometries":1527,"textures":31,"programs":13},"m06-quay-all-awake":{"calls":836,"triangles":31510,"geometries":2151,"textures":31,"programs":13},"m07-atrium":{"calls":218,"triangles":29978,"geometries":1475,"textures":31,"programs":13},"m08-chamber":{"calls":209,"triangles":22190,"geometries":1449,"textures":31,"programs":14},"m08-chamber-all-awake":{"calls":563,"triangles":22166,"geometries":1797,"textures":31,"programs":14}}
+PASS render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case) {"pier":191,"plaza":161,"warehouse":68,"plaza-all-awake":493,"warehouse-all-awake":145,"m03-market":234,"m03-market-all-awake":819,"m05-terrace":121,"m05-terrace-all-awake":419,"m06-quay":186,"m06-quay-all-awake":836,"m07-atrium":218,"m08-chamber":209,"m08-chamber-all-awake":563}
+PASS looking at a closed door within reach shows how to open it [E] open
+PASS a locked door says what it needs Locked: needs the brass key
+PASS the secret panel gives NO prompt (it must stay a secret) use-hint hidden facing the panel
+PASS no prompt when nothing is in reach 
+PASS Quick load is hidden while no quick save exists (no dead-end button) 
+PASS F5 quick-saves without opening the pause menu and says so Quick saved
+PASS F9 loads the quick save (position restored) x=30
+PASS Quick load appears once a quick save exists 
+PASS Retry after loading a save restores the level-start inventory (flare cannon only, 8 flares, full health), not the mid-level one {"weapons":["flare"],"ammo":{"flare":8},"hp":100}
+PASS pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable) {"top":10,"bottom":710,"sh":1381,"ch":696,"ov":"auto","ih":720,"resume":true,"restart":true,"quit":true}
+PASS pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it {"rows":19,"hiddenInList":0,"rowsOverlappingButton":0,"gapToButton":10,"partialRow":false}
+PASS pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable) {"top":10,"bottom":590,"sh":1381,"ch":576,"ov":"auto","ih":600,"resume":true,"restart":true,"quit":true}
+PASS pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it {"rows":19,"hiddenInList":0,"rowsOverlappingButton":0,"gapToButton":10,"partialRow":false}
+PASS pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable) {"top":10,"bottom":590,"sh":1381,"ch":576,"ov":"auto","ih":600,"resume":true,"restart":true,"quit":true}
+PASS pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it {"rows":19,"hiddenInList":0,"rowsOverlappingButton":0,"gapToButton":10,"partialRow":false}
+PASS pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable) {"top":10,"bottom":470,"sh":1381,"ch":456,"ov":"auto","ih":480,"resume":true,"restart":true,"quit":true}
+PASS pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it {"rows":19,"hiddenInList":0,"rowsOverlappingButton":0,"gapToButton":10,"partialRow":false}
+[2m2:42:40 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTHREE.WebGLRenderer: A WebGL context could not be created. Reason:  disabled by enterprise policy or commandline switch
+[2m2:42:40 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTHREE.WebGLRenderer: A WebGL context could not be created. Reason:  disabled by enterprise policy or commandline switch
+[2m2:42:40 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTHREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context.
+[2m2:42:40 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: THREE.WebGLRenderer: Error creating WebGL context.
+[39m > new WebGLRenderer node_modules/three/build/three.module.js:16458:12
+ > src/game/main.js:41:18
+    39 |  }
+    40 |  let renderer;
+    41 |  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false }); } catch (err) { fatal('WebGL is not available...
+       |                    ^
+    42 |  renderer.setPixelRatio(1); renderer.autoClear = false;
+    43 |  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode = 'title'; document.exitPointerLock?....
+
+PASS with WebGL unavailable the game says so on screen (no inert title) WebGL is not available in this browser, so HUSHFALL cannot draw. Try a current Chrome, Edg
+PASS no GPU leak across 12 level restarts (geometries/textures stable) geometries 1407->1407, textures 31->31, programs 14->14
+perf (SwiftShader, 1280x720): {"frames":900,"avgMs":110.81377777777777,"p95Ms":583.4000000000087,"worstMs":1566.7000000000116} {"geometries":1459,"textures":31,"calls":1,"triangles":2,"programs":14}
+PASS real-time loop runs frames without exceptions frames=900 avg=110.8ms
+PASS no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim) worst 1567 ms, p95 583 ms
+PASS no uncaught exceptions or console errors 
+
+108/108 checks passed

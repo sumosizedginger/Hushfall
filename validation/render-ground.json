@@ -1,10 +1,10 @@
 {
-  "when": "2026-10-05T20:56:55.246Z",
-  "commit": "964c207",
+  "when": "2026-10-05T21:42:55.016Z",
+  "commit": "90c5319",
   "sources": {
     "engine": "a01a633c05680695",
-    "render": "8b03082a29460933",
-    "game": "a3c3070a753b2eb6",
+    "render": "5f2dc4330b716085",
+    "game": "4d9f7cc49a1a76ed",
     "audio": "030538561ae23a94",
     "assets": "be7f0f55628a7b04"
   },
@@ -42,7 +42,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.955, 6 nodes"
+      "detail": "body 4.788 m tall on 12 m, shield r 2.967, 6 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -532,7 +532,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.955
+        "r": 2.967
       },
       "farthestBodyCornerFromShieldCentre": 3.127,
       "ring": [

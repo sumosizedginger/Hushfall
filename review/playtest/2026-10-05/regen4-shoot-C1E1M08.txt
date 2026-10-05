@@ -1,0 +1,17 @@
+shot 01-courtyard
+shot 02-tower-door
+shot 03-south-leg
+shot 04-west-leg
+shot 05-north-leg
+shot 06-warden-corridor
+shot 07-warden-awake
+shot 08-chamber-door
+shot 09-chamber
+shot 10-cantor-close
+shot 10-cantor-close
+shot 10b-cantor-north
+shot 11-pulse
+shot 11b-pulse-late
+shot 12-ring-node
+shot 13-hatch
+{"errors":[]}
