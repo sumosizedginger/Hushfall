@@ -36,11 +36,12 @@ export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic 
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a' };
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a' };            // L, K: Episode 2 (the Salt Works)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
   m: { kind: 'outdoor', tex: 'floor_silt_a' }, n: { kind: 'floor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
+  l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
 };
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.

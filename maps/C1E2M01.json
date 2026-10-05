@@ -1,0 +1,1331 @@
+{
+ "format": 1,
+ "id": "C1E2M01",
+ "version": 1,
+ "name": "Brine Gate",
+ "ceilingHeight": 6,
+ "atmosphere": {
+  "fog": "#9a9a8c",
+  "fogDensity": 0.008,
+  "sky": "overcast"
+ },
+ "grid": [
+  "########################################################################",
+  "########################################################################",
+  "########################################################################",
+  "########################################################################",
+  "########################################################################",
+  "##LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL########################",
+  "##LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL######################",
+  "##LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL######################",
+  "##LlllllllllllmmmlKKKKKKKDKKKKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlKKKKfffffffKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlKKfXfffffffKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlKKKKfffffffKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlKKfXfffffffKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlKKKKKKKDKKKKmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLLLLLLLLLLLLLLLLLLLLLL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LsssssssssssgggsssssssssssssgggssssssssssssssLLLssssssssssssssssssssL#",
+  "##LsssssssssssgggsssssssssssssgggsssssssssssssssDsssssssssssssssssssssL#",
+  "##LsssssssssssgggsssssssssssssgggssssssssssssssLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLLLLLLLLLLLLLLLLLLLLLL#",
+  "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmllKKKKDKKKKKlmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmllKffffffffKlmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmllKffffffffKlmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmllKffffffffKlmmmllllllllllllllLLL######################",
+  "##LlllllllllllmmmllKKKKKKKKKKlmmmllllllllllllllLLL######################",
+  "##LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL######################",
+  "##LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL######################",
+  "##LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL########################",
+  "########################################################################",
+  "########################################################################",
+  "########################################################################",
+  "########################################################################",
+  "########################################################################"
+ ],
+ "heights": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "...........................................6666.........................",
+  ".....................................1234566666.........................",
+  ".....................................1234566666.........................",
+  "...........................................6666.........................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "...........................................6666.........................",
+  ".....................................1234566666.........................",
+  ".....................................1234566666.........................",
+  "...........................................6666.........................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "fx": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........................",
+  "...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "..............www.............www.......................................",
+  "...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........................",
+  "...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "doors": [
+  {
+   "at": [25, 8]
+  },
+  {
+   "at": [25, 13]
+  },
+  {
+   "at": [48, 24],
+   "remote": true
+  },
+  {
+   "at": [23, 37]
+  }
+ ],
+ "secrets": [],
+ "closets": [
+  {
+   "at": [21, 10]
+  },
+  {
+   "at": [21, 12]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "kennels",
+   "when": "enter",
+   "at": [25, 10],
+   "radius": 2.5,
+   "do": [
+    {
+     "open": [21, 10]
+    },
+    {
+     "open": [21, 12]
+    },
+    {
+     "wake": "kennel"
+    },
+    {
+     "objective": "The kennels are open. The sluice wheel is on the south wall"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [6, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [8, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [10, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [12, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [14, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [16, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [18, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [20, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [22, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [24, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [34, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [22, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [24, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [28, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [8, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 10],
+   "facing": -0.519
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 10],
+   "facing": -0.666
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 10],
+   "facing": -0.852,
+   "group": "kennel"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [23, 10],
+   "facing": -0.936
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [25, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [27, 10],
+   "facing": -1.024
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 10],
+   "facing": -1.043
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [23, 11],
+   "facing": -0.971
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [25, 11]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [27, 11],
+   "facing": -1.056
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 11]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 12],
+   "facing": -0.322
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 12],
+   "facing": -0.927,
+   "group": "kennel"
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [28, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [10, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [20, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [26, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [12, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [9, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [10, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [19, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [20, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [25, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [34, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [46, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [44, 18],
+   "facing": -1.422
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [52, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [66, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [41, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [46, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [11, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [12, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [20, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [21, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [22, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [27, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [28, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [37, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [52, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [54, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [57, 20],
+   "facing": -1.495,
+   "group": "yard"
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [65, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [33, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 21],
+   "facing": -1.494
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [67, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [7, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [21, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [27, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [38, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [39, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 22],
+   "facing": -1.523
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [60, 22],
+   "facing": -1.535,
+   "group": "yard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [64, 22],
+   "facing": -1.537,
+   "group": "yard"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [23, 23]
+  },
+  {
+   "type": "player",
+   "at": [4, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [10, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [11, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [20, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [21, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [22, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [24, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [26, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [27, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [34, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [39, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [44, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [58, 24],
+   "facing": -1.571,
+   "group": "yard"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [35, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [52, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [55, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [62, 25],
+   "facing": -1.588,
+   "group": "yard"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [66, 25]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [68, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [7, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [21, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [27, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "cart",
+   "at": [38, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [39, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 26],
+   "facing": -1.618
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [58, 26],
+   "facing": -1.608,
+   "group": "yard"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 27],
+   "facing": -1.648
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [9, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [10, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [19, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [20, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [25, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [26, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [33, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [37, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [60, 28],
+   "facing": -1.642,
+   "group": "yard"
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [41, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [46, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [67, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [44, 30],
+   "facing": -1.72
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [52, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [54, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [57, 30],
+   "facing": -1.684,
+   "group": "yard"
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [65, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [8, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [10, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 31],
+   "facing": -1.786
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 32],
+   "facing": -1.989
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [36, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [46, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [52, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [66, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [12, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [11, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [12, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [21, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [22, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [27, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [28, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 35]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 36],
+   "facing": -2.82
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [18, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 37]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 38],
+   "facing": -2.476
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [21, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [23, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [25, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [27, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [8, 39]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [22, 39],
+   "facing": -2.266
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 39]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [26, 39],
+   "facing": -2.169
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [20, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [23, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [25, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [35, 41]
+  },
+  {
+   "type": "switch",
+   "id": "sluice",
+   "at": [23, 12],
+   "wall": "south",
+   "do": [
+    {
+     "open": [48, 24]
+    },
+    {
+     "wake": "yard"
+    },
+    {
+     "objective": "The gate is rolling up. The yard is awake: take the road, east end"
+    },
+    {
+     "shake": 2
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 600
+ },
+ "intro": {
+  "title": "BRINE GATE",
+  "lines": [
+   "The works guard themselves the way a port does.",
+   "With people who were told to stand there."
+  ]
+ },
+ "outro": "Next: the Evaporation Pans. Everything out there is white.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 24],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Salt Works. That wall is the Brine Gate and the road runs straight at it. Do not take the road."
+  },
+  {
+   "id": "pan",
+   "at": [33, 24],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "A rank in front of the gate. Bellhands on both towers. Whoever set this up has done it before."
+  },
+  {
+   "id": "ditch",
+   "at": [14, 8],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The ditch slows me, and nothing up on the towers can see into it. The guardhouse is ahead, north door."
+  },
+  {
+   "id": "guard",
+   "at": [25, 11],
+   "radius": 3,
+   "speaker": "GUARD LOG",
+   "text": "GATE OPENS BY THE SLUICE WHEEL ONLY. NIGHT SHIFT KEEPS THE KENNEL KEYS. ALL PERSONS REMAIN ON THE ROAD."
+  },
+  {
+   "id": "yard",
+   "at": [51, 24],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Plate. That is the Warden-Graft again. Let it run into the wall."
+  },
+  {
+   "id": "exit",
+   "at": [66, 25],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "That is the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties."
+  }
+ ],
+ "objective": "Cross the pan. The gate only answers to the sluice wheel in the guardhouse: take the north ditch",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [28, 50],
+  "botSeconds": [70, 600],
+  "mechanics": [
+   "heights",
+   "switches",
+   "triggers",
+   "hazards",
+   "closets"
+  ],
+  "skins": 7,
+  "enemyKinds": {
+   "wardengraft": 1,
+   "bellhand": 2
+  }
+ }
+}

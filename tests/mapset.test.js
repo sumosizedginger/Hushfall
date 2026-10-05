@@ -11,7 +11,7 @@ import { listMaps, pickMaps, MAP_ID } from '../tools/mapset.mjs';
 import { compile } from '../tools/mapkit/compile.mjs';
 
 const MAP_TOOL = path.join(ROOT, 'tools/map.mjs');
-const scratch = () => { const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-map-')); fs.copyFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), path.join(dir, 'CAMPAIGN_MANIFEST.json')); fs.mkdirSync(path.join(dir, 'tools/mapkit'), { recursive: true }); fs.copyFileSync(path.join(ROOT, 'tools/mapkit/builder.mjs'), path.join(dir, 'tools/mapkit/builder.mjs')); return dir; };
+const scratch = () => { const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-map-')); fs.copyFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), path.join(dir, 'CAMPAIGN_MANIFEST.json')); fs.mkdirSync(path.join(dir, 'tools/mapkit'), { recursive: true }); fs.copyFileSync(path.join(ROOT, 'tools/mapkit/builder.mjs'), path.join(dir, 'tools/mapkit/builder.mjs')); fs.mkdirSync(path.join(dir, 'src/engine'), { recursive: true }); fs.copyFileSync(path.join(ROOT, 'src/engine/defs.js'), path.join(dir, 'src/engine/defs.js')); return dir; };         // the builder derives its floor characters from the skin table in defs.js
 const mapTool = (dir, ...args) => spawnSync(process.execPath, [MAP_TOOL, ...args], { env: { ...process.env, HUSHFALL_ROOT: dir }, encoding: 'utf8' });
 
 test('map ids: campaign-1 episode maps, secrets and campaign-2 maps are recognised; anything else is not', () => {
