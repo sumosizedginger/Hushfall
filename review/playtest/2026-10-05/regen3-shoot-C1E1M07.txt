@@ -1,0 +1,14 @@
+shot 01-porch
+shot 02-atrium
+shot 03-shelf-lanes
+shot 04-radio-room
+shot 05-radio-lit
+shot 06-generator
+shot 07-cellar-fuse
+shot 08-dormitory
+shot 09-niches
+shot 10-corridor
+shot 11-attic
+shot 12-gantry
+shot 13-atrium-lit
+{"errors":[]}

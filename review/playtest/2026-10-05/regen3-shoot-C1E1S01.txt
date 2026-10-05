@@ -1,0 +1,8 @@
+shot 01-arrival
+shot 02-cellar
+shot 03-desk
+shot 04-tower-stair
+shot 05-beacon-room
+shot 06-the-sea
+shot 07-way-out
+{"errors":[]}

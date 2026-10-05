@@ -1,0 +1,14 @@
+shot 01-vestibule
+shot 02-colonnade
+shot 03-mezzanine
+shot 04-arch
+shot 05-quay
+shot 06-pillars
+shot 07-cabin-door
+shot 08-winch
+shot 09-ramp-up
+shot 10-hold-warden
+shot 11-hold-awake
+shot 12-watchtower
+shot 13-look-back
+{"errors":[]}

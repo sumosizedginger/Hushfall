@@ -93,7 +93,7 @@
       "botSecondsNormal": 152.4,
       "fighterDamage": {
         "easy": 12,
-        "normal": 35,
+        "normal": 37,
         "hard": 49
       },
       "runner": {
@@ -122,11 +122,11 @@
         "items": 40,
         "secrets": 1
       },
-      "botSecondsNormal": 136,
+      "botSecondsNormal": 136.2,
       "fighterDamage": {
         "easy": 4,
-        "normal": 14,
-        "hard": 43
+        "normal": 21,
+        "hard": 37
       },
       "runner": {
         "easy": "dead, 110 damage",
@@ -137,7 +137,7 @@
         {
           "file": "routes/C1E1M04.main.route.json",
           "result": "complete",
-          "seconds": 136,
+          "seconds": 136.2,
           "kills": 32,
           "secrets": 0
         },
@@ -163,9 +163,9 @@
       },
       "botSecondsNormal": 135.9,
       "fighterDamage": {
-        "easy": 11,
+        "easy": 17,
         "normal": 28,
-        "hard": 84
+        "hard": 87
       },
       "runner": {
         "easy": "dead, 117 damage",
@@ -196,8 +196,8 @@
       "botSecondsNormal": 103.9,
       "fighterDamage": {
         "easy": 36,
-        "normal": 70,
-        "hard": 54
+        "normal": 82,
+        "hard": 36
       },
       "runner": {
         "easy": "dead, 100 damage",
@@ -257,11 +257,11 @@
         "items": 54,
         "secrets": 0
       },
-      "botSecondsNormal": 177.3,
+      "botSecondsNormal": 184,
       "fighterDamage": {
         "easy": 48,
-        "normal": 128,
-        "hard": 190
+        "normal": 127,
+        "hard": 198
       },
       "runner": {
         "easy": "dead, 110 damage",
@@ -272,7 +272,7 @@
         {
           "file": "routes/C1E1M08.main.route.json",
           "result": "complete",
-          "seconds": 177.3,
+          "seconds": 184,
           "kills": 47,
           "secrets": 0
         }
