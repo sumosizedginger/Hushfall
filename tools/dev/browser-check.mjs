@@ -1,5 +1,6 @@
 // Browser/runtime verification of the real game in headless Chrome (SwiftShader software GL) via the dev-only __GAME_TEST__ hook.
 // Writes screenshots to review/engine-skeleton/ and a JSON report to validation/browser-check.json. Exit 1 on any failed check.
+import { savePng } from './savepng.mjs';
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
@@ -26,7 +27,7 @@ page.on('pageerror', (e) => errors.push('pageerror: ' + e));
 page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
 // runs a single expression (returning its value) or a ';'-separated statement list (returning nothing). A second statement after `return` would never execute.
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
-const shot = (name) => page.screenshot({ path: path.join(shots, name + '.png') });
+const shot = (name) => savePng(page, path.join(shots, name + '.png'));
 const text = (id) => page.$eval('#' + id, (e) => e.textContent);
 const visible = (id) => page.$eval('#' + id, (e) => !e.classList.contains('hidden'));
 try {
@@ -235,7 +236,7 @@ try {
   // ---- 2d. RENDER TRUTH (PT-001/PT-002): the sim gate above proves where actors ARE; this proves where they are DRAWN ------------------
   // Every enemy of every shipped map, asleep / awake / in every pose / dying / dead / on moving floors, and the Cantor's body + shield + ring, against the sim's ground.
   const rgShots = path.join(root, 'review/render-ground'); fs.mkdirSync(rgShots, { recursive: true });
-  renderGround = await runRenderCensus({ T, root, check, shot: async (name) => { await page.screenshot({ path: path.join(rgShots, name + '.png') }); return name + '.png'; } });
+  renderGround = await runRenderCensus({ T, root, check, shot: async (name) => { await savePng(page, path.join(rgShots, name + '.png')); return name + '.png'; } });
   // the pickup toast states the amount the pickup really grants (it said +30 for the rivet pickup while the sim gave 40)
   await T("t.newGame('normal', 3, { mapId: 'C1E1M05' })"); await T('t.clearOverlays()');
   { const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare', 'scattergun', 'rivet'], ammo: { flare: 8, shell: 6, rivet: 0 } })"); await T(`t.setup_addPickup('ammo_rivet', ${p.x}, ${p.z})`); await T('t.tick(3)');

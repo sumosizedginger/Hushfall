@@ -1,5 +1,6 @@
 // Level tour: screenshots of Marrow Quay from its key vantage points (appearance evidence, not correctness).
 // Writes review/level-c1e1m01/*.png
+import { savePng } from './savepng.mjs';
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
@@ -39,7 +40,7 @@ let opened = false;
 for (const [name, x, z, yaw, pitch, open] of VIEWS) {
   if (open && !opened) { await T('t.setup_openDoors()'); opened = true; }
   await T(`t.setup_teleport(${x}, ${z}, ${yaw}); t.setup_player({ pitch: ${pitch}, hp: 100, hurt: 0 })`); await T('t.clearOverlays(); t.render(0.02)');
-  await page.screenshot({ path: path.join(out, name + '.png') }); console.log('shot', name);
+  await savePng(page, path.join(out, name + '.png')); console.log('shot', name);
 }
 console.log(JSON.stringify({ errors }));
 await browser.close(); await server.close();
