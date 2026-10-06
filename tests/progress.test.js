@@ -101,3 +101,13 @@ test('save v8 -> v9: an old save loads with no progress, its world gains zero up
   assert.deepEqual(back.world, w, 'the same world (the state hash is order-sensitive and a migration adds keys, so this compares the structure, not the hash)');
   assert.equal(parseSave(JSON.stringify({ magic: SAVE_MAGIC, version: SAVE_VERSION })).reason, 'corrupt');
 });
+
+import { shippedMap } from './helpers.js';
+test('upgrades survive the arrival merge with a map\'s authored entry loadout (the real-game check found arrivalInventory dropping them); Retry and a level-start save keep them too', () => {
+  const map = shippedMap('C1E2M01'); assert.ok(map.entryLoadout, 'the pilot has an authored entry loadout, which is what triggers the merge');
+  const up = { ammo: 2, armor: 3 }, w = createWorld(map, { seed: 1, carry: { hp: 80, armor: 10, ammo: { flare: 5 }, weapons: ['flare'], upgrades: up } });
+  assert.deepEqual(w.upgrades, up); assert.deepEqual(w.levelStart.upgrades, up); assert.deepEqual(restartWorld(w).upgrades, up);
+  assert.equal(w.player.ammo.rivet, map.entryLoadout.ammo.rivet, 'and the floor at the entry loadout still applies');
+  const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'level-start'))).save, (id) => (id === 'C1E2M01' ? map : null)); assert.equal(back.ok, true); assert.deepEqual(back.world.upgrades, up);
+  assert.deepEqual(createWorld(map, { seed: 1, carry: { hp: 80, armor: 0, ammo: {}, weapons: ['flare'] } }).upgrades, { ammo: 0, armor: 0 }, 'no upgrades in the carry: none in the world');
+});
