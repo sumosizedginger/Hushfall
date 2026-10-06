@@ -81,8 +81,9 @@ export class Bot {
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
     const dyE = t.e.y - p.y;                                                                                // target and player may stand at different heights
-    if (hitscan) pitchWant = Math.atan2(dyE + Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
-    else { const flight = t.d / def.speed, aimY = 1.0 + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
+    const hv = ENEMIES[t.e.kind].hover ?? 0;                                                               // a flyer's body starts above its floor
+    if (hitscan) pitchWant = Math.atan2(dyE + hv + Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
+    else { const flight = t.d / def.speed, aimY = 1.0 + hv + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
     const inRange = hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
@@ -112,7 +113,7 @@ export class Bot {
     const t = this.combatTarget();
     if (t) { this.calm = 0; this.fight(t); return false; }
     this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false);
-    const want = this.forage(); if (want) { this.follow([Math.floor(want.x / w.map.cell), Math.floor(want.z / w.map.cell)], 0.5); return false; }              // quiet moment: top up
+    const want = this.forage(); if (want) { if (this.follow([Math.floor(want.x / w.map.cell), Math.floor(want.z / w.map.cell)], 0.5)) { const st = this.forageStuck?.id === want.id ? this.forageStuck : (this.forageStuck = { id: want.id, n: 0 }); if (++st.n > 180) (this.skipPickups ??= new Set()).add(want.id); } return false; }      // `follow` says 'close enough' (something sits on the exact spot): a pickup it cannot collect is given up, or the bot would forage at it forever instead of going for the boss              // quiet moment: top up
     const nodes = w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
     const goal = nodes[0] ?? boss, m = w.map;
     this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, 7);
@@ -122,6 +123,7 @@ export class Bot {
   forage() {
     const w = this.w, p = w.player; let best = null, bd = 16;
     for (const it of w.pickups) {
+      if (this.skipPickups?.has(it.id)) continue;
       const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;
       const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
       if (low) { best = it; bd = d; }

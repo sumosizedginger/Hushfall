@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeBellNodeEnemy } from './models_g2.js';
+import { makeDroneGill, makeFeeder, makeGraftMother } from './models_e2.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
@@ -12,7 +13,7 @@ import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 
-const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand'), sexton: (t) => makeTollbearer(t.tollbearer_atlas, 'sexton'), wardengraft: (t) => makeTollbearer(t.tollbearer_atlas, 'warden'), cantor: (t) => makeTollbearer(t.tollbearer_atlas, 'cantor'), bellnode: () => makeBellNodeEnemy() };
+const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand'), sexton: (t) => makeTollbearer(t.tollbearer_atlas, 'sexton'), wardengraft: (t) => makeTollbearer(t.tollbearer_atlas, 'warden'), cantor: (t) => makeTollbearer(t.tollbearer_atlas, 'cantor'), bellnode: () => makeBellNodeEnemy(), gill: (t) => makeDroneGill(t.pod_organic_a), feeder: (t) => makeFeeder(t.pod_organic_a), graftmother: (t) => makeGraftMother(t.pod_organic_a) };
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
 const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
@@ -136,7 +137,7 @@ export class GameView {
       }
       if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 1.7, n.z, boss.x, (boss.y ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
       for (const [k, m] of this.beams) if (!live.has(k)) { this.scene.remove(m); this.beams.delete(k); }
-      if (boss && nodes.length) { if (!this.shield) { this.shield = new THREE.Mesh(this.shieldGeo, this.shieldMat); this.scene.add(this.shield); } this.shield.visible = true; this.shield.position.set(boss.x, (boss.y ?? 0) + 2.4, boss.z); this.shield.scale.setScalar(2.9 + 0.08 * Math.sin(this.time * 5)); this.shield.rotation.y = this.time * 0.6; } else if (this.shield) this.shield.visible = false;
+      if (boss && nodes.length) { if (!this.shield) { this.shield = new THREE.Mesh(this.shieldGeo, this.shieldMat); this.scene.add(this.shield); } this.shield.visible = true; const SH = ENEMIES[boss.kind].shield ?? {}; this.shield.position.set(boss.x, (boss.y ?? 0) + (SH.y ?? 2.4), boss.z); this.shield.scale.setScalar((SH.r ?? 2.9) + 0.08 * Math.sin(this.time * 5)); this.shield.rotation.y = this.time * 0.6; } else if (this.shield) this.shield.visible = false;
       const pseen = new Set();
       for (const q of w.pulses || []) {
         pseen.add(q.id); let m = this.pulseViews.get(q.id);

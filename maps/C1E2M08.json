@@ -1,0 +1,1017 @@
+{
+ "format": 1,
+ "id": "C1E2M08",
+ "version": 1,
+ "name": "The Grafting Floor",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#2a1a30",
+  "fogDensity": 0.016,
+  "sky": "night",
+  "ambient": 0.65
+ },
+ "grid": [
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "#########################YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YffffffffIIfffffffffffffffIIffffffffY####",
+  "#########################YffffffffIIfffffffffffffffIIffffffffY####",
+  "#########################YffffffffIIfffffffffffffffIIffffffffY####",
+  "#########################YffffffffIIfffffffffffffffIIffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YffffIIIIIfffffffffffffffffIIIIIffffY####",
+  "#########################YffffIIIIIfffffffffffffffffIIIIIffffY####",
+  "#########################YffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##########RRRRRRRRRRRRRRRYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##########RggggggggggggggYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##KKKKKKKKRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
+  "##KfffffffRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
+  "##KfffffffRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
+  "##KfffffffRggggggggggggggYfffffffffIIffffIIIIIffffIIfffffffffY####",
+  "##KfffffffDggggggggggggggDfffffffffIIffffIIIIIffffIIfffffffffY####",
+  "##KfffffffRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
+  "##KfffffffRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
+  "##KfffffffRggggggggggggggYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##KKKKKKKKRggggggggggggggYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##########RggggggggggggggYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "##########RRRRRRRRSRRRRRRYffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "###############RfffffR###YffffIIIIIffffffIIIIIffffffIIIIIffffY####",
+  "###############RfffffR###YfffffffffffffffIIIIIfffffffffffffffY####",
+  "###############RfffffR###YfffffffffffffffIIIIIfffffffffffffffY####",
+  "###############RRRRRRR###YfffffffffffffffIIIIIfffffffffffffffY####",
+  "#########################YfffffffffffffffIIIIIfffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YfffffffffffffffffffffffffffffffffffY####",
+  "#########################YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY####",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################",
+  "##################################################################"
+ ],
+ "doors": [
+  {
+   "at": [10, 29]
+  },
+  {
+   "at": [25, 29]
+  }
+ ],
+ "secrets": [
+  {
+   "id": "night-stash",
+   "panel": [18, 35],
+   "cells": [
+    [18, 36],
+    [18, 37],
+    [18, 38]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "shield-down",
+   "when": "dead:feeders",
+   "do": [
+    {
+     "objective": "The shield is down. Kill the Graft-Mother, north end"
+    },
+    {
+     "shake": 2
+    },
+    {
+     "message": "shield"
+    }
+   ]
+  },
+  {
+   "id": "mother-dead",
+   "when": "dead:mother",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The line is broken. The exit is open: south-west corner"
+    },
+    {
+     "shake": 3
+    },
+    {
+     "message": "broken"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [28, 10],
+   "facing": -0.88
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [31, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [43, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [55, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [27, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [43, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [59, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [27, 14]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 14],
+   "facing": -0.993
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [43, 14]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [58, 14],
+   "facing": -1.295
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [59, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [27, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [28, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [33, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [49, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [53, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [58, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [59, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [29, 18],
+   "facing": -1.141
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [38, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [43, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [48, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [57, 18],
+   "facing": -1.362
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [59, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [27, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [28, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [37, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [43, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [49, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [58, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [59, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [27, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [37, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [39, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [47, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [49, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [59, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [37, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [38, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [48, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [49, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [13, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [16, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [19, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [21, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [5, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [12, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [24, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [27, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [37, 26],
+   "facing": -1.477
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [49, 26],
+   "facing": -1.503
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [59, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [6, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [14, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [17, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 27],
+   "facing": -1.438
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [12, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [14, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [38, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [48, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [53, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [58, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [3, 29]
+  },
+  {
+   "type": "player",
+   "at": [5, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [13, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [16, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [17, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 29],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [19, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [20, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [21, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [22, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [23, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [12, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [14, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [27, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 30],
+   "facing": -1.601
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [48, 30],
+   "facing": -1.594
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [59, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [6, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [14, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [17, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 31],
+   "facing": -1.703
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [5, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [12, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [24, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [27, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [48, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [59, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [13, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [16, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [19, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [21, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [28, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [37, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [49, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [58, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [17, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [19, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [28, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [38, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [48, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [58, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [17, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [18, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [19, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [17, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [18, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [19, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 38],
+   "facing": -1.837
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [48, 38],
+   "facing": -1.777
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [59, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [27, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [33, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [48, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [53, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [59, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [40, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [27, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [28, 42],
+   "facing": -2.085
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [43, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [46, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [58, 42],
+   "facing": -1.811
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [59, 42]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [27, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [38, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [41, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [43, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [48, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [59, 44]
+  },
+  {
+   "type": "exit",
+   "at": [28, 44],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "feeder",
+   "at": [30, 14],
+   "group": "feeders",
+   "facing": -1.03
+  },
+  {
+   "type": "enemy",
+   "kind": "feeder",
+   "at": [56, 14],
+   "group": "feeders",
+   "facing": -1.285
+  },
+  {
+   "type": "enemy",
+   "kind": "feeder",
+   "at": [43, 42],
+   "group": "feeders",
+   "facing": -1.9
+  },
+  {
+   "type": "enemy",
+   "kind": "graftmother",
+   "at": [43, 13],
+   "group": "mother",
+   "facing": "south",
+   "summons": [
+    [38, 12],
+    [48, 12],
+    [38, 17],
+    [48, 17]
+   ]
+  }
+ ],
+ "par": {
+  "time": 420
+ },
+ "intro": {
+  "title": "THE GRAFTING FLOOR",
+  "lines": [
+   "Every pipe in the Works ends in this room.",
+   "Something has been fed here for a very long time."
+  ]
+ },
+ "outro": "Episode three: Landing Scar. Whatever the Mother was feeding, it has landed.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 29],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: it is shielded until they are gone."
+  },
+  {
+   "id": "approach",
+   "at": [15, 29],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The line comes in here. Cradles all the way down, and the sound of something large breathing. We are close."
+  },
+  {
+   "id": "floor",
+   "at": [30, 29],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor, feeding it through the floor. Break them and the shield falls."
+  },
+  {
+   "id": "mother",
+   "at": [43, 20],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "It is a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Do not stand in the open."
+  },
+  {
+   "id": "stash",
+   "at": [18, 37],
+   "radius": 2.5,
+   "speaker": "NIGHT LOG",
+   "text": "EMERGENCY STORES FOR THE NIGHT CREW, IN CASE THE LINE SHOULD EVER GO BAD. IT HAS GONE BAD."
+  },
+  {
+   "id": "shield",
+   "at": [43, 20],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "The shield is gone. All of it. Hit it, Calder, hit it with everything."
+  },
+  {
+   "id": "broken",
+   "at": [28, 44],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The line is broken. Calder, whatever the Mother was feeding has landed. Episode three is a crater, and the Choir ships are in it."
+  }
+ ],
+ "objective": "The Graft-Mother is at the north end. Her three cradle feeders keep her shielded: west, east and behind the conveyor",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [20, 70],
+  "botSeconds": [60, 900],
+  "mechanics": [
+   "triggers",
+   "secret"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "graftmother": 1,
+   "feeder": 3,
+   "bellhand": 3
+  },
+  "scaleClass": "COMPRESSION",
+  "introduces": "the Graft-Mother: a boss that is a pod the size of a room, shielded by three cradle feeders, hatching Drone-Gills and spitting spore fans"
+ }
+}

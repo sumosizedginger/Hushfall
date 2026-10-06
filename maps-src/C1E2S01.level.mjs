@@ -42,7 +42,7 @@ export default {
   ],
   messages: [
     { id: 'arrive', at: [5, 16], radius: 3, speaker: 'WARDEN CALDER', text: 'You found it. I hid what the Wardens learned where the Works could not burn it: in the cold. The vault wants three coolant valves. They are in the alcoves.' },
-    { id: 'hall', at: [18, 16], radius: 3, speaker: 'INES', text: 'Racks and racks. Look at the dates on the crates: all of them before the firing. They knew, Calder. Someone here knew for years.' },
+    { id: 'hall', at: [13, 13], radius: 4, speaker: 'INES', text: 'Racks and racks. Look at the dates on the crates: all of them before the firing. They knew, Calder. Someone here knew for years.' },
     { id: 'valve', at: [15, 5], radius: 2, speaker: 'VALVE LOG', text: 'COOLANT VALVE A. IF THE VAULT WARMS, THE DOOR WILL NOT OPEN FROM OUTSIDE. KEEP IT COLD. KEEP IT QUIET.' },
     { id: 'lever', at: [30, 14], radius: 3, speaker: 'VAULT LEVER', text: 'THREE VALVES: A, B, C. THE LEVER SPENDS THEM. THE DOOR RISES ON ITS OWN COUNTERWEIGHT.' },
     { id: 'rolling', at: [31, 16], radius: 0.1, speaker: 'INES', text: 'It is rolling up. Cold air is coming out. Whatever they kept, they kept it a long time.' },

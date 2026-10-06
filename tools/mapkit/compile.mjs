@@ -10,7 +10,7 @@ const root = path.resolve(import.meta.dirname, '../..');
 /** default object symbols (one char per cell in the `objects` layer). Maps can add or override with `legend`. */
 export const LEGEND = {
   '@': { type: 'player' }, '>': { type: 'exit', dest: 'next' }, '$': { type: 'exit', dest: 'secret' },
-  t: { type: 'enemy', kind: 'tollbearer' }, g: { type: 'enemy', kind: 'gaunt' }, b: { type: 'enemy', kind: 'bellhand' }, x: { type: 'enemy', kind: 'sexton' }, w: { type: 'enemy', kind: 'wardengraft' }, K: { type: 'enemy', kind: 'cantor' },
+  t: { type: 'enemy', kind: 'tollbearer' }, g: { type: 'enemy', kind: 'gaunt' }, b: { type: 'enemy', kind: 'bellhand' }, x: { type: 'enemy', kind: 'sexton' }, w: { type: 'enemy', kind: 'wardengraft' }, K: { type: 'enemy', kind: 'cantor' }, G: { type: 'enemy', kind: 'gill' }, Y: { type: 'enemy', kind: 'graftmother' }, Z: { type: 'enemy', kind: 'feeder' },
   h: { type: 'pickup', kind: 'health_small' }, H: { type: 'pickup', kind: 'health_large' }, a: { type: 'pickup', kind: 'ammo_flare' }, e: { type: 'pickup', kind: 'ammo_shell' }, r: { type: 'pickup', kind: 'ammo_rivet' },
   v: { type: 'pickup', kind: 'armor_vest' }, k: { type: 'pickup', kind: 'key_brass' }, i: { type: 'pickup', kind: 'key_iron' }, q: { type: 'pickup', kind: 'key_bell' }, S: { type: 'pickup', kind: 'weapon_scattergun' }, R: { type: 'pickup', kind: 'weapon_rivet' },
   c: { type: 'prop', kind: 'crate' }, C: { type: 'prop', kind: 'crate2' }, o: { type: 'prop', kind: 'barrel' }, P: { type: 'prop', kind: 'pillar' }, m: { type: 'prop', kind: 'lamp' }, M: { type: 'prop', kind: 'lamp', tint: 'cool' }, Q: { type: 'prop', kind: 'lamp', tint: 'teal' },

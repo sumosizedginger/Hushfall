@@ -1,0 +1,107 @@
+[
+  {
+    "name": "01-arrival",
+    "x": 5.5,
+    "z": 29.5,
+    "yaw": "east"
+  },
+  {
+    "name": "02-the-approach",
+    "x": 12.5,
+    "z": 29.5,
+    "yaw": "east",
+    "pitch": 0.05
+  },
+  {
+    "name": "03-the-door",
+    "x": 23.5,
+    "z": 29.5,
+    "yaw": "east",
+    "pitch": 0,
+    "open": true
+  },
+  {
+    "name": "04-the-floor",
+    "x": 28,
+    "z": 29.5,
+    "yaw": "east",
+    "pitch": 0.05,
+    "open": true
+  },
+  {
+    "name": "05-the-line",
+    "x": 38.5,
+    "z": 27,
+    "yaw": "north",
+    "pitch": 0.05,
+    "open": true
+  },
+  {
+    "name": "06-the-mother-far",
+    "x": 38.5,
+    "z": 29.5,
+    "yaw": "north",
+    "pitch": 0.1,
+    "open": true
+  },
+  {
+    "name": "07-the-mother",
+    "x": 43.5,
+    "z": 19.5,
+    "yaw": "north",
+    "pitch": 0.2,
+    "open": true
+  },
+  {
+    "name": "08-the-mother-close",
+    "x": 43.5,
+    "z": 17.5,
+    "yaw": "north",
+    "pitch": 0.3,
+    "open": true
+  },
+  {
+    "name": "09-west-feeder",
+    "x": 31.5,
+    "z": 17.5,
+    "yaw": "north",
+    "pitch": 0.1,
+    "open": true
+  },
+  {
+    "name": "10-south-feeder",
+    "x": 43.5,
+    "z": 44.5,
+    "yaw": "south",
+    "pitch": 0,
+    "open": true
+  },
+  {
+    "name": "11-awake",
+    "x": 43.5,
+    "z": 19,
+    "yaw": "north",
+    "pitch": 0.25,
+    "open": true,
+    "wake": true,
+    "ticks": 90
+  },
+  {
+    "name": "12-the-stash",
+    "x": 18.5,
+    "z": 36.5,
+    "yaw": "south",
+    "pitch": 0,
+    "open": true
+  },
+  {
+    "name": "13-hatching",
+    "x": 38.5,
+    "z": 17,
+    "yaw": "east",
+    "pitch": 0.2,
+    "open": true,
+    "wake": true,
+    "ticks": 1100
+  }
+]

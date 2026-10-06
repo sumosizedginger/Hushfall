@@ -83,14 +83,14 @@ export function cellSolid(w, cx, cz) {
 function blocksMove(w, cx, cz) { return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water'; }
 /** `self` = the moving entity (player or enemy): living enemies and the player then block it, so nothing walks through anyone. */
 export function blockedCircle(w, x, z, r, self = null) {
-  const S = w.map.cell;
+  const S = w.map.cell, fly = !!(self && self.kind && ENEMIES[self.kind]?.flying);                  // a flyer (Drone-Gill) is stopped by walls and closed doors only: not by water, ledges or props
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
-    if (!blocksMove(w, cx, cz)) continue;
+    if (!(fly ? cellSolid(w, cx, cz) : blocksMove(w, cx, cz))) continue;
     const nx = clamp(x, cx * S, (cx + 1) * S), nz = clamp(z, cz * S, (cz + 1) * S);
     if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
   }
-  if (self && tooHigh(w, self, x, z, r)) return true;                                    // a ledge more than a step above the mover's feet
-  for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
+  if (self && !fly && tooHigh(w, self, x, z, r)) return true;                            // a ledge more than a step above the mover's feet
+  if (!fly) for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
   if (self) {
     for (const e of w.enemies) if (e !== self && e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2) return true;
     if (self !== w.player && (x - w.player.x) ** 2 + (z - w.player.z) ** 2 < (r + PLAYER.radius) ** 2) return true;
@@ -176,7 +176,7 @@ function explode(w, x, y, z, ownerIsPlayer, def) {
   emit(w, 'explode', { x, y, z }); noise(w, x, z, NOISE.explosion);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
-    const body = ENEMIES[e.kind].height, d = Math.hypot(x - e.x, y - (e.y + Math.min(Math.max(y - e.y, 1.0), Math.max(1.0, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
+    const ed = ENEMIES[e.kind], base = e.y + (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0)), lo = ed.hover ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
       const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct, { splash: true });
       const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
@@ -264,7 +264,7 @@ function stepClear(w, x0, z0, x1, z1) {
 
 // ---------------------------------------------------------------- enemies
 function fireEnemyShot(w, e, def, diff) {
-  const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = e.y + 1.5, oz = e.z + Math.cos(e.yaw) * 0.6;
+  const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = e.y + (R.muzzleY ?? 1.5), oz = e.z + Math.cos(e.yaw) * 0.6;
   const dx = p.x - ox, dy = p.y + R.aimHeight - oy, dz = p.z - oz, len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
   w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: dx / len * R.speed, vy: dy / len * R.speed, vz: dz / len * R.speed, life: 4, dmg: Math.round(R.damage * diff.enemyDamage) });
   emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z });
@@ -354,12 +354,12 @@ function supportStep(w, e, def, dt, sees, dist) {
 function bossStep(w, e, def, diff, dt, sees, dist) {
   const p = w.player, enraged = nodesAlive(w) === 0, P = def.pulse;
   e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt); e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
-  if ((e.pulseT ?? -1) >= 0) {
+  if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
     if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; }
     return true;
   }
-  if (sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
+  if (P && sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
   if (def.summon && e.summons?.length && sees && e.summonCd <= 0) {
     const S = def.summon;
     if (w.enemies.filter((o) => o.kind === S.kind && o.state !== 'dead').length < S.max) for (let i = 0; i < S.count; i++) {
@@ -367,16 +367,25 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
     }
     e.summonCd = S.every * (enraged ? 0.7 : 1);
   }
-  if (enraged && def.shots && sees && e.shotCd <= 0 && dist > 4) {
-    const Sh = def.shots, ox = e.x + Math.sin(e.yaw) * 0.8, oz = e.z + Math.cos(e.yaw) * 0.8, oy = e.y + 1.9, base = Math.atan2(p.x - ox, p.z - oz);
+  if ((enraged || def.shots?.always) && def.shots && sees && e.shotCd <= 0 && dist > 4) {
+    const Sh = def.shots, ox = e.x + Math.sin(e.yaw) * 0.8, oz = e.z + Math.cos(e.yaw) * 0.8, oy = e.y + (Sh.muzzleY ?? 1.9), base = Math.atan2(p.x - ox, p.z - oz);
     for (let i = -Math.floor(Sh.count / 2); i <= Math.floor(Sh.count / 2); i++) {
       const a = base + i * Sh.spread, dy = p.y + Sh.aimHeight - oy, hz = Math.hypot(p.x - ox, p.z - oz) || 1, len = Math.hypot(hz, dy);
       w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: Math.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: Math.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage) });
     }
     emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z }); e.shotCd = Sh.cooldown;
   }
-  if (sees && dist < 6) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  if (sees && dist < (def.keepAway ?? 6)) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
   return false;
+}
+
+/** a hovering shooter circles the player instead of standing: alternate sideways runs (the direction and length come from the seeded RNG, so the sim stays deterministic) */
+function strafeStep(w, e, def, dt) {
+  const S = def.strafe, p = w.player; e.strafeT = (e.strafeT ?? 0) - dt;
+  if (e.strafeT <= 0) { e.strafeDir = rand(w) < 0.5 ? -1 : 1; e.strafeT = S.every * (0.6 + rand(w) * 0.8); }
+  const a = Math.atan2(p.x - e.x, p.z - e.z) + e.strafeDir * Math.PI / 2, sx = Math.sin(a) * S.speed * dt, sz = Math.cos(a) * S.speed * dt;
+  if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  e.strafeDir = -e.strafeDir; return false;
 }
 
 function updatePulses(w, dt) {
@@ -440,11 +449,13 @@ function updateEnemy(w, e, diff, dt) {
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+  } else if (def.flying && R && sees && dist < R.minRange && retreatStep(w, e, def, dt)) {
+    e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait;
   } else if ((sees ? !(dist <= engage && dyv < 1.6) : tdist > 1.2)) {
     chaseStep(w, e, def, dt);
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
   } else {
-    e.walk = Math.max(0, e.walk - dt * 3);
+    if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
     if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
   }
 }
