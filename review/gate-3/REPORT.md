@@ -2,7 +2,9 @@
 
 **Update 2026-10-05 (PT-008):** the owner played the pilot and asked for a design revision, so this report describes versions 1-2 of the Brine Gate. It is now version 3 (a shorter approach between rooms, a roofed hall behind the gate, the machinery of the Works on screen from the first room, a secret; 44% roofed, walls 4.2 m), and the pipeline gained a space-contract lint and the progression system. Re-verified from clean commit `95626ac`; see `PLAYTEST_NOTES.md` PT-008 and `design/CAMPAIGN_SPINE.md`. Still NOT played by the owner in this form.
 
-Status: **built and verified by the automated gates; NOT played by the owner.** Nothing of Gate 4 is started. The plan and criteria: `design/GATE3.md` (full pilot log and the honest cost list there).
+**Update 2026-10-05 (GATE 3 APPROVED):** the owner answered "Approve Gate 3" on the revised pilot. They played only the new Brine Gate, not the end screen, the Locker or an upgraded level, so the progression numbers remain unplayed first guesses. Gate 4 is open in small batches the owner sets; none is set or built (`PLAYTEST_NOTES.md` "Gate 3 APPROVED"). The sections below are the report as written for the decision.
+
+Status (as written for the decision): **built and verified by the automated gates; NOT played by the owner.** Nothing of Gate 4 is started. The plan and criteria: `design/GATE3.md` (full pilot log and the honest cost list there).
 
 ## What was built
 - **Manifest-driven gates:** `tools/mapset.mjs` discovers the maps and routes; `tools/dev/route-parity.mjs` is the one "play it in the real game and compare with the Node sim" implementation; the render census takes one map and finds moving floors and the boss from the maps themselves.
