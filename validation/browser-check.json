@@ -1,10 +1,10 @@
 {
-  "when": "2026-10-05T23:45:20.515Z",
-  "commit": "0a81186",
+  "when": "2026-10-06T02:51:51.210Z",
+  "commit": "95626ac",
   "sources": {
-    "engine": "2078aef21477631f",
+    "engine": "68bf1b0300dfb6c0",
     "render": "aafd5384bba8940b",
-    "game": "80bbc167614f6d05",
+    "game": "7190c4b9c9955e8b",
     "audio": "030538561ae23a94",
     "assets": "d7df902a581fccc8"
   },
@@ -151,7 +151,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.971
+        "r": 2.955
       },
       "nodes": 6
     }
@@ -173,90 +173,90 @@
     "C1E1M02.main": {
       "ok": true,
       "ticks": 7441,
-      "hash": "0590fdeb",
+      "hash": "d301b343",
       "nodeTicks": 7441,
-      "nodeHash": "0590fdeb",
+      "nodeHash": "d301b343",
       "kills": 30,
       "secrets": 0
     },
     "C1E1M02.secret": {
       "ok": true,
       "ticks": 8165,
-      "hash": "eb3db235",
+      "hash": "129e24c5",
       "nodeTicks": 8165,
-      "nodeHash": "eb3db235",
+      "nodeHash": "129e24c5",
       "kills": 30,
       "secrets": 1
     },
     "C1E1M03.main": {
       "ok": true,
       "ticks": 9142,
-      "hash": "948a0298",
+      "hash": "f5675e64",
       "nodeTicks": 9142,
-      "nodeHash": "948a0298",
+      "nodeHash": "f5675e64",
       "kills": 41,
       "secrets": 0
     },
     "C1E1M04.main": {
       "ok": true,
       "ticks": 8169,
-      "hash": "f16b0160",
+      "hash": "d2a5efb4",
       "nodeTicks": 8169,
-      "nodeHash": "f16b0160",
+      "nodeHash": "d2a5efb4",
       "kills": 32,
       "secrets": 0
     },
     "C1E1M04.secret": {
       "ok": true,
       "ticks": 6239,
-      "hash": "d96040a8",
+      "hash": "3870b6e4",
       "nodeTicks": 6239,
-      "nodeHash": "d96040a8",
+      "nodeHash": "3870b6e4",
       "kills": 26,
       "secrets": 1
     },
     "C1E1M05.main": {
       "ok": true,
       "ticks": 8155,
-      "hash": "94729b3f",
+      "hash": "e6c2a9af",
       "nodeTicks": 8155,
-      "nodeHash": "94729b3f",
+      "nodeHash": "e6c2a9af",
       "kills": 40,
       "secrets": 0
     },
     "C1E1M06.main": {
       "ok": true,
       "ticks": 6234,
-      "hash": "5e4e0b77",
+      "hash": "544b70f7",
       "nodeTicks": 6234,
-      "nodeHash": "5e4e0b77",
+      "nodeHash": "544b70f7",
       "kills": 46,
       "secrets": 0
     },
     "C1E1M07.main": {
       "ok": true,
       "ticks": 9674,
-      "hash": "e01cf37f",
+      "hash": "a2747093",
       "nodeTicks": 9674,
-      "nodeHash": "e01cf37f",
+      "nodeHash": "a2747093",
       "kills": 37,
       "secrets": 0
     },
     "C1E1M08.main": {
       "ok": true,
       "ticks": 11039,
-      "hash": "46493b09",
+      "hash": "92e608a5",
       "nodeTicks": 11039,
-      "nodeHash": "46493b09",
+      "nodeHash": "92e608a5",
       "kills": 47,
       "secrets": 0
     },
     "C1E1S01.main": {
       "ok": true,
       "ticks": 2677,
-      "hash": "a3a11d3a",
+      "hash": "a83151ea",
       "nodeTicks": 2677,
-      "nodeHash": "a3a11d3a",
+      "nodeHash": "a83151ea",
       "kills": 0,
       "secrets": 0
     }
@@ -282,7 +282,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=33"
+      "detail": "mode=playing tick=26"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -317,7 +317,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.16 m"
+      "detail": "moved 6.26 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -327,7 +327,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=32 last=hurt,strike,toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire"
+      "detail": "played=34 last=toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire,step_outdoor,flare_boom"
     },
     {
       "name": "Escape pauses (live)",
@@ -342,7 +342,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.13 m, sprint 6.60 m, ratio 1.60"
+      "detail": "walk 4.02 m, sprint 6.44 m, ratio 1.60"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -437,7 +437,7 @@
     {
       "name": "browser sim == Node sim (state hash)",
       "ok": true,
-      "detail": "browser 47e36270 vs node 47e36270"
+      "detail": "browser 2ac340dc vs node 2ac340dc"
     },
     {
       "name": "every enemy killed, key held",
@@ -447,7 +447,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=129 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,toll_soft,pickup_ammo,bell_alert,gaunt_screech,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
+      "detail": "played=131 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,toll_soft,bell_alert,gaunt_screech,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -455,9 +455,34 @@
       "detail": "Kills16 / 16Items11 / 21Secrets0 / 1Time1:11 (par 5:00)Damage taken14DifficultyNormal"
     },
     {
+      "name": "intermission shows a rank (S/A/B/C) and the Locker with one row per upgrade track",
+      "ok": true,
+      "detail": "rank=B buy buttons=2"
+    },
+    {
+      "name": "the earned salvage and a record for this map are in the progress state",
+      "ok": true,
+      "detail": "{\"salvage\":1,\"upgrades\":{\"ammo\":0,\"armor\":0},\"records\":{\"C1E1M01\":{\"rank\":\"B\",\"score\":0.75,\"time\":71.4,\"kills\":16,\"secrets\":0,\"paid\":1}}}"
+    },
+    {
+      "name": "buying in the Locker spends salvage and raises the tier",
+      "ok": true,
+      "detail": "{\"ammo\":1,\"armor\":0} salvage 47"
+    },
+    {
+      "name": "the Locker never spends below zero and stops at the last tier",
+      "ok": true,
+      "detail": "{\"salvage\":1,\"upgrades\":{\"ammo\":1,\"armor\":5},\"records\":{\"C1E1M01\":{\"rank\":\"B\",\"score\":0.75,\"time\":71.4,\"kills\":16,\"secrets\":0,\"paid\":1}}}"
+    },
+    {
       "name": "Gate 2 flow: the intermission Next button loads C1E1M02 and play resumes",
       "ok": true,
       "detail": "C1E1M02/playing"
+    },
+    {
+      "name": "progression: the upgrade bought in the Locker is in effect in the next level, and the salvage carried",
+      "ok": true,
+      "detail": "{\"world\":{\"ammo\":1,\"armor\":5},\"progress\":{\"ammo\":1,\"armor\":5},\"salvage\":1}"
     },
     {
       "name": "Gate 2 flow: the inventory carries over (weapons kept, ammo kept, at full health or better)",
@@ -482,97 +507,97 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7441/0590fdeb vs node 7441/0590fdeb"
+      "detail": "browser 7441/d301b343 vs node 7441/d301b343"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8165 wall=3s"
+      "detail": "status=complete failed=null ticks=8165 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8165/eb3db235 vs node 8165/eb3db235"
+      "detail": "browser 8165/129e24c5 vs node 8165/129e24c5"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9142 wall=5s"
+      "detail": "status=complete failed=null ticks=9142 wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9142/948a0298 vs node 9142/948a0298"
+      "detail": "browser 9142/f5675e64 vs node 9142/f5675e64"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8169 wall=4s"
+      "detail": "status=complete failed=null ticks=8169 wall=5s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8169/f16b0160 vs node 8169/f16b0160"
+      "detail": "browser 8169/d2a5efb4 vs node 8169/d2a5efb4"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6239 wall=2s"
+      "detail": "status=complete failed=null ticks=6239 wall=3s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6239/d96040a8 vs node 6239/d96040a8"
+      "detail": "browser 6239/3870b6e4 vs node 6239/3870b6e4"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8155 wall=5s"
+      "detail": "status=complete failed=null ticks=8155 wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8155/94729b3f vs node 8155/94729b3f"
+      "detail": "browser 8155/e6c2a9af vs node 8155/e6c2a9af"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6234 wall=6s"
+      "detail": "status=complete failed=null ticks=6234 wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6234/5e4e0b77 vs node 6234/5e4e0b77"
+      "detail": "browser 6234/544b70f7 vs node 6234/544b70f7"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9674 wall=4s"
+      "detail": "status=complete failed=null ticks=9674 wall=5s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9674/e01cf37f vs node 9674/e01cf37f"
+      "detail": "browser 9674/a2747093 vs node 9674/a2747093"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=11039 wall=6s"
+      "detail": "status=complete failed=null ticks=11039 wall=9s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 11039/46493b09 vs node 11039/46493b09"
+      "detail": "browser 11039/92e608a5 vs node 11039/92e608a5"
     },
     {
       "name": "Gate 2 real-game route C1E1S01.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=2677 wall=1s"
+      "detail": "status=complete failed=null ticks=2677 wall=2s"
     },
     {
       "name": "Gate 2 real-game route C1E1S01.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 2677/a3a11d3a vs node 2677/a3a11d3a"
+      "detail": "browser 2677/a83151ea vs node 2677/a83151ea"
     },
     {
       "name": "Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse",
@@ -632,7 +657,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.971, 6 nodes"
+      "detail": "body 4.788 m tall on 12 m, shield r 2.955, 6 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -647,7 +672,7 @@
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "383 samples, lowest chip 0.001 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "386 samples, lowest chip 0.000 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -797,12 +822,12 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=83.1ms"
+      "detail": "frames=900 avg=97.0ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 1267 ms, p95 450 ms"
+      "detail": "worst 1783 ms, p95 567 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -813,9 +838,9 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 83.11022222222223,
-    "p95Ms": 450,
-    "worstMs": 1266.6999999999825
+    "avgMs": 97.01733333333334,
+    "p95Ms": 566.6999999999825,
+    "worstMs": 1783.3000000000175
   },
   "gl": {
     "geometries": 1459,

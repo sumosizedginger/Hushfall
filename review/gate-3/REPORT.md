@@ -1,5 +1,7 @@
 # Gate 3 report (2026-10-05): the repeatable pipeline, proven on one pilot map
 
+**Update 2026-10-05 (PT-008):** the owner played the pilot and asked for a design revision, so this report describes versions 1-2 of the Brine Gate. It is now version 3 (a shorter approach between rooms, a roofed hall behind the gate, the machinery of the Works on screen from the first room, a secret; 44% roofed, walls 4.2 m), and the pipeline gained a space-contract lint and the progression system. Re-verified from clean commit `95626ac`; see `PLAYTEST_NOTES.md` PT-008 and `design/CAMPAIGN_SPINE.md`. Still NOT played by the owner in this form.
+
 Status: **built and verified by the automated gates; NOT played by the owner.** Nothing of Gate 4 is started. The plan and criteria: `design/GATE3.md` (full pilot log and the honest cost list there).
 
 ## What was built
