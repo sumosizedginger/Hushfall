@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt } from '../src/render/models.js';
 import { makeBellNodeEnemy } from '../src/render/models_g2.js';
+import { makeDroneGill, makeFeeder, makeGraftMother } from '../src/render/models_e2.js';
 import { createWorld, step, spawnEnemy } from '../src/engine/world.js';
 import { ENEMIES, PLAYER } from '../src/engine/defs.js';
 import { parseMap } from '../src/engine/mapformat.js';
@@ -16,6 +17,7 @@ import { parseMap } from '../src/engine/mapformat.js';
 const RIGS = {
   tollbearer: () => makeTollbearer(null), bellhand: () => makeTollbearer(null, 'bellhand'), sexton: () => makeTollbearer(null, 'sexton'), wardengraft: () => makeTollbearer(null, 'warden'),
   cantor: () => makeTollbearer(null, 'cantor'), gaunt: () => makeGaunt(null), bellnode: () => makeBellNodeEnemy(),
+  gill: () => makeDroneGill(null), feeder: () => makeFeeder(null), graftmother: () => makeGraftMother(null),        // Gate 4 batch 2: the first flyer, the Graft-Mother's feeder and the boss
 };
 // one big open room; the east half stands 3 m up (height char '6' = 6 x 0.5 m), like the M02 gallery
 const COLS = 40, ROWS = 20;
@@ -62,8 +64,9 @@ test('the drawn body stands on the hit volume: the sim axis passes through it, i
     // a hunched Gaunt reaches forward, so its drawn centre sits ~0.38 m from the axis the hit cylinder is centred on: the axis must be INSIDE the drawn body, the centre within a diameter
     if (!(d.min.x <= e.x && e.x <= d.max.x && d.min.z <= e.z && e.z <= d.max.z)) bad.push(`${kind}: the sim position (${e.x.toFixed(2)}, ${e.z.toFixed(2)}) is outside the drawn body's footprint`);
     if (Math.hypot(cxm - e.x, czm - e.z) > 2 * def.radius) bad.push(`${kind}: drawn body centre is ${Math.hypot(cxm - e.x, czm - e.z).toFixed(2)} m off the sim position (hit diameter ${2 * def.radius})`);
-    if (Math.abs(d.min.y - e.y) > 0.03) bad.push(`${kind} on ${e.y} m: drawn base ${d.min.y.toFixed(3)} is not on the sim's ground`);
-    if (!(mid > e.y && mid < e.y + def.height)) bad.push(`${kind} on ${e.y} m: drawn middle ${mid.toFixed(2)} is outside the hit volume ${e.y}..${e.y + def.height}`);
+    const base = e.y + (def.hover ?? 0);                                    // a flyer's body starts `hover` above its floor (it bobs a few cm, hence the wider tolerance)
+    if (Math.abs(d.min.y - base) > (def.hover ? 0.08 : 0.03)) bad.push(`${kind} on ${e.y} m: drawn base ${d.min.y.toFixed(3)} is not on the sim's ground${def.hover ? ' + hover ' + def.hover : ''}`);
+    if (!(mid > base && mid < base + def.height)) bad.push(`${kind} on ${e.y} m: drawn middle ${mid.toFixed(2)} is outside the hit volume ${base}..${base + def.height}`);
   }
   assert.equal(bad.length, 0, bad.join(' | '));
 });

@@ -23,6 +23,10 @@
 //                    crouches are lifted exactly onto the plane, and the browser census reports the measured maximum so the margin stays visible.
 export const GROUND_BAND = Object.freeze({ buried: 0.03, floating: 0.30 });
 
+/** A FLYER (defs.js `hover`, the Drone-Gill) is the one kind the contract lets float: its lowest vertex belongs `hover` metres above the ground while it lives, easing down to the floor as it dies (the same ease as models_e2.js).
+ *  The verdict is then taken against ground + hoverLift(def, dead), so a flyer that sinks into the floor or hovers higher than it should is still caught. */
+export function hoverLift(def, dead = 0) { const d = Math.min(1, Math.max(0, dead)), e = d * d * (3 - 2 * d); return (def?.hover ?? 0) * (1 - e); }
+
 /** off = lowest rendered vertex minus the authoritative ground (m): negative is buried, positive floats */
 export function groundVerdict(minY, groundY, band = GROUND_BAND) {
   const off = minY - groundY;

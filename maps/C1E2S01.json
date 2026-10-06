@@ -554,8 +554,8 @@
   },
   {
    "id": "hall",
-   "at": [18, 16],
-   "radius": 3,
+   "at": [13, 13],
+   "radius": 4,
    "speaker": "INES",
    "text": "Racks and racks. Look at the dates on the crates: all of them before the firing. They knew, Calder. Someone here knew for years."
   },

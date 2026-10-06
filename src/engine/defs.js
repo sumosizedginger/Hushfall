@@ -82,6 +82,19 @@ ENEMIES.cantor = { name: 'Cantor', hp: 720, speed: 1.3, gait: 4.5, radius: 0.65,
   shield: { reduce: 0.05 }, pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 }, enragedPulseCooldown: 3.6,
   shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 }, summon: { kind: 'gaunt', count: 3, every: 18, max: 8 }, stagger: 3.0 };
 
+// ---- Gate 4 batch 2 roster (Episode 2): the first Vael-grown creatures -------------------------------------------------------------------------------------------------------------------------
+// Drone-Gill: a hatched, FLYING Vael drone (design/CAMPAIGN_SPINE.md section 3: the first non-human enemy, C1E2M05). It hovers `hover` metres above the floor (the hit volume starts there: shoot at the body, not at the floor
+// under it), ignores props and water (only walls and closed doors stop it), keeps its distance, strafes while it spits slow spores, and drops to the floor when it dies. Fragile; the scattergun and the rivet driver answer it.
+ENEMIES.gill = { name: 'Drone-Gill', hp: 30, speed: 2.7, gait: 9, radius: 0.36, height: 1.15, hover: 1.2, flying: true, hitRadius: 0.6, sight: 30, turnRate: 4.5,
+  attack: { range: 1.8, reach: 2.2, windup: 0.5, duration: 0.9, cooldown: 0.8, damage: 8 },
+  ranged: { hold: 7, minRange: 2.2, maxRange: 20, speed: 8.5, damage: 9, aimHeight: 1.1, muzzleY: 1.75 }, strafe: { speed: 2.4, every: 1.1 } };
+// Cradle feeder: one of the three feeding cradles that keep the Graft-Mother's shield up (the Cantor's bell node, grown: immobile, destroying them all drops the shield).
+ENEMIES.feeder = { name: 'Cradle feeder', hp: 100, speed: 0, gait: 0, radius: 0.7, height: 2.1, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
+// Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end, shielded (6% damage) while any feeder stands. Spits fans of spores (always, wider once her feeders are gone), hatches Drone-Gills from the pods round her,
+// and slams anything that reaches her. She barely moves.
+ENEMIES.graftmother = { name: 'Graft-Mother', hp: 680, speed: 0.8, keepAway: 0, gait: 3, radius: 0.9, height: 4.2, hitRadius: 1.4, sight: 70, turnRate: 1.6, attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 }, boss: true,
+  shield: { reduce: 0.06, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] }, shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true }, summon: { kind: 'gill', count: 2, every: 18, max: 4 }, stagger: 3.0 };
+
 export const PICKUPS = {
   key_iron: { type: 'key', key: 'iron' },
   key_bell: { type: 'key', key: 'bell' },

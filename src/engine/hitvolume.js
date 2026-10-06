@@ -1,6 +1,6 @@
 // The volume a shot tests against. Pure sim, no DOM/Three.
 //
-// An enemy's hit volume is a vertical cylinder standing on its feet (e.y): `height` tall, `hitRadius` wide (default: its movement collider `radius`),
+// An enemy's hit volume is a vertical cylinder standing on its feet (e.y; a flyer's start `hover` metres higher): `height` tall, `hitRadius` wide (default: its movement collider `radius`),
 // centred `hitForward` metres ahead of the sim position along its facing (default 0: the hunched Gaunt's body hangs ~0.3 m in front of its feet).
 // `radius` stays the MOVEMENT collider (walls, props, other bodies, pathing); only shots use `hitRadius` / `hitForward`.
 //
@@ -11,8 +11,8 @@ import { ENEMIES } from './defs.js';
 
 /** the cylinder as plain numbers: centre x/z in the world, radius, base y, top y */
 export function hitCylinder(e) {
-  const d = ENEMIES[e.kind], fwd = d.hitForward ?? 0;
-  return { x: e.x + Math.sin(e.yaw) * fwd, z: e.z + Math.cos(e.yaw) * fwd, r: d.hitRadius ?? d.radius, y0: e.y, y1: e.y + d.height };
+  const d = ENEMIES[e.kind], fwd = d.hitForward ?? 0, lift = d.hover ? d.hover * (1 - Math.min(1, e.dead ?? 0)) : 0;      // a flyer's body starts `hover` above its floor, and comes down as it dies
+  return { x: e.x + Math.sin(e.yaw) * fwd, z: e.z + Math.cos(e.yaw) * fwd, r: d.hitRadius ?? d.radius, y0: e.y + lift, y1: e.y + lift + d.height };
 }
 
 /** is the world point (x, y, z) inside enemy `e`'s hit volume? `pad` is the thickness of whatever is testing (a pellet: 0.05, a flare: 0.1) */

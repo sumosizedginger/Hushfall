@@ -24,7 +24,7 @@ export function enemyBounds(view, w) {
   for (const e of w.enemies) {
     const v = view.enemyViews.get(e.id); if (!v) continue; const obj = v.frozen ?? v.root; if (obj === v.root && !v.root.visible) continue;
     obj.updateMatrixWorld(true); b.setFromObject(obj, true); v.root.getWorldPosition(wp); const def = ENEMIES[e.kind];
-    out.push({ id: e.id, kind: e.kind, state: e.state, dead: e.dead, yaw: e.yaw, sim: { x: e.x, y: e.y ?? 0, z: e.z }, ground: groundAt(w, e.x, e.z, def.radius), floorCentre: floorAt(w, e.x, e.z), hit: { radius: def.radius, height: def.height, hitRadius: def.hitRadius ?? def.radius, hitForward: def.hitForward ?? 0 },
+    out.push({ id: e.id, kind: e.kind, state: e.state, dead: e.dead, yaw: e.yaw, sim: { x: e.x, y: e.y ?? 0, z: e.z }, ground: groundAt(w, e.x, e.z, def.radius), floorCentre: floorAt(w, e.x, e.z), hit: { radius: def.radius, height: def.height, hover: def.hover ?? 0, hitRadius: def.hitRadius ?? def.radius, hitForward: def.hitForward ?? 0 },
       root: { x: wp.x, y: wp.y, z: wp.z }, min: [b.min.x, b.min.y, b.min.z], max: [b.max.x, b.max.y, b.max.z], frozen: !!v.frozen });
   }
   return out;

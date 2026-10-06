@@ -6,11 +6,14 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt } from '../src/render/models.js';
 import { makeBellNodeEnemy } from '../src/render/models_g2.js';
-import { GROUND_BAND, groundVerdict } from '../src/render/ground-contract.js';
+import { makeDroneGill, makeFeeder, makeGraftMother } from '../src/render/models_e2.js';
+import { ENEMIES } from '../src/engine/defs.js';
+import { GROUND_BAND, groundVerdict, hoverLift } from '../src/render/ground-contract.js';
 
 const RIGS = {
   tollbearer: () => makeTollbearer(null), bellhand: () => makeTollbearer(null, 'bellhand'), sexton: () => makeTollbearer(null, 'sexton'), wardengraft: () => makeTollbearer(null, 'warden'),
   cantor: () => makeTollbearer(null, 'cantor'), gaunt: () => makeGaunt(null), bellnode: () => makeBellNodeEnemy(),
+  gill: () => makeDroneGill(null), feeder: () => makeFeeder(null), graftmother: () => makeGraftMother(null),        // Gate 4 batch 2: the first flyer, the Graft-Mother's feeder and the boss
 };
 const GROUNDS = [0, 0.5, 1, 3];                                                  // flat floor, a step, a raised cell, the M02 gallery
 const BASE = { t: 1.3, walk: 0, phase: 0, attack: 0, lunge: 0, dead: 0, flash: 0 };
@@ -44,7 +47,7 @@ test('in every pose the lowest rendered vertex sits on the authoritative ground,
   for (const [kind, make] of Object.entries(RIGS)) for (const g of GROUNDS) {
     const v = make(); placed(v, g);
     for (const [name, p] of POSES) {
-      v.pose({ ...BASE, ...p }); const { min } = lowest(v), r = groundVerdict(min, g);
+      v.pose({ ...BASE, ...p }); const { min } = lowest(v), r = groundVerdict(min, g + hoverLift(ENEMIES[kind], p.dead ?? 0));      // a flyer is judged against its hover (and none once it is dead)
       if (r.off < worst.off) worst = { off: r.off, kind, g, name }; if (r.off > worstFloat.off) worstFloat = { off: r.off, kind, g, name };
       if (!r.ok) bad.push(`${kind} on ${g} m, "${name}": lowest vertex ${min.toFixed(3)} (${r.off >= 0 ? '+' : ''}${r.off.toFixed(3)} from the ground)`);
     }
@@ -57,7 +60,7 @@ test('a corpse lies ON the floor: the dead pose is lifted onto the contact plane
   for (const [kind, make] of Object.entries(RIGS)) for (const g of [0, 3]) {
     const v = make(); placed(v, g); v.pose({ ...BASE, dead: 1 }); const { min, max } = lowest(v);
     if (Math.abs(min - g) > GROUND_BAND.buried) bad.push(`${kind} on ${g} m: lowest vertex ${(min - g).toFixed(3)} from the floor`);
-    if (kind !== 'bellnode' && max - g > 1.6 * (kind === 'cantor' ? 2 : 1)) bad.push(`${kind} on ${g} m: a dead body still ${(max - g).toFixed(2)} m tall`);
+    if (kind !== 'bellnode' && kind !== 'feeder' && max - g > 1.6 * (kind === 'cantor' ? 2 : kind === 'graftmother' ? 2.5 : 1)) bad.push(`${kind} on ${g} m: a dead body still ${(max - g).toFixed(2)} m tall`);
   }
   assert.equal(bad.length, 0, bad.join(' | '));
 });

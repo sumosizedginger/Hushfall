@@ -11,7 +11,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { GROUND_BAND, groundVerdict } from '../../src/render/ground-contract.js';
+import { GROUND_BAND, groundVerdict, hoverLift } from '../../src/render/ground-contract.js';
+import { ENEMIES as CURRENT_ENEMIES } from '../../src/engine/defs.js';
 
 const EPS = 1e-3, RAISED = 0.25;
 const r3 = (x) => Math.round(x * 1000) / 1000;
@@ -20,7 +21,7 @@ const r3 = (x) => Math.round(x * 1000) / 1000;
 export function judge(rows, tag) {
   const bad = []; let worstBuried = 0, worstFloat = 0, raised = 0;
   for (const r of rows) {
-    const v = groundVerdict(r.min[1], r.ground), problems = [];
+    const v = groundVerdict(r.min[1], r.ground + hoverLift(CURRENT_ENEMIES[r.kind], r.dead ?? 0)), problems = [];      // a flyer is judged against its own hover (the one kind allowed to float)
     if (r.ground > RAISED) raised++;
     if (Math.hypot(r.root.x - r.sim.x, r.root.z - r.sim.z) > EPS || Math.abs(r.root.y - r.sim.y) > EPS) problems.push(`placement: root (${r3(r.root.x)}, ${r3(r.root.y)}, ${r3(r.root.z)}) != sim (${r3(r.sim.x)}, ${r3(r.sim.y)}, ${r3(r.sim.z)})`);
     { const pad = r.hit.radius + 0.1; if (r.sim.x < r.min[0] - pad || r.sim.x > r.max[0] + pad || r.sim.z < r.min[2] - pad || r.sim.z > r.max[2] + pad) problems.push(`footprint: the sim position (${r3(r.sim.x)}, ${r3(r.sim.z)}) is outside the drawn body (x ${r3(r.min[0])}..${r3(r.max[0])}, z ${r3(r.min[2])}..${r3(r.max[2])})`); }
@@ -49,7 +50,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
   const allIds = fs.readdirSync(path.join(root, 'maps')).filter((f) => /^C\dE\d[MS]\d\d\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
   const mapIds = only ? allIds.filter((i) => only.includes(i)) : allIds;           // `only`: one map (or a few) checked on their own; the campaign-wide coverage rules below then do not apply
   const rows = async () => T('t.enemyBounds()');
-  const report = { band: GROUND_BAND, maps: {}, movingFloors: [], cantor: null, shots: [] };
+  const report = { band: GROUND_BAND, maps: {}, movingFloors: [], cantor: null, graftmother: null, shots: [] };
   const all = { asleep: [], awake: [], matrix: [], dying: [], corpses: [] }, kindsSeen = new Set(), hitVolume = {}; let raisedEnemies = 0, totalEnemies = 0;
 
   for (const id of mapIds) {
@@ -71,7 +72,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
       if (d.lunge) states.push(['lunge-crouch', { lungeT: 0.5 * d.lunge.windup }], ['lunge-crouch-deep', { lungeT: 0.95 * d.lunge.windup }], ['lunge-dash', { lungeT: d.lunge.windup + 0.15, walk: 1 }]);
       if (d.charge) states.push(['charge-windup', { chargeT: 0.6 * d.charge.windup }]);
       if (d.support) states.push(['channel', { channelT: 0.4 }]);
-      if (d.boss) states.push(['pulse-windup', { pulseT: 0.6 * d.pulse.windup }]);
+      if (d.boss && d.pulse) states.push(['pulse-windup', { pulseT: 0.6 * d.pulse.windup }]);
       states.push(['dying 0.25', { state: 'dead', dead: 0.25 }], ['dying 0.5', { state: 'dead', dead: 0.5 }], ['dying 0.8', { state: 'dead', dead: 0.8 }], ['dead', { state: 'dead', dead: 1 }], ['resurrected', { ...reset }]);
       for (const [name, f] of states) {
         await T(`t.setup_enemy(${sel}, ${JSON.stringify({ ...reset, ...f })}); t.render()`);
@@ -90,7 +91,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     // screenshots of the encounters the owner reported: the highest floor with enemies, awake and chasing, then the corpse it leaves
     if (shot && entry.enemies > 0) {
       await T(`t.newGame('normal', 3, { mapId: '${id}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)');
-      const cand = (await rows()).filter((r) => r.kind !== 'bellnode' && r.kind !== 'cantor').sort((x, y) => y.ground - x.ground || x.id - y.id);
+      const cand = (await rows()).filter((r) => !['bellnode', 'cantor', 'feeder', 'graftmother'].includes(r.kind)).sort((x, y) => y.ground - x.ground || x.id - y.id);
       for (const c of cand) { const vp = vantage(m, c.sim.x, c.sim.z, 4.5); if (!vp) continue;
         await T(`t.setup_teleport(${vp.x}, ${vp.z}, ${vp.yaw}); t.setup_enemy(${c.id}, { state: 'chase', lastX: ${vp.x}, lastZ: ${vp.z} }); t.clearOverlays(); t.tick(14)`); report.shots.push(await shot(`${id}-${c.kind}-on-${r3(c.ground)}m-awake`));
         await T(`t.setup_enemy(${c.id}, { state: 'dead', hp: 0, attackT: -1, lungeT: -1 }); t.tick(45)`); report.shots.push(await shot(`${id}-${c.kind}-on-${r3(c.ground)}m-corpse`)); break; }
@@ -158,18 +159,56 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     report.cantor = c; log(`census Cantor: ${c.problems.length ? c.problems.join(' | ') : 'body, shield and ring agree'}`);
   }
 
+  // 6b. THE GRAFT-MOTHER: the same encounter checks (body, shield, the three cradle feeders and their links), cloned from the Cantor's block
+  const motherMap = mapIds.find((id) => (JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8')).entities ?? []).some((e) => e.kind === 'graftmother'));
+  if (motherMap) {
+    await T(`t.newGame('normal', 3, { mapId: '${motherMap}' })`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(3)');
+    const rs = await rows(), boss = rs.find((r) => r.kind === 'graftmother'), nodes = rs.filter((r) => r.kind === 'feeder'), probe = await T('t.encounterProbe()'), c = { found: !!boss, nodes: nodes.length, problems: [] };
+    if (boss) {
+      const cx = (boss.min[0] + boss.max[0]) / 2, cz = (boss.min[2] + boss.max[2]) / 2; c.body = { min: boss.min.map(r3), max: boss.max.map(r3), height: r3(boss.max[1] - boss.min[1]), ground: boss.ground, hitHeight: boss.hit.height, hitRadius: boss.hit.radius };
+      c.bodyCentreOffsetFromSim = r3(Math.hypot(cx - boss.sim.x, cz - boss.sim.z));
+      if (c.bodyCentreOffsetFromSim > boss.hit.radius) c.problems.push(`rendered body centre is ${c.bodyCentreOffsetFromSim} m from the sim position (hit radius ${boss.hit.radius})`);
+      if (!probe.shield) c.problems.push('no shield is drawn while the ring stands');
+      else {
+        const s = probe.shield; c.shield = { x: r3(s.x), y: r3(s.y), z: r3(s.z), r: r3(s.r) };
+        if (Math.hypot(s.x - boss.sim.x, s.z - boss.sim.z) > 0.15) c.problems.push('shield is not centred on the body horizontally');
+        if (s.y < boss.min[1] || s.y > boss.max[1]) c.problems.push(`shield centre y ${r3(s.y)} is outside the body ${r3(boss.min[1])}..${r3(boss.max[1])}`);
+        let far = 0; for (const x of [boss.min[0], boss.max[0]]) for (const y of [boss.min[1], boss.max[1]]) for (const z of [boss.min[2], boss.max[2]]) far = Math.max(far, Math.hypot(x - s.x, y - s.y, z - s.z));
+        c.farthestBodyCornerFromShieldCentre = r3(far); if (far > s.r * 1.1) c.problems.push(`the body pokes out of the shield (corner ${r3(far)} m from its centre, radius ${r3(s.r)})`);
+      }
+      const inside = (p, r, pad) => p[0] >= r.min[0] - pad && p[0] <= r.max[0] + pad && p[1] >= r.min[1] - pad && p[1] <= r.max[1] + pad && p[2] >= r.min[2] - pad && p[2] <= r.max[2] + pad;
+      c.ring = nodes.map((n) => ({ id: n.id, distFromBoss: r3(Math.hypot(n.sim.x - boss.sim.x, n.sim.z - boss.sim.z)), groundDelta: r3(n.ground - boss.ground) }));
+      for (const n of nodes) {
+        const beam = probe.beams.find((b) => b.key === 'nk' + n.id); if (!beam) { c.problems.push(`node ${n.id} has no link drawn`); continue; }
+        if (!inside(beam.b, boss, 0.2)) c.problems.push(`node ${n.id}'s link ends at (${beam.b.map(r3)}), outside the Graft-Mother's drawn body`);
+        if (!inside(beam.a, n, 0.2)) c.problems.push(`node ${n.id}'s link starts at (${beam.a.map(r3)}), outside that node's drawn body`);
+      }
+      if (nodes.length < 3) c.problems.push(`only ${nodes.length} feeders found`);
+      const ringRows = judge(rs, motherMap + ' chamber'); c.contact = { bad: ringRows.bad.length, worstBuried: ringRows.worstBuried, worstFloat: ringRows.worstFloat }; if (ringRows.bad.length) c.problems.push(`${ringRows.bad.length} chamber enemies violate the ground contract`);
+      if (shot) { const m = parseMap(JSON.parse(fs.readFileSync(path.join(root, 'maps', motherMap + '.json'), 'utf8'))), vp = vantage(m, boss.sim.x, boss.sim.z, 9);
+        if (vp) { await T(`t.setup_teleport(${vp.x}, ${vp.z}, ${vp.yaw}); t.clearOverlays(); t.tick(4)`); report.shots.push(await shot(motherMap + '-graftmother-body-shield-feeders')); } }
+      // severing the ring: shield and links go
+      await T(`for (const n of window.__GAME_TEST__.enemyBounds().filter((r) => r.kind === 'feeder')) window.__GAME_TEST__.setup_enemy(n.id, { state: 'dead', hp: 0 });`); await T('t.tick(30)');
+      const after = await T('t.encounterProbe()'); c.afterSevering = { shield: after.shield, beams: after.beams.length };
+      if (after.shield || after.beams.length) c.problems.push('the shield or ring links are still drawn after every node is severed');
+      const rsAfter = await rows(), bossAfter = rsAfter.find((r) => r.kind === 'graftmother'), nodesAfter = rsAfter.filter((r) => r.kind === 'feeder'); const ja = judge([bossAfter, ...nodesAfter], motherMap + ' severed'); if (ja.bad.length) c.problems.push(`after severing, ${ja.bad.length} rigs violate the ground contract`);
+    } else c.problems.push('no Graft-Mother in ' + motherMap);
+    report.graftmother = c; log(`census Graft-Mother: ${c.problems.length ? c.problems.join(' | ') : 'body, shield and feeders agree'}`);
+  }
+
   // ---- verdicts -----------------------------------------------------------------------------------------------------------------------
   const sum = (list) => list.reduce((a, j) => ({ n: a.n + j.n, raised: a.raised + j.raised, bad: a.bad.concat(j.bad), worstBuried: Math.min(a.worstBuried, j.worstBuried), worstFloat: Math.max(a.worstFloat, j.worstFloat) }), { n: 0, raised: 0, bad: [], worstBuried: 0, worstFloat: 0 });
   const moving = sum(report.movingFloors.flatMap((f) => f.phases)), tot = Object.fromEntries(Object.entries(all).map(([k, v]) => [k, sum(v)]));
   const line = (s) => `${s.n} rows (${s.raised} on raised floors), ${s.bad.length} violations, deepest ${s.worstBuried} m, highest ${s.worstFloat} m` + (s.bad.length ? ' | e.g. ' + s.bad.slice(0, 2).map((b) => `${b.label ?? b.kind + '#' + b.id} ${b.problems[0]}`).join(' ; ') : '');
-  const need = ['tollbearer', 'gaunt', 'bellhand', 'sexton', 'wardengraft', 'cantor', 'bellnode'];
-  if (!only) check(`render truth coverage: ${mapIds.length} maps, all 7 enemy kinds, ${raisedEnemies} enemies on raised floors (a census that saw nothing would pass vacuously)`, mapIds.length >= 9 && need.every((k) => kindsSeen.has(k)) && raisedEnemies >= 60 && tot.matrix.n >= 300, `kinds ${[...kindsSeen].join(',')}; raised ${raisedEnemies}; pose rows ${tot.matrix.n}`);
+  const need = ['tollbearer', 'gaunt', 'bellhand', 'sexton', 'wardengraft', 'cantor', 'bellnode', 'gill', 'feeder', 'graftmother'];
+  if (!only) check(`render truth coverage: ${mapIds.length} maps, all 10 enemy kinds, ${raisedEnemies} enemies on raised floors (a census that saw nothing would pass vacuously)`, mapIds.length >= 9 && need.every((k) => kindsSeen.has(k)) && raisedEnemies >= 60 && tot.matrix.n >= 300, `kinds ${[...kindsSeen].join(',')}; raised ${raisedEnemies}; pose rows ${tot.matrix.n}`);
   check('render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor', tot.asleep.bad.length === 0 && tot.asleep.n === totalEnemies && (!!only || totalEnemies > 0), line(tot.asleep) + `; every one of the ${totalEnemies} enemies was measured: ${tot.asleep.n === totalEnemies}`);
   check('render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor', tot.awake.bad.length === 0 && tot.awake.n === 2 * totalEnemies && (!!only || totalEnemies > 0), line(tot.awake) + `; two samples of all ${totalEnemies} enemies: ${tot.awake.n === 2 * totalEnemies}`);
   check('render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band', tot.matrix.bad.length === 0, line(tot.matrix));
   check('render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)', tot.dying.bad.length === 0 && tot.corpses.bad.length === 0 && tot.corpses.n >= totalEnemies && tot.dying.n >= totalEnemies, `dying: ${line(tot.dying)} || corpses: ${line(tot.corpses)}`);
   check('render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)', moving.bad.length === 0 && (only ? true : report.movingFloors.length >= 2 && moving.n >= 40), line(moving));
   check('render truth: the Cantor\'s body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links', (only && !report.cantor) || (!!report.cantor && report.cantor.problems.length === 0 && report.cantor.nodes === 6), report.cantor ? (report.cantor.problems.join(' | ') || `body ${report.cantor.body.height} m tall on ${report.cantor.body.ground} m, shield r ${report.cantor.shield?.r}, ${report.cantor.nodes} nodes`) : 'none');
+  check('render truth: the Graft-Mother\'s body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links', (only && !report.graftmother) || (!!report.graftmother && report.graftmother.problems.length === 0 && report.graftmother.nodes === 6), report.graftmother ? (report.graftmother.problems.join(' | ') || `body ${report.graftmother.body.height} m tall on ${report.graftmother.body.ground} m, shield r ${report.graftmother.shield?.r}, ${report.graftmother.nodes} nodes`) : 'none');
   // PT-005 (owner decision 2026-10-05: the hit box matches the enemy): the sim's hit height is the drawn height. Width is judged vertex by vertex in tests/hit-volume-fair.test.js (the census only sees bounding boxes).
   const hvBad = only ? [] : need.filter((k) => !hitVolume[k] || Math.abs(hitVolume[k].hitHeight - hitVolume[k].drawnHeight) > 0.10);
   if (!only) check("render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)", hvBad.length === 0, need.map((k) => `${k} ${hitVolume[k]?.drawnHeight} drawn / ${hitVolume[k]?.hitHeight} hit`).join('; '));

@@ -138,6 +138,46 @@ export const SFX = {
   wheeze_windup(c, out, t, o) { noise(c, out, t, { dur: 0.7, a: 0.15, gain: 0.32, type: 'bandpass', f0: 500, f1: 1500, q: 1.4, off: o.r() }); tone(c, out, t, { f0: 140, f1: 260, a: 0.2, d: 0.5, gain: 0.12 }); return 0.8; },
   strike(c, out, t, o) { noise(c, out, t, { dur: 0.26, gain: 0.55, type: 'bandpass', f0: 900, f1: 320, q: 0.9, off: o.r() }); thump(c, out, t + 0.06, 95, 38, 0.25, 0.85); return 0.4; },
   enemy_hit(c, out, t, o) { thump(c, out, t, 210, 70, 0.13, 0.7); noise(c, out, t, { dur: 0.14, gain: 0.45, type: 'lowpass', f0: 950, off: o.r() }); return 0.25; },
+  // --- Vael-grown (Gate 4 batch 2): the Drone-Gill, the Graft-Mother ---
+  gill_chirp(c, out, t, o) {                                    // a quick rising warble, twice: wet, high, alien
+    for (const [dt, f] of [[0, 1500], [0.13, 1850]]) tone(c, out, t + dt, { type: 'sine', f0: f, f1: f * 1.7, a: 0.008, d: 0.12, gain: 0.2, vib: 55 });
+    noise(c, out, t, { dur: 0.3, gain: 0.1, type: 'bandpass', f0: 4200, f1: 5200, q: 2, off: o.r() });
+    return 0.5;
+  },
+  gill_spit(c, out, t, o) {                                     // the sac pops: a wet thump and a short hiss
+    thump(c, out, t, 420, 130, 0.12, 0.4); tone(c, out, t, { type: 'triangle', f0: 300, f1: 900, a: 0.004, d: 0.1, gain: 0.14 });
+    noise(c, out, t, { dur: 0.25, gain: 0.3, type: 'bandpass', f0: 900, f1: 320, q: 1.2, off: o.r() });
+    return 0.4;
+  },
+  gill_die(c, out, t, o) {                                      // a dropping shriek, then it hits the floor
+    tone(c, out, t, { type: 'sawtooth', f0: 1800, f1: 200, a: 0.01, d: 0.5, gain: 0.22, lp: 2400, vib: 30 });
+    noise(c, out, t, { dur: 0.5, gain: 0.2, type: 'lowpass', f0: 1400, f1: 220, off: o.r() });
+    thump(c, out, t + 0.42, 95, 40, 0.2, 0.45);
+    return 0.9;
+  },
+  mother_roar(c, out, t, o) {                                   // very low and very long: a pod the size of a room breathing out
+    tone(c, out, t, { type: 'sawtooth', f0: 58, f1: 38, a: 0.25, d: 1.7, gain: 0.3, lp: 240, vib: 3 });
+    tone(c, out, t, { type: 'sine', f0: 29, f1: 24, a: 0.3, d: 1.7, gain: 0.45 });
+    noise(c, out, t, { dur: 1.5, a: 0.2, gain: 0.28, type: 'bandpass', f0: 190, f1: 90, q: 0.8, off: o.r() });
+    return 2.1;
+  },
+  mother_spit(c, out, t, o) {                                   // a fan of spores: a deep wet blast
+    thump(c, out, t, 170, 55, 0.3, 0.7); noise(c, out, t, { dur: 0.5, gain: 0.4, type: 'bandpass', f0: 700, f1: 200, q: 1.0, off: o.r() });
+    tone(c, out, t + 0.02, { type: 'sawtooth', f0: 120, f1: 60, a: 0.01, d: 0.3, gain: 0.18, lp: 500 });
+    return 0.7;
+  },
+  mother_hatch(c, out, t, o) {                                  // a Gill tears out of its sac
+    noise(c, out, t, { dur: 0.3, gain: 0.35, type: 'bandpass', f0: 1800, f1: 500, q: 1.4, off: o.r() });
+    tone(c, out, t, { f0: 220, f1: 90, a: 0.005, d: 0.25, gain: 0.4 }); tone(c, out, t + 0.12, { type: 'sine', f0: 1400, f1: 2400, a: 0.01, d: 0.12, gain: 0.14, vib: 50 });
+    return 0.55;
+  },
+  mother_die(c, out, t, o) {                                    // the long fall of the whole line: a growl that never finds the floor
+    tone(c, out, t, { type: 'sawtooth', f0: 90, f1: 22, a: 0.1, d: 3.2, gain: 0.32, lp: 300, vib: 4 });
+    noise(c, out, t, { dur: 2.6, a: 0.1, gain: 0.3, type: 'lowpass', f0: 900, f1: 80, off: o.r() });
+    for (const [dt, f] of [[0.3, 130], [1.1, 98], [2.0, 73]]) bell(c, out, t + dt, f, { decay: 1.8, gain: 0.2, ratio: 2.6, index: 1.4 });
+    thump(c, out, t + 0.1, 70, 28, 0.9, 0.7);
+    return 3.6;
+  },
   enemy_die(c, out, t, o) {
     tone(c, out, t, { type: 'sawtooth', f0: 200, f1: 58, a: 0.02, d: 0.85, gain: 0.32, lp: 520, vib: 8 });
     noise(c, out, t, { dur: 0.6, gain: 0.3, type: 'lowpass', f0: 1100, f1: 150, off: o.r() });

@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { makeTollbearer, makeGaunt } from '../src/render/models.js';
 import { makeBellNodeEnemy } from '../src/render/models_g2.js';
+import { makeDroneGill, makeFeeder, makeGraftMother } from '../src/render/models_e2.js';
 import { createWorld, step, spawnEnemy } from '../src/engine/world.js';
 import { ENEMIES, PLAYER } from '../src/engine/defs.js';
 import { hitCylinder, insideHit } from '../src/engine/hitvolume.js';
@@ -17,6 +18,7 @@ import { parseMap } from '../src/engine/mapformat.js';
 const RIGS = {
   tollbearer: () => makeTollbearer(null), bellhand: () => makeTollbearer(null, 'bellhand'), sexton: () => makeTollbearer(null, 'sexton'), wardengraft: () => makeTollbearer(null, 'warden'),
   cantor: () => makeTollbearer(null, 'cantor'), gaunt: () => makeGaunt(null), bellnode: () => makeBellNodeEnemy(),
+  gill: () => makeDroneGill(null), feeder: () => makeFeeder(null), graftmother: () => makeGraftMother(null),        // Gate 4 batch 2: the first flyer, the Graft-Mother's feeder and the boss
 };
 const STAND = { t: 1, walk: 0, phase: 0, attack: 0, lunge: 0, dead: 0, flash: 0 };
 const COLS = 40, ROWS = 20;
@@ -57,7 +59,8 @@ test('HEIGHT: a shot at the drawn head (85%, 95%, 99% of the rendered height) re
   const bad = [];
   for (const kind of Object.keys(RIGS)) for (const [name, cx] of FLOORS) {
     const { e } = placed(kind, cx), vs = vertsOf(kind, e), h = drawnTop(vs) - drawnBase(vs);
-    for (const f of [0.85, 0.95, 0.99]) if (!(shoot(kind, cx, f * h) > 0)) bad.push(`${kind} on the ${name}: a shot ${(f * 100)}% up the DRAWN body (${(f * h).toFixed(2)} m of ${h.toFixed(2)} m) passes over it (hit volume is ${ENEMIES[kind].height} m tall)`);
+    const off = drawnBase(vs) - e.y;                                      // a flyer's body starts above its feet: shoot at fractions of the DRAWN body, measured from where it really starts
+    for (const f of [0.85, 0.95, 0.99]) if (!(shoot(kind, cx, off + f * h) > 0)) bad.push(`${kind} on the ${name}: a shot ${(f * 100)}% up the DRAWN body (${(off + f * h).toFixed(2)} m of ${h.toFixed(2)} m) passes over it (hit volume is ${ENEMIES[kind].height} m tall)`);
   }
   assert.equal(bad.length, 0, bad.join(' | '));
 });
