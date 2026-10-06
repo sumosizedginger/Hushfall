@@ -124,10 +124,11 @@ export class Bot {
   /** a pickup worth walking to when nothing is shooting: health when hurt, armour when bare, ammo when low (within 16 m) */
   forage() {
     const w = this.w, p = w.player; let best = null, bd = 16;
+    const OWNER = { flare: 'flare', shell: 'scattergun', rivet: 'rivet', bolt: 'harpoon' };                 // ammunition for a gun it does not carry is not worth a walk (the boxes may be there for a later weapon, or for the player who found the gun)
     for (const it of w.pickups) {
       if (this.skipPickups?.has(it.id)) continue;
       const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;
-      const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
+      const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? p.weapons.includes(OWNER[def.ammo] ?? 'flare') && (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
       if (low) { best = it; bd = d; }
     }
     return best;

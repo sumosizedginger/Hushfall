@@ -561,8 +561,8 @@ export function step(w, cmd) {
     if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def); }
   }
 
-  // last-resort feed: a player with no ammunition of ANY kind is never left with nothing (there is no melee weapon): the flare cannon's feed drops one flare after a few seconds (and again each time it is spent)
-  if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0)) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; p.ammo.flare = (p.ammo.flare || 0) + PLAYER.dryFeed.amount; emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
+  // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing (there is no melee weapon): the flare cannon's feed drops one flare after a few seconds (and again each time it is spent)
+  if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0 && Object.entries(WEAPONS).some(([id, wd]) => wd.ammo === k && p.weapons.includes(id)))) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; p.ammo.flare = (p.ammo.flare || 0) + PLAYER.dryFeed.amount; emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
   // pickups
   for (let i = w.pickups.length - 1; i >= 0; i--) {
     const it = w.pickups[i], def = PICKUPS[it.kind];

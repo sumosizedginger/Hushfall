@@ -65,7 +65,7 @@ L.put(25, 3, 'v'); L.put(27, 3, 'H'); L.put(26, 2, 'e'); L.put(25, 2, 'r'); L.pu
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M03', name: 'Rail Yard', version: 1, ceilingHeight: 4.2, par: { time: 400 },
   atmosphere: { fog: '#a0a094', fogDensity: 0.008, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -99,3 +99,7 @@ export default {
   quality: { enemies: [30, 56], botSeconds: [40, 600], mechanics: ['heights', 'switches', 'sectors', 'secret'], skins: 6, enemyKinds: { wardengraft: 1, bellhand: 2 },
     scaleClass: 'MIXED', introduces: 'shunting: three wagons that are moving floors, raised as walls across the shed and lowered one at a time by levers; every way east has its own threat' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[37,13],[50,24]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;

@@ -6,6 +6,9 @@ import { createWorld, step, drainEvents, spawnEnemy } from '../src/engine/world.
 import { WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, AMMO_MAX, NOISE, TICK } from '../src/engine/defs.js';
 import { ammoCap } from '../src/engine/progress.js';
 import { shippedMap } from './helpers.js';
+import { Bot } from '../src/engine/bot.js';
+import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { InputState } from '../src/engine/input.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, ...o });
 const H = WEAPONS.harpoon;
@@ -75,4 +78,24 @@ test('pickups: the rifle (switches to it, 6 bolts), bolt boxes, the cap, and the
 test('the same seed and inputs give the same shot (deterministic) and the sim is not touched by the view-only bolt event', () => {
   const run = () => { const w = lane(7); const e = at(w, 'tollbearer', 25); raise(w); shoot(w, false); return [e.hp, w.player.ammo.bolt, w.rng ?? w.seed]; };
   assert.deepEqual(run(), run());
+});
+
+test('the bot does not walk to bolt boxes unless it carries the rifle (PT-010)', () => {
+  const w = lane(); w.player.ammo.bolt = 0; w.pickups.push({ id: 9100, kind: 'ammo_bolt', x: w.player.x + 3, z: w.player.z });
+  w.player.weapons = ['flare', 'scattergun']; assert.equal(new Bot(w, new InputState(), [], {}).forage(), null, 'no rifle: the box is not worth a walk');
+  w.player.weapons = ['flare', 'harpoon']; assert.equal(new Bot(w, new InputState(), [], {}).forage()?.id, 9100, 'with the rifle and no bolts it fetches the box');
+});
+
+test('the rifle has a supply: every Episode 2 map from its pedestal on has bolt boxes, and the main route walks over every one of them (PT-010)', () => {
+  for (const id of ['C1E2M02', 'C1E2M03', 'C1E2M04', 'C1E2M05', 'C1E2M06', 'C1E2M07', 'C1E2M08']) {
+    const map = loadMapFile(`maps/${id}.json`), r = runRoute(map, loadRouteFile(`routes/${id}.main.route.json`), { seed: 1, difficulty: 'normal' });
+    const boxes = map.entities.filter((e) => e.type === 'pickup' && e.kind === 'ammo_bolt').length, left = r.world.pickups.filter((p) => p.kind === 'ammo_bolt').length;
+    assert.ok(boxes >= 2, `${id} has ${boxes} bolt boxes`); assert.equal(left, 0, `${id}: ${left} of ${boxes} bolt boxes were not on the lane`);
+  }
+});
+
+test('bolts picked up before the rifle do not hold off the last-resort flare feed; with the rifle they do (PT-010)', () => {
+  const feedAfter = (weapons) => { const w = lane(); w.player.weapons = weapons; w.player.weapon = 'flare'; w.player.ammo = { flare: 0, shell: 0, rivet: 0, bolt: 5 }; for (let i = 0; i < 12 * 60; i++) step(w, idle()); return w.player.ammo.flare; };
+  assert.ok(feedAfter(['flare']) >= 1, 'no rifle: the player is dry and a flare is fed');
+  assert.equal(feedAfter(['flare', 'harpoon']), 0, 'with the rifle the bolts are ammunition: no feed');
 });

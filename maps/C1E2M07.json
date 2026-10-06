@@ -858,6 +858,16 @@
      "message": "lit"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [23, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [49, 20]
   }
  ],
  "par": {

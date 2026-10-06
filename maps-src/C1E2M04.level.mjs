@@ -54,7 +54,7 @@ L.put(52, 36, 'v'); L.put(54, 36, 'H'); L.put(52, 38, 'e'); L.put(54, 38, 'r');
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M04', name: 'Kiln Row', version: 1, ceilingHeight: 3.8, par: { time: 420 },
   atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -88,3 +88,7 @@ export default {
   quality: { enemies: [30, 56], botSeconds: [40, 600], mechanics: ['switches', 'triggers', 'hazards', 'closets', 'keys>=2', 'secret'], skins: 5, enemyKinds: { bellhand: 4 },
     scaleClass: 'COMPRESSION', introduces: 'the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[30,26],[63,22]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;

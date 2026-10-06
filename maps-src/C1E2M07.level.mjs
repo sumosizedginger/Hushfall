@@ -43,7 +43,7 @@ L.putAll('P', [[58, 21], [58, 23]]); L.putAll('H', [[53, 19], [53, 25]]); L.putA
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M07', name: 'Slurry Undercroft', version: 1, ceilingHeight: 3.2, par: { time: 480 },
   atmosphere: { fog: '#101c18', fogDensity: 0.03, sky: 'night', ambient: 0.3 },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -72,3 +72,7 @@ export default {
   quality: { enemies: [30, 56], botSeconds: [60, 600], mechanics: ['switches', 'hazards', 'secret'], skins: 5, enemyKinds: { bellhand: 4 },
     scaleClass: 'COMPRESSION', introduces: 'light as a schedule: the undercroft starts nearly dark; each of four breakers raises the light a stage, opens the next door and wakes what lives there' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[23,22],[49,20]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;

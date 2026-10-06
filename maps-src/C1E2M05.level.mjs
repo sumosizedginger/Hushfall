@@ -41,7 +41,7 @@ L.put(17, 13, 'v'); L.put(19, 13, 'H'); L.put(17, 12, 'e'); L.put(19, 12, 'r'); 
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M05', name: 'The Cradle Annex', version: 1, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55 },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -72,3 +72,7 @@ export default {
   quality: { enemies: [14, 50], botSeconds: [40, 600], mechanics: ['triggers', 'switches', 'closets', 'secret'], skins: 5, enemyKinds: { gill: 2, bellhand: 1 },
     scaleClass: 'COMPRESSION', introduces: 'the first non-human enemy: the Drone-Gill, a flying Vael hatchling, revealed by pods that crack open in a quiet hall and by ambush closets that open around you' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[25,22],[30,22],[51,24]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;
