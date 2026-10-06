@@ -5,6 +5,7 @@ import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER } from '../engine/defs.js';
+import { sanitizeProgress } from '../engine/progress.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
@@ -23,6 +24,7 @@ export function installTestHook(app) {
     const w = g.world, p = w?.player;
     return {
       mode: g.mode, mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, tick: w?.tick ?? null, status: w?.status ?? null, hash: w ? hashWorld(w) : null,
+      progress: JSON.parse(JSON.stringify(g.progress)), upgrades: w?.upgrades ?? null,
       fov: g.view?.cam.fov ?? null, player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, ads: p.ads, sprint: p.sprint, sprinting: p.sprinting, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, weapons: p.weapons, cooldown: p.cooldown },
       messagesSeen: w?.messagesSeen ?? null, explored: w ? w.explored.reduce((a, b) => a + b, 0) : null, stats: w?.stats ?? null, endStats: w?.endStats ?? null, secretsFound: w?.secretsFound ?? null,
       enemies: w?.enemies.map((e) => ({ id: e.id, x: e.x, z: e.z, hp: e.hp, state: e.state })) ?? null, pickups: w?.pickups.length ?? null,
@@ -70,6 +72,7 @@ export function installTestHook(app) {
     setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
+    setup_progress(fields) { g.progress = sanitizeProgress({ ...g.progress, ...fields }); if (g.mode === 'complete') ui.locker(g.progress, ''); },                         // the campaign progress (salvage, upgrade tiers, records) before a level starts or on the intermission
     setup_postClassic(on) { g.view.post.uniforms.uClassic.value = on ? 1 : 0; },                                        // the whole picture on the original ink pass (outline guard in browser-check)
     setup_postDebug(on) { g.view.post.uniforms.uDebug.value = on ? 1 : 0; },                                            // the ink mask instead of the picture (tools/dev/shoot-outlines.mjs)
     // -- diagnostics --

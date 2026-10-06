@@ -10,6 +10,7 @@ import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
 import { TICK, VIEW, KEYS } from '../engine/defs.js';
+import { newProgress, sanitizeProgress, earn, buy } from '../engine/progress.js';
 import { UI } from './ui.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
@@ -47,13 +48,15 @@ document.getElementById('title-art').src = titleArtUrl();
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
   mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
+  progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
   capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
 };
 
 const ui = new UI({
-  newGame: (d) => startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }),
+  newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
+  buyUpgrade: (track) => buyUpgrade(track),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   playRadio: () => audio.play(RADIO_SOUND),
@@ -87,6 +90,7 @@ function loadFirstSave() {
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
+  g.progress = sanitizeProgress(save.progress);                             // the salvage, upgrades and records the save was made with
   startLevel({ world: r.world, note: r.degraded }); return true;
 }
 
@@ -100,7 +104,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false;
-  if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now() }));
+  if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
   if (!world) { ui.card(map.intro); ui.tip(legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
@@ -109,7 +113,28 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
 /** the level after the one just finished (a secret exit goes to the secret map; a secret map returns to the main route), carrying the inventory over */
 function nextLevel() {
   const id = g.nextId; if (!id) return quitToTitle();
-  startLevel({ mapId: id, difficulty: g.difficulty, seed: g.seed + 1, carry: carryOver(g.world) });
+  startLevel({ mapId: id, difficulty: g.difficulty, seed: g.seed + 1, carry: nextCarry() });
+}
+/** the inventory the next level starts with: what the player holds, with the upgrade tiers as bought in the Locker */
+const nextCarry = () => ({ ...carryOver(g.world), upgrades: { ...g.progress.upgrades } });
+/** the intermission screen's data: the stats, the rank this run earned, the salvage it paid, the Locker */
+function completeData() {
+  const m = MAPS[g.mapId], e = g.lastEarn;
+  return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId,
+    rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '' };
+}
+/** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
+function commitProgress() {
+  if (!g.nextId || !g.world) return;
+  try { const w = createWorld(MAPS[g.nextId], { seed: g.seed + 1, difficulty: g.difficulty, carry: nextCarry() }); store.write('auto', makeSave(w, 'level-start', { now: Date.now(), progress: g.progress })); }
+  catch (e) { g.lockerNote = 'Progress could not be saved: ' + e.message; }
+}
+function buyUpgrade(track) {
+  if (g.mode !== 'complete' || !g.lastEarn) return;
+  const r = buy(g.progress, track);
+  g.lockerNote = r.ok ? '' : r.reason === 'salvage' ? 'Not enough salvage.' : r.reason === 'maxed' ? 'Already fully upgraded.' : '';
+  if (r.ok) { g.progress = r.progress; commitProgress(); }
+  ui.show('complete', completeData());
 }
 function quitToTitle() {
   g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
@@ -120,7 +145,7 @@ function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.
 function quickSave() {
   if (!g.world) return;
   const playing = g.mode === 'playing';                                     // F5 during play: save and keep playing, tell the player with a toast
-  try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now() })); if (playing) ui.toast('Quick saved'); else ui.show('pause', { note: 'Saved.', canLoad: true }); }
+  try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now(), progress: g.progress })); if (playing) ui.toast('Quick saved'); else ui.show('pause', { note: 'Saved.', canLoad: true }); }
   catch (e) { if (playing) ui.toast('Save failed: ' + e.message); else ui.show('pause', { note: 'Save failed: ' + e.message, canLoad: hasQuick() }); }
 }
 function quickLoad() {
@@ -200,7 +225,14 @@ function frame(now) {
   let alpha = 0;
   if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
-  else if (g.mode === 'ending') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'complete'; g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]); ui.show('complete', { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: MAPS[g.mapId].par?.time, difficulty: g.difficulty, mapName: MAPS[g.mapId].name, outro: MAPS[g.mapId].outro, hasNext: !!g.nextId }); } }
+  else if (g.mode === 'ending') {
+    g.timer -= dt;
+    if (g.timer <= 0) {
+      g.mode = 'complete'; g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
+      g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record
+      commitProgress(); ui.show('complete', completeData());
+    }
+  }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
@@ -220,7 +252,7 @@ if (import.meta.env.DEV) {                                                 // de
   const box = document.getElementById('dev-levels'), sel = document.getElementById('dev-map'), diff = document.getElementById('dev-diff'), go = document.getElementById('dev-go');
   if (box && sel && diff && go) {
     sel.innerHTML = Object.keys(MAPS).sort().map((id) => `<option value="${id}">${id} ${MAPS[id].name ?? ''}</option>`).join(''); box.classList.remove('hidden');
-    go.onclick = () => startLevel({ mapId: sel.value, difficulty: diff.value, seed: 1 + Math.floor(Math.random() * 1e6) });
+    go.onclick = () => { g.progress = sanitizeProgress({ salvage: Number(document.getElementById('dev-salvage')?.value) || 0 }); startLevel({ mapId: sel.value, difficulty: diff.value, seed: 1 + Math.floor(Math.random() * 1e6) }); };      // a dev run starts with the salvage typed in the box (to try the Locker without playing ten maps)
   }
 }
 if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));

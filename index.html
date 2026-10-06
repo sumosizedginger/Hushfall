@@ -57,6 +57,11 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 #controls{margin-bottom:10px}
 .note{color:#e0a060;min-height:1.4em;margin-top:8px;font-size:12px}
 #screen-dead .panel{border-color:var(--red)}#screen-dead h2{color:var(--red)}
+#rank-line{display:flex;align-items:center;gap:14px;margin:6px 0 12px;color:#9fb4b0}
+.rank{font-size:52px;line-height:1;text-shadow:3px 3px 0 var(--ink)}.rank.r-S{color:#ffd45a}.rank.r-A{color:var(--teal)}.rank.r-B{color:var(--paper)}.rank.r-C{color:#9fb4b0}
+#locker-box{margin-top:14px}#locker-box h3{margin:0 0 6px;letter-spacing:.2em;color:var(--bronze);font-size:14px}#locker-box h3 small{color:var(--teal);letter-spacing:.1em;margin-left:8px}
+#locker div{flex-wrap:wrap;align-items:center}#locker .what{color:#c4d4d0;font-size:12px;flex:1 1 100%}
+button.buy{display:inline-block;width:auto;margin:0 0 0 8px;padding:2px 12px;font-size:11px}button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:var(--paper)}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="cross"></div>
@@ -81,7 +86,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
     <div class="legend" id="legend-title"></div>
     <div class="note" id="title-note"></div>
-    <div id="dev-levels" class="hidden" style="margin-top:12px;font-size:12px;opacity:.85">DEV level picker (not in the shipped game): <select id="dev-map"></select> <select id="dev-diff"><option>easy</option><option selected>normal</option><option>hard</option></select> <button id="dev-go" style="width:auto;min-width:72px">Play</button></div>
+    <div id="dev-levels" class="hidden" style="margin-top:12px;font-size:12px;opacity:.85">DEV level picker (not in the shipped game): <select id="dev-map"></select> <select id="dev-diff"><option>easy</option><option selected>normal</option><option>hard</option></select> salvage <input id="dev-salvage" type="number" min="0" max="999" value="0" style="width:56px"> <button id="dev-go" style="width:auto;min-width:72px">Play</button></div>
   </div>
 </div>
 
@@ -116,7 +121,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 </div>
 
 <div id="screen-complete" class="screen hidden">
-  <div class="panel"><h2 id="complete-title"></h2><div id="stat-rows" class="rows"></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
+  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
 </div>
 <script type="module" src="/src/game/main.js"></script>
 </body></html>

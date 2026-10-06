@@ -1,6 +1,7 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
 import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
+import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
@@ -50,7 +51,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
     sectors: map.sectors.map((s) => { const h = s.start === 'high' ? s.high : s.low; return { id: s.id, h, target: h, speed: s.speed }; }),      // moving floors (lifts, ramps)
     triggerState: Object.fromEntries(map.triggers.map((t) => [t.id, { fired: false }])), switchState: Object.fromEntries(map.switches.map((s) => [s.id, { used: false, on: false }])),
     exitLocked: Object.fromEntries(map.exits.map((x) => [x.id, !!x.locked])), objective: map.objective ?? null,
-    levelStart: { hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0, ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])] },      // what Retry restores (never the mid-level inventory)
+    upgrades: sanitizeUpgrades(carry?.upgrades),                         // the campaign's persistent upgrade tiers (progress.js): they set the ammunition and armour CAPS, nothing else; the sim never changes them
+    levelStart: { hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0, ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])], upgrades: sanitizeUpgrades(carry?.upgrades) },      // what Retry restores (never the mid-level inventory)
     secretsFound: [], messagesSeen: [], explored: new Array(map.w * map.h).fill(0),
     stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
     endStats: null,
@@ -532,13 +534,14 @@ export function step(w, cmd) {
     const it = w.pickups[i], def = PICKUPS[it.kind];
     if (Math.hypot(p.x - it.x, p.z - it.z) > 0.9 || Math.abs((it.y ?? 0) - p.y) > 1.0) continue;
     let took = false;
+    const aCap = def.type === 'armor' ? armorCap(w.upgrades) : 0, mCap = def.ammo ? ammoCap(def.ammo, w.upgrades) : 0;      // the caps rise with the persistent upgrades (progress.js)
     if (def.type === 'health' && p.hp < PLAYER.maxHp) { p.hp = Math.min(PLAYER.maxHp, p.hp + def.amount); took = true; }
-    else if (def.type === 'armor' && p.armor < PLAYER.maxArmor) { p.armor = Math.min(PLAYER.maxArmor, p.armor + def.amount); took = true; }
-    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo]) { p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true; }
+    else if (def.type === 'armor' && p.armor < aCap) { p.armor = Math.min(aCap, p.armor + def.amount); took = true; }
+    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < mCap) { p.ammo[def.ammo] = Math.min(mCap, (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
-    else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (p.ammo[def.ammo] || 0) < AMMO_MAX[def.ammo])) {
+    else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (p.ammo[def.ammo] || 0) < mCap)) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => WEAPON_ORDER.indexOf(a) - WEAPON_ORDER.indexOf(b)); p.weapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; }
-      p.ammo[def.ammo] = Math.min(AMMO_MAX[def.ammo], (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true;
+      p.ammo[def.ammo] = Math.min(mCap, (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true;
     }
     if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
   }
@@ -571,7 +574,7 @@ export function step(w, cmd) {
 export const restartWorld = (w) => createWorld(w.map, { seed: w.seed, difficulty: w.difficulty, carry: w.levelStart });
 
 /** Inventory carried into the next map / level-start checkpoint. Keys do not carry. */
-export const carryOver = (w) => ({ hp: Math.max(1, w.player.hp), armor: w.player.armor, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons] });
+export const carryOver = (w) => ({ hp: Math.max(1, w.player.hp), armor: w.player.armor, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons], upgrades: { ...w.upgrades } });
 
 export function hashWorld(w) {
   const s = JSON.stringify(w, (k, v) => (typeof v === 'number' ? Math.round(v * 1e5) / 1e5 : v));

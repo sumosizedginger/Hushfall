@@ -2,6 +2,7 @@
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS' };
+import { describeNext, TRACKS } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { ACTIONS } from '../engine/input.js';
@@ -28,6 +29,7 @@ export class UI {
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
+    $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
     $('set-fov').oninput = (e) => this.h.setSetting('fov', Number(e.target.value)); $('set-bright').oninput = (e) => this.h.setSetting('brightness', Number(e.target.value));
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
@@ -53,8 +55,16 @@ export class UI {
     if (name === 'complete') {
       const s = data.stats, t = s.total;
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
+      $('rank-line').innerHTML = `<span class="rank r-${data.rank}">${data.rank}</span><span>score ${data.score.toFixed(2)} · ${data.gain > 0 ? '+' + data.gain + ' salvage' : 'no new salvage'}${data.record && data.record.rank !== data.rank ? ' · best ' + data.record.rank : ''}</span>`;
+      this.locker(data.progress, data.lockerNote ?? '');
       $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
     }
+  }
+  /** the Locker on the intermission: one row per upgrade track (the next tier, what it gives, what it costs) and the salvage in hand. Buying is the shell's job (h.buyUpgrade). */
+  locker(p, note = '') {
+    $('locker-salvage').textContent = `salvage ${p.salvage}`;
+    $('locker').innerHTML = Object.keys(TRACKS).map((t) => { const d = describeNext(p, t); return `<div><b>${d.name} · tier ${d.tier}/${TRACKS[t].costs.length}</b><span>${d.cost == null ? 'maxed' : `${d.cost} salvage<button class="buy" data-track="${t}"${p.salvage < d.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${d.text}</span></div>`; }).join('');
+    $('locker-note').textContent = note;
   }
   toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
   /** hotkeys (Enter/Space on the death and complete screens) are ignored for half a second after a screen appears, so a held fire key cannot skip it */
