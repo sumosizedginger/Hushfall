@@ -1,0 +1,10 @@
+C1E1M01.json    PASS  | PASS 
+C1E1M02.json    PASS  | PASS 
+C1E1M03.json    PASS  | PASS 
+C1E1M04.json    PASS  | PASS 
+C1E1M05.json    PASS  | PASS 
+C1E1M06.json    PASS  | PASS 
+C1E1M07.json    PASS  | PASS 
+C1E1M08.json    PASS  | PASS 
+C1E1S01.json    PASS  | PASS 
+C1E2M01.json    FAIL 9 roofed cells near 14,23 have 0 wall edges and 12 open edges; 9 roofed cells near 30,23 have 0 wall edges and 12 open edges | FAIL 6 floating: lamp@6,24 lamp@20,24 lamp@26,24 lamp@44,24 lamp@52,24 lamp@66,25

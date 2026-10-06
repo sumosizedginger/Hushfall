@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M01",
- "version": 1,
+ "version": 2,
  "name": "Brine Gate",
  "ceilingHeight": 6,
  "atmosphere": {
@@ -33,9 +33,9 @@
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
-  "##LsssssssssssgggsssssssssssssgggssssssssssssssLLLssssssssssssssssssssL#",
-  "##LsssssssssssgggsssssssssssssgggsssssssssssssssDsssssssssssssssssssssL#",
-  "##LsssssssssssgggsssssssssssssgggssssssssssssssLLLssssssssssssssssssssL#",
+  "##LssssssssssspppssssssssssssspppssssssssssssssLLLssssssssssssssssssssL#",
+  "##LssssssssssspppssssssssssssspppsssssssssssssssDsssssssssssssssssssssL#",
+  "##LssssssssssspppssssssssssssspppssssssssssssssLLLssssssssssssssssssssL#",
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
   "##LlllllllllllmmmlllllllllllllmmmllllllllllllllLLLssssssssssssssssssssL#",
@@ -640,13 +640,28 @@
   },
   {
    "type": "prop",
+   "kind": "lamppost",
+   "at": [6, 22]
+  },
+  {
+   "type": "prop",
    "kind": "cart",
    "at": [7, 22]
   },
   {
    "type": "prop",
+   "kind": "lamppost",
+   "at": [20, 22]
+  },
+  {
+   "type": "prop",
    "kind": "cart",
    "at": [21, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [26, 22]
   },
   {
    "type": "prop",
@@ -669,10 +684,20 @@
    "at": [39, 22]
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [44, 22]
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [46, 22],
    "facing": -1.523
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [52, 22]
   },
   {
    "type": "enemy",
@@ -694,13 +719,13 @@
    "at": [23, 23]
   },
   {
-   "type": "player",
-   "at": [4, 24]
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [66, 23]
   },
   {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [6, 24]
+   "type": "player",
+   "at": [4, 24]
   },
   {
    "type": "pickup",
@@ -718,11 +743,6 @@
    "at": [11, 24]
   },
   {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [20, 24]
-  },
-  {
    "type": "pickup",
    "kind": "health_small",
    "at": [21, 24]
@@ -738,11 +758,6 @@
    "at": [24, 24]
   },
   {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [26, 24]
-  },
-  {
    "type": "pickup",
    "kind": "health_small",
    "at": [27, 24]
@@ -756,16 +771,6 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [39, 24]
-  },
-  {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [44, 24]
-  },
-  {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [52, 24]
   },
   {
    "type": "enemy",
@@ -795,16 +800,16 @@
    "at": [55, 25]
   },
   {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [56, 25]
+  },
+  {
    "type": "enemy",
    "kind": "wardengraft",
    "at": [62, 25],
    "facing": -1.588,
    "group": "yard"
-  },
-  {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [66, 25]
   },
   {
    "type": "exit",

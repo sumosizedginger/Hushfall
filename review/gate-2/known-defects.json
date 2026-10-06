@@ -409,6 +409,14 @@
       "status": "open",
       "title": "Adding a skin invalidates every map's evidence",
       "remaining": "A skin is a row in src/engine/defs.js and a baked asset, both hashed into all evidence: the full regeneration after the pilot took about 15 minutes for ten maps (about an hour for 68). Candidate fix not built: skins as data outside the hashed engine files and per-map freshness of only the assets a map uses. Owner choice."
+    },
+    {
+      "id": "PT-007",
+      "severity": "MAJOR",
+      "status": "partially-fixed",
+      "title": "Owner 2026-10-05 (Gate 3 pilot): the Brine Gate read as indoors in the open: two floating ceiling slabs over the road bridges and six ceiling lamps hanging in the sky",
+      "how": "The bridges used the indoor grate floor (it gets a ceiling slab) and the road lamps were the ceiling-hung lamp prop. Map-only fix (plank bridges, lampposts) plus tools/maplint.mjs (a roofed region must have walls; ceiling-hung props must stand under a roof), run by verify-map; red on the shipped pilot, green on all Episode 1 maps and the fixed pilot; tests/maplint.test.js.",
+      "remaining": "FIXED IN CODE, NOT CONFIRMED BY THE OWNER IN PLAY."
     }
   ],
   "reauditedCommit": "07f456e"
