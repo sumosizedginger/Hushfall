@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-05T21:42:58.795Z",
+  "when": "2026-10-06T19:14:53.519Z",
   "sources": {
-    "engine": "a01a633c05680695",
-    "render": "5f2dc4330b716085",
-    "game": "4d9f7cc49a1a76ed",
-    "audio": "030538561ae23a94",
-    "assets": "be7f0f55628a7b04"
+    "engine": "931734998902e110",
+    "render": "52f1d9d01ee4554e",
+    "game": "e9e877f941e30fb7",
+    "audio": "66b6062c85c8657d",
+    "assets": "bf0547479d5b8097"
   },
-  "commit": "90c5319",
+  "commit": "3398238",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -116,8 +116,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "step_plank",
@@ -380,8 +380,8 @@
       "tailRms": 0.00005,
       "audibleSeconds": 2.17,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "revive",
@@ -392,8 +392,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.54,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "tone_pulse",
@@ -404,8 +404,8 @@
       "tailRms": 0.00004,
       "audibleSeconds": 1.81,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "pulse_hit",
@@ -564,6 +564,90 @@
       "bitExact": true
     },
     {
+      "id": "gill_chirp",
+      "seconds": 0.5,
+      "peak": 0.21,
+      "rms": 0.0097,
+      "loudestWindowRms": 0.0521,
+      "tailRms": 0,
+      "audibleSeconds": 0.23,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "gill_spit",
+      "seconds": 0.4,
+      "peak": 0.368,
+      "rms": 0.0131,
+      "loudestWindowRms": 0.1,
+      "tailRms": 0,
+      "audibleSeconds": 0.14,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "gill_die",
+      "seconds": 0.9,
+      "peak": 0.395,
+      "rms": 0.0215,
+      "loudestWindowRms": 0.104,
+      "tailRms": 0,
+      "audibleSeconds": 0.57,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "mother_roar",
+      "seconds": 2.1,
+      "peak": 0.435,
+      "rms": 0.0634,
+      "loudestWindowRms": 0.277,
+      "tailRms": 0,
+      "audibleSeconds": 1.43,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "mother_spit",
+      "seconds": 0.7,
+      "peak": 0.684,
+      "rms": 0.035,
+      "loudestWindowRms": 0.238,
+      "tailRms": 0,
+      "audibleSeconds": 0.27,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "mother_hatch",
+      "seconds": 0.55,
+      "peak": 0.421,
+      "rms": 0.0194,
+      "loudestWindowRms": 0.1314,
+      "tailRms": 0,
+      "audibleSeconds": 0.22,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "mother_die",
+      "seconds": 3.6,
+      "peak": 0.816,
+      "rms": 0.0849,
+      "loudestWindowRms": 0.3589,
+      "tailRms": 0.00332,
+      "audibleSeconds": 3,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
       "id": "enemy_die",
       "seconds": 1.5,
       "peak": 0.724,
@@ -572,8 +656,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.05,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "gaunt_screech",

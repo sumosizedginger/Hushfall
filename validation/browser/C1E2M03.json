@@ -1,0 +1,284 @@
+{
+  "mapId": "C1E2M03",
+  "when": "2026-10-06T19:09:00.341Z",
+  "commit": "3398238",
+  "dirtySource": false,
+  "env": {
+    "browser": "headless Chrome",
+    "gl": "SwiftShader (software GL)",
+    "note": "NOT a real-GPU measurement"
+  },
+  "mapSha": "2fd951438ac4285f",
+  "routesSha": "7da7d2c948d18f04",
+  "sources": {
+    "engine": "931734998902e110",
+    "render": "52f1d9d01ee4554e",
+    "game": "e9e877f941e30fb7",
+    "audio": "66b6062c85c8657d",
+    "assets": "bf0547479d5b8097"
+  },
+  "routes": {
+    "main": {
+      "ok": true,
+      "ticks": 4548,
+      "hash": "2d16a390",
+      "nodeTicks": 4548,
+      "nodeHash": "2d16a390",
+      "agree": true,
+      "kills": 34,
+      "secrets": 0,
+      "wallSeconds": 2
+    },
+    "secret": {
+      "ok": true,
+      "ticks": 5099,
+      "hash": "f079095b",
+      "nodeTicks": 5099,
+      "nodeHash": "f079095b",
+      "agree": true,
+      "kills": 36,
+      "secrets": 1,
+      "wallSeconds": 2
+    }
+  },
+  "hud": {
+    "objective": true,
+    "boss": false,
+    "shield": false
+  },
+  "census": {
+    "enemies": 36,
+    "asleep": {
+      "rows": 36,
+      "raised": 2,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0
+    },
+    "awake": {
+      "rows": 72,
+      "raised": 2,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.127
+    },
+    "matrix": {
+      "rows": 56,
+      "raised": 13,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.156
+    },
+    "dying": {
+      "rows": 36,
+      "raised": 2,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0
+    },
+    "corpses": {
+      "rows": 36,
+      "raised": 2,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0
+    },
+    "movingFloors": [
+      {
+        "sector": "wn",
+        "low": 0.5,
+        "high": 4,
+        "phases": [
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.054
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.069
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 3,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.048
+          }
+        ]
+      },
+      {
+        "sector": "wc",
+        "low": 0.5,
+        "high": 4,
+        "phases": [
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.054
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.069
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 3,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.048
+          }
+        ]
+      },
+      {
+        "sector": "ws",
+        "low": 0.5,
+        "high": 4,
+        "phases": [
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.054
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.069
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 3,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0.048
+          }
+        ]
+      }
+    ],
+    "cantor": null
+  },
+  "checks": [
+    {
+      "name": "real-game route C1E2M03.main: completes in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=4548 wall=2s"
+    },
+    {
+      "name": "real-game route C1E2M03.main: browser sim == Node sim (ticks + state hash)",
+      "ok": true,
+      "detail": "browser 4548/2d16a390 vs node 4548/2d16a390"
+    },
+    {
+      "name": "real-game route C1E2M03.secret: completes in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=5099 wall=2s"
+    },
+    {
+      "name": "real-game route C1E2M03.secret: browser sim == Node sim (ticks + state hash)",
+      "ok": true,
+      "detail": "browser 5099/f079095b vs node 5099/f079095b"
+    },
+    {
+      "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
+      "ok": true,
+      "detail": "36 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 36 enemies was measured: true"
+    },
+    {
+      "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
+      "ok": true,
+      "detail": "72 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 36 enemies: true"
+    },
+    {
+      "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
+      "ok": true,
+      "detail": "56 rows (13 on raised floors), 0 violations, deepest 0 m, highest 0.156 m"
+    },
+    {
+      "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
+      "ok": true,
+      "detail": "dying: 36 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 36 rows (2 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+    },
+    {
+      "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
+      "ok": true,
+      "detail": "60 rows (57 on raised floors), 0 violations, deepest 0 m, highest 0.069 m"
+    },
+    {
+      "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "render truth: the census ran on this map (its enemies were really measured)",
+      "ok": true,
+      "detail": "36 enemies measured of 36 placed"
+    },
+    {
+      "name": "no uncaught exceptions or console errors while this map was played",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "wallSeconds": 15
+}
