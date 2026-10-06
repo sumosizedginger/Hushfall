@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-06T21:44:47.935Z",
+  "when": "2026-10-06T23:28:47.669Z",
   "sources": {
-    "engine": "fe36c1634ab53f90",
+    "engine": "1cda2c200751fc80",
     "render": "1302b1d566fa429e",
     "game": "ba3afdb17603d7c8",
     "audio": "a3e083ce1a860458",
     "assets": "bf0547479d5b8097"
   },
-  "commit": "8dbdba6",
+  "commit": "35967b9",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -44,8 +44,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.24,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "pump",
@@ -140,8 +140,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "step_plank",
@@ -416,8 +416,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.54,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "tone_pulse",
@@ -452,8 +452,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.99,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "cantor_call",
@@ -632,8 +632,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.43,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "mother_spit",
@@ -644,8 +644,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.27,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "mother_hatch",
@@ -764,8 +764,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.71,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     }
   ],
   "music": {

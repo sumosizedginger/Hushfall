@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-10-06T21:38:27.865Z",
-  "commit": "8dbdba6",
+  "when": "2026-10-06T23:22:23.763Z",
+  "commit": "35967b9",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,7 +11,7 @@
   "mapSha": "fc47a292b9b3fd02",
   "routesSha": "b039924e1ede9608",
   "sources": {
-    "engine": "fe36c1634ab53f90",
+    "engine": "1cda2c200751fc80",
     "render": "1302b1d566fa429e",
     "game": "ba3afdb17603d7c8",
     "audio": "a3e083ce1a860458",
@@ -121,7 +121,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.967, 6 nodes"
+      "detail": "body 4.788 m tall on 12 m, shield r 2.971, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -139,5 +139,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 15
+  "wallSeconds": 14
 }
