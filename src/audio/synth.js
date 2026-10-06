@@ -80,9 +80,9 @@ export const SFX = {
     return 0.35;
   },
   harpoon_fire(c, out, t, o) {                                  // a long gun: a flat supersonic crack over a deep thump, the line zipping off its reel, a ring from the bolt leaving the steel
-    thump(c, out, t, 95, 30, 0.42, 0.8);
-    noise(c, out, t, { dur: 0.07, gain: 0.55, type: 'highpass', f0: 2200, off: o.r() });
-    noise(c, out, t, { dur: 0.5, gain: 0.42, type: 'lowpass', f0: 5200, f1: 240, q: 0.5, off: o.r() });
+    thump(c, out, t, 95, 30, 0.42, 0.55);
+    noise(c, out, t, { dur: 0.07, gain: 0.36, type: 'highpass', f0: 2200, off: o.r() });
+    noise(c, out, t, { dur: 0.5, gain: 0.28, type: 'lowpass', f0: 5200, f1: 240, q: 0.5, off: o.r() });
     tone(c, out, t, { type: 'triangle', f0: 2600, f1: 420, d: 0.14, gain: 0.12 });
     noise(c, out, t + 0.03, { dur: 0.36, a: 0.02, gain: 0.1, type: 'bandpass', f0: 1200, f1: 3200, q: 3, off: o.r() });
     bell(c, out, t + 0.01, 1180, { decay: 0.5, gain: 0.1, ratio: 3.1, index: 1.4 });
