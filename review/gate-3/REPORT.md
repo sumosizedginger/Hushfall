@@ -23,3 +23,6 @@ Nobody has played the pilot (balance, readability of the pan, the dyke, the towe
 
 ## Your decision
 Approve Gate 3 (then Gate 4 starts, in small batches you set, each played by you before the next), or revise (log what you saw first), and whether to fix the skin cost before Gate 4.
+
+## Correction after the owner's first look (PT-007, same day)
+The owner played the pilot and asked "are we inside or outside?". They were right: the two road bridges used an indoor floor skin and grew ceiling slabs in the sky, and the six road lamps were the ceiling-hung prop, floating at 6 m. My own tour stills showed both and I did not question them; no gate could see it. Fixed in the map (plank bridges, lampposts; a pillar on the Warden's lane: the strafing bot with aim error now completes 16 of 16 seeds on normal and hard), and `tools/maplint.mjs` (run by `verify-map`, so by `npm run map`) now fails a roofed region without walls and a ceiling-hung prop in open air: red on the pilot as shipped (`maplint-vs-PT-007-BEFORE-fix.txt`), green on all Episode 1 maps. The level builder also warns when a `put()` silently replaces an earlier object (it had hidden a Sexton under a lamp). Details: `PLAYTEST_NOTES.md` PT-007. Evidence regenerated from commit `871f5c7`; the pilot is AGENT_VERIFIED again.
