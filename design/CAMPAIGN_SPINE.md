@@ -1,0 +1,47 @@
+# Campaign spine (PROPOSAL: written 2026-10-05 after PT-008; NOT approved, no map or engine code has changed because of it)
+
+Intent, not status. The owner played the Gate 3 pilot (C1E2M01 Brine Gate) and asked: should the room in the back have a ceiling, is the wide-open feel intentional ("rooms remind me of Doom, but the wide open without a reason feels weird"), when do the aliens show up, and how do we "set up points and ways to progress" so the game feels fully set. This is the answer in the repo, so that someone with nothing but the last push can act on it. The numbers come from `node tools/dev/map-feel.mjs` (read-only, run it).
+
+## 1. What the numbers say (measured on the grids, not on feel)
+```
+map      name                     size    walk roofed ceil  sight med/p90  enemies density first  aliens secrets  new enemy kinds
+C1E1M01  Marrow Quay              48x34    693   45%  3.6        5 / 15      16      23    11       2       1  tollbearer, gaunt, bellhand
+C1E1M02  Customs Hall             64x52   1258   88%  4.2      6.5 / 17      38      30     8       4       1
+C1E1M03  Fishmarket Rows          66x48   1704    6%  4.2   16.5 / 36.5      37      22    10       0       0
+C1E1M04  The Drowned Chandlery    60x54   1511  100%  3.2      7.5 / 20      44      29    10       3       1
+C1E1M05  Lamplighter Hill         56x60   2384    0%  4.2   10.5 / 29.5      45      19    12       0       0  sexton
+C1E1M06  Ferry Terminal           68x46   1594   39%  4.2       11 / 28      40      25     9       0       0  wardengraft
+C1E1M07  Signal House             60x46   1087   97%  4.2        6 / 15      37      34     2       3       0
+C1E1M08  Bell Tower of St. Orrin  54x62   1569   39%  4.2      7 / 20.5      41      26     2       0       0  bellnode, cantor
+C1E1S01  The Lighthouse Cellar    30x28    219   85%  3.4        4 / 11       0       0     -       0       0
+C1E2M01  Brine Gate               72x50   2010    3%    6   12.5 / 33.5      30      15    13       0       0
+```
+(`node tools/dev/map-feel.mjs`, 2026-10-05. Sightlines ignore props, so they are an upper bound; "first" is metres from the spawn to the nearest enemy.)
+- **Roofs are a side effect, not a decision.** A cell gets a ceiling only if its floor skin is kind `floor` (planks, tile, grate, carpet, flag, silt `n`); the outdoor skins (cobble, slate, pier planks, silt `m`, salt crust) never do, however many walls stand around them. The pilot's guardhouse and pump house are flag floor (roofed); the walled 20 x 20 yard behind the gate is slate (open sky). I chose slate for how it looks; nobody chose "a roofless room".
+- **Brine Gate is the most open, emptiest and tallest map in the game, and it opens an episode.** 3% roofed (Episode 1: 0%-100%); 2010 walkable cells (only Lamplighter Hill is larger); 90th-percentile sightline 33.5 m (only Fishmarket Rows is longer); 15 enemies per 1000 cells (Episode 1: 19-34); first enemy 13 m from the spawn (Episode 1: 2-12 m); walls and ceiling 6 m (the engine default is 3.6 m; Episode 1 uses 3.2-4.2 m; a wall beside open air rises one ceiling height, `levelmesh.js` `wallTop`). Tall walls and a 44 x 38 m pan with nothing to do in it is what reads as "wide open without a reason".
+- **Episode 1 is a mix, not wall-to-wall open:** Customs Hall 88%, Chandlery 100%, Signal House 97% roofed; Fishmarket Rows 6% and Lamplighter Hill 0% open air; Quay, Ferry, Bell Tower 39-45%. The manifest asks for open maps on purpose (E1M06 "wide open set-piece", E2M01 "checkpoint assault across open ground", E2M02 "open salt flats", C2M02 "wide-open traversal", E4M05 "open zero-g arena"); what was missing is a rule about WHERE and WHY, so the pilot (an open set-piece) went first.
+- **There is no alien in the build.** Every enemy is a grafted human (Tollbearer, Gaunt, Bellhand, Sexton, Warden-Graft) plus the Cantor and its six bell nodes at the end of Episode 1. The Vael exist only as: pods (M01 x2, M07 x3), cradles (M02 x4, M04 x3), transmissions and signs (M03, M04, M07, M08). Brine Gate has none of them. The first planned appearance of a Vael vessel is C1E3M01, the 17th main map of Campaign 1. Chorister, Drone-Gill, Weeping Mother, Bulwark Shell and Cantor Acolyte are named in `GAME_VISION.md` and scheduled on no map.
+- **Progression is thin after map 3.** All three weapons are in the loadout from M03 (eight are planned, three exist); the only new enemy kinds after M01 are Sexton (M05), Warden-Graft (M06), Cantor (M08); the pilot, by its own rules, introduces nothing new. What exists: objective text, keys ("fuses"), switches, secrets, intro/outro text, an end-of-level screen (kills, items, secrets, time vs par), and carry-over of health/ammo/weapons. No score, rank, upgrade, or schedule of introductions exists in the repo.
+
+## 2. Space contract (proposed rules for every remaining map; the first three can be machine-checked like `tools/maplint.mjs`)
+1. **Every map declares a scale class** in its brief and in `quality`: COMPRESSION (>= 80% roofed, p90 sightline <= 20 m), MIXED (40-80% roofed, p90 <= 30 m), SET-PIECE (open arena). At most one SET-PIECE per episode, never the opener, and it needs a reason written in the brief (a crossing under fire, a boss, a clock).
+2. **Wall and ceiling height: 3.2-4.2 m by default.** More than that only for a named hall or cathedral.
+3. **Open ground is broken up:** no unbroken sightline over 30 m unless it ends on something the player must do (a landmark, a gate, a boss); the pilot's dyke is the pattern.
+4. **A roof is authored.** Proposed: any region enclosed by walls is roofed unless the map declares it a courtyard. That is an engine/render change (an explicit per-region roof, not floor material), or else indoor variants of the outdoor skins (more skins). Either invalidates every map's evidence once (about 15 minutes to regenerate), so it is taken once, with the first Gate 4 batch.
+5. **Every map introduces exactly one new thing** (enemy, weapon, hazard, mechanic or alien reveal), written in the brief (`introduces`), and the Gate 3 loop prints it.
+6. **Every map has the same beats** (the "set" checklist): a landmark visible from the spawn; something alive or wrong within 12 m of the spawn; a reveal at about a third; a set-piece at about two thirds; a payoff at the exit; a story prop or voice at each beat; a lighting or colour change across the map.
+
+## 3. When the aliens show up (proposed ladder; new enemy kinds need the owner's approval before they are built)
+- **Episode 1 (approved, untouched):** the Hush and grafted humans only; pods (M01), cradles (M02), the first clear Vael transmission (M07), the Cantor and its bell ring (M08) as the first enemy that is not a grafted person.
+- **Episode 2, The Salt Works:** the machinery that makes Tollbearers is on screen from map 1 (cradle rails, grafting rigs, resin growth on the walls, `R` skin). First non-human, Vael-grown enemy: the Drone-Gill (planned flyer) at M02 or M03. A suppression enemy (Chorister) by M05. The Graft-Mother boss at M08 closes it.
+- **Episode 3:** the Vael themselves: the grounded Choir Ship (M01), organic interiors (resin skin), Bulwark Shell and Weeping Mother elites.
+- **Episode 4 and Campaign 2:** orbit, the Gate, then their world.
+
+## 4. Ways to progress (proposed; the owner decides how far to go)
+- **Weapons (eight planned, three exist):** one new weapon about every three to four maps, shown to the player on a pedestal-style pickup with a short tutorial beat: harpoon rifle E2M02-M03, charge-arc lamp E2M06, bell-breaker mortar E3M03, counter-tone emitter late Campaign 2, melee/tool sidearm early. Placement is a proposal.
+- **Enemies:** a table of first appearances (above), so no map throws a new thing without teaching it first.
+- **In a map:** three to five objective beats (the HUD already shows the current objective), keys/switches as gates, one or two secrets per main map (the pilot has none).
+- **Between maps (owner choice):** (a) stats as they are; (b) a rank per map (time, kills, secrets) on the end screen; (c) persistent upgrades earned from secrets (armour or ammunition capacity). None of (b)/(c) exists; each needs a save-format change.
+
+## 5. What this means for the pilot (proposal)
+The owner's reply is, for Gate 3, a REVISE of the pilot's design, not of the pipeline. Keep what was proven (the sluice wheel, the dyke, the guardhouse, the Warden); change what read wrong: shrink the pan, bring the walls to 4.2 m (the tower platforms stand 3 m high, so they get a gantry or a ramp rather than a taller sky), roof the yard as a covered receiving hall so the gate is the border between open and tight, put the alien machinery in it (a cradle rail, pods, resin growth), add a secret. No other map is built until the owner approves a direction.
