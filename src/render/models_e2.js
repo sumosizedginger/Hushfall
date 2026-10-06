@@ -41,7 +41,7 @@ export function makeDroneGill(podTex) {
     rig.rotation.x = -0.25 * w + (a > 0 ? -0.35 * swell : 0) + d * 0.9;                                                               // leans into its travel, rears back to spit, dives nose-first when it dies
     rig.rotation.z = d * 1.3 + Math.sin(p.t * 1.9) * 0.05 * (1 - d);
     ground();                                                                                                                            // the lowest tendril tip on the plane...
-    rig.position.y += H * (1 - d) + Math.sin(p.t * 2.2) * 0.05 * (1 - d);                                                              // ...then up by the hover (the census allows exactly this), and down to the floor as it dies
+    rig.position.y += (H + (0.5 + 0.5 * Math.sin(p.t * 2.2)) * 0.05) * (1 - d);                                                         // ...then up by the hover plus a bob that only ever goes UP (the hover is the floor of the flight: the census allows exactly `hover`), and down to the floor as it dies
     flesh.emissive.setRGB(0.16 + 0.7 * (p.flash || 0), 0.06 + 0.5 * (p.flash || 0), 0.19 + 0.4 * (p.flash || 0));
   }
   return { root, rig, pose, mat: flesh };
