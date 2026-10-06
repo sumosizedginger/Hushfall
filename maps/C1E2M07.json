@@ -1,0 +1,955 @@
+{
+ "format": 1,
+ "id": "C1E2M07",
+ "version": 1,
+ "name": "Slurry Undercroft",
+ "ceilingHeight": 3.2,
+ "atmosphere": {
+  "fog": "#101c18",
+  "fogDensity": 0.03,
+  "sky": "night",
+  "ambient": 0.3
+ },
+ "grid": [
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "#################RRRRRRRRRRRRRRRRRRR################################",
+  "#################RvvvvvvvfffvvvvvvvR################################",
+  "#################RvvvvvvvfffvvvvvvvLLLLLLLLLLLLLLLLL################",
+  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffL################",
+  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffRRRRRRRRRRRRRR###",
+  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRffffffffffffR###",
+  "##RRRRRRRRRRRRRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RffffffffffffffRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RfffffvvvvfffffRfffffffffffffffffLfffffffffffffffRffffffffffffR###",
+  "##RfffffvvvvfffffDfffffffffffffffffDfffffffffffffffDffffffffffffR###",
+  "##RfffffvvvvfffffRfffffffffffffffffLfffffffffffffffRffffffffffffR###",
+  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RffffffffffffffRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "##RRRRRRRRRRRRRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRffffffffffffR###",
+  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffRRRRRRRRRRRRRR###",
+  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffL################",
+  "#################RvvvvvvvfffvvvvvvvLLLLLLLLSLLLLLLLL################",
+  "#################RvvvvvvvfffvvvvvvvR####LfffffL#####################",
+  "#################RRRRRRRRRRRRRRRRRRR####LfffffL#####################",
+  "########################################LfffffL#####################",
+  "########################################LfffffL#####################",
+  "########################################LLLLLLL#####################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################",
+  "####################################################################"
+ ],
+ "fx": [
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "...................wwwwww...wwwwww..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................wwwwww...wwwwww..................................",
+  "...................wwwwww...wwwwww..................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "...................wwwwww...wwwwww..................................",
+  "...................wwwwww...wwwwww..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................w....w...w....w..................................",
+  "...................wwwwww...wwwwww..................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "....................................................................",
+  "...................................................................."
+ ],
+ "doors": [
+  {
+   "at": [17, 22],
+   "remote": true
+  },
+  {
+   "at": [35, 22],
+   "remote": true
+  },
+  {
+   "at": [51, 22],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "drain-room",
+   "panel": [43, 31],
+   "cells": [
+    [43, 32],
+    [43, 33],
+    [43, 34]
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 12],
+   "facing": -1.039,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 13]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [31, 13],
+   "facing": -1.238,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [37, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 15],
+   "facing": -1.389,
+   "group": "z3"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [49, 16],
+   "facing": -1.435,
+   "group": "z3"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [26, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [27, 17],
+   "facing": -1.347,
+   "group": "z2"
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [58, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [62, 17],
+   "facing": -1.483,
+   "group": "z4"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 18],
+   "facing": -1.469,
+   "group": "z3"
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [54, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [57, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [60, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [61, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [5, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [6, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [14, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 19],
+   "facing": -1.414,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [59, 19],
+   "facing": -1.515,
+   "group": "z4"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [4, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 20],
+   "facing": -1.292
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [15, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [19, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 20],
+   "facing": -1.491,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [53, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 20],
+   "facing": -1.531,
+   "group": "z4"
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [56, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [61, 20],
+   "facing": -1.535,
+   "group": "z4"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [10, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [40, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [47, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [49, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [58, 21]
+  },
+  {
+   "type": "player",
+   "at": [5, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [14, 22],
+   "facing": -1.571
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [19, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [20, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [21, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [22, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [26, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [27, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [28, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [31, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [32, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [33, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [37, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 22],
+   "facing": -1.571,
+   "group": "z3"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 22],
+   "facing": -1.571,
+   "group": "z3"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [42, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 22],
+   "facing": -1.571,
+   "group": "z3"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [44, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [45, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 22],
+   "facing": -1.571,
+   "group": "z3"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [47, 22],
+   "facing": -1.571,
+   "group": "z3"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [54, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [55, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [57, 22],
+   "facing": -1.571,
+   "group": "z4"
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [60, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [10, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [38, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [40, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [49, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [58, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [4, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 24],
+   "facing": -1.849
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [53, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 24],
+   "facing": -1.611,
+   "group": "z4"
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [56, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [5, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [6, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [14, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 25],
+   "facing": -1.727,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 25],
+   "facing": -1.69,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [59, 25],
+   "facing": -1.626,
+   "group": "z4"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 26],
+   "facing": -1.673,
+   "group": "z3"
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [54, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [57, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [60, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [61, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [26, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [58, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [62, 27],
+   "facing": -1.658,
+   "group": "z4"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [27, 28],
+   "facing": -1.837,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [26, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [37, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 29],
+   "facing": -1.753,
+   "group": "z3"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 31],
+   "facing": -2.058,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [31, 31],
+   "facing": -1.904,
+   "group": "z2"
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [42, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [42, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [43, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [44, 34]
+  },
+  {
+   "type": "exit",
+   "at": [62, 22],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "breaker-1",
+   "at": [15, 18],
+   "wall": "north",
+   "do": [
+    {
+     "lights": 0.5
+    },
+    {
+     "open": [17, 22]
+    },
+    {
+     "wake": "z2"
+    },
+    {
+     "objective": "Breaker one is in. The vat hall is awake. Breaker two: north wall, east end"
+    },
+    {
+     "shake": 1
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "breaker-2",
+   "at": [33, 12],
+   "wall": "north",
+   "do": [
+    {
+     "lights": 0.7
+    },
+    {
+     "open": [35, 22]
+    },
+    {
+     "wake": "z3"
+    },
+    {
+     "objective": "Breaker two is in. The tanks are awake. Breaker three: north wall, east end"
+    },
+    {
+     "shake": 1
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "breaker-3",
+   "at": [49, 14],
+   "wall": "north",
+   "do": [
+    {
+     "lights": 0.85
+    },
+    {
+     "open": [51, 22]
+    },
+    {
+     "wake": "z4"
+    },
+    {
+     "objective": "Breaker three is in. The sump heart is awake. The last breaker is inside"
+    },
+    {
+     "shake": 1.2
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "breaker-4",
+   "at": [57, 16],
+   "wall": "north",
+   "do": [
+    {
+     "lights": 1
+    },
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "All four breakers are in. The exit is at the east end"
+    },
+    {
+     "shake": 2
+    },
+    {
+     "message": "lit"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 480
+ },
+ "intro": {
+  "title": "SLURRY UNDERCROFT",
+  "lines": [
+   "Everything the Works drains ends up here.",
+   "It is very quiet. That is the Hush, and it is thick."
+  ]
+ },
+ "outro": "Next: the Grafting Floor. The line that makes them, and what runs it.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 22],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Slurry Undercroft. They cut the lights down here so nobody would see what drains in. Four breakers, one in each hall. Each one you throw wakes the hall ahead."
+  },
+  {
+   "id": "dark",
+   "at": [12, 22],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The lanterns are ours, and they will not carry far. Count your ammunition before you throw the breaker. You cannot turn the light back off."
+  },
+  {
+   "id": "vats",
+   "at": [26, 22],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Vats, and slurry up to the knee round them. Keep to the dry lanes: the cross in the middle."
+  },
+  {
+   "id": "tanks",
+   "at": [44, 22],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Bellhands behind the iron tanks. They hear you before they see you."
+  },
+  {
+   "id": "heart",
+   "at": [57, 22],
+   "radius": 4,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The sump heart. Every pipe in the Works ends in that wall. The cradles are warm, Calder: this is where the line starts."
+  },
+  {
+   "id": "lit",
+   "at": [57, 18],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "It is as bright as it gets. And that is the end of the dark: the hatch is open."
+  },
+  {
+   "id": "drain",
+   "at": [43, 34],
+   "radius": 2.5,
+   "speaker": "WARDEN CALDER",
+   "text": "Slurry drains do not drain only slurry. I hid a week of supplies here when I was a younger man, in case the Works went bad."
+  }
+ ],
+ "objective": "It is dark on purpose. Breaker one is on the north wall, east end: the light will wake the next hall",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [30, 56],
+  "botSeconds": [60, 600],
+  "mechanics": [
+   "switches",
+   "hazards",
+   "secret"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "bellhand": 4
+  },
+  "scaleClass": "COMPRESSION",
+  "introduces": "light as a schedule: the undercroft starts nearly dark; each of four breakers raises the light a stage, opens the next door and wakes what lives there"
+ }
+}

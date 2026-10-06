@@ -1,0 +1,17 @@
+[
+  { "name": "01-arrival", "x": 5.5, "z": 24.5, "yaw": "east" },
+  { "name": "02-nave-door", "x": 11.5, "z": 24.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "03-the-nave", "x": 14.5, "z": 24.5, "yaw": "east", "pitch": 0.1 },
+  { "name": "04-the-roof", "x": 20.5, "z": 24.5, "yaw": "east", "pitch": 0.7 },
+  { "name": "05-the-sump", "x": 27.5, "z": 22.5, "yaw": "east", "pitch": -0.05 },
+  { "name": "06-the-great-pump", "x": 30.5, "z": 18.5, "yaw": "south", "pitch": 0.15 },
+  { "name": "07-the-cage", "x": 46.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "08-from-the-catwalk", "x": 54.5, "z": 25.5, "yaw": "west", "pitch": -0.1, "y": 4.0 },
+  { "name": "09-east-catwalk", "x": 54.5, "z": 20.5, "yaw": "north", "pitch": 0.0, "y": 4.0 },
+  { "name": "10-south-terrace", "x": 53.5, "z": 41.5, "yaw": "west", "pitch": 0.0, "y": 4.0 },
+  { "name": "11-south-stair", "x": 50.5, "z": 41.5, "yaw": "west", "pitch": 0.1, "y": 4.0 },
+  { "name": "12-south-gallery", "x": 38.5, "z": 41.5, "yaw": "west", "pitch": 0.0, "y": 8.0 },
+  { "name": "13-drain-lever", "x": 35.5, "z": 41.5, "yaw": "south", "pitch": 0.0, "y": 8.0 },
+  { "name": "14-north-gallery", "x": 40.5, "z": 8.5, "yaw": "west", "pitch": 0.0, "y": 8.0 },
+  { "name": "15-the-office", "x": 8.5, "z": 12.0, "yaw": "west", "pitch": 0.0, "open": true }
+]

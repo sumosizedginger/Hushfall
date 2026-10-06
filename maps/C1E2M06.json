@@ -1,0 +1,1217 @@
+{
+ "format": 1,
+ "id": "C1E2M06",
+ "version": 1,
+ "name": "Pump Cathedral",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#3a4a4a",
+  "fogDensity": 0.01,
+  "sky": "overcast"
+ },
+ "grid": [
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII#################",
+  "############IgggggggggggggggggggggggggggggggggggggggggggggI#################",
+  "############IgggggggggggggggggggggggggggggggggggggggggggggI#################",
+  "#####LLLLLLLLgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "#####LffffffLgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "#####LffffffLgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "#####LffffffSgggggKKKKggKKKgggKKKKKgggggKKKKgggggggggggIIgI#################",
+  "#####LffffffLgggggKKKKggggggggKKKKKgggggKKKKgggggggggggIIgI#################",
+  "#####LffffffLgggggKKKKggggggggKKKKKgggggKKKKggggggggggggggI#################",
+  "#####LLLLLLLLgggggKKKKgggggggggggggKKgggKKKKggggggggggggggI#################",
+  "############IgggggKKKKgggggggggggggKKgggggggggggggggggggggI#################",
+  "############IggggKKgggggggggggggggggggggggggggggggggggggggI#################",
+  "############IggggKKgggggggggggggggggggggggggggKKgggggggIIgI#################",
+  "############IggggggggggKKggggggggggggggggKKgggKKgggggggIIgI#################",
+  "##LLLLLLLLLLIggggggggggKKggggggggggggggggKKgggKKggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggggggggggggggggKKggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggIgIIIgggggI#################",
+  "##LfffffffffDgggggggggggggggggggIIIIIIIgggggggggggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggggggggggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggggIIIgggggI#################",
+  "##LfffffffffIgggggggggggggggggggIIIIIIIgggggggggggggggggggI#################",
+  "##LLLLLLLLLLIggggggggggKKgggggggggggggggggggggKKggggggggggI#################",
+  "############IggggggggggKKggggggggggggggggKKgggKKgggggIIgggI#################",
+  "############IggggKKggggggggggggggggggggggKKgggKKgggggIIgggI#################",
+  "############IggggKKgggggggggggggggggggggggggggKKggggggggggI#################",
+  "############IgggggggggggggggggggggggggggggggggggggggggggggI#################",
+  "############IgggggKKKKgggggggggggggKKgggggggggggggggggggggI#################",
+  "############IgggggKKKKgggggggggggggKKgggKKKKggggggggggggggI#################",
+  "############IgggggKKKKggggggggKKKKKgggggKKKKgggggggggIIgggI#################",
+  "############IgggggKKKKggggggggKKKKKgggggKKKKgggggggggIIgggI#################",
+  "############IgggggKKKKggKKKgggKKKKKgggggKKKKggggggggggggggI#################",
+  "############IgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "############IgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "############IgggggggggggKKKgggggggggggggggggggggggggggggggI#################",
+  "############IgggggggggggggggggggggggggggggggggggggggggggggI#################",
+  "############IgggggggggggggggggggggggggggggggggggggggggggggI#################",
+  "############IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII#################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################",
+  "############################################################################"
+ ],
+ "heights": [
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  ".....................................................8888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................ggggggggggggggggfedcba9888888...................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................"
+ ],
+ "ceilings": [
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  ".............qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq..................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................"
+ ],
+ "fx": [
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "..........................wwwwwwwwwwwwwww..ww...............................",
+  "..........................wwwwwwwwwwwwwww..ww...............................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwww.......wwwwww...............................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "..........................wwwwwwwwwwwwwww..ww...............................",
+  "..........................wwwwwwwwwwwwwww..ww...............................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "..........................wwwwwwwwwwwwwwwwwww...............................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................",
+  "............................................................................"
+ ],
+ "doors": [
+  {
+   "at": [12, 24]
+  }
+ ],
+ "secrets": [
+  {
+   "id": "engineers-office",
+   "panel": [12, 12],
+   "cells": [
+    [11, 12],
+    [10, 12],
+    [9, 12]
+   ]
+  }
+ ],
+ "sectors": [
+  {
+   "id": "cage",
+   "cells": [
+    [50, 24],
+    [51, 24],
+    [52, 24],
+    [50, 25],
+    [51, 25],
+    [52, 25],
+    [50, 26],
+    [51, 26],
+    [52, 26]
+   ],
+   "low": 0,
+   "high": 4,
+   "speed": 1.2,
+   "start": "low"
+  }
+ ],
+ "triggers": [
+  {
+   "id": "cage-top",
+   "when": "sector:cage:high",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [55, 17],
+      "group": "catwalk",
+      "facing": "south"
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [55, 33],
+      "group": "catwalk",
+      "facing": "north"
+     }
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "objective": "The drain lever is on the south gallery: south terrace, then the stair"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [28, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [35, 8],
+   "facing": -1.081
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [39, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [41, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [45, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [47, 8],
+   "facing": -1.207
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [54, 8],
+   "facing": -1.255
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [29, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 9],
+   "facing": -1.03
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 9],
+   "facing": -1.093
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [40, 9],
+   "facing": -1.166
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 9],
+   "facing": -1.22
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [47, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [53, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [8, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [20, 10]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 10],
+   "facing": -1.092
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [7, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [9, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [10, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [8, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [54, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [7, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [10, 13]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 14],
+   "facing": -0.833
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 14],
+   "facing": -1.039
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [25, 14],
+   "facing": -1.107
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [50, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [55, 14]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [54, 15],
+   "facing": -1.389
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [24, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 16],
+   "facing": -1.333
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 17],
+   "facing": -1.275
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 17],
+   "facing": -1.384
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [44, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [16, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [19, 20],
+   "facing": -1.292
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 20],
+   "facing": -1.34
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [30, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [31, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [54, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 20],
+   "facing": -1.491
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 22],
+   "facing": -1.476
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 22],
+   "facing": -1.52
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [3, 24]
+  },
+  {
+   "type": "player",
+   "at": [5, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [14, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [18, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [20, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [21, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 24],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [26, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [29, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [42, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [43, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 24],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [47, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [15, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [17, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [20, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [22, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [23, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [25, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [27, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 25],
+   "facing": -1.611
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [41, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [46, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [47, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [55, 25],
+   "facing": -1.591
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [56, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [45, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [48, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 28],
+   "facing": -1.759
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 28],
+   "facing": -1.673
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [55, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [35, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [19, 30],
+   "facing": -1.976
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 30],
+   "facing": -1.91
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [30, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [31, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 30],
+   "facing": -1.69
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [16, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 33],
+   "facing": -1.944
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 33],
+   "facing": -1.809
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [44, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [24, 34]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 34],
+   "facing": -1.865
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [54, 35],
+   "facing": -1.792
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 36],
+   "facing": -2.4
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 36],
+   "facing": -2.185
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [25, 36],
+   "facing": -2.111
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [50, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [55, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [54, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [20, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 40],
+   "facing": -2.106
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [29, 41]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 41],
+   "facing": -2.168
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 41]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 41],
+   "facing": -2.101
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [40, 41],
+   "facing": -2.023
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 41],
+   "facing": -1.964
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [47, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [53, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [28, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [35, 42],
+   "facing": -2.111
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [39, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [41, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [45, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [47, 42],
+   "facing": -1.976
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 42]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [54, 42],
+   "facing": -1.923
+  },
+  {
+   "type": "exit",
+   "at": [29, 8],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "cage-up",
+   "at": [50, 24],
+   "wall": "north",
+   "once": false,
+   "do": [
+    {
+     "sector": {
+      "id": "cage",
+      "to": "high"
+     }
+    },
+    {
+     "objective": "Riding up. Bellhands on both galleries: use the pillars"
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "cage-call",
+   "at": [48, 24],
+   "wall": "north",
+   "once": false,
+   "do": [
+    {
+     "sector": {
+      "id": "cage",
+      "to": "low"
+     }
+    }
+   ]
+  },
+  {
+   "type": "switch",
+   "id": "drain",
+   "at": [35, 43],
+   "wall": "south",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The sump is draining. The exit is on the north gallery, west end"
+    },
+    {
+     "shake": 2
+    },
+    {
+     "message": "draining"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 600
+ },
+ "intro": {
+  "title": "PUMP CATHEDRAL",
+  "lines": [
+   "They built a church for a pump.",
+   "It has been drawing something up out of the sea."
+  ]
+ },
+ "outro": "Next: the Slurry Undercroft. Whatever they drained comes out down there.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 24],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Pump Cathedral. The pump that drains the pans is in the middle of the nave. The cage on the east side is the only way up to the catwalks. Cross the floor first."
+  },
+  {
+   "id": "nave",
+   "at": [14, 24],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "This is not a pump house. This is a church for the pump. Look at the height of it, and at what is hung from the roof."
+  },
+  {
+   "id": "sump",
+   "at": [26, 24],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The water round the pump is up to your knees. It will slow you. Keep to the grate and the aisles."
+  },
+  {
+   "id": "cage",
+   "at": [47, 25],
+   "radius": 3,
+   "speaker": "CAGE PLACARD",
+   "text": "CAGE LIFT. LEVER ON THE CAGE RISES IT, CALL LEVER ON THE POST BRINGS IT DOWN. FOUR METRES. NO MORE THAN SIX PERSONS."
+  },
+  {
+   "id": "top",
+   "at": [54, 25],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Bellhands on both galleries. Stay off the edge of the catwalk, and use the pillars. The drain lever is on the south gallery."
+  },
+  {
+   "id": "drain",
+   "at": [35, 42],
+   "radius": 3,
+   "speaker": "DRAIN LEVER",
+   "text": "SUMP DRAIN. PULL AND THE PUMP RUNS DRY, AND THE HATCH ON THE NORTH GALLERY OPENS. DO NOT PULL WITH PERSONS IN THE SUMP."
+  },
+  {
+   "id": "draining",
+   "at": [35, 41],
+   "radius": 0.1,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The pump has stopped. What was in the sump is on the grate now. Get to the north gallery."
+  },
+  {
+   "id": "exit",
+   "at": [30, 8],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The hatch leads under the Works: the Slurry Undercroft. It is dark down there, and it is where everything drains to."
+  }
+ ],
+ "objective": "Cross the nave to the cage lift, east side. The catwalks are the only way up",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [38, 64],
+  "botSeconds": [60, 600],
+  "mechanics": [
+   "heights",
+   "switches",
+   "sectors",
+   "triggers",
+   "hazards"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "bellhand": 6
+  },
+  "scaleClass": "COMPRESSION",
+  "tallReason": "the nave is the episode's one named cathedral hall: 13 m to the roof so the catwalks and galleries have air above them",
+  "introduces": "the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries"
+ }
+}

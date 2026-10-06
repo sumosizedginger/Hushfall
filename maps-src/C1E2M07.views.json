@@ -1,0 +1,14 @@
+[
+  { "name": "01-arrival", "x": 5.5, "z": 22.5, "yaw": "east" },
+  { "name": "02-the-gallery", "x": 9.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "03-breaker-one", "x": 14.5, "z": 20.0, "yaw": "north", "pitch": 0.0 },
+  { "name": "04-vat-hall", "x": 19.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true, "ambient": 0.5 },
+  { "name": "05-the-lane-cross", "x": 26.5, "z": 19.5, "yaw": "south", "pitch": 0.0, "ambient": 0.7 },
+  { "name": "06-the-wading", "x": 22.5, "z": 20.5, "yaw": "east", "pitch": -0.1, "ambient": 0.7 },
+  { "name": "07-the-tanks", "x": 38.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true, "ambient": 0.85 },
+  { "name": "08-behind-the-iron", "x": 43.5, "z": 22.5, "yaw": "north", "pitch": 0.0, "open": true, "ambient": 0.85 },
+  { "name": "09-sump-heart", "x": 53.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true, "ambient": 1 },
+  { "name": "10-the-line", "x": 57.5, "z": 22.5, "yaw": "east", "pitch": 0.1, "open": true, "ambient": 1 },
+  { "name": "11-drain-room", "x": 43.5, "z": 33.0, "yaw": "south", "pitch": 0.0, "open": true, "ambient": 0.85 },
+  { "name": "12-in-the-dark", "x": 30.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true }
+]
