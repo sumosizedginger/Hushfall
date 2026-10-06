@@ -42,6 +42,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - `npm run gate2-bundle` — assemble `review/gate-2/` (all nine Episode 1 maps) from evidence; same exit codes as gate1-bundle. Run `npm run verify`, `browsercheck`, `audio-qa`, `verify-map` for every map and `npm run validate` first, from a clean commit
 - `node tools/dev/refresh-manifest.mjs` — rebuild the asset manifest from disk after parallel bakes
 - `npm run shoot-weapons` — scattergun stances/flash/pump, Gaunt poses, new pickups (review/engine-skeleton/weapons-*.png)
+- `node tools/dev/map-feel.mjs` — how every shipped map FEELS in numbers (roofed share, sightlines, enemy density, distance to the first enemy, alien props, new enemy kinds per map); read-only, it enforces nothing. The space contract it would enforce is a proposal in `design/CAMPAIGN_SPINE.md` (PT-008)
 - `node tools/dev/shoot-outlines.mjs <out-dir>` — fixed-viewpoint stills + ink masks + ink-share for outline work (before/after pairs are in `review/outlines/`)
 - `npm run shoot-stances` — hip / ADS / sprint screenshots for quick weapon-pose iteration · `npm run shoot` — look-demo screenshots · `node tools/preview.mjs` — 2D asset contact sheet
 
