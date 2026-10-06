@@ -1,4 +1,4 @@
-# Gate 3: repeatable production (opened 2026-10-05)
+# Gate 3: repeatable production (opened 2026-10-05; APPROVED by the owner 2026-10-05 on the revised pilot, see PLAYTEST_NOTES.md; Gate 4 is open, in small batches the owner sets)
 
 The owner approved Gate 2 on the revised build ("Perfect look, love it now. approved") and asked to "start proving the repeatable production pipeline for the remaining 59 maps". This file is the plan and the acceptance criteria. It is intent, not status: status is derived by `npm run validate`.
 
