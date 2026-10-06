@@ -48,3 +48,33 @@ test('the level builder reports a put() that silently replaces an earlier object
   const L = new Level(6, 6); L.put(1, 1, 't'); L.put(1, 1, 'm'); L.put(2, 2, 'c'); L.put(2, 2, 'c'); L.put(3, 3, 'h');
   assert.deepEqual(L.layers().placementWarnings, ["1,1: 't' replaced by 'm'"]);
 });
+
+import { feelChecks, contractChecks } from '../tools/maplint.mjs';
+// the contract on made-up numbers (the pipeline passes mapFeel(src)); a good source first, then one thing wrong at a time
+const GOOD = { id: 'C1E9M01', objective: 'Cross the yard', secrets: [{ id: 'cache' }], triggers: [{ id: 't', do: [{ objective: 'Pull the lever' }] }],
+  entities: [{ type: 'switch', do: [{ open: [1, 1] }, { objective: 'The gate is open' }] }],
+  quality: { scaleClass: 'MIXED', introduces: 'a gate that only a switch in a side building opens' } };
+const FEEL = { roofedPct: 55, sightP90: 18, ceiling: 4.2 };
+const fails = (src, feel = FEEL) => contractChecks(src, feel).filter((c) => !c.ok).map((c) => c.name.replace('feel: ', '').slice(0, 40));
+test('the space contract: a map outside Episode 1 declares a scale class the measured grid matches, names what it introduces, has three beats and a secret, and keeps its walls at 4.2 m or less', () => {
+  assert.deepEqual(fails(GOOD), [], 'a good map passes every check');
+  assert.equal(fails({ ...GOOD, quality: { ...GOOD.quality, scaleClass: 'COMPRESSION' } }).length, 1, 'a 55% roofed map is not COMPRESSION (needs 80%)');
+  assert.equal(fails({ ...GOOD, quality: { ...GOOD.quality, scaleClass: 'SET-PIECE', reason: 'the crossing is the whole point of the map' } }).length, 1, 'nor a SET-PIECE (an open arena is under 40% roofed)');
+  assert.equal(fails({ ...GOOD, quality: { ...GOOD.quality, scaleClass: 'SET-PIECE' } }, { ...FEEL, roofedPct: 10 }).length, 1, 'a set-piece must say why the player crosses open ground');
+  assert.deepEqual(fails({ ...GOOD, quality: { ...GOOD.quality, scaleClass: 'SET-PIECE', reason: 'the crossing is the whole point of the map' } }, { ...FEEL, roofedPct: 10, sightP90: 50 }), [], 'a set-piece may have long sightlines');
+  assert.equal(fails(GOOD, { ...FEEL, sightP90: 31 }).length, 1, 'MIXED allows a 30 m sightline, not 31');
+  assert.equal(fails({ ...GOOD, quality: { scaleClass: 'MIXED' } }).length, 1, 'every map names what it introduces');
+  assert.equal(fails({ ...GOOD, quality: undefined }).length, 2, 'no quality block: no class and no introduction');
+  assert.equal(fails(GOOD, { ...FEEL, ceiling: 6 }).length, 1, 'a 6 m wall needs a named reason');
+  assert.deepEqual(fails({ ...GOOD, quality: { ...GOOD.quality, tallReason: 'the nave of the grafting hall' } }, { ...FEEL, ceiling: 6 }), []);
+  assert.equal(fails({ ...GOOD, triggers: [] }).length, 1, 'two objectives are not three beats');
+  assert.equal(fails({ ...GOOD, secrets: [] }).length, 1, 'a main map hides a secret');
+  assert.deepEqual(fails({ ...GOOD, id: 'C1E9S01', secrets: [] }), [], 'a secret map needs none');
+  assert.deepEqual(feelChecks({ ...GOOD, id: 'C1E1M05' }), [], 'Episode 1 was approved before the contract and is grandfathered');
+});
+
+test('every shipped map passes the space contract (the pilot declares MIXED and is measured as MIXED)', () => {
+  const bad = [];
+  for (const f of fs.readdirSync(path.join(ROOT, 'maps')).filter((x) => x.endsWith('.json'))) for (const c of feelChecks(JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', f), 'utf8')))) if (!c.ok) bad.push(f + ': ' + c.name + ' -> ' + c.detail);
+  assert.deepEqual(bad, []);
+});

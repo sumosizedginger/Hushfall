@@ -182,12 +182,22 @@ try {
   check('intermission screen shows end-level statistics', (await visible('screen-complete')) && /Kills/.test(await text('stat-rows')), (await text('stat-rows')).replace(/\s+/g, ' '));
   await T('t.clearOverlays()'); await shot('04-intermission');
   console.log('route wall time (SwiftShader):', ((Date.now() - t0) / 1000).toFixed(1) + 's');
+  // progression (PT-008): the rank this run earned, the Locker, and a purchase that is real (salvage spent, the tier carries into the next level)
+  { const rank = await page.$eval('#rank-line .rank', (e) => e.textContent).catch(() => ''), rows = await page.$$eval('#locker button.buy', (b) => b.length).catch(() => -1), st = await T('t.state()');
+    check('intermission shows a rank (S/A/B/C) and the Locker with one row per upgrade track', /^[SABC]$/.test(rank) && rows === 2, `rank=${rank} buy buttons=${rows}`);
+    check('the earned salvage and a record for this map are in the progress state', st.progress.salvage >= 0 && !!st.progress.records[st.mapId] && st.progress.records[st.mapId].rank === rank, JSON.stringify(st.progress));
+    await T('t.setup_progress({ salvage: 50 })'); await page.$eval('#locker button[data-track="ammo"]', (b) => b.click());
+    const bought = await T('t.state()');
+    check('buying in the Locker spends salvage and raises the tier', bought.progress.upgrades.ammo === 1 && bought.progress.salvage === 47 && /tier 1\/5/.test(await text('locker')), JSON.stringify(bought.progress.upgrades) + ' salvage ' + bought.progress.salvage);
+    for (let i = 0; i < 12; i++) { const off = await page.$eval('#locker button[data-track="armor"]', (b) => b.disabled).catch(() => true); if (off) break; await page.$eval('#locker button[data-track="armor"]', (b) => b.click()); }     // spend it all: the button disables when the salvage runs out and disappears at the last tier
+    const spent = await T('t.state()'); check('the Locker never spends below zero and stops at the last tier', spent.progress.salvage >= 0 && spent.progress.upgrades.armor <= 5, JSON.stringify(spent.progress)); }
   // Gate 2 campaign flow: the real Next button leads to the next map of the episode, carrying health/ammo/weapons
   const carried = await T('t.state().player');
   await page.$eval('#btn-next', (e) => e.click());
   await page.waitForFunction("window.__GAME_TEST__.state().mapId === 'C1E1M02'", { timeout: 60000 }).catch(() => {});
   const m2 = await T('t.state()');
   check('Gate 2 flow: the intermission Next button loads C1E1M02 and play resumes', m2.mapId === 'C1E1M02' && m2.mode === 'playing', m2.mapId + '/' + m2.mode);
+  check('progression: the upgrade bought in the Locker is in effect in the next level, and the salvage carried', m2.upgrades?.ammo === 1 && m2.progress.upgrades.ammo === 1 && m2.progress.salvage >= 0, JSON.stringify({ world: m2.upgrades, progress: m2.progress.upgrades, salvage: m2.progress.salvage }));
   check('Gate 2 flow: the inventory carries over (weapons kept, ammo kept, at full health or better)', carried.weapons.every((wp) => m2.player.weapons.includes(wp)) && m2.player.hp >= Math.min(100, carried.hp) - 1 && m2.player.ammo.flare >= carried.ammo.flare, JSON.stringify({ before: carried.weapons, after: m2.player.weapons, hp: [carried.hp, m2.player.hp] }));
   await T('t.clearOverlays()'); await shot('g2-00-m02-start');
   // the dev-only level picker (title screen): any map starts from it, on the chosen difficulty
