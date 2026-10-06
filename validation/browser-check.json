@@ -1,11 +1,11 @@
 {
-  "when": "2026-10-06T19:06:13.930Z",
-  "commit": "3398238",
+  "when": "2026-10-06T21:36:31.317Z",
+  "commit": "8dbdba6",
   "sources": {
-    "engine": "931734998902e110",
-    "render": "52f1d9d01ee4554e",
-    "game": "e9e877f941e30fb7",
-    "audio": "66b6062c85c8657d",
+    "engine": "fe36c1634ab53f90",
+    "render": "1302b1d566fa429e",
+    "game": "ba3afdb17603d7c8",
+    "audio": "a3e083ce1a860458",
     "assets": "bf0547479d5b8097"
   },
   "renderGround": {
@@ -372,7 +372,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.28 m, ratio 1.48"
+      "detail": "walk 4.13 m, sprint 6.43 m, ratio 1.56"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -477,7 +477,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=130 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,pickup_ammo,toll_soft,bell_alert,gaunt_screech,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
+      "detail": "played=127 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,enemy_die,door_open,step_plank,toll_soft,pickup_ammo,bell_alert,gaunt_screech,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -552,7 +552,7 @@
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9142 wall=5s"
+      "detail": "status=complete failed=null ticks=9142 wall=6s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
@@ -592,7 +592,7 @@
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6234 wall=5s"
+      "detail": "status=complete failed=null ticks=6234 wall=6s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
@@ -602,7 +602,7 @@
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9674 wall=4s"
+      "detail": "status=complete failed=null ticks=9674 wall=5s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
@@ -612,7 +612,7 @@
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=11039 wall=6s"
+      "detail": "status=complete failed=null ticks=11039 wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
@@ -692,7 +692,7 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.262 m tall on 0 m, shield r 3.155, 3 nodes"
+      "detail": "body 4.262 m tall on 0 m, shield r 3.149, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -705,9 +705,19 @@
       "detail": "toast: \"Rivets (+40)\", rivets 40"
     },
     {
+      "name": "picking up the harpoon rifle equips it: slot 4 on the HUD, BOLTS on the ammo label, a toast that names it, 6 bolts in the sim",
+      "ok": true,
+      "detail": "weapon harpoon, bolts 6, hud \"1 CANNON4 RIFLE\", label \"BOLTS\", toast \"Harpoon rifle (4): hold aim to zoom, it goes through plate and bodies\""
+    },
+    {
+      "name": "a harpoon shot in the live game spends one bolt, draws its streak, and the sights zoom to the rifle's own field of view (24 degrees against 46 for the other guns)",
+      "ok": true,
+      "detail": "bolts 5, streaks 1, stuck 1, fov hip 70 -> sights 24"
+    },
+    {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "384 samples, lowest chip 0.001 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "385 samples, lowest chip 0.001 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -807,42 +817,42 @@
     {
       "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":710,\"sh\":1381,\"ch\":696,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":710,\"sh\":1413,\"ch\":696,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":19,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1381,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1413,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":19,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1381,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1413,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":19,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":470,\"sh\":1381,\"ch\":456,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":470,\"sh\":1413,\"ch\":456,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":19,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "with WebGL unavailable the game says so on screen (no inert title)",
@@ -857,12 +867,12 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=78.8ms"
+      "detail": "frames=900 avg=94.1ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 883 ms, p95 417 ms"
+      "detail": "worst 1150 ms, p95 533 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -873,9 +883,9 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 78.77677777777778,
-    "p95Ms": 416.6000000000058,
-    "worstMs": 883.2999999999884
+    "avgMs": 94.12844444444445,
+    "p95Ms": 533.2999999999884,
+    "worstMs": 1150
   },
   "gl": {
     "geometries": 1459,

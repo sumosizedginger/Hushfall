@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-06T19:14:53.519Z",
+  "when": "2026-10-06T21:44:47.935Z",
   "sources": {
-    "engine": "931734998902e110",
-    "render": "52f1d9d01ee4554e",
-    "game": "e9e877f941e30fb7",
-    "audio": "66b6062c85c8657d",
+    "engine": "fe36c1634ab53f90",
+    "render": "1302b1d566fa429e",
+    "game": "ba3afdb17603d7c8",
+    "audio": "a3e083ce1a860458",
     "assets": "bf0547479d5b8097"
   },
-  "commit": "3398238",
+  "commit": "8dbdba6",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -55,6 +55,30 @@
       "loudestWindowRms": 0.0793,
       "tailRms": 0,
       "audibleSeconds": 0.27,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "harpoon_fire",
+      "seconds": 0.85,
+      "peak": 0.85,
+      "rms": 0.0339,
+      "loudestWindowRms": 0.2167,
+      "tailRms": 0,
+      "audibleSeconds": 0.35,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "harpoon_cycle",
+      "seconds": 0.5,
+      "peak": 0.377,
+      "rms": 0.0161,
+      "loudestWindowRms": 0.098,
+      "tailRms": 0,
+      "audibleSeconds": 0.41,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -116,8 +140,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "step_plank",
@@ -380,8 +404,8 @@
       "tailRms": 0.00005,
       "audibleSeconds": 2.17,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "revive",
@@ -392,8 +416,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.54,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "tone_pulse",
@@ -404,8 +428,8 @@
       "tailRms": 0.00004,
       "audibleSeconds": 1.81,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "pulse_hit",
@@ -428,8 +452,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.99,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "cantor_call",
@@ -608,8 +632,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.43,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mother_spit",
@@ -620,8 +644,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.27,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mother_hatch",
@@ -656,8 +680,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.05,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "gaunt_screech",
@@ -740,8 +764,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.71,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     }
   ],
   "music": {
