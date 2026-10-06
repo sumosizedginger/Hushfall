@@ -1,0 +1,23 @@
+[
+  { "name": "01-arrival", "x": 3.5, "z": 25.5, "yaw": "east" },
+  { "name": "02-the-cradles", "x": 7.5, "z": 25.5, "yaw": "west", "pitch": 0.05 },
+  { "name": "03-the-door", "x": 8.0, "z": 25.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "04-first-gang", "x": 11.5, "z": 25.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "05-sky-over-the-pan", "x": 16.5, "z": 25.5, "yaw": "east", "pitch": 0.55 },
+  { "name": "06-the-road", "x": 20.5, "z": 25.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "07-first-causeway", "x": 23.0, "z": 25.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "08-the-channel", "x": 26.5, "z": 25.5, "yaw": "north", "pitch": -0.1 },
+  { "name": "09-middle-pan", "x": 29.5, "z": 25.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "10-station-front", "x": 32.5, "z": 25.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "11-station-inside", "x": 36.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "12-valve-wheel", "x": 40.5, "z": 23.0, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "13-cistern", "x": 47.5, "z": 22.0, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "14-settling-tank", "x": 48.0, "z": 26.0, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "15-second-causeway", "x": 50.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "16-east-pan", "x": 57.5, "z": 25.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "17-hall-door", "x": 60.0, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "18-cradle-hall", "x": 64.0, "z": 25.5, "yaw": "east", "pitch": 0.05, "open": true },
+  { "name": "19-the-hatch", "x": 68.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "20-far-north-gang", "x": 18.5, "z": 14.5, "yaw": "north", "pitch": 0.0 },
+  { "name": "21-hunt-released", "x": 20.5, "z": 25.5, "yaw": "west", "pitch": 0.02, "open": true, "wake": true, "ticks": 20 }
+]
