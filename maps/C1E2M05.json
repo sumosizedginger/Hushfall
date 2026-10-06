@@ -803,6 +803,21 @@
      "message": "stopped"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [25, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [30, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [51, 24]
   }
  ],
  "par": {

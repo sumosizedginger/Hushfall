@@ -39,7 +39,7 @@ L.put(17, 37, 'v'); L.put(19, 37, 'v'); L.put(17, 38, 'H'); L.put(19, 38, 'H'); 
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M08', name: 'The Grafting Floor', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#2a1a30', fogDensity: 0.016, sky: 'night', ambient: 0.65 },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -70,3 +70,7 @@ export default {
   quality: { enemies: [20, 70], botSeconds: [60, 900], mechanics: ['triggers', 'secret'], skins: 5, enemyKinds: { graftmother: 1, feeder: 3, bellhand: 3 },
     scaleClass: 'COMPRESSION', introduces: 'the Graft-Mother: a boss that is a pod the size of a room, shielded by three cradle feeders, hatching Drone-Gills and spitting spore fans' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[24,29],[45,18],[46,35],[46,23]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;

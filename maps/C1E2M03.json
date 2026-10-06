@@ -1159,6 +1159,16 @@
      "shake": 2
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [37, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [50, 24]
   }
  ],
  "par": {

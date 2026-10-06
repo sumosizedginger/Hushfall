@@ -1110,6 +1110,21 @@
      "message": "draining"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [46, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [54, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [55, 29]
   }
  ],
  "par": {

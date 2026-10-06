@@ -51,7 +51,7 @@ L.put(7, 11, 'v'); L.put(10, 11, 'H'); L.put(7, 13, 'e'); L.put(10, 13, 'r'); L.
 
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M06', name: 'Pump Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -84,3 +84,7 @@ export default {
     scaleClass: 'COMPRESSION', tallReason: 'the nave is the episode\'s one named cathedral hall: 13 m to the roof so the catwalks and galleries have air above them',
     introduces: 'the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries' },
 };
+
+// bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
+MAP.entities ??= []; MAP.entities.push(...[[46,23],[54,24],[55,29]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+export default MAP;

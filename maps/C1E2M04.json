@@ -1089,6 +1089,16 @@
      "message": "flue-open"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [30, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [63, 22]
   }
  ],
  "par": {

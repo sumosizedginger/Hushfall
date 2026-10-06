@@ -845,16 +845,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [51, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [57, 24]
-  },
-  {
-   "type": "pickup",
    "kind": "ammo_shell",
    "at": [58, 24]
   },
@@ -867,11 +857,6 @@
    "type": "pickup",
    "kind": "ammo_flare",
    "at": [60, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [64, 24]
   },
   {
    "type": "enemy",
@@ -1043,17 +1028,12 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [44, 26]
-  },
-  {
-   "type": "pickup",
    "kind": "ammo_shell",
    "at": [47, 26]
   },
   {
    "type": "pickup",
-   "kind": "ammo_bolt",
+   "kind": "ammo_rivet",
    "at": [48, 26]
   },
   {
@@ -1684,6 +1664,26 @@
      "message": "valve"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [44, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [50, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [61, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [66, 25]
   }
  ],
  "par": {
