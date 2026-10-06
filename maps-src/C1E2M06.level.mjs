@@ -82,9 +82,11 @@ const MAP = {
   ],
   quality: { enemies: [38, 64], botSeconds: [60, 600], mechanics: ['heights', 'switches', 'sectors', 'triggers', 'hazards'], skins: 5, enemyKinds: { bellhand: 6 },
     scaleClass: 'COMPRESSION', tallReason: 'the nave is the episode\'s one named cathedral hall: 13 m to the roof so the catwalks and galleries have air above them',
-    introduces: 'the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries' },
+    introduces: 'the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries; and the Charge-arc lamp, waiting on the landing where the cage stops' },
 };
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[46,23],[54,24],[55,29]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+// the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
+MAP.entities.push(...[["weapon_arc",54,25],["ammo_cell",54,28],["ammo_cell",54,39],["ammo_cell",42,41]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 export default MAP;

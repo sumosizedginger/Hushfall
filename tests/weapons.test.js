@@ -153,6 +153,7 @@ test('weapon table sanity: every weapon has what the sim reads', () => {
   for (const [id, d] of Object.entries(WEAPONS)) {
     for (const k of ['name', 'kind', 'ammo', 'cooldown', 'switchTime', 'spread', 'muzzle']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     if (d.kind === 'hitscan') for (const k of ['pellets', 'damage', 'range', 'falloffStart', 'falloffMin', 'knock']) assert.ok(d[k] !== undefined, `${id}.${k}`);
+    else if (d.kind === 'arc') for (const k of ['damage', 'range', 'chain', 'jump', 'chainFalloff', 'lock']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     else for (const k of ['speed', 'gravity', 'splash', 'splashDamage', 'direct', 'selfDamage']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     assert.ok(AMMO_MAX[d.ammo] > 0, id + ' ammo type has a cap');
   }

@@ -7,7 +7,7 @@ import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch } from './script.js';
-import { insideHit, insideFuse } from './hitvolume.js';
+import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -235,6 +235,50 @@ function fireBolt(w, def, cone) {
   for (const e of survivors) if (e.state !== 'dead') emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
 }
 
+/** is the straight line between two points free of walls, closed doors, solid props, floor and ceiling? (the arc's line of sight: a body behind a corner is not a target) */
+function rayClear(w, x0, y0, z0, x1, y1, z1) {
+  const map = w.map, dx = x1 - x0, dy = y1 - y0, dz = z1 - z0, n = Math.max(1, Math.ceil(Math.hypot(dx, dy, dz) / 0.25));
+  for (let i = 1; i < n; i++) {
+    const t = i / n, x = x0 + dx * t, y = y0 + dy * t, z = z0 + dz * t;
+    if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) return false;
+    for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) return false;
+  }
+  return true;
+}
+/** the point on a body the arc strikes: its torso, 60% of the way up the drawn volume (a flyer's included) */
+const arcPoint = (e) => { const c = hitCylinder(e); return [c.x, c.y0 + (c.y1 - c.y0) * 0.6, c.z]; };
+
+/** The charge-arc lamp: lock onto the best body inside a cone around the view ray (the sights narrow it), then jump the arc from body to body. Emits 'arc' (the points it travelled, for the view) and 'enemy_hit'. */
+function fireArc(w, def) {
+  const p = w.player, ex = p.x, ey = p.y + PLAYER.eye, ez = p.z, f = forwardVec(p), cone = def.lock.hip * (1 - p.ads) + def.lock.ads * p.ads;
+  let first = null, bestScore = Infinity;
+  for (const e of w.enemies) {
+    if (e.state === 'dead') continue;
+    const [tx, ty, tz] = arcPoint(e), dx = tx - ex, dy = ty - ey, dz = tz - ez, d = Math.hypot(dx, dy, dz); if (d > def.range || d < 0.3) continue;
+    const ang = Math.acos(Math.min(1, Math.max(-1, (dx * f[0] + dy * f[1] + dz * f[2]) / d))), slack = Math.atan2(hitCylinder(e).r, d);          // a wide body is easier to lock than a thin one at the same distance
+    if (ang - slack > cone || !rayClear(w, ex, ey, ez, tx, ty, tz)) continue;
+    const score = ang + d * 0.004; if (score < bestScore) { bestScore = score; first = { e, pt: [tx, ty, tz] }; }
+  }
+  const pts = [], hit = new Set(), struck = [];
+  if (first) {
+    let cur = first, dmg = def.damage;
+    for (let j = 0; j <= def.chain && cur; j++) {
+      pts.push(cur.pt); hit.add(cur.e); struck.push([cur.e, dmg]); dmg *= def.chainFalloff;
+      let next = null, nd = def.jump;
+      for (const e of w.enemies) {
+        if (e.state === 'dead' || hit.has(e)) continue;
+        const pt = arcPoint(e), d = Math.hypot(pt[0] - cur.pt[0], pt[1] - cur.pt[1], pt[2] - cur.pt[2]);
+        if (d < nd && rayClear(w, cur.pt[0], cur.pt[1], cur.pt[2], pt[0], pt[1], pt[2])) { nd = d; next = { e, pt }; }
+      }
+      cur = next;
+    }
+  }
+  let end = null;
+  if (!first) { let x = ex, y = ey, z = ez; for (let s = 0.25; s <= def.range; s += 0.25) { const nx = ex + f[0] * s, ny = ey + f[1] * s, nz = ez + f[2] * s; if (!rayClear(w, x, y, z, nx, ny, nz)) break; x = nx; y = ny; z = nz; } end = [x, y, z]; }      // a miss still crackles, out to the wall or the end of its reach
+  emit(w, 'arc', { x0: ex, y0: ey, z0: ez, pts, end });
+  for (const [e, dmg] of struck) if (!damageEnemy(w, e, dmg)) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+}
+
 function fireWeapon(w) {
   const p = w.player, def = WEAPONS[p.weapon];
   if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); return; }
@@ -243,7 +287,8 @@ function fireWeapon(w) {
   const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
   const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0));
   if (def.heatPerShot) p.heat = Math.min(1, heat + def.heatPerShot);                                     // holding the trigger blooms the pattern
-  if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
+  if (def.kind === 'arc') fireArc(w, def);
+  else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
   else {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair

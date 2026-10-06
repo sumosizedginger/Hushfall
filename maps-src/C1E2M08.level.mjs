@@ -73,4 +73,6 @@ const MAP = {
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[24,29],[45,18],[46,35],[46,23]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+// the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
+MAP.entities.push(...[["ammo_cell",18,30],["ammo_cell",27,21],["ammo_cell",46,22]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 export default MAP;

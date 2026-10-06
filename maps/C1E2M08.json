@@ -939,6 +939,21 @@
    "type": "pickup",
    "kind": "ammo_bolt",
    "at": [46, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_cell",
+   "at": [18, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_cell",
+   "at": [27, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_cell",
+   "at": [46, 22]
   }
  ],
  "par": {

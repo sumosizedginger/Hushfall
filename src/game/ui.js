@@ -1,7 +1,7 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
 
-const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS' };
+const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS' };
 import { describeNext, TRACKS } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
@@ -16,7 +16,7 @@ const TOASTS = {
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',
-  weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : 'Weapon'),
+  weapon_pickup: (e) => (e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : e.kind === 'weapon_arc' ? 'Charge-arc lamp  (5): hold fire, it picks its own targets and the arc jumps; it lights the dark' : 'Weapon'),
   weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
 };
 

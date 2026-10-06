@@ -73,12 +73,14 @@ export class Bot {
     const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
     const plated = !!ENEMIES[t.e.kind].armor, hr = p.weapon === 'harpoon' ? 1.3 : 1, hd = ENEMIES[t.e.kind];
     const wantHarpoon = p.weapons.includes('harpoon') && (p.ammo.bolt || 0) > 0 && ((plated && t.d > 3) || (t.d > 9 / hr && (!!hd.ranged || !!hd.hover)));       // the long gun: plate (the bolt goes through it) and shooters or flyers that are not close
-    const wantFlare = !wantHarpoon && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
-    const wantScatter = !wantFlare && !wantHarpoon && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
-    const wantRivet = !wantScatter && !wantFlare && !wantHarpoon && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
-    const wantId = wantHarpoon ? 'harpoon' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
-    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : 'weapon4'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
-    const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan';
+    const near = w.enemies.filter((e) => e !== t.e && e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - t.e.x, e.z - t.e.z) < 4.5).length;
+    const wantArc = !wantHarpoon && p.weapons.includes('arc') && (p.ammo.cell || 0) > 0 && t.d < (p.weapon === 'arc' ? 11 : 9) && (near >= 1 || !!hd.hover);       // the lamp: a clutch of bodies, or a flyer, inside its reach (the arc jumps)
+    const wantFlare = !wantHarpoon && !wantArc && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
+    const wantScatter = !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
+    const wantRivet = !wantScatter && !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
+    const wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
+    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : 'weapon5'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
+    const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan' || def.kind === 'arc';
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
@@ -88,7 +90,7 @@ export class Bot {
     else { const flight = t.d / def.speed, aimY = 1.0 + hv + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
-    const inRange = hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
+    const inRange = def.kind === 'arc' ? t.d < def.range * 0.9 : hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
     const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
     this.setHeld('fire', shoot);
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
@@ -124,7 +126,7 @@ export class Bot {
   /** a pickup worth walking to when nothing is shooting: health when hurt, armour when bare, ammo when low (within 16 m) */
   forage() {
     const w = this.w, p = w.player; let best = null, bd = 16;
-    const OWNER = { flare: 'flare', shell: 'scattergun', rivet: 'rivet', bolt: 'harpoon' };                 // ammunition for a gun it does not carry is not worth a walk (the boxes may be there for a later weapon, or for the player who found the gun)
+    const OWNER = { flare: 'flare', shell: 'scattergun', rivet: 'rivet', bolt: 'harpoon', cell: 'arc' };                 // ammunition for a gun it does not carry is not worth a walk (the boxes may be there for a later weapon, or for the player who found the gun)
     for (const it of w.pickups) {
       if (this.skipPickups?.has(it.id)) continue;
       const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;

@@ -8,6 +8,7 @@ export const SILENT_EVENTS = {
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
   shot_impact_silent: 'reserved',
   shake: 'view-only effect (camera shake): the view reads it',
+  arc: 'view-only: the lamp\'s lightning between the bodies it struck; the fire event carries the sound, enemy_hit the strike',
   bolt: 'view-only: the harpoon\'s streak and the bolt left in the wall; the fire event carries the sound, the impact event the strike',
   objective: 'shown as HUD text',
   trigger: 'bookkeeping: what a trigger DOES makes the sound',
@@ -20,6 +21,7 @@ const WEAPON_FIRE = {
   rivet: [{ id: 'rivet_fire', gain: 0.8 }],
   scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
   harpoon: [{ id: 'harpoon_fire' }, { id: 'harpoon_cycle', delay: 0.62 }],
+  arc: [{ id: 'arc_fire', gain: 0.9 }],
 };
 const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', graftmother: 'mother_roar' };
 const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', graftmother: 'mother_roar' };

@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
+import { makeArcLamp, makePickupArc } from './models_arc.js';
 import { makeBellNodeEnemy } from './models_g2.js';
 import { makeDroneGill, makeFeeder, makeGraftMother } from './models_e2.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
@@ -38,7 +39,7 @@ export class GameView {
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
-    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas), harpoon: makeHarpoonRifle(tex.flarecannon_atlas) };
+    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas), harpoon: makeHarpoonRifle(tex.flarecannon_atlas), arc: makeArcLamp(tex.flarecannon_atlas) };
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(0.62); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
@@ -52,7 +53,8 @@ export class GameView {
     // Gate 2 effects: channel beams and node links (thin teal cylinders), the Cantor's shield, expanding tone-pulse rings
     this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); this.beamMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.55, depthWrite: false }); this.beams = new Map();
     this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
-    this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
+    this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
+    this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
     this.shieldGeo = new THREE.IcosahedronGeometry(1, 1); this.shieldMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.2, wireframe: true, depthWrite: false }); this.shield = null;
     this.beforeStep(world);
   }
@@ -77,8 +79,9 @@ export class GameView {
   }
   handleEvents(events) {
     for (const e of events) {
-      if (e.type === 'fire') { const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon'; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp) this.spinKick = 1; }
+      if (e.type === 'fire') { const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc'; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : ar ? 0.15 : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp) this.spinKick = 1; }
       else if (e.type === 'bolt') this.addBolt(e);
+      else if (e.type === 'arc') this.addArc(e);
       else if (e.type === 'impact') {
         for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.scale.setScalar(0.6); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.2, this.rnd() - 0.5).multiplyScalar(2.6), life: 0.3 + this.rnd() * 0.2 }); }
       }
@@ -104,6 +107,24 @@ export class GameView {
       const s = new THREE.Mesh(this.stuckGeo, this.stuckMat), n = [dx / len, dy / len, dz / len]; s.position.set(e.x1 - n[0] * 0.3, e.y1 - n[1] * 0.3, e.z1 - n[2] * 0.3); s.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(n[0], n[1], n[2])); this.scene.add(s);
       this.bolts.push({ m: s, life: 12, max: 12, streak: false }); const stuck = this.bolts.filter((b) => !b.streak); if (stuck.length > 24) { const old = stuck[0]; this.scene.remove(old.m); this.bolts.splice(this.bolts.indexOf(old), 1); }
     }
+  }
+
+  /** the lamp's lightning: from the muzzle through every body the arc struck (or out to where it died against a wall), each hop broken into jagged teal segments that live for under a tenth of a second */
+  addArc(e) {
+    const yaw = this.cam.rotation.y, r = [Math.cos(yaw), 0, -Math.sin(yaw)], f = [-Math.sin(yaw), 0, -Math.cos(yaw)];
+    const path = [[e.x0 + f[0] * 0.8 + r[0] * 0.14, e.y0 - 0.16, e.z0 + f[2] * 0.8 + r[2] * 0.14], ...(e.pts.length ? e.pts : [e.end])];
+    const up = new THREE.Vector3(0, 1, 0);
+    for (let s = 0; s + 1 < path.length; s++) {
+      const a = path[s], b = path[s + 1], len = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]), n = Math.max(3, Math.min(10, Math.round(len / 0.5))), jit = Math.min(0.45, 0.08 * len);
+      let prev = a;
+      for (let k = 1; k <= n; k++) {
+        const t = k / n, last = k === n, q = last ? b : [a[0] + (b[0] - a[0]) * t + (this.rnd() - 0.5) * jit, a[1] + (b[1] - a[1]) * t + (this.rnd() - 0.5) * jit, a[2] + (b[2] - a[2]) * t + (this.rnd() - 0.5) * jit];
+        const dx = q[0] - prev[0], dy = q[1] - prev[1], dz = q[2] - prev[2], l = Math.hypot(dx, dy, dz) || 1, m = new THREE.Mesh(this.beamGeo, this.arcMat);
+        m.position.set((prev[0] + q[0]) / 2, (prev[1] + q[1]) / 2, (prev[2] + q[2]) / 2); m.quaternion.setFromUnitVectors(up, new THREE.Vector3(dx / l, dy / l, dz / l)); m.scale.set(0.009, l, 0.009); this.scene.add(m);
+        this.arcs.push({ m, life: this.arcLife }); prev = q;
+      }
+    }
+    while (this.arcs.length > 90) this.scene.remove(this.arcs.shift().m);
   }
 
   render(w, alpha, dt) {
@@ -166,7 +187,7 @@ export class GameView {
     seen.clear();
     for (const it of w.pickups) {
       seen.add(it.id); let v = this.pickupViews.get(it.id);
-      if (!v) { v = (it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : it.kind === 'ammo_bolt' || it.kind === 'weapon_harpoon' ? makePickupHarpoon : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
+      if (!v) { v = (it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : it.kind === 'ammo_bolt' || it.kind === 'weapon_harpoon' ? makePickupHarpoon : it.kind === 'ammo_cell' || it.kind === 'weapon_arc' ? makePickupArc : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
       v.position.set(it.x, (it.y ?? 0) + 0.18 + Math.sin(this.time * 2.2 + it.id) * 0.05 + (it.kind.startsWith('key') ? 0.25 : 0), it.z); v.rotation.y = this.time * 0.9 + it.id;
     }
     for (const [id, v] of this.pickupViews) if (!seen.has(id)) { this.scene.remove(v); this.pickupViews.delete(id); }
@@ -192,6 +213,7 @@ export class GameView {
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
     for (const sw of this.map.switches) { const r = this.lvl.switchViews.get(sw.id); if (!r) continue; const used = w.switchState?.[sw.id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; r.group.position.y = floorAt(w, sw.x, sw.z) + 1.35; }        // a panel on a moving floor rides with it
     for (const [id, r] of this.lvl.exitViews) r.group.children[0].material.color.setHex(w.exitLocked?.[id] ? 0x7a2a22 : 0xffc070);      // a sealed gate glows dull red
+    for (let i = this.arcs.length - 1; i >= 0; i--) { const a = this.arcs[i]; a.life -= dt; if (a.life <= 0) { this.scene.remove(a.m); this.arcs.splice(i, 1); } }
     for (let i = this.bolts.length - 1; i >= 0; i--) {
       const b = this.bolts[i]; b.life -= dt; if (b.streak) { const k = Math.max(0, b.life / b.max); b.m.scale.x = b.m.scale.z = 0.035 * k; }
       if (b.life <= 0) { this.scene.remove(b.m); this.bolts.splice(i, 1); }
@@ -229,6 +251,8 @@ export class GameView {
     if (rig.spin) { this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6); rig.spin.rotation[rig.spinAxis || 'z'] += dt * (rig.spinAxis ? 16 * this.spinKick : 6 + 40 * this.spinKick); }                    // the barrel cluster winds up while it fires
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
     this.pumpT = Math.max(0, this.pumpT - dt);
+    if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 : 0));                   // the bulb breathes and flares
+    { const lamp = shown === 'arc' && w.status !== 'dead'; this.lampLight.intensity = lamp ? (this.flashT > 0 ? 24 + this.rnd() * 10 : 6 + 0.8 * Math.sin(this.time * 7)) : 0; if (lamp) { const fy = this.cam.rotation.y; this.lampLight.position.set(this.cam.position.x - Math.sin(fy) * 0.7, this.cam.position.y - 0.1, this.cam.position.z - Math.cos(fy) * 0.7); } }      // the lamp lights the dark around you
     if (rig.bolt) rig.bolt.visible = p.cooldown < 0.45 && p.ads < 0.4;                                                      // the harpoon leaves the muzzle; the next one seats as the action closes
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
     this.post.uniforms.uDamage.value = p.hurt;
