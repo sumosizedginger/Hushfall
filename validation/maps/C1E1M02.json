@@ -2,7 +2,7 @@
   "mapId": "C1E1M02",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "0a81186",
+  "codeVersion": "871f5c7",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "229709eccc79904d",
@@ -497,6 +497,16 @@
         "name": "quality: uses mechanic 'keys>=2'",
         "ok": true,
         "detail": "keys 2"
+      },
+      {
+        "name": "placement: every roofed region has walls (a floating ceiling slab over open ground is a map that reads as indoors outside)",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
+        "name": "placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air",
+        "ok": true,
+        "detail": "ok"
       },
       {
         "name": "the shared browser check passed",
