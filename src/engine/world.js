@@ -155,7 +155,7 @@ function noise(w, x, z, radius) {
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
 export function damageEnemy(w, e, dmg, opts = {}) {
   const def = ENEMIES[e.kind];
-  if (def.armor && !opts.splash) {                                                  // plate on the front arc: only the shooter's side counts, splash ignores it
+  if (def.armor && !opts.splash && !opts.pierceArmor) {                             // plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore it
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
     else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
   }
@@ -212,6 +212,29 @@ function fireHitscan(w, def, cone) {
   for (const e of hits.values()) if (e.state !== 'dead') emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
 }
 
+/** The harpoon bolt: one ray from the eye, it stops at walls, closed doors and solid props, and goes THROUGH bodies: up to 1 + def.pierce of them, the later ones for def.pierceDamage of the damage.
+ *  Emits 'bolt' (the line it travelled, for the view's streak and the bolt left in the wall) and, on a wall, an 'impact'. */
+function fireBolt(w, def, cone) {
+  const p = w.player, map = w.map, hit = [], f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone });
+  const x0 = p.x, y0 = p.y + PLAYER.eye, z0 = p.z; let x = x0, y = y0, z = z0, stop = false, dist = 0;
+  for (dist = 0.25; dist <= def.range && !stop && hit.length <= def.pierce; dist += 0.25) {
+    x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
+    if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
+    for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
+    if (stop) break;
+    for (const e of w.enemies) if (e.state !== 'dead' && !hit.includes(e) && insideHit(e, x, y, z, 0.05)) { hit.push(e); break; }
+  }
+  const survivors = [];
+  hit.forEach((e, i) => {
+    const mult = i === 0 ? 1 : def.pierceDamage;
+    if (!damageEnemy(w, e, def.damage * mult, { pierceArmor: def.pierceArmor })) survivors.push(e);
+    tryMove(w, e, f[0] * def.knock * mult, f[2] * def.knock * mult, ENEMIES[e.kind].radius);
+  });
+  if (stop) emit(w, 'impact', { x, y, z });
+  emit(w, 'bolt', { x0, y0, z0, x1: x, y1: y, z1: z, stuck: stop });
+  for (const e of survivors) if (e.state !== 'dead') emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+}
+
 function fireWeapon(w) {
   const p = w.player, def = WEAPONS[p.weapon];
   if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); return; }
@@ -220,7 +243,7 @@ function fireWeapon(w) {
   const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
   const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0));
   if (def.heatPerShot) p.heat = Math.min(1, heat + def.heatPerShot);                                     // holding the trigger blooms the pattern
-  if (def.kind === 'hitscan') fireHitscan(w, def, cone);
+  if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
   else {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair

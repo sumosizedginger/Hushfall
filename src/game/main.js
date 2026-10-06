@@ -9,7 +9,7 @@ import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
-import { TICK, VIEW, KEYS } from '../engine/defs.js';
+import { TICK, VIEW, KEYS, WEAPONS } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy } from '../engine/progress.js';
 import { UI } from './ui.js';
 import { AudioEngine } from '../audio/engine.js';
@@ -202,7 +202,7 @@ canvas.addEventListener('wheel', (e) => {                                   // w
 }, { passive: false });
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
-const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan(VIEW.adsFov * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
+const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan((WEAPONS[g.world?.player.weapon]?.adsFov ?? VIEW.adsFov) * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
 addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); });
 addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }

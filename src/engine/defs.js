@@ -22,10 +22,10 @@ export const PLAYER = {
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
-export const NOISE = { flare: 22, scattergun: 26, rivet: 20, explosion: 24, closeRange: 9 };
-export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200 };
+export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, explosion: 24, closeRange: 9 };
+export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24 };
 /** fixed slot order (keys 1, 2, ...); a weapon occupies its slot once owned */
-export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet'];
+export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon'];
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
 
 // ---- terrain (Gate 2 production kit) ----------------------------------------------------------------------------------
@@ -55,6 +55,11 @@ export const WEAPONS = {
   // sustained fire from the hip or the sights: a stream of small hits, accurate while you stay still and settled (bloom builds the longer you hold the trigger).
   // The answer to crowds of weak targets and the workhorse when shells and flares run dry; weak per hit, so it does not replace the scattergun's punch.
   rivet: { name: 'Riveter driver', kind: 'hitscan', ammo: 'rivet', cooldown: 0.085, switchTime: 0.35, pellets: 1, damage: 7, range: 34, falloffStart: 14, falloffMin: 0.55, knock: 0.05, kick: 0.035, muzzle: { fwd: 0.7, right: 0.1, down: 0.1 }, heatPerShot: 0.075, heatDecay: 1.4, heatCone: 3.2, spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 } },
+  // the long gun (Gate 4, owner go 2026-10-06): one heavy bolt, instant, almost no drop-off at 90 m, and it goes THROUGH: it punches the front plate of an armoured target (the Warden-Graft's shield-arm no longer
+  // turns it) and the bolt carries on into a second body behind the first at 60%. Slow (a bolt every 1.35 s), few rounds (24 at most), loud (30 m), and only accurate when you stop and use the sights, which also zoom it right in.
+  // It is the answer to what the other three cannot reach: a Drone-Gill hovering out of scattergun range, a Bellhand on a far causeway, plate. It is not the answer to a crowd.
+  harpoon: { name: 'Harpoon rifle', kind: 'hitscan', ammo: 'bolt', cooldown: 1.35, switchTime: 0.55, pellets: 1, damage: 80, range: 90, falloffStart: 90, falloffMin: 1, pierce: 1, pierceDamage: 0.6, pierceArmor: true, knock: 0.55, kick: 0.07, adsFov: 24, muzzle: { fwd: 0.8, right: 0.1, down: 0.12 },
+    spread: { hip: 0.05, ads: 0.0008, moveFactor: 1.2 } },
 };
 
 // `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
@@ -105,6 +110,8 @@ export const PICKUPS = {
   weapon_scattergun: { type: 'weapon', weapon: 'scattergun', ammo: 'shell', amount: 8 },
   weapon_rivet: { type: 'weapon', weapon: 'rivet', ammo: 'rivet', amount: 60 },
   ammo_rivet: { type: 'ammo', ammo: 'rivet', amount: 40 },
+  weapon_harpoon: { type: 'weapon', weapon: 'harpoon', ammo: 'bolt', amount: 6 },
+  ammo_bolt: { type: 'ammo', ammo: 'bolt', amount: 4 },
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };

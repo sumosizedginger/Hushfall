@@ -54,9 +54,11 @@ L.putAll('C', [[32, 18], [32, 32], [36, 15], [36, 35], [40, 16], [40, 34], [44, 
 L.putAll('z', [[29, 12], [29, 38], [49, 12], [49, 38]]); L.putAll('o', [[34, 20], [34, 30], [45, 32], [51, 33]]); L.rect([46, 28, 50, 31], 'K'); L.putAll('j', [[30, 23], [30, 27], [48, 27]]);       // the tank is a solid settling tank south of the road: it keeps the south Bellhand off the east causeway
 L.putAll('e', [[31, 24], [33, 26], [47, 26], [49, 26], [35, 12], [35, 38]]); L.putAll('r', [[30, 26], [32, 24], [48, 26], [39, 13], [39, 39]]); L.putAll('a', [[33, 23], [34, 28], [45, 13], [45, 39]]);
 L.putAll('h', [[31, 28], [33, 22], [42, 12], [43, 38]]); L.put(50, 26, 'H');
-L.putAll('e', [[31, 25], [47, 25]]); L.putAll('r', [[32, 25], [49, 25]]); L.put(34, 25, 'H'); L.put(51, 25, 'a'); L.put(29, 25, 'h');     // on the road (both sides of the station)
+L.putAll('e', [[31, 25], [47, 25]]); L.putAll('r', [[32, 25], [49, 25]]); L.putAll('U', [[51, 24], [48, 26]]); L.put(34, 25, 'H'); L.put(51, 25, 'a'); L.put(29, 25, 'h');     // on the road (both sides of the station)
 // inside the station: the pump machinery (cradles and pods on the line), lanterns, a cache; the valve wheel is on the north wall at (40, 21)
 L.put(40, 27, 't'); L.putAll('O', [[38, 22], [42, 22]]); L.putAll('D', [[38, 28], [42, 28]]); L.putAll('n', [[38, 23], [42, 27]]);
+// the harpoon rifle (weapon 4) hangs on the foreman's hook by the lane, and the valve wheel is on this same wall: nobody gets the valve without walking past it. Out of the east door there is a Bellhand on each flank at sixteen metres, which is what it is for
+L.put(38, 25, 'X'); L.put(44, 26, 'U');
 L.put(37, 28, 'H'); L.put(43, 22, 'e'); L.put(36, 28, 'r'); L.put(44, 28, 'a'); L.put(37, 25, 'e'); L.put(39, 25, 'r'); L.put(41, 25, 'h'); L.put(43, 25, 'a');
 // the cistern (secret): the foreman's own supplies
 L.put(47, 21, 'v'); L.put(48, 21, 'H'); L.put(47, 23, 'e'); L.put(48, 23, 'r'); L.put(46, 21, 'a'); L.putAll('F', [[49, 20], [49, 23]]); L.put(46, 23, 'y'); L.put(49, 22, 'o');
@@ -70,11 +72,11 @@ L.putAll('C', [[58, 15], [58, 35], [61, 14], [61, 36], [64, 15], [64, 37], [67, 
 L.putAll('y', [[59, 15], [59, 35]]); L.putAll('z', [[58, 12], [58, 38]]); L.putAll('o', [[61, 21], [61, 29], [58, 28], [58, 21]]); L.putAll('j', [[58, 23], [58, 27]]);
 L.putAll('e', [[58, 24], [58, 26], [62, 12], [62, 38]]); L.putAll('r', [[59, 24], [59, 26], [65, 10], [66, 40]]); L.putAll('a', [[60, 24], [60, 13], [63, 36]]);
 L.putAll('h', [[60, 26], [67, 13], [68, 37]]); L.put(61, 23, 'H');
-L.putAll('e', [[58, 25], [57, 25]]); L.put(60, 25, 'r'); L.put(59, 25, 'a'); L.put(57, 26, 'H');                                      // on the east road, before the hall
+L.putAll('e', [[58, 25], [57, 25]]); L.put(60, 25, 'r'); L.put(59, 25, 'a'); L.put(57, 26, 'H'); L.put(57, 24, 'U');                                      // on the east road, before the hall
 // the cradle hall: what the valve wakes (a group), the rail overhead, pods on the floor
 L.putAll('t', [[65, 22], [65, 28], [69, 29], [65, 24], [65, 26]]); L.putAll('g', [[67, 23], [67, 27]]);
 L.putAll('O', [[64, 21], [64, 29], [68, 21], [68, 29]]); L.putAll('D', [[66, 21], [66, 29], [70, 21], [70, 29]]); L.put(66, 22, 'n');
-L.putAll('H', [[63, 22], [63, 28]]); L.putAll('e', [[64, 23], [64, 27], [64, 25]]); L.put(65, 25, 'r');
+L.putAll('H', [[63, 22], [63, 28]]); L.put(64, 24, 'U'); L.putAll('e', [[64, 23], [64, 27], [64, 25]]); L.put(65, 25, 'r');
 
 const layers = L.layers();
 
@@ -94,6 +96,7 @@ export default {
   ],
   messages: [
     { id: 'start', at: [3, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Evaporation Pans. White ground to the horizon and one roof in the middle: the pump station. Everything between us and it is working.' },
+    { id: 'harpoon', at: [38, 25], radius: 2, speaker: 'INES', text: 'The foreman left a harpoon rifle on its hook. Hold aim and it zooms in a long way. The bolt goes through plate, and through the one behind it.' },
     { id: 'cradles', at: [4, 25], radius: 2.5, speaker: 'INES', text: 'Empty cradles, ropes still swinging. They hang their hunting parties here and let them go when somebody walks the pans.' },
     { id: 'pans', at: [12, 25], radius: 3, speaker: 'INES', text: 'Brine channels, five metres across, and they burn. Cross on the planks, or wade and pay for it. Keep the heaps between you and anything that stands up.' },
     { id: 'release', at: [26, 25], radius: 3, speaker: 'INES', text: 'Behind us. The cradles opened. They have your scent. Do not stop on the open ground.' },
@@ -114,5 +117,5 @@ export default {
   ],
   quality: { enemies: [40, 72], botSeconds: [40, 600], mechanics: ['switches', 'triggers', 'hazards', 'secret'], skins: 6, enemyKinds: { bellhand: 4 },
     scaleClass: 'SET-PIECE', reason: 'A crossing under pursuit: the pans are open on purpose. A hunting party is released behind you at the first causeway, so the open ground has a job (keep moving, heap to heap) and the brine channels cut it into pans crossed on planks.',
-    introduces: 'the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost)' },
+    introduces: 'the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost); and the Harpoon rifle, the long gun that the open ground asks for' },
 };
