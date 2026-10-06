@@ -28,7 +28,7 @@ export function arrivalInventory(carry, entry) {
   if (!carry) return entry ?? null; if (!entry) return carry;
   const ammo = { ...(carry.ammo ?? {}) }; for (const [k, v] of Object.entries(entry.ammo ?? {})) ammo[k] = Math.max(ammo[k] ?? 0, v);
   const weapons = [...new Set([...(carry.weapons ?? []), ...(entry.weapons ?? [])])].sort((x, y) => WEAPON_ORDER.indexOf(x) - WEAPON_ORDER.indexOf(y));
-  return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons };
+  return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons, upgrades: carry.upgrades };      // the persistent upgrade tiers ride along: they are never part of a map's authored loadout
 }
 
 export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null, ammoScale = null } = {}) {
