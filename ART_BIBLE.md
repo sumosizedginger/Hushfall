@@ -83,6 +83,13 @@ Lighting: `atmosphere.ambient` (0.05-1.5, default 1) scales the hemisphere and s
 | wall_saltbrick_a | 256 tile | 9101 | salt-caked brick, pale with rust weeping from the joints: boundary walls, gatehouse, kiln stacks (`L`) |
 | wall_corrugated_a | 256 tile | 9102 | rusted corrugated sheet with copper-green bloom: pump houses, kennels, the guardhouse, fences (`K`) |
 | floor_saltcrust_a | 256 tile | 9201 | cracked salt crust over rust stains and shallow brine: the open pans (`l`, outdoor) |
+| wall_kiln_a | 256 tile | 9103 | sooted kiln brick, black with live orange seams burnt through the mortar: Kiln Row (`Y`) |
+| wall_rime_a | 256 tile | 9104 | frosted steel plate, riveted seams, ice growing from the joints: the Rime Vault (`Z`) |
+| floor_track_a | 256 tile | 9202 | rail ballast with two rails and timber sleepers running east-west: the Rail Yard (`b` outdoor, `q` roofed) |
+| floor_clinker_a | 256 tile | 9203 | kiln clinker and ash cracked with embers (jagged polylines, dark then ember orange): Kiln Row (`k`) |
+| floor_slurry_a | 256 tile | 9204 | dark wet slurry with an oily sheen and bubbles: the Slurry Undercroft (`v`) |
+| floor_rime_a | 256 tile | 9205 | frosted steel deck plate: the Rime Vault (`r`) |
+| floor_ember_a | 256 tile | 9206 | the ember bed: bright glowing bed with dark crust plates and cracks; drawn UNLIT as the overlay of floor effect `h`, one tile per metre (`levelmesh.js`) |
 
 Adding a skin is now: a recipe (new seed in this table), ONE row in `WALL_SKINS`/`FLOOR_SKINS` in `src/engine/defs.js`, and `node tools/bake.mjs <asset ids>`. The level builder's floor characters and the texture list in `src/render/textures.js` are derived from those tables (a floor-character string in the builder and a hand-kept name list used to need edits too). Known p5.brush limit (again): narrow or full-size brush rects crash its scatter; flat opaque areas use `g.solid`.
 

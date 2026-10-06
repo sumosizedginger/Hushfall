@@ -1,0 +1,16 @@
+[
+  { "name": "01-arrival", "x": 5.5, "z": 23.5, "yaw": "east" },
+  { "name": "02-hall-door", "x": 9.0, "z": 23.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "03-the-trench", "x": 12.5, "z": 22.5, "yaw": "east", "pitch": -0.05 },
+  { "name": "04-the-island", "x": 22.5, "z": 19.0, "yaw": "south", "pitch": -0.1 },
+  { "name": "05-north-strip", "x": 12.5, "z": 17.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "06-the-far-bellhand", "x": 18.5, "z": 28.5, "yaw": "east", "pitch": 0.0, "wake": true, "ticks": 10 },
+  { "name": "07-the-corridor", "x": 34.5, "z": 18.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "08-the-gallery", "x": 43.5, "z": 21.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "09-ember-strip", "x": 48.5, "z": 13.5, "yaw": "east", "pitch": -0.05, "open": true },
+  { "name": "10-kiln-mouths", "x": 51.5, "z": 14.5, "yaw": "south", "pitch": 0.0, "open": true },
+  { "name": "11-east-corridor", "x": 63.5, "z": 31.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "12-the-flue", "x": 65.5, "z": 17.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "13-the-chamber", "x": 70.5, "z": 23.5, "yaw": "west", "pitch": 0.0, "open": true },
+  { "name": "14-secret-tunnel", "x": 53.5, "z": 35.5, "yaw": "south", "pitch": 0.0, "open": true }
+]

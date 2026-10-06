@@ -1,0 +1,626 @@
+{
+ "format": 1,
+ "id": "C1E2S01",
+ "version": 1,
+ "name": "The Rime Vault",
+ "ceilingHeight": 3.4,
+ "atmosphere": {
+  "fog": "#8aa0b0",
+  "fogDensity": 0.013,
+  "sky": "overcast",
+  "ambient": 0.75
+ },
+ "keyLabels": {
+  "brass": "Coolant valve A",
+  "iron": "Coolant valve B",
+  "bell": "Coolant valve C"
+ },
+ "grid": [
+  "####################################################",
+  "####################################################",
+  "####################################################",
+  "#############ZZZZZ#######ZZZZZ######################",
+  "#############ZrrrZ#######ZrrrZ######################",
+  "#############ZrrrZ#######ZrrrZ######################",
+  "#############ZrrrZ#######ZrrrZ######################",
+  "##########ZZZZZDZZZZZZZZZZZDZZZZZ###################",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZ###################",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZ###################",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZZZZZZZZZZZZZ#######",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZZZZZZZZZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrDrrrrrrrrrrrrrrrrrrrrrDfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZZZZZZZZZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZZZZZZZZZZZZZ#######",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZ###################",
+  "##########ZrrrrrrrrrrrrrrrrrrrrrZ###################",
+  "##########ZZZZZZZZZZZZZZZDZZZZZZZ###################",
+  "#######################ZrrrZ########################",
+  "#######################ZrrrZ########################",
+  "#######################ZrrrZ########################",
+  "#######################ZZZZZ########################",
+  "####################################################",
+  "####################################################",
+  "####################################################",
+  "####################################################"
+ ],
+ "doors": [
+  {
+   "at": [15, 7]
+  },
+  {
+   "at": [27, 7]
+  },
+  {
+   "at": [10, 16]
+  },
+  {
+   "at": [32, 16],
+   "remote": true
+  },
+  {
+   "at": [25, 25]
+  }
+ ],
+ "secrets": [],
+ "triggers": [
+  {
+   "id": "valve-a",
+   "when": "key:brass",
+   "do": [
+    {
+     "objective": "Valve A taken. Two to go: north east, and south"
+    }
+   ]
+  },
+  {
+   "id": "valve-b",
+   "when": "key:iron",
+   "do": [
+    {
+     "objective": "Valve B taken. One to go"
+    }
+   ]
+  },
+  {
+   "id": "valve-c",
+   "when": "key:bell",
+   "do": [
+    {
+     "objective": "All three valves are yours. The lever by the vault door, east of the hall"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [15, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [27, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [15, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [16, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [17, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [19, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [20, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [21, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [23, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [24, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [25, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [14, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [22, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [30, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [34, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [36, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [38, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [41, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [33, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [35, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [39, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [5, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [13, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [29, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [36, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [40, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [3, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [13, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [22, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [29, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [34, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 15]
+  },
+  {
+   "type": "player",
+   "at": [5, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [7, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [12, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [18, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [38, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [40, 16]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [42, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [43, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [3, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [22, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [34, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [5, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [13, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [29, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [30, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [36, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [40, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [35, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [39, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [14, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [22, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "cool",
+   "at": [30, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [34, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [36, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [38, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [41, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [15, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [16, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [17, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [19, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [20, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [21, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [27, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [28, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [29, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_bell",
+   "at": [25, 27]
+  },
+  {
+   "type": "switch",
+   "id": "vault",
+   "at": [31, 12],
+   "wall": "east",
+   "needs": [
+    "brass",
+    "iron",
+    "bell"
+   ],
+   "do": [
+    {
+     "open": [32, 16]
+    },
+    {
+     "objective": "The vault is open. Read what they hid, and take what they left"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "message": "rolling"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 240
+ },
+ "intro": {
+  "title": "THE RIME VAULT",
+  "lines": [
+   "It is colder here than the sea has any reason to be.",
+   "Someone built a winter under the Works, on purpose."
+  ]
+ },
+ "outro": "Back to the Works. The Cradle Annex is next.",
+ "messages": [
+  {
+   "id": "arrive",
+   "at": [5, 16],
+   "radius": 3,
+   "speaker": "WARDEN CALDER",
+   "text": "You found it. I hid what the Wardens learned where the Works could not burn it: in the cold. The vault wants three coolant valves. They are in the alcoves."
+  },
+  {
+   "id": "hall",
+   "at": [18, 16],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Racks and racks. Look at the dates on the crates: all of them before the firing. They knew, Calder. Someone here knew for years."
+  },
+  {
+   "id": "valve",
+   "at": [15, 5],
+   "radius": 2,
+   "speaker": "VALVE LOG",
+   "text": "COOLANT VALVE A. IF THE VAULT WARMS, THE DOOR WILL NOT OPEN FROM OUTSIDE. KEEP IT COLD. KEEP IT QUIET."
+  },
+  {
+   "id": "lever",
+   "at": [30, 14],
+   "radius": 3,
+   "speaker": "VAULT LEVER",
+   "text": "THREE VALVES: A, B, C. THE LEVER SPENDS THEM. THE DOOR RISES ON ITS OWN COUNTERWEIGHT."
+  },
+  {
+   "id": "rolling",
+   "at": [31, 16],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "It is rolling up. Cold air is coming out. Whatever they kept, they kept it a long time."
+  },
+  {
+   "id": "research",
+   "at": [37, 16],
+   "radius": 3,
+   "speaker": "WARDEN LOG",
+   "text": "SEVEN YEARS BEFORE THE FIRING. THE HUM IN THE CHALK IS NOT GEOLOGY: IT HAS A RHYTHM. THE PANS ARE A COVER. THE BEDS UNDER THEM ARE A RECEIVER. WE WERE TOLD TO STOP ASKING."
+  },
+  {
+   "id": "cold",
+   "at": [41, 16],
+   "radius": 3,
+   "speaker": "WARDEN LOG",
+   "text": "THEY DO NOT LIKE COLD. IT SLOWS THE HUSH. IF YOU ARE READING THIS, KEEP IT COLD, AND KEEP THE BELLS COLDER."
+  }
+ ],
+ "objective": "Three coolant valves open the vault: two north, one south. The lever is by its door",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "safe": true,
+  "enemies": [0, 0],
+  "botSeconds": [15, 300],
+  "mechanics": [
+   "switches",
+   "triggers",
+   "keys>=3"
+  ],
+  "skins": 3,
+  "scaleClass": "COMPRESSION",
+  "introduces": "the Wardens research vault: the first plain statement of what the Works is for, behind three coolant valves and a lever (puzzle-lite, no enemies)"
+ }
+}
