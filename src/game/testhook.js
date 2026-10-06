@@ -60,7 +60,8 @@ export function installTestHook(app) {
     /** feed events to the view as the game does (impact / explode make debris) and read the debris back */
     emitView(events) { g.view.handleEvents(events); },
     debrisProbe() { return g.view && g.world ? debrisProbe(g.view, g.world) : []; },
-    boltProbe() { return g.view ? { streaks: g.view.bolts.filter((b) => b.streak).length, stuck: g.view.bolts.filter((b) => !b.streak).length, zoom: g.view.cam.fov } : null; },        // the harpoon's view-only effects (streak, bolt left in a wall) and the camera's field of view
+    setup_arcLife(seconds) { if (g.view) g.view.arcLife = seconds; },        // stills only: the lamp's lightning lives 0.09 s, too short to photograph
+    boltProbe() { return g.view ? { streaks: g.view.bolts.filter((b) => b.streak).length, stuck: g.view.bolts.filter((b) => !b.streak).length, zoom: g.view.cam.fov, arcs: g.view.arcs.length, lamp: g.view.lampLight.intensity } : null; },        // the harpoon's view-only effects (streak, bolt left in a wall) and the camera's field of view
     /** where the Cantor's shield and the ring beams are drawn (world space) */
     encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */

@@ -13,5 +13,6 @@
   { "name": "12-south-gallery", "x": 38.5, "z": 41.5, "yaw": "west", "pitch": 0.0, "y": 8.0 },
   { "name": "13-drain-lever", "x": 35.5, "z": 41.5, "yaw": "south", "pitch": 0.0, "y": 8.0 },
   { "name": "14-north-gallery", "x": 40.5, "z": 8.5, "yaw": "west", "pitch": 0.0, "y": 8.0 },
-  { "name": "15-the-office", "x": 8.5, "z": 12.0, "yaw": "west", "pitch": 0.0, "open": true }
+  { "name": "15-the-office", "x": 8.5, "z": 12.0, "yaw": "west", "pitch": 0.0, "open": true },
+  { "name": "16-the-lamp", "x": 54.5, "z": 22.5, "yaw": "south", "pitch": -0.28, "y": 4.0 }
 ]

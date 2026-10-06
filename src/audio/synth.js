@@ -94,6 +94,12 @@ export const SFX = {
     noise(c, out, t + 0.3, { dur: 0.06, gain: 0.6, type: 'bandpass', f0: 1700, q: 2, off: o.r() }); thump(c, out, t + 0.31, 150, 70, 0.12, 0.4);
     return 0.5;
   },
+  arc_fire(c, out, t, o) {                                      // the lamp: a wet electric crackle, a buzz under a snap of noise and a falling zap; short, because it repeats six times a second
+    tone(c, out, t, { type: 'sawtooth', f0: 110 + o.r() * 20, d: 0.14, gain: 0.16, lp: 900 });
+    noise(c, out, t, { dur: 0.1, gain: 0.42, type: 'bandpass', f0: 3200 + o.r() * 1800, q: 1.5, off: o.r() });
+    tone(c, out, t, { type: 'square', f0: 2400 + o.r() * 800, f1: 600, d: 0.09, gain: 0.1, lp: 4200 });
+    return 0.18;
+  },
   dry_click(c, out, t, o) { noise(c, out, t, { dur: 0.03, gain: 0.35, type: 'highpass', f0: 3000, off: o.r() }); tone(c, out, t, { type: 'square', f0: 1700, d: 0.02, gain: 0.05 }); return 0.1; },
   weapon_switch(c, out, t, o) { noise(c, out, t, { dur: 0.12, a: 0.03, gain: 0.25, type: 'bandpass', f0: 900, f1: 1800, q: 1.2, off: o.r() }); thump(c, out, t + 0.1, 200, 130, 0.08, 0.25); return 0.25; },
   impact(c, out, t, o) { noise(c, out, t, { dur: 0.06, gain: 0.3, type: 'bandpass', f0: 2200 + o.r() * 800, q: 1.5, off: o.r() }); tone(c, out, t, { f0: 600 + o.r() * 300, f1: 300, d: 0.05, gain: 0.08 }); return 0.12; },

@@ -70,6 +70,6 @@ export function describeNext(progress, track) {
   const t = TRACKS[track], tier = clampTier(track, progress.upgrades?.[track]);
   if (tier >= t.costs.length) return { name: t.name, tier, text: 'fully upgraded', cost: null };
   const next = { ...progress.upgrades, [track]: tier + 1 };
-  const text = track === 'ammo' ? `+${Math.round(t.step * 100)}% carried: flares ${ammoCap('flare', next)}, shells ${ammoCap('shell', next)}, rivets ${ammoCap('rivet', next)}, bolts ${ammoCap('bolt', next)}` : `armour holds up to ${armorCap(next)}`;
+  const text = track === 'ammo' ? `+${Math.round(t.step * 100)}% carried: flares ${ammoCap('flare', next)}, shells ${ammoCap('shell', next)}, rivets ${ammoCap('rivet', next)}, bolts ${ammoCap('bolt', next)}, cells ${ammoCap('cell', next)}` : `armour holds up to ${armorCap(next)}`;
   return { name: t.name, tier, text, cost: t.costs[tier] };
 }
