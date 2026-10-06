@@ -66,6 +66,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     if (errors.length) { bad++; console.error(`FAIL ${f}:\n  ` + errors.slice(0, 40).join('\n  ')); continue; }
     fs.writeFileSync(path.join(root, 'maps', lv.id + '.json'), pretty(map));
     console.log(`ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> maps/${lv.id}.json`);
+    for (const w of lv.placementWarnings ?? []) console.log(`  WARN ${w}: an objects-layer cell holds ONE character, the earlier object is gone`);
   }
   process.exit(bad ? 1 : 0);
 }

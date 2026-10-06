@@ -9,6 +9,7 @@ import { validateMap, parseMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
 import { runRoute } from '../src/engine/harness.js';
 import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '../src/engine/viability.js';
+import { mapLintChecks } from './maplint.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const id = process.argv[2]; if (!id) { console.error('usage: verify-map.mjs <MAP_ID>'); process.exit(2); }
@@ -45,6 +46,7 @@ if (v.ok) {
   for (const c of viabilityChecks(viability, src.par?.time, { safe: !!src.quality?.safe })) add(c.name, c.ok, c.detail);
   const facts = levelFacts(map); evidence.facts = facts;
   for (const c of qualityChecks(map, src.quality, facts, viability.normal.fighter.seconds)) add(c.name, c.ok, c.detail);
+  for (const c of mapLintChecks(map)) add(c.name, c.ok, c.detail);                              // placement lint (PT-007): no floating roofs, no ceiling lamps in open air
   evidence.viability = viability;
 }
 // real-game evidence = (1) the shared browser check (about CODE: input, UI, saves, flows, GPU leaks, Episode 1 fixtures) fresh against this code and passing, and

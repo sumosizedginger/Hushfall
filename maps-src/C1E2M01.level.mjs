@@ -16,7 +16,7 @@ L.room([3, 6, 46, 43], { floor: 'l', wall: 'L' });                              
 L.rect([47, 6, 49, 43], 'L');                                                               // the gate wall, three cells thick
 L.rect([3, 23, 46, 25], 's');                                                               // the road: slate flags straight to the gate
 for (const x of [14, 30]) { L.rect([x, 6, x + 2, 43], 'm'); L.fx([x, 6, x + 2, 43], 'w'); } // two brine channels run north to south (wading: slow)
-for (const x of [14, 30]) { L.rect([x, 23, x + 2, 25], 'g'); L.fx([x, 23, x + 2, 25], '.'); }   // grate bridges carry the road over them
+for (const x of [14, 30]) { L.rect([x, 23, x + 2, 25], 'p'); L.fx([x, 23, x + 2, 25], '.'); }   // plank bridges carry the road over them (an OUTDOOR floor: the grate `g` is an indoor skin and grows a ceiling slab, PT-007)
 L.rect([3, 6, 46, 7], 'm'); L.fx([3, 6, 46, 7], 'w');                                       // the north ditch (to the guardhouse)
 L.rect([3, 42, 46, 43], 'm'); L.fx([3, 42, 46, 43], 'w');                                   // the south ditch (to the pump house and the south tower)
 
@@ -54,20 +54,21 @@ L.putAll('t', [[8, 12], [8, 36], [22, 32], [36, 31], [12, 10], [28, 10]]);
 L.putAll('t', [[23, 10], [27, 10], [23, 11], [27, 11]]); L.putAll('g', [[20, 10], [20, 12]]); L.putAll('F', [[22, 9], [28, 9]]); L.put(25, 11, 'n');
 // the pump house: a cache and two sleepers
 L.putAll('g', [[22, 39], [26, 39]]); L.putAll('H', [[21, 38], [27, 38]]); L.putAll('e', [[23, 38], [25, 38]]); L.putAll('r', [[24, 39], [23, 40], [25, 40]]); L.put(24, 38, 'n');
-// the yard: the Warden-Graft and its guard, idle until the gate rolls up
-L.put(62, 25, 'w'); L.putAll('t', [[57, 20], [57, 30], [60, 22], [60, 28]]); L.put(66, 25, 'x'); L.putAll('g', [[58, 24], [58, 26], [64, 22]]); L.putAll('C', [[54, 20], [54, 30], [65, 20], [65, 30]]); L.putAll('n', [[53, 25], [67, 21], [67, 29]]);
+// the yard: the Warden-Graft and its guard, idle until the gate rolls up (no Sexton here: the draft's was hidden under a lamp, and the balance was verified without it)
+L.put(62, 25, 'w'); L.putAll('t', [[57, 20], [57, 30], [60, 22], [60, 28]]); L.putAll('g', [[58, 24], [58, 26], [64, 22]]); L.putAll('C', [[54, 20], [54, 30], [65, 20], [65, 30]]); L.putAll('n', [[53, 25], [67, 21], [67, 29]]);
+L.put(56, 25, 'P');                                                                   // a pillar on the Warden's charge lane: let it run into the pillar (the 'yard' message says so)
 // pickups: ammunition and health in the lee of the cover, more on the flanks than on the road
 L.putAll('e', [[8, 15], [10, 31], [20, 15], [20, 36], [26, 16], [26, 36], [33, 15], [37, 30], [10, 7], [22, 7], [34, 7]]); L.putAll('r', [[6, 7], [14, 7], [18, 7], [26, 7], [30, 7]]); L.putAll('a', [[8, 7], [20, 7]]); L.put(12, 7, 'h'); L.put(16, 7, 'h'); L.put(24, 7, 'v');
 L.putAll('r', [[10, 14], [8, 31], [20, 14], [18, 36], [24, 14], [24, 36], [34, 16], [36, 32], [11, 24], [23, 23], [35, 25]]);
 L.putAll('a', [[9, 20], [20, 20], [26, 20], [9, 30], [26, 30], [37, 20]]);
 L.putAll('h', [[7, 24], [21, 24], [27, 24], [39, 24], [24, 14], [26, 14], [20, 40], [38, 36]]); L.putAll('H', [[33, 22], [33, 27], [25, 10]]); L.putAll('v', [[22, 24], [28, 12], [33, 21], [33, 28]]); L.putAll('C', [[37, 20], [37, 28], [39, 22], [39, 26]]);          // armour in the safe pocket west of the dyke; a pillbox of crates just past the gap
 L.putAll('e', [[52, 18], [52, 32]]); L.putAll('r', [[52, 20], [52, 30], [55, 25]]); L.putAll('H', [[52, 25]]); L.putAll('h', [[66, 18], [66, 32]]);
-L.putAll('m', [[6, 24], [20, 24], [26, 24], [44, 24], [52, 24], [66, 25]]);
+L.putAll('j', [[6, 22], [20, 22], [26, 22], [44, 22], [52, 22], [66, 23]]);                        // lampposts: `m` hangs from the ceiling and floats in open air (PT-007)
 
 const layers = L.layers();
 
 export default {
-  id: 'C1E2M01', name: 'Brine Gate', version: 1, ceilingHeight: 6, par: { time: 600 },
+  id: 'C1E2M01', name: 'Brine Gate', version: 2, ceilingHeight: 6, par: { time: 600 },
   atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'overcast' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'BRINE GATE', lines: ['The works guard themselves the way a port does.', 'With people who were told to stand there.'] },
