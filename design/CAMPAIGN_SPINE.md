@@ -1,4 +1,6 @@
-# Campaign spine (PROPOSAL: written 2026-10-05 after PT-008; NOT approved, no map or engine code has changed because of it)
+# Campaign spine (written 2026-10-05 after PT-008)
+
+**Owner decisions (2026-10-05): (1) revise the Brine Gate pilot as in section 5; (2) the first non-human enemy stays at C1E2M05, the Cradle Annex (section 3: the Episode 2 line below is superseded: machinery on the map from map 1, no new enemy before M05); (3) FULL progression: beats and schedules, objectives, secrets, a rank per map (S/A/B/C from time, kills, secrets) and persistent ammunition and armour upgrades (section 4, specified there); new weapons "maybe": scheduled, not built.** Everything else here is still a proposal until the owner says otherwise; they have not seen the space contract (section 2) beyond the reply that introduced it.
 
 Intent, not status. The owner played the Gate 3 pilot (C1E2M01 Brine Gate) and asked: should the room in the back have a ceiling, is the wide-open feel intentional ("rooms remind me of Doom, but the wide open without a reason feels weird"), when do the aliens show up, and how do we "set up points and ways to progress" so the game feels fully set. This is the answer in the repo, so that someone with nothing but the last push can act on it. The numbers come from `node tools/dev/map-feel.mjs` (read-only, run it).
 
@@ -33,7 +35,7 @@ C1E2M01  Brine Gate               72x50   2010    3%    6   12.5 / 33.5      30 
 
 ## 3. When the aliens show up (proposed ladder; new enemy kinds need the owner's approval before they are built)
 - **Episode 1 (approved, untouched):** the Hush and grafted humans only; pods (M01), cradles (M02), the first clear Vael transmission (M07), the Cantor and its bell ring (M08) as the first enemy that is not a grafted person.
-- **Episode 2, The Salt Works:** the machinery that makes Tollbearers is on screen from map 1 (cradle rails, grafting rigs, resin growth on the walls, `R` skin). First non-human, Vael-grown enemy: the Drone-Gill (planned flyer) at M02 or M03. A suppression enemy (Chorister) by M05. The Graft-Mother boss at M08 closes it.
+- **Episode 2, The Salt Works:** the machinery that makes Tollbearers is on screen from map 1 (cradle rails, grafting rigs, resin growth on the walls, `R` skin). **Decided (owner): the first non-human, Vael-grown enemy appears at M05, the Cradle Annex** (the Drone-Gill, the planned flyer, is the candidate; the manifest's "first cradle-pod reveal"); M01-M04 stay with the grafted humans and carry the alien presence as machinery on the map. A suppression enemy (Chorister) after it. The Graft-Mother boss at M08 closes the episode.
 - **Episode 3:** the Vael themselves: the grounded Choir Ship (M01), organic interiors (resin skin), Bulwark Shell and Weeping Mother elites.
 - **Episode 4 and Campaign 2:** orbit, the Gate, then their world.
 
@@ -44,4 +46,4 @@ C1E2M01  Brine Gate               72x50   2010    3%    6   12.5 / 33.5      30 
 - **Between maps (owner choice):** (a) stats as they are; (b) a rank per map (time, kills, secrets) on the end screen; (c) persistent upgrades earned from secrets (armour or ammunition capacity). None of (b)/(c) exists; each needs a save-format change.
 
 ## 5. What this means for the pilot (proposal)
-The owner's reply is, for Gate 3, a REVISE of the pilot's design, not of the pipeline. Keep what was proven (the sluice wheel, the dyke, the guardhouse, the Warden); change what read wrong: shrink the pan, bring the walls to 4.2 m (the tower platforms stand 3 m high, so they get a gantry or a ramp rather than a taller sky), roof the yard as a covered receiving hall so the gate is the border between open and tight, put the alien machinery in it (a cradle rail, pods, resin growth), add a secret. No other map is built until the owner approves a direction.
+The owner's reply is, for Gate 3, a REVISE of the pilot's design, not of the pipeline. Keep what was proven (the sluice wheel, the dyke, the guardhouse, the Warden); change what read wrong: shrink the pan, bring the walls to 4.2 m (a platform needs no taller walls: the default ceiling is each cell's own floor plus the ceiling height; lowering it did change the verified balance during PT-007, so the map is re-verified), roof the yard as a covered receiving hall so the gate is the border between open and tight, put the alien machinery in it (a cradle rail, pods, resin growth), add a secret. No other map is built until the owner approves a direction.
