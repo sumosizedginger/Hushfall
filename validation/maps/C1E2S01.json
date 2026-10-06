@@ -1,0 +1,353 @@
+{
+  "mapId": "C1E2S01",
+  "mapVersion": 1,
+  "generatedBy": "tools/verify-map.mjs",
+  "codeVersion": "3398238",
+  "dirtyTree": true,
+  "dirtySource": false,
+  "mapSha": "f68992256caac56d",
+  "assetVersion": "bf0547479d5b8097",
+  "engineSha": "931734998902e110",
+  "sources": {
+    "engine": "931734998902e110",
+    "render": "52f1d9d01ee4554e",
+    "game": "e9e877f941e30fb7",
+    "audio": "66b6062c85c8657d",
+    "assets": "bf0547479d5b8097"
+  },
+  "routesSha": "cd168db75190657f",
+  "loads": true,
+  "validationErrors": [],
+  "routes": [
+    {
+      "file": "routes/C1E2S01.main.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2248,
+      "finalHash": "704767b6",
+      "kills": 0,
+      "secrets": 0,
+      "items": 5,
+      "damageTaken": 0
+    },
+    {
+      "file": "routes/C1E2S01.main.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2248,
+      "finalHash": "98ff7011",
+      "kills": 0,
+      "secrets": 0,
+      "items": 5,
+      "damageTaken": 0
+    },
+    {
+      "file": "routes/C1E2S01.main.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "result": "complete",
+      "ticks": 2248,
+      "finalHash": "676d4a0b",
+      "kills": 0,
+      "secrets": 0,
+      "items": 5,
+      "damageTaken": 0
+    }
+  ],
+  "canonicalRoute": {
+    "sha": "848e6cf86ae906ad",
+    "file": "routes/C1E2S01.main.route.json",
+    "difficulty": "normal",
+    "seed": 1,
+    "reachedExit": true,
+    "ticks": 2248,
+    "finalHash": "98ff7011",
+    "proves": "one valid tested path; not balance, fun, or full exploration"
+  },
+  "counts": {
+    "enemies": 0,
+    "items": 15,
+    "secrets": 0
+  },
+  "facts": {
+    "enemies": 0,
+    "enemyKinds": {},
+    "keys": 3,
+    "closets": 0,
+    "triggers": 3,
+    "switches": 1,
+    "sectors": 0,
+    "heights": false,
+    "maxFloor": 0,
+    "fxCells": 0,
+    "skins": 4,
+    "wallSkins": [
+      "#",
+      "Z"
+    ],
+    "floorSkins": [
+      "r",
+      "f"
+    ],
+    "props": 60,
+    "secrets": 0,
+    "cells": 1768
+  },
+  "viability": {
+    "easy": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "ammo": {
+        "capacity": 372,
+        "fired": 0,
+        "capacityBy": {
+          "flare": 22,
+          "shell": 50,
+          "rivet": 300
+        },
+        "firedBy": {}
+      },
+      "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 37.5,
+        "kills": 0,
+        "failure": null
+      }
+    },
+    "normal": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "ammo": {
+        "capacity": 276,
+        "fired": 0,
+        "capacityBy": {
+          "flare": 18,
+          "shell": 38,
+          "rivet": 220
+        },
+        "firedBy": {}
+      },
+      "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 37.5,
+        "kills": 0,
+        "failure": null
+      }
+    },
+    "hard": {
+      "runner": {
+        "result": "complete",
+        "damage": 0,
+        "hpLeft": 100
+      },
+      "ammo": {
+        "capacity": 238,
+        "fired": 0,
+        "capacityBy": {
+          "flare": 16,
+          "shell": 34,
+          "rivet": 188
+        },
+        "firedBy": {}
+      },
+      "fighter": {
+        "completedSeeds": 3,
+        "seeds": 3,
+        "result": "complete",
+        "damage": 0,
+        "meanDamage": 0,
+        "seconds": 37.5,
+        "kills": 0,
+        "failure": null
+      }
+    },
+    "threats": 0,
+    "gate": []
+  },
+  "browser": {
+    "file": "validation/browser/C1E2S01.json",
+    "when": "2026-10-06T19:10:01.801Z",
+    "commit": "3398238",
+    "mapSha": "f68992256caac56d",
+    "routesSha": "cd168db75190657f",
+    "passed": 11,
+    "total": 11,
+    "allPassed": true,
+    "shared": {
+      "file": "validation/browser-check.json",
+      "when": "2026-10-06T19:06:13.930Z",
+      "commit": "3398238",
+      "passed": 115,
+      "total": 115
+    }
+  },
+  "automated": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "exit reachable from spawn (keys considered)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "name": "no unreachable pickups/enemies",
+        "ok": true,
+        "detail": "[]"
+      },
+      {
+        "name": "all secrets reachable",
+        "ok": true,
+        "detail": "[]"
+      },
+      {
+        "name": "route C1E2S01.main.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "37.5 s"
+      },
+      {
+        "name": "route C1E2S01.main.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "37.5 s"
+      },
+      {
+        "name": "route C1E2S01.main.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "37.5 s"
+      },
+      {
+        "name": "safe room: contains no enemies (placed or scripted)",
+        "ok": true,
+        "detail": "0"
+      },
+      {
+        "name": "safe room easy: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "safe room normal: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "safe room hard: the route completes",
+        "ok": true,
+        "detail": "complete"
+      },
+      {
+        "name": "quality: enemy count in [0,0]",
+        "ok": true,
+        "detail": 0
+      },
+      {
+        "name": "quality: perfect-bot time in [15,300] s",
+        "ok": true,
+        "detail": "37.5 s"
+      },
+      {
+        "name": "quality: uses at least 3 distinct wall/floor skins",
+        "ok": true,
+        "detail": 4
+      },
+      {
+        "name": "quality: uses mechanic 'switches'",
+        "ok": true,
+        "detail": "1 switches"
+      },
+      {
+        "name": "quality: uses mechanic 'triggers'",
+        "ok": true,
+        "detail": "3 triggers"
+      },
+      {
+        "name": "quality: uses mechanic 'keys>=3'",
+        "ok": true,
+        "detail": "keys 3"
+      },
+      {
+        "name": "placement: every roofed region has walls (a floating ceiling slab over open ground is a map that reads as indoors outside)",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
+        "name": "placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
+        "name": "feel: the map declares a scale class (COMPRESSION, MIXED or SET-PIECE)",
+        "ok": true,
+        "detail": "COMPRESSION"
+      },
+      {
+        "name": "feel: the measured map is COMPRESSION",
+        "ok": true,
+        "detail": "100% roofed, p90 sightline 16.5 m (COMPRESSION: >= 80% roofed, sightline <= 20 m)"
+      },
+      {
+        "name": "feel: the map names the one new thing it introduces (quality.introduces)",
+        "ok": true,
+        "detail": "the Wardens research vault: the first plain statement of what the Works is for, behind three coolant valves and a lever (puzzle-lite, no enemies)"
+      },
+      {
+        "name": "feel: walls and ceilings are 4.2 m or less (or quality.tallReason names the hall)",
+        "ok": true,
+        "detail": "ceilingHeight 3.4"
+      },
+      {
+        "name": "feel: the map has three or more objective beats (the starting objective and the ones its triggers and switches set)",
+        "ok": true,
+        "detail": "5 beats"
+      },
+      {
+        "name": "the shared browser check passed",
+        "ok": true,
+        "detail": "115/115"
+      },
+      {
+        "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
+        "ok": true,
+        "detail": "source hashes match"
+      },
+      {
+        "name": "this map's real-game evidence ran on THIS map file (sha matches)",
+        "ok": true,
+        "detail": "validation/browser/C1E2S01.json: f68992256caac56d vs f68992256caac56d"
+      },
+      {
+        "name": "this map's real-game evidence ran on THIS map's route files",
+        "ok": true,
+        "detail": "cd168db75190657f vs cd168db75190657f"
+      },
+      {
+        "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
+        "ok": true,
+        "detail": "source hashes match"
+      },
+      {
+        "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
+        "ok": true,
+        "detail": "11/11 checks, routes: main"
+      }
+    ]
+  },
+  "humanReview": null,
+  "knownBlockers": [],
+  "notes": "Generated: map v1, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+}
