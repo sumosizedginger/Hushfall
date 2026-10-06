@@ -2,14 +2,14 @@
   "mapId": "C1E2M03",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "8dbdba6",
+  "codeVersion": "35967b9",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "2fd951438ac4285f",
+  "mapSha": "99a7cf60eb393482",
   "assetVersion": "bf0547479d5b8097",
-  "engineSha": "fe36c1634ab53f90",
+  "engineSha": "1cda2c200751fc80",
   "sources": {
-    "engine": "fe36c1634ab53f90",
+    "engine": "1cda2c200751fc80",
     "render": "1302b1d566fa429e",
     "game": "ba3afdb17603d7c8",
     "audio": "a3e083ce1a860458",
@@ -25,10 +25,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 3962,
-      "finalHash": "20fead5d",
+      "finalHash": "c0a45bb6",
       "kills": 34,
       "secrets": 0,
-      "items": 7,
+      "items": 9,
       "damageTaken": 16
     },
     {
@@ -37,10 +37,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4548,
-      "finalHash": "2d16a390",
+      "finalHash": "b81a6b5a",
       "kills": 34,
       "secrets": 0,
-      "items": 6,
+      "items": 8,
       "damageTaken": 14
     },
     {
@@ -49,10 +49,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4707,
-      "finalHash": "adb6936f",
+      "finalHash": "936b90a4",
       "kills": 34,
       "secrets": 0,
-      "items": 7,
+      "items": 9,
       "damageTaken": 18
     },
     {
@@ -61,10 +61,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4463,
-      "finalHash": "4d6e2328",
+      "finalHash": "7bf5fbe3",
       "kills": 34,
       "secrets": 1,
-      "items": 9,
+      "items": 11,
       "damageTaken": 0
     },
     {
@@ -73,10 +73,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5099,
-      "finalHash": "f079095b",
+      "finalHash": "70e63100",
       "kills": 36,
       "secrets": 1,
-      "items": 10,
+      "items": 12,
       "damageTaken": 14
     },
     {
@@ -85,10 +85,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5345,
-      "finalHash": "702a06de",
+      "finalHash": "0108f5e9",
       "kills": 36,
       "secrets": 1,
-      "items": 10,
+      "items": 12,
       "damageTaken": 54
     }
   ],
@@ -99,12 +99,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4548,
-    "finalHash": "2d16a390",
+    "finalHash": "b81a6b5a",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 36,
-    "items": 68,
+    "items": 70,
     "secrets": 1
   },
   "facts": {
@@ -149,12 +149,13 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 1617,
+        "capacity": 1629,
         "fired": 111,
         "capacityBy": {
           "flare": 52,
           "shell": 185,
-          "rivet": 1380
+          "rivet": 1380,
+          "bolt": 12
         },
         "firedBy": {
           "rivet": 97,
@@ -180,12 +181,13 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 1106,
+        "capacity": 1114,
         "fired": 169,
         "capacityBy": {
           "flare": 38,
           "shell": 128,
-          "rivet": 940
+          "rivet": 940,
+          "bolt": 8
         },
         "firedBy": {
           "rivet": 150,
@@ -211,12 +213,13 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 904,
+        "capacity": 910,
         "fired": 177,
         "capacityBy": {
           "flare": 31,
           "shell": 109,
-          "rivet": 764
+          "rivet": 764,
+          "bolt": 6
         },
         "firedBy": {
           "rivet": 153,
@@ -265,17 +268,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E2M03.json",
-    "when": "2026-10-06T21:39:18.907Z",
-    "commit": "8dbdba6",
-    "mapSha": "2fd951438ac4285f",
+    "when": "2026-10-06T23:23:18.845Z",
+    "commit": "35967b9",
+    "mapSha": "99a7cf60eb393482",
     "routesSha": "7da7d2c948d18f04",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-06T21:36:31.317Z",
-      "commit": "8dbdba6",
+      "when": "2026-10-06T23:20:23.929Z",
+      "commit": "35967b9",
       "passed": 117,
       "total": 117
     }
@@ -399,19 +402,19 @@
         "detail": "x7.79"
       },
       {
-        "name": "ammo easy: rounds available (1617) are at least 1.5x what the perfect bot fires (111): humans miss",
+        "name": "ammo easy: rounds available (1629) are at least 1.5x what the perfect bot fires (111): humans miss",
         "ok": true,
-        "detail": "x14.57"
+        "detail": "x14.68"
       },
       {
-        "name": "ammo normal: rounds available (1106) are at least 1.5x what the perfect bot fires (169): humans miss",
+        "name": "ammo normal: rounds available (1114) are at least 1.5x what the perfect bot fires (169): humans miss",
         "ok": true,
-        "detail": "x6.54"
+        "detail": "x6.59"
       },
       {
-        "name": "ammo hard: rounds available (904) are at least 1.5x what the perfect bot fires (177): humans miss",
+        "name": "ammo hard: rounds available (910) are at least 1.5x what the perfect bot fires (177): humans miss",
         "ok": true,
-        "detail": "x5.11"
+        "detail": "x5.14"
       },
       {
         "name": "viability easy: a perfect fighter completes the level",
@@ -556,7 +559,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2M03.json: 2fd951438ac4285f vs 2fd951438ac4285f"
+        "detail": "validation/browser/C1E2M03.json: 99a7cf60eb393482 vs 99a7cf60eb393482"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -577,5 +580,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 36 enemies, 68 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 36 enemies, 70 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

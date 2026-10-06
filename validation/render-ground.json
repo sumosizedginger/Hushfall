@@ -1,8 +1,8 @@
 {
-  "when": "2026-10-06T21:36:31.212Z",
-  "commit": "8dbdba6",
+  "when": "2026-10-06T23:20:23.832Z",
+  "commit": "35967b9",
   "sources": {
-    "engine": "fe36c1634ab53f90",
+    "engine": "1cda2c200751fc80",
     "render": "1302b1d566fa429e",
     "game": "ba3afdb17603d7c8",
     "audio": "a3e083ce1a860458",
@@ -47,7 +47,7 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.262 m tall on 0 m, shield r 3.149, 3 nodes"
+      "detail": "body 4.262 m tall on 0 m, shield r 3.155, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -1143,7 +1143,7 @@
         "x": 87,
         "y": 2.2,
         "z": 27,
-        "r": 3.149
+        "r": 3.155
       },
       "farthestBodyCornerFromShieldCentre": 2.906,
       "ring": [
