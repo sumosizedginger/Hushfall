@@ -1,0 +1,1203 @@
+{
+ "format": 1,
+ "id": "C1E2M04",
+ "version": 1,
+ "name": "Kiln Row",
+ "ceilingHeight": 3.8,
+ "atmosphere": {
+  "fog": "#4a3226",
+  "fogDensity": 0.012,
+  "sky": "overcast"
+ },
+ "keyLabels": {
+  "brass": "Brass damper handle",
+  "iron": "Iron damper handle"
+ },
+ "grid": [
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "#########################################YYYYYYYYYYYYYYYYYYYYYYYY#################",
+  "#########################################YkkkkkkkkkkkkkkkkkkkkkkYYYYYYYYYYYYYYY###",
+  "##########YYYYYYYYYYYYYYYYYYYYYYY########YkkkkkkkkkkkkkkkkkkkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkY########YkkkkkkkkkkkkkkkkkkkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkYYYYYYYYYYkkkkkkkkkkkkkkkkkkkkkkDfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkYkkkkkkkkYkkkkYYYXYYYYXYYYYYkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkDkkkkkkkkDkkkkYYYkYYYYkYYYYYkkkkYfffffffffffffY###",
+  "##KKKKKKKKYkkkkkkkkkkkkkkkkkkkkkYkkkkkkkkYkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkYYYYYYYYYYkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffDkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KKKKKKKKYkkkkkkkkkkkkkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkY########YkkkkYYYkYYYYkYYYYYkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkY########YkkkkYYYXYYYYXYYYYYkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkY########YkkkkkkkkkkkkkkkkkkkkkkYfffffffffffffY###",
+  "##########YkkkkkkkkkkkkkkkkkkkkkY########YkkkkkkkkkkkkkkkkkkkkkkYfffffffffffffY###",
+  "##########YYYYYYYYYYYYYYYYYYYYYYY########YkkkkkkkkkkkkkkkkkkkkkkYfffffffffffffY###",
+  "#########################################YkkkkkkkkkkkkkkkkkkkkkkYYYYYYYYYYYYYYY###",
+  "#########################################YYYYYYYYYYYYSYYYYYYYYYYY#################",
+  "###################################################YkkkY##########################",
+  "###################################################YkkkY##########################",
+  "###################################################YkkkY##########################",
+  "###################################################YkkkY##########################",
+  "###################################################YYYYY##########################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################",
+  "##################################################################################"
+ ],
+ "fx": [
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "...............................................hhhhhhhhhhhh.......................",
+  "...............................................hhhhhhhhhhhh.......................",
+  "..................................................................................",
+  "..................................................................................",
+  ".............................................................hh...................",
+  ".............................................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  "..............hhhhhhh..hhhhhh................................hh...................",
+  ".............................................................hh...................",
+  ".............................................................hh...................",
+  "..................................................................................",
+  "..................................................................................",
+  "...............................................hhhhhhhhhhhh.......................",
+  "...............................................hhhhhhhhhhhh.......................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  "..................................................................................",
+  ".................................................................................."
+ ],
+ "doors": [
+  {
+   "at": [64, 16]
+  },
+  {
+   "at": [32, 18]
+  },
+  {
+   "at": [41, 18]
+  },
+  {
+   "at": [10, 23]
+  }
+ ],
+ "secrets": [
+  {
+   "id": "cold-tunnel",
+   "panel": [53, 34],
+   "cells": [
+    [53, 35],
+    [53, 36],
+    [53, 37]
+   ]
+  }
+ ],
+ "closets": [
+  {
+   "at": [49, 17]
+  },
+  {
+   "at": [54, 17]
+  },
+  {
+   "at": [49, 29]
+  },
+  {
+   "at": [54, 29]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "got-brass",
+   "when": "key:brass",
+   "do": [
+    {
+     "objective": "Brass handle taken. The iron handle is in the gallery, east side"
+    }
+   ]
+  },
+  {
+   "id": "got-iron",
+   "when": "key:iron",
+   "do": [
+    {
+     "open": [49, 17]
+    },
+    {
+     "open": [54, 17]
+    },
+    {
+     "open": [49, 29]
+    },
+    {
+     "open": [54, 29]
+    },
+    {
+     "wake": "kiln"
+    },
+    {
+     "message": "kilns"
+    },
+    {
+     "shake": 1.5
+    },
+    {
+     "objective": "The kilns are open. Take both handles to the flue lever, east chamber"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [43, 13]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [48, 13],
+   "facing": -1.342
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [51, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [57, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [63, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [60, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [72, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [14, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [15, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [22, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [25, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [43, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [63, 15],
+   "facing": -1.434
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [67, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [72, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [17, 16],
+   "facing": -1.043
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [19, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [25, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 16],
+   "facing": -1.275
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 16],
+   "facing": -1.298
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [44, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [50, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [52, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [55, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [56, 16],
+   "facing": -1.434
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [60, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [67, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [69, 16],
+   "facing": -1.462,
+   "group": "flue"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 17],
+   "facing": -0.927
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [15, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [17, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [20, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 17],
+   "facing": -1.265
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [29, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [37, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [38, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [66, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [68, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [11, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [26, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [27, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [34, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 18],
+   "facing": -1.411
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [39, 18],
+   "facing": -1.425
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [42, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [49, 18],
+   "facing": -1.458,
+   "group": "kiln"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [54, 18],
+   "facing": -1.469,
+   "group": "kiln"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [63, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [73, 18],
+   "facing": -1.497,
+   "group": "flue"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [76, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [23, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [35, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [66, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [67, 19],
+   "facing": -1.506,
+   "group": "flue"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [63, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [67, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [69, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [74, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 21],
+   "facing": -1.518
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [63, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [66, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [71, 21],
+   "facing": -1.541,
+   "group": "flue"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [30, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [42, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [45, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [60, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [66, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [3, 23]
+  },
+  {
+   "type": "player",
+   "at": [5, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [11, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [12, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [21, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [22, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [31, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [63, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [66, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [70, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [73, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [8, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [42, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [45, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [60, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [66, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [3, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [4, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [63, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [66, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [71, 25],
+   "facing": -1.601,
+   "group": "flue"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [63, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [67, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [69, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "pod",
+   "at": [74, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [23, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 27],
+   "facing": -1.676
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [67, 27],
+   "facing": -1.635,
+   "group": "flue"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [11, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [26, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [27, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [42, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [49, 28],
+   "facing": -1.684,
+   "group": "kiln"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [54, 28],
+   "facing": -1.672,
+   "group": "kiln"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [63, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [73, 28],
+   "facing": -1.644,
+   "group": "flue"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [76, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 29],
+   "facing": -2.214
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [15, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [17, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [20, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 29],
+   "facing": -1.877
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [29, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [66, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [68, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 30],
+   "facing": -2.065
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [19, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [25, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 30],
+   "facing": -1.866
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 30],
+   "facing": -1.844
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [44, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [50, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [52, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [55, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [56, 30],
+   "facing": -1.707
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [60, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [67, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [69, 30],
+   "facing": -1.68,
+   "group": "flue"
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [14, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [15, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [22, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [25, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [43, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [63, 31],
+   "facing": -1.708
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [67, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [72, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [60, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [72, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [43, 33]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [48, 33],
+   "facing": -1.799
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [51, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [57, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [63, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [52, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [54, 36]
+  },
+  {
+   "type": "exit",
+   "dest": "secret",
+   "at": [53, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [52, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [54, 38]
+  },
+  {
+   "type": "exit",
+   "at": [76, 23],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "flue",
+   "at": [70, 14],
+   "wall": "north",
+   "needs": [
+    "brass",
+    "iron"
+   ],
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The flue is drawing. The exit is at the east end of the chamber"
+    },
+    {
+     "shake": 2
+    },
+    {
+     "message": "flue-open"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 420
+ },
+ "intro": {
+  "title": "KILN ROW",
+  "lines": [
+   "They fire them here, like pots.",
+   "The kilns are still warm. Nobody banked them."
+  ]
+ },
+ "outro": "Next: the Cradle Annex. The room where they are made.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 23],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, Kiln Row. They fire the shells here. The flue is dampered shut, and the handles were taken out and hidden so nobody could draw it. Brass first: the charging hall."
+  },
+  {
+   "id": "hall",
+   "at": [13, 23],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "That trench is embers. It burns, and it slows you. There is a bridge in the middle, and a handle on the island."
+  },
+  {
+   "id": "brass",
+   "at": [21, 23],
+   "radius": 2,
+   "speaker": "DAMPER LOG",
+   "text": "BRASS DAMPER HANDLE, KEPT ON THE ISLAND SO NO ONE CAN REACH IT WITHOUT CROSSING THE TRENCH. SIGNED, THE KILN MASTER."
+  },
+  {
+   "id": "gallery",
+   "at": [43, 23],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A ring round the kilns, and an ember strip down each side of it. Stay on the lane by the wall. Do not stand near the kiln mouths."
+  },
+  {
+   "id": "iron",
+   "at": [63, 23],
+   "radius": 2,
+   "speaker": "DAMPER LOG",
+   "text": "IRON DAMPER HANDLE. TAKE IT AND THE KILN MOUTHS OPEN: THE SHELLS COME OUT TO MEET WHOEVER TOOK IT."
+  },
+  {
+   "id": "kilns",
+   "at": [53, 23],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "The kiln mouths are opening. Move off the lane, now."
+  },
+  {
+   "id": "flue",
+   "at": [70, 16],
+   "radius": 3,
+   "speaker": "FLUE LEVER",
+   "text": "FLUE. NEEDS BOTH DAMPER HANDLES, BRASS AND IRON, IN THE SOCKETS BELOW THE LEVER. DO NOT FIRE WITH THE DOOR OPEN."
+  },
+  {
+   "id": "flue-open",
+   "at": [70, 14],
+   "radius": 0.1,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The flue is drawing. That is the cold coming up the stack. Whatever they hid below the Works, it is much colder than it should be."
+  },
+  {
+   "id": "tunnel",
+   "at": [53, 36],
+   "radius": 2.5,
+   "speaker": "WARDEN CALDER",
+   "text": "A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there."
+  }
+ ],
+ "objective": "Two damper handles open the flue: brass in the charging hall, iron in the gallery",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [30, 56],
+  "botSeconds": [40, 600],
+  "mechanics": [
+   "switches",
+   "triggers",
+   "hazards",
+   "closets",
+   "keys>=2",
+   "secret"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "bellhand": 4
+  },
+  "scaleClass": "COMPRESSION",
+  "introduces": "the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs"
+ }
+}

@@ -1,0 +1,22 @@
+[
+  { "name": "01-arrival", "x": 5.5, "z": 19.5, "yaw": "east" },
+  { "name": "02-cabin-door", "x": 9.0, "z": 19.5, "yaw": "east", "pitch": 0.02, "open": true },
+  { "name": "03-the-shed", "x": 12.5, "z": 17.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "04-centre-aisle", "x": 22.5, "z": 17.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "05-the-consist", "x": 20.5, "z": 14.5, "yaw": "north", "pitch": 0.0 },
+  { "name": "06-north-aisle", "x": 14.5, "z": 7.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "07-the-train", "x": 33.5, "z": 17.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "08-centre-lever", "x": 36.5, "z": 14.5, "yaw": "north", "pitch": 0.0 },
+  { "name": "09-wagon-down", "x": 36.5, "z": 17.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "10-the-throat", "x": 42.5, "z": 19.5, "yaw": "east", "pitch": 0.03, "open": true },
+  { "name": "11-sky", "x": 45.5, "z": 20.5, "yaw": "east", "pitch": 0.5, "open": true },
+  { "name": "12-the-road", "x": 46.5, "z": 20.0, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "13-north-tower", "x": 47.5, "z": 12.5, "yaw": "east", "pitch": 0.15, "open": true },
+  { "name": "14-signal-box", "x": 51.0, "z": 20.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "15-the-lever", "x": 54.5, "z": 20.0, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "16-gate-alley", "x": 59.0, "z": 20.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "17-the-dock", "x": 63.5, "z": 20.5, "yaw": "east", "pitch": 0.03, "open": true },
+  { "name": "18-the-warden", "x": 66.0, "z": 20.5, "yaw": "east", "pitch": 0.0, "open": true, "wake": true, "ticks": 20 },
+  { "name": "19-tool-locker", "x": 26.5, "z": 3.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "20-south-aisle", "x": 14.5, "z": 26.5, "yaw": "east", "pitch": 0.0 }
+]

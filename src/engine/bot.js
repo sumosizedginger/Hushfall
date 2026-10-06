@@ -1,6 +1,6 @@
 // Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
 // human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to}.
-import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP } from './defs.js';
+import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 
@@ -19,7 +19,7 @@ export class Bot {
   passable(cx, cz, goal) {
     const m = this.w.map, k = m.kind(cx, cz), p = this.w.player;
     if (goal && cx === goal[0] && cz === goal[1]) return true;
-    if (this.avoidToxic && m.fx(cx, cz) === 'x') return false;
+    if (this.avoidToxic && FX[m.fx(cx, cz)]?.dps) return false;
     if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
     if (k === 'secret') { const d = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !d?.closet || d.open > 0.85; }     // a closet panel is a wall until an event opens it
     if (k === 'floor' || k === 'outdoor') return true;

@@ -1,0 +1,9 @@
+[
+  { "name": "01-arrival", "x": 4.5, "z": 16.5, "yaw": "east" },
+  { "name": "02-the-hall", "x": 12.0, "z": 16.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "03-the-racks", "x": 18.5, "z": 12.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "04-alcove-a", "x": 15.5, "z": 8.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "05-the-lever", "x": 29.5, "z": 13.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "06-the-vault-door", "x": 30.0, "z": 16.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "07-the-vault", "x": 34.5, "z": 16.5, "yaw": "east", "pitch": 0.0, "open": true }
+]

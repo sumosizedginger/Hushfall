@@ -29,7 +29,7 @@ export function renderMap(m, scale = 10) {
     else if (k === 'door' || k === 'secret') c = [30, 24, 20];
     else { const base = FLOOR[t] || [90, 90, 90], lift = Math.min(90, m.floor(cx, cz) * 18); c = base.map((v) => Math.min(255, v + lift)); }
     rect(x0, y0, scale, scale, c);
-    if (k !== 'wall' && k !== 'water') { const f = m.fx(cx, cz); if (f === 'w') rect(x0, y0, scale, scale, [60, 150, 220], 90); if (f === 'x') rect(x0, y0, scale, scale, [60, 255, 150], 130); }
+    if (k !== 'wall' && k !== 'water') { const f = m.fx(cx, cz); if (f === 'w') rect(x0, y0, scale, scale, [60, 150, 220], 90); if (f === 'x') rect(x0, y0, scale, scale, [60, 255, 150], 130); if (f === 'h') rect(x0, y0, scale, scale, [255, 110, 30], 150); }
     if (m.sectorAt(cx, cz) >= 0) for (let i = 0; i < scale; i += 3) rect(x0 + i, y0, 1, scale, [255, 255, 255], 90);
     if (k === 'wall') rect(x0, y0, scale, 1, [0, 0, 0], 70);
     if (t === 'X') { rect(x0 + 1, y0 + 1, scale - 2, scale - 2, [140, 40, 160], 150); }

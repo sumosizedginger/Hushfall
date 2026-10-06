@@ -32,16 +32,17 @@ export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { na
 /** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
 export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
-export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 } };
+export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 } };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a' };            // L, K: Episode 2 (the Salt Works)
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
   m: { kind: 'outdoor', tex: 'floor_silt_a' }, n: { kind: 'floor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
   l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
+  b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
 };
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.

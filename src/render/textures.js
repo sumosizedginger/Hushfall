@@ -23,7 +23,7 @@ export function loadTex(name, { repeat = true, srgb = true } = {}) {
 
 // Textures that are not skins (props, atlases, the title art, water) are listed here. Wall and floor SKINS come from the skin tables in defs.js and SKIES from the baked files themselves,
 // so adding a skin or a sky means a recipe, a defs row and a bake: no list to edit (Gate 3).
-const FIXED = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art', 'water_dusk', 'awning_stripe_a', 'boat_hull_a'];
+const FIXED = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art', 'water_dusk', 'awning_stripe_a', 'boat_hull_a', 'floor_ember_a'];
 const SKIES = Object.keys(URL_BY_NAME).filter((n) => n.startsWith('sky_'));
 const NAMES = [...new Set([...FIXED, ...SKIES, ...Object.values(WALL_SKINS), ...Object.values(FLOOR_SKINS).map((f) => f.tex)])];
 

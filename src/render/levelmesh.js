@@ -52,7 +52,7 @@ export function buildLevel(map, tex) {
 
   const walls = new Map(), floors = new Map(), risers = new Map(), ceil = new Quads(), ceilSteps = new Quads(), fascia = new Quads();
   const bucket = (m, key) => { let q = m.get(key); if (!q) m.set(key, q = new Quads()); return q; };
-  const fxQuads = { w: new Quads(), x: new Quads() }, wsize = 3000;         // the sea reaches past the fog: no black gap at the horizon from a high vantage
+  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads() }, wsize = 3000;         // the sea reaches past the fog: no black gap at the horizon from a high vantage
   const sectorQ = map.sectors.map(() => ({ top: new Map(), skirt: new Map() }));
 
   for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
@@ -82,7 +82,7 @@ export function buildLevel(map, tex) {
       if (y > lowN + 1e-6) face(bucket(risers, fs), S, cx, cz, dx, dz, lowN, y);
     }
     const fx = map.fx(cx, cz);
-    if (fx && (fx === 'w' || fx === 'x')) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => [r[0] / wsize, r[2] / wsize])); }
+    if (fx && fx in fxQuads) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
   const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
   const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group) => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: m, color, emissive })); parent.add(mesh); return mesh; };
@@ -195,5 +195,6 @@ export function buildLevel(map, tex) {
     group.add(r.group); lights.push(r.light);
     exitViews.set(e.id, r);
   }
+  if (!fxQuads.h.empty) { fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false }); const m = new THREE.Mesh(fxQuads.h.geometry(), fxMats.h); m.renderOrder = 2; group.add(m); }                // ember bed (Kiln Row): a glowing orange wash
   return { group, lights, doorViews, towerGlow, sectorViews, fxMats, switchViews, exitViews };
 }
