@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M05",
-  "when": "2026-10-05T23:46:21.549Z",
-  "commit": "0a81186",
+  "when": "2026-10-06T02:53:03.000Z",
+  "commit": "95626ac",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,9 +11,9 @@
   "mapSha": "ca88c434394ca789",
   "routesSha": "80ddf76e16c07610",
   "sources": {
-    "engine": "2078aef21477631f",
+    "engine": "68bf1b0300dfb6c0",
     "render": "aafd5384bba8940b",
-    "game": "80bbc167614f6d05",
+    "game": "7190c4b9c9955e8b",
     "audio": "030538561ae23a94",
     "assets": "d7df902a581fccc8"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 8155,
-      "hash": "94729b3f",
+      "hash": "e6c2a9af",
       "nodeTicks": 8155,
-      "nodeHash": "94729b3f",
+      "nodeHash": "e6c2a9af",
       "agree": true,
       "kills": 40,
       "secrets": 0,
@@ -127,7 +127,7 @@
     {
       "name": "real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8155/94729b3f vs node 8155/94729b3f"
+      "detail": "browser 8155/e6c2a9af vs node 8155/e6c2a9af"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -170,5 +170,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 12
+  "wallSeconds": 13
 }

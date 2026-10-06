@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-10-05T23:47:07.151Z",
-  "commit": "0a81186",
+  "when": "2026-10-06T02:53:47.738Z",
+  "commit": "95626ac",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,9 +11,9 @@
   "mapSha": "fc47a292b9b3fd02",
   "routesSha": "b039924e1ede9608",
   "sources": {
-    "engine": "2078aef21477631f",
+    "engine": "68bf1b0300dfb6c0",
     "render": "aafd5384bba8940b",
-    "game": "80bbc167614f6d05",
+    "game": "7190c4b9c9955e8b",
     "audio": "030538561ae23a94",
     "assets": "d7df902a581fccc8"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 11039,
-      "hash": "46493b09",
+      "hash": "92e608a5",
       "nodeTicks": 11039,
-      "nodeHash": "46493b09",
+      "nodeHash": "92e608a5",
       "agree": true,
       "kills": 47,
       "secrets": 0,
@@ -86,7 +86,7 @@
     {
       "name": "real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 11039/46493b09 vs node 11039/46493b09"
+      "detail": "browser 11039/92e608a5 vs node 11039/92e608a5"
     },
     {
       "name": "C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -121,7 +121,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.971, 6 nodes"
+      "detail": "body 4.788 m tall on 12 m, shield r 2.967, 6 nodes"
     },
     {
       "name": "render truth: the census ran on this map (its enemies were really measured)",
@@ -134,5 +134,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 15
+  "wallSeconds": 14
 }

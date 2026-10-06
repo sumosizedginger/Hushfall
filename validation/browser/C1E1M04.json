@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M04",
-  "when": "2026-10-05T23:46:09.116Z",
-  "commit": "0a81186",
+  "when": "2026-10-06T02:52:49.989Z",
+  "commit": "95626ac",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,9 +11,9 @@
   "mapSha": "90c806a4c8f82434",
   "routesSha": "363a18a77b5ae18d",
   "sources": {
-    "engine": "2078aef21477631f",
+    "engine": "68bf1b0300dfb6c0",
     "render": "aafd5384bba8940b",
-    "game": "80bbc167614f6d05",
+    "game": "7190c4b9c9955e8b",
     "audio": "030538561ae23a94",
     "assets": "d7df902a581fccc8"
   },
@@ -21,24 +21,24 @@
     "main": {
       "ok": true,
       "ticks": 8169,
-      "hash": "f16b0160",
+      "hash": "d2a5efb4",
       "nodeTicks": 8169,
-      "nodeHash": "f16b0160",
+      "nodeHash": "d2a5efb4",
       "agree": true,
       "kills": 32,
       "secrets": 0,
-      "wallSeconds": 2
+      "wallSeconds": 3
     },
     "secret": {
       "ok": true,
       "ticks": 6239,
-      "hash": "d96040a8",
+      "hash": "3870b6e4",
       "nodeTicks": 6239,
-      "nodeHash": "d96040a8",
+      "nodeHash": "3870b6e4",
       "agree": true,
       "kills": 26,
       "secrets": 1,
-      "wallSeconds": 2
+      "wallSeconds": 3
     }
   },
   "hud": {
@@ -90,22 +90,22 @@
     {
       "name": "real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8169 wall=2s"
+      "detail": "status=complete failed=null ticks=8169 wall=3s"
     },
     {
       "name": "real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8169/f16b0160 vs node 8169/f16b0160"
+      "detail": "browser 8169/d2a5efb4 vs node 8169/d2a5efb4"
     },
     {
       "name": "real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6239 wall=2s"
+      "detail": "status=complete failed=null ticks=6239 wall=3s"
     },
     {
       "name": "real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6239/d96040a8 vs node 6239/d96040a8"
+      "detail": "browser 6239/3870b6e4 vs node 6239/3870b6e4"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -148,5 +148,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 12
+  "wallSeconds": 16
 }
