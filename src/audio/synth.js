@@ -79,6 +79,21 @@ export const SFX = {
     thump(c, out, t + 0.19, 170, 90, 0.1, 0.35);
     return 0.35;
   },
+  harpoon_fire(c, out, t, o) {                                  // a long gun: a flat supersonic crack over a deep thump, the line zipping off its reel, a ring from the bolt leaving the steel
+    thump(c, out, t, 95, 30, 0.42, 0.8);
+    noise(c, out, t, { dur: 0.07, gain: 0.55, type: 'highpass', f0: 2200, off: o.r() });
+    noise(c, out, t, { dur: 0.5, gain: 0.42, type: 'lowpass', f0: 5200, f1: 240, q: 0.5, off: o.r() });
+    tone(c, out, t, { type: 'triangle', f0: 2600, f1: 420, d: 0.14, gain: 0.12 });
+    noise(c, out, t + 0.03, { dur: 0.36, a: 0.02, gain: 0.1, type: 'bandpass', f0: 1200, f1: 3200, q: 3, off: o.r() });
+    bell(c, out, t + 0.01, 1180, { decay: 0.5, gain: 0.1, ratio: 3.1, index: 1.4 });
+    return 0.85;
+  },
+  harpoon_cycle(c, out, t, o) {                                 // the action: the carriage slides back, the reel winds in, the next bolt seats with a heavy clack
+    noise(c, out, t, { dur: 0.05, gain: 0.45, type: 'bandpass', f0: 1400, q: 2, off: o.r() }); thump(c, out, t + 0.02, 190, 100, 0.1, 0.3);
+    noise(c, out, t + 0.1, { dur: 0.22, a: 0.05, gain: 0.14, type: 'bandpass', f0: 700, f1: 1500, q: 3, off: o.r() });
+    noise(c, out, t + 0.3, { dur: 0.06, gain: 0.6, type: 'bandpass', f0: 1700, q: 2, off: o.r() }); thump(c, out, t + 0.31, 150, 70, 0.12, 0.4);
+    return 0.5;
+  },
   dry_click(c, out, t, o) { noise(c, out, t, { dur: 0.03, gain: 0.35, type: 'highpass', f0: 3000, off: o.r() }); tone(c, out, t, { type: 'square', f0: 1700, d: 0.02, gain: 0.05 }); return 0.1; },
   weapon_switch(c, out, t, o) { noise(c, out, t, { dur: 0.12, a: 0.03, gain: 0.25, type: 'bandpass', f0: 900, f1: 1800, q: 1.2, off: o.r() }); thump(c, out, t + 0.1, 200, 130, 0.08, 0.25); return 0.25; },
   impact(c, out, t, o) { noise(c, out, t, { dur: 0.06, gain: 0.3, type: 'bandpass', f0: 2200 + o.r() * 800, q: 1.5, off: o.r() }); tone(c, out, t, { f0: 600 + o.r() * 300, f1: 300, d: 0.05, gain: 0.08 }); return 0.12; },

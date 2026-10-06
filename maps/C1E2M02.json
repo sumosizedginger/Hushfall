@@ -845,6 +845,16 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [51, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [57, 24]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_shell",
    "at": [58, 24]
   },
@@ -857,6 +867,11 @@
    "type": "pickup",
    "kind": "ammo_flare",
    "at": [60, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [64, 24]
   },
   {
    "type": "enemy",
@@ -943,6 +958,11 @@
   },
   {
    "type": "pickup",
+   "kind": "weapon_harpoon",
+   "at": [38, 25]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_rivet",
    "at": [39, 25]
   },
@@ -1023,12 +1043,17 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [44, 26]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_shell",
    "at": [47, 26]
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
+   "kind": "ammo_bolt",
    "at": [48, 26]
   },
   {
@@ -1681,6 +1706,13 @@
    "text": "Calder, the Evaporation Pans. White ground to the horizon and one roof in the middle: the pump station. Everything between us and it is working."
   },
   {
+   "id": "harpoon",
+   "at": [38, 25],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The foreman left a harpoon rifle on its hook. Hold aim and it zooms in a long way. The bolt goes through plate, and through the one behind it."
+  },
+  {
    "id": "cradles",
    "at": [4, 25],
    "radius": 2.5,
@@ -1767,6 +1799,6 @@
   },
   "scaleClass": "SET-PIECE",
   "reason": "A crossing under pursuit: the pans are open on purpose. A hunting party is released behind you at the first causeway, so the open ground has a job (keep moving, heap to heap) and the brine channels cut it into pans crossed on planks.",
-  "introduces": "the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost)"
+  "introduces": "the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost); and the Harpoon rifle, the long gun that the open ground asks for"
  }
 }

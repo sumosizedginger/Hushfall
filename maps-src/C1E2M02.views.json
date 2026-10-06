@@ -19,5 +19,6 @@
   { "name": "18-cradle-hall", "x": 64.0, "z": 25.5, "yaw": "east", "pitch": 0.05, "open": true },
   { "name": "19-the-hatch", "x": 68.5, "z": 25.5, "yaw": "east", "pitch": 0.0, "open": true },
   { "name": "20-far-north-gang", "x": 18.5, "z": 14.5, "yaw": "north", "pitch": 0.0 },
-  { "name": "21-hunt-released", "x": 20.5, "z": 25.5, "yaw": "west", "pitch": 0.02, "open": true, "wake": true, "ticks": 20 }
+  { "name": "21-hunt-released", "x": 20.5, "z": 25.5, "yaw": "west", "pitch": 0.02, "open": true, "wake": true, "ticks": 20 },
+  { "name": "22-the-hook", "x": 36.5, "z": 25.6, "yaw": "east", "pitch": -0.3, "open": true }
 ]

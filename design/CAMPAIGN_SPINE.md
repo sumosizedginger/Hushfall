@@ -40,7 +40,7 @@ C1E2M01  Brine Gate               72x50   2010    3%    6   12.5 / 33.5      30 
 - **Episode 4 and Campaign 2:** orbit, the Gate, then their world.
 
 ## 4. Ways to progress (proposed; the owner decides how far to go)
-- **Weapons (eight planned, three exist):** one new weapon about every three to four maps, shown to the player on a pedestal-style pickup with a short tutorial beat: harpoon rifle E2M02-M03, charge-arc lamp E2M06, bell-breaker mortar E3M03, counter-tone emitter late Campaign 2, melee/tool sidearm early. Placement is a proposal.
+- **Weapons (eight planned, FOUR exist: the Harpoon rifle was built 2026-10-06 and hangs at the pump station of C1E2M02, owner's go; not yet played):** one new weapon about every three to four maps, shown to the player on a pedestal-style pickup with a short tutorial beat: harpoon rifle E2M02-M03, charge-arc lamp E2M06, bell-breaker mortar E3M03, counter-tone emitter late Campaign 2, melee/tool sidearm early. Placement is a proposal.
 - **Enemies:** a table of first appearances (above), so no map throws a new thing without teaching it first.
 - **In a map:** three to five objective beats (the HUD already shows the current objective), keys/switches as gates, one or two secrets per main map (the pilot has none).
 - **Between maps (DECIDED by the owner: full progression; BUILT 2026-10-05, unplayed; all numbers are first guesses in `src/engine/progress.js`, tune them there):**
