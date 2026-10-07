@@ -1,6 +1,7 @@
 // The Riveter driver (weapon 3): view model and world pickups. Kept in its own file so models.js does not import it.
 import * as THREE from 'three';
 import { atlas } from './models.js';
+import { ironSights } from './weapon-sights.js';
 
 export function makeRivetDriver(tex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1c1610 });
@@ -14,8 +15,7 @@ export function makeRivetDriver(tex) {
   const ring = M(new THREE.TorusGeometry(0.036, 0.008, 4, 10), 1); ring.position.z = -0.04; spin.add(ring);
   const drum = M(new THREE.CylinderGeometry(0.075, 0.075, 0.1, 10), 1); drum.rotation.z = Math.PI / 2; drum.position.set(-0.115, -0.015, 0.03); g.add(drum);        // side-mounted so the sights stay clear
   const drumCap = M(new THREE.CylinderGeometry(0.03, 0.03, 0.12, 6), 5); drumCap.rotation.z = Math.PI / 2; drumCap.position.set(-0.115, -0.015, 0.03); g.add(drumCap);
-  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.026, 0.012), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.062, -0.55); g.add(bead);
-  for (const x of [-0.02, 0.02]) { const post = M(new THREE.BoxGeometry(0.012, 0.028, 0.02), 5); post.position.set(x, 0.061, 0.12); g.add(post); }
+  const sights = ironSights(g, mat, 5, { rearZ: 0.12, frontZ: -0.55, rearBase: 0.0475, frontBase: 0.045, line: 0.0825, gap: 0.022 });
   const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.13); grip.rotation.x = 0.3; g.add(grip);
   const stock = M(new THREE.BoxGeometry(0.05, 0.08, 0.22), 7); stock.position.set(0, -0.04, 0.3); g.add(stock);
   const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.18, 0.15); g.add(handR);
@@ -25,7 +25,7 @@ export function makeRivetDriver(tex) {
   const flash = new THREE.Group(); flash.position.z = -0.62; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.08, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.045, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
-  return { group: g, flash, pump: null, spin, adsY: -0.048, sleeveMat };
+  return { group: g, flash, pump: null, spin, adsY: -0.048, sleeveMat, sights };
 }
 
 /** world pickups for the new weapon and its ammo */

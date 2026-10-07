@@ -2,6 +2,7 @@
 // Same 4x4 painted atlas as the other guns (cells: 0/1 brass, 2 slate steel, 3 hide, 4 oilskin, 5 black iron, 6 teal, 7 wood).
 import * as THREE from 'three';
 import { atlas } from './models.js';
+import { ironSights } from './weapon-sights.js';
 
 export function makeHarpoonRifle(tex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1c1610 });
@@ -28,10 +29,8 @@ export function makeHarpoonRifle(tex) {
   const shaft = M(new THREE.CylinderGeometry(0.008, 0.008, 0.34, 6), 2); shaft.rotation.x = -Math.PI / 2; shaft.position.set(0, 0.005, -1.0); bolt.add(shaft);
   const head = M(new THREE.ConeGeometry(0.026, 0.085, 6), 6, new THREE.MeshLambertMaterial({ map: tex, emissive: 0x0e5048 })); head.rotation.x = -Math.PI / 2; head.position.set(0, 0.005, -1.215); bolt.add(head);
   for (const a of [0, Math.PI / 2]) { const barb = M(new THREE.BoxGeometry(0.05, 0.004, 0.03), 6); barb.rotation.z = a; barb.position.set(0, 0.005, -1.17); bolt.add(barb); }
-  // iron sights: blade at the muzzle, a peep ring behind; the view lines them up on the crosshair
-  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.03, 0.012), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.062, -0.82); g.add(bead);
-  const peep = M(new THREE.TorusGeometry(0.017, 0.004, 4, 10), 5); peep.position.set(0, 0.061, 0.14); g.add(peep);
-  const peepPost = M(new THREE.BoxGeometry(0.008, 0.03, 0.012), 5); peepPost.position.set(0, 0.043, 0.14); g.add(peepPost);
+  // iron sights (weapon-sights.js): a blade at the muzzle and a peep ring behind; the pose lines the eye up through them
+  const sights = ironSights(g, mat, 5, { rearZ: 0.14, frontZ: -0.82, rearBase: 0.064, frontBase: 0.035, line: 0.103, gap: 0.02, post: 0.012, peep: true });
   const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.15); grip.rotation.x = 0.3; g.add(grip);
   const stock = M(new THREE.BoxGeometry(0.06, 0.1, 0.34), 7); stock.position.set(0, -0.04, 0.34); stock.rotation.x = 0.08; g.add(stock);
   const pad = M(new THREE.BoxGeometry(0.065, 0.12, 0.02), 5); pad.position.set(0, -0.045, 0.52); g.add(pad);
@@ -42,7 +41,7 @@ export function makeHarpoonRifle(tex) {
   const flash = new THREE.Group(); flash.position.z = -1.0; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), new THREE.MeshBasicMaterial({ color: 0x6ffff0 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.055, 0), new THREE.MeshBasicMaterial({ color: 0xf0fffc })));
-  return { group: g, flash, pump, spin, spinAxis: 'x', bolt, adsY: -0.048, sleeveMat };
+  return { group: g, flash, pump, spin, spinAxis: 'x', bolt, adsY: -0.048, sleeveMat, sights };
 }
 
 /** world pickups for the weapon and its ammunition */
