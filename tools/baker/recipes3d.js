@@ -79,7 +79,40 @@ export const recipes3d = {
       cell(g, 5, '#1a1d22', ['#2a2e35', '#0e1013'], (c) => { g.stroke('HB', '#5a6470', 0.8); for (let i = 0; i < 4; i++) c.circle(10 + i * 14, 32, 1.4); });
       cell(g, 6, '#3fd6c0', ['#7fffe8', '#1fa090'], (c) => { g.noStroke(); g.fill('#e8fff8', 200); for (let i = 0; i < 6; i++) c.circle(g.rnd(8, 56), g.rnd(8, 56), g.rnd(1.5, 3)); });
       cell(g, 7, '#4a3826', ['#382818', '#5a4632'], (c) => { g.stroke('cpencil', '#20160c', 0.8); for (let i = 0; i < 6; i++) c.line(6, 8 + i * 9, 58, 9 + i * 9 + g.rnd(-2, 2)); });
-      for (let i = 8; i < 16; i++) cell(g, i, '#555', ['#666', '#444'], null);
+      // ---- cells 8-15: the melee set (PT-013): fists and found weapons. Olive, not green-teal; teal is light, never paint (design/LOOK_BIBLE.md).
+      cell(g, 8, '#cdbfa0', ['#e2d6b8', '#b3a584'], (c) => {                      // linen hand-wraps: diagonal bands, sweat and old blood
+        g.stroke('cpencil', '#8c7e60', 0.9); for (let i = 0; i < 8; i++) c.line(-4, 4 + i * 9, 66, 16 + i * 9);
+        g.stroke('2B', '#6a4a3a', 0.8); for (let i = 0; i < 3; i++) { const x = g.rnd(10, 54), y = g.rnd(10, 54); c.line(x, y, x + g.rnd(3, 8), y + g.rnd(2, 6)); }
+      });
+      cell(g, 9, '#b4846a', ['#c99a80', '#9a6c54'], (c) => {                       // knuckle skin: scuffs and a split
+        g.stroke('cpencil', '#6e4634', 0.8); for (let i = 0; i < 5; i++) { const x = g.rnd(6, 56), y = g.rnd(6, 56); c.line(x, y, x + g.rnd(4, 12), y + g.rnd(-3, 3)); }
+        g.stroke('HB', '#e0b49a', 0.7); for (let i = 0; i < 4; i++) c.circle(10 + i * 14, 20, 2.2);
+      });
+      cell(g, 10, '#7f8e92', ['#a7b6ba', '#5d6c70'], (c) => {                      // forged steel: a bright edge down one side, file marks, nicks
+        g.stroke('cpencil', '#e6f2f2', 1.2); c.line(6, 2, 6, 62); c.line(8, 2, 8, 62);
+        g.stroke('HB', '#34454a', 0.8); for (let i = 0; i < 7; i++) { const y = 6 + i * 8; c.line(14, y, 50, y + g.rnd(-2, 2)); }
+        g.stroke('2B', '#1e2a2e', 0.9); for (let i = 0; i < 4; i++) { const y = g.rnd(8, 56); c.line(4, y, 11, y + 2); }
+      });
+      cell(g, 11, '#a8895a', ['#c3a574', '#8a6c40'], (c) => {                      // rope: twist lines
+        g.stroke('2B', '#5a4326', 1.0); for (let i = -2; i < 12; i++) c.line(i * 8, 0, i * 8 + 14, 64);
+        g.stroke('cpencil', '#dcc08a', 0.8); for (let i = -2; i < 12; i++) c.line(i * 8 + 4, 0, i * 8 + 18, 64);
+      });
+      cell(g, 12, '#4a3a34', ['#7a4a2a', '#2e2420', '#8a5a30'], (c) => {          // rusted iron: pitted, orange where the paint is gone
+        g.stroke('cpencil', '#b86a30', 0.8); for (let i = 0; i < 14; i++) { const x = g.rnd(4, 60), y = g.rnd(4, 60); c.circle(x, y, g.rnd(1, 2.4)); }
+        g.stroke('2B', '#1c1410', 0.9); for (let i = 0; i < 5; i++) { const x = g.rnd(4, 50), y = g.rnd(6, 58); c.line(x, y, x + g.rnd(6, 14), y + g.rnd(-2, 2)); }
+      });
+      cell(g, 13, '#6b4a2e', ['#7a5636', '#4d321c'], (c) => {                      // a handle worn dark by hands: long grain, a polished stripe where the grip sits
+        g.stroke('2B', '#2c1c0e', 0.9); for (let i = 0; i < 7; i++) c.line(6 + i * 8, 0, 8 + i * 8 + g.rnd(-2, 2), 64);
+        g.stroke('cpencil', '#9a7a52', 0.9); c.line(30, 0, 31, 64); c.line(34, 0, 35, 64);
+      });
+      cell(g, 14, '#7a6a3a', ['#9a8a4a', '#6a6a30', '#4a3a1c'], (c) => {          // the lamplighter's mallet head: old bronze, olive patina in the recesses
+        g.stroke('cpencil', '#7d7a3c', 1.0); for (let i = 0; i < 6; i++) { const x = g.rnd(4, 58), y = g.rnd(4, 40); c.line(x, y, x + g.rnd(-3, 3), y + g.rnd(8, 18)); }
+        g.stroke('HB', '#d8c070', 0.8); c.line(4, 6, 58, 6); c.line(4, 58, 58, 58);
+      });
+      cell(g, 15, '#9b2e22', ['#b8402e', '#7a2218'], (c) => {                      // red fire-service enamel, chipped to steel at the edges
+        g.stroke('cpencil', '#b6c0c0', 1.0); for (let i = 0; i < 9; i++) { const x = g.rnd(2, 62), y = g.rnd(2, 62); c.line(x, y, x + g.rnd(2, 6), y + g.rnd(-2, 4)); }
+        g.stroke('2B', '#4a1410', 0.9); for (let i = 0; i < 4; i++) { const y = g.rnd(8, 56); c.line(4, y, 60, y + g.rnd(-2, 2)); }
+      });
     }),
   },
 
