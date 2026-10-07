@@ -129,8 +129,9 @@ export function bellhand(tex) {
     const t = p.t, h = humanoidPose(p, J, { stoop: 0.14, lean: 0.05, headX: 0.25, headZ: 0.12, jawOpen: 0.3, hipY: 0.9, stride: 0.6 });
     const ring = h.raise * (1 - h.rec), up = p.attack > 0 ? h.raise * (1 - h.slam) : 0, sl = p.attack > 0 ? h.slam * (1 - h.rec) : 0;
     J.armA.rotation.set(-0.15 * up - 0.5 * sl, 0, -0.35 - 0.6 * up + 0.2 * sl); J.armAM.rotation.set(-0.35 * sl, 0, -2.79 + 0.5 * up);         // the forearm stands up beside the head; the tell lifts it, the strike throws the bell forward
-    const toll = S(t * 6.3 + p.phase) * (0.14 + 0.1 * p.walk + 0.5 * ring) - 0.9 * sl;                                                           // the bell is always ringing: faster and harder on the tell
-    J.hb.rotation.set(0.15 * S(t * 4.1) + 0.6 * sl, 0, PI + toll); J.hclapper.scale.setScalar(1 + 0.3 * Math.abs(toll) * 3 + 1.2 * ring); R.ring(J.hbEchoes, 0.15 + Math.min(1, Math.abs(toll) * 3) * 0.5 + ring);
+    const live = p.awake ? 1 : 0;                                                                                                                    // a sleeper is silent: the view says whether the creature is awake (idle = asleep)
+    const toll = S(t * 6.3 + p.phase) * (live * (0.14 + 0.1 * p.walk) + 0.5 * ring) - 0.9 * sl;                                                    // awake, the bell is always ringing: faster and harder on the tell
+    J.hb.rotation.set(0.15 * S(t * 4.1) + 0.6 * sl, 0, PI + toll); J.hclapper.scale.setScalar(1 + 0.3 * Math.abs(toll) * 3 + 1.2 * ring); R.ring(J.hbEchoes, live * (0.15 + Math.min(1, Math.abs(toll) * 3) * 0.5) + ring);
     J.armB.rotation.x = S(p.phase) * 0.4 * p.walk; J.armB.rotation.z = 0.08 + 0.02 * S(t * 1.1); J.armBM.rotation.x = -0.2;
   });
 }

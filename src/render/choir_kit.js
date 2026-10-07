@@ -35,6 +35,9 @@ function mergeParts(rig, J, echoes) {
   return { before, after };
 }
 
+/** KIT.merge = false builds the rigs with every primitive separate (tests/choir-rigs.test.js inspects each primitive's UV cell on them) */
+export const KIT = { merge: true };
+
 export const ease = (t) => t * t * (3 - 2 * t);
 export const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
@@ -148,14 +151,14 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
     ring(shells, amp) { for (const m of shells) { m.scale.copy(m.userData.base).multiplyScalar(amp > 0.02 ? 1 : 0.0001); } echoMat.opacity = 0.15 + 0.4 * clamp01(amp); },
   };
   build(R);
-  const merged = mergeParts(rig, J, echoes);
+  const merged = KIT.merge ? mergeParts(rig, J, echoes) : null;
   root.traverse((o) => { if (o.isMesh) o.frustumCulled = true; });
   const ground = makeRigGrounder(root, rig, opts.maxLift ?? 3);
   function posed(p) {
     pose(p, J, R); ground(); opts.afterGround?.(p, J, R);
     const f = p.flash || 0; mat.emissive.setRGB(0.7 * f, 0.55 * f, 0.4 * f);
   }
-  return { root, rig, pose: posed, mat, J, merged };
+  return { root, rig, pose: posed, mat, glow, echoes, J, merged };
 }
 
 /** walking, breathing and the arm-raise attack for any two-legged build (joints legA/legB (+M), armA/armB (+M), spine, head, jaw, hips), the same maths as the shipped Tollbearer: tells keep their timing */

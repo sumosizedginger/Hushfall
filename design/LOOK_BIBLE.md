@@ -1,6 +1,33 @@
 # HUSHFALL look bible v2 ("Tuned")
 
-**Status: L0 refined (2026-10-06, the owner: "I want to refine these and make them distinct and fit the game and architecture of the code"). Design tooling only, awaiting the owner's decision.** Nothing in the game changed: no `src/`, `assets/`, map, route or sim file was touched, so no evidence is stale. PART B below is the refinement: the ten creatures rebuilt as REAL rigs in the game's own rig architecture and drawn through the game's own post pass; where Part B and the drawn studies of Part A disagree, Part B is right (it is measured on the built geometry). Everything is under `tools/look/` and `review/look-bible/`, never `assets/baked`.
+**Status: L1 BUILT into the game (2026-10-07, see PART C); evidence regeneration and frame time pending. L0 was refined (2026-10-06, the owner: "I want to refine these and make them distinct and fit the game and architecture of the code"). Design tooling only, awaiting the owner's decision.** Nothing in the game changed: no `src/`, `assets/`, map, route or sim file was touched, so no evidence is stale. PART B below is the refinement: the ten creatures rebuilt as REAL rigs in the game's own rig architecture and drawn through the game's own post pass; where Part B and the drawn studies of Part A disagree, Part B is right (it is measured on the built geometry). Everything is under `tools/look/` and `review/look-bible/`, never `assets/baked`.
+
+# PART C: what went into the game (L1, 2026-10-07; read this first, it supersedes Part B where they differ)
+
+**The owner's answer to B8** (2026-10-07): "I trust your decisions Claude. You own it, make sure you are making something you would be proud of." My answers: (1) the 0.50-0.54 humanoid overlap stays as a number and no hit volume moves (an engine change that stales every map's simulation evidence, for a cosmetic reason); the three are separated by hue, prop height, hat and motion instead; (2) per-kind hue: yes, every kind has its own atlas and palette; (3) cost: static parts of each joint are merged and the triangle ceiling is tested; frame time is still to be measured; (4) the Warden-Graft and the feeder were redone before shipping; (5) go, all ten, proven in the real game first.
+
+**What was built.** `src/render/models_choir.js` (the ten rigs), `choir_kit.js` (church bells, tapered tubes, lumpy ball, pleated lathe, ragged strips, joint-wise merging of static parts), `choir_cells.js` (the atlas contract by cell NAME), `tools/baker/recipes_choir.js` (ten p5.brush atlases, `assets/baked/choir_<kind>.png`, about 10 s each), `view.js` (`ENEMY_MODELS` now comes from `models_choir.js`; the Tollbearer's graft grows with the episode: a small bell in Episode 1, the great bell from Episode 2 on; sleepers are posed `awake: false`), `textures.js`, the four rig tests and `measure-rig.mjs` (now on the new rigs), `tests/choir-rigs.test.js` (six new tests). No `defs.js`, engine, `post.js`, audio, map or route file changed.
+
+**A defect in my own Part B, found while building.** A lathe whose profile is written crown-first (top to bottom) is built INSIDE-OUT by three.js (only an ascending-y profile faces outward). Every bell in Part B, in its A/B sheets and the "strongest redesign" bell node among them, was drawn as the far inside wall of a shell: that is why the Tollbearer's bell looked like a funnel and the Bellhand's like a lampshade. The kit now turns profiles round (`tests/choir-rigs.test.js` guards it). The Part B images of bells are therefore not what ships.
+
+| kind | what ships (and what changed from Part B) |
+|---|---|
+| Tollbearer | an oxblood oilskin coat torn open down the front, hem in strips; a real church bell hung on a rope grown into the right shoulder, swinging at the hip as a pendulum (lags the stride, thrown out by the raised arm); early graft = small bell (Episode 1) |
+| Gaunt | pale, long forelimbs, bone claws, red throat, the jaw hangs down; same silhouette, lumpy head |
+| Bellhand | the town crier: indigo coat, stovepipe hat with a bronze band, a hand-bell raised beside the head that rings while it is awake (silent asleep), a rope coiled on the hip. (Part B: a collar-bell and a hammer arm; the raised arm read as a trumpet) |
+| Sexton | an ivory surplice to the floor, one violet stole, five pipes fanned behind the shoulders like a peacock's tail, a censer on a chain |
+| Warden-Graft | redone: a bronze kettledrum grown into the chest with its skin forward, a horned bone mask with one teal slit, iron pauldrons with bronze spikes, it drags two mallets (Part B: a clock-faced chest on a robot) |
+| Cantor | a pleated violet bell-robe with ivory rings, fork hands, six church bells orbiting the head |
+| Bell node | a tuning fork struck into stone, a real bell floating between the tines, a teal ring |
+| Drone-Gill | an engraved ivory dome, ribbon fringe, a hanging heart, a note-bubble; same silhouette |
+| Cradle feeder | redone: a cage of six bone ribs round an amber-wrapped captive, head fallen forward, a brass reed grown from the mouth (Part B: a mannequin in a frame) |
+| Graft-Mother | redone: a walking church organ, three towers of pipes, a bronze horn off-centre, cradle sacs underneath, four insect legs (Part B: an egg with a crown that read as a face) |
+
+**Measured (2026-10-07).** `node tools/look/check-rigs.mjs`: all ten pass height, width, grounding and root; `node --test` on the five rig test files and `tests/choir-rigs.test.js` passes; in the real game every creature was drawn at 3 m and 8 m in the harbour map with no console error (review stills are not committed: scratch captures). Awake meshes after merging: Tollbearer 26, Gaunt 13, Bellhand 18, Sexton 25, Warden 17, Cantor 27, Bell node 5, Gill 16, feeder 6, Graft-Mother 51 (shipped 6-41); triangles 590-2920 (shipped 220-1100).
+
+**NOT measured or NOT done yet** (say so, do not assume): frame time (`npm run browsercheck` render budget has not been run on these); the silhouette overlap of the NEW humanoids (`tools/look/sil-matrix.mjs` has not been re-run: the hat, the raised bell and the pipe fan are expected to help, that is a hope); animation as motion (stills of walk, tell, strike and death only); in-map look beyond the harbour and two Episode 2 rooms; the evidence of all 18 maps is STALE until regenerated once from a clean commit (`src/render` and `assets/baked` changed); novelty against other games (no survey).
+
+---
 
 # PART B: the refined creatures, built as real rigs (read this first)
 

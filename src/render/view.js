@@ -158,7 +158,7 @@ export class GameView {
       // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
       let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if (def.boss && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash });
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle' });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
