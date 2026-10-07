@@ -60,7 +60,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - Rule: render/UI/audio only read sim state and drain events; they never write it.
 
 ## Persistent files
-`design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
+`design/WEAPONS_AND_CONTROLS_PLAN.md` the plan for weapon identity, melee, parry, controls, controller and the weapon wheel (proposal, awaiting the owner) · `design/LOOK_BIBLE.md` PART C = what the creature redesign shipped · `design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
 `design/GATE3.md` Gate 3 plan, acceptance criteria and pilot log · `REPAIR_PLAN.md` the Gate 2 repair plan (history) · `PLAYTEST_NOTES.md` human playtest reports with causes, guards and the next work list (read before any code work) · `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
 
 ## p5.brush facts learned (see ART_BIBLE.md)
