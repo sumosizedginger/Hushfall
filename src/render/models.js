@@ -1,5 +1,6 @@
 // Code-authored low-poly 3D models. Every surface wears a p5.brush-painted UV atlas cell / texture.
 import * as THREE from 'three';
+import { ironSights, tang } from './weapon-sights.js';
 
 const INSET = 3 / 256;
 /** Remap a primitive's 0..1 UVs into one 64px cell of a 4x4 atlas (cell 0 = top-left of the baked image). */
@@ -171,9 +172,9 @@ export function makeFlareCannon(tex) {
   for (const z of [-0.2, -0.4]) { const b = M(new THREE.TorusGeometry(0.066, 0.011, 4, 10), 5); b.position.z = z; g.add(b); }
   const recv = M(new THREE.BoxGeometry(0.17, 0.15, 0.32), 2); recv.position.set(0, -0.02, 0.02); g.add(recv);
   const plate = M(new THREE.BoxGeometry(0.12, 0.025, 0.25), 2); plate.position.set(0, 0.065, 0.02); g.add(plate);
-  // iron sights: a bright front bead on the muzzle ring and a two-post rear notch on the receiver
-  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.014), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.097, -0.62); g.add(bead);
-  for (const x of [-0.022, 0.022]) { const post = M(new THREE.BoxGeometry(0.012, 0.028, 0.02), 5); post.position.set(x, 0.0915, 0.1); g.add(post); }
+  // iron sights (weapon-sights.js): a U-notch on the receiver plate, a blade with a bright tip on the muzzle ring; the sight line runs through the middle of the notch and the tip
+  const sights = ironSights(g, mat, 5, { rearZ: 0.1, frontZ: -0.62, rearBase: 0.0775, frontBase: 0.082, line: 0.112 });
+  tang(g, mat, 2, { z: 0.145, y: 0.0775, width: 0.11, len: 0.5, drop: 0.45 });                                  // the receiver's top runs back and down: a ramp under the eye, not a flat rear face
   const tube = new THREE.Mesh(atlas(new THREE.CylinderGeometry(0.024, 0.024, 0.2, 6), 6), glassMat); tube.rotation.x = Math.PI / 2; tube.position.set(-0.105, -0.02, 0.03); g.add(tube);
   const grip = M(new THREE.BoxGeometry(0.06, 0.18, 0.075), 7); grip.position.set(0, -0.15, 0.12); grip.rotation.x = 0.3; g.add(grip);
   const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.19, 0.13); g.add(handR);
@@ -184,7 +185,7 @@ export function makeFlareCannon(tex) {
   const flash = new THREE.Group(); flash.position.z = -0.72; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xfff4d0 })));
-  return { group: g, flash, pump: null, adsY: -0.067, sleeveMat };
+  return { group: g, flash, pump: null, adsY: -0.067, sleeveMat, sights };
 }
 
 // -------------------------------------------------------------------- props
@@ -365,9 +366,8 @@ export function makeScattergun(tex) {
   for (const x of [-0.03, 0.03]) { const b = M(new THREE.CylinderGeometry(0.028, 0.03, 0.68, 8), 2); b.rotation.x = -Math.PI / 2; b.position.set(x, 0.005, -0.34); g.add(b); }
   const rib = M(new THREE.BoxGeometry(0.03, 0.012, 0.62), 1); rib.position.set(0, 0.038, -0.33); g.add(rib);
   const band = M(new THREE.BoxGeometry(0.15, 0.075, 0.03), 1); band.position.set(0, 0.005, -0.52); g.add(band);
-  const bead = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.026, 0.012), new THREE.MeshBasicMaterial({ color: 0xffe08a })); bead.position.set(0, 0.064, -0.66); g.add(bead);
   const recv = M(new THREE.BoxGeometry(0.13, 0.115, 0.22), 5); recv.position.set(0, -0.01, 0.03); g.add(recv);
-  for (const x of [-0.02, 0.02]) { const post = M(new THREE.BoxGeometry(0.012, 0.028, 0.02), 5); post.position.set(x, 0.061, 0.1); g.add(post); }
+  const sights = ironSights(g, mat, 5, { rearZ: 0.1, frontZ: -0.66, rearBase: 0.0475, frontBase: 0.044, line: 0.0825, gap: 0.022 });
   const pump = new THREE.Group(); const fore = M(new THREE.BoxGeometry(0.1, 0.06, 0.2), 7); fore.position.set(0, -0.05, -0.26); pump.add(fore); g.add(pump);
   const stock = M(new THREE.BoxGeometry(0.075, 0.11, 0.36), 7); stock.position.set(0, -0.055, 0.34); stock.rotation.x = 0.12; g.add(stock);
   const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.14); grip.rotation.x = 0.3; g.add(grip);
@@ -378,7 +378,7 @@ export function makeScattergun(tex) {
   const flash = new THREE.Group(); flash.position.z = -0.78; flash.visible = false; g.add(flash);
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
   flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
-  return { group: g, flash, pump, adsY: -0.048, sleeveMat };
+  return { group: g, flash, pump, adsY: -0.048, sleeveMat, sights };
 }
 
 // ------------------------------------------------ Marrow Quay: set dressing and scenery

@@ -5,6 +5,7 @@ import { makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
+import { weaponPose } from './weapon-pose.js';
 import { FACTORIES as CHOIR } from './models_choir.js';
 import { choirAtlasName } from './choir_cells.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
@@ -20,8 +21,6 @@ const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 
 const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, (tex, map) => CHOIR[kind](tex[choirAtlasName(kind)], { stage: graftStage(map) })]));
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
-const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
-const SPRINT_POSE = { x: 0.13, y: -0.235, z: -0.42, rx: -0.3, ry: 0.65, rz: -0.28 };   // gun carried low and across the body
 const lerp = (a, b, t) => a + (b - a) * t;
 
 export class GameView {
@@ -243,12 +242,10 @@ export class GameView {
     for (const [id, r] of Object.entries(this.rigs)) r.group.visible = id === shown;
     const rig = this.rigs[shown];
     // weapon pose = hip, blended toward the sights, then toward the lowered sprint carry
-    const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed), r = this.recoil * (1 - 0.5 * a), W = this.WPOS;
-    const gs = lerp(0.62, 0.56, a);                                                     // a slightly smaller gun in the sights: less slab under the crosshair
-    rig.group.scale.setScalar(gs); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
-    const px = lerp(lerp(W.x, ADS_POSE.x, a), SPRINT_POSE.x, sp), py = lerp(lerp(W.y, rig.adsY * gs / 0.62, a), SPRINT_POSE.y, sp), pz = lerp(lerp(W.z, ADS_POSE.z, a), SPRINT_POSE.z, sp);
-    rig.group.position.set(px + sway, py + Math.abs(sway) * 0.6 - r * 0.02 - this.deadT * 0.6 + dip, pz + r * 0.13);
-    rig.group.rotation.set(-r * 0.12 + SPRINT_POSE.rx * sp, lerp(lerp(0.1, 0, a), SPRINT_POSE.ry, sp), SPRINT_POSE.rz * sp);
+    const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed);
+    const wp = weaponPose(rig, { ads: a, sprint: sp, sway, recoil: this.recoil, dead: this.deadT, dip });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js) and the sprint carry
+    rig.group.scale.setScalar(wp.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
+    rig.group.position.set(wp.pos[0], wp.pos[1], wp.pos[2]); rig.group.rotation.set(wp.rot[0], wp.rot[1], wp.rot[2]);
     rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a));      // small in the sights: it must not hide the target
     if (rig.spin) { this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6); rig.spin.rotation[rig.spinAxis || 'z'] += dt * (rig.spinAxis ? 16 * this.spinKick : 6 + 40 * this.spinKick); }                    // the barrel cluster winds up while it fires
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
