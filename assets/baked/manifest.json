@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
+  "generatedBy": "tools/bake.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -340,6 +340,86 @@
       "transparent": false,
       "sha256": "9ef14c39804af6daa6dc64d81a730531244df04521fd080af7005422c0cf62e1",
       "bytes": 116955
+    },
+    "choir_tollbearer": {
+      "seed": 2301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f3aad6a2d42f900f6d8b87acb2d6893514548ad24ad565a84be7db97ff45aa06",
+      "bytes": 30556
+    },
+    "choir_gaunt": {
+      "seed": 2302,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "32c208f542c5b5de46c53e12071f82f602686a9d2bbcd4860f37d60934448a1e",
+      "bytes": 21331
+    },
+    "choir_bellhand": {
+      "seed": 2303,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "33c0d46e02563754fdd931a6fe4325d521d088ff3fb9c06e69ac7794352ed139",
+      "bytes": 30572
+    },
+    "choir_sexton": {
+      "seed": 2304,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e260bf545f9f42df08b947b62d8fbc5aa4a4a5a87461da9cd2e8e6823c1dba87",
+      "bytes": 30715
+    },
+    "choir_wardengraft": {
+      "seed": 2305,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "409491329c5309ed8d8331c5133f5f34fb78a7299dfc5c3ae7bd8cfbaf2c1b7e",
+      "bytes": 35219
+    },
+    "choir_cantor": {
+      "seed": 2306,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "05fee51734a24ebe96571ebc50598ca559fd89f3f2e6d2be3bd71c5780380b48",
+      "bytes": 29699
+    },
+    "choir_bellnode": {
+      "seed": 2307,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "98cf253d3bea39ace85da825877b9452ec380c56b4486ecbf34c86ce8f5e0a04",
+      "bytes": 22515
+    },
+    "choir_gill": {
+      "seed": 2308,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e7d9ef866510f0b32e0dc808c1849187cf449b656b796336664f56f920db204d",
+      "bytes": 22552
+    },
+    "choir_feeder": {
+      "seed": 2309,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4986a04bbcfa5c92c158d43408e42a8a3554f546f2159b38264d42738cf73b04",
+      "bytes": 28347
+    },
+    "choir_graftmother": {
+      "seed": 2310,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c6ce08f412d6ceb5664aedffe7a9ce83a5b5f6ace3111ab99915c480f603ed4a",
+      "bytes": 35392
     }
   }
 }

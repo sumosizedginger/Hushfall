@@ -6,11 +6,11 @@
 //   BUDGET   meshes, materials and triangles against the shipped rig of the same kind (each mesh is a draw call while the creature is awake; a sleeper merges to one call per material)
 //   node tools/look/check-rigs.mjs [kind ...]
 import * as THREE from 'three';
-import { FACTORIES } from './rigs_v2.js';
+import { FACTORIES } from '../../src/render/models_choir.js';
 import { makeTollbearer, makeGaunt } from '../../src/render/models.js';
 import { makeBellNodeEnemy } from '../../src/render/models_g2.js';
 import { makeDroneGill, makeFeeder, makeGraftMother } from '../../src/render/models_e2.js';
-import { ENEMIES } from '../../src/engine/defs.js';
+import { ENEMIES, PLAYER } from '../../src/engine/defs.js';
 import { hitCylinder } from '../../src/engine/hitvolume.js';
 import { GROUND_BAND, groundVerdict, hoverLift } from '../../src/render/ground-contract.js';
 
@@ -36,6 +36,8 @@ for (const kind of kinds) {
   const v = make(null); v.root.position.set(e.x, e.y, e.z); v.root.rotation.y = e.yaw; v.pose(STAND);
   const vs = verts(v), top = Math.max(...vs.map((p) => p[1])), base = Math.min(...vs.map((p) => p[1])), h = top - base;
   if (Math.abs(def.height - h) > 0.10) problems.push(`HEIGHT drawn ${h.toFixed(2)} vs hit ${def.height}`);
+  { const eye = PLAYER.eye, rr = (def.hitRadius ?? def.radius) + 0.05, yTop = 0.99 * h;                                  // tests/hit-volume-fair.test.js: a pellet aimed at 99% of the DRAWN head from 6 m must register: it enters the cylinder rr short of the axis
+    const yEntry = eye + (yTop + (def.hover ?? 0) - eye) * ((6 - rr) / 6); if (yEntry > def.height + (def.hover ?? 0)) problems.push(`HEIGHT a shot at 99% of the drawn head (${yTop.toFixed(2)} m) enters the hit cylinder at ${yEntry.toFixed(2)} m, above its ${def.height} m top`); }
   const c = hitCylinder(e), d = vs.map((p) => Math.hypot(p[0] - c.x, p[2] - c.z)).sort((a, b) => a - b), need = d[Math.floor(d.length * 0.85)], have = c.r + 0.05;
   if (have < need) problems.push(`WIDTH hit cylinder ${have.toFixed(2)} narrower than the body needs (${need.toFixed(2)})`); else if (have > need + 0.15) problems.push(`WIDTH hit cylinder ${have.toFixed(2)} wider than needed (${need.toFixed(2)}) by more than 0.15`);
   // GROUND + ROOT over every pose and floor

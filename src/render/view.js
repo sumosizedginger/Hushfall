@@ -1,12 +1,12 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
-import { makeTollbearer, makeGaunt, makeFlareCannon, makeScattergun, makePickup } from './models.js';
+import { makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
-import { makeBellNodeEnemy } from './models_g2.js';
-import { makeDroneGill, makeFeeder, makeGraftMother } from './models_e2.js';
+import { FACTORIES as CHOIR } from './models_choir.js';
+import { choirAtlasName } from './choir_cells.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
@@ -15,7 +15,9 @@ import { PostPass } from './post.js';
 import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 
-const ENEMY_MODELS = { tollbearer: (t) => makeTollbearer(t.tollbearer_atlas), gaunt: (t) => makeGaunt(t.tollbearer_atlas), bellhand: (t) => makeTollbearer(t.tollbearer_atlas, 'bellhand'), sexton: (t) => makeTollbearer(t.tollbearer_atlas, 'sexton'), wardengraft: (t) => makeTollbearer(t.tollbearer_atlas, 'warden'), cantor: (t) => makeTollbearer(t.tollbearer_atlas, 'cantor'), bellnode: () => makeBellNodeEnemy(), gill: (t) => makeDroneGill(t.pod_organic_a), feeder: (t) => makeFeeder(t.pod_organic_a), graftmother: (t) => makeGraftMother(t.pod_organic_a) };
+// The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
+const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 2 ? 2 : 0);
+const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, (tex, map) => CHOIR[kind](tex[choirAtlasName(kind)], { stage: graftStage(map) })]));
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
 const ADS_POSE = { x: 0, y: -0.067, z: -0.6 };                                  // sights on the crosshair axis
@@ -147,7 +149,7 @@ export class GameView {
     const seen = new Set();
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
-      if (!v) { v = ENEMY_MODELS[e.kind](this.tex); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
+      if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);

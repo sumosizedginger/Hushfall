@@ -4,13 +4,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { markEntity, patchEntityFragment, ENTITY_ALPHA } from '../src/render/entityflag.js';
-import { makeTollbearer, makeGaunt } from '../src/render/models.js';
-import { makeBellNodeEnemy } from '../src/render/models_g2.js';
+import { FACTORIES as CHOIR } from '../src/render/models_choir.js';
 
 const materials = (root) => { const s = new Set(); root.traverse((o) => { if (o.isMesh) for (const m of Array.isArray(o.material) ? o.material : [o.material]) s.add(m); }); return [...s]; };
 
 test('markEntity flags every opaque material of every enemy rig and patches its fragment shader to write alpha 0', () => {
-  const rigs = { tollbearer: makeTollbearer(null), bellhand: makeTollbearer(null, 'bellhand'), sexton: makeTollbearer(null, 'sexton'), wardengraft: makeTollbearer(null, 'warden'), cantor: makeTollbearer(null, 'cantor'), gaunt: makeGaunt(null), bellnode: makeBellNodeEnemy() };
+  const rigs = Object.fromEntries(Object.entries(CHOIR).map(([kind, make]) => [kind, make(null)]));
   for (const [kind, v] of Object.entries(rigs)) {
     markEntity(v.root); const ms = materials(v.root).filter((m) => !m.transparent);
     assert.ok(ms.length > 0, kind + ' has opaque materials');

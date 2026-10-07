@@ -1,5 +1,5 @@
 // Stills of the refined rigs through the game's own post pass (tools/look/dev.js). Output goes under review/look-bible/rigs/ unless <outDir> says otherwise. Appearance evidence only.
-//   node tools/look/shoot-rigs.mjs close   <outDir> [kind ...] [--preset=dusk|hall|dark] [--dist=5]    one still per creature, facing the camera
+//   node tools/look/shoot-rigs.mjs close   <outDir> [kind ...] [--preset=dusk|hall|dark] [--dist=5] [--yaw=0] [--cy=1.6] [--pitch=0.02] [--tag=name]   one still per creature (yaw 0 = facing the camera)
 //   node tools/look/shoot-rigs.mjs lineup  <outDir> [kind ...] [--preset=...] [--dist=11]             all in a row, to scale, at a distance
 //   node tools/look/shoot-rigs.mjs poses   <outDir> <kind> [--preset=...]                             idle, walk phases, the attack tell, death
 //   node tools/look/shoot-rigs.mjs sil     <outDir> [kind ...]                                        true-scale silhouettes of the real geometry (the sil-matrix.mjs format)
@@ -15,7 +15,7 @@ const [mode, outArg, ...rest] = process.argv.slice(2);
 if (!mode || !outArg) { console.error('usage: shoot-rigs.mjs close|lineup|poses|sil|merge <outDir> [kind ...] [--preset=] [--dist=]'); process.exit(2); }
 const flags = Object.fromEntries(rest.filter((a) => a.startsWith('--')).map((a) => a.slice(2).split('=')));
 const out = path.resolve(root, outArg); fs.mkdirSync(out, { recursive: true });
-const { FACTORIES } = await import('./rigs_v2.js');
+const { FACTORIES } = await import('../../src/render/models_choir.js');
 const kinds = rest.filter((a) => !a.startsWith('--')); const KINDS = kinds.length ? kinds : Object.keys(FACTORIES);
 const base = (k) => k.replace(/^old_/, '');
 const port = Number(process.env.LOOK_DEV_PORT || 5292);
@@ -35,8 +35,8 @@ if (mode === 'close') {
   const dist = Number(flags.dist ?? 5);
   for (const k of KINDS) {
     const [kind, o] = opts(k), big = ['cantor', 'graftmother', 'wardengraft'].includes(base(kind.replace('old:', ''))), d = big ? dist * 1.9 : dist;
-    await L('L.clear()'); await L(`L.place('${kind}', { x: 0, z: 0, yaw: 0, o: ${JSON.stringify(o)}, pose: { t: 1.3 } }); L.camera({ x: 0, y: 1.6, z: ${d}, yaw: 0, pitch: ${kind.endsWith('gill') ? 0.12 : 0.02} })`);
-    await shot(`close-${k}`);
+    await L('L.clear()'); await L(`L.place('${kind}', { x: 0, z: 0, yaw: ${Number(flags.yaw ?? 0)}, o: ${JSON.stringify(o)}, pose: { t: 1.3, ...${flags.pose ? flags.pose : '{}'} } }); L.camera({ x: 0, y: ${Number(flags.cy ?? 1.6)}, z: ${d}, yaw: 0, pitch: ${kind.endsWith('gill') ? 0.12 : Number(flags.pitch ?? 0.02)} })`);
+    await shot(`close-${k}${flags.tag ? '-' + flags.tag : ''}`);
   }
 } else if (mode === 'empty') {                  // the same frames with nobody in them (the background of every close-up), for tools/look/readability.mjs
   for (const d of [3.2, 6.08]) { await L('L.clear()'); await L(`L.camera({ x: 0, y: 1.6, z: ${d}, yaw: 0, pitch: 0.02 })`); await shot(`empty-${d}`); }

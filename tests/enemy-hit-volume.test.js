@@ -7,18 +7,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { makeTollbearer, makeGaunt } from '../src/render/models.js';
-import { makeBellNodeEnemy } from '../src/render/models_g2.js';
-import { makeDroneGill, makeFeeder, makeGraftMother } from '../src/render/models_e2.js';
+import { FACTORIES as CHOIR } from '../src/render/models_choir.js';
 import { createWorld, step, spawnEnemy } from '../src/engine/world.js';
 import { ENEMIES, PLAYER } from '../src/engine/defs.js';
 import { parseMap } from '../src/engine/mapformat.js';
 
-const RIGS = {
-  tollbearer: () => makeTollbearer(null), bellhand: () => makeTollbearer(null, 'bellhand'), sexton: () => makeTollbearer(null, 'sexton'), wardengraft: () => makeTollbearer(null, 'warden'),
-  cantor: () => makeTollbearer(null, 'cantor'), gaunt: () => makeGaunt(null), bellnode: () => makeBellNodeEnemy(),
-  gill: () => makeDroneGill(null), feeder: () => makeFeeder(null), graftmother: () => makeGraftMother(null),        // Gate 4 batch 2: the first flyer, the Graft-Mother's feeder and the boss
-};
+const RIGS = Object.fromEntries(Object.entries(CHOIR).map(([kind, make]) => [kind, () => make(null)]));        // the ten creatures of the look redesign (models_choir.js); the Tollbearer at its grown stage, the early graft is in tests/choir-rigs.test.js
 // one big open room; the east half stands 3 m up (height char '6' = 6 x 0.5 m), like the M02 gallery
 const COLS = 40, ROWS = 20;
 const arena = () => parseMap({
