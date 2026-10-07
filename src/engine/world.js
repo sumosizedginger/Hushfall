@@ -1,6 +1,6 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
-import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
+import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -135,6 +135,8 @@ export function hasLOS(w, x0, z0, x1, z1) {
   }
   return true;
 }
+/** is the player inside the arc in front of enemy `e` (cos of the half-angle)? The enemy's facing is its yaw: forward = (sin yaw, cos yaw) */
+function inFront(e, p, cos) { const dx = p.x - e.x, dz = p.z - e.z, d = Math.hypot(dx, dz); return d < 1e-6 || (Math.sin(e.yaw) * dx + Math.cos(e.yaw) * dz) / d >= cos; }
 const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
 
 // ---------------------------------------------------------------- damage
@@ -552,7 +554,7 @@ function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
     if (e.chargeT < C.windup) { e.walk *= 0.85; return true; }                                       // the tell: it stops and lowers its shoulder
     if (e.chargeT < C.windup + C.duration) {
       const step = C.speed * dt, nx = Math.sin(e.yaw) * step, nz = Math.cos(e.yaw) * step; e.walk = 1; e.phase += dt * def.gait * 2;
-      if (!e.chargeHit && Math.hypot(p.x - e.x, p.z - e.z) < def.radius + PLAYER.radius + 0.45 && Math.abs(p.y - e.y) < 1.4 && p.hp > 0) {
+      if (!e.chargeHit && Math.hypot(p.x - e.x, p.z - e.z) < def.radius + PLAYER.radius + 0.45 && Math.abs(p.y - e.y) < 1.4 && p.hp > 0 && inFront(e, p, ENEMY_STRIKE.dashCos)) {
         const res = strikePlayer(w, e, Math.round(C.damage * diff.enemyDamage), true); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z });
         if (res === 'hit' || res === 'broken') tryMove(w, p, Math.sin(e.yaw) * C.knock, Math.cos(e.yaw) * C.knock, PLAYER.radius);
         e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return true;
@@ -677,7 +679,7 @@ function updateEnemy(w, e, diff, dt) {
       else if (e.lungeT < L.windup + L.duration) {
         const hit = () => { if (!e.lungeHit) { e.lungeHit = true; strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } };
         tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
-        if (dist < def.attack.reach * 0.7 && dyv < 1.6) hit();
+        if (dist < def.attack.reach * 0.7 && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.dashCos)) hit();
       } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
       return;
     }
@@ -689,7 +691,7 @@ function updateEnemy(w, e, diff, dt) {
     if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
       e.struck = true;
       if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
-      else { if (dist < def.attack.reach && dyv < 1.6) strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+      else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {

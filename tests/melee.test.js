@@ -102,7 +102,7 @@ test('BLOCK: a guard held longer stops most of the blow; a heavy blow (a Warden\
   const raw = ENEMIES.tollbearer.attack.damage, b = dmg('tollbearer'); assert.equal(b.lost, Math.round(raw * GUARD.block), 'blocked: 30% gets through'); assert.ok(b.w.player.guarding);
   const un = (() => { const w = room({ hp: 100 }); const e = windup(w, 8); void e; const hp = w.player.hp; run(w, 14); return hp - w.player.hp; })(); assert.equal(un, raw, 'unguarded: the full ' + raw);
   const heavy = dmg('wardengraft'); assert.ok(heavy.lost >= ENEMIES.wardengraft.attack.damage * 0.95, 'a Warden\'s blow breaks through: ' + heavy.lost); assert.ok(!heavy.w.player.guarding && heavy.w.player.brokenT > 0, 'and the guard is broken for a moment');
-  const back = dmg('tollbearer', (w, e) => { e.x = w.player.x - 1.5; }); assert.equal(back.lost, raw, 'from behind: the guard does nothing');
+  const back = dmg('tollbearer', (w, e) => { e.x = w.player.x - 1.5; e.yaw = Math.PI / 2; }); assert.equal(back.lost, raw, 'from behind: the guard does nothing');
 });
 test('the parry window: it closes after 0.2 s, and a window that found nothing cannot be reopened for 0.8 s (no mashing); a parried Gaunt lunge and a Warden charge are parried too', () => {
   const late = room(); const e = windup(late, 21); run(late, 4, () => idle({ aim: true })); const hp = late.player.hp; run(late, 24, () => idle({ aim: true })); assert.equal(hp - late.player.hp, Math.round(ENEMIES.tollbearer.attack.damage * GUARD.block), 'raised more than 0.2 s ahead: a block, not a parry'); void e;

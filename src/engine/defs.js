@@ -35,6 +35,8 @@ export const ALL_WEAPONS = [...WEAPON_ORDER, ...MELEE_ORDER];
  *  costs `whiffCd` s before a new one can open (no spamming the key). Only attackers in front of the player (`cos`) can be guarded against. Ranged toll-shots are not guarded (a deliberate limit). */
 export const GUARD = { raise: 0.1, window: 0.2, whiffCd: 0.6, block: 0.3, cos: 0.3, parryStun: 1.0, riposteT: 2.0, riposteMult: 2, brokenT: 0.8 };
 /** a quick bash with whatever is in hand (key V): a free, weak strike that does not need ammunition. It blocks the gun for its own duration. */
+/** PT-014: where an enemy's melee blow can land. A blow lands only on a player INSIDE the creature's frontal arc at the moment it lands (cos of the half-angle: 0.34 = about 70 degrees each side), a dash (a Gaunt's lunge, a Warden's charge) only on a player AHEAD of it (0.5 = 60 degrees). The windup is the tell: a creature does not turn once it has begun. cos -1 = the old behaviour, a blow all the way round. */
+export const ENEMY_STRIKE = { cos: 0.34, dashCos: 0.5 };
 export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.35, knock: 0.5, flinch: 0.5 };
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
 
