@@ -58,7 +58,7 @@ export class GameView {
     this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
     this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
     this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
-    this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.13, 0.55, 5); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
+    this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.2, 0.75, 6); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
     this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 });       // the Vael's light going out of a body; the spark of a blow
     this.shieldGeo = new THREE.IcosahedronGeometry(1, 1); this.shieldMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.2, wireframe: true, depthWrite: false }); this.shield = null;
     this.beforeStep(world);
@@ -229,13 +229,13 @@ export class GameView {
       for (const b of w.burns || []) {
         live.add(b.id); let v = this.burnViews.get(b.id);
         if (!v) {
-          const g = new THREE.Group(), dm = new THREE.MeshBasicMaterial({ color: 0xff7a22, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), fm = new THREE.MeshBasicMaterial({ color: 0xffb040, transparent: true, opacity: 0.9, depthWrite: false });
+          const g = new THREE.Group(), dm = new THREE.MeshBasicMaterial({ color: 0xff6a1a, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), fm = new THREE.MeshBasicMaterial({ color: 0xff9a2a, transparent: true, opacity: 0.9, depthWrite: false });
           const disc = new THREE.Mesh(this.burnDisc, dm); disc.rotation.x = -Math.PI / 2; disc.scale.setScalar(b.r); g.add(disc);
-          const flames = []; for (let i = 0; i < 9; i++) { const f = new THREE.Mesh(this.flameGeo, fm), a = this.rnd() * Math.PI * 2, rr = Math.sqrt(this.rnd()) * b.r * 0.85; f.position.set(Math.cos(a) * rr, 0.2, Math.sin(a) * rr); f.userData.seed = this.rnd() * 10; g.add(f); flames.push(f); }
+          const flames = []; for (let i = 0; i < 12; i++) { const f = new THREE.Mesh(this.flameGeo, fm), a = this.rnd() * Math.PI * 2, rr = Math.sqrt(this.rnd()) * b.r * 0.85; f.position.set(Math.cos(a) * rr, 0.3, Math.sin(a) * rr); f.userData.seed = this.rnd() * 10; g.add(f); flames.push(f); }
           g.position.set(b.x, b.y + 0.03, b.z); this.scene.add(g); v = { g, disc, flames, dm, fm }; this.burnViews.set(b.id, v);
         }
         const fade = Math.min(1, b.t / 0.7) * Math.min(1, (b.max - b.t) / 0.12 + 0.25);
-        v.dm.opacity = (0.26 + 0.1 * Math.sin(this.time * 11 + b.id)) * fade; v.fm.opacity = 0.9 * fade;
+        v.dm.opacity = (0.34 + 0.1 * Math.sin(this.time * 11 + b.x)) * fade;          // (b.id is a string: a number is needed here, an opacity of NaN draws BLACK: PT-013, seen in the first real-game stills) v.fm.opacity = 0.9 * fade;
         for (const f of v.flames) { const k = 0.55 + 0.6 * Math.abs(Math.sin(this.time * 8.5 + f.userData.seed * 3)); f.scale.set(1 - 0.25 * k, k * fade + 0.05, 1 - 0.25 * k); f.position.y = 0.28 * k * fade; f.rotation.y = this.time * 1.7 + f.userData.seed; }
         const d = Math.hypot(b.x - this.cam.position.x, b.z - this.cam.position.z); if (d < nd) { nd = d; near = { b, fade }; }
       }
@@ -293,7 +293,7 @@ export class GameView {
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
     this.pumpT = Math.max(0, this.pumpT - dt);
     if (chg > 0) this.lastCharge = chg; else if (this.flashT <= 0) this.lastCharge = 0;
-    if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 + this.lastCharge : 0) + 1.1 * chg);                   // the bulb breathes and flares; held in a charge it swells
+    if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 + 0.5 * this.lastCharge : 0) + 0.45 * chg);                   // the bulb breathes and flares; held in a charge it swells
     { const lamp = shown === 'arc' && w.status !== 'dead'; this.lampLight.intensity = lamp ? (this.flashT > 0 ? 24 + this.rnd() * 10 + 30 * this.lastCharge : 6 + 0.8 * Math.sin(this.time * 7) + 22 * chg) : 0; if (lamp) { const fy = this.cam.rotation.y; this.lampLight.position.set(this.cam.position.x - Math.sin(fy) * 0.7, this.cam.position.y - 0.1, this.cam.position.z - Math.cos(fy) * 0.7); } }      // the lamp lights the dark around you
     if (rig.bolt) rig.bolt.visible = p.cooldown < 0.45 && p.ads < 0.4;                                                      // the harpoon leaves the muzzle; the next one seats as the action closes
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
