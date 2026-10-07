@@ -3,13 +3,13 @@ import { ACTIONS, DEFAULT_BINDINGS } from '../engine/input.js';
 
 export const ACTION_LABELS = {
   forward: 'Move forward', back: 'Move back', left: 'Strafe left', right: 'Strafe right', turnLeft: 'Turn left', turnRight: 'Turn right', lookUp: 'Look up', lookDown: 'Look down',
-  fire: 'Fire', aim: 'Aim down sights', sprint: 'Sprint', use: 'Use / open', weapon1: 'Weapon 1', weapon2: 'Weapon 2', weapon3: 'Weapon 3', weapon4: 'Weapon 4', weapon5: 'Weapon 5', weaponNext: 'Next weapon', weaponPrev: 'Previous weapon', map: 'Automap', pause: 'Pause',
+  fire: 'Fire', aim: 'Aim down sights', sprint: 'Sprint', use: 'Use / open', weapon1: 'Weapon 1', weapon2: 'Weapon 2', weapon3: 'Weapon 3', weapon4: 'Weapon 4', weapon5: 'Weapon 5', weapon6: 'Melee slot (press again to cycle)', weaponLast: 'Last weapon (hold: weapon wheel)', melee: 'Quick melee', weaponNext: 'Next weapon', weaponPrev: 'Previous weapon', map: 'Automap', pause: 'Pause',
 };
 export const SLOTS = 2;
 /** one-line controls reminder built from the CURRENT bindings (title, pause, and the first minute of a run) */
 export function legendText(b) {
   const k = (a) => prettyCode(b[a]?.[0]);
-  return `Move ${['forward', 'left', 'back', 'right'].map(k).join('')} · Look mouse · Fire ${k('fire')} · Aim ${k('aim')} · Sprint ${k('sprint')} · Use ${k('use')} · Weapons ${k('weapon1')} ${k('weapon2')} ${k('weapon3')} ${k('weapon4')} ${k('weapon5')} / wheel · Map ${k('map')} · Pause ${k('pause')}`;
+  return `Move ${['forward', 'left', 'back', 'right'].map(k).join('')} · Look mouse · Fire ${k('fire')} · Aim ${k('aim')} · Sprint ${k('sprint')} · Use ${k('use')} · Weapons ${k('weapon1')} ${k('weapon2')} ${k('weapon3')} ${k('weapon4')} ${k('weapon5')} ${k('weapon6')} (melee) / wheel · Quick melee ${k('melee')} · Last weapon ${k('weaponLast')} (hold: wheel) · Map ${k('map')} · Pause ${k('pause')}`;
 }
 /** Escape cancels a capture and is how browsers release the mouse, so it cannot be assigned to an action. */
 export const RESERVED = new Set(['Escape']);

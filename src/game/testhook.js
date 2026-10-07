@@ -74,6 +74,9 @@ export function installTestHook(app) {
     setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
+    /** the weapon wheel (PT-013): is it open, what is selected, the clock scale; and push the pointer as the mouse would (the real mouse needs pointer lock, which the harness turns off) */
+    wheel() { return { open: g.wheel.open, sel: g.wheel.sel, timeScale: g.timeScale }; },
+    setup_wheelFeed(dx, dy) { g.wheel.feed(dx, dy); },
     setup_progress(fields) { g.progress = sanitizeProgress({ ...g.progress, ...fields }); if (g.mode === 'complete') ui.locker(g.progress, ''); },                         // the campaign progress (salvage, upgrade tiers, records) before a level starts or on the intermission
     setup_postClassic(on) { g.view.post.uniforms.uClassic.value = on ? 1 : 0; },                                        // the whole picture on the original ink pass (outline guard in browser-check)
     setup_postDebug(on) { g.view.post.uniforms.uDebug.value = on ? 1 : 0; },                                            // the ink mask instead of the picture (tools/dev/shoot-outlines.mjs)

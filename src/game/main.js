@@ -9,7 +9,7 @@ import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
-import { TICK, VIEW, KEYS, WEAPONS } from '../engine/defs.js';
+import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy } from '../engine/progress.js';
 import { UI } from './ui.js';
 import { AudioEngine } from '../audio/engine.js';
@@ -18,6 +18,9 @@ import { drawAutomap } from './automap.js';
 import { loadSettings, saveSettings } from './settings.js';
 import { applyRebind, defaultBindings, prettyCode, legendText } from './bindings.js';
 import { RADIO_SOUND } from '../audio/events.js';
+import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, applyPadRebind, defaultPadBindings } from './gamepad.js';
+import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } from './wheel.js';
+import { pickNext, navDir, NavRepeat } from './padmenu.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -54,6 +57,8 @@ const g = {
   capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
 };
 
+g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
+
 const ui = new UI({
   newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
   buyUpgrade: (track) => buyUpgrade(track),
@@ -65,6 +70,9 @@ const ui = new UI({
   nextLevel: () => nextLevel(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
+  setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
+  resetPadBindings: () => { g.capturePad = null; commitPadBindings(defaultPadBindings(), 'Controller buttons reset to default.'); },
+  beginPadRebind: (action) => { g.capture = null; g.capturePad = { action }; ui.syncPadBindings(settings.padBindings, action, g.pad.family, 'Press a button on the pad. Esc cancels.'); },
   setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
@@ -77,7 +85,7 @@ function captureCode(code) {
   if (!r.ok) return ui.syncBindings(g.input.bindings, null, r.reason + '.');
   commitBindings(r.bindings, r.displaced.length ? `${prettyCode(code)} taken from: ${r.displaced.join(', ')}.` : `${prettyCode(code)} assigned.`);
 }
-ui.syncSettings(settings); ui.syncBindings(settings.bindings);
+ui.syncSettings(settings); ui.syncBindings(settings.bindings); ui.syncPadBindings(settings.padBindings, null, g.pad.family);
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
@@ -103,10 +111,10 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.world = world || createWorld(map, { seed, difficulty, carry });
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
-  g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false;
+  g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
-  if (!world) { ui.card(map.intro); ui.tip(legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
+  if (!world) { ui.card(map.intro); ui.tip(g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
   requestLock();
 }
@@ -137,10 +145,10 @@ function buyUpgrade(track) {
   ui.show('complete', completeData());
 }
 function quitToTitle() {
-  g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
+  cancelWheel(); g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
-function pause() { if (g.mode !== 'playing') return; audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
+function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
 function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
 function quickSave() {
   if (!g.world) return;
@@ -166,6 +174,7 @@ function requestLock(fromClick = false) {
 /** One fixed simulation tick. Everything (keyboard, mouse, bot, test hook) reaches the sim through g.input. */
 function stepOnce() {
   if (g.mode !== 'playing') return;
+  { const wantToggle = settings.aimToggle && WEAPONS[g.world.player.weapon]?.kind !== 'melee'; if (g.aimToggleOn !== wantToggle) { g.input.setToggle('aim', wantToggle); g.aimToggleOn = wantToggle; } }      // with a melee weapon in hand Aim is the GUARD, and a guard is always a HOLD, whatever the aim-toggle setting says
   const cmd = g.input.sample();
   if (cmd.pause) { pause(); return; }
   if (cmd.map) g.mapOpen = !g.mapOpen;                                            // UI-only toggle: the sim keeps running under the map
@@ -173,9 +182,9 @@ function stepOnce() {
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
     console.error(e); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' }); return;
   }
-  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
-  if (g.world.status === 'dead') { g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
-  else if (g.world.status === 'complete') { g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
+  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
+  if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
+  else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
 }
 
 // ---- devices ---------------------------------------------------------------
@@ -185,7 +194,8 @@ let dragging = false;
 canvas.addEventListener('mousedown', (e) => {
   if (g.mode !== 'playing') return;
   if (!g.locked && !g.lockFailed) { requestLock(true); return; }
-  dragging = true; g.input.keyDown('Mouse' + e.button);
+  if (g.wheel.open) return;                                                  // the wheel owns the mouse while it is open
+  g.padActive = false; dragging = true; g.input.keyDown('Mouse' + e.button);
 });
 addEventListener('mouseup', (e) => { dragging = false; g.input.keyUp('Mouse' + e.button); });
 document.addEventListener('mousedown', (e) => { if (g.capture && !e.target.closest?.('button.bind')) { e.preventDefault(); captureCode('Mouse' + e.button); } }, true);
@@ -203,8 +213,9 @@ canvas.addEventListener('wheel', (e) => {                                   // w
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
 const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan((WEAPONS[g.world?.player.weapon]?.adsFov ?? VIEW.adsFov) * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
-addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); });
+addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) { if (g.wheel.open) g.wheel.feed(e.movementX, e.movementY); else { if (e.movementX || e.movementY) g.padActive = false; g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); } } });
 addEventListener('keydown', (e) => {
+  if (g.capturePad) { e.preventDefault(); e.stopPropagation(); if (e.code === 'Escape') cancelPadCapture('Cancelled.'); return; }
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
@@ -212,18 +223,91 @@ addEventListener('keydown', (e) => {
   if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.nextLevel(); return; }
   if (e.code === 'F5' && g.mode === 'playing') { e.preventDefault(); quickSave(); return; }
   if (e.code === 'F9' && (g.mode === 'playing' || g.mode === 'paused')) { e.preventDefault(); quickLoad(); return; }
-  if (g.mode === 'playing') { g.input.keyDown(e.code); if (g.input.byCode.has(e.code)) e.preventDefault(); }
+  if (g.mode === 'playing' && (g.input.bindings.weaponLast || []).includes(e.code)) { e.preventDefault(); g.padActive = false; lastWeaponDown(); return; }          // tap = last weapon, hold = the wheel
+  if (g.mode === 'playing') { g.padActive = false; g.input.keyDown(e.code); if (g.input.byCode.has(e.code)) e.preventDefault(); }
 });
-addEventListener('keyup', (e) => g.input.keyUp(e.code));
+addEventListener('keyup', (e) => { if ((g.input.bindings.weaponLast || []).includes(e.code)) lastWeaponUp(); g.input.keyUp(e.code); });
 addEventListener('blur', () => pause());
+addEventListener('gamepadconnected', () => { g.padWasConnected = false; });
+addEventListener('gamepaddisconnected', () => { if (g.mode === 'playing' && g.padActive) pause(); });                // the pad you were playing with went away: pause, do not let the game run on without you
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+
+// ---- controller and weapon wheel -------------------------------------------------------------
+function refreshLegends() { ui.legends(g.padWasConnected ? padLegend(settings.padBindings, g.pad.family) : ''); ui.syncPadBindings(settings.padBindings, g.capturePad?.action ?? null, g.pad.family); }
+function commitPadBindings(b, note = '') { settings.padBindings = b; g.pad.setBindings(b); saveSettings(storage, settings); ui.syncPadBindings(b, null, g.pad.family, note); }
+function cancelPadCapture(note) { g.capturePad = null; ui.syncPadBindings(settings.padBindings, null, g.pad.family, note); }
+function cancelWheel() { g.wheel.cancel(); if (g.wheelMuffled) { g.wheelMuffled = false; audio.setMuffled(false); } g.timeScale = 1; ui.setWheel(null); }
+/** equip the wheel's choice: the same slot action the number keys press (the sim ignores a weapon you do not own); choosing the melee slot while already in it stays put instead of cycling */
+function wheelPick(index) {
+  const slot = WHEEL_SLOTS[index], p = g.world?.player; if (!slot || !p) return;
+  if (slot.id === 'melee' ? WEAPONS[p.weapon]?.kind === 'melee' : p.weapon === slot.id) return;
+  g.input.press('weapon' + (slot.slot + 1)); g.input.release('weapon' + (slot.slot + 1));
+}
+function lastWeaponDown() { if (settings.wheelToggle) { if (g.wheel.open) lastWeaponUp(true); else g.wheel.forceOpen(performance.now()); return; } g.wheel.press(performance.now()); }
+function lastWeaponUp(force = false) {
+  if (settings.wheelToggle && !force) return;
+  const r = g.wheel.release();
+  if (r.tap) { if (g.mode === 'playing') { g.input.press('weaponLast'); g.input.release('weaponLast'); } } else wheelPick(r.pick);
+}
+function updateWheelUI() {
+  if (g.mode !== 'playing' || !g.world || !g.wheel.open) { ui.setWheel(null); return; }
+  ui.setWheel(wheelSvg(wheelModel(g.world.player, g.wheel.sel, WEAPONS, MELEE_ORDER)), !settings.wheelSlow ? '' : g.difficulty === 'easy' ? 'TIME FROZEN' : 'TIME SLOWED');
+}
+const navRepeat = new NavRepeat();
+const menuItems = () => { const scr = document.querySelector('.screen:not(.hidden)'); return scr ? [...scr.querySelectorAll('button, input, select, summary')].filter((el) => !el.disabled && el.offsetParent !== null) : []; };
+/** the pad in a menu: D-pad or left stick moves the focus, A / Cross confirms (fixed, so the menus always work whatever is rebound), B / Circle or the pause button backs out of the pause menu */
+function padMenu(out, dt) {
+  const d = navRepeat.update(navDir(g.pad.down, out.move), dt), items = menuItems(); if (!items.length) return;
+  const cur = items.indexOf(document.activeElement);
+  if (cur < 0) { if (d || out.pressed.length) items[0].focus(); return; }
+  if (d) {
+    const el = items[cur];
+    if (el.type === 'range' && (d === 'left' || d === 'right')) { const step = Number(el.step) || 1, v = Number(el.value) + (d === 'right' ? step : -step); el.value = Math.min(Number(el.max), Math.max(Number(el.min), v)); el.dispatchEvent(new Event('input', { bubbles: true })); }
+    else { const n = pickNext(items.map((e, i) => { const r = e.getBoundingClientRect(); return { id: i, x: r.x, y: r.y, w: r.width, h: r.height }; }), cur, d); if (n !== cur) { items[n].focus(); items[n].scrollIntoView?.({ block: 'nearest' }); } }
+  }
+  if (out.pressed.includes('Pad0')) items[cur].click();
+  if (g.mode === 'paused' && (out.pressed.includes('Pad1') || (settings.padBindings.pause || []).some((c) => out.pressed.includes(c)))) resume();
+}
+function padPress(a) {
+  if (a === 'weaponLast') return lastWeaponDown();
+  if (a === 'sprint' && !settings.sprintToggle) { g.padSprint = !g.padSprint; return; }                // a click of the stick cannot be held while steering it: on a pad sprint is a toggle that ends when you let go of the stick
+  g.input.press(a);
+}
+function padRelease(a) { if (a === 'weaponLast') return lastWeaponUp(); if (a === 'sprint' && !settings.sprintToggle) return; g.input.release(a); }
+function pollPad(dt) {
+  const list = navigator.getGamepads ? Array.from(navigator.getGamepads()) : [], gp = list.find((x) => x && x.connected && x.mapping === 'standard') ?? list.find((x) => x && x.connected) ?? null; g.gp = gp;
+  const playing = g.mode === 'playing', scale = playing ? adsSensScale() * settings.sensitivity * (g.world && !g.wheel.open ? assistScale(g.world, settings.gamepad.assist) : 1) : 1;
+  const out = g.pad.poll(snapshotOf(gp), dt, scale);
+  if (out.connected !== g.padWasConnected) { g.padWasConnected = out.connected; refreshLegends(); }
+  for (const a of out.actions.released) if (playing) padRelease(a);
+  if (!out.connected) { if (g.padSprintHeld) { g.input.release('sprint'); g.padSprintHeld = false; } g.padSprint = false; g.input.setAnalog(0, 0); return; }
+  if (out.active) g.padActive = true;
+  if (g.capturePad) { if (out.pressed.length) { const r = applyPadRebind(settings.padBindings, g.capturePad.action, out.pressed[0]); if (r.ok) { g.capturePad = null; commitPadBindings(r.bindings, r.displaced.length ? padGlyph(out.pressed[0], g.pad.family) + ' taken from: ' + r.displaced.join(', ') + '.' : padGlyph(out.pressed[0], g.pad.family) + ' assigned.'); } else cancelPadCapture(r.reason + '.'); } return; }
+  if (!playing) { g.input.setAnalog(0, 0); padMenu(out, dt); return; }
+  for (const a of out.actions.pressed) if (!(g.wheel.open && (a === 'fire' || a === 'aim' || a === 'melee'))) padPress(a);           // the wheel owns the triggers while it is open
+  g.input.setAnalog(out.move[0], out.move[1]);
+  if (g.wheel.open) g.wheel.stick(out.stick[0], out.stick[1]); else if (out.look[0] || out.look[1]) { g.input.addYaw(out.look[0]); g.input.addPitch(out.look[1]); }
+  const wantSprint = g.padSprint && Math.hypot(out.move[0], out.move[1]) > 0.25; if (!wantSprint) g.padSprint = false;
+  if (wantSprint && !g.padSprintHeld) { g.input.press('sprint'); g.padSprintHeld = true; } else if (!wantSprint && g.padSprintHeld) { g.input.release('sprint'); g.padSprintHeld = false; }
+}
+let lastRumble = 0;
+function rumbleEvents(ev) {
+  if (!g.padActive || !settings.gamepad.vibration || !g.gp?.vibrationActuator) return;
+  for (const e of ev) { const r = rumbleFor(e); if (!r) continue; const t = performance.now(); if (r.ms < 60 && t - lastRumble < 70) continue; lastRumble = t; try { g.gp.vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: r.ms, weakMagnitude: r.weak, strongMagnitude: r.strong }); } catch { /* not every pad can */ } }
+}
 
 // ---- frame loop --------------------------------------------------------------
 function frame(now) {
   const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
   g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
+  pollPad(dt);
   let alpha = 0;
-  if (g.mode === 'playing') alpha = g.manual ? 1 : g.loop.advance(dt).alpha;            // g.manual: the dev test hook owns the clock
+  if (g.mode === 'playing') {
+    if (g.wheel.tick(now)) g.input.release('fire');                                   // the wheel opened (the last-weapon key has been held): stop shooting
+    const open = g.wheel.open, target = open ? timeScaleFor(g.difficulty, settings.wheelSlow) : 1; g.timeScale = easeScale(g.timeScale, target, raw);        // Easy: frozen, Normal: 15%, Hard: 5% (owner decision D7); the clock the simulation is fed, never the simulation
+    if (open !== g.wheelMuffled) { g.wheelMuffled = open; audio.setMuffled(open); }
+    alpha = g.manual ? 1 : g.loop.advance(dt * g.timeScale).alpha;
+  }            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
   else if (g.mode === 'ending') {
     g.timer -= dt;
@@ -236,14 +320,14 @@ function frame(now) {
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
-  ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : '');
+  updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : '');
   requestAnimationFrame(frame);
 }
 /** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
 function doorPrompt(w) {
   const t = useTarget(w); if (!t || t.secret || t.target === 1 || t.open > 0.05) return '';
   if (t.key && !w.player.keys.includes(t.key)) return `Locked: needs the ${KEYS[t.key]?.name.toLowerCase() || 'key'}`;
-  return `[${prettyCode(g.input.bindings.use?.[0])}] open`;
+  return `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] open`;
 }
 resize(); ui.show('title', { canContinue: canContinue(), note: settingsNotes.join(' ') });
 requestAnimationFrame(frame);

@@ -12,6 +12,37 @@ canvas{display:block;width:100vw;height:100vh}
 body:not([data-screen=""]) #cross{display:none}
 body[data-stance=ads] #cross{width:3px;height:3px;margin:-2px 0 0 -2px;background:var(--teal);border:none;opacity:.9}
 body[data-stance=sprint] #cross{opacity:0}
+body[data-stance=guard] #cross{width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:3px;border-color:var(--bronze);opacity:.9}
+#cross.ripo{border-color:#ffd45a!important;box-shadow:0 0 10px #ffd45a;opacity:1}
+#hitmark{position:fixed;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;pointer-events:none;opacity:0;z-index:2}
+#hitmark::before,#hitmark::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:28px;margin:-14px 0 0 -1px;background:var(--paper);transform:rotate(45deg);box-shadow:0 0 0 1px #0008}
+#hitmark::after{transform:rotate(-45deg)}
+#hitmark.on{animation:hitm .24s ease-out}
+#hitmark.kill::before,#hitmark.kill::after{background:var(--red);width:3px}
+#hitmark.plate::before,#hitmark.plate::after{background:#8a98a0}
+@keyframes hitm{0%{opacity:1;transform:scale(1.35)}100%{opacity:0;transform:scale(.8)}}
+#cross-note{position:fixed;left:50%;top:calc(50% + 36px);transform:translateX(-50%);pointer-events:none;letter-spacing:.3em;font-size:13px;color:var(--teal);text-shadow:1px 1px 0 #000,0 0 6px #000;opacity:0;z-index:2}
+#cross-note.on{animation:cnote .8s ease-out}
+@keyframes cnote{0%{opacity:1;transform:translateX(-50%) scale(1.4)}35%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(-8px)}}
+#charge{position:fixed;left:50%;top:calc(50% + 30px);width:92px;height:6px;margin-left:-46px;border:1px solid var(--slate);background:#0d0f14b8;pointer-events:none;opacity:0;z-index:2}
+#charge i{display:block;height:100%;width:0;background:var(--teal)}
+#wheel{position:fixed;left:50%;top:50%;width:min(64vh,540px);height:min(64vh,540px);transform:translate(-50%,-50%);pointer-events:none;z-index:6}
+body.wheel-open::after{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 50%,#07080c00 16%,#07080caa 78%);pointer-events:none;z-index:5}
+#wheel svg{width:100%;height:100%;filter:drop-shadow(0 4px 14px #000)}
+#wheel .seg path{fill:#0d0f14e6;stroke:var(--slate);stroke-width:2}
+#wheel .seg text{fill:#9fb4b0;font:10px ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#wheel .seg .icon{fill:none;stroke:#9fb4b0;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#wheel .seg.cur path{stroke:var(--bronze)}
+#wheel .seg.sel path{fill:#123030cc;stroke:var(--teal);stroke-width:3}
+#wheel .seg.sel .icon{stroke:var(--teal)}#wheel .seg.sel text{fill:var(--teal)}
+#wheel .seg.off{opacity:.35}
+#wheel text.mid{fill:var(--paper);font:700 13px ui-monospace,Consolas,monospace;letter-spacing:.14em}
+#wheel text.role{fill:#9fb4b0;font:9px ui-monospace,Consolas,monospace;letter-spacing:.1em}
+#wheel .wnote{position:absolute;left:0;right:0;bottom:-26px;text-align:center;color:var(--teal);letter-spacing:.3em;font-size:11px;text-shadow:1px 1px 0 #000}
+body.wheel-open #cross,body.wheel-open #use-hint{opacity:0}
+#legend-title,#legend-pause{white-space:pre-line}
+button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:var(--teal);color:var(--teal)}
+#charge.on{opacity:1}#charge.fist i{background:var(--bronze)}#charge.full i{background:#fff4c0;box-shadow:0 0 8px #fff4c0}
 #hud{position:fixed;left:0;right:0;bottom:0;display:flex;gap:18px;align-items:flex-end;padding:10px 18px;pointer-events:none;background:linear-gradient(0deg,#07080ccc,transparent)}
 #hud .stat{display:flex;flex-direction:column;align-items:flex-start;min-width:76px}
 #hud .stat b{font-size:30px;line-height:1;color:var(--paper);text-shadow:2px 2px 0 var(--ink)}
@@ -64,7 +95,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 button.buy{display:inline-block;width:auto;margin:0 0 0 8px;padding:2px 12px;font-size:11px}button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:var(--paper)}
 </style></head>
 <body data-screen="">
-<canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="cross"></div>
+<canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
 <div id="toasts"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
@@ -105,11 +136,21 @@ button.buy{display:inline-block;width:auto;margin:0 0 0 8px;padding:2px 12px;fon
     <label>Render width <select id="set-res"></select></label>
     <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
     <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
+    <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
+    <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
+    <label>Controller <input id="set-pad" type="checkbox"></label>
+    <label>Stick look speed <input id="set-padlook" type="range" min="1" max="8" step="0.1"></label>
+    <label>Stick dead zone <input id="set-paddz" type="range" min="0.05" max="0.5" step="0.01"></label>
+    <label>Invert stick Y <input id="set-padinvert" type="checkbox"></label>
+    <label>Aim assist <input id="set-padassist" type="range" min="0" max="1" step="0.05"></label>
+    <label>Vibration <input id="set-padvib" type="checkbox"></label>
+    <label>Button symbols <select id="set-padglyph"><option value="auto">Automatic</option><option value="ps">PlayStation</option><option value="xbox">Xbox</option></select></label>
     <label>Ink outline <input id="set-outline" type="checkbox"></label>
     <label>Paint pass <input id="set-paint" type="checkbox"></label>
     </details>
     <div class="legend" id="legend-pause"></div>
     <details id="controls-box"><summary>Controls (click a key to change it)</summary><div id="controls" class="rows"></div><button id="btn-reset-keys">Reset controls to default</button><div class="note" id="bind-note"></div></details>
+    <details id="pad-box"><summary>Controller buttons (click one, then press a button on the pad)</summary><div id="padcontrols" class="rows"></div><button id="btn-reset-pad">Reset controller buttons to default</button><div class="note" id="pad-note"></div></details>
     <div class="row"><button id="btn-restart">Restart level</button><button id="btn-quit">Quit to title</button></div>
     <div class="note" id="pause-note"></div>
   </div>

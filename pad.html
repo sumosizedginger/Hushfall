@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HUSHFALL · controller test</title>
+<style>
+:root{--ink:#0d0f14;--slate:#2b3a3f;--teal:#3fffe0;--bronze:#d9a04c;--paper:#e8e2d0}
+html,body{margin:0;background:#07080c;color:var(--paper);font:14px/1.5 ui-monospace,Consolas,"Courier New",monospace}
+main{max-width:860px;margin:0 auto;padding:18px}
+h1{letter-spacing:.3em;color:var(--teal);font-size:24px;margin:0 0 4px}
+p{color:#9fb4b0;margin:4px 0 14px}
+.pad{border:2px solid var(--slate);background:#0d0f14;padding:12px 16px;margin:12px 0}
+.pad h2{margin:0 0 6px;color:var(--bronze);font-size:15px;letter-spacing:.12em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.b{border:1px solid var(--slate);padding:4px 8px;color:#9fb4b0}
+.b.on{border-color:var(--teal);color:var(--teal);background:#12303066}
+.b small{display:block;color:#6d807c}
+.axes{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap}
+.axis{width:150px}.axis i{display:block;height:8px;background:#182126;position:relative}.axis i b{position:absolute;top:0;bottom:0;width:6px;background:var(--teal);margin-left:-3px}
+.note{color:#e0a060}
+</style></head>
+<body><main>
+<h1>CONTROLLER TEST</h1>
+<p>Plug in or pair the pad, then PRESS A BUTTON on it (a browser shows nothing until you do). Each button lights up with its number, the symbol the game will show for it, and its analog value. This is what HUSHFALL reads: the browser's standard mapping, the same numbers for a PS5 and an Xbox pad. Tell me if a button lights the wrong box.</p>
+<div id="out"><div class="pad note">No controller seen yet. Press any button on it.</div></div>
+<script type="module">
+import { glyphFamily, padGlyph, PAD_DEFAULTS } from '/src/game/gamepad.js';
+const out = document.getElementById('out'), actionOf = {};
+for (const [a, codes] of Object.entries(PAD_DEFAULTS)) for (const c of codes) actionOf[c] = a;
+const NAMES = ['bottom face (Cross / A)', 'right face (Circle / B)', 'left face (Square / X)', 'top face (Triangle / Y)', 'left bumper (L1 / LB)', 'right bumper (R1 / RB)', 'left trigger (L2 / LT)', 'right trigger (R2 / RT)', 'Create / View', 'Options / Menu', 'left stick click (L3 / LS)', 'right stick click (R3 / RS)', 'D-pad up', 'D-pad down', 'D-pad left', 'D-pad right', 'PS / Home', 'touchpad click / Share'];
+function frame() {
+  const pads = Array.from(navigator.getGamepads ? navigator.getGamepads() : []).filter((p) => p && p.connected);
+  if (pads.length) out.innerHTML = pads.map((p) => {
+    const fam = glyphFamily(p.id);
+    return `<div class="pad"><h2>${p.id.replace(/</g, '&lt;')}</h2><div>mapping: <b>${p.mapping || '(none: the browser did not recognise a standard layout)'}</b> · symbols: <b>${fam === 'ps' ? 'PlayStation' : 'Xbox'}</b> · ${p.buttons.length} buttons, ${p.axes.length} axes · vibration: <b>${p.vibrationActuator ? 'yes' : 'not offered'}</b></div>
+      <div class="grid" style="margin-top:8px">${p.buttons.map((b, i) => `<div class="b ${b.pressed || b.value > 0.5 ? 'on' : ''}">${i}: ${padGlyph('Pad' + i, fam)}<small>${NAMES[i] ?? ''}${actionOf['Pad' + i] ? ' → ' + actionOf['Pad' + i] : ''}</small><small>value ${b.value.toFixed(2)}</small></div>`).join('')}</div>
+      <div class="axes">${p.axes.map((v, i) => `<div class="axis">axis ${i} ${['left X', 'left Y', 'right X', 'right Y'][i] ?? ''}: ${v.toFixed(2)}<i><b style="left:${50 + v * 50}%"></b></i></div>`).join('')}</div></div>`;
+  }).join('');
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</main></body></html>
