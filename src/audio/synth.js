@@ -267,6 +267,9 @@ export const SFX = {
 
 // ------------------------------------------------------------------ helpers shared with the engine
 /** deterministic [0,1) source for offline renders */
+/** level a recipe down by `k` (a gain stage in front of its output): the first offline render of the PT-013 sounds measured peaks above full scale for these five (audio QA: arc_bolt 1.03, melee_hit_heavy 1.13, parry 1.28, guard_break 1.05, pin_thunk 1.16), so they are scaled to peak near 0.9 like the rest; melee_hit peaked at 0.994, too close, and is scaled as well */
+const scaled = (fn, k) => (c, out, t, o) => { const g = c.createGain(); g.gain.value = k; g.connect(out); return fn(c, g, t, o); };
+SFX.arc_bolt = scaled(SFX.arc_bolt, 0.85); SFX.melee_hit = scaled(SFX.melee_hit, 0.88); SFX.melee_hit_heavy = scaled(SFX.melee_hit_heavy, 0.78); SFX.parry = scaled(SFX.parry, 0.68); SFX.guard_break = scaled(SFX.guard_break, 0.84); SFX.pin_thunk = scaled(SFX.pin_thunk, 0.76);
 export function seededRandom(seed = 1) { let s = seed >>> 0; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
 
 /** Render one recipe on an OfflineAudioContext (browser only). Returns {rate, samples:Float32Array, duration}. */
