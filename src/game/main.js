@@ -57,7 +57,7 @@ const g = {
   capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
 };
 
-g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
+g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintEngaged = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
 
 const ui = new UI({
   newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
@@ -270,7 +270,7 @@ function padMenu(out, dt) {
 }
 function padPress(a) {
   if (a === 'weaponLast') return lastWeaponDown();
-  if (a === 'sprint' && !settings.sprintToggle) { g.padSprint = !g.padSprint; return; }                // a click of the stick cannot be held while steering it: on a pad sprint is a toggle that ends when you let go of the stick
+  if (a === 'sprint' && !settings.sprintToggle) { g.padSprint = !g.padSprint; g.padSprintEngaged = Math.hypot(g.input.analog[0], g.input.analog[1]) > 0.25; return; }                // a click of the stick cannot be held while steering it: on a pad sprint is a toggle that ends when you let go of the stick
   g.input.press(a);
 }
 function padRelease(a) { if (a === 'weaponLast') return lastWeaponUp(); if (a === 'sprint' && !settings.sprintToggle) return; g.input.release(a); }
@@ -287,7 +287,8 @@ function pollPad(dt) {
   for (const a of out.actions.pressed) if (!(g.wheel.open && (a === 'fire' || a === 'aim' || a === 'melee'))) padPress(a);           // the wheel owns the triggers while it is open
   g.input.setAnalog(out.move[0], out.move[1]);
   if (g.wheel.open) g.wheel.stick(out.stick[0], out.stick[1]); else if (out.look[0] || out.look[1]) { g.input.addYaw(out.look[0]); g.input.addPitch(out.look[1]); }
-  const wantSprint = g.padSprint && Math.hypot(out.move[0], out.move[1]) > 0.25; if (!wantSprint) g.padSprint = false;
+  const moving = Math.hypot(out.move[0], out.move[1]) > 0.25; if (g.padSprint) { if (moving) g.padSprintEngaged = true; else if (g.padSprintEngaged) g.padSprint = false; }            // armed by the click, kept while the stick is still neutral, ended by letting go of it after it has been pushed
+  const wantSprint = g.padSprint && moving;
   if (wantSprint && !g.padSprintHeld) { g.input.press('sprint'); g.padSprintHeld = true; } else if (!wantSprint && g.padSprintHeld) { g.input.release('sprint'); g.padSprintHeld = false; }
 }
 let lastRumble = 0;
