@@ -75,6 +75,8 @@ export function installTestHook(app) {
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     /** the weapon wheel (PT-013): is it open, what is selected, the clock scale; and push the pointer as the mouse would (the real mouse needs pointer lock, which the harness turns off) */
+    /** the live GameView, for look-dev probes (dev only; compiled out of the production build) */
+    view() { return g.view; },
     wheel() { return { open: g.wheel.open, sel: g.wheel.sel, timeScale: g.timeScale }; },
     setup_wheelFeed(dx, dy) { g.wheel.feed(dx, dy); },
     setup_progress(fields) { g.progress = sanitizeProgress({ ...g.progress, ...fields }); if (g.mode === 'complete') ui.locker(g.progress, ''); },                         // the campaign progress (salvage, upgrade tiers, records) before a level starts or on the intermission

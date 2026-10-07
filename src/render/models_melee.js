@@ -67,7 +67,7 @@ export function makeFists(tex) {
     for (const k of ['R', 'L']) put(arms[k], [READY[k].p[0], READY[k].p[1] + sway * (k === 'R' ? 1 : -1), READY[k].p[2]], READY[k].r);
     // the guard: both fists up and together in front of the face
     const gd = st.guard ?? 0;
-    if (gd > 0) { put(R, lerp3(R.position.toArray(), [0.1, -0.5, 0.2], gd), lerp3(R.rotation.toArray(), [1.0, 0.3, -0.12], gd)); put(L, lerp3(L.position.toArray(), [-0.1, -0.5, 0.2], gd), lerp3(L.rotation.toArray(), [1.0, -0.3, 0.12], gd)); }
+    if (gd > 0) { put(R, lerp3(R.position.toArray(), [0.17, -0.62, 0.3], gd), lerp3(R.rotation.toArray(), [0.88, 0.3, -0.1], gd)); put(L, lerp3(L.position.toArray(), [-0.17, -0.62, 0.3], gd), lerp3(L.rotation.toArray(), [0.88, -0.3, 0.1], gd)); }
     // a heavy punch charging: the leading fist drawn back past the shoulder, trembling at full
     const ch = st.charge ?? 0;
     if (ch > 0) { const A = arms[lead], shake = ch >= 1 ? Math.sin((st.t ?? 0) * 70) * 0.006 : 0; put(A, lerp3(A.position.toArray(), [sgn * 0.3 + shake, -0.55, 0.5], ch), lerp3(A.rotation.toArray(), [0.45, sgn * -0.55, sgn * 0.28], ch)); }
