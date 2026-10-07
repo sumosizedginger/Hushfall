@@ -10,15 +10,15 @@ const SIL_S = 100, SIL_W = 360, SIL_H = 560;            // the silhouette canvas
 // ------------------------------------------------------------------------------------------------------------------ drawing
 function pip(x, y, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
 
-const hex = (c) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+export const hex = (c) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
 const toHex = (r) => '#' + r.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
-const mix = (c, to, f) => { const a = hex(c), b = hex(to); return toHex(a.map((v, i) => v + (b[i] - v) * f)); };
+export const mix = (c, to, f) => { const a = hex(c), b = hex(to); return toHex(a.map((v, i) => v + (b[i] - v) * f)); };
 const lum = (c) => { const [r, gg, b] = hex(c); return (0.299 * r + 0.587 * gg + 0.114 * b) / 255; };
 /** engraving colour that always reads on its ground: darker lines on a light part, lighter lines on a dark part */
 const lineOn = (c) => (lum(c) < 0.3 ? mix(c, '#efe6cc', 0.42) : mix(c, '#0d0f14', 0.62));
 
 /** parallel engraving strokes clipped to a polygon (px coordinates); keepX = only the part of each stroke right of that x (the shadow side) */
-function hatch(g, pts, o, keepX = -Infinity) {
+export function hatch(g, pts, o, keepX = -Infinity) {
   const a = (o.ang ?? 70) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), gap = o.gap ?? 5;
   const Rr = pts.map(([x, y]) => [x * ca + y * sa, -x * sa + y * ca]), vs = Rr.map((r) => r[1]), v0 = Math.min(...vs), v1 = Math.max(...vs);
   g.stroke(o.kind ?? 'cpencil', o.col ?? '#1a1208', o.wt ?? 0.6);
@@ -37,7 +37,7 @@ function hatch(g, pts, o, keepX = -Infinity) {
 }
 
 /** a Chladni (nodal-line) figure: the zero set of cos(n pi u) cos(m pi v) - cos(m pi u) cos(n pi v) over a box, by marching squares; drawn as brush line-work, clipped to a polygon */
-function nodal(g, box, n, m, col, wt, clip, res = 30, k = 'cpencil') {
+export function nodal(g, box, n, m, col, wt, clip, res = 30, k = 'cpencil') {
   const [x0, y0, x1, y1] = box, f = (i, j) => { const u = i / res, v = j / res; return Math.cos(n * Math.PI * u) * Math.cos(m * Math.PI * v) - Math.cos(m * Math.PI * u) * Math.cos(n * Math.PI * v); };
   const px = (i) => x0 + (x1 - x0) * i / res, py = (j) => y0 + (y1 - y0) * j / res;
   g.stroke(k, col, wt);
