@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-06T23:28:47.669Z",
+  "when": "2026-10-07T00:09:26.833Z",
   "sources": {
-    "engine": "1cda2c200751fc80",
-    "render": "1302b1d566fa429e",
-    "game": "ba3afdb17603d7c8",
-    "audio": "a3e083ce1a860458",
+    "engine": "db745e41c61d6515",
+    "render": "5e8d89b11b635613",
+    "game": "22801f2db9072035",
+    "audio": "152501668c4a7c69",
     "assets": "bf0547479d5b8097"
   },
-  "commit": "35967b9",
+  "commit": "af329fe",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -44,8 +44,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.24,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "pump",
@@ -79,6 +79,18 @@
       "loudestWindowRms": 0.098,
       "tailRms": 0,
       "audibleSeconds": 0.41,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "arc_fire",
+      "seconds": 0.18,
+      "peak": 0.388,
+      "rms": 0.0074,
+      "loudestWindowRms": 0.0564,
+      "tailRms": 0,
+      "audibleSeconds": 0.1,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -416,8 +428,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.54,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "tone_pulse",
@@ -428,8 +440,8 @@
       "tailRms": 0.00004,
       "audibleSeconds": 1.81,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "pulse_hit",
@@ -452,8 +464,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.99,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "cantor_call",
@@ -632,8 +644,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.43,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mother_spit",
@@ -668,8 +680,8 @@
       "tailRms": 0.00332,
       "audibleSeconds": 3,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "enemy_die",

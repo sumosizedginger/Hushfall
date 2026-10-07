@@ -2,17 +2,17 @@
   "mapId": "C1E2M08",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "35967b9",
+  "codeVersion": "af329fe",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "d5d18ae430896f0d",
+  "mapSha": "a3ea190e9278a7ed",
   "assetVersion": "bf0547479d5b8097",
-  "engineSha": "1cda2c200751fc80",
+  "engineSha": "db745e41c61d6515",
   "sources": {
-    "engine": "1cda2c200751fc80",
-    "render": "1302b1d566fa429e",
-    "game": "ba3afdb17603d7c8",
-    "audio": "a3e083ce1a860458",
+    "engine": "db745e41c61d6515",
+    "render": "5e8d89b11b635613",
+    "game": "22801f2db9072035",
+    "audio": "152501668c4a7c69",
     "assets": "bf0547479d5b8097"
   },
   "routesSha": "7504fc4351f272e7",
@@ -25,10 +25,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 3689,
-      "finalHash": "e1390500",
+      "finalHash": "16aceb77",
       "kills": 22,
       "secrets": 0,
-      "items": 12,
+      "items": 15,
       "damageTaken": 21
     },
     {
@@ -37,10 +37,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4266,
-      "finalHash": "509fda97",
+      "finalHash": "fa16dbc5",
       "kills": 22,
       "secrets": 0,
-      "items": 13,
+      "items": 16,
       "damageTaken": 59
     },
     {
@@ -49,10 +49,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5050,
-      "finalHash": "fc0b849e",
+      "finalHash": "abe77bda",
       "kills": 22,
       "secrets": 0,
-      "items": 17,
+      "items": 20,
       "damageTaken": 110
     },
     {
@@ -61,10 +61,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4027,
-      "finalHash": "be53c717",
+      "finalHash": "58cbf9bc",
       "kills": 22,
       "secrets": 1,
-      "items": 13,
+      "items": 16,
       "damageTaken": 21
     },
     {
@@ -73,10 +73,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 4604,
-      "finalHash": "4376304b",
+      "finalHash": "199626f5",
       "kills": 22,
       "secrets": 1,
-      "items": 14,
+      "items": 17,
       "damageTaken": 59
     },
     {
@@ -85,10 +85,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5388,
-      "finalHash": "37e42f5c",
+      "finalHash": "975134b4",
       "kills": 22,
       "secrets": 1,
-      "items": 18,
+      "items": 21,
       "damageTaken": 110
     }
   ],
@@ -99,12 +99,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4266,
-    "finalHash": "509fda97",
+    "finalHash": "fa16dbc5",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 20,
-    "items": 79,
+    "items": 82,
     "secrets": 1
   },
   "facts": {
@@ -148,13 +148,14 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 1431,
+        "capacity": 1521,
         "fired": 187,
         "capacityBy": {
           "flare": 82,
           "shell": 185,
           "rivet": 1140,
-          "bolt": 24
+          "bolt": 24,
+          "cell": 90
         },
         "firedBy": {
           "flare": 2,
@@ -180,13 +181,14 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 982,
+        "capacity": 1042,
         "fired": 226,
         "capacityBy": {
           "flare": 58,
           "shell": 128,
           "rivet": 780,
-          "bolt": 16
+          "bolt": 16,
+          "cell": 60
         },
         "firedBy": {
           "flare": 2,
@@ -212,13 +214,14 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 803,
+        "capacity": 851,
         "fired": 232,
         "capacityBy": {
           "flare": 46,
           "shell": 109,
           "rivet": 636,
-          "bolt": 12
+          "bolt": 12,
+          "cell": 48
         },
         "firedBy": {
           "flare": 5,
@@ -267,19 +270,19 @@
   },
   "browser": {
     "file": "validation/browser/C1E2M08.json",
-    "when": "2026-10-06T23:24:16.099Z",
-    "commit": "35967b9",
-    "mapSha": "d5d18ae430896f0d",
+    "when": "2026-10-07T00:04:56.633Z",
+    "commit": "af329fe",
+    "mapSha": "a3ea190e9278a7ed",
     "routesSha": "7504fc4351f272e7",
     "passed": 14,
     "total": 14,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-06T23:20:23.929Z",
-      "commit": "35967b9",
-      "passed": 117,
-      "total": 117
+      "when": "2026-10-07T00:01:07.839Z",
+      "commit": "af329fe",
+      "passed": 119,
+      "total": 119
     }
   },
   "automated": {
@@ -386,19 +389,19 @@
         "detail": "x15.57"
       },
       {
-        "name": "ammo easy: rounds available (1431) are at least 1.5x what the perfect bot fires (187): humans miss",
+        "name": "ammo easy: rounds available (1521) are at least 1.5x what the perfect bot fires (187): humans miss",
         "ok": true,
-        "detail": "x7.65"
+        "detail": "x8.13"
       },
       {
-        "name": "ammo normal: rounds available (982) are at least 1.5x what the perfect bot fires (226): humans miss",
+        "name": "ammo normal: rounds available (1042) are at least 1.5x what the perfect bot fires (226): humans miss",
         "ok": true,
-        "detail": "x4.35"
+        "detail": "x4.61"
       },
       {
-        "name": "ammo hard: rounds available (803) are at least 1.5x what the perfect bot fires (232): humans miss",
+        "name": "ammo hard: rounds available (851) are at least 1.5x what the perfect bot fires (232): humans miss",
         "ok": true,
-        "detail": "x3.46"
+        "detail": "x3.67"
       },
       {
         "name": "viability easy: a perfect fighter completes the level",
@@ -528,7 +531,7 @@
       {
         "name": "the shared browser check passed",
         "ok": true,
-        "detail": "117/117"
+        "detail": "119/119"
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
@@ -538,7 +541,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2M08.json: d5d18ae430896f0d vs d5d18ae430896f0d"
+        "detail": "validation/browser/C1E2M08.json: a3ea190e9278a7ed vs a3ea190e9278a7ed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -559,5 +562,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 20 enemies, 79 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 20 enemies, 82 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }
