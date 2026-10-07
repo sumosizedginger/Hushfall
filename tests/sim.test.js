@@ -161,7 +161,7 @@ test('exit while taking fatal damage: death wins (a dead player cannot complete 
   const w = createWorld(loadMap(), { seed: 1 });
   const ex = w.map.exits[0], e = w.enemies[0];
   w.player.x = ex.x; w.player.z = ex.z; w.player.hp = 1;
-  e.x = ex.x; e.z = ex.z + 1.2; e.state = 'chase'; e.yaw = 0; e.attackT = ENEMIES.tollbearer.attack.duration * ENEMIES.tollbearer.attack.windup - TICK / 2;
+  e.x = ex.x; e.z = ex.z + 1.2; e.state = 'chase'; e.yaw = Math.PI; e.attackT = ENEMIES.tollbearer.attack.duration * ENEMIES.tollbearer.attack.windup - TICK / 2;      // (facing the player, who is to its north: a blow lands only in front of the creature, PT-014)
   step(w, idle());
   assert.equal(w.status, 'dead');
   assert.equal(w.endStats, null);
