@@ -1,6 +1,6 @@
 // Which meshes of a refined rig sit furthest from its axis (the usual reason the WIDTH rule of check-rigs.mjs fails). node tools/look/rig-parts.mjs <kind>
 import * as THREE from 'three';
-import { FACTORIES } from './rigs_v2.js';
+import { FACTORIES } from '../../src/render/models_choir.js';
 const kind = process.argv[2] ?? 'bellhand';
 const v = FACTORIES[kind](null); v.pose({ t: 1, walk: 0, phase: 0, attack: 0, lunge: 0, dead: 0, flash: 0 }); v.root.updateMatrixWorld(true);
 const rows = [], t = new THREE.Vector3();

@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { WALL_SKINS, FLOOR_SKINS } from '../engine/defs.js';
+import { CHOIR_KINDS, choirAtlasName } from './choir_cells.js';
 
 // Vite resolves + hashes these at build time, so dev and production builds use the same code path.
 const urls = import.meta.glob(['../../assets/baked/*.png', '!../../assets/baked/enemy_tollbearer_idle.png', '!../../assets/baked/weapon_flarecannon.png'], { eager: true, query: '?url', import: 'default' });
 const URL_BY_NAME = Object.fromEntries(Object.entries(urls).map(([p, u]) => [p.split('/').pop().replace('.png', ''), u]));
 
 const loader = new THREE.TextureLoader();
-const ATLASES = new Set(['tollbearer_atlas', 'flarecannon_atlas', 'props_atlas']);
+const CHOIR_ATLASES = CHOIR_KINDS.map(choirAtlasName);       // the ten creature atlases (models_choir.js)
+const ATLASES = new Set(['tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', ...CHOIR_ATLASES]);
 
 export function loadTex(name, { repeat = true, srgb = true } = {}) {
   const url = URL_BY_NAME[name];
@@ -23,7 +25,7 @@ export function loadTex(name, { repeat = true, srgb = true } = {}) {
 
 // Textures that are not skins (props, atlases, the title art, water) are listed here. Wall and floor SKINS come from the skin tables in defs.js and SKIES from the baked files themselves,
 // so adding a skin or a sky means a recipe, a defs row and a bake: no list to edit (Gate 3).
-const FIXED = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art', 'water_dusk', 'awning_stripe_a', 'boat_hull_a', 'floor_ember_a'];
+const FIXED = ['wall_bulkhead_a', 'floor_planks_a', 'crate_wood_a', 'pod_organic_a', 'door_hatch_a', 'tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'ui_title_art', 'water_dusk', 'awning_stripe_a', 'boat_hull_a', 'floor_ember_a', ...CHOIR_ATLASES];
 const SKIES = Object.keys(URL_BY_NAME).filter((n) => n.startsWith('sky_'));
 const NAMES = [...new Set([...FIXED, ...SKIES, ...Object.values(WALL_SKINS), ...Object.values(FLOOR_SKINS).map((f) => f.tex)])];
 
