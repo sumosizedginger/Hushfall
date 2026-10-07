@@ -173,3 +173,19 @@ Everything below changes `src/game`, `src/render`, `src/audio` or `src/engine`, 
 ## 9. Not built, not approved
 
 Sections 3 to 7 are a proposal. The owner has decided D1, D2, D3, D5, D6 and D7; D4 and D8 are mine and open; nothing has been started.
+
+## 10. After this batch: what comes next (added 2026-10-07 at the owner's question)
+
+Order, each step waits for the owner's go and for them to play the one before. Built so far: 18 of 68 maps (Episode 1 nine, Episode 2 nine). Remaining: Episode 3 nine, Episode 4 nine, Campaign 2 thirty-two = 50.
+
+| # | Step | What it is | Needs from the owner |
+|---|---|---|---|
+| 1 | The owner tests this batch | feel, lantern, melee, parry, keys, pad, wheel; findings go to `PLAYTEST_NOTES.md` first, then fixes | their play and findings |
+| 2 | Evidence + push | ONE regeneration of all 18 maps (also covers the unpushed creature redesign, frame time of the new creatures included), then push | "the machine is free" |
+| 3 | Close the open findings | PT-009: the Locker perks are bought but not FELT (the owner could not tell what they do); balance numbers (all first guesses: weapons, melee, progression) tuned from their play; Episodes 1-2 human review (only they can award COMPLETE) | their notes on difficulty and perks |
+| 4 | L3 "the world" look pass (from `assessment.md`, approved plan C:/Users/sumos/.claude/plans/joyful-plotting-liskov.md) | decals, blood and bodies, real lighting and shadows, first-person hands and weapon polish, UI restyle, the alien room kit and surface variety (Episode 2's arrival rooms were one room eight times) | a go; they judge stills first |
+| 5 | Gate 4: Episode 3, The Choir Ships | nine maps in small batches the owner sets: C1E3M01 Landing Scar to M08 The Cantor's Throat + secret S01; the Vael themselves, resin interiors; new enemies (the Chorister suppression enemy, Bulwark Shell and Weeping Mother elites, the Grand Cantor boss); **the bell-breaker mortar at C1E3M03 Gill Gardens**; the Episode 3 colour/tone in the look bible | a batch go, then a playtest per batch |
+| 6 | Gate 4: Episode 4, The Hollow Sky | nine maps; NEW ENGINE WORK first: low gravity, vacuum doors, light-beam routing (Mirror Array) | the same |
+| 7 | Gate 4: Campaign 2 | thirty-two maps; the counter-tone emitter late (candidate near C2M29); upgrades/alt-fires instead of new guns | the same |
+
+Rules that do not change: one new thing per map (briefed before it is built), every map verified by the bots and the real game before the next, evidence regenerated from a clean commit, the owner awards COMPLETE.
