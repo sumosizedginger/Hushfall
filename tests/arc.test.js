@@ -1,4 +1,5 @@
-// The Charge-arc lamp (weapon 5): held fire, 12 m, it locks onto the nearest body inside a cone around the view ray and the arc jumps to up to three more bodies. Cell ammunition, quiet, forgiving, weak per hit.
+// The Charge-arc lamp (weapon 5): a TAP (the arc fires when the key is released) is the short arc: 12 m, it locks onto the nearest body inside a cone around the view ray and jumps to up to three more bodies. Cell ammunition, quiet, forgiving, weak per hit.
+// (HOLDING the key charges it into a forked bolt: tests/identity.test.js.)
 // Sim only, on the shipped Evaporation Pans' 45 m lane (what it looks like: tools/dev/shoot-arc.mjs).
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -17,10 +18,10 @@ function lane(seed = 1, { upgrades, weapons = ['flare', 'arc'] } = {}) {
   w.enemies.length = 0; Object.assign(w.player, { x: 24, z: 51, yaw: -Math.PI / 2, pitch: 0, weapon: 'arc', switchT: 0 }); return w;
 }
 const put = (w, kind, dx, dz = 0, hp = 1000) => { const e = spawnEnemy(w, kind, w.player.x + dx, 51 + dz, Math.PI / 2); e.hp = hp; e.state = 'idle'; return e; };
-const fire = (w, o = {}) => { step(w, idle({ fire: true, ...o })); return drainEvents(w); };
+const fire = (w, o = {}) => { step(w, idle({ ...o, fire: true })); step(w, idle({ ...o, fire: false })); return drainEvents(w); };       // a tap: the lamp fires on RELEASE
 const hpLost = (e) => 1000 - e.hp;
 
-test('the lamp is the fifth weapon: held fire, short reach, its own ammunition and pickups', () => {
+test('the lamp is the fifth weapon: a tap, short reach, its own ammunition and pickups', () => {
   assert.equal(WEAPON_ORDER[4], 'arc'); assert.equal(A.kind, 'arc'); assert.equal(A.ammo, 'cell');
   assert.ok(A.range <= 14 && A.cooldown <= 0.2, 'short reach, rapid'); assert.ok(NOISE.arc < NOISE.scattergun, 'and quiet');
   assert.deepEqual([PICKUPS.weapon_arc.weapon, PICKUPS.weapon_arc.ammo, PICKUPS.ammo_cell.ammo], ['arc', 'cell', 'cell']); assert.ok(AMMO_MAX.cell >= 60);
@@ -54,9 +55,9 @@ test('it hits flyers (a Drone-Gill hovering over the lane), a miss still crackle
   assert.ok(ev.some((x) => x.type === 'fire' && x.weapon === 'arc'));
 });
 
-test('held fire repeats at the cooldown, and an empty lamp clicks', () => {
-  const w = lane(); let shots = 0; for (let i = 0; i < 60; i++) { step(w, idle({ fire: true })); shots = 60 - w.player.ammo.cell; } assert.ok(shots >= 5 && shots <= 7, `about 6 shots a second, got ${shots}`);
-  w.player.ammo.cell = 0; drainEvents(w); for (let i = 0; i < 30; i++) step(w, idle({ fire: true })); assert.ok(drainEvents(w).some((e) => e.type === 'dry'));
+test('tapping repeats at the cooldown (about six a second), and an empty lamp clicks', () => {
+  const w = lane(); let shots = 0; for (let i = 0; i < 60; i++) { step(w, idle({ fire: i % 10 < 5 })); shots = 60 - w.player.ammo.cell; } assert.ok(shots >= 5 && shots <= 7, `about 6 shots a second, got ${shots}`);
+  w.player.ammo.cell = 0; drainEvents(w); for (let i = 0; i < 30; i++) step(w, idle({ fire: i % 10 < 5 })); assert.ok(drainEvents(w).some((e) => e.type === 'dry'));
 });
 
 test('pickups: the lamp (switches to it, 30 cells), cell boxes, the cap, the Locker satchel; cells without the lamp do not hold off the flare feed', () => {
@@ -76,7 +77,7 @@ test('the bot reaches for the lamp in a crowd and uses it', () => {
 });
 
 test('deterministic: the same seed and inputs give the same arc', () => {
-  const run = () => { const w = lane(5), a = put(w, 'tollbearer', 9), b = put(w, 'tollbearer', 11.5); for (let i = 0; i < 30; i++) step(w, idle({ fire: true })); return [a.hp, b.hp, w.player.ammo.cell]; };
+  const run = () => { const w = lane(5), a = put(w, 'tollbearer', 9), b = put(w, 'tollbearer', 11.5); for (let i = 0; i < 30; i++) step(w, idle({ fire: i % 10 < 5 })); return [a.hp, b.hp, w.player.ammo.cell]; };
   assert.deepEqual(run(), run());
 });
 

@@ -22,10 +22,20 @@ export const PLAYER = {
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
-export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, explosion: 24, closeRange: 9 };
+export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, explosion: 24, closeRange: 9, melee: 9 };
 export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100 };
-/** fixed slot order (keys 1, 2, ...); a weapon occupies its slot once owned */
+/** fixed slot order of the GUNS (keys 1..5); a weapon occupies its slot once owned. Slot 6 (key 6) is the melee slot: fists always, plus the found weapons of MELEE_ORDER (pressing 6 again cycles them). */
 export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc'];
+export const MELEE_ORDER = ['fists', 'boathook', 'marlinspike', 'mallet', 'axe'];
+export const MELEE_SLOT = WEAPON_ORDER.length;                                    // the slot index of the melee slot (0-based: key 6)
+/** every weapon id in one stable order (save sorting, the HUD) */
+export const ALL_WEAPONS = [...WEAPON_ORDER, ...MELEE_ORDER];
+/** Guard and parry (PT-013, owner go 2026-10-07; every number a first guess). With a melee weapon in hand the Aim key GUARDS (always a hold). A guard raised no more than `window` s before a melee strike lands PARRIES it:
+ *  the attacker is staggered `parryStun` s and the next melee hit lands for `riposteMult` x (for `riposteT` s). A guard held longer BLOCKS (`block` of the damage gets through; a heavy blow breaks the block for `brokenT` s). A parry window that found nothing
+ *  costs `whiffCd` s before a new one can open (no spamming the key). Only attackers in front of the player (`cos`) can be guarded against. Ranged toll-shots are not guarded (a deliberate limit). */
+export const GUARD = { raise: 0.1, window: 0.2, whiffCd: 0.6, block: 0.3, cos: 0.3, parryStun: 1.0, riposteT: 2.0, riposteMult: 2, brokenT: 0.8 };
+/** a quick bash with whatever is in hand (key V): a free, weak strike that does not need ammunition. It blocks the gun for its own duration. */
+export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.35, knock: 0.5, flinch: 0.5 };
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
 
 // ---- terrain (Gate 2 production kit) ----------------------------------------------------------------------------------
@@ -47,22 +57,38 @@ export const FLOOR_SKINS = {
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
 export const WEAPONS = {
-  flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, switchTime: 0.4, muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
+  flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, switchTime: 0.4,
+    // PT-013 identity: AREA. The burst leaves burning ground (enemies standing in it burn; the player is not hurt by their own fire) and lights the room for as long as it lasts.
+    burn: { r: 2.5, t: 4, dps: 9, max: 8 }, muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
     spread: { hip: 0.035, ads: 0.003, moveFactor: 0.5 },   // radians (half-angle); hip spread grows with movement, aiming tightens it
   },
   // hitscan close-range punch: instant, no splash, no self-damage, useless past ~15 m. The flare is the slow area-denial counterpart.
-  scattergun: { name: 'Tidewarden scattergun', kind: 'hitscan', ammo: 'shell', cooldown: 0.95, switchTime: 0.35, pellets: 9, damage: 9, range: 26, falloffStart: 5, falloffMin: 0.3, knock: 0.22, kick: 0.11, spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 }, muzzle: { fwd: 0.7, right: 0.12, down: 0.14 } },
+  scattergun: { name: 'Tidewarden scattergun', kind: 'hitscan', ammo: 'shell', cooldown: 0.95, switchTime: 0.35, pellets: 9, damage: 9, range: 26, falloffStart: 5, falloffMin: 0.3, knock: 0.22, kick: 0.11, spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 }, muzzle: { fwd: 0.7, right: 0.12, down: 0.14 },
+    hit: { flinch: 0.25, interrupt: 3 } },                  // PT-013 identity: CLOSE. Every hit staggers a little; inside `interrupt` metres a hit CANCELS the windup of the attack it lands on. (First try 0.45 s: on C1E2M03 it cut a perfect bot's damage taken on normal from 51 to 19: a flinch that long is a stun-lock in a stationary player's hands.)
   // sustained fire from the hip or the sights: a stream of small hits, accurate while you stay still and settled (bloom builds the longer you hold the trigger).
   // The answer to crowds of weak targets and the workhorse when shells and flares run dry; weak per hit, so it does not replace the scattergun's punch.
-  rivet: { name: 'Riveter driver', kind: 'hitscan', ammo: 'rivet', cooldown: 0.085, switchTime: 0.35, pellets: 1, damage: 7, range: 34, falloffStart: 14, falloffMin: 0.55, knock: 0.05, kick: 0.035, muzzle: { fwd: 0.7, right: 0.1, down: 0.1 }, heatPerShot: 0.075, heatDecay: 1.4, heatCone: 3.2, spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 } },
+  rivet: { name: 'Riveter driver', kind: 'hitscan', ammo: 'rivet', cooldown: 0.085, switchTime: 0.35, pellets: 1, damage: 7, range: 34, falloffStart: 14, falloffMin: 0.55, knock: 0.05, kick: 0.035, muzzle: { fwd: 0.7, right: 0.1, down: 0.1 }, heatPerShot: 0.075, heatDecay: 1.4, heatCone: 3.2, spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 },
+    hit: { slow: 0.1, slowT: 0.8, cancelLunge: true } },    // PT-013 identity: SUPPRESS. Rivets slow what they hit (10% for 0.8 s, at most 1 s at a time: SLOW_MAX in world.js) and break a Gaunt's lunge windup (once in a while): it holds crowds off, it does not kill them. (First tries: 30% for 1 s cut a perfect bot's damage taken on C1E2M04 hard from 45 to 9; 20% still failed C1E2M04 and C1E2M07's viability gates; 10% passes all of them. A stream of 12 shots a second turns any slow into a permanent one: that is why it is small.)
   // the long gun (Gate 4, owner go 2026-10-06): one heavy bolt, instant, almost no drop-off at 90 m, and it goes THROUGH: it punches the front plate of an armoured target (the Warden-Graft's shield-arm no longer
   // turns it) and the bolt carries on into a second body behind the first at 60%. Slow (a bolt every 1.35 s), few rounds (24 at most), loud (30 m), and only accurate when you stop and use the sights, which also zoom it right in.
   // It is the answer to what the other three cannot reach: a Drone-Gill hovering out of scattergun range, a Bellhand on a far causeway, plate. It is not the answer to a crowd.
   harpoon: { name: 'Harpoon rifle', kind: 'hitscan', ammo: 'bolt', cooldown: 1.35, switchTime: 0.55, pellets: 1, damage: 80, range: 90, falloffStart: 90, falloffMin: 1, pierce: 1, pierceDamage: 0.6, pierceArmor: true, knock: 0.55, kick: 0.07, adsFov: 24, muzzle: { fwd: 0.8, right: 0.1, down: 0.12 },
-    spread: { hip: 0.05, ads: 0.0008, moveFactor: 1.2 } },
+    spread: { hip: 0.05, ads: 0.0008, moveFactor: 1.2 },
+    hit: { flinch: 0.4, pin: { wall: 3, t: 2 } } },         // PT-013 identity: ONE HEAVY SHOT. A bolt that leaves a body with a wall within `wall` metres behind it PINS it for `t` s (not the elites or the bosses)
   // the lamp (Gate 4, owner go 2026-10-06): held fire, 12 m, it picks its own target (the nearest body inside a lock cone around where you look; the sights narrow the cone) and the arc JUMPS to up to `chain` more bodies within `jump` metres of the last, each for `chainFalloff` of the one before.
   // Forgiving where the rifle is exact, and quiet (14 m). It is the answer to what the others handle badly: a crowd, a clutch of Gills hovering about, a dark room. Weak per hit; plate and shields count as they do for any shot.
-  arc: { name: 'Charge-arc lamp', kind: 'arc', ammo: 'cell', cooldown: 0.16, switchTime: 0.4, damage: 11, range: 12, chain: 3, jump: 4.5, chainFalloff: 0.7, lock: { hip: 0.14, ads: 0.06 }, kick: 0.012, muzzle: { fwd: 0.6, right: 0.1, down: 0.1 }, spread: { hip: 0, ads: 0, moveFactor: 0 } },
+  arc: { name: 'Charge-arc lamp', kind: 'arc', ammo: 'cell', cooldown: 0.16, switchTime: 0.4, damage: 11, range: 12, chain: 3, jump: 4.5, chainFalloff: 0.7, lock: { hip: 0.14, ads: 0.06 }, kick: 0.012, muzzle: { fwd: 0.6, right: 0.1, down: 0.1 }, spread: { hip: 0, ads: 0, moveFactor: 0 },
+    // PT-013 identity (owner: 'it doesn't make me feel more powerful or like I have more range'): TAP = the short arc above (it fires on release). HOLD past `min` s CHARGES to `max`: a forked bolt, `range` m, `damage`, `chain` jumps at `chainFalloff`, up to `forks` branches, for up to `cells` cells.
+    // WATER: a struck body standing in wading water conducts to every body in the same water within `water.r` m, for `water.mult` x the base damage. VAEL: Drone-Gills struck are stunned `vael.stun` s; bell nodes take `vael.nodeMult` x.
+    charge: { min: 0.35, max: 1.2, damage: 60, range: 24, chain: 5, chainFalloff: 0.8, jump: 6, forks: 2, cells: 8, recover: 0.35 }, water: { r: 8, mult: 1.5, max: 8 }, vael: { stun: 1.2, kinds: ['gill'], nodeMult: 2 }, hit: { flinch: 0.15 } },
+  // ---- melee (PT-013): fists are always owned (slot 6); the found weapons are picked up and take the same slot (key 6 again cycles). `swing`: reach m (from the player's centre to the body's surface), arc rad (full cone), damage, windup/recover s, knock m, flinch s,
+  // optional stun s, pull m, backstab x (sleeping or turned-away targets), cleave (every body in the arc), ignorePlate (the Warden's front plate does not turn it). Every number a first guess.
+  fists: { name: 'Fists', kind: 'melee', switchTime: 0.25, swing: { reach: 1.9, arc: 1.3, damage: 8, windup: 0.08, recover: 0.27, knock: 0.25, flinch: 0.25 },
+    charge: { min: 0.3, max: 0.65, heavy: { reach: 2.1, arc: 1.2, damage: 30, windup: 0.1, recover: 0.8, knock: 1.4, stun: 1.0, flinch: 0.6 } } },
+  boathook: { name: 'Boat hook', kind: 'melee', switchTime: 0.4, swing: { reach: 2.8, arc: 0.7, damage: 28, windup: 0.2, recover: 0.5, knock: 0, pull: 1.5, flinch: 0.4 } },
+  marlinspike: { name: 'Marlinspike', kind: 'melee', switchTime: 0.3, swing: { reach: 1.9, arc: 0.6, damage: 16, windup: 0.07, recover: 0.25, knock: 0.1, backstab: 3, flinch: 0.15 } },      // 16 x 3 = 48: a stab kills a Tollbearer (45) that did not see it coming
+  mallet: { name: "Lamplighter's mallet", kind: 'melee', switchTime: 0.5, swing: { reach: 2.1, arc: 1.1, damage: 30, windup: 0.3, recover: 0.65, knock: 1.0, stun: 1.5, ignorePlate: true, flinch: 0.6 } },
+  axe: { name: 'Fire axe', kind: 'melee', switchTime: 0.55, swing: { reach: 2.3, arc: 1.75, damage: 55, windup: 0.35, recover: 0.75, knock: 0.8, cleave: true, flinch: 0.6 } },
 };
 
 // `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
@@ -70,7 +96,7 @@ export const WEAPONS = {
 export const ENEMIES = {
   tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
-  gaunt: { name: 'Gaunt Runner', hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
+  gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
   // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
   bellhand: { name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
 };
@@ -81,26 +107,26 @@ ENEMIES.sexton = { name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, he
   support: { range: 11, channel: 2.2, cooldown: 5, reviveHp: 0.5, keepAway: 8, maxRevives: 2, kinds: ['tollbearer', 'gaunt', 'bellhand'] } };
 // Warden-Graft: elite. Plate on the front arc (direct hits from the front do a third of the damage; splash and hits from behind do not care). Charges in a straight line after a
 // readable windup; a charge into a wall or prop staggers it, and it takes extra damage while it is down. The flare cannon and a step to the side are the answers.
-ENEMIES.wardengraft = { name: 'Warden-Graft', hp: 260, speed: 1.5, gait: 5, radius: 0.55, height: 3.0, sight: 30, turnRate: 2.4, attack: { range: 2.6, reach: 3.2, windup: 0.62, duration: 1.7, cooldown: 1.2, damage: 30 },
+ENEMIES.wardengraft = { name: 'Warden-Graft', poise: 3, hp: 260, speed: 1.5, gait: 5, radius: 0.55, height: 3.0, sight: 30, turnRate: 2.4, attack: { range: 2.6, reach: 3.2, windup: 0.62, duration: 1.7, cooldown: 1.2, damage: 30 },
   armor: { front: 0.34, cos: 0.6, stunMult: 1.6 }, charge: { min: 5, max: 16, windup: 0.85, speed: 11.5, duration: 1.5, damage: 36, stun: 2.6, cooldown: 3.2, knock: 3.0 } };
 // Bell node: one of the ring the Cantor sings through. Immobile; destroying them all breaks the Cantor's shield.
 ENEMIES.bellnode = { name: 'Bell node', hp: 120, speed: 0, gait: 0, radius: 0.7, height: 2.45, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
 // Cantor: the boss. Shielded (5% damage) while any bell node stands. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and fans toll-shots once its ring is broken.
-ENEMIES.cantor = { name: 'Cantor', hp: 720, speed: 1.3, gait: 4.5, radius: 0.65, height: 4.8, hitRadius: 0.8, sight: 70, turnRate: 2, attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 }, boss: true,
+ENEMIES.cantor = { name: 'Cantor', poise: 8, hp: 720, speed: 1.3, gait: 4.5, radius: 0.65, height: 4.8, hitRadius: 0.8, sight: 70, turnRate: 2, attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 }, boss: true,
   shield: { reduce: 0.05 }, pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 }, enragedPulseCooldown: 3.6,
   shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 }, summon: { kind: 'gaunt', count: 3, every: 18, max: 8 }, stagger: 3.0 };
 
 // ---- Gate 4 batch 2 roster (Episode 2): the first Vael-grown creatures -------------------------------------------------------------------------------------------------------------------------
 // Drone-Gill: a hatched, FLYING Vael drone (design/CAMPAIGN_SPINE.md section 3: the first non-human enemy, C1E2M05). It hovers `hover` metres above the floor (the hit volume starts there: shoot at the body, not at the floor
 // under it), ignores props and water (only walls and closed doors stop it), keeps its distance, strafes while it spits slow spores, and drops to the floor when it dies. Fragile; the scattergun and the rivet driver answer it.
-ENEMIES.gill = { name: 'Drone-Gill', hp: 30, speed: 2.7, gait: 9, radius: 0.36, height: 1.15, hover: 1.2, flying: true, hitRadius: 0.6, sight: 30, turnRate: 4.5,
+ENEMIES.gill = { name: 'Drone-Gill', poise: 0.8, hp: 30, speed: 2.7, gait: 9, radius: 0.36, height: 1.15, hover: 1.2, flying: true, hitRadius: 0.6, sight: 30, turnRate: 4.5,
   attack: { range: 1.8, reach: 2.2, windup: 0.5, duration: 0.9, cooldown: 0.8, damage: 8 },
   ranged: { hold: 7, minRange: 2.2, maxRange: 20, speed: 8.5, damage: 9, aimHeight: 1.1, muzzleY: 1.75 }, strafe: { speed: 2.4, every: 1.1 } };
 // Cradle feeder: one of the three feeding cradles that keep the Graft-Mother's shield up (the Cantor's bell node, grown: immobile, destroying them all drops the shield).
 ENEMIES.feeder = { name: 'Cradle feeder', hp: 100, speed: 0, gait: 0, radius: 0.7, height: 2.1, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
 // Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end, shielded (6% damage) while any feeder stands. Spits fans of spores (always, wider once her feeders are gone), hatches Drone-Gills from the pods round her,
 // and slams anything that reaches her. She barely moves.
-ENEMIES.graftmother = { name: 'Graft-Mother', hp: 680, speed: 0.8, keepAway: 0, gait: 3, radius: 0.9, height: 4.2, hitRadius: 1.4, sight: 70, turnRate: 1.6, attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 }, boss: true,
+ENEMIES.graftmother = { name: 'Graft-Mother', poise: 8, hp: 680, speed: 0.8, keepAway: 0, gait: 3, radius: 0.9, height: 4.2, hitRadius: 1.4, sight: 70, turnRate: 1.6, attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 }, boss: true,
   shield: { reduce: 0.06, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] }, shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true }, summon: { kind: 'gill', count: 2, every: 18, max: 4 }, stagger: 3.0 };
 
 export const PICKUPS = {
@@ -117,6 +143,10 @@ export const PICKUPS = {
   ammo_bolt: { type: 'ammo', ammo: 'bolt', amount: 4 },
   weapon_arc: { type: 'weapon', weapon: 'arc', ammo: 'cell', amount: 30 },
   ammo_cell: { type: 'ammo', ammo: 'cell', amount: 20 },
+  weapon_boathook: { type: 'weapon', weapon: 'boathook' },
+  weapon_marlinspike: { type: 'weapon', weapon: 'marlinspike' },
+  weapon_mallet: { type: 'weapon', weapon: 'mallet' },
+  weapon_axe: { type: 'weapon', weapon: 'axe' },
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };

@@ -23,6 +23,8 @@ const WEAPON_FIRE = {
   harpoon: [{ id: 'harpoon_fire' }, { id: 'harpoon_cycle', delay: 0.62 }],
   arc: [{ id: 'arc_fire', gain: 0.9 }],
 };
+/** melee moves that land like a hammer (the others land like a fist) */
+const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
 const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', graftmother: 'mother_roar' };
 const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', graftmother: 'mother_roar' };
 
@@ -30,7 +32,17 @@ const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : u
 
 export function soundsForEvent(e) {
   switch (e.type) {
-    case 'fire': return (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s }));
+    case 'fire': return e.weapon === 'arc' && e.charge > 0.04 ? [{ id: 'arc_bolt', gain: 0.7 + 0.3 * e.charge }] : (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s }));      // a charged lamp is a different, bigger sound
+    case 'charge_start': return [{ id: e.weapon === 'arc' ? 'arc_charge' : 'fist_charge' }];
+    case 'charge_full': return [{ id: e.weapon === 'arc' ? 'charge_full' : 'fist_charge', gain: e.weapon === 'arc' ? 1 : 0.6 }];
+    case 'swing': return [{ id: e.heavy || HEAVY_SWING.has(e.kind) ? 'swing_heavy' : 'swing', gain: e.kind === 'bash' ? 0.8 : 1 }];
+    case 'melee_hit': return [{ id: e.kind === 'heavy' || HEAVY_SWING.has(e.kind) ? 'melee_hit_heavy' : 'melee_hit', pos: at(e) }, ...(e.riposte ? [{ id: 'parry', gain: 0.6, delay: 0.02 }] : [])];
+    case 'parry': return [{ id: 'parry' }];
+    case 'guard_up': return [{ id: 'guard_up' }];
+    case 'block': return [{ id: 'block' }];
+    case 'guard_break': return [{ id: 'guard_break' }];
+    case 'burn': return [{ id: 'burn_start', pos: at(e) }];
+    case 'pin': return [{ id: 'pin_thunk', pos: at(e) }];
     case 'dry': return [{ id: 'dry_click' }];
     case 'weapon_switch': return [{ id: 'weapon_switch' }];
     case 'explode': return [{ id: 'flare_boom', pos: at(e) }];
