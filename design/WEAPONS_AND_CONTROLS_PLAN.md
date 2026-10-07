@@ -1,6 +1,6 @@
 # HUSHFALL: weapons, melee, controls, controller and the weapon wheel (the plan to resume from)
 
-**Status (2026-10-07): a PLAN, not a go.** Nothing in sections 3 to 8 is built. The owner asked for this plan "so we don't get lost in the sauce, as we need to be able to pick up from here". A short reply is feedback, not approval: build nothing here until they say go on a named phase (section 9). Source of the requests: `PLAYTEST_NOTES.md` PT-011 (aim down sights, DONE), PT-013 (weapon identity, melee, parry, controls, controller, wheel).
+**Status (2026-10-07, later the same day): STEPS 1-6 BUILT at the owner's go ("go to town my friend"), awaiting their play; step 7 (the one evidence regeneration + the push) waits for them to say the machine is free.** See section 11 for what exists, where, and what is NOT done. The section 7 questions were answered by me (logged in `PLAYTEST_NOTES.md`): V / Q / 6 kept, parry YES, melee placements kept but the FOUND weapons are not placed on any map yet, lantern = charge + water + Vael, order 1+2 then 3-6. Source of the requests: `PLAYTEST_NOTES.md` PT-011 (aim down sights, DONE), PT-013 (weapon identity, melee, parry, controls, controller, wheel).
 
 Legend: **[OWNER]** decided by the owner in chat. **[MINE]** my proposal, open to veto. **[GUESS]** a number or a name that is a first guess to be tuned in play (the progression numbers are guesses already: `src/engine/progress.js`).
 
@@ -70,7 +70,7 @@ Tests: `tests/weapons.test.js` (stagger values), `tests/audio.test.js` (each new
 |---|---|
 | Flare | the flare leaves burning ground (radius 2.5 m, 4 s, damage per second); lights dark rooms |
 | Scattergun | stagger on every hit, a point-blank hit (under 3 m) interrupts an enemy's attack windup |
-| Riveter | rivets slow the target (30% for 1 s) and cancel a Gaunt's lunge windup |
+| Riveter | rivets slow the target (**built: 10% for 0.8 s**; the first try, 30% for 1 s, made a perfect bot's run on C1E2M04 hard 5x easier) and cancel a Gaunt's lunge windup (once per 1.8 s) |
 | Harpoon | a bolt through a body pins it to the wall behind it for 2 s when a wall is within 3 m (the bolt-in-wall effect already exists) |
 | **Lantern** | (1) **charge**: tap = today's arc; hold past 0.35 s charges to 1.2 s, release = a forked bolt, range 24 m, 60 damage, 5 jumps at 80%, costs cells in proportion; the lamp glows and lights the room as it charges. (2) **water**: an arc that touches an enemy standing in water chains to every enemy in the same water within 8 m at +50% (the kit already has wading/toxic water cells). (3) **Vael**: stuns Drone-Gills (1.2 s) and does extra damage to bell nodes. Fixes "no power, no range". |
 Tests: new cases in `tests/arc.test.js`, `tests/weapons.test.js`; `tests/harpoon.test.js`.
@@ -81,7 +81,7 @@ Tests: new cases in `tests/arc.test.js`, `tests/weapons.test.js`; `tests/harpoon
 - **Fists**: jab 8 damage, 0.35 s; hold to charge (0.6 s) for a heavy punch, 30 damage + 1 s stagger, 0.9 s recovery.
 - **Found weapons** (one melee SLOT, press 6 again to cycle): boat hook (reach 2.8, 28, pulls 1.5 m), marlinspike (14, x3 on sleeping/unaware), lamplighter's mallet (30, stagger 1.5 s, full damage through the Warden's plate), fire axe (55, cleaves everything within 2.2 m and 100 degrees, 1.1 s).
 - **Guard / parry**: with a melee weapon equipped, **Aim (right mouse / L2 / LT) is Guard**. Hold = block (70% less melee damage). A guard raised within 0.2 s BEFORE a strike lands = **parry**: the attacker is staggered 1 s and your next hit does x2. A whiffed parry has a 0.6 s cooldown. Heavy hits (Warden charge) break a block but can still be parried. Ranged toll-shots are out of scope. Guard is always HOLD, even if aim toggle is on.
-- **Remove the dry-feed rule** (`world.js` ~609): fists mean you are never empty. **Risk:** a route that relied on the feed. Check with `verify-map` (ammo slack) before and after.
+- ~~**Remove the dry-feed rule**~~ **KEPT (decided 2026-10-07 while building it):** fists mean you always have something to hit with, but they cannot hurt a plated Warden from the front (a bash does a third through the plate), so the one-flare-every-10-seconds feed stays as a safety net against a soft-lock; the C1E1M06 robustness gate (a strafing fighter with 25% less ammunition) also failed without it.
 - Saves: fists are always owned; found melee weapons are in `weapons`; **save version bump + migration** (`src/engine/save.js`); old saves load unchanged.
 - Bots and canonical routes keep using only the existing actions: no route changes.
 Tests: new `tests/melee.test.js` (reach, cleave, backstab, pull, parry window, block, cooldown, determinism), `tests/sim.test.js` (dry-feed gone), `tests/save.test.js` (migration).
@@ -189,3 +189,24 @@ Order, each step waits for the owner's go and for them to play the one before. B
 | 7 | Gate 4: Campaign 2 | thirty-two maps; the counter-tone emitter late (candidate near C2M29); upgrades/alt-fires instead of new guns | the same |
 
 Rules that do not change: one new thing per map (briefed before it is built), every map verified by the bots and the real game before the next, evidence regenerated from a clean commit, the owner awards COMPLETE.
+
+## 11. What was built (2026-10-07) and what is not
+
+Built at the owner's go, in this order, each by node tests (not a person): **identities + the feel pass** (W1/W2), **melee + parry + the save migration** (W3, `SAVE_VERSION` 10), **controls** (W4), **controller** (W5), **wheel** (W6). Tests added: `tests/identity.test.js` (17), `tests/melee.test.js` (15), `tests/gamepad.test.js` (12), `tests/wheel.test.js` (11), additions in `settings`, `bindings`, `render-modules-load`; tests that encoded the old behaviour (held-fire lamp, the flare feed) were rewritten, not deleted: the behaviour changed on purpose.
+
+| Thing | Where |
+|---|---|
+| weapon identities, melee tables, guard, poise | `src/engine/defs.js` |
+| the sim: hit effects, burning ground, the lamp's charge / fork / water / Vael, swings, guard / parry, weapon slots | `src/engine/world.js` |
+| the quick-melee / slot-6 / last-weapon actions, analog movement | `src/engine/input.js` |
+| the bot taps the lamp and bashes when dry | `src/engine/bot.js` |
+| melee rigs (fists, boat hook, marlinspike, mallet, fire axe) | `src/render/models_melee.js`, atlas cells 8-15 of `flarecannon_atlas` (`tools/baker/recipes3d.js`) |
+| swing phase, bash, melee anchor | `src/render/weapon-pose.js` |
+| view: melee, charge glow, burning ground, shake, motes, parry zoom | `src/render/view.js` |
+| 14 new sounds, event mapping | `src/audio/synth.js`, `events.js` |
+| controller, wheel, menu focus | `src/game/gamepad.js`, `wheel.js`, `padmenu.js`; the shell in `main.js`; settings in `settings.js` |
+| the controller test page | `pad.html` |
+
+Not done, on purpose or for lack of a person: (1) the four found melee weapons are on NO map (placing them edits shipped maps: `C1E1M03` hook, `C1E1M04` spike, `C1E1M05` mallet, `C1E2M04` axe, each to be re-verified after the owner has played the melee itself); (2) the mortar and the counter-tone emitter (not before Episode 3 / late Campaign 2); (3) no real PS5 pad was available: open `/pad.html`; (4) no real-game frame was seen by me before the stills of `tools/dev/shoot-melee.mjs`, and none of it was played; (5) icons on the wheel are drawn in code (simple vector pictograms), not painted; (6) enemies have no hit-react POSE (flinch is a slow, not an animation); (7) frame time and audio QA of the new content: not measured before the one evidence run.
+
+Balance is first-guess everywhere. One number WAS tuned against a bot (the rivets' slow, after it broke a viability gate); see `PLAYTEST_NOTES.md`.
