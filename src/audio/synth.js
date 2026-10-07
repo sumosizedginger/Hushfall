@@ -100,6 +100,50 @@ export const SFX = {
     tone(c, out, t, { type: 'square', f0: 2400 + o.r() * 800, f1: 600, d: 0.09, gain: 0.1, lp: 4200 });
     return 0.18;
   },
+  // --- PT-013: the lamp's charge, melee, guard and parry, burning ground, the pinning bolt ---
+  arc_bolt(c, out, t, o) {                                      // a charged lamp: the held breath let go. A fat sawtooth crack that falls through the floor, a bright sweep of noise, forking crackle, the bulb's glass ringing
+    tone(c, out, t, { type: 'sawtooth', f0: 420 + o.r() * 40, f1: 55, d: 0.42, gain: 0.26, lp: 1400 });
+    tone(c, out, t, { type: 'square', f0: 3100, f1: 700, d: 0.16, gain: 0.12, lp: 5200 });
+    noise(c, out, t, { dur: 0.34, gain: 0.55, type: 'bandpass', f0: 5200, f1: 700, q: 1.1, off: o.r() });
+    thump(c, out, t, 110, 34, 0.38, 0.7);
+    for (let i = 0; i < 5; i++) noise(c, out, t + 0.04 + i * 0.045, { dur: 0.03, gain: 0.22, type: 'highpass', f0: 4000 + o.r() * 2500, off: o.r() });
+    bell(c, out, t + 0.02, 1760, { decay: 0.55, gain: 0.1, ratio: 2.4, index: 1.1 });
+    return 0.7;
+  },
+  arc_charge(c, out, t, o) {                                    // the lamp charging (about 0.85 s, the length of a charge): a hum climbing, a thin whine over it, a hiss that brightens
+    tone(c, out, t, { type: 'sawtooth', f0: 70, f1: 240, a: 0.2, d: 0.7, gain: 0.14, lp: 800, vib: 14 });
+    tone(c, out, t, { type: 'sine', f0: 520, f1: 1500, a: 0.25, d: 0.6, gain: 0.07 });
+    noise(c, out, t, { dur: 0.85, a: 0.3, gain: 0.12, type: 'bandpass', f0: 1800, f1: 4200, q: 2.5, off: o.r() });
+    return 0.95;
+  },
+  charge_full(c, out, t, o) {                                   // fully charged: a clean ring over a steady buzz, so the player knows to let go
+    bell(c, out, t, 1318, { decay: 0.8, gain: 0.16, ratio: 2.01, index: 0.5 });
+    tone(c, out, t, { type: 'sawtooth', f0: 240, d: 0.6, gain: 0.08, lp: 700, vib: 16 });
+    return 0.9;
+  },
+  fist_charge(c, out, t, o) {                                   // a fist drawn back: leather and knuckle creak, a low breath
+    noise(c, out, t, { dur: 0.4, a: 0.1, gain: 0.22, type: 'bandpass', f0: 500, f1: 900, q: 3, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 62, f1: 80, a: 0.2, d: 0.3, gain: 0.2 });
+    return 0.5;
+  },
+  swing(c, out, t, o) { noise(c, out, t, { dur: 0.2, a: 0.04, gain: 0.34, type: 'bandpass', f0: 600, f1: 2400, q: 1.2, off: o.r() }); return 0.25; },
+  swing_heavy(c, out, t, o) { noise(c, out, t, { dur: 0.34, a: 0.07, gain: 0.46, type: 'bandpass', f0: 300, f1: 1700, q: 1, off: o.r() }); thump(c, out, t + 0.06, 90, 50, 0.2, 0.3); return 0.45; },
+  melee_hit(c, out, t, o) { thump(c, out, t, 190, 58, 0.15, 0.85); noise(c, out, t, { dur: 0.1, gain: 0.5, type: 'bandpass', f0: 1100 + o.r() * 400, q: 1.2, off: o.r() }); noise(c, out, t, { dur: 0.04, gain: 0.3, type: 'highpass', f0: 3500, off: o.r() }); return 0.25; },
+  melee_hit_heavy(c, out, t, o) { thump(c, out, t, 130, 34, 0.34, 1); noise(c, out, t, { dur: 0.22, gain: 0.6, type: 'lowpass', f0: 3200, f1: 240, off: o.r() }); noise(c, out, t, { dur: 0.05, gain: 0.4, type: 'highpass', f0: 3000, off: o.r() }); bell(c, out, t + 0.01, 420, { decay: 0.3, gain: 0.12, ratio: 3.2, index: 1.2 }); return 0.5; },
+  parry(c, out, t, o) {                                         // a clean steel clash: a bright ring and its overtone, a snap, a body under it. The most satisfying sound of the melee set, on purpose: it is the reward for a read.
+    bell(c, out, t, 1480, { decay: 0.55, gain: 0.3, ratio: 2.76, index: 1.3 }); bell(c, out, t + 0.005, 2217, { decay: 0.35, gain: 0.16, ratio: 3.1, index: 0.8 });
+    noise(c, out, t, { dur: 0.05, gain: 0.55, type: 'highpass', f0: 3800, off: o.r() }); thump(c, out, t, 170, 60, 0.14, 0.7);
+    return 0.65;
+  },
+  guard_up(c, out, t, o) { noise(c, out, t, { dur: 0.09, a: 0.02, gain: 0.26, type: 'bandpass', f0: 700, f1: 1300, q: 1.5, off: o.r() }); tone(c, out, t, { f0: 300, f1: 400, d: 0.05, gain: 0.06 }); return 0.12; },
+  block(c, out, t, o) { thump(c, out, t, 150, 70, 0.12, 0.8); noise(c, out, t, { dur: 0.1, gain: 0.4, type: 'bandpass', f0: 900, q: 1.5, off: o.r() }); bell(c, out, t, 620, { decay: 0.18, gain: 0.1, ratio: 2.3, index: 0.8 }); return 0.25; },
+  guard_break(c, out, t, o) { thump(c, out, t, 100, 28, 0.45, 1); noise(c, out, t, { dur: 0.4, gain: 0.55, type: 'lowpass', f0: 2600, f1: 200, off: o.r() }); bell(c, out, t, 311, { decay: 0.7, gain: 0.2, ratio: 2.9, index: 2 }); return 0.8; },
+  burn_start(c, out, t, o) {                                    // a flare's burst settling into burning ground: the whoomph, then a field of crackle
+    noise(c, out, t, { dur: 0.7, a: 0.04, gain: 0.5, type: 'lowpass', f0: 1400, f1: 200, off: o.r() }); thump(c, out, t, 70, 28, 0.5, 0.6);
+    for (let i = 0; i < 10; i++) noise(c, out, t + 0.1 + o.r() * 1.1, { dur: 0.04, gain: 0.12, type: 'highpass', f0: 2500 + o.r() * 3000, off: o.r() });
+    return 1.4;
+  },
+  pin_thunk(c, out, t, o) { thump(c, out, t, 140, 40, 0.3, 0.9); noise(c, out, t, { dur: 0.05, gain: 0.5, type: 'highpass', f0: 3000, off: o.r() }); noise(c, out, t, { dur: 0.15, gain: 0.3, type: 'bandpass', f0: 1200, q: 1.5, off: o.r() }); bell(c, out, t, 900, { decay: 0.3, gain: 0.14, ratio: 3.3, index: 1.4 }); return 0.45; },
   dry_click(c, out, t, o) { noise(c, out, t, { dur: 0.03, gain: 0.35, type: 'highpass', f0: 3000, off: o.r() }); tone(c, out, t, { type: 'square', f0: 1700, d: 0.02, gain: 0.05 }); return 0.1; },
   weapon_switch(c, out, t, o) { noise(c, out, t, { dur: 0.12, a: 0.03, gain: 0.25, type: 'bandpass', f0: 900, f1: 1800, q: 1.2, off: o.r() }); thump(c, out, t + 0.1, 200, 130, 0.08, 0.25); return 0.25; },
   impact(c, out, t, o) { noise(c, out, t, { dur: 0.06, gain: 0.3, type: 'bandpass', f0: 2200 + o.r() * 800, q: 1.5, off: o.r() }); tone(c, out, t, { f0: 600 + o.r() * 300, f1: 300, d: 0.05, gain: 0.08 }); return 0.12; },

@@ -80,7 +80,7 @@ export class Bot {
     const wantRivet = !wantScatter && !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
     const wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : 'weapon5'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
-    const def = WEAPONS[p.weapon], hitscan = def.kind === 'hitscan' || def.kind === 'arc';
+    const def = WEAPONS[p.weapon]?.kind === 'melee' ? WEAPONS[wantId] : WEAPONS[p.weapon], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
@@ -92,9 +92,12 @@ export class Bot {
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
     const inRange = def.kind === 'arc' ? t.d < def.range * 0.9 : hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
     const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
-    this.setHeld('fire', shoot);
+    this.setHeld('fire', shoot && (def.charge ? w.tick % 10 < 5 : true));         // a charging weapon (the lamp) fires on RELEASE: the bot taps it, five ticks down and five up (about six a second)
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
+    // out of ammunition for everything it carries: the bot closes in and bashes (key V) instead of standing there with a dry gun (the old last-resort flare feed is gone, fists never run out)
+    const dry = !p.weapons.some((id) => (p.ammo[WEAPONS[id].ammo] || 0) > 0) && !plated && !ENEMIES[t.e.kind].boss;          // (never walks up to plate or a boss with fists: a player flanks, the bot just waits for the feed's flare)
+    if (dry) { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('forward', t.d > 1.6); if (t.d < 2.3 && w.tick % 30 === 0) { this.in.press('melee'); this.releaseMelee = true; } }
     const dodge = (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0, shooter = this.weave && !!ENEMIES[t.e.kind].ranged && t.d > 5, weave = shooter && ((w.tick / 36) | 0) % 2 === 0;   // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
     this.setHeld('right', dodge || weave); this.setHeld('left', shooter && !weave && !dodge);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
@@ -191,6 +194,7 @@ export class Bot {
   /** Decide inputs for the next sim tick. */
   tick() {
     if (this.pendingRelease) { this.in.release(this.pendingRelease); this.pendingRelease = null; }
+    if (this.releaseMelee) { this.in.release('melee'); this.releaseMelee = false; }
     if (this.failed || this.done) return;
     const w = this.w, p = w.player, op = this.route[this.i];
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after

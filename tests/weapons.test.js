@@ -65,9 +65,11 @@ test('weapon slots: switching costs time, blocks firing, ignores unowned weapons
   const shots = w.stats.shots; for (let i = 0; i < 10; i++) step(w, idle({ fire: true })); assert.equal(w.stats.shots, shots, 'cannot fire mid-switch');
   for (let i = 0; i < 20; i++) step(w, idle({ fire: true })); assert.equal(w.stats.shots, shots + 1, 'fires once the weapon is up');
   w.player.cooldown = 0;
+  step(w, idle({ weaponStep: 1 })); assert.equal(w.player.weapon, 'fists', 'next goes on to the melee slot (the sixth, fists are always owned)');
+  for (let i = 0; i < 30; i++) step(w, idle());
   step(w, idle({ weaponStep: 1 })); assert.equal(w.player.weapon, 'flare', 'next wraps around');
   for (let i = 0; i < 30; i++) step(w, idle());
-  step(w, idle({ weaponStep: -1 })); assert.equal(w.player.weapon, 'scattergun', 'prev wraps around');
+  step(w, idle({ weaponStep: -1 })); assert.equal(w.player.weapon, 'fists', 'prev wraps around the other way');
 });
 
 test('weapon pickup: grants the weapon, equips it, adds shells, counts as an item; a second copy is just ammo', () => {
@@ -151,6 +153,7 @@ test('save v2 (before weapon slots and lunges) migrates to v3 and plays on', () 
 
 test('weapon table sanity: every weapon has what the sim reads', () => {
   for (const [id, d] of Object.entries(WEAPONS)) {
+    if (d.kind === 'melee') { for (const k of ['name', 'switchTime', 'swing']) assert.ok(d[k] !== undefined, `${id}.${k}`); for (const k of ['reach', 'arc', 'damage', 'windup', 'recover']) assert.ok(d.swing[k] > 0, `${id}.swing.${k}`); continue; }
     for (const k of ['name', 'kind', 'ammo', 'cooldown', 'switchTime', 'spread', 'muzzle']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     if (d.kind === 'hitscan') for (const k of ['pellets', 'damage', 'range', 'falloffStart', 'falloffMin', 'knock']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     else if (d.kind === 'arc') for (const k of ['damage', 'range', 'chain', 'jump', 'chainFalloff', 'lock']) assert.ok(d[k] !== undefined, `${id}.${k}`);

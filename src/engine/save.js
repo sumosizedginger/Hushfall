@@ -5,7 +5,7 @@ import { ENEMIES } from './defs.js';
 import { newProgress, sanitizeProgress } from './progress.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 /** version N -> function producing version N+1. */
 export const MIGRATIONS = {
   // v1 -> v2 (2026-09-29): player gained sprint/aim state (ads, sprint, recover, sprinting). Old mid-level worlds start from rest.
@@ -16,6 +16,8 @@ export const MIGRATIONS = {
   // v6 -> v7 (2026-09-30, Gate 2 kit): terrain height for actors/pickups, moving floors, triggers/switches/exit locks, objective, remote doors, hazard state.
   // v7 -> v8 (2026-09-30): tone pulses (the boss), enemy stagger/charge/channel state (read lazily, so old worlds simply have none).
   // v8 -> v9 (2026-10-05): campaign progression (progress.js): the save carries `progress` (salvage, upgrade tiers, per-map records) and the world carries `upgrades` (its level-start copy too). Old saves start with none.
+  // v9 -> v10 (2026-10-07): weapon identities and melee (PT-013). The player gains the charge, swing, guard and melee-slot fields, the world gains burning ground. Old worlds start with all of it at rest.
+  9: (s) => ({ ...s, version: 10, world: s.world ? { burns: [], ...s.world, player: { charge: 0, swingT: -1, swingKind: null, swingHit: false, guard: 0, guarding: false, parryW: 0, parryCd: 0, riposteT: 0, brokenT: 0, meleeWeapon: 'fists', lastWeapon: null, ...s.world.player } } : s.world }),
   8: (s) => ({ ...s, version: 9, progress: newProgress(), carry: s.carry ? { upgrades: { ammo: 0, armor: 0 }, ...s.carry } : s.carry, world: s.world ? { upgrades: { ammo: 0, armor: 0 }, ...s.world, levelStart: s.world.levelStart ? { upgrades: { ammo: 0, armor: 0 }, ...s.world.levelStart } : s.world.levelStart } : s.world }),
   7: (s) => ({ ...s, version: 8, world: s.world ? { pulses: [], ...s.world } : s.world }),
   6: (s) => ({ ...s, version: 7, world: s.world ? { sectors: [], triggerState: {}, switchState: {}, exitLocked: {}, objective: null, ...s.world, player: { y: 0, hazardT: 0, fx: null, ...s.world.player }, enemies: (s.world.enemies || []).map((e) => ({ y: 0, group: null, ...e })), pickups: (s.world.pickups || []).map((p) => ({ y: 0, ...p })), doors: (s.world.doors || []).map((d) => ({ remote: false, closet: false, sealed: false, ...d })) } : s.world }),
