@@ -11,7 +11,7 @@ const root = path.resolve(import.meta.dirname, '../..');
 const outDir = path.join(root, 'review', 'look-bible');
 fs.mkdirSync(outDir, { recursive: true });
 const port = Number(process.env.LOOK_PORT || 5198);
-const { recipes } = await import('./recipes_look.js');
+const { recipes: base } = await import('./recipes_look.js'), { recipesProto } = await import('./recipes_proto.js'), recipes = { ...base, ...recipesProto };       // proto_* = the rig prototypes' atlas (written to review/look-bible/proto/, still never assets/baked)
 const want = process.argv.slice(2), ids = want.length ? want : Object.keys(recipes);
 const server = await createServer({ root: path.join(root, 'tools/look'), logLevel: 'error', server: { port, strictPort: true, fs: { allow: [root] } } });
 await server.listen();
@@ -28,7 +28,7 @@ for (const id of ids) {
   await page.waitForFunction('window.__BAKE_DONE__ === true || window.__BAKE_ERROR__', { timeout: 300000 });
   const err = await page.evaluate('window.__BAKE_ERROR__');
   if (err) errors.push(id + ': ' + err);
-  else { const res = await page.evaluate('window.__BAKE_RESULT__'); await write(path.join(outDir, id + '.png'), Buffer.from(res.dataUrl.split(',')[1], 'base64')); console.log('drew', id, res.width + 'x' + res.height); }
+  else { const res = await page.evaluate('window.__BAKE_RESULT__'); const sub = id.startsWith('proto_') ? 'proto' : ''; fs.mkdirSync(path.join(outDir, sub), { recursive: true }); await write(path.join(outDir, sub, id.replace(/^proto_/, '') + '.png'), Buffer.from(res.dataUrl.split(',')[1], 'base64')); console.log('drew', id, res.width + 'x' + res.height); }
   await page.close();
 }
 await browser.close(); await server.close();

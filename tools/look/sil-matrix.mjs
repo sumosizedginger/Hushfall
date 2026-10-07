@@ -6,9 +6,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 
-const dir = path.resolve(import.meta.dirname, '../../review/look-bible');
-const KINDS = ['tollbearer', 'tollbearer0', 'gaunt', 'bellhand', 'sexton', 'wardengraft', 'cantor', 'bellnode', 'gill', 'feeder', 'graftmother', 'chorister', 'bulwark', 'weeping'];
-const GAME = KINDS.slice(0, 11), TARGET = 0.5;
+//   node tools/look/sil-matrix.mjs [dir]     dir = review/look-bible (the drawn studies) by default, or review/look-bible/rigs (the silhouettes of the REAL built rigs, from tools/look/shoot-rigs.mjs sil)
+const dir = path.resolve(process.argv[2] ?? path.resolve(import.meta.dirname, '../../review/look-bible'));
+const ALL = ['tollbearer', 'tollbearer0', 'gaunt', 'bellhand', 'sexton', 'wardengraft', 'cantor', 'bellnode', 'gill', 'feeder', 'graftmother', 'chorister', 'bulwark', 'weeping'];
+const KINDS = ALL.filter((k) => fs.existsSync(path.join(dir, `sil_${k}.png`)));
+const GAME = KINDS.filter((k) => ALL.indexOf(k) < 11), TARGET = 0.5;
 const load = (k) => { const p = PNG.sync.read(fs.readFileSync(path.join(dir, `sil_${k}.png`))), m = new Uint8Array(p.width * p.height); for (let i = 0; i < m.length; i++) m[i] = p.data[i * 4] < 128 ? 1 : 0; return { m, w: p.width, h: p.height }; };
 const M = Object.fromEntries(KINDS.map((k) => [k, load(k)]));
 const area = (a) => a.reduce((s, v) => s + v, 0);

@@ -2,7 +2,9 @@
 // It is not the asset baker: nothing it draws is a game asset, and tools/look/bake-concepts.mjs writes only to review/look-bible/ (never assets/baked, never the manifest).
 import p5 from 'p5';
 import * as brush from 'p5.brush';
-import { recipes } from './recipes_look.js';
+import { recipes as base } from './recipes_look.js';
+import { recipesProto } from './recipes_proto.js';
+const recipes = { ...base, ...recipesProto };
 
 const id = new URLSearchParams(location.search).get('asset');
 try {

@@ -1,6 +1,132 @@
 # HUSHFALL look bible v2 ("Tuned")
 
-**Status: L0, design only, awaiting the owner's decision.** Nothing in the game changed: no `src/`, `assets/`, map, route or sim file was touched, so no evidence is stale. The studies below were drawn by the project's own p5.js + p5.brush pipeline (`tools/look/`, written to `review/look-bible/`, never to `assets/baked`).
+**Status: L0 refined (2026-10-06, the owner: "I want to refine these and make them distinct and fit the game and architecture of the code"). Design tooling only, awaiting the owner's decision.** Nothing in the game changed: no `src/`, `assets/`, map, route or sim file was touched, so no evidence is stale. PART B below is the refinement: the ten creatures rebuilt as REAL rigs in the game's own rig architecture and drawn through the game's own post pass; where Part B and the drawn studies of Part A disagree, Part B is right (it is measured on the built geometry). Everything is under `tools/look/` and `review/look-bible/`, never `assets/baked`.
+
+# PART B: the refined creatures, built as real rigs (read this first)
+
+**What was built.** `tools/look/rigs_v2.js`: ten factories with the same shape as the shipped `makeTollbearer(atlas)` / `makeDroneGill(atlas)` -> `{ root, rig, pose, mat }`, made with `tools/look/rigkit.js` (the same `atlas()` UV cells, `makeRigGrounder`, one Lambert material per creature, `pose(p)` writes only the rig) on one painted atlas (`tools/look/recipes_proto.js`, p5.brush, 16 cells of 64 px like the shipped atlases). `tools/look/dev.html` draws them through the game's real `PostPass` (ink, banding, paper grain), real entity flagging, the game's lighting recipe, camera (70 degrees) and default 480 px internal width, next to the SHIPPED rigs in the same light (an honest A/B). None of it is in the game.
+
+**The ten, as built** (what changed from the Part A drawings, and why: each change came from a real render or a failing check):
+
+| kind | the refined design | what the real render forced |
+|---|---|---|
+| Tollbearer (BELL) | lean figure, thin dark coat in strips, a bronze bell grown from the screen-right shoulder (hung to the side and behind), a bone outrigger from the hip, head tilted, mouth open, one teal eye | the bell first hung in front of the chest like a lantern; the chest "ribs" panel read as a paper label (replaced by skin showing through the tear) |
+| Gaunt (UNTUNED) | bulky, hunched, pale, long forelimbs with bone claws, a bone ridge down the back, a red throat, the jaw hangs DOWN | the first version was a head on stilts (arms far too long and thin) |
+| Bellhand (CLAPPER) | long legs under a short jacket, a tall bell-collar, the hand is a bronze bell-mouth held up beside the head, the other arm a long hammer-limb ending in a clapper | the arm held out front broke the width rule; proportions had to change to separate it from the Tollbearer |
+| Sexton (PIPE) | a cone skirt under a narrow body, five pipes fused into a crown, ivory bands | the pipes read as one lantern/pawn shape: distinct, but not a "comb" |
+| Warden-Graft (DRUM) | a hunched hulk with a drum on its chest, a three-plate shell on the back, a faceless bone head, huge fists | first version read as a small tin toy with a clock on its chest; drum pulled back inside the hit cylinder |
+| Cantor (CHOIR-MASTER) | a bell-shaped robe with ivory rings, fork arms, six bronze bells orbiting the head | the petal halo of Part A read as a flower; replaced by orbiting bells (the choir) |
+| Bell node (RESONATOR) | a tuning fork struck into the ground, a bronze bell floating between the tines, a teal ring | the strongest redesign: nothing else looks like it |
+| Drone-Gill (GLASS-BELL) | an ivory engraved dome with a ribbon fringe, a hanging heart and spore sac, teal photophores along the rim | opaque, not translucent (a see-through mantle gets no ink outline and no depth) |
+| Cradle feeder (SAC) | a wrapped person (head, shoulders, bound arms, tapered feet) hung in a harp frame | the first shroud read as an amphora/bowling pin; arms and a neck added; the frame widened to satisfy the width rule |
+| Graft-Mother (ORGAN) | a tall ivory case, nine pipes, a bronze horn OFF-centre and tilted, the cradle sacs hung to one side, four stout legs, grafting arms | with the horn centred and the sacs below it she read as a face with teeth |
+
+## B1. Does it fit the architecture? Measured (`node tools/look/check-rigs.mjs`)
+
+All ten PASS the project's own rules, applied to the true world-space vertices exactly as the shipped rigs are judged (`tests/hit-volume-fair.test.js`, `tests/rig-grounding.test.js`): drawn height within 0.10 m of `defs.js`; the hit cylinder covers 85% of the vertices and is at most 0.15 m wider than the body needs; the lowest vertex stays inside the ground band across every pose family on floors of 0, 0.5, 1 and 3 m (a flyer against its hover); a pose never writes the root. **No `defs.js` value, no hit volume, no engine file needed to change.**
+
+| kind | drawn / defs height | 85%-radius need / have | meshes (new / shipped) | triangles (new / shipped) | asleep, merged to |
+|---|---|---|---|---|---|
+| tollbearer | 2.33 / 2.25 | 0.41 / 0.45 | 47 / 28 | 1210 / 792 | 3 meshes |
+| gaunt | 1.53 / 1.5 | 0.41 / 0.55 | 30 / 23 | 588 / 474 | 2 |
+| bellhand | 2.35 / 2.35 | 0.42 / 0.43 | 30 / 31 | 1012 / 960 | 3 |
+| sexton | 2.38 / 2.35 | 0.39 / 0.43 | 45 / 33 | 1432 / 930 | 2 |
+| wardengraft | 3.01 / 3.0 | 0.59 / 0.60 | 31 / 36 | 1114 / 974 | 3 |
+| cantor | 4.75 / 4.8 | 0.82 / 0.85 | 41 / 41 | 1844 / 1100 | 2 |
+| bellnode | 2.44 / 2.45 | 0.66 / 0.75 | 9 / 6 | 808 / 220 | 3 |
+| gill | 1.14 / 1.15 | 0.62 / 0.65 | 23 / 14 | 1344 / 468 | 3 |
+| feeder | 2.05 / 2.1 | 0.65 / 0.75 | 24 / 11 | 1466 / 728 | 3 |
+| graftmother | 4.25 / 4.2 | 1.40 / 1.45 | 59 / 31 | 2398 / 1076 | 3 |
+
+The sleeping-enemy merge (`mergeStatic`, one mesh per material) works on every rig (`rigs-asleep.png`): echo shells are never switched with `visible` (a merge would bake them in), they go to a vanishing scale. The cost is real: **about 1.2x to 2.5x the triangles of the shipped rigs and more meshes for the non-humanoids** (a mesh is a draw call while a creature is awake). Not measured: the frame-time effect; `npm run browsercheck` has a render-budget baseline that would show it, and it has not been run on these.
+
+![asleep](../review/look-bible/rigs-asleep.png)
+
+## B2. Are they distinct? Measured on the real geometry (`node tools/look/sil-matrix.mjs review/look-bible/rigs`)
+
+| pair (silhouette overlap, true scale, same distance) | shipped | refined |
+|---|---|---|
+| Tollbearer / Sexton | 0.86 | **0.52** |
+| Tollbearer / Bellhand | 0.91 | **0.54** (0.58 with the early-stage Tollbearer) |
+| Bellhand / Sexton | 0.82 | **0.50** |
+| Feeder / Bellhand (the egg on a stand, against a man) | 0.54 | 0.29 |
+| Cantor / Graft-Mother | 0.65 | 0.27 |
+| every other pair of kinds | up to 0.52 | **at most 0.47** |
+| my acceptance target | | < 0.50 |
+
+("Shipped" here is measured the same way as "refined", on the shipped rigs' real geometry with `node tools/look/shoot-rigs.mjs sil ... old_<kind>`; the assessment's 0.87 / 0.82 / 0.79 came from a screen-difference method and agree to within 0.05-0.09.)
+
+**I missed my own target on the three humanoid pairs.** In Part A the drawn studies showed 0.49 as the worst pair; the built rigs show 0.54. The reason is physical, not a flaw I can iterate away: the hit radius caps a 2.3 m upright figure at about 0.8 m wide, so three humanoids of the same height share most of their silhouette, and every pull of one mass away from the shared column (a lean, a long arm, a collar) either failed the width rule or moved the overlap by hundredths. What separates the three now is the mass distribution (bell right-top; long legs and a raised bell-hand; a cone skirt and a pipe crown), colour, and motion, not outline alone. If the owner wants the overlap lower, the honest lever is a different hit volume for one of them (an engine change: every map's simulation evidence goes stale), not more geometry.
+
+![silhouettes](../review/look-bible/rigs-silhouettes.png)
+
+## B3. Can the player see them? Measured (`node tools/look/readability.mjs`)
+
+Mean luminance of the creature against the ring of level behind it, shipped against refined, same light and camera. A larger |dL| = it stands out more.
+
+| | Episode 1 dusk (a bright sky behind): shipped dL -> refined dL | Episode 2 interior (a warm lamp): shipped ratio -> refined ratio |
+|---|---|---|
+| Tollbearer | -34 -> -32 | 2.23 -> 2.01 |
+| Bellhand | -46 -> -33 | 1.93 -> 1.90 |
+| Sexton | -33 -> -17 | 2.13 -> 1.81 |
+| Gaunt | -1 -> +28 | 1.60 -> 2.27 |
+| Warden-Graft | -70 -> -33 | 1.97 -> 2.42 |
+| Cantor | -72 -> -84 | 2.21 -> 1.71 |
+| Bell node | -72 -> +12 | 1.65 -> 2.62 |
+| Gill | -31 -> -33 | 2.56 -> 2.75 |
+| feeder | +5 -> -11 | 1.83 -> 1.59 |
+| Graft-Mother | -32 -> -19 | 2.05 -> 2.25 |
+
+My worry that dark oilskin would vanish was only partly right: the shipped yellow stood out by HUE, not brightness (its luminance contrast is no better than the refined set's). Weakest in the interior look: the feeder (1.59) and the Cantor/Sexton (1.7-1.8); in the dusk look the Sexton (-17). Hue separation between the three humanoids is now low (all grey-olive skin, dark coat): that is the cheapest lever left (see decisions).
+
+## B4. The ringing tell, the A/B, the lineups
+
+![tells](../review/look-bible/rigs-tells.png)
+*Rows: Tollbearer, Bellhand, Sexton, Cantor; columns: idle, the tell, the strike (the Sexton and Cantor: the tell, then death).* The Tollbearer's bell swells and glows teal as its arm rises; the Bellhand raises its bell overhead and swings it down. Every tell keeps the shipped timing (the same `attack` values drive it); only the body changes.
+
+A/B, Episode 1 dusk look (left of each pair: shipped; right: refined):
+![ab humans](../review/look-bible/rigs-ab-dusk-humans.png)
+![ab others](../review/look-bible/rigs-ab-dusk-others.png)
+![ab vael](../review/look-bible/rigs-ab-dusk-vael.png)
+
+A/B, Episode 2 interior look:
+![ab hall humans](../review/look-bible/rigs-ab-hall-humans.png)
+![ab hall others](../review/look-bible/rigs-ab-hall-others.png)
+![ab hall vael](../review/look-bible/rigs-ab-hall-vael.png)
+
+To scale, 10 m away (refined, then shipped):
+![lineup refined](../review/look-bible/rigs-lineup-refined.png)
+![lineup shipped](../review/look-bible/rigs-lineup-shipped.png)
+
+## B5. What the real renders taught (so the next rig starts here)
+
+- **A mark thinner than about 1.2 px or closer than about 6 px to the next is lost** at 480 px width. The first atlas's hairline engraving was invisible; the atlas is now bold (1.1-1.8 px strokes, 6-8 px spacing). Fine line-work cannot carry the "engraved" look at fighting distance; value shapes and silhouette must.
+- **Verdigris painted green-teal reads as the Hush under the game's cool light.** It is olive-yellow now. Teal is reserved for the Hush: the only teal on a body is an eye, a clapper, a ring, a tell.
+- **Flat card-like panels read as paper labels.** The chest panel and the first feeder face were removed.
+- **The width rule counts every vertex, including invisible ones.** A detail-1 icosphere is 240 vertices (non-indexed) and an echo shell duplicates its source; both dragged rigs out of the hit cylinder until they were made cheap (detail-0 hands, low-poly echo shells). A stooped posture shifts the head forward of the feet and the cylinder is centred on the feet, so stoop is limited.
+- **My look-dev lamp sat inside the creatures** (a point light at the origin) and lit their feet from within: every early render was misleading. Hung from the ceiling now.
+- **An upright 2.3 m figure cannot be silhouette-distinct from another by shape alone inside a 0.4 m hit radius** (B2).
+
+## B6. What is NOT proven
+
+Texturing at production quality (the atlas is a prototype; surfaces are flat colour with bold engraving); animation beyond the poses shown (walk, tell, death were looked at as stills, no clip was watched); any gameplay or balance; frame time; how the creatures look in the actual maps (only a dusk and a lamp-lit hall test set); whether they are "different from anything else out there" (I did not survey other games). The Warden and the feeder are the weakest designs; the bell node and Cantor the strongest.
+
+## B7. What shipping this would take (L1, NOT started; the owner decides)
+
+New: `src/render/models_choir.js` (the rigs and the kit, moved from `tools/look`), `tools/baker/recipes_choir.js` + `assets/baked/choir_atlas.png` (the atlas recipe moved and baked into the manifest), the atlas name in `src/render/textures.js` `FIXED`. Edited: the `ENEMY_MODELS` table in `src/render/view.js`; the `RIGS` lists in `tests/hit-volume-fair.test.js`, `tests/rig-grounding.test.js`, `tests/entityflag.test.js`, `tests/enemy-hit-volume.test.js`, `tools/dev/measure-rig.mjs`. Unchanged by design: `src/engine/*` (no hit volume moves), `src/render/post.js`, audio, maps, routes. Cost: `src/render` and `assets` change, so the real-game evidence of all 18 maps is regenerated ONCE (about the usual hour), from a clean commit, then pushed; the existing hit-volume, grounding and census tests are the gate and need no new thresholds.
+
+## B8. Decisions for the owner
+
+1. **The three humanoids (B2):** accept 0.50-0.54 overlap, or give one of them a different hit volume (an engine change)? Or separate them by colour (next)?
+2. **Colour:** yellow is retired, so the humanoids are all grey-olive. A stronger hue per kind (Bellhand bronze/rust, Sexton ivory/violet, Tollbearer oxblood) is cheap and would do more for at-a-glance separation than any shape change. Yes?
+3. **Cost:** about 1.2x-2.5x the triangles and more draw calls for the non-humanoids (B1). Acceptable, or trim detail first?
+4. **The weakest designs:** redo the Warden-Graft and the feeder now, or ship them as they are?
+5. **Go to L1** (put them in the game, all ten or the Tollbearer, Gill and feeder first, as the plan said) once these are answered?
+
+---
+
+# PART A: the first pass (drawn studies)
+
 
 Why this exists: `assessment.md` found the renderer's painted/ink language is good and the content drawn through it is generic. The owner's brief (2026-10-06): *"distinct enemies ... things that look different than anything else out there ... keep the art style."* Their decisions: **everything is an instrument**; humans keep **dark torn oilskin**; tone **escalates by episode**; **look only first** (same ten kinds, same behaviours, same hit volumes).
 
