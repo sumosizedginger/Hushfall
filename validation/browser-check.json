@@ -1,11 +1,11 @@
 {
-  "when": "2026-10-06T23:20:23.929Z",
-  "commit": "35967b9",
+  "when": "2026-10-07T00:01:07.839Z",
+  "commit": "af329fe",
   "sources": {
-    "engine": "1cda2c200751fc80",
-    "render": "1302b1d566fa429e",
-    "game": "ba3afdb17603d7c8",
-    "audio": "a3e083ce1a860458",
+    "engine": "db745e41c61d6515",
+    "render": "5e8d89b11b635613",
+    "game": "22801f2db9072035",
+    "audio": "152501668c4a7c69",
     "assets": "bf0547479d5b8097"
   },
   "renderGround": {
@@ -312,7 +312,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=35"
+      "detail": "mode=playing tick=32"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -347,7 +347,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.05 m"
+      "detail": "moved 5.94 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -357,7 +357,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=32 last=hurt,strike,toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire"
+      "detail": "played=32 last=strike,wheeze_windup,toll_soft,hurt,strike,toll_soft,radio,step_outdoor,step_outdoor,step_outdoor,step_outdoor,flare_fire"
     },
     {
       "name": "Escape pauses (live)",
@@ -372,7 +372,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.44 m, ratio 1.52"
+      "detail": "walk 4.34 m, sprint 6.62 m, ratio 1.52"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -532,7 +532,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7441 wall=3s"
+      "detail": "status=complete failed=null ticks=7441 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
@@ -715,9 +715,19 @@
       "detail": "bolts 5, streaks 1, stuck 1, fov hip 70 -> sights 24"
     },
     {
+      "name": "picking up the charge-arc lamp equips it: slot 5 on the HUD, CELLS on the ammo label, a toast that names it, 30 cells in the sim",
+      "ok": true,
+      "detail": "weapon arc, cells 30, hud \"1 CANNON5 LAMP\", label \"CELLS\", toast \"Charge-arc lamp (5): hold fire, it picks its own targets and the arc jumps; it l\""
+    },
+    {
+      "name": "one burst of the lamp in the live game spends one cell, jumps down a line of three bodies (each hit, each for less), draws its lightning and lights the level",
+      "ok": true,
+      "detail": "cells 29, hp 89,92,95, arc segments 22, lamp light 25.0"
+    },
+    {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "383 samples, lowest chip 0.001 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "381 samples, lowest chip 0.000 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -817,42 +827,42 @@
     {
       "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":710,\"sh\":1413,\"ch\":696,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":710,\"sh\":1444,\"ch\":696,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":21,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1413,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1444,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":21,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1413,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":590,\"sh\":1444,\"ch\":576,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":21,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":10,\"bottom\":470,\"sh\":1413,\"ch\":456,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":10,\"bottom\":470,\"sh\":1444,\"ch\":456,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":20,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":21,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "with WebGL unavailable the game says so on screen (no inert title)",
@@ -867,12 +877,12 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=93.4ms"
+      "detail": "frames=900 avg=90.6ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 1100 ms, p95 483 ms"
+      "detail": "worst 983 ms, p95 450 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -883,9 +893,9 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 93.35233333333333,
-    "p95Ms": 483.29999999998836,
-    "worstMs": 1100
+    "avgMs": 90.62866666666666,
+    "p95Ms": 450.1000000000058,
+    "worstMs": 983.2999999999884
   },
   "gl": {
     "geometries": 1459,
