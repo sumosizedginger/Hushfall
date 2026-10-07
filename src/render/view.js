@@ -5,7 +5,8 @@ import { makeFlareCannon, makeScattergun, makePickup } from './models.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
-import { weaponPose } from './weapon-pose.js';
+import { MELEE_MAKERS, makePickupMelee } from './models_melee.js';
+import { weaponPose, meleePose, swingPhase } from './weapon-pose.js';
 import { FACTORIES as CHOIR } from './models_choir.js';
 import { choirAtlasName } from './choir_cells.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
@@ -40,7 +41,8 @@ export class GameView {
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
-    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas), harpoon: makeHarpoonRifle(tex.flarecannon_atlas), arc: makeArcLamp(tex.flarecannon_atlas) };
+    this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas), harpoon: makeHarpoonRifle(tex.flarecannon_atlas), arc: makeArcLamp(tex.flarecannon_atlas), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
+    this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(0.62); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
@@ -56,6 +58,8 @@ export class GameView {
     this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
     this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
     this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
+    this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.13, 0.55, 5); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
+    this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 });       // the Vael's light going out of a body; the spark of a blow
     this.shieldGeo = new THREE.IcosahedronGeometry(1, 1); this.shieldMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.2, wireframe: true, depthWrite: false }); this.shield = null;
     this.beforeStep(world);
   }
@@ -80,7 +84,20 @@ export class GameView {
   }
   handleEvents(events) {
     for (const e of events) {
-      if (e.type === 'fire') { const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc'; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : ar ? 0.15 : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp) this.spinKick = 1; }
+      if (e.type === 'fire') {
+        const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp) this.spinKick = 1;
+        this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
+        this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
+      }
+      else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; }
+      else if (e.type === 'melee_hit') {
+        this.hitKick = e.kind === 'heavy' || e.kind === 'axe' || e.kind === 'mallet' ? 1.4 : 0.8; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, this.hitKick * 0.45); this.shakeT = Math.max(this.shakeT || 0, 0.25);
+        for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.5); m.position.set(e.x, 1.1, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.7 + 0.2, this.rnd() - 0.5).multiplyScalar(4.5), life: 0.25 + this.rnd() * 0.2 }); }
+      }
+      else if (e.type === 'parry') { this.parryT = 0; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.5); this.shakeT = Math.max(this.shakeT || 0, 0.3); for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.6); m.position.set(e.x, 1.3, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.9 + 0.2, this.rnd() - 0.5).multiplyScalar(6), life: 0.3 + this.rnd() * 0.25 }); } }
+      else if (e.type === 'block' || e.type === 'guard_break') { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, e.type === 'block' ? 0.25 : 0.7); this.shakeT = Math.max(this.shakeT || 0, 0.25); }
+      else if (e.type === 'enemy_died') { for (let i = 0; i < 7; i++) { const m = new THREE.Mesh(this.moteGeo, this.moteMat); m.position.set(e.x + (this.rnd() - 0.5) * 0.5, 0.6 + this.rnd() * 1.0, e.z + (this.rnd() - 0.5) * 0.5); this.scene.add(m); this.motes.push({ m, v: new THREE.Vector3((this.rnd() - 0.5) * 0.6, 0.6 + this.rnd() * 0.9, (this.rnd() - 0.5) * 0.6), life: 0.9 + this.rnd() * 0.7, max: 1.6 }); } }
+      else if (e.type === 'pin') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.position.set(e.x, 1.2, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.1, this.rnd() - 0.5).multiplyScalar(3.4), life: 0.3 + this.rnd() * 0.2 }); } }
       else if (e.type === 'bolt') this.addBolt(e);
       else if (e.type === 'arc') this.addArc(e);
       else if (e.type === 'impact') {
@@ -88,7 +105,7 @@ export class GameView {
       }
       else if (e.type === 'shake') { this.shakeT = 0.5; this.shakeAmp = e.amount ?? 1; }
       else if (e.type === 'explode') {
-        this.boomT = 0; this.boomLight.position.set(e.x, e.y, e.z);
+        this.boomT = 0; this.boomLight.position.set(e.x, e.y, e.z); { const d = Math.hypot(e.x - this.cam.position.x, e.z - this.cam.position.z), amp = Math.max(0, 1 - d / 16) * 0.8; if (amp > 0.03) { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, amp); this.shakeT = Math.max(this.shakeT || 0, 0.4); } }
         for (let i = 0; i < 14; i++) {
           const m = new THREE.Mesh(this.debGeo, this.debMat); m.position.set(e.x, e.y, e.z); this.scene.add(m);
           this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.9 + 0.3, this.rnd() - 0.5).multiplyScalar(7), life: 0.5 + this.rnd() * 0.4 });
@@ -138,7 +155,7 @@ export class GameView {
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
     this.cam.rotation.set(lerp(pp.pitch, p.pitch, alpha) + p.kick, lerp(pp.yaw, p.yaw, alpha), roll);
-    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
+    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
     { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = 2.4 * this.ambient; this.sun.intensity = 1.3 * this.ambient; }
@@ -188,7 +205,7 @@ export class GameView {
     seen.clear();
     for (const it of w.pickups) {
       seen.add(it.id); let v = this.pickupViews.get(it.id);
-      if (!v) { v = (it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : it.kind === 'ammo_bolt' || it.kind === 'weapon_harpoon' ? makePickupHarpoon : it.kind === 'ammo_cell' || it.kind === 'weapon_arc' ? makePickupArc : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
+      if (!v) { v = (/^weapon_(boathook|marlinspike|mallet|axe)$/.test(it.kind) ? (k, pt, wt) => makePickupMelee(k, wt) : it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : it.kind === 'ammo_bolt' || it.kind === 'weapon_harpoon' ? makePickupHarpoon : it.kind === 'ammo_cell' || it.kind === 'weapon_arc' ? makePickupArc : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
       v.position.set(it.x, (it.y ?? 0) + 0.18 + Math.sin(this.time * 2.2 + it.id) * 0.05 + (it.kind.startsWith('key') ? 0.25 : 0), it.z); v.rotation.y = this.time * 0.9 + it.id;
     }
     for (const [id, v] of this.pickupViews) if (!seen.has(id)) { this.scene.remove(v); this.pickupViews.delete(id); }
@@ -207,6 +224,25 @@ export class GameView {
     }
     for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
+    // burning ground (the flare cannon's fire, sim state w.burns): a glowing patch, flickering flames, and one light on the nearest patch
+    { const live = new Set(); let near = null, nd = 1e9;
+      for (const b of w.burns || []) {
+        live.add(b.id); let v = this.burnViews.get(b.id);
+        if (!v) {
+          const g = new THREE.Group(), dm = new THREE.MeshBasicMaterial({ color: 0xff7a22, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), fm = new THREE.MeshBasicMaterial({ color: 0xffb040, transparent: true, opacity: 0.9, depthWrite: false });
+          const disc = new THREE.Mesh(this.burnDisc, dm); disc.rotation.x = -Math.PI / 2; disc.scale.setScalar(b.r); g.add(disc);
+          const flames = []; for (let i = 0; i < 9; i++) { const f = new THREE.Mesh(this.flameGeo, fm), a = this.rnd() * Math.PI * 2, rr = Math.sqrt(this.rnd()) * b.r * 0.85; f.position.set(Math.cos(a) * rr, 0.2, Math.sin(a) * rr); f.userData.seed = this.rnd() * 10; g.add(f); flames.push(f); }
+          g.position.set(b.x, b.y + 0.03, b.z); this.scene.add(g); v = { g, disc, flames, dm, fm }; this.burnViews.set(b.id, v);
+        }
+        const fade = Math.min(1, b.t / 0.7) * Math.min(1, (b.max - b.t) / 0.12 + 0.25);
+        v.dm.opacity = (0.26 + 0.1 * Math.sin(this.time * 11 + b.id)) * fade; v.fm.opacity = 0.9 * fade;
+        for (const f of v.flames) { const k = 0.55 + 0.6 * Math.abs(Math.sin(this.time * 8.5 + f.userData.seed * 3)); f.scale.set(1 - 0.25 * k, k * fade + 0.05, 1 - 0.25 * k); f.position.y = 0.28 * k * fade; f.rotation.y = this.time * 1.7 + f.userData.seed; }
+        const d = Math.hypot(b.x - this.cam.position.x, b.z - this.cam.position.z); if (d < nd) { nd = d; near = { b, fade }; }
+      }
+      for (const [id, v] of this.burnViews) if (!live.has(id)) { this.scene.remove(v.g); v.dm.dispose(); v.fm.dispose(); this.burnViews.delete(id); }
+      this.burnLight.intensity = near && nd < 18 ? 20 * (0.78 + 0.22 * Math.sin(this.time * 14) + 0.06 * Math.sin(this.time * 33)) * near.fade : 0; if (near) this.burnLight.position.set(near.b.x, near.b.y + 0.9, near.b.z);
+    }
+    for (let i = this.motes.length - 1; i >= 0; i--) { const m = this.motes[i]; m.life -= dt; m.m.position.addScaledVector(m.v, dt); m.v.y *= 1 - 0.8 * dt; m.m.scale.setScalar(Math.max(0.01, m.life / m.max)); if (m.life <= 0) { this.scene.remove(m.m); this.motes.splice(i, 1); } }
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
@@ -243,15 +279,22 @@ export class GameView {
     const rig = this.rigs[shown];
     // weapon pose = hip, blended toward the sights, then toward the lowered sprint carry
     const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed);
-    const wpose = weaponPose(rig, { ads: a, sprint: sp, sway, recoil: this.recoil, dead: this.deadT, dip });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js) and the sprint carry
+    const sk = p.swingKind, swT = (p.swingT ?? -1) >= 0 ? p.swingT + alpha * TICK : -1, ph = swingPhase(sk, swT), chg = shown === 'arc' && (p.ammo.cell || 0) > 0 ? Math.min(1, Math.max(0, ((p.charge || 0) - WEAPONS.arc.charge.min) / (WEAPONS.arc.charge.max - WEAPONS.arc.charge.min))) : 0;
+    this.hitKick = Math.max(0, this.hitKick - dt * 5); this.parryT += dt;
+    let wpose;
+    if (rig.melee) {                                                                                                  // fists and the found weapons: the rig animates itself from the swing phase, the guard and the charge (models_melee.js)
+      const fc = WEAPONS.fists.charge; rig.anim({ ...ph, kind: sk, charge: shown === 'fists' ? Math.min(1, Math.max(0, ((p.charge || 0) - 0.12) / (fc.max - 0.12))) : 0, guard: p.guard || 0, alt: this.swingAlt ? 1 : 0, t: this.time });
+      wpose = meleePose(rig, { sprint: sp, sway, dead: this.deadT, dip, kick: this.hitKick });
+    } else wpose = weaponPose(rig, { ads: a, sprint: sp, sway: sway + (chg > 0 ? (this.rnd() - 0.5) * 0.012 * chg : 0), recoil: this.recoil, dead: this.deadT, dip, bash: ph.on && sk === 'bash' ? ph : null });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js), the sprint carry, the quick bash; a charging lamp trembles
     rig.group.scale.setScalar(wpose.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
     rig.group.position.set(wpose.pos[0], wpose.pos[1], wpose.pos[2]); rig.group.rotation.set(wpose.rot[0], wpose.rot[1], wpose.rot[2]);
-    rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a));      // small in the sights: it must not hide the target
+    if (rig.flash) { rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a)); }      // small in the sights: it must not hide the target
     if (rig.spin) { this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6); rig.spin.rotation[rig.spinAxis || 'z'] += dt * (rig.spinAxis ? 16 * this.spinKick : 6 + 40 * this.spinKick); }                    // the barrel cluster winds up while it fires
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
     this.pumpT = Math.max(0, this.pumpT - dt);
-    if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 : 0));                   // the bulb breathes and flares
-    { const lamp = shown === 'arc' && w.status !== 'dead'; this.lampLight.intensity = lamp ? (this.flashT > 0 ? 24 + this.rnd() * 10 : 6 + 0.8 * Math.sin(this.time * 7)) : 0; if (lamp) { const fy = this.cam.rotation.y; this.lampLight.position.set(this.cam.position.x - Math.sin(fy) * 0.7, this.cam.position.y - 0.1, this.cam.position.z - Math.cos(fy) * 0.7); } }      // the lamp lights the dark around you
+    if (chg > 0) this.lastCharge = chg; else if (this.flashT <= 0) this.lastCharge = 0;
+    if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 + this.lastCharge : 0) + 1.1 * chg);                   // the bulb breathes and flares; held in a charge it swells
+    { const lamp = shown === 'arc' && w.status !== 'dead'; this.lampLight.intensity = lamp ? (this.flashT > 0 ? 24 + this.rnd() * 10 + 30 * this.lastCharge : 6 + 0.8 * Math.sin(this.time * 7) + 22 * chg) : 0; if (lamp) { const fy = this.cam.rotation.y; this.lampLight.position.set(this.cam.position.x - Math.sin(fy) * 0.7, this.cam.position.y - 0.1, this.cam.position.z - Math.cos(fy) * 0.7); } }      // the lamp lights the dark around you
     if (rig.bolt) rig.bolt.visible = p.cooldown < 0.45 && p.ads < 0.4;                                                      // the harpoon leaves the muzzle; the next one seats as the action closes
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
     this.post.uniforms.uDamage.value = p.hurt;
@@ -261,6 +304,7 @@ export class GameView {
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
+    this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); this.shieldGeo.dispose(); this.shieldMat.dispose(); for (const m of this.pulseViews.values()) m.material.dispose();
     this.post.dispose();
     this.scene.clear(); this.weaponScene.clear();

@@ -20,3 +20,17 @@ test('GameView is exported and constructible as a class (the game builds one per
   const { GameView } = await import(pathToFileURL(path.join(dir, 'view.js')).href);
   assert.equal(typeof GameView, 'function'); assert.ok(GameView.prototype.update || Object.getOwnPropertyNames(GameView.prototype).length > 3, 'GameView has methods');
 });
+
+test('PT-013: the new shell modules (controller, wheel, menu focus) load in node: they are pure on purpose', async () => {
+  for (const f of ['gamepad.js', 'wheel.js', 'padmenu.js']) { const m = await import(pathToFileURL(path.resolve(import.meta.dirname, '../src/game', f)).href); assert.ok(Object.keys(m).length >= 3, f); }
+});
+test('PT-013: every melee rig builds with no texture, carries anim(), and anim() poses it without throwing at any phase of a swing', async () => {
+  const { MELEE_MAKERS } = await import(pathToFileURL(path.join(dir, 'models_melee.js')).href), { swingPhase, swingTimes, meleePose } = await import(pathToFileURL(path.join(dir, 'weapon-pose.js')).href);
+  assert.deepEqual(Object.keys(MELEE_MAKERS), ['fists', 'boathook', 'marlinspike', 'mallet', 'axe']);
+  for (const [id, make] of Object.entries(MELEE_MAKERS)) {
+    const rig = make(null); assert.ok(rig.melee && typeof rig.anim === 'function' && rig.sleeveMat && rig.group, id);
+    const kind = id === 'fists' ? 'jab' : id, T = swingTimes(kind);
+    for (let u = 0; u <= 1.0001; u += 0.1) { rig.anim({ ...swingPhase(kind, u * (T.windup + T.recover)), kind, charge: u, guard: u, alt: u > 0.5 ? 1 : 0, t: u * 3 }); const p = meleePose(rig, { sprint: u, sway: 0.01, dead: 0, dip: 0, kick: u }); assert.ok([...p.pos, ...p.rot, p.scale].every(Number.isFinite), `${id} at ${u}`); }
+    let n = 0; rig.group.traverse((o) => { if (o.isMesh) { n++; const uv = o.geometry.attributes.uv; for (let i = 0; i < uv.count; i++) { assert.ok(uv.getX(i) >= -0.001 && uv.getX(i) <= 1.001 && uv.getY(i) >= -0.001 && uv.getY(i) <= 1.001, `${id}: a UV leaves the atlas`); } } }); assert.ok(n >= 8 && n < 60, `${id}: ${n} meshes`);
+  }
+});
