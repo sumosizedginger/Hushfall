@@ -8,7 +8,7 @@ const URL_BY_NAME = Object.fromEntries(Object.entries(urls).map(([p, u]) => [p.s
 
 const loader = new THREE.TextureLoader();
 const CHOIR_ATLASES = CHOIR_KINDS.map(choirAtlasName);       // the ten creature atlases (models_choir.js)
-const ATLASES = new Set(['tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', ...CHOIR_ATLASES]);
+const ATLASES = new Set(['tollbearer_atlas', 'flarecannon_atlas', 'props_atlas', 'decals_atlas', 'guns_atlas', ...CHOIR_ATLASES]);
 
 export function loadTex(name, { repeat = true, srgb = true } = {}) {
   const url = URL_BY_NAME[name];
@@ -50,6 +50,10 @@ function makeSeamless(t) { try { return makeSeamlessUnsafe(t); } catch { return 
 export async function loadAll() {
   const out = {};
   await Promise.all(NAMES.map(async (n) => { out[n] = await loadTex(n, { repeat: !ATLASES.has(n) && n !== 'ui_title_art' && n !== 'door_hatch_a' }); }));
+  // the marks' atlas (PT-021): a cosmetic layer must never take the game down, so a build without the baked file draws no marks (and says so) rather than failing to start
+  out.decals_atlas = await loadTex('decals_atlas', { repeat: false }).catch(() => { console.warn('decals_atlas is not baked: no marks will be drawn'); return new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1); });
+  out.decals_atlas.needsUpdate = true;
+  out.guns_atlas = await loadTex('guns_atlas', { repeat: false }).catch(() => { console.warn('guns_atlas is not baked: the guns use the old weapon atlas'); return out.flarecannon_atlas; });       // the guns' own materials (PT-021 step 3)
   for (const n of SKIES) out[n] = makeSeamless(out[n]);                                  // every painted sky (PT-021 added sky_bleach and sky_ash)
   out.wall_plaster_a.wrapT = THREE.ClampToEdgeWrapping;        // the wainscot is at the bottom of the tile and plain plaster above it: it must not repeat up a tall wall
   out.paper_grain = await loadTex('paper_grain', { srgb: false });

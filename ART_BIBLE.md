@@ -108,6 +108,8 @@ The outside critique (PT-021) was right that the surfaces were "one recipe in di
 | wall_resin_a (7501) | the Vael's growth: bone ribs over a dark wet membrane with veins and sacs (it was a violet sheet of lightning) |
 | wall_bulkhead_a (1101) | harbour steel: teal plates, the tide line, barnacles below it, algae at the foot |
 | sky_bleach (8401), sky_ash (8402) | new skies for the salt works (a white-grey glare with a yellow-green haze) and the kilns (smoke with a dull glow); every painted sky is made seamless at load |
+| decals_atlas (9701), guns_atlas (9801) | the marks (4 x 4 cells, transparent: blood and ichor splats, pock, drip, pools, scorch, smear, scrapes, damp, soot) and the guns' own materials (4 x 4 opaque cells: walnut, blued steel, brass, copper, enamel, perforated sheet, rubber, oak, iron, rope, lantern brass, glass, coil, porcelain, leather, gunmetal) |
+| ui_title_art (4401) | redone: the harbour at dusk, a bell tower with one lit window, the sun's road, a lamp on the quay, rings of teal sound |
 `BAKE_PREVIEW=<dir> node tools/bake.mjs <ids>` writes the PNGs to a folder and touches neither `assets/baked` nor the manifest (recipe iteration). Floors and the brick, stone and wood props are NOT redone (the floors are still the earlier recipes).
 
 ## Not yet done

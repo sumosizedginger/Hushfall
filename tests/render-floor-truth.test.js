@@ -24,7 +24,7 @@ const OFFSETS = [[0, 0], [0.6, 0.6], [-0.6, 0.6], [0.6, -0.6], [-0.6, -0.6]];  /
 function surfaceBelow(root, x, fromY, z) {
   const rc = new THREE.Raycaster(new THREE.Vector3(x, fromY, z), new THREE.Vector3(0, -1, 0), 0, 60);
   for (const h of rc.intersectObject(root, true)) {
-    const m = h.object.material; if (m?.transparent || m?.visible === false) continue;
+    const m = h.object.material; if (m?.transparent || m?.visible === false || h.object.userData?.dressing) continue;                    // (PT-021: the Vael's growth is dressing that stands on the floor on purpose)
     if (h.face && h.face.normal.clone().transformDirection(h.object.matrixWorld).y > 0.5) return h.point.y;
   }
   return null;

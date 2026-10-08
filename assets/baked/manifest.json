@@ -34,8 +34,8 @@
       "width": 320,
       "height": 200,
       "transparent": false,
-      "sha256": "d010fc84959ef5bc5774753a46ab349c8db2348968aa4a8b8d5fc26225f1dcea",
-      "bytes": 126114
+      "sha256": "ab38d1d18e0713f0ff79452250d55e6efd9f616ccc39a206c27bd165b569caf9",
+      "bytes": 75467
     },
     "tollbearer_atlas": {
       "seed": 5101,
@@ -436,6 +436,22 @@
       "transparent": false,
       "sha256": "729e48640ceb35b54b4735a9dd7b7ffeddeddf33cc6a45daf44714236bc87ecc",
       "bytes": 209449
+    },
+    "decals_atlas": {
+      "seed": 9701,
+      "width": 256,
+      "height": 256,
+      "transparent": true,
+      "sha256": "10d4cba36bef8e455606b8b35313b82c1ae667377a63f303db7b2aa45014e30e",
+      "bytes": 37187
+    },
+    "guns_atlas": {
+      "seed": 9801,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "13419fcad9edb6566beb5f320c229baea4d3877670360b9b7ae9775594563968",
+      "bytes": 31573
     }
   }
 }

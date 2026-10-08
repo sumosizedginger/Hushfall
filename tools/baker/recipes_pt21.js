@@ -259,4 +259,148 @@ export const recipesPT21 = {
     }),
   },
 
+  // ---- the marks that stay (PT-021 step 2): a 4 x 4 atlas of 64 px cells, transparent. Painted as dark INK stains, not red fountains: the game is painterly, not gory. Cells (DECALS.kinds in defs.js): 0-2 blood splats, 3 a bullet pock,
+  // 4-6 ichor splats, 7 a drip stain, 8 a blood pool, 9 an ichor pool, 10 a scorch burst, 11 a wall scorch streak, 12 a smear (a drag), 13 claw scrapes, 14 a damp patch, 15 a soot burst. The smear and the drip are painted NEUTRAL and
+  // tinted at run time (blood or ichor), so one cell serves both.
+  decals_atlas: {
+    seed: 9701, width: 256, height: 256, transparent: true,
+    draw: R((g) => {
+      const W2 = g.p.width / 2, H2 = g.p.height / 2;
+      const dot = (x, y, d, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, d, d); g.p.pop(); };
+      const seg = (x1, y1, x2, y2, c, wt, a = 255) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 - W2, y1 - H2, x2 - W2, y2 - H2); g.p.pop(); };
+      const cellAt = (i) => [(i % 4) * 64 + 32, Math.floor(i / 4) * 64 + 32];
+      const splat = (i, base, rim, hi) => {                                                                   // a body, a rim of satellite drops, streaks thrown outward, a wet highlight
+        const [cx, cy] = cellAt(i), ang0 = g.rnd(0, 6.28);
+        for (let k = 0; k < 4; k++) dot(cx + g.rnd(-5, 5), cy + g.rnd(-5, 5), g.rnd(14, 24), base, 235);
+        for (let k = 0; k < 3; k++) dot(cx + g.rnd(-4, 4), cy + g.rnd(-4, 4), g.rnd(10, 16), rim, 150);
+        for (let k = 0; k < 6; k++) { const a = ang0 + g.rnd(-1, 1) + k * 1.05, l = g.rnd(12, 27), x2 = cx + Math.cos(a) * l, y2 = cy + Math.sin(a) * l; seg(cx + Math.cos(a) * 6, cy + Math.sin(a) * 6, x2, y2, base, g.rnd(1.6, 3.4), 235); dot(x2, y2, g.rnd(3, 6), base, 235); }
+        for (let k = 0; k < 13; k++) { const a = g.rnd(0, 6.28), l = g.rnd(16, 30); dot(cx + Math.cos(a) * l, cy + Math.sin(a) * l, g.rnd(1.4, 5), base, 225); }
+        dot(cx - 5, cy - 6, g.rnd(4, 7), hi, 190);
+      };
+      for (const [i, t] of [[0, 0], [1, 1], [2, 2]]) splat(i, ['#7c1a12', '#6e1610', '#8a2016'][t], '#b02a1c', '#e0583c');
+      for (const [i, t] of [[4, 0], [5, 1], [6, 2]]) splat(i, ['#12806e', '#0e7464', '#188a78'][t], '#30c0a0', '#a8ffec');
+      { const [cx, cy] = cellAt(3);                                                                           // a bullet pock: the pale chips round a dark hole, hairline cracks
+        for (let k = 0; k < 9; k++) { const a = k * 0.7 + g.rnd(-0.2, 0.2), l = g.rnd(9, 15); dot(cx + Math.cos(a) * l, cy + Math.sin(a) * l, g.rnd(2.6, 5), '#d6cfba', 235); }
+        dot(cx, cy, 11, '#0e0c0a', 250); dot(cx - 1, cy - 1, 5, '#000000', 255);
+        for (let k = 0; k < 5; k++) { const a = g.rnd(0, 6.28), l = g.rnd(12, 24); seg(cx, cy, cx + Math.cos(a) * l, cy + Math.sin(a) * l, '#1a1612', 1.1, 210); } }
+      { const [cx, cy] = cellAt(7);                                                                           // a drip stain (neutral; tinted): a wash, then streaks that run down and end in a drop
+        dot(cx, cy - 8, 28, '#e0e0e0', 90); dot(cx + 3, cy - 4, 20, '#c8c8c8', 140);
+        for (let k = 0; k < 6; k++) { const x = cx - 14 + k * 5.6 + g.rnd(-1.5, 1.5), l = g.rnd(18, 44); seg(x, cy - 22, x + g.rnd(-1, 1), cy - 22 + l, '#d8d8d8', g.rnd(2.6, 4.6), 230); dot(x, cy - 22 + l, g.rnd(4, 6.5), '#ececec', 240); } }
+      const pool = (i, base, rim, hi) => {                                                                   // a pool: a lumpy round body with lobes, a darker skin at the edge and a shine on the upper side
+        const [cx, cy] = cellAt(i), lobes = [];
+        for (let k = 0; k < 14; k++) { const a = k / 14 * 6.28, r = 19 + g.rnd(-3, 6) + (k % 5 === 0 ? 6 : 0); lobes.push([cx + Math.cos(a) * r * 0.8, cy + Math.sin(a) * r * 0.8, g.rnd(13, 20)]); }
+        for (const [x, y, d] of lobes) dot(x, y, d, rim, 240);
+        for (const [x, y, d] of lobes) dot(x * 0.82 + cx * 0.18, y * 0.82 + cy * 0.18, d * 0.85, base, 245);
+        dot(cx, cy, 30, base, 245);
+        for (let k = 0; k < 7; k++) { const a = 3.4 + k * 0.22, r = 17; dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r, g.rnd(2.2, 4.2), hi, 170); }
+      };
+      pool(8, '#6a1810', '#3a0c08', '#e0583c'); pool(9, '#10766a', '#0a4a42', '#a8ffec');
+      { const [cx, cy] = cellAt(10);                                                                          // a scorch burst: black soot, ray streaks, an ash rim
+        for (let k = 0; k < 18; k++) { const a = k / 18 * 6.28 + g.rnd(-0.12, 0.12), l = g.rnd(20, 30); seg(cx + Math.cos(a) * 8, cy + Math.sin(a) * 8, cx + Math.cos(a) * l, cy + Math.sin(a) * l, '#0a0908', g.rnd(2.2, 5), 215); }
+        for (let k = 0; k < 6; k++) dot(cx + g.rnd(-6, 6), cy + g.rnd(-6, 6), g.rnd(22, 34), '#0a0908', 230);
+        for (let k = 0; k < 14; k++) { const a = g.rnd(0, 6.28); dot(cx + Math.cos(a) * g.rnd(22, 29), cy + Math.sin(a) * g.rnd(22, 29), g.rnd(3, 8), '#6a6660', 90); }
+        for (let k = 0; k < 16; k++) { const a = g.rnd(0, 6.28), l = g.rnd(16, 30); dot(cx + Math.cos(a) * l, cy + Math.sin(a) * l, g.rnd(1, 2.4), '#d8d0c0', 150); } }
+      { const [cx, cy] = cellAt(11);                                                                          // a wall scorch: soot licked upward, widest low and thinning, a few clean streaks
+        for (let k = 0; k < 14; k++) { const t = k / 13, y = cy + 28 - t * 56, d = 30 - t * 18 + g.rnd(-2, 2); dot(cx + g.rnd(-4, 4) * (1 + t), y, d, '#0a0908', 210 - t * 120); }
+        for (let k = 0; k < 7; k++) { const x = cx - 12 + k * 4 + g.rnd(-1, 1); seg(x, cy + 26, x + g.rnd(-3, 3), cy - 6 - g.rnd(0, 20), '#0a0908', g.rnd(1.6, 3.2), 170); } }
+      { const [cx, cy] = cellAt(12);                                                                          // a smear (neutral; tinted): the head is a heavy blot on the right, the tail thins out to the left in dry-brush streaks
+        for (let k = 0; k < 12; k++) { const t = k / 11, x = cx - 28 + t * 54, d = 6 + 18 * Math.sin(Math.PI * Math.min(1, t * 1.15)) ** 1.2; dot(x, cy + g.rnd(-2, 2), d, '#d0d0d0', 235); }
+        for (let k = 0; k < 6; k++) { const y = cy - 9 + k * 3.6 + g.rnd(-1, 1); seg(cx - 30 + g.rnd(0, 8), y, cx + 6 + g.rnd(0, 16), y, '#dcdcdc', g.rnd(1.2, 2.4), 190); }
+        for (let k = 0; k < 6; k++) dot(cx + 18 + g.rnd(0, 12), cy + g.rnd(-14, 14), g.rnd(2, 5), '#e4e4e4', 230);
+        dot(cx + 20, cy - 3, 5, '#ffffff', 140); }
+      { const [cx, cy] = cellAt(13);                                                                          // claw scrapes: four gouges, each a pale edge over a dark shadow, with chips
+        for (let k = 0; k < 4; k++) { const x = cx - 14 + k * 9, c = g.rnd(-4, 4); let px = x, py = cy - 26; for (let s = 0; s < 6; s++) { const nx = x + c * Math.sin(s * 0.5) + g.rnd(-0.6, 0.6), ny = cy - 26 + (s + 1) * 8.6; seg(px + 1.6, py, nx + 1.6, ny, '#15110c', 2.6, 215); seg(px, py, nx, ny, '#d8d0b8', 1.8, 235); px = nx; py = ny; } }
+        for (let k = 0; k < 10; k++) dot(cx + g.rnd(-20, 20), cy + g.rnd(-24, 24), g.rnd(1.2, 3), '#cfc8b0', 200); }
+      { const [cx, cy] = cellAt(14);                                                                          // a damp patch: soft, dark, uneven (many faint dots build it)
+        for (let k = 0; k < 22; k++) { const a = g.rnd(0, 6.28), r = 22 * Math.sqrt(g.rnd(0, 1)); dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r, g.rnd(14, 30), '#08100f', 40); } }
+      { const [cx, cy] = cellAt(15);                                                                          // a soot burst: small and sharp
+        for (let k = 0; k < 10; k++) { const a = k / 10 * 6.28 + g.rnd(-0.2, 0.2), l = g.rnd(12, 24); seg(cx, cy, cx + Math.cos(a) * l, cy + Math.sin(a) * l, '#0a0908', g.rnd(1.6, 3.2), 200); }
+        dot(cx, cy, 20, '#0a0908', 225); for (let k = 0; k < 12; k++) { const a = g.rnd(0, 6.28), l = g.rnd(14, 28); dot(cx + Math.cos(a) * l, cy + Math.sin(a) * l, g.rnd(1.2, 3), '#3a3632', 150); } }
+    }),
+  },
+
+  // ---- the guns' own materials (PT-021 step 3, "the guns are the same yellow glove on five thin sticks... different materials"): until now all five guns drew from the SAME eight cells (slate steel, brass, wood, oilskin) of the
+  // weapon atlas, so a scattergun, a rivet driver, a harpoon and a lamp were cousins. A second 4 x 4 atlas of 64 px cells, opaque: each gun gets its own stuff. The hands, sleeves and wraps stay in the old atlas (cells 4, 8, 9).
+  //  0 walnut   1 blued steel   2 brass (verdigris in the recesses)   3 hammered copper   4 yellow enamel (chipped)   5 stamped steel (perforated)   6 black rubber (checkered)   7 bleached whaling oak with bone inlay
+  //  8 pitted black iron   9 rope   10 polished lantern brass (ribbed)   11 teal glass   12 copper coil   13 crazed porcelain   14 stitched leather   15 dark gunmetal
+  guns_atlas: {
+    seed: 9801, width: 256, height: 256,
+    draw: R((g) => {
+      const W2 = g.p.width / 2, H2 = g.p.height / 2, ox = (i) => (i % 4) * 64, oy = (i) => Math.floor(i / 4) * 64, cl = (v, lo = 0.5, hi = 63.5) => Math.min(hi, Math.max(lo, v));
+      const base = (i, c) => g.solid(ox(i), oy(i), 64, 64, c);
+      const dot = (i, x, y, d, c, a = 255) => { const r = d / 2; if (x - r < 0 || x + r > 64 || y - r < 0 || y + r > 64) { const rr = Math.min(r, x, y, 64 - x, 64 - y); if (rr < 0.4) return; d = rr * 2; } g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(ox(i) + x - W2, oy(i) + y - H2, d, d); g.p.pop(); };
+      const seg = (i, x1, y1, x2, y2, c, wt = 1, a = 255) => {                                                  // a line CLIPPED to the cell (Liang-Barsky: clamping the ends would bend a diagonal)
+        let t0 = 0, t1 = 1; const dx = x2 - x1, dy = y2 - y1;
+        for (const [p, q] of [[-dx, x1 - 0.5], [dx, 63.5 - x1], [-dy, y1 - 0.5], [dy, 63.5 - y1]]) { if (p === 0) { if (q < 0) return; } else { const r = q / p; if (p < 0) { if (r > t1) return; if (r > t0) t0 = r; } else { if (r < t0) return; if (r < t1) t1 = r; } } }
+        g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(ox(i) + x1 + dx * t0 - W2, oy(i) + y1 + dy * t0 - H2, ox(i) + x1 + dx * t1 - W2, oy(i) + y1 + dy * t1 - H2); g.p.pop();
+      };
+      const band = (i, y, h, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(ox(i) - W2, oy(i) + cl(y, 0, 64) - H2, 64, Math.min(h, 64 - cl(y, 0, 64))); g.p.pop(); };
+      const wave = (i, y0, amp, ph, c, wt, a) => { let px = 0.5, py = y0 + amp * Math.sin(ph); for (let x = 4; x <= 64; x += 4) { const y = y0 + amp * Math.sin(ph + x * 0.11); seg(i, px, py, x, y, c, wt, a); px = x; py = y; } };
+      const speck = (i, n, c, a, d0, d1, x0 = 1, x1 = 63, y0 = 1, y1 = 63) => { for (let k = 0; k < n; k++) dot(i, g.rnd(x0, x1), g.rnd(y0, y1), g.rnd(d0, d1), c, a); };
+      // 0 walnut: flowing grain, a figured swirl, open pores
+      base(0, '#6a3f22'); for (let k = 0; k < 11; k++) wave(0, 3 + k * 5.6, g.rnd(1, 3), g.rnd(0, 6), pick(g, ['#3e2312', '#4c2c16', '#2e1a0c']), g.rnd(0.8, 1.6), 190); for (let k = 0; k < 5; k++) wave(0, 6 + k * 12, 2, g.rnd(0, 6), '#9a6a3c', 1, 150); dot(0, 38, 30, 14, '#4a2a14', 90); dot(0, 38, 30, 7, '#2e1a0c', 120); speck(0, 40, '#25140a', 170, 0.8, 1.6);
+      // 1 blued steel: a deep blue-black, a long soft highlight, silvered edge wear, pitting
+      base(1, '#26323c'); band(1, 8, 14, '#4a6074', 110); band(1, 12, 5, '#7890a4', 100); band(1, 40, 10, '#10181e', 90); seg(1, 0, 1.5, 64, 1.5, '#a8b8c4', 1.6, 200); seg(1, 0, 62.5, 64, 62.5, '#a8b8c4', 1.4, 160); speck(1, 22, '#cfd8de', 150, 0.8, 1.8); speck(1, 18, '#0a1014', 190, 0.8, 1.6);
+      // 2 brass: a warm body, a bright band, engraved lines, verdigris specks where the polish does not reach
+      base(2, '#bc9236'); band(2, 10, 12, '#e6c25a', 150); band(2, 44, 12, '#7a5a1e', 110); for (const y of [6, 30, 58]) seg(2, 2, y, 62, y, '#4a3510', 1.1, 210); for (let k = 0; k < 6; k++) dot(2, 8 + k * 10, 31, 4, '#4a3510', 190); speck(2, 18, '#5a9a7a', 190, 1.2, 3, 1, 63, 40, 63); speck(2, 20, '#f2dc8a', 150, 0.8, 1.6);
+      // 3 hammered copper: a red-brown skin dimpled all over (a light lip and a dark lip to each dimple)
+      base(3, '#a85a2c'); for (let k = 0; k < 44; k++) { const x = g.rnd(5, 59), y = g.rnd(5, 59), d = g.rnd(6, 11); dot(3, x + 0.8, y + 1, d, '#6a3418', 130); dot(3, x - 0.4, y - 0.5, d * 0.85, '#c8783c', 150); } band(3, 0, 6, '#6a3418', 60); speck(3, 14, '#4a8a6a', 160, 1, 2.4);
+      // 4 yellow enamel: a safety-yellow paint, chipped through to dark steel at the edges, soot and grease streaks
+      base(4, '#d4a626'); band(4, 0, 22, '#e8c24a', 70); band(4, 46, 18, '#8a6a14', 80); for (let k = 0; k < 12; k++) { const x = g.rnd(2, 60), y = pick(g, [g.rnd(1, 7), g.rnd(57, 63)]); dot(4, x, y, g.rnd(2.5, 6), '#2a2c2e', 235); } for (let k = 0; k < 5; k++) seg(4, g.rnd(4, 60), 4, g.rnd(4, 60), 4 + g.rnd(14, 40), '#1c1a14', g.rnd(1.2, 2.8), 120); speck(4, 16, '#fff0b0', 140, 0.8, 1.6);
+      // 5 stamped steel: pale grey sheet with a regular perforation and pressed seams
+      base(5, '#7c868c'); band(5, 0, 8, '#a8b4ba', 90); band(5, 52, 12, '#4a5258', 90); for (let r = 0; r < 5; r++) for (let c = 0; c < 6; c++) { const x = 6 + c * 10.4 + (r % 2) * 5, y = 8 + r * 11; dot(5, x, y, 5.4, '#161a1c', 255); dot(5, x - 0.5, y - 0.5, 2, '#5a646a', 200); } seg(5, 32, 1, 32, 63, '#2a3034', 1.4, 200); speck(5, 14, '#d8e0e4', 140, 0.8, 1.6);
+      // 6 black rubber: a matt black with a diamond checkering and a sheen along one edge
+      base(6, '#241d19'); for (let k = -4; k <= 8; k++) { seg(6, 8 * k, 0, 8 * k + 64, 64, '#0a0807', 1.4, 255); seg(6, 8 * k + 64, 0, 8 * k, 64, '#0a0807', 1.4, 255); } for (let k = -4; k <= 8; k++) { seg(6, 8 * k + 1.4, 0, 8 * k + 65.4, 64, '#4a3d34', 0.8, 150); } band(6, 0, 6, '#5a4a3e', 60);
+      // 7 bleached whaling oak: pale, salt-silvered, long grain, a knot, and two bone (scrimshaw) inlays
+      base(7, '#b49e76'); for (let k = 0; k < 9; k++) wave(7, 4 + k * 7, g.rnd(0.6, 1.8), g.rnd(0, 6), pick(g, ['#7a6540', '#8a7448', '#6a5632']), g.rnd(0.8, 1.4), 170); dot(7, 14, 40, 9, '#5a4626', 220); dot(7, 14, 40, 4, '#3e2e16', 230); dot(7, 44, 20, 12, '#f0eadc', 235); dot(7, 44, 20, 12, '#cfc6b0', 90); seg(7, 38, 20, 50, 20, '#3a2e1e', 1, 220); seg(7, 44, 14, 44, 26, '#3a2e1e', 1, 220); speck(7, 26, '#e8e0cc', 150, 0.8, 1.8);
+      // 8 pitted black iron: a cast-iron black, a few rust bleeds, a rim of orange where the black is gone
+      base(8, '#1c1f22'); band(8, 6, 10, '#33383c', 100); speck(8, 70, '#0a0c0e', 220, 0.8, 2.2); speck(8, 12, '#8a4a22', 200, 1.2, 3); seg(8, 0, 1, 64, 1, '#6a3a1a', 1.4, 160); seg(8, 0, 63, 64, 63, '#6a3a1a', 1.4, 160);
+      // 9 rope: a twisted hemp, diagonal strands light and dark, fibres standing
+      base(9, '#a68c5a'); for (let k = -8; k <= 12; k++) { seg(9, 6 * k, 0, 6 * k + 30, 64, '#5a4624', 2.2, 230); seg(9, 6 * k + 2.2, 0, 6 * k + 32.2, 64, '#d8c088', 1.4, 190); } speck(9, 26, '#e8d8a8', 150, 0.8, 1.4);
+      // 10 polished lantern brass: bright, ribbed (a dark groove and a lit lip every 9 px), a hot highlight column
+      base(10, '#d9b244'); for (let k = 0; k < 7; k++) { seg(10, 0.5, 4 + k * 9, 63.5, 4 + k * 9, '#6a4a14', 1.6, 230); seg(10, 0.5, 6 + k * 9, 63.5, 6 + k * 9, '#fff0a8', 1.2, 190); } g.p.push(); g.p.noStroke(); rgba(g, '#fff6c8', 120); g.p.rect(ox(10) + 14 - W2, oy(10) - H2, 8, 64); g.p.pop(); band(10, 0, 64, '#3a2808', 0); speck(10, 14, '#fffbe0', 160, 0.8, 1.6);
+      // 11 teal glass: a deep teal that lightens to the centre, a bright streak, a dark rim (the material is lit from within)
+      base(11, '#168a7c'); dot(11, 32, 32, 52, '#3adcc4', 150); dot(11, 32, 32, 30, '#8affea', 150); seg(11, 14, 10, 14, 52, '#e8fffa', 3, 220); seg(11, 20, 12, 20, 30, '#e8fffa', 1.4, 170); seg(11, 0.5, 0.5, 63.5, 0.5, '#0a4a44', 2, 230); seg(11, 0.5, 63.5, 63.5, 63.5, '#0a4a44', 2, 230);
+      // 12 copper coil: wire wound in tight turns, each with a lit crown and a dark gap
+      base(12, '#6a3a1c'); for (let k = 0; k < 12; k++) { const y = 2 + k * 5.2; band(12, y, 3.4, '#c8702e', 255); band(12, y, 1.2, '#f0a05a', 220); band(12, y + 3.4, 1.8, '#2a160a', 255); } speck(12, 16, '#e8b078', 140, 0.8, 1.4);
+      // 13 crazed porcelain: off-white with a web of hairlines and one tea-brown stain
+      base(13, '#e4e0d2'); band(13, 40, 24, '#c8c4b4', 80); for (let k = 0; k < 9; k++) { let x = g.rnd(0, 64), y = g.rnd(0, 64); for (let s = 0; s < 4; s++) { const nx = x + g.rnd(-12, 12), ny = y + g.rnd(-12, 12); seg(13, x, y, nx, ny, '#8a8678', 0.9, 170); x = nx; y = ny; } } dot(13, 40, 22, 14, '#b89a6a', 70);
+      // 14 stitched leather: tan hide, two rows of stitching, creases, wear to a lighter grain at the edges
+      base(14, '#6e4a2a'); band(14, 0, 8, '#8a6238', 90); band(14, 54, 10, '#3e2812', 90); for (const y of [9, 55]) for (let x = 3; x < 62; x += 6) seg(14, x, y, x + 3.2, y, '#e0cfa4', 1.4, 235); for (let k = 0; k < 7; k++) wave(14, 12 + k * 6, 1, g.rnd(0, 6), '#3a2410', 1, 130); speck(14, 30, '#2a1808', 150, 0.8, 1.6);
+      // 15 dark gunmetal: near black with a faint sheen and fine wear
+      base(15, '#171b1d'); band(15, 10, 8, '#2e3a40', 90); seg(15, 0, 1, 64, 1, '#7a8a92', 1.2, 150); speck(15, 20, '#5a6a72', 140, 0.8, 1.4);
+    }),
+  },
+
+  // ---- the title picture (PT-021 step 4: "the title art (320x200) is a smudge you cannot read"). One composition you can read at a glance: the harbour at its one dusk hour, a bell tower with one lit window against a low sun, the sun's road
+  // on dark water, a lamp on the quay throwing a pool of warm light, and rings of teal sound spreading across the water (the Vael's voice). Shown behind the menu; the HTML draws the name.
+  ui_title_art: {
+    seed: 4401, width: 320, height: 200,
+    draw: R((g, w, h) => {
+      const W2 = g.p.width / 2, H2 = g.p.height / 2;
+      const dot = (x, y, d, c, a = 255) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, d, d); g.p.pop(); };
+      const oval = (x, y, ww, hh, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const ring = (x, y, ww, hh, c, a, wt = 1) => { g.p.push(); g.p.noFill(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const seg = (x1, y1, x2, y2, c, wt, a = 255) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 - W2, y1 - H2, x2 - W2, y2 - H2); g.p.pop(); };
+      g.noStroke(); g.bleed(0.8, 'out');
+      ['#120e26', '#1d1640', '#33204f', '#5a2e62', '#963e66', '#cc6a5e', '#eea05e'].forEach((c, i) => { g.fill(c, 245); g.rect(-10, i * 19 - 8, w + 20, 30); });          // the dusk, dark above and a low fire at the horizon
+      for (let i = 0; i < 16; i++) { const x = g.rnd(0, w), y = g.rnd(18, 104), r = g.rnd(14, 38); g.fill(pick(g, ['#1d1640', '#5a2e62', '#d87a64', '#8a3a66']), g.rnd(40, 100)); g.circle(x, y, r); }
+      for (let k = 0; k < 4; k++) oval(212, 118, 150 - k * 28, 70 - k * 14, '#ffd8a0', 26);                                                                                  // the low sun's glow
+      g.solid(0, 128, w, 72, '#0b1b27');                                                                                                                                      // the water
+      for (let i = 0; i < 46; i++) { const x = g.rnd(0, w), y = g.rnd(130, 198), l = g.rnd(10, 40); seg(x, y, x + l, y, pick(g, ['#1a4a5a', '#12303f', '#24607a']), g.rnd(0.8, 1.6), g.rnd(120, 200)); }
+      for (let i = 0; i < 20; i++) { const y = 130 + i * 3.4, l = 46 - i * 1.7 + g.rnd(-6, 6); seg(212 - l / 2, y, 212 + l / 2, y, i < 8 ? '#ffc880' : '#e07a4a', g.rnd(1.2, 2.2), 200 - i * 6); }          // the sun's road on the water
+      for (const [rx, ry, a] of [[16, 5, 200], [34, 9, 170], [58, 14, 130], [88, 21, 90], [124, 30, 55]]) ring(96, 166, rx * 2, ry * 2, '#3fffe0', a, 1.4);                         // rings of sound
+      g.solid(0, 126, 62, 4, '#0a0810'); g.solid(70, 121, 38, 9, '#0a0810'); g.solid(120, 124, 54, 6, '#0a0810'); g.solid(268, 120, 52, 10, '#0a0810'); g.solid(0, 128, 320, 2, '#0a0810');   // the far quays and sheds
+      seg(76, 122, 76, 92, '#0a0810', 2); seg(76, 96, 108, 100, '#0a0810', 1.6); seg(108, 100, 108, 122, '#0a0810', 1.4);                                                                   // a crane
+      g.solid(232, 62, 18, 66, '#0a0810'); g.p.push(); g.p.noStroke(); rgba(g, '#0a0810', 255); g.p.triangle(230 - W2, 64 - H2, 252 - W2, 64 - H2, 241 - W2, 40 - H2); g.p.pop();           // the bell tower and its roof
+      g.solid(228, 76, 26, 4, '#0a0810'); dot(241, 70, 5, '#ffcf70', 255); dot(241, 70, 12, '#ffcf70', 60); g.solid(238, 90, 6, 10, '#ffcf70');                                                  // one lit window, one lit door
+      for (let k = 0; k < 8; k++) seg(0, 134 + k * 8, w, 134 + k * 8 + g.rnd(-1.5, 1.5), '#050709', g.rnd(0.6, 1.2), 60);
+      g.solid(0, 178, w, 22, '#07090d'); g.solid(0, 176, w, 3, '#1a2228');                                                                                                                     // the quay edge
+      seg(26, 178, 26, 108, '#07090d', 3); g.solid(20, 104, 12, 6, '#07090d'); dot(26, 106, 8, '#ffe0a0', 255); dot(26, 106, 26, '#ffb45a', 70); dot(26, 106, 54, '#ffb45a', 34);               // the lamp
+      oval(26, 186, 110, 14, '#ffb45a', 60); oval(26, 186, 64, 8, '#ffd48a', 80);                                                                                                              // its pool on the quay
+      g.solid(284, 168, 12, 14, '#07090d'); g.solid(281, 166, 18, 4, '#07090d');                                                                                                               // a bollard
+      for (let i = 0; i < 70; i++) dot(g.rnd(0, w), g.rnd(0, 120), g.rnd(0.8, 1.6), '#fff0d8', g.rnd(60, 150));                                                                               // the first stars and the grain of the air
+    }),
+  },
+
 };
