@@ -6,7 +6,7 @@ import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
 import { MELEE_MAKERS, makePickupMelee } from './models_melee.js';
-import { weaponPose, meleePose, swingPhase } from './weapon-pose.js';
+import { weaponPose, meleePose, swingPhase, swingCamera, SwingClock } from './weapon-pose.js';
 import { FACTORIES as CHOIR } from './models_choir.js';
 import { choirAtlasName } from './choir_cells.js';
 import { markEntity, patchEntityFragment } from './entityflag.js';
@@ -43,6 +43,7 @@ export class GameView {
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
     this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas), scattergun: makeScattergun(tex.flarecannon_atlas), rivet: makeRivetDriver(tex.flarecannon_atlas), harpoon: makeHarpoonRifle(tex.flarecannon_atlas), arc: makeArcLamp(tex.flarecannon_atlas), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
+    this.vm = new SwingClock(); this.lag = { x: 0, y: 0 }; this.lastLook = null;      // PT-020: the swing's own clock (a freeze on contact: view only), the view model trailing a turning view
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(0.62); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
@@ -89,8 +90,9 @@ export class GameView {
         this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
         this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
       }
-      else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; }
+      else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; this.vm.start(e.kind, e.tick * TICK); }
       else if (e.type === 'melee_hit') {
+        this.vm.hit(e.kind, e.killed);                                                                                   // the weapon sticks in the body for a moment (the view model only)
         this.hitKick = e.kind === 'heavy' || e.kind === 'axe' || e.kind === 'mallet' ? 1.4 : 0.8; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, this.hitKick * 0.45); this.shakeT = Math.max(this.shakeT || 0, 0.25);
         for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.5); m.position.set(e.x, 1.1, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.7 + 0.2, this.rnd() - 0.5).multiplyScalar(4.5), life: 0.25 + this.rnd() * 0.2 }); }
       }
@@ -147,6 +149,15 @@ export class GameView {
 
   render(w, alpha, dt) {
     this.time += dt; const p = w.player, pp = this.prev.player;
+    // the swing's own clock: render time since the swing began, minus the time the view model was held at the contact (a view-only hit-stop; the simulation never sees it, and a pause or the wheel's slowed time hold it too)
+    let ph = this.vm.sample(w.time + alpha * TICK), sk = this.vm.kind ?? p.swingKind;
+    if (!ph) ph = (p.swingT ?? -1) >= 0 && p.swingKind ? swingPhase(p.swingKind, p.swingT + alpha * TICK) : { a: 0, b: 0, c: 0, h: 0, on: false };      // (a swing the view never saw begin, a loaded save: follow the simulation)
+    const ck = swingCamera(sk, ph), lookYaw = lerp(pp.yaw, p.yaw, alpha), lookPitch = lerp(pp.pitch, p.pitch, alpha);
+    if (this.lastLook && dt > 0) {                                                                                     // the view model trails a turning view
+      let dy = lookYaw - this.lastLook[0]; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); const vy = Math.max(-5, Math.min(5, dy / dt)), vp = Math.max(-5, Math.min(5, (lookPitch - this.lastLook[1]) / dt)), k = Math.min(1, dt * 11);
+      this.lag.x += (Math.max(-0.07, Math.min(0.07, vy * 0.016)) - this.lag.x) * k; this.lag.y += (Math.max(-0.05, Math.min(0.05, -vp * 0.012)) - this.lag.y) * k;
+    }
+    this.lastLook = [lookYaw, lookPitch];
     // camera (interpolated)
     const speed = Math.hypot(p.vx, p.vz), bob = Math.sin(p.bob * 2) * 0.035 * Math.min(1, speed / PLAYER.speed);
     let eye = PLAYER.eye + bob, roll = 0;
@@ -154,7 +165,7 @@ export class GameView {
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
-    this.cam.rotation.set(lerp(pp.pitch, p.pitch, alpha) + p.kick, lerp(pp.yaw, p.yaw, alpha), roll);
+    this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
@@ -279,12 +290,12 @@ export class GameView {
     const rig = this.rigs[shown];
     // weapon pose = hip, blended toward the sights, then toward the lowered sprint carry
     const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed);
-    const sk = p.swingKind, swT = (p.swingT ?? -1) >= 0 ? p.swingT + alpha * TICK : -1, ph = swingPhase(sk, swT), chg = shown === 'arc' && (p.ammo.cell || 0) > 0 ? Math.min(1, Math.max(0, ((p.charge || 0) - WEAPONS.arc.charge.min) / (WEAPONS.arc.charge.max - WEAPONS.arc.charge.min))) : 0;
+    const chg = shown === 'arc' && (p.ammo.cell || 0) > 0 ? Math.min(1, Math.max(0, ((p.charge || 0) - WEAPONS.arc.charge.min) / (WEAPONS.arc.charge.max - WEAPONS.arc.charge.min))) : 0;
     this.hitKick = Math.max(0, this.hitKick - dt * 5); this.parryT += dt;
     let wpose;
     if (rig.melee) {                                                                                                  // fists and the found weapons: the rig animates itself from the swing phase, the guard and the charge (models_melee.js)
       const fc = WEAPONS.fists.charge; rig.anim({ ...ph, kind: sk, charge: shown === 'fists' ? Math.min(1, Math.max(0, ((p.charge || 0) - 0.12) / (fc.max - 0.12))) : 0, guard: p.guard || 0, alt: this.swingAlt ? 1 : 0, t: this.time });
-      wpose = meleePose(rig, { sprint: sp, sway, dead: this.deadT, dip, kick: this.hitKick });
+      wpose = meleePose(rig, { sprint: sp, sway, dead: this.deadT, dip, kick: this.hitKick, lagX: this.lag.x, lagY: this.lag.y });
     } else wpose = weaponPose(rig, { ads: a, sprint: sp, sway: sway + (chg > 0 ? (this.rnd() - 0.5) * 0.012 * chg : 0), recoil: this.recoil, dead: this.deadT, dip, bash: ph.on && sk === 'bash' ? ph : null });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js), the sprint carry, the quick bash; a charging lamp trembles
     rig.group.scale.setScalar(wpose.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
     rig.group.position.set(wpose.pos[0], wpose.pos[1], wpose.pos[2]); rig.group.rotation.set(wpose.rot[0], wpose.rot[1], wpose.rot[2]);

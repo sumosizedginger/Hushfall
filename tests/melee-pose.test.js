@@ -49,7 +49,9 @@ test('the rig is at its "hit" key pose when the damage lands (not later)', () =>
     const hitQ = new THREE.Quaternion(); rig.hold.getWorldQuaternion(hitQ); const hp = rig.hold.position.clone();
     const mid = MELEE_MAKERS[id](null); mid.anim({ ...swingPhase(id, T.windup - 0.03), kind: id, t: 0 });
     assert.ok(mid.hold.position.distanceTo(hp) > 0.01, id + ': 30 ms before the hit the weapon is still on its way');
-    const late = MELEE_MAKERS[id](null); late.anim({ ...swingPhase(id, T.windup + 0.2 * T.recover * 0.5), kind: id, t: 0 }); assert.ok(late.hold.position.distanceTo(hp) < 1e-6, id + ': the follow-through holds the hit pose');
+    const hold = 0.2 * T.recover, sink = MELEE_MAKERS[id](null), end = MELEE_MAKERS[id](null), wind = MELEE_MAKERS[id](null); sink.anim({ ...swingPhase(id, T.windup + hold * 0.5), kind: id, t: 0 }); end.anim({ ...swingPhase(id, T.windup + hold), kind: id, t: 0 }); wind.anim({ ...swingPhase(id, T.windup - strikeTime(T)), kind: id, t: 0 });
+    const stroke = wind.hold.position.distanceTo(hp), sunk = sink.hold.position.distanceTo(hp);
+    assert.ok(sunk > 1e-4 && sunk < stroke * 0.15, id + ': after the contact the weapon sinks a little past the hit pose (' + sunk.toFixed(4) + ' m of a ' + stroke.toFixed(2) + ' m stroke)'); assert.ok(end.hold.position.distanceTo(hp) < 1e-6, id + ': and has settled on the hit pose at the end of the hold');
   }
 });
 test('at rest and on guard: BOTH hands (one for the marlinspike) are on the screen, with a forearm, and the weapon\'s axis stays clear of the crosshair at rest', () => {
@@ -74,4 +76,48 @@ test('the wind-up and the blow keep both hands in the picture or leave it only u
 test('the pickup is the weapon alone: no forearm (sleeve material) and no glove (a linen-wrapped box)', async () => {
   const { makePickupMelee } = await import('../src/render/models_melee.js');
   for (const id of FOUND) { const g = makePickupMelee('weapon_' + id, null); let sleeves = 0, meshes = 0; g.traverse((m) => { if (m.isMesh) { meshes++; if (m.material.transparent && m.material.depthWrite === false) sleeves++; } }); assert.equal(sleeves, 0, id + ': no sleeve in the pickup'); assert.ok(meshes >= 5, id + ': but the weapon itself is there'); }
+});
+
+// ---- PT-020: the swing's own clock (a view-only freeze on contact), the feel table, the camera's kick
+import { SwingClock, FEEL, swingCamera } from '../src/render/weapon-pose.js';
+test('with no hit the clock runs the plain swing and ends with it', () => {
+  for (const kind of FOUND) {
+    const T = swingTimes(kind), c = new SwingClock(); c.start(kind, 10);
+    for (const u of [0.1, 0.3, 0.6, 0.9]) { const t = u * (T.windup + T.recover), a = c.sample(10 + t), b = swingPhase(kind, t); assert.ok(a && Math.abs(a.a - b.a) + Math.abs(a.b - b.b) + Math.abs(a.c - b.c) < 1e-9, kind + ' follows swingPhase'); }
+    assert.equal(c.sample(10 + T.windup + T.recover + 0.01), null, kind + ': over when the swing is over');
+  }
+});
+test('a hit freezes the view model ON the hit pose for the weapon\'s stop, once, then the swing carries on and ends that much later', () => {
+  for (const kind of FOUND) {
+    const T = swingTimes(kind), stop = FEEL[kind].stop, c = new SwingClock(); c.start(kind, 5);
+    c.sample(5 + T.windup - 0.01); c.hit(kind, false); c.hit(kind, false);                             // a cleave lands on several bodies: still one freeze
+    const at = (dt) => c.sample(5 + T.windup + dt);
+    const first = at(0.004); assert.ok(first.b === 1 && first.h === 0 && first.c === 0, kind + ': exactly the hit pose at the contact');
+    const mid = at(stop * 0.6), late = at(stop * 0.95); assert.ok(mid.b === 1 && mid.h === 0 && late.b === 1 && late.h === 0, kind + ': held for the stop (' + stop + ' s)');
+    const after = at(stop + 0.03); assert.ok(after.h > 0, kind + ': then it carries on (the weapon sinks and settles)');
+    assert.ok(c.sample(5 + T.windup + stop + T.recover - 0.02) !== null, kind + ': the swing now ends later by the stop'); assert.equal(c.sample(5 + T.windup + stop + T.recover + 0.02), null, kind + ': and then it is over');
+  }
+});
+test('the freeze counts SIM time: a paused game (time not moving) does not use it up; a heavier weapon holds longer; a kill holds longer still', () => {
+  const kind = 'axe', T = swingTimes(kind), c = new SwingClock(); c.start(kind, 0); c.sample(T.windup); c.hit(kind, false);
+  for (let i = 0; i < 50; i++) c.sample(T.windup + 0.001);                                              // fifty frames of a paused game
+  assert.equal(c.sample(T.windup + 0.002).h, 0, 'still held'); assert.ok(FEEL.axe.stop > FEEL.marlinspike.stop && FEEL.mallet.stop > FEEL.boathook.stop && FEEL.heavy.stop > FEEL.jab.stop, 'weight decides the stop');
+  const k = new SwingClock(); k.start(kind, 0); k.sample(T.windup); k.hit(kind, true); assert.ok(k.freeze > FEEL.axe.stop, 'a kill is held a little longer');
+  for (const [id, F] of Object.entries(FEEL)) assert.ok(F.stop >= 0.02 && F.stop <= 0.12, id + ': a freeze of a few frames, never a stall');
+});
+test('the camera kicks: up as the weapon is raised, down on the blow, within a couple of degrees (a visual kick, never a moved aim)', () => {
+  for (const kind of Object.keys(FEEL)) {
+    const T = swingTimes(kind), a = swingCamera(kind, swingPhase(kind, T.windup * 0.4)), b = swingCamera(kind, swingPhase(kind, T.windup)), n = swingCamera(kind, swingPhase(kind, T.windup + T.recover));
+    assert.ok(a.pitch >= 0 && b.pitch < 0, kind + ': the camera rises with the weapon and drops on the blow'); assert.ok(Math.abs(n.pitch) + Math.abs(n.roll) < 1e-6, kind + ': and is level again when the swing is over');
+    for (let t = 0; t <= T.windup + T.recover; t += 0.005) { const k = swingCamera(kind, swingPhase(kind, t)); assert.ok(Math.abs(k.pitch) < 0.05 && Math.abs(k.roll) < 0.05, kind + ': under 3 degrees'); }
+  }
+});
+test('a blow ACCELERATES into the contact (the fastest the weapon moves is in the last few hundredths of a second before the hit) and stops dead there', () => {
+  for (const id of FOUND) {
+    const T = swingTimes(id), rig = MELEE_MAKERS[id](null), speeds = []; let prev = null; const dt = 0.004;
+    for (let t = 0; t <= T.windup + 0.1; t += dt) { rig.anim({ ...swingPhase(id, t), kind: id, t: 0 }); const p = rig.hold.position.clone(); if (prev) speeds.push([t, p.distanceTo(prev) / dt]); prev = p; }
+    const peak = speeds.reduce((m, s) => (s[1] > m[1] ? s : m), [0, 0]);
+    assert.ok(peak[0] > T.windup - 0.02 && peak[0] <= T.windup + 0.004, `${id}: the peak speed (${peak[1].toFixed(1)} m/s) is at ${peak[0].toFixed(3)} s, the contact is at ${T.windup} s`);
+    const after = speeds.filter((s) => s[0] > T.windup + 0.012 && s[0] < T.windup + 0.06).map((s) => s[1]); assert.ok(Math.max(...after) < peak[1] * 0.35, `${id}: it does not carry on at speed after the contact`);
+  }
 });

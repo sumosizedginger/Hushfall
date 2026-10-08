@@ -56,8 +56,50 @@ export const strikeTime = (T) => Math.min(0.14, Math.max(0.035, 0.4 * T.windup))
 export function swingPhase(kind, t) {
   const T = t >= 0 ? swingTimes(kind) : null; if (!T) return { a: 0, b: 0, c: 0, on: false };
   const s = strikeTime(T), pull = T.windup - s, hold = 0.2 * T.recover;
-  const a = ease(clamp01(t / pull)), b = clamp01((t - pull) / s) ** 2, c = ease(clamp01((t - T.windup - hold) / (T.recover - hold)));
-  return { a, b, c, on: true };
+  const a = ease(clamp01(t / pull)), b = clamp01((t - pull) / s) ** 2, h = clamp01((t - T.windup) / hold), c = ease(clamp01((t - T.windup - hold) / (T.recover - hold)));          // h: 0..1 through the hold on the follow-through (the weapon sinks past its hit pose and settles)
+  return { a, b, c, h, on: true };
+}
+/**
+ * How a blow FEELS (PT-020; VIEW ONLY: the simulation never reads this, so no balance, hash or evidence depends on it).
+ *   stop   the freeze on contact, seconds: the weapon sticks in the body for a moment (a hit-stop of the view model only; the heavier the weapon the longer)
+ *   pitch  the camera's kick, radians, [as the weapon is raised, on the blow]: + looks up. roll: the same for the camera's roll, + leans to the right
+ *   over   how far past the hit pose the weapon sinks and settles, as a share of the stroke
+ * Kept small: the camera kick is visual and the hit arc is wide, but a blow must never feel like it moved your aim.
+ */
+export const FEEL = {
+  jab: { stop: 0.035, pitch: [0.004, -0.01], roll: [0.0, 0.0], over: 0.05 }, heavy: { stop: 0.075, pitch: [0.012, -0.028], roll: [0.01, -0.012], over: 0.08 }, bash: { stop: 0.04, pitch: [0.006, -0.014], roll: [0.0, 0.01], over: 0.06 },
+  boathook: { stop: 0.05, pitch: [0.006, -0.015], roll: [0.008, -0.01], over: 0.06 }, marlinspike: { stop: 0.03, pitch: [0.003, -0.01], roll: [0.0, -0.006], over: 0.04 },
+  mallet: { stop: 0.09, pitch: [0.028, -0.04], roll: [0.0, 0.0], over: 0.09 }, axe: { stop: 0.085, pitch: [0.014, -0.032], roll: [-0.03, 0.045], over: 0.08 },
+};
+/**
+ * The swing's own clock for the VIEW (PT-020): sim seconds since the swing began, minus the time the view model was held at the contact (the hit-stop). Pure and testable; the simulation never sees it, and because it counts SIM
+ * time (the pause and the wheel's slowed time hold it too) a freeze lasts as long as the game says, not as long as the frame rate does.
+ *   start(kind, t0)  a swing began at sim time t0 (the 'swing' event's tick)     hit(kind, killed)  the 'melee_hit' event: snap to the hit pose and hold it FEEL[kind].stop seconds (once per swing)
+ *   sample(now)      the phase { a, b, c, h, on } at sim time `now` (null once the swing, and its freeze, are over)
+ */
+export class SwingClock {
+  constructor() { Object.assign(this, { on: false, kind: null, t0: 0, stopped: 0, freeze: 0, snap: false, hitDone: false, lastNow: 0 }); }
+  start(kind, t0) { Object.assign(this, { on: true, kind, t0, stopped: 0, freeze: 0, snap: false, hitDone: false, lastNow: t0 }); }
+  hit(kind, killed = false) {
+    if (!this.on || this.kind !== kind) return;
+    if (!this.hitDone) { this.hitDone = true; this.snap = true; }
+    this.freeze = Math.max(this.freeze, (FEEL[kind]?.stop ?? 0.04) * (killed ? 1.3 : 1));
+  }
+  sample(now) {
+    if (!this.on) return null;
+    const T = swingTimes(this.kind); if (!T) { this.on = false; return null; }
+    if (this.snap) { this.snap = false; this.stopped = Math.max(0, now - this.t0 - T.windup); }                                  // the contact: the pose IS the hit pose, whatever the frame did
+    else if (this.freeze > 0) { const use = Math.min(this.freeze, Math.max(0, now - this.lastNow)); this.stopped += use; this.freeze -= use; }
+    this.lastNow = now; const t = now - this.t0 - this.stopped;
+    if (t > T.windup + T.recover) { this.on = false; return null; }
+    return swingPhase(this.kind, Math.max(0, t));
+  }
+}
+/** the camera's kick for a swing phase: { pitch, roll } in radians (see FEEL) */
+export function swingCamera(kind, ph) {
+  const F = FEEL[kind]; if (!F || !ph.on) return { pitch: 0, roll: 0 };
+  const pull = ph.a * (1 - ph.b), blow = ph.b * (1 - ph.c);
+  return { pitch: F.pitch[0] * pull + F.pitch[1] * blow, roll: F.roll[0] * pull + F.roll[1] * blow };
 }
 /** the quick bash with a gun in hand: pull back, then swing the butt up and across. Returns offsets to ADD to the gun's pose. `ph` = swingPhase('bash', t) */
 export function bashOffset(ph) {
@@ -67,6 +109,6 @@ export function bashOffset(ph) {
 }
 /** the pose of the melee rig's group: fixed in front of the player (the rig animates ITSELF, rig.anim), carried lower in a sprint, dipped on a weapon switch */
 export function meleePose(rig, st) {
-  const h = rig.hip ?? { pos: [0, 0, -0.3], scale: 0.7 }, sp = st.sprint ?? 0, sway = st.sway ?? 0, dead = st.dead ?? 0, dip = st.dip ?? 0, kick = st.kick ?? 0;
-  return { scale: h.scale, pos: [h.pos[0] + sway + 0.04 * sp, h.pos[1] + Math.abs(sway) * 0.6 - 0.12 * sp - dead * 0.6 + dip, h.pos[2] + 0.05 * kick + 0.06 * sp], rot: [0.08 * sp - 0.05 * kick, 0.15 * sp, -0.18 * sp] };
+  const h = rig.hip ?? { pos: [0, 0, -0.3], scale: 0.7 }, sp = st.sprint ?? 0, sway = st.sway ?? 0, dead = st.dead ?? 0, dip = st.dip ?? 0, kick = st.kick ?? 0, lx = st.lagX ?? 0, ly = st.lagY ?? 0;      // lagX / lagY: the view model trails a turning view (PT-020)
+  return { scale: h.scale, pos: [h.pos[0] + sway + 0.04 * sp + lx, h.pos[1] + Math.abs(sway) * 0.6 - 0.12 * sp - dead * 0.6 + dip + ly, h.pos[2] + 0.05 * kick + 0.06 * sp], rot: [0.08 * sp - 0.05 * kick + ly * 0.8, 0.15 * sp - lx * 1.2, -0.18 * sp - lx * 1.6] };
 }
