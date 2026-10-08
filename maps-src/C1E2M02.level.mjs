@@ -5,6 +5,7 @@
 //        on the flanks) -> the PUMP STATION (the valve wheel opens the east cradle hall and unlocks the exit; a secret cistern behind its east wall) -> the second causeway -> the east pan -> the cradle hall (what the valve woke) -> the hatch.
 // Open air vs roof (PT-007/PT-008): the floor skins `l m s p` are outdoor and get no ceiling; the hut, the station, the cistern and the hall are `. f` and are roofed. About a tenth of the map is roofed, on purpose.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(84, 52);
 
@@ -78,6 +79,15 @@ L.putAll('t', [[65, 22], [65, 28], [69, 29], [65, 24], [65, 26]]); L.putAll('g',
 L.putAll('O', [[64, 21], [64, 29], [68, 21], [68, 29]]); L.putAll('D', [[66, 21], [66, 29], [70, 21], [70, 29]]); L.put(66, 22, 'n');
 L.putAll('H', [[63, 22], [63, 28]]); L.putAll('e', [[64, 23], [64, 27], [64, 25]]); L.put(65, 25, 'r');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M02'), keep: [[40, 20]], foes: [[6, 22], [7, 25], [6, 24], [6, 26], [6, 28]] });                                                      // the valve wheel's wall stays
+for (const [a, b] of [[12, 21], [31, 49], [58, 70]]) { S.bays('n', 4, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('s', 47, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); }     // salt sheds and sluice recesses in the pan's long walls, clear of the brine channels
+for (const [a, b] of [[6, 18], [32, 45]]) { S.bays('w', 9, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('e', 72, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); }
+S.dressBays('barrel');
+S.chamfer([2, 21, 8, 29], 'nw ne sw se', 1); S.chamfer([36, 21, 44, 29], 'nw ne sw se', 1); S.chamfer([63, 20, 70, 30], 'nw ne sw se', 2);
+console.log('C1E2M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -122,4 +132,11 @@ const MAP = {
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[44,25],[50,25],[61,25],[66,25]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'bloodpool', at: [8, 25], size: 1.3 }, { kind: 'smear', at: [12, 25], rot: 0, size: 2.8, h: 1.0 }, { kind: 'ichorpool', at: [66, 25], size: 1.5 }, { kind: 'damp', at: [40, 24], size: 1.6 }];
+MAP.growth = [{ at: [67, 25], r: 14, power: 1.0 }];                                                                                                                                                          // the cradle hall at the east end
+// ---- end PT-021 marks and growth ----
+
 export default MAP;

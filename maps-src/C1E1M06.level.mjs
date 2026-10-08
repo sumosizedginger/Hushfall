@@ -4,6 +4,7 @@
 // Route: hill road (west) -> concourse (colonnade, mezzanine, luggage) -> the quay -> winch cabin (north) -> pull the winch: the ramp crashes down, the hold empties, the Warden charges
 //        -> kill it (flares round the plate, or dodge and let it hit a pillar) -> reinforcements -> board the ferry, east end.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(68, 46);
 // concourse (interior, tall), the mezzanine along the north wall, its stairs at the east end
@@ -48,10 +49,20 @@ L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putA
 L.put(61, 24, 'w'); L.putAll('t', [[58, 20], [58, 28], [60, 20], [60, 28], [62, 22], [62, 26]]); L.putAll('g', [[58, 22], [58, 26], [60, 22]]); L.putAll('n', [[57, 19], [57, 29], [63, 24]]); L.putAll('C', [[62, 20], [62, 28]]);
 L.put(62, 24, '>');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M06'), keep: [[43, 2]], foes: [[59, 23], [59, 25], [62, 22], [58, 19], [58, 29], [60, 22]] });                                                       // the winch lever's wall stays
+const t0 = S.bayLog.length;
+S.hall([3, 10, 26, 34], { sides: { w: { w: 3, gap: 3, d: 1, heart: 'alt' }, s: { w: 3, gap: 3, d: 2 }, n: { w: 3, gap: 3, d: 1 } }, cut: 3 });      // the concourse: ticket windows and waiting bays
+S.dressBays('lamp', t0, { tint: 'cool' });
+S.hall([28, 8, 53, 40], { sides: { n: { w: 3, gap: 4, d: 1 }, s: { w: 3, gap: 4, d: 2 } }, cut: 3 });                                          // the quay's sheds
+S.chamfer([56, 18, 63, 30], 'nw ne sw se', 2); S.chamfer([40, 3, 46, 6], 'nw ne sw se', 1);                                  // the hold, the winch cabin
+console.log('C1E1M06 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 const rampCells = [[54, 22], [55, 22], [54, 23], [55, 23], [54, 24], [55, 24], [54, 25], [55, 25], [54, 26], [55, 26]];
 
-export default {
+const MAP = {
   id: 'C1E1M06', name: 'Ferry Terminal', version: 2, ceilingHeight: 4.2, par: { time: 700 },
   atmosphere: { fog: '#2a2c38', fogDensity: 0.01, sky: 'dusk', look: 'dusk' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -78,3 +89,11 @@ export default {
   ],
   quality: { enemies: [40, 66], botSeconds: [80, 600], mechanics: ['heights', 'switches', 'sectors', 'triggers'], skins: 6, enemyKinds: { wardengraft: 1, bellhand: 4 } },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'smear', at: [46, 24], rot: 0, size: 3.0, h: 1.2 }, { kind: 'bloodpool', at: [53, 24], size: 1.4 }, { kind: 'bloodpool', at: [58, 24], size: 1.4 }, { kind: 'scrape', at: [53, 20], wall: 'east', y: 1.2, size: 1.4 }, { kind: 'bloodpool', at: [14, 25], size: 1.2 }];   // the loading lane, the hull, the hall
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

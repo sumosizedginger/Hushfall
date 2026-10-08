@@ -8,6 +8,7 @@
 // Optional: the pump house on the south side holds a cache, two sleepers and a SECRET valve room behind the east wall.
 // Open air vs roof (PT-007/PT-008): a floor skin of kind `floor` (. f) gets a ceiling, the outdoor skins (l s m p) do not. The pan is open; the shed, guardhouse, pump house, gate passage, hall and bay are roofed.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(76, 40);
 
@@ -79,9 +80,18 @@ L.putAll('h', [[12, 22], [18, 22], [28, 22], [35, 22], [21, 19], [26, 26], [22, 
 L.putAll('e', [[47, 17], [47, 27]]); L.putAll('r', [[47, 20], [47, 24], [50, 22]]); L.put(48, 22, 'H'); L.putAll('h', [[63, 16], [62, 28]]);
 L.putAll('j', [[23, 20], [23, 24], [37, 20], [41, 24]]);                                           // lampposts, off the centre lane: `m` hangs from the ceiling and floats in open air (PT-007)
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M01'), keep: [[21, 18]] });                                                      // the sluice wheel's wall stays
+S.bays('n', 10, 13, 42, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('s', 34, 13, 42, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('w', 10, 12, 32, { w: 3, gap: 3, d: 1, floor: 'l' });   // sluice recesses in the pan's ring wall
+const h0 = S.bayLog.length;
+S.hall([46, 14, 64, 29], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, s: { w: 3, gap: 3, d: 2, heart: true } }, cut: 2 }); S.dressBays('cradle', h0);        // the receiving hall: a cradle hangs in each apse
+S.chamfer([66, 19, 73, 25], 'nw ne sw se', 1); S.chamfer([3, 19, 9, 25], 'nw ne sw se', 1);
+console.log('C1E2M01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2M01', name: 'Brine Gate', version: 3, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -110,3 +120,12 @@ export default {
   quality: { enemies: [28, 50], botSeconds: [40, 600], mechanics: ['heights', 'switches', 'triggers', 'hazards', 'closets'], skins: 7, enemyKinds: { wardengraft: 1, bellhand: 2 },
     scaleClass: 'MIXED', introduces: 'the fortified approach: a gate that only a switch in a side building opens, and the first machinery of the Works (cradle rails) on screen from the first room' },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'ichorpool', at: [69, 22], size: 1.5 }, { kind: 'ichor', at: [68, 19], wall: 'north', y: 1.6, size: 1.4 }, { kind: 'ichorpool', at: [56, 22], size: 1.3 }, { kind: 'bloodpool', at: [24, 15], size: 1.2 }, { kind: 'smear', at: [29, 14], rot: 0.2, size: 2.2, h: 0.9 }];
+MAP.growth = [{ at: [69, 22], r: 16, power: 1.0 }];                                                                                                                                                          // the grafting bay: resin has come out through the hall's door
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

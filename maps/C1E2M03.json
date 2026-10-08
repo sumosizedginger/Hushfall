@@ -16,32 +16,32 @@
   "#######################KfffffK######################################################",
   "#######################KfffffK###########LLLLLLLLLLLLLLLLLLLLL######################",
   "#######################KfffffK###########LlllllllllllllllllllL######################",
-  "##########KKKKKKKKKKKKKKKKSKKKKKKKKKKKKKKKlllllllllllllllllllL######################",
+  "##########KKKKfffKKKfffKKKSKKKKKfffKKKKKKKlllllllllllllllllllL######################",
   "##########KffffffffffffffffffffffffffffppplllllllllllllllllllL######################",
   "##########KffffffffffffffffffffffffffffppplllllllllllllllllllL######################",
   "##########KqqqqqqqqqqqqqqqqqqqqqqqqqqqqppplllllllllllllllllllL######################",
-  "##########KffffffffffffffffffffffffffffppplllKKKKllllllllllllL######################",
-  "##########KffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllKKKKllllllllllllLLLLLLLLLLLLLLLLL######",
-  "##########KffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllKKKKllllllllllllLfffffffffffffffL######",
-  "##########KffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllllllllllllllllllLfffffffffffffffL######",
+  "##########fffffffffffffffffffffffffffffppplllKKKKllllllllllllL######################",
+  "##########fffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllKKKKllllllllllllLLLLfffLLLfffLLLL######",
+  "##########fffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllKKKKllllllllllllLfffffffffffffLLL######",
+  "##########KffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllllllllllllllllllLffffffffffffffLL######",
   "##########KffffffffffffffffffffffffffffppplllllllllllllllllllLfffffffffffffffL######",
   "##########KffffffffffffffffffffffffffffpppbbbbbbbbbbbbbbbbbbbLfffffffffffffffL######",
   "##KKKKKKKKKffffffffffffffffffffffffffffpppllllKKKKlllllllllllLfffffffffffffffL######",
-  "##KfffffffKffffffffffffffffffffffffffffpppllllKKKKlKKKKKKKlllLfffffffffffffffL######",
+  "##KffffffKKffffffffffffffffffffffffffffpppllllKKKKlKKKKKKKlllLfffffffffffffffL######",
   "##KfffffffKqqqqqqqqqqqqqqqqqqqqqqqqqqqqpppllllKKKKlKfffffKlllLfffffffffffffffL######",
   "##KfffffffKffffffffffffffffffffffffffffppplllllllllKfffffKlllLfffffffffffffffL######",
   "##KfffffffDffffffffffffffffffffffffffffpppsssssssssKfffffKlllLfffffffffffffffL######",
   "##KfffffffKffffffffffffffffffffffffffffpppsssssssssDfffffKlllDfffffffffffffffL######",
   "##KfffffffKffffffffffffffffffffffffffffpppsssssssssKfffffKlllLfffffffffffffffL######",
-  "##KfffffffKffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllllllllKfffffKlllLfffffffffffffffL######",
+  "##KffffffKKffKKKKKKKffKKKKKKKffKKKKKKKfKKKlllllllllKfffffKlllLfffffffffffffffL######",
   "##KKKKKKKKKffKKKKKKKffKKKKKKKffKKKKKKKfKKKllllKKKKlKfffffKlllLfffffffffffffffL######",
-  "##########KffKKKKKKKffKKKKKKKffKKKKKKKfKKKllllKKKKlKKKKKKKlllLfffffffffffffffL######",
-  "##########KffffffffffffffffffffffffffffpppllllKKKKlllllllllllLfffffffffffffffL######",
-  "##########KqqqqqqqqqqqqqqqqqqqqqqqqqqqqpppbbbbbbbbbbbbbbbbbbbLfffffffffffffffL######",
+  "##########fffKKKKKKKffKKKKKKKffKKKKKKKfKKKllllKKKKlKKKKKKKlllLfffffffffffffffL######",
+  "##########fffffffffffffffffffffffffffffpppllllKKKKlllllllllllLfffffffffffffffL######",
+  "##########fqqqqqqqqqqqqqqqqqqqqqqqqqqqqpppbbbbbbbbbbbbbbbbbbbLfffffffffffffffL######",
   "##########KffffffffffffffffffffffffffffppplllllllllllllllllllLfffffffffffffffL######",
-  "##########KffffffffffffffffffffffffffffppplllllllllllllllllllLfffffffffffffffL######",
-  "##########KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKlllKKKKllllllllllllLfffffffffffffffL######",
-  "#########################################LlllKKKKllllllllllllLLLLLLLLLLLLLLLLL######",
+  "##########KffffffffffffffffffffffffffffppplllllllllllllllllllLffffffffffffffLL######",
+  "##########KKKKKfffKKKfffKKKfffKKKfffKKKKKKlllKKKKllllllllllllLfffffffffffffLLL######",
+  "#########################################LlllKKKKllllllllllllLLLLfffLLLfffLLLL######",
   "#########################################LlllKKKKllllllllllllL######################",
   "#########################################LlllllllllllllllllllL######################",
   "#########################################LlllllllllllllllllllL######################",
@@ -1170,6 +1170,26 @@
    "type": "pickup",
    "kind": "ammo_bolt",
    "at": [50, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [66, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [72, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [66, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [72, 30]
   }
  ],
  "par": {
@@ -1239,6 +1259,32 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "The rail ends in Kiln Row. After this, the heat. Everything past that door is cooking something."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "bloodpool",
+   "at": [44, 20],
+   "size": 1.3
+  },
+  {
+   "kind": "smear",
+   "at": [46, 20],
+   "rot": 0,
+   "size": 2.6,
+   "h": 1
+  },
+  {
+   "kind": "soot",
+   "at": [64, 11],
+   "wall": "north",
+   "y": 1.6,
+   "size": 1.6
+  },
+  {
+   "kind": "bloodpool",
+   "at": [6, 19],
+   "size": 1.2
   }
  ],
  "objective": "A train is parked across the shed. A lever in an aisle lowers one wagon: find one",

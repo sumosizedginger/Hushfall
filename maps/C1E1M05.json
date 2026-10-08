@@ -15,60 +15,60 @@
   "########################################################",
   "########################################################",
   "########################################################",
-  "##BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB##",
-  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
-  "##BpppppppppppppppppppppppppppppppppppppppppCCCCCCCCCB##",
-  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
-  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
+  "##BBBBBBBpppBBBBpppBBBBpppBBBBpppBBBBpppBBBBBBBBBBBBBB##",
+  "##BBBppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##pBppppppppppppppppppppppppppppppppppppppppCCCCCCCCCB##",
+  "##pppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##ppppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
   "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
   "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
   "##BpppppppppppWWWWWWWWWppppppppppppppppppppppppppppppB##",
-  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
-  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
-  "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
+  "##pppppppppppppppppppppppppppppppppppppppppppppppppppp##",
+  "##pppppppppppppppppppppppppppppppppppppppppppppppppppp##",
+  "##pppppppppppppppppppppppppppppppppppppppppppppppppppp##",
   "##BppppppppppppppppppppppppppppppppppppppppppppppppppB##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
-  "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
-  "##B::::::::::WWWWWWWW::::::::::::WWWWWWWW::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##:::::::::::WWWWWWWW::::::::::::WWWWWWWW:::::::::::::##",
+  "##:::::::::::WWWWWWWW::::::::::::WWWWWWWW:::::::::::::##",
+  "##::::::::::::::::::::::::::::::::::::::::::::::::::::##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
-  "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
-  "##BsssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWsssssB##",
-  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
+  "##ssssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWssssss##",
+  "##ssssssssssWWWWWWWssssssssssssWWWWWWWssssWWWWWWssssss##",
+  "##ssssssssssssssssssssssssssssssssssssssssssssssssssss##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
   "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
-  "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
-  "##B::::::::::WWWWWWW::::::::::::::WWWWWWWW:::::::::::B##",
-  "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
+  "##:::::::::::WWWWWWW::::::::::::::WWWWWWWW::::::::::::##",
+  "##:::::::::::WWWWWWW::::::::::::::WWWWWWWW::::::::::::##",
+  "##:::::::::::::::::::::::IppI:::::::::::::::::::::::::##",
   "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
   "##B::::::::::::::::::::::IppI::::::::::::::::::::::::B##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
-  "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
-  "##BsssssssssWWWWWWssssssssssssssWWWWWWWssssssssssssssB##",
+  "##ssssssssssWWWWWWssssssssssssssWWWWWWWsssssssssssssss##",
+  "##ssssssssssWWWWWWssssssssssssssWWWWWWWsssssssssssssss##",
+  "##ssssssssssssssssssssssssssssssssssssssssssssssssssss##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
-  "##BssssssssssssssssssssssssssssssssssssssssssssssssssB##",
   "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
-  "##B::::::::::::::::::::::::::::::::::::::::::::::::::B##",
+  "##::::::::::::::::::::::::::::::::::::::::::::::::::::##",
+  "##::::::::::::::::::::::::::::::::::::::::::::::::::::##",
+  "##::::::::::::::::::::::::::::::::::::::::::::::::::B:##",
+  "##B::::::::::::::::::::::::::::::::::::::::::::::::BBB##",
+  "##BB::::::::::::::::::::::::::::::::::::::::::::::BBBB##",
   "##BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB##",
   "########################################################"
  ],
@@ -77,51 +77,51 @@
   "........................................................",
   "........................................................",
   "........................................................",
-  "........................................................",
+  ".........kkk....kkk....kkk....kkk....kkk................",
+  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
   "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
   "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
   "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kjjjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
-  "...kiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
+  "..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..",
+  "..kkjjjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..",
+  "..kkiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..",
   "...khhhkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...",
   "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
   "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
   "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
-  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
-  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
-  "...gggggggggggggggggggggggggggggggggggggggggggggggggg...",
+  "..gggggggggggggggggggggggggggggggggggggggggggggggggggg..",
+  "..gggggggggggggggggggggggggggggggggggggggggggggggggggg..",
+  "..gggggggggggggggggggggggggggggggggggggggggggggggggggg..",
   "...ggggggggggggggggggggggggggggggggggggggggggggfffggg...",
   "...ggggggggggggggggggggggggggggggggggggggggggggeeeggg...",
   "...ggggggggggggggggggggggggggggggggggggggggggggdddggg...",
   "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
   "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
   "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
-  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
-  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
-  "...cccccccccccccccccccccccccccccccccccccccccccccccccc...",
+  "..cccccccccccccccccccccccccccccccccccccccccccccccccccc..",
+  "..cccccccccccccccccccccccccccccccccccccccccccccccccccc..",
+  "..cccccccccccccccccccccccccccccccccccccccccccccccccccc..",
   "...cbbbcccccccccccccccccccccccccccccccccccccccccccccc...",
   "...caaacccccccccccccccccccccccccccccccccccccccccccccc...",
   "...c999cccccccccccccccccccccccccccccccccccccccccccccc...",
   "...88888888888888888888888888888888888888888888888888...",
   "...88888888888888888888888888888888888888888888888888...",
   "...88888888888888888888888888888888888888888888888888...",
-  "...88888888888888888888888888888888888888888888888888...",
-  "...88888888888888888888888888888888888888888888888888...",
+  "..8888888888888888888888888888888888888888888888888888..",
+  "..8888888888888888888888888888888888888888888888888888..",
+  "..8888888888888888888888884488888888888888888888888888..",
   "...88888888888888888888888448888888888888888888888888...",
   "...88888888888888888888888448888888888888888888888888...",
   "...88888888888888888888888448888888888888888888888888...",
-  "...88888888888888888888888448888888888888888888888888...",
   "...44444444444444444444444444444444444444444444444444...",
   "...44444444444444444444444444444444444444444444444444...",
   "...44444444444444444444444444444444444444444444444444...",
-  "...44444444444444444444444444444444444444444444444444...",
-  "...44444444444444444444444444444444444444444444444444...",
-  "...44444444444444444444444444444444444444444444444444...",
+  "..4444444444444444444444444444444444444444444444444444..",
+  "..4444444444444444444444444444444444444444444444444444..",
+  "..4444444444444444444444444444444444444444444444444444..",
   "...43334444444444444444444444444444444444444444444444...",
   "...42224444444444444444444444444444444444444444444444...",
   "...41114444444444444444444444444444444444444444444444...",
@@ -933,6 +933,96 @@
      "shake": 1
     }
    ]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [2, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [10, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [17, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [31, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 4]
   }
  ],
  "par": {
@@ -995,6 +1085,34 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "bloodpool",
+   "at": [24, 44],
+   "size": 1.2
+  },
+  {
+   "kind": "smear",
+   "at": [30, 31],
+   "rot": 0.3,
+   "size": 2.4,
+   "h": 1
+  },
+  {
+   "kind": "scorch",
+   "at": [48, 7],
+   "wall": "north",
+   "y": 1.7,
+   "size": 1.6
+  },
+  {
+   "kind": "soot",
+   "at": [44, 7],
+   "wall": "north",
+   "y": 1.5,
+   "size": 1.4
   }
  ],
  "objective": "Climb the hill. Stairs on the terraces, or take the funicular car",

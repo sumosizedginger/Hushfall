@@ -6,6 +6,7 @@
 //        -> back down -> the north terrace -> stairs up the north gallery -> the exit.
 // Open air vs roof: the whole nave is roofed (`g f` floors), the sump is wading water. Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(76, 52);
 
@@ -49,6 +50,15 @@ L.putAll('g', [[46, 9], [46, 41], [25, 14], [25, 36]]); L.putAll('t', [[34, 9], 
 // the office: the engineer's own supplies
 L.put(7, 11, 'v'); L.put(10, 11, 'H'); L.put(7, 13, 'e'); L.put(10, 13, 'r'); L.put(8, 12, 'f'); L.put(9, 11, 'a'); L.put(8, 10, 'F');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M06'), keep: [[35, 44], [50, 23], [48, 23]], foes: [[55, 17], [55, 33]] });                                  // the drain lever's wall and the cage levers' walls stay
+const n0 = S.bayLog.length;
+S.hall([13, 7, 57, 43], { sides: { n: { w: 3, gap: 4, d: 2, heart: true }, s: { w: 3, gap: 4, d: 2, heart: true }, w: { w: 3, gap: 3, d: 2, heart: 'alt' }, e: { w: 3, gap: 3, d: 2, heart: 'alt' } }, cut: 3 });   // the nave: chapels down both walls, the corners cut
+S.dressBays('lantern', n0);
+S.chamfer([3, 21, 11, 28], 'nw ne sw se', 2); S.chamfer([6, 10, 11, 14], 'nw ne sw se', 1);
+console.log('C1E2M06 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -89,4 +99,11 @@ const MAP = {
 MAP.entities ??= []; MAP.entities.push(...[[46,23],[54,24],[55,29]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
 // the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
 MAP.entities.push(...[["weapon_arc",54,25],["ammo_cell",54,28],["ammo_cell",54,39],["ammo_cell",42,41]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'ichorpool', at: [20, 25], size: 1.4 }, { kind: 'bloodpool', at: [16, 24], size: 1.2 }, { kind: 'smear', at: [54, 14], rot: 1.5708, size: 2.4, h: 1.0 }, { kind: 'damp', at: [45, 25], size: 1.6 }];
+MAP.growth = [{ at: [31, 25], r: 22, power: 0.9 }];                                                                                                                                                          // from the great pump: what the Works drains is growing in its housings
+// ---- end PT-021 marks and growth ----
+
 export default MAP;

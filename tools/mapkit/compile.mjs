@@ -1,5 +1,5 @@
 // Text-map compiler: maps-src/<ID>.level.mjs -> maps/<ID>.json. The source is drawn as layers of ASCII (geometry, heights, ceilings, fx, objects) so a level
-// can be read and edited as a picture; this turns it into the runtime map format and validates it. Usage: node tools/mapkit/compile.mjs [ID ...]
+// can be read and edited as a picture; this turns it into the runtime map format and validates it. Usage: node tools/mapkit/compile.mjs [ID ...]   (MAP_OUT=<dir> writes the JSON there instead of maps/: a dry run)
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -65,8 +65,8 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   for (const f of files) {
     const lv = (await import(pathToFileURL(path.join(dir, f)).href)).default, { map, errors } = compile(lv);
     if (errors.length) { bad++; console.error(`FAIL ${f}:\n  ` + errors.slice(0, 40).join('\n  ')); continue; }
-    fs.writeFileSync(path.join(root, 'maps', lv.id + '.json'), pretty(map));
-    console.log(`ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> maps/${lv.id}.json`);
+    const outDir = process.env.MAP_OUT ? path.resolve(process.env.MAP_OUT) : path.join(root, 'maps'); fs.mkdirSync(outDir, { recursive: true }); fs.writeFileSync(path.join(outDir, lv.id + '.json'), pretty(map));
+    console.log(`ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> ${path.relative(root, outDir)}/${lv.id}.json`);
     for (const w of lv.placementWarnings ?? []) console.log(`  WARN ${w}: an objects-layer cell holds ONE character, the earlier object is gone`);
   }
   process.exit(bad ? 1 : 0);

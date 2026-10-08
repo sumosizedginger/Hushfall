@@ -7,6 +7,7 @@
 // Optional: a SECRET panel in the south wall of the gallery hides a tunnel with the secret exit (to C1E2S01, The Rime Vault).
 // Open air vs roof (PT-007/PT-008): every floor here is `k f` (roofed), so there is no sky; nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(82, 46);
 
@@ -52,6 +53,16 @@ L.putAll('P', [[69, 20], [69, 26], [73, 23]]); L.putAll('H', [[66, 21], [66, 25]
 // the secret tunnel: a cache before the secret exit
 L.put(52, 36, 'v'); L.put(54, 36, 'H'); L.put(52, 38, 'e'); L.put(54, 38, 'r');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M04'), keep: [[70, 13]] });                                                      // the flue lever's wall stays
+S.hall([11, 15, 31, 31], { sides: { n: { w: 3, gap: 3, d: 2, heart: 'alt' }, s: { w: 3, gap: 3, d: 2, heart: 'alt' }, w: { w: 3, gap: 3, d: 1 } }, cut: 3 });   // the charging hall
+S.hall([42, 13, 63, 33], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 3 });                                                       // the firing gallery
+S.hall([65, 14, 77, 32], { sides: { s: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 } }, cut: 2 });                                                       // the flue chamber
+S.chamfer([3, 20, 9, 26], 'nw ne sw se', 1);
+S.dressBays('lantern');
+console.log('C1E2M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -91,4 +102,10 @@ const MAP = {
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[30,26],[63,22]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'scorch', at: [68, 14], wall: 'north', y: 1.5, size: 1.6 }, { kind: 'soot', at: [44, 13], wall: 'north', y: 1.7, size: 1.8 }, { kind: 'bloodpool', at: [26, 23], size: 1.3 }, { kind: 'smear', at: [37, 18], rot: 0, size: 2.4, h: 0.9 }];
+// ---- end PT-021 marks and growth ----
+
 export default MAP;

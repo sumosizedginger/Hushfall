@@ -2,6 +2,7 @@
 // Entered from Kiln Row's secret exit; returns to The Cradle Annex. No enemies: a place to stand still in the cold. Three coolant valves (the keys) in three alcoves; a lever beside the vault door spends them
 // and rolls the door up; the cache and the research are behind it. Scale class COMPRESSION; the frosted steel (`Z` walls, `r` floor) is new.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(52, 34);
 // the antechamber (arrival), the hall (racks of cold storage, three alcoves), the vault (behind a remote door)
@@ -25,9 +26,17 @@ L.put(15, 5, 'k'); L.put(27, 5, 'i'); L.put(25, 27, 'q'); L.putAll('n', [[14, 5]
 L.putAll('F', [[34, 12], [34, 20], [38, 12], [38, 20]]); L.putAll('f', [[36, 14], [36, 18]]); L.putAll('O', [[36, 12], [36, 20], [40, 14], [40, 18]]); L.putAll('D', [[41, 12], [41, 20]]);
 L.putAll('v', [[34, 15], [34, 17]]); L.putAll('H', [[35, 13], [35, 19]]); L.putAll('e', [[37, 15], [37, 17]]); L.putAll('r', [[39, 13], [39, 19]]); L.putAll('a', [[38, 16], [40, 16]]); L.putAll('n', [[33, 13], [43, 16]]);
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2S01'), keep: [[32, 12]] });                                                      // the vault lever's wall stays
+S.hall([11, 8, 31, 24], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 }, w: { w: 3, gap: 3, d: 1 } }, cut: 3 });
+S.hall([33, 11, 43, 21], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 1 }, e: { w: 3, gap: 2, d: 1 } }, cut: 2 });
+S.chamfer([3, 13, 9, 19], 'nw ne sw se', 1);
+console.log('C1E2S01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E2S01', name: 'The Rime Vault', version: 1, ceilingHeight: 3.4, par: { time: 240 },
   atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75, look: 'rime' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -57,3 +66,7 @@ export default {
   quality: { safe: true, enemies: [0, 0], botSeconds: [15, 300], mechanics: ['switches', 'triggers', 'keys>=3'], skins: 3,
     scaleClass: 'COMPRESSION', introduces: 'the Wardens research vault: the first plain statement of what the Works is for, behind three coolant valves and a lever (puzzle-lite, no enemies)' },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+export default MAP;
