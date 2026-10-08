@@ -52,7 +52,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E1M07', name: 'Signal House', version: 2, ceilingHeight: 4.2, par: { time: 800 },
-  atmosphere: { fog: '#0e1218', fogDensity: 0.03, sky: 'night', ambient: 0.3 },
+  atmosphere: { fog: '#0e1218', fogDensity: 0.03, sky: 'night', ambient: 0.3, look: 'signal' },
   keyLabels: { brass: 'Brass fuse', iron: 'Iron fuse', bell: 'Bell fuse' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 4, shell: 8, rivet: 40 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'SIGNAL HOUSE', lines: ['The lamps went out at dusk.', 'Somebody is still keying the set.'] },

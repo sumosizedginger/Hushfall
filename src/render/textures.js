@@ -50,7 +50,7 @@ function makeSeamless(t) { try { return makeSeamlessUnsafe(t); } catch { return 
 export async function loadAll() {
   const out = {};
   await Promise.all(NAMES.map(async (n) => { out[n] = await loadTex(n, { repeat: !ATLASES.has(n) && n !== 'ui_title_art' && n !== 'door_hatch_a' }); }));
-  for (const n of ['sky_dusk', 'sky_night', 'sky_overcast']) out[n] = makeSeamless(out[n]);
+  for (const n of SKIES) out[n] = makeSeamless(out[n]);                                  // every painted sky (PT-021 added sky_bleach and sky_ash)
   out.wall_plaster_a.wrapT = THREE.ClampToEdgeWrapping;        // the wainscot is at the bottom of the tile and plain plaster above it: it must not repeat up a tall wall
   out.paper_grain = await loadTex('paper_grain', { srgb: false });
   out.paper_grain.magFilter = out.paper_grain.minFilter = THREE.LinearFilter;

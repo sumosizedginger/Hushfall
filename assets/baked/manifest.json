@@ -10,8 +10,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "fc3a49cbf47060b00b6128cf68bebd6da9a0986b0a30e8f24b6a4af0cb3837ca",
-      "bytes": 98562
+      "sha256": "2b2f538be01fdbbd9eeff6302089368ae9c0876418e39ae99e1e9db185443e89",
+      "bytes": 33915
     },
     "enemy_tollbearer_idle": {
       "seed": 2201,
@@ -162,40 +162,40 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "73285748005b0d838e7db89ce0bd289369f83df2772f359964cfe6871ffdb87d",
-      "bytes": 104340
+      "sha256": "5568103671c4c9d373eb8e941a55a6457323fa1d2b848e8bc9e72a992cb7a53e",
+      "bytes": 25336
     },
     "wall_plaster_a": {
       "seed": 7201,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "578cf940246d1eff67a64d9817cee1afa40eb6da4e258113679f7660afaa7415",
-      "bytes": 60602
+      "sha256": "9f9e6716164ea2d7131a389fbd3f36183b93adf5f0e3f12f368155deb2388bf6",
+      "bytes": 31071
     },
     "wall_concrete_a": {
       "seed": 7301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f0cb00e8146840c38c626127cee22ffb2b4abe47d2a74e3e8c96f69b4cd7ac20",
-      "bytes": 45838
+      "sha256": "67af3951664be77d7fed85ce136ff28d2c2370544b07c816b634ac3550ed9eb6",
+      "bytes": 23227
     },
     "wall_iron_a": {
       "seed": 7401,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ecab8cac8fabcd5bfc28a7ea8707605e02696ab0d3e67eaaa5b331327310519b",
-      "bytes": 71020
+      "sha256": "0670828bd214a53b515d6125be69c3dbb5bd4274a9b6edc764f1726db252d495",
+      "bytes": 26079
     },
     "wall_resin_a": {
       "seed": 7501,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ffc470d2365097a6b7f8aa8b503bcafe637cafe043790668e6fc287e9228c0bb",
-      "bytes": 86007
+      "sha256": "ba6e62fab0a77903573c75e470f182ac9150b8c299cb3c3de1674bca282a1a36",
+      "bytes": 53566
     },
     "floor_tile_a": {
       "seed": 7601,
@@ -266,16 +266,16 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "78692ae02c8c9537a8e0853c9b5cca35824c709134d65dfb8d61b3126bf41d31",
-      "bytes": 152102
+      "sha256": "f7c066823387c19fe49d917aa1499e4da26f3e1bc2a99c7e38dda1c5a18b4f24",
+      "bytes": 27702
     },
     "wall_corrugated_a": {
       "seed": 9102,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "7d076cceef22304247fd5e8ceada8a8084c748c3b478ee28a137224375879fc9",
-      "bytes": 98016
+      "sha256": "674186905f8a66911fe7f27282cf25a82e4cc2a5599b3b01be8ed04af760115e",
+      "bytes": 35281
     },
     "floor_saltcrust_a": {
       "seed": 9201,
@@ -286,20 +286,20 @@
       "bytes": 76642
     },
     "wall_kiln_a": {
-      "seed": 9103,
+      "seed": 9301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4ada553c0ff942008e550362157441b9c96b81f89dff7546d44fc5c89d48d58a",
-      "bytes": 113966
+      "sha256": "e687f225119930c4834ec76e576cda4a1cecb0da1ac01619bb2f5eebf7b4efad",
+      "bytes": 22124
     },
     "wall_rime_a": {
-      "seed": 9104,
+      "seed": 9302,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f6011ee5d34311ac131524ee95d1ddcb7a14a2f43b29a52fb43f5713949fdd4b",
-      "bytes": 76314
+      "sha256": "18c9466291fbefd309a36fef03b3e9ef774b1caea5970beb5997c37731d03583",
+      "bytes": 30065
     },
     "floor_track_a": {
       "seed": 9202,
@@ -420,6 +420,22 @@
       "transparent": false,
       "sha256": "c6ce08f412d6ceb5664aedffe7a9ce83a5b5f6ace3111ab99915c480f603ed4a",
       "bytes": 35392
+    },
+    "sky_bleach": {
+      "seed": 8401,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a7be2e1f355af13a1ff4a59bf2c66fe6cf95c110c93c334c66d44b8530c955cc",
+      "bytes": 203299
+    },
+    "sky_ash": {
+      "seed": 8402,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "729e48640ceb35b54b4735a9dd7b7ffeddeddf33cc6a45daf44714236bc87ecc",
+      "bytes": 209449
     }
   }
 }

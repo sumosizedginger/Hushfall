@@ -29,7 +29,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E2S01', name: 'The Rime Vault', version: 1, ceilingHeight: 3.4, par: { time: 240 },
-  atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75 },
+  atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75, look: 'rime' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coolant valve A', iron: 'Coolant valve B', bell: 'Coolant valve C' },
   intro: { title: 'THE RIME VAULT', lines: ['It is colder here than the sea has any reason to be.', 'Someone built a winter under the Works, on purpose.'] },

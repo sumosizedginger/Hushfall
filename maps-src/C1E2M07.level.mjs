@@ -45,7 +45,7 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E2M07', name: 'Slurry Undercroft', version: 1, ceilingHeight: 3.2, par: { time: 480 },
-  atmosphere: { fog: '#101c18', fogDensity: 0.03, sky: 'night', ambient: 0.3 },
+  atmosphere: { fog: '#101c18', fogDensity: 0.03, sky: 'night', ambient: 0.3, look: 'pump' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'SLURRY UNDERCROFT', lines: ['Everything the Works drains ends up here.', 'It is very quiet. That is the Hush, and it is thick.'] },
   outro: 'Next: the Grafting Floor. The line that makes them, and what runs it.',

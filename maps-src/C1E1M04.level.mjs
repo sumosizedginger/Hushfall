@@ -52,7 +52,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E1M04', name: 'The Drowned Chandlery', version: 1, ceilingHeight: 3.2, par: { time: 800 },
-  atmosphere: { fog: '#0a1c1e', fogDensity: 0.028, sky: 'night' },
+  atmosphere: { fog: '#0a1c1e', fogDensity: 0.028, sky: 'night', look: 'cellar' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE DROWNED CHANDLERY', lines: ['The ebb has gone out of the harbour. It has not gone out of the cellars.', 'Something is growing in the water table.'] },
   outro: 'Next: Lamplighter Hill. The survivors are signalling by lamp.',

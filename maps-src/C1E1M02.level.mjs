@@ -65,7 +65,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E1M02', name: 'Customs Hall', version: 1, ceilingHeight: 4.2, par: { time: 600 },
-  atmosphere: { fog: '#2a3038', fogDensity: 0.012, sky: 'dusk' },
+  atmosphere: { fog: '#2a3038', fogDensity: 0.012, sky: 'dusk', look: 'customs' },
   intro: { title: 'CUSTOMS HALL', lines: ['Every ship that ever came to Port Marrow was counted here.', 'The lamps are lit. Nobody lit them.'] },
   outro: 'Next: Fishmarket Rows. That is where the town tried to run.',
   objective: 'Find a way into the hall',

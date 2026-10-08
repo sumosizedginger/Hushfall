@@ -56,7 +56,7 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E2M04', name: 'Kiln Row', version: 1, ceilingHeight: 3.8, par: { time: 420 },
-  atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'overcast' },
+  atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'ash', look: 'kiln' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Brass damper handle', iron: 'Iron damper handle' },
   intro: { title: 'KILN ROW', lines: ['They fire them here, like pots.', 'The kilns are still warm. Nobody banked them.'] },

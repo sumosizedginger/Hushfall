@@ -7,7 +7,8 @@
  "atmosphere": {
   "fog": "#30303e",
   "fogDensity": 0.011,
-  "sky": "overcast"
+  "sky": "overcast",
+  "look": "hill"
  },
  "grid": [
   "########################################################",

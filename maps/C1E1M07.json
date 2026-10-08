@@ -8,7 +8,8 @@
   "fog": "#0e1218",
   "fogDensity": 0.03,
   "sky": "night",
-  "ambient": 0.3
+  "ambient": 0.3,
+  "look": "signal"
  },
  "keyLabels": {
   "brass": "Brass fuse",

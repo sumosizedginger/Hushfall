@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, RANGE, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { CELL, DEFAULT_CEILING, RANGE, LOOKS, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -248,6 +248,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   }
   if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
+  if (src.atmosphere?.look != null && !LOOKS[src.atmosphere.look]) err(`atmosphere.look must be one of ${Object.keys(LOOKS).join(', ')}`);
   const trIds = new Set();
   for (const t of src.triggers || []) {
     const tag = `trigger '${t.id}'`;
