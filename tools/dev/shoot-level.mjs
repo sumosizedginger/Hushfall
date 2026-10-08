@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '../..');
-const out = path.join(root, 'review/level-c1e1m01');
+const out = process.env.SHOOT_OUT ? path.resolve(process.env.SHOOT_OUT) : path.join(root, 'review/level-c1e1m01');      // SHOOT_OUT=<dir>: a before / after set that must not overwrite the tracked stills
 fs.mkdirSync(out, { recursive: true });
 const server = await createServer({ root, logLevel: 'error', server: { port: 5250, strictPort: true } });
 await server.listen();

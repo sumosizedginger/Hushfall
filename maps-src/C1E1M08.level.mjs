@@ -56,7 +56,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 2, ceilingHeight: 4.2, par: { time: 1100 },
-  atmosphere: { fog: '#1a1428', fogDensity: 0.014, sky: 'night' },
+  atmosphere: { fog: '#1a1428', fogDensity: 0.014, sky: 'night', look: 'moon' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { B: { type: 'enemy', kind: 'bellnode' } },
   intro: { title: 'BELL TOWER OF ST. ORRIN', lines: ['The bell has rung for three days.', 'Nobody is pulling the rope.'] },

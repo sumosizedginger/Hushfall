@@ -83,7 +83,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E2M01', name: 'Brine Gate', version: 3, ceilingHeight: 4.2, par: { time: 600 },
-  atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'overcast' },
+  atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'BRINE GATE', lines: ['The works guard themselves the way a port does.', 'With people who were told to stand there.'] },
   outro: 'Next: the Evaporation Pans. Everything out there is white.',

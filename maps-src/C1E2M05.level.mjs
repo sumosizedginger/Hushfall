@@ -43,7 +43,7 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E2M05', name: 'The Cradle Annex', version: 1, ceilingHeight: 4.2, par: { time: 300 },
-  atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55 },
+  atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE CRADLE ANNEX', lines: ['They are not making them here. They are growing them.', 'Do not touch anything that hangs.'] },
   outro: 'Next: the Pump Cathedral. What the Works drains from the sea comes up through the floor of a church.',

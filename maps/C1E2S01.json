@@ -8,7 +8,8 @@
   "fog": "#8aa0b0",
   "fogDensity": 0.013,
   "sky": "overcast",
-  "ambient": 0.75
+  "ambient": 0.75,
+  "look": "rime"
  },
  "keyLabels": {
   "brass": "Coolant valve A",

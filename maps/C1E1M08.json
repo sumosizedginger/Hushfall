@@ -7,7 +7,8 @@
  "atmosphere": {
   "fog": "#1a1428",
   "fogDensity": 0.014,
-  "sky": "night"
+  "sky": "night",
+  "look": "moon"
  },
  "grid": [
   "######################################################",

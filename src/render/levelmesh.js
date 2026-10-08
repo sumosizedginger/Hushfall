@@ -2,18 +2,19 @@
 // Gate 2: per-cell floor heights with risers, per-cell ceilings, wall/floor skins, moving-floor sectors, wading/toxic overlays, switch panels, closets.
 import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
-import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL } from '../engine/defs.js';
+import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, lookOf } from '../engine/defs.js';
+import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
-  constructor() { this.pos = []; this.nor = []; this.uv = []; this.idx = []; }
-  add(p, n, uvs) { const b = this.pos.length / 3; for (let i = 0; i < 4; i++) { this.pos.push(...p[i]); this.nor.push(...n); this.uv.push(...uvs[i]); } this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3); }
+  constructor() { this.pos = []; this.nor = []; this.uv = []; this.col = []; this.idx = []; }
+  add(p, n, uvs, cols) { const b = this.pos.length / 3; for (let i = 0; i < 4; i++) { this.pos.push(...p[i]); this.nor.push(...n); this.uv.push(...uvs[i]); this.col.push(...(cols ? cols[i] : [1, 1, 1])); } this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3); }
   get empty() { return this.pos.length === 0; }
   geometry() {
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
     g.setIndex(this.idx); return g;
   }
 }
@@ -44,13 +45,26 @@ function glowBuilder() {
     },
   };
 }
-const flatQuad = (q, S, cx, cz, y, up) => {
+/** a horizontal cell quad; `shade(X, Z, wx, wz)` (optional) gives the brightness at each corner (X, Z the lattice point, wx, wz its world position) */
+const flatQuad = (q, S, cx, cz, y, up, shade) => {
   const x = cx * S, z = cz * S, p = up ? [[x, y, z], [x, y, z + S], [x + S, y, z + S], [x + S, y, z]] : [[x, y, z], [x + S, y, z], [x + S, y, z + S], [x, y, z + S]];
-  q.add(p, [0, up ? 1 : -1, 0], p.map((r) => [r[0] / S, r[2] / S]));
+  q.add(p, [0, up ? 1 : -1, 0], p.map((r) => [r[0] / S, r[2] / S]), shade ? p.map((r) => { const k = shade(Math.round(r[0] / S), Math.round(r[2] / S), r[0], r[2]); return [k, k, k]; }) : null);
 };
+/** a wall face in rows with a baked brightness: a dark foot and head, large soft patches (shading.js); the geometry and the UVs are exactly face()'s, only cut into strips */
+function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed) {
+  const x = cx * S, z = cz * S, u = (px, pz) => (px + pz) / S;
+  let p0, a;
+  if (dz === -1) { p0 = [x + S, z]; a = [-1, 0]; } else if (dz === 1) { p0 = [x, z + S]; a = [1, 0]; } else if (dx === -1) { p0 = [x, z]; a = [0, 1]; } else { p0 = [x + S, z + S]; a = [0, -1]; }
+  const p1 = [p0[0] + a[0] * S, p0[1] + a[1] * S], rows = wallRows(y0, y1, foot), k = (px, pz, y, r) => { const v = r * patchFactor(px + pz, y, patch, seed); return [v, v, v]; };
+  for (let i = 0; i + 1 < rows.length; i++) {
+    const [ya, ka] = rows[i], [yb, kb] = rows[i + 1], p = [[p0[0], ya, p0[1]], [p1[0], ya, p1[1]], [p1[0], yb, p1[1]], [p0[0], yb, p0[1]]];
+    q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]), [k(p0[0], p0[1], ya, ka), k(p1[0], p1[1], ya, ka), k(p1[0], p1[1], yb, kb), k(p0[0], p0[1], yb, kb)]);
+  }
+}
 
 export function buildLevel(map, tex) {
-  const S = map.cell, H = map.ceiling, group = new THREE.Group();
+  const S = map.cell, H = map.ceiling, group = new THREE.Group(), look = lookOf(map.atmosphere), sh = look.shade, shaded = sh.foot > 0 || sh.ao > 0 || sh.patch > 0;
+  const kindAt = (cx, cz) => map.kind(cx, cz), floorShade = (seed) => (X, Z, wx, wz) => cornerAO(kindAt, X, Z, sh.ao) * patchFactor(wx, wz, sh.patch, seed);       // the baked brightness of a floor / ceiling corner (PT-021)
   const lights = [], doorViews = new Map(), sectorViews = [], switchViews = new Map(), exitViews = new Map();
   const T = (name) => tex[name] ?? tex.wall_bulkhead_a;
   const isOpenKind = (k) => k !== 'wall';
@@ -76,7 +90,7 @@ export function buildLevel(map, tex) {
     if (k === 'water') continue;                                                    // one big water plane below covers all water cells
     if (k === 'wall') {
       const top = wallTop(cx, cz); if (top === -Infinity) continue;
-      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : fl(cx + dx, cz + dz) - 0.05; face(bucket(walls, WALL_SKINS[skin] ? skin : '#'), S, cx, cz, dx, dz, base, top, nk === 'water' ? 0 : fl(cx + dx, cz + dz)); }
+      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : fl(cx + dx, cz + dz) - 0.05; const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'), vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz); if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5); else face(wq, S, cx, cz, dx, dz, base, top, vb); }
       continue;
     }
     const fs = floorSkinAt(cx, cz), si = sectorOf(cx, cz), y = si >= 0 ? 0 : fl(cx, cz);
@@ -84,9 +98,9 @@ export function buildLevel(map, tex) {
       flatQuad(bucket(sectorQ[si].top, fs), S, cx, cz, 0, true);
       const sd = map.sectors[si], depth = sd.high - sd.low + 0.6;
       for (const [dx, dz] of DIRS) face(bucket(sectorQ[si].skirt, fs), S, cx, cz, dx, dz, -depth, 0);
-    } else flatQuad(bucket(floors, fs), S, cx, cz, y, true);
+    } else flatQuad(bucket(floors, fs), S, cx, cz, y, true, shaded ? floorShade(3) : undefined);
     if (hasCeil(k)) {
-      flatQuad(ceil, S, cx, cz, ce(cx, cz), false);
+      flatQuad(ceil, S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
       for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (hasCeil(nk) && ce(cx + dx, cz + dz) < ce(cx, cz) - 1e-6) face(ceilSteps, S, cx + dx, cz + dz, -dx, -dz, ce(cx + dx, cz + dz), ce(cx, cz)); }
     }
     // risers: where this cell stands above a walkable neighbour (stairs, terraces, ledges) and the drop to the water
@@ -101,7 +115,7 @@ export function buildLevel(map, tex) {
     if (fx && fx in fxQuads) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
   const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
-  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group) => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: m, color, emissive })); parent.add(mesh); return mesh; };
+  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group) => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true })); parent.add(mesh); return mesh; };
   for (const [c, q] of walls) mk(q, T(WALL_SKINS[c]));
   for (const [c, q] of floors) { const [t, tint] = skinTex(c); const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor'; mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000); }
   for (const [c, q] of risers) { const [t] = skinTex(c); mk(q, t, 0x9aa0a8, 0x080a0c); }

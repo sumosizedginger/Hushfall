@@ -7,7 +7,8 @@
  "ceilingHeight": 3.6,
  "atmosphere": {
   "fog": "#3a2c4a",
-  "fogDensity": 0.02
+  "fogDensity": 0.02,
+  "look": "dusk"
  },
  "grid": [
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",

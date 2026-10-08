@@ -14,14 +14,15 @@ import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
-import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW } from '../engine/defs.js';
+import { lightWeights } from './lightbudget.js';
+import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
 const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 2 ? 2 : 0);
 const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, (tex, map) => CHOIR[kind](tex[choirAtlasName(kind)], { stage: graftStage(map) })]));
 
-const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 6;
+const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
 
 export class GameView {
@@ -30,7 +31,8 @@ export class GameView {
     const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
     const hemi = this.hemi = new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4); scene.add(hemi);
     const sun = this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
-    this.ambient = map.atmosphere.ambient ?? 1; hemi.intensity = 2.4 * this.ambient; sun.intensity = 1.3 * this.ambient;       // dark levels (Signal House) dim the general light: the lamps carry the scene
+    this.ambient = map.atmosphere.ambient ?? 1;       // dark levels (Signal House) dim the general light: the lamps carry the scene
+    this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR); this.setPlace(lookOf(map.atmosphere));       // the place's light and grade (PT-021)
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
@@ -48,7 +50,6 @@ export class GameView {
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
     for (const rig of Object.values(this.rigs)) rig.group.traverse((o) => { if (!o.isMesh) return; const m = o.material; m.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace('#include <project_vertex>', nearDepth); if (!m.transparent) patchEntityFragment(s); }; m.customProgramCacheKey = () => 'weapon-depth'; });       // the weapon keeps the classic ink too (entityflag.js)
-    this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR);
     this.enemyViews = new Map(); this.pickupViews = new Map(); this.projViews = new Map(); this.debris = [];
     this.prev = { player: { x: 0, z: 0, yaw: 0, pitch: 0 }, enemies: new Map() };
     this.seed = 99; this.debGeo = new THREE.TetrahedronGeometry(0.09); this.debMat = new THREE.MeshBasicMaterial({ color: 0xff8a30 }); this.dustMat = new THREE.MeshBasicMaterial({ color: 0x9a8a72 });
@@ -67,7 +68,7 @@ export class GameView {
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
   setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w))); }
   setLook({ outline, paint, fov = VIEW.fov, brightness = 1 }) {
-    this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.post.uniforms.uExposure.value = 2.2 * brightness;
+    this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.brightness = brightness; this.post.uniforms.uExposure.value = 2.2 * brightness * (this.exposureK ?? 1);       // the player's brightness setting times the place's exposure
     this.baseFov = fov; this.adsFov = fov * (VIEW.adsFov / VIEW.fov);                                                      // aiming keeps the same zoom ratio at any field of view
   }
 
@@ -169,7 +170,7 @@ export class GameView {
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position);
-    { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = 2.4 * this.ambient; this.sun.intensity = 1.3 * this.ambient; }
+    { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = this.look.hemi[2] * this.ambient; this.sun.intensity = this.look.sun[1] * this.ambient; }
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
     if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies
@@ -275,12 +276,14 @@ export class GameView {
     this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
     const cp = this.cam.position, wp = new THREE.Vector3();
+    const lampK = this.look.lamp;
     for (const l of this.lvl.lights) {
-      const b = l.userData.base, f = l.userData.flicker; l.getWorldPosition(wp);
+      const b = l.userData.base * lampK, f = l.userData.flicker; l.getWorldPosition(wp);
       l.intensity = f === 'pod' ? b * (0.8 + 0.2 * Math.sin(this.time * 2 + wp.x)) : b * (0.93 + 0.05 * Math.sin(this.time * 13 + wp.z) + 0.03 * Math.sin(this.time * 31));
       l.userData.d = wp.distanceToSquared(cp);
     }
-    [...this.lvl.lights].sort((a, b) => a.userData.d - b.userData.d).forEach((l, i) => { l.visible = i < LIGHT_BUDGET; });
+    const lw = lightWeights(this.lvl.lights.map((l) => l.userData.d), LIGHT_BUDGET, LIGHT_FADE);       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
+    this.lvl.lights.forEach((l, i) => { l.visible = lw.on[i]; l.intensity *= lw.w[i]; });
     // weapon overlay
     this.recoil = Math.max(0, this.recoil - dt * 4.5); this.flashT = Math.max(0, this.flashT - dt);
     // which weapon is on screen: during a switch the old one dips out for the first half, the new one rises for the second
@@ -313,6 +316,13 @@ export class GameView {
   }
 
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
+  /** the place's light and grade (LOOKS in defs.js): the hemisphere, the sun, the post tint; also what the dev hook uses to try another look on the same view */
+  setPlace(look) {
+    this.look = look; const { hemi, sun } = this;
+    hemi.color.setHex(look.hemi[0]); hemi.groundColor.setHex(look.hemi[1]); hemi.intensity = look.hemi[2] * this.ambient;
+    sun.color.setHex(look.sun[0]); sun.position.set(...look.sun[2]); sun.intensity = look.sun[1] * this.ambient;
+    this.exposureK = look.exposure; this.post.setGrade(look.grade); this.post.uniforms.uExposure.value = 2.2 * look.exposure * (this.brightness ?? 1);
+  }
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
     this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();

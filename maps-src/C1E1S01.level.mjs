@@ -24,7 +24,7 @@ const layers = L.layers();
 
 export default {
   id: 'C1E1S01', name: 'The Lighthouse Cellar', version: 1, ceilingHeight: 3.4, par: { time: 240 },
-  atmosphere: { fog: '#20262e', fogDensity: 0.01, sky: 'night' },
+  atmosphere: { fog: '#20262e', fogDensity: 0.01, sky: 'night', look: 'cellar' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE LIGHTHOUSE CELLAR', lines: ['A warm room under a dark lamp.', 'Nothing here wants you dead. Take a breath.'] },
   outro: 'Back to the harbour road. Lamplighter Hill is next.',

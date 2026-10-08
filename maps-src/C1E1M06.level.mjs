@@ -53,7 +53,7 @@ const rampCells = [[54, 22], [55, 22], [54, 23], [55, 23], [54, 24], [55, 24], [
 
 export default {
   id: 'C1E1M06', name: 'Ferry Terminal', version: 2, ceilingHeight: 4.2, par: { time: 700 },
-  atmosphere: { fog: '#2a2c38', fogDensity: 0.01, sky: 'dusk' },
+  atmosphere: { fog: '#2a2c38', fogDensity: 0.01, sky: 'dusk', look: 'dusk' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'FERRY TERMINAL', lines: ['The last boat is still at the quay.', 'It never left. Nobody on it did either.'] },
   outro: 'Next: the Signal House. The antenna on the ridge still answers.',

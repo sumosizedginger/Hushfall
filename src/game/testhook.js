@@ -4,7 +4,7 @@
 import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
-import { PLAYER } from '../engine/defs.js';
+import { PLAYER, lookOf } from '../engine/defs.js';
 import { sanitizeProgress } from '../engine/progress.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
@@ -67,6 +67,7 @@ export function installTestHook(app) {
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */
     setup_sectorTo(id, pos) { const s = g.world.sectors.find((q) => q.id === id), def = g.world.map.sectors.find((q) => q.id === id); s.target = pos === 'high' ? def.high : def.low; },
     setup_ambient(v) { g.world.ambient = v; if (g.view) g.view.ambient = v; },
+    setup_look(name) { g.view?.setPlace(lookOf({ look: name })); },                                  // try another place's light on the map in hand (PT-021 stills)
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */
     clearOverlays() { ui.clearOverlays(); },

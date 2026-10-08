@@ -1,5 +1,5 @@
 // Canonical asset baker driver: serves tools/baker with vite, runs it in headless Chrome, saves PNGs.
-// Usage: node tools/bake.mjs [assetId ...]
+// Usage: node tools/bake.mjs [assetId ...]      BAKE_PREVIEW=<dir> writes the PNGs there and touches neither assets/baked nor the manifest (recipe iteration: PT-021)
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import { PNG } from 'pngjs';
@@ -8,7 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 const root = path.resolve(import.meta.dirname, '..');
-const outDir = path.join(root, 'assets', 'baked');
+const PREVIEW = process.env.BAKE_PREVIEW ? path.resolve(process.env.BAKE_PREVIEW) : null, outDir = PREVIEW ?? path.join(root, 'assets', 'baked');
 fs.mkdirSync(outDir, { recursive: true });
 const want = process.argv.slice(2);
 
@@ -70,6 +70,6 @@ for (const [id, rs] of byId) {
   manifest.assets[id] = { seed: r.seed, width: r.width, height: r.height, transparent: r.transparent, sha256: crypto.createHash('sha256').update(buf).digest('hex'), bytes: buf.length };
   console.log('baked', id, r.width + 'x' + r.height, 'seed', r.seed, r.transparent ? '(matted alpha)' : '');
 }
-fs.writeFileSync(mp, JSON.stringify(manifest, null, 2));
+if (!PREVIEW) fs.writeFileSync(mp, JSON.stringify(manifest, null, 2));
 await browser.close();
 await server.close();

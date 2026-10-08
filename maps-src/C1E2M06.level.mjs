@@ -53,7 +53,7 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E2M06', name: 'Pump Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
-  atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast' },
+  atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pump' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },
   outro: 'Next: the Slurry Undercroft. Whatever they drained comes out down there.',

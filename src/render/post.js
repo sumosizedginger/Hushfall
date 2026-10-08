@@ -9,7 +9,8 @@ const frag = /* glsl */`
 precision highp float;
 uniform sampler2D tColor, tDepth, tPaper;
 uniform vec2 uRes;
-uniform float uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug;
+uniform vec3 uShadowTint, uLightTint;
+uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug;
 varying vec2 vUv;
 
 float invZ(vec2 uv) {
@@ -32,7 +33,8 @@ void main() {
     float lq = floor((lum0 + (p2 - 0.5) / uLevels) * uLevels + 0.5) / uLevels;   // painted value steps on luminance only: no hue speckle
     col = min(col * (lq / max(lum0, 0.02)), vec3(1.0));
     float lum = lq;
-    col *= mix(vec3(0.9, 1.0, 1.08), vec3(1.07, 1.0, 0.93), smoothstep(0.15, 0.7, lum));   // cool shadows, warm lights
+    col *= mix(uShadowTint, uLightTint, smoothstep(0.15, 0.7, lum));   // shadows and lights tinted by the place's look (LOOKS in defs.js; the default is cool shadows, warm lights)
+    col = mix(vec3(dot(col, vec3(0.299, 0.587, 0.114))), col, uSat);
   }
 
   if (uOutline > 0.5) {
@@ -73,10 +75,13 @@ export class PostPass {
       tColor: { value: null }, tDepth: { value: null }, tPaper: { value: paperTex }, uRes: { value: new THREE.Vector2(1, 1) },
       uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
       uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 },
+      uShadowTint: { value: new THREE.Vector3(0.9, 1.0, 1.08) }, uLightTint: { value: new THREE.Vector3(1.07, 1.0, 0.93) }, uSat: { value: 1 },
     };
     this.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: this.uniforms, vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false })));
     this.rt = null;
   }
+  /** the place's grade: { shadow: [r,g,b], light: [r,g,b], sat } (LOOKS in defs.js; the exposure is the view's: the player's brightness times the place's) */
+  setGrade(g) { this.uniforms.uShadowTint.value.set(...g.shadow); this.uniforms.uLightTint.value.set(...g.light); this.uniforms.uSat.value = g.sat; }
   resize(w, h) {
     this.rt?.dispose(); this.rt?.depthTexture?.dispose();
     const depth = new THREE.DepthTexture(w, h); depth.type = THREE.UnsignedIntType; depth.minFilter = depth.magFilter = THREE.NearestFilter;

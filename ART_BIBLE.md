@@ -93,5 +93,22 @@ Lighting: `atmosphere.ambient` (0.05-1.5, default 1) scales the hemisphere and s
 
 Adding a skin is now: a recipe (new seed in this table), ONE row in `WALL_SKINS`/`FLOOR_SKINS` in `src/engine/defs.js`, and `node tools/bake.mjs <asset ids>`. The level builder's floor characters and the texture list in `src/render/textures.js` are derived from those tables (a floor-character string in the builder and a hand-kept name list used to need edits too). Known p5.brush limit (again): narrow or full-size brush rects crash its scatter; flat opaque areas use `g.solid`.
 
+## Asset seeds, the PT-021 material pass (2026-10-08; recipes in `tools/baker/recipes_pt21.js`, which SUPERSEDES the earlier recipe of the same id: `all.js` spreads it last; seeds unchanged)
+The outside critique (PT-021) was right that the surfaces were "one recipe in different colours": every earlier wall used the same ingredients (translucent blooms, short white dashes, black dash scratches, dots). The new walls are built from what each material does, big shapes and strong value steps first (the game renders about 480 px wide and bands the value, so fine lines vanish at distance), small marks last, and NO ingredient shared across families:
+| asset | what it is now |
+|---|---|
+| wall_corrugated_a (9102) | galvanised sheet: ribs shaded trough / flank / crest / flank, two overlapped sheets, bolts with rust weeping from them, salt crust rising from the foot |
+| wall_plaster_a (7201) | cream plaster over a green wainscot: a rising-damp tide mark, patches fallen away to the brick (courses and all), cracks, a chair rail |
+| wall_timber_a (7101) | silvered boards: grain, knots with a swirl, nail rows with rust runs, dark gaps, salt and damp at the foot |
+| wall_iron_a (7401) | riveted plate: a weld bead, a lit top and a shaded lower edge, rivets (shadow, dome, glint) with rust running from them, a faded hazard band |
+| wall_concrete_a (7301) | poured concrete: form panels of different greys, board marks, aggregate, tie holes with rust weeping, spalls with rebar, efflorescence, soot at the head, green at the foot |
+| wall_saltbrick_a (9101) | pale salt-caked brick: the crust thickest at the foot, crystalline patches, rust from the joints |
+| wall_kiln_a (9301) | black fire-cracked brick with glowing mortar and a dusting of ash |
+| wall_rime_a (9302) | frosted steel: frost ferns growing from the corners and the seams |
+| wall_resin_a (7501) | the Vael's growth: bone ribs over a dark wet membrane with veins and sacs (it was a violet sheet of lightning) |
+| wall_bulkhead_a (1101) | harbour steel: teal plates, the tide line, barnacles below it, algae at the foot |
+| sky_bleach (8401), sky_ash (8402) | new skies for the salt works (a white-grey glare with a yellow-green haze) and the kilns (smoke with a dull glow); every painted sky is made seamless at load |
+`BAKE_PREVIEW=<dir> node tools/bake.mjs <ids>` writes the PNGs to a folder and touches neither `assets/baked` nor the manifest (recipe iteration). Floors and the brick, stone and wood props are NOT redone (the floors are still the earlier recipes).
+
 ## Not yet done
 Texel-density rules, per-episode palettes, UI/HUD rules, sprite direction sets (8-way vs billboard), animation frame counts, runtime Three.js material verification.

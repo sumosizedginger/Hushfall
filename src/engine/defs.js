@@ -41,6 +41,30 @@ export const ENEMY_STRIKE = { cos: 0.34, dashCos: 0.5 };
 /** The tell of a secret panel (PT-015: the owner finished the level and "no sign of a secret"; the old tell was a 5 cm hairline at 32% in the middle of the panel). View constants only, the sim never reads them: lamplight leaks out of the
  *  seam into every open side as a bright full-height seam (`seam` metres wide), stepped halos round it ([width m, opacity]) and a patch of light on the floor in front of it ([width m, depth m, opacity]), all additive. */
 export const SECRET_TELL = { color: 0xffb45a, seam: 0.12, seamOpacity: 0.9, halo: [[0.45, 0.22], [1.0, 0.1]], spill: [[1.0, 0.7, 0.3], [1.8, 1.6, 0.18], [2.6, 2.6, 0.1]] };
+/**
+ * The LOOK of a place (PT-021, the outside critique: "the rooms are boxes... a player should know which place they are in with the gun down", "the light is flat"): until now EVERY map was lit by the same hemisphere, the same purple
+ * sun and one global post grade, and a map differed only by its fog colour, its sky and an `ambient` scalar. A map now names a look (`atmosphere.look`); the default is exactly the old one, so a map that names none is unchanged.
+ * View constants only: the simulation never reads them (render and post read them; the validator only checks the name).
+ *   hemi [sky, ground, level]   sun [colour, level, [x, y, z] direction]   lamp  scale of every lamp / pod / lantern light   exposure  scale of the post exposure
+ *   grade { shadow, light, sat }  the post pass's cool-shadow / warm-light tint (multipliers per channel) and its saturation
+ *   shade { foot, ao, patch }  baked into the level's vertex colours: how dark a wall's foot and head are, how much a floor / ceiling darkens toward a wall, how strongly large patches vary the tile (0 = off)
+ */
+const GR = (shadow, light, sat) => ({ shadow, light, sat });
+export const LOOKS = {
+  harbour: { hemi: [0x9fb4d0, 0x3a2a40, 2.4], sun: [0xd8b0e0, 1.3, [-8, 14, -6]], lamp: 1, exposure: 1, grade: GR([0.9, 1.0, 1.08], [1.07, 1.0, 0.93], 1), shade: { foot: 0, ao: 0, patch: 0 } },                    // the pre-PT-021 light: the default
+  dusk: { hemi: [0xd2aa98, 0x2c2638, 2.3], sun: [0xffa868, 1.9, [-14, 7, -5]], lamp: 1, exposure: 1, grade: GR([0.84, 0.92, 1.14], [1.14, 1.0, 0.84], 1.12), shade: { foot: 0.3, ao: 0.35, patch: 0.08 } },          // Port Marrow's one hour: low warm sun, violet shade
+  customs: { hemi: [0xb4c4cc, 0x2a3038, 1.5], sun: [0xe8f0ff, 0.5, [-6, 14, -8]], lamp: 1.25, exposure: 1, grade: GR([0.9, 1.0, 1.0], [1.0, 1.03, 0.97], 0.78), shade: { foot: 0.35, ao: 0.4, patch: 0.1 } },       // institutional: cold tubes, grey-green, drained
+  moon: { hemi: [0x6c84b8, 0x181e34, 1.5], sun: [0x9cb4ff, 1.0, [7, 13, -9]], lamp: 1.45, exposure: 1, grade: GR([0.8, 0.94, 1.22], [1.1, 1.02, 0.9], 1.08), shade: { foot: 0.3, ao: 0.4, patch: 0.1 } },            // the harbour at night: blue shade, the lamps are the warm things
+  cellar: { hemi: [0x4a7068, 0x141c1c, 1.1], sun: [0x80c0b0, 0.2, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.82, 1.06, 1.0], [1.1, 1.0, 0.86], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },           // damp stone under the quay: green-black, a lamp is a room
+  signal: { hemi: [0x5c6c88, 0x14182a, 1.2], sun: [0x9aa8c8, 0.3, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.84, 0.94, 1.18], [1.08, 1.0, 0.9], 0.85), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the dark house on the hill: cold blue, the generator light
+  hill: { hemi: [0xa8b4c8, 0x383440, 2.1], sun: [0xd0d0e0, 0.9, [-9, 12, -3]], lamp: 1.1, exposure: 1, grade: GR([0.9, 0.97, 1.1], [1.04, 1.0, 0.94], 0.95), shade: { foot: 0.25, ao: 0.3, patch: 0.08 } },           // overcast, wind, the survivors' lanterns
+  salt: { hemi: [0xe4e6e6, 0x8c887a, 3.0], sun: [0xfff2dc, 2.4, [-5, 18, -4]], lamp: 0.55, exposure: 1, grade: GR([0.97, 1.03, 1.0], [1.03, 1.02, 0.97], 0.62), shade: { foot: 0.25, ao: 0.3, patch: 0.07 } },          // the works: bleached, hard, chemical, drained of colour
+  kiln: { hemi: [0x7a5240, 0x1e1412, 1.3], sun: [0xff8a4c, 1.1, [-12, 6, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },            // Kiln Row: soot and ember, red-brown shade
+  cradle: { hemi: [0x58b4a4, 0x2a1830, 1.3], sun: [0x70f0d0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.06, 1.06], [1.1, 1.03, 0.88], 1), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },             // the Vael's rooms: wet teal, the pods are the light
+  pump: { hemi: [0x78988a, 0x16201a, 1.5], sun: [0xd0e0c0, 0.7, [-4, 16, -2]], lamp: 1.3, exposure: 1, grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },               // pumps and slurry: industrial green-black
+  rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
+};
+export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
 export const RANGE = { holdModes: ['inert', 'turn', 'fixed'], healAfter: 3, respawnAfter: 5, playerHealAfter: 3, refillAfter: 1.5 };
 export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.35, knock: 0.5, flinch: 0.5 };
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
