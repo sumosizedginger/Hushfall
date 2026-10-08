@@ -4,7 +4,7 @@
 //   node tools/dev/rast-weapon.mjs <out.png> <weapon|all> [--ads=1] [--sprint=0] [--w=930] [--legacy]      weapons: flare scattergun rivet harpoon arc
 //   --gs=0.5 --dist=0.2 override the rig's aim scale and the eye-to-rear-sight distance (experiments)
 //   --legacy draws the pose view.js used before the sight-line pose (to compare with the owner's screenshots)
-//   MELEE (PT-013): weapons fists boathook marlinspike mallet axe; --swing=<jab|heavy|bash|id> --u=<0..1> (how far through the swing), --guard=1, --charge=1 (fists drawn back), --alt=1 (the other fist leads);
+//   MELEE (PT-013): weapons fists boathook marlinspike mallet axe; --swing=<jab|heavy|bash|id> --u=<0..1> (how far through the swing) or --t=<seconds since the swing began (the sim lands the blow at t = windup)>, --guard=1, --charge=1 (fists drawn back), --alt=1 (the other fist leads);
 //   with no --u the rig stands in its ready pose. --bash=<0..1> draws a gun mid-bash instead of mid-aim.
 import * as THREE from 'three';
 import fs from 'node:fs';
@@ -31,7 +31,7 @@ function render(name) {
   const rig = MAKERS[name](null), a = ADS, sp = SPR; if (flags.gs) rig.adsScale = Number(flags.gs); if (flags.dist) rig.adsDist = Number(flags.dist);
   let pose;
   if (rig.melee) {
-    const kind = flags.swing ?? (name === 'fists' ? 'jab' : name), T = swingTimes(kind), t = flags.u != null ? Number(flags.u) * (T.windup + T.recover) : -1, ph = swingPhase(kind, t);
+    const kind = flags.swing ?? (name === 'fists' ? 'jab' : name), T = swingTimes(kind), t = flags.t != null ? Number(flags.t) : flags.u != null ? Number(flags.u) * (T.windup + T.recover) : -1, ph = swingPhase(kind, t);
     rig.anim({ ...ph, kind, charge: Number(flags.charge ?? 0), guard: Number(flags.guard ?? 0), alt: Number(flags.alt ?? 0), t: 0 }); pose = meleePose(rig, { sprint: sp });
   } else {
     rig.sleeveMat.opacity = Math.max(0, 1 - a / 0.6) ** 2;

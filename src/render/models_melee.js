@@ -41,7 +41,13 @@ function arm(M, sleeve, radius = 0.046) {
     },
   };
 }
-const glove = (M, cell = 3) => { const g = new THREE.Group(); const a = M(new THREE.BoxGeometry(0.1, 0.1, 0.13), cell); g.add(a); const k = M(new THREE.BoxGeometry(0.108, 0.04, 0.05), 5); k.position.set(0, 0.035, -0.06); g.add(k); return g; };
+/** a hand closed round a haft (the haft runs through it along y): the linen-wrapped back of the hand, the bare ridge of the knuckles on the forward face, the thumb along the top: the fists' hand (PT-017: the first version was a plank-textured box, and read as a crate on the pole) */
+const glove = (M) => {
+  const g = new THREE.Group(), back = M(new THREE.BoxGeometry(0.094, 0.082, 0.1), 8); g.add(back);
+  for (let i = -1.5; i <= 1.5; i++) { const k = M(sphere(0.021, 6, 4), 9); k.position.set(i * 0.025, 0.0, -0.058); g.add(k); }
+  const thumb = M(new THREE.BoxGeometry(0.03, 0.05, 0.075), 9); thumb.position.set(-0.058, 0.026, -0.012); thumb.rotation.y = 0.3; g.add(thumb);
+  return g;
+};
 
 // ---------------------------------------------------------------------------------------------------------------------- the fists
 export function makeFists(tex) {
@@ -88,18 +94,20 @@ export function makeFists(tex) {
 
 // ---------------------------------------------------------------------------------------------------------------------- found weapons
 /** a keyframed hold: ready / wind (the pull-back or raise) / hit (the end of the blow) / guard; each { p, r } on the `hold` group; the arms are re-aimed to the hands afterwards */
+/** a key pose's orientation: Euler [x, y, z] (XYZ), and an optional 4th number: a ROLL about the weapon's own long axis, applied first (it turns the head to show its flat side) */
+const quatOf = (r) => new THREE.Quaternion().setFromEuler(new THREE.Euler(r[0], r[1], r[2], 'XYZ')).multiply(new THREE.Quaternion().setFromAxisAngle(UP, r[3] ?? 0));
 function holdAnim(g, hold, K, arms, hands) {
-  const tmp = new THREE.Vector3();
+  const tmp = new THREE.Vector3(), Q = { ready: quatOf(K.ready.r), wind: quatOf(K.wind.r), hit: quatOf(K.hit.r), guard: quatOf(K.guard.r) }, q = new THREE.Quaternion();      // the turn between two key poses is a slerp: a lerp of Euler angles swings a weapon through poses nobody authored
   return function anim(st) {
-    let p = K.ready.p, r = K.ready.r;
+    let p = K.ready.p; q.copy(Q.ready);
     p = [p[0], p[1] + Math.sin((st.t ?? 0) * 1.5) * 0.004, p[2]];
-    if ((st.guard ?? 0) > 0) { p = lerp3(p, K.guard.p, st.guard); r = lerp3(r, K.guard.r, st.guard); }
+    if ((st.guard ?? 0) > 0) { p = lerp3(p, K.guard.p, st.guard); q.slerp(Q.guard, st.guard); }
     if (st.a > 0 || st.b > 0) {
-      p = lerp3(p, K.wind.p, st.a); r = lerp3(r, K.wind.r, st.a);
-      p = lerp3(p, K.hit.p, st.b); r = lerp3(r, K.hit.r, st.b);
-      p = lerp3(p, K.ready.p, st.c); r = lerp3(r, K.ready.r, st.c);
+      p = lerp3(p, K.wind.p, st.a); q.slerp(Q.wind, st.a);
+      p = lerp3(p, K.hit.p, st.b); q.slerp(Q.hit, st.b);
+      p = lerp3(p, K.ready.p, st.c); q.slerp(Q.ready, st.c);
     }
-    hold.position.set(...p); hold.rotation.set(...r); hold.updateMatrix();
+    hold.position.set(...p); hold.quaternion.copy(q); hold.updateMatrix();
     arms.forEach((a, i) => { tmp.set(...hands[i].at).applyMatrix4(hold.matrix); a.aim(hands[i].from, [tmp.x, tmp.y, tmp.z]); });
   };
 }
@@ -107,8 +115,8 @@ function holdRig(tex, build) {
   const { mat, sleeveMat, M } = kit(tex), g = new THREE.Group(), hold = new THREE.Group(); g.add(hold);
   const spec = build({ M, mat, sleeveMat, hold });                                                                          // { K, hands: [{ at, from, cell? }], hip }
   const arms = spec.hands.map(() => arm(M, sleeveMat)); arms.forEach((a) => { g.add(a.mesh); g.add(a.cuff); });
-  spec.hands.forEach((h) => { const gl = glove(M); gl.position.set(...h.at); hold.add(gl); });
-  return { group: g, flash: null, sleeveMat, melee: true, anim: holdAnim(g, hold, spec.K, arms, spec.hands), adsY: 0, hold, hip: spec.hip };
+  const gloves = spec.hands.map((h) => { const gl = glove(M); gl.position.set(...h.at); hold.add(gl); return gl; });
+  return { group: g, flash: null, sleeveMat, melee: true, anim: holdAnim(g, hold, spec.K, arms, spec.hands), adsY: 0, hold, gloves, arms, hip: spec.hip };
 }
 
 export function makeBoatHook(tex) {
@@ -121,8 +129,8 @@ export function makeBoatHook(tex) {
     const point = M(new THREE.ConeGeometry(0.022, 0.16, 6), 10); point.position.set(0, 1.22, -0.44); point.rotation.x = Math.PI / 2 + 0.2; hold.add(point);
     const tip = M(new THREE.ConeGeometry(0.026, 0.22, 6), 10); tip.position.y = 1.4; hold.add(tip);                                          // the spike on the end: a boat hook is also a pike
     return { K: {
-      ready: { p: [0.2, -0.3, -0.12], r: [-0.85, 0.05, 0.5] }, wind: { p: [0.24, -0.32, 0.06], r: [-0.8, 0.1, 0.52] }, hit: { p: [0.1, -0.22, -0.46], r: [-1.1, 0.0, 0.3] }, guard: { p: [0.04, -0.14, -0.14], r: [-0.4, 0.0, 1.0] } },
-      hands: [{ at: [0, 0, 0], from: [0.35, -0.7, 0.3] }, { at: [0, 0.42, 0], from: [-0.3, -0.7, 0.3] }], hip: { pos: [0, 0, -0.3], scale: 0.58 } };
+      ready: { p: [0.28, -0.15, -0.5], r: [-1.15, 0.0, 0.12] }, wind: { p: [0.31, -0.12, -0.34], r: [-1.0, 0.0, 0.22] }, hit: { p: [0.16, -0.2, -0.78], r: [-1.35, 0.0, 0.1] }, guard: { p: [0.02, -0.16, -0.46], r: [-0.3, 0.0, 1.15] } },
+      hands: [{ at: [0, 0, 0], from: [0.55, -0.75, -0.1] }, { at: [0, 0.42, 0], from: [-0.35, -0.75, -0.1] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -134,8 +142,8 @@ export function makeMarlinspike(tex) {
     const spike = M(new THREE.CylinderGeometry(0.006, 0.036, 0.7, 8), 10); spike.position.y = 0.55; hold.add(spike);                          // the spike: thick at the guard, a needle at the tip
     const fuller = M(new THREE.BoxGeometry(0.012, 0.55, 0.012), 10); fuller.position.set(0, 0.5, -0.032); hold.add(fuller);
     return { K: {
-      ready: { p: [0.2, -0.3, -0.16], r: [-0.95, 0.0, 0.42] }, wind: { p: [0.23, -0.32, 0.0], r: [-0.75, 0.05, 0.5] }, hit: { p: [0.08, -0.2, -0.5], r: [-1.2, 0.0, 0.25] }, guard: { p: [0.04, -0.12, -0.16], r: [-0.4, 0.0, 0.95] } },
-      hands: [{ at: [0, 0, 0], from: [0.32, -0.62, 0.34] }], hip: { pos: [0, 0, -0.3], scale: 0.72 } };
+      ready: { p: [0.26, -0.17, -0.5], r: [-1.1, 0.0, 0.15] }, wind: { p: [0.29, -0.14, -0.3], r: [-1.05, 0.0, 0.4] }, hit: { p: [0.12, -0.18, -0.86], r: [-1.42, 0.0, 0.1] }, guard: { p: [0.02, -0.16, -0.46], r: [-0.3, 0.0, 1.1] } },
+      hands: [{ at: [0, 0, 0], from: [0.8, -0.5, -0.15] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -148,8 +156,8 @@ export function makeMallet(tex) {
     for (const s of [-1, 1]) { const band = M(new THREE.CylinderGeometry(0.113, 0.113, 0.04, 10), 12); band.rotation.z = Math.PI / 2; band.position.set(s * 0.14, 0.92, 0); hold.add(band); const cap = M(new THREE.CylinderGeometry(0.078, 0.105, 0.03, 10), 12); cap.rotation.z = Math.PI / 2; cap.position.set(s * 0.195, 0.92, 0); hold.add(cap); }
     const wedge = M(new THREE.BoxGeometry(0.03, 0.05, 0.05), 12); wedge.position.set(0, 1.06, 0); hold.add(wedge);                                   // the iron wedge that keeps the head on
     return { K: {                                                                                                                              // held up and back, brought DOWN over the top
-      ready: { p: [0.2, -0.3, -0.14], r: [-0.5, 0.0, 0.5] }, wind: { p: [0.26, -0.14, 0.02], r: [0.55, 0.0, -0.35] }, hit: { p: [0.1, -0.36, -0.28], r: [-1.85, 0.0, 0.1] }, guard: { p: [0.04, -0.14, -0.14], r: [-0.2, 0.0, 1.25] } },
-      hands: [{ at: [0, 0, 0], from: [0.34, -0.7, 0.3] }, { at: [0, 0.27, 0], from: [-0.3, -0.7, 0.3] }], hip: { pos: [0, 0, -0.3], scale: 0.56 } };
+      ready: { p: [0.28, -0.15, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.18, -0.5], r: [-0.35, 0.0, 1.2] } },
+      hands: [{ at: [0, 0, 0], from: [0.55, -0.75, -0.1] }, { at: [0, 0.27, 0], from: [-0.35, -0.75, -0.1] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -166,8 +174,8 @@ export function makeAxe(tex) {
     const pick = M(new THREE.ConeGeometry(0.022, 0.18, 5), 10); pick.position.set(0, 0.66, 0.15); pick.rotation.x = -Math.PI / 2; hold.add(pick);            // the pick on the back of the head
     const socket = M(new THREE.BoxGeometry(0.07, 0.11, 0.11), 12); socket.position.set(0, 0.66, 0.0); hold.add(socket);
     return { K: {                                                                                                                              // raised over the right shoulder, swung across and down: the cleave
-      ready: { p: [0.22, -0.3, -0.12], r: [-0.55, 0.0, 0.55] }, wind: { p: [0.3, -0.22, 0.04], r: [0.45, -0.1, -0.4] }, hit: { p: [0.12, -0.12, -0.2], r: [-0.25, 0.0, 1.75] }, guard: { p: [0.04, -0.14, -0.14], r: [-0.25, 0.0, 1.2] } },
-      hands: [{ at: [0, 0, 0], from: [0.34, -0.7, 0.3] }, { at: [0, 0.3, 0], from: [-0.3, -0.7, 0.3] }], hip: { pos: [0, 0, -0.3], scale: 0.64 } };
+      ready: { p: [0.28, -0.15, -0.52], r: [-1.0, 0.0, 0.12, 0.7] }, wind: { p: [0.4, -0.16, -0.58], r: [-0.05, 0.0, -0.3, 0.5] }, hit: { p: [0.1, -0.2, -0.68], r: [-1.5, 0.0, 0.85, 0.3] }, guard: { p: [0.02, -0.18, -0.52], r: [-0.35, 0.0, 1.2, 0.7] } },
+      hands: [{ at: [0, 0, 0], from: [0.55, -0.75, -0.1] }, { at: [0, 0.3, 0], from: [-0.35, -0.75, -0.1] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -176,7 +184,7 @@ export const MELEE_MAKERS = { fists: makeFists, boathook: makeBoatHook, marlinsp
 /** a found weapon lying on the floor (the same model, small, lying flat, with a glint): for maps that place one */
 export function makePickupMelee(kind, tex) {
   const id = kind.replace(/^weapon_/, ''), make = MELEE_MAKERS[id]; const g = new THREE.Group(); if (!make) return g;
-  const rig = make(tex); rig.anim({ a: 0, b: 0, c: 0, t: 0 }); const m = rig.group; m.scale.setScalar(0.5); m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.14, 0); g.add(m);
+  const rig = make(tex); rig.anim({ a: 0, b: 0, c: 0, t: 0 }); const m = rig.hold ?? rig.group; for (const gl of rig.gloves ?? []) gl.parent?.remove(gl); m.position.set(0, 0.14, 0); m.rotation.set(Math.PI / 2, 0, 0); m.scale.setScalar(0.5); g.add(m);      // the weapon alone, lying flat: not the forearms and gloves of the first-person rig
   const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.05, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.62; g.add(glow);
   return g;
 }
