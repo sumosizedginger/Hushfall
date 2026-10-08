@@ -22,6 +22,8 @@ function cell(g, i, base, mottle, details) {
   if (details) details(c, g);
 }
 const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
+// PT-020: a cell REPAINTED at the very end of its atlas. The first painting of the cell stays where it was, so the random sequence (and with it every other cell) is exactly what it was; this paints over it, opaque.
+const repaint = (g, i, base, mottle, details) => { g.solid((i % 4) * 64, Math.floor(i / 4) * 64, 64, 64, base); cell(g, i, base, mottle, details); };
 
 export const recipes3d = {
   // ---- Tollbearer UV atlas -------------------------------------------------
@@ -112,6 +114,31 @@ export const recipes3d = {
       cell(g, 15, '#9b2e22', ['#b8402e', '#7a2218'], (c) => {                      // red fire-service enamel, chipped to steel at the edges
         g.stroke('cpencil', '#b6c0c0', 1.0); for (let i = 0; i < 9; i++) { const x = g.rnd(2, 62), y = g.rnd(2, 62); c.line(x, y, x + g.rnd(2, 6), y + g.rnd(-2, 4)); }
         g.stroke('2B', '#4a1410', 0.9); for (let i = 0; i < 4; i++) { const y = g.rnd(8, 56); c.line(4, y, 60, y + g.rnd(-2, 2)); }
+      });
+      // ---- PT-020: the sleeve, the hand wraps and the skin, repainted (the owner: the arms were flat, saturated pipes, the hands 2x4s). Painted last so no other cell moves.
+      // 4: a waxed oilskin sleeve, a value darker and quieter than before so the weapon leads. Washes, not hard lines (the first try was a plaid at this size): a few soft folds with a lit ridge beside each, cross creases crowded at the elbow and above the cuff, a stitched seam, scuffs and oil stains, shaded at both ends
+      repaint(g, 4, '#8f7526', ['#7c661f', '#a28a35', '#6e5a19'], (c) => {
+        g.noStroke();
+        for (let i = 0; i < 5; i++) { const x = 6 + i * 12 + g.rnd(-2, 2); g.fill('#3a2c0a', 78); c.rect(x, 0, 3.2, 64); g.fill('#d6ba5a', 62); c.rect(x + 3.4, 2, 2.6, 60); }
+        for (const y0 of [23, 29, 35, 41, 53, 57]) { g.fill('#2e2308', 70); c.rect(0, y0, 64, 1.8); g.fill('#cfb34f', 55); c.rect(0, y0 + 2, 64, 1.6); }
+        g.stroke('cpencil', '#e6d58f', 0.6); for (let y = 3; y < 61; y += 6) c.line(58, y, 58, y + 2.5);
+        g.noStroke(); g.fill('#c9ae55', 80); for (let i = 0; i < 7; i++) c.circle(g.rnd(4, 60), g.rnd(4, 60), g.rnd(1.5, 4));
+        g.fill('#2a2008', 66); for (let i = 0; i < 5; i++) c.circle(g.rnd(4, 60), g.rnd(8, 60), g.rnd(2, 5));
+        g.fill('#1c1604', 80); c.rect(0, 0, 64, 6); c.rect(0, 58, 64, 6);
+      });
+      // 8: linen hand wraps: overlapping bands that run round the hand (a lit upper edge and a shadow under each, as soft washes), sweat and old blood; no plank grain, no check
+      repaint(g, 8, '#d9ccac', ['#e8dcc0', '#c4b690'], (c) => {
+        g.noStroke();
+        for (let i = 0; i < 9; i++) { const y = 2 + i * 7 + g.rnd(-1, 1); g.fill('#8d805c', 85); c.rect(0, y + 4.6, 64, 2.2); g.fill('#f6efd8', 95); c.rect(0, y, 64, 2.2); }
+        g.stroke('HB', '#b2a47c', 0.35); for (let i = 0; i < 5; i++) { const x = g.rnd(0, 64); c.line(x, 0, x + g.rnd(-6, 6), 64); }
+        g.noStroke(); g.fill('#b89a54', 60); for (let i = 0; i < 4; i++) c.circle(g.rnd(6, 58), g.rnd(6, 58), g.rnd(3, 6)); g.fill('#6a3a2c', 95); for (let i = 0; i < 3; i++) c.circle(g.rnd(6, 58), g.rnd(6, 58), g.rnd(1, 2.2));
+      });
+      // 9: bare skin: warm, with creases across the knuckles, scuffs and a little dirt
+      repaint(g, 9, '#c4937a', ['#d5a68c', '#ad7d64'], (c) => {
+        g.stroke('cpencil', '#8f6048', 0.7); for (let i = 0; i < 6; i++) { const y = 6 + i * 10; c.line(4, y, 60, y + g.rnd(-1.5, 1.5)); }
+        g.stroke('cpencil', '#e6bda4', 0.8); for (let i = 0; i < 6; i++) { const y = 8 + i * 10; c.line(6, y, 56, y + g.rnd(-1, 1)); }
+        g.stroke('2B', '#6e4634', 0.7); for (let i = 0; i < 4; i++) { const x = g.rnd(6, 56), y = g.rnd(6, 56); c.line(x, y, x + g.rnd(3, 9), y + g.rnd(-2, 2)); }
+        g.noStroke(); g.fill('#5a3a2c', 60); for (let i = 0; i < 4; i++) c.circle(g.rnd(4, 60), g.rnd(40, 62), g.rnd(2, 5));
       });
     }),
   },

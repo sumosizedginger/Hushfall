@@ -7,6 +7,7 @@
 // the forearms are NOT children of the weapon: each runs from an anchor below the screen's edge to wherever the hand is this frame, so an arm never swings with the weapon like a rod.
 import * as THREE from 'three';
 import { atlas } from './models.js';
+import { FEEL } from './weapon-pose.js';
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const lerp3 = (A, B, t) => [lerp(A[0], B[0], t), lerp(A[1], B[1], t), lerp(A[2], B[2], t)];
@@ -29,15 +30,25 @@ function kit(tex) {
   return { mat, sleeveMat, M };
 }
 /**
- * a two-bone arm (PT-019: the first arms were ONE straight tube from the screen edge to the hand, which only got longer and straighter as the hand rose: "a stick swinging a stick"): an upper arm and a forearm that meet at an elbow,
- * solved every frame from a shoulder to the wrist (group space). The elbow bends out and down (`pole`); a hand out of reach drags the SHOULDER toward it (the body leans into the blow) instead of stretching the arm.
- * `last` = { S, E, W } of the latest solve (the tests project them).
+ * a two-bone arm (PT-019) wearing ONE continuous sleeve (PT-020): the arm is solved every frame from a shoulder to the wrist (group space): an upper arm and a forearm that meet at an elbow, the elbow bending out and down (`pole`),
+ * a hand out of reach dragging the SHOULDER toward it (the body leans into the blow) instead of stretching the arm. The sleeve is a single tube swept along the smooth curve through shoulder, elbow and wrist, with a radius that swells
+ * at the elbow, tapers to the wrist and ripples with creases: no stacked cylinders, so no seams for the ink pass to draw and no faceted kink at the elbow. `last` = { S, E, W } of the latest solve (the tests project them).
  */
+const RINGS = 24, SIDES = 14;
+function sleeveGeometry() {
+  const n = (RINGS + 1) * (SIDES + 1), g = new THREE.BufferGeometry(), uv = new Float32Array(n * 2), idx = [];
+  for (let i = 0; i <= RINGS; i++) for (let k = 0; k <= SIDES; k++) { const j = i * (SIDES + 1) + k; uv[j * 2] = k / SIDES; uv[j * 2 + 1] = 1 - i / RINGS; }
+  for (let i = 0; i < RINGS; i++) for (let k = 0; k < SIDES; k++) { const a = i * (SIDES + 1) + k, b = a + 1, c = a + SIDES + 1, d = c + 1; idx.push(a, b, c, b, d, c); }
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
+  return g;
+}
+const smooth01 = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+/** the sleeve's radius at t (0 shoulder .. 1 wrist): a swollen upper arm, the elbow's bulge, a taper to the wrist, creases that run across the arm and crowd at the elbow and the cuff */
+const sleeveRadius = (r, t) => r * (1.28 - 0.18 * smooth01(0, 0.5, t) + 0.1 * Math.exp(-(((t - 0.56) / 0.07) ** 2)) - 0.34 * smooth01(0.58, 1, t)) * (1 + 0.03 * Math.sin(t * 58) * (0.5 + 0.8 * Math.exp(-(((t - 0.52) / 0.2) ** 2))) + 0.05 * smooth01(0.86, 0.95, t) * Math.sin(t * 150));
 function arm(M, sleeve, r = 0.04, upper = 0.5, fore = 0.5) {
-  const tube = (r0, r1) => M(new THREE.CylinderGeometry(r1, r0, 1, 10), 4, sleeve);                       // r0 at the start, r1 at the end
-  const U = tube(r * 1.25, r * 1.08), Fo = tube(r * 1.1, r * 0.8), joint = M(sphere(r * 1.12, 8, 6), 4, sleeve), cuff = M(new THREE.CylinderGeometry(r * 1.2, r * 0.95, 0.1, 8), 8), g = new THREE.Group(); g.add(U, Fo, joint);
-  const S = new THREE.Vector3(), W = new THREE.Vector3(), E = new THREE.Vector3(), Hv = new THREE.Vector3(), d = new THREE.Vector3(), p = new THREE.Vector3(), t = new THREE.Vector3();
-  const place = (m, A, B) => { t.subVectors(B, A); const len = t.length() || 1e-6; m.scale.set(1, len, 1); m.position.copy(A).addScaledVector(t, 0.5); m.quaternion.setFromUnitVectors(UP, t.divideScalar(len)); };
+  const geo = sleeveGeometry(), skin = new THREE.Mesh(atlas(geo, 4), sleeve), cuff = M(new THREE.CylinderGeometry(r * 1.2, r * 0.95, 0.1, 8), 8), g = new THREE.Group(); skin.frustumCulled = false; g.add(skin);
+  const S = new THREE.Vector3(), W = new THREE.Vector3(), E = new THREE.Vector3(), Hv = new THREE.Vector3(), d = new THREE.Vector3(), p = new THREE.Vector3(), t = new THREE.Vector3(), C = new THREE.Vector3(), P = new THREE.Vector3(), Tn = new THREE.Vector3(), Nn = new THREE.Vector3(), Bn = new THREE.Vector3();
+  const pos = geo.attributes.position, nor = geo.attributes.normal;
   return {
     mesh: g, cuff, last: { S, E, W },
     aim(shoulder, hand, pole) {
@@ -47,13 +58,26 @@ function arm(M, sleeve, r = 0.04, upper = 0.5, fore = 0.5) {
       d.divideScalar(dd); const a = (upper * upper - fore * fore + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, upper * upper - a * a));
       p.set(...pole); p.addScaledVector(d, -p.dot(d)); if (p.lengthSq() < 1e-6) p.set(0, -1, 0); p.normalize();
       E.copy(S).addScaledVector(d, a).addScaledVector(p, h);
-      place(U, S, E); place(Fo, E, W); joint.position.copy(E);
-      t.subVectors(W, E).normalize(); cuff.position.copy(W).addScaledVector(t, -0.01); cuff.quaternion.setFromUnitVectors(UP, t);   // a flared linen cuff at the wrist
+      C.copy(E).multiplyScalar(2).addScaledVector(S, -0.5).addScaledVector(W, -0.5);                                               // the control point that makes the curve pass THROUGH the elbow at t = 0.5
+      for (let i = 0; i <= RINGS; i++) {
+        const u = i / RINGS, v = 1 - u;
+        P.set(0, 0, 0).addScaledVector(S, v * v).addScaledVector(C, 2 * v * u).addScaledVector(W, u * u);
+        Tn.set(0, 0, 0).addScaledVector(C, 1).addScaledVector(S, -1).multiplyScalar(2 * v).addScaledVector(W, 2 * u).addScaledVector(C, -2 * u).normalize();
+        Nn.copy(p).addScaledVector(Tn, -p.dot(Tn)).normalize(); Bn.crossVectors(Tn, Nn);
+        const rad = sleeveRadius(r, u);
+        for (let k = 0; k <= SIDES; k++) { const ang = (k % SIDES) / SIDES * Math.PI * 2, j = i * (SIDES + 1) + k, ca = Math.cos(ang) * rad, sa = Math.sin(ang) * rad; pos.setXYZ(j, P.x + Nn.x * ca + Bn.x * sa, P.y + Nn.y * ca + Bn.y * sa, P.z + Nn.z * ca + Bn.z * sa); }
+      }
+      pos.needsUpdate = true; geo.computeVertexNormals();
+      for (let i = 0; i <= RINGS; i++) { const j0 = i * (SIDES + 1), j1 = j0 + SIDES; nor.setXYZ(j0, (nor.getX(j0) + nor.getX(j1)) / 2, (nor.getY(j0) + nor.getY(j1)) / 2, (nor.getZ(j0) + nor.getZ(j1)) / 2); nor.setXYZ(j1, nor.getX(j0), nor.getY(j0), nor.getZ(j0)); }   // no lighting seam where the tube closes
+      nor.needsUpdate = true;
+      t.subVectors(W, E).normalize(); cuff.position.copy(W).addScaledVector(t, -0.01); cuff.quaternion.setFromUnitVectors(UP, t);   // a flared linen cuff over the wrist end of the sleeve
     },
   };
 }
 /** where a found weapon's two arms start (view space, metres from the eye) and which way each elbow bends */
 const BODY = [{ shoulder: [0.3, -0.3, -0.12], pole: [0.45, -1, 0.25] }, { shoulder: [-0.3, -0.3, -0.12], pole: [-0.45, -1, 0.25] }];
+/** a turned part (a haft with a swell and a knob, a barrel-shaped head): `prof` = [radius, y] points up the axis, spun into a lathe */
+const lathe = (M, cell, prof, sides = 10) => M(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), sides), cell);
 /** a hand closed round a haft (the haft runs through it along y; PT-019: the boxes of the first two versions read as 2x4s): four bare fingers, each a ring round the haft that is open on the player's side, the linen-wrapped back of the hand closing that side, and a thumb along the haft */
 const glove = (M) => {
   const g = new THREE.Group(), back = M(sphere(0.05, 8, 6), 8); back.scale.set(1.0, 0.95, 0.85); back.position.set(0, 0, 0.03); g.add(back);
@@ -114,14 +138,18 @@ export function makeFists(tex) {
 /** a key pose's orientation: Euler [x, y, z] (XYZ), and an optional 4th number: a ROLL about the weapon's own long axis, applied first (it turns the head to show its flat side) */
 const quatOf = (r) => new THREE.Quaternion().setFromEuler(new THREE.Euler(r[0], r[1], r[2], 'XYZ')).multiply(new THREE.Quaternion().setFromAxisAngle(UP, r[3] ?? 0));
 function holdAnim(g, hold, K, arms, hands) {
-  const tmp = new THREE.Vector3(), lunge = K.lunge ?? [0, -0.03, -0.05], arc = K.arc ?? [0, 0, 0], Q = { ready: quatOf(K.ready.r), wind: quatOf(K.wind.r), hit: quatOf(K.hit.r), guard: quatOf(K.guard.r) }, q = new THREE.Quaternion();      // the turn between two key poses is a slerp: a lerp of Euler angles swings a weapon through poses nobody authored
+  const tmp = new THREE.Vector3(), lunge = K.lunge ?? [0, -0.03, -0.05], arc = K.arc ?? [0, 0, 0], antic = K.antic ?? [0, -0.03, -0.03], Q = { ready: quatOf(K.ready.r), wind: quatOf(K.wind.r), hit: quatOf(K.hit.r), guard: quatOf(K.guard.r) }, q = new THREE.Quaternion(), qo = new THREE.Quaternion();      // the turn between two key poses is a slerp: a lerp of Euler angles swings a weapon through poses nobody authored
   return function anim(st) {
     let p = K.ready.p; q.copy(Q.ready);
     p = [p[0], p[1] + Math.sin((st.t ?? 0) * 1.5) * 0.004, p[2]];
     if ((st.guard ?? 0) > 0) { p = lerp3(p, K.guard.p, st.guard); q.slerp(Q.guard, st.guard); }
     if (st.a > 0 || st.b > 0) {
       p = lerp3(p, K.wind.p, st.a); q.slerp(Q.wind, st.a);
+      const an = Math.sin(Math.PI * Math.min(1, st.a * 1.7)) * (1 - st.b);                                             // ANTICIPATION: first the weapon moves AGAINST the blow, then it is drawn back
+      p = [p[0] + antic[0] * an, p[1] + antic[1] * an, p[2] + antic[2] * an];
       p = lerp3(p, K.hit.p, st.b); q.slerp(Q.hit, st.b);
+      const ov = (FEEL[st.kind]?.over ?? 0.06) * Math.sin(Math.PI * (st.h ?? 0));                                         // OVERSHOOT: after the contact the weapon sinks past its hit pose and settles
+      if (ov > 0) { for (let i = 0; i < 3; i++) p[i] += (K.hit.p[i] - K.wind.p[i]) * ov; qo.copy(Q.wind).slerp(Q.hit, 1 + ov); q.copy(qo); }
       p = lerp3(p, K.ready.p, st.c); q.slerp(Q.ready, st.c);
     }
     const strike = st.a > 0 || st.b > 0 ? st.b * (1 - st.c) : 0, bow = st.a > 0 || st.b > 0 ? Math.sin(Math.PI * st.b) * (1 - st.c) : 0;                // the body goes into the blow; the hand takes an arc, not a straight line
@@ -148,7 +176,7 @@ export function makeBoatHook(tex) {
     const point = M(new THREE.ConeGeometry(0.022, 0.16, 6), 10); point.position.set(0, 1.22, -0.44); point.rotation.x = Math.PI / 2 + 0.2; hold.add(point);
     const tip = M(new THREE.ConeGeometry(0.026, 0.22, 6), 10); tip.position.y = 1.4; hold.add(tip);                                          // the spike on the end: a boat hook is also a pike
     return { K: {
-      ready: { p: [0.28, -0.13, -0.5], r: [-1.15, 0.0, 0.12] }, wind: { p: [0.31, -0.12, -0.34], r: [-1.0, 0.0, 0.22] }, hit: { p: [0.16, -0.2, -0.78], r: [-1.35, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.15] }, lunge: [0.0, -0.02, -0.1] },
+      ready: { p: [0.28, -0.13, -0.5], r: [-1.15, 0.0, 0.12] }, wind: { p: [0.31, -0.12, -0.34], r: [-1.0, 0.0, 0.22] }, hit: { p: [0.16, -0.2, -0.78], r: [-1.35, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.15] }, lunge: [0.0, -0.02, -0.1], antic: [0.0, -0.015, -0.05] },
       hands: [{ at: [0, 0, 0] }, { at: [0, 0.42, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
@@ -161,7 +189,7 @@ export function makeMarlinspike(tex) {
     const spike = M(new THREE.CylinderGeometry(0.006, 0.036, 0.7, 8), 10); spike.position.y = 0.5; hold.add(spike);                          // the spike: thick at the guard, a needle at the tip
     const fuller = M(new THREE.BoxGeometry(0.012, 0.55, 0.012), 10); fuller.position.set(0, 0.45, -0.032); hold.add(fuller);
     return { K: {
-      ready: { p: [0.26, -0.1, -0.5], r: [-1.1, 0.0, 0.15] }, wind: { p: [0.29, -0.08, -0.3], r: [-1.05, 0.0, 0.4] }, hit: { p: [0.12, -0.12, -0.86], r: [-1.42, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.1] }, lunge: [0.0, -0.02, -0.1] },
+      ready: { p: [0.26, -0.1, -0.5], r: [-1.1, 0.0, 0.15] }, wind: { p: [0.29, -0.08, -0.3], r: [-1.05, 0.0, 0.4] }, hit: { p: [0.12, -0.12, -0.86], r: [-1.42, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.1] }, lunge: [0.0, -0.02, -0.1], antic: [0.0, -0.01, -0.04] },
       hands: [{ at: [0, 0, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
@@ -171,29 +199,29 @@ export function makeMallet(tex) {
     const handle = M(new THREE.CylinderGeometry(0.03, 0.036, 1.05, 8), 13); handle.position.y = 0.38; hold.add(handle);
     const grip = M(new THREE.CylinderGeometry(0.034, 0.034, 0.2, 8), 11); grip.position.y = -0.02; hold.add(grip);
     const knob = M(sphere(0.042, 8, 6), 13); knob.position.y = -0.13; hold.add(knob);
-    const head = M(new THREE.CylinderGeometry(0.105, 0.105, 0.36, 10), 14); head.rotation.z = Math.PI / 2; head.position.y = 0.92; hold.add(head);        // the bronze head, across the top
+    const head = lathe(M, 14, [[0.0, -0.18], [0.082, -0.18], [0.102, -0.158], [0.108, -0.12], [0.11, 0.0], [0.108, 0.12], [0.102, 0.158], [0.082, 0.18], [0.0, 0.18]], 14); head.rotation.z = Math.PI / 2; head.position.y = 0.92; hold.add(head);      // the bronze head: a barrel with chamfered faces, laid across the top        // the bronze head, across the top
     for (const s of [-1, 1]) { const band = M(new THREE.CylinderGeometry(0.113, 0.113, 0.04, 10), 12); band.rotation.z = Math.PI / 2; band.position.set(s * 0.14, 0.92, 0); hold.add(band); const cap = M(new THREE.CylinderGeometry(0.078, 0.105, 0.03, 10), 12); cap.rotation.z = Math.PI / 2; cap.position.set(s * 0.195, 0.92, 0); hold.add(cap); }
     const wedge = M(new THREE.BoxGeometry(0.03, 0.05, 0.05), 12); wedge.position.set(0, 1.06, 0); hold.add(wedge);                                   // the iron wedge that keeps the head on
     return { K: {                                                                                                                              // held up and back, brought DOWN over the top
-      ready: { p: [0.28, -0.13, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.5], r: [-0.35, 0.0, 1.2] }, arc: [0.04, 0.14, 0.0], lunge: [0.0, -0.06, -0.06] },
+      ready: { p: [0.28, -0.13, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.5], r: [-0.35, 0.0, 1.2] }, arc: [0.04, 0.14, 0.0], lunge: [0.0, -0.06, -0.06], antic: [0.0, -0.08, -0.06] },
       hands: [{ at: [0, 0, 0] }, { at: [0, 0.27, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
 export function makeAxe(tex) {
   return holdRig(tex, ({ M, hold }) => {
-    const handle = M(new THREE.CylinderGeometry(0.028, 0.036, 0.86, 8), 13); handle.position.y = 0.27; hold.add(handle);
-    const grip = M(new THREE.CylinderGeometry(0.033, 0.033, 0.2, 8), 11); grip.position.y = -0.02; hold.add(grip);
-    const knob = M(sphere(0.04, 8, 6), 12); knob.position.y = -0.13; hold.add(knob);
-    // the head: a red-enamelled fire-axe profile (poll behind, a flaring blade ahead), extruded; its edge is bright steel
-    const sh = new THREE.Shape(); sh.moveTo(-0.075, -0.045); sh.lineTo(0.0, -0.06); sh.quadraticCurveTo(0.1, -0.075, 0.22, -0.14); sh.quadraticCurveTo(0.255, 0.0, 0.22, 0.14); sh.quadraticCurveTo(0.1, 0.075, 0.0, 0.06); sh.lineTo(-0.075, 0.05); sh.closePath();
-    const headG = unitUV(new THREE.ExtrudeGeometry(sh, { depth: 0.04, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.008, bevelSegments: 1 })); headG.translate(0, 0, -0.025); headG.rotateY(Math.PI / 2);                  // shape x -> forward (-z), the extrusion across (x)
+    const haft = lathe(M, 13, [[0.0, -0.135], [0.03, -0.128], [0.043, -0.1], [0.04, -0.075], [0.03, -0.05], [0.027, -0.02], [0.033, 0.04], [0.035, 0.11], [0.03, 0.2], [0.027, 0.4], [0.026, 0.6], [0.034, 0.685], [0.0, 0.7]], 10); hold.add(haft);        // a turned ash haft: a knob, a neck, a swell where the hands sit, a flare under the head
+    const grip = M(new THREE.CylinderGeometry(0.0355, 0.0355, 0.17, 10), 11); grip.position.y = 0.03; hold.add(grip);                                    // cord-wrapped where the hands sit
+    const cap = M(new THREE.CylinderGeometry(0.038, 0.04, 0.022, 10), 12); cap.position.y = -0.118; hold.add(cap);                                      // the iron butt cap
+    // the head: a fire-axe profile (a poll behind, a bearded blade ahead), extruded and then drawn down to a wedge: thick at the eye, thin at the edge
+    const sh = new THREE.Shape(); sh.moveTo(-0.07, -0.05); sh.lineTo(-0.07, 0.05); sh.lineTo(0.03, 0.05); sh.quadraticCurveTo(0.15, 0.075, 0.255, 0.175); sh.quadraticCurveTo(0.305, 0.0, 0.255, -0.2); sh.quadraticCurveTo(0.15, -0.09, 0.03, -0.05); sh.closePath();
+    const headG = unitUV(new THREE.ExtrudeGeometry(sh, { depth: 0.046, bevelEnabled: true, bevelThickness: 0.006, bevelSize: 0.006, bevelSegments: 1 })); headG.translate(0, 0, -0.026); headG.rotateY(Math.PI / 2);   // shape x -> forward (-z), the extrusion across (x)
+    { const pos = headG.attributes.position; for (let i = 0; i < pos.count; i++) { const fwd = -pos.getZ(i), t = Math.min(1, Math.max(0, (fwd - 0.03) / 0.26)); pos.setX(i, pos.getX(i) * (1 - 0.8 * t ** 1.4)); } pos.needsUpdate = true; headG.computeVertexNormals(); }
     const head = M(headG, 15); head.position.y = 0.66; hold.add(head);
-    const edge = M(new THREE.BoxGeometry(0.014, 0.3, 0.03), 10); edge.position.set(0, 0.66, -0.235); hold.add(edge);                                        // the sharpened edge: bright steel (a sliver, in front of the red)
-    const pick = M(new THREE.ConeGeometry(0.03, 0.11, 5), 10); pick.position.set(0, 0.66, 0.12); pick.rotation.x = -Math.PI / 2; hold.add(pick);            // the pick on the back of the head
-    const socket = M(new THREE.BoxGeometry(0.07, 0.11, 0.11), 12); socket.position.set(0, 0.66, 0.0); hold.add(socket);
+    const pick = M(new THREE.ConeGeometry(0.026, 0.13, 6), 10); pick.position.set(0, 0.645, 0.125); pick.rotation.x = -Math.PI / 2 - 0.2; hold.add(pick);                          // the short pick on the back of the head, angled down
+    const socket = M(new THREE.BoxGeometry(0.066, 0.115, 0.1), 12); socket.position.set(0, 0.66, -0.005); hold.add(socket);                                // the eye of the head, banded in iron
     return { K: {                                                                                                                              // raised over the right shoulder, swung across and down: the cleave
-      ready: { p: [0.28, -0.13, -0.52], r: [-1.0, 0.0, 0.12, 0.7] }, wind: { p: [0.4, -0.16, -0.58], r: [-0.05, 0.0, -0.3, 0.5] }, hit: { p: [0.1, -0.2, -0.68], r: [-1.5, 0.0, 0.85, 0.3] }, guard: { p: [0.02, -0.09, -0.52], r: [-0.35, 0.0, 1.2, 0.7] }, arc: [0.06, 0.12, 0.0], lunge: [-0.02, -0.05, -0.08] },
+      ready: { p: [0.28, -0.13, -0.52], r: [-1.0, 0.0, 0.12, 0.7] }, wind: { p: [0.4, -0.16, -0.58], r: [-0.05, 0.0, -0.3, 0.5] }, hit: { p: [0.1, -0.2, -0.68], r: [-1.5, 0.0, 0.85, 0.3] }, guard: { p: [0.02, -0.09, -0.52], r: [-0.35, 0.0, 1.2, 0.7] }, arc: [0.06, 0.12, 0.0], lunge: [-0.02, -0.05, -0.08], antic: [0.03, -0.07, -0.05] },
       hands: [{ at: [0, 0, 0] }, { at: [0, 0.3, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }

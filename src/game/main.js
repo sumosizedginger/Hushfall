@@ -116,7 +116,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
-  rangeMeter.reset();
+  rangeMeter.reset(); g.devScale = 1;
   if (!world && !map.range) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));      // (the range never overwrites the campaign's Continue)
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
   if (!world) { ui.card(map.intro); ui.tip(g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
@@ -312,7 +312,7 @@ function frame(now) {
     if (g.wheel.tick(now)) g.input.release('fire');                                   // the wheel opened (the last-weapon key has been held): stop shooting
     const open = g.wheel.open, target = open ? timeScaleFor(g.difficulty, settings.wheelSlow) : 1; g.timeScale = easeScale(g.timeScale, target, raw);        // Easy: frozen, Normal: 15%, Hard: 5% (owner decision D7); the clock the simulation is fed, never the simulation
     if (open !== g.wheelMuffled) { g.wheelMuffled = open; audio.setMuffled(open); }
-    alpha = g.manual ? 1 : g.loop.advance(dt * g.timeScale).alpha;
+    alpha = g.manual ? 1 : g.loop.advance(dt * g.timeScale * (g.devScale ?? 1)).alpha;                     // (g.devScale: the range's slow motion, F8: the real game, the real renderer, slowed, to watch a swing)
   }            // g.manual: the dev test hook owns the clock
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
   else if (g.mode === 'ending') {
@@ -333,7 +333,7 @@ function frame(now) {
 /** the weapons range's readout (PT-016): shown only while a range map is being played */
 function rangePanel() {
   const w = g.world, on = !!(w && w.map.range && g.mode === 'playing' && rangeEl); rangeEl?.classList.toggle('hidden', !on); if (!on) return;
-  rangeMeter.update(w); rangeEl.textContent = rangeMeter.lines(w).join('\n');
+  rangeMeter.update(w); rangeEl.textContent = rangeMeter.lines(w).join('\n') + `\nTIME ${Math.round((g.devScale ?? 1) * 100)}%   (F8: 100 / 50 / 25 / 10)`;
 }
 /** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
 function doorPrompt(w) {
@@ -351,4 +351,5 @@ if (import.meta.env.DEV) {                                                 // de
     go.onclick = () => { g.progress = sanitizeProgress({ salvage: Number(document.getElementById('dev-salvage')?.value) || 0 }); startLevel({ mapId: sel.value, difficulty: diff.value, seed: 1 + Math.floor(Math.random() * 1e6) }); };      // a dev run starts with the salvage typed in the box (to try the Locker without playing ten maps)
   }
 }
+if (import.meta.env.DEV) addEventListener('keydown', (e) => { if (e.code === 'F8' && g.world?.map.range) { e.preventDefault(); const steps = [1, 0.5, 0.25, 0.1], i = steps.indexOf(g.devScale ?? 1); g.devScale = steps[(i + 1) % steps.length]; } });      // the range's slow motion (PT-020): watch a swing at a tenth of its speed in the real game
 if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));
