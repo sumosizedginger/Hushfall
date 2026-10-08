@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { CELL, DEFAULT_CEILING, RANGE, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -43,6 +43,7 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
+    this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
     this.props = this.entities.filter((e) => e.type === 'prop');
     this.par = src.par ?? null;
@@ -141,6 +142,10 @@ function validateMapChecks(src) {
     const c = tile(Math.floor(e.at[0]), Math.floor(e.at[1]));
     if (!walkable(c)) err(`${tag} at ${e.at} is not on a floor/outdoor tile`);
     if (e.type === 'enemy' && !ENEMIES[e.kind]) err(`${tag}: unknown enemy kind`);
+    if (e.type === 'enemy' && e.hold != null && !RANGE.holdModes.includes(e.hold)) err(`${tag}: hold must be one of ${RANGE.holdModes.join(', ')}`);
+    if (e.type === 'enemy' && e.hp != null && !(e.hp > 0)) err(`${tag}: hp must be a positive number`);
+    if (e.type === 'enemy' && e.sight != null && !(e.sight > 0)) err(`${tag}: sight must be a positive number of metres`);
+    if ((e.hold != null || e.hp != null || e.sight != null) && !src.range) err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
     else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit', 'switch'].includes(e.type)) err(`${tag}: unknown entity type`);
