@@ -39,7 +39,7 @@ L.putAll('e', [[22, 28], [39, 24]]); L.putAll('a', [[12, 23], [25, 29]]); L.putA
 // rope store
 L.putAll('d', [[6, 38], [10, 38], [6, 42]]); L.putAll('y', [[5, 40], [11, 40], [11, 43]]); L.putAll('t', [[7, 41], [10, 42]]); L.putAll('g', [[6, 44], [11, 37]]); L.putAll('r', [[8, 43], [5, 37]]); L.put(9, 40, 'e');
 // chandler's office: the iron key on the desk, a Bellhand behind it
-L.putAll('f', [[50, 24], [52, 24], [45, 28]]); L.put(51, 24, 'i'); L.putAll('t', [[46, 24], [50, 28]]); L.put(53, 27, 'b'); L.putAll('m', [[45, 24], [52, 29]]); L.putAll('h', [[43, 23], [53, 23]]); L.put(44, 29, 'H'); L.putAll('r', [[43, 29], [46, 23]]); L.put(52, 27, 'e');
+L.putAll('f', [[50, 24], [52, 24], [45, 28]]); L.put(51, 24, 'i'); L.putAll('t', [[46, 24], [50, 28]]); L.put(53, 27, 'b'); L.putAll('m', [[45, 24], [52, 29]]); L.putAll('h', [[43, 23], [53, 23]]); L.put(44, 29, 'H'); L.putAll('r', [[43, 29], [46, 23]]); L.put(52, 27, 'e'); L.putAll('n', [[47, 30], [49, 30]]);              // PT-015: two lanterns flank the vault hatch (48,31) so the way on reads from the office
 // vault (secret route): six Tollbearers around the pools under resin
 L.putAll('Y', [[45, 38], [51, 38], [45, 41], [51, 41]]); L.putAll('t', [[44, 36], [52, 36], [46, 43], [52, 42], [43, 38], [53, 40]]); L.putAll('Q', [[43, 35], [53, 35], [43, 43], [53, 43]]); L.putAll('O', [[46, 37], [50, 41], [48, 36]]);
 L.putAll('r', [[43, 40], [54, 36]]); L.putAll('v', [[43, 42]]); L.put(54, 43, 'H'); L.put(57, 39, '$');
@@ -67,6 +67,7 @@ export default {
     { id: 'under', at: [20, 28], radius: 4, speaker: 'CHANDLER\'S LOG', text: 'Ebb tide, no ebb. The wall in the east store weeps a green wet. Told the harbourmaster. He laughed, then he stopped laughing.' },
     { id: 'office', at: [48, 26], radius: 4, speaker: 'INES', text: 'Iron key on the desk. The blotter has one line: "Do not drain the cistern."' },
     { id: 'cistern', at: [27, 38], radius: 4, speaker: 'INES', text: 'Green pool, catwalk across it. Something sings under the surface. Stay on the grating.' },
+    { id: 'hatch', at: [48, 29], radius: 2, speaker: "CHANDLER'S LOG", text: "Strongroom hatch, south wall. They say the old lighthouse stair was bricked up behind the vault's east side. Lamplight leaks round the one panel that is not brick." },
     { id: 'vault', at: [48, 38], radius: 4, speaker: 'RESIN LOG', text: 'It grows where the water is loud. It grows toward the tone. It has started to grow toward us.' },
     { id: 'tunnel', at: [57, 39], radius: 2, speaker: 'LIGHTHOUSE KEEPER', text: 'If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. Come up.' },
     { id: 'gate', at: [30, 50], radius: 2, speaker: 'SIGNAL HOUSE', text: 'Lamplighter Hill is the way up. The survivors there signal by lamp: green for safe, red for bells.' },

@@ -2,7 +2,7 @@
 // Gate 2: per-cell floor heights with risers, per-cell ceilings, wall/floor skins, moving-floor sectors, wading/toxic overlays, switch panels, closets.
 import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
-import { WALL_SKINS, FLOOR_SKINS } from '../engine/defs.js';
+import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL } from '../engine/defs.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 
@@ -27,6 +27,22 @@ function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0) {
   if (dz === -1) { p0 = [x + S, z]; a = [-1, 0]; } else if (dz === 1) { p0 = [x, z + S]; a = [1, 0]; } else if (dx === -1) { p0 = [x, z]; a = [0, 1]; } else { p0 = [x + S, z + S]; a = [0, -1]; }
   const p = [[p0[0], y0, p0[1]], [p0[0] + a[0] * S, y0, p0[1] + a[1] * S], [p0[0] + a[0] * S, y1, p0[1] + a[1] * S], [p0[0], y1, p0[1]]];
   q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]));
+}
+/** Additive glow quads in ONE mesh (PT-015): each quad is a centre, two unit axes, half sizes and an intensity that goes into the vertex colour (SECRET_TELL.color scaled), so one material draws all of them. */
+function glowBuilder() {
+  const pos = [], col = [], idx = [], c = new THREE.Color(SECRET_TELL.color);
+  return {
+    get empty() { return pos.length === 0; },
+    quad(ctr, u, v, hu, hv, k) {
+      const b = pos.length / 3;
+      for (const [a, d] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { pos.push(ctr[0] + u[0] * a * hu + v[0] * d * hv, ctr[1] + u[1] * a * hu + v[1] * d * hv, ctr[2] + u[2] * a * hu + v[2] * d * hv); col.push(c.r * k, c.g * k, c.b * k); }
+      idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
+    },
+    mesh() {
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx);
+      const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.renderOrder = 3; m.frustumCulled = false; return m;
+    },
+  };
 }
 const flatQuad = (q, S, cx, cz, y, up) => {
   const x = cx * S, z = cz * S, p = up ? [[x, y, z], [x, y, z + S], [x + S, y, z + S], [x + S, y, z]] : [[x, y, z], [x + S, y, z], [x + S, y, z + S], [x, y, z + S]];
@@ -132,13 +148,17 @@ export function buildLevel(map, tex) {
     const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, s.panel[0], s.panel[1], dx, dz, fy, fy + span, fy);
     const m = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(s.panel[0], s.panel[1])]) }));                 // match the wall it sits in
     const holder = new THREE.Group(); holder.add(m); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(s.panel.join(','), holder);
-    // the tell: a hairline of lamplight leaking round the panel's seam on every open side. Easy to miss, easy to find if you look at the walls.
-    const leak = new THREE.MeshBasicMaterial({ color: 0xffb45a, transparent: true, opacity: 0.32 });
+    // the tell (PT-015): lamplight leaking out of the seam into every open side: a bright seam the height of the panel, stepped halos round it, and a patch of light on the floor in front of it (SECRET_TELL). The seam and halos ride with
+    // the panel when it opens; the floor patch stays (it reads as light coming through the opening). Additive, vertex-coloured (intensity is in the colour), no textures: two draw calls a panel, nothing to leak when the level is disposed.
+    const wallGlow = glowBuilder(), floorGlow = glowBuilder(), px = (s.panel[0] + 0.5) * S, pz = (s.panel[1] + 0.5) * S;
     for (const [dx, dz] of DIRS) {
       const nk = map.kind(s.panel[0] + dx, s.panel[1] + dz); if (nk !== 'floor' && nk !== 'outdoor') continue;
-      const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 1.9), leak); strip.rotation.y = Math.atan2(dx, dz);
-      strip.position.set((s.panel[0] + 0.5) * S + dx * (S / 2 + 0.012), fy + 1.1, (s.panel[1] + 0.5) * S + dz * (S / 2 + 0.012)); holder.add(strip);
+      const along = [dz, 0, -dx], out = [dx, 0, dz];                                                  // along the face, and out of it
+      SECRET_TELL.halo.forEach(([w, op], i) => wallGlow.quad([px + dx * (S / 2 + 0.008 + i * 0.002), fy + span / 2, pz + dz * (S / 2 + 0.008 + i * 0.002)], along, [0, 1, 0], w / 2, span / 2, op));
+      wallGlow.quad([px + dx * (S / 2 + 0.016), fy + span / 2, pz + dz * (S / 2 + 0.016)], along, [0, 1, 0], SECRET_TELL.seam / 2, span / 2, SECRET_TELL.seamOpacity);
+      for (const [w, d, op] of SECRET_TELL.spill) floorGlow.quad([px + dx * (S / 2), fy + 0.09, pz + dz * (S / 2)], along, out, w / 2, d / 2, op);
     }
+    if (!wallGlow.empty) { const wm = wallGlow.mesh(); holder.add(wm); const fm = floorGlow.mesh(); group.add(fm); }
   }
   // wall switches: an iron panel with a lamp (red = waiting, green = used)
   for (const sw of map.switches) {
