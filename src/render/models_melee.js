@@ -28,24 +28,41 @@ function kit(tex) {
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
   return { mat, sleeveMat, M };
 }
-/** a forearm mesh (unit length along +y) re-aimed every frame from `from` to `to` (group space) */
-function arm(M, sleeve, radius = 0.038) {
-  const s = M(new THREE.CylinderGeometry(radius * 0.8, radius, 1, 8), 4, sleeve), cuff = M(new THREE.CylinderGeometry(radius * 1.12, radius * 1.12, 0.08, 8), 8), g = new THREE.Group(); g.add(s);
-  const v = new THREE.Vector3(), d = new THREE.Vector3();
+/**
+ * a two-bone arm (PT-019: the first arms were ONE straight tube from the screen edge to the hand, which only got longer and straighter as the hand rose: "a stick swinging a stick"): an upper arm and a forearm that meet at an elbow,
+ * solved every frame from a shoulder to the wrist (group space). The elbow bends out and down (`pole`); a hand out of reach drags the SHOULDER toward it (the body leans into the blow) instead of stretching the arm.
+ * `last` = { S, E, W } of the latest solve (the tests project them).
+ */
+function arm(M, sleeve, r = 0.04, upper = 0.5, fore = 0.5) {
+  const tube = (r0, r1) => M(new THREE.CylinderGeometry(r1, r0, 1, 10), 4, sleeve);                       // r0 at the start, r1 at the end
+  const U = tube(r * 1.25, r * 1.08), Fo = tube(r * 1.1, r * 0.8), joint = M(sphere(r * 1.12, 8, 6), 4, sleeve), cuff = M(new THREE.CylinderGeometry(r * 1.2, r * 0.95, 0.1, 8), 8), g = new THREE.Group(); g.add(U, Fo, joint);
+  const S = new THREE.Vector3(), W = new THREE.Vector3(), E = new THREE.Vector3(), Hv = new THREE.Vector3(), d = new THREE.Vector3(), p = new THREE.Vector3(), t = new THREE.Vector3();
+  const place = (m, A, B) => { t.subVectors(B, A); const len = t.length() || 1e-6; m.scale.set(1, len, 1); m.position.copy(A).addScaledVector(t, 0.5); m.quaternion.setFromUnitVectors(UP, t.divideScalar(len)); };
   return {
-    mesh: g, cuff,
-    aim(from, to) {                                                                                       // the hand-wrap (cuff) sits at the wrist end
-      v.set(...from); d.set(to[0] - from[0], to[1] - from[1], to[2] - from[2]); const len = d.length() || 1; d.divideScalar(len);
-      s.scale.set(1, len, 1); s.position.set((from[0] + to[0]) / 2, (from[1] + to[1]) / 2, (from[2] + to[2]) / 2); s.quaternion.setFromUnitVectors(UP, d);
-      cuff.position.set(to[0] - d.x * 0.05, to[1] - d.y * 0.05, to[2] - d.z * 0.05); cuff.quaternion.copy(s.quaternion);
+    mesh: g, cuff, last: { S, E, W },
+    aim(shoulder, hand, pole) {
+      S.set(...shoulder); Hv.set(...hand); d.subVectors(Hv, S); W.copy(Hv).addScaledVector(d, -0.07 / (d.length() || 1e-6));      // the wrist: a hand's length short of the hand's centre
+      d.subVectors(W, S); let dd = d.length(); const reach = (upper + fore) * 0.97;
+      if (dd > reach) { S.addScaledVector(d, (dd - reach) / dd); d.subVectors(W, S); dd = d.length(); }                            // out of reach: the body leans into it
+      d.divideScalar(dd); const a = (upper * upper - fore * fore + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, upper * upper - a * a));
+      p.set(...pole); p.addScaledVector(d, -p.dot(d)); if (p.lengthSq() < 1e-6) p.set(0, -1, 0); p.normalize();
+      E.copy(S).addScaledVector(d, a).addScaledVector(p, h);
+      place(U, S, E); place(Fo, E, W); joint.position.copy(E);
+      t.subVectors(W, E).normalize(); cuff.position.copy(W).addScaledVector(t, -0.01); cuff.quaternion.setFromUnitVectors(UP, t);   // a flared linen cuff at the wrist
     },
   };
 }
-/** a hand closed round a haft (the haft runs through it along y): the linen-wrapped back of the hand, the bare ridge of the knuckles on the forward face, the thumb along the top: the fists' hand (PT-017: the first version was a plank-textured box, and read as a crate on the pole) */
+/** where a found weapon's two arms start (view space, metres from the eye) and which way each elbow bends */
+const BODY = [{ shoulder: [0.3, -0.3, -0.12], pole: [0.45, -1, 0.25] }, { shoulder: [-0.3, -0.3, -0.12], pole: [-0.45, -1, 0.25] }];
+/** a hand closed round a haft (the haft runs through it along y; PT-019: the boxes of the first two versions read as 2x4s): four bare fingers, each a ring round the haft that is open on the player's side, the linen-wrapped back of the hand closing that side, and a thumb along the haft */
 const glove = (M) => {
-  const g = new THREE.Group(), back = M(new THREE.BoxGeometry(0.082, 0.086, 0.09), 8); back.position.z = 0.012; g.add(back);                         // the linen-wrapped back of the hand, toward the player
-  for (let i = -1.5; i <= 1.5; i++) { const k = M(sphere(0.022, 6, 4), 9); k.position.set(0.0, i * 0.022, -0.046); g.add(k); }                           // four bare knuckles stacked ALONG the haft, on the far side of it: the fingers wrap round the pole
-  const thumb = M(new THREE.CylinderGeometry(0.016, 0.014, 0.075, 6), 9); thumb.rotation.z = 0.5; thumb.position.set(0.05, 0.03, -0.01); g.add(thumb);        // the thumb laid along the haft on the near side
+  const g = new THREE.Group(), back = M(sphere(0.05, 8, 6), 8); back.scale.set(1.0, 0.95, 0.85); back.position.set(0, 0, 0.03); g.add(back);
+  for (let i = -1.5; i <= 1.5; i++) {
+    const ring = new THREE.Group(), tor = M(new THREE.TorusGeometry(0.041, 0.0125, 5, 12, Math.PI * 1.55), 9); tor.rotation.x = Math.PI / 2; ring.add(tor);
+    ring.rotation.y = -0.725 * Math.PI; ring.position.y = i * 0.0225; g.add(ring);
+  }
+  const thumb = M(new THREE.CylinderGeometry(0.015, 0.013, 0.07, 6), 9); thumb.position.set(0.042, 0.03, 0.03); thumb.rotation.z = 0.15; g.add(thumb);
+  const tip = M(sphere(0.015, 6, 4), 9); tip.position.set(0.044, 0.066, 0.03); g.add(tip);
   return g;
 };
 
@@ -97,7 +114,7 @@ export function makeFists(tex) {
 /** a key pose's orientation: Euler [x, y, z] (XYZ), and an optional 4th number: a ROLL about the weapon's own long axis, applied first (it turns the head to show its flat side) */
 const quatOf = (r) => new THREE.Quaternion().setFromEuler(new THREE.Euler(r[0], r[1], r[2], 'XYZ')).multiply(new THREE.Quaternion().setFromAxisAngle(UP, r[3] ?? 0));
 function holdAnim(g, hold, K, arms, hands) {
-  const tmp = new THREE.Vector3(), Q = { ready: quatOf(K.ready.r), wind: quatOf(K.wind.r), hit: quatOf(K.hit.r), guard: quatOf(K.guard.r) }, q = new THREE.Quaternion();      // the turn between two key poses is a slerp: a lerp of Euler angles swings a weapon through poses nobody authored
+  const tmp = new THREE.Vector3(), lunge = K.lunge ?? [0, -0.03, -0.05], arc = K.arc ?? [0, 0, 0], Q = { ready: quatOf(K.ready.r), wind: quatOf(K.wind.r), hit: quatOf(K.hit.r), guard: quatOf(K.guard.r) }, q = new THREE.Quaternion();      // the turn between two key poses is a slerp: a lerp of Euler angles swings a weapon through poses nobody authored
   return function anim(st) {
     let p = K.ready.p; q.copy(Q.ready);
     p = [p[0], p[1] + Math.sin((st.t ?? 0) * 1.5) * 0.004, p[2]];
@@ -107,13 +124,15 @@ function holdAnim(g, hold, K, arms, hands) {
       p = lerp3(p, K.hit.p, st.b); q.slerp(Q.hit, st.b);
       p = lerp3(p, K.ready.p, st.c); q.slerp(Q.ready, st.c);
     }
+    const strike = st.a > 0 || st.b > 0 ? st.b * (1 - st.c) : 0, bow = st.a > 0 || st.b > 0 ? Math.sin(Math.PI * st.b) * (1 - st.c) : 0;                // the body goes into the blow; the hand takes an arc, not a straight line
+    p = [p[0] + lunge[0] * strike + arc[0] * bow, p[1] + lunge[1] * strike + arc[1] * bow, p[2] + lunge[2] * strike + arc[2] * bow];
     hold.position.set(...p); hold.quaternion.copy(q); hold.updateMatrix();
-    arms.forEach((a, i) => { tmp.set(...hands[i].at).applyMatrix4(hold.matrix); a.aim(hands[i].from, [tmp.x, tmp.y, tmp.z]); });
+    arms.forEach((a, i) => { const B = BODY[i], sh = hands[i].shoulder ?? B.shoulder; tmp.set(...hands[i].at).applyMatrix4(hold.matrix); a.aim([sh[0] + lunge[0] * strike, sh[1] + lunge[1] * strike, sh[2] + lunge[2] * strike], [tmp.x, tmp.y, tmp.z], hands[i].pole ?? B.pole); });
   };
 }
 function holdRig(tex, build) {
   const { mat, sleeveMat, M } = kit(tex), g = new THREE.Group(), hold = new THREE.Group(); g.add(hold);
-  const spec = build({ M, mat, sleeveMat, hold });                                                                          // { K, hands: [{ at, from, cell? }], hip }
+  const spec = build({ M, mat, sleeveMat, hold });                                                                          // { K, hands: [{ at, shoulder?, pole? }], hip }
   const arms = spec.hands.map(() => arm(M, sleeveMat)); arms.forEach((a) => { g.add(a.mesh); g.add(a.cuff); });
   const gloves = spec.hands.map((h) => { const gl = glove(M); gl.position.set(...h.at); hold.add(gl); return gl; });
   return { group: g, flash: null, sleeveMat, melee: true, anim: holdAnim(g, hold, spec.K, arms, spec.hands), adsY: 0, hold, gloves, arms, hands: spec.hands, hip: spec.hip };
@@ -129,8 +148,8 @@ export function makeBoatHook(tex) {
     const point = M(new THREE.ConeGeometry(0.022, 0.16, 6), 10); point.position.set(0, 1.22, -0.44); point.rotation.x = Math.PI / 2 + 0.2; hold.add(point);
     const tip = M(new THREE.ConeGeometry(0.026, 0.22, 6), 10); tip.position.y = 1.4; hold.add(tip);                                          // the spike on the end: a boat hook is also a pike
     return { K: {
-      ready: { p: [0.28, -0.13, -0.5], r: [-1.15, 0.0, 0.12] }, wind: { p: [0.31, -0.12, -0.34], r: [-1.0, 0.0, 0.22] }, hit: { p: [0.16, -0.2, -0.78], r: [-1.35, 0.0, 0.1] }, guard: { p: [0.02, -0.16, -0.46], r: [-0.3, 0.0, 1.15] } },
-      hands: [{ at: [0, 0, 0], from: [0.95, -0.32, -0.3] }, { at: [0, 0.42, 0], from: [-0.5, -0.6, -0.2] }], hip: { pos: [0, 0, 0], scale: 1 } };
+      ready: { p: [0.28, -0.13, -0.5], r: [-1.15, 0.0, 0.12] }, wind: { p: [0.31, -0.12, -0.34], r: [-1.0, 0.0, 0.22] }, hit: { p: [0.16, -0.2, -0.78], r: [-1.35, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.15] }, lunge: [0.0, -0.02, -0.1] },
+      hands: [{ at: [0, 0, 0] }, { at: [0, 0.42, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -142,8 +161,8 @@ export function makeMarlinspike(tex) {
     const spike = M(new THREE.CylinderGeometry(0.006, 0.036, 0.7, 8), 10); spike.position.y = 0.5; hold.add(spike);                          // the spike: thick at the guard, a needle at the tip
     const fuller = M(new THREE.BoxGeometry(0.012, 0.55, 0.012), 10); fuller.position.set(0, 0.45, -0.032); hold.add(fuller);
     return { K: {
-      ready: { p: [0.26, -0.17, -0.5], r: [-1.1, 0.0, 0.15] }, wind: { p: [0.29, -0.14, -0.3], r: [-1.05, 0.0, 0.4] }, hit: { p: [0.12, -0.18, -0.86], r: [-1.42, 0.0, 0.1] }, guard: { p: [0.02, -0.16, -0.46], r: [-0.3, 0.0, 1.1] } },
-      hands: [{ at: [0, 0, 0], from: [0.95, -0.32, -0.3] }], hip: { pos: [0, 0, 0], scale: 1 } };
+      ready: { p: [0.26, -0.1, -0.5], r: [-1.1, 0.0, 0.15] }, wind: { p: [0.29, -0.08, -0.3], r: [-1.05, 0.0, 0.4] }, hit: { p: [0.12, -0.12, -0.86], r: [-1.42, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.46], r: [-0.3, 0.0, 1.1] }, lunge: [0.0, -0.02, -0.1] },
+      hands: [{ at: [0, 0, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -156,8 +175,8 @@ export function makeMallet(tex) {
     for (const s of [-1, 1]) { const band = M(new THREE.CylinderGeometry(0.113, 0.113, 0.04, 10), 12); band.rotation.z = Math.PI / 2; band.position.set(s * 0.14, 0.92, 0); hold.add(band); const cap = M(new THREE.CylinderGeometry(0.078, 0.105, 0.03, 10), 12); cap.rotation.z = Math.PI / 2; cap.position.set(s * 0.195, 0.92, 0); hold.add(cap); }
     const wedge = M(new THREE.BoxGeometry(0.03, 0.05, 0.05), 12); wedge.position.set(0, 1.06, 0); hold.add(wedge);                                   // the iron wedge that keeps the head on
     return { K: {                                                                                                                              // held up and back, brought DOWN over the top
-      ready: { p: [0.28, -0.13, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.18, -0.5], r: [-0.35, 0.0, 1.2] } },
-      hands: [{ at: [0, 0, 0], from: [0.95, -0.32, -0.3] }, { at: [0, 0.27, 0], from: [-0.5, -0.6, -0.2] }], hip: { pos: [0, 0, 0], scale: 1 } };
+      ready: { p: [0.28, -0.13, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.5], r: [-0.35, 0.0, 1.2] }, arc: [0.04, 0.14, 0.0], lunge: [0.0, -0.06, -0.06] },
+      hands: [{ at: [0, 0, 0] }, { at: [0, 0.27, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
@@ -174,8 +193,8 @@ export function makeAxe(tex) {
     const pick = M(new THREE.ConeGeometry(0.03, 0.11, 5), 10); pick.position.set(0, 0.66, 0.12); pick.rotation.x = -Math.PI / 2; hold.add(pick);            // the pick on the back of the head
     const socket = M(new THREE.BoxGeometry(0.07, 0.11, 0.11), 12); socket.position.set(0, 0.66, 0.0); hold.add(socket);
     return { K: {                                                                                                                              // raised over the right shoulder, swung across and down: the cleave
-      ready: { p: [0.28, -0.13, -0.52], r: [-1.0, 0.0, 0.12, 0.7] }, wind: { p: [0.4, -0.16, -0.58], r: [-0.05, 0.0, -0.3, 0.5] }, hit: { p: [0.1, -0.2, -0.68], r: [-1.5, 0.0, 0.85, 0.3] }, guard: { p: [0.02, -0.18, -0.52], r: [-0.35, 0.0, 1.2, 0.7] } },
-      hands: [{ at: [0, 0, 0], from: [0.95, -0.32, -0.3] }, { at: [0, 0.3, 0], from: [-0.5, -0.6, -0.2] }], hip: { pos: [0, 0, 0], scale: 1 } };
+      ready: { p: [0.28, -0.13, -0.52], r: [-1.0, 0.0, 0.12, 0.7] }, wind: { p: [0.4, -0.16, -0.58], r: [-0.05, 0.0, -0.3, 0.5] }, hit: { p: [0.1, -0.2, -0.68], r: [-1.5, 0.0, 0.85, 0.3] }, guard: { p: [0.02, -0.09, -0.52], r: [-0.35, 0.0, 1.2, 0.7] }, arc: [0.06, 0.12, 0.0], lunge: [-0.02, -0.05, -0.08] },
+      hands: [{ at: [0, 0, 0] }, { at: [0, 0.3, 0] }], hip: { pos: [0, 0, 0], scale: 1 } };
   });
 }
 
