@@ -51,6 +51,7 @@ export function compile(lv) {
     doors, secrets: lv.secrets || [], ...(closets.length ? { closets } : {}), ...(lv.sectors ? { sectors: lv.sectors } : {}), ...(lv.triggers ? { triggers: lv.triggers } : {}),
     entities, ...(lv.scenery ? { scenery: lv.scenery } : {}), ...(lv.par ? { par: lv.par } : {}), ...(lv.intro ? { intro: lv.intro } : {}), ...(lv.outro ? { outro: lv.outro } : {}), ...(lv.messages ? { messages: lv.messages } : {}), ...(lv.objective ? { objective: lv.objective } : {}), ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
     ...(lv.quality ? { quality: lv.quality } : {}),
+    ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
   };
   const v = validateMap(out); if (!v.ok) errors.push(...v.errors);
   return { map: out, errors };

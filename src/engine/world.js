@@ -8,6 +8,7 @@ import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from 
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
+import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -66,7 +67,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -193,7 +194,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
   else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
-  e.hp -= dmg; e.flash = 1;
+  e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
   if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, !opts.burn, !!opts.burn);                    // being shot wakes you, whether or not you can see the shooter (a creature set alight wakes alone: it does not call its neighbours, the burst that lit it already made its noise)
   if (e.hp <= 0 && e.state !== 'dead') {
     e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z });
@@ -647,15 +648,25 @@ function updatePulses(w, dt) {
   }
 }
 
+/** a range target's way back to its post: walk there, then (a 'fixed' one, or one that cannot see you) turn back to its heading. Returns true while it is still moving or turning. */
+function homeStep(w, e, def, dt, turnHome) {
+  const dx = e.post.x - e.x, dz = e.post.z - e.z, d = Math.hypot(dx, dz), turn = def.turnRate * dt, face = (to) => { const a = Math.atan2(Math.sin(to - e.yaw), Math.cos(to - e.yaw)); e.yaw += clamp(a, -turn, turn); return Math.abs(a) > turn; };
+  if (d > 0.15) { const a = Math.atan2(dx, dz); face(a); const s = Math.min(d, def.speed * dt * moveMult(e)); tryMove(w, e, Math.sin(a) * s, Math.cos(a) * s, def.radius); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2); return true; }
+  e.walk = Math.max(0, e.walk - dt * 3);
+  return (turnHome || e.hold === 'fixed') && face(e.post.yaw);
+}
 function updateEnemy(w, e, diff, dt) {
   const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4); if (e.slowT > 0) { e.slowT = Math.max(0, e.slowT - dt); e.slowAge = (e.slowAge || 0) + dt; if (e.slowAge >= SLOW_MAX || e.slowT === 0) { e.slowT = 0; e.slowAge = 0; e.slowImm = SLOW_IMMUNE; } } else if (e.slowImm > 0) e.slowImm = Math.max(0, e.slowImm - dt); if (e.intCd > 0) e.intCd = Math.max(0, e.intCd - dt);
+  if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; return; }          // staggered: it does nothing
   if (def.node) return;
+  if (e.hold === 'inert') { e.walk *= 0.9; return; }                              // a target that only takes it
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
-  const sees = dist < def.sight && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
+  const sees = dist < (e.sightR ?? def.sight) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
+  if (e.hold && !sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0) { homeStep(w, e, def, dt, true); return; }      // a range target that cannot see you goes back to its post and its heading
   if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
   else if (!sees) e.lost = (e.lost || 0) + dt;
   // hunt: head for the last place the player was seen; give up after a while (or on arrival) and go back to sleep
@@ -663,14 +674,15 @@ function updateEnemy(w, e, diff, dt) {
   if (!sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
   // steering: straight at the target when it is in view and the ground allows it; otherwise follow the distance field around walls, doors and ledges
   let ax = tx, az = tz;
-  if (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius)) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
+  if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
   const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
-  if (e.attackT < 0 && !dashing) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
+  if (e.attackT < 0 && !dashing && e.hold !== 'fixed') e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
   e.cd = Math.max(0, e.cd - dt);
+  if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
-  if (def.support && supportStep(w, e, def, dt, sees, dist)) return;
-  if (def.boss && bossStep(w, e, def, diff, dt, sees, dist)) return;
+  if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
+  if (def.boss && !e.hold && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.lunge) {
     const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
     if ((e.lungeT ?? -1) >= 0) {
@@ -696,14 +708,14 @@ function updateEnemy(w, e, diff, dt) {
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
-  } else if (def.flying && R && sees && dist < R.minRange && retreatStep(w, e, def, dt)) {
+  } else if (!e.hold && def.flying && R && sees && dist < R.minRange && retreatStep(w, e, def, dt)) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait;
-  } else if ((sees ? !(dist <= engage && dyv < 1.6) : tdist > 1.2)) {
+  } else if (!e.hold && (sees ? !(dist <= engage && dyv < 1.6) : tdist > 1.2)) {
     chaseStep(w, e, def, dt);
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
   } else {
-    if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
-    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+    if (e.hold) e.walk = Math.max(0, e.walk - dt * 3); else if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
+    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0 && (e.hold !== 'turn' || inFront(e, p, ENEMY_STRIKE.cos))) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }      // (a range 'turn' target swings once it faces you, as a creature that walked up to you would; a 'fixed' one swings regardless)
   }
 }
 
@@ -834,6 +846,7 @@ export function step(w, cmd) {
   for (const s of map.secrets) if (!w.secretsFound.includes(s.id) && s.cells.some(([cx, cz]) => cx === pcx && cz === pcz)) { w.secretsFound.push(s.id); w.stats.secrets++; emit(w, 'secret', { id: s.id }); }
 
   updateTriggers(w);
+  if (map.range) rangePlayer(w, dt);                                                       // the dev range: you cannot die, run dry or stay hurt (range.js)
 
   // resolution order matters: damage is settled first, so a player who dies this tick cannot also exit
   if (p.hp <= 0) { p.hp = 0; w.status = 'dead'; emit(w, 'player_died'); }

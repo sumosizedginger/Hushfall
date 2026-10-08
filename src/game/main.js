@@ -21,10 +21,14 @@ import { RADIO_SOUND } from '../audio/events.js';
 import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, applyPadRebind, defaultPadBindings } from './gamepad.js';
 import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } from './wheel.js';
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
+import { RangeMeter } from './rangemeter.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
 for (const src of Object.values(import.meta.glob('../../maps/*.json', { eager: true, import: 'default' }))) { const m = parseMap(src); MAPS[m.id] = m; }   // validates at load
+// PT-016: the dev-only weapons range lives in maps-dev/, never in maps/ (it is not a campaign map and no validation, status or test counts it); loaded only by the dev server
+const devMapsReady = import.meta.env.DEV ? Promise.all(Object.values(import.meta.glob('../../maps-dev/*.json', { import: 'default' })).map((load) => load().then((src) => { const m = parseMap(src); MAPS[m.id] = m; }))) : Promise.resolve();
+const rangeMeter = new RangeMeter(), rangeEl = document.getElementById('range-hud');
 
 const memory = new Map();
 const storage = (() => { try { localStorage.setItem('_hf', '1'); localStorage.removeItem('_hf'); return localStorage; } catch { return { getItem: (k) => memory.get(k) ?? null, setItem: (k, v) => memory.set(k, v), removeItem: (k) => memory.delete(k) }; } })();
@@ -112,7 +116,8 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
-  if (!world) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));
+  rangeMeter.reset();
+  if (!world && !map.range) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));      // (the range never overwrites the campaign's Continue)
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
   if (!world) { ui.card(map.intro); ui.tip(g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
@@ -182,7 +187,7 @@ function stepOnce() {
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
     console.error(e); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' }); return;
   }
-  const ev = drainEvents(g.world); if (ev.length) { g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
+  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
 }
@@ -312,7 +317,8 @@ function frame(now) {
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
   else if (g.mode === 'ending') {
     g.timer -= dt;
-    if (g.timer <= 0) {
+    if (g.timer <= 0 && MAPS[g.mapId].range) quitToTitle();                              // the dev range has no scoring, salvage or next map: its exit just goes back to the title
+    else if (g.timer <= 0) {
       g.mode = 'complete'; g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record
       commitProgress(); ui.show('complete', completeData());
@@ -321,8 +327,13 @@ function frame(now) {
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
-  updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : '');
+  updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
   requestAnimationFrame(frame);
+}
+/** the weapons range's readout (PT-016): shown only while a range map is being played */
+function rangePanel() {
+  const w = g.world, on = !!(w && w.map.range && g.mode === 'playing' && rangeEl); rangeEl?.classList.toggle('hidden', !on); if (!on) return;
+  rangeMeter.update(w); rangeEl.textContent = rangeMeter.lines(w).join('\n');
 }
 /** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
 function doorPrompt(w) {
@@ -336,7 +347,7 @@ requestAnimationFrame(frame);
 if (import.meta.env.DEV) {                                                 // dev-only title-screen level picker (index.html #dev-levels): any map, any difficulty, no need to play Episode 1 first
   const box = document.getElementById('dev-levels'), sel = document.getElementById('dev-map'), diff = document.getElementById('dev-diff'), go = document.getElementById('dev-go');
   if (box && sel && diff && go) {
-    sel.innerHTML = Object.keys(MAPS).sort().map((id) => `<option value="${id}">${id} ${MAPS[id].name ?? ''}</option>`).join(''); box.classList.remove('hidden');
+    devMapsReady.then(() => { sel.innerHTML = Object.keys(MAPS).sort((a, b) => (MAPS[b].range ? 1 : 0) - (MAPS[a].range ? 1 : 0) || a.localeCompare(b)).map((id) => `<option value="${id}">${id} ${MAPS[id].name ?? ''}</option>`).join(''); box.classList.remove('hidden'); });      // the range first
     go.onclick = () => { g.progress = sanitizeProgress({ salvage: Number(document.getElementById('dev-salvage')?.value) || 0 }); startLevel({ mapId: sel.value, difficulty: diff.value, seed: 1 + Math.floor(Math.random() * 1e6) }); };      // a dev run starts with the salvage typed in the box (to try the Locker without playing ten maps)
   }
 }
