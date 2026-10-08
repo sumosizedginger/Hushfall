@@ -651,6 +651,16 @@
   },
   {
    "type": "prop",
+   "kind": "lantern",
+   "at": [47, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [49, 30]
+  },
+  {
+   "type": "prop",
    "kind": "pillar",
    "skin": "R",
    "at": [10, 31]
@@ -1146,6 +1156,13 @@
    "radius": 4,
    "speaker": "INES",
    "text": "Green pool, catwalk across it. Something sings under the surface. Stay on the grating."
+  },
+  {
+   "id": "hatch",
+   "at": [48, 29],
+   "radius": 2,
+   "speaker": "CHANDLER'S LOG",
+   "text": "Strongroom hatch, south wall. They say the old lighthouse stair was bricked up behind the vault's east side. Lamplight leaks round the one panel that is not brick."
   },
   {
    "id": "vault",

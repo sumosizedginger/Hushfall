@@ -3,17 +3,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { buildLevel } from '../src/render/levelmesh.js';
+import { SECRET_TELL } from '../src/engine/defs.js';
 import { shippedMap } from './helpers.js';
 
 const tex = new Proxy({}, { get: (o, k) => (o[k] ??= new THREE.Texture()) });
 const level = buildLevel(shippedMap(), tex);
 const countMeshes = (root) => { let n = 0; root.traverse((o) => { if (o.isMesh) n++; }); return n; };
 
-test('the secret panel carries a lamplight tell on each open side; ordinary doors do not', () => {
-  const panel = level.doorViews.get('4,22'), strips = panel.children.filter((c) => c.isMesh && c.material.color?.getHex() === 0xffb45a);
-  assert.equal(strips.length, 2, 'one hairline of light on the hut side and one on the loft side');
-  for (const s of strips) assert.ok(s.material.transparent && s.material.opacity < 1 && s.geometry.parameters.width < 0.1, 'thin and faint: a hint, not a sign');
-  const door = level.doorViews.get('7,19'); assert.ok(door && !door.children.some((c) => c.material?.color?.getHex() === 0xffb45a));
+// PT-015: the owner finished the Chandlery with "no sign of a secret"; the earlier test here held the tell to "thin and faint: a hint, not a sign" and let a 5 cm hairline at 32% stand. It is now held to a floor instead.
+const bbox = (mesh) => { mesh.geometry.computeBoundingBox(); return mesh.geometry.boundingBox; };
+test('the secret panel shows a plain tell on each open side: a bright seam as tall as the panel with halos round it, and a patch of light on the floor; ordinary doors have none', () => {
+  const panel = level.doorViews.get('4,22'), tell = panel.children.filter((c) => c.isMesh && c.material.blending === THREE.AdditiveBlending);
+  assert.equal(tell.length, 1, 'one merged additive mesh rides with the panel');
+  const quads = tell[0].geometry.index.count / 6; assert.equal(quads, 2 * (SECRET_TELL.halo.length + 1), 'a seam and its halos on the hut side and on the loft side');
+  const bb = bbox(tell[0]), span = panel.userData.span + 0.05; assert.ok(Math.abs((bb.max.y - bb.min.y) - span) < 1e-6, 'the glow is as tall as the panel: ' + (bb.max.y - bb.min.y));
+  assert.ok(SECRET_TELL.seam >= 0.1 && SECRET_TELL.seamOpacity >= 0.6 && SECRET_TELL.halo.length >= 2 && SECRET_TELL.spill.length >= 2, 'a floor under the tell constants: a quiet number cannot creep back in');
+  const col = tell[0].geometry.getAttribute('color'); let top = 0; for (let i = 0; i < col.count; i++) top = Math.max(top, col.getX(i)); assert.ok(top >= 0.6 * 1.0 - 1e-6, 'the brightest vertex (the seam) is bright: ' + top);
+  const spill = level.group.children.filter((c) => c.isMesh && c.material.blending === THREE.AdditiveBlending && c !== tell[0] && bbox(c).max.y - bbox(c).min.y < 1e-6);
+  assert.equal(spill.length, 1, 'one flat mesh of light on the floor'); assert.equal(spill[0].geometry.index.count / 6, 2 * SECRET_TELL.spill.length);
+  const floorY = bbox(spill[0]).min.y; assert.ok(floorY > 0 && floorY < 0.2, 'just above the floor: ' + floorY);
+  const door = level.doorViews.get('7,19'); assert.ok(door && !door.children.some((c) => c.material?.blending === THREE.AdditiveBlending));
 });
 
 test('rooms are lit differently: warm oil lamps, cold customs tubes and teal pods (audit F10)', () => {

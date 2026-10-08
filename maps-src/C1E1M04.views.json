@@ -12,5 +12,8 @@
   { "name": "11-vault-panel", "x": 53.5, "z": 39.5, "yaw": "east", "open": true },
   { "name": "12-tunnel", "x": 56.5, "z": 39.5, "yaw": "east", "open": true },
   { "name": "13-drain-gate", "x": 30.5, "z": 47.5, "yaw": "south", "open": true },
-  { "name": "14-rope-store", "x": 8.5, "z": 36.5, "yaw": "south", "open": true }
+  { "name": "14-rope-store", "x": 8.5, "z": 36.5, "yaw": "south", "open": true },
+  { "name": "15-hatch-from-office", "x": 48.5, "z": 26.5, "yaw": "south", "pitch": -0.04 },
+  { "name": "16-vault-panel-tell", "x": 48.5, "z": 38.5, "yaw": "east", "pitch": 0 },
+  { "name": "17-vault-panel-near", "x": 52.5, "z": 39.5, "yaw": "east", "pitch": -0.05 }
 ]
