@@ -47,10 +47,16 @@ export function swingTimes(kind) {
   const S = kind === 'bash' ? BASH : kind === 'jab' ? WEAPONS.fists.swing : kind === 'heavy' ? WEAPONS.fists.charge.heavy : WEAPONS[kind]?.swing;
   return S ? { windup: S.windup, recover: S.recover } : null;
 }
-/** where a swing is at time t (seconds since it began; negative = no swing): a = the wind-up 0..1, b = the blow 0..1 (the first third of the recovery), c = the return 0..1 */
+/** the blow's own travel: the LAST part of the wind-up, so that it ends at the very instant the sim resolves the hit (t = windup; PT-017: the first version drew the blow AFTER the damage, up to a quarter of a second late) */
+export const strikeTime = (T) => Math.min(0.14, Math.max(0.035, 0.4 * T.windup));
+/**
+ * where a swing is at time t (seconds since it began; negative = no swing): a = the pull-back 0..1, b = the blow 0..1 (accelerating, and 1 exactly when the sim's hit lands), c = the return 0..1 (after a short hold on the follow-through).
+ * pull-back + blow = the sim's `windup`; hold + return = its `recover`.
+ */
 export function swingPhase(kind, t) {
   const T = t >= 0 ? swingTimes(kind) : null; if (!T) return { a: 0, b: 0, c: 0, on: false };
-  const a = ease(clamp01(t / T.windup)), b = ease(clamp01((t - T.windup) / (0.35 * T.recover))), c = ease(clamp01((t - T.windup - 0.35 * T.recover) / (0.65 * T.recover)));
+  const s = strikeTime(T), pull = T.windup - s, hold = 0.2 * T.recover;
+  const a = ease(clamp01(t / pull)), b = clamp01((t - pull) / s) ** 2, c = ease(clamp01((t - T.windup - hold) / (T.recover - hold)));
   return { a, b, c, on: true };
 }
 /** the quick bash with a gun in hand: pull back, then swing the butt up and across. Returns offsets to ADD to the gun's pose. `ph` = swingPhase('bash', t) */

@@ -21,7 +21,7 @@ await page.goto('http://localhost:5251/', { waitUntil: 'domcontentloaded', timeo
 await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 120000 });
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
 const shot = async (n) => { await T('t.clearOverlays(); t.render(0.02)'); await new Promise((r) => setTimeout(r, 450)); await T('t.render(0.02)'); await savePng(page, path.join(out, n + '.png')); console.log('shot', n); };          // (the HUD is drawn by the page's own frame loop: give it a few frames)
-const EAST = -Math.PI / 2, KIT = "weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'axe', 'mallet'], ammo: { flare: 12, shell: 12, rivet: 60, bolt: 8, cell: 80 }, hp: 100000, switchT: 0";
+const EAST = -Math.PI / 2, KIT = "weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'boathook', 'marlinspike', 'mallet', 'axe'], ammo: { flare: 12, shell: 12, rivet: 60, bolt: 8, cell: 80 }, hp: 100000, switchT: 0";
 const tap = async (a, ticks = 2) => { await T(`t.press('${a}')`); await T(`t.tick(${ticks})`); await T(`t.release('${a}')`); };
 await T("t.newGame('normal', 3, { mapId: 'C1E2M02' })"); await T('t.clearOverlays()');
 await T("t.setup_clearEnemies(); t.setup_player({ " + KIT + ", weapon: 'fists' }); t.setup_teleport(96, 51, " + EAST + ")"); await T('t.tick(30)');
@@ -30,8 +30,14 @@ const b1 = await T("t.setup_spawnEnemy('tollbearer', 98.6, 51, Math.PI / 2, 'idl
 await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.tick(3)'); await shot('fists-jab');
 await T('t.tick(30)'); await T("t.press('fire')"); await T('t.tick(36)'); await shot('fists-charged'); await T("t.release('fire')"); await T('t.tick(8)'); await shot('fists-heavy');
 await T('t.tick(60)'); await T("t.press('aim')"); await T('t.tick(10)'); await shot('fists-guard'); await T("t.release('aim')");
-await tap('weapon6'); await T('t.tick(30)'); await shot('mallet-ready'); await tap('weapon6'); await T('t.tick(30)'); await shot('axe-ready');
-await T("t.press('fire')"); await T('t.tick(12)'); await shot('axe-swing'); await T("t.release('fire')"); await T('t.tick(40)');
+// the four found weapons (PT-017: how they are HELD and how a swing reads): ready, half way through the pull-back, the instant the blow lands (the sim's windup), the guard; the windup in ticks from defs.js
+const { WEAPONS: WD } = await import('../../src/engine/defs.js');
+for (const id of ['boathook', 'marlinspike', 'mallet', 'axe']) {
+  await T("t.setup_player({ weapon: '" + id + "', switchT: 0 })"); await T('t.tick(40)'); await shot(id + '-ready');
+  const wt = Math.round(WD[id].swing.windup * 60); await T("t.press('fire')"); await T('t.tick(' + Math.max(1, Math.round(wt * 0.4)) + ')'); await shot(id + '-pull'); await T('t.tick(' + (wt - Math.round(wt * 0.4)) + ')'); await shot(id + '-hit'); await T("t.release('fire')"); await T('t.tick(60)');
+  await T("t.press('aim')"); await T('t.tick(14)'); await shot(id + '-guard'); await T("t.release('aim')"); await T('t.tick(20)');
+}
+await T("t.setup_player({ weapon: 'flare', switchT: 0 })");
 await tap('weapon1'); await T('t.tick(30)'); await tap('melee', 1); await T('t.tick(4)'); await shot('flare-bash');
 // a parry: a Tollbearer's blow about to land, the guard raised a moment before it (a fresh world each time: bodies of the last scene would lie in this one)
 await T("t.newGame('normal', 3, { mapId: 'C1E2M02' })"); await T('t.clearOverlays()'); await T("t.setup_clearEnemies(); t.setup_player({ " + KIT + ", weapon: 'fists' }); t.setup_teleport(96, 51, " + EAST + ")"); await T('t.tick(30)');
