@@ -4,6 +4,7 @@
 // Route: porch -> atrium -> generator cellar (brass fuse) -> dormitory (iron fuse, three closets open when you take it) -> east corridor -> attic gallery (bell fuse, Bellhands on the gantry)
 //        -> back to the radio room: install the fuses. The lights surge, the Vael speak, the sealed hatch opens.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(60, 46);
 L.room([2, 21, 7, 25], { floor: ':', wall: 'B' });                              // porch (open air)
@@ -48,9 +49,20 @@ L.putAll('n', [[33, 21], [33, 25]]); L.putAll('t', [[35, 23]]); L.put(32, 23, 'a
 L.putAll('C', [[48, 26], [52, 26], [48, 30], [52, 30], [46, 33], [54, 33]]); L.putAll('c', [[49, 26], [53, 30]]); L.putAll('o', [[50, 24], [50, 34]]); L.putAll('n', [[45, 24], [55, 24], [50, 28], [45, 34], [55, 34]]);
 L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]]); L.putAll('b', [[48, 13], [52, 13]]); L.put(50, 11, 'q'); L.putAll('h', [[46, 23], [55, 22]]); L.put(50, 22, 'e'); L.putAll('r', [[45, 13], [52, 22]]); L.put(55, 15, 'H');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M07'), keep: [[20, 7]] });                                                       // the radio lever's wall stays
+S.hall([9, 17, 28, 29], { cut: 2 });                                                                                          // the atrium
+S.hall([9, 31, 28, 40], { sides: { w: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 } }, cut: 2 });                         // the dormitory
+const a0 = S.bayLog.length;
+S.hall([44, 10, 56, 36], { sides: { w: { w: 3, gap: 4, d: 2, heart: 'alt' }, e: { w: 3, gap: 4, d: 2, heart: 'alt' } }, cut: 3 }); S.dressBays('lantern', a0);   // the attic: rafter bays
+S.hall([3, 6, 12, 15], { sides: { n: { w: 3, gap: 2, d: 1 }, w: { w: 3, gap: 2, d: 1 } }, cut: 2 });                           // the generator cellar
+S.chamfer([16, 8, 24, 15], 'nw ne sw se', 1); S.chamfer([2, 21, 7, 25], 'nw ne sw se', 1);
+console.log('C1E1M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E1M07', name: 'Signal House', version: 2, ceilingHeight: 4.2, par: { time: 800 },
   atmosphere: { fog: '#0e1218', fogDensity: 0.03, sky: 'night', ambient: 0.3, look: 'signal' },
   keyLabels: { brass: 'Brass fuse', iron: 'Iron fuse', bell: 'Bell fuse' },
@@ -82,3 +94,12 @@ export default {
   ],
   quality: { enemies: [30, 60], botSeconds: [80, 600], mechanics: ['heights', 'switches', 'triggers', 'closets'], skins: 6, enemyKinds: { sexton: 2 } },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'bloodpool', at: [14, 36], size: 1.3 }, { kind: 'smear', at: [20, 36], rot: 0.1, size: 2.4, h: 0.9 }, { kind: 'soot', at: [18, 8], wall: 'north', y: 1.6, size: 1.6 }, { kind: 'damp', at: [6, 10], size: 1.6 }];                     // the dormitory, the radio room, the generator cellar
+MAP.growth = [{ at: [7, 10], r: 12, power: 0.7 }];                                                                                                                                                           // a hint of the Vael under the house: the cellar's pods
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

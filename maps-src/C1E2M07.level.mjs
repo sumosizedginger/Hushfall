@@ -4,6 +4,7 @@
 // Route: the pump gallery (spawn, three sleepers; breaker 1) -> the vat hall (wading slurry, vats as cover, cross-shaped dry lanes; breaker 2) -> the settling tanks (breaker 3; a SECRET drain room) -> the sump heart (breaker 4 unlocks the exit).
 // Open air vs roof: everything is `v f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(68, 48);
 
@@ -41,6 +42,16 @@ L.putAll('t', [[55, 20], [55, 24], [59, 19], [59, 25]]); L.putAll('g', [[57, 22]
 L.putAll('O', [[54, 18], [54, 26], [58, 17], [58, 27]]); L.putAll('D', [[56, 20], [56, 24], [60, 22], [61, 18], [61, 26]]); L.putAll('n', [[53, 22], [57, 18], [57, 26]]);
 L.putAll('P', [[58, 21], [58, 23]]); L.putAll('H', [[53, 19], [53, 25]]); L.putAll('e', [[53, 20], [53, 24]]); L.putAll('r', [[54, 22], [60, 18]]); L.putAll('a', [[60, 26], [55, 22]]);
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M07'), keep: [[15, 17], [33, 11], [49, 13], [57, 15]] });                         // the four breakers' walls stay
+S.hall([3, 18, 16, 26], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 1 } }, cut: 2 });                      // the pump gallery
+S.hall([18, 12, 34, 32], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 3 });                     // the vat hall
+S.hall([36, 14, 50, 30], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 2 });                     // the settling tanks
+const s0 = S.bayLog.length;
+S.hall([52, 16, 63, 28], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, s: { w: 3, gap: 3, d: 2, heart: true }, e: { w: 3, gap: 3, d: 2, heart: true } }, cut: 2 }); S.dressBays('cradle', s0);   // the sump heart: a cradle in each apse
+console.log('C1E2M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -77,4 +88,11 @@ const MAP = {
 MAP.entities ??= []; MAP.entities.push(...[[23,22],[49,20]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
 // the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
 MAP.entities.push(...[["ammo_cell",27,16],["ammo_cell",34,22],["ammo_cell",49,19]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'ichorpool', at: [26, 22], size: 1.5 }, { kind: 'bloodpool', at: [10, 22], size: 1.2 }, { kind: 'ichor', at: [59, 16], wall: 'north', y: 1.6, size: 1.4 }, { kind: 'smear', at: [43, 22], rot: 0, size: 2.4, h: 0.9 }];
+MAP.growth = [{ at: [57, 22], r: 26, power: 1.2 }];                                                                                                                                                          // the sump heart: the line's last room, and it has overflowed
+// ---- end PT-021 marks and growth ----
+
 export default MAP;

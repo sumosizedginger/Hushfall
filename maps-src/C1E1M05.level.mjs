@@ -3,6 +3,7 @@
 //            a sealed gate that only the summit beacon opens. The survivors' lamps are dressing: they show the road, they carry no signal.
 // Route: harbour road -> stairs to terrace 1 -> the funicular car (the ONLY way from terrace 1 to 2) -> stairs west (T3) -> stairs east (T4) -> stairs west (summit) -> light the beacon -> the gate opens -> exit.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(56, 60);
 const TERR = [{ z0: 52, z1: 57, h: 0, f: ':' }, { z0: 43, z1: 51, h: 4, f: 's' }, { z0: 34, z1: 42, h: 8, f: ':' }, { z0: 25, z1: 33, h: 12, f: 's' }, { z0: 16, z1: 24, h: 16, f: ':' }, { z0: 5, z1: 15, h: 20, f: 'p' }];
@@ -38,10 +39,19 @@ L.putAll('r', [[8, 19], [24, 17], [46, 21]]); L.putAll('e', [[16, 21], [40, 22]]
 // the summit: three Tollbearers and two Bellhands around the beacon, the sealed gate at the east end
 L.putAll('t', [[16, 13], [26, 12], [38, 13]]); L.putAll('b', [[24, 9], [40, 8]]); L.put(32, 12, 'x'); L.putAll('r', [[10, 12], [28, 7], [44, 10]]); L.putAll('e', [[20, 13], [34, 12]]); L.putAll('H', [[48, 12], [8, 8]]); L.putAll('h', [[46, 8]]); L.put(50, 8, 'n');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M05'), keep: [[46, 6]], foes: [[24, 36], [30, 36]] });                                                       // the beacon lever's wall stays
+for (const t of TERR) { S.bays('w', 2, t.z0 + 1, t.z1 - 1, { w: 3, gap: 3, d: 1 }); S.bays('e', 53, t.z0 + 1, t.z1 - 1, { w: 3, gap: 3, d: 1 }); }   // doorways and yards cut into the terraces' side walls
+S.bays('n', 4, 7, 42, { w: 3, gap: 4, d: 1 });                                                                               // the summit's back wall
+S.chamfer([3, 52, 52, 57], 'sw se', 3); S.chamfer([3, 5, 52, 15], 'nw', 2);
+S.dressBays('lantern');
+console.log('C1E1M05 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 const carCells = [[26, 39], [27, 39], [26, 40], [27, 40], [26, 41], [27, 41], [26, 42], [27, 42]];
 
-export default {
+const MAP = {
   id: 'C1E1M05', name: 'Lamplighter Hill', version: 2, ceilingHeight: 4.2, par: { time: 900 },
   atmosphere: { fog: '#30303e', fogDensity: 0.011, sky: 'overcast', look: 'hill' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -73,3 +83,11 @@ export default {
   ],
   quality: { enemies: [40, 66], botSeconds: [110, 540], mechanics: ['heights', 'switches', 'sectors', 'triggers'], skins: 6, enemyKinds: { sexton: 2, bellhand: 8 } },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'bloodpool', at: [24, 44], size: 1.2 }, { kind: 'smear', at: [30, 31], rot: 0.3, size: 2.4, h: 1.0 }, { kind: 'scorch', at: [48, 7], wall: 'north', y: 1.7, size: 1.6 }, { kind: 'soot', at: [44, 7], wall: 'north', y: 1.5, size: 1.4 }];     // the funicular, the Sexton's terrace, the beacon
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

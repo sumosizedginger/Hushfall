@@ -23,29 +23,29 @@
   "####################################################################",
   "####################################################################",
   "####################################################################",
-  "#################RRRRRRRRRRRRRRRRRRR################################",
+  "#################RRRRRvvvRRRvvvRRRRR################################",
   "#################RvvvvvvvfffvvvvvvvR################################",
-  "#################RvvvvvvvfffvvvvvvvLLLLLLLLLLLLLLLLL################",
+  "#################RvvvvvvvfffvvvvvvvLLLLfffLLLfffLLLL################",
   "#################RvvRRRRvfffvRRRRvvLfffffffffffffffL################",
   "#################RvvRRRRvfffvRRRRvvLfffffffffffffffRRRRRRRRRRRRRR###",
-  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRffffffffffffR###",
-  "##RRRRRRRRRRRRRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RffffffffffffffRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
+  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRRRffffffffffR###",
+  "##RRRRfffRRfffRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRRfffffffffffR###",
+  "##RRfffffffffffffRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffff##",
+  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRfffffffffffffff#",
+  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffff##",
   "##RfffffvvvvfffffRfffffffffffffffffLfffffffffffffffRffffffffffffR###",
   "##RfffffvvvvfffffDfffffffffffffffffDfffffffffffffffDffffffffffffR###",
   "##RfffffvvvvfffffRfffffffffffffffffLfffffffffffffffRffffffffffffR###",
-  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RffffffffffffffRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "##RRRRRRRRRRRRRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffR###",
-  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRffffffffffffR###",
-  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffRRRRRRRRRRRRRR###",
-  "#################RvvRRRRvfffvRRRRvvLfffffffffffffffL################",
-  "#################RvvvvvvvfffvvvvvvvLLLLLLLLSLLLLLLLL################",
-  "#################RvvvvvvvfffvvvvvvvR####LfffffL#####################",
-  "#################RRRRRRRRRRRRRRRRRRR####LfffffL#####################",
+  "##RfffffvvvvfffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRffffffffffffff##",
+  "##RffffffffffffffRvvvvvvvfffvvvvvvvLffvIIIIvvIIIIvfRfffffffffffffff#",
+  "##RRffffffffffffRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRffffffffffffff##",
+  "##RRRRfffRRfffRRRRvvRRRRvfffvRRRRvvLffvIIIIvvIIIIvfRRfffffffffffR###",
+  "#################RvvRRRRvfffvRRRRvvLffvvvvvvvvvvvvfRRRffffffffffR###",
+  "#################RvvRRRRvfffvRRRRvvLffffffffffffffLRRRRRfffRRRRRR###",
+  "#################RvvRRRRvfffvRRRRvvLfffffffffffffLLL####fff#########",
+  "#################RvvvvvvvfffvvvvvvRLLLLLLLLSLLLLLLLL#####f##########",
+  "#################RvvvvvvvfffvvvvvRRR####LfffffL#####################",
+  "#################RRRRRvvvRRRvvvRRRRR####LfffffL#####################",
   "########################################LfffffL#####################",
   "########################################LfffffL#####################",
   "########################################LLLLLLL#####################",
@@ -884,6 +884,21 @@
    "type": "pickup",
    "kind": "ammo_cell",
    "at": [49, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [57, 31]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [66, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [66, 25]
   }
  ],
  "par": {
@@ -946,6 +961,39 @@
    "radius": 2.5,
    "speaker": "WARDEN CALDER",
    "text": "Slurry drains do not drain only slurry. I hid a week of supplies here when I was a younger man, in case the Works went bad."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "ichorpool",
+   "at": [26, 22],
+   "size": 1.5
+  },
+  {
+   "kind": "bloodpool",
+   "at": [10, 22],
+   "size": 1.2
+  },
+  {
+   "kind": "ichor",
+   "at": [59, 16],
+   "wall": "north",
+   "y": 1.6,
+   "size": 1.4
+  },
+  {
+   "kind": "smear",
+   "at": [43, 22],
+   "rot": 0,
+   "size": 2.4,
+   "h": 0.9
+  }
+ ],
+ "growth": [
+  {
+   "at": [57, 22],
+   "r": 26,
+   "power": 1.2
   }
  ],
  "objective": "It is dark on purpose. Breaker one is on the north wall, east end: the light will wake the next hall",

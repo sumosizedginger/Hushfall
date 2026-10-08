@@ -3,6 +3,7 @@
 // Route: chandlery shop (2 m up) -> stairs down -> the flooded undercroft -> chandler's office (iron key) -> the cistern (Bellhands on the platforms, toxic pools, dry catwalk)
 //        -> iron drain gate -> exit.  Secret route: office -> vault (toxic pools) -> resin panel in the east wall -> the lighthouse tunnel -> secret exit.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(60, 54);
 
@@ -48,9 +49,22 @@ L.putAll('b', [[17, 40], [17, 46], [37, 43]]); L.putAll('t', [[24, 38], [30, 38]
 L.putAll('Y', [[22, 39], [32, 39], [22, 47], [32, 47]]); L.putAll('Q', [[27, 41], [27, 45]]); L.putAll('e', [[17, 43], [37, 40], [30, 43]]); L.putAll('r', [[17, 38], [37, 46], [26, 43]]); L.putAll('H', [[17, 48], [37, 38]]); L.putAll('a', [[23, 43], [33, 43]]);
 L.putAll('g', [[20, 52], [24, 52], [36, 52]]); L.putAll('t', [[29, 52], [31, 52]]); L.put(30, 52, '>'); L.put(30, 50, 'h');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M04'), foeSymbols: 'tgbxwKGZ' });
+S.hall([4, 4, 26, 16], { sides: { n: { w: 3, gap: 3, d: 1 }, w: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 } }, cut: 2 });                           // the chandlery shop
+S.hall([4, 22, 40, 34], { sides: { n: { w: 3, gap: 3, d: 1 }, w: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 3 });   // the undercroft: dry landings in the flooded hall's walls
+S.hall([4, 36, 12, 44], { sides: { w: { w: 3, gap: 2, d: 1 } }, cut: 2 });                                                                               // the rope store
+const c0 = S.bayLog.length;
+S.hall([16, 36, 38, 50], { sides: { w: { w: 3, gap: 3, d: 2, heart: 'alt' }, e: { w: 3, gap: 3, d: 2, heart: 'alt' } }, cut: 2 }); S.dressBays('lantern', c0);   // the cistern: resin-lined niches down both sides
+S.hall([42, 22, 54, 30], { sides: { n: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 } }, cut: 2 });                                                   // the chandler's office
+const v0 = S.bayLog.length;
+S.hall([42, 34, 54, 44], { sides: { w: { w: 3, gap: 3, d: 2, heart: true }, s: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 2, heart: true } }, cut: 2 }); S.dressBays('cradle', v0);   // the vault: a cradle in the heart of each niche
+console.log('C1E1M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E1M04', name: 'The Drowned Chandlery', version: 1, ceilingHeight: 3.2, par: { time: 800 },
   atmosphere: { fog: '#0a1c1e', fogDensity: 0.028, sky: 'night', look: 'cellar' },
   growth: [{ at: [48, 38], r: 26, power: 1.3 }],                                                       // PT-021: it started in the vault and has crept through the hatch seams into the chandler's office
@@ -80,3 +94,7 @@ export default {
   ],
   quality: { enemies: [34, 56], botSeconds: [120, 480], mechanics: ['heights', 'hazards', 'closets', 'triggers', 'secret', 'keys>=1'], skins: 7 },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+export default MAP;

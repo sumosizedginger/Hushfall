@@ -1,5 +1,5 @@
 // Top-down PNG of a map for design review: skins, heights, hazards, doors/keys, sectors, entities, triggers, messages, with a coordinate ruler.
-// Usage: node tools/mapkit/mapview.mjs <ID> [scale]  ->  review/maps/<ID>.png   (also reads maps/<ID>.json only; no browser)
+// Usage: node tools/mapkit/mapview.mjs <ID> [scale]  ->  review/maps/<ID>.png   (reads maps/<ID>.json only; no browser; MAP_DIR=<dir> reads the JSON there, PLAN_OUT=<dir> writes the PNG there)
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
@@ -57,7 +57,7 @@ export function renderMap(m, scale = 10) {
 }
 if (import.meta.url.endsWith(path.basename(process.argv[1] || ''))) {
   const id = process.argv[2]; if (!id) { console.error('usage: mapview.mjs <ID> [scale]'); process.exit(2); }
-  const m = parseMap(JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8'))), png = renderMap(m, Number(process.argv[3] || 10));
-  fs.mkdirSync(path.join(root, 'review/maps'), { recursive: true });
-  const f = path.join(root, 'review/maps', id + '.png'); fs.writeFileSync(f, PNG.sync.write(png)); console.log(`wrote ${path.relative(root, f)} (${png.width}x${png.height})  legend: red=Tollbearer orange=Gaunt magenta=Bellhand purple=Sexton white=Warden green=player/health cyan=ammo gold/blue/teal=keys yellow-square=switch purple-ring=trigger cyan-cross=message white-hatch=lift`);
+  const m = parseMap(JSON.parse(fs.readFileSync(path.join(process.env.MAP_DIR ? path.resolve(process.env.MAP_DIR) : path.join(root, 'maps'), id + '.json'), 'utf8'))), png = renderMap(m, Number(process.argv[3] || 10));
+  const planDir = process.env.PLAN_OUT ? path.resolve(process.env.PLAN_OUT) : path.join(root, 'review/maps'); fs.mkdirSync(planDir, { recursive: true });
+  const f = path.join(planDir, id + '.png'); fs.writeFileSync(f, PNG.sync.write(png)); console.log(`wrote ${path.relative(root, f)} (${png.width}x${png.height})  legend: red=Tollbearer orange=Gaunt magenta=Bellhand purple=Sexton white=Warden green=player/health cyan=ammo gold/blue/teal=keys yellow-square=switch purple-ring=trigger cyan-cross=message white-hatch=lift`);
 }

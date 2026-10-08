@@ -3,6 +3,7 @@
 // Route: landing yard -> (bond store: Riveter driver) -> vestibule -> grand hall -> stairs to the gallery (brass key) -> brass door -> registry -> iron key
 //        -> iron door -> descending stair corridor -> exit. Secret: the Lost Property office behind the vestibule wall.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(64, 52);
 
@@ -61,9 +62,24 @@ L.putAll('g', [[26, 6], [30, 6], [40, 6], [44, 6]]);
 // excise stair and the exit
 L.putAll('t', [[52, 15], [56, 20]]); L.put(62, 16, 'b'); L.put(62, 19, 't'); L.put(59, 17, 'h'); L.put(56, 17, 'H'); L.put(58, 18, 'r'); L.put(58, 17, 'e'); L.put(61, 15, 'Q'); L.put(62, 17, '>');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M02') });
+S.hall([2, 38, 15, 48], { sides: { w: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 2 } }, cut: 2 });                       // the landing yard: slips cut into the quay wall, its corners taken
+S.hall([4, 28, 13, 35], { sides: { w: { w: 3, gap: 1, d: 1 } }, cut: 2 });                                                    // the bond store
+S.chamfer([17, 40, 21, 46], 'nw ne sw se', 1); S.chamfer([17, 33, 21, 38], 'nw ne sw se', 1);                                 // the vestibule and the lost-property office
+const hallBays = S.bayLog.length;
+S.hall([23, 30, 47, 48], { sides: { w: { w: 3, gap: 3, d: 2, heart: 'alt' }, e: { w: 3, gap: 3, d: 2, heart: 'alt' }, n: { w: 3, gap: 4, d: 1 } }, cut: 3 });         // the grand hall: registry bays down both long walls, the gallery's organ lofts, the corners cut
+S.dressBays('lamp', hallBays, { tint: 'cool' });
+const regBays = S.bayLog.length;
+S.bays('w', 23, 10, 26, { w: 3, gap: 3, d: 1 }); S.bay(35, 7, 'n', { w: 3, d: 2, heart: true });                                // the registry: reading nooks on the west wall, the registrar's bay in the antechamber
+S.chamfer([24, 8, 32, 27], 'nw sw', 2); S.chamfer([38, 8, 46, 27], 'ne se sw nw', 2);
+S.dressBays('shelf', regBays);
+console.log('C1E1M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E1M02', name: 'Customs Hall', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#2a3038', fogDensity: 0.012, sky: 'dusk', look: 'customs' },
   intro: { title: 'CUSTOMS HALL', lines: ['Every ship that ever came to Port Marrow was counted here.', 'The lamps are lit. Nobody lit them.'] },
@@ -94,3 +110,12 @@ export default {
   ],
   quality: { enemies: [30, 46], botSeconds: [90, 420], mechanics: ['heights', 'closets', 'triggers', 'keys>=2'], skins: 5 },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'scorch', at: [6, 28], wall: 'north', y: 1.3, size: 1.3 }, { kind: 'bloodpool', at: [7, 32], size: 1.3 }, { kind: 'smear', at: [9, 33], rot: 0.5, size: 2.4, h: 0.9 },       // the bond store: the sealed riveters were not left alone
+  { kind: 'bloodpool', at: [33, 45], size: 1.5 }, { kind: 'smear', at: [31, 46], rot: 1.2, size: 2.6, h: 1.0 }, { kind: 'soot', at: [31, 30], wall: 'north', y: 1.8, size: 2.0 }];                 // the grand hall: the crowd that was counted
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

@@ -3,6 +3,7 @@
 // Route: west gate -> stairs up to the boardwalk (three Bellhands) -> north hoist switch (a wave of Gaunts comes for you) -> back through the rows ->
 //        south smokehouse (closets) -> south hoist switch -> the auction hall's two shutters -> exit.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(66, 48);
 
@@ -43,9 +44,19 @@ L.putAll('t', [[22, 42], [22, 44]]); L.putAll('F', [[10, 43], [12, 43], [16, 43]
 // auction hall: the exit, the stage guards
 L.putAll('b', [[62, 24], [62, 26]]); L.putAll('t', [[60, 23], [60, 27]]); L.put(60, 25, 'H'); L.put(63, 25, '>'); L.put(59, 22, 'Q'); L.put(59, 28, 'Q');
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M03'), keep: [[52, 7], [14, 46]], foes: [[8, 22], [8, 24], [8, 26], [8, 28]] });                                                // the two hoist switches' walls stay
+S.bays('w', 6, 12, 40, { w: 3, gap: 3, d: 1 }); S.dressBays('stall');                                                          // stall recesses in the market's west wall (the gate lane skips itself)
+const m1 = S.bayLog.length;
+S.bays('s', 41, 24, 50, { w: 3, gap: 3, d: 2 }); S.bays('e', 55, 12, 40, { w: 3, gap: 3, d: 1 }); S.bays('n', 7, 9, 50, { w: 3, gap: 4, d: 1 });   // loading bays under the south wall, the east lane, the boardwalk's hatches
+S.dressBays('barrel', m1);
+S.chamfer([7, 11, 54, 40], 'sw se', 3); S.chamfer([8, 42, 20, 45], 'nw ne sw se', 1); S.chamfer([58, 22, 63, 28], 'nw ne sw se', 1);
+console.log('C1E1M03 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E1M03', name: 'Fishmarket Rows', version: 1, ceilingHeight: 4.2, par: { time: 700 },
   atmosphere: { fog: '#1a2438', fogDensity: 0.012, sky: 'night', look: 'moon' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -70,3 +81,12 @@ export default {
   triggers: [{ id: 'boardwalk', when: 'enter', at: [10, 9], radius: 2, do: [{ objective: 'Three Bellhands on the boardwalk: take them one at a time from behind the crates' }] }],
   quality: { enemies: [36, 56], botSeconds: [150, 480], mechanics: ['switches', 'heights', 'triggers', 'hazards', 'closets'], skins: 7 },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'bloodpool', at: [21, 23], size: 1.3 }, { kind: 'smear', at: [36, 28], rot: 0.2, size: 2.4, h: 1.0 }, { kind: 'damp', at: [20, 16], size: 1.6 }, { kind: 'bloodpool', at: [44, 31], size: 1.2 },   // the rows, the gutters
+  { kind: 'scrape', at: [58, 24], wall: 'west', y: 1.0, size: 1.2 }, { kind: 'bloodpool', at: [30, 9], size: 1.1 }];                                                                                       // the auction hall's shutter, the boardwalk
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

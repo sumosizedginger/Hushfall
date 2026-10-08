@@ -28,15 +28,15 @@
   "##WffffffffffffW##############",
   "##WffffffffffffW##############",
   "##WffffffffffffW##PPPPPPPPP###",
-  "##WffffffffffffW##PtttttttP###",
+  "##WffffffffffffW##PPtttttPP###",
   "##WffffffffffffWWWPtttttttP###",
   "##WffffffffffffDffDtttttttP###",
   "##WffffffffffffWWWPtttttttP###",
-  "##WffffffffffffW##PtttttttP###",
+  "##WffffffffffffW##PPtttttPP###",
   "##WffffffffffffW##PPPPPPPPP###",
   "##WffffffffffffW##############",
-  "##WffffffffffffW##############",
-  "##WWWWWWWWWWWWWW##############",
+  "##WWfffffffffffW##############",
+  "##WWWfffWWfffWWW##############",
   "##############################",
   "##############################"
  ],
@@ -278,6 +278,16 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [13, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [6, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [11, 25]
   }
  ],
  "par": {

@@ -3,6 +3,7 @@
 // Sever the ring, kill the Cantor: the belfry hatch (the exit) opens. The door to the chamber seals behind you.
 // Route: courtyard -> tower door (SE) -> south leg (west) -> west leg (north) -> north leg (east) -> east leg (south; a Warden-Graft among pillars) -> chamber door -> the ring, the Cantor, the hatch.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(54, 62);
 L.rect([10, 6, 46, 44], 'B');                                                   // the tower: solid stone, corridors carved out of it
@@ -52,9 +53,17 @@ L.putAll('r', [[38, 33], [38, 27], [38, 23], [18, 24], [18, 26], [38, 31], [18, 
 L.putAll('n', [[19, 14], [37, 14], [19, 36], [37, 36]]);
 // (the exit is the explicit locked entity below; no '>' glyph)
 
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E1M08') });
+S.bays('w', 10, 8, 38, { w: 3, gap: 3, d: 1 }); S.bays('e', 46, 9, 36, { w: 3, gap: 3, d: 1 }); S.bays('n', 6, 12, 44, { w: 3, gap: 3, d: 1 });      // embrasures in the tower's outer wall, one on every leg
+S.dressBays('lantern');
+S.hall([20, 45, 48, 57], { sides: { w: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 2 } }, cut: 3 });  // the courtyard
+console.log('C1E1M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
+
 const layers = L.layers();
 
-export default {
+const MAP = {
   id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 2, ceilingHeight: 4.2, par: { time: 1100 },
   atmosphere: { fog: '#1a1428', fogDensity: 0.014, sky: 'night', look: 'moon' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
@@ -83,3 +92,12 @@ export default {
   ],
   quality: { enemies: [40, 70], botSeconds: [120, 720], mechanics: ['heights', 'triggers'], skins: 6, enemyKinds: { cantor: 1, bellnode: 6, wardengraft: 1, sexton: 1 } },
 };
+
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'bloodpool', at: [40, 48], size: 1.3 }, { kind: 'smear', at: [33, 41], rot: 0, size: 2.6, h: 1.0 }, { kind: 'scrape', at: [25, 43], wall: 'south', y: 1.1, size: 1.4 }, { kind: 'scorch', at: [28, 25], size: 1.6 }];                 // the courtyard, the south leg, under the ring
+MAP.growth = [{ at: [28, 25], r: 22, power: 0.8 }];                                                                                                                                                          // the chamber where the Cantor sings: it has climbed down the east leg
+// ---- end PT-021 marks and growth ----
+
+export default MAP;

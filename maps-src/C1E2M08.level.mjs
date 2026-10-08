@@ -6,6 +6,7 @@
 // Optional: a SECRET stash behind a panel in the approach's south wall: armour and ammunition for the boss.
 // Open air vs roof: everything is `g f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(66, 56);
 
@@ -36,6 +37,16 @@ L.putAll('a', [[28, 20], [58, 20], [28, 34], [58, 34], [38, 28], [48, 28], [41, 
 L.putAll('h', [[27, 14], [59, 14], [27, 42], [59, 42], [37, 24], [49, 24], [38, 40], [48, 40]]); L.putAll('H', [[27, 26], [59, 26], [43, 14], [27, 32], [59, 32], [40, 41]]); L.putAll('v', [[27, 20], [59, 20], [43, 44]]);
 // the stash: what is left for the night crew
 L.put(17, 37, 'v'); L.put(19, 37, 'v'); L.put(17, 38, 'H'); L.put(19, 38, 'H'); L.put(18, 38, 'e'); L.put(18, 37, 'a'); L.put(17, 36, 'r'); L.put(19, 36, 'r');
+
+// ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
+const S = new Shape(L, { lane: laneOf('C1E2M08') });
+const g0 = S.bayLog.length;
+S.hall([26, 8, 60, 46], { sides: { n: { w: 3, gap: 3, d: 2, heart: 'alt' }, s: { w: 3, gap: 3, d: 2, heart: 'alt' }, e: { w: 3, gap: 3, d: 2, heart: 'alt' }, w: { w: 3, gap: 3, d: 2, heart: 'alt' } }, cut: 4 });   // the grafting floor
+S.dressBays('cradle', g0);
+S.hall([11, 24, 24, 34], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 2 });                      // the approach
+S.chamfer([3, 26, 9, 32], 'nw ne sw se', 1);
+console.log('C1E2M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end PT-021 shaping ----
 
 const layers = L.layers();
 
@@ -75,4 +86,11 @@ const MAP = {
 MAP.entities ??= []; MAP.entities.push(...[[24,29],[45,18],[46,35],[46,23]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
 // the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
 MAP.entities.push(...[["ammo_cell",18,30],["ammo_cell",27,21],["ammo_cell",46,22]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// PT-021: the props set down in the new bays (after every other entity: no id shifts)
+MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----
+MAP.decals = [{ kind: 'ichorpool', at: [39, 31], size: 1.6 }, { kind: 'ichorpool', at: [38, 26], size: 1.3 }, { kind: 'bloodpool', at: [20, 29], size: 1.3 }, { kind: 'smear', at: [30, 29], rot: 0, size: 2.8, h: 1.0 }];
+MAP.growth = [{ at: [39, 31], r: 28, power: 1.4 }];                                                                                                                                                          // the grafting floor: the heart of it
+// ---- end PT-021 marks and growth ----
+
 export default MAP;

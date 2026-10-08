@@ -21,11 +21,11 @@
   "############################################################################",
   "############################################################################",
   "############################################################################",
-  "##########LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL##############################",
-  "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##############################",
-  "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##############################",
-  "##########LllmmmlKKKKKKDKKKKlllllllllllllllLLLLLLLLLLLLLLLLLLLLLLL##########",
-  "##########LllmmmlKKKKffffffKlllllllllllllllLLLfffffffffffffffffffL##########",
+  "##########LLLLlllLLLlllLLLlllLLLlllLLLlllLLLLL##############################",
+  "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL###f#####f#####f##############",
+  "##########lmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##fff###fff###fff#############",
+  "##########lllmmmlKKKKKKDKKKKlllllllllllllllLLLLLfffLLLfffLLLfffLLL##########",
+  "##########lllmmmlKKKKffffffKlllllllllllllllLLLLffffffffffffffffffL##########",
   "##########LllmmmlKKfXffffffKlllllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKKKKffffffKlllllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKKfXffffffKlllllllllllllllLLLfffffffffffffffffffL##########",
@@ -41,11 +41,11 @@
   "##########LllmmmlKKKKDKKKKKKKKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKfffffffKfffKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKfffffffSfffKlllllllllllllLLLfffffffffffffffffffL##########",
-  "##########LllmmmlKfffffffKfffKlllllllllllllLLLLLLLLLLLLLLLLLLLLLLL##########",
-  "##########LllmmmlKKKKKKKKKKKKKlllllllllllllLLL##############################",
+  "##########lllmmmlKfffffffKfffKlllllllllllllLLLLLfffLLLfffLLLfffLLL##########",
+  "##########lllmmmlKKKKKKKKKKKKKlllllllllllllLLL##fff###fff###fff#############",
+  "##########lmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL###f#####f#####f##############",
   "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##############################",
-  "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##############################",
-  "##########LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL##############################",
+  "##########LLLLlllLLLlllLLLlllLLLlllLLLlllLLLLL##############################",
   "############################################################################",
   "############################################################################",
   "############################################################################",
@@ -1220,6 +1220,36 @@
      "shake": 2
     }
    ]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [49, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [55, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [61, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [49, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [55, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [61, 32]
   }
  ],
  "par": {
@@ -1289,6 +1319,44 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "That is the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "ichorpool",
+   "at": [69, 22],
+   "size": 1.5
+  },
+  {
+   "kind": "ichor",
+   "at": [68, 19],
+   "wall": "north",
+   "y": 1.6,
+   "size": 1.4
+  },
+  {
+   "kind": "ichorpool",
+   "at": [56, 22],
+   "size": 1.3
+  },
+  {
+   "kind": "bloodpool",
+   "at": [24, 15],
+   "size": 1.2
+  },
+  {
+   "kind": "smear",
+   "at": [29, 14],
+   "rot": 0.2,
+   "size": 2.2,
+   "h": 0.9
+  }
+ ],
+ "growth": [
+  {
+   "at": [69, 22],
+   "r": 16,
+   "power": 1
   }
  ],
  "objective": "Cross the pan. The gate only answers to the sluice wheel in the guardhouse: take the north ditch",
