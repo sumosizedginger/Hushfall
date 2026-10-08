@@ -2,6 +2,7 @@
 // weapon camera (58 degrees, as view.js), with the weapon scene's own light recipe and the real painted atlas sampled by UV. It has NO ink, NO value banding and NO paper grain (the real post pass is not here): it is
 // for COMPOSITION (where the sights are, how much of the screen the body takes, what the barrel does), never for the final look. Made because the owner's mouse stops reaching the screen while my Chrome jobs run (PT-011).
 //   node tools/dev/rast-weapon.mjs <out.png> <weapon|all> [--ads=1] [--sprint=0] [--w=930] [--legacy]      weapons: flare scattergun rivet harpoon arc
+//   --zoom=1.6 --dx=-0.1 --dy=0.25 --dz=0 --yaw=0.4 move / scale / turn the rig to inspect its hands and its far side (PT-021)
 //   --gs=0.5 --dist=0.2 override the rig's aim scale and the eye-to-rear-sight distance (experiments)
 //   --legacy draws the pose view.js used before the sight-line pose (to compare with the owner's screenshots)
 //   MELEE (PT-013): weapons fists boathook marlinspike mallet axe; --swing=<jab|heavy|bash|id> --u=<0..1> (how far through the swing) or --t=<seconds since the swing began (the sim lands the blow at t = windup)>, --guard=1, --charge=1 (fists drawn back), --alt=1 (the other fist leads);
@@ -23,7 +24,8 @@ const atlasPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/flare
 const MAKERS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp, ...MELEE_MAKERS };
 const FOV = 58, NEAR = 0.1;
 
-function sampleAtlas(u, v) { const x = Math.min(atlasPng.width - 1, Math.max(0, Math.floor(u * atlasPng.width))), y = Math.min(atlasPng.height - 1, Math.max(0, Math.floor((1 - v) * atlasPng.height))), i = (y * atlasPng.width + x) * 4; return [atlasPng.data[i] / 255, atlasPng.data[i + 1] / 255, atlasPng.data[i + 2] / 255]; }
+const gunsPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/guns_atlas.png', import.meta.url)));          // the guns' own materials (PT-021): a material that says userData.atlas = 'guns' samples this one
+function sampleAtlas(u, v, png = atlasPng) { const x = Math.min(png.width - 1, Math.max(0, Math.floor(u * png.width))), y = Math.min(png.height - 1, Math.max(0, Math.floor((1 - v) * png.height))), i = (y * png.width + x) * 4; return [png.data[i] / 255, png.data[i + 1] / 255, png.data[i + 2] / 255]; }
 const srgbToLin = (c) => c.map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)), linToSrgb = (x) => (x <= 0.0031308 ? x * 12.92 : 1.055 * x ** (1 / 2.4) - 0.055);
 const KEY = new THREE.Vector3(-1, 1.5, 1).normalize(), SKY = new THREE.Color(0x9fb8d0), GND = new THREE.Color(0x3a2a30), KEYC = new THREE.Color(0xffe0b0);
 
@@ -38,7 +40,7 @@ function render(name) {
     const bt = flags.bash != null ? swingPhase('bash', Number(flags.bash) * (swingTimes('bash').windup + swingTimes('bash').recover)) : null;
     pose = weaponPose(rig, { ads: bt ? 0 : a, sprint: sp, sway: 0, recoil: 0, dead: 0, dip: 0, legacy: !!flags.legacy, bash: bt && bt.on ? bt : null });
   }
-  rig.group.scale.setScalar(pose.scale); rig.group.position.set(...pose.pos); rig.group.rotation.set(...pose.rot);
+  rig.group.scale.setScalar(pose.scale * Number(flags.zoom ?? 1)); rig.group.position.set(pose.pos[0] + Number(flags.dx ?? 0), pose.pos[1] + Number(flags.dy ?? 0), pose.pos[2] + Number(flags.dz ?? 0)); rig.group.rotation.set(pose.rot[0], pose.rot[1] + Number(flags.yaw ?? 0), pose.rot[2]);       // --zoom --dx --dy --dz --yaw: look at the whole gun and its hands (the hip pose has the lower half below the screen by design)
   const cam = new THREE.PerspectiveCamera(FOV, W / H, NEAR, 100); cam.position.set(0, 0, 0); cam.updateMatrixWorld(true);
   const scene = new THREE.Scene(); scene.add(rig.group); rig.group.updateMatrixWorld(true);
   const img = new PNG({ width: W, height: H }), zbuf = new Float32Array(W * H).fill(Infinity);
@@ -63,7 +65,7 @@ function render(name) {
   });
   const shade = (mat, n, u, v) => {
     if (mat.isMeshBasicMaterial) return [mat.color.r, mat.color.g, mat.color.b];
-    const tex = mat.map || mat.userData?.map ? [1, 1, 1] : srgbToLin(sampleAtlas(u, v));          // the rigs are built with a null map here: sample the atlas by hand
+    const tex = mat.map || mat.userData?.map ? [1, 1, 1] : srgbToLin(sampleAtlas(u, v, mat.userData?.atlas === 'guns' ? gunsPng : atlasPng));          // the rigs are built with a null map here: sample the atlas by hand
     const up = 0.5 + 0.5 * n.y, hemi = [SKY.r * up + GND.r * (1 - up), SKY.g * up + GND.g * (1 - up), SKY.b * up + GND.b * (1 - up)].map((x) => x * 1.5), k = Math.max(0, n.dot(KEY)) * 1.6;
     const em = mat.emissive ? [mat.emissive.r, mat.emissive.g, mat.emissive.b] : [0, 0, 0];
     return [0, 1, 2].map((c) => Math.min(1, (tex[c] * (hemi[c] * 0.5 + [KEYC.r, KEYC.g, KEYC.b][c] * k * 0.45)) + em[c]));

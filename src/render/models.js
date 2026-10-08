@@ -2,15 +2,8 @@
 import * as THREE from 'three';
 import { ironSights, tang } from './weapon-sights.js';
 
-const INSET = 3 / 256;
-/** Remap a primitive's 0..1 UVs into one 64px cell of a 4x4 atlas (cell 0 = top-left of the baked image). */
-export function atlas(geom, cell) {
-  const uv = geom.attributes.uv, cx = cell % 4, cy = Math.floor(cell / 4);
-  const u0 = cx * 0.25 + INSET, u1 = (cx + 1) * 0.25 - INSET;
-  const v0 = 1 - (cy + 1) * 0.25 + INSET, v1 = 1 - cy * 0.25 - INSET;
-  for (let i = 0; i < uv.count; i++) uv.setXY(i, u0 + uv.getX(i) * (u1 - u0), v0 + uv.getY(i) * (v1 - v0));
-  return geom;
-}
+import { atlas } from './atlasuv.js';
+export { atlas };                                                 // (it lives in atlasuv.js so the gun and melee modules need not import this file)
 
 // Shared, cached materials for STATIC props so they can be merged into one draw call per material (see render/merge.js).
 const matCache = new Map();
@@ -160,33 +153,9 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   return { root, rig, pose, mat };
 }
 
-// ------------------------------------------------------------- Flare cannon
-export function makeFlareCannon(tex) {
-  const mat = new THREE.MeshLambertMaterial({ map: tex });
-  const sleeveMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false });      // the oilskin sleeves fade out in the sights: they only ever hid the target
-  const glassMat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1a6a60 });
-  const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
-  const g = new THREE.Group();
-  const barrel = M(new THREE.CylinderGeometry(0.05, 0.062, 0.6, 8), 0); barrel.rotation.x = -Math.PI / 2; barrel.position.z = -0.3; g.add(barrel);
-  const ring = M(new THREE.CylinderGeometry(0.082, 0.066, 0.08, 8), 1); ring.rotation.x = -Math.PI / 2; ring.position.z = -0.62; g.add(ring);
-  for (const z of [-0.2, -0.4]) { const b = M(new THREE.TorusGeometry(0.066, 0.011, 4, 10), 5); b.position.z = z; g.add(b); }
-  const recv = M(new THREE.BoxGeometry(0.17, 0.15, 0.32), 2); recv.position.set(0, -0.02, 0.02); g.add(recv);
-  const plate = M(new THREE.BoxGeometry(0.12, 0.025, 0.25), 2); plate.position.set(0, 0.065, 0.02); g.add(plate);
-  // iron sights (weapon-sights.js): a U-notch on the receiver plate, a blade with a bright tip on the muzzle ring; the sight line runs through the middle of the notch and the tip
-  const sights = ironSights(g, mat, 5, { rearZ: 0.1, frontZ: -0.62, rearBase: 0.0775, frontBase: 0.082, line: 0.112 });
-  tang(g, mat, 2, { z: 0.145, y: 0.0775, width: 0.11, len: 0.5, drop: 0.45 });                                  // the receiver's top runs back and down: a ramp under the eye, not a flat rear face
-  const tube = new THREE.Mesh(atlas(new THREE.CylinderGeometry(0.024, 0.024, 0.2, 6), 6), glassMat); tube.rotation.x = Math.PI / 2; tube.position.set(-0.105, -0.02, 0.03); g.add(tube);
-  const grip = M(new THREE.BoxGeometry(0.06, 0.18, 0.075), 7); grip.position.set(0, -0.15, 0.12); grip.rotation.x = 0.3; g.add(grip);
-  const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.19, 0.13); g.add(handR);
-  const handL = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 3); handL.position.set(-0.005, -0.1, -0.25); g.add(handL);
-  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4, sleeveMat); sleeveR.position.set(0.09, -0.3, 0.34); sleeveR.rotation.x = -1.15; g.add(sleeveR);
-  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4, sleeveMat); sleeveL.position.set(-0.14, -0.22, 0.0); sleeveL.rotation.set(-1.1, 0, 0.55); g.add(sleeveL);
-  // muzzle flash: real geometry, shown briefly
-  const flash = new THREE.Group(); flash.position.z = -0.72; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xfff4d0 })));
-  return { group: g, flash, pump: null, adsY: -0.067, sleeveMat, sights };
-}
+// ------------------------------------------------------------- Flare cannon and scattergun: models_guns.js (PT-021)
+import { makeFlareCannon, makeScattergun } from './models_guns.js';
+export { makeFlareCannon, makeScattergun };
 
 // -------------------------------------------------------------------- props
 export function makeCrate(tex) { return new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), lam({ map: tex })); }
@@ -211,12 +180,15 @@ export function makePod(tex, H) {
 
 /** lamp tint = the light of that room: warm oil lamps (hut, loft), cold customs tubes (shed), the pods' teal (warehouse) */
 const LAMP_TINTS = { warm: { bulb: 0xffd48a, light: 0xffb060 }, cool: { bulb: 0xd8f4ff, light: 0xa8dcff }, teal: { bulb: 0xa8ffee, light: 0x50ffd8 } };
+/** a soft ball of light round a bulb (PT-021: the lamps were black hooks with a point of colour): two nested additive spheres, shared materials so they merge with the other props */
+export function halo(g, x, y, z, r, color = 0xffc070) { for (const [k, op] of [[1, 0.3], [2.8, 0.1]]) { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(r * k, 1), bas({ color, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false })); m.position.set(x, y, z); g.add(m); } }
 export function makeLamp(H, tint = 'warm') {
   const T = LAMP_TINTS[tint] ?? LAMP_TINTS.warm, group = new THREE.Group();
   const shade = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.3, 8, 1, true), lam({ color: 0x2f3a3a, side: THREE.DoubleSide }));
   shade.position.y = -0.85; group.add(shade);
   const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: T.bulb })); bulb.position.y = -0.92; group.add(bulb);
   const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), bas({ color: 0x14100c })); wire.position.y = -0.35; group.add(wire);
+  halo(group, 0, -0.92, 0, 0.2, T.light);
   const light = new THREE.PointLight(T.light, 110, 16, 2);
   light.userData.base = 110; light.userData.flicker = 'lamp';
   return { group, light };
@@ -227,6 +199,7 @@ export function makeLampPost() {
   const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), lam({ color: 0x24302f })); pole.position.y = 1.6; group.add(pole);
   const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), lam({ color: 0x1a201f })); cage.position.y = 3.3; group.add(cage);
   const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: 0xffe0a0 })); bulb.position.y = 3.3; group.add(bulb);
+  halo(group, 0, 3.3, 0, 0.28, 0xffc880);
   const light = new THREE.PointLight(0xffc880, 120, 20, 2);
   light.userData.base = 120; light.userData.flicker = 'lamp';
   return { group, light };
@@ -234,7 +207,7 @@ export function makeLampPost() {
 
 // ------------------------------------------------- Gate 1 additions: pickups, doors, exit
 /** kind: a PICKUPS key from engine/defs.js. Faces wear props_atlas cells. */
-export function makePickup(kind, tex, weaponTex) {
+export function makePickup(kind, tex, weaponTex, gunTex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x201810 });
   const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
   const g = new THREE.Group();
@@ -249,7 +222,7 @@ export function makePickup(kind, tex, weaponTex) {
     const box = M(new THREE.BoxGeometry(0.4, 0.2, 0.28), 1); box.position.y = 0.12; g.add(box);
     for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.04, 0.04, 0.16, 6), 4); shell.position.set(i * 0.09, 0.3, 0); g.add(shell); const cap = M(new THREE.CylinderGeometry(0.042, 0.042, 0.04, 6), 3); cap.position.set(i * 0.09, 0.22, 0); g.add(cap); }
   } else if (kind === 'weapon_scattergun') {
-    const gun = makeScattergun(weaponTex || tex).group; gun.scale.setScalar(0.5); gun.rotation.set(0, Math.PI / 2, 0); gun.position.y = 0.3; g.add(gun);
+    const gun = makeScattergun(weaponTex || tex, gunTex, { hands: false }).group; gun.scale.setScalar(0.5); gun.rotation.set(0, Math.PI / 2, 0); gun.position.y = 0.3; g.add(gun);
     const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.62; g.add(glow);
   } else if (kind.startsWith('armor')) {
     const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2); body.position.y = 0.26; g.add(body);
@@ -354,31 +327,6 @@ export function makeGaunt(atlasTex) {
     mat.emissive.setRGB(0.7 * p.flash, 0.55 * p.flash, 0.4 * p.flash);
   }
   return { root, rig, pose, mat };
-}
-
-// ------------------------------------------------------- Tidewarden scattergun
-/** Double-barrelled pump shotgun. Same 4x4 atlas as the flare cannon (steel, wood, leather, oilskin cells). */
-export function makeScattergun(tex) {
-  const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x2a1c10 });        // lifts the dark wood so the stock stays readable
-  const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
-  const sleeveMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false });      // the oilskin sleeves fade out in the sights: they only ever hid the target
-  const g = new THREE.Group();
-  for (const x of [-0.03, 0.03]) { const b = M(new THREE.CylinderGeometry(0.028, 0.03, 0.68, 8), 2); b.rotation.x = -Math.PI / 2; b.position.set(x, 0.005, -0.34); g.add(b); }
-  const rib = M(new THREE.BoxGeometry(0.03, 0.012, 0.62), 1); rib.position.set(0, 0.038, -0.33); g.add(rib);
-  const band = M(new THREE.BoxGeometry(0.15, 0.075, 0.03), 1); band.position.set(0, 0.005, -0.52); g.add(band);
-  const recv = M(new THREE.BoxGeometry(0.13, 0.115, 0.22), 5); recv.position.set(0, -0.01, 0.03); g.add(recv);
-  const sights = ironSights(g, mat, 5, { rearZ: 0.1, frontZ: -0.66, rearBase: 0.0475, frontBase: 0.044, line: 0.0825, gap: 0.022 });
-  const pump = new THREE.Group(); const fore = M(new THREE.BoxGeometry(0.1, 0.06, 0.2), 7); fore.position.set(0, -0.05, -0.26); pump.add(fore); g.add(pump);
-  const stock = M(new THREE.BoxGeometry(0.075, 0.11, 0.36), 7); stock.position.set(0, -0.055, 0.34); stock.rotation.x = 0.12; g.add(stock);
-  const grip = M(new THREE.BoxGeometry(0.055, 0.13, 0.07), 7); grip.position.set(0, -0.12, 0.14); grip.rotation.x = 0.3; g.add(grip);
-  const handR = M(new THREE.BoxGeometry(0.085, 0.1, 0.11), 3); handR.position.set(0.005, -0.18, 0.16); g.add(handR);
-  const handL = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 3); handL.position.set(-0.005, -0.1, -0.26); pump.add(handL);
-  const sleeveR = M(new THREE.CylinderGeometry(0.06, 0.075, 0.42, 7), 4, sleeveMat); sleeveR.position.set(0.09, -0.3, 0.36); sleeveR.rotation.x = -1.15; g.add(sleeveR);
-  const sleeveL = M(new THREE.CylinderGeometry(0.06, 0.075, 0.5, 7), 4, sleeveMat); sleeveL.position.set(-0.14, -0.22, 0.02); sleeveL.rotation.set(-1.1, 0, 0.55); pump.add(sleeveL);
-  const flash = new THREE.Group(); flash.position.z = -0.78; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
-  return { group: g, flash, pump, adsY: -0.048, sleeveMat, sights };
 }
 
 // ------------------------------------------------ Marrow Quay: set dressing and scenery

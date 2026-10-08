@@ -65,6 +65,17 @@ export const LOOKS = {
   rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
+/**
+ * MARKS THAT STAY (PT-021 step 2): the cells of the 4 x 4 `decals_atlas` by name, how many marks of each ring the view keeps (the oldest is recycled), and which creatures bleed (the rest leave the Vael's ichor).
+ * A map may list its own marks (`decals`, validated by kind). View data only: the simulation never reads it and no save holds it.
+ */
+export const DECALS = {
+  kinds: { blood: [0, 1, 2], pock: [3], ichor: [4, 5, 6], drip: [7], bloodpool: [8], ichorpool: [9], scorch: [10], streak: [11], smear: [12], scrape: [13], damp: [14], soot: [15] },
+  rings: { pock: 96, splat: 128, mark: 96 },
+  human: ['tollbearer', 'gaunt', 'bellhand', 'sexton', 'wardengraft'],
+};
+/** THE VAEL'S GROWTH with thickness (PT-021 step 5): a map lists where it started (`growth: [{ at, r, power }]`); render-only. max sources, how fast it thins with distance, lobes per wall face at full strength, how high it climbs, sacs at the heart. */
+export const GROWTH = { max: 8, falloff: 1.15, perFace: 9, reach: 3.2, sacs: 14 };
 export const RANGE = { holdModes: ['inert', 'turn', 'fixed'], healAfter: 3, respawnAfter: 5, playerHealAfter: 3, refillAfter: 1.5 };
 export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.35, knock: 0.5, flinch: 0.5 };
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };

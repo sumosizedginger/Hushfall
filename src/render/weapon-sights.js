@@ -5,7 +5,7 @@
 //   o.line               the y of the sight line (the notch centre and the blade tip): the posts and the blade are built up to it
 //   o.gap, o.post        half-width of the notch, width of a post
 import * as THREE from 'three';
-import { atlas } from './models.js';
+import { atlas } from './atlasuv.js';
 
 export function ironSights(group, mat, cellIron, o) {
   const { rearZ, frontZ, rearBase, frontBase, line, gap = 0.03, post = 0.02, bright = 0xffe08a, peep = false } = o;

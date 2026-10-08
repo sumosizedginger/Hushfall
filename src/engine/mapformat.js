@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, RANGE, LOOKS, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -48,6 +48,8 @@ export class MapData {
     this.props = this.entities.filter((e) => e.type === 'prop');
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
+    this.growth = src.growth || [];                                                      // where the Vael's growth started (PT-021): view data, the simulation never reads it
+    this.decals = src.decals || [];                                                     // marks the map starts with (PT-021): view data, the simulation never reads it
     this.messages = (src.messages || []).map((m) => ({ ...m, x: (m.at[0] + 0.5) * this.cell, z: (m.at[1] + 0.5) * this.cell, r: (m.radius ?? 2) * this.cell }));
     this.intro = src.intro ?? null; this.outro = src.outro ?? null;
     this.atmosphere = { fog: '#2a2244', fogDensity: 0.028, ...(src.atmosphere || {}) };
@@ -165,6 +167,25 @@ function validateMapChecks(src) {
   for (const [i, s] of (src.scenery || []).entries()) {
     if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
     if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
+  }
+  if (src.growth != null && (!Array.isArray(src.growth) || src.growth.length > GROWTH.max)) err(`growth must be a list of at most ${GROWTH.max}`);
+  for (const [i, gr] of (Array.isArray(src.growth) ? src.growth : []).entries()) {
+    const tag = `growth #${i}`;
+    if (!Array.isArray(gr?.at) || gr.at.length !== 2 || !gr.at.every(Number.isFinite) || gr.at[0] < 0 || gr.at[1] < 0 || gr.at[0] >= w || gr.at[1] >= h) err(`${tag}: 'at' must be inside the grid (cells)`);
+    else if (!walkable(tile(Math.floor(gr.at[0]), Math.floor(gr.at[1])))) err(`${tag}: 'at' must be on a walkable cell`);
+    if (!(gr?.r >= 2 && gr.r <= 30)) err(`${tag}: r must be in [2, 30] metres`);
+    if (gr?.power != null && !(gr.power >= 0.2 && gr.power <= 2)) err(`${tag}: power must be in [0.2, 2]`);
+  }
+  if (src.decals != null && (!Array.isArray(src.decals) || src.decals.length > 64)) err('decals must be a list of at most 64');
+  for (const [i, d] of (Array.isArray(src.decals) ? src.decals : []).entries()) {
+    const tag = `decal #${i}`;
+    if (!DECALS.kinds[d?.kind]) err(`${tag}: kind must be one of ${Object.keys(DECALS.kinds).join(', ')}`);
+    if (!Array.isArray(d?.at) || d.at.length !== 2 || !d.at.every(Number.isFinite) || d.at[0] < 0 || d.at[1] < 0 || d.at[0] >= w || d.at[1] >= h) err(`${tag}: 'at' must be inside the grid (cells)`);
+    if (d?.wall != null && !['north', 'south', 'east', 'west'].includes(d.wall)) err(`${tag}: wall must be north, south, east or west`);
+    for (const k of ['size', 'h']) if (d?.[k] != null && !(d[k] >= 0.1 && d[k] <= 4)) err(`${tag}: ${k} must be in [0.1, 4] metres`);
+    if (d?.y != null && !(d.y >= 0 && d.y <= 6)) err(`${tag}: y must be in [0, 6] metres`);
+    if (d?.rot != null && !Number.isFinite(d.rot)) err(`${tag}: rot must be a number`);
+    if (d?.ring != null && !DECALS.rings[d.ring]) err(`${tag}: ring must be one of ${Object.keys(DECALS.rings).join(', ')}`);
   }
   const msgIds = new Set();
   for (const [i, m] of (src.messages || []).entries()) {

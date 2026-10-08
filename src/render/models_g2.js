@@ -1,7 +1,7 @@
 // Gate 2 set dressing: code-authored low-poly props for the new maps. Static props use the shared cached materials from models.js so they
 // merge into a few draw calls; the switch panel keeps its own lamp material because its colour changes with game state.
 import * as THREE from 'three';
-import { lam, bas, makeRigGrounder } from './models.js';
+import { lam, bas, halo, makeRigGrounder } from './models.js';
 
 const box = (w, h, d, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); return m; };
 const cyl = (rt, rb, h, seg, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); return m; };
@@ -48,18 +48,38 @@ export function makeLantern() {
   g.add(cyl(0.05, 0.08, 2.4, 6, iron, 0, 1.2, 0));
   g.add(box(0.5, 0.05, 0.05, iron, 0.22, 2.42, 0));
   const cage = cyl(0.13, 0.11, 0.3, 6, iron, 0.42, 2.25, 0); g.add(cage);
-  g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), bas({ color: 0xffd48a }))).position.set(0.42, 2.25, 0);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), bas({ color: 0xffd48a })); bulb.position.set(0.42, 2.25, 0); g.add(bulb);          // (it used to be added at the foot of the post: g.add() returns the group, so .position moved the group, and the bulb sat in the floor)
+  halo(g, 0.42, 2.25, 0, 0.2, 0xffb060);
   const light = new THREE.PointLight(0xffb060, 70, 14, 2); light.userData.base = 70; light.userData.flicker = 'lamp';
   return { group: g, light };
 }
-/** a Vael cradle: a captive hung from the ceiling on chains, veined with teal, bronze seeded at the shoulder. Hangs from local y=0 downward. */
+/**
+ * A Vael cradle (PT-021 step 2, "the cradle has to show a person in it"): a captive hung from the ceiling by two chains, upright and slumped, in a translucent resin cocoon, a sou'wester knocked back off the head, the arms
+ * hanging, the boots dangling, tubes running from the ceiling into the back and the skull, a bronze graft seeded at the shoulder, teal veins down the chest, drips under the feet. The old one was a capsule and a ball.
+ * Hangs from local y = 0 downward; the feet end near y = -2.8. Returns { group, light }.
+ */
 export function makeCradle(atlasTex) {
-  const g = new THREE.Group(), iron = lam({ color: 0x1a1d22 }), skin = lam({ color: 0x93a196 }), coat = lam({ color: 0x6a5a20 }), bronze = lam({ color: 0xb8722e }), glow = bas({ color: 0x3fffe0 });
-  for (const s of [-1, 1]) g.add(cyl(0.015, 0.015, 1.3, 4, iron, s * 0.14, -0.65, 0));
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24, 0.9, 4, 8), coat); body.position.y = -1.7; body.scale.z = 0.7; g.add(body);
-  const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 1), skin); head.position.set(0, -2.45, 0.05); head.scale.set(0.9, 1.1, 1); g.add(head);
-  const cone = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.34, 5), bronze); cone.position.set(0.24, -1.36, 0); cone.rotation.z = -0.5; g.add(cone);
-  for (const y of [-1.2, -1.6, -2.0]) { const v = new THREE.Mesh(new THREE.SphereGeometry(0.035, 5, 4), glow); v.position.set(0.12, y, 0.2); g.add(v); }
+  const g = new THREE.Group(), iron = lam({ color: 0x1a1d22 }), skin = lam({ color: 0xb59f8a }), coat = lam({ color: 0x8a6c1e }), boot = lam({ color: 0x15130f }), hat = lam({ color: 0xa88a20 }), bronze = lam({ color: 0xb8722e }), glow = bas({ color: 0x3fffe0 });
+  const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), new THREE.MeshBasicMaterial({ color: 0x40e8d0, transparent: true, opacity: 0.2, depthWrite: false }));
+  shell.position.y = -2.0; shell.scale.set(0.46, 1.05, 0.4); g.add(shell);                                         // the cocoon
+  for (const s of [-1, 1]) g.add(cyl(0.015, 0.015, 1.1, 4, iron, s * 0.14, -0.55, 0));                               // the chains
+  const cap = (r, len, mat, x, y, z, rz = 0) => { const m = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 4, 8), mat); m.position.set(x, y, z); m.rotation.z = rz; return m; };
+  const torso = cap(0.19, 0.42, coat, 0, -1.82, 0); torso.scale.z = 0.72; torso.rotation.x = 0.08; g.add(torso);                      // the oilskin coat, slumped forward
+  const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 1), skin); head.position.set(0, -1.37, 0.07); head.scale.set(0.92, 1.1, 1); g.add(head);
+  const brim = cyl(0.2, 0.2, 0.025, 10, hat, 0, -1.2, -0.12); brim.rotation.x = -0.9; g.add(brim);                      // the hat, knocked back
+  const crown = cyl(0.1, 0.12, 0.13, 8, hat, 0, -1.25, -0.08); crown.rotation.x = -0.9; g.add(crown);
+  for (const s of [-1, 1]) {
+    g.add(cap(0.055, 0.5, coat, s * 0.28, -1.85, 0.02, s * 0.1));                                                   // the arms hang
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), skin); hand.position.set(s * 0.33, -2.22, 0.03); g.add(hand);
+    g.add(cap(0.075, 0.5, coat, s * 0.09, -2.3, 0.02, s * 0.03));                                                   // the legs, together
+    g.add(box(0.12, 0.1, 0.22, boot, s * 0.09, -2.72, 0.05));                                                       // the boots
+  }
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.34, 5), bronze); cone.position.set(0.25, -1.55, 0); cone.rotation.z = -0.5; g.add(cone);
+  for (const [x, z, y1] of [[-0.06, -0.22, -1.55], [0.06, -0.22, -1.7], [0.0, -0.17, -1.3], [0.1, -0.2, -1.95]]) {   // tubes from the ceiling into the spine and the skull
+    const t = cyl(0.018, 0.018, -y1, 4, iron, x, y1 / 2, z); g.add(t); const tip = new THREE.Mesh(new THREE.SphereGeometry(0.03, 5, 4), glow); tip.position.set(x, y1, z * 0.8); g.add(tip);
+  }
+  for (const y of [-1.65, -1.85, -2.05]) { const v = new THREE.Mesh(new THREE.SphereGeometry(0.035, 5, 4), glow); v.position.set(0.1, y, 0.2); g.add(v); }       // veins down the chest
+  for (const [y, s] of [[-3.2, 0.05], [-3.5, 0.035]]) { const d = new THREE.Mesh(new THREE.SphereGeometry(s, 5, 4), glow); d.position.set(0.04, y, 0.05); g.add(d); }      // drips
   const light = new THREE.PointLight(0x3fffe0, 26, 8, 2); light.userData.base = 26; light.userData.flicker = 'pod';
   return { group: g, light };
 }

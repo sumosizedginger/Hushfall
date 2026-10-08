@@ -26,8 +26,8 @@
   "###############RRRRRRR##################################################",
   "###############RfffffR##################################################",
   "###############RfffffR#######################YYYYYYYYYYYYYYYYYYY########",
-  "###############RfffffR####f###f##############YfffffffffffffffffY########",
-  "##########RRRRRRRRSRRRRRRRXRRRXRRRRRRRRRRRRRRYfffffffffffffffffY########",
+  "#############g#RfffffR####f###f######g####g##YYYfffffffffffffYYY########",
+  "##########RRgggRRRSRRRRRRRXRRRXRRRRRgggRRgggRYYfffffffffffffffYY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##KKKKKKKKRggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
@@ -41,8 +41,8 @@
   "##KKKKKKKKRggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
-  "##########RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRYfffffffffffffffffY########",
-  "#############################################YfffffffffffffffffY########",
+  "##########RRgggRRgggRRRRgggRgggRRRRRgggRRgggRYYfffffffffffffffYY########",
+  "#############g####g######g###g#######g####g##YYYfffffffffffffYYY########",
   "#############################################YYYYYYYYYYYYYYYYYYY########",
   "########################################################################",
   "########################################################################",
@@ -155,6 +155,11 @@
    "at": [19, 13]
   },
   {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [13, 14]
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [26, 14],
@@ -167,6 +172,16 @@
    "at": [30, 14],
    "facing": -1.261,
    "group": "brood"
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [37, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [42, 14]
   },
   {
    "type": "prop",
@@ -778,6 +793,36 @@
    "at": [61, 29]
   },
   {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [13, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [18, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [25, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [29, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [37, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [42, 30]
+  },
+  {
    "type": "exit",
    "at": [61, 28],
    "locked": true,
@@ -881,6 +926,13 @@
    "radius": 0.1,
    "speaker": "SIGNAL HOUSE",
    "text": "The line is stopped. Calder, those were not drones in the aisle: they were hatchlings. The Vael are growing their own now."
+  }
+ ],
+ "growth": [
+  {
+   "at": [50, 22],
+   "r": 26,
+   "power": 1.1
   }
  ],
  "objective": "Cross the aisle quietly. Nothing is awake yet: the release lever is in the table room, east",

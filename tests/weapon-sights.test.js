@@ -8,7 +8,7 @@ import { makeFlareCannon, makeScattergun } from '../src/render/models.js';
 import { makeRivetDriver } from '../src/render/models_rivet.js';
 import { makeHarpoonRifle } from '../src/render/models_harpoon.js';
 import { makeArcLamp } from '../src/render/models_arc.js';
-import { weaponPose, adsTarget, HIP, SPRINT_POSE } from '../src/render/weapon-pose.js';
+import { weaponPose, adsTarget, HIP, HIP_SCALE, SPRINT_POSE } from '../src/render/weapon-pose.js';
 
 const RIGS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp };
 const place = (rig, pose) => { rig.group.scale.setScalar(pose.scale); rig.group.position.set(...pose.pos); rig.group.rotation.set(...pose.rot); rig.group.updateMatrixWorld(true); };
@@ -38,10 +38,10 @@ test('aimed: nothing solid is closer to the eye than the weapon camera\'s near p
 test('hip and sprint are unchanged by the sight-line pose; the legacy pose is still reproducible', () => {
   for (const [name, make] of Object.entries(RIGS)) {
     const rig = make(null), hip = weaponPose(rig, { ads: 0, sprint: 0 }), spr = weaponPose(rig, { ads: 0, sprint: 1 });
-    assert.deepEqual(hip.pos.map((x) => +x.toFixed(6)), [HIP.x, HIP.y, HIP.z], `${name}: hip position`); assert.ok(Math.abs(hip.scale - 0.62) < 1e-9 && Math.abs(hip.rot[1] - 0.1) < 1e-9, `${name}: hip scale/yaw`);
+    assert.deepEqual(hip.pos.map((x) => +x.toFixed(6)), [HIP.x, HIP.y, HIP.z], `${name}: hip position`); assert.ok(Math.abs(hip.scale - HIP_SCALE) < 1e-9 && Math.abs(hip.rot[1] - 0.1) < 1e-9, `${name}: hip scale/yaw`);       // (PT-021: HIP_SCALE, 0.74, was 0.62: the guns were small in the frame)
     assert.deepEqual(spr.pos.map((x) => +x.toFixed(6)), [SPRINT_POSE.x, SPRINT_POSE.y, SPRINT_POSE.z], `${name}: sprint position`); assert.ok(Math.abs(spr.rot[0] - SPRINT_POSE.rx) < 1e-9 && Math.abs(spr.rot[1] - SPRINT_POSE.ry) < 1e-9, `${name}: sprint rotation`);
-    const old = weaponPose(rig, { ads: 1, sprint: 0, legacy: true }); assert.deepEqual(old.pos.map((x) => +x.toFixed(3)), [0, +(rig.adsY * 0.56 / 0.62).toFixed(3), -0.6], `${name}: legacy ADS position`);
-    assert.ok(adsTarget(rig).scale <= 0.62, `${name}: the aimed gun is not larger than the hip gun`);
+    const old = weaponPose(rig, { ads: 1, sprint: 0, legacy: true }); assert.deepEqual(old.pos.map((x) => +x.toFixed(3)), [0, +(rig.adsY * 0.56 / HIP_SCALE).toFixed(3), -0.6], `${name}: legacy ADS position`);
+    assert.ok(adsTarget(rig).scale <= HIP_SCALE, `${name}: the aimed gun is not larger than the hip gun`);
   }
 });
 

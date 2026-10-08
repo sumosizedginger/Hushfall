@@ -16,6 +16,11 @@ L.rect([21, 16, 22, 19], 'R'); L.rect([21, 25, 22, 28], 'R'); L.rect([33, 16, 34
 for (const [x, z, cz] of [[26, 15, 14], [30, 15, 14]]) { L.closet(x, z); L.rect([x, cz, x, cz], 'f'); }   // two ambush closets: a cubby behind each shut panel (they open when the pods hatch)
 L.room([46, 14, 62, 30], { floor: 'f', wall: 'Y' }); L.door(45, 22);
 L.rect([52, 20, 56, 24], 'Y');                                                                                                  // the graft table: a solid block in the middle of the room
+// PT-021 step 5, rooms that are not boxes: the aisle's walls are broken by APSES (three wide and one deep, a heart cell behind) where a cradle hangs, and the table room's four corners are cut. Only floor is added (and the corners
+// of one room taken), away from the lane z 21..23, the closets, the store and every object, so the routes, the ammunition and the viability gates do not move.
+for (const x of [13, 37, 42]) { L.rect([x - 1, 15, x + 1, 15], 'g'); L.rect([x, 14, x, 14], 'g'); }                                      // north apses
+for (const x of [13, 18, 25, 29, 37, 42]) { L.rect([x - 1, 29, x + 1, 29], 'g'); L.rect([x, 30, x, 30], 'g'); }                       // south apses
+for (const r of [[46, 14, 47, 14], [46, 15, 46, 15], [61, 14, 62, 14], [62, 15, 62, 15], [46, 30, 47, 30], [46, 29, 46, 29], [61, 30, 62, 30], [62, 29, 62, 29]]) L.rect(r, 'Y');   // the table room's corners, cut
 L.room([16, 12, 20, 14], { floor: 'f', wall: 'R' }); L.secretPanel(18, 15);                                                      // the store (secret)
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,12 +43,15 @@ L.putAll('P', [[50, 19], [50, 25], [58, 20], [58, 24]]); L.putAll('O', [[48, 22]
 L.putAll('e', [[47, 21], [47, 23], [57, 19], [57, 25]]); L.putAll('r', [[47, 20], [47, 24], [59, 21]]); L.putAll('a', [[46, 22], [57, 22]]); L.putAll('H', [[47, 19], [47, 25]]); L.putAll('h', [[60, 20], [60, 24]]); L.put(61, 29, 'v');
 // the store (secret): a cache
 L.put(17, 13, 'v'); L.put(19, 13, 'H'); L.put(17, 12, 'e'); L.put(19, 12, 'r'); L.put(18, 13, 'a');
+// a cradle with its captive hangs in the heart of every apse
+L.putAll('O', [[13, 14], [37, 14], [42, 14], [13, 30], [18, 30], [25, 30], [29, 30], [37, 30], [42, 30]]);
 
 const layers = L.layers();
 
 const MAP = {
   id: 'C1E2M05', name: 'The Cradle Annex', version: 1, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
+  growth: [{ at: [50, 22], r: 26, power: 1.1 }],                                                       // PT-021: the growth started at the graft table and has spread down the aisle (render only: thick here, a wet front at 26 m)
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE CRADLE ANNEX', lines: ['They are not making them here. They are growing them.', 'Do not touch anything that hangs.'] },
   outro: 'Next: the Pump Cathedral. What the Works drains from the sea comes up through the floor of a church.',

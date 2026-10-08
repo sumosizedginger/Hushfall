@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
 import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, lookOf } from '../engine/defs.js';
 import { wallRows, cornerAO, patchFactor } from './shading.js';
+import { buildGrowth } from './growth.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 
@@ -230,5 +231,6 @@ export function buildLevel(map, tex) {
     exitViews.set(e.id, r);
   }
   if (!fxQuads.h.empty) { fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false }); const m = new THREE.Mesh(fxQuads.h.geometry(), fxMats.h); m.renderOrder = 2; group.add(m); }                // ember bed (Kiln Row): a glowing orange wash
+  { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
   return { group, lights, doorViews, towerGlow, sectorViews, fxMats, switchViews, exitViews };
 }

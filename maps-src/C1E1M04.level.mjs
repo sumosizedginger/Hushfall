@@ -53,6 +53,8 @@ const layers = L.layers();
 export default {
   id: 'C1E1M04', name: 'The Drowned Chandlery', version: 1, ceilingHeight: 3.2, par: { time: 800 },
   atmosphere: { fog: '#0a1c1e', fogDensity: 0.028, sky: 'night', look: 'cellar' },
+  growth: [{ at: [48, 38], r: 26, power: 1.3 }],                                                       // PT-021: it started in the vault and has crept through the hatch seams into the chandler's office
+  decals: [{ kind: 'smear', at: [48, 29], rot: 1.5708, size: 2.4, h: 1.1 }, { kind: 'bloodpool', at: [48, 30], size: 1.2 }, { kind: 'scrape', at: [47, 30], wall: 'south', y: 1.0, size: 1.0 }, { kind: 'scrape', at: [49, 30], wall: 'south', y: 1.0, size: 1.0 }],      // a body was dragged to the hatch
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE DROWNED CHANDLERY', lines: ['The ebb has gone out of the harbour. It has not gone out of the cellars.', 'Something is growing in the water table.'] },
   outro: 'Next: Lamplighter Hill. The survivors are signalling by lamp.',

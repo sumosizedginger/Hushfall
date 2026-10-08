@@ -6,7 +6,7 @@
 // A found weapon is authored UPRIGHT (+y along the handle, the grip near y = 0, the business end at the top, the blade/point facing -z = forward) and posed by keyframes on a `hold` group;
 // the forearms are NOT children of the weapon: each runs from an anchor below the screen's edge to wherever the hand is this frame, so an arm never swings with the weapon like a rod.
 import * as THREE from 'three';
-import { atlas } from './models.js';
+import { atlas } from './atlasuv.js';
 import { FEEL } from './weapon-pose.js';
 
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -23,7 +23,7 @@ function unitUV(g) {
 /** a sphere whose UVs stay inside 0..1 (three's poles spill ~0.1 past it, which would paint a neighbouring atlas cell on the tip) */
 function sphere(r, w, h) { const g = new THREE.SphereGeometry(r, w, h), uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, Math.min(1, Math.max(0, uv.getX(i))), Math.min(1, Math.max(0, uv.getY(i)))); return g; }
 
-function kit(tex) {
+export function kit(tex) {
   const mat = new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1c1610 });
   const sleeveMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, depthWrite: false });      // the view fades the sleeves in the sights; melee has none, but the view reads this material
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
@@ -45,7 +45,7 @@ function sleeveGeometry() {
 const smooth01 = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 /** the sleeve's radius at t (0 shoulder .. 1 wrist): a swollen upper arm, the elbow's bulge, a taper to the wrist, creases that run across the arm and crowd at the elbow and the cuff */
 const sleeveRadius = (r, t) => r * (1.28 - 0.18 * smooth01(0, 0.5, t) + 0.1 * Math.exp(-(((t - 0.56) / 0.07) ** 2)) - 0.34 * smooth01(0.58, 1, t)) * (1 + 0.03 * Math.sin(t * 58) * (0.5 + 0.8 * Math.exp(-(((t - 0.52) / 0.2) ** 2))) + 0.05 * smooth01(0.86, 0.95, t) * Math.sin(t * 150));
-function arm(M, sleeve, r = 0.04, upper = 0.5, fore = 0.5) {
+export function arm(M, sleeve, r = 0.04, upper = 0.5, fore = 0.5) {
   const geo = sleeveGeometry(), skin = new THREE.Mesh(atlas(geo, 4), sleeve), cuff = M(new THREE.CylinderGeometry(r * 1.2, r * 0.95, 0.1, 8), 8), g = new THREE.Group(); skin.frustumCulled = false; g.add(skin);
   const S = new THREE.Vector3(), W = new THREE.Vector3(), E = new THREE.Vector3(), Hv = new THREE.Vector3(), d = new THREE.Vector3(), p = new THREE.Vector3(), t = new THREE.Vector3(), C = new THREE.Vector3(), P = new THREE.Vector3(), Tn = new THREE.Vector3(), Nn = new THREE.Vector3(), Bn = new THREE.Vector3();
   const pos = geo.attributes.position, nor = geo.attributes.normal;
@@ -79,7 +79,7 @@ const BODY = [{ shoulder: [0.3, -0.3, -0.12], pole: [0.45, -1, 0.25] }, { should
 /** a turned part (a haft with a swell and a knob, a barrel-shaped head): `prof` = [radius, y] points up the axis, spun into a lathe */
 const lathe = (M, cell, prof, sides = 10) => M(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), sides), cell);
 /** a hand closed round a haft (the haft runs through it along y; PT-019: the boxes of the first two versions read as 2x4s): four bare fingers, each a ring round the haft that is open on the player's side, the linen-wrapped back of the hand closing that side, and a thumb along the haft */
-const glove = (M) => {
+export const glove = (M) => {
   const g = new THREE.Group(), back = M(sphere(0.05, 8, 6), 8); back.scale.set(1.0, 0.95, 0.85); back.position.set(0, 0, 0.03); g.add(back);
   for (let i = -1.5; i <= 1.5; i++) {
     const ring = new THREE.Group(), tor = M(new THREE.TorusGeometry(0.041, 0.0125, 5, 12, Math.PI * 1.55), 9); tor.rotation.x = Math.PI / 2; ring.add(tor);
