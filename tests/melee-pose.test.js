@@ -16,6 +16,12 @@ function posed(id, st) {
   return rig;
 }
 const ndc = (v) => v.clone().project(cam);
+/** how much of a forearm is INSIDE the picture: the length (m) of its axis whose points project inside the screen and in front of the camera (PT-018: the first fix only asserted the tube had a length, while the lower forearm left the frame 10 cm after the glove and was never seen) */
+function visibleLength(rig, a) {
+  const s = a.mesh.children[0], half = new THREE.Vector3(0, 1, 0).applyQuaternion(s.quaternion).multiplyScalar(s.scale.y / 2), A = rig.group.localToWorld(s.position.clone().sub(half)), B = rig.group.localToWorld(s.position.clone().add(half)), n = 80; let len = 0;
+  for (let i = 0; i < n; i++) { const p = A.clone().lerp(B, (i + 0.5) / n), q = p.clone().project(cam); if (p.z < -0.1 && Math.abs(q.x) < 1 && Math.abs(q.y) < 1) len += A.distanceTo(B) / n; }
+  return len;
+}
 /** the weapon's long axis in the view: points along the hold's y from the butt to the business end */
 function axisNdc(rig) {
   const box = new THREE.Box3().setFromObject(rig.hold), inv = new THREE.Matrix4().copy(rig.hold.matrixWorld).invert(); box.applyMatrix4(inv);      // (a world box in local terms: only its y extent is used, below)
@@ -49,7 +55,7 @@ test('at rest and on guard: BOTH hands (one for the marlinspike) are on the scre
       const rig = posed(id, st);
       assert.equal(rig.gloves.length, id === 'marlinspike' ? 1 : 2, id + ': one glove per hand on the weapon');
       for (const [i, gl] of rig.gloves.entries()) { const p = ndc(gl.getWorldPosition(new THREE.Vector3())); assert.ok(Math.abs(p.x) < 0.98 && Math.abs(p.y) < 0.98 && p.z < 1, `${id} ${name}: hand ${i} on screen (${p.x.toFixed(2)}, ${p.y.toFixed(2)})`); }
-      for (const a of rig.arms) { const e = a.mesh.children[0]; assert.ok(e.scale.y > 0.2, id + ': a forearm runs to every hand'); }
+      for (const [i, a] of rig.arms.entries()) { const L = visibleLength(rig, a); assert.ok(L > 0.15, `${id} ${name}: forearm ${i} can be SEEN (${L.toFixed(2)} m inside the frame; it must be at least 15 cm)`); }
     }
     const ready = axisNdc(posed(id, {}));
     for (const p of ready) assert.ok(Math.hypot(p.x * 1.98, p.y) > 0.16 || p.z > 1, `${id} ready: the weapon's axis passes the crosshair at (${p.x.toFixed(2)}, ${p.y.toFixed(2)})`);
