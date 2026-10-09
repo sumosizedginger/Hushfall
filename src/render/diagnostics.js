@@ -31,7 +31,7 @@ export function enemyBounds(view, w) {
 }
 /** where the Cantor's shield and the ring beams are actually drawn (world space), to compare with the body */
 export function encounterProbe(view) {
-  const sh = view.shield; return { shield: sh && sh.visible ? { x: sh.position.x, y: sh.position.y, z: sh.position.z, r: sh.scale.x } : null, beams: [...view.beams].map(([key, m]) => ({ key, a: m.userData.a, b: m.userData.b })) };
+  const sh = view.shield?.group; return { shield: sh && sh.visible ? { x: sh.position.x, y: sh.position.y, z: sh.position.z, r: sh.scale.x } : null, beams: [...view.beams].map(([key, m]) => ({ key, a: m.userData.a, b: m.userData.b })) };
 }
 /** every live piece of debris with the floor it will land on */
 export function debrisProbe(view, w) {

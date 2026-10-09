@@ -310,11 +310,11 @@ Object.assign(SFX, {
     tone(c, out, t, { type: 'sawtooth', f0: 140, f1: 380, d: 0.5, gain: 0.09, lp: 900 });
     return 1.1;
   },
-  rocket_boom(c, out, t, o) {                                   // the big blast: two low thumps, a long falling roar, a crack on top, debris
-    thump(c, out, t, 64, 20, 1.0, 0.7); thump(c, out, t + 0.02, 110, 34, 0.5, 0.4);
-    noise(c, out, t, { dur: 1.3, gain: 0.55, type: 'lowpass', f0: 3800, f1: 90, q: 0.6, off: o.r() });
-    noise(c, out, t + 0.02, { dur: 0.25, gain: 0.28, type: 'highpass', f0: 2200, off: o.r() });
-    for (let i = 0; i < 8; i++) noise(c, out, t + 0.1 + o.r() * 0.9, { dur: 0.06, gain: 0.13, type: 'highpass', f0: 2500 + o.r() * 3500, off: o.r() });
+  rocket_boom(c, out, t, o) {                                   // the big blast: two low thumps, a long falling roar, a crack on top, debris (levels set so the sum peaks under 1.0: audio-qa measured 1.305 at the first levels)
+    thump(c, out, t, 64, 20, 1.0, 0.46); thump(c, out, t + 0.02, 110, 34, 0.5, 0.27);
+    noise(c, out, t, { dur: 1.3, gain: 0.37, type: 'lowpass', f0: 3800, f1: 90, q: 0.6, off: o.r() });
+    noise(c, out, t + 0.02, { dur: 0.25, gain: 0.19, type: 'highpass', f0: 2200, off: o.r() });
+    for (let i = 0; i < 8; i++) noise(c, out, t + 0.1 + o.r() * 0.9, { dur: 0.06, gain: 0.09, type: 'highpass', f0: 2500 + o.r() * 3500, off: o.r() });
     return 1.5;
   },
   head_tick(c, out, t) { bell(c, out, t, 2400, { decay: 0.12, gain: 0.14, ratio: 2.76, index: 0.9 }); tone(c, out, t, { type: 'square', f0: 3300, f1: 1800, d: 0.03, gain: 0.05, lp: 4800 }); return 0.2; },   // a round in the head: a bright tick over the hit

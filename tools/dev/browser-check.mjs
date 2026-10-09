@@ -45,7 +45,7 @@ try {
   await sleep(700);
   const audioState = await T('t.state().audio.state');
   check('a real click unlocks audio (context running)', audioState === 'running', audioState);
-  const live0 = await T('t.state()');
+  let live0 = await T('t.state()'); for (let i = 0; i < 20 && !(live0.mode === 'playing' && live0.tick > 10); i++) { await sleep(250); live0 = await T('t.state()'); }          // a loaded machine draws fewer frames a second: wait for the loop instead of reading once
   check('real click on Normal starts a game and the live loop advances the sim', live0.mode === 'playing' && live0.tick > 10, `mode=${live0.mode} tick=${live0.tick}`);
   await sleep(500);
   const cardVisible = await page.$eval('#card', (e) => !e.classList.contains('hidden') && getComputedStyle(e).opacity > 0.3);
@@ -117,8 +117,10 @@ try {
   const fired = await T('t.state()');
   check('real click fires the scattergun (one shell, its own sound)', fired.player.ammo.shell === 9 && (await T('t.audioLog()')).some((x) => x.id === 'scatter_fire'), `shells=${fired.player.ammo.shell}`);
   await sleep(1100); await page.mouse.move(640, 360); await page.mouse.wheel({ deltaY: 100 }); await sleep(700);
+  const wheel1 = await T('t.state()');
+  await sleep(1100); await page.mouse.wheel({ deltaY: 100 }); await sleep(700);
   const wheel = await T('t.state()');
-  check('mouse wheel cycles weapons (wraps back to the flare cannon)', wheel.player.weapon === 'flare', wheel.player.weapon);
+  check('mouse wheel cycles weapons (the scattergun, then the fists which are always carried, then wraps back to the flare cannon)', wheel1.player.weapon === 'fists' && wheel.player.weapon === 'flare', `${wheel1.player.weapon} then ${wheel.player.weapon}`);
 
   // ---- 0d. automap with REAL input -------------------------------------------------------------------------------------
   await T("t.setup_clearEnemies(); t.setup_teleport(8, 34, -Math.PI / 2)"); await sleep(500);
@@ -263,7 +265,7 @@ try {
     const st = await T('t.state()'), toast = await text('toasts'), hud = await text('hud-weapons'), label = await text('hud-ammo-label');
     check('picking up the charge-arc lamp equips it: slot 5 on the HUD, CELLS on the ammo label, a toast that names it, 30 cells in the sim', st.player.weapon === 'arc' && st.player.ammo.cell === 30 && /5 LAMP/.test(hud) && /CELLS/.test(label) && toast.includes('Charge-arc lamp'), `weapon ${st.player.weapon}, cells ${st.player.ammo.cell}, hud "${hud}", label "${label}", toast "${toast.replace(/\s+/g, ' ').trim().slice(0, 80)}"`);
     const ids = []; for (const dx of [8, 11, 14]) ids.push(await T(`t.setup_spawnEnemy('feeder', ${96 + dx}, 51, Math.PI / 2, 'idle')`));
-    await T('t.tick(30)'); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.render(0.02)');
+    await T('t.tick(30)'); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.tick(2)'); await T('t.render(0.02)');                // the lamp fires on RELEASE: tick once the key is up
     const after = await T('t.state()'), fx = await T('t.boltProbe()'), hp = after.enemies.filter((e) => ids.includes(e.id)).map((e) => e.hp);
     check('one burst of the lamp in the live game spends one cell, jumps down a line of three bodies (each hit, each for less), draws its lightning and lights the level', after.player.ammo.cell === 29 && hp.length === 3 && hp.every((h) => h < 100) && hp[0] < hp[1] && hp[1] < hp[2] && fx.arcs > 0 && fx.lamp > 3, `cells ${after.player.ammo.cell}, hp ${hp.map((h) => Math.round(h))}, arc segments ${fx.arcs}, lamp light ${fx.lamp.toFixed(1)}`); }
   // debris lands on the terrain under it: an explosion over the M02 gallery (floor 3 m) must not let a chip fall more than a frame's travel below that floor
