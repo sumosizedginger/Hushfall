@@ -21,7 +21,7 @@ L.fx([41, 19, 42, 20], '.'); L.fx([41, 30, 42, 31], '.');
 L.rect([55, 18, 56, 19], 'I'); L.rect([53, 30, 54, 31], 'I'); L.rect([55, 12, 56, 13], 'I'); L.rect([53, 36, 54, 37], 'I');          // staggered blocks on the east catwalk: no 29 m straight line
 
 // ---- the east end: catwalks at 4 m (north, east, south), two galleries at 8 m with stairs, the cage lift between the ground and the east catwalk -----------------------------
-L.height([51, 7, 56, 10], 8); L.height([53, 11, 56, 39], 8); L.height([51, 40, 56, 43], 8);              // the catwalks (4 m)
+L.height([51, 7, 57, 10], 8); L.height([53, 11, 57, 39], 8); L.height([51, 40, 57, 43], 8);              // the catwalks (4 m), wall to wall: they stopped one cell short (x 56) and left a one-cell trench at floor level behind them, which the east bays then widened: step off the back of the catwalk and there was no way up (PT-024)
 L.stairs([43, 7, 50, 10], 'x', 16, 8); L.height([28, 7, 42, 10], 16);                                 // the north gallery (8 m) and its stair
 L.stairs([43, 40, 50, 43], 'x', 16, 8); L.height([28, 40, 42, 43], 16);                               // the south gallery and its stair
 L.wall([50, 23, 52, 23], 'I'); L.wall([50, 27, 52, 27], 'I'); L.wall([48, 23, 48, 23], 'I');         // the cage shaft's walls, and the post the call lever is on
