@@ -1,0 +1,18 @@
+[
+  { "name": "01-arrival", "x": 4.5, "z": 22.5, "yaw": "east" },
+  { "name": "02-the-sleepers", "x": 6.0, "z": 20.5, "yaw": "south", "pitch": 0.0 },
+  { "name": "03-top-of-the-ramp", "x": 9.5, "z": 22.5, "yaw": "east", "pitch": 0.05 },
+  { "name": "04-the-basin", "x": 16.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "05-north-ledge", "x": 16.5, "z": 20.0, "yaw": "north", "pitch": 0.1, "wake": true, "ticks": 20 },
+  { "name": "06-the-rubble", "x": 20.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "07-east-end", "x": 28.5, "z": 22.5, "yaw": "east", "pitch": 0.02 },
+  { "name": "08-the-breach", "x": 31.0, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "09-the-gullet", "x": 36.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "10-the-ribs", "x": 40.0, "z": 20.5, "yaw": "north", "pitch": 0.15 },
+  { "name": "11-the-throat-door", "x": 52.5, "z": 22.5, "yaw": "east", "pitch": 0.0 },
+  { "name": "12-the-throat", "x": 57.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "13-the-valve", "x": 62.5, "z": 19.5, "yaw": "north", "pitch": 0.0, "open": true },
+  { "name": "14-the-hatch", "x": 66.0, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "15-the-exit", "x": 70.5, "z": 22.5, "yaw": "east", "pitch": 0.0, "open": true },
+  { "name": "16-the-niche", "x": 44.0, "z": 10.5, "yaw": "south", "pitch": 0.0, "open": true }
+]

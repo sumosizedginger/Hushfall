@@ -104,4 +104,7 @@ MAP.entities.push(...[['weapon_carbine', 28, 23], ['ammo_round', 31, 21], ['ammo
 MAP.quality.introduces += "; also found here: the Harbour carbine, on a harbour guard's rack at the quay, before the first Warden's hall";
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

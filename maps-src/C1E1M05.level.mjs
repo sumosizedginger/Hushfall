@@ -98,4 +98,7 @@ MAP.entities.push(...[['weapon_mallet', 5, 49]].map(([kind, x, z]) => ({ type: '
 MAP.quality.introduces += '; also found here: the lamplighter\'s mallet, at the foot of the hill (it staggers, and plate does not turn it)';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

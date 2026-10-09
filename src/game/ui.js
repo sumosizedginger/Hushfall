@@ -122,7 +122,7 @@ export class UI {
   hud(w, visible) {
     this.keyLabels = w?.map?.keyLabels || {};
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
-    const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.guarding ? 'guard' : p.ads > 0.5 ? 'ads' : 'hip'; $('cross').classList.toggle('ripo', (p.riposteT || 0) > 0);
+    const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.guarding ? 'guard' : p.ads > 0.5 ? 'ads' : 'hip'; $('cross').classList.toggle('ripo', (p.riposteT || 0) > 0); $('cross').classList.toggle('supp', (p.suppT || 0) > 0);          // suppressed (PT-026): the crosshair opens red, as your guns do
     { const gt = WEAPONS[p.weapon]?.grav ? gravTarget(w) : null; $('cross').classList.toggle('grab', gt === 'prop' || gt === 'creature'); $('cross').classList.toggle('held', gt === 'held'); }       // PT-022: the tuning-fork's crosshair: wide when it can take something, solid when it holds something
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
     $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], melee = wd.kind === 'melee', noAmmo = melee || wd.kind === 'tool', have = noAmmo ? 0 : p.ammo[wd.ammo] ?? 0, stalled = !!wd.saw && (p.saw?.stall ?? 0) > 0;

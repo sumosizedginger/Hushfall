@@ -199,11 +199,6 @@
  "entities": [
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [28, 7]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [8, 8]
   },
@@ -230,16 +225,6 @@
    "facing": -0.41
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [44, 10]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [10, 12]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [26, 12],
@@ -253,11 +238,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [34, 12]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [48, 12]
   },
@@ -266,11 +246,6 @@
    "kind": "tollbearer",
    "at": [16, 13],
    "facing": -0.278
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [20, 13]
   },
   {
    "type": "prop",
@@ -306,11 +281,6 @@
    "facing": -0.353
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [24, 17]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [38, 17],
@@ -338,16 +308,6 @@
    "at": [50, 18]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [8, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [21, 19]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [44, 19],
@@ -365,11 +325,6 @@
    "facing": -0.175
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [16, 21]
-  },
-  {
    "type": "enemy",
    "kind": "sexton",
    "at": [26, 21],
@@ -381,20 +336,10 @@
    "at": [32, 21]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [46, 21]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 22],
    "facing": -0.499
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [40, 22]
   },
   {
    "type": "prop",
@@ -412,11 +357,6 @@
    "kind": "tollbearer",
    "at": [30, 23],
    "facing": -0.682
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [42, 24]
   },
   {
    "type": "prop",
@@ -440,16 +380,6 @@
    "kind": "bellhand",
    "at": [25, 26],
    "facing": -0.627
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [35, 26]
   },
   {
    "type": "enemy",
@@ -485,11 +415,6 @@
    "at": [38, 28]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [11, 29]
-  },
-  {
    "type": "enemy",
    "kind": "sexton",
    "at": [30, 29],
@@ -502,11 +427,6 @@
    "facing": -0.197
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [46, 30]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [50, 30],
@@ -516,16 +436,6 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [7, 31]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [15, 31]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [20, 31]
   },
   {
    "type": "prop",
@@ -545,39 +455,9 @@
    "facing": -0.983
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [48, 31]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [8, 33]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [18, 35]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [20, 35]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [30, 35]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [45, 35]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [9, 36]
   },
   {
    "type": "pickup",
@@ -668,11 +548,6 @@
    "facing": -1.158
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [42, 41]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [45, 42]
@@ -699,11 +574,6 @@
    "facing": -1.219
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [40, 44]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [10, 45],
@@ -725,16 +595,6 @@
    "kind": "tollbearer",
    "at": [22, 46],
    "facing": -1.107
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [30, 46]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [9, 47]
   },
   {
    "type": "pickup",
@@ -775,11 +635,6 @@
    "facing": -1.268
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [24, 50]
-  },
-  {
    "type": "prop",
    "kind": "barrel",
    "at": [27, 50]
@@ -809,11 +664,6 @@
    "type": "prop",
    "kind": "lantern",
    "at": [26, 53]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [14, 54]
   },
   {
    "type": "enemy",
@@ -1157,5 +1007,8 @@
    "bellhand": 8
   },
   "introduces": "undefined; also found here: the lamplighter's mallet, at the foot of the hill (it staggers, and plate does not turn it)"
+ },
+ "drops": {
+  "scale": 1
  }
 }

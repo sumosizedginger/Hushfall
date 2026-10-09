@@ -100,4 +100,7 @@ MAP.entities.push(...[['ammo_round', 26, 29], ['ammo_round', 27, 19], ['ammo_rou
 MAP.entities.push(...[['crate', 34, 11], ['barrel', 34, 44], ['sack', 44, 10], ['crate', 44, 46], ['barrel', 53, 15], ['crate', 57, 38], ['sack', 35, 33], ['barrel', 60, 28]].map(([kind, x, z]) => ({ type: 'prop', kind, at: [x, z], movable: true })));
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // the boss map keeps ALL its ammunition boxes on the ground (its ring of nodes and the mother's hatchlings never drop, only 20 creatures stand on it and the fight eats rivets: with every box of the hall the bot still died on hard, without the airlock's it died more); drops add to them
+
 export default MAP;

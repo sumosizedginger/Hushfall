@@ -419,11 +419,6 @@
    "at": [22, 13]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [5, 14]
-  },
-  {
    "type": "player",
    "at": [6, 14]
   },
@@ -434,28 +429,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [20, 14]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [24, 14]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [12, 23]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [43, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [46, 23]
   },
   {
    "type": "pickup",
@@ -475,18 +450,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [15, 24]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [38, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [39, 24]
   },
   {
    "type": "prop",
@@ -572,35 +537,15 @@
    "at": [23, 27]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [38, 27]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [52, 27]
-  },
-  {
    "type": "enemy",
    "kind": "bellhand",
    "at": [53, 27],
    "facing": -1.841
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [22, 28]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [23, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [24, 28]
   },
   {
    "type": "pickup",
@@ -623,16 +568,6 @@
    "kind": "tollbearer",
    "at": [14, 29],
    "facing": -2.652
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [25, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [43, 29]
   },
   {
    "type": "pickup",
@@ -744,16 +679,6 @@
    "facing": -2.017
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [54, 36]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [5, 37]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [11, 37],
@@ -773,11 +698,6 @@
    "type": "prop",
    "kind": "rope",
    "at": [10, 38]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [17, 38]
   },
   {
    "type": "enemy",
@@ -843,11 +763,6 @@
    "at": [5, 40]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [9, 40]
-  },
-  {
    "type": "prop",
    "kind": "sack",
    "at": [11, 40]
@@ -863,16 +778,6 @@
    "kind": "gaunt",
    "at": [34, 40],
    "facing": -2.319
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [37, 40]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [43, 40]
   },
   {
    "type": "enemy",
@@ -932,39 +837,9 @@
    "facing": -2.118
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [8, 43]
-  },
-  {
    "type": "prop",
    "kind": "sack",
    "at": [11, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [17, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [23, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [30, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [33, 43]
   },
   {
    "type": "enemy",
@@ -1024,11 +899,6 @@
    "kind": "gaunt",
    "at": [28, 46],
    "facing": -2.539
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [37, 46]
   },
   {
    "type": "prop",
@@ -1282,5 +1152,8 @@
   ],
   "skins": 7,
   "introduces": "undefined; also found here: the marlinspike, on the hook at the head of the cellar stair"
+ },
+ "drops": {
+  "scale": 1
  }
 }

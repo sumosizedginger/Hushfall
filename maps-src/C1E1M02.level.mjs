@@ -118,4 +118,7 @@ MAP.decals = [{ kind: 'scorch', at: [6, 28], wall: 'north', y: 1.3, size: 1.3 },
   { kind: 'bloodpool', at: [33, 45], size: 1.5 }, { kind: 'smear', at: [31, 46], rot: 1.2, size: 2.6, h: 1.0 }, { kind: 'soot', at: [31, 30], wall: 'north', y: 1.8, size: 2.0 }];                 // the grand hall: the crowd that was counted
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

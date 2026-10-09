@@ -86,12 +86,10 @@ test('the bot does not walk to bolt boxes unless it carries the rifle (PT-010)',
   w.player.weapons = ['flare', 'harpoon']; assert.equal(new Bot(w, new InputState(), [], {}).forage()?.id, 9100, 'with the rifle and no bolts it fetches the box');
 });
 
-test('the rifle has a supply: every Episode 2 map from its pedestal on has bolt boxes, and the main route walks over every one of them (PT-010)', () => {
-  for (const id of ['C1E2M02', 'C1E2M03', 'C1E2M04', 'C1E2M05', 'C1E2M06', 'C1E2M07', 'C1E2M08']) {
-    const map = loadMapFile(`maps/${id}.json`), r = runRoute(map, loadRouteFile(`routes/${id}.main.route.json`), { seed: 1, difficulty: 'normal' });
-    const boxes = map.entities.filter((e) => e.type === 'pickup' && e.kind === 'ammo_bolt').length, left = r.world.pickups.filter((p) => p.kind === 'ammo_bolt').length;
-    assert.ok(boxes >= 2, `${id} has ${boxes} bolt boxes`); assert.equal(left, 0, `${id}: ${left} of ${boxes} bolt boxes were not on the lane`);
-  }
+test('the rifle waits on the hook in C1E2M02 and its bolts come from the dead on every Episode 2 map from there on (PT-010, PT-025)', () => {
+  const r = runRoute(loadMapFile('maps/C1E2M02.json'), loadRouteFile('routes/C1E2M02.main.route.json'), { seed: 1, difficulty: 'normal' });
+  assert.ok(r.world.player.weapons.includes('harpoon'), 'the route finds the rifle'); assert.equal(r.world.pickups.filter((p) => p.kind === 'weapon_harpoon').length, 0, 'it was on the lane'); assert.ok((r.world.stats.gained?.bolt ?? 0) >= 6, 'and its bolts');
+  for (const id of ['C1E2M02', 'C1E2M03', 'C1E2M04', 'C1E2M05', 'C1E2M06', 'C1E2M07', 'C1E2M08']) assert.ok(loadMapFile(`maps/${id}.json`).drops, `${id} is fed by the dead (a player who has the rifle gets bolts for it: the drop picks the gun in use)`);
 });
 
 test('bolts picked up before the rifle do not hold off the last-resort flare feed; with the rifle they do (PT-010)', () => {

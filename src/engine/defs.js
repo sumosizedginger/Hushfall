@@ -64,6 +64,7 @@ export const LOOKS = {
   kiln: { hemi: [0x7a5240, 0x1e1412, 1.3], sun: [0xff8a4c, 1.1, [-12, 6, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },            // Kiln Row: soot and ember, red-brown shade
   cradle: { hemi: [0x58b4a4, 0x2a1830, 1.3], sun: [0x70f0d0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.06, 1.06], [1.1, 1.03, 0.88], 1), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },             // the Vael's rooms: wet teal, the pods are the light
   pump: { hemi: [0x78988a, 0x16201a, 1.5], sun: [0xd0e0c0, 0.7, [-4, 16, -2]], lamp: 1.3, exposure: 1, grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },               // pumps and slurry: industrial green-black
+  choir: { hemi: [0x86a89a, 0x241a2e, 1.6], sun: [0xbfe8d8, 0.8, [-9, 12, -6]], lamp: 1.35, exposure: 1, grade: GR([0.88, 1.04, 1.02], [1.06, 1.02, 0.9], 0.9), shade: { foot: 0.38, ao: 0.45, patch: 0.12 } },       // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
   rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -261,3 +262,32 @@ export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {} };
 
 export const DOOR = { speed: 1.5, passableAt: 0.85, holdOpen: 5, autoCloseClearance: 1.3 };
 export const FACING = { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI };
+
+/**
+ * AMMUNITION DROPS (PT-025, owner 2026-10-09: "maybe instead of ground pickups we make it drops from enemies? The gun you're using or the one missing the most ammo is the type?").
+ * A map that says `drops: { scale }` gets its ammunition from the dead instead of from boxes on the road (a few boxes stay in its secrets). On a kill (never a summoned or a raised creature, a bell node or a range
+ * target) the dead may drop one box, of the type the player NEEDS: among the guns fired in the last `window` s (the one in hand always counts) the one with the lowest share of its cap; with none fired, the
+ * emptiest carried gun. The chance rises as that share falls and a run of dry kills guarantees one (`pity`), so a player is neither starved nor flooded. A drop is the ordinary box of that type (`amount`
+ * is each type's old ground box), pulled toward the player inside `magnet.r` m. Every number is a first guess; the ones a map can move are `scale` (its overall supply) and a creature's own `chance`.
+ */
+export const DROPS = {
+  window: 90,                                                                                       // s: a gun fired within this long is "in use" (the one in hand always is)
+  full: 0.95,                                                                                       // a type this full is not dropped
+  chance: { tollbearer: 0.30, gaunt: 0.25, bellhand: 0.45, sexton: 0.50, gill: 0.25, chorister: 0.40, wardengraft: 1, default: 0.30 },   // per kill, before the need and the type weigh in; 1 = always
+  weight: { flare: 1, shell: 1, rivet: 1, bolt: 0.7, cell: 0.9, round: 1, rocket: 0.6 },            // the heavy guns' boxes are rarer
+  need: { floor: 0.5, slope: 1.5 },                                                                 // chance x (floor + slope x (1 - share of the cap held)): 0.5x when full-ish, 2x when empty
+  pity: 5,                                                                                          // kills without a drop, while the need is at least `pityNeed`, after which the next one drops
+  pityNeed: 0.5,
+  magnet: { r: 3.2, speed: 8, stop: 0.55 },                                                         // m, m/s, m: a drop within r that the player has a clear line to slides toward them
+};
+
+// ---- Episode 3, The Choir Ships (PT-026, owner approval 2026-10-09 of the five new creatures; Batch A needs only the first) --------------------------------------------------------------------------------------------
+// Chorister: the SUPPRESSION creature (design/CAMPAIGN_SPINE.md section 3, GAME_VISION.md "Chorister (suppression, flanking)"). A grafted singer whose throat is a grown horn: it keeps its distance (`ranged.hold`, and backs off while you are inside
+// `keep`: `retreat`), circles the player (`strafe`: it flanks round whatever the player stands behind) and sings in BURSTS: `burst.count` fast, light shots `burst.gap` s apart, each a little off the line (`spread`). One shot does
+// little (3); a ring of Choristers does a lot, and a shot that goes by within `suppress.r` m SUPPRESSES: for `SUPPRESS.time` s every gun the player fires opens its cone by up to `SUPPRESS.cone`. Standing in the open under
+// their fire makes you shoot badly; cover and the carbine (no cone to open) are the answers.
+ENEMIES.chorister = { name: 'Chorister', poise: 1, hp: 38, speed: 2.5, gait: 8, radius: 0.36, height: 2.3, hitRadius: 0.65, sight: 26, turnRate: 4.5,
+  attack: { range: 1.8, reach: 2.2, windup: 0.45, duration: 0.8, cooldown: 2.2, damage: 8 },
+  ranged: { hold: 12, keep: 8, minRange: 4, maxRange: 30, speed: 19, damage: 3, aimHeight: 1.2, muzzleY: 1.7, burst: { count: 4, gap: 0.1, spread: 0.06 }, suppress: { r: 1.5 } }, strafe: { speed: 3.1, every: 1.7 }, retreat: true };
+/** suppression (PT-026): a shot that passes close sets `p.suppT` to `time`; every weapon's cone is opened by `cone` x (the share of `time` left) */
+export const SUPPRESS = { time: 0.9, cone: 0.9 };

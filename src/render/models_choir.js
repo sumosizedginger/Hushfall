@@ -351,4 +351,48 @@ export function graftmother(tex) {
   }, { maxLift: 5 });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, feeder, graftmother };
+// ------------------------------------------------------------------------------------------------------------------ CHORISTER (PT-026, Episode 3: the voice; a grafted singer whose throat is a grown horn)
+/** a tall figure in a cold, pleated surplice with a pearl chitin shoulder and a brass-ochre stole, one hand raised like a conductor's; a row of organ pipes grown up its back; the face is a small skull behind a long ivory HORN
+ *  that points forward (the shape that tells it from the bell of a Tollbearer and the hat of a Bellhand at 20 m): a teal light burns in its throat and swells when it sings. */
+export function chorister(tex) {
+  const C = cellsOf('chorister');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 0.92, 0]);
+    legs(R, 'hips', 0.1, { a: 0.46, b: 0.44, r0: 0.085, r1: 0.066, r2: 0.05, cellA: C.robeDk, cellB: C.chitinDk }, C.chitinDk);
+    R.joint('spine', 'hips', [0, 0.05, 0]);
+    R.cyl('spine', 0.13, 0.16, 0.72, 8, C.skin, { pos: [0, 0.36, 0], scale: [1, 1, 0.75] });
+    R.pleat('spine', V2([[0.13, 0.84], [0.19, 0.78], [0.235, 0.62], [0.25, 0.42], [0.275, 0.2], [0.32, -0.02], [0.36, -0.22]]), 12, 6, 0.06, C.robe, { scale: [1, 1, 0.75] });             // the surplice
+    R.lump('spine', 0.14, 1, 0.14, 4, C.chitin, { pos: [0.27, 0.8, 0], scale: [1.35, 0.7, 1.1] });                                                                                          // a chitin pauldron on the screen-right shoulder
+    R.lump('spine', 0.11, 0, 0.14, 2, C.robe, { pos: [-0.25, 0.77, 0], scale: [1.2, 0.8, 1] });
+    for (let i = 0; i < 3; i++) R.lump('spine', 0.085, 0, 0.1, 5 + i, C.chitin, { pos: [0.02 * i, 0.5 + i * 0.12, 0.15], scale: [1.5 - i * 0.2, 0.55, 0.5] });                           // ribs of chitin through the linen
+    R.cyl('spine', 0.06, 0.07, 0.86, 6, C.stole, { pos: [0, 0.3, 0.2], scale: [1, 1, 0.22] });                                                                                              // the stole, hanging down the front: a long round strip, not a card
+    // organ pipes grown up the spine
+    [[-0.12, 0.34, -0.1], [-0.04, 0.5, 0.06], [0.05, 0.42, -0.06], [0.13, 0.28, 0.1]].forEach(([x, h, lean], i) => {
+      R.joint('pipe' + i, 'spine', [x, 0.78, -0.2], [-0.12 + lean * 0.5, 0, x * 1.4]); R.cyl('pipe' + i, 0.028, 0.04, h, 6, C.horn, { pos: [0, h / 2, 0] }); R.tor('pipe' + i, 0.034, 0.012, 3, 8, C.chitinDk, { pos: [0, h * 0.45, 0], rot: [PI / 2, 0, 0] });
+      R.cone('pipe' + i, 0.04, 0.06, 6, C.hornDk, { pos: [0, h + 0.02, 0] });
+    });
+    // arms: A (screen-left) raised and bent, the conductor's hand; B hangs forward at the hip
+    R.limb('spine', 'armA', [-0.25, 0.76, 0], { a: 0.32, b: 0.36, r0: 0.062, r1: 0.054, r2: 0.046, cellA: C.robe, cellB: C.skin }); hand(R, C, 'armA', { len: 0.4, r: 0.06, finger: 0.17 });
+    R.limb('spine', 'armB', [0.25, 0.76, 0], { a: 0.32, b: 0.38, r0: 0.062, r1: 0.054, r2: 0.046, cellA: C.chitin, cellB: C.skin }); hand(R, C, 'armB', { len: 0.42, r: 0.06, finger: 0.17 });
+    // the head: a small skull, eyes lit, and THE HORN where the mouth and throat were
+    R.joint('neck', 'spine', [0, 0.84, 0.05]); R.cyl('neck', 0.045, 0.055, 0.2, 6, C.skin, { pos: [0, 0.07, 0] });
+    R.joint('head', 'neck', [0, 0.18, 0.02]); R.lump('head', 0.13, 1, 0.1, 3, C.skin, { pos: [0, 0.06, -0.01], scale: [0.85, 1.25, 1] });
+    R.sph('head', 0.036, 5, 3, C.iron, { pos: [-0.052, 0.1, 0.1] }); R.sph('head', 0.036, 5, 3, C.iron, { pos: [0.052, 0.1, 0.1] });
+    R.sph('head', 0.02, 4, 3, 'glow', { pos: [-0.052, 0.1, 0.125] }); R.sph('head', 0.02, 4, 3, 'glow', { pos: [0.052, 0.1, 0.125] });
+    const flare = V2([[0.03, 0], [0.036, 0.06], [0.05, 0.16], [0.08, 0.27], [0.12, 0.37], [0.18, 0.44], [0.24, 0.48]]);                                                                        // radius by length: a throat that opens into a bell
+    const horn = R.lathe('head', flare, 12, C.horn, { pos: [0, -0.06, 0.1], rot: [PI / 2 - 0.12, 0, 0], name: 'hornMesh' });
+    R.lathe('head', V2(flare.map((q) => [Math.max(0.001, q.x - 0.012), q.y - 0.003])), 12, C.hornDk, { pos: [0, -0.06, 0.1], rot: [PI / 2 - 0.12, 0, 0], inside: true });                          // the dark inside of the bell
+    R.tor('head', 0.24, 0.022, 4, 14, C.chitinDk, { pos: [0, -0.06 + 0.48 * Math.sin(0.12), 0.1 + 0.48 * Math.cos(0.12)], rot: [-0.12, 0, 0] });                                         // the lip
+    R.sph('head', 0.055, 6, 4, 'glow', { pos: [0, -0.07, 0.38], name: 'throat' });                                                                                                            // the light in the throat
+    R.J.hornEchoes = R.echo(horn, 1, 0.12);
+  }, (p, J, R) => {
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.07, lean: 0.03, headX: 0.12, headZ: 0, jawOpen: 0, hipY: 0.92, stride: 0.6 }), ring = h.raise * (1 - h.rec);
+    J.armA.rotation.x = -1.2 + S(t * 1.4) * 0.06 - 0.45 * ring + S(p.phase) * 0.12 * p.walk; J.armA.rotation.z = -0.12; J.armAM.rotation.x = -0.95 - 0.2 * ring;                          // the conductor's arm, up
+    J.armB.rotation.x = -0.4 + S(p.phase) * 0.35 * p.walk; J.armBM.rotation.x = -0.35; J.armB.rotation.z = 0.1;
+    J.head.rotation.x = 0.04 - 0.5 * ring + S(t * 38) * 0.03 * ring; J.head.rotation.y = S(t * 0.7) * 0.12 * (1 - ring);                                                                    // it throws its head back to sing, the horn swings up
+    J.throat.scale.setScalar(1 + 0.18 * S(t * 3) + 1.5 * ring); R.ring(J.hornEchoes, p.attack > 0 ? ring : 0);
+    for (let i = 0; J['pipe' + i]; i++) J['pipe' + i].rotation.x = -0.12 + S(t * 1.5 + i * 1.7) * 0.05 + 0.18 * ring * S(t * 30 + i);                                                         // the pipes tremble as it sings
+  });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, feeder, graftmother };

@@ -132,6 +132,7 @@ export class GameView {
         for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.scale.setScalar(0.6); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.2, this.rnd() - 0.5).multiplyScalar(2.6), life: 0.3 + this.rnd() * 0.2 }); }
       }
       else if (e.type === 'shake') { this.shakeT = 0.5; this.shakeAmp = e.amount ?? 1; }
+      else if (e.type === 'suppress') { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.22); this.shakeT = Math.max(this.shakeT || 0, 0.2); }          // a round went by close (PT-026): a little jolt
       else if (e.type === 'explode') {
         this.boomT = 0; this.boomK = (e.r ?? 3.4) / 3.4; this.boomLight.position.set(e.x, e.y, e.z); { const d = Math.hypot(e.x - this.cam.position.x, e.z - this.cam.position.z), amp = Math.max(0, 1 - d / (16 * this.boomK)) * 0.8 * Math.min(1.6, this.boomK); if (amp > 0.03) { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, amp); this.shakeT = Math.max(this.shakeT || 0, 0.4); } }
         for (let i = 0, n = Math.round(14 * this.boomK); i < n; i++) {

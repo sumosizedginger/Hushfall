@@ -205,25 +205,10 @@
    "at": [25, 11]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [11, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [13, 12]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [14, 12],
    "facing": -0.733
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [15, 12]
   },
   {
    "type": "enemy",
@@ -238,28 +223,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [19, 12]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [21, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [23, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [25, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [26, 12]
   },
   {
    "type": "enemy",
@@ -271,21 +236,6 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [29, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [31, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [35, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [39, 12]
   },
   {
    "type": "prop",
@@ -428,11 +378,6 @@
    "at": [42, 17]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 17]
-  },
-  {
    "type": "prop",
    "kind": "crate2",
    "at": [49, 17]
@@ -453,11 +398,6 @@
    "at": [62, 17]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [12, 18]
-  },
-  {
    "type": "prop",
    "kind": "crate2",
    "at": [31, 18]
@@ -468,59 +408,14 @@
    "at": [35, 18]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [36, 18]
-  },
-  {
    "type": "prop",
    "kind": "pillar",
    "at": [50, 18]
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [12, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [16, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [18, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [19, 19]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [21, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [22, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [24, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [26, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [28, 19]
   },
   {
    "type": "prop",
@@ -531,11 +426,6 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [33, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [34, 19]
   },
   {
    "type": "enemy",
@@ -583,11 +473,6 @@
    "at": [4, 20]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [8, 20]
-  },
-  {
    "type": "prop",
    "kind": "barrel",
    "at": [12, 20]
@@ -623,11 +508,6 @@
    "at": [26, 20]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [34, 20]
-  },
-  {
    "type": "prop",
    "kind": "cart",
    "at": [36, 20]
@@ -642,11 +522,6 @@
    "kind": "tollbearer",
    "at": [42, 20],
    "facing": -1.517
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [47, 20]
   },
   {
    "type": "enemy",
@@ -682,11 +557,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [16, 22]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [18, 22]
   },
@@ -694,11 +564,6 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [20, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 22]
   },
   {
    "type": "pickup",
@@ -722,18 +587,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [37, 22]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [48, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [50, 22]
   },
   {
    "type": "prop",
@@ -779,11 +634,6 @@
    "at": [4, 24]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [8, 24]
-  },
-  {
    "type": "prop",
    "kind": "cart",
    "at": [17, 24]
@@ -823,11 +673,6 @@
    "kind": "tollbearer",
    "at": [42, 24],
    "facing": -1.625
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [47, 24]
   },
   {
    "type": "prop",
@@ -917,48 +762,13 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [12, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [16, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [18, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [20, 26]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [22, 26]
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [23, 26]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [26, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [27, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [28, 26]
   },
   {
    "type": "prop",
@@ -976,19 +786,9 @@
    "at": [35, 26]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [37, 26]
-  },
-  {
    "type": "prop",
    "kind": "pillar",
    "at": [50, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [12, 27]
   },
   {
    "type": "prop",
@@ -999,11 +799,6 @@
    "type": "prop",
    "kind": "crate",
    "at": [42, 27]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 27]
   },
   {
    "type": "prop",
@@ -1036,19 +831,9 @@
    "at": [18, 28]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [19, 28]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [21, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [23, 28]
   },
   {
    "type": "pickup",
@@ -1069,11 +854,6 @@
    "type": "prop",
    "kind": "crate2",
    "at": [31, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [36, 28]
   },
   {
    "type": "enemy",
@@ -1118,11 +898,6 @@
    "facing": -2.007
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [21, 29]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [23, 29],
@@ -1153,16 +928,6 @@
    "kind": "tollbearer",
    "at": [12, 30],
    "facing": -2.423
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [20, 30]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [22, 30]
   },
   {
    "type": "pickup",
@@ -1250,36 +1015,6 @@
    "type": "prop",
    "kind": "cradle",
    "at": [61, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [23, 14]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [22, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [33, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [52, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [21, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [45, 22]
   }
  ],
  "par": {
@@ -1421,5 +1156,8 @@
   },
   "scaleClass": "MIXED",
   "introduces": "the fortified approach: a gate that only a switch in a side building opens, and the first machinery of the Works (cradle rails) on screen from the first room"
+ },
+ "drops": {
+  "scale": 1
  }
 }

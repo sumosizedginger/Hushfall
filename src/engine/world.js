@@ -1,10 +1,11 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
-import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
+import { maybeDrop, updateDrops, trackFired } from './drops.js';
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
@@ -201,7 +202,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
   if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, !opts.burn, !!opts.burn);                    // being shot wakes you, whether or not you can see the shooter (a creature set alight wakes alone: it does not call its neighbours, the burst that lit it already made its noise)
   if (e.hp <= 0 && e.state !== 'dead') {
-    e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+    e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
     if (def.node) { emit(w, 'node_severed', { id: e.id, x: e.x, z: e.z }); for (const c of w.enemies) if (ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
@@ -477,7 +478,7 @@ function fireWeapon(w, charge = 0) {
   p.ammo[def.ammo] -= cost; p.cooldown = def.cooldown + cf * (def.charge?.recover ?? 0); p.kick = (def.kick ?? 0.06) * (1 + 6 * cf); w.stats.shots++;
   // accuracy: hip spread grows with movement; aiming tightens it. RNG draws happen in a fixed order so replays are deterministic.
   const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
-  const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0));
+  const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0)) * (1 + SUPPRESS.cone * Math.min(1, (p.suppT || 0) / SUPPRESS.time));
   if (def.heatPerShot) p.heat = Math.min(1, heat + def.heatPerShot);                                     // holding the trigger blooms the pattern
   if (def.kind === 'arc') fireArc(w, def, cf);
   else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
@@ -523,11 +524,14 @@ function stepClear(w, x0, z0, x1, z1) {
 }
 
 // ---------------------------------------------------------------- enemies
-function fireEnemyShot(w, e, def, diff) {
+function fireEnemyShot(w, e, def, diff, inBurst = false) {
   const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = e.y + (R.muzzleY ?? 1.5), oz = e.z + Math.cos(e.yaw) * 0.6;
-  const dx = p.x - ox, dy = p.y + R.aimHeight - oy, dz = p.z - oz, len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
-  w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: dx / len * R.speed, vy: dy / len * R.speed, vz: dz / len * R.speed, life: 4, dmg: Math.round(R.damage * diff.enemyDamage) });
-  emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+  let dx = p.x - ox, dy = p.y + R.aimHeight - oy, dz = p.z - oz; const len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
+  let vx = dx / len * R.speed, vy = dy / len * R.speed, vz = dz / len * R.speed;
+  if (R.burst) { const j = R.burst.spread, a = (rand(w) * 2 - 1) * j, b = (rand(w) * 2 - 1) * j, c = Math.cos(a), sn = Math.sin(a); [vx, vz] = [vx * c - vz * sn, vx * sn + vz * c]; vy += b * R.speed; }          // a burst is a little off the line, shot by shot (the seeded RNG: deterministic)
+  w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx, vy, vz, life: 4, dmg: Math.round(R.damage * diff.enemyDamage), ...(R.suppress ? { sup: R.suppress.r } : {}) });
+  emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z, burst: inBurst });
+  if (R.burst && !inBurst) { e.burstLeft = R.burst.count - 1; e.burstT = R.burst.gap; }
 }
 
 function updateEnemyShots(w, diff, dt) {
@@ -542,6 +546,7 @@ function updateEnemyShots(w, diff, dt) {
       if (!gone && w.phys && physAt(w, q.x, q.y, q.z)) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && q.reflected) { for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { gone = true; if (!damageEnemy(w, e, q.dmg)) { hitEffects(w, e, { flinch: 0.5 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }); } emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); break; } }
       else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      if (!gone && q.sup && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < q.sup && q.y > p.y && q.y < p.y + 2.1) { if ((p.suppT || 0) < SUPPRESS.time * 0.5) emit(w, 'suppress', { x: q.x, z: q.z }); p.suppT = SUPPRESS.time; }          // whizzing past: the player is suppressed (their guns open up)
     }
     if (gone) w.enemyShots.splice(i, 1);
   }
@@ -625,7 +630,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   if (def.summon && e.summons?.length && sees && e.summonCd <= 0) {
     const S = def.summon;
     if (w.enemies.filter((o) => o.kind === S.kind && o.state !== 'dead').length < S.max) for (let i = 0; i < S.count; i++) {
-      e.summonN = (e.summonN ?? -1) + 1; const [sx, sz] = e.summons[e.summonN % e.summons.length], g = spawnEnemy(w, S.kind, sx, sz, Math.atan2(p.x - sx, p.z - sz)); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z });
+      e.summonN = (e.summonN ?? -1) + 1; const [sx, sz] = e.summons[e.summonN % e.summons.length], g = spawnEnemy(w, S.kind, sx, sz, Math.atan2(p.x - sx, p.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z });
     }
     e.summonCd = S.every * (enraged ? 0.7 : 1);
   }
@@ -674,8 +679,9 @@ function updateEnemy(w, e, diff, dt) {
   if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
-  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; return; }          // staggered: it does nothing
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; return; }          // staggered: it does nothing
   if (def.node) return;
+  if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? def.sight) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
@@ -722,7 +728,7 @@ function updateEnemy(w, e, diff, dt) {
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
-  } else if (!e.hold && def.flying && R && sees && dist < R.minRange && retreatStep(w, e, def, dt)) {
+  } else if (!e.hold && (def.flying || def.retreat) && R && sees && dist < (R.keep ?? R.minRange) && retreatStep(w, e, def, dt)) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait;
   } else if (!e.hold && (sees ? !(dist <= engage && dyv < 1.6) : tdist > 1.2)) {
     chaseStep(w, e, def, dt);
@@ -737,7 +743,7 @@ function updateEnemy(w, e, diff, dt) {
 export function step(w, cmd) {
   if (w.status !== 'playing') return;
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
-  w.tick++; w.time = w.tick * dt;
+  w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt);
   updateSectors(w, dt); p.y = groundAt(w, p.x, p.z, PLAYER.radius);                       // moving floors carry whoever stands on them
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
@@ -839,6 +845,8 @@ export function step(w, cmd) {
   // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing: the flare cannon's feed drops one flare after a few seconds (and again each time it is spent).
   // PT-013 gave everybody fists, and the first version of this batch removed the feed ("fists mean you are never empty"). It is back, as a safety net: fists cannot hurt a plated Warden from the front (a bash does a third of its damage through the plate), so a player who ran dry in front of one could be soft-locked, and the robustness gate (a strafing fighter with 25% less ammunition pickups must finish C1E1M06) failed without it.
   if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0 && Object.entries(WEAPONS).some(([id, wd]) => wd.ammo === k && p.weapons.includes(id)))) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; p.ammo.flare = (p.ammo.flare || 0) + PLAYER.dryFeed.amount; emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
+  // ammunition drops (PT-025): the guns fired this tick are noted and a box that has dropped slides toward the player; both do nothing on a map without `drops`
+  if (w.map.drops) { trackFired(w); updateDrops(w, dt); }
   // pickups
   for (let i = w.pickups.length - 1; i >= 0; i--) {
     const it = w.pickups[i], def = PICKUPS[it.kind];
@@ -847,14 +855,14 @@ export function step(w, cmd) {
     const aCap = def.type === 'armor' ? armorCap(w.upgrades) : 0, mCap = def.ammo ? ammoCap(def.ammo, w.upgrades) : 0;      // the caps rise with the persistent upgrades (progress.js)
     if (def.type === 'health' && p.hp < PLAYER.maxHp) { p.hp = Math.min(PLAYER.maxHp, p.hp + def.amount); took = true; }
     else if (def.type === 'armor' && p.armor < aCap) { p.armor = Math.min(aCap, p.armor + def.amount); took = true; }
-    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < mCap) { p.ammo[def.ammo] = Math.min(mCap, (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); took = true; }
+    else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < mCap) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
     else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (def.ammo && (p.ammo[def.ammo] || 0) < mCap))) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => ALL_WEAPONS.indexOf(a) - ALL_WEAPONS.indexOf(b)); p.lastWeapon = p.weapon; p.weapon = def.weapon; if (isMelee(def.weapon)) p.meleeWeapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; p.charge = 0; p.swingT = -1; }
-      if (def.ammo) p.ammo[def.ammo] = Math.min(mCap, (p.ammo[def.ammo] || 0) + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1)));
+      if (def.ammo) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; }
       took = true;
     }
-    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key') w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
+    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key' && !it.drop) w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
   }
 
   if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) {

@@ -452,6 +452,14 @@
       "transparent": false,
       "sha256": "13419fcad9edb6566beb5f320c229baea4d3877670360b9b7ae9775594563968",
       "bytes": 31573
+    },
+    "choir_chorister": {
+      "seed": 2311,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3d7c9507f5a7eaad7bb1644a4e27537d843853bb8e542830f82ea4fd0b2605ec",
+      "bytes": 35134
     }
   }
 }

@@ -366,18 +366,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [25, 9]
-  },
-  {
-   "type": "pickup",
    "kind": "armor_vest",
    "at": [35, 9]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [46, 9]
   },
   {
    "type": "pickup",
@@ -396,11 +386,6 @@
    "at": [44, 10]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [34, 11]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [30, 12]
@@ -412,19 +397,9 @@
    "facing": -0.736
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [34, 12]
-  },
-  {
    "type": "prop",
    "kind": "lamp",
    "at": [35, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [36, 12]
   },
   {
    "type": "prop",
@@ -538,11 +513,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [58, 17]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [59, 17]
   },
@@ -576,11 +546,6 @@
    "kind": "bellhand",
    "at": [44, 18],
    "facing": -1.006
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [58, 18]
   },
   {
    "type": "prop",
@@ -683,19 +648,9 @@
    "facing": -0.951
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [34, 24]
-  },
-  {
    "type": "prop",
    "kind": "lamp",
    "at": [35, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [36, 24]
   },
   {
    "type": "enemy",
@@ -735,34 +690,14 @@
    "at": [44, 25]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [24, 26]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [30, 26]
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [34, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [36, 26]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [38, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [46, 26]
   },
   {
    "type": "prop",
@@ -772,18 +707,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [7, 29]
-  },
-  {
-   "type": "pickup",
    "kind": "weapon_rivet",
    "at": [8, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [9, 29]
   },
   {
    "type": "prop",
@@ -794,11 +719,6 @@
    "type": "prop",
    "kind": "shelf",
    "at": [5, 30]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [43, 30]
   },
   {
    "type": "pickup",
@@ -851,21 +771,6 @@
    "at": [8, 32]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [25, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [31, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [39, 32]
-  },
-  {
    "type": "enemy",
    "kind": "bellhand",
    "at": [44, 32],
@@ -898,11 +803,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [12, 35]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [19, 35]
   },
@@ -928,20 +828,10 @@
    "facing": -1.272
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [33, 36]
-  },
-  {
    "type": "prop",
    "kind": "lamp",
    "tint": "cool",
    "at": [35, 36]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [37, 36]
   },
   {
    "type": "enemy",
@@ -1028,11 +918,6 @@
    "type": "prop",
    "kind": "table",
    "at": [40, 39]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [4, 40]
   },
   {
    "type": "prop",
@@ -1192,16 +1077,6 @@
    "at": [19, 43]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [26, 43]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [44, 43]
-  },
-  {
    "type": "player",
    "at": [3, 44]
   },
@@ -1209,16 +1084,6 @@
    "type": "prop",
    "kind": "crate2",
    "at": [8, 44]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [18, 44]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [20, 44]
   },
   {
    "type": "prop",
@@ -1313,20 +1178,10 @@
    "at": [14, 47]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [24, 47]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [35, 47],
    "facing": -1.664
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [46, 47]
   },
   {
    "type": "enemy",
@@ -1533,5 +1388,8 @@
    "keys>=2"
   ],
   "skins": 5
+ },
+ "drops": {
+  "scale": 1
  }
 }

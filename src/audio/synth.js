@@ -220,6 +220,35 @@ export const SFX = {
     thump(c, out, t + 0.42, 95, 40, 0.2, 0.45);
     return 0.9;
   },
+  // --- Episode 3 (PT-026): the Chorister, and the shots that go by ---
+  chorister_alert(c, out, t, o) {                               // a held, hollow note that bends up: a throat tuned like a horn
+    tone(c, out, t, { type: 'sawtooth', f0: 233, f1: 311, a: 0.05, d: 0.55, gain: 0.2, lp: 1400, vib: 6 });
+    tone(c, out, t, { type: 'sine', f0: 466, f1: 622, a: 0.06, d: 0.5, gain: 0.12 });
+    noise(c, out, t, { dur: 0.4, a: 0.05, gain: 0.08, type: 'bandpass', f0: 900, f1: 1400, q: 2, off: o.r() });
+    return 0.7;
+  },
+  chorister_draw(c, out, t, o) {                                // the breath before the burst: a rising hiss through the horn
+    noise(c, out, t, { dur: 0.4, a: 0.2, gain: 0.22, type: 'bandpass', f0: 500, f1: 1800, q: 2.2, off: o.r() });
+    tone(c, out, t, { type: 'triangle', f0: 180, f1: 420, a: 0.2, d: 0.2, gain: 0.1 });
+    return 0.45;
+  },
+  chorister_note(c, out, t, o) {                                // one sung round of a burst: a short bright pulse, a different pitch each time (the choir's notes)
+    const f = 560 + Math.floor(o.r() * 5) * 62;
+    tone(c, out, t, { type: 'sawtooth', f0: f, f1: f * 0.94, a: 0.002, d: 0.09, gain: 0.24, lp: 2600 });
+    noise(c, out, t, { dur: 0.04, gain: 0.18, type: 'highpass', f0: 3200, off: o.r() });
+    return 0.12;
+  },
+  chorister_die(c, out, t, o) {                                 // the note goes flat and the horn is let down: a moan falling away, then the body
+    tone(c, out, t, { type: 'sawtooth', f0: 330, f1: 90, a: 0.02, d: 0.65, gain: 0.22, lp: 1100, vib: 5 });
+    noise(c, out, t, { dur: 0.45, gain: 0.16, type: 'lowpass', f0: 1100, f1: 200, off: o.r() });
+    thump(c, out, t + 0.55, 90, 40, 0.2, 0.45);
+    return 0.95;
+  },
+  shot_whiz(c, out, t, o) {                                     // a round going by close: a thin, fast crack of air
+    noise(c, out, t, { dur: 0.16, a: 0.004, gain: 0.24, type: 'bandpass', f0: 2600, f1: 5400, q: 1.6, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 3200, f1: 1500, a: 0.002, d: 0.1, gain: 0.05 });
+    return 0.2;
+  },
   mother_roar(c, out, t, o) {                                   // very low and very long: a pod the size of a room breathing out
     tone(c, out, t, { type: 'sawtooth', f0: 58, f1: 38, a: 0.25, d: 1.7, gain: 0.3, lp: 240, vib: 3 });
     tone(c, out, t, { type: 'sine', f0: 29, f1: 24, a: 0.3, d: 1.7, gain: 0.45 });

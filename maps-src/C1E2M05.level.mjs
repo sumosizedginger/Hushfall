@@ -92,4 +92,7 @@ MAP.entities.push(...[['barrel', 14, 27], ['crate', 24, 25], ['barrel', 40, 16],
 MAP.quality.introduces += '; also found here: the Vael tuning-fork, on the rail between the aisle and the table room, and movable crates, barrels and sacks to use it on';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

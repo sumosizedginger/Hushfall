@@ -81,12 +81,9 @@ test('deterministic: the same seed and inputs give the same arc', () => {
   assert.deepEqual(run(), run());
 });
 
-test('the lamp has a supply: it waits on the lane in C1E2M06 where the cage stops, and M06-M08 have cell boxes the main route walks over', async () => {
+test('the lamp waits on the lane in C1E2M06 where the cage stops (PT-025: its cells come from the dead, M06-M08 are drop-fed, the lamp itself gives 30)', async () => {
   const { loadMapFile, loadRouteFile, runRoute } = await import('../src/engine/harness.js');
-  for (const id of ['C1E2M06', 'C1E2M07', 'C1E2M08']) {
-    const map = loadMapFile(`maps/${id}.json`), r = runRoute(map, loadRouteFile(`routes/${id}.main.route.json`), { seed: 1, difficulty: 'normal' });
-    const boxes = map.entities.filter((e) => e.type === 'pickup' && e.kind === 'ammo_cell').length, left = r.world.pickups.filter((p) => p.kind === 'ammo_cell' || p.kind === 'weapon_arc').length;
-    assert.ok(boxes >= 3, `${id} has ${boxes} cell boxes`); assert.equal(left, 0, `${id}: ${left} lamp/cell pickups were not on the lane`);
-    if (id === 'C1E2M06') assert.ok(r.world.player.weapons.includes('arc'), 'the route finds the lamp');
-  }
+  const map = loadMapFile('maps/C1E2M06.json'), r = runRoute(map, loadRouteFile('routes/C1E2M06.main.route.json'), { seed: 1, difficulty: 'normal' });
+  assert.equal(r.world.pickups.filter((p) => p.kind === 'weapon_arc').length, 0, 'the lamp was on the lane'); assert.ok(r.world.player.weapons.includes('arc'), 'the route finds the lamp'); assert.ok((r.world.stats.gained?.cell ?? 0) >= 20, 'and its cells');
+  for (const id of ['C1E2M06', 'C1E2M07', 'C1E2M08']) assert.ok(loadMapFile(`maps/${id}.json`).drops, `${id} is fed by the dead`);
 });

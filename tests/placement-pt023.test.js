@@ -33,19 +33,19 @@ test('the chainsaw also hangs on the main road of Slurry Undercroft, for the pla
   const main = play('C1E2M03'); assert.ok(!main.world.player.weapons.includes('chainsaw'), 'the Rail Yard\'s main road does not: its copy is in the secret locker');
 });
 
-test('the guns arrive in a ladder: carbine at the Ferry Terminal, line-thrower at the Signal House; no map before holds their ammunition except the secret cache', () => {
+test('the guns arrive in a ladder: carbine at the Ferry Terminal, line-thrower at the Signal House; no map before holds their ammunition boxes except the secret cache (PT-025: from there on the dead feed them, to a player who fires them)', () => {
   const idx = (id) => CAMPAIGN.indexOf(id);
   for (const id of CAMPAIGN) {
     const k = kinds(id), rounds = k.filter((x) => x === 'ammo_round').length, rockets = k.filter((x) => x === 'ammo_rocket').length;
-    if (idx(id) < idx('C1E1M06')) assert.equal(rounds, 0, `${id}: no carbine rounds before the carbine`); else assert.ok(rounds >= 3, `${id}: ${rounds} round boxes`);
-    if (idx(id) < idx('C1E1M07')) assert.equal(rockets, 0, `${id}: no rockets before the line-thrower`); else assert.ok(rockets >= 1, `${id}: ${rockets} rocket boxes`);
+    if (idx(id) < idx('C1E1M06')) assert.equal(rounds, 0, `${id}: no carbine rounds before the carbine`);
+    if (idx(id) < idx('C1E1M07')) assert.equal(rockets, 0, `${id}: no rockets before the line-thrower`);
   }
   for (const id of SECRETS) { const k = kinds(id); assert.ok(k.includes('ammo_round') && k.includes('ammo_rocket'), `${id}'s cache holds some of each: it is carried to the maps that have the guns`); }
 });
 
-test('the ammunition is ON the lane: the route of each map picks up every round and rocket box (and the weapons), none is left lying', () => {
+test('every found weapon is ON the lane: the route of each map picks it up, none is left lying (the ammunition boxes of PT-023 became drops in PT-025; a boss map keeps its boxes and its route walks over them)', () => {
   for (const id of [...CAMPAIGN, ...SECRETS]) {
-    const r = play(id), left = r.world.pickups.filter((p) => /^(ammo_round|ammo_rocket|weapon_(carbine|linethrower|fork|boathook|marlinspike|mallet|axe))$/.test(p.kind));
+    const r = play(id), left = r.world.pickups.filter((p) => /^weapon_(carbine|linethrower|fork|boathook|marlinspike|mallet|axe)$/.test(p.kind));
     assert.equal(left.length, 0, `${id}: ${left.map((p) => p.kind + '@' + Math.floor(p.x / 2) + ',' + Math.floor(p.z / 2)).join(' ')} left on the floor`);
   }
 });

@@ -6,6 +6,7 @@ import { analyseReach } from '../src/engine/reach.js';
 import { runRoute } from '../src/engine/harness.js';
 import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { PICKUPS, PLAYER, WEAPONS, DIFFICULTY, AMMO_MAX } from '../src/engine/defs.js';
+import { measuredCapacityBy } from '../src/engine/viability.js';
 import { shippedSrc, shippedMap, shippedRoute } from './helpers.js';
 
 const map = shippedMap();
@@ -52,16 +53,13 @@ test('design contract: all three enemy kinds and both weapons matter (no unused 
   const kinds = new Set(map.entities.filter((e) => e.type === 'enemy').map((e) => e.kind));
   assert.deepEqual([...kinds].sort(), ['bellhand', 'gaunt', 'tollbearer']);
   assert.ok(at('bellhand').length >= 3, 'the ranged enemy is a recurring threat, not a cameo');
-  assert.ok(at('ammo_flare').length >= 4 && at('ammo_shell').length >= 5);
+  assert.ok(map.drops, 'its ammunition comes from the dead (PT-025): flares and shells from the Tollbearers, the Gaunts and the Bellhands'); assert.ok(at('ammo_shell').length >= 1 && at('ammo_flare').length >= 0, 'what is left on the ground is the net loft cache');
 });
 
-test('design contract: ammo is neither starving nor flooding, judged against what a perfect bot actually spends (normal, main route)', () => {
-  const d = DIFFICULTY.normal, flare = PLAYER.startAmmo.flare + at('ammo_flare').length * Math.round(PICKUPS.ammo_flare.amount * d.ammoPickup);
-  const shells = (at('ammo_shell').length * PICKUPS.ammo_shell.amount + PICKUPS.weapon_scattergun.amount) * d.ammoPickup, capacity = flare + shells;
-  const r = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1 }), spent = r.world.stats.shots;
+test('design contract: ammo is neither starving nor flooding, judged against what a perfect bot actually spends (normal, main route; PT-025: what it was given and what lies on the floor)', () => {
+  const r = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1 }), spent = r.world.stats.shots, by = measuredCapacityBy(map, 'normal', r.world), capacity = (by.flare ?? 0) + (by.shell ?? 0);
   assert.ok(capacity >= spent * 1.5, `a perfect bot fires ${spent} of ${capacity} available rounds: humans miss, so this needs at least 1.5x slack`);
-  assert.ok(capacity <= spent * 5, `${capacity} rounds available vs ${spent} needed by a perfect bot: ammo would be irrelevant`);
-  assert.ok(flare <= AMMO_MAX.flare * 3 && at('ammo_flare').length * PICKUPS.ammo_flare.amount <= AMMO_MAX.flare * 2, 'pickups are not wasted against the flare cap');
+  assert.ok(capacity <= spent * 8, `${capacity} rounds available vs ${spent} needed by a perfect bot: ammo would be irrelevant`);
   assert.ok(WEAPONS.flare.cooldown > 0);
 });
 

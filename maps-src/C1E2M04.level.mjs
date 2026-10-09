@@ -116,4 +116,9 @@ MAP.entities.push(...[['weapon_axe', 9, 23], ['ammo_round', 21, 19], ['ammo_roun
 MAP.quality.introduces += '; also found here: the fire axe, in the gatehouse\'s fire cabinet';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+// the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand in the charging hall, appended last so no id shifts
+MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [26, 19], facing: -0.96 });
+
 export default MAP;

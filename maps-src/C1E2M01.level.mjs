@@ -134,4 +134,7 @@ MAP.entities ??= [];
 MAP.entities.push(...[['ammo_round', 23, 14], ['ammo_round', 22, 29], ['ammo_round', 33, 22], ['ammo_round', 52, 21], ['ammo_rocket', 21, 22], ['ammo_rocket', 45, 22]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

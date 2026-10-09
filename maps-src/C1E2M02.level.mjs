@@ -145,4 +145,9 @@ MAP.entities ??= [];
 MAP.entities.push(...[['ammo_round', 12, 25], ['ammo_round', 27, 25], ['ammo_round', 36, 25], ['ammo_round', 52, 25], ['ammo_rocket', 15, 25], ['ammo_rocket', 46, 25]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+// the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand on the south side of the pump station road, appended last so no id shifts
+MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [43, 28], facing: -2.555 });
+
 export default MAP;

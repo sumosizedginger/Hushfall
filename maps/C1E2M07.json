@@ -145,21 +145,11 @@
    "group": "z2"
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [26, 13]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [31, 13],
    "facing": -1.238,
    "group": "z2"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [26, 15]
   },
   {
    "type": "pickup",
@@ -222,29 +212,14 @@
    "at": [57, 18]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [60, 18]
-  },
-  {
    "type": "prop",
    "kind": "pod",
    "at": [61, 18]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [5, 19]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [6, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [9, 19]
   },
   {
    "type": "prop",
@@ -260,11 +235,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 19]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [53, 19]
   },
@@ -274,11 +244,6 @@
    "at": [59, 19],
    "facing": -1.515,
    "group": "z4"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [4, 20]
   },
   {
    "type": "enemy",
@@ -304,11 +269,6 @@
    "group": "z2"
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [53, 20]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [55, 20],
@@ -331,36 +291,6 @@
    "type": "prop",
    "kind": "pillar",
    "at": [10, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [37, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [38, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [40, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [44, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [47, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [49, 21]
   },
   {
    "type": "prop",
@@ -388,19 +318,9 @@
    "at": [19, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [20, 22]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [21, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [22, 22]
   },
   {
    "type": "pickup",
@@ -418,24 +338,9 @@
    "at": [27, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [28, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [30, 22]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [31, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [32, 22]
   },
   {
    "type": "prop",
@@ -508,16 +413,6 @@
    "at": [53, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [54, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [55, 22]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [57, 22],
@@ -535,39 +430,9 @@
    "at": [10, 23]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [37, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [38, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [40, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [44, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [49, 23]
-  },
-  {
    "type": "prop",
    "kind": "pillar",
    "at": [58, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [4, 24]
   },
   {
    "type": "enemy",
@@ -579,11 +444,6 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [33, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [53, 24]
   },
   {
    "type": "enemy",
@@ -598,19 +458,9 @@
    "at": [56, 24]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [5, 25]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [6, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [9, 25]
   },
   {
    "type": "prop",
@@ -623,11 +473,6 @@
    "at": [24, 25],
    "facing": -1.727,
    "group": "z2"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 25]
   },
   {
    "type": "enemy",
@@ -666,11 +511,6 @@
    "at": [57, 26]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [60, 26]
-  },
-  {
    "type": "prop",
    "kind": "pod",
    "at": [61, 26]
@@ -701,11 +541,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [26, 29]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [37, 29]
   },
@@ -722,11 +557,6 @@
    "at": [22, 31],
    "facing": -2.058,
    "group": "z2"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [26, 31]
   },
   {
    "type": "enemy",
@@ -861,31 +691,6 @@
    ]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [23, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [49, 20]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_cell",
-   "at": [27, 16]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_cell",
-   "at": [34, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_cell",
-   "at": [49, 19]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [57, 31]
@@ -904,36 +709,6 @@
    "type": "pickup",
    "kind": "weapon_chainsaw",
    "at": [9, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [16, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [32, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [39, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [49, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [25, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [49, 15]
   },
   {
    "type": "prop",
@@ -1097,5 +872,8 @@
   },
   "scaleClass": "COMPRESSION",
   "introduces": "light as a schedule: the undercroft starts nearly dark; each of four breakers raises the light a stage, opens the next door and wakes what lives there; also found here: the Shipwright's chainsaw again, on a rack at the pump gallery door (for the player who missed the Rail Yard's tool locker)"
+ },
+ "drops": {
+  "scale": 1
  }
 }

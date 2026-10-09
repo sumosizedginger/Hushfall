@@ -4,14 +4,15 @@
 // cells that reach an exit. Used by `tools/dev/trap-cells.mjs`, by the map lint (and so by verify-map) and by tests/traps.test.js.
 import { STEP, PROPS } from './defs.js';
 
+/** `secrets: false` closes every secret panel and closet (the cells reachable from the spawn are then the map's PUBLIC part; `result.reach` is the set, `result.key(x, z)` its index). */
 /** `props`: 'static' also treats the cell of every static prop that blocks its cell (a crate, a stall, a pillar) as a wall; 'all' adds the movable props (a player without the tuning-fork cannot move them) */
-export function findTraps(map, { props = null } = {}) {
+export function findTraps(map, { props = null, secrets = true } = {}) {
   const W = map.w, H = map.h, key = (x, z) => z * W + x;
   const sectorH = new Map(); for (const s of map.sectors) for (const [x, z] of s.cells) sectorH.set(key(x, z), [s.low ?? 0, s.high ?? 0]);
   const heights = (x, z) => sectorH.get(key(x, z)) ?? [map.floor(x, z)];
   const blocked = new Set();
   if (props) for (const e of map.entities) if (e.type === 'prop' && ((!e.movable && PROPS[e.kind]?.blocksCell) || (props === 'all' && e.movable))) blocked.add(key(Math.floor(e.at[0]), Math.floor(e.at[1])));
-  const passable = (x, z) => { if (x < 0 || z < 0 || x >= W || z >= H || blocked.has(key(x, z))) return false; const k = map.kind(x, z); return k === 'floor' || k === 'outdoor' || k === 'door' || k === 'secret'; };
+  const passable = (x, z) => { if (x < 0 || z < 0 || x >= W || z >= H || blocked.has(key(x, z))) return false; const k = map.kind(x, z); return k === 'floor' || k === 'outdoor' || k === 'door' || (k === 'secret' && secrets); };
   const canStep = (ax, az, bx, bz) => { for (const ha of heights(ax, az)) for (const hb of heights(bx, bz)) if (hb - ha <= STEP + 1e-6) return true; return false; };
   const out = new Map(), inn = new Map();                                                       // directed edges: a cell -> the cells it can move to
   const add = (a, b) => { (out.get(a) ?? out.set(a, []).get(a)).push(b); (inn.get(b) ?? inn.set(b, []).get(b)).push(a); };
@@ -34,5 +35,5 @@ export function findTraps(map, { props = null } = {}) {
     const rim = []; for (const a of cells) for (const f of inn.get(a) ?? []) if (toExit.has(f)) rim.push(f);          // where a player comes in from: a ledge he can still return from
     groups.push({ cells: cells.length, x: [Math.min(...xs), Math.max(...xs)], z: [Math.min(...zs), Math.max(...zs)], floor: map.floor(xs[0], zs[0]), from: [...new Set(rim)].slice(0, 3).map((a) => `${a % W},${Math.floor(a / W)}`) });
   }
-  return { traps: trapped.length, groups, reachable: reach.size, exits: map.exits.length };
+  return { traps: trapped.length, groups, reachable: reach.size, exits: map.exits.length, reach, key };
 }
