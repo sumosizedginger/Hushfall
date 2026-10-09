@@ -96,4 +96,12 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'smear', at: [46, 24], rot: 0, size: 3.0, h: 1.2 }, { kind: 'bloodpool', at: [53, 24], size: 1.4 }, { kind: 'bloodpool', at: [58, 24], size: 1.4 }, { kind: 'scrape', at: [53, 20], wall: 'east', y: 1.2, size: 1.4 }, { kind: 'bloodpool', at: [14, 25], size: 1.2 }];   // the loading lane, the hull, the hall
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the Harbour carbine, on a harbour guard's rack at the quay, before the first Warden's hall; ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_carbine', 28, 23], ['ammo_round', 31, 21], ['ammo_round', 43, 9], ['ammo_round', 47, 23]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-carbine', at: [28, 23], radius: 1.5, speaker: 'HARBOUR GUARD', text: 'A harbour guard\'s carbine on the rack, a clip in it. No spread to it: put the round where the head is.' });
+MAP.quality.introduces += "; also found here: the Harbour carbine, on a harbour guard's rack at the quay, before the first Warden's hall";
+// ---- end PT-023 ----
+
 export default MAP;

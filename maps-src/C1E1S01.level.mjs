@@ -52,4 +52,10 @@ const MAP = {
 
 // PT-021: the props set down in the new bays (after every other entity: no id shifts)
 MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['ammo_round', 6, 12], ['ammo_rocket', 5, 4]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-023 ----
+
 export default MAP;

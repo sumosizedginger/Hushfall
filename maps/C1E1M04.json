@@ -1129,6 +1129,11 @@
    "type": "prop",
    "kind": "cradle",
    "at": [51, 45]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_marlinspike",
+   "at": [13, 19]
   }
  ],
  "par": {
@@ -1205,6 +1210,13 @@
    "radius": 2,
    "speaker": "SIGNAL HOUSE",
    "text": "Lamplighter Hill is the way up. The survivors there signal by lamp: green for safe, red for bells."
+  },
+  {
+   "id": "found-marlinspike",
+   "at": [13, 19],
+   "radius": 1.5,
+   "speaker": "RIGGER'S HOOK",
+   "text": "A marlinspike on the stair hook. Put it into a sleeper from behind and it does not wake: three times the work of a stab from the front."
   }
  ],
  "decals": [
@@ -1268,6 +1280,7 @@
    "secret",
    "keys>=1"
   ],
-  "skins": 7
+  "skins": 7,
+  "introduces": "undefined; also found here: the marlinspike, on the hook at the head of the cellar stair"
  }
 }

@@ -1020,6 +1020,36 @@
    "type": "prop",
    "kind": "lantern",
    "at": [43, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [30, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [33, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [23, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [13, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [41, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [21, 29]
   }
  ],
  "par": {

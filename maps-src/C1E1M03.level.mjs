@@ -89,4 +89,12 @@ MAP.decals = [{ kind: 'bloodpool', at: [21, 23], size: 1.3 }, { kind: 'smear', a
   { kind: 'scrape', at: [58, 24], wall: 'west', y: 1.0, size: 1.2 }, { kind: 'bloodpool', at: [30, 9], size: 1.1 }];                                                                                       // the auction hall's shutter, the boardwalk
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the boat hook, a gaff left on a stall post on the boardwalk ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_boathook', 14, 9]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-boathook', at: [14, 9], radius: 1.5, speaker: 'BOAT HOOK', text: 'A gaff left on a stall post, the point still wet. It reaches further than a fist, and what it hooks comes to you.' });
+MAP.quality.introduces += '; also found here: the boat hook, a gaff left on a stall post on the boardwalk';
+// ---- end PT-023 ----
+
 export default MAP;

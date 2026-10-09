@@ -90,4 +90,12 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'bloodpool', at: [24, 44], size: 1.2 }, { kind: 'smear', at: [30, 31], rot: 0.3, size: 2.4, h: 1.0 }, { kind: 'scorch', at: [48, 7], wall: 'north', y: 1.7, size: 1.6 }, { kind: 'soot', at: [44, 7], wall: 'north', y: 1.5, size: 1.4 }];     // the funicular, the Sexton's terrace, the beacon
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the lamplighter's mallet, at the foot of the hill (it staggers, and plate does not turn it) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_mallet', 5, 49]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-mallet', at: [5, 49], radius: 1.5, speaker: 'LAMPLIGHTER', text: 'The lamplighter\'s mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it. Keep it for the Warden.' });
+MAP.quality.introduces += '; also found here: the lamplighter\'s mallet, at the foot of the hill (it staggers, and plate does not turn it)';
+// ---- end PT-023 ----
+
 export default MAP;

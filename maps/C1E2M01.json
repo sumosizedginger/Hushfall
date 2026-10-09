@@ -1250,6 +1250,36 @@
    "type": "prop",
    "kind": "cradle",
    "at": [61, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [23, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [22, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [33, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [52, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [21, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [45, 22]
   }
  ],
  "par": {

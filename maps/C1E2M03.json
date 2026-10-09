@@ -1190,6 +1190,41 @@
    "type": "prop",
    "kind": "crate2",
    "at": [72, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_chainsaw",
+   "at": [26, 3]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [23, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [42, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [51, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [63, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [38, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [60, 20]
   }
  ],
  "par": {
@@ -1259,6 +1294,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "The rail ends in Kiln Row. After this, the heat. Everything past that door is cooking something."
+  },
+  {
+   "id": "found-chainsaw",
+   "at": [26, 3],
+   "radius": 1.5,
+   "speaker": "TOOL LOCKER",
+   "text": "A shipwright's chainsaw, oiled and wrapped. It runs and runs, and it is loud; hold it on plate or bell and it stalls."
   }
  ],
  "decals": [
@@ -1317,6 +1359,6 @@
    "bellhand": 2
   },
   "scaleClass": "MIXED",
-  "introduces": "shunting: three wagons that are moving floors, raised as walls across the shed and lowered one at a time by levers; every way east has its own threat"
+  "introduces": "shunting: three wagons that are moving floors, raised as walls across the shed and lowered one at a time by levers; every way east has its own threat; also found here: the Shipwright's chainsaw, in the tool locker (the secret)"
  }
 }

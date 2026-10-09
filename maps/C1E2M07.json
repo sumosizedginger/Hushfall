@@ -899,6 +899,71 @@
    "type": "prop",
    "kind": "cradle",
    "at": [66, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_chainsaw",
+   "at": [9, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [16, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [32, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [39, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [49, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [25, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [49, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [15, 26],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [34, 25],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [46, 13],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [49, 26],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [58, 30],
+   "movable": true
   }
  ],
  "par": {
@@ -961,6 +1026,13 @@
    "radius": 2.5,
    "speaker": "WARDEN CALDER",
    "text": "Slurry drains do not drain only slurry. I hid a week of supplies here when I was a younger man, in case the Works went bad."
+  },
+  {
+   "id": "found-chainsaw",
+   "at": [9, 22],
+   "radius": 1.5,
+   "speaker": "PUMP GALLERY RACK",
+   "text": "A saw rack by the pump gallery door: the Shipwright's chainsaw, for anyone who missed it. Close quarters, a long run, a hard stall."
   }
  ],
  "decals": [
@@ -1024,6 +1096,6 @@
    "bellhand": 4
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "light as a schedule: the undercroft starts nearly dark; each of four breakers raises the light a stage, opens the next door and wakes what lives there"
+  "introduces": "light as a schedule: the undercroft starts nearly dark; each of four breakers raises the light a stage, opens the next door and wakes what lives there; also found here: the Shipwright's chainsaw again, on a rack at the pump gallery door (for the player who missed the Rail Yard's tool locker)"
  }
 }

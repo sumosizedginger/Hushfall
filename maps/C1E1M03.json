@@ -1348,6 +1348,11 @@
    "type": "prop",
    "kind": "barrel",
    "at": [47, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_boathook",
+   "at": [14, 9]
   }
  ],
  "scenery": [
@@ -1410,6 +1415,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "That is the way out. After it, the Drowned Chandlery: the cellars flood on the ebb. Bring a light, and courage."
+  },
+  {
+   "id": "found-boathook",
+   "at": [14, 9],
+   "radius": 1.5,
+   "speaker": "BOAT HOOK",
+   "text": "A gaff left on a stall post, the point still wet. It reaches further than a fist, and what it hooks comes to you."
   }
  ],
  "decals": [
@@ -1473,6 +1485,7 @@
    "hazards",
    "closets"
   ],
-  "skins": 7
+  "skins": 7,
+  "introduces": "undefined; also found here: the boat hook, a gaff left on a stall post on the boardwalk"
  }
 }

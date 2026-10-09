@@ -128,4 +128,10 @@ MAP.decals = [{ kind: 'ichorpool', at: [69, 22], size: 1.5 }, { kind: 'ichor', a
 MAP.growth = [{ at: [69, 22], r: 16, power: 1.0 }];                                                                                                                                                          // the grafting bay: resin has come out through the hall's door
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['ammo_round', 23, 14], ['ammo_round', 22, 29], ['ammo_round', 33, 22], ['ammo_round', 52, 21], ['ammo_rocket', 21, 22], ['ammo_rocket', 45, 22]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-023 ----
+
 export default MAP;

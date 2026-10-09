@@ -1023,6 +1023,11 @@
    "type": "prop",
    "kind": "lantern",
    "at": [38, 4]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_mallet",
+   "at": [5, 49]
   }
  ],
  "par": {
@@ -1085,6 +1090,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there."
+  },
+  {
+   "id": "found-mallet",
+   "at": [5, 49],
+   "radius": 1.5,
+   "speaker": "LAMPLIGHTER",
+   "text": "The lamplighter's mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it. Keep it for the Warden."
   }
  ],
  "decals": [
@@ -1143,6 +1155,7 @@
   "enemyKinds": {
    "sexton": 2,
    "bellhand": 8
-  }
+  },
+  "introduces": "undefined; also found here: the lamplighter's mallet, at the foot of the hill (it staggers, and plate does not turn it)"
  }
 }

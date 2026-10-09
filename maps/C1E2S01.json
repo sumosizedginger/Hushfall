@@ -532,6 +532,16 @@
      "message": "rolling"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [30, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [27, 24]
   }
  ],
  "par": {
