@@ -1,0 +1,789 @@
+{
+ "format": 1,
+ "id": "C1E3M01",
+ "version": 1,
+ "name": "Landing Scar",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#2c3a3a",
+  "fogDensity": 0.011,
+  "sky": "ash",
+  "look": "choir"
+ },
+ "grid": [
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "########################################RRRRRRRRR###################################",
+  "########################################RnnnnnnnR###################################",
+  "##TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#######RnnnnnnnR###################################",
+  "##TsssssssssssssssssssssssssssssT#######RnnnnnnnR###################################",
+  "##TsssssssssssssssssssssssssssssT####n##RnnnnnnnR###################################",
+  "##TsssssssssssssssssssssssssssssT###nnn#RnnnnnnnR###################################",
+  "##TsssssssssssssssssssssssssssssRRRRnnnRRRRRSRRRRRRRRRRR############################",
+  "##TsssssssssssssssssssssssssssssRRRnnnnnnnnnnnnnnnnnnRRR############################",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmRRnnnnnnnnnnnnnnnnnnnnRR############################",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRRRRRRRRRRRRR###############",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggR###############",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggR###############",
+  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRRRRRRR########",
+  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRnnnnRR########",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRnnnnnnR########",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnDggggggggggggDnnnnnnR########",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRnnnnnnR########",
+  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRnnnnRR########",
+  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRRRRRRR########",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRgggggggggggR###############",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRRRRRRRRRRRRR###############",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmRRnnnnnnnnnnnnnnnnnnnnRR############################",
+  "##TsssssssssssssssssssssssssssssRRRnnnnnnnnnnnnnnnnnnRRR############################",
+  "##TsssssssssssssssssssssssssssssRRRRnnnRRRnnnRRRnnnRRRRR############################",
+  "##TsssssssssssssssssssssssssssssT###nnn###nnn###nnn#################################",
+  "##TsssssssssssssssssssssssssssssT####n#####n#####n##################################",
+  "##TsssssssssssssssssssssssssssssT###################################################",
+  "##TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT###################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################",
+  "####################################################################################"
+ ],
+ "heights": [
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  ".........................................2222222....................................",
+  ".........................................2222222....................................",
+  "...6666666666666666666666654321..........2222222....................................",
+  "...6666666666666666666666654321......2...2222222....................................",
+  "...6666666666666666666666654321.....222..2222222....................................",
+  "...6666666666666666666666654321.....222.....2.......................................",
+  "...6666666666666666666666654321....122222222222222222...............................",
+  "...666666..........................122222222222222222...............................",
+  "...666666..........................122222222222222222...............................",
+  "...666666..........................122222222222222222...............................",
+  "...666666...........................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666654321.....................................................................",
+  "...666666..........................122222222222222222...............................",
+  "...666666..........................122222222222222222...............................",
+  "...666666..........................122222222222222222...............................",
+  "...6666666666666666666666654321....122222222222222222...............................",
+  "...6666666666666666666666654321.....222...222...222.................................",
+  "...6666666666666666666666654321.....222...222...222.................................",
+  "...6666666666666666666666654321......2.....2.....2..................................",
+  "...6666666666666666666666654321.....................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "...................................................................................."
+ ],
+ "doors": [
+  {
+   "at": [55, 22]
+  },
+  {
+   "at": [68, 22],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "hollow-rib",
+   "panel": [44, 13],
+   "cells": [
+    [44, 12],
+    [44, 11],
+    [44, 10]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "rim",
+   "when": "enter",
+   "at": [14, 22],
+   "radius": 2.5,
+   "do": [
+    {
+     "wake": "rim"
+    },
+    {
+     "wake": "rim-south"
+    },
+    {
+     "objective": "Singers on both rims. Cross rubble to rubble: the breach is east"
+    }
+   ]
+  },
+  {
+   "id": "breach",
+   "when": "enter",
+   "at": [33, 22],
+   "radius": 2,
+   "do": [
+    {
+     "objective": "Inside the hull. The valve is on the throat wall"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [44, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [42, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [43, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [46, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [44, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [12, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [20, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [26, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [42, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [43, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [45, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [46, 11]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [14, 12],
+   "facing": -0.785,
+   "group": "rim"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [23, 12],
+   "facing": -1.086,
+   "group": "rim"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [6, 13],
+   "facing": -0.219
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [18, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [28, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [51, 15],
+   "facing": -1.423
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [19, 16]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [44, 16],
+   "facing": -1.422
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [7, 17],
+   "facing": -0.54
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 17],
+   "facing": -1.381
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [56, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [60, 18]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 19],
+   "facing": -1.385
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [34, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 19],
+   "facing": -1.483
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [40, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [47, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [52, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [58, 19],
+   "facing": -1.515
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [5, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 20],
+   "facing": -1.488
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 20],
+   "facing": -1.527
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [54, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [57, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [61, 20],
+   "facing": -1.536
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [41, 21],
+   "facing": -1.544
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [71, 21]
+  },
+  {
+   "type": "player",
+   "at": [4, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [16, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [25, 22],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [35, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [43, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [50, 22],
+   "facing": -1.571
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [59, 22],
+   "facing": -1.571
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [63, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [66, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [70, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [72, 22]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [73, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [47, 23],
+   "facing": -1.594
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [64, 23],
+   "facing": -1.587
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [71, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [5, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 24],
+   "facing": -1.621
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [54, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [57, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [58, 24],
+   "facing": -1.608
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [34, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [40, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [47, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [52, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [60, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [24, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [67, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [19, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 27],
+   "facing": -1.761
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [21, 28],
+   "facing": -1.91
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [28, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [18, 30]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [14, 31],
+   "facing": -2.304,
+   "group": "rim-south"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [23, 31],
+   "facing": -2.013,
+   "group": "rim-south"
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [12, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [20, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [26, 32]
+  },
+  {
+   "type": "switch",
+   "id": "valve",
+   "at": [62, 17],
+   "wall": "north",
+   "do": [
+    {
+     "open": [68, 22]
+    },
+    {
+     "objective": "The hatch is open: the exit is at the east end of the last chamber"
+    },
+    {
+     "shake": 1.5
+    }
+   ]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [37, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [37, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [43, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [49, 32]
+  }
+ ],
+ "par": {
+  "time": 320
+ },
+ "intro": {
+  "title": "LANDING SCAR",
+  "lines": [
+   "It came down three nights ago and has not stopped singing.",
+   "The crater is the only way to the ship."
+  ]
+ },
+ "outro": "Next: the Ribbed Corridors. The ship is not a building. It breathes, and the doors with it.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [4, 22],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Landing Scar. Three nights ago something came down in that bowl. The ship is in the east wall. There is no other way to it."
+  },
+  {
+   "id": "sleepers",
+   "at": [7, 20],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "People, standing. They have been standing there since it landed. Do not wake them if you can help it."
+  },
+  {
+   "id": "rim",
+   "at": [13, 22],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "Singers on both rims. They sing in fours, and anything that goes past you shakes your aim. Cross rubble to rubble. Do not stand in the open."
+  },
+  {
+   "id": "high",
+   "at": [27, 22],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The ledges step down at the east end. If you can get up there they are close enough to hit with anything."
+  },
+  {
+   "id": "breach",
+   "at": [33, 22],
+   "radius": 2.5,
+   "speaker": "SIGNAL HOUSE",
+   "text": "It is open. It was not forced: it opened. This is not a wreck, Calder. It is still alive."
+  },
+  {
+   "id": "gullet",
+   "at": [38, 22],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Ribs. Those are ribs. Singers on the ledges again: get under them or get past them."
+  },
+  {
+   "id": "hollow",
+   "at": [44, 15],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "This rib is thinner than the rest. Put a knuckle to it and it answers like a bell."
+  },
+  {
+   "id": "throat",
+   "at": [59, 22],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The valve on the north wall is the one thing in here that was made rather than grown. Turn it and the hatch should open."
+  },
+  {
+   "id": "exit",
+   "at": [71, 22],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "Past that is the ship proper. Listen. It is breathing."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "scorch",
+   "at": [13, 22],
+   "size": 2.6
+  },
+  {
+   "kind": "scorch",
+   "at": [21, 22],
+   "size": 2.2
+  },
+  {
+   "kind": "ichorpool",
+   "at": [30, 22],
+   "size": 1.8
+  },
+  {
+   "kind": "smear",
+   "at": [36, 22],
+   "rot": 0,
+   "size": 2.4,
+   "h": 0.9
+  },
+  {
+   "kind": "bloodpool",
+   "at": [8, 20],
+   "size": 1.4
+  },
+  {
+   "kind": "ichorpool",
+   "at": [47, 22],
+   "size": 1.6
+  },
+  {
+   "kind": "damp",
+   "at": [60, 22],
+   "size": 1.8
+  }
+ ],
+ "growth": [
+  {
+   "at": [44, 22],
+   "r": 30,
+   "power": 1.2
+  }
+ ],
+ "objective": "Go down into the crater and cross it. The ship is in the east wall",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [22, 56],
+  "botSeconds": [40, 600],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "switches",
+   "secret"
+  ],
+  "skins": 6,
+  "enemyKinds": {
+   "chorister": 6,
+   "bellhand": 3
+  },
+  "scaleClass": "MIXED",
+  "introduces": "the CHORISTER: a Vael-grown singer that fires bursts of four from the high ground and, when its fire goes by close, suppresses you (your guns open up); met as crossfire from two rims over an open crater, then again on the ribs of the first grounded Choir Ship"
+ },
+ "drops": {
+  "scale": 1
+ }
+}

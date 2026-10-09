@@ -1263,5 +1263,16 @@
   },
   "scaleClass": "COMPRESSION",
   "introduces": "the Graft-Mother: a boss that is a pod the size of a room, shielded by three cradle feeders, hatching Drone-Gills and spitting spore fans"
+ },
+ "drops": {
+  "scale": 1.3,
+  "keep": [
+   [
+    0,
+    0,
+    999,
+    999
+   ]
+  ]
  }
 }

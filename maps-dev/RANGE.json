@@ -328,6 +328,14 @@
   },
   {
    "type": "enemy",
+   "kind": "chorister",
+   "at": [29, 6],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
    "kind": "cantor",
    "at": [31, 7],
    "facing": 0,
@@ -379,6 +387,14 @@
    "facing": 0,
    "hold": "turn",
    "sight": 6
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [25, 13],
+   "facing": 0,
+   "hold": "turn",
+   "sight": 22
   },
   {
    "type": "enemy",

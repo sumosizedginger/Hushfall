@@ -105,4 +105,7 @@ MAP.entities.push(...[['weapon_marlinspike', 13, 19]].map(([kind, x, z]) => ({ t
 MAP.quality.introduces += '; also found here: the marlinspike, on the hook at the head of the cellar stair';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

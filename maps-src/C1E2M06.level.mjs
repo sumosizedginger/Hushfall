@@ -113,4 +113,7 @@ MAP.entities.push(...[['ammo_round', 24, 25], ['ammo_round', 47, 23], ['ammo_rou
 MAP.entities.push(...[['crate', 15, 27], ['barrel', 34, 16], ['crate', 51, 44], ['barrel', 19, 33], ['crate', 22, 11], ['sack', 35, 37], ['sack', 39, 13]].map(([kind, x, z]) => ({ type: 'prop', kind, at: [x, z], movable: true })));
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

@@ -169,6 +169,20 @@ const KINDS = {
       stand: cell({ grad: ['#5a5e54', '#222420'], blots: [{ cols: ['#7a7a6a', '#3a3c34'], n: 4, r: [6, 11], a: 200 }], marks: [{ col: '#0e100e', wt: 1.5, n: 4, dir: 'h' }] }),
     },
   },
+  chorister: {                       // PT-026: cold grey-blue surplice, a brass-ochre stole, pearl chitin and an ivory horn grown where the throat was
+    seed: 2311, cells: {
+      skin: SKIN('#c4c2b0', '#86857a', '#6a5e84', '#46463e'),
+      robe: cell({ grad: ['#d6dade', '#8a9096'], marks: [{ col: '#4e545a', wt: 1.6, n: 7, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#b4bac0', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }],           // the surplice: damp linen, cold, folds, dark water-marks low
+        blots: [{ cols: ['#6a5e48', '#4c4a40'], n: 2, r: [6, 10], a: 140 }] }),
+      robeDk: cell({ grad: ['#8a9096', '#3c4248'], marks: [{ col: '#22262a', wt: 1.6, n: 6, dir: 'v', len: [18, 40] }] }),
+      stole: cell({ grad: ['#c4902e', '#6a4012'], marks: [{ col: '#f2dc98', wt: 1.5, n: 3, dir: 'h' }, { col: '#3a2206', wt: 1.5, n: 4, dir: 'v', len: [12, 26] }] }),
+      chitin: cell({ grad: ['#e4dece', '#8e8776'], marks: [{ col: '#5a5444', wt: 1.7, n: 5, dir: 'h' }, { col: '#fffaf0', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),                   // pearl chitin: ridged plates
+      chitinDk: cell({ grad: ['#8e8776', '#3e3a30'], marks: [{ col: '#201e18', wt: 1.6, n: 4, dir: 'h' }, { col: '#b8b09c', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      horn: cell({ grad: ['#efe2b0', '#a07c3c'], blots: [{ cols: ['#7a8a3a'], n: 2, r: [4, 8], a: 200 }], marks: [{ col: '#5a4018', wt: 1.8, n: 4, dir: 'h' }, { col: '#fff6d0', wt: 1.1, n: 3, dir: 'v', len: [10, 20] }] }),   // the horn: ivory with growth rings, olive at the lip
+      hornDk: cell({ grad: ['#5a3c1c', '#1a0e06'], marks: [{ col: '#8a6228', wt: 1.5, n: 4, dir: 'h' }, { col: '#0a0502', wt: 1.5, n: 4, dir: 'v', len: [10, 24] }] }),
+      bone: BONE(0.1), iron: IRON(), mouth: MOUTH('#2a0c12'),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

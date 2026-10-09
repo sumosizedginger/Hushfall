@@ -43,6 +43,7 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
+    this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
     this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable);                 // the STATIC props (collision, nav, the merged level mesh)
@@ -170,6 +171,7 @@ function validateMapChecks(src) {
     if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
     if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
   }
+  if (src.drops != null && (typeof src.drops !== 'object' || Array.isArray(src.drops) || (src.drops.scale != null && !(src.drops.scale > 0 && src.drops.scale <= 4)))) err('drops must be { scale } with a scale above 0 and at most 4');
   if (src.growth != null && (!Array.isArray(src.growth) || src.growth.length > GROWTH.max)) err(`growth must be a list of at most ${GROWTH.max}`);
   for (const [i, gr] of (Array.isArray(src.growth) ? src.growth : []).entries()) {
     const tag = `growth #${i}`;

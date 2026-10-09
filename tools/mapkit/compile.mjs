@@ -3,7 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { validateMap } from '../../src/engine/mapformat.js';
+import { validateMap, parseMap } from '../../src/engine/mapformat.js';
+import { findTraps } from '../../src/engine/traps.js';
 
 const root = path.resolve(import.meta.dirname, '../..');
 
@@ -53,7 +54,13 @@ export function compile(lv) {
     ...(lv.quality ? { quality: lv.quality } : {}),
     ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
   };
-  const v = validateMap(out); if (!v.ok) errors.push(...v.errors);
+  let v = validateMap(out); if (!v.ok) errors.push(...v.errors);
+  // PT-025: a map that says `drops` is fed by the dead, not by boxes on the road: its ammunition boxes in the PUBLIC part of the map (reachable from the spawn with every secret panel shut) are not built; the ones in its secrets stay
+  if (v.ok && lv.drops) {
+    const m = parseMap(out), pub = findTraps(m, { secrets: false }), keep = lv.drops.keep ?? [], kept = (e) => keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3])), inPublic = (e) => pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1]))) && !kept(e);          // keep: cells [x, z] and rectangles [x0, z0, x1, z1] whose boxes stay          // `keep`: boxes a boss arena keeps on the ground (its ring and its mother are not fed by the dead: nodes and summons never drop)
+    out.entities = out.entities.filter((e) => !(e.type === 'pickup' && /^ammo_/.test(e.kind) && inPublic(e))); out.drops = lv.drops;
+    v = validateMap(out); if (!v.ok) errors.push(...v.errors);
+  }
   return { map: out, errors };
 }
 

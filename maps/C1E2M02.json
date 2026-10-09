@@ -244,11 +244,6 @@
    "at": [18, 8]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [13, 9]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [37, 9],
@@ -267,11 +262,6 @@
    "facing": -0.848
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [65, 10]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [69, 10],
@@ -284,11 +274,6 @@
    "facing": -0.666
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [16, 11]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [33, 11],
@@ -299,11 +284,6 @@
    "kind": "tollbearer",
    "at": [60, 11],
    "facing": -1.33
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [12, 12]
   },
   {
    "type": "pickup",
@@ -320,11 +300,6 @@
    "type": "prop",
    "kind": "cart",
    "at": [29, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [35, 12]
   },
   {
    "type": "enemy",
@@ -348,11 +323,6 @@
    "at": [58, 12]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [62, 12]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [66, 12],
@@ -368,21 +338,6 @@
    "type": "prop",
    "kind": "cart",
    "at": [19, 13]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [39, 13]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [45, 13]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [60, 13]
   },
   {
    "type": "pickup",
@@ -634,11 +589,6 @@
    "at": [70, 21]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [2, 22]
-  },
-  {
    "type": "prop",
    "kind": "cradle",
    "at": [4, 22]
@@ -680,11 +630,6 @@
    "at": [18, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [21, 22]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [32, 22],
@@ -704,11 +649,6 @@
    "type": "prop",
    "kind": "cradle",
    "at": [42, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [43, 22]
   },
   {
    "type": "prop",
@@ -738,29 +678,14 @@
    "at": [66, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [3, 23]
-  },
-  {
    "type": "prop",
    "kind": "rope",
    "at": [5, 23]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [11, 23]
-  },
-  {
    "type": "prop",
    "kind": "lamppost",
    "at": [12, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [19, 23]
   },
   {
    "type": "prop",
@@ -781,11 +706,6 @@
    "type": "prop",
    "kind": "lamppost",
    "at": [30, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [33, 23]
   },
   {
    "type": "prop",
@@ -823,41 +743,11 @@
    "at": [61, 23]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [64, 23]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [67, 23],
    "facing": -1.54,
    "group": "cradlehall"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [31, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [32, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [58, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [59, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [60, 24]
   },
   {
    "type": "enemy",
@@ -871,35 +761,10 @@
    "at": [3, 25]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [11, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [14, 25]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [16, 25],
    "facing": -1.571
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [18, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [20, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [22, 25]
   },
   {
    "type": "pickup",
@@ -924,23 +789,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [31, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [32, 25]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [34, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [37, 25]
   },
   {
    "type": "pickup",
@@ -949,98 +799,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [39, 25]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [41, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [43, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [49, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [51, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [57, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [58, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [59, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [60, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [64, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [65, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [12, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [22, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [30, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [33, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [48, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [49, 26]
   },
   {
    "type": "pickup",
@@ -1051,16 +811,6 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [57, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [58, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [59, 26]
   },
   {
    "type": "pickup",
@@ -1075,11 +825,6 @@
    "group": "cradlehall"
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [3, 27]
-  },
-  {
    "type": "prop",
    "kind": "rope",
    "at": [5, 27]
@@ -1088,16 +833,6 @@
    "type": "prop",
    "kind": "lamppost",
    "at": [12, 27]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [15, 27]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [18, 27]
   },
   {
    "type": "prop",
@@ -1136,21 +871,11 @@
    "at": [58, 27]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [64, 27]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [67, 27],
    "facing": -1.602,
    "group": "cradlehall"
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [2, 28]
   },
   {
    "type": "prop",
@@ -1190,11 +915,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [21, 28]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [31, 28]
   },
@@ -1203,16 +923,6 @@
    "kind": "tollbearer",
    "at": [32, 28],
    "facing": -1.674
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [34, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [36, 28]
   },
   {
    "type": "pickup",
@@ -1228,11 +938,6 @@
    "type": "prop",
    "kind": "pod",
    "at": [42, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [44, 28]
   },
   {
    "type": "prop",
@@ -1477,11 +1182,6 @@
    "at": [61, 36]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [63, 36]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [17, 37],
@@ -1504,11 +1204,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [12, 38]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [19, 38]
   },
@@ -1525,11 +1220,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [35, 38]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [43, 38]
   },
@@ -1542,11 +1232,6 @@
    "type": "prop",
    "kind": "cart",
    "at": [58, 38]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [62, 38]
   },
   {
    "type": "enemy",
@@ -1567,25 +1252,10 @@
    "facing": -2.007
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [39, 39]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [45, 39]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [60, 39],
    "facing": -1.812
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [16, 40]
   },
   {
    "type": "enemy",
@@ -1598,16 +1268,6 @@
    "kind": "gaunt",
    "at": [41, 40],
    "facing": -1.947
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [66, 40]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [13, 41]
   },
   {
    "type": "enemy",
@@ -1665,26 +1325,6 @@
      "message": "valve"
     }
    ]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [44, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [50, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [61, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [66, 25]
   },
   {
    "type": "prop",
@@ -1797,34 +1437,10 @@
    "at": [72, 41]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [12, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [27, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [36, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [52, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [15, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [46, 25]
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 28],
+   "facing": -2.555
   }
  ],
  "par": {
@@ -1972,5 +1588,8 @@
   "scaleClass": "SET-PIECE",
   "reason": "A crossing under pursuit: the pans are open on purpose. A hunting party is released behind you at the first causeway, so the open ground has a job (keep moving, heap to heap) and the brine channels cut it into pans crossed on planks.",
   "introduces": "the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost); and the Harpoon rifle, the long gun that the open ground asks for"
+ },
+ "drops": {
+  "scale": 1
  }
 }

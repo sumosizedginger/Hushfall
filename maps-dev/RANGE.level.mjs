@@ -30,10 +30,10 @@ const t = (kind, x, z, facing, hold, extra = {}) => E.push({ type: 'enemy', kind
 const SPONGE = { hp: 5000 };
 
 // north wall: the sponges, a metre from the wall (a harpoon bolt pins what has a wall close behind it), facing south
-t('tollbearer', 5, 6, S, 'inert', SPONGE); t('gaunt', 9, 6, S, 'inert', SPONGE); t('bellhand', 13, 6, S, 'inert', SPONGE); t('sexton', 17, 6, S, 'inert', SPONGE); t('gill', 21, 6, S, 'inert', SPONGE); t('wardengraft', 25, 6, S, 'inert', SPONGE);
+t('tollbearer', 5, 6, S, 'inert', SPONGE); t('gaunt', 9, 6, S, 'inert', SPONGE); t('bellhand', 13, 6, S, 'inert', SPONGE); t('sexton', 17, 6, S, 'inert', SPONGE); t('gill', 21, 6, S, 'inert', SPONGE); t('wardengraft', 25, 6, S, 'inert', SPONGE); t('chorister', 29, 6, S, 'inert', SPONGE);
 t('cantor', 31, 7, S, 'inert'); t('graftmother', 38, 7, S, 'inert');      // the bosses keep their own hit points (the boss bar and the node shield are part of what is tested)
 // the middle row: swingers (turn to you, swing, lunge, charge, toll), each only noticing you within a few metres
-t('tollbearer', 5, 13, S, 'turn', { sight: 6 }); t('gaunt', 9, 13, S, 'turn', { sight: 8 }); t('wardengraft', 13, 13, S, 'turn', { sight: 9 }); t('bellhand', 17, 13, S, 'turn', { sight: 10 }); t('sexton', 21, 13, S, 'turn', { sight: 6 });
+t('tollbearer', 5, 13, S, 'turn', { sight: 6 }); t('gaunt', 9, 13, S, 'turn', { sight: 8 }); t('wardengraft', 13, 13, S, 'turn', { sight: 9 }); t('bellhand', 17, 13, S, 'turn', { sight: 10 }); t('sexton', 21, 13, S, 'turn', { sight: 6 }); t('chorister', 25, 13, S, 'turn', { sight: 22 });          // the singer: a 'turn' Chorister bursts and circles at you (the Range heals you), its rounds suppress
 // the south row: fixed (never turn): walk round them
 t('tollbearer', 5, 19, EAST, 'fixed', { sight: 6 }); t('tollbearer', 9, 19, WEST, 'fixed', { sight: 6 }); t('tollbearer', 13, 19, N, 'fixed', { sight: 6 }); t('gaunt', 17, 19, N, 'fixed', { sight: 8 });
 t('wardengraft', 21, 19, S, 'fixed', { sight: 6 }); t('wardengraft', 25, 19, N, 'fixed', { sight: 6 });

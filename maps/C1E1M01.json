@@ -148,16 +148,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [9, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [9, 24]
-  },
-  {
-   "type": "pickup",
    "kind": "armor_vest",
    "at": [2, 22]
   },
@@ -202,18 +192,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [18, 20]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [29, 12]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [25, 24]
   },
   {
    "type": "prop",
@@ -301,16 +281,6 @@
    "at": [22, 6]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [24, 6]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [27, 6]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 3],
@@ -387,33 +357,13 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [36, 15]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [34, 18]
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [44, 14]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [42, 11]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [41, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [39, 26]
   },
   {
    "type": "pickup",
@@ -702,5 +652,8 @@
    "y": 1.5,
    "size": 1.6
   }
- ]
+ ],
+ "drops": {
+  "scale": 1.5
+ }
 }

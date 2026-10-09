@@ -264,39 +264,9 @@
    "at": [45, 4]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [41, 5]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [43, 5]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [45, 5]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [41, 6]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [42, 6]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [44, 6]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [45, 6]
   },
   {
    "type": "pickup",
@@ -377,11 +347,6 @@
    "at": [14, 13]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [16, 13]
-  },
-  {
    "type": "prop",
    "kind": "cart",
    "at": [10, 14]
@@ -406,11 +371,6 @@
    "kind": "tollbearer",
    "at": [46, 14],
    "facing": -1.383
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [49, 14]
   },
   {
    "type": "prop",
@@ -518,11 +478,6 @@
    "at": [57, 19]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [7, 20]
-  },
-  {
    "type": "prop",
    "kind": "table",
    "at": [22, 20]
@@ -531,11 +486,6 @@
    "type": "prop",
    "kind": "table",
    "at": [24, 20]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [31, 20]
   },
   {
    "type": "prop",
@@ -580,11 +530,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [19, 21]
-  },
-  {
-   "type": "pickup",
    "kind": "health_large",
    "at": [52, 21]
   },
@@ -609,11 +554,6 @@
    "at": [30, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [33, 22]
-  },
-  {
    "type": "prop",
    "kind": "cart",
    "at": [40, 22]
@@ -632,16 +572,6 @@
    "type": "prop",
    "kind": "crate",
    "at": [46, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [49, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [51, 22]
   },
   {
    "type": "enemy",
@@ -675,11 +605,6 @@
    "at": [5, 24]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [9, 24]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [14, 24],
@@ -702,11 +627,6 @@
    "at": [24, 24]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [32, 24]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [35, 24],
@@ -716,11 +636,6 @@
    "type": "prop",
    "kind": "crate2",
    "at": [37, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [42, 24]
   },
   {
    "type": "prop",
@@ -780,19 +695,9 @@
    "at": [20, 26]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [21, 26]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [30, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [33, 26]
   },
   {
    "type": "prop",
@@ -808,16 +713,6 @@
    "type": "prop",
    "kind": "crate",
    "at": [46, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [49, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [51, 26]
   },
   {
    "type": "enemy",
@@ -884,11 +779,6 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [24, 28]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [31, 28]
   },
   {
    "type": "prop",
@@ -1052,11 +942,6 @@
    "facing": -1.794
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [6, 33]
-  },
-  {
    "type": "prop",
    "kind": "lamp",
    "at": [8, 33]
@@ -1169,11 +1054,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [45, 38]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [52, 38]
   },
@@ -1267,21 +1147,6 @@
    "type": "pickup",
    "kind": "weapon_carbine",
    "at": [28, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [31, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [43, 9]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [47, 23]
   }
  ],
  "par": {
@@ -1407,5 +1272,8 @@
    "bellhand": 4
   },
   "introduces": "undefined; also found here: the Harbour carbine, on a harbour guard's rack at the quay, before the first Warden's hall"
+ },
+ "drops": {
+  "scale": 1
  }
 }

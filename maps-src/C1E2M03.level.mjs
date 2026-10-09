@@ -126,4 +126,9 @@ MAP.entities.push(...[['weapon_chainsaw', 26, 3], ['ammo_round', 23, 17], ['ammo
 MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw, in the tool locker (the secret)';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+// the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand in the north bay over the throat, appended last so no id shifts
+MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [31, 13], facing: 1.101 });
+
 export default MAP;

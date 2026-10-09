@@ -23,6 +23,7 @@ export class Bot {
     if (goal && cx === goal[0] && cz === goal[1]) return true;
     if (this.avoidToxic && FX[m.fx(cx, cz)]?.dps) return false;
     if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
+    if (m.movables.some((pr) => Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;          // a crate, barrel or sack the tuning-fork could lift: a walker without it is stopped by it (PT-025: a bot that went to collect a drop walked into one)
     if (k === 'secret') { const d = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !d?.closet || d.open > 0.85; }     // a closet panel is a wall until an event opens it
     if (k === 'floor' || k === 'outdoor') return true;
     if (k === 'door') { const d = m.doorAt(cx, cz); if (d.remote) { const wd = this.w.doors.find((q) => q.cx === cx && q.cz === cz); return !!wd && wd.open > 0.85; } return !d.key || p.keys.includes(d.key); }
@@ -135,7 +136,7 @@ export class Bot {
     const OWNER = { flare: 'flare', shell: 'scattergun', rivet: 'rivet', bolt: 'harpoon', cell: 'arc' };                 // ammunition for a gun it does not carry is not worth a walk (the boxes may be there for a later weapon, or for the player who found the gun)
     for (const it of w.pickups) {
       if (this.skipPickups?.has(it.id)) continue;
-      const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;
+      const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || (it.drop && d > 7) || Math.abs(it.y - p.y) > 1.2) continue;          // a box a creature dropped is worth a short walk (7 m; the magnet brings it the last 3): not a march across a boss arena (PT-025)
       const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? p.weapons.includes(OWNER[def.ammo] ?? 'none') && (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
       if (low) { best = it; bd = d; }
     }

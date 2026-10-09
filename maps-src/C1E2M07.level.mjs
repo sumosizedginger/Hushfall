@@ -104,4 +104,7 @@ MAP.entities.push(...[['crate', 15, 26], ['barrel', 34, 25], ['sack', 46, 13], [
 MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw again, on a rack at the pump gallery door (for the player who missed the Rail Yard\'s tool locker)';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;

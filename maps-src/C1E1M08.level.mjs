@@ -106,4 +106,7 @@ MAP.entities ??= [];
 MAP.entities.push(...[['ammo_round', 30, 42], ['ammo_round', 33, 10], ['ammo_round', 23, 29], ['ammo_rocket', 13, 10], ['ammo_rocket', 41, 32], ['ammo_rocket', 21, 29]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // a boss map keeps ALL its ammunition boxes on the ground (the Cantor's six nodes never drop and the fight eats rivets: with ten of them the ammunition gate failed on hard); drops add to them
+
 export default MAP;

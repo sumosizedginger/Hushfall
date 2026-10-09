@@ -24,6 +24,16 @@ export function ammoCapacityBy(map, difficulty) {
   for (const e of map.entities) { if (e.type !== 'pickup') continue; const p = PICKUPS[e.kind]; if (usable(p)) cap[p.ammo] = (cap[p.ammo] ?? 0) + Math.round(p.amount * dm.ammoPickup); }
   return cap;
 }
+/**
+ * The same for a map fed by DROPS (PT-025): there is no box count to add up, so what is available is what the perfect bot's own run shows: what it started with, what it was GIVEN (`stats.gained`: after the caps) and what lies on the
+ * floor uncollected (drops and the few boxes a map keeps), per type (only the types the bot fights with count in the total, as above).
+ */
+export function measuredCapacityBy(map, difficulty, w) {
+  const dm = DIFFICULTY[difficulty], cap = { ...(map.entryLoadout?.ammo ?? PLAYER.startAmmo) };
+  for (const [t, n] of Object.entries(w.stats.gained ?? {})) cap[t] = (cap[t] ?? 0) + n;
+  for (const it of w.pickups) { const p = PICKUPS[it.kind]; if (p?.type === 'ammo') cap[p.ammo] = (cap[p.ammo] ?? 0) + Math.round(p.amount * dm.ammoPickup); }
+  return cap;
+}
 /** rounds the bot fired, per ammunition type, counted from the run's fire events */
 export function firedBy(events) { const by = {}; for (const e of events) if (e.type === 'fire') { const a = WEAPONS[e.weapon]?.ammo; if (a) by[a] = (by[a] || 0) + 1; } return by; }
 /** enemies a level can put in front of the player: placed ones plus those its scripts spawn */
@@ -40,7 +50,8 @@ export function evaluateViability(map, mainRoute, { seed = 1 } = {}) {
     const seeds = [seed, seed + 1, seed + 2], runs = seeds.map((sd) => (sd === seed ? fighter : runRoute(map, mainRoute, { seed: sd, difficulty }))), meanDamage = Math.round(runs.reduce((a, r) => a + r.world.stats.damageTaken, 0) / seeds.length);      // damage is noisy per seed: ordering is judged on the mean of three
     out[difficulty] = {
       runner: { result: runner.result, damage: runner.world.stats.damageTaken, hpLeft: runner.world.player.hp },
-      ammo: { capacity: ammoCapacity(map, difficulty), fired: fighter.world.stats.shots, capacityBy: ammoCapacityBy(map, difficulty), firedBy: firedBy(fighter.events) },
+      ammo: map.drops ? (() => { const by = measuredCapacityBy(map, difficulty, fighter.world); return { capacity: Object.entries(by).filter(([t]) => FOUGHT.has(t)).reduce((a, [, n]) => a + n, 0), fired: fighter.world.stats.shots, capacityBy: by, firedBy: firedBy(fighter.events), drops: true }; })()
+        : { capacity: ammoCapacity(map, difficulty), fired: fighter.world.stats.shots, capacityBy: ammoCapacityBy(map, difficulty), firedBy: firedBy(fighter.events) },
       fighter: { completedSeeds: runs.filter((r) => r.result === 'complete').length, seeds: seeds.length, result: fighter.result, damage: fighter.world.stats.damageTaken, meanDamage, seconds: +(fighter.ticks / 60).toFixed(1), kills: fighter.world.stats.kills, failure: fighter.failure },
     };
   }

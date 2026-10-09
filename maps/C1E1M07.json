@@ -345,11 +345,6 @@
    "facing": -1.107
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [45, 13]
-  },
-  {
    "type": "enemy",
    "kind": "bellhand",
    "at": [48, 13],
@@ -365,11 +360,6 @@
    "type": "prop",
    "kind": "lantern",
    "at": [5, 14]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [7, 14]
   },
   {
    "type": "prop",
@@ -396,11 +386,6 @@
    "kind": "gaunt",
    "at": [16, 18],
    "facing": -1.204
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [21, 18]
   },
   {
    "type": "prop",
@@ -444,20 +429,10 @@
    "at": [25, 20]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [27, 20]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [10, 21],
    "facing": -1.292
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [15, 21]
   },
   {
    "type": "prop",
@@ -491,21 +466,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [24, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [50, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [52, 22]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [55, 22]
   },
@@ -531,11 +491,6 @@
    "facing": -1.571
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [32, 23]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [35, 23],
@@ -551,16 +506,6 @@
    "kind": "tollbearer",
    "at": [5, 24],
    "facing": -2.034
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [11, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [15, 24]
   },
   {
    "type": "prop",
@@ -735,21 +680,6 @@
    "type": "prop",
    "kind": "lamp",
    "at": [10, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [16, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [19, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [22, 32]
   },
   {
    "type": "prop",
@@ -955,11 +885,6 @@
    "at": [20, 39]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [26, 39]
-  },
-  {
    "type": "prop",
    "kind": "lamp",
    "at": [27, 39]
@@ -1040,26 +965,6 @@
    "type": "pickup",
    "kind": "weapon_linethrower",
    "at": [5, 8]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [10, 11]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [14, 32]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [50, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [28, 23]
   }
  ],
  "par": {
@@ -1200,5 +1105,8 @@
    "sexton": 2
   },
   "introduces": "undefined; also found here: the Rocket line-thrower, in the station's rocket store in the cellar"
+ },
+ "drops": {
+  "scale": 1
  }
 }

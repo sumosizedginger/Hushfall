@@ -309,16 +309,6 @@
    "at": [50, 19]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [57, 19]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [3, 20]
-  },
-  {
    "type": "prop",
    "kind": "table",
    "at": [4, 20]
@@ -349,11 +339,6 @@
    "at": [37, 20]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [47, 20]
-  },
-  {
    "type": "prop",
    "kind": "pillar",
    "at": [58, 20]
@@ -362,16 +347,6 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [60, 20]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [8, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [12, 21]
   },
   {
    "type": "enemy",
@@ -391,18 +366,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [26, 21]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [31, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [33, 21]
   },
   {
    "type": "pickup",
@@ -419,21 +384,6 @@
    "type": "prop",
    "kind": "pod",
    "at": [41, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [43, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 21]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [59, 21]
   },
   {
    "type": "prop",
@@ -455,39 +405,9 @@
    "at": [13, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [16, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [17, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [20, 22]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [23, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [24, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [27, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [28, 22]
   },
   {
    "type": "pickup",
@@ -495,44 +415,14 @@
    "at": [29, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [31, 22]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [32, 22]
   },
   {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [35, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [36, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [39, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [40, 22]
-  },
-  {
    "type": "prop",
    "kind": "lantern",
    "at": [43, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [46, 22]
   },
   {
    "type": "prop",
@@ -546,11 +436,6 @@
    "facing": -1.571
   },
   {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [57, 22]
-  },
-  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [60, 22],
@@ -560,16 +445,6 @@
    "type": "prop",
    "kind": "pod",
    "at": [61, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [8, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [12, 23]
   },
   {
    "type": "enemy",
@@ -589,11 +464,6 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [30, 23]
-  },
-  {
-   "type": "pickup",
    "kind": "health_small",
    "at": [35, 23]
   },
@@ -607,21 +477,6 @@
    "type": "prop",
    "kind": "pod",
    "at": [41, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
-   "at": [43, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [47, 23]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [3, 24]
   },
   {
    "type": "prop",
@@ -652,11 +507,6 @@
    "type": "prop",
    "kind": "pod",
    "at": [37, 24]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [47, 24]
   },
   {
    "type": "prop",
@@ -698,11 +548,6 @@
    "type": "prop",
    "kind": "pillar",
    "at": [50, 25]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [57, 25]
   },
   {
    "type": "prop",
@@ -852,53 +697,8 @@
   },
   {
    "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [25, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [30, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_bolt",
-   "at": [51, 24]
-  },
-  {
-   "type": "pickup",
    "kind": "weapon_fork",
    "at": [44, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [22, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [26, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [47, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_round",
-   "at": [54, 26]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [21, 22]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rocket",
-   "at": [49, 22]
   },
   {
    "type": "prop",
@@ -1044,5 +844,8 @@
   },
   "scaleClass": "COMPRESSION",
   "introduces": "the first non-human enemy: the Drone-Gill, a flying Vael hatchling, revealed by pods that crack open in a quiet hall and by ambush closets that open around you; also found here: the Vael tuning-fork, on the rail between the aisle and the table room, and movable crates, barrels and sacks to use it on"
+ },
+ "drops": {
+  "scale": 1
  }
 }

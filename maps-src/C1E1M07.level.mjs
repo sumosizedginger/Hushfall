@@ -110,4 +110,7 @@ MAP.entities.push(...[['weapon_linethrower', 5, 8], ['ammo_round', 10, 11], ['am
 MAP.quality.introduces += '; also found here: the Rocket line-thrower, in the station\'s rocket store in the cellar';
 // ---- end PT-023 ----
 
+// ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
+MAP.drops = { scale: 1 };
+
 export default MAP;
