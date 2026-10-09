@@ -87,7 +87,7 @@ export default {
     { id: 'water', at: [37, 21], radius: 6, speaker: 'RANGE', text: 'WATER: the arc lamp shocks everything standing in the water, not only what it hits. Wading slows you too.' },
     { id: 'sawyard', at: [8, 35], radius: 7, speaker: 'RANGE', text: 'SAW YARD: hold fire to rev; it cuts everything in front every 0.1 s and pulls you in. LOUD. Stalls after ~5 s of cutting; plate kicks it back (cut the Warden that shows its back).' },
     { id: 'rocketyard', at: [23, 35], radius: 6, speaker: 'RANGE', text: 'ROCKET YARD: 1.5 s a rocket, a wide blast, a direct hit adds more, bell nodes take double, plate does not turn it. It hurts YOU inside 65% of the blast. Corner barrels move.' },
-    { id: 'gravityyard', at: [36, 36], radius: 7, speaker: 'RANGE', text: 'GRAVITY: HOLD AIM lifts a crate / barrel / sack, or drags a creature in. FIRE with one held THROWS it; FIRE with nothing held PUNTS: shoves what is ahead, turns toll-shots back.' },
+    { id: 'gravityyard', at: [36, 36], radius: 7, speaker: 'RANGE', text: 'GRAVITY (key 9): hold RIGHT mouse within 8 m, near screen middle (the crosshair widens): lifts a crate/barrel/sack or drags a creature in. LEFT throws it, or punts if empty-handed.' },
     { id: 'carbinelane', at: [12, 49], radius: 5, speaker: 'RANGE', text: 'CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],

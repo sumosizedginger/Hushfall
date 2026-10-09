@@ -1147,7 +1147,7 @@
    "at": [36, 36],
    "radius": 7,
    "speaker": "RANGE",
-   "text": "GRAVITY: HOLD AIM lifts a crate / barrel / sack, or drags a creature in. FIRE with one held THROWS it; FIRE with nothing held PUNTS: shoves what is ahead, turns toll-shots back."
+   "text": "GRAVITY (key 9): hold RIGHT mouse within 8 m, near screen middle (the crosshair widens): lifts a crate/barrel/sack or drags a creature in. LEFT throws it, or punts if empty-handed."
   },
   {
    "id": "carbinelane",

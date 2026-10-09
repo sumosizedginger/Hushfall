@@ -753,7 +753,7 @@ export function step(w, cmd) {
   if (guardHeld && !p.guarding) { p.parryW = p.parryCd <= 0 ? GUARD.window : 0; if (p.parryW > 0) p.parryCd = GUARD.window + GUARD.whiffCd; emit(w, 'guard_up', {}); }
   else if (guardHeld) p.parryW = Math.max(0, p.parryW - dt); else p.parryW = 0;
   p.guarding = guardHeld; p.guard = clamp(p.guard + (guardHeld ? 1 : -1) * dt / GUARD.raise, 0, 1);
-  p.sprinting = !!cmd.sprint && sf >= PLAYER.sprintMinForward && !aimHeld && !guardHeld && p.swingT < 0;
+  p.sprinting = !!cmd.sprint && sf >= PLAYER.sprintMinForward && !aimHeld && !guardHeld && !(tool && cmd.aim) && p.swingT < 0;       // (the tuning-fork's beam is Aim too: holding it ends a sprint, as the sights do, or a held Shift would silence the beam)
   if (wasSprinting && !p.sprinting) p.recover = PLAYER.sprintRecover;
   p.recover = Math.max(0, p.recover - dt);
   p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
