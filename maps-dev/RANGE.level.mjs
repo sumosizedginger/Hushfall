@@ -5,7 +5,7 @@
 // Cells are 2 m. x = column, z = row (south is +z). An enemy's `facing` is the direction it looks as (sin, cos): 0 = south (+z), PI = north, PI/2 = east, -PI/2 = west.
 import { Level } from '../tools/mapkit/builder.mjs';
 
-const L = new Level(62, 32);
+const L = new Level(62, 56);
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
 
 // ---- rooms ---------------------------------------------------------------------------------------------------------------
@@ -13,10 +13,15 @@ L.room([47, 9, 57, 23], { floor: 'f', wall: 'I' });             // the pen, behi
 L.room([2, 6, 45, 27], { floor: 'f', wall: 'C' });              // the range
 L.door(46, 16, { remote: true });                               // the pen's door: a lever opens it
 L.fx([30, 17, 44, 25], 'w');                                    // the water bay (wading water: everything standing in it conducts the lamp)
+// PT-022: the second range, south of the first and open to it just below the hub: the saw yard (west), the rocket yard (middle), the gravity yard (east), a carbine lane along the south wall
+L.room([2, 31, 45, 52], { floor: 'f', wall: 'C' });
+L.rect([21, 28, 23, 30], 'f');                                   // the way through (three wide)
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
 L.putAll('P', [[28, 11], [28, 16], [28, 21]]);
+L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50], [30, 50]]);                           // the second range's lamps
+L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);                                              // the rocket yard's wall of crates (static: a rocket stops on them)
 L.put(22, 24, '@');                                              // the hub: the sponges north, the pair and the far sponge on this row, the crowd and the water north-east
 
 // ---- targets -------------------------------------------------------------------------------------------------------------------
@@ -45,14 +50,32 @@ const pen = (kind, x, z) => E.push({ type: 'enemy', kind, at: [x, z], facing: WE
 for (const [kind, x, z] of [['tollbearer', 50, 11], ['tollbearer', 54, 13], ['tollbearer', 51, 21], ['gaunt', 49, 15], ['gaunt', 53, 17], ['gaunt', 55, 21], ['bellhand', 56, 11], ['sexton', 55, 15], ['wardengraft', 52, 18]]) pen(kind, x, z);
 E.push({ type: 'switch', id: 'pen', at: [45, 19], wall: 'east', once: true, do: [{ open: [46, 16] }, { wake: 'pen' }, { objective: 'The pen is open and awake: nine creatures, fighting as in the game' }, { shake: 1.5 }] });
 
+// ---- PT-022: the second range -----------------------------------------------------------------------------------------------------
+// SAW YARD (west): sponges to cut, a crowd to cleave, a Warden whose plate faces you (the saw kicks back: stall) and one that shows its back
+t('tollbearer', 5, 34, S, 'inert', SPONGE); t('tollbearer', 9, 34, S, 'inert', SPONGE); t('gaunt', 13, 34, S, 'inert', SPONGE);
+t('wardengraft', 7, 39, S, 'fixed', { sight: 6 }); t('wardengraft', 12, 39, N, 'fixed', { sight: 6 });
+for (const [x, z] of [[6, 45], [8, 45], [10, 45], [7, 47], [9, 47], [11, 47]]) t('tollbearer', x, z, S, 'inert');
+// CARBINE LANE (the south wall, west to east): stand at the west end, sponges at 20, 40, 60, 80 m; the head zone is the top of the body
+t('tollbearer', 14, 51, WEST, 'inert', SPONGE); t('bellhand', 24, 51, WEST, 'inert', SPONGE); t('gaunt', 34, 51, WEST, 'inert', SPONGE); t('sexton', 44, 51, WEST, 'inert', SPONGE); t('gill', 29, 50, WEST, 'inert', SPONGE);
+// ROCKET YARD (middle): a crowd at 16 m behind the crates, a plated Warden and the Vael nodes (a blast ignores plate and does double to a bell), movable barrels the blast throws about
+for (const [x, z] of [[20, 41], [23, 41], [26, 41], [20, 44], [23, 44], [26, 44]]) t((x + z) % 3 === 0 ? 'gaunt' : 'tollbearer', x, z, N, 'inert');
+t('wardengraft', 29, 41, N, 'inert', SPONGE); t('bellnode', 18, 48, N, 'inert'); t('feeder', 22, 48, N, 'inert'); t('gill', 26, 48, N, 'inert', SPONGE);
+for (const [x, z] of [[27, 34], [28, 35], [29, 34], [28, 33]]) E.push({ type: 'prop', kind: 'barrel', at: [x, z], movable: true });
+// GRAVITY YARD (east): crates, barrels and sacks to lift and throw (broken ones come back); sponges to throw at; sponges a metre from the east wall to punt into it;
+// swingers to pull into reach, a Bellhand to turn its own toll-shots on, and a Warden (the beam and the shock hardly move it)
+for (const [kind, x, z] of [['crate', 33, 34], ['crate', 35, 34], ['crate', 37, 34], ['crate', 39, 34], ['barrel', 33, 37], ['barrel', 35, 37], ['barrel', 37, 37], ['barrel', 39, 37], ['sack', 33, 40], ['sack', 35, 40], ['sack', 37, 40], ['sack', 39, 40]]) E.push({ type: 'prop', kind, at: [x, z], movable: true });
+t('tollbearer', 45, 36, WEST, 'inert', SPONGE); t('tollbearer', 45, 40, WEST, 'inert', SPONGE); t('tollbearer', 45, 44, WEST, 'inert', SPONGE);
+t('tollbearer', 36, 47, N, 'inert', SPONGE); t('tollbearer', 39, 47, N, 'inert', SPONGE); t('tollbearer', 42, 47, N, 'inert', SPONGE);
+t('gaunt', 41, 42, WEST, 'turn', { sight: 12 }); t('tollbearer', 41, 38, WEST, 'turn', { sight: 12 }); t('bellhand', 31, 46, EAST, 'turn', { sight: 16 }); t('wardengraft', 43, 49, N, 'turn', { sight: 10 });
+
 const layers = L.layers();
 
 export default {
   id: 'RANGE', name: 'The Range (dev only)', version: 1, ceilingHeight: 6, range: true,
   atmosphere: { fog: '#8d9a98', fogDensity: 0.006, sky: 'overcast' },
-  entryLoadout: { hp: 100, armor: 100, ammo: { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'boathook', 'marlinspike', 'mallet', 'axe'] },
-  intro: { title: 'THE RANGE', lines: ['Every weapon. Nothing runs out. You cannot die.', 'Targets stand where they are put.'] },
-  objective: 'RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east',
+  entryLoadout: { hp: 100, armor: 100, ammo: { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'] },
+  intro: { title: 'THE RANGE', lines: ['Every weapon. Nothing runs out. You cannot die.', 'Targets stand where they are put. The second range is south of the hub: saw, rockets, gravity, a carbine lane.'] },
+  objective: 'RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east; the second range (saw, rockets, gravity, carbine) through the opening south of the hub',
   ...layers,
   entities: E.map((e) => ({ ...e })).concat([{ type: 'exit', dest: 'next', at: [45, 27] }]),
   startFacing: 'north',
@@ -62,6 +85,10 @@ export default {
     { id: 'fixed', at: [15, 20], radius: 7, speaker: 'RANGE', text: 'FIXED targets never turn: blows land only in front of them. Walk round. Marlinspike into the back of the one facing north. One Warden faces you (plated), the other shows its back.' },
     { id: 'crowd', at: [36, 12], radius: 4, speaker: 'RANGE', text: 'CROWD: flare splash and burning ground, scattergun spread, the arc lamp jumping (hold to charge, it forks). They fall and stand up again after 5 s.' },
     { id: 'water', at: [37, 21], radius: 6, speaker: 'RANGE', text: 'WATER: the arc lamp shocks everything standing in the water, not only what it hits. Wading slows you too.' },
+    { id: 'sawyard', at: [8, 35], radius: 7, speaker: 'RANGE', text: 'SAW YARD: hold fire to rev; it cuts everything in front every 0.1 s and pulls you in. LOUD. Stalls after ~5 s of cutting; plate kicks it back (cut the Warden that shows its back).' },
+    { id: 'rocketyard', at: [23, 35], radius: 6, speaker: 'RANGE', text: 'ROCKET YARD: 1.5 s a rocket, a wide blast, a direct hit adds more, bell nodes take double, plate does not turn it. It hurts YOU inside 65% of the blast. Corner barrels move.' },
+    { id: 'gravityyard', at: [36, 36], radius: 7, speaker: 'RANGE', text: 'GRAVITY: HOLD AIM lifts a crate / barrel / sack, or drags a creature in. FIRE with one held THROWS it; FIRE with nothing held PUNTS: shoves what is ahead, turns toll-shots back.' },
+    { id: 'carbinelane', at: [12, 49], radius: 5, speaker: 'RANGE', text: 'CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

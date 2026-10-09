@@ -2,12 +2,12 @@
 // Keyboard/mouse and the automation bot/test hook all go through the same press()/release()/addYaw() path.
 import { TICK } from './defs.js';
 
-export const ACTIONS = ['forward', 'back', 'left', 'right', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'fire', 'aim', 'sprint', 'use', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weaponLast', 'melee', 'weaponNext', 'weaponPrev', 'map', 'pause'];
+export const ACTIONS = ['forward', 'back', 'left', 'right', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'fire', 'aim', 'sprint', 'use', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weapon7', 'weapon8', 'weapon9', 'weaponLast', 'melee', 'weaponNext', 'weaponPrev', 'map', 'pause'];
 // Fire has no Ctrl default: Ctrl+W/T/N are browser shortcuts
 export const DEFAULT_BINDINGS = {
   forward: ['KeyW'], back: ['KeyS'], left: ['KeyA'], right: ['KeyD'],
   turnLeft: ['ArrowLeft'], turnRight: ['ArrowRight'], lookUp: ['ArrowUp'], lookDown: ['ArrowDown'],
-  fire: ['Mouse0', 'KeyF'], aim: ['Mouse2'], sprint: ['ShiftLeft', 'ShiftRight'], use: ['KeyE', 'Space'], weapon1: ['Digit1'], weapon2: ['Digit2'], weapon3: ['Digit3'], weapon4: ['Digit4'], weapon5: ['Digit5'], weapon6: ['Digit6'], weaponLast: ['KeyQ'], melee: ['KeyV'], weaponNext: ['WheelDown'], weaponPrev: ['WheelUp'], map: ['Tab'], pause: ['Escape', 'KeyP'],
+  fire: ['Mouse0', 'KeyF'], aim: ['Mouse2'], sprint: ['ShiftLeft', 'ShiftRight'], use: ['KeyE', 'Space'], weapon1: ['Digit1'], weapon2: ['Digit2'], weapon3: ['Digit3'], weapon4: ['Digit4'], weapon5: ['Digit5'], weapon6: ['Digit6'], weapon7: ['Digit7'], weapon8: ['Digit8'], weapon9: ['Digit9'], weaponLast: ['KeyQ'], melee: ['KeyV'], weaponNext: ['WheelDown'], weaponPrev: ['WheelUp'], map: ['Tab'], pause: ['Escape', 'KeyP'],
 };
 const TURN_RATE = 2.2, LOOK_RATE = 1.6;              // rad/s for keyboard turning
 
@@ -51,7 +51,7 @@ export class InputState {
       yaw: this.yaw + ((d.has('turnLeft') ? 1 : 0) - (d.has('turnRight') ? 1 : 0)) * TURN_RATE * TICK,
       pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK,
       fire: d.has('fire'), aim: d.has('aim'), sprint: d.has('sprint'), use: this.edge.has('use'), pause: this.edge.has('pause'), map: this.edge.has('map'), melee: this.edge.has('melee'), weaponLast: this.edge.has('weaponLast'),
-      weapon: this.edge.has('weapon1') ? 0 : this.edge.has('weapon2') ? 1 : this.edge.has('weapon3') ? 2 : this.edge.has('weapon4') ? 3 : this.edge.has('weapon5') ? 4 : this.edge.has('weapon6') ? 5 : null,
+      weapon: this.edge.has('weapon1') ? 0 : this.edge.has('weapon2') ? 1 : this.edge.has('weapon3') ? 2 : this.edge.has('weapon4') ? 3 : this.edge.has('weapon5') ? 4 : this.edge.has('weapon6') ? 5 : this.edge.has('weapon7') ? 6 : this.edge.has('weapon8') ? 7 : this.edge.has('weapon9') ? 8 : null,
       weaponStep: (this.edge.has('weaponNext') ? 1 : 0) - (this.edge.has('weaponPrev') ? 1 : 0),
     };
     this.yaw = 0; this.pitch = 0; this.edge.clear(); this.tapped.clear();

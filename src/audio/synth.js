@@ -265,6 +265,69 @@ export const SFX = {
   level_complete(c, out, t) { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => bell(c, out, t + i * 0.16, f, { decay: 1.8, gain: 0.2, ratio: 2, index: 0.8 })); return 3.0; },
 };
 
+// ------------------------------------------------------------------ PT-022: the carbine, the line-thrower, the tuning-fork, the chainsaw (first guesses: not yet heard, not yet measured by audio-qa)
+Object.assign(SFX, {
+  carbine_fire(c, out, t, o) {                                  // a rifle: a short sharp crack over a small thump; it repeats about eight times a second
+    thump(c, out, t, 170, 55, 0.1, 0.4);
+    noise(c, out, t, { dur: 0.05, gain: 0.38, type: 'highpass', f0: 2600, off: o.r() });
+    noise(c, out, t, { dur: 0.16, gain: 0.28, type: 'lowpass', f0: 5200, f1: 420, q: 0.5, off: o.r() });
+    tone(c, out, t, { type: 'triangle', f0: 2100, f1: 520, d: 0.06, gain: 0.07 });
+    return 0.2;
+  },
+  rocket_fire(c, out, t, o) {                                   // the line-thrower: a deep thump, a long rising whoosh, the line hissing out behind it
+    thump(c, out, t, 90, 30, 0.4, 0.55);
+    noise(c, out, t, { dur: 0.7, a: 0.03, gain: 0.4, type: 'bandpass', f0: 500, f1: 3200, q: 0.8, off: o.r() });
+    noise(c, out, t + 0.02, { dur: 1.0, a: 0.1, gain: 0.16, type: 'highpass', f0: 2500, f1: 1800, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 140, f1: 380, d: 0.5, gain: 0.09, lp: 900 });
+    return 1.1;
+  },
+  rocket_boom(c, out, t, o) {                                   // the big blast: two low thumps, a long falling roar, a crack on top, debris
+    thump(c, out, t, 64, 20, 1.0, 0.7); thump(c, out, t + 0.02, 110, 34, 0.5, 0.4);
+    noise(c, out, t, { dur: 1.3, gain: 0.55, type: 'lowpass', f0: 3800, f1: 90, q: 0.6, off: o.r() });
+    noise(c, out, t + 0.02, { dur: 0.25, gain: 0.28, type: 'highpass', f0: 2200, off: o.r() });
+    for (let i = 0; i < 8; i++) noise(c, out, t + 0.1 + o.r() * 0.9, { dur: 0.06, gain: 0.13, type: 'highpass', f0: 2500 + o.r() * 3500, off: o.r() });
+    return 1.5;
+  },
+  head_tick(c, out, t) { bell(c, out, t, 2400, { decay: 0.12, gain: 0.14, ratio: 2.76, index: 0.9 }); tone(c, out, t, { type: 'square', f0: 3300, f1: 1800, d: 0.03, gain: 0.05, lp: 4800 }); return 0.2; },   // a round in the head: a bright tick over the hit
+  grav_grab(c, out, t) { tone(c, out, t, { type: 'sine', f0: 140, f1: 420, a: 0.02, d: 0.22, gain: 0.2 }); tone(c, out, t, { type: 'triangle', f0: 900, f1: 1600, d: 0.18, gain: 0.06 }); thump(c, out, t + 0.05, 180, 80, 0.1, 0.25); return 0.4; },     // the beam takes hold: a hum climbing, a soft thunk
+  grav_drop(c, out, t, o) { tone(c, out, t, { type: 'sine', f0: 400, f1: 110, d: 0.25, gain: 0.14 }); noise(c, out, t, { dur: 0.2, gain: 0.12, type: 'lowpass', f0: 1200, f1: 200, off: o.r() }); return 0.3; },
+  grav_throw(c, out, t, o) { thump(c, out, t, 120, 40, 0.3, 0.55); noise(c, out, t, { dur: 0.25, gain: 0.32, type: 'bandpass', f0: 400, f1: 2600, q: 0.9, off: o.r() }); tone(c, out, t, { type: 'sine', f0: 300, f1: 90, d: 0.3, gain: 0.14 }); return 0.4; },
+  grav_punt(c, out, t, o) {                                     // the shock: a low boom, a falling rush, a ring from the tines
+    thump(c, out, t, 80, 26, 0.5, 0.65);
+    noise(c, out, t, { dur: 0.45, gain: 0.45, type: 'lowpass', f0: 3000, f1: 200, q: 0.6, off: o.r() });
+    tone(c, out, t, { type: 'triangle', f0: 1500, f1: 260, d: 0.35, gain: 0.11 });
+    bell(c, out, t + 0.01, 960, { decay: 0.5, gain: 0.1, ratio: 2.1, index: 0.9 });
+    return 0.6;
+  },
+  grav_catch(c, out, t, o) { thump(c, out, t, 150, 70, 0.12, 0.38); noise(c, out, t, { dur: 0.08, gain: 0.28, type: 'bandpass', f0: 900, q: 1.2, off: o.r() }); return 0.2; },
+  shot_reflect(c, out, t, o) { tone(c, out, t, { type: 'square', f0: 1400, f1: 3200, d: 0.08, gain: 0.09, lp: 4800 }); bell(c, out, t, 1900, { decay: 0.4, gain: 0.13, ratio: 2.2, index: 1.0 }); noise(c, out, t, { dur: 0.06, gain: 0.2, type: 'highpass', f0: 3200, off: o.r() }); return 0.5; },
+  shove_impact(c, out, t, o) { thump(c, out, t, 90, 35, 0.3, 0.65); noise(c, out, t, { dur: 0.25, gain: 0.42, type: 'lowpass', f0: 1800, f1: 200, off: o.r() }); noise(c, out, t, { dur: 0.1, gain: 0.28, type: 'bandpass', f0: 700, q: 1, off: o.r() }); return 0.4; },
+  phys_hit(c, out, t, o) { thump(c, out, t, 110, 50, 0.18, 0.5); noise(c, out, t, { dur: 0.2, gain: 0.42, type: 'bandpass', f0: 900, f1: 300, q: 0.8, off: o.r() }); return 0.3; },                                 // wood on a body
+  phys_break(c, out, t, o) { thump(c, out, t, 100, 40, 0.3, 0.5); noise(c, out, t, { dur: 0.3, gain: 0.38, type: 'highpass', f0: 1800, off: o.r() }); for (let i = 0; i < 6; i++) noise(c, out, t + 0.03 + o.r() * 0.25, { dur: 0.04, gain: 0.2, type: 'bandpass', f0: 1200 + o.r() * 1800, q: 2, off: o.r() }); return 0.5; },
+  saw_start(c, out, t, o) {                                     // a pull and the engine catching: a cough, a climbing roar
+    noise(c, out, t, { dur: 0.3, a: 0.1, gain: 0.2, type: 'bandpass', f0: 200, f1: 900, q: 1.2, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 40, f1: 110, a: 0.02, d: 0.5, gain: 0.17, lp: 700, vib: 20 });
+    thump(c, out, t + 0.1, 90, 50, 0.1, 0.3); thump(c, out, t + 0.24, 100, 55, 0.1, 0.3);
+    return 0.65;
+  },
+  saw_rev(c, out, t, o) {                                       // the engine at speed (it repeats every 0.4 s while the saw runs, so it overlaps into a steady roar)
+    tone(c, out, t, { type: 'sawtooth', f0: 95, d: 0.5, a: 0.05, gain: 0.13, lp: 650, vib: 28 });
+    tone(c, out, t, { type: 'square', f0: 190, d: 0.5, a: 0.05, gain: 0.045, lp: 900, vib: 30 });
+    noise(c, out, t, { dur: 0.5, a: 0.05, gain: 0.1, type: 'bandpass', f0: 1500, q: 1, off: o.r() });
+    return 0.55;
+  },
+  saw_stop(c, out, t) { tone(c, out, t, { type: 'sawtooth', f0: 100, f1: 40, d: 0.5, gain: 0.12, lp: 600 }); return 0.6; },
+  saw_hit(c, out, t, o) { noise(c, out, t, { dur: 0.09, gain: 0.34, type: 'bandpass', f0: 2200 + o.r() * 900, q: 1.5, off: o.r() }); tone(c, out, t, { type: 'sawtooth', f0: 160 + o.r() * 40, d: 0.09, gain: 0.11, lp: 1200 }); return 0.12; },      // the chain in a body: a burst of grinding, ten times a second
+  saw_kick(c, out, t, o) { noise(c, out, t, { dur: 0.12, gain: 0.45, type: 'bandpass', f0: 3500, q: 2, off: o.r() }); tone(c, out, t, { type: 'square', f0: 2800, f1: 900, d: 0.15, gain: 0.1, lp: 5000 }); bell(c, out, t, 1500, { decay: 0.3, gain: 0.11, ratio: 3.7, index: 1.2 }); return 0.4; },     // plate: the chain skids off the steel
+  saw_stall(c, out, t, o) {                                     // the engine dies: the roar sinks, sputters, stops
+    tone(c, out, t, { type: 'sawtooth', f0: 120, f1: 30, d: 0.8, gain: 0.19, lp: 600, vib: 12 });
+    noise(c, out, t, { dur: 0.6, gain: 0.28, type: 'lowpass', f0: 900, f1: 120, off: o.r() });
+    for (const dt of [0.25, 0.5, 0.72]) thump(c, out, t + dt, 80, 45, 0.1, 0.3);
+    return 1.0;
+  },
+  saw_restart(c, out, t, o) { noise(c, out, t, { dur: 0.25, gain: 0.25, type: 'bandpass', f0: 600, q: 1.5, off: o.r() }); tone(c, out, t + 0.1, { type: 'sawtooth', f0: 50, f1: 90, d: 0.3, gain: 0.12, lp: 600 }); thump(c, out, t + 0.2, 90, 50, 0.1, 0.28); return 0.5; },
+});
+
 // ------------------------------------------------------------------ helpers shared with the engine
 /** deterministic [0,1) source for offline renders */
 /** level a recipe down by `k` (a gain stage in front of its output): the first offline render of the PT-013 sounds measured peaks above full scale for these five (audio QA: arc_bolt 1.03, melee_hit_heavy 1.13, parry 1.28, guard_break 1.05, pin_thunk 1.16), so they are scaled to peak near 0.9 like the rest; melee_hit peaked at 0.994, too close, and is scaled as well */

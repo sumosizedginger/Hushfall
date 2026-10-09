@@ -132,7 +132,7 @@ test('melee is deterministic: the same inputs give the same world', () => {
   assert.equal(play(), play());
 });
 test('the melee table: every swing has reach, arc, damage and timings; the order has fists first', () => {
-  assert.equal(MELEE_ORDER[0], 'fists'); assert.equal(WEAPON_ORDER.length, 5);
+  assert.equal(MELEE_ORDER[0], 'fists'); assert.equal(WEAPON_ORDER.length, 8, 'eight guns (PT-022 added the carbine, the line-thrower and the fork); the melee slot is key 6 (SLOT_KEYS)');
   for (const id of MELEE_ORDER) { const S = WEAPONS[id].swing; for (const k of ['reach', 'arc', 'damage', 'windup', 'recover']) assert.ok(S[k] > 0, id + '.' + k); assert.ok(S.reach <= 3 && S.arc <= Math.PI, id + ' sane'); }
   assert.ok(WEAPONS.axe.swing.damage > WEAPONS.mallet.swing.damage && WEAPONS.mallet.swing.damage > WEAPONS.marlinspike.swing.damage, 'heavier hits harder'); assert.ok(WEAPONS.axe.swing.recover > WEAPONS.marlinspike.swing.recover, 'and recovers slower');
 });

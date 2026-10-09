@@ -1,7 +1,11 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
-import { makeFlareCannon, makeScattergun, makePickup } from './models.js';
+import { makeFlareCannon, makeScattergun, makePickup, makeCrate, makeBarrel } from './models.js';
+import { makeSack } from './models_g2.js';
+import { makeCarbine, makePickupCarbine } from './models_carbine.js';
+import { makeLineThrower, makePickupRocket, makeRocketMesh } from './models_rocket.js';
+import { makeFork, makePickupFork } from './models_fork.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
@@ -18,7 +22,7 @@ import { lightWeights } from './lightbudget.js';
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
-import { PLAYER, ENEMIES, WEAPONS, TICK, VIEW, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
@@ -27,6 +31,9 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
+/** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
+const pickupMaker = (kind) => (/^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
+  : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : makePickup);
 
 export class GameView {
   constructor(renderer, tex, map, world) {
@@ -48,7 +55,7 @@ export class GameView {
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
-    const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
+    const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
     this.vm = new SwingClock(); this.lag = { x: 0, y: 0 }; this.lastLook = null;      // PT-020: the swing's own clock (a freeze on contact: view only), the view model trailing a turning view
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(HIP_SCALE); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
@@ -67,6 +74,10 @@ export class GameView {
     this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
     this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.2, 0.75, 6); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
     this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 });       // the Vael's light going out of a body; the spark of a blow
+    // PT-022: the rocket's light and smoke, the gravity tool's beam / shock rings / movable props, and what a boom's size does
+    this.rocketLight = new THREE.PointLight(0xff9a40, 0, 16, 2); scene.add(this.rocketLight); this.puffGeo = new THREE.IcosahedronGeometry(0.16, 0); this.puffMat = new THREE.MeshBasicMaterial({ color: 0xa8a29a, transparent: true, opacity: 0.55, depthWrite: false }); this.puffs = [];
+    this.woodMat = new THREE.MeshBasicMaterial({ color: 0x8a6a3a }); this.shocks = []; this.shockGeo = new THREE.TorusGeometry(1, 0.03, 4, 28); this.shockMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
+    this.physViews = new Map(); this.tractor = null; this.puntT = 9; this.boomK = 1;
     this.shield = null; this.shieldFlash = 0; this.ripples = [];       // the boss's shield is bands of plates (shield.js), and a hit it absorbs sends a ring of sound out
     this.beforeStep(world);
   }
@@ -94,9 +105,9 @@ export class GameView {
     for (const e of events) {
       for (const spec of decalsForEvent(e, dctx)) this.decals.add(spec);                                          // a hit, a death, a blast, a bullet: the room keeps it
       if (e.type === 'fire') {
-        const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp) this.spinKick = 1;
-        this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
-        this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
+        const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
+        this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
+        this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
       }
       else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; this.vm.start(e.kind, e.tick * TICK); }
       else if (e.type === 'melee_hit') {
@@ -109,6 +120,12 @@ export class GameView {
       else if (e.type === 'enemy_died') { for (let i = 0; i < 7; i++) { const m = new THREE.Mesh(this.moteGeo, this.moteMat); m.position.set(e.x + (this.rnd() - 0.5) * 0.5, 0.6 + this.rnd() * 1.0, e.z + (this.rnd() - 0.5) * 0.5); this.scene.add(m); this.motes.push({ m, v: new THREE.Vector3((this.rnd() - 0.5) * 0.6, 0.6 + this.rnd() * 0.9, (this.rnd() - 0.5) * 0.6), life: 0.9 + this.rnd() * 0.7, max: 1.6 }); } }
       else if (e.type === 'pin') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.position.set(e.x, 1.2, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.1, this.rnd() - 0.5).multiplyScalar(3.4), life: 0.3 + this.rnd() * 0.2 }); } }
       else if (e.type === 'shield_hit') { this.shieldFlash = 1; const m = new THREE.Mesh(this.ringGeo, new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.75, side: THREE.DoubleSide, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.set(e.x, this.shield ? this.shield.group.position.y : 2.2, e.z); m.scale.setScalar(1.4); this.scene.add(m); this.ripples.push({ m, t: 0 }); }       // the hit was absorbed: the plates flare and a ring of sound goes out
+      else if (e.type === 'headshot') { for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.45); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.8 + 0.3, this.rnd() - 0.5).multiplyScalar(4), life: 0.22 + this.rnd() * 0.2 }); } }
+      else if (e.type === 'grav_punt') { this.puntT = 0; this.flashT = 0.14; this.addShock(1.4); this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, e.hit ? 0.28 : 0.1); this.shakeT = Math.max(this.shakeT || 0, 0.18); this.muzzleLight.color.setHex(0x9ffff0); }
+      else if (e.type === 'shot_reflect') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.moteMat); m.scale.setScalar(0.6); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() - 0.2, this.rnd() - 0.5).multiplyScalar(5), life: 0.25 + this.rnd() * 0.2 }); } }
+      else if (e.type === 'phys_hit' || e.type === 'shove_impact') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, e.type === 'phys_hit' ? this.woodMat : this.dustMat); m.scale.setScalar(0.7); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.7 + 0.2, this.rnd() - 0.5).multiplyScalar(4.5), life: 0.3 + this.rnd() * 0.25 }); } this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.25); this.shakeT = Math.max(this.shakeT || 0, 0.18); }
+      else if (e.type === 'phys_break') { for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(this.debGeo, this.woodMat); m.scale.setScalar(1.1); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.9 + 0.3, this.rnd() - 0.5).multiplyScalar(6), life: 0.5 + this.rnd() * 0.4 }); } }
+      else if (e.type === 'saw_hit' || e.type === 'saw_kick') { const k = e.type === 'saw_kick' ? 7 : 2; for (let i = 0; i < k; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.4); m.position.set(e.x, e.y ?? 1.1, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.1, this.rnd() - 0.5).multiplyScalar(4.5), life: 0.18 + this.rnd() * 0.15 }); } this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, e.type === 'saw_kick' ? 0.4 : 0.1); this.shakeT = Math.max(this.shakeT || 0, 0.12); }
       else if (e.type === 'bolt') this.addBolt(e);
       else if (e.type === 'arc') this.addArc(e);
       else if (e.type === 'impact') {
@@ -116,8 +133,8 @@ export class GameView {
       }
       else if (e.type === 'shake') { this.shakeT = 0.5; this.shakeAmp = e.amount ?? 1; }
       else if (e.type === 'explode') {
-        this.boomT = 0; this.boomLight.position.set(e.x, e.y, e.z); { const d = Math.hypot(e.x - this.cam.position.x, e.z - this.cam.position.z), amp = Math.max(0, 1 - d / 16) * 0.8; if (amp > 0.03) { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, amp); this.shakeT = Math.max(this.shakeT || 0, 0.4); } }
-        for (let i = 0; i < 14; i++) {
+        this.boomT = 0; this.boomK = (e.r ?? 3.4) / 3.4; this.boomLight.position.set(e.x, e.y, e.z); { const d = Math.hypot(e.x - this.cam.position.x, e.z - this.cam.position.z), amp = Math.max(0, 1 - d / (16 * this.boomK)) * 0.8 * Math.min(1.6, this.boomK); if (amp > 0.03) { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, amp); this.shakeT = Math.max(this.shakeT || 0, 0.4); } }
+        for (let i = 0, n = Math.round(14 * this.boomK); i < n; i++) {
           const m = new THREE.Mesh(this.debGeo, this.debMat); m.position.set(e.x, e.y, e.z); this.scene.add(m);
           this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.9 + 0.3, this.rnd() - 0.5).multiplyScalar(7), life: 0.5 + this.rnd() * 0.4 });
         }
@@ -129,6 +146,12 @@ export class GameView {
   shedShield() {
     const c = this.shield.group.position, R = this.shield.group.scale.x;
     for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2, m = new THREE.Mesh(this.debGeo, this.moteMat); m.scale.setScalar(2.2); m.position.set(c.x + Math.cos(a) * R, c.y + (this.rnd() - 0.5) * 1.4, c.z + Math.sin(a) * R); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(Math.cos(a) * 3, 1.5 + this.rnd() * 2, Math.sin(a) * 3), life: 0.9 + this.rnd() * 0.5 }); }
+  }
+
+  /** the punt's shock: a teal ring a little ahead of the eye that opens out and fades (view only) */
+  addShock(r0) {
+    const m = new THREE.Mesh(this.shockGeo, this.shockMat.clone()), yaw = this.cam.rotation.y, pitch = this.cam.rotation.x, f = [-Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)];
+    m.position.set(this.cam.position.x + f[0] * 1.6, this.cam.position.y + f[1] * 1.6 - 0.1, this.cam.position.z + f[2] * 1.6); m.rotation.set(pitch, yaw, 0); m.scale.setScalar(r0 * 0.3); this.scene.add(m); this.shocks.push({ m, t: 0 });
   }
 
   /** the harpoon's line: a streak from the muzzle (low and to the right, as the gun is held) to where the bolt stopped, and, when it stopped in something solid, the bolt left standing there */
@@ -237,15 +260,21 @@ export class GameView {
     seen.clear();
     for (const it of w.pickups) {
       seen.add(it.id); let v = this.pickupViews.get(it.id);
-      if (!v) { v = (/^weapon_(boathook|marlinspike|mallet|axe)$/.test(it.kind) ? (k, pt, wt) => makePickupMelee(k, wt) : it.kind === 'ammo_rivet' || it.kind === 'weapon_rivet' ? makePickupRivet : it.kind === 'ammo_bolt' || it.kind === 'weapon_harpoon' ? makePickupHarpoon : it.kind === 'ammo_cell' || it.kind === 'weapon_arc' ? makePickupArc : makePickup)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas, this.tex.guns_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
+      if (!v) { v = pickupMaker(it.kind)(it.kind, this.tex.props_atlas, this.tex.flarecannon_atlas, this.tex.guns_atlas); this.scene.add(v); this.pickupViews.set(it.id, v); }
       v.position.set(it.x, (it.y ?? 0) + 0.18 + Math.sin(this.time * 2.2 + it.id) * 0.05 + (it.kind.startsWith('key') ? 0.25 : 0), it.z); v.rotation.y = this.time * 0.9 + it.id;
     }
     for (const [id, v] of this.pickupViews) if (!seen.has(id)) { this.scene.remove(v); this.pickupViews.delete(id); }
     // projectiles
-    seen.clear(); let lead = null;
+    seen.clear(); let lead = null, rocketLead = null;
     for (const q of w.projectiles) {
-      seen.add(q.id); let m = this.projViews.get(q.id); if (!m) { m = new THREE.Mesh(this.projGeo, this.projMat); this.scene.add(m); this.projViews.set(q.id, m); }
-      m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK); lead = lead || m;
+      seen.add(q.id); let m = this.projViews.get(q.id), rocket = q.weapon === 'linethrower';
+      if (!m) { if (rocket) { const r = makeRocketMesh(); m = r.group; m.userData.flame = r.flame; m.userData.puffT = 0; } else m = new THREE.Mesh(this.projGeo, this.projMat); this.scene.add(m); this.projViews.set(q.id, m); }
+      m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK);
+      if (rocket) {                                                                                                   // PT-022: the rocket points along its flight, its flame breathes, it leaves smoke and lights the place it passes
+        const sp = Math.hypot(q.vx, q.vy, q.vz) || 1; m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), new THREE.Vector3(q.vx / sp, q.vy / sp, q.vz / sp)); m.userData.flame.scale.set(1, 1, 0.8 + 0.4 * Math.sin(this.time * 60));
+        m.userData.puffT -= dt; if (m.userData.puffT <= 0) { m.userData.puffT = 0.03; const pf = new THREE.Mesh(this.puffGeo, this.puffMat); pf.position.copy(m.position).addScaledVector(new THREE.Vector3(q.vx / sp, q.vy / sp, q.vz / sp), -0.45); pf.position.x += (this.rnd() - 0.5) * 0.06; pf.position.y += (this.rnd() - 0.5) * 0.06; this.scene.add(pf); this.puffs.push({ m: pf, t: 0, max: 0.9 + this.rnd() * 0.5 }); }
+        rocketLead = rocketLead || m;
+      } else lead = lead || m;
     }
     for (const [id, m] of this.projViews) if (!seen.has(id)) { this.scene.remove(m); this.projViews.delete(id); }
     seen.clear();
@@ -256,6 +285,28 @@ export class GameView {
     }
     for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
+    this.rocketLight.intensity = rocketLead ? 50 * (0.85 + 0.15 * Math.sin(this.time * 50)) : 0; if (rocketLead) this.rocketLight.position.copy(rocketLead.position);
+    for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]; pf.t += dt; const k = pf.t / pf.max; if (k >= 1) { this.scene.remove(pf.m); this.puffs.splice(i, 1); } else { pf.m.scale.setScalar(0.5 + 1.8 * k); pf.m.position.y += dt * 0.35; if (k > 0.55) pf.m.scale.multiplyScalar(1 - (k - 0.55) / 0.45); } }
+    for (let i = this.shocks.length - 1; i >= 0; i--) { const sh = this.shocks[i]; sh.t += dt; const k = sh.t / 0.28; if (k >= 1) { this.scene.remove(sh.m); sh.m.material.dispose(); this.shocks.splice(i, 1); } else { sh.m.scale.setScalar(0.3 + 3.2 * k); sh.m.material.opacity = 0.8 * (1 - k); } }
+    // PT-022: the movable props (drawn one by one: they move) and the tractor beam from the fork to what it holds or drags
+    { const live = new Set();
+      for (const q of w.phys || []) {
+        if (q.gone) continue; live.add(q.id); let v = this.physViews.get(q.id);
+        if (!v) { const g = new THREE.Group(), d = PHYS[q.kind], mesh = q.kind === 'crate' ? makeCrate(this.tex.crate_wood_a) : q.kind === 'barrel' ? makeBarrel(this.tex.crate_wood_a) : makeSack(); if (q.kind === 'sack') mesh.position.y = -d.h / 2; g.add(mesh); this.scene.add(g); v = { g, rx: 0, rz: 0, yaw: ((q.id.charCodeAt(1) * 37) % 100) / 16 }; this.physViews.set(q.id, v); }
+        const d = PHYS[q.kind], sp = Math.hypot(q.vx, q.vy, q.vz);
+        v.g.position.set(q.x + q.vx * alpha * TICK, q.y + d.h / 2 + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK);
+        if (!q.held && sp > 3) { v.rx += dt * sp * 0.45; v.rz += dt * sp * 0.3; } else { v.rx *= Math.max(0, 1 - dt * 9); v.rz *= Math.max(0, 1 - dt * 9); }
+        if (q.held) v.rz = Math.sin(this.time * 2.3 + q.x) * 0.12; v.g.rotation.set(v.rx, v.yaw, v.rz);
+      }
+      for (const [id, v] of this.physViews) if (!live.has(id)) { this.scene.remove(v.g); this.physViews.delete(id); }
+      const gv = p.grav, held = gv?.prop != null ? (w.phys || []).find((o) => o.id === gv.prop) : null, on = gv?.beam && (gv.beamT ?? -9) >= w.tick - 2 && p.weapon === 'fork' && w.status !== 'dead';
+      if (on) {
+        if (!this.tractor) { this.tractor = new THREE.Mesh(this.beamGeo, new THREE.MeshBasicMaterial({ color: 0x6ffff0, transparent: true, opacity: 0.4, depthWrite: false })); this.scene.add(this.tractor); }
+        const yaw = this.cam.rotation.y, pitch = this.cam.rotation.x, f = [-Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)], r = [Math.cos(yaw), 0, -Math.sin(yaw)];
+        const ax = this.cam.position.x + f[0] * 0.9 + r[0] * 0.2, ay = this.cam.position.y + f[1] * 0.9 - 0.2, az = this.cam.position.z + f[2] * 0.9 + r[2] * 0.2, [bx, by, bz] = gv.beam, dx = bx - ax, dy = by - ay, dz = bz - az, len = Math.hypot(dx, dy, dz) || 1;
+        this.tractor.visible = true; this.tractor.position.set((ax + bx) / 2, (ay + by) / 2, (az + bz) / 2); this.tractor.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx / len, dy / len, dz / len)); const th = (held ? 0.03 : 0.018) + 0.008 * Math.sin(this.time * 40); this.tractor.scale.set(th, len, th);
+      } else if (this.tractor) this.tractor.visible = false;
+    }
     // burning ground (the flare cannon's fire, sim state w.burns): a glowing patch, flickering flames, and one light on the nearest patch
     { const live = new Set(); let near = null, nd = 1e9;
       for (const b of w.burns || []) {
@@ -293,7 +344,7 @@ export class GameView {
       if (d.ground == null) d.ground = spawnGround(w, d.m.position.x, d.m.position.z);
       if (d.life <= 0 || d.m.position.y < debrisFloor(w, d.m.position.x, d.m.position.z, d.ground)) { this.scene.remove(d.m); this.debris.splice(i, 1); }       // lands on the terrain under it, not on world y = 0
     }
-    this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * (1 - this.boomT / 0.5) ** 2 : 0;
+    this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
     const cp = this.cam.position, wp = new THREE.Vector3();
     const lampK = this.look.lamp;
@@ -317,9 +368,11 @@ export class GameView {
     this.hitKick = Math.max(0, this.hitKick - dt * 5); this.parryT += dt;
     let wpose;
     if (rig.melee) {                                                                                                  // fists and the found weapons: the rig animates itself from the swing phase, the guard and the charge (models_melee.js)
-      const fc = WEAPONS.fists.charge; rig.anim({ ...ph, kind: sk, charge: shown === 'fists' ? Math.min(1, Math.max(0, ((p.charge || 0) - 0.12) / (fc.max - 0.12))) : 0, guard: p.guard || 0, alt: this.swingAlt ? 1 : 0, t: this.time });
+      const fc = WEAPONS.fists.charge; rig.anim({ ...ph, kind: sk, charge: shown === 'fists' ? Math.min(1, Math.max(0, ((p.charge || 0) - 0.12) / (fc.max - 0.12))) : 0, guard: p.guard || 0, alt: this.swingAlt ? 1 : 0, t: this.time, saw: shown === 'chainsaw' ? p.saw : null });
       wpose = meleePose(rig, { sprint: sp, sway, dead: this.deadT, dip, kick: this.hitKick, lagX: this.lag.x, lagY: this.lag.y });
     } else wpose = weaponPose(rig, { ads: a, sprint: sp, sway: sway + (chg > 0 ? (this.rnd() - 0.5) * 0.012 * chg : 0), recoil: this.recoil, dead: this.deadT, dip, bash: ph.on && sk === 'bash' ? ph : null });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js), the sprint carry, the quick bash; a charging lamp trembles
+    if (rig.tick) rig.tick({ t: this.time, beam: this.tractor?.visible && !p.grav?.prop ? 1 : this.tractor?.visible ? 0.5 : 0, hold: p.grav?.prop != null ? 1 : 0, punt: Math.max(0, 1 - this.puntT / 0.3) });
+    this.puntT += dt;
     rig.group.scale.setScalar(wpose.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
     rig.group.position.set(wpose.pos[0], wpose.pos[1], wpose.pos[2]); rig.group.rotation.set(wpose.rot[0], wpose.rot[1], wpose.rot[2]);
     if (rig.flash) { rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a)); }      // small in the sights: it must not hide the target
@@ -346,6 +399,7 @@ export class GameView {
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
     this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();
+    this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     this.post.dispose();
     this.scene.clear(); this.weaponScene.clear();

@@ -26,7 +26,7 @@ test('PT-013: the new shell modules (controller, wheel, menu focus) load in node
 });
 test('PT-013: every melee rig builds with no texture, carries anim(), and anim() poses it without throwing at any phase of a swing', async () => {
   const { MELEE_MAKERS } = await import(pathToFileURL(path.join(dir, 'models_melee.js')).href), { swingPhase, swingTimes, meleePose } = await import(pathToFileURL(path.join(dir, 'weapon-pose.js')).href);
-  assert.deepEqual(Object.keys(MELEE_MAKERS), ['fists', 'boathook', 'marlinspike', 'mallet', 'axe']);
+  assert.deepEqual(Object.keys(MELEE_MAKERS), ['fists', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw']);
   for (const [id, make] of Object.entries(MELEE_MAKERS)) {
     const rig = make(null); assert.ok(rig.melee && typeof rig.anim === 'function' && rig.sleeveMat && rig.group, id);
     const kind = id === 'fists' ? 'jab' : id, T = swingTimes(kind);

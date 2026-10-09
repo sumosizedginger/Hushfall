@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -45,7 +45,8 @@ export class MapData {
     this.objective = src.objective ?? null;
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
-    this.props = this.entities.filter((e) => e.type === 'prop');
+    this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable);                 // the STATIC props (collision, nav, the merged level mesh)
+    this.movables = this.entities.filter((e) => e.type === 'prop' && e.movable);                // PT-022: props the gravity tool can lift and throw (world.phys, drawn one by one, never part of the static props)
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
     this.growth = src.growth || [];                                                      // where the Vael's growth started (PT-021): view data, the simulation never reads it
@@ -151,6 +152,7 @@ function validateMapChecks(src) {
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
     else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit', 'switch'].includes(e.type)) err(`${tag}: unknown entity type`);
+    if (e.movable != null && (e.type !== 'prop' || e.movable !== true || !PHYS[e.kind])) err(`${tag}: movable is for a crate, a barrel or a sack (movable: true)`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
   });
   // nothing may spawn inside a solid prop (or inside another actor): a body embedded in a collider is stuck or unfair from tick 0

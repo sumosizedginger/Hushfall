@@ -1,6 +1,6 @@
 // The weapons range's readout (PT-016): what is under the crosshair, what the last hit did, the damage of the current burst, what the targets did to you. PURE: it reads a world and a list of events and builds text; main.js owns the DOM.
 // It measures damage dealt by watching the targets' hit points (the sim does not report a number for a hit), so a burn is a stream of small drops, a kill counts its full blow (overkill included).
-import { ENEMIES, PLAYER } from '../engine/defs.js';
+import { ENEMIES, PLAYER, TICK } from '../engine/defs.js';
 import { hitCylinder } from '../engine/hitvolume.js';
 import { hasLOS } from '../engine/world.js';
 
@@ -46,6 +46,7 @@ export class RangeMeter {
   events(ev) {
     for (const e of ev) {
       if (e.type === 'hurt') { this.taken.last = e.amount; this.taken.total += e.amount; this.taken.note = ''; }
+      else if (e.type === 'headshot') this.headAt = (e.tick ?? 0) * TICK;              // PT-022: the carbine's head zone: the readout says HEAD beside the hit it belongs to
       else if (e.type === 'parry') this.taken.note = 'parried: nothing taken';
       else if (e.type === 'block') this.taken.note = 'blocked';
       else if (e.type === 'guard_break') this.taken.note = 'guard broken';
@@ -59,7 +60,7 @@ export class RangeMeter {
       L.push(`TARGET  ${d.name} · ${tg.hold ? HOLD_TEXT[tg.hold] : 'live (acts as in the game)'}`, `HP ${Math.ceil(tg.hp)} / ${Math.ceil(tg.maxHp ?? d.hp)}${flags.length ? ' · ' + flags.join(' · ') : ''}`);
     } else L.push('TARGET  none under the crosshair', '');
     const dps = this.hits.reduce((s, h) => s + h[1], 0) / DPS_WINDOW, b = this.burst, age = b ? t - b.t1 : Infinity;
-    L.push(this.last && t - this.last.t < 8 ? `LAST HIT  ${this.last.dmg.toFixed(1)}${this.last.n > 1 ? ` on ${this.last.n} targets (best ${this.last.best.toFixed(1)})` : ''}` : 'LAST HIT  –');
+    L.push(this.last && t - this.last.t < 8 ? `LAST HIT  ${this.last.dmg.toFixed(1)}${this.last.n > 1 ? ` on ${this.last.n} targets (best ${this.last.best.toFixed(1)})` : ''}${this.headAt != null && Math.abs(this.last.t - this.headAt) < 0.25 ? '  ·  HEAD' : ''}` : 'LAST HIT  –');
     L.push(b && age < 8 ? `BURST  ${b.dmg.toFixed(0)} in ${(b.t1 - b.t0).toFixed(1)} s  ·  now ${dps.toFixed(0)} / s` : 'BURST  –');
     L.push(`TAKEN  last ${this.taken.last}  ·  total ${this.taken.total}${this.taken.note ? '  ·  ' + this.taken.note : ''}`);
     return L;

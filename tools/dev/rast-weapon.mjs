@@ -7,6 +7,7 @@
 //   --legacy draws the pose view.js used before the sight-line pose (to compare with the owner's screenshots)
 //   MELEE (PT-013): weapons fists boathook marlinspike mallet axe; --swing=<jab|heavy|bash|id> --u=<0..1> (how far through the swing) or --t=<seconds since the swing began (the sim lands the blow at t = windup)>, --guard=1, --charge=1 (fists drawn back), --alt=1 (the other fist leads);
 //   with no --u the rig stands in its ready pose. --bash=<0..1> draws a gun mid-bash instead of mid-aim.
+//   PT-022: weapons carbine linethrower fork chainsaw; the fork takes --beam=0..1 --hold=1 --punt=0..1 --time=SECONDS, the chainsaw --spin=0..1 --eng=1 --stall=SECONDS --time=SECONDS
 import * as THREE from 'three';
 import fs from 'node:fs';
 import { PNG } from 'pngjs';
@@ -14,6 +15,9 @@ import { makeFlareCannon, makeScattergun } from '../../src/render/models.js';
 import { makeRivetDriver } from '../../src/render/models_rivet.js';
 import { makeHarpoonRifle } from '../../src/render/models_harpoon.js';
 import { makeArcLamp } from '../../src/render/models_arc.js';
+import { makeCarbine } from '../../src/render/models_carbine.js';
+import { makeLineThrower } from '../../src/render/models_rocket.js';
+import { makeFork } from '../../src/render/models_fork.js';
 import { weaponPose, HIP, swingTimes, swingPhase, meleePose } from '../../src/render/weapon-pose.js';
 import { MELEE_MAKERS } from '../../src/render/models_melee.js';
 
@@ -21,7 +25,7 @@ const args = process.argv.slice(2), outFile = args[0], which = args[1] ?? 'all';
 const flags = Object.fromEntries(args.filter((a) => a.startsWith('--')).map((a) => { const [k, v] = a.slice(2).split('='); return [k, v ?? '1']; }));
 const W = Number(flags.w ?? 930), H = Math.round(W * 940 / 1860), ADS = Number(flags.ads ?? 1), SPR = Number(flags.sprint ?? 0);
 const atlasPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/flarecannon_atlas.png', import.meta.url)));
-const MAKERS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp, ...MELEE_MAKERS };
+const MAKERS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp, carbine: makeCarbine, linethrower: makeLineThrower, fork: makeFork, ...MELEE_MAKERS };
 const FOV = 58, NEAR = 0.1;
 
 const gunsPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/guns_atlas.png', import.meta.url)));          // the guns' own materials (PT-021): a material that says userData.atlas = 'guns' samples this one
@@ -34,10 +38,11 @@ function render(name) {
   let pose;
   if (rig.melee) {
     const kind = flags.swing ?? (name === 'fists' ? 'jab' : name), T = swingTimes(kind), t = flags.t != null ? Number(flags.t) : flags.u != null ? Number(flags.u) * (T.windup + T.recover) : -1, ph = swingPhase(kind, t);
-    rig.anim({ ...ph, kind, charge: Number(flags.charge ?? 0), guard: Number(flags.guard ?? 0), alt: Number(flags.alt ?? 0), t: 0 }); pose = meleePose(rig, { sprint: sp });
+    rig.anim({ ...ph, kind, charge: Number(flags.charge ?? 0), guard: Number(flags.guard ?? 0), alt: Number(flags.alt ?? 0), t: Number(flags.time ?? 0), saw: { spin: Number(flags.spin ?? 0), stall: Number(flags.stall ?? 0), eng: flags.eng === '1' } }); pose = meleePose(rig, { sprint: sp });
   } else {
     rig.sleeveMat.opacity = Math.max(0, 1 - a / 0.6) ** 2;
     const bt = flags.bash != null ? swingPhase('bash', Number(flags.bash) * (swingTimes('bash').windup + swingTimes('bash').recover)) : null;
+    rig.tick?.({ t: Number(flags.time ?? 0), beam: Number(flags.beam ?? 0), hold: Number(flags.hold ?? 0), punt: Number(flags.punt ?? 0) });
     pose = weaponPose(rig, { ads: bt ? 0 : a, sprint: sp, sway: 0, recoil: 0, dead: 0, dip: 0, legacy: !!flags.legacy, bash: bt && bt.on ? bt : null });
   }
   rig.group.scale.setScalar(pose.scale * Number(flags.zoom ?? 1)); rig.group.position.set(pose.pos[0] + Number(flags.dx ?? 0), pose.pos[1] + Number(flags.dy ?? 0), pose.pos[2] + Number(flags.dz ?? 0)); rig.group.rotation.set(pose.rot[0], pose.rot[1] + Number(flags.yaw ?? 0), pose.rot[2]);       // --zoom --dx --dy --dz --yaw: look at the whole gun and its hands (the hip pose has the lower half below the screen by design)

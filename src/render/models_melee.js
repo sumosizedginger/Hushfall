@@ -6,6 +6,7 @@
 // A found weapon is authored UPRIGHT (+y along the handle, the grip near y = 0, the business end at the top, the blade/point facing -z = forward) and posed by keyframes on a `hold` group;
 // the forearms are NOT children of the weapon: each runs from an anchor below the screen's edge to wherever the hand is this frame, so an arm never swings with the weapon like a rod.
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { atlas } from './atlasuv.js';
 import { FEEL } from './weapon-pose.js';
 
@@ -162,7 +163,7 @@ function holdRig(tex, build) {
   const { mat, sleeveMat, M } = kit(tex), g = new THREE.Group(), hold = new THREE.Group(); g.add(hold);
   const spec = build({ M, mat, sleeveMat, hold });                                                                          // { K, hands: [{ at, shoulder?, pole? }], hip }
   const arms = spec.hands.map(() => arm(M, sleeveMat)); arms.forEach((a) => { g.add(a.mesh); g.add(a.cuff); });
-  const gloves = spec.hands.map((h) => { const gl = glove(M); gl.position.set(...h.at); hold.add(gl); return gl; });
+  const gloves = spec.hands.map((h) => { const gl = glove(M); gl.position.set(...h.at); if (h.rot) gl.rotation.set(...h.rot); hold.add(gl); return gl; });          // `rot`: a hand closed round a grip that does not run along the weapon's own y (the chainsaw's handles, PT-022)
   return { group: g, flash: null, sleeveMat, melee: true, anim: holdAnim(g, hold, spec.K, arms, spec.hands), adsY: 0, hold, gloves, arms, hands: spec.hands, hip: spec.hip };
 }
 
@@ -199,8 +200,8 @@ export function makeMallet(tex) {
     const handle = M(new THREE.CylinderGeometry(0.03, 0.036, 1.05, 8), 13); handle.position.y = 0.38; hold.add(handle);
     const grip = M(new THREE.CylinderGeometry(0.034, 0.034, 0.2, 8), 11); grip.position.y = -0.02; hold.add(grip);
     const knob = M(sphere(0.042, 8, 6), 13); knob.position.y = -0.13; hold.add(knob);
-    const head = lathe(M, 14, [[0.0, -0.18], [0.082, -0.18], [0.102, -0.158], [0.108, -0.12], [0.11, 0.0], [0.108, 0.12], [0.102, 0.158], [0.082, 0.18], [0.0, 0.18]], 14); head.rotation.z = Math.PI / 2; head.position.y = 0.92; hold.add(head);      // the bronze head: a barrel with chamfered faces, laid across the top        // the bronze head, across the top
-    for (const s of [-1, 1]) { const band = M(new THREE.CylinderGeometry(0.113, 0.113, 0.04, 10), 12); band.rotation.z = Math.PI / 2; band.position.set(s * 0.14, 0.92, 0); hold.add(band); const cap = M(new THREE.CylinderGeometry(0.078, 0.105, 0.03, 10), 12); cap.rotation.z = Math.PI / 2; cap.position.set(s * 0.195, 0.92, 0); hold.add(cap); }
+    const head = lathe(M, 14, [[0.0, -0.18], [0.082, -0.18], [0.102, -0.158], [0.108, -0.12], [0.11, 0.0], [0.108, 0.12], [0.102, 0.158], [0.082, 0.18], [0.0, 0.18]], 14); head.rotation.x = Math.PI / 2; head.position.y = 0.92; hold.add(head);      // the bronze head: a barrel with chamfered faces. Its axis runs along local z, which lies IN the plane the swing turns in (the swing is a rotation about x), so a blow lands with an END FACE (PT-021: it was laid along x, the swing's own axis, and struck with the curved side like a rolling pin)
+    for (const s of [-1, 1]) { const band = M(new THREE.CylinderGeometry(0.113, 0.113, 0.04, 10), 12); band.rotation.x = Math.PI / 2; band.position.set(0, 0.92, s * 0.14); hold.add(band); const cap = M(new THREE.CylinderGeometry(0.078, 0.105, 0.03, 10), 12); cap.rotation.x = s * Math.PI / 2; cap.position.set(0, 0.92, s * 0.195); hold.add(cap); }
     const wedge = M(new THREE.BoxGeometry(0.03, 0.05, 0.05), 12); wedge.position.set(0, 1.06, 0); hold.add(wedge);                                   // the iron wedge that keeps the head on
     return { K: {                                                                                                                              // held up and back, brought DOWN over the top
       ready: { p: [0.28, -0.13, -0.52], r: [-0.95, 0.0, 0.12] }, wind: { p: [0.36, -0.12, -0.56], r: [0.2, 0.0, -0.25] }, hit: { p: [0.1, -0.22, -0.62], r: [-1.9, 0.0, 0.1] }, guard: { p: [0.02, -0.09, -0.5], r: [-0.35, 0.0, 1.2] }, arc: [0.04, 0.14, 0.0], lunge: [0.0, -0.06, -0.06], antic: [0.0, -0.08, -0.06] },
@@ -226,7 +227,53 @@ export function makeAxe(tex) {
   });
 }
 
-export const MELEE_MAKERS = { fists: makeFists, boathook: makeBoatHook, marlinspike: makeMarlinspike, mallet: makeMallet, axe: makeAxe };
+/**
+ * The shipwright's chainsaw (PT-022): authored with the guide bar along +y like every found weapon (so the key poses read the same), a housing of fire-service red enamel behind it, a rear grip that runs along z (which is UP once the saw is carried
+ * level) and a top handle along x. The chain is two sets of teeth in turns: at rest both show, running the view flips between them every frame so the chain seems to travel (and a faint blur sweeps the bar). `st.saw` = { spin 0..1, heat 0..1, stall (s), eng }
+ * from the sim's player; a running saw shakes in the hands, a hot one smokes (the view), a stalled one hangs dead.
+ */
+export function makeChainsaw(tex) {
+  const parts = {};
+  const rig = holdRig(tex, ({ M, hold }) => {
+    const housing = M(new THREE.BoxGeometry(0.13, 0.32, 0.16), 15); housing.position.set(0, 0.12, 0); hold.add(housing);
+    const cover = M(new THREE.BoxGeometry(0.11, 0.2, 0.05), 12); cover.position.set(0, 0.1, 0.1); hold.add(cover);
+    const tank = M(new THREE.BoxGeometry(0.1, 0.1, 0.06), 12); tank.position.set(0, -0.0, -0.1); hold.add(tank);
+    const rear = M(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 8), 13); rear.rotation.x = Math.PI / 2; rear.position.set(0, -0.12, 0.02); hold.add(rear);                       // the rear grip, along z
+    const wrap = M(new THREE.CylinderGeometry(0.0235, 0.0235, 0.08, 8), 11); wrap.rotation.x = Math.PI / 2; wrap.position.set(0, -0.12, 0.02); hold.add(wrap);
+    for (const s of [-1, 1]) { const strut = M(new THREE.BoxGeometry(0.02, 0.1, 0.02), 12); strut.position.set(0, -0.07, 0.02 + s * 0.095); hold.add(strut); }
+    const top = M(new THREE.CylinderGeometry(0.02, 0.02, 0.19, 8), 13); top.rotation.z = Math.PI / 2; top.position.set(0, 0.19, 0.17); hold.add(top);                                // the top handle, along x
+    for (const s of [-1, 1]) { const post = M(new THREE.BoxGeometry(0.02, 0.02, 0.12), 12); post.position.set(s * 0.085, 0.19, 0.11); hold.add(post); }
+    const guard = M(new THREE.BoxGeometry(0.15, 0.022, 0.1), 12); guard.position.set(0, 0.3, 0.07); hold.add(guard);                                                              // the front hand guard
+    const bar = M(new THREE.BoxGeometry(0.016, 0.62, 0.052), 10); bar.position.set(0, 0.6, 0); hold.add(bar);                                                                    // the guide bar: forged steel
+    const tip = M(new THREE.CylinderGeometry(0.026, 0.026, 0.016, 12), 10); tip.rotation.z = Math.PI / 2; tip.position.set(0, 0.91, 0); hold.add(tip);
+    const sprocket = M(new THREE.CylinderGeometry(0.03, 0.03, 0.03, 10), 12); sprocket.rotation.z = Math.PI / 2; sprocket.position.set(0, 0.3, 0); hold.add(sprocket);
+    // the chain: teeth round the bar's edge, 32 of them in two interleaved sets
+    const teeth = [[], []]; const N = 32, topZ = 0.032, y0 = 0.3, y1 = 0.91, r = topZ, len = 2 * (y1 - y0) + 2 * Math.PI * r;
+    for (let i = 0; i < N; i++) {
+      let d = i / N * len, y, z;
+      if (d < y1 - y0) { y = y0 + d; z = topZ; } else if ((d -= y1 - y0) < Math.PI * r) { const a = d / r; y = y1 + Math.sin(a) * r; z = Math.cos(a) * r; } else if ((d -= Math.PI * r) < y1 - y0) { y = y1 - d; z = -topZ; } else { const a = (d - (y1 - y0)) / r; y = y0 - Math.sin(a) * r; z = -Math.cos(a) * r; }
+      const t = atlas(new THREE.BoxGeometry(0.03, 0.026, 0.016), 12); t.translate(0, y, z); teeth[i % 2].push(t);
+    }
+    const mats = [teeth[0], teeth[1]].map((set) => { const m = new THREE.Mesh(mergeGeometries(set), new THREE.MeshLambertMaterial({ map: tex, emissive: 0x1c1610 })); hold.add(m); return m; });
+    parts.chainA = mats[0]; parts.chainB = mats[1];
+    const blur = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.66, 0.085), new THREE.MeshBasicMaterial({ color: 0xcfd6d8, transparent: true, opacity: 0, depthWrite: false })); blur.position.set(0, 0.61, 0); blur.visible = false; hold.add(blur); parts.blur = blur;
+    return { K: {
+      ready: { p: [0.3, -0.27, -0.36], r: [-1.2, 0.0, 0.5] }, wind: { p: [0.42, -0.22, -0.3], r: [-1.15, 0.0, -0.3] }, hit: { p: [0.06, -0.27, -0.5], r: [-1.3, 0.0, 0.95] }, guard: { p: [0.3, -0.27, -0.36], r: [-1.2, 0.0, 0.5] }, lunge: [0.0, -0.02, -0.08], antic: [0.02, -0.01, -0.03] },
+      hands: [{ at: [0, -0.12, 0.02], rot: [Math.PI / 2, 0, 0] }, { at: [0, 0.19, 0.17], rot: [0, 0, -Math.PI / 2] }], hip: { pos: [0, 0, 0], scale: 1 } };
+  });
+  const base = rig.anim;
+  rig.anim = (st) => {
+    const S = st.saw ?? {}, spin = S.spin ?? 0, dead = (S.stall ?? 0) > 0, t = st.t ?? 0, run = spin > 0.05 && !dead, flip = Math.floor(t * 60) % 2 === 0;
+    base(st);
+    const k = 0.0035 * spin + (S.eng ? 0.0025 : 0);                                                                                                  // a running saw shakes in the hands; one that is cutting shakes harder
+    if (k > 0) { rig.hold.position.x += Math.sin(t * 93) * k; rig.hold.position.y += Math.sin(t * 117 + 1) * k + 0.012 * spin; rig.hold.position.z += Math.sin(t * 71 + 2) * k; }
+    if (dead) rig.hold.position.y -= 0.03;                                                                                                          // hanging dead
+    parts.chainA.visible = !run || flip; parts.chainB.visible = !run || !flip; parts.blur.visible = run && spin > 0.6; parts.blur.material.opacity = 0.32 * spin;
+  };
+  return rig;
+}
+
+export const MELEE_MAKERS = { fists: makeFists, boathook: makeBoatHook, marlinspike: makeMarlinspike, mallet: makeMallet, axe: makeAxe, chainsaw: makeChainsaw };
 
 /** a found weapon lying on the floor (the same model, small, lying flat, with a glint): for maps that place one */
 export function makePickupMelee(kind, tex) {

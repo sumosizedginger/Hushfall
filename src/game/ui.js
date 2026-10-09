@@ -1,7 +1,10 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
-import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, WEAPON_ORDER, MELEE_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
+import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
+import { gravTarget } from '../engine/gravity.js';
 
-const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS' };
+const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
+/** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
+const NEW_WEAPON_TOASTS = { weapon_carbine: 'Harbour carbine  (7): no bloom, a round in the head does 2.4x', weapon_linethrower: 'Rocket line-thrower  (8): a wide blast; it hurts you too', weapon_fork: 'Vael tuning-fork  (9): hold aim to lift, fire to throw or punt', weapon_chainsaw: "Shipwright's chainsaw  (6): hold fire; it is loud and it stalls" };
 import { describeNext, TRACKS } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
@@ -17,7 +20,7 @@ const TOASTS = {
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',
-  weapon_pickup: (e) => (e.kind === 'weapon_boathook' ? 'Boat hook  (6): long reach, it pulls them in' : e.kind === 'weapon_marlinspike' ? 'Marlinspike  (6): fast, three times as deadly in the back' : e.kind === 'weapon_mallet' ? "Lamplighter's mallet  (6): it staggers, and plate does not turn it" : e.kind === 'weapon_axe' ? 'Fire axe  (6): slow, it cleaves everything in front of you' : e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : e.kind === 'weapon_arc' ? 'Charge-arc lamp  (5): tap for an arc that picks its own targets; HOLD to charge a forked bolt (it conducts through water); it lights the dark' : 'Weapon'),
+  weapon_pickup: (e) => NEW_WEAPON_TOASTS[e.kind] ?? (e.kind === 'weapon_boathook' ? 'Boat hook  (6): long reach, it pulls them in' : e.kind === 'weapon_marlinspike' ? 'Marlinspike  (6): fast, three times as deadly in the back' : e.kind === 'weapon_mallet' ? "Lamplighter's mallet  (6): it staggers, and plate does not turn it" : e.kind === 'weapon_axe' ? 'Fire axe  (6): slow, it cleaves everything in front of you' : e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : e.kind === 'weapon_arc' ? 'Charge-arc lamp  (5): tap for an arc that picks its own targets; HOLD to charge a forked bolt (it conducts through water); it lights the dark' : 'Weapon'),
   weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
 };
 
@@ -120,12 +123,14 @@ export class UI {
     this.keyLabels = w?.map?.keyLabels || {};
     $('hud').classList.toggle('hidden', !visible); if (!visible) return;
     const p = w.player; document.body.dataset.stance = p.sprinting ? 'sprint' : p.guarding ? 'guard' : p.ads > 0.5 ? 'ads' : 'hip'; $('cross').classList.toggle('ripo', (p.riposteT || 0) > 0);
+    { const gt = WEAPONS[p.weapon]?.grav ? gravTarget(w) : null; $('cross').classList.toggle('grab', gt === 'prop' || gt === 'creature'); $('cross').classList.toggle('held', gt === 'held'); }       // PT-022: the tuning-fork's crosshair: wide when it can take something, solid when it holds something
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
-    $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], melee = wd.kind === 'melee', have = melee ? 0 : p.ammo[wd.ammo] ?? 0; $('hud-ammo').textContent = melee ? '—' : have; $('hud-ammo-label').textContent = melee ? 'NO AMMO NEEDED' : AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', !melee && have === 0);
+    $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], melee = wd.kind === 'melee', noAmmo = melee || wd.kind === 'tool', have = noAmmo ? 0 : p.ammo[wd.ammo] ?? 0, stalled = !!wd.saw && (p.saw?.stall ?? 0) > 0;
+    $('hud-ammo').textContent = wd.saw ? (stalled ? 'STALL' : Math.round((p.saw?.heat ?? 0) * 100) + '%') : noAmmo ? '—' : have; $('hud-ammo-label').textContent = wd.saw ? 'ENGINE HEAT' : noAmmo ? 'NO AMMO NEEDED' : AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', (!noAmmo && have === 0) || stalled || (!!wd.saw && (p.saw?.heat ?? 0) > 0.75));
     { const C = wd.charge, bar = $('charge'); const lo = melee ? 0.12 : C ? C.min : 0, f = C ? Math.min(1, Math.max(0, ((p.charge || 0) - lo) / (C.max - lo))) : 0, on = !!C && (p.charge || 0) > lo && (melee || have > 0);
       bar.classList.toggle('on', on); bar.classList.toggle('fist', melee); bar.classList.toggle('full', on && f >= 1); bar.firstElementChild.style.width = Math.round(f * 100) + '%'; }
     { const mid = melee ? p.weapon : (MELEE_ORDER.includes(p.meleeWeapon) ? p.meleeWeapon : 'fists');
-      $('hud-weapons').innerHTML = WEAPON_ORDER.map((id, i) => (p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join('') + `<span class="${melee ? 'on' : ''}">${WEAPON_ORDER.length + 1} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>`; }
+      $('hud-weapons').innerHTML = SLOT_KEYS.map((id, i) => (id === 'melee' ? `<span class="${melee ? 'on' : ''}">${i + 1} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>` : p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join(''); }
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
     $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle'), bossEl = $('boss');

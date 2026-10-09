@@ -22,12 +22,14 @@ export const PLAYER = {
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
-export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, explosion: 24, closeRange: 9, melee: 9 };
-export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100 };
-/** fixed slot order of the GUNS (keys 1..5); a weapon occupies its slot once owned. Slot 6 (key 6) is the melee slot: fists always, plus the found weapons of MELEE_ORDER (pressing 6 again cycles them). */
-export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc'];
-export const MELEE_ORDER = ['fists', 'boathook', 'marlinspike', 'mallet', 'axe'];
-export const MELEE_SLOT = WEAPON_ORDER.length;                                    // the slot index of the melee slot (0-based: key 6)
+export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
+export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 };
+/** every GUN in one stable order (save sorting, the HUD's list, the next / previous ring); a weapon occupies its place once owned. */
+export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork'];
+/** the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has been key 6 since PT-013 and stays), 7..9 the guns PT-022 added */
+export const SLOT_KEYS = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'melee', 'carbine', 'linethrower', 'fork'];
+export const MELEE_ORDER = ['fists', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'];
+export const MELEE_SLOT = SLOT_KEYS.indexOf('melee');                              // the slot index of the melee slot (0-based: key 6)
 /** every weapon id in one stable order (save sorting, the HUD) */
 export const ALL_WEAPONS = [...WEAPON_ORDER, ...MELEE_ORDER];
 /** Guard and parry (PT-013, owner go 2026-10-07; every number a first guess). With a melee weapon in hand the Aim key GUARDS (always a hold). A guard raised no more than `window` s before a melee strike lands PARRIES it:
@@ -97,6 +99,23 @@ export const FLOOR_SKINS = {
   b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
 };
 
+/**
+ * THE GRAVITY TOOL (PT-022, owner go 2026-10-08: "if we're going to make a gravity gun we should make a gravity gun"): the Vael tuning-fork. HOLD AIM = the beam: it drags the body nearest the middle of the view toward you (a movable prop is
+ * lifted and held `hold.dist` m ahead; a creature is dragged in and stunned at melee range), FIRE with a prop held THROWS it, FIRE with nothing held is a PUNT: a shock that shoves the creatures in front of it (a wall or another body is struck
+ * for `impact`), launches the props, and turns a toll-shot back on the one who tolled it. No ammunition: a cooldown. Every number a first guess.
+ */
+export const GRAV = {
+  reach: 8.5, cone: 0.5,                                                            // how far the beam finds anything, and the half-angle (rad) of the cone it looks in
+  hold: { dist: 2.3, up: -0.2, follow: 15, max: 3.6, blocked: 1.2 },                // a held prop floats `dist` m ahead (`up` m about eye height), closes the gap at `follow` m/s, is let go when `max` m from where it belongs or blocked for `blocked` s
+  pull: { speed: 8.5, stop: 1.9, stun: 1.0, maxPoise: 3, linger: 0.25 },            // a creature is dragged in at `speed` m/s until `stop` m from you, then stunned `stun` s (poise `maxPoise` and above, bosses and nodes: never); it stays helpless `linger` s after the beam lets go
+  punt: { cooldown: 0.8, miss: 0.45, reach: 9.5, cone: 0.6, push: 17, time: 0.4, falloff: 0.5, impact: 26, stun: 1.3, elite: 0.35, props: 15, lift: 3.5 },     // push: m/s at the start, ending after `time` s (about 3.4 m); `impact`: the damage of a wall or a body (scaled by how fast it was still going); elites take `elite` of the push and no impact
+  throw: { speed: 25, cooldown: 0.55 },
+  catch: { reach: 7.5, cone: 0.75, speed: 1.3, dmg: 2 },                             // a toll-shot in the cone is sent back at `speed` x for `dmg` x its damage, against the creatures
+};
+/** movable props (a map's `prop` with `movable: true`): collision radius, height, the damage of a throw at full speed, how many bodies one takes before it breaks (an authored prop; nothing in the shipped maps is movable yet) */
+export const PHYS = { crate: { r: 0.62, h: 1.1, dmg: 42, hits: 1 }, barrel: { r: 0.42, h: 1.0, dmg: 34, hits: 2 }, sack: { r: 0.42, h: 0.7, dmg: 20, hits: 3 } };
+export const PHYS_RULES = { gravity: 17, bounce: 0.3, friction: 5, hitSpeed: 6.5, breakSpeed: 14, throwRef: 25, respawnAfter: 4, strayAfter: 10 };       // respawnAfter / strayAfter: the Range only (a broken prop comes back; one left far from home for that long goes back)
+
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
 export const WEAPONS = {
   flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, switchTime: 0.4,
@@ -123,6 +142,17 @@ export const WEAPONS = {
     // PT-013 identity (owner: 'it doesn't make me feel more powerful or like I have more range'): TAP = the short arc above (it fires on release). HOLD past `min` s CHARGES to `max`: a forked bolt, `range` m, `damage`, `chain` jumps at `chainFalloff`, up to `forks` branches, for up to `cells` cells.
     // WATER: a struck body standing in wading water conducts to every body in the same water within `water.r` m, for `water.mult` x the base damage. VAEL: Drone-Gills struck are stunned `vael.stun` s; bell nodes take `vael.nodeMult` x.
     charge: { min: 0.35, max: 1.2, damage: 60, range: 24, chain: 5, chainFalloff: 0.8, jump: 6, forks: 2, cells: 8, recover: 0.35 }, water: { r: 8, mult: 1.5, max: 8 }, vael: { stun: 1.2, kinds: ['gill'], nodeMult: 2 }, hit: { flinch: 0.15 } },
+  // ---- PT-022 (owner go 2026-10-08; built in the Range first, on no map yet; every number a first guess) ----------------------------------------------------------------------------------------------------
+  // the carbine (keys 7): PRECISION. A steady automatic rifle for the player who aims: no bloom (the riveter's stream spreads the longer you hold), the round goes where the crosshair is out to 60 m, and a round in the HEAD zone (the top share of the
+  // body's drawn height, `head.from`) does `head.mult` x and staggers. Not the riveter (a weak spray that slows) and not the harpoon (one heavy shot): it is the gun that rewards a steady hand with the fastest kill of the three.
+  carbine: { name: 'Harbour carbine', kind: 'hitscan', ammo: 'round', cooldown: 0.13, switchTime: 0.4, pellets: 1, damage: 11, range: 60, falloffStart: 30, falloffMin: 0.7, knock: 0.04, kick: 0.04, adsFov: 34, muzzle: { fwd: 0.8, right: 0.1, down: 0.1 },
+    spread: { hip: 0.024, ads: 0.0012, moveFactor: 1.0 }, head: { from: 0.74, mult: 2.4, flinch: 0.3 } },
+  // the rocket line-thrower (key 8): BLAST. A fast, almost flat rocket (a lifesaving line-thrower's rocket, turned on the dead): a wide blast that never needs a clean hit, big knock, `directHit` extra on the body it strikes, double on a bell node, and it hurts you
+  // (`selfDamage`) inside 65% of the blast. Plate does not turn a blast (splash ignores it). Slow (1.5 s), twelve rockets at most, loud.
+  linethrower: { name: 'Rocket line-thrower', kind: 'projectile', ammo: 'rocket', cooldown: 1.5, speed: 21, gravity: 0.6, splash: 4.4, splashDamage: 120, direct: 55, directHit: 70, selfDamage: 0.6, knock: 2.2, nodeMult: 2, switchTime: 0.7, kick: 0.16, adsFov: 52,
+    muzzle: { fwd: 0.9, right: 0.15, down: 0.12 }, spread: { hip: 0.02, ads: 0.002, moveFactor: 0.6 } },
+  // the tuning-fork (key 9): GRAVITY, see GRAV above. No ammunition; the sim reads `grav`.
+  fork: { name: 'Vael tuning-fork', kind: 'tool', switchTime: 0.5, grav: GRAV },
   // ---- melee (PT-013): fists are always owned (slot 6); the found weapons are picked up and take the same slot (key 6 again cycles). `swing`: reach m (from the player's centre to the body's surface), arc rad (full cone), damage, windup/recover s, knock m, flinch s,
   // optional stun s, pull m, backstab x (sleeping or turned-away targets), cleave (every body in the arc), ignorePlate (the Warden's front plate does not turn it). Every number a first guess.
   fists: { name: 'Fists', kind: 'melee', switchTime: 0.25, swing: { reach: 1.9, arc: 1.3, damage: 8, windup: 0.08, recover: 0.27, knock: 0.25, flinch: 0.25 },
@@ -131,6 +161,11 @@ export const WEAPONS = {
   marlinspike: { name: 'Marlinspike', kind: 'melee', switchTime: 0.3, swing: { reach: 1.9, arc: 0.6, damage: 16, windup: 0.07, recover: 0.25, knock: 0.1, backstab: 3, flinch: 0.15 } },      // 16 x 3 = 48: a stab kills a Tollbearer (45) that did not see it coming
   mallet: { name: "Lamplighter's mallet", kind: 'melee', switchTime: 0.5, swing: { reach: 2.1, arc: 1.1, damage: 30, windup: 0.3, recover: 0.65, knock: 1.0, stun: 1.5, ignorePlate: true, flinch: 0.6 } },
   axe: { name: 'Fire axe', kind: 'melee', switchTime: 0.55, swing: { reach: 2.3, arc: 1.75, damage: 55, windup: 0.35, recover: 0.75, knock: 0.8, cleave: true, flinch: 0.6 } },
+  // the chainsaw (PT-022; joins key 6's cycle): HOLD FIRE to rev (`spinUp` s), then it cuts every body in front of you every `every` s for `damage` (cleaves the lot, a flinch each time), drags you forward `drag` m/s into what it is cutting and slows you `slow` while it runs;
+  // it is LOUD (every `noiseEvery` s a noise of NOISE.chainsaw), has no guard, and UNLIMITED FUEL with a STALL: cutting builds heat (`heatTime` s of cutting to stall, cooling `cool` /s at rest), plate and bells kick it back (`plateHeat`, `nodeHeat` extra per cut), and a stalled saw is
+  // dead for `stall` s. Key V is a short chop (`swing`) like every melee weapon.
+  chainsaw: { name: "Shipwright's chainsaw", kind: 'melee', switchTime: 0.6, noGuard: true, swing: { reach: 2.0, arc: 1.0, damage: 14, windup: 0.14, recover: 0.4, knock: 0.2, flinch: 0.3 },
+    saw: { reach: 2.1, arc: 1.0, damage: 5, every: 0.1, spinUp: 0.4, spinDown: 0.5, heatTime: 5.5, cool: 0.5, stall: 1.8, restart: 0.3, plateHeat: 0.2, nodeHeat: 0.12, flinch: 0.25, drag: 1.3, slow: 0.35, noiseEvery: 0.4 } },
 };
 
 // `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
@@ -189,6 +224,12 @@ export const PICKUPS = {
   weapon_marlinspike: { type: 'weapon', weapon: 'marlinspike' },
   weapon_mallet: { type: 'weapon', weapon: 'mallet' },
   weapon_axe: { type: 'weapon', weapon: 'axe' },
+  weapon_carbine: { type: 'weapon', weapon: 'carbine', ammo: 'round', amount: 60 },       // PT-022: placed on no map yet
+  ammo_round: { type: 'ammo', ammo: 'round', amount: 40 },
+  weapon_linethrower: { type: 'weapon', weapon: 'linethrower', ammo: 'rocket', amount: 4 },
+  ammo_rocket: { type: 'ammo', ammo: 'rocket', amount: 3 },
+  weapon_fork: { type: 'weapon', weapon: 'fork' },
+  weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };

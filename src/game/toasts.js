@@ -3,7 +3,7 @@
 import { PICKUPS } from '../engine/defs.js';
 
 export const PICKUP_NAMES = {
-  health_small: 'Field dressing', health_large: 'Medical satchel', ammo_flare: 'Flare shells', armor_vest: 'Canvas flak vest', ammo_shell: 'Shotgun shells', ammo_rivet: 'Rivets', ammo_bolt: 'Harpoon bolts', ammo_cell: 'Charge cells',
+  health_small: 'Field dressing', health_large: 'Medical satchel', ammo_flare: 'Flare shells', armor_vest: 'Canvas flak vest', ammo_shell: 'Shotgun shells', ammo_rivet: 'Rivets', ammo_bolt: 'Harpoon bolts', ammo_cell: 'Charge cells', ammo_round: 'Carbine rounds', ammo_rocket: 'Line-thrower rockets',
   key_brass: 'Brass key', key_iron: 'Iron key', key_bell: 'Bell key',
 };
 /** "Rivets (+40)": ammo, health and armour show what they give; keys and unknown kinds show just the name */

@@ -7,10 +7,10 @@ import { pickNext, navDir, NavRepeat } from '../src/game/padmenu.js';
 import { FixedLoop } from '../src/engine/loop.js';
 import { createWorld, step, hashWorld } from '../src/engine/world.js';
 import { parseMap } from '../src/engine/mapformat.js';
-import { WEAPONS, MELEE_ORDER, WEAPON_ORDER } from '../src/engine/defs.js';
+import { WEAPONS, MELEE_ORDER, SLOT_KEYS } from '../src/engine/defs.js';
 
-test('the wheel has one segment per weapon slot, in the order of the keys, ending in the melee slot', () => {
-  assert.deepEqual(WHEEL_SLOTS.map((s) => s.id), [...WEAPON_ORDER, 'melee']); assert.deepEqual(WHEEL_SLOTS.map((s) => s.slot), [0, 1, 2, 3, 4, 5]);
+test('the wheel has one segment per weapon slot, in the order of the keys (the melee slot is key 6, PT-022 put three more guns after it)', () => {
+  assert.deepEqual(WHEEL_SLOTS.map((s) => s.id), SLOT_KEYS); assert.deepEqual(WHEEL_SLOTS.map((s) => s.slot), [0, 1, 2, 3, 4, 5, 6, 7, 8]); assert.equal(WHEEL_SLOTS[5].id, 'melee');
   for (const s of WHEEL_SLOTS) assert.ok(s.name && s.role, s.id);
 });
 test('D7 (owner): while the wheel is open time is FROZEN on Easy, 15% on Normal, 5% on Hard; the setting turns it off', () => {
@@ -42,19 +42,20 @@ test('tap or hold: a short press is the last-weapon tap, a long one opens the wh
   const t = new Wheel(); t.forceOpen(5); assert.ok(t.open); assert.deepEqual(t.release(), { tap: false, pick: -1 }, 'opened and closed without pushing anywhere: nothing is chosen');
 });
 test('segments: the pointer vector picks the slice it points into (0 = up, clockwise), the dead centre picks nothing, and it wraps', () => {
-  const at = (deg, r = 1) => pickSegment(Math.sin(deg * Math.PI / 180) * r, -Math.cos(deg * Math.PI / 180) * r);
-  assert.deepEqual([0, 60, 120, 180, 240, 300].map((d) => at(d)), [0, 1, 2, 3, 4, 5]); assert.deepEqual([29, 31, 359, 331, 329].map((d) => at(d)), [0, 1, 0, 0, 5], 'the boundaries are at +-30 degrees');
+  const at = (deg, r = 1, n = 6) => pickSegment(Math.sin(deg * Math.PI / 180) * r, -Math.cos(deg * Math.PI / 180) * r, n);
+  assert.deepEqual([0, 60, 120, 180, 240, 300].map((d) => at(d)), [0, 1, 2, 3, 4, 5]); assert.deepEqual([29, 31, 359, 331, 329].map((d) => at(d)), [0, 1, 0, 0, 5], 'six: the boundaries are at +-30 degrees');
+  assert.deepEqual([0, 40, 80, 120, 160, 200, 240, 280, 320].map((d) => at(d, 1, WHEEL_SLOTS.length)), [0, 1, 2, 3, 4, 5, 6, 7, 8], 'the real wheel has nine segments, 40 degrees each'); assert.deepEqual([19, 21, 359, 341, 339].map((d) => at(d, 1, WHEEL_SLOTS.length)), [0, 1, 0, 0, 8], 'and the boundaries are at +-20 degrees');
   assert.equal(at(90, 0.2), -1, 'inside the dead centre'); assert.equal(pickSegment(0, 0), -1); assert.equal(pickSegment(0, -1, 8), 0); assert.equal(pickSegment(1, 0, 8), 2);
 });
 test('the pointer: the mouse accumulates a vector that stays in the unit circle, the stick IS the vector; nothing happens while closed', () => {
   const w = new Wheel(); w.feed(500, 0); assert.equal(w.x, 0, 'closed: ignored'); w.forceOpen(0); w.feed(5000, 0); assert.ok(Math.abs(Math.hypot(w.x, w.y) - 1) < 1e-9, 'clamped to the unit circle'); assert.ok([1, 2].includes(w.sel), 'pointing right, on the line between two segments: ' + w.sel);
   w.feed(-5000, 0); assert.ok(w.x < 0, 'it follows where you have pushed, not where you have been');
-  const s = new Wheel(); s.forceOpen(0); s.stick(0, 0.3); assert.equal(s.sel, -1, 'a stick barely off centre'); s.stick(0, 0.9); assert.equal(s.sel, 3, 'pushed down'); s.stick(-0.9, -0.1); assert.equal(s.sel, 5, 'left and a touch up (276 degrees) is the last segment');
+  const s = new Wheel(); s.forceOpen(0); s.stick(0, 0.3); assert.equal(s.sel, -1, 'a stick barely off centre'); s.stick(0.05, 0.9); assert.equal(s.sel, 4, 'pushed down (and a touch right): the fifth'); s.stick(-0.05, 0.9); assert.equal(s.sel, 5, 'down and a touch left: the sixth'); s.stick(-0.9, -0.1); assert.equal(s.sel, 7, 'left and a touch up (276 degrees) is the eighth');
 });
-test('the wheel as SVG: six segments, the chosen one marked, weapons you do not have dimmed with no ammo count, the centre names the choice', () => {
+test('the wheel as SVG: nine segments, the chosen one marked, weapons you do not have dimmed with no ammo count, the centre names the choice', () => {
   const p = { weapon: 'scattergun', weapons: ['flare', 'scattergun'], ammo: { flare: 5, shell: 12 }, meleeWeapon: 'fists' };
-  const m = wheelModel(p, 1, WEAPONS, MELEE_ORDER); assert.equal(m.current, 'scattergun'); assert.deepEqual(m.items.map((i) => i.owned), [true, true, false, false, false, true], 'fists are always there');
-  const svg = wheelSvg(m); assert.equal((svg.match(/<g class="seg/g) || []).length, 6); assert.equal((svg.match(/class="seg[^"]* sel/g) || []).length, 1); assert.equal((svg.match(/class="seg off/g) || []).length, 3); assert.equal((svg.match(/class="seg[^"]* cur/g) || []).length, 1);
+  const m = wheelModel(p, 1, WEAPONS, MELEE_ORDER); assert.equal(m.current, 'scattergun'); assert.deepEqual(m.items.map((i) => i.owned), [true, true, false, false, false, true, false, false, false], 'fists are always there');
+  const svg = wheelSvg(m); assert.equal((svg.match(/<g class="seg/g) || []).length, 9); assert.equal((svg.match(/class="seg[^"]* sel/g) || []).length, 1); assert.equal((svg.match(/class="seg off/g) || []).length, 6); assert.equal((svg.match(/class="seg[^"]* cur/g) || []).length, 1);
   assert.match(svg, /SCATTERGUN/); assert.match(svg, /CLOSE/); assert.match(svg, /2 · 12/, 'the shell count'); assert.match(svg, /<svg[^>]*viewBox/); assert.ok(!/NaN|undefined/.test(svg));
   const none = wheelSvg(wheelModel(p, -1, WEAPONS, MELEE_ORDER)); assert.match(none, /WEAPONS/); assert.match(none, /release to equip/);
   const locked = wheelSvg(wheelModel(p, 4, WEAPONS, MELEE_ORDER)); assert.match(locked, /NOT FOUND YET/, 'the lamp is not owned yet');

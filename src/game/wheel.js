@@ -11,6 +11,9 @@ export const WHEEL_SLOTS = [
   { id: 'harpoon', slot: 3, name: 'Harpoon rifle', role: 'ONE HEAVY SHOT · pins' },
   { id: 'arc', slot: 4, name: 'Charge-arc lamp', role: 'CHARGE · water · Vael' },
   { id: 'melee', slot: 5, name: 'Melee', role: 'FISTS · found weapons · guard' },
+  { id: 'carbine', slot: 6, name: 'Harbour carbine', role: 'PRECISION · head shots' },
+  { id: 'linethrower', slot: 7, name: 'Rocket line-thrower', role: 'BLAST · rockets' },
+  { id: 'fork', slot: 8, name: 'Vael tuning-fork', role: 'GRAVITY · lift · throw · punt' },
 ];
 /** time scale while the wheel is open, by difficulty (owner decision D7) */
 export const WHEEL_TIME = { easy: 0, normal: 0.15, hard: 0.05 };
@@ -57,6 +60,9 @@ const ICONS = {                                                         // 40 x 
   rivet: '<rect x="5" y="13" width="17" height="13" rx="2"/><path d="M22 19.5h10M26 16v7M9 13v-4h8v4"/><path d="M33 19.5h5"/><path d="M10 26v6h6v-6"/>',
   harpoon: '<path d="M3 31L33 9"/><path d="M33 9l-9 0.5M33 9l-3.5 8"/><path d="M5 29c-3 1-3 6 1 6"/><path d="M12 26l2.5 3"/>',
   arc: '<circle cx="20" cy="15" r="8.5"/><path d="M15.5 27h9M16.5 30.5h7M18 34h4"/><path d="M21.5 8l-4.5 7h6l-4.5 7"/>',
+  carbine: '<rect x="3" y="19" width="10" height="5" rx="1"/><rect x="13" y="16" width="11" height="7" rx="1.5"/><path d="M24 18h13M24 21h13"/><path d="M18 23v8h4v-8"/><path d="M15 16v-3h4v3"/>',
+  linethrower: '<rect x="6" y="15" width="24" height="9" rx="2"/><path d="M30 13l6-2.5v17l-6-2.5z"/><path d="M6 15l-3-3v15l3-3"/><circle cx="13" cy="31" r="4"/><path d="M21 24v7h4v-7"/>',
+  fork: '<path d="M13 4v14c0 4 3 7 7 7s7-3 7-7V4"/><path d="M20 25v12"/><circle cx="20" cy="13" r="2.6"/><path d="M9 4h8M23 4h8"/>',
   melee: '<path d="M10 31V19c0-2 2-3 3.5-2V12c0-2 3-2.5 4-0.5 1-2 4-2 4.8 0 1-1.5 4.2-1 4.2 1.3V31z"/><path d="M13.5 19v-3M17.5 17v-4M21.5 17.5v-3M10 24h20M12 31v4h16v-4"/>',
 };
 const polar = (cx, cy, r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
@@ -86,7 +92,7 @@ export function wheelModel(player, selected, WEAPONS, MELEE_ORDER) {
   const owned = (id) => id === 'melee' || player.weapons.includes(id);
   const items = WHEEL_SLOTS.map((s) => {
     if (s.id === 'melee') { const cur = WEAPONS[player.weapon]?.kind === 'melee' ? player.weapon : (MELEE_ORDER.includes(player.meleeWeapon) ? player.meleeWeapon : 'fists'); return { id: s.id, owned: true, ammoText: '', label: WEAPONS[cur].name }; }
-    const w = WEAPONS[s.id]; return { id: s.id, owned: owned(s.id), ammoText: owned(s.id) ? String(player.ammo[w.ammo] ?? 0) : '', label: w.name };
+    const w = WEAPONS[s.id]; return { id: s.id, owned: owned(s.id), ammoText: owned(s.id) && w.ammo ? String(player.ammo[w.ammo] ?? 0) : '', label: w.name };
   });
   const cur = WEAPONS[player.weapon]?.kind === 'melee' ? 'melee' : player.weapon;
   return { selected, current: cur, items };
