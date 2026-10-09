@@ -1,13 +1,13 @@
 {
-  "when": "2026-10-07T23:32:33.836Z",
+  "when": "2026-10-09T22:27:00.980Z",
   "sources": {
-    "engine": "7bb71422887c513e",
-    "render": "ea82cd5664dced28",
-    "game": "41c690ea6b649e21",
-    "audio": "de442d524c24e72e",
-    "assets": "5debe38ccf521682"
+    "engine": "457ad98ab651f853",
+    "render": "6583f1f617cafb13",
+    "game": "0985ac0035ada716",
+    "audio": "0fb7b3e80e7f47c9",
+    "assets": "09f20c61fb70782f"
   },
-  "commit": "87c326e",
+  "commit": "2fc7cac",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -44,8 +44,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.24,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "pump",
@@ -68,8 +68,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.35,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "harpoon_cycle",
@@ -170,9 +170,9 @@
     {
       "id": "melee_hit",
       "seconds": 0.25,
-      "peak": 0.994,
-      "rms": 0.0299,
-      "loudestWindowRms": 0.2276,
+      "peak": 0.875,
+      "rms": 0.0263,
+      "loudestWindowRms": 0.2003,
       "tailRms": 0,
       "audibleSeconds": 0.12,
       "nan": 0,
@@ -236,8 +236,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.43,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "burn_start",
@@ -260,8 +260,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.22,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "dry_click",
@@ -320,8 +320,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "step_plank",
@@ -584,8 +584,8 @@
       "tailRms": 0.00005,
       "audibleSeconds": 2.17,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "revive",
@@ -632,8 +632,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.99,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "cantor_call",
@@ -804,6 +804,66 @@
       "bitExact": true
     },
     {
+      "id": "chorister_alert",
+      "seconds": 0.7,
+      "peak": 0.227,
+      "rms": 0.0149,
+      "loudestWindowRms": 0.0884,
+      "tailRms": 0,
+      "audibleSeconds": 0.41,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "chorister_draw",
+      "seconds": 0.45,
+      "peak": 0.102,
+      "rms": 0.0056,
+      "loudestWindowRms": 0.0387,
+      "tailRms": 0,
+      "audibleSeconds": 0.39,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "chorister_note",
+      "seconds": 0.12,
+      "peak": 0.354,
+      "rms": 0.0056,
+      "loudestWindowRms": 0.0434,
+      "tailRms": 0,
+      "audibleSeconds": 0.08,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "chorister_die",
+      "seconds": 0.95,
+      "peak": 0.39,
+      "rms": 0.0224,
+      "loudestWindowRms": 0.139,
+      "tailRms": 0,
+      "audibleSeconds": 0.7,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "shot_whiz",
+      "seconds": 0.2,
+      "peak": 0.132,
+      "rms": 0.003,
+      "loudestWindowRms": 0.0224,
+      "tailRms": 0,
+      "audibleSeconds": 0.11,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
       "id": "mother_roar",
       "seconds": 2.1,
       "peak": 0.435,
@@ -824,8 +884,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.27,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "mother_hatch",
@@ -860,8 +920,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.05,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "gaunt_screech",
@@ -946,6 +1006,246 @@
       "nan": 0,
       "maxDiffLSB": 1,
       "bitExact": false
+    },
+    {
+      "id": "carbine_fire",
+      "seconds": 0.2,
+      "peak": 0.653,
+      "rms": 0.0147,
+      "loudestWindowRms": 0.113,
+      "tailRms": 0,
+      "audibleSeconds": 0.1,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "rocket_fire",
+      "seconds": 1.1,
+      "peak": 0.444,
+      "rms": 0.0335,
+      "loudestWindowRms": 0.19,
+      "tailRms": 0,
+      "audibleSeconds": 0.76,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "rocket_boom",
+      "seconds": 1.5,
+      "peak": 0.878,
+      "rms": 0.0489,
+      "loudestWindowRms": 0.2335,
+      "tailRms": 0,
+      "audibleSeconds": 0.93,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "head_tick",
+      "seconds": 0.2,
+      "peak": 0.172,
+      "rms": 0.0049,
+      "loudestWindowRms": 0.0372,
+      "tailRms": 0,
+      "audibleSeconds": 0.09,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "grav_grab",
+      "seconds": 0.4,
+      "peak": 0.258,
+      "rms": 0.0132,
+      "loudestWindowRms": 0.0859,
+      "tailRms": 0,
+      "audibleSeconds": 0.17,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "grav_drop",
+      "seconds": 0.3,
+      "peak": 0.162,
+      "rms": 0.0071,
+      "loudestWindowRms": 0.0486,
+      "tailRms": 0,
+      "audibleSeconds": 0.16,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "grav_throw",
+      "seconds": 0.4,
+      "peak": 0.607,
+      "rms": 0.0277,
+      "loudestWindowRms": 0.1893,
+      "tailRms": 0,
+      "audibleSeconds": 0.23,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "grav_punt",
+      "seconds": 0.6,
+      "peak": 0.81,
+      "rms": 0.042,
+      "loudestWindowRms": 0.2568,
+      "tailRms": 0,
+      "audibleSeconds": 0.36,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "grav_catch",
+      "seconds": 0.2,
+      "peak": 0.366,
+      "rms": 0.0122,
+      "loudestWindowRms": 0.0933,
+      "tailRms": 0,
+      "audibleSeconds": 0.1,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "shot_reflect",
+      "seconds": 0.5,
+      "peak": 0.292,
+      "rms": 0.0093,
+      "loudestWindowRms": 0.0617,
+      "tailRms": 0,
+      "audibleSeconds": 0.25,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "shove_impact",
+      "seconds": 0.4,
+      "peak": 0.71,
+      "rms": 0.0311,
+      "loudestWindowRms": 0.212,
+      "tailRms": 0,
+      "audibleSeconds": 0.22,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "phys_hit",
+      "seconds": 0.3,
+      "peak": 0.48,
+      "rms": 0.0189,
+      "loudestWindowRms": 0.1397,
+      "tailRms": 0,
+      "audibleSeconds": 0.14,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "phys_break",
+      "seconds": 0.5,
+      "peak": 0.76,
+      "rms": 0.0284,
+      "loudestWindowRms": 0.1942,
+      "tailRms": 0,
+      "audibleSeconds": 0.31,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "saw_start",
+      "seconds": 0.65,
+      "peak": 0.26,
+      "rms": 0.0149,
+      "loudestWindowRms": 0.0713,
+      "tailRms": 0,
+      "audibleSeconds": 0.34,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "saw_rev",
+      "seconds": 0.55,
+      "peak": 0.171,
+      "rms": 0.008,
+      "loudestWindowRms": 0.0474,
+      "tailRms": 0,
+      "audibleSeconds": 0.39,
+      "nan": 0,
+      "maxDiffLSB": 1,
+      "bitExact": false
+    },
+    {
+      "id": "saw_stop",
+      "seconds": 0.6,
+      "peak": 0.116,
+      "rms": 0.0059,
+      "loudestWindowRms": 0.0335,
+      "tailRms": 0,
+      "audibleSeconds": 0.31,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "saw_hit",
+      "seconds": 0.12,
+      "peak": 0.137,
+      "rms": 0.0033,
+      "loudestWindowRms": 0.0255,
+      "tailRms": 0,
+      "audibleSeconds": 0.07,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "saw_kick",
+      "seconds": 0.4,
+      "peak": 0.332,
+      "rms": 0.0083,
+      "loudestWindowRms": 0.0584,
+      "tailRms": 0,
+      "audibleSeconds": 0.19,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "saw_stall",
+      "seconds": 1,
+      "peak": 0.273,
+      "rms": 0.0192,
+      "loudestWindowRms": 0.0712,
+      "tailRms": 0,
+      "audibleSeconds": 0.8,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "saw_restart",
+      "seconds": 0.5,
+      "peak": 0.194,
+      "rms": 0.009,
+      "loudestWindowRms": 0.0596,
+      "tailRms": 0,
+      "audibleSeconds": 0.29,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
     }
   ],
   "music": {
