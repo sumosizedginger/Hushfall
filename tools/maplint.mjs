@@ -2,8 +2,10 @@
 // the open: a bot walks under a floating ceiling slab without noticing. Two rules, both about what the level mesh will DRAW (src/render/levelmesh.js: a cell of kind floor / door / secret gets a ceiling):
 //   roofed-has-walls      every connected region of roofed cells has more wall edges than open edges. A bridge made of an indoor floor skin is a roofed region with no walls: a slab hanging in the sky.
 //   hung-props-have-roof  a ceiling-hung prop (lamp, pod, cradle) stands on a roofed cell. In open air it floats at the ceiling height with its wire.
+//   no-trap               (PT-024) no cell the player can walk or FALL into leaves no way to an exit (src/engine/traps.js): the Pump Cathedral's catwalk stopped a cell short of the wall and left a trench behind it.
 // Used by tools/verify-map.mjs (so by `npm run map`). Pure: takes a parsed map (src/engine/mapformat.js).
 import { mapFeel } from './dev/map-feel.mjs';
+import { findTraps } from '../src/engine/traps.js';
 
 const ROOFED = new Set(['floor', 'door', 'secret']);          // = hasCeil in levelmesh.js
 const HUNG = new Set(['lamp', 'pod', 'cradle']);              // props that hang from the ceiling height (levelmesh.js: m.position.set(p.x, cy, p.z))
@@ -30,6 +32,10 @@ export function mapLintChecks(map) {
   const floating = map.props.filter((p) => HUNG.has(p.kind) && !ROOFED.has(cells(Math.floor(p.x / map.cell), Math.floor(p.z / map.cell))));
   checks.push({ name: 'placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air', ok: floating.length === 0,
     detail: floating.length ? `${floating.length} floating: ` + floating.slice(0, 6).map((p) => `${p.kind}@${Math.floor(p.x / map.cell)},${Math.floor(p.z / map.cell)}`).join(' ') : 'ok' });
+  // 3. no trap: nothing the player can step or fall into is a dead end
+  const tr = findTraps(map);
+  checks.push({ name: 'placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)', ok: tr.traps === 0,
+    detail: tr.traps ? tr.groups.slice(0, 4).map((g) => `${g.cells} cells at x ${g.x.join('..')} z ${g.z.join('..')} (floor ${g.floor} m, entered from ${g.from.join(' ')})`).join('; ') : 'ok' });
   return checks;
 }
 
