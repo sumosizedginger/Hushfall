@@ -337,7 +337,7 @@ try {
 
   // ---- 5b. UX: prompts, quick save/load, pause layout at small windows ---------------------------------------------------
   await T("t.newGame('normal', 12, { realtime: true })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); await sleep(200);
-  const hintAt = async (x, z, yaw) => { await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); await sleep(350); return text('use-hint'); };
+  const hintAt = async (x, z, yaw) => { await T(`t.setup_teleport(${x}, ${z}, ${yaw})`); await sleep(350); let h = await text('use-hint'); for (let i = 0; i < 12 && !h; i++) { await sleep(250); h = await text('use-hint'); } return h; };          // the HUD is drawn by the page's own frame loop: on a loaded machine it takes more than 350 ms
   check('looking at a closed door within reach shows how to open it', (await hintAt(15, 36.4, Math.PI)) === '[E] open', await text('use-hint'));
   check('a locked door says what it needs', (await hintAt(79, 54.4, Math.PI)).includes('needs the brass key'), await text('use-hint'));
   await T('t.setup_teleport(13.4, 45, Math.PI / 2)'); await sleep(350);
