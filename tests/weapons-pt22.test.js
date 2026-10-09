@@ -160,6 +160,10 @@ test('a punt launches a prop; a punt turns a toll-shot back on the one who tolle
   let reflected = false, hp0 = bh.hp; for (let i = 0; i < 60 * 8 && !reflected; i++) { step(r, idle({ fire: r.enemyShots.some((q2) => !q2.reflected && Math.hypot(q2.x - r.player.x, q2.z - r.player.z) < 5) })); const e = drainEvents(r); reflected = e.some((x) => x.type === 'shot_reflect'); }
   assert.ok(reflected, 'a toll-shot was sent back'); run(r, 1.2); assert.ok(bh.hp < hp0, 'and it struck the Bellhand (' + (hp0 - bh.hp) + ')'); assert.equal(r.stats.damageTaken, 0, 'and the player took nothing from it');
 });
+test('the beam works with the sprint key held: Aim ends a sprint with the tuning-fork as the sights do with a gun', () => {
+  const w = arena([{ type: 'enemy', kind: 'tollbearer', at: [12, 5], facing: 'east', hold: 'inert', hp: 5000 }], { weapon: 'fork', px: cell(12) + 6 }), e = w.enemies[0]; w.player.z = e.z; aimAt(w, e, 0.5);
+  const ev = run(w, 1.2, idle({ aim: true, sprint: true, move: [0, 1] })); assert.equal(w.player.sprinting, false, 'not sprinting while the beam is on'); assert.ok(types(ev).includes('grav_catch'), 'the creature was dragged in');
+});
 test('hold aim on a creature: it is dragged to melee range and left helpless; a Warden, a boss and a node are not dragged', () => {
   const w = arena([{ type: 'enemy', kind: 'gaunt', at: [12, 5], facing: 'east', hold: 'turn', sight: 3 }], { weapon: 'fork', px: cell(12) + 7 }), g = w.enemies[0]; w.player.z = g.z; aimAt(w, g, 0.5);
   const ev = run(w, 1.4, idle({ aim: true })); const d = Math.hypot(g.x - w.player.x, g.z - w.player.z); assert.ok(d <= GRAV.pull.stop + 0.2, 'dragged in to ' + d.toFixed(2) + ' m'); assert.ok((g.stunT || 0) > 0.4, 'and stunned (' + (g.stunT || 0).toFixed(2) + ' s)'); assert.ok(types(ev).includes('grav_catch'));
