@@ -95,4 +95,13 @@ MAP.decals = [{ kind: 'ichorpool', at: [26, 22], size: 1.5 }, { kind: 'bloodpool
 MAP.growth = [{ at: [57, 22], r: 26, power: 1.2 }];                                                                                                                                                          // the sump heart: the line's last room, and it has overflowed
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the Shipwright's chainsaw again, on a rack at the pump gallery door (for the player who missed the Rail Yard's tool locker); ammunition for the carbine (rounds) and the line-thrower (rockets); movable props for the tuning-fork ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_chainsaw', 9, 22], ['ammo_round', 16, 22], ['ammo_round', 32, 12], ['ammo_round', 39, 22], ['ammo_round', 49, 22], ['ammo_rocket', 25, 22], ['ammo_rocket', 49, 15]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+MAP.entities.push(...[['crate', 15, 26], ['barrel', 34, 25], ['sack', 46, 13], ['crate', 49, 26], ['barrel', 58, 30]].map(([kind, x, z]) => ({ type: 'prop', kind, at: [x, z], movable: true })));
+(MAP.messages ??= []).push({ id: 'found-chainsaw', at: [9, 22], radius: 1.5, speaker: 'PUMP GALLERY RACK', text: 'A saw rack by the pump gallery door: the Shipwright\'s chainsaw, for anyone who missed it. Close quarters, a long run, a hard stall.' });
+MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw again, on a rack at the pump gallery door (for the player who missed the Rail Yard\'s tool locker)';
+// ---- end PT-023 ----
+
 export default MAP;

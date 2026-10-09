@@ -4,6 +4,8 @@ import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 
+/** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
+export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
 const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
@@ -78,9 +80,10 @@ export class Bot {
     const wantFlare = !wantHarpoon && !wantArc && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
     const wantScatter = !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
     const wantRivet = !wantScatter && !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
-    const wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : 'flare';
-    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : 'weapon5'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
-    const def = WEAPONS[p.weapon]?.kind === 'melee' ? WEAPONS[wantId] : WEAPONS[p.weapon], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
+    const lastResort = p.weapons.includes('carbine') && (p.ammo.round || 0) > 0 && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0);          // PT-023: the carbine is the bot's LAST resort: with it in the pocket the sim's flare feed no longer carries a bot that has run out of everything else, so the bot has to use it
+    const wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : lastResort ? 'carbine' : 'flare';
+    if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : wantId === 'arc' ? 'weapon5' : 'weapon7'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
+    const def = BOT_GUNS.has(p.weapon) || (lastResort && p.weapon === 'carbine') ? WEAPONS[p.weapon] : WEAPONS[wantId], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
@@ -96,7 +99,7 @@ export class Bot {
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
     this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
     // out of ammunition for everything it carries: the bot closes in and bashes (key V) instead of standing there with a dry gun (the old last-resort flare feed is gone, fists never run out)
-    const dry = !p.weapons.some((id) => (p.ammo[WEAPONS[id].ammo] || 0) > 0) && !plated && !ENEMIES[t.e.kind].boss;          // (never walks up to plate or a boss with fists: a player flanks, the bot just waits for the feed's flare)
+    const dry = !lastResort && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0) && !plated && !ENEMIES[t.e.kind].boss;          // (never walks up to plate or a boss with fists: a player flanks, the bot just waits for the feed's flare)
     if (dry) { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('forward', t.d > 1.6); if (t.d < 2.3 && w.tick % 30 === 0) { this.in.press('melee'); this.releaseMelee = true; } }
     const dodge = (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0, shooter = this.weave && !!ENEMIES[t.e.kind].ranged && t.d > 5, weave = shooter && ((w.tick / 36) | 0) % 2 === 0;   // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
     this.setHeld('right', dodge || weave); this.setHeld('left', shooter && !weave && !dodge);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
@@ -133,7 +136,7 @@ export class Bot {
     for (const it of w.pickups) {
       if (this.skipPickups?.has(it.id)) continue;
       const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || Math.abs(it.y - p.y) > 1.2) continue;
-      const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? p.weapons.includes(OWNER[def.ammo] ?? 'flare') && (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
+      const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? p.weapons.includes(OWNER[def.ammo] ?? 'none') && (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
       if (low) { best = it; bd = d; }
     }
     return best;

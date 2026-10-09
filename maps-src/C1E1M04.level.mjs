@@ -97,4 +97,12 @@ const MAP = {
 
 // PT-021: the props set down in the new bays (after every other entity: no id shifts)
 MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the marlinspike, on the hook at the head of the cellar stair ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_marlinspike', 13, 19]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-marlinspike', at: [13, 19], radius: 1.5, speaker: 'RIGGER\'S HOOK', text: 'A marlinspike on the stair hook. Put it into a sleeper from behind and it does not wake: three times the work of a stab from the front.' });
+MAP.quality.introduces += '; also found here: the marlinspike, on the hook at the head of the cellar stair';
+// ---- end PT-023 ----
+
 export default MAP;

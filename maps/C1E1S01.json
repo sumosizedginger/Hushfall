@@ -288,6 +288,16 @@
    "type": "prop",
    "kind": "lantern",
    "at": [11, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [6, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [5, 4]
   }
  ],
  "par": {

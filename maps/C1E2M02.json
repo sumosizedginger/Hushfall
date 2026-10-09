@@ -1795,6 +1795,36 @@
    "type": "prop",
    "kind": "barrel",
    "at": [72, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [12, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [27, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [36, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [52, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [15, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [46, 25]
   }
  ],
  "par": {

@@ -864,6 +864,77 @@
    "type": "pickup",
    "kind": "ammo_bolt",
    "at": [51, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_fork",
+   "at": [44, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [22, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [26, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [47, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [54, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [21, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [49, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [14, 27],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [24, 25],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [40, 16],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [30, 28],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [46, 25],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [60, 19],
+   "movable": true
   }
  ],
  "par": {
@@ -926,6 +997,13 @@
    "radius": 0.1,
    "speaker": "SIGNAL HOUSE",
    "text": "The line is stopped. Calder, those were not drones in the aisle: they were hatchlings. The Vael are growing their own now."
+  },
+  {
+   "id": "found-fork",
+   "at": [44, 22],
+   "radius": 1.5,
+   "speaker": "VAEL INSTRUMENT",
+   "text": "A Vael tuning-fork, still humming, left on the rail. Hold it up and things lean toward you; the crates in this hall will come with them."
   }
  ],
  "growth": [
@@ -965,6 +1043,6 @@
    "bellhand": 1
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "the first non-human enemy: the Drone-Gill, a flying Vael hatchling, revealed by pods that crack open in a quiet hall and by ambush closets that open around you"
+  "introduces": "the first non-human enemy: the Drone-Gill, a flying Vael hatchling, revealed by pods that crack open in a quiet hall and by ambush closets that open around you; also found here: the Vael tuning-fork, on the rail between the aisle and the table room, and movable crates, barrels and sacks to use it on"
  }
 }

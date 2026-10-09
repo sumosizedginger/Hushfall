@@ -83,4 +83,13 @@ const MAP = {
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[25,22],[30,22],[51,24]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the Vael tuning-fork, on the rail between the aisle and the table room, and movable crates, barrels and sacks to use it on; ammunition for the carbine (rounds) and the line-thrower (rockets); movable props for the tuning-fork ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_fork', 44, 22], ['ammo_round', 22, 22], ['ammo_round', 26, 22], ['ammo_round', 47, 22], ['ammo_round', 54, 26], ['ammo_rocket', 21, 22], ['ammo_rocket', 49, 22]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+MAP.entities.push(...[['barrel', 14, 27], ['crate', 24, 25], ['barrel', 40, 16], ['crate', 30, 28], ['sack', 46, 25], ['crate', 60, 19]].map(([kind, x, z]) => ({ type: 'prop', kind, at: [x, z], movable: true })));
+(MAP.messages ??= []).push({ id: 'found-fork', at: [44, 22], radius: 1.5, speaker: 'VAEL INSTRUMENT', text: 'A Vael tuning-fork, still humming, left on the rail. Hold it up and things lean toward you; the crates in this hall will come with them.' });
+MAP.quality.introduces += '; also found here: the Vael tuning-fork, on the rail between the aisle and the table room, and movable crates, barrels and sacks to use it on';
+// ---- end PT-023 ----
+
 export default MAP;

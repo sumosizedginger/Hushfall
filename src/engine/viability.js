@@ -2,22 +2,26 @@
 // so the gate the tools apply and the gate the tests apply cannot drift apart. Pure: maps and routes in, plain data out.
 import { runRoute } from './harness.js';
 import { createWorld } from './world.js';
+import { BOT_GUNS } from './bot.js';
 import { analyseReach } from './reach.js';
 import { WALL_SKINS, FLOOR_SKINS, PICKUPS, PLAYER, DIFFICULTY, WEAPONS } from './defs.js';
 
 const DIFFS = ['easy', 'normal', 'hard'];
+/** the ammunition the route bot fights with (PT-023): the capacity the gates count is what a bot with THOSE guns can use; a carbine round or a rocket would only inflate the total and hide a shortage of the rest, and a found melee weapon has no ammunition at all */
+const FOUGHT = new Set([...BOT_GUNS].map((id) => WEAPONS[id].ammo));
+const usable = (p) => (p.type === 'ammo' || p.type === 'weapon') && FOUGHT.has(p.ammo);
 
 /** rounds a player can have over the whole level from a cold start: the entry loadout plus every ammo and weapon pickup on the map, at that difficulty's pickup rate */
 export function ammoCapacity(map, difficulty) {
   const dm = DIFFICULTY[difficulty], start = Object.values(map.entryLoadout?.ammo ?? PLAYER.startAmmo).reduce((a, b) => a + b, 0);
-  const pick = map.entities.filter((e) => e.type === 'pickup' && (PICKUPS[e.kind].type === 'ammo' || PICKUPS[e.kind].type === 'weapon')).reduce((a, e) => a + Math.round(PICKUPS[e.kind].amount * dm.ammoPickup), 0);
+  const pick = map.entities.filter((e) => e.type === 'pickup' && usable(PICKUPS[e.kind])).reduce((a, e) => a + Math.round(PICKUPS[e.kind].amount * dm.ammoPickup), 0);
   return start + pick;
 }
 
 /** the same, per ammunition type (flare / shell / rivet) */
 export function ammoCapacityBy(map, difficulty) {
   const dm = DIFFICULTY[difficulty], cap = { ...(map.entryLoadout?.ammo ?? PLAYER.startAmmo) };
-  for (const e of map.entities) { if (e.type !== 'pickup') continue; const p = PICKUPS[e.kind]; if (p.type === 'ammo' || p.type === 'weapon') cap[p.ammo] = (cap[p.ammo] ?? 0) + Math.round(p.amount * dm.ammoPickup); }
+  for (const e of map.entities) { if (e.type !== 'pickup') continue; const p = PICKUPS[e.kind]; if (usable(p)) cap[p.ammo] = (cap[p.ammo] ?? 0) + Math.round(p.amount * dm.ammoPickup); }
   return cap;
 }
 /** rounds the bot fired, per ammunition type, counted from the run's fire events */

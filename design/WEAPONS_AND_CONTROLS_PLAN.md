@@ -238,3 +238,49 @@ Nothing was run in a browser (the owner's mouse rule): the rigs were drawn only 
 2. **Placement** of the eight found weapons (the four melee ones are still unplaced too): one pass, so the bots and the evidence are redone once. The discussion's draft: the mallet on Lamplighter Hill, the chainsaw in the Rail Yard's tool locker (a secret) with a mainline copy later, the line-thrower after the first Warden (Signal House or Ferry Terminal), the carbine in Episodes 3-4, the fork as a deep Vael find.
 3. The carbine's identity (head zone) is my choice after "different from the rifle and the riveter"; the alternatives were a recoil-climbing auto and a marking round. Say if you want another.
 4. Water and the saw (it could drown), a gravity-gun readout on the HUD (what it can grab), corpses as throwables, explosive barrels: none built.
+
+## 13. PT-023: the weapons placed on the maps (owner, 2026-10-08, after playing the Range: "the weapons feel great! And I love the updated looks. Okay, time to work through and update all the maps and get all 18 maps updated.")
+
+Read as the one PLACEMENT PASS section 12.4 kept for this word: the eight found weapons (the four melee ones of PT-013 and the four of PT-022) go on the maps, and the guns PT-022 added get their ammunition, so the bots and the evidence are redone once. NOT read as a go for (a) the single "Ammo" pack ("we may want": still open, 13.5) or (b) the evidence regeneration (a Chrome job: it waits for the owner to say the machine is free).
+
+### 13.1 What is where (every cell is ON the lane the main route walks, found with `tools/dev/place-near.mjs`; the chainsaw's locker is on the secret route's)
+| map | found here | ammunition added |
+|---|---|---|
+| C1E1M03 Fishmarket Rows | **boat hook**, on a stall post on the boardwalk | none |
+| C1E1M04 The Drowned Chandlery | **marlinspike**, on the hook at the head of the cellar stair (before the dark and the sleepers) | none |
+| C1E1M05 Lamplighter Hill | **lamplighter's mallet**, at the foot of the hill (before the first Warden of M06) | none |
+| C1E1M06 Ferry Terminal | **Harbour carbine** (key 7), on a harbour guard's rack at the quay, before the first Warden's hall; 60 rounds | 3 round boxes |
+| C1E1M07 Signal House | **Rocket line-thrower** (key 8), in the station's rocket store in the cellar; 4 rockets | 3 round, 1 rocket |
+| C1E1M08 Bell Tower of St. Orrin | | 3 round, 3 rocket (a rocket does double to a bell node) |
+| C1E1S01 Lighthouse Cellar (secret cache) | | 1 round, 1 rocket (carried: the guns are found later) |
+| C1E2M01 Brine Gate | | 4 round, 2 rocket |
+| C1E2M02 Evaporation Pans | | 4 round, 2 rocket |
+| C1E2M03 Rail Yard | **Shipwright's chainsaw** (key 6's cycle) in the TOOL LOCKER, the map's secret | 4 round, 2 rocket |
+| C1E2M04 Kiln Row | **fire axe**, in the gatehouse's fire cabinet | 4 round, 2 rocket |
+| C1E2M05 The Cradle Annex | **Vael tuning-fork** (key 9), on the rail between the aisle and the table room; 6 movable props (crates, barrels, sacks) | 4 round, 2 rocket |
+| C1E2M06 Pump Cathedral | 7 movable props | 4 round, 2 rocket |
+| C1E2M07 Slurry Undercroft | the chainsaw again, on a rack at the pump gallery door (for the player who missed the locker; a weapon already owned is not taken twice); 5 movable props | 4 round, 2 rocket |
+| C1E2M08 The Grafting Floor | 8 movable props | 4 round, 4 rocket |
+| C1E2S01 The Rime Vault (secret cache) | | 1 round, 1 rocket |
+| C1E1M01, C1E1M02 | unchanged (byte for byte) | |
+
+Each weapon has a short note at its pickup (speaker = the object: BOAT HOOK, RIGGER'S HOOK, LAMPLIGHTER, HARBOUR GUARD, ROCKET APPARATUS, TOOL LOCKER, FIRE CABINET, VAEL INSTRUMENT, PUMP GALLERY RACK) and its `quality.introduces` line says what else the map now introduces. The pickup toast says the keys.
+
+### 13.2 How (so a later session can find it)
+- Each `maps-src/*.level.mjs` ends with a block `PT-023 ... end PT-023` just before `export default MAP;`: pickups and movable props appended AFTER every other entity (no id shifts), a note, the longer `introduces`. Marrow Quay and Customs Hall have no block. `maps/*.json` were recompiled; against HEAD each differs ONLY by appended entities, appended notes and a longer `introduces` (checked by a script, not by eye).
+- Pickups are ON the lane (a route walks over each one within half a metre, so the bot and a player on the road both collect it, and the item count of a run only grows); the movable props are OFF the traffic of every route (`maps-src/lanes/<ID>.json`, a cell clear on every side), because a movable prop blocks a creature the path-finder does not know about. `node tools/dev/place-near.mjs <ID> [--off] [--r=N] [--route=secret] <x,z | f0.35> ...` finds both kinds of cell.
+- The route bot uses none of the new guns except the carbine as a LAST resort (`BOT_GUNS` and `lastResort` in `bot.js`): a found weapon in hand is switched away from at the first fight, ammunition for a gun it does not use is not foraged, the "dry" rule counts only the guns it fights with, and with a carbine and rounds but nothing else to fire it switches to the carbine (the sim's flare feed, which used to carry a bot with no ammunition, does not run while a carried gun has rounds). The ammo-slack gates (`viability.js`) count only the ammunition of the guns the bot fights with (and the melee pickups no longer make the total NaN, which they did). A world where the bot never holds one of the new weapons is unchanged.
+- `src/engine/progress.js` lists rounds and rockets in the Locker's ammo text.
+- `tests/placement-pt023.test.js` (10): each weapon is where this table says and each route that walks over it picks it up; every map from a gun's introduction on supplies its ammunition and nothing before does (the secret caches excepted); every round and rocket box is on the lane (none left lying after the route); the bot still completes every route on hard and fires the carbine only as its last resort; every movable prop is clear of all traffic and no map before the fork has one; each note is short and delivered by a route.
+- WHY the carbine is on the quay and not at the start (a lesson for any later placement): a weapon picked up while the first fight is on (the carbine was first put at x 10, inside the start's fight) makes the bot switch weapons mid-fight, the two Bellhands of the north bays then never re-woke, and the perfect fighter's damage on the Ferry Terminal fell from 96 / 66 (normal / hard) to 14 / 24, which failed the gate "a perfect fighter takes real damage" (hard >= 25); the same weapon on the quay, a calm moment, leaves the numbers IDENTICAL to before (84 / 84 / 120 and 108 / 54 / 36). A pickup on the road is free for the evidence only if it is taken at a calm moment: `tools/dev/place-near.mjs` finds a cell, replaying the route with the item at several cells (the scratch script of PT-023) shows which spot moves the bot least. Maps whose route differs after the placement (M03, M04, M05, M06 a little, M07, the Rail Yard secret, E2M05) still pass every gate (see 13.3).
+
+### 13.3 Verified (node only, no browser)
+The whole suite 537 / 537 (526 before, one sprint test, 10 placement tests), `npm run validate` OK, `npm run build` OK. `tools/verify-map.mjs` run on the 16 changed maps from the dirty tree (its files were DISCARDED, not committed: evidence must come from a clean commit): every automated gate passes on all 16 (reachability, the three difficulties of every route, robustness, the gate-skip probe, the passive runner, ammo slack, the perfect fighter's completion and damage, par, quality, placement); the only failures are the three real-game-evidence ones (stale: the engine, render, audio and the map files changed since the last browser run). All 261 route runs replayed against the PT-022 baseline: all still complete. The maps whose bot never picks up a weapon (E1M08, E1M01, E1M02, E1S01, E2M01, E2M02, E2M03 main, E2M04, E2M06, E2M07, E2M08, E2S01) give results IDENTICAL to before in ticks, hit points, armour, kills and the old ammunition (only the items count and the new round / rocket counts grow); the others differ by the timing of the pickup (M03 up to 662 ticks, M04 270, M05 245, M06 3 runs of 9 by up to 107 ticks, M07 3 runs by up to 29, the Rail Yard's secret route 187, E2M05 238 and 300).
+
+### 13.4 NOT verified
+Nobody has played any of it: whether a weapon on the road at that spot is found, whether picking one up mid-walk (a pickup switches to the new weapon at once) is annoying, whether the ammunition amounts feel right (first guess: about 220 carbine rounds and 6 to 9 rockets a map), whether the notes read, how the movable props look in those rooms. The bots do not use the carbine, the line-thrower, the fork or the saw, so the evidence does NOT show that the maps are easier or harder with them: a player will find them easier. Every map's real-game evidence is stale (the engine, render, audio and the map files all changed); the ONE regeneration waits for the owner's word.
+
+### 13.5 Open decisions for the owner
+1. **The single "Ammo" pack** (12.4.1) is still not started. With the placement done, doing it is a scripted pass over the pickups of 18 maps plus the sim's pickup rule, the bots and the Locker text, still before the one regeneration. Recommended shape: ONE pickup that tops up every gun you carry by a share of that gun's cap.
+2. Whether any of the eight should be placed differently (the plan in 13.1 is mine), or hidden in secrets instead of on the road (the chainsaw's locker is the one secret).
+3. Whether melee tools should also get a second copy for the player who skipped the map (only the chainsaw has one).

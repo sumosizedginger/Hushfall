@@ -108,4 +108,12 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'scorch', at: [68, 14], wall: 'north', y: 1.5, size: 1.6 }, { kind: 'soot', at: [44, 13], wall: 'north', y: 1.7, size: 1.8 }, { kind: 'bloodpool', at: [26, 23], size: 1.3 }, { kind: 'smear', at: [37, 18], rot: 0, size: 2.4, h: 0.9 }];
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the fire axe, in the gatehouse's fire cabinet; ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_axe', 9, 23], ['ammo_round', 21, 19], ['ammo_round', 40, 18], ['ammo_round', 63, 17], ['ammo_round', 66, 16], ['ammo_rocket', 30, 25], ['ammo_rocket', 63, 16]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-axe', at: [9, 23], radius: 1.5, speaker: 'FIRE CABINET', text: 'A fire axe behind the glass, the glass already broken. Slow, and it takes everything in front of you.' });
+MAP.quality.introduces += '; also found here: the fire axe, in the gatehouse\'s fire cabinet';
+// ---- end PT-023 ----
+
 export default MAP;

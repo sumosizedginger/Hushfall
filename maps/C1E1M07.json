@@ -1035,6 +1035,31 @@
    "type": "prop",
    "kind": "lantern",
    "at": [58, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_linethrower",
+   "at": [5, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [10, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [14, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [50, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [28, 23]
   }
  ],
  "par": {
@@ -1104,6 +1129,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "That was not a station. That was a summons. Go: the tower on the ridge is next, and it is already ringing."
+  },
+  {
+   "id": "found-linethrower",
+   "at": [5, 8],
+   "radius": 1.5,
+   "speaker": "ROCKET APPARATUS",
+   "text": "The station's life-saving rocket, with a few rockets. It throws a line to a wreck; it throws this at a wall as well. Stand clear of it."
   }
  ],
  "decals": [
@@ -1166,6 +1198,7 @@
   "skins": 6,
   "enemyKinds": {
    "sexton": 2
-  }
+  },
+  "introduces": "undefined; also found here: the Rocket line-thrower, in the station's rocket store in the cellar"
  }
 }

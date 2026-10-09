@@ -1262,6 +1262,26 @@
    "kind": "lamp",
    "at": [20, 9],
    "tint": "cool"
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_carbine",
+   "at": [28, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [31, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [43, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [47, 23]
   }
  ],
  "par": {
@@ -1317,6 +1337,13 @@
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The Signal House is next: the ridge antenna is still answering. Whatever comes down that ramp, it is not the only one."
+  },
+  {
+   "id": "found-carbine",
+   "at": [28, 23],
+   "radius": 1.5,
+   "speaker": "HARBOUR GUARD",
+   "text": "A harbour guard's carbine on the rack, a clip in it. No spread to it: put the round where the head is."
   }
  ],
  "decals": [
@@ -1378,6 +1405,7 @@
   "enemyKinds": {
    "wardengraft": 1,
    "bellhand": 4
-  }
+  },
+  "introduces": "undefined; also found here: the Harbour carbine, on a harbour guard's rack at the quay, before the first Warden's hall"
  }
 }

@@ -118,4 +118,12 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'bloodpool', at: [44, 20], size: 1.3 }, { kind: 'smear', at: [46, 20], rot: 0, size: 2.6, h: 1.0 }, { kind: 'soot', at: [64, 11], wall: 'north', y: 1.6, size: 1.6 }, { kind: 'bloodpool', at: [6, 19], size: 1.2 }];
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the Shipwright's chainsaw, in the tool locker (the secret); ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_chainsaw', 26, 3], ['ammo_round', 23, 17], ['ammo_round', 42, 18], ['ammo_round', 51, 25], ['ammo_round', 63, 23], ['ammo_rocket', 38, 13], ['ammo_rocket', 60, 20]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-chainsaw', at: [26, 3], radius: 1.5, speaker: 'TOOL LOCKER', text: 'A shipwright\'s chainsaw, oiled and wrapped. It runs and runs, and it is loud; hold it on plate or bell and it stalls.' });
+MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw, in the tool locker (the secret)';
+// ---- end PT-023 ----
+
 export default MAP;

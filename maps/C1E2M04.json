@@ -1170,6 +1170,41 @@
    "type": "prop",
    "kind": "lantern",
    "at": [78, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_axe",
+   "at": [9, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [21, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [40, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [63, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [66, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [30, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [63, 16]
   }
  ],
  "par": {
@@ -1246,6 +1281,13 @@
    "radius": 2.5,
    "speaker": "WARDEN CALDER",
    "text": "A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there."
+  },
+  {
+   "id": "found-axe",
+   "at": [9, 23],
+   "radius": 1.5,
+   "speaker": "FIRE CABINET",
+   "text": "A fire axe behind the glass, the glass already broken. Slow, and it takes everything in front of you."
   }
  ],
  "decals": [
@@ -1307,6 +1349,6 @@
    "bellhand": 4
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs"
+  "introduces": "the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs; also found here: the fire axe, in the gatehouse's fire cabinet"
  }
 }

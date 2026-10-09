@@ -102,4 +102,12 @@ MAP.decals = [{ kind: 'bloodpool', at: [14, 36], size: 1.3 }, { kind: 'smear', a
 MAP.growth = [{ at: [7, 10], r: 12, power: 0.7 }];                                                                                                                                                           // a hint of the Vael under the house: the cellar's pods
 // ---- end PT-021 marks and growth ----
 
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the Rocket line-thrower, in the station's rocket store in the cellar; ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
+MAP.entities ??= [];
+MAP.entities.push(...[['weapon_linethrower', 5, 8], ['ammo_round', 10, 11], ['ammo_round', 14, 32], ['ammo_round', 50, 25], ['ammo_rocket', 28, 23]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-linethrower', at: [5, 8], radius: 1.5, speaker: 'ROCKET APPARATUS', text: 'The station\'s life-saving rocket, with a few rockets. It throws a line to a wreck; it throws this at a wall as well. Stand clear of it.' });
+MAP.quality.introduces += '; also found here: the Rocket line-thrower, in the station\'s rocket store in the cellar';
+// ---- end PT-023 ----
+
 export default MAP;

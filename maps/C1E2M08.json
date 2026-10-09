@@ -1050,6 +1050,94 @@
    "type": "prop",
    "kind": "cradle",
    "at": [24, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [26, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [27, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [49, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [46, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [22, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [31, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [46, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [46, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [34, 11],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [34, 44],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [44, 10],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [44, 46],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [53, 15],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [57, 38],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [35, 33],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [60, 28],
+   "movable": true
   }
  ],
  "par": {
