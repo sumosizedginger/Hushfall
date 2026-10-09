@@ -1,29 +1,29 @@
 {
   "mapId": "C1E2M05",
-  "when": "2026-10-07T00:04:13.779Z",
-  "commit": "af329fe",
+  "when": "2026-10-09T22:25:32.223Z",
+  "commit": "2fc7cac",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "0bb3fa558d46c444",
+  "mapSha": "55b89993fa568356",
   "routesSha": "ba6ff7f03524607c",
   "sources": {
-    "engine": "db745e41c61d6515",
-    "render": "5e8d89b11b635613",
-    "game": "22801f2db9072035",
-    "audio": "152501668c4a7c69",
-    "assets": "bf0547479d5b8097"
+    "engine": "457ad98ab651f853",
+    "render": "6583f1f617cafb13",
+    "game": "0985ac0035ada716",
+    "audio": "0fb7b3e80e7f47c9",
+    "assets": "09f20c61fb70782f"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 2767,
-      "hash": "c0b5fd09",
-      "nodeTicks": 2767,
-      "nodeHash": "c0b5fd09",
+      "ticks": 2761,
+      "hash": "1c2d9ff1",
+      "nodeTicks": 2761,
+      "nodeHash": "1c2d9ff1",
       "agree": true,
       "kills": 19,
       "secrets": 0,
@@ -31,12 +31,12 @@
     },
     "secret": {
       "ok": true,
-      "ticks": 3304,
-      "hash": "9491d42e",
-      "nodeTicks": 3304,
-      "nodeHash": "9491d42e",
+      "ticks": 3631,
+      "hash": "f059c76f",
+      "nodeTicks": 3631,
+      "nodeHash": "f059c76f",
       "agree": true,
-      "kills": 18,
+      "kills": 19,
       "secrets": 1,
       "wallSeconds": 1
     }
@@ -53,28 +53,28 @@
       "raised": 0,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.04
+      "highest": 0.017
     },
     "awake": {
       "rows": 34,
       "raised": 0,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.127
+      "highest": 0.101
     },
     "matrix": {
       "rows": 55,
       "raised": 0,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.156
+      "highest": 0.105
     },
     "dying": {
       "rows": 17,
       "raised": 0,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.042
+      "highest": 0.005
     },
     "corpses": {
       "rows": 17,
@@ -90,42 +90,42 @@
     {
       "name": "real-game route C1E2M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=2767 wall=1s"
+      "detail": "status=complete failed=null ticks=2761 wall=1s"
     },
     {
       "name": "real-game route C1E2M05.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 2767/c0b5fd09 vs node 2767/c0b5fd09"
+      "detail": "browser 2761/1c2d9ff1 vs node 2761/1c2d9ff1"
     },
     {
       "name": "real-game route C1E2M05.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=3304 wall=1s"
+      "detail": "status=complete failed=null ticks=3631 wall=1s"
     },
     {
       "name": "real-game route C1E2M05.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 3304/9491d42e vs node 3304/9491d42e"
+      "detail": "browser 3631/f059c76f vs node 3631/f059c76f"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.04 m; every one of the 17 enemies was measured: true"
+      "detail": "17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.017 m; every one of the 17 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "34 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.127 m; two samples of all 17 enemies: true"
+      "detail": "34 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 17 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "55 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.156 m"
+      "detail": "55 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.042 m || corpses: 17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+      "detail": "dying: 17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0.005 m || corpses: 17 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
@@ -153,5 +153,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 8
+  "wallSeconds": 11
 }

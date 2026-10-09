@@ -1,33 +1,33 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-10-07T00:03:04.146Z",
-  "commit": "af329fe",
+  "when": "2026-10-09T22:23:58.180Z",
+  "commit": "2fc7cac",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "fc47a292b9b3fd02",
+  "mapSha": "2b6915e86de56a88",
   "routesSha": "b039924e1ede9608",
   "sources": {
-    "engine": "db745e41c61d6515",
-    "render": "5e8d89b11b635613",
-    "game": "22801f2db9072035",
-    "audio": "152501668c4a7c69",
-    "assets": "bf0547479d5b8097"
+    "engine": "457ad98ab651f853",
+    "render": "6583f1f617cafb13",
+    "game": "0985ac0035ada716",
+    "audio": "0fb7b3e80e7f47c9",
+    "assets": "09f20c61fb70782f"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 11039,
-      "hash": "92e608a5",
-      "nodeTicks": 11039,
-      "nodeHash": "92e608a5",
+      "ticks": 10411,
+      "hash": "a6ea4a0c",
+      "nodeTicks": 10411,
+      "nodeHash": "a6ea4a0c",
       "agree": true,
-      "kills": 47,
+      "kills": 44,
       "secrets": 0,
-      "wallSeconds": 6
+      "wallSeconds": 5
     }
   },
   "hud": {
@@ -49,14 +49,14 @@
       "raised": 34,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.242
+      "highest": 0.101
     },
     "matrix": {
       "rows": 139,
       "raised": 97,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.201
+      "highest": 0.105
     },
     "dying": {
       "rows": 41,
@@ -81,12 +81,12 @@
     {
       "name": "real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=11039 wall=6s"
+      "detail": "status=complete failed=null ticks=10411 wall=5s"
     },
     {
       "name": "real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 11039/92e608a5 vs node 11039/92e608a5"
+      "detail": "browser 10411/a6ea4a0c vs node 10411/a6ea4a0c"
     },
     {
       "name": "C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -101,12 +101,12 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "82 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0.242 m; two samples of all 41 enemies: true"
+      "detail": "82 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 41 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "139 rows (97 on raised floors), 0 violations, deepest 0 m, highest 0.201 m"
+      "detail": "139 rows (97 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
@@ -121,7 +121,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.788 m tall on 12 m, shield r 2.971, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.971, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -139,5 +139,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 14
+  "wallSeconds": 17
 }

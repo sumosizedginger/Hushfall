@@ -2,18 +2,18 @@
   "mapId": "C1E2S01",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "af329fe",
+  "codeVersion": "2fc7cac",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "f68992256caac56d",
-  "assetVersion": "bf0547479d5b8097",
-  "engineSha": "db745e41c61d6515",
+  "mapSha": "a7365db18e4c303e",
+  "assetVersion": "09f20c61fb70782f",
+  "engineSha": "457ad98ab651f853",
   "sources": {
-    "engine": "db745e41c61d6515",
-    "render": "5e8d89b11b635613",
-    "game": "22801f2db9072035",
-    "audio": "152501668c4a7c69",
-    "assets": "bf0547479d5b8097"
+    "engine": "457ad98ab651f853",
+    "render": "6583f1f617cafb13",
+    "game": "0985ac0035ada716",
+    "audio": "0fb7b3e80e7f47c9",
+    "assets": "09f20c61fb70782f"
   },
   "routesSha": "cd168db75190657f",
   "loads": true,
@@ -25,10 +25,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "704767b6",
+      "finalHash": "4e026511",
       "kills": 0,
       "secrets": 0,
-      "items": 5,
+      "items": 7,
       "damageTaken": 0
     },
     {
@@ -37,10 +37,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "98ff7011",
+      "finalHash": "3f56f51d",
       "kills": 0,
       "secrets": 0,
-      "items": 5,
+      "items": 7,
       "damageTaken": 0
     },
     {
@@ -49,10 +49,10 @@
       "seed": 1,
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "676d4a0b",
+      "finalHash": "959a4830",
       "kills": 0,
       "secrets": 0,
-      "items": 5,
+      "items": 7,
       "damageTaken": 0
     }
   ],
@@ -63,12 +63,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 2248,
-    "finalHash": "98ff7011",
+    "finalHash": "3f56f51d",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 0,
-    "items": 15,
+    "items": 17,
     "secrets": 0
   },
   "facts": {
@@ -182,17 +182,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E2S01.json",
-    "when": "2026-10-07T00:04:59.722Z",
-    "commit": "af329fe",
-    "mapSha": "f68992256caac56d",
+    "when": "2026-10-09T22:26:36.846Z",
+    "commit": "2fc7cac",
+    "mapSha": "a7365db18e4c303e",
     "routesSha": "cd168db75190657f",
     "passed": 11,
     "total": 11,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-07T00:01:07.839Z",
-      "commit": "af329fe",
+      "when": "2026-10-09T22:21:18.740Z",
+      "commit": "2fc7cac",
       "passed": 119,
       "total": 119
     }
@@ -291,6 +291,11 @@
         "detail": "ok"
       },
       {
+        "name": "placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
         "name": "feel: the map declares a scale class (COMPRESSION, MIXED or SET-PIECE)",
         "ok": true,
         "detail": "COMPRESSION"
@@ -328,7 +333,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2S01.json: f68992256caac56d vs f68992256caac56d"
+        "detail": "validation/browser/C1E2S01.json: a7365db18e4c303e vs a7365db18e4c303e"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -349,5 +354,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 0 enemies, 17 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }
