@@ -15,7 +15,7 @@ export const PAD_DEFAULTS = {
   weapon1: ['Pad14'], weapon2: ['Pad12'], weapon3: ['Pad15'], weapon4: ['Pad13'], map: ['Pad8'], pause: ['Pad9'],
 };
 /** the actions a pad may be bound to (movement and look are the sticks; turn/look keys have no pad button) */
-export const PAD_ACTIONS = ['fire', 'aim', 'sprint', 'use', 'melee', 'weaponLast', 'weaponNext', 'weaponPrev', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'map', 'pause'];
+export const PAD_ACTIONS = ['fire', 'aim', 'sprint', 'use', 'melee', 'weaponLast', 'weaponNext', 'weaponPrev', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weapon7', 'weapon8', 'weapon9', 'map', 'pause'];
 export const defaultPadBindings = () => JSON.parse(JSON.stringify(PAD_DEFAULTS));
 
 export const PAD_SETTINGS = { enabled: true, lookRate: 3.4, deadzone: 0.18, curve: 1.6, invertY: false, assist: 0.5, vibration: true, glyphs: 'auto' };   // lookRate: rad/s at full tilt (before the sensitivity slider)
@@ -125,13 +125,18 @@ export function assistScale(world, strength = 0.5) {
 /** what the pad should do for a sim event: { strong, weak, ms } or null. Plain dual-rumble (the only thing a web page can ask of a DualSense). */
 export function rumbleFor(e) {
   switch (e.type) {
-    case 'fire': return ({ scattergun: { strong: 0.7, weak: 0.4, ms: 120 }, harpoon: { strong: 0.9, weak: 0.5, ms: 160 }, flare: { strong: 0.5, weak: 0.3, ms: 100 }, rivet: { strong: 0.12, weak: 0.25, ms: 40 }, arc: { strong: 0.1 + 0.7 * (e.charge ?? 0), weak: 0.2 + 0.5 * (e.charge ?? 0), ms: 70 + 140 * (e.charge ?? 0) } })[e.weapon] ?? null;
+    case 'fire': return ({ scattergun: { strong: 0.7, weak: 0.4, ms: 120 }, harpoon: { strong: 0.9, weak: 0.5, ms: 160 }, flare: { strong: 0.5, weak: 0.3, ms: 100 }, rivet: { strong: 0.12, weak: 0.25, ms: 40 }, carbine: { strong: 0.2, weak: 0.3, ms: 40 }, linethrower: { strong: 1, weak: 0.7, ms: 220 }, arc: { strong: 0.1 + 0.7 * (e.charge ?? 0), weak: 0.2 + 0.5 * (e.charge ?? 0), ms: 70 + 140 * (e.charge ?? 0) } })[e.weapon] ?? null;
     case 'hurt': return { strong: Math.min(1, 0.3 + (e.amount ?? 10) / 40), weak: 0.4, ms: 160 };
     case 'melee_hit': return { strong: e.kind === 'heavy' || e.kind === 'axe' || e.kind === 'mallet' ? 0.8 : 0.45, weak: 0.3, ms: 110 };
     case 'parry': return { strong: 0.2, weak: 0.9, ms: 140 };
     case 'block': return { strong: 0.5, weak: 0.2, ms: 90 };
     case 'guard_break': return { strong: 1, weak: 0.6, ms: 260 };
-    case 'explode': return { strong: 0.6, weak: 0.5, ms: 200 };
+    case 'explode': return (e.r ?? 0) > 4 ? { strong: 1, weak: 0.8, ms: 320 } : { strong: 0.6, weak: 0.5, ms: 200 };
+    case 'grav_punt': return { strong: e.hit ? 0.7 : 0.25, weak: 0.5, ms: 150 };
+    case 'phys_hit': case 'shove_impact': return { strong: 0.5, weak: 0.3, ms: 90 };
+    case 'saw_hit': return { strong: 0.25, weak: 0.4, ms: 70 };
+    case 'saw_kick': return { strong: 0.8, weak: 0.5, ms: 110 };
+    case 'saw_stall': return { strong: 0.9, weak: 0.4, ms: 240 };
     case 'player_died': return { strong: 1, weak: 1, ms: 500 };
     default: return null;
   }

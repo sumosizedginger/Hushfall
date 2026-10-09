@@ -38,8 +38,32 @@
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#####################fff######################################",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
   "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC###############",
-  "##############################################################",
   "##############################################################",
   "##############################################################"
  ],
@@ -70,6 +94,30 @@
   "..............................wwwwwwwwwwwwwww.................",
   "..............................wwwwwwwwwwwwwww.................",
   "..............................wwwwwwwwwwwwwww.................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -164,6 +212,71 @@
    "type": "prop",
    "kind": "lamp",
    "at": [39, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [34, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [18, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [20, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [22, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [24, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [26, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [34, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [14, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [30, 50]
   },
   {
    "type": "enemy",
@@ -597,6 +710,376 @@
    ]
   },
   {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [5, 34],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 34],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [13, 34],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [7, 39],
+   "facing": 0,
+   "hold": "fixed",
+   "sight": 6
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [12, 39],
+   "facing": 3.141592653589793,
+   "hold": "fixed",
+   "sight": 6
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [6, 45],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 45],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [10, 45],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [7, 47],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 47],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [11, 47],
+   "facing": 0,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [14, 51],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 51],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 51],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [44, 51],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [29, 50],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 41],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [23, 41],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 41],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 44],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [23, 44],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 44],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [29, 41],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "bellnode",
+   "at": [18, 48],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "feeder",
+   "at": [22, 48],
+   "facing": 3.141592653589793,
+   "hold": "inert"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [26, 48],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [27, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [28, 35],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [29, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [28, 33],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [33, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [35, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [37, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [39, 34],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [33, 37],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [35, 37],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [37, 37],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [39, 37],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [33, 40],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [35, 40],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [37, 40],
+   "movable": true
+  },
+  {
+   "type": "prop",
+   "kind": "sack",
+   "at": [39, 40],
+   "movable": true
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [45, 36],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [45, 40],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [45, 44],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 47],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [39, 47],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 47],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [41, 42],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [41, 38],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [31, 46],
+   "facing": 1.5707963267948966,
+   "hold": "turn",
+   "sight": 16
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [43, 49],
+   "facing": 3.141592653589793,
+   "hold": "turn",
+   "sight": 10
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [45, 27]
@@ -606,7 +1089,7 @@
   "title": "THE RANGE",
   "lines": [
    "Every weapon. Nothing runs out. You cannot die.",
-   "Targets stand where they are put."
+   "Targets stand where they are put. The second range is south of the hub: saw, rockets, gravity, a carbine lane."
   ]
  },
  "messages": [
@@ -646,6 +1129,34 @@
    "text": "WATER: the arc lamp shocks everything standing in the water, not only what it hits. Wading slows you too."
   },
   {
+   "id": "sawyard",
+   "at": [8, 35],
+   "radius": 7,
+   "speaker": "RANGE",
+   "text": "SAW YARD: hold fire to rev; it cuts everything in front every 0.1 s and pulls you in. LOUD. Stalls after ~5 s of cutting; plate kicks it back (cut the Warden that shows its back)."
+  },
+  {
+   "id": "rocketyard",
+   "at": [23, 35],
+   "radius": 6,
+   "speaker": "RANGE",
+   "text": "ROCKET YARD: 1.5 s a rocket, a wide blast, a direct hit adds more, bell nodes take double, plate does not turn it. It hurts YOU inside 65% of the blast. Corner barrels move."
+  },
+  {
+   "id": "gravityyard",
+   "at": [36, 36],
+   "radius": 7,
+   "speaker": "RANGE",
+   "text": "GRAVITY: HOLD AIM lifts a crate / barrel / sack, or drags a creature in. FIRE with one held THROWS it; FIRE with nothing held PUNTS: shoves what is ahead, turns toll-shots back."
+  },
+  {
+   "id": "carbinelane",
+   "at": [12, 49],
+   "radius": 5,
+   "speaker": "RANGE",
+   "text": "CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit."
+  },
+  {
    "id": "vael",
    "at": [43, 10],
    "radius": 3,
@@ -653,7 +1164,7 @@
    "text": "VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands."
   }
  ],
- "objective": "RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east",
+ "objective": "RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east; the second range (saw, rockets, gravity, carbine) through the opening south of the hub",
  "entryLoadout": {
   "hp": 100,
   "armor": 100,
@@ -662,7 +1173,9 @@
    "shell": 40,
    "rivet": 200,
    "bolt": 24,
-   "cell": 100
+   "cell": 100,
+   "round": 180,
+   "rocket": 12
   },
   "weapons": [
    "flare",
@@ -670,10 +1183,14 @@
    "rivet",
    "harpoon",
    "arc",
+   "carbine",
+   "linethrower",
+   "fork",
    "boathook",
    "marlinspike",
    "mallet",
-   "axe"
+   "axe",
+   "chainsaw"
   ]
  },
  "range": true

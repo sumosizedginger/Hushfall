@@ -13,6 +13,7 @@ export const SILENT_EVENTS = {
   objective: 'shown as HUD text',
   trigger: 'bookkeeping: what a trigger DOES makes the sound',
   exit_lock: 'bookkeeping',
+  phys_respawn: 'the dev Range only: a broken prop comes back, the view just puts it there',
 };
 export const RADIO_SOUND = 'radio';
 
@@ -22,6 +23,8 @@ const WEAPON_FIRE = {
   scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
   harpoon: [{ id: 'harpoon_fire' }, { id: 'harpoon_cycle', delay: 0.62 }],
   arc: [{ id: 'arc_fire', gain: 0.9 }],
+  carbine: [{ id: 'carbine_fire', gain: 0.85 }],
+  linethrower: [{ id: 'rocket_fire' }],
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
@@ -45,7 +48,25 @@ export function soundsForEvent(e) {
     case 'pin': return [{ id: 'pin_thunk', pos: at(e) }];
     case 'dry': return [{ id: 'dry_click' }];
     case 'weapon_switch': return [{ id: 'weapon_switch' }];
-    case 'explode': return [{ id: 'flare_boom', pos: at(e) }];
+    case 'explode': return [{ id: (e.r ?? 0) > 4 ? 'rocket_boom' : 'flare_boom', pos: at(e) }];
+    case 'headshot': return [{ id: 'head_tick', pos: at(e) }];
+    case 'grav_grab': return [{ id: 'grav_grab' }];
+    case 'grav_drop': return [{ id: 'grav_drop', gain: 0.8 }];
+    case 'grav_throw': return [{ id: 'grav_throw' }];
+    case 'grav_punt': return [{ id: 'grav_punt', gain: e.hit ? 1 : 0.55 }];
+    case 'grav_punt_prop': return [{ id: 'grav_throw', gain: 0.6, pos: at(e) }];
+    case 'grav_catch': return [{ id: 'grav_catch', pos: at(e) }];
+    case 'shot_reflect': return [{ id: 'shot_reflect', pos: at(e) }];
+    case 'shove_impact': return [{ id: 'shove_impact', pos: at(e) }];
+    case 'phys_hit': return [{ id: 'phys_hit', pos: at(e) }];
+    case 'phys_break': return [{ id: 'phys_break', pos: at(e) }];
+    case 'saw_start': return [{ id: 'saw_start' }];
+    case 'saw_rev': return [{ id: 'saw_rev', gain: 0.8 }];
+    case 'saw_stop': return [{ id: 'saw_stop' }];
+    case 'saw_hit': return [{ id: 'saw_hit', pos: at(e), gain: 0.7 }];
+    case 'saw_kick': return [{ id: 'saw_kick', pos: at(e) }];
+    case 'saw_stall': return [{ id: 'saw_stall' }];
+    case 'saw_restart': return [{ id: 'saw_restart' }];
     case 'impact': return [{ id: 'impact', pos: at(e), gain: 0.6 }];
     case 'hurt': return [{ id: 'hurt', gain: Math.min(1, 0.5 + (e.amount || 10) / 30) }];
     case 'player_died': return [{ id: 'player_die' }];

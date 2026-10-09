@@ -1,6 +1,6 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
-import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
+import { TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -9,6 +9,8 @@ import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
+import { spawnPhys, physAt, physBlocks, blastProps, updatePhys, updateShoves, gravInput, gravDrop, rangePhys } from './gravity.js';      // PT-022: the gravity tool and the movable props (nothing here runs on a map without movable props unless the fork is in hand)
+import { sawStep } from './saw.js';                                                                                  // PT-022: the chainsaw's held fire
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -71,6 +73,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
+  if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
   for (const d of map.doors.values()) w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: 0, target: 0, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false });
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   return w;
@@ -99,6 +102,7 @@ export function blockedCircle(w, x, z, r, self = null) {
   }
   if (self && !fly && tooHigh(w, self, x, z, r)) return true;                            // a ledge more than a step above the mover's feet
   if (!fly) for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
+  if (!fly && w.phys && physBlocks(w, x, z, r, self)) return true;                       // a movable prop that has come to rest is as solid as a static one
   if (self) {
     for (const e of w.enemies) if (e !== self && e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2) return true;
     if (self !== w.player && (x - w.player.x) ** 2 + (z - w.player.z) ** 2 < (r + PLAYER.radius) ** 2) return true;
@@ -138,7 +142,7 @@ export function hasLOS(w, x0, z0, x1, z1) {
 }
 /** is the player inside the arc in front of enemy `e` (cos of the half-angle)? The enemy's facing is its yaw: forward = (sin yaw, cos yaw) */
 function inFront(e, p, cos) { const dx = p.x - e.x, dz = p.z - e.z, d = Math.hypot(dx, dz); return d < 1e-6 || (Math.sin(e.yaw) * dx + Math.cos(e.yaw) * dz) / d >= cos; }
-const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
+export const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
 
 // ---------------------------------------------------------------- damage
 function hurtPlayer(w, dmg) {
@@ -177,7 +181,7 @@ export function wakeEnemy(w, e, loud, scripted = false) {
   if (!scripted) for (const o of w.enemies) if (o.state === 'idle' && Math.hypot(o.x - e.x, o.z - e.z) < 12 && hasLOS(w, e.x, e.z, o.x, o.z)) { o.state = 'chase'; o.lost = 0; o.lastX = w.player.x; o.lastZ = w.player.z; }
 }
 /** Loud noise (gunfire, explosion): idle enemies within `radius` wake if nothing solid is between, or if it is very close. */
-function noise(w, x, z, radius) {
+export function noise(w, x, z, radius) {
   for (const e of w.enemies) {
     if (e.state !== 'idle') continue; const d = Math.hypot(e.x - x, e.z - z);
     if (d < radius && (d < NOISE.closeRange || hasLOS(w, x, z, e.x, e.z))) wakeEnemy(w, e, false);
@@ -217,7 +221,7 @@ const moveMult = (e) => ((e.slowT || 0) > 0 ? 1 - (e.slowK || 0) : 1);
  * `h` is a weapon's `hit` block or a melee move. flinch: a short stumble (`flinchK`, default 50%, slower) that is shorter for the heavy (÷ poise); slow/slowT: the rivets; interrupt: inside that many metres the hit breaks the windup of the blow it lands on;
  * cancelLunge: it breaks a Gaunt's lunge windup; stun: a stagger (the elites take half, the bosses none). Bosses and nodes shrug off interrupts (poise 3 and above).
  */
-function hitEffects(w, e, h, dist = 99) {
+export function hitEffects(w, e, h, dist = 99) {
   if (!h || e.state === 'dead') return;
   const def = ENEMIES[e.kind], poise = def.poise ?? 1;
   if (h.flinch && !def.node) setSlow(e, h.flinchK ?? 0.5, Math.min(0.6, h.flinch / poise));
@@ -245,18 +249,20 @@ function updateBurns(w, dt) {
   }
 }
 
-function explode(w, x, y, z, ownerIsPlayer, def) {
-  emit(w, 'explode', { x, y, z }); noise(w, x, z, NOISE.explosion);
+function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
+  emit(w, 'explode', { x, y, z, r: def.splash }); noise(w, x, z, NOISE.explosion);
   if (def.burn) ignite(w, x, y, z, def.burn);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
     const ed = ENEMIES[e.kind], base = e.y + (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0)), lo = ed.hover ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
-      const killed = damageEnemy(w, e, def.splashDamage * (1 - d / def.splash) + def.direct, { splash: true });
-      const k = 0.8 * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
+      let dmg = def.splashDamage * (1 - d / def.splash) + def.direct; if (e === struck && def.directHit) dmg += def.directHit; if (ed.node && def.nodeMult) dmg *= def.nodeMult;       // PT-022: the rocket's direct hit, and a bell node takes the blast twice over
+      const killed = damageEnemy(w, e, dmg, { splash: true });
+      const k = (def.knock ?? 0.8) * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
       if (!killed) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     }
   }
+  if (w.phys) blastProps(w, x, y, z, def);
   const p = w.player, d = Math.hypot(x - p.x, y - (p.y + PLAYER.eye), z - p.z);
   if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))));
 }
@@ -264,7 +270,7 @@ function explode(w, x, y, z, ownerIsPlayer, def) {
 // ---------------------------------------------------------------- weapons
 /** Scatter def.pellets rays from the eye. Pellets stop at walls, closed doors, solid props, and the first enemy they touch. */
 function fireHitscan(w, def, cone) {
-  const p = w.player, map = w.map, hits = new Map(), push = new Map(); let impacts = 0;
+  const p = w.player, map = w.map, hits = new Map(), push = new Map(), heads = new Set(); let impacts = 0;
   for (let i = 0; i < def.pellets; i++) {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone });
     let x = p.x, y = p.y + PLAYER.eye, z = p.z, target = null, stop = false, dist = 0;
@@ -272,19 +278,23 @@ function fireHitscan(w, def, cone) {
       x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
       if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
+      if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
       if (stop) break;
       for (const e of w.enemies) if (e.state !== 'dead' && insideHit(e, x, y, z, 0.05)) { target = e; break; }
     }
     if (target) {
       const fall = dist <= def.falloffStart ? 1 : 1 - (1 - def.falloffMin) * Math.min(1, (dist - def.falloffStart) / (def.range - def.falloffStart));
-      const killed = damageEnemy(w, target, def.damage * fall);
+      let mult = 1;
+      if (def.head && !ENEMIES[target.kind].node) { const c = hitCylinder(target); if (y >= c.y0 + (c.y1 - c.y0) * def.head.from) mult = def.head.mult; }       // PT-022, the carbine: a round in the top of the body
+      const killed = damageEnemy(w, target, def.damage * fall * mult);
+      if (mult > 1) { heads.add(target); emit(w, 'headshot', { id: target.id, x: target.x, y, z: target.z, killed }); }
       if (!killed) hits.set(target.id, target);
       const k = push.get(target.id) || { e: target, x: 0, z: 0 }; k.x += f[0] * def.knock * fall; k.z += f[2] * def.knock * fall; push.set(target.id, k);      // applied after the volley: pellets are simultaneous
     } else if (stop && impacts < 3 && i % 3 === 0) { emit(w, 'impact', { x, y, z }); impacts++; }
   }
   const range0 = new Map([...hits.values()].map((e) => [e, Math.hypot(e.x - p.x, e.z - p.z)]));                    // how far it was when it was hit: before the knockback carries it away
   for (const k of push.values()) tryMove(w, k.e, k.x, k.z, ENEMIES[k.e.kind].radius);
-  for (const e of hits.values()) if (e.state !== 'dead') { hitEffects(w, e, def.hit, range0.get(e)); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+  for (const e of hits.values()) if (e.state !== 'dead') { hitEffects(w, e, def.hit, range0.get(e)); if (heads.has(e)) hitEffects(w, e, { flinch: def.head.flinch }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
 }
 
 /** The harpoon bolt: one ray from the eye, it stops at walls, closed doors and solid props, and goes THROUGH bodies: up to 1 + def.pierce of them, the later ones for def.pierceDamage of the damage.
@@ -296,6 +306,7 @@ function fireBolt(w, def, cone) {
     x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
     if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
     for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
+    if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
     if (stop) break;
     for (const e of w.enemies) if (e.state !== 'dead' && !hit.includes(e) && insideHit(e, x, y, z, 0.05)) { hit.push(e); break; }
   }
@@ -320,12 +331,13 @@ function fireBolt(w, def, cone) {
 }
 
 /** is the straight line between two points free of walls, closed doors, solid props, floor and ceiling? (the arc's line of sight: a body behind a corner is not a target) */
-function rayClear(w, x0, y0, z0, x1, y1, z1) {
+export function rayClear(w, x0, y0, z0, x1, y1, z1, skipPhys = false) {
   const map = w.map, dx = x1 - x0, dy = y1 - y0, dz = z1 - z0, n = Math.max(1, Math.ceil(Math.hypot(dx, dy, dz) / 0.25));
   for (let i = 1; i < n; i++) {
     const t = i / n, x = x0 + dx * t, y = y0 + dy * t, z = z0 + dz * t;
     if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) return false;
     for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) return false;
+    if (!skipPhys && w.phys && physAt(w, x, y, z)) return false;
   }
   return true;
 }
@@ -527,7 +539,9 @@ function updateEnemyShots(w, diff, dt) {
       q.x += q.vx * dt / n; q.y += q.vy * dt / n; q.z += q.vz * dt / n;
       if (q.y < floorAt(w, q.x, q.z) + 0.05 || q.y > ceilingAt(w, q.x, q.z) || cellSolid(w, Math.floor(q.x / map.cell), Math.floor(q.z / map.cell))) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       for (const pr of map.props) if (!gone && PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < floorAt(w, pr.x, pr.z) + 1.3) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
-      if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      if (!gone && w.phys && physAt(w, q.x, q.y, q.z)) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      if (!gone && q.reflected) { for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { gone = true; if (!damageEnemy(w, e, q.dmg)) { hitEffects(w, e, { flinch: 0.5 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }); } emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); break; } }
+      else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
     }
     if (gone) w.enemyShots.splice(i, 1);
   }
@@ -662,7 +676,7 @@ function updateEnemy(w, e, diff, dt) {
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; return; }          // staggered: it does nothing
   if (def.node) return;
-  if (e.hold === 'inert') { e.walk *= 0.9; return; }                              // a target that only takes it
+  if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? def.sight) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
@@ -733,9 +747,9 @@ export function step(w, cmd) {
   const len = Math.hypot(sx, sf); if (len > 1) { sx /= len; sf /= len; }
   const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
   // stance: aim wins over sprint; sprint needs forward input; a dead-on-arrival sprint (no forward) is not a sprint
-  const melee = isMelee(p.weapon), aimHeld = !!cmd.aim && !melee && p.swingT < 0, wasSprinting = p.sprinting;       // with a melee weapon in hand the Aim key is the GUARD (below), not the sights; a swing drops the sights
+  const melee = isMelee(p.weapon), tool = WEAPONS[p.weapon]?.kind === 'tool', aimHeld = !!cmd.aim && !melee && !tool && p.swingT < 0, wasSprinting = p.sprinting;       // with a melee weapon in hand the Aim key is the GUARD (below), not the sights; a swing drops the sights
   p.brokenT = Math.max(0, p.brokenT - dt); p.riposteT = Math.max(0, p.riposteT - dt); p.parryCd = Math.max(0, p.parryCd - dt);
-  const guardHeld = melee && !!cmd.aim && p.swingT < 0 && p.brokenT <= 0 && p.switchT <= 0 && p.hp > 0;          // not while the weapon is still coming up
+  const guardHeld = melee && !WEAPONS[p.weapon].noGuard && !!cmd.aim && p.swingT < 0 && p.brokenT <= 0 && p.switchT <= 0 && p.hp > 0;          // not while the weapon is still coming up
   if (guardHeld && !p.guarding) { p.parryW = p.parryCd <= 0 ? GUARD.window : 0; if (p.parryW > 0) p.parryCd = GUARD.window + GUARD.whiffCd; emit(w, 'guard_up', {}); }
   else if (guardHeld) p.parryW = Math.max(0, p.parryW - dt); else p.parryW = 0;
   p.guarding = guardHeld; p.guard = clamp(p.guard + (guardHeld ? 1 : -1) * dt / GUARD.raise, 0, 1);
@@ -744,7 +758,7 @@ export function step(w, cmd) {
   p.recover = Math.max(0, p.recover - dt);
   p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
   p.sprint = clamp(p.sprint + (p.sprinting ? 1 : -1) * dt / PLAYER.sprintBlendTime, 0, 1);
-  const fxc = fxAt(w, p.x, p.z), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
+  const fxc = fxAt(w, p.x, p.z), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
   p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
   tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
@@ -757,10 +771,11 @@ export function step(w, cmd) {
   // key 6 is the melee slot (pressing it again cycles the melee weapons you carry); Q goes back to the last weapon; the wheel / next / previous step through the guns and the melee slot
   const meleeOwned = MELEE_ORDER.filter((id) => owns(p, id)), curMelee = isMelee(p.weapon) ? p.weapon : (owns(p, p.meleeWeapon) ? p.meleeWeapon : 'fists');
   let want = null;
-  if (cmd.weapon === WEAPON_ORDER.length) want = isMelee(p.weapon) ? meleeOwned[(meleeOwned.indexOf(p.weapon) + 1) % meleeOwned.length] : curMelee;
-  else if (cmd.weapon != null) want = WEAPON_ORDER[cmd.weapon];
+  const slotKey = cmd.weapon != null ? SLOT_KEYS[cmd.weapon] : null;                                        // PT-022: keys 1-5 the first guns, 6 the melee slot, 7-9 the later guns
+  if (slotKey === 'melee') want = isMelee(p.weapon) ? meleeOwned[(meleeOwned.indexOf(p.weapon) + 1) % meleeOwned.length] : curMelee;
+  else if (slotKey) want = slotKey;
   else if (cmd.weaponLast) want = p.lastWeapon;
-  else if (cmd.weaponStep) { const ring = [...WEAPON_ORDER.filter((id) => p.weapons.includes(id)), curMelee], i = ring.indexOf(isMelee(p.weapon) ? curMelee : p.weapon); want = ring[(i + cmd.weaponStep + ring.length) % ring.length]; }
+  else if (cmd.weaponStep) { const ring = SLOT_KEYS.filter((id) => id === 'melee' || p.weapons.includes(id)).map((id) => (id === 'melee' ? curMelee : id)), i = ring.indexOf(isMelee(p.weapon) ? curMelee : p.weapon); want = ring[(i + cmd.weaponStep + ring.length) % ring.length]; }
   if (want && want !== p.weapon && owns(p, want) && (p.swingT < 0 || p.swingHit)) {
     p.lastWeapon = p.weapon; p.weapon = want; if (isMelee(want)) p.meleeWeapon = want; p.switchT = WEAPONS[want].switchTime; p.charge = 0; p.swingT = -1; p.queuedT = 0; emit(w, 'weapon_switch', { weapon: want });
   }
@@ -781,8 +796,14 @@ export function step(w, cmd) {
   if (cmd.melee && p.swingT < 0 && p.switchT <= 0 && p.hp > 0) { if (isMelee(p.weapon)) { if (p.cooldown <= 0) startSwing(w, p.weapon === 'fists' ? 'jab' : p.weapon); } else startSwing(w, 'bash'); }
   const canAct = p.cooldown <= 0 && p.switchT <= 0 && !p.sprinting && p.recover <= 0 && p.swingT < 0;               // no firing mid-switch, mid-swing or from the sprint pose
   const wdef = WEAPONS[p.weapon];
-  if (wdef.charge) chargeInput(w, cmd, wdef, canAct);
+  if (p.saw && !wdef.saw) { p.saw.spin = 0; p.saw.eng = false; }                                              // a saw put away stops running
+  if (p.grav && !wdef.grav) gravDrop(w);                                                                    // a fork put away lets go of what it holds
+  if (wdef.saw) sawStep(w, cmd, wdef, dt);                                                                  // PT-022: the chainsaw (hold to rev and cut, saw.js)
+  else if (wdef.grav) gravInput(w, cmd, wdef, canAct, dt);                                                   // PT-022: the tuning-fork (gravity.js)
+  else if (wdef.charge) chargeInput(w, cmd, wdef, canAct);
   else if (cmd.fire && canAct) fireWeapon(w);
+
+  updateShoves(w, dt); updatePhys(w, dt);                                                                   // PT-022: creatures a punt is carrying, and the movable props (both do nothing unless there are some)
 
   // doors
   for (const d of w.doors) {
@@ -803,15 +824,16 @@ export function step(w, cmd) {
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {
     const q = w.projectiles[i], def = WEAPONS[q.weapon ?? 'flare']; q.life -= dt; q.vy -= def.gravity * dt;      // projectiles keep their own weapon stats after you switch away
-    const speed = Math.hypot(q.vx, q.vy, q.vz), n = Math.ceil(speed * dt / 0.25); let hit = q.life <= 0;
+    const speed = Math.hypot(q.vx, q.vy, q.vz), n = Math.ceil(speed * dt / 0.25); let hit = q.life <= 0, struck = null;
     for (let k = 0; k < n && !hit; k++) {
       q.x += q.vx * dt / n; q.y += q.vy * dt / n; q.z += q.vz * dt / n;
       const cx = Math.floor(q.x / map.cell), cz = Math.floor(q.z / map.cell);
       if (q.y < floorAt(w, q.x, q.z) + 0.05 || q.y > ceilingAt(w, q.x, q.z) || cellSolid(w, cx, cz)) hit = true;
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < floorAt(w, pr.x, pr.z) + 1.3) hit = true;
-      for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) hit = true;
+      if (w.phys && physAt(w, q.x, q.y, q.z)) hit = true;
+      for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { hit = true; struck ??= e; }
     }
-    if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def); }
+    if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def, struck); }
   }
 
   // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing: the flare cannon's feed drops one flare after a few seconds (and again each time it is spent).
@@ -846,7 +868,7 @@ export function step(w, cmd) {
   for (const s of map.secrets) if (!w.secretsFound.includes(s.id) && s.cells.some(([cx, cz]) => cx === pcx && cz === pcz)) { w.secretsFound.push(s.id); w.stats.secrets++; emit(w, 'secret', { id: s.id }); }
 
   updateTriggers(w);
-  if (map.range) rangePlayer(w, dt);                                                       // the dev range: you cannot die, run dry or stay hurt (range.js)
+  if (map.range) { rangePlayer(w, dt); rangePhys(w, dt); }                                                       // the dev range: you cannot die, run dry or stay hurt (range.js)
 
   // resolution order matters: damage is settled first, so a player who dies this tick cannot also exit
   if (p.hp <= 0) { p.hp = 0; w.status = 'dead'; emit(w, 'player_died'); }

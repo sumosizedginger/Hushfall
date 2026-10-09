@@ -154,6 +154,7 @@ test('save v2 (before weapon slots and lunges) migrates to v3 and plays on', () 
 test('weapon table sanity: every weapon has what the sim reads', () => {
   for (const [id, d] of Object.entries(WEAPONS)) {
     if (d.kind === 'melee') { for (const k of ['name', 'switchTime', 'swing']) assert.ok(d[k] !== undefined, `${id}.${k}`); for (const k of ['reach', 'arc', 'damage', 'windup', 'recover']) assert.ok(d.swing[k] > 0, `${id}.swing.${k}`); continue; }
+    if (d.kind === 'tool') { for (const k of ['name', 'switchTime', 'grav']) assert.ok(d[k] !== undefined, `${id}.${k}`); assert.equal(d.ammo, undefined, id + ' needs no ammunition'); continue; }          // the tuning-fork (PT-022): a cooldown, not ammunition
     for (const k of ['name', 'kind', 'ammo', 'cooldown', 'switchTime', 'spread', 'muzzle']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     if (d.kind === 'hitscan') for (const k of ['pellets', 'damage', 'range', 'falloffStart', 'falloffMin', 'knock']) assert.ok(d[k] !== undefined, `${id}.${k}`);
     else if (d.kind === 'arc') for (const k of ['damage', 'range', 'chain', 'jump', 'chainFalloff', 'lock']) assert.ok(d[k] !== undefined, `${id}.${k}`);
