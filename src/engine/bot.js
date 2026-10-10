@@ -2,7 +2,7 @@
 // human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to} | waitplatform {id, at: 'high'|'low', min} (a timing platform, PT-029).
 import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
-import { cellFloor } from './terrain.js';
+import { cellFloor, fxAt } from './terrain.js';
 import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
 import { lockBusy } from './airlock.js';                                                  // PT-033: a lock's second door waits for the air: the bot stands and waits, as it does at a sound-lock
@@ -173,6 +173,7 @@ export class Bot {
   }
   follow(goal, arriveCells = 0.7, stopAt = null) {
     const m = this.w.map, p = this.w.player, gx = (goal[0] + 0.5) * m.cell, gz = (goal[1] + 0.5) * m.cell;
+    const drifting = FX[fxAt(this.w, p.x, p.z)]?.grip != null; if (drifting) arriveCells = Math.max(arriveCells, 1.4);                     // PT-033: on a floor with no grip a human does not aim for the exact spot
     if (stopAt != null && Math.hypot(gx - p.x, gz - p.z) < stopAt) { this.setHeld('forward', false); return true; }
     if (this.stillFor > 60 && Math.hypot(gx - p.x, gz - p.z) < 2.5 * m.cell) { this.setHeld('forward', false); return true; }        // something (a body, a prop) sits on the exact spot: close enough is arrived
     const key = goal.join(',');
@@ -200,7 +201,8 @@ export class Bot {
         if (Math.hypot(dx - p.x, dz - p.z) < 2.0) { this.setHeld('forward', false); this.aimAt(dx, dz); this.pressUse(); return false; }
       }
     }
-    this.setHeld('sprint', this.path.length > 3);                   // sprint the long stretches only
+    if (drifting && this.path.length <= 4 && Math.hypot(p.vx, p.vz) * 0.55 > Math.hypot(gx - p.x, gz - p.z) - 0.5) { this.setHeld('forward', false); this.setHeld('sprint', false); this.aimAt(gx, gz); return false; }          // PT-033: let go and coast the last stretch (a drift floor carries you about 0.6 s of your speed)
+    this.setHeld('sprint', this.path.length > 3 && !drifting);                   // sprint the long stretches only
     this.steerTo((next[0] + 0.5) * m.cell, (next[1] + 0.5) * m.cell, 0.35);
     return false;
   }

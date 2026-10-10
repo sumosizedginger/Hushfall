@@ -119,7 +119,7 @@ export function soundsForEvent(e) {
     case 'door_cycling': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];                                       // PT-033: airlocks and vacuum
     case 'vacuum_enter': return [{ id: 'vacuum_rush' }];
     case 'vacuum_leave': return [{ id: 'air_return' }];
-    case 'wade': return e.kind === 's' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
+    case 'wade': return e.kind === 's' || e.kind === 'd' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
     case 'alarm': return [{ id: 'alarm_bell' }];
     case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
     case 'exit_unlock': return [{ id: 'gate_unlock' }];

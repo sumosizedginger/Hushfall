@@ -121,10 +121,11 @@ export function blockedCircle(w, x, z, r, self = null) {
     if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
   }
   if (self && !fly && tooHigh(w, self, x, z, r)) return true;                            // a ledge more than a step above the mover's feet
-  if (!fly) for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
+  const over = air && self.y > groundAt(w, x, z, r) + 2.2;                                                 // PT-033: a body in the air above the height of a prop or a creature passes over it
+  if (!fly && !over) for (const p of w.map.props) { const pr = PROPS[p.kind].radius; if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true; }
   if (!fly && w.phys && physBlocks(w, x, z, r, self)) return true;                       // a movable prop that has come to rest is as solid as a static one
   if (self) {
-    for (const e of w.enemies) if (e !== self && e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2) return true;
+    for (const e of w.enemies) if (e !== self && e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2 && !(air && (self.y > (e.y ?? 0) + ENEMIES[e.kind].height + (ENEMIES[e.kind].hover ?? 0) || self.y + 1.7 < (e.y ?? 0)))) return true;
     if (self !== w.player && (x - w.player.x) ** 2 + (z - w.player.z) ** 2 < (r + PLAYER.radius) ** 2) return true;
   }
   return false;
@@ -1003,7 +1004,8 @@ export function step(w, cmd) {
   const fxc = fxAt(w, p.x, p.z) ?? (w.patches?.length ? patchAt(w, p.x, p.z) : null), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
   if (p.air) airMove(w, p, sx, sf, fx, fz, rx, rz, dt);                                                  // PT-032: a vent has thrown the player: low gravity, a little steering
   else {
-    p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
+    const ag = fxc && FX[fxc].grip != null ? a * FX[fxc].grip : a;                                              // PT-033: a drift floor has almost no grip (FX.d): the same pull, a tenth of the rate
+    p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * ag; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * ag;
     tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
     if (w.map.vents.length || w.map.hasVoid) groundAir(w, p, dt);
   }

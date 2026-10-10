@@ -1,0 +1,992 @@
+{
+ "format": 1,
+ "id": "C1E4M06",
+ "version": 1,
+ "name": "Gatekeeper's Approach",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#1c1e34",
+  "fogDensity": 0.007,
+  "sky": "gate",
+  "ambient": 0.9,
+  "look": "approach"
+ },
+ "grid": [
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888AAAA8AAAA888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888AA888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888AA8888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAA888888888AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAA88888888888888888888888AAA888888888AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888AAA8888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAA8888888AAA8888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAA8888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAA8AAAAAAAAAAAAAAAAA888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAA8888888AAAAAAAA888AA88888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAAAA",
+  "AAAA888888888AAAAAAA888AA8888888888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAA",
+  "AAA88888888888AAAAAA888AA8888888888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAA",
+  "AA8888888888888AAAAA888AA8888888888888888888888888888888888888888888888AAAAAAAAAAAAAAAAAAA",
+  "AA8888888888888AAAAA888AA88888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAAAA",
+  "AA88888888888888888888888888888888888888888888888AAA888888888888888AA888AAAAAAAAAAAAAAAAAA",
+  "A888888888888888888888888888888888888888888888888AAA888888888888888AA888AAAAAAAAAAAAAAAAAA",
+  "AA8888888888888888888888888888888888888AAA8888888888888888888888888AA888AAAAAAAAAAAAAAAAAA",
+  "AA8888888888888AAAA888AA888888888888888AAA8888888888888888888888888AA888AAAAAAAAAAAAAAAAAA",
+  "AA8888888888888AAAA888AA8888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAAA",
+  "AAA88888888888AAAA888AA888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAA",
+  "AAAA888888888AAAAA888AA888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAA",
+  "AAAAA8888888AAAAAA888AA888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAA",
+  "AAAAAAAA8AAAAAAAAA888AA888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAA888AA888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAA888AAAAAAAAAAAAAAAAA88888AAAAAAAAAAAA88888AAAAAAAAAAAA888AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAA888AAAAAAAAAAAAAAAAA88888AAAAAAAAAAAA88888AAAAAAAAAAAA888AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA888AA8888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA888AA8888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA888AA8888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA888AA8888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA888AA88888888888888888888888888888888AA888888888888888AA888AAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAA888AA888888888888888888888888888888888AA8888888888888888AA888AAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAA888AA88888888888AA88888888888888888888AA8888888888888888AA888AAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAA888AA88888888888AA88888888888888888888888888888888888888AA888AAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAA888AA88888888888AA88888888888888888888888888888888888888AA888AAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAA888AA888888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAA888AA88888888888888888888888888888888888888888888888888888AA888AAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAA888AAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAA888AAAAAAAAAAAAA",
+  "AAAAAAAAAAAAA888AAAAAAAAAAA88888AAAAAAAAAAAAAAAAAAAAAAAAAAA88888AAAAAAAAAAA888AAAAAAAAAAAA",
+  "AAAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAAA",
+  "AAAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAAA",
+  "AAAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAAA",
+  "AAAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAAA",
+  "AAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAA",
+  "AAAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAAA",
+  "AAAAAAAAAAAA888AAssssssssssssssssssssssssssssssssssssssAAAssssssssssssssssAA888A888AAAAAAA",
+  "AAAAAAAAAAAA888AAssssssssssssssssssssssssssssssssssssssAAAssssssssssssssssAA888S888AAAAAAA",
+  "AAAAAAAAAAAA888AAssssssssssssssssAAAssssssssssssssssssssssssssssssssssssssAA888A888AAAAAAA",
+  "AAAAAAAAAAA888AAsssssssssssssssssAAAsssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAA",
+  "AAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAA",
+  "AAAAAAAAAAA888AAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssAA888AAAAAAAAAA",
+  "AAAAAAAAAAA888AAsssssssssssssssssssssssssAAAAssssssssssssssssssssssssssssssAA888AAAAAAAAAA",
+  "AAAAAAAAAAA88ssssssssssssssssssssssssssssAAAAsssssssssssssssssssssssssssssssss88AAAAAAAAAA",
+  "AAAAAAAAAA88sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss88AAAAAAAAA",
+  "AAAAAAAAAA88sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss88AAAAAAAAA",
+  "AAAAAAAAAAAAAAAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "heights": [
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "...................................aaaaaaaaaaaaaaaaaaaaa..................................",
+  "...................................aaaaaaaaaaaaaaaaaaaaa..................................",
+  "...................................aaaaaaaaaaaaaaaaaaaaa..................................",
+  "..................................aaaaaaaaaaaaaaaaaaaaaaa.................................",
+  "..................................aaaaaaaaaaaaaaaaaaaaaaa.................................",
+  "..................................aaaaaaaaaaaaaaaaaaaaaaa.................................",
+  "..................................aaaaaaaaaaaaaaaaaaaaaaa.................................",
+  "..................................aaaaaaaaaaaaaaaaaaaaaaa.................................",
+  "...........................................aaaaa..........................................",
+  "...........................................99999..........................................",
+  ".................................8888888888888888888888888................................",
+  ".................................8888888888888888888888888................................",
+  ".................................8888888888888888888888888................................",
+  "................................888888888888888888888888888...............................",
+  "................................888888888888888888888888888...............................",
+  "................................888888888888888888888888888...............................",
+  "................................888888888888888888888888888...............................",
+  "................................888888888888888888888888888...............................",
+  "...............................88888888888888888888888888888..............................",
+  "...............................88888888888888888888888888888..............................",
+  "...............................88888888888888888888888888888..............................",
+  "...............................88888888888888888888888888888..............................",
+  "...............................88888888888888888888888888888..............................",
+  "..............................8888888888888888888888888888888.............................",
+  "..............................8888888888888888888888888888888.............................",
+  ".......................................88888........88888.................................",
+  ".......................................77777........77777.................................",
+  "..............................6666666666666666666666666666666.............................",
+  ".............................666666666666666666666666666666666............................",
+  ".............................666666666666666666666666666666666............................",
+  ".............................666666666666666666666666666666666............................",
+  ".............................666666666666666666666666666666666............................",
+  ".............................666666666666666666666666666666666............................",
+  "............................66666666666666666666666666666666666...........................",
+  "............................66666666666666666666666666666666666...........................",
+  "............................66666666666666666666666666666666666...........................",
+  "............................66666666666666666666666666666666666...........................",
+  "............................66666666666666666666666666666666666...........................",
+  "...........................6666666666666666666666666666666666666..........................",
+  "...........................6666666666666666666666666666666666666..........................",
+  "...........................6666666666666666666666666666666666666..........................",
+  "...........................6666666666666666666666666666666666666..........................",
+  "...........................6666666666666666666666666666666666666..........................",
+  "..........................666666666666666666666666666666666666666.........................",
+  "...............................66666............66666.....................................",
+  "...............................55555............55555.....................................",
+  "..........................444444444444444444444444444444444444444.........................",
+  "........4.................444444444444444444444444444444444444444.........................",
+  ".....4444444........444..44444444444444444444444444444444444444444..444...................",
+  "....444444444.......444..4444444444444444444444444444444444444444444444...................",
+  "...44444444444......444..4444444444444444444444444444444444444444444444...................",
+  "..4444444444444.....444..4444444444444444444444444444444444444444444444...................",
+  "..4444444444444.....444..44444444444444444444444444444444444444444..444...................",
+  "..44444444444444444444444444444444444444444444444444444444444444444..444..................",
+  ".444444444444444444444444444444444444444444444444444444444444444444..444..................",
+  "..44444444444444444444444444444444444444444444444444444444444444444..333..................",
+  "..4444444444444....333..4444444444444444444444444444444444444444444..333..................",
+  "..4444444444444....333..4444444444444444444444444444444444444444444..333..................",
+  "...44444444444....333..444444444444444444444444444444444444444444444..333.................",
+  "....444444444.....333..444444444444444444444444444444444444444444444..333.................",
+  ".....4444444......333..444444444444444444444444444444444444444444444..333.................",
+  "........4.........333..444444444444444444444444444444444444444444444..333.................",
+  "..................333..444444444444444444444444444444444444444444444..333.................",
+  ".................333.................44444............44444............333................",
+  ".................333.................33333............33333............333................",
+  ".................333..22222222222222222222222222222222222222222222222..333................",
+  ".................333..22222222222222222222222222222222222222222222222..333................",
+  ".................333..22222222222222222222222222222222222222222222222..333................",
+  "................222..2222222222222222222222222222222222222222222222222..222...............",
+  "................222..2222222222222222222222222222222222222222222222222..222...............",
+  "................222..2222222222222222222222222222222222222222222222222..222...............",
+  "................222..2222222222222222222222222222222222222222222222222..222...............",
+  "................222..2222222222222222222222222222222222222222222222222..222...............",
+  "...............222..222222222222222222222222222222222222222222222222222..222..............",
+  "...............222..222222222222222222222222222222222222222222222222222..222..............",
+  "...............222..222222222222222222222222222222222222222222222222222..222..............",
+  "...............222..222222222222222222222222222222222222222222222222222..222..............",
+  "...............222..222222222222222222222222222222222222222222222222222..222..............",
+  "..............222..22222222222222222222222222222222222222222222222222222..222.............",
+  "..............222..22222222222222222222222222222222222222222222222222222..222.............",
+  "..............111..22222222222222222222222222222222222222222222222222222..111.............",
+  "..............111..22222222222222222222222222222222222222222222222222222..111.............",
+  "..............111..........22222...........................22222..........111.............",
+  ".............111...........11111...........................11111...........111............",
+  ".............111...........................................................111............",
+  ".............111...........................................................111............",
+  ".............111...........................................................111............",
+  ".............111...........................................................111............",
+  "............111.............................................................111...........",
+  "............111.............................................................111...........",
+  "............111.............................................................111.111.......",
+  "............111.............................................................1111111.......",
+  "............111.............................................................111.111.......",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  ".........................................................................................."
+ ],
+ "ceilings": [
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "...................................ggggggggggggggggggggg..................................",
+  "...................................ggggggggggggggggggggg..................................",
+  "...................................ggggggggggggggggggggg..................................",
+  "..................................ggggggggggggggggggggggg.................................",
+  "..................................ggggggggggggggggggggggg.................................",
+  "..................................ggggggggggggggggggggggg.................................",
+  "..................................ggggggggggggggggggggggg.................................",
+  "..................................ggggggggggggggggggggggg.................................",
+  "...........................................iiiii..........................................",
+  "...........................................iiiii..........................................",
+  ".................................ggggggggggggggggggggggggg................................",
+  ".................................ggggggggggggggggggggggggg................................",
+  ".................................ggggggggggggggggggggggggg................................",
+  "................................ggggggggggggggggggggggggggg...............................",
+  "................................ggggggggggggggggggggggggggg...............................",
+  "................................ggggggggggggggggggggggggggg...............................",
+  "................................ggggggggggggggggggggggggggg...............................",
+  "................................ggggggggggggggggggggggggggg...............................",
+  "...............................ggggggggggggggggggggggggggggg..............................",
+  "...............................ggggggggggggggggggggggggggggg..............................",
+  "...............................ggggggggggggggggggggggggggggg..............................",
+  "...............................ggggggggggggggggggggggggggggg..............................",
+  "...............................ggggggggggggggggggggggggggggg..............................",
+  "..............................ggggggggggggggggggggggggggggggg.............................",
+  "..............................ggggggggggggggggggggggggggggggg.............................",
+  ".......................................iiiii........iiiii.................................",
+  ".......................................iiiii........iiiii.................................",
+  "..............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.............................",
+  ".............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii............................",
+  ".............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii............................",
+  ".............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii............................",
+  ".............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii............................",
+  ".............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii............................",
+  "............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii...........................",
+  "............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii...........................",
+  "............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii...........................",
+  "............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii...........................",
+  "............................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii...........................",
+  "...........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii..........................",
+  "...........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii..........................",
+  "...........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii..........................",
+  "...........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii..........................",
+  "...........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii..........................",
+  "..........................iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.........................",
+  "...............................kkkkk............kkkkk.....................................",
+  "...............................kkkkk............kkkkk.....................................",
+  "..........................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.........................",
+  "........i.................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.........................",
+  ".....iiiiiii........ccc..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..ccc...................",
+  "....iiiiiiiii.......ccc..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkcc...................",
+  "...iiiiiiiiiii......ccc..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkcc...................",
+  "..iiiiiiiiiiiii.....ccc..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkcc...................",
+  "..iiiiiiiiiiiii.....ccc..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..ccc...................",
+  "..iiiiiiiiiiiiiiiiiiiiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..ccc..................",
+  ".iiiiiiiiiiiiiiiiiiiiiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..ccc..................",
+  "..iiiiiiiiiiiiiiiiiiiiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb..................",
+  "..iiiiiiiiiiiii....bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb..................",
+  "..iiiiiiiiiiiii....bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb..................",
+  "...iiiiiiiiiii....bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb.................",
+  "....iiiiiiiii.....bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb.................",
+  ".....iiiiiii......bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb.................",
+  "........i.........bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb.................",
+  "..................bbb..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..bbb.................",
+  ".................bbb.................mmmmm............mmmmm............bbb................",
+  ".................bbb.................mmmmm............mmmmm............bbb................",
+  ".................bbb..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..bbb................",
+  ".................bbb..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..bbb................",
+  ".................bbb..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..bbb................",
+  "................aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa...............",
+  "................aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa...............",
+  "................aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa...............",
+  "................aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa...............",
+  "................aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa...............",
+  "...............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa..............",
+  "...............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa..............",
+  "...............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa..............",
+  "...............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa..............",
+  "...............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa..............",
+  "..............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa.............",
+  "..............aaa..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..aaa.............",
+  "..............999..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..999.............",
+  "..............999..mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm..999.............",
+  "..............999..........ooooo...........................ooooo..........999.............",
+  ".............999...........ooooo...........................ooooo...........999............",
+  ".............999...........................................................999............",
+  ".............999...........................................................999............",
+  ".............999...........................................................999............",
+  ".............999...........................................................999............",
+  "............999.............................................................999...........",
+  "............999.............................................................999...........",
+  "............999.............................................................999.999.......",
+  "............999.............................................................999.999.......",
+  "............999.............................................................999.999.......",
+  "...........888...............................................................888..........",
+  "...........888...............................................................888..........",
+  "...........888...............................................................888..........",
+  "...........888...............................................................888..........",
+  "...........888...............................................................888..........",
+  "..........888.................................................................888.........",
+  "..........888.................................................................888.........",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  "..........................................................................................",
+  ".........................................................................................."
+ ],
+ "doors": [],
+ "secrets": [
+  {
+   "id": "cache",
+   "panel": [79, 99],
+   "cells": [
+    [80, 98],
+    [80, 99],
+    [80, 100],
+    [81, 98],
+    [81, 99],
+    [81, 100],
+    [82, 98],
+    [82, 99],
+    [82, 100]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "mother-down",
+   "when": "dead:mother",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The Mother is down. The way out is open: the Gate yard, straight ahead"
+    },
+    {
+     "shake": 2
+    }
+   ]
+  },
+  {
+   "id": "stalls",
+   "when": "enter",
+   "at": [45, 85],
+   "radius": 5,
+   "do": [
+    {
+     "objective": "The stalls: kill the Acolytes first, then the singers"
+    }
+   ]
+  },
+  {
+   "id": "mother-rank",
+   "when": "enter",
+   "at": [31, 62],
+   "radius": 5,
+   "do": [
+    {
+     "objective": "The Mother is in the round room west of this rank: kill her"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [45, 108]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [21, 104],
+   "facing": 1.406
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [19, 96],
+   "facing": 1.138
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [69, 104],
+   "facing": -1.406
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [71, 96],
+   "facing": -1.138
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [61, 94],
+   "facing": -0.852
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [29, 94],
+   "facing": 0.852
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [43, 106]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [45, 106]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [47, 106]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [45, 103]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [35, 102],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [55, 102],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 94],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [65, 94],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [19, 108],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [71, 108],
+   "skin": "A"
+  },
+  {
+   "type": "enemy",
+   "kind": "acolyte",
+   "at": [43, 80],
+   "facing": 0.071
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [31, 77],
+   "facing": 0.424
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [57, 83],
+   "facing": -0.448
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [61, 76],
+   "facing": -0.464
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 82]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [33, 86],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [57, 86],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [29, 74],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [63, 74],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [45, 88],
+   "skin": "A"
+  },
+  {
+   "type": "enemy",
+   "kind": "weeping",
+   "at": [8, 62],
+   "group": "mother",
+   "facing": 0.677
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 59],
+   "facing": 0.607
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [5, 65],
+   "facing": 0.749
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 64]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [12, 62]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [31, 66],
+   "facing": 0.322
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [59, 64],
+   "facing": -0.308
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [35, 58],
+   "facing": 0.197
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 56],
+   "facing": -0.19
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [42, 68]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [44, 68]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [46, 68]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [48, 68]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [39, 68]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [51, 68]
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [37, 46],
+   "facing": 0.128
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [54, 44],
+   "facing": -0.14
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 40],
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [29, 42],
+   "facing": 0.238
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 49]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [33, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [57, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [41, 48],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [50, 49],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [31, 38],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [59, 40],
+   "skin": "A"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [45, 26],
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [37, 22],
+   "facing": 0.093
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [53, 22],
+   "facing": -0.093
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [40, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [39, 29],
+   "skin": "A"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [51, 29],
+   "skin": "A"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 90],
+   "facing": 1.03
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [74, 84],
+   "facing": -0.879
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [72, 72],
+   "facing": -0.644
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [13, 96]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [71, 66]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [35, 82]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [55, 82]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [35, 64]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [55, 64]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [35, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [55, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [39, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [51, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [45, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [81, 99]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [80, 99]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [82, 99]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [81, 100]
+  },
+  {
+   "type": "exit",
+   "at": [45, 9],
+   "locked": true,
+   "dest": "next"
+  }
+ ],
+ "par": {
+  "time": 600
+ },
+ "intro": {
+  "title": "GATEKEEPER'S APPROACH",
+  "lines": [
+   "Everything the Vael had left is standing in this hall.",
+   "The Gate is at the far end, and it is very bright."
+  ]
+ },
+ "outro": "The hall opens. Above the last steps the light stops being a rumour and becomes a thing you can look at.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [45, 108],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Approach. Five ranks, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two."
+  },
+  {
+   "id": "court",
+   "at": [45, 100],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It is like looking at the sun."
+  },
+  {
+   "id": "stalls",
+   "at": [45, 85],
+   "radius": 4,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half."
+  },
+  {
+   "id": "mother",
+   "at": [25, 62],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "She is in there, in the round room west of the rank. The way out stays locked as long as she weeps. Walk out of what she makes."
+  },
+  {
+   "id": "steps",
+   "at": [45, 50],
+   "radius": 4,
+   "speaker": "HULL",
+   "text": "The steps. Two grafts with plates on their fronts, and bellhands behind them. Pillars are cover from the bells."
+  },
+  {
+   "id": "last",
+   "at": [45, 30],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "One more shell. Then the yard, and the Gate beyond it. I can feel it in my teeth."
+  },
+  {
+   "id": "panel",
+   "at": [79, 99],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "The wall of the east tunnel rings hollow."
+  }
+ ],
+ "objective": "Cross the court and the five ranks of the Approach. The way out is locked while the Weeping Mother stands",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [14, 70],
+  "botSeconds": [60, 1200],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "secret"
+  ],
+  "skins": 3,
+  "enemyKinds": {
+   "bulwark": 1,
+   "acolyte": 1,
+   "chorister": 3,
+   "weeping": 1,
+   "wardengraft": 1,
+   "bellhand": 2,
+   "tollbearer": 4,
+   "gaunt": 2
+  },
+  "scaleClass": "MIXED",
+  "tallReason": "the outer court of the Approach is 12 m under the Gate's sky and the hall closes down rank by rank to 8",
+  "introduces": "the gauntlet: every elite the Vael have, used together in five ranks of a funnel, with two flank tunnels that go round the first two and a Mother in the middle who keeps the way out locked"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": [
+   [
+    41,
+    104,
+    49,
+    108
+   ],
+   [
+    41,
+    66,
+    49,
+    70
+   ]
+  ]
+ }
+}

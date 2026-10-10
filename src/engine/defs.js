@@ -100,7 +100,7 @@ export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { na
 /** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
 export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
-export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 } };      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
+export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 }, d: { name: 'drift', speed: 1, grip: 0.1 } };      // `d` (PT-033, Episode 4 Batch D): DRIFT, a floor with almost no grip: the body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the speed cap is the walking speed      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
 /** THE SHIP BREATHES (PT-027, Episode 3 Batch B; src/engine/breath.js): `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing gate never closes on anyone within DOOR.autoCloseClearance */
 export const BREATH = { warn: 1.2, fade: 0.8 };
 /**
