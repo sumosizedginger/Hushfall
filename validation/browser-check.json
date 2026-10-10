@@ -1,12 +1,12 @@
 {
-  "when": "2026-10-09T22:21:18.740Z",
-  "commit": "2fc7cac",
+  "when": "2026-10-10T00:37:09.889Z",
+  "commit": "51510f2",
   "sources": {
-    "engine": "457ad98ab651f853",
-    "render": "6583f1f617cafb13",
-    "game": "0985ac0035ada716",
-    "audio": "0fb7b3e80e7f47c9",
-    "assets": "09f20c61fb70782f"
+    "engine": "fc1606991854db2b",
+    "render": "6f22835626329b24",
+    "game": "6a4cfbd1802034c1",
+    "audio": "711965f435282a23",
+    "assets": "53c2963b5d4c422b"
   },
   "renderGround": {
     "band": {
@@ -15,36 +15,36 @@
     },
     "totals": {
       "asleep": {
-        "rows": 589,
-        "raised": 162,
+        "rows": 645,
+        "raised": 169,
         "violations": 0,
         "deepest": 0,
         "highest": 0.017
       },
       "awake": {
-        "rows": 1178,
-        "raised": 162,
+        "rows": 1290,
+        "raised": 169,
         "violations": 0,
         "deepest": 0,
         "highest": 0.101
       },
       "matrix": {
-        "rows": 1265,
-        "raised": 537,
+        "rows": 1403,
+        "raised": 550,
         "violations": 0,
         "deepest": 0,
         "highest": 0.105
       },
       "dying": {
-        "rows": 592,
-        "raised": 165,
+        "rows": 648,
+        "raised": 172,
         "violations": 0,
         "deepest": 0,
         "highest": 0.005
       },
       "corpses": {
-        "rows": 592,
-        "raised": 165,
+        "rows": 648,
+        "raised": 172,
         "violations": 0,
         "deepest": 0,
         "highest": 0.026
@@ -322,7 +322,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=22"
+      "detail": "mode=playing tick=20"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -357,7 +357,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.16 m"
+      "detail": "moved 6.26 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -367,7 +367,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=34 last=toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire,flare_boom,burn_start"
+      "detail": "played=35 last=wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,step_outdoor,flare_fire,flare_boom,burn_start"
     },
     {
       "name": "Escape pauses (live)",
@@ -417,7 +417,7 @@
     {
       "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=146 exits=0"
+      "detail": "visible=true painted=230400 explored=148 exits=0"
     },
     {
       "name": "Tab again closes the automap",
@@ -487,7 +487,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=143 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,pump,weapon_switch,creak,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
+      "detail": "played=154 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,pump,radio,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -542,7 +542,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7380 wall=6s"
+      "detail": "status=complete failed=null ticks=7380 wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
@@ -552,7 +552,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8162 wall=6s"
+      "detail": "status=complete failed=null ticks=8162 wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
@@ -562,7 +562,7 @@
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9521 wall=10s"
+      "detail": "status=complete failed=null ticks=9521 wall=11s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
@@ -572,7 +572,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8099 wall=7s"
+      "detail": "status=complete failed=null ticks=8099 wall=6s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
@@ -582,7 +582,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6272 wall=4s"
+      "detail": "status=complete failed=null ticks=6272 wall=5s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
@@ -592,7 +592,7 @@
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8369 wall=8s"
+      "detail": "status=complete failed=null ticks=8369 wall=9s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -602,7 +602,7 @@
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6103 wall=11s"
+      "detail": "status=complete failed=null ticks=6103 wall=13s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
@@ -612,7 +612,7 @@
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9671 wall=10s"
+      "detail": "status=complete failed=null ticks=9671 wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
@@ -622,7 +622,7 @@
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10411 wall=17s"
+      "detail": "status=complete failed=null ticks=10411 wall=13s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
@@ -665,29 +665,29 @@
       "detail": "C1E1M06/playing"
     },
     {
-      "name": "render truth coverage: 19 maps, all 10 enemy kinds, 162 enemies on raised floors (a census that saw nothing would pass vacuously)",
+      "name": "render truth coverage: 21 maps, all 10 enemy kinds, 169 enemies on raised floors (a census that saw nothing would pass vacuously)",
       "ok": true,
-      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,gill,feeder,graftmother,chorister; raised 162; pose rows 1265"
+      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,gill,feeder,graftmother,chorister; raised 169; pose rows 1403"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "589 rows (162 on raised floors), 0 violations, deepest 0 m, highest 0.017 m; every one of the 589 enemies was measured: true"
+      "detail": "645 rows (169 on raised floors), 0 violations, deepest 0 m, highest 0.017 m; every one of the 645 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "1178 rows (162 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 589 enemies: true"
+      "detail": "1290 rows (169 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 645 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "1265 rows (537 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
+      "detail": "1403 rows (550 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 592 rows (165 on raised floors), 0 violations, deepest 0 m, highest 0.005 m || corpses: 592 rows (165 on raised floors), 0 violations, deepest 0 m, highest 0.026 m"
+      "detail": "dying: 648 rows (172 on raised floors), 0 violations, deepest 0 m, highest 0.005 m || corpses: 648 rows (172 on raised floors), 0 violations, deepest 0 m, highest 0.026 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
@@ -732,12 +732,32 @@
     {
       "name": "one burst of the lamp in the live game spends one cell, jumps down a line of three bodies (each hit, each for less), draws its lightning and lights the level",
       "ok": true,
-      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 30.9"
+      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 5.5"
+    },
+    {
+      "name": "picking up the mortar equips it: key 0 on the HUD, ROCKETS on the ammo label, a toast that names it, 6 rockets in the sim",
+      "ok": true,
+      "detail": "weapon mortar, rockets 6, hud \"1 CANNON6 FISTS0 MORTAR\", label \"ROCKETS\", toast \"Bell-breaker mortar (0): the shell lands on the ring; two rockets a shell; it hu\""
+    },
+    {
+      "name": "with the mortar in hand a ring is drawn on the ground where the shell will land, and one shot spends two rockets and puts a shell in the air",
+      "ok": true,
+      "detail": "ring {\"visible\":true,\"x\":100.16881768576792,\"y\":0.06,\"z\":47}, rockets 4, shells in the air 1"
+    },
+    {
+      "name": "a breathing gate: open at the start, shut by 7 s, the drawn slab follows the sim (up when open, down when shut), and a shut one says it opens when the ship breathes in",
+      "ok": true,
+      "detail": "start {\"cx\":23,\"cz\":25,\"open\":1,\"target\":1,\"y\":4.15,\"span\":4.15}, at 7 s {\"cx\":23,\"cz\":25,\"open\":0,\"target\":0,\"y\":0,\"span\":4.15}, hint \"It opens when the ship breathes in\""
+    },
+    {
+      "name": "spore beds in the live game: blooming = bright with mist and it burns, dormant = dim, no mist, no damage",
+      "ok": true,
+      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.46714644709477077,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
     },
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "484 samples, lowest chip 0.006 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "470 samples, lowest chip 0.003 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -782,7 +802,7 @@
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":194,\"triangles\":37280,\"geometries\":1139,\"textures\":56,\"programs\":21},\"plaza\":{\"calls\":175,\"triangles\":34410,\"geometries\":1139,\"textures\":56,\"programs\":21},\"warehouse\":{\"calls\":96,\"triangles\":19320,\"geometries\":1139,\"textures\":56,\"programs\":21},\"plaza-all-awake\":{\"calls\":414,\"triangles\":34410,\"geometries\":1371,\"textures\":56,\"programs\":21},\"warehouse-all-awake\":{\"calls\":146,\"triangles\":19368,\"geometries\":1371,\"textures\":56,\"programs\":21},\"m03-market\":{\"calls\":173,\"triangles\":57572,\"geometries\":1173,\"textures\":56,\"programs\":20},\"m03-market-all-awake\":{\"calls\":611,\"triangles\":57620,\"geometries\":1572,\"textures\":56,\"programs\":20},\"m05-terrace\":{\"calls\":108,\"triangles\":35648,\"geometries\":1137,\"textures\":56,\"programs\":17},\"m05-terrace-all-awake\":{\"calls\":320,\"triangles\":35648,\"geometries\":1305,\"textures\":56,\"programs\":17},\"m06-quay\":{\"calls\":159,\"triangles\":53592,\"geometries\":1208,\"textures\":56,\"programs\":18},\"m06-quay-all-awake\":{\"calls\":636,\"triangles\":53592,\"geometries\":1648,\"textures\":56,\"programs\":18},\"m07-atrium\":{\"calls\":181,\"triangles\":49590,\"geometries\":1169,\"textures\":56,\"programs\":18},\"m08-chamber\":{\"calls\":274,\"triangles\":46816,\"geometries\":1244,\"textures\":56,\"programs\":17},\"m08-chamber-all-awake\":{\"calls\":521,\"triangles\":46460,\"geometries\":1483,\"textures\":56,\"programs\":17}}"
+      "detail": "{\"pier\":{\"calls\":194,\"triangles\":37280,\"geometries\":1139,\"textures\":60,\"programs\":21},\"plaza\":{\"calls\":175,\"triangles\":34410,\"geometries\":1139,\"textures\":60,\"programs\":21},\"warehouse\":{\"calls\":96,\"triangles\":19320,\"geometries\":1139,\"textures\":60,\"programs\":21},\"plaza-all-awake\":{\"calls\":414,\"triangles\":34410,\"geometries\":1371,\"textures\":60,\"programs\":21},\"warehouse-all-awake\":{\"calls\":146,\"triangles\":19368,\"geometries\":1371,\"textures\":60,\"programs\":21},\"m03-market\":{\"calls\":173,\"triangles\":57572,\"geometries\":1173,\"textures\":60,\"programs\":20},\"m03-market-all-awake\":{\"calls\":611,\"triangles\":57620,\"geometries\":1572,\"textures\":60,\"programs\":20},\"m05-terrace\":{\"calls\":108,\"triangles\":35648,\"geometries\":1137,\"textures\":60,\"programs\":17},\"m05-terrace-all-awake\":{\"calls\":320,\"triangles\":35648,\"geometries\":1305,\"textures\":60,\"programs\":17},\"m06-quay\":{\"calls\":159,\"triangles\":53592,\"geometries\":1208,\"textures\":60,\"programs\":18},\"m06-quay-all-awake\":{\"calls\":636,\"triangles\":53592,\"geometries\":1648,\"textures\":60,\"programs\":18},\"m07-atrium\":{\"calls\":181,\"triangles\":49590,\"geometries\":1169,\"textures\":60,\"programs\":18},\"m08-chamber\":{\"calls\":274,\"triangles\":46816,\"geometries\":1244,\"textures\":60,\"programs\":17},\"m08-chamber-all-awake\":{\"calls\":521,\"triangles\":46460,\"geometries\":1483,\"textures\":60,\"programs\":17}}"
     },
     {
       "name": "render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)",
@@ -837,42 +857,42 @@
     {
       "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2109,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2141,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":27,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2109,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2141,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":27,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2109,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2141,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":27,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2109,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2141,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":27,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "with WebGL unavailable the game says so on screen (no inert title)",
@@ -882,17 +902,17 @@
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
       "ok": true,
-      "detail": "geometries 1139->1139, textures 56->56, programs 21->21"
+      "detail": "geometries 1139->1139, textures 60->60, programs 21->21"
     },
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=117.1ms"
+      "detail": "frames=900 avg=114.7ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 1367 ms, p95 650 ms"
+      "detail": "worst 1400 ms, p95 650 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -903,13 +923,13 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 117.12811111111117,
-    "p95Ms": 649.8999999999651,
-    "worstMs": 1366.7000000000116
+    "avgMs": 114.66544444444447,
+    "p95Ms": 650,
+    "worstMs": 1400
   },
   "gl": {
     "geometries": 1185,
-    "textures": 56,
+    "textures": 60,
     "calls": 1,
     "triangles": 2,
     "programs": 21

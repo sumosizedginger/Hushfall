@@ -1,7 +1,7 @@
 {
   "mapId": "C1E2M08",
-  "when": "2026-10-09T22:26:32.088Z",
-  "commit": "2fc7cac",
+  "when": "2026-10-10T00:27:34.496Z",
+  "commit": "51510f2",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,11 +11,11 @@
   "mapSha": "e08a07dee7cca331",
   "routesSha": "7504fc4351f272e7",
   "sources": {
-    "engine": "457ad98ab651f853",
-    "render": "6583f1f617cafb13",
-    "game": "0985ac0035ada716",
-    "audio": "0fb7b3e80e7f47c9",
-    "assets": "09f20c61fb70782f"
+    "engine": "fc1606991854db2b",
+    "render": "6f22835626329b24",
+    "game": "6a4cfbd1802034c1",
+    "audio": "711965f435282a23",
+    "assets": "53c2963b5d4c422b"
   },
   "routes": {
     "main": {
@@ -145,7 +145,7 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.174, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.171, 3 nodes"
     },
     {
       "name": "render truth: the census ran on this map (its enemies were really measured)",
@@ -158,5 +158,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 19
+  "wallSeconds": 21
 }

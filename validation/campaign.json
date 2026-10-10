@@ -4,9 +4,9 @@
   "main": 62,
   "secret": 6,
   "counts": {
-    "PLANNED": 49,
+    "PLANNED": 47,
     "IMPLEMENTED": 0,
-    "AGENT_VERIFIED": 19,
+    "AGENT_VERIFIED": 21,
     "COMPLETE": 0
   },
   "errors": [],
@@ -31,8 +31,8 @@
     "C1E2M08": "AGENT_VERIFIED",
     "C1E2S01": "AGENT_VERIFIED",
     "C1E3M01": "AGENT_VERIFIED",
-    "C1E3M02": "PLANNED",
-    "C1E3M03": "PLANNED",
+    "C1E3M02": "AGENT_VERIFIED",
+    "C1E3M03": "AGENT_VERIFIED",
     "C1E3M04": "PLANNED",
     "C1E3M05": "PLANNED",
     "C1E3M06": "PLANNED",

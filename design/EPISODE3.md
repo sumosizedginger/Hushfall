@@ -6,8 +6,8 @@ Campaign 1, episode 3 (`CAMPAIGN_MANIFEST.json`: "Living alien vessels grown fro
 | batch | maps | what it proves | state |
 |---|---|---|---|
 | **A** | M01 Landing Scar | the ship's look and light (`choir`), the first new creature (the CHORISTER), SUPPRESSION | **BUILT 2026-10-09, PLAYED and APPROVED by the owner, pushed** |
-| **B** | M02 Ribbed Corridors, M03 Gill Gardens | doors that breathe; spores and snipers on high ledges; the bell-breaker MORTAR placed | **BUILT 2026-10-09, unplayed** (owner go: "Played, fun, and approved, batch B is a go") |
-| C | M04 Marrow Nave, S01 The Choirless Chamber | the episode's one set-piece arena; the secret exit | not started |
+| **B** | M02 Ribbed Corridors, M03 Gill Gardens | doors that breathe; spores and snipers on high ledges; the bell-breaker MORTAR placed | **BUILT 2026-10-09, PLAYED and APPROVED by the owner ("fun and looks good"), not pushed** |
+| C | M04 Marrow Nave, S01 The Choirless Chamber | the episode's one set-piece arena; the secret exit; the two elites (Bulwark Shell, Weeping Mother) | **owner go 2026-10-09 ("batch c")**, in progress |
 | D | M05 Resonance Loom, M06 The Choir Loft | timing platforms and sound-lock doors; suppression enemies in numbers | not started |
 | E | M07 Spore Foundry, M08 The Cantor's Throat | spawner denial; the Grand Cantor | not started |
 
