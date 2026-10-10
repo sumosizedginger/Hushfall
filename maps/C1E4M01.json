@@ -1,0 +1,995 @@
+{
+ "format": 1,
+ "id": "C1E4M01",
+ "version": 1,
+ "name": "Ascent Tether",
+ "ceilingHeight": 30,
+ "atmosphere": {
+  "fog": "#161c28",
+  "fogDensity": 0.004,
+  "sky": "orbit",
+  "look": "tether"
+ },
+ "grid": [
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNddddddddddNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNOddddddddddddddddNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNOOaaddddddddddddddddddNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNOaaaaaddddddddddddddddddddNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNOOaaaaaadddddddddddddddddddddNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNOOaaaaaaaaaddddddddddddddddddddddNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNOOaaaaaaaaOOd__________ddddddddddddNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNOaaaaaaaOOO________________ddddddddddNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNOaaaaaaaO_______dddddddd______dddddddddNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNOaaaaaaOO____ddddddddddddddd_____ddddddddNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNOaaaaaaO____ddddddddddddddddddO____ddddddddNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNOOaaaaaO____dddddddddddddddddddaOO___ddddddddNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNOaaaaaO___ddddddddddddddddddddaaaOO___dddddddNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNOaaaaaO___dddddddddddddddddddddaaaaaO___dddddddNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNOaaaaO___ddddddddddddddddddNddaaaaaaaO___ddddddNNNNNNNNNNNNNN",
+  "NNNNNNNNNNOaaaaaO__dddddddddddddddddddNNNOOaaaaaOO__dddddddNNNNNNNNNNNNN",
+  "NNNNNNNNNNOaaaaO___ddddddddddddddddddNNNNNNOaaaaaO___ddddddNNNNNNNNNNNNN",
+  "NNNNNNNNNOaaaaaO__dddddddddddddddddddNNNNNNNOaaaaaO__dddddddNNNNNNNNNNNN",
+  "NNNNNNNNNOaaaaO___ddddddddddddNNNNNNNNNNNNNNNOaaaaO___ddddddNNNNNNNNNNNN",
+  "NNNNNNNNOOaaaaO__ddddddddddddNNNNNNNNNNNNNNNNOaaaaaO__ddddddNNNNNNNNNNNN",
+  "NNNNNNNOOggaaO___ddddddNddddNNNNNNNNNNNNNNNNNNOaaaaO__ddddddNNNNNNNNNNNN",
+  "NNNNNNOOgggggO__ddddddNNNNdNNNNNNNNNNNNNNNNNNNOaaaaO___ddddddNNNNNNNNNNN",
+  "NNNNNNOgggggggO_ddddddNNNNSNNNNNNNNNNNNNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNOgggggggO_ddddddNNNaaaNNNNNNNNNNNNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNOgggggggOddddddNNNaaaaaNNNNNaaaaNNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNOggggggOOddddddNNNaaaaaNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNOOgggggO_ddddddNNNaaaaaNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNaaaNNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNaaaaNNNNNNNNNaaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNNOaaaaO___addddNNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNNOaaaaO__OaaaaONNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNOaaaaaO__OaaaaONNNNNNNNNNNN",
+  "NNNNNNNNaaaaa___ddddddNNNNNNNNaaaaaaaNNNNNNNOaaaaaO__OaaaaaONNNNNNNNNNNN",
+  "NNNNNNNNOaaaaO__ddddddNNNNNNNaaaaaaaaNOOOONOaaaaaO___OaaaaONNNNNNNNNNNNN",
+  "NNNNNNNNOaaaaO__dddddddNNNNNaaaaOONNOOOggOOaaaaaaO__OaaaaaONNNNNNNNNNNNN",
+  "NNNNNNNNOaaaaO___ddddddNNNNaaaaaaaOOOgggggaaaaaaO___OaaaaONNNNNNNNNNNNNN",
+  "NNNNNNNNNOaaaaO__dddddddNN_OaaaaaaaagggggggaaaaO___OaaaaaONNNNNNNNNNNNNN",
+  "NNNNNNNNNOaaaaO___dddddaO___OaaaaaaagggggggaaOO___OaaaaaONNNNNNNNNNNNNNN",
+  "NNNNNNNNNOaaaaaO__dddaaaOO___OOaaaaagggggggOOO___OaaaaaaONNNNNNNNNNNNNNN",
+  "NNNNNNNNNNOaaaad___daaaaaOO____OOaaaaggggggO____OaaaaaaONNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNOaadddd___OaaaaaaO______OOOgggggOOOOOOaaaaaaONNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNddddddd___OaaaaaaOO_______OOOOOOggggaaaaaaONNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNddddddd__NOOaaaaaaaOOO______O_OggggggaaaaONNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNdddddddNNNNOaaaaaaaaaOOOOOOOOOggggggaaaONNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNdddddNNNNNNOaaaaaaaaaaaaaaaaagggggggOONNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNddddNNNNNNNNOOaaaaaaaaaaaaaaaggggggOONNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNddNNNNNNNNNNNOOaaaaaaaaaaaaaggggggONNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNaaaNNNNNNNNNNNNNOOOaaaaaaaaaOOggggOONNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNaaaaaaaaNNNNNNNNNNNNNNNNNNOOOOOOOOONOOOONNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNaaaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNaaaaaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNaaaaaaNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
+ ],
+ "heights": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "..............................6666666666................................",
+  "...........................6666666666666666.............................",
+  "..........................66666666666666666666..........................",
+  ".......................5666666666666666666666666........................",
+  "......................455666666666666666666666666.......................",
+  "....................3445566666666666666666666666666.....................",
+  "...................23344556..6..........666666666666....................",
+  ".................1122334...................6666666666...................",
+  ".................111223........cccccccc......666666666..................",
+  "..................111......ccccccccccccccc.....66666666.................",
+  "...................1.....cccccccccccccccccc.....66666666................",
+  "........................cccccccccccccccccccc.....66666666...............",
+  "......................ccccccccccccccccccccccc.....6666666...............",
+  ".....................cccccccccccccccccccccccccc....6666666..............",
+  "....................cccccccccccccccccc.ccccccccd....666666..............",
+  "...................ccccccccccccccccccc.....cccdd....6666666.............",
+  "...................cccccccccccccccccc.......cddee....666666.............",
+  "..................ccccccccccccccccccc........deeef...6666666............",
+  "..................cccccccccccc................efff....666666............",
+  ".................cccccccccccc.................fffgg...666666............",
+  ".................cccccc.cccc...................gggh...666666............",
+  "................cccccc....c....................ghhh....666666...........",
+  "................cccccc....c.....................hhii...666666...........",
+  "................cccccc...ccc....................iiii...666666...........",
+  "...............cccccc...ccccc.....oooo..........iiii...666666...........",
+  "...............cccccc...ccccc....oooooo.........iiii...666666...........",
+  "...............cccccc...ccccc....oooooo.........iiii...666666...........",
+  "...............cccccc....ccc.....oooooo.........iiii...666666...........",
+  "...............cccccc............oooooo.........iiii...666666...........",
+  "...............cccccc.............oooo.........iiiii...666666...........",
+  "...............cccccc..............oo..........iiii....66666............",
+  "...............cccccc..............oo..........iiii....6666.............",
+  "...............cccccc..............oo.........jjjii....6666.............",
+  "................cccccc........ooooooo........kkjjj....66666.............",
+  "................cccccc.......oooooooo.......llkkk.....6666..............",
+  "................ccccccc.....oooo.......oo..mmllkk....66666..............",
+  ".................cccccc....ooooooo...ooooooommll.....6666...............",
+  ".................ccccccc....oooooooooooooooonmm.....66666...............",
+  "..................cccccc.....ooooooooooooooon......66666................",
+  "..................cccccc.......ooooooooooooo......666666................",
+  "...................cccccc........oooooooooo......666666.................",
+  ".....................cccccc..........ooooo......666666..................",
+  "......................cccccc...............6666666666...................",
+  ".......................ccccbba............6666666666....................",
+  "........................cccbaa998.........666666666.....................",
+  ".........................cbbaa9887766666666666666.......................",
+  "...........................ba9988766666666666666........................",
+  ".............................9988766666666666666........................",
+  "................................8766666666.6666.........................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "ceilings": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "..........................ee............................................",
+  ".......................deeee............................................",
+  "......................cddeee............................................",
+  "....................bccddeeee...........................................",
+  "...................abbccdde.............................................",
+  ".................99aabbc................................................",
+  "................8999aab.................................................",
+  "...............888999...................................................",
+  "..............888889....................................................",
+  "..............88888........................k............................",
+  ".............88888........................kkk...........................",
+  "............88888.........................kkkkk.........................",
+  "............8888.........................kkkkkkl........................",
+  "...........88888...........................kkkll........................",
+  "...........8888.............................kllmm.......................",
+  "..........88888..............................lmmmn......................",
+  "..........8888................................mnnn......................",
+  "..........9988................................nnnoo.....................",
+  ".........9999..................................ooop.....................",
+  "........99999..................................oppp.....................",
+  ".......9999999............k.....................ppqq....................",
+  ".......9999999...........kkk....................qqqq....................",
+  ".......9999999..........kkkkk.....xxxx..........qqqq....................",
+  ".......999999...........kkkkk....xxxxxx.........qqqq....................",
+  "........99999...........kkkkk....xxxxxx.........qqqq....................",
+  "........9999.............kkk.....xxxxxx.........qqqq....................",
+  "........8898.....................xxxxxx.........qqqq....................",
+  "........8888......................xxxx.........qqqqq....................",
+  "........8888.......................xx..........qqqq....e................",
+  "........8888.......................xx..........qqqq....eeee.............",
+  "........8888.......................xx.........rrrqq....eeee.............",
+  "........88888.................xxxxxxx........ssrrr....eeeee.............",
+  ".........8888................wwxxxxxx.......ttsss.....eeee..............",
+  ".........8888...............wwww.......xx..uuttss....eeeee..............",
+  ".........8888..............wwwwwww...xxxxxxxuutt.....eeee...............",
+  "..........8888..............wwwwwwwxxxxxxxxxvuu.....eeeee...............",
+  "..........8888.........k.....wwwwwwxxxxxxxxxv......eeeee................",
+  "..........88888......kkk.......wwwwxxxxxxxx.......eeeeee................",
+  "...........8888.....kkkkk........wwxxxxxxxx......eeeeee.................",
+  "...........88........kkkkkk..........xxxxx......eeeeee..................",
+  "......................kkkkkk...............ffffffeeee...................",
+  ".......................kkkkjji............fffffffeee....................",
+  "........................kkkjiihhg.........ffffffffe.....................",
+  ".........................kjjiihggffeeeeefffffffff.......................",
+  "...........................jihhggfeeeeeeffffffff........................",
+  ".............................hhggfeeeeeeefffffff........................",
+  ".............888................gfeeeeeee..ffff.........................",
+  ".......iiiiiii8.........................................................",
+  ".....iiiiiiiiii.........................................................",
+  ".....iiiiiiiiii.........................................................",
+  "....iiiiiiiiiiii........................................................",
+  "....iiiiiiiiiiii........................................................",
+  "....iiiiiiiiiiii........................................................",
+  "....iiiiiiiiiiii........................................................",
+  "....iiiiiiiiiiii........................................................",
+  "....iiiiiiiiiiii........................................................",
+  ".....iiiiiiiiii.........................................................",
+  ".....iiiiiiiiii.........................................................",
+  ".......iiiiii...........................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "doors": [],
+ "secrets": [
+  {
+   "id": "cable-hatch",
+   "panel": [26, 31],
+   "cells": [
+    [25, 32],
+    [26, 32],
+    [27, 32],
+    [24, 33],
+    [25, 33],
+    [26, 33],
+    [27, 33],
+    [28, 33],
+    [24, 34],
+    [25, 34],
+    [26, 34],
+    [27, 34],
+    [28, 34],
+    [24, 35],
+    [25, 35],
+    [26, 35],
+    [27, 35],
+    [28, 35],
+    [25, 36],
+    [26, 36],
+    [27, 36]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "first-load",
+   "when": "enter",
+   "at": [35, 11],
+   "radius": 3,
+   "do": [
+    {
+     "objective": "Falling freight: stay out of the lit patch until it has landed"
+    }
+   ]
+  },
+  {
+   "id": "bay",
+   "when": "enter",
+   "at": [19, 29],
+   "radius": 3,
+   "do": [
+    {
+     "objective": "The freight bay: throw the car-call switch on its wall"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [10, 64]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [7, 61],
+   "facing": 0.785
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [13, 62],
+   "facing": -0.983
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [8, 67],
+   "facing": 2.554
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 41],
+   "facing": -0.043
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 38],
+   "facing": 0.038
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [9, 32],
+   "facing": 0.031
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [11, 32],
+   "facing": -0.031
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [13, 24],
+   "facing": -0.075
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 19],
+   "facing": -0.111
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 13],
+   "facing": -0.407
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [56, 23],
+   "facing": -0.843
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [37, 11],
+   "facing": -0.471
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [51, 22],
+   "facing": -0.773
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [56, 27],
+   "facing": -0.893
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [59, 33],
+   "facing": -1.007
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [52, 50],
+   "facing": -1.249
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [56, 43],
+   "facing": -1.143
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [52, 47],
+   "facing": -1.186
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 54],
+   "facing": -1.292
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 55],
+   "facing": -1.312
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [27, 53],
+   "facing": -0.996
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [20, 44],
+   "facing": -0.464
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [17, 43],
+   "facing": -0.322
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [20, 40],
+   "facing": -0.395
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [26, 22],
+   "facing": -0.364
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 25],
+   "facing": -0.345
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [35, 18],
+   "facing": -0.498
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [29, 23],
+   "facing": -0.434
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [38, 20],
+   "facing": -0.567
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [41, 20],
+   "facing": -0.614
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 25],
+   "facing": -0.745
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [48, 32],
+   "facing": -0.871
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [50, 37],
+   "facing": -0.977
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [40, 48],
+   "facing": -1.081
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [38, 47],
+   "facing": -1.025
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [33, 47],
+   "facing": -0.934
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [11, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [20, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [42, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [58, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [51, 49]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [24, 51]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [16, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [37, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [47, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [47, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [32, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [8, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [12, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [8, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [12, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 46]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [41, 45]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [39, 49]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [21, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [57, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [51, 52]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [39, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [26, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [46, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [50, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [50, 41]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [44, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [31, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [14, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [5, 66]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [14, 67]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 69]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [42, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [43, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [51, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [56, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [19, 45]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [16, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [23, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [36, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [32, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [37, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [32, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [37, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [31, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [36, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [29, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [34, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [27, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [26, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "crate2",
+   "at": [27, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [25, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [27, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [25, 35]
+  },
+  {
+   "type": "exit",
+   "at": [35, 35],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "car-call",
+   "at": [30, 26],
+   "wall": "south",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The car is called. Up the last of the road, into the cable"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "message": "called"
+    }
+   ]
+  }
+ ],
+ "par": {
+  "time": 480
+ },
+ "intro": {
+  "title": "ASCENT TETHER",
+  "lines": [
+   "The last of the world is the foot of this cable.",
+   "The only way up is the road round it."
+  ]
+ },
+ "outro": "The car climbs. The world becomes a curve, then a bright coin, then a thing you can hold in one hand.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [10, 64],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Ascent Tether. The Vael freight goes up this cable and so do you. One road, round and round it. Nothing on it moves slowly except the loads."
+  },
+  {
+   "id": "loads",
+   "at": [35, 11],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "Orange on the deck, a shadow growing: that is where the next load lands. Thirty if it catches you. It will not catch anything that stays out of the light."
+  },
+  {
+   "id": "crush",
+   "at": [25, 52],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "They crush what they land on. All of it. Stand them under one."
+  },
+  {
+   "id": "bay",
+   "at": [19, 29],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The freight bay. The car-call switch is on the wall. You will have to stand still for a moment to throw it."
+  },
+  {
+   "id": "called",
+   "at": [35, 35],
+   "radius": 0.1,
+   "speaker": "HULL",
+   "text": "The car is called."
+  },
+  {
+   "id": "panel",
+   "at": [26, 31],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "The panel in the bay wall rings hollow."
+  },
+  {
+   "id": "top",
+   "at": [33, 47],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "It goes into the cable. Of course it does."
+  }
+ ],
+ "loads": [
+  {
+   "rect": [
+    44,
+    12,
+    49,
+    17
+   ],
+   "period": 14,
+   "phase": 0
+  },
+  {
+   "rect": [
+    14,
+    34,
+    19,
+    39
+   ],
+   "period": 8,
+   "phase": 0
+  },
+  {
+   "rect": [
+    16,
+    26,
+    21,
+    31
+   ],
+   "period": 8,
+   "phase": 4
+  },
+  {
+   "rect": [
+    29,
+    17,
+    34,
+    22
+   ],
+   "period": 10,
+   "phase": 3
+  }
+ ],
+ "objective": "Climb the tether. The car is at the top of the road, inside the cable",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [14, 70],
+  "botSeconds": [60, 900],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "switches"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "tollbearer": 6,
+   "gaunt": 5,
+   "chorister": 3,
+   "bellhand": 1,
+   "sexton": 1
+  },
+  "scaleClass": "MIXED",
+  "tallReason": "the cable rises out of sight: walls beside the open road are 30 m so that it does",
+  "introduces": "falling loads: freight dropped down the tether on a clock, a lit patch and a shadow for 1.5 seconds, then 30 damage and a crushed walker"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": [
+   [
+    6,
+    28,
+    14,
+    36
+   ],
+   [
+    35,
+    43,
+    43,
+    51
+   ]
+  ]
+ }
+}

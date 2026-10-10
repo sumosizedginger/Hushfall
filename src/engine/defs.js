@@ -116,7 +116,9 @@ export const FLOOR_SKINS = {
   l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
   b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
   o: { kind: 'floor', tex: 'floor_gill_a' }, u: { kind: 'outdoor', tex: 'floor_gill_a' },       // Episode 3 (PT-027): the gill gardens' damp floor, roofed and open to the sky
-  w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' }, a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
+  w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' },
+  a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
+  '+': { kind: 'floor', tex: 'floor_hull_a' },       // Episode 4: the wreck's roofed hull floor (the plate of h, under a lid)
 };
 
 /**
