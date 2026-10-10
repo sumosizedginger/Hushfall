@@ -1,5 +1,5 @@
 {
-  "when": "2026-10-10T02:54:40.462Z",
+  "when": "2026-10-10T07:06:43.294Z",
   "map": "C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)",
   "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
   "budget": {
@@ -7,98 +7,98 @@
       "calls": 194,
       "triangles": 37280,
       "geometries": 1139,
-      "textures": 62,
+      "textures": 74,
       "programs": 21
     },
     "plaza": {
       "calls": 175,
       "triangles": 34410,
       "geometries": 1139,
-      "textures": 62,
+      "textures": 74,
       "programs": 21
     },
     "warehouse": {
       "calls": 96,
       "triangles": 19320,
       "geometries": 1139,
-      "textures": 62,
+      "textures": 74,
       "programs": 21
     },
     "plaza-all-awake": {
       "calls": 414,
       "triangles": 34410,
       "geometries": 1371,
-      "textures": 62,
+      "textures": 74,
       "programs": 21
     },
     "warehouse-all-awake": {
       "calls": 146,
       "triangles": 19368,
       "geometries": 1371,
-      "textures": 62,
+      "textures": 74,
       "programs": 21
     },
     "m03-market": {
       "calls": 173,
       "triangles": 57572,
       "geometries": 1173,
-      "textures": 62,
+      "textures": 74,
       "programs": 20
     },
     "m03-market-all-awake": {
       "calls": 611,
       "triangles": 57620,
       "geometries": 1572,
-      "textures": 62,
+      "textures": 74,
       "programs": 20
     },
     "m05-terrace": {
       "calls": 108,
       "triangles": 35648,
       "geometries": 1137,
-      "textures": 62,
+      "textures": 74,
       "programs": 17
     },
     "m05-terrace-all-awake": {
       "calls": 320,
       "triangles": 35648,
       "geometries": 1305,
-      "textures": 62,
+      "textures": 74,
       "programs": 17
     },
     "m06-quay": {
       "calls": 159,
       "triangles": 53592,
       "geometries": 1208,
-      "textures": 62,
+      "textures": 74,
       "programs": 18
     },
     "m06-quay-all-awake": {
       "calls": 636,
       "triangles": 53592,
       "geometries": 1648,
-      "textures": 62,
+      "textures": 74,
       "programs": 18
     },
     "m07-atrium": {
       "calls": 181,
       "triangles": 49590,
       "geometries": 1169,
-      "textures": 62,
+      "textures": 74,
       "programs": 18
     },
     "m08-chamber": {
       "calls": 274,
       "triangles": 46816,
       "geometries": 1244,
-      "textures": 62,
+      "textures": 74,
       "programs": 17
     },
     "m08-chamber-all-awake": {
       "calls": 521,
       "triangles": 46460,
       "geometries": 1483,
-      "textures": 62,
+      "textures": 74,
       "programs": 17
     }
   }
