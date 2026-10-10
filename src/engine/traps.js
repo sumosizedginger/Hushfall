@@ -24,6 +24,7 @@ export function findTraps(map, { props = null, secrets = true } = {}) {
       add(key(x, z), key(nx, nz));
     }
   }
+  for (const v of map.vents) if (passable(v.at[0], v.at[1]) && passable(v.to[0], v.to[1])) add(key(v.at[0], v.at[1]), key(v.to[0], v.to[1]));      // PT-032: a vent plate throws the player to its landing (the void sets a miss back: it traps nobody)
   const bfs = (starts, edges) => { const seen = new Set(starts), q = [...starts]; while (q.length) { const c = q.pop(); for (const n of edges.get(c) ?? []) if (!seen.has(n)) { seen.add(n); q.push(n); } } return seen; };
   const start = key(Math.floor(map.spawn.x / map.cell), Math.floor(map.spawn.z / map.cell)), reach = bfs([start], out);
   const toExit = bfs(map.exits.map((e) => key(Math.floor(e.at[0]), Math.floor(e.at[1]))), inn);

@@ -1,7 +1,7 @@
 // Terrain queries for the sim: floor height (static per cell, or a moving sector), ceiling, floor effects.
 // Everything takes the world `w` because sector heights are sim state. A map with no terrain layers and no sectors is "flat": every
 // query short-circuits to 0, so Gate 1 maps and frozen test fixtures behave exactly as before.
-import { STEP, FX } from './defs.js';
+import { STEP, FX, LOWG } from './defs.js';
 import { sporeOnAt } from './breath.js';
 
 const isFlat = (m) => m.flat && m.sectors.length === 0;
@@ -9,6 +9,7 @@ const isFlat = (m) => m.flat && m.sectors.length === 0;
 /** floor height of a cell right now (metres): the sector's current height if it belongs to one, else the map's static height */
 export function cellFloor(w, cx, cz) {
   const m = w.map;
+  if (m.hasVoid && m.kind(cx, cz) === 'void') return -LOWG.voidDepth;                                      // PT-032: open sky has no floor to speak of
   if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return w.sectors[si].h; }
   return m.flat ? 0 : m.floor(cx, cz);
 }

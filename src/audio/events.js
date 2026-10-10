@@ -107,6 +107,9 @@ export function soundsForEvent(e) {
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
     case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
     case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'vent_launch': return [{ id: 'vent_launch', pos: at(e) }];
+    case 'air_land': return [{ id: 'air_land', gain: Math.min(1, 0.4 + (e.speed ?? 0) * 0.12) }];
+    case 'void_fall': return [{ id: 'void_fall' }];
     case 'wade': return e.kind === 's' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
     case 'alarm': return [{ id: 'alarm_bell' }];
     case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];

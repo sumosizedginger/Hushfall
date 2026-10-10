@@ -94,6 +94,13 @@ export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 } };      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
 /** THE SHIP BREATHES (PT-027, Episode 3 Batch B; src/engine/breath.js): `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing gate never closes on anyone within DOOR.autoCloseClearance */
 export const BREATH = { warn: 1.2, fade: 0.8 };
+/**
+ * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
+ * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.
+ * A `_` tile is the VOID (open sky, kind 'void': it blocks walking for everyone but a body in the air, is not solid for sight or shots, and has no floor; its floor is `voidDepth` m down): landing over it is a MISS, the body falls on (`voidFallG`)
+ * and is set back on the last solid ground it stood on after `voidDamage` hurt, never killed outright. `ventCooldown` s after a launch (or a set-back) a plate does not fire again. `p.air` is lazy state: only a world with a vent ever has it.
+ */
+export const LOWG = { g: 3.2, steer: 0.28, ventCooldown: 0.5, setBackCooldown: 1.5, voidDepth: 6, voidFallG: 14, voidDamage: 15, minTime: 1, maxTime: 8, maxAir: 14 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */

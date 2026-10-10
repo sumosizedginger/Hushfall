@@ -346,6 +346,25 @@ export const SFX = {
     thump(c, out, t + 0.45, 95, 38, 0.3, 0.4);
     return 1.4;
   },
+  // --- Episode 4, Batch A (PT-032): the vents and the air ---
+  vent_launch(c, out, t, o) {                                   // a plate lets go: a rush of gas, a thump up through the floor, a long falling whistle as the body leaves it
+    noise(c, out, t, { dur: 0.7, a: 0.01, gain: 0.3, type: 'bandpass', f0: 400, f1: 2600, q: 0.9, off: o.r() });
+    thump(c, out, t, 90, 40, 0.3, 0.5);
+    tone(c, out, t + 0.05, { type: 'sine', f0: 700, f1: 180, a: 0.02, d: 0.9, gain: 0.08 });
+    return 1.2;
+  },
+  air_land(c, out, t, o) {                                      // boots on a deck after a long fall: a dull ring of plate, a scuff
+    thump(c, out, t, 120, 45, 0.18, 0.5);
+    noise(c, out, t, { dur: 0.3, a: 0.003, gain: 0.2, type: 'lowpass', f0: 1800, f1: 250, q: 0.7, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 210, f1: 150, a: 0.004, d: 0.35, gain: 0.07 });
+    return 0.5;
+  },
+  void_fall(c, out, t, o) {                                     // the sky takes you: a gasp of air that stops short, a thud of being set down again
+    noise(c, out, t, { dur: 0.5, a: 0.02, gain: 0.2, type: 'highpass', f0: 1500, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 900, f1: 90, a: 0.01, d: 0.7, gain: 0.1 });
+    thump(c, out, t + 0.55, 80, 36, 0.3, 0.45);
+    return 1.0;
+  },
   // --- Episode 3, Batch E (PT-030): the Brood Vat, the Reed, the Grand Cantor ---
   vat_swell(c, out, t, o) {                                     // a lid straining: a low gurgle climbing, the groan of iron under pressure, a hiss at the top
     noise(c, out, t, { dur: 1.3, a: 0.9, gain: 0.2, type: 'lowpass', f0: 120, f1: 520, q: 1.4, off: o.r() });

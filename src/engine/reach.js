@@ -24,6 +24,7 @@ export function analyseReach(map) {
     const q = [[sx, sz]]; reach.add(sx + ',' + sz);
     while (q.length) {
       const [cx, cz] = q.pop();
+      for (const v of map.vents) if (v.at[0] === cx && v.at[1] === cz && !reach.has(v.to.join(','))) { reach.add(v.to.join(',')); q.push([v.to[0], v.to[1]]); }      // PT-032: a vent plate throws the player to its landing
       for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = cx + dx, nz = cz + dz, k = nx + ',' + nz;
         if (!reach.has(k) && passable(nx, nz) && canStep(cx, cz, nx, nz)) { reach.add(k); q.push([nx, nz]); }

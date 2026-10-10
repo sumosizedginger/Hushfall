@@ -2,7 +2,7 @@
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -95,12 +95,12 @@ export function cellSolid(w, cx, cz) {
   return false;
 }
 /** blocks walking: walls, closed doors, and water. (Sight and projectiles use cellSolid, so they pass over water.) */
-function blocksMove(w, cx, cz) { return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water'; }
+function blocksMove(w, cx, cz, air = false) { return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water' || (!air && w.map.hasVoid && w.map.kind(cx, cz) === 'void'); }      // (PT-032: open sky blocks everyone who is not in the air)
 /** `self` = the moving entity (player or enemy): living enemies and the player then block it, so nothing walks through anyone. */
 export function blockedCircle(w, x, z, r, self = null) {
-  const S = w.map.cell, fly = !!(self && self.kind && ENEMIES[self.kind]?.flying);                  // a flyer (Drone-Gill) is stopped by walls and closed doors only: not by water, ledges or props
+  const S = w.map.cell, fly = !!(self && self.kind && ENEMIES[self.kind]?.flying), air = !!(self && self.air);                  // a flyer (Drone-Gill) is stopped by walls and closed doors only: not by water, ledges or props
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
-    if (!(fly ? cellSolid(w, cx, cz) : blocksMove(w, cx, cz))) continue;
+    if (!(fly ? cellSolid(w, cx, cz) : blocksMove(w, cx, cz, air))) continue;
     const nx = clamp(x, cx * S, (cx + 1) * S), nz = clamp(z, cz * S, (cz + 1) * S);
     if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
   }
@@ -817,6 +817,46 @@ function updatePulses(w, dt) {
   }
 }
 
+// ---------------------------------------------------------------- the air state and the launch vents (PT-032, Episode 4 Batch A)
+/** throw the player from a plate to its landing cell: an arc exact for the per-tick integrator (vy -= g dt; y += vy dt lands on y1 after n ticks, as lobTear does) */
+function launchFrom(w, p, v) {
+  const S = w.map.cell, x1 = (v.to[0] + 0.5) * S, z1 = (v.to[1] + 0.5) * S, n = Math.max(1, Math.round(v.time / TICK)), tt = n * TICK, g = v.g ?? LOWG.g;
+  const y1 = groundAt(w, x1, z1, PLAYER.radius), vy = (y1 - p.y) / tt + 0.5 * g * (tt + TICK);
+  p.air = { vy, g, bx: (x1 - p.x) / tt, bz: (z1 - p.z) / tt, sx: 0, sz: 0, t: 0, low: Math.min(p.y, y1) - 0.4 }; p.ventCd = LOWG.ventCooldown; p.vx = p.air.bx; p.vz = p.air.bz;
+  emit(w, 'vent_launch', { x: p.x, z: p.z });
+}
+/** on the ground in a map with vents or open sky: a plate under the feet fires, and the last solid place stood on is remembered (the void sets the player back there) */
+function groundAir(w, p, dt) {
+  p.ventCd = Math.max(0, (p.ventCd ?? 0) - dt);
+  const m = w.map, cx = Math.floor(p.x / m.cell), cz = Math.floor(p.z / m.cell);
+  if (m.ventCells.has(cx + ',' + cz)) { if (p.ventCd <= 0) { const v = m.vents.find((q) => q.at[0] === cx && q.at[1] === cz); if (v) launchFrom(w, p, v); } return; }
+  if (m.hasVoid) p.lastSafe = { x: p.x, z: p.z };
+}
+/** open sky took the player: hurt, back on the last solid ground, not killed */
+function voidFall(w, p) {
+  const s = p.lastSafe ?? { x: w.map.spawn.x, z: w.map.spawn.z };
+  delete p.air; p.x = s.x; p.z = s.z; p.vx = 0; p.vz = 0; p.y = groundAt(w, p.x, p.z, PLAYER.radius); p.ventCd = LOWG.setBackCooldown;
+  emit(w, 'void_fall', { x: p.x, z: p.z }); hurtPlayer(w, LOWG.voidDamage);
+}
+/** one tick of a body in low gravity: the launch velocity plus steering, the arc, a ceiling, the landing (or the void) */
+function airMove(w, p, sx, sf, fx, fz, rx, rz, dt) {
+  const A = p.air, m = w.map, steer = PLAYER.speed * LOWG.steer, k = Math.min(1, dt * PLAYER.accel * LOWG.steer);
+  A.t += dt; p.ventCd = Math.max(0, (p.ventCd ?? 0) - dt);
+  A.sx += ((fx * sf + rx * sx) * steer - A.sx) * k; A.sz += ((fz * sf + rz * sx) * steer - A.sz) * k;
+  p.vx = A.bx + A.sx; p.vz = A.bz + A.sz;
+  const y0 = p.y; tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);                                      // (walls and ledges higher than the body stop it; tryMove puts p.y on the ground: the height below is the body's own)
+  const over = m.hasVoid && m.kind(Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)) === 'void';
+  A.vy -= (over && A.vy < 0 && y0 < A.low ? LOWG.voidFallG : A.g) * dt; let y = y0 + A.vy * dt;
+  const roof = ceilingAt(w, p.x, p.z) - PLAYER.eye - 0.3; if (A.vy > 0 && y > roof) { y = Math.max(y0, roof); A.vy = 0; }
+  const ground = groundAt(w, p.x, p.z, PLAYER.radius);
+  if (over && y <= ground + 0.05) { p.y = y; return voidFall(w, p); }
+  if (!over && A.vy <= 0 && y <= ground + 1e-9) {
+    const speed = Math.abs(A.vy); p.y = ground; delete p.air; p.vx *= 0.35; p.vz *= 0.35; emit(w, 'air_land', { x: p.x, z: p.z, speed }); return;
+  }
+  p.y = y;
+  if (A.t > LOWG.maxAir) { p.y = ground; delete p.air; }                                                    // a body that has not come down in 14 s is put down (a ceiling, a wedge)
+}
+
 /** a range target's way back to its post: walk there, then (a 'fixed' one, or one that cannot see you) turn back to its heading. Returns true while it is still moving or turning. */
 function homeStep(w, e, def, dt, turnHome) {
   const dx = e.post.x - e.x, dz = e.post.z - e.z, d = Math.hypot(dx, dz), turn = def.turnRate * dt, face = (to) => { const a = Math.atan2(Math.sin(to - e.yaw), Math.cos(to - e.yaw)); e.yaw += clamp(a, -turn, turn); return Math.abs(a) > turn; };
@@ -897,7 +937,7 @@ export function step(w, cmd) {
   if (w.status !== 'playing') return;
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
   w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt);
-  updateSectors(w, dt); p.y = groundAt(w, p.x, p.z, PLAYER.radius);                       // moving floors carry whoever stands on them
+  updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
   // look + move
@@ -918,11 +958,15 @@ export function step(w, cmd) {
   p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
   p.sprint = clamp(p.sprint + (p.sprinting ? 1 : -1) * dt / PLAYER.sprintBlendTime, 0, 1);
   const fxc = fxAt(w, p.x, p.z) ?? (w.patches?.length ? patchAt(w, p.x, p.z) : null), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
-  p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
-  tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
+  if (p.air) airMove(w, p, sx, sf, fx, fz, rx, rz, dt);                                                  // PT-032: a vent has thrown the player: low gravity, a little steering
+  else {
+    p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
+    tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
+    if (w.map.vents.length || w.map.hasVoid) groundAir(w, p, dt);
+  }
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
   if (fxc && FX[fxc].dps) { p.hazardT = (p.hazardT || 0) + dt; if (p.hazardT >= 0.5) { p.hazardT -= 0.5; hurtPlayer(w, Math.round(FX[fxc].dps * 0.5 * diff.enemyDamage)); } } else p.hazardT = 0;
-  p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
+  if (!p.air) p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
   if (p.heat > 0) p.heat = Math.max(0, p.heat - dt * (WEAPONS[p.weapon].heatDecay || 1.4));
   p.cooldown = Math.max(0, p.cooldown - dt); p.hurt = Math.max(0, p.hurt - dt * 1.2); p.kick = Math.max(0, p.kick - dt * 0.4);
   // weapon selection: slot key, or cycle through owned weapons (mouse wheel). Switching costs the new weapon's switchTime.

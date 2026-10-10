@@ -29,7 +29,7 @@ export function walkableCell(w, cx, cz) {
   const m = w.map;
   if (cx < 0 || cz < 0 || cx >= m.w || cz >= m.h) return false;
   const k = m.kind(cx, cz);
-  if (k === 'wall' || k === 'water') return false;
+  if (k === 'wall' || k === 'water' || k === 'void') return false;
   if (cellSolid(w, cx, cz) && !((k === 'door') && w.doors.find((d) => d.cx === cx && d.cz === cz)?.breath)) return false;           // PT-027: a breathing gate is a way through for the field (a creature waits at it while it is shut)
   return !blockedCells(m).has(cx + ',' + cz);
 }

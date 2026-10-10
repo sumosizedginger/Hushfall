@@ -90,10 +90,10 @@ export function buildLevel(map, tex) {
 
   for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
     const k = map.kind(cx, cz), skin = map.skin(cx, cz);
-    if (k === 'water') continue;                                                    // one big water plane below covers all water cells
+    if (k === 'water' || k === 'void') continue;                                    // one big water plane below covers all water cells; open sky (PT-032) has no floor at all
     if (k === 'wall') {
       const top = wallTop(cx, cz); if (top === -Infinity) continue;
-      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : fl(cx + dx, cz + dz) - 0.05; const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'), vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz); if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5); else face(wq, S, cx, cz, dx, dz, base, top, vb); }
+      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : nk === 'void' ? -6 : fl(cx + dx, cz + dz) - 0.05; const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'), vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz); if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5); else face(wq, S, cx, cz, dx, dz, base, top, vb); }
       continue;
     }
     const fs = floorSkinAt(cx, cz), si = sectorOf(cx, cz), y = si >= 0 ? 0 : fl(cx, cz);
@@ -110,6 +110,7 @@ export function buildLevel(map, tex) {
     for (const [dx, dz] of DIRS) {
       const nx = cx + dx, nz = cz + dz, nk = map.kind(nx, nz);
       if (nk === 'water') { if (si < 0) face(fascia, S, cx, cz, dx, dz, WATER_Y, y); continue; }
+      if (nk === 'void') { if (si < 0) face(fascia, S, cx, cz, dx, dz, y - 0.8, y); continue; }              // PT-032: the deck's edge is a plate 80 cm thick, and below it is the sky
       if (nk === 'wall' || si >= 0) continue;
       const nsi = sectorOf(nx, nz), lowN = nsi >= 0 ? map.sectors[nsi].low : fl(nx, nz);
       if (y > lowN + 1e-6) face(bucket(risers, fs), S, cx, cz, dx, dz, lowN, y);

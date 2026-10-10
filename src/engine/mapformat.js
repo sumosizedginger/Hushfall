@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -13,7 +13,7 @@ export const MAP_FORMAT = 1;
 // Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z), `ceilings` (absolute ceiling height in
 // 0.5 m units, '.' = floor + ceilingHeight), `fx` (floor effect: w wading water, x toxic residue). Lists: `sectors` (moving floors), `closets`, `triggers`,
 // entities of type `switch`. See design/EPISODE1.md and tests/kit.test.js for the exact shapes.
-const TILES = { '~': 'water', D: 'door', S: 'secret', X: 'secret' };
+const TILES = { '~': 'water', _: 'void', D: 'door', S: 'secret', X: 'secret' };      // _ = the void (PT-032): open sky, no floor
 for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
 const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
@@ -32,7 +32,10 @@ export class MapData {
     this.h = this.tiles.length; this.w = this.tiles[0].length;
     this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
-    this.flat = !this.heightRows && !this.ceilingRows;                                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
+    this.hasVoid = src.grid.some((r) => r.includes('_'));                                  // PT-032: a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
+    this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
+    this.vents = (src.vents || []).map((v) => ({ at: v.at, to: v.to, time: v.time, g: v.g ?? null }));      // PT-032: launch plates (LOWG in defs.js)
+    this.ventCells = new Set(this.vents.map((v) => v.at.join(',')));
     this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low', cycle: s.cycle ? { period: s.cycle.period, hold: s.cycle.hold, phase: s.cycle.phase ?? 0 } : null }));      // PT-029: a `cycle` sector is a TIMING PLATFORM (platforms.js)
     this.hasSoundlock = (src.doors || []).some((d) => d.soundlock);                              // PT-029: a map with a sound-lock door records the player's noise (world.noise)
     this.sectorIndex = new Map(); this.sectors.forEach((s, i) => s.cells.forEach(([cx, cz]) => this.sectorIndex.set(cx + ',' + cz, i)));
@@ -110,6 +113,7 @@ function validateMapChecks(src) {
     const c = tile(cx, cz);
     if (!(c in TILES)) err(`unknown tile '${c}' at ${cx},${cz}`);
     const edge = cx === 0 || cz === 0 || cx === w - 1 || cz === h - 1;
+    if (c === '_' && edge) err(`the void at ${cx},${cz} is on the map edge`);
     if (edge && !WALL_CHARS.has(c) && c !== '~') err(`map edge at ${cx},${cz} is not a wall or water (level would leak)`);
   }
   const walkable = (c) => WALKABLE_CHARS.has(c);
@@ -239,6 +243,29 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!(p.period >= 3) || !(p.on >= 1.5) || !(p.period - p.on >= 2)) err(`${tag}: period >= 3, on >= 1.5 s and a dormant spell of at least 2 s (period ${p.period}, on ${p.on})`);
     if (p.phase != null && typeof p.phase !== 'number') err(`${tag}: phase must be a number`);
     pulseRects.push(p.rect);
+  }
+  const ventAts = new Set();                                                          // PT-032: launch vents
+  for (const [i, v] of (src.vents || []).entries()) {
+    const tag = `vent #${i}`, cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && c[0] >= 0 && c[1] >= 0 && c[0] < w && c[1] < h;
+    if (!cellOk(v?.at) || !cellOk(v?.to)) { err(`${tag}: at and to must be [x, z] cells inside the grid`); continue; }
+    if (!walkable(tile(v.at[0], v.at[1]))) err(`${tag}: the plate at ${v.at} is not on a floor cell`);
+    if (!walkable(tile(v.to[0], v.to[1]))) err(`${tag}: it lands at ${v.to}, which is not a floor cell (the void and walls are no landing)`);
+    if (v.at[0] === v.to[0] && v.at[1] === v.to[1]) err(`${tag}: it lands on its own plate`);
+    if (!(v.time >= LOWG.minTime && v.time <= LOWG.maxTime)) err(`${tag}: time must be in [${LOWG.minTime}, ${LOWG.maxTime}] s`);
+    if (v.g != null && !(v.g >= 0.5 && v.g <= 20)) err(`${tag}: g must be in [0.5, 20]`);
+    if (ventAts.has(v.at.join(','))) err(`${tag}: two vents on one plate`); ventAts.add(v.at.join(','));
+    if (walkable(tile(v.at[0], v.at[1])) && walkable(tile(v.to[0], v.to[1])) && v.time >= LOWG.minTime && v.time <= LOWG.maxTime) {          // the ideal arc (no steering) must be CLEAR: no wall, no ledge higher than the body, no roof lower than its head, from plate to landing
+      const g = v.g ?? LOWG.g, n = Math.max(1, Math.round(v.time / TICK)), tt = n * TICK, x0 = (v.at[0] + 0.5) * (src.cellSize ?? CELL), z0 = (v.at[1] + 0.5) * (src.cellSize ?? CELL), x1 = (v.to[0] + 0.5) * (src.cellSize ?? CELL), z1 = (v.to[1] + 0.5) * (src.cellSize ?? CELL);
+      const y0 = floorOf(v.at[0], v.at[1]), y1 = floorOf(v.to[0], v.to[1]); let vy = (y1 - y0) / tt + 0.5 * g * (tt + TICK), y = y0, bad = null;
+      for (let i = 1; i <= n && !bad; i++) {
+        vy -= g * TICK; y += vy * TICK; const x = x0 + (x1 - x0) * i / n, z = z0 + (z1 - z0) * i / n, cx = Math.floor(x / (src.cellSize ?? CELL)), cz = Math.floor(z / (src.cellSize ?? CELL)), c = tile(cx, cz), kind = TILES[c];
+        if (kind === 'wall' || kind === 'door' || kind === 'secret') bad = `passes through a ${kind} at ${cx},${cz}`;
+        else if (kind === 'void' || kind === 'water') continue;
+        else if (i < n - 2 && floorOf(cx, cz) > y + STEP) bad = `a ledge at ${cx},${cz} is higher than the body there (y ${y.toFixed(2)}, floor ${floorOf(cx, cz).toFixed(2)})`;
+        else if (interior(c) && ceilOf(cx, cz) < y + PLAYER.eye + 0.35) bad = `no headroom at ${cx},${cz} (roof ${ceilOf(cx, cz).toFixed(2)}, the body's head ${(y + PLAYER.eye + 0.3).toFixed(2)}): a vent needs open sky or a high roof`;
+      }
+      if (bad) err(`${tag}: the arc from ${v.at} to ${v.to} ${bad}`);
+    }
   }
   const sectorOf = new Map(), sectorIds = new Set();
   for (const [i, s] of (src.sectors || []).entries()) {

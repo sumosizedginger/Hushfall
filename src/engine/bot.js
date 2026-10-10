@@ -20,8 +20,11 @@ export class Bot {
   }
   get done() { return this.i >= this.route.length; }
   // -- nav -------------------------------------------------------------
+  /** the plain floor test, for a vent plate (which `passable` refuses, so that a path never crosses one by accident) */
+  passable0(cx, cz) { const k = this.w.map.kind(cx, cz); return k === 'floor' || k === 'outdoor'; }
   passable(cx, cz, goal) {
     const m = this.w.map, k = m.kind(cx, cz), p = this.w.player;
+    if (m.ventCells.has(cx + ',' + cz) && !(goal && cx === goal[0] && cz === goal[1])) return false;       // PT-032: stepping on a plate throws you: only a path that means to goes there
     if (goal && cx === goal[0] && cz === goal[1]) return true;
     if (this.avoidToxic && FX[m.fx(cx, cz)]?.dps) return false;
     if (m.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.floor(pr.at[0]) === cx && Math.floor(pr.at[1]) === cz)) return false;
@@ -50,9 +53,11 @@ export class Bot {
     while (q.length) {
       const c = q.shift();
       if (c[0] === goal[0] && c[1] === goal[1]) break;
+      const vent = m.vents.length ? m.vents.find((v) => v.at[0] === c[0] && v.at[1] === c[1]) : null;       // PT-032: a vent plate is a way through, and only to its landing (stepping on it throws you)
+      if (vent) { const n = [vent.to[0], vent.to[1]]; if (!prev.has(key(n))) { prev.set(key(n), c); q.push(n); } continue; }
       for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const n = [c[0] + dx, c[1] + dz];
-        if (!prev.has(key(n)) && this.passable(n[0], n[1], goal) && cellFloor(this.w, n[0], n[1]) - cellFloor(this.w, c[0], c[1]) <= STEP + 1e-6) { prev.set(key(n), c); q.push(n); }
+        if (!prev.has(key(n)) && (this.passable(n[0], n[1], goal) || (m.ventCells.has(key(n)) && this.passable0(n[0], n[1]))) && cellFloor(this.w, n[0], n[1]) - cellFloor(this.w, c[0], c[1]) <= STEP + 1e-6) { prev.set(key(n), c); q.push(n); }
       }
     }
     if (!prev.has(key(goal))) return null;
@@ -245,6 +250,7 @@ export class Bot {
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after
     else if (this.usePressed) this.usePressed = false;
     if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
+    if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     if (this.escapePool()) { this.stillFor = 0; return; }
