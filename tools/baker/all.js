@@ -7,4 +7,5 @@ import { recipesChoir } from './recipes_choir.js';
 import { recipesPT21 } from './recipes_pt21.js';
 import { recipesE3 } from './recipes_e3.js';
 import { recipesE3b } from './recipes_e3b.js';
-export const recipes = { ...base, ...recipes3d, ...recipesG2, ...recipesE2, ...recipesE2b, ...recipesChoir, ...recipesPT21, ...recipesE3, ...recipesE3b };      // PT-021: the material pass supersedes the earlier recipe of the same id
+import { recipesE4 } from './recipes_e4.js';
+export const recipes = { ...base, ...recipes3d, ...recipesG2, ...recipesE2, ...recipesE2b, ...recipesChoir, ...recipesPT21, ...recipesE3, ...recipesE3b, ...recipesE4 };      // PT-021: the material pass supersedes the earlier recipe of the same id

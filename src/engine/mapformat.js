@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, LOADS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -47,6 +47,7 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
+    this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
@@ -243,6 +244,14 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!(p.period >= 3) || !(p.on >= 1.5) || !(p.period - p.on >= 2)) err(`${tag}: period >= 3, on >= 1.5 s and a dormant spell of at least 2 s (period ${p.period}, on ${p.on})`);
     if (p.phase != null && typeof p.phase !== 'number') err(`${tag}: phase must be a number`);
     pulseRects.push(p.rect);
+  }
+  for (const [i, l] of (src.loads || []).entries()) {                                  // PT-032: falling loads
+    const tag = `load #${i}`;
+    if (!Array.isArray(l.rect) || l.rect.length !== 4 || l.rect.some((n) => !Number.isInteger(n)) || l.rect[0] > l.rect[2] || l.rect[1] > l.rect[3] || l.rect[0] < 0 || l.rect[1] < 0 || l.rect[2] >= w || l.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`); continue; }
+    if (!(l.period >= 4)) err(`${tag}: period must be at least 4 s (it is seen coming for ${LOADS.warn} s)`);
+    if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
+    let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
+    if (!floor) err(`${tag}: no floor under it`);
   }
   const ventAts = new Set();                                                          // PT-032: launch vents
   for (const [i, v] of (src.vents || []).entries()) {

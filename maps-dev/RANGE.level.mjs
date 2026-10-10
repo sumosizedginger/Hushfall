@@ -5,7 +5,7 @@
 // Cells are 2 m. x = column, z = row (south is +z). An enemy's `facing` is the direction it looks as (sin, cos): 0 = south (+z), PI = north, PI/2 = east, -PI/2 = west.
 import { Level } from '../tools/mapkit/builder.mjs';
 
-const L = new Level(62, 92);
+const L = new Level(62, 112);
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
 
 // ---- rooms ---------------------------------------------------------------------------------------------------------------
@@ -27,6 +27,11 @@ L.room([2, 56, 45, 70], { floor: 'f', wall: 'C' }); L.rect([21, 53, 23, 55], 'f'
 
 // PT-030: the fifth range, south of the elite yard (an opening in its south wall): the FOUNDRY yard (sponge vats, a live pair behind a lever) and the Choir's reeds and its Grand Cantor (a sponge for the outline and the hit volume)
 L.room([2, 74, 45, 88], { floor: 'f', wall: 'C' }); L.rect([21, 71, 23, 73], 'f'); L.ceiling([2, 74, 45, 88], 9);          // 9 m: the Grand Cantor stands 6.2 m
+
+// PT-032: the sixth range, south of the foundry yard (an opening in its south wall at x 3..5): the SKY YARD (two decks of open air with eighteen metres of open sky between them: launch vents each way, creatures on the far deck to shoot in flight) and east of it
+// the LOADS yard (two falling loads across a corridor, a second one half a cycle behind the first)
+L.room([2, 92, 45, 108], { floor: ':', wall: 'C' }); L.rect([3, 89, 5, 91], 'f'); L.rect([14, 93, 29, 107], '_');
+L.rect([46, 99, 47, 101], ':'); L.room([48, 92, 59, 108], { floor: ':', wall: 'C' });
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
@@ -105,6 +110,11 @@ t('vat', 6, 78, S, 'inert', SPONGE); t('vat', 12, 78, N, 'inert', SPONGE); t('re
 E.push({ type: 'enemy', kind: 'vat', at: [8, 85], facing: S, group: 'foundry', spawns: ['gaunt'] }, { type: 'enemy', kind: 'vat', at: [16, 85], facing: S, group: 'foundry' });
 E.push({ type: 'switch', id: 'foundry', at: [2, 82], wall: 'west', once: true, do: [{ wake: 'foundry' }, { objective: 'The vats are awake: kill a vat and its brood stops' }, { shake: 1.2 }] });
 
+// ---- PT-032: the sky yard and the loads yard ----
+// deck B (east of the sky): sponges to shoot while you fly over them
+t('tollbearer', 36, 96, WEST, 'inert', SPONGE); t('gaunt', 38, 100, WEST, 'inert', SPONGE); t('bellhand', 36, 104, WEST, 'inert', SPONGE); t('chorister', 42, 98, WEST, 'inert', SPONGE);
+t('tollbearer', 8, 104, EAST, 'inert', SPONGE);
+
 const layers = L.layers();
 
 export default {
@@ -115,6 +125,8 @@ export default {
   objective: 'RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east; the second range (saw, rockets, gravity, carbine) through the opening south of the hub',
   ...layers,
   pulses: [{ rect: [50, 47, 57, 49], period: 8, on: 3, phase: 0 }],
+  vents: [{ at: [12, 98], to: [32, 98], time: 4 }, { at: [12, 103], to: [34, 103], time: 5 }, { at: [31, 100], to: [11, 100], time: 4 }, { at: [31, 105], to: [9, 105], time: 5 }],      // PT-032: the sky yard's plates: two each way
+  loads: [{ rect: [48, 96, 59, 98], period: 8, phase: 0 }, { rect: [48, 102, 59, 104], period: 8, phase: 4 }],      // PT-032: the loads yard: the second lands four seconds after the first
   entities: E.map((e) => ({ ...e })).concat([{ type: 'exit', dest: 'next', at: [45, 27] }]),
   startFacing: 'north',
   messages: [
@@ -131,6 +143,8 @@ export default {
     { id: 'breathyard', at: [53, 48], radius: 6, speaker: 'RANGE', text: 'BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then.' },
     { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front and opens to bash. A Mother weeps pools and broods. An Acolyte wards: everything within 9 m takes half. The lever wakes the east.' },
     { id: 'foundryyard', at: [10, 79], radius: 8, speaker: 'RANGE', text: 'FOUNDRY YARD: a Brood Vat swells for 1.2 s, then drops a creature; kill the vat and the brood stops. Reeds shield the Grand Cantor. The west lever wakes the live vats.' },
+    { id: 'airyard', at: [8, 98], radius: 7, speaker: 'RANGE', text: 'SKY YARD: step on a lit plate and you are thrown to its landing; steer a little in the air, shoot as you go. Miss the deck and the sky sets you back (15 hurt).' },
+    { id: 'loadsyard', at: [53, 94], radius: 6, speaker: 'RANGE', text: 'LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

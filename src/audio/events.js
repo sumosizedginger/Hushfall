@@ -107,6 +107,9 @@ export function soundsForEvent(e) {
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
     case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
     case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'load_warn': return [{ id: 'load_creak', pos: at(e) }];
+    case 'load_land': return [{ id: 'load_crash', pos: at(e) }];
+    case 'load_hit': return [{ id: 'pulse_hit' }];
     case 'vent_launch': return [{ id: 'vent_launch', pos: at(e) }];
     case 'air_land': return [{ id: 'air_land', gain: Math.min(1, 0.4 + (e.speed ?? 0) * 0.12) }];
     case 'void_fall': return [{ id: 'void_fall' }];

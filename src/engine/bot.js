@@ -5,6 +5,7 @@ import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
+import { loadState, loadAtCell } from './loads.js';
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
 export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
@@ -190,7 +191,7 @@ export class Bot {
         this.setHeld('sprint', this.path.length > 3); this.steerTo(dx, dz, 0.35); return false;
       }
     }
-    if (this.sporeHold(here, next)) { this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; return false; }
+    if (this.sporeHold(here, next) || this.loadHold(here, next)) { this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; return false; }
     if ((nk === 'door' || nk === 'secret')) {                    // closed door ahead: open it
       const d = this.w.doors.find((q) => q.cx === next[0] && q.cz === next[1]);
       if (d && d.open < 0.85) {
@@ -203,6 +204,16 @@ export class Bot {
     return false;
   }
   /** about to step from `here` onto a spore bed: stay out while it blooms, or while the dormant spell left is shorter than the walk across it (at most one whole period: after that go and take what comes) */
+  /** PT-032: a falling load lands on its rect every `period` s: wait outside it until the whole crossing fits before the next impact (like a spore bloom; after a full period of waiting go anyway) */
+  loadHold(here, next) {
+    const m = this.w.map; if (!m.loads.length) { this.loadSince = null; return false; }
+    const L = loadAtCell(m, next[0], next[1]); if (!L || loadAtCell(m, here[0], here[1]) === L) { if (!L) this.loadSince = null; return false; }
+    let n = 0; for (const c of this.path) { if (loadAtCell(m, c[0], c[1]) === L) n++; else if (n) break; }
+    const cross = n * m.cell / PLAYER.speed + 0.5, s = loadState(L, this.w.time);
+    if (s.until > cross + 0.3) { this.loadSince = null; return false; }
+    this.loadSince ??= this.w.time; if (this.w.time - this.loadSince > L.period + 1) return false;
+    return true;
+  }
   sporeHold(here, next) {
     const m = this.w.map, t = this.w.time;
     if (!m.pulses.length || !FX[m.fx(next[0], next[1])]?.pulse) { this.sporeSince = null; return false; }

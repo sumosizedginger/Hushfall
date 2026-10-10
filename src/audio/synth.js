@@ -347,6 +347,18 @@ export const SFX = {
     return 1.4;
   },
   // --- Episode 4, Batch A (PT-032): the vents and the air ---
+  load_creak(c, out, t, o) {                                    // a hoist taking a weight it should not: iron groaning, a cable singing up in pitch
+    tone(c, out, t, { type: 'sawtooth', f0: 70, f1: 120, a: 0.3, d: 1.2, gain: 0.12, lp: 500, vib: 5 });
+    noise(c, out, t + 0.2, { dur: 1.1, a: 0.5, gain: 0.1, type: 'bandpass', f0: 600, f1: 2400, q: 3, off: o.r() });
+    return 1.5;
+  },
+  load_crash(c, out, t, o) {                                    // a container on a deck: the whole floor rings, plate shearing, then the settling
+    thump(c, out, t, 90, 30, 0.6, 0.7);
+    noise(c, out, t, { dur: 0.7, a: 0.002, gain: 0.4, type: 'bandpass', f0: 900, f1: 220, q: 0.7, off: o.r() });
+    tone(c, out, t, { type: 'square', f0: 140, f1: 55, a: 0.003, d: 0.5, gain: 0.12, lp: 900 });
+    noise(c, out, t + 0.3, { dur: 1.0, a: 0.1, gain: 0.12, type: 'highpass', f0: 3000, off: o.r() });
+    return 1.5;
+  },
   vent_launch(c, out, t, o) {                                   // a plate lets go: a rush of gas, a thump up through the floor, a long falling whistle as the body leaves it
     noise(c, out, t, { dur: 0.7, a: 0.01, gain: 0.3, type: 'bandpass', f0: 400, f1: 2600, q: 0.9, off: o.r() });
     thump(c, out, t, 90, 40, 0.3, 0.5);

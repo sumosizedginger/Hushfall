@@ -604,6 +604,54 @@
       "transparent": false,
       "sha256": "f28ca634642d4aacd29fe1a9d9af9a2d04275b0cc27f3df129f1a8f8864f5373",
       "bytes": 45127
+    },
+    "wall_lattice_a": {
+      "seed": 9401,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8ca82c7be38839e5e3915d46f3fcb5fe8a202abfbbba2d9fe0c200fdb3df84d6",
+      "bytes": 20803
+    },
+    "wall_hull_a": {
+      "seed": 9402,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "01a47a0289558abd35e2c57d9d925e3b617cb92640eefb1b96c520b341438539",
+      "bytes": 23894
+    },
+    "floor_deck_a": {
+      "seed": 9403,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "2b6df7817d8146baf0c0f6ebb57aa6ccb6a82c98bbbddef46e2ccf97e952c668",
+      "bytes": 21630
+    },
+    "floor_hull_a": {
+      "seed": 9404,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "23b911830963ff4c93ce6cbc9e5d7a4eb67ffe5611843f6eebc9740215b6b08a",
+      "bytes": 17801
+    },
+    "sky_orbit": {
+      "seed": 9405,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a2d20fe6baf6ac272d54f7380cb86560a450a231922ad7f54374e6cd577d58ac",
+      "bytes": 20874
+    },
+    "sky_orbit_below": {
+      "seed": 9406,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "b57a8f8566c2d3040302b38141ff921a285ed696393105ff12d74cee33258d2c",
+      "bytes": 78406
     }
   }
 }

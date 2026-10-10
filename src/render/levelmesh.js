@@ -135,7 +135,7 @@ export function buildLevel(map, tex) {
 
   // water: one big plane, painted sky reflections; the view scrolls the texture slowly
   const water = new THREE.Mesh(new THREE.PlaneGeometry(wsize, wsize), new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xa8b4c4 }));
-  tex.water_dusk.repeat.set(wsize / 8, wsize / 8); water.rotation.x = -Math.PI / 2; water.position.set(map.w * S / 2, WATER_Y, map.h * S / 2); group.add(water);
+  tex.water_dusk.repeat.set(wsize / 8, wsize / 8); water.rotation.x = -Math.PI / 2; water.position.set(map.w * S / 2, WATER_Y, map.h * S / 2); if (!map.hasVoid) group.add(water);          // (a map with open sky has no sea under it: PT-032)
   // wading water and toxic residue: translucent overlays just above the floor (they share the sea texture; the view pulses the toxic one)
   const fxMats = {};
   if (!fxQuads.w.empty) { fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false }); const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w); m.renderOrder = 2; group.add(m); }

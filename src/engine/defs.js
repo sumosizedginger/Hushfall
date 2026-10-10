@@ -69,6 +69,8 @@ export const LOOKS = {
   loft: { hemi: [0xc49a66, 0x2a1a10, 1.55], sun: [0xffd89a, 0.9, [-8, 12, -5]], lamp: 1.4, exposure: 1, grade: GR([1.02, 0.9, 0.8], [1.15, 1.03, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },                   // the Choir Loft: amber and walnut, the warm room
   foundry: { hemi: [0x4a7a52, 0x0e1a10, 1.05], sun: [0xa8ff90, 0.22, [-6, 14, -6]], lamp: 1.75, exposure: 1, grade: GR([0.8, 1.08, 0.84], [1.08, 1.12, 0.74], 1.05), shade: { foot: 0.48, ao: 0.5, patch: 0.12 } },    // the Spore Foundry: green-black iron, the glow is the light
   throat: { hemi: [0xb0587a, 0x2a0e1e, 1.2], sun: [0xff9ab8, 0.4, [-5, 12, -5]], lamp: 1.5, exposure: 1, grade: GR([1.08, 0.82, 0.98], [1.18, 0.92, 0.9], 1.12), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },                // the Cantor's Throat: wet pink and red-violet
+  tether: { hemi: [0xd8e4f8, 0x1c2230, 2.3], sun: [0xfff4dc, 1.9, [-12, 16, -4]], lamp: 0.9, exposure: 1, grade: GR([0.94, 0.98, 1.1], [1.08, 1.04, 0.92], 0.8), shade: { foot: 0.28, ao: 0.34, patch: 0.08 } },          // Episode 4, the Ascent Tether: a hard white sun, rust and frost, the black behind it
+  wreck: { hemi: [0x5c9096, 0x0c1418, 1.35], sun: [0xa8e4ec, 0.55, [-6, 10, -8]], lamp: 1.6, exposure: 1, grade: GR([0.82, 1.04, 1.08], [1.06, 1.02, 0.9], 0.95), shade: { foot: 0.42, ao: 0.46, patch: 0.12 } },            // the Wreck Belt: torn hulls, cold teal shade, sparks
   rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -100,11 +102,13 @@ export const BREATH = { warn: 1.2, fade: 0.8 };
  * A `_` tile is the VOID (open sky, kind 'void': it blocks walking for everyone but a body in the air, is not solid for sight or shots, and has no floor; its floor is `voidDepth` m down): landing over it is a MISS, the body falls on (`voidFallG`)
  * and is set back on the last solid ground it stood on after `voidDamage` hurt, never killed outright. `ventCooldown` s after a launch (or a set-back) a plate does not fire again. `p.air` is lazy state: only a world with a vent ever has it.
  */
+/** FALLING LOADS (PT-032; src/engine/loads.js): the warning, the settling cloud, and what a landing does to someone under it */
+export const LOADS = { warn: 1.5, linger: 1.2, damage: 30, enemyDamage: 80 };
 export const LOWG = { g: 3.2, steer: 0.28, ventCooldown: 0.5, setBackCooldown: 1.5, voidDepth: 6, voidFallG: 14, voidDamage: 15, minTime: 1, maxTime: 8, maxAir: 14 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', F: 'wall_foundry_a', H: 'wall_throat_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', N: 'wall_lattice_a', O: 'wall_hull_a', F: 'wall_foundry_a', H: 'wall_throat_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
@@ -112,7 +116,7 @@ export const FLOOR_SKINS = {
   l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
   b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
   o: { kind: 'floor', tex: 'floor_gill_a' }, u: { kind: 'outdoor', tex: 'floor_gill_a' },       // Episode 3 (PT-027): the gill gardens' damp floor, roofed and open to the sky
-  w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
+  w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' }, a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
 };
 
 /**

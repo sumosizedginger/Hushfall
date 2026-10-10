@@ -81,6 +81,12 @@ export function installTestHook(app) {
         grand: w.enemies.filter((e) => e.kind === 'grandcantor').map((e) => ({ id: e.id, state: e.state, hp: e.hp, stunT: e.stunT ?? 0, pulseT: e.pulseT ?? -1, echoT: e.echoT ?? 0, horn: v.enemyViews.get(e.id)?.J.horn.rotation.x ?? null })),
         reeds: w.enemies.filter((e) => e.kind === 'reed' && e.state !== 'dead').length, pulses: w.pulses.length, pulseViews: v.pulseViews.size, born: w.enemies.filter((e) => e.summoned).length };
     },
+    /** PT-032: the air state and what is drawn for it: the player's height and the camera's, the field of view, every vent plate and falling load as the view has them */
+    airProbe() {
+      if (!g.view || !g.world) return null; const v = g.view, p = g.world.player;
+      return { air: !!p.air, y: p.y, hp: p.hp, camY: v.cam.position.y, fov: v.cam.fov, baseFov: v.baseFov ?? null, airK: v.airK, ventViews: v.ventViews?.length ?? 0, skyBelow: !!v.skyBelow,
+        loads: (v.loadViews ?? []).map((lv, i) => ({ visible: lv.box.visible, y: lv.box.position.y, scaleY: lv.box.scale.y, glow: lv.glow.material.opacity, shadow: lv.shadow.material.opacity, rect: g.world.map.loads[i].rect })), time: g.world.time };
+    },
     /** PT-029: every moving floor: the sim's height, the height the view draws it at, and the clock (a timing platform follows `platformState`) */
     sectorProbe() { if (!g.view || !g.world) return null; return { time: g.world.time, sectors: g.world.sectors.map((s, i) => ({ id: s.id, h: s.h, y: g.view.lvl.sectorViews[i]?.position.y ?? null, ph: s.ph ?? null })) }; },
     /** PT-030: every node (bell nodes, feeders, reeds, vats) dead at once: a boss with none left has no shield (the Range's stills) */

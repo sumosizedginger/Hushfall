@@ -2,7 +2,8 @@
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG } from './defs.js';
+import { loadState, loadIndex, inLoad } from './loads.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, LOADS } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -817,6 +818,21 @@ function updatePulses(w, dt) {
   }
 }
 
+// ---------------------------------------------------------------- falling loads (PT-032, Episode 4 Batch A: the Ascent Tether)
+/** a load lands at the start of each of its cycles (loads.js): a warning event as it starts to fall, and at the impact whoever is on the ground inside its rect is struck (the player hurt, a walker crushed). Lazy state: only a map with loads has `w.loadSeen`. */
+function updateLoads(w) {
+  const st = w.loadSeen ?? (w.loadSeen = w.map.loads.map((L) => ({ idx: loadIndex(L, w.time), warned: false })));
+  const p = w.player, S = w.map.cell, diff = DIFFICULTY[w.difficulty];
+  w.map.loads.forEach((L, i) => {
+    const o = st[i], idx = loadIndex(L, w.time), x = (L.rect[0] + L.rect[2] + 1) / 2 * S, z = (L.rect[1] + L.rect[3] + 1) / 2 * S;
+    if (idx > o.idx) {
+      o.idx = idx; o.warned = false; emit(w, 'load_land', { i, x, y: floorAt(w, x, z), z });
+      if (p.hp > 0 && !p.air && inLoad(L, p.x, p.z, S, PLAYER.radius)) { emit(w, 'load_hit', { x: p.x, z: p.z }); hurtPlayer(w, Math.round(LOADS.damage * diff.enemyDamage)); }
+      for (const e of w.enemies) { const d = ENEMIES[e.kind]; if (e.state !== 'dead' && !d.flying && !d.node && !d.boss && inLoad(L, e.x, e.z, S, 0)) damageEnemy(w, e, LOADS.enemyDamage); }
+    } else if (!o.warned && loadState(L, w.time).warn > 0) { o.warned = true; emit(w, 'load_warn', { i, x, z }); }
+  });
+}
+
 // ---------------------------------------------------------------- the air state and the launch vents (PT-032, Episode 4 Batch A)
 /** throw the player from a plate to its landing cell: an arc exact for the per-tick integrator (vy -= g dt; y += vy dt lands on y1 after n ticks, as lobTear does) */
 function launchFrom(w, p, v) {
@@ -1023,6 +1039,7 @@ export function step(w, cmd) {
   }
 
   if (map.pulses?.length) updateSpores(w);
+  if (map.loads?.length) updateLoads(w);
 
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);

@@ -27,6 +27,7 @@ import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
+import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
 const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 2 ? 2 : 0);
@@ -51,6 +52,11 @@ export class GameView {
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
+    { const below = tex['sky_' + (map.atmosphere.sky ?? 'dusk') + '_below'];                                          // PT-032: a map with open sky has a lower dome too: the world beneath the feet
+      if (map.hasVoid && below) { this.skyBelow = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshBasicMaterial({ map: below, side: THREE.BackSide, fog: false, depthWrite: false })); this.skyBelow.renderOrder = -1; scene.add(this.skyBelow); }
+      this.ventViews = map.vents.map((v) => { const vv = makeVentView(map, v, map.floor(v.at[0], v.at[1])); scene.add(vv.group); return vv; });        // the launch plates
+      this.loadViews = map.loads.map((L) => { const lv = makeLoadView(map, L, map.floor(L.rect[0], L.rect[1])); scene.add(lv.group); return lv; });      // the falling loads
+      this.airK = 0; }
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
     // weapon overlay
@@ -123,6 +129,13 @@ export class GameView {
       else if (e.type === 'parry') { this.parryT = 0; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.5); this.shakeT = Math.max(this.shakeT || 0, 0.3); for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.6); m.position.set(e.x, 1.3, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.9 + 0.2, this.rnd() - 0.5).multiplyScalar(6), life: 0.3 + this.rnd() * 0.25 }); } }
       else if (e.type === 'block' || e.type === 'guard_break') { this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, e.type === 'block' ? 0.25 : 0.7); this.shakeT = Math.max(this.shakeT || 0, 0.25); }
       else if (e.type === 'enemy_died') { for (let i = 0; i < 7; i++) { const m = new THREE.Mesh(this.moteGeo, this.moteMat); m.position.set(e.x + (this.rnd() - 0.5) * 0.5, 0.6 + this.rnd() * 1.0, e.z + (this.rnd() - 0.5) * 0.5); this.scene.add(m); this.motes.push({ m, v: new THREE.Vector3((this.rnd() - 0.5) * 0.6, 0.6 + this.rnd() * 0.9, (this.rnd() - 0.5) * 0.6), life: 0.9 + this.rnd() * 0.7, max: 1.6 }); } }
+      else if (e.type === 'vent_launch') { this.flashT = 0.1; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.3); this.shakeT = Math.max(this.shakeT || 0, 0.22); const vv = this.ventViews?.find((q) => Math.hypot(q.group.position.x - e.x, q.group.position.z - e.z) < 2.5); if (vv) vv.flash = 1; }
+      else if (e.type === 'air_land') { const k = Math.min(1, (e.speed ?? 0) / 5); this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.12 + 0.3 * k); this.shakeT = Math.max(this.shakeT || 0, 0.22); }
+      else if (e.type === 'void_fall') { this.flashT = 0.18; this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.5); this.shakeT = Math.max(this.shakeT || 0, 0.4); }
+      else if (e.type === 'load_land') {
+        const d = Math.hypot(this.cam.position.x - e.x, this.cam.position.z - e.z), k = Math.max(0, 1 - d / 40); this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, 0.9 * k); this.shakeT = Math.max(this.shakeT || 0, 0.5 * k + 0.05);
+        for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.scale.setScalar(2.2); m.position.set(e.x + (this.rnd() - 0.5) * 5, (e.y ?? 0) + 0.3, e.z + (this.rnd() - 0.5) * 5); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.5 + 0.1, this.rnd() - 0.5).multiplyScalar(5), life: 0.5 + this.rnd() * 0.5 }); }
+      }
       else if (e.type === 'pin') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.position.set(e.x, 1.2, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.1, this.rnd() - 0.5).multiplyScalar(3.4), life: 0.3 + this.rnd() * 0.2 }); } }
       else if (e.type === 'shield_hit') { this.shieldFlash = 1; const m = new THREE.Mesh(this.ringGeo, new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.75, side: THREE.DoubleSide, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.set(e.x, this.shield ? this.shield.group.position.y : 2.2, e.z); m.scale.setScalar(1.4); this.scene.add(m); this.ripples.push({ m, t: 0 }); }       // the hit was absorbed: the plates flare and a ring of sound goes out
       else if (e.type === 'headshot') { for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.45); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.8 + 0.3, this.rnd() - 0.5).multiplyScalar(4), life: 0.22 + this.rnd() * 0.2 }); } }
@@ -223,9 +236,10 @@ export class GameView {
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
     this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
-    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
+    this.airK += ((w.player.air ? 1 : 0) - this.airK) * Math.min(1, dt * 6);                                                // PT-032: the view opens a little in the air
+    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
-    this.sky.position.copy(this.cam.position);
+    this.sky.position.copy(this.cam.position); this.skyBelow?.position.copy(this.cam.position);
     this.decals.update(dt);
     { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = this.look.hemi[2] * this.ambient; this.sun.intensity = this.look.sun[1] * this.ambient; }
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
@@ -375,6 +389,7 @@ export class GameView {
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
+    this.ventViews?.forEach((vv) => updateVentView(vv, this.time, dt)); this.loadViews?.forEach((lv, i) => updateLoadView(lv, this.map.loads[i], w.time + alpha * TICK));      // PT-032: the plates breathe, the loads fall on the clock
     this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
