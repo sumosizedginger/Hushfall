@@ -16,6 +16,7 @@ import { makeRivetDriver } from '../../src/render/models_rivet.js';
 import { makeHarpoonRifle } from '../../src/render/models_harpoon.js';
 import { makeArcLamp } from '../../src/render/models_arc.js';
 import { makeCarbine } from '../../src/render/models_carbine.js';
+import { makeMortar } from '../../src/render/models_mortar.js';
 import { makeLineThrower } from '../../src/render/models_rocket.js';
 import { makeFork } from '../../src/render/models_fork.js';
 import { weaponPose, HIP, swingTimes, swingPhase, meleePose } from '../../src/render/weapon-pose.js';
@@ -25,7 +26,7 @@ const args = process.argv.slice(2), outFile = args[0], which = args[1] ?? 'all';
 const flags = Object.fromEntries(args.filter((a) => a.startsWith('--')).map((a) => { const [k, v] = a.slice(2).split('='); return [k, v ?? '1']; }));
 const W = Number(flags.w ?? 930), H = Math.round(W * 940 / 1860), ADS = Number(flags.ads ?? 1), SPR = Number(flags.sprint ?? 0);
 const atlasPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/flarecannon_atlas.png', import.meta.url)));
-const MAKERS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp, carbine: makeCarbine, linethrower: makeLineThrower, fork: makeFork, ...MELEE_MAKERS };
+const MAKERS = { flare: makeFlareCannon, scattergun: makeScattergun, rivet: makeRivetDriver, harpoon: makeHarpoonRifle, arc: makeArcLamp, carbine: makeCarbine, linethrower: makeLineThrower, mortar: makeMortar, fork: makeFork, ...MELEE_MAKERS };
 const FOV = 58, NEAR = 0.1;
 
 const gunsPng = PNG.sync.read(fs.readFileSync(new URL('../../assets/baked/guns_atlas.png', import.meta.url)));          // the guns' own materials (PT-021): a material that says userData.atlas = 'guns' samples this one

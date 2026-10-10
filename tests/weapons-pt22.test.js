@@ -32,7 +32,7 @@ const aimAt = (w, e, frac = 0.5) => { const p = w.player; p.yaw = Math.atan2(e.x
 // ---------------------------------------------------------------------------------------------------------------- slots, tables, pickups
 test('the four are in the tables: keys 7, 8 and 9 for the guns, the chainsaw joins the melee cycle on key 6, which is still the melee slot', () => {
   assert.deepEqual(SLOT_KEYS.slice(0, 6), ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'melee'], 'keys 1-6 are what they have been since PT-013');
-  assert.deepEqual(SLOT_KEYS.slice(6), ['carbine', 'linethrower', 'fork']);
+  assert.deepEqual(SLOT_KEYS.slice(6), ['carbine', 'linethrower', 'fork', 'mortar'], 'PT-027 added the mortar on key 0');
   for (const id of ['carbine', 'linethrower', 'fork']) assert.ok(WEAPON_ORDER.includes(id) && WEAPONS[id], id);
   assert.equal(MELEE_ORDER.at(-1), 'chainsaw'); assert.equal(WEAPONS.chainsaw.kind, 'melee'); assert.ok(WEAPONS.chainsaw.swing && WEAPONS.chainsaw.saw);
   assert.equal(WEAPONS.fork.kind, 'tool'); assert.equal(WEAPONS.fork.ammo, undefined, 'the tuning-fork needs no ammunition'); assert.ok(AMMO_MAX.round > 0 && AMMO_MAX.rocket > 0 && AMMO_MAX.rocket <= 16, 'rockets are few');
@@ -49,8 +49,8 @@ test('the keys pick the weapons; key 6 cycles the melee weapons including the ch
   w.player.switchT = 0; w.player.weapon = 'flare'; const ring = []; for (let i = 0; i < 8; i++) { w.player.switchT = 0; step(w, idle({ weaponStep: 1 })); ring.push(w.player.weapon); }
   assert.deepEqual(ring.slice(0, 5), [w.player.meleeWeapon, 'carbine', 'linethrower', 'fork', 'flare'], 'next, in key order: the melee slot (key 6), carbine, line-thrower, fork, back to the flare (the guns not owned are skipped)');
 });
-test('the weapon wheel has nine segments in key order; the tuning-fork shows no ammunition', () => {
-  assert.deepEqual(WHEEL_SLOTS.map((s) => s.id), SLOT_KEYS); assert.deepEqual(WHEEL_SLOTS.map((s) => s.slot), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+test('the weapon wheel has ten segments in key order; the tuning-fork shows no ammunition', () => {
+  assert.deepEqual(WHEEL_SLOTS.map((s) => s.id), SLOT_KEYS); assert.deepEqual(WHEEL_SLOTS.map((s) => s.slot), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const w = arena(); const m = wheelModel(w.player, -1, WEAPONS, MELEE_ORDER); assert.equal(m.items[8].ammoText, '', 'no number for the fork'); assert.equal(m.items[6].ammoText, '180');
 });
 

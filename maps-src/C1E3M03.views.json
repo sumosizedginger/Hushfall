@@ -1,0 +1,18 @@
+[
+  { "name": "01-arrival", "x": 4.5, "z": 23.0, "yaw": "east" },
+  { "name": "02-garden-mouth", "x": 16.0, "z": 23.0, "yaw": "east" },
+  { "name": "03-north-ledge", "x": 24.0, "z": 17.0, "yaw": "north", "pitch": 0.14, "wake": true, "ticks": 20 },
+  { "name": "04-bed-a", "x": 24.5, "z": 23.0, "yaw": "east" },
+  { "name": "05-the-gap", "x": 33.0, "z": 23.0, "yaw": "east" },
+  { "name": "06-bed-b", "x": 33.5, "z": 22.0, "yaw": "east", "pitch": -0.05 },
+  { "name": "07-the-mortar", "x": 41.0, "z": 23.0, "yaw": "east" },
+  { "name": "08-vault", "x": 48.5, "z": 23.0, "yaw": "east" },
+  { "name": "09-vault-east", "x": 57.0, "z": 23.0, "yaw": "east" },
+  { "name": "10-garden-two", "x": 62.0, "z": 23.0, "yaw": "east" },
+  { "name": "11-the-dais", "x": 65.0, "z": 23.0, "yaw": "east", "pitch": 0.16 },
+  { "name": "12-north-stair", "x": 73.0, "z": 11.5, "yaw": "south", "pitch": 0.0 },
+  { "name": "13-south-stair", "x": 73.0, "z": 35.5, "yaw": "north", "pitch": 0.0 },
+  { "name": "14-hatch", "x": 85.0, "z": 23.0, "yaw": "east", "open": true },
+  { "name": "15-exit", "x": 94.0, "z": 23.0, "yaw": "east", "open": true },
+  { "name": "16-niche", "x": 52.0, "z": 29.5, "yaw": "south", "open": true }
+]

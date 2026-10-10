@@ -30,7 +30,7 @@ export class MapData {
     this.cell = src.cellSize ?? CELL; this.ceiling = src.ceilingHeight ?? DEFAULT_CEILING;
     this.tiles = src.grid.map((r) => [...r]);
     this.h = this.tiles.length; this.w = this.tiles[0].length;
-    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
+    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
     this.flat = !this.heightRows && !this.ceilingRows;                                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
     this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low' }));
@@ -43,6 +43,7 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
+    this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
@@ -68,6 +69,8 @@ export class MapData {
   /** ceiling height above sea level of an interior cell: an explicit `ceilings` char, else floor + ceilingHeight */
   ceilingAt(cx, cz) { const c = this.ceilingRows?.[cz]?.[cx]; return c != null && c !== '.' ? hval(c) * HEIGHT_UNIT : this.floor(cx, cz) + this.ceiling; }
   /** the floor effect char at a cell ('w' | 'x' | null) */
+  /** the spore region the cell lies in (the first that lists it), or null */
+  pulseAt(cx, cz) { for (const p of this.pulses) if (cx >= p.rect[0] && cx <= p.rect[2] && cz >= p.rect[1] && cz <= p.rect[3]) return p; return null; }
   fx(cx, cz) { const c = this.fxRows?.[cz]?.[cx]; return c && c !== '.' && c !== ' ' ? c : null; }
   sectorAt(cx, cz) { return this.sectorIndex.size ? (this.sectorIndex.get(cx + ',' + cz) ?? -1) : -1; }
   /** the raw tile char, for choosing a skin when drawing */
@@ -117,6 +120,12 @@ function validateMapChecks(src) {
     if (!Array.isArray(d.at) || tile(d.at[0], d.at[1]) !== 'D') { err(`doors entry ${JSON.stringify(d.at)} is not on a 'D' tile`); continue; }
     doorKeys.add(d.at.join(','));
     if (d.key != null && !KEYS[d.key]) err(`door ${d.at} needs unknown key '${d.key}'`);
+    if (d.breath != null) {                                              // PT-027: a breathing gate opens on a clock and nothing else opens it
+      const b = d.breath;
+      if (typeof b !== 'object' || !(b.period >= 2) || !(b.open > 0 && b.open < 1) || (b.phase != null && typeof b.phase !== 'number')) err(`door ${d.at}: breath needs { period >= 2, open between 0 and 1, phase }`);
+      else if (b.period * Math.min(b.open, 1 - b.open) < 2) err(`door ${d.at}: a breathing gate must stay open and shut for at least 2 s (period ${b.period}, open ${b.open})`);
+      if (d.key != null || d.remote) err(`door ${d.at}: a breathing gate has no key and is not remote`);
+    }
   }
   for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) {
     const c = tile(cx, cz);
@@ -217,6 +226,14 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   const floorOf = (cx, cz) => (hasH ? (hval(src.heights[cz][cx]) || 0) * HEIGHT_UNIT : 0);
   const ceilOf = (cx, cz) => { const c = hasC ? src.ceilings[cz][cx] : '.'; return c !== '.' ? hval(c) * HEIGHT_UNIT : floorOf(cx, cz) + (src.ceilingHeight ?? DEFAULT_CEILING); };
   const interior = (c) => FLOOR_SKINS[c]?.kind === 'floor';
+  const pulseRects = [];
+  for (const [i, p] of (src.pulses || []).entries()) {                                  // PT-027: spore regions
+    const tag = `pulse #${i}`;
+    if (!Array.isArray(p.rect) || p.rect.length !== 4 || p.rect.some((n) => !Number.isInteger(n)) || p.rect[0] > p.rect[2] || p.rect[1] > p.rect[3] || p.rect[0] < 0 || p.rect[1] < 0 || p.rect[2] >= w || p.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] inside the map`); continue; }
+    if (!(p.period >= 3) || !(p.on >= 1.5) || !(p.period - p.on >= 2)) err(`${tag}: period >= 3, on >= 1.5 s and a dormant spell of at least 2 s (period ${p.period}, on ${p.on})`);
+    if (p.phase != null && typeof p.phase !== 'number') err(`${tag}: phase must be a number`);
+    pulseRects.push(p.rect);
+  }
   const sectorOf = new Map(), sectorIds = new Set();
   for (const [i, s] of (src.sectors || []).entries()) {
     const tag = `sector #${i} (${s.id})`;
@@ -234,6 +251,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) {
     const c = tile(cx, cz);
     if (hasF && src.fx[cz][cx] in FX && !walkable(c)) err(`fx '${src.fx[cz][cx]}' at ${cx},${cz} is not on a floor cell`);
+    if (hasF && FX[src.fx[cz][cx]]?.pulse && !pulseRects.some((r) => cx >= r[0] && cx <= r[2] && cz >= r[1] && cz <= r[3])) err(`spore bed at ${cx},${cz} is in no pulse region (it would be on forever)`);
     if (walkable(c) && interior(c)) { const room = ceilOf(cx, cz) - floorOf(cx, cz); if (room < MIN_HEADROOM) err(`interior cell ${cx},${cz} has ${room.toFixed(1)} m of headroom (needs ${MIN_HEADROOM})`); }
     if (c === 'D' || c === 'X') for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const n = tile(cx + dx, cz + dz); if (walkable(n) && Math.abs(floorOf(cx + dx, cz + dz) - floorOf(cx, cz)) > 1e-6) err(`door at ${cx},${cz} is not on level ground (neighbour ${cx + dx},${cz + dz} differs)`); }
   }
@@ -305,7 +323,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   // a switch that needs items needs those items to exist on the level
   for (const e of ents) if (e.type === 'switch' && Array.isArray(e.needs)) for (const k of e.needs) if (KEYS[k] && !ents.some((q) => q.type === 'pickup' && PICKUPS[q.kind]?.key === k)) err(`switch '${e.id}' needs '${k}' but the level has no such pickup`);
   const p = ents.find((e) => e.type === 'player');
-  if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX) err('the player starts on a floor effect (wading water / toxic residue)');
+  if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX) err('the player starts on a floor effect (wading water / toxic residue / spore bed)');
 }
 
 export function parseMap(src) {

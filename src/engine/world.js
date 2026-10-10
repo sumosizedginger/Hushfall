@@ -1,5 +1,6 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
+import { gateOpen, sporeState } from './breath.js';
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
@@ -11,6 +12,7 @@ import { updateSectors, updateTriggers, activateSwitch } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
 import { spawnPhys, physAt, physBlocks, blastProps, updatePhys, updateShoves, gravInput, gravDrop, rangePhys } from './gravity.js';      // PT-022: the gravity tool and the movable props (nothing here runs on a map without movable props unless the fork is in hand)
+import { designate as mortarShot } from './mortar.js';                                                              // PT-027: the Bell-breaker mortar (indirect fire)
 import { sawStep } from './saw.js';                                                                                  // PT-022: the chainsaw's held fire
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -75,7 +77,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
   if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
-  for (const d of map.doors.values()) w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: 0, target: 0, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false });
+  for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   return w;
 }
@@ -248,6 +250,27 @@ function updateBurns(w, dt) {
       if (Math.hypot(e.x - b.x, e.z - b.z) < b.r + 0.2 && Math.abs((e.y ?? 0) - b.y) < 1.0) damageEnemy(w, e, b.dps * dt, { burn: true });
     }
   }
+}
+
+/** a BREATHING gate (breath.js): open while its clock says so, whatever anyone does; it never shuts on a body (anyone within the door clearance holds it open), and it announces every change */
+function breathGate(w, d, dt) {
+  const cxw = (d.cx + 0.5) * w.map.cell, czw = (d.cz + 0.5) * w.map.cell;
+  let want = gateOpen(d.breath, w.time);
+  if (!want && d.target === 1 && [w.player, ...w.enemies.filter((e) => e.state !== 'dead')].some((o) => Math.hypot(o.x - cxw, o.z - czw) < DOOR.autoCloseClearance)) want = true;
+  const goal = want ? 1 : 0;
+  if (goal !== d.target) { d.target = goal; emit(w, goal ? 'door_open' : 'door_close', { cx: d.cx, cz: d.cz, x: cxw, z: czw, breath: true }); }
+  if (d.open < d.target) d.open = Math.min(d.target, d.open + dt * DOOR.speed); else if (d.open > d.target) d.open = Math.max(d.target, d.open - dt * DOOR.speed);
+}
+/** the spore regions announce their blooms (audio and the view; the damage itself is just fxAt): lazy state, so a map without pulses is untouched */
+function updateSpores(w) {
+  const st = w.spores ?? (w.spores = w.map.pulses.map((p) => { const s = sporeState(p, w.time); return { on: s.on, warned: s.warn > 0 }; }));
+  w.map.pulses.forEach((p, i) => {
+    const s = sporeState(p, w.time), o = st[i], x = (p.rect[0] + p.rect[2] + 1) / 2 * w.map.cell, z = (p.rect[1] + p.rect[3] + 1) / 2 * w.map.cell;
+    if (s.on && !o.on) emit(w, 'spore_bloom', { i, x, z, r: Math.hypot(p.rect[2] - p.rect[0] + 1, p.rect[3] - p.rect[1] + 1) * w.map.cell / 2 });
+    else if (!s.on && o.on) emit(w, 'spore_fade', { i, x, z });
+    else if (s.warn > 0 && !o.warned && !s.on) emit(w, 'spore_warn', { i, x, z });
+    o.on = s.on; o.warned = s.warn > 0;
+  });
 }
 
 function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
@@ -468,9 +491,9 @@ function chargeInput(w, cmd, def, canAct) {
 function fireWeapon(w, charge = 0) {
   const p = w.player, def = WEAPONS[p.weapon];
   if (def.kind === 'melee') { startSwing(w, p.weapon === 'fists' ? 'jab' : p.weapon); return; }
-  if ((p.ammo[def.ammo] || 0) <= 0) { p.cooldown = 0.4; emit(w, 'dry'); return; }
+  if ((p.ammo[def.ammo] || 0) < (def.cost ?? 1)) { p.cooldown = 0.4; emit(w, 'dry'); return; }
   // the lamp: 0 = the tap arc (one cell); a charge spends more cells for a bigger bolt, as many as are left
-  let cf = 0, cost = 1;
+  let cf = 0, cost = def.cost ?? 1;
   if (def.kind === 'arc' && def.charge) {
     const C = def.charge; cf = charge < C.min ? 0 : Math.min(1, (charge - C.min) / (C.max - C.min)); cost = cf === 0 ? 1 : 1 + Math.round(cf * (C.cells - 1));
     const have = p.ammo[def.ammo]; if (cost > have) { cf = cf * (have - 1) / Math.max(1, cost - 1); cost = have; }
@@ -482,6 +505,11 @@ function fireWeapon(w, charge = 0) {
   if (def.heatPerShot) p.heat = Math.min(1, heat + def.heatPerShot);                                     // holding the trigger blooms the pattern
   if (def.kind === 'arc') fireArc(w, def, cf);
   else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
+  else if (def.designate) {                                                                                 // PT-027: the mortar throws the shell TO the point the crosshair rests on (the landing, not the aim, is what the unsteady hand scatters)
+    const f = forwardVec(p), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)], mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads), jitter = [(rand(w) * 2 - 1) * cone, (rand(w) * 2 - 1) * cone];
+    const from = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight], s = mortarShot(w, p, def, f, from, jitter);
+    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: from[0], y: from[1], z: from[2], vx: s.vx, vy: s.vy, vz: s.vz, g: s.g, life: s.T + 1.5 });
+  }
   else {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
@@ -791,7 +819,8 @@ export function step(w, cmd) {
     const hit = useTarget(w);
     if (hit?.switchId) activateSwitch(w, map.switches.find((s) => s.id === hit.switchId));
     else if (hit) {
-      if (hit.sealed || hit.remote) emit(w, 'door_remote', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // opened elsewhere (a switch, or an event)
+      if (hit.breath) emit(w, 'door_breath', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-027: it opens when the ship breathes in, whatever you do
+      else if (hit.sealed || hit.remote) emit(w, 'door_remote', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // opened elsewhere (a switch, or an event)
       else if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
       else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }
     }
@@ -813,6 +842,7 @@ export function step(w, cmd) {
 
   // doors
   for (const d of w.doors) {
+    if (d.breath) { breathGate(w, d, dt); continue; }
     if (d.target === 1 && d.open < 1) { d.open = Math.min(1, d.open + dt * DOOR.speed); }
     else if (d.target === 1 && d.open >= 1 && !d.secret) {
       const cxw = (d.cx + 0.5) * map.cell, czw = (d.cz + 0.5) * map.cell;
@@ -822,6 +852,8 @@ export function step(w, cmd) {
     } else if (d.target === 0 && d.open > 0) d.open = Math.max(0, d.open - dt * DOOR.speed);
   }
 
+  if (map.pulses?.length) updateSpores(w);
+
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
@@ -829,7 +861,7 @@ export function step(w, cmd) {
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {
-    const q = w.projectiles[i], def = WEAPONS[q.weapon ?? 'flare']; q.life -= dt; q.vy -= def.gravity * dt;      // projectiles keep their own weapon stats after you switch away
+    const q = w.projectiles[i], def = WEAPONS[q.weapon ?? 'flare']; q.life -= dt; q.vy -= (q.g ?? def.gravity) * dt;      // projectiles keep their own weapon stats after you switch away
     const speed = Math.hypot(q.vx, q.vy, q.vz), n = Math.ceil(speed * dt / 0.25); let hit = q.life <= 0, struck = null;
     for (let k = 0; k < n && !hit; k++) {
       q.x += q.vx * dt / n; q.y += q.vy * dt / n; q.z += q.vz * dt / n;

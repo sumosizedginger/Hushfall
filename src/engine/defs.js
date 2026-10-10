@@ -22,12 +22,12 @@ export const PLAYER = {
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
-export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
+export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, mortar: 32, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
 export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 };
 /** every GUN in one stable order (save sorting, the HUD's list, the next / previous ring); a weapon occupies its place once owned. */
-export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork'];
-/** the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has been key 6 since PT-013 and stays), 7..9 the guns PT-022 added */
-export const SLOT_KEYS = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'melee', 'carbine', 'linethrower', 'fork'];
+export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'mortar'];
+/** the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has been key 6 since PT-013 and stays), 7..9 the guns PT-022 added, 0 the mortar (PT-027) */
+export const SLOT_KEYS = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'melee', 'carbine', 'linethrower', 'fork', 'mortar'];
 export const MELEE_ORDER = ['fists', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'];
 export const MELEE_SLOT = SLOT_KEYS.indexOf('melee');                              // the slot index of the melee slot (0-based: key 6)
 /** every weapon id in one stable order (save sorting, the HUD) */
@@ -87,17 +87,20 @@ export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { na
 /** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
 export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
-export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 } };
+export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true } };
+/** THE SHIP BREATHES (PT-027, Episode 3 Batch B; src/engine/breath.js): `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing gate never closes on anyone within DOOR.autoCloseClearance */
+export const BREATH = { warn: 1.2, fade: 0.8 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
   m: { kind: 'outdoor', tex: 'floor_silt_a' }, n: { kind: 'floor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
   l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
   b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
+  o: { kind: 'floor', tex: 'floor_gill_a' }, u: { kind: 'outdoor', tex: 'floor_gill_a' },       // Episode 3 (PT-027): the gill gardens' damp floor, roofed and open to the sky
 };
 
 /**
@@ -152,6 +155,11 @@ export const WEAPONS = {
   // (`selfDamage`) inside 65% of the blast. Plate does not turn a blast (splash ignores it). Slow (1.5 s), twelve rockets at most, loud.
   linethrower: { name: 'Rocket line-thrower', kind: 'projectile', ammo: 'rocket', cooldown: 1.5, speed: 21, gravity: 0.6, splash: 4.4, splashDamage: 120, direct: 55, directHit: 70, selfDamage: 0.6, knock: 2.2, nodeMult: 2, switchTime: 0.7, kick: 0.16, adsFov: 52,
     muzzle: { fwd: 0.9, right: 0.15, down: 0.12 }, spread: { hip: 0.02, ads: 0.002, moveFactor: 0.6 } },
+  // the Bell-breaker mortar (key 0, PT-027): INDIRECT fire. The shell flies TO the point the crosshair rests on (src/engine/mortar.js): a high arc, 1 to 2.6 s in the air, so it reaches a ledge or goes over a crate; the landing point is pushed out to `minRange`
+  // (a mortar cannot be fired at your boots). A very wide blast (it hurts you inside 65% of it), a big knock, `directHit` extra on the body it lands on, double on a bell node. It spends TWO rockets (it shares the line-thrower's ammunition), takes 2.2 s to
+  // reload and 0.95 s to bring up. `designate`: minRange / maxRange m, speed (m/s the flight time is judged by), tmin / tmax s (flight time bounds), apex m (the arc's height over the straight line, at most distance / 8).
+  mortar: { name: 'Bell-breaker mortar', kind: 'projectile', ammo: 'rocket', cost: 2, cooldown: 2.2, speed: 22, gravity: 12, splash: 5.2, splashDamage: 150, direct: 35, directHit: 60, selfDamage: 0.6, knock: 3, nodeMult: 2, switchTime: 0.95, kick: 0.22, adsFov: 54,
+    muzzle: { fwd: 0.9, right: 0.12, down: 0.05 }, spread: { hip: 0.012, ads: 0.003, moveFactor: 0.8 }, designate: { minRange: 9, maxRange: 60, speed: 22, tmin: 0.9, tmax: 2.6, apex: 2.6 } },
   // the tuning-fork (key 9): GRAVITY, see GRAV above. No ammunition; the sim reads `grav`.
   fork: { name: 'Vael tuning-fork', kind: 'tool', switchTime: 0.5, grav: GRAV },
   // ---- melee (PT-013): fists are always owned (slot 6); the found weapons are picked up and take the same slot (key 6 again cycles). `swing`: reach m (from the player's centre to the body's surface), arc rad (full cone), damage, windup/recover s, knock m, flinch s,
@@ -228,6 +236,7 @@ export const PICKUPS = {
   weapon_carbine: { type: 'weapon', weapon: 'carbine', ammo: 'round', amount: 60 },       // PT-022: placed on no map yet
   ammo_round: { type: 'ammo', ammo: 'round', amount: 40 },
   weapon_linethrower: { type: 'weapon', weapon: 'linethrower', ammo: 'rocket', amount: 4 },
+  weapon_mortar: { type: 'weapon', weapon: 'mortar', ammo: 'rocket', amount: 6 },                   // PT-027: three shells' worth of the line-thrower's rockets
   ammo_rocket: { type: 'ammo', ammo: 'rocket', amount: 3 },
   weapon_fork: { type: 'weapon', weapon: 'fork' },
   weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },

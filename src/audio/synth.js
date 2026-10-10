@@ -220,6 +220,31 @@ export const SFX = {
     thump(c, out, t + 0.42, 95, 40, 0.2, 0.45);
     return 0.9;
   },
+  // --- Episode 3 (PT-027): the ship breathes ---
+  gate_in(c, out, t, o) {                                       // a breathing gate opening: a slow wet inhale, a swell under it
+    noise(c, out, t, { dur: 0.75, a: 0.25, gain: 0.2, type: 'bandpass', f0: 280, f1: 900, q: 1.4, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 80, f1: 135, a: 0.3, d: 0.5, gain: 0.2 });
+    noise(c, out, t + 0.1, { dur: 0.3, a: 0.1, gain: 0.07, type: 'highpass', f0: 2600, off: o.r() });
+    return 0.8;
+  },
+  gate_out(c, out, t, o) {                                      // it shuts: an exhale falling away, a soft wet seal at the end
+    noise(c, out, t, { dur: 0.6, a: 0.05, gain: 0.2, type: 'bandpass', f0: 900, f1: 240, q: 1.4, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 130, f1: 70, a: 0.05, d: 0.45, gain: 0.18 });
+    thump(c, out, t + 0.4, 70, 42, 0.18, 0.4);
+    noise(c, out, t + 0.4, { dur: 0.14, gain: 0.12, type: 'lowpass', f0: 700, f1: 200, off: o.r() });
+    return 0.7;
+  },
+  spore_swell(c, out, t, o) {                                   // a spore bed filling: a thin airy hum that climbs, the warning
+    tone(c, out, t, { type: 'sine', f0: 200, f1: 330, a: 0.7, d: 0.5, gain: 0.14, vib: 5 });
+    noise(c, out, t, { dur: 1.1, a: 0.8, gain: 0.1, type: 'bandpass', f0: 1200, f1: 2600, q: 1.8, off: o.r() });
+    return 1.2;
+  },
+  spore_puff(c, out, t, o) {                                    // the bloom: a soft pop and a spray that thins out
+    thump(c, out, t, 130, 55, 0.2, 0.4);
+    noise(c, out, t, { dur: 0.9, a: 0.01, gain: 0.3, type: 'lowpass', f0: 2600, f1: 380, q: 0.6, off: o.r() });
+    noise(c, out, t, { dur: 0.25, gain: 0.12, type: 'highpass', f0: 3200, off: o.r() });
+    return 1;
+  },
   // --- Episode 3 (PT-026): the Chorister, and the shots that go by ---
   chorister_alert(c, out, t, o) {                               // a held, hollow note that bends up: a throat tuned like a horn
     tone(c, out, t, { type: 'sawtooth', f0: 233, f1: 311, a: 0.05, d: 0.55, gain: 0.2, lp: 1400, vib: 6 });
@@ -308,6 +333,13 @@ Object.assign(SFX, {
     noise(c, out, t, { dur: 0.7, a: 0.03, gain: 0.4, type: 'bandpass', f0: 500, f1: 3200, q: 0.8, off: o.r() });
     noise(c, out, t + 0.02, { dur: 1.0, a: 0.1, gain: 0.16, type: 'highpass', f0: 2500, f1: 1800, off: o.r() });
     tone(c, out, t, { type: 'sawtooth', f0: 140, f1: 380, d: 0.5, gain: 0.09, lp: 900 });
+    return 1.1;
+  },
+  mortar_fire(c, out, t, o) {                                   // the bell-breaker: a deep cough out of a bell-mouthed tube, a ring of brass, the bomb whistling up and over
+    thump(c, out, t, 70, 24, 0.5, 0.5); noise(c, out, t, { dur: 0.22, gain: 0.3, type: 'lowpass', f0: 2200, f1: 260, q: 0.6, off: o.r() });
+    bell(c, out, t + 0.01, 233, { decay: 0.9, gain: 0.16, ratio: 2.4, index: 1.3 });
+    tone(c, out, t + 0.1, { type: 'sine', f0: 700, f1: 1400, a: 0.05, d: 0.9, gain: 0.05, vib: 4 });
+    noise(c, out, t + 0.12, { dur: 0.9, a: 0.3, gain: 0.07, type: 'bandpass', f0: 1800, f1: 900, q: 1.6, off: o.r() });
     return 1.1;
   },
   rocket_boom(c, out, t, o) {                                   // the big blast: two low thumps, a long falling roar, a crack on top, debris (levels set so the sum peaks under 1.0: audio-qa measured 1.305 at the first levels)

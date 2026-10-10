@@ -6,6 +6,8 @@ import { makeSack } from './models_g2.js';
 import { makeCarbine, makePickupCarbine } from './models_carbine.js';
 import { makeLineThrower, makePickupRocket, makeRocketMesh } from './models_rocket.js';
 import { makeFork, makePickupFork } from './models_fork.js';
+import { makeMortar, makePickupMortar, makeBombMesh } from './models_mortar.js';
+import { designate } from '../engine/mortar.js';
 import { makeRivetDriver, makePickupRivet } from './models_rivet.js';
 import { makeHarpoonRifle, makePickupHarpoon } from './models_harpoon.js';
 import { makeArcLamp, makePickupArc } from './models_arc.js';
@@ -24,6 +26,7 @@ import { makeShield } from './shield.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
+import { sporeState } from '../engine/breath.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
 const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 2 ? 2 : 0);
@@ -33,7 +36,7 @@ const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the neare
 const lerp = (a, b, t) => a + (b - a) * t;
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
 const pickupMaker = (kind) => (/^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
-  : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : makePickup);
+  : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
 export class GameView {
   constructor(renderer, tex, map, world) {
@@ -55,7 +58,7 @@ export class GameView {
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
-    const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
+    const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), mortar: makeMortar(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
     this.vm = new SwingClock(); this.lag = { x: 0, y: 0 }; this.lastLook = null;      // PT-020: the swing's own clock (a freeze on contact: view only), the view model trailing a turning view
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(HIP_SCALE); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
@@ -105,7 +108,7 @@ export class GameView {
     for (const e of events) {
       for (const spec of decalsForEvent(e, dctx)) this.decals.add(spec);                                          // a hit, a death, a blast, a bullet: the room keeps it
       if (e.type === 'fire') {
-        const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
+        const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower' || e.weapon === 'mortar', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
         this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
         this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
       }
@@ -184,6 +187,19 @@ export class GameView {
       }
     }
     while (this.arcs.length > 90) this.scene.remove(this.arcs.shift().m);
+  }
+
+  /** PT-027: while the mortar is in hand a ring on the ground says where the shell will land (the sim's own `designate`, so it cannot disagree): a broad ring the size of the blast and a small mark in the middle; amber, dimmer when the minimum range pushed it out */
+  updateMortarRing(w) {
+    const p = w.player, on = p.weapon === 'mortar' && p.hp > 0 && w.status === 'playing';
+    if (!on) { if (this.aimRing) this.aimRing.visible = false; return; }
+    if (!this.aimRing) {
+      const g = new THREE.Group(), mat = new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.6, depthWrite: false, depthTest: false, side: THREE.DoubleSide });
+      const R = WEAPONS.mortar.splash, ring = new THREE.Mesh(new THREE.RingGeometry(R - 0.12, R, 40), mat), mark = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.4, 20), mat), cross = new THREE.Mesh(new THREE.RingGeometry(0.0, 0.07, 8), mat);
+      for (const m of [ring, mark, cross]) { m.rotation.x = -Math.PI / 2; m.renderOrder = 6; g.add(m); } g.userData.mat = mat; this.aimRing = g; this.scene.add(g);
+    }
+    const s = designate(w, p, WEAPONS.mortar); this.aimRing.visible = true; this.aimRing.position.set(s.x, s.y + 0.06, s.z);
+    this.aimRing.userData.mat.opacity = (s.clamped ? 0.3 : 0.55) + 0.12 * Math.sin(this.time * 6); this.aimRing.userData.mat.color.setHex(s.clamped ? 0xc86a3a : 0xffa040);
   }
 
   render(w, alpha, dt) {
@@ -268,13 +284,16 @@ export class GameView {
     // projectiles
     seen.clear(); let lead = null, rocketLead = null;
     for (const q of w.projectiles) {
-      seen.add(q.id); let m = this.projViews.get(q.id), rocket = q.weapon === 'linethrower';
-      if (!m) { if (rocket) { const r = makeRocketMesh(); m = r.group; m.userData.flame = r.flame; m.userData.puffT = 0; } else m = new THREE.Mesh(this.projGeo, this.projMat); this.scene.add(m); this.projViews.set(q.id, m); }
+      seen.add(q.id); let m = this.projViews.get(q.id), rocket = q.weapon === 'linethrower', bomb = q.weapon === 'mortar';
+      if (!m) { if (bomb) { const b = makeBombMesh(); m = b.group; m.userData.spark = b.spark; m.userData.puffT = 0; } else if (rocket) { const r = makeRocketMesh(); m = r.group; m.userData.flame = r.flame; m.userData.puffT = 0; } else m = new THREE.Mesh(this.projGeo, this.projMat); this.scene.add(m); this.projViews.set(q.id, m); }
       m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK);
       if (rocket) {                                                                                                   // PT-022: the rocket points along its flight, its flame breathes, it leaves smoke and lights the place it passes
         const sp = Math.hypot(q.vx, q.vy, q.vz) || 1; m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), new THREE.Vector3(q.vx / sp, q.vy / sp, q.vz / sp)); m.userData.flame.scale.set(1, 1, 0.8 + 0.4 * Math.sin(this.time * 60));
         m.userData.puffT -= dt; if (m.userData.puffT <= 0) { m.userData.puffT = 0.03; const pf = new THREE.Mesh(this.puffGeo, this.puffMat); pf.position.copy(m.position).addScaledVector(new THREE.Vector3(q.vx / sp, q.vy / sp, q.vz / sp), -0.45); pf.position.x += (this.rnd() - 0.5) * 0.06; pf.position.y += (this.rnd() - 0.5) * 0.06; this.scene.add(pf); this.puffs.push({ m: pf, t: 0, max: 0.9 + this.rnd() * 0.5 }); }
         rocketLead = rocketLead || m;
+      } else if (bomb) {                                                                                              // PT-027: the bomb tumbles along its arc and leaves a thin trail of smoke; its fuse spark flickers
+        m.rotation.set(this.time * 3.1 + q.id, this.time * 2.3, 0); m.userData.spark.scale.setScalar(0.7 + 0.5 * Math.sin(this.time * 40 + q.id));
+        m.userData.puffT -= dt; if (m.userData.puffT <= 0) { m.userData.puffT = 0.06; const pf = new THREE.Mesh(this.puffGeo, this.puffMat); pf.position.copy(m.position); pf.scale.setScalar(0.5); this.scene.add(pf); this.puffs.push({ m: pf, t: 0, max: 0.7 + this.rnd() * 0.3 }); }
       } else lead = lead || m;
     }
     for (const [id, m] of this.projViews) if (!seen.has(id)) { this.scene.remove(m); this.projViews.delete(id); }
@@ -286,6 +305,7 @@ export class GameView {
     }
     for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
+    this.updateMortarRing(w);
     this.rocketLight.intensity = rocketLead ? 50 * (0.85 + 0.15 * Math.sin(this.time * 50)) : 0; if (rocketLead) this.rocketLight.position.copy(rocketLead.position);
     for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]; pf.t += dt; const k = pf.t / pf.max; if (k >= 1) { this.scene.remove(pf.m); this.puffs.splice(i, 1); } else { pf.m.scale.setScalar(0.5 + 1.8 * k); pf.m.position.y += dt * 0.35; if (k > 0.55) pf.m.scale.multiplyScalar(1 - (k - 0.55) / 0.45); } }
     for (let i = this.shocks.length - 1; i >= 0; i--) { const sh = this.shocks[i]; sh.t += dt; const k = sh.t / 0.28; if (k >= 1) { this.scene.remove(sh.m); sh.m.material.dispose(); this.shocks.splice(i, 1); } else { sh.m.scale.setScalar(0.3 + 3.2 * k); sh.m.material.opacity = 0.8 * (1 - k); } }
@@ -330,6 +350,7 @@ export class GameView {
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
+    this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.3 + 0.07 * Math.sin(this.time * 3.1 + i) : 0.3 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
     for (const sw of this.map.switches) { const r = this.lvl.switchViews.get(sw.id); if (!r) continue; const used = w.switchState?.[sw.id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; r.group.position.y = floorAt(w, sw.x, sw.z) + 1.35; }        // a panel on a moving floor rides with it

@@ -16,7 +16,7 @@ const NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]
 const MAX_FIELDS = 4;
 /** everything a distance field depends on besides the target: which doors are passable and where each moving floor is. A field is valid exactly while this is unchanged, so it never depends on cache history (audit A07: resume == uninterrupted). */
 function navVersion(w) {
-  let v = ''; for (const d of w.doors) v += d.open < DOOR.passableAt ? '0' : '1';
+  let v = ''; for (const d of w.doors) v += d.breath || d.open >= DOOR.passableAt ? '1' : '0';
   for (const s of w.sectors) v += '|' + q(s.h); return v;
 }
 
@@ -30,7 +30,7 @@ export function walkableCell(w, cx, cz) {
   if (cx < 0 || cz < 0 || cx >= m.w || cz >= m.h) return false;
   const k = m.kind(cx, cz);
   if (k === 'wall' || k === 'water') return false;
-  if (cellSolid(w, cx, cz)) return false;
+  if (cellSolid(w, cx, cz) && !((k === 'door') && w.doors.find((d) => d.cx === cx && d.cz === cz)?.breath)) return false;           // PT-027: a breathing gate is a way through for the field (a creature waits at it while it is shut)
   return !blockedCells(m).has(cx + ',' + cz);
 }
 

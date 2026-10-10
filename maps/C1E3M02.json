@@ -1,0 +1,781 @@
+{
+ "format": 1,
+ "id": "C1E3M02",
+ "version": 1,
+ "name": "Ribbed Corridors",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#243430",
+  "fogDensity": 0.02,
+  "sky": "ash",
+  "look": "choir"
+ },
+ "grid": [
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################",
+  "#####################VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV########################",
+  "#####################VnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnV########################",
+  "#####################VnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnVVVVVV###################",
+  "#####################VnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnDggggV###################",
+  "#####################VnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnVggggV###################",
+  "#####################VnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnVVVggV###################",
+  "#####################VVVVVVVVVnnVVVVVVVVVVVVVVVVVVVVVV#VggV###################",
+  "#############################VggV######################VggV###################",
+  "#############################VggV######################VggV###################",
+  "#############################VggV######################VggV###################",
+  "#############################VggV######################VggV###################",
+  "#############################VggV######################VggV###################",
+  "###########################n#VggV######################VggV###################",
+  "##########################nnnVggV######################VggV###################",
+  "#######################VVVnnnVnnVVVVVVV######VVVVVVVVVVVooVVVVVVVVVV##########",
+  "#######################VnnnnnnnnnnnnnVV######VooooooooooooooooooooVV##########",
+  "##VVVVVVVVVVVVVV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooV##########",
+  "##VnnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVVVVVVVVV##",
+  "##VnnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVVnnnnnVV##",
+  "##VnnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVnnnnnnnV##",
+  "##VnnnnnnnnnnnnVVVVVVVVVnnnnnnnnnnnnnnVVVVVVVVoooooooooooooooooooooVnnnnnnnV##",
+  "##VnnnnnnnnnnnnggggggggDnnnnnnnnnnnnnnDggggggooooooooooooooooooooooVnnnnnnnV##",
+  "##VnnnnnnnnnnnnggggggggVnnnnnnnnnnnnnnVggggggooooooooooooooooooooooDnnnnnnnV##",
+  "##VnnnnnnnnnnnnVVVVVVVVVnnnnnnnnnnnnnnVVVVVVVVoooooooooooooooooooooVnnnnnnnV##",
+  "##VnnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVnnnnnnnV##",
+  "##VnnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVnnnnnnnV##",
+  "##VVnnnnnnnnnnnV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooVVnnnnnVV##",
+  "##VVVVVVVVVVVVVV#######VnnnnnnnnnnnnnVV######VoooooooooooooooooooooVVVVVVVVV##",
+  "#######################VnnnnnnnnnnnnVVV######VoooooooooooooooooooooV##########",
+  "#######################VVVnnnVVVnnnVVVV######VVVVVVVVVVVSVVVVVVVVVVV##########",
+  "##########################nnn###nnn#################VnnnnnnnV#################",
+  "###########################n#####n##################VnnnnnnnV#################",
+  "####################################################VnnnnnnnV#################",
+  "####################################################VnnnnnnnV#################",
+  "####################################################VnnnnnnnV#################",
+  "####################################################VVVVVVVVV#################",
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################",
+  "##############################################################################"
+ ],
+ "doors": [
+  {
+   "at": [53, 7],
+   "breath": {
+    "period": 10,
+    "open": 0.5,
+    "phase": 5
+   }
+  },
+  {
+   "at": [23, 25],
+   "breath": {
+    "period": 9,
+    "open": 0.6,
+    "phase": 0
+   }
+  },
+  {
+   "at": [38, 25],
+   "breath": {
+    "period": 8,
+    "open": 0.5,
+    "phase": 3
+   }
+  },
+  {
+   "at": [67, 26],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "hollow-rib",
+   "panel": [56, 33],
+   "cells": [
+    [56, 34],
+    [56, 35],
+    [56, 36]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "chamber",
+   "when": "enter",
+   "at": [28, 25],
+   "radius": 3,
+   "do": [
+    {
+     "objective": "Cross the chamber. Gate 2 is on the east wall; a corridor leads north"
+    }
+   ]
+  },
+  {
+   "id": "heart",
+   "when": "enter",
+   "at": [47, 25],
+   "radius": 2.5,
+   "do": [
+    {
+     "objective": "The lever is on the Heart's east wall"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 5]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [23, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [38, 6]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 6],
+   "facing": -1.127,
+   "group": "gallery"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [49, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [52, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [22, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [26, 7]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 7],
+   "facing": -0.927,
+   "group": "gallery"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [33, 7]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [40, 7],
+   "facing": -1.107,
+   "group": "gallery"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [46, 7]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 8],
+   "facing": -1.082,
+   "group": "gallery"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [38, 8]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [47, 8],
+   "facing": -1.194,
+   "group": "gallery"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [50, 8],
+   "facing": -1.217,
+   "group": "gallery"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [42, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [51, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [56, 13],
+   "facing": -1.344
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 14],
+   "facing": -1.171
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [25, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [31, 20],
+   "facing": -1.388,
+   "group": "chamber"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [47, 20]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [64, 20],
+   "facing": -1.488,
+   "group": "heart"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 21],
+   "facing": -1.406,
+   "group": "chamber"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [30, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [36, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [54, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [4, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [35, 22],
+   "facing": -1.474,
+   "group": "chamber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [37, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [46, 22]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 22],
+   "facing": -1.506,
+   "group": "heart"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [60, 22],
+   "facing": -1.517,
+   "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [62, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [66, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [33, 23]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [3, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [55, 24],
+   "facing": -1.551,
+   "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [59, 24]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [61, 24],
+   "facing": -1.553,
+   "group": "heart"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [70, 24]
+  },
+  {
+   "type": "player",
+   "at": [4, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [40, 25]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 25],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [46, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [50, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [36, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [41, 26],
+   "facing": -1.598
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [42, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [47, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [58, 26],
+   "facing": -1.589,
+   "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [72, 26]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [73, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [3, 27]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [52, 27],
+   "facing": -1.612,
+   "group": "heart"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [4, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [28, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [33, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [54, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [59, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [70, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [26, 29],
+   "facing": -1.751,
+   "group": "chamber"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 29],
+   "facing": -1.723,
+   "group": "chamber"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [33, 29],
+   "facing": -1.708,
+   "group": "chamber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [37, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [46, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [54, 29],
+   "facing": -1.651,
+   "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [66, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [30, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [25, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [47, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [65, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [54, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [58, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [55, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [56, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [57, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [54, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [55, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [57, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [58, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [56, 38]
+  },
+  {
+   "type": "switch",
+   "id": "bellows",
+   "at": [66, 25],
+   "wall": "east",
+   "do": [
+    {
+     "open": [67, 26]
+    },
+    {
+     "objective": "The hatch is open: the exit is at the east end of the last chamber"
+    },
+    {
+     "shake": 1.2
+    }
+   ]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [27, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [27, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "cradle",
+   "at": [33, 35]
+  }
+ ],
+ "par": {
+  "time": 300
+ },
+ "intro": {
+  "title": "RIBBED CORRIDORS",
+  "lines": [
+   "The doors are breathing.",
+   "Wait for them. Do not be in one when it matters."
+  ]
+ },
+ "outro": "Next: the Gill Gardens. Where the ship keeps the people it has not finished with.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 25],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, you are in. Those are not corridors, they are ribs. Keep to the floor and listen. The ship is breathing and you are in its lungs."
+  },
+  {
+   "id": "gate1",
+   "at": [21, 25],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "That door is breathing. It opens, it shuts, and it does not care what you want. It will not shut on you if you are standing in it. Wait for it."
+  },
+  {
+   "id": "chamber",
+   "at": [26, 25],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "People, standing, asleep. And something singing in the corner. Gate on the far side, a way north on this one. Stay out of the middle of the room."
+  },
+  {
+   "id": "north",
+   "at": [30, 22],
+   "radius": 3.6,
+   "speaker": "INES",
+   "text": "The air moves up that corridor. It is longer and there is no gate at the mouth. I do not think it is quieter."
+  },
+  {
+   "id": "heart",
+   "at": [50, 25],
+   "radius": 4,
+   "speaker": "SIGNAL HOUSE",
+   "text": "This is the heart room. Everything you have passed was a valve. There is a lever on the east wall: that is the way out."
+  },
+  {
+   "id": "hollow",
+   "at": [56, 31],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "This rib is thinner than the others. It sounds hollow, like a held breath."
+  },
+  {
+   "id": "exit",
+   "at": [70, 26],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "It is open. It let you through. I would like to know why."
+  }
+ ],
+ "decals": [
+  {
+   "kind": "ichorpool",
+   "at": [20, 25],
+   "size": 1.8
+  },
+  {
+   "kind": "smear",
+   "at": [37, 25],
+   "rot": 0,
+   "size": 2.2,
+   "h": 0.8
+  },
+  {
+   "kind": "bloodpool",
+   "at": [28, 22],
+   "size": 1.4
+  },
+  {
+   "kind": "damp",
+   "at": [42, 25],
+   "size": 1.8
+  },
+  {
+   "kind": "ichorpool",
+   "at": [56, 25],
+   "size": 2
+  },
+  {
+   "kind": "scorch",
+   "at": [60, 27],
+   "size": 2
+  }
+ ],
+ "growth": [
+  {
+   "at": [56, 25],
+   "r": 26,
+   "power": 1.3
+  }
+ ],
+ "objective": "Find the heart of the ship. The gates open when it breathes in",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [20, 56],
+  "botSeconds": [40, 600],
+  "mechanics": [
+   "gates",
+   "switches",
+   "secret"
+  ],
+  "skins": 4,
+  "enemyKinds": {
+   "chorister": 2,
+   "bellhand": 2,
+   "sexton": 1
+  },
+  "scaleClass": "COMPRESSION",
+  "introduces": "the BREATHING GATE: a door on a clock that opens and shuts by itself and never shuts on a body in it; a gate that opens is an ambush, one that shuts is a retreat; you learn the rhythm in a chamber with a way round"
+ },
+ "drops": {
+  "scale": 1
+ }
+}

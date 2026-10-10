@@ -3,6 +3,7 @@
 import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
+import { gateRemaining, sporeState } from './breath.js';
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
 export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
@@ -174,6 +175,16 @@ export class Bot {
     const next = this.path[0];
     if (!next) return this.steerTo(gx, gz, arriveCells * m.cell / 2);
     const nk = m.kind(next[0], next[1]);
+    // PT-027, the ship breathes: a human waits at a shut breathing gate until it is open for long enough to get through, and waits outside a spore bed that is blooming or would bloom before it was crossed
+    if (nk === 'door') {
+      const d = this.w.doors.find((q) => q.cx === next[0] && q.cz === next[1]);
+      if (d?.breath) {
+        const dx = (next[0] + 0.5) * m.cell, dz = (next[1] + 0.5) * m.cell, dist = Math.hypot(dx - p.x, dz - p.z);
+        if (dist < 2.6 && !(d.open >= 0.85 && gateRemaining(d.breath, this.w.time) > dist / PLAYER.speed + 0.6)) { this.setHeld('forward', false); this.setHeld('sprint', false); this.aimAt(dx, dz); this.stillFor = 0; return false; }          // waiting for the ship to breathe is not being stuck
+        this.setHeld('sprint', this.path.length > 3); this.steerTo(dx, dz, 0.35); return false;
+      }
+    }
+    if (this.sporeHold(here, next)) { this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; return false; }
     if ((nk === 'door' || nk === 'secret')) {                    // closed door ahead: open it
       const d = this.w.doors.find((q) => q.cx === next[0] && q.cz === next[1]);
       if (d && d.open < 0.85) {
@@ -184,6 +195,19 @@ export class Bot {
     this.setHeld('sprint', this.path.length > 3);                   // sprint the long stretches only
     this.steerTo((next[0] + 0.5) * m.cell, (next[1] + 0.5) * m.cell, 0.35);
     return false;
+  }
+  /** about to step from `here` onto a spore bed: stay out while it blooms, or while the dormant spell left is shorter than the walk across it (at most one whole period: after that go and take what comes) */
+  sporeHold(here, next) {
+    const m = this.w.map, t = this.w.time;
+    if (!m.pulses.length || !FX[m.fx(next[0], next[1])]?.pulse) { this.sporeSince = null; return false; }
+    const reg = m.pulseAt(next[0], next[1]); if (!reg || (FX[m.fx(here[0], here[1])]?.pulse && m.pulseAt(here[0], here[1]) === reg)) return false;      // already inside: keep walking
+    let n = 0; for (const c of this.path) { if (m.pulseAt(c[0], c[1]) === reg && FX[m.fx(c[0], c[1])]?.pulse) n++; else if (n) break; }
+    const cross = n * m.cell / (PLAYER.speed * (FX.s.speed ?? 0.7)) + 0.4, s = sporeState(reg, t);
+    const hold = s.on || s.until < cross;
+    if (!hold) { this.sporeSince = null; return false; }
+    this.sporeSince ??= t;
+    if (t - this.sporeSince > reg.period + 1) return false;
+    return true;
   }
   /** standing at the lever/door of a switch or use op: a human pulls it even with something shooting at them */
   atUsePoint(op) {

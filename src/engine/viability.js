@@ -112,7 +112,7 @@ export function levelFacts(map) {
   return {
     enemies: map.entities.filter((e) => e.type === 'enemy').length, enemyKinds: kinds, keys: keys.size, closets: [...map.doors.values()].filter((d) => d.closet).length, triggers: map.triggers.length, switches: map.switches.length,
     sectors: map.sectors.length, heights: !map.flat && maxFloor > 0, maxFloor, fxCells: fx, skins: wallSkins.size + floorSkins.size, wallSkins: [...wallSkins], floorSkins: [...floorSkins],
-    props: map.entities.filter((e) => e.type === 'prop').length, secrets: map.secrets.length, cells: map.w * map.h,
+    props: map.entities.filter((e) => e.type === 'prop').length, secrets: map.secrets.length, cells: map.w * map.h, gates: [...map.doors.values()].filter((d) => d.breath).length, spores: map.pulses.length,
   };
 }
 
@@ -124,7 +124,7 @@ export function qualityChecks(map, q, facts, botSeconds) {
   if (q.botSeconds) add(`perfect-bot time in [${q.botSeconds}] s`, botSeconds >= q.botSeconds[0] && botSeconds <= q.botSeconds[1], botSeconds + ' s');
   if (q.skins) add(`uses at least ${q.skins} distinct wall/floor skins`, facts.skins >= q.skins, facts.skins);
   for (const m of q.mechanics || []) {
-    const need = m.startsWith('keys>=') ? [facts.keys >= Number(m.slice(6)), 'keys ' + facts.keys] : { heights: [facts.heights, 'max floor ' + facts.maxFloor], closets: [facts.closets > 0, facts.closets + ' closets'], triggers: [facts.triggers > 0, facts.triggers + ' triggers'], switches: [facts.switches > 0, facts.switches + ' switches'], sectors: [facts.sectors > 0, facts.sectors + ' sectors'], hazards: [facts.fxCells > 0, facts.fxCells + ' hazard cells'], secret: [facts.secrets > 0, facts.secrets + ' secrets'] }[m];
+    const need = m.startsWith('keys>=') ? [facts.keys >= Number(m.slice(6)), 'keys ' + facts.keys] : { heights: [facts.heights, 'max floor ' + facts.maxFloor], closets: [facts.closets > 0, facts.closets + ' closets'], triggers: [facts.triggers > 0, facts.triggers + ' triggers'], switches: [facts.switches > 0, facts.switches + ' switches'], sectors: [facts.sectors > 0, facts.sectors + ' sectors'], gates: [facts.gates > 0, facts.gates + ' breathing gates'], spores: [facts.spores > 0 && facts.fxCells > 0, facts.spores + ' spore regions'], hazards: [facts.fxCells > 0, facts.fxCells + ' hazard cells'], secret: [facts.secrets > 0, facts.secrets + ' secrets'] }[m];
     add(`uses mechanic '${m}'`, need?.[0], need?.[1] ?? 'unknown mechanic');
   }
   for (const [kind, n] of Object.entries(q.enemyKinds || {})) add(`has at least ${n} ${kind}`, (facts.enemyKinds[kind] || 0) >= n, facts.enemyKinds[kind] || 0);

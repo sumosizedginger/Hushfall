@@ -62,6 +62,12 @@ export function installTestHook(app) {
     debrisProbe() { return g.view && g.world ? debrisProbe(g.view, g.world) : []; },
     setup_arcLife(seconds) { if (g.view) g.view.arcLife = seconds; },        // stills only: the lamp's lightning lives 0.09 s, too short to photograph
     boltProbe() { return g.view ? { streaks: g.view.bolts.filter((b) => b.streak).length, stuck: g.view.bolts.filter((b) => !b.streak).length, zoom: g.view.cam.fov, arcs: g.view.arcs.length, lamp: g.view.lampLight.intensity } : null; },        // the harpoon's view-only effects (streak, bolt left in a wall) and the camera's field of view
+    /** PT-027: what the view draws for the ship's breath: the mortar's landing ring, each spore region's bed / mist, each breathing gate's slab height against the sim's `open` */
+    breathProbe() {
+      if (!g.view || !g.world) return null; const v = g.view, w = g.world;
+      return { ring: v.aimRing ? { visible: v.aimRing.visible, x: v.aimRing.position.x, y: v.aimRing.position.y, z: v.aimRing.position.z } : null, beds: (v.lvl.sporeViews ?? []).map((s) => ({ bed: s.bed.opacity, mist: s.mist.opacity, mistVisible: s.mist.visible })),
+        gates: w.doors.filter((d) => d.breath).map((d) => { const m = v.lvl.doorViews.get(d.cx + ',' + d.cz); return { cx: d.cx, cz: d.cz, open: d.open, target: d.target, y: m ? m.position.y - (m.userData.base ?? 0) : null, span: m?.userData.span ?? null }; }), shells: w.projectiles.filter((q) => q.weapon === 'mortar').length };
+    },
     /** where the Cantor's shield and the ring beams are drawn (world space) */
     encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */

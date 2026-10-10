@@ -2,6 +2,7 @@
 // Everything takes the world `w` because sector heights are sim state. A map with no terrain layers and no sectors is "flat": every
 // query short-circuits to 0, so Gate 1 maps and frozen test fixtures behave exactly as before.
 import { STEP, FX } from './defs.js';
+import { sporeOnAt } from './breath.js';
 
 const isFlat = (m) => m.flat && m.sectors.length === 0;
 
@@ -33,5 +34,9 @@ export function ceilingAt(w, x, z) {
   return k === 'floor' || k === 'door' || k === 'secret' ? m.ceilingAt(cx, cz) : Infinity;
 }
 /** the floor-effect char under a point ('w' | 'x' | null) */
-export function fxAt(w, x, z) { const m = w.map; return m.fxRows ? m.fx(Math.floor(x / m.cell), Math.floor(z / m.cell)) : null; }
+export function fxAt(w, x, z) {
+  const m = w.map; if (!m.fxRows) return null;
+  const cx = Math.floor(x / m.cell), cz = Math.floor(z / m.cell), c = m.fx(cx, cz);
+  return c && FX[c]?.pulse && !sporeOnAt(m, cx, cz, w.time) ? null : c;                 // PT-027: a spore bed does nothing while it is dormant (breath.js)
+}
 export const fxSpeed = (c) => (c ? FX[c]?.speed ?? 1 : 1);

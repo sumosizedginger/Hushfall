@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs",
+  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -413,6 +413,14 @@
       "sha256": "4986a04bbcfa5c92c158d43408e42a8a3554f546f2159b38264d42738cf73b04",
       "bytes": 28347
     },
+    "choir_chorister": {
+      "seed": 2311,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3d7c9507f5a7eaad7bb1644a4e27537d843853bb8e542830f82ea4fd0b2605ec",
+      "bytes": 35134
+    },
     "choir_graftmother": {
       "seed": 2310,
       "width": 256,
@@ -453,13 +461,37 @@
       "sha256": "13419fcad9edb6566beb5f320c229baea4d3877670360b9b7ae9775594563968",
       "bytes": 31573
     },
-    "choir_chorister": {
-      "seed": 2311,
+    "wall_rib_a": {
+      "seed": 9301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "3d7c9507f5a7eaad7bb1644a4e27537d843853bb8e542830f82ea4fd0b2605ec",
-      "bytes": 35134
+      "sha256": "2d4864ea844fea300bf57ee1e4176a02090d61b82d2fec3dfa9dfa6ab74e2673",
+      "bytes": 25484
+    },
+    "floor_gill_a": {
+      "seed": 9302,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "aa59c9ee0ab3eba06c5cd92cb0dc49e05e03c17e188e4e6ff29ac4696bc9e049",
+      "bytes": 43409
+    },
+    "door_gill_a": {
+      "seed": 9303,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a60427713fe4abe90200f42e4fa98b04a3dbe1367ee05ee0161211d0c1dfe718",
+      "bytes": 31796
+    },
+    "floor_spore_a": {
+      "seed": 9304,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "14e2d3ba88f84cf776c71271ad1e592fc598e205d0fca808b769f5bad9d5ee92",
+      "bytes": 40728
     }
   }
 }

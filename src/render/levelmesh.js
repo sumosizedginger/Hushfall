@@ -83,7 +83,8 @@ export function buildLevel(map, tex) {
 
   const walls = new Map(), floors = new Map(), risers = new Map(), ceil = new Quads(), ceilSteps = new Quads(), fascia = new Quads();
   const bucket = (m, key) => { let q = m.get(key); if (!q) m.set(key, q = new Quads()); return q; };
-  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads() }, wsize = 3000;         // the sea reaches past the fog: no black gap at the horizon from a high vantage
+  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads() }, wsize = 3000;
+  const sporeBed = map.pulses.map(() => new Quads()), sporeMist = map.pulses.map(() => new Quads());      // PT-027: a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js)         // the sea reaches past the fog: no black gap at the horizon from a high vantage
   const sectorQ = map.sectors.map(() => ({ top: new Map(), skirt: new Map() }));
 
   for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
@@ -113,6 +114,7 @@ export function buildLevel(map, tex) {
       if (y > lowN + 1e-6) face(bucket(risers, fs), S, cx, cz, dx, dz, lowN, y);
     }
     const fx = map.fx(cx, cz);
+    if (fx === 's') { const pi = map.pulses.indexOf(map.pulseAt(cx, cz)); if (pi >= 0) { const x0 = cx * S, z0 = cz * S, bed = [[x0, y + 0.07, z0], [x0, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0]], mist = bed.map((r) => [r[0], y + 0.8, r[2]]); sporeBed[pi].add(bed, [0, 1, 0], bed.map((r) => [r[0] / 2, r[2] / 2])); sporeMist[pi].add(mist, [0, 1, 0], mist.map((r) => [r[0] / 6, r[2] / 6])); } }
     if (fx && fx in fxQuads) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
   const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
@@ -155,7 +157,7 @@ export function buildLevel(map, tex) {
       const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, d.cx, d.cz, dx, dz, fy, fy + span, fy);
       const holder = new THREE.Group(); holder.add(new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(d.cx, d.cz)]) }))); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(d.cx + ',' + d.cz, holder); continue;
     }
-    const m = makeDoorSlab(T('door_hatch_a'), S, span, map.doorAxis(d.cx, d.cz), !!d.key);
+    const m = makeDoorSlab(d.breath ? (tex.door_gill_a ?? T('door_hatch_a')) : T('door_hatch_a'), S, span, map.doorAxis(d.cx, d.cz), !!d.key);
     m.position.set(...pos); m.userData = { base: fy, span: span - 0.05 }; group.add(m); doorViews.set(d.cx + ',' + d.cz, m);
   }
   for (const s of map.secrets) {
@@ -231,6 +233,12 @@ export function buildLevel(map, tex) {
     exitViews.set(e.id, r);
   }
   if (!fxQuads.h.empty) { fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false }); const m = new THREE.Mesh(fxQuads.h.geometry(), fxMats.h); m.renderOrder = 2; group.add(m); }                // ember bed (Kiln Row): a glowing orange wash
+  const sporeViews = map.pulses.map((p, i) => {                                                                    // PT-027: the spore beds: the view sets both materials from the clock every frame
+    const bed = new THREE.MeshBasicMaterial({ map: tex.floor_spore_a ?? tex.floor_ember_a, color: 0xffffff, transparent: true, opacity: 0.2, depthWrite: false }), mist = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xd6ee8c, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+    if (!sporeBed[i].empty) { const m = new THREE.Mesh(sporeBed[i].geometry(), bed); m.renderOrder = 2; group.add(m); }
+    if (!sporeMist[i].empty) { const m = new THREE.Mesh(sporeMist[i].geometry(), mist); m.renderOrder = 3; group.add(m); }
+    return { bed, mist };
+  });
   { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
-  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, switchViews, exitViews };
+  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews };
 }

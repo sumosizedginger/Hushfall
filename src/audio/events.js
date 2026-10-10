@@ -5,6 +5,7 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
+  spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
   shot_impact_silent: 'reserved',
   shake: 'view-only effect (camera shake): the view reads it',
@@ -26,6 +27,7 @@ const WEAPON_FIRE = {
   arc: [{ id: 'arc_fire', gain: 0.9 }],
   carbine: [{ id: 'carbine_fire', gain: 0.85 }],
   linethrower: [{ id: 'rocket_fire' }],
+  mortar: [{ id: 'mortar_fire' }],
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
@@ -76,8 +78,11 @@ export function soundsForEvent(e) {
       return [{ id: t === 'health' ? 'pickup_health' : t === 'ammo' ? 'pickup_ammo' : t === 'armor' ? 'pickup_armor' : t === 'key' ? 'pickup_key' : 'pickup_ammo' }];
     }
     case 'weapon_pickup': return [{ id: 'pickup_ammo' }, { id: 'pump', delay: 0.15 }];
-    case 'door_open': return [{ id: 'door_open', pos: at(e) }];
-    case 'door_close': return [{ id: 'door_close', pos: at(e) }];
+    case 'door_open': return [{ id: e.breath ? 'gate_in' : 'door_open', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];       // a breathing gate sighs all the time: quieter than a door somebody opened
+    case 'door_close': return [{ id: e.breath ? 'gate_out' : 'door_close', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];
+    case 'door_breath': return [{ id: 'door_locked', pos: at(e), gain: 0.5 }];
+    case 'spore_warn': return [{ id: 'spore_swell', pos: at(e), gain: 0.8 }];
+    case 'spore_bloom': return [{ id: 'spore_puff', pos: at(e) }];
     case 'door_locked': return [{ id: 'door_locked', pos: at(e) }];
     case 'secret': return [{ id: 'secret' }];
     case 'enemy_alert': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e) }];
@@ -100,7 +105,7 @@ export function soundsForEvent(e) {
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
     case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
     case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
-    case 'wade': return [{ id: 'splash' }];
+    case 'wade': return e.kind === 's' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
     case 'alarm': return [{ id: 'alarm_bell' }];
     case 'enemy_spawn': return [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
     case 'exit_unlock': return [{ id: 'gate_unlock' }];

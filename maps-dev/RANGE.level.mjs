@@ -16,12 +16,18 @@ L.fx([30, 17, 44, 25], 'w');                                    // the water bay
 // PT-022: the second range, south of the first and open to it just below the hub: the saw yard (west), the rocket yard (middle), the gravity yard (east), a carbine lane along the south wall
 L.room([2, 31, 45, 52], { floor: 'f', wall: 'C' });
 L.rect([21, 28, 23, 30], 'f');                                   // the way through (three wide)
+// PT-027: the third range, east of the second (an opening in its east wall): the mortar yard (a 3 m ledge of singers over a wall of crates) in the north half, the breath yard (a breathing gate and a spore bed) in the south half
+L.room([48, 30, 59, 52], { floor: 'f', wall: 'C' }); L.rect([46, 40, 47, 42], 'f');
+L.rect([48, 44, 59, 44], 'C'); L.door(53, 44, { breath: { period: 8, open: 0.5, phase: 0 } });                       // the partition: one breathing gate, shut half of every eight seconds
+L.rect([54, 30, 59, 41], 'f'); L.height([54, 30, 59, 41], 6); L.stairs([48, 38, 53, 41], 'x', 0, 6);                    // the ledge, 3 m up, and the stair to it (a way back down: there is no trap)
+L.fx([50, 47, 57, 49], 's');                                                                                          // the spore bed: blooms 3 s of every 8, glows for 1.2 s before
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
 L.putAll('P', [[28, 11], [28, 16], [28, 21]]);
 L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50], [30, 50]]);                           // the second range's lamps
-L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);                                              // the rocket yard's wall of crates (static: a rocket stops on them)
+L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
+L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
 L.put(22, 24, '@');                                              // the hub: the sponges north, the pair and the far sponge on this row, the crowd and the water north-east
 
 // ---- targets -------------------------------------------------------------------------------------------------------------------
@@ -50,6 +56,9 @@ const pen = (kind, x, z) => E.push({ type: 'enemy', kind, at: [x, z], facing: WE
 for (const [kind, x, z] of [['tollbearer', 50, 11], ['tollbearer', 54, 13], ['tollbearer', 51, 21], ['gaunt', 49, 15], ['gaunt', 53, 17], ['gaunt', 55, 21], ['bellhand', 56, 11], ['sexton', 55, 15], ['wardengraft', 52, 18]]) pen(kind, x, z);
 E.push({ type: 'switch', id: 'pen', at: [45, 19], wall: 'east', once: true, do: [{ open: [46, 16] }, { wake: 'pen' }, { objective: 'The pen is open and awake: nine creatures, fighting as in the game' }, { shake: 1.5 }] });
 
+// ---- PT-027: the mortar yard (a ledge of sponge singers, a crowd on the far floor behind crates) ----
+t('chorister', 56, 33, WEST, 'inert', SPONGE); t('chorister', 58, 36, WEST, 'inert', SPONGE); t('chorister', 57, 39, WEST, 'inert', SPONGE); t('tollbearer', 56, 31, WEST, 'inert', SPONGE);
+for (const [x, z] of [[49, 34], [51, 34], [50, 35]]) t('tollbearer', x, z, WEST, 'inert');
 // ---- PT-022: the second range -----------------------------------------------------------------------------------------------------
 // SAW YARD (west): sponges to cut, a crowd to cleave, a Warden whose plate faces you (the saw kicks back: stall) and one that shows its back
 t('tollbearer', 5, 34, S, 'inert', SPONGE); t('tollbearer', 9, 34, S, 'inert', SPONGE); t('gaunt', 13, 34, S, 'inert', SPONGE);
@@ -73,10 +82,11 @@ const layers = L.layers();
 export default {
   id: 'RANGE', name: 'The Range (dev only)', version: 1, ceilingHeight: 6, range: true,
   atmosphere: { fog: '#8d9a98', fogDensity: 0.006, sky: 'overcast' },
-  entryLoadout: { hp: 100, armor: 100, ammo: { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'] },
+  entryLoadout: { hp: 100, armor: 100, ammo: { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'mortar', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'] },
   intro: { title: 'THE RANGE', lines: ['Every weapon. Nothing runs out. You cannot die.', 'Targets stand where they are put. The second range is south of the hub: saw, rockets, gravity, a carbine lane.'] },
   objective: 'RANGE: sponges north, swingers middle, fixed south; crowd, water, Vael, pen east; the second range (saw, rockets, gravity, carbine) through the opening south of the hub',
   ...layers,
+  pulses: [{ rect: [50, 47, 57, 49], period: 8, on: 3, phase: 0 }],
   entities: E.map((e) => ({ ...e })).concat([{ type: 'exit', dest: 'next', at: [45, 27] }]),
   startFacing: 'north',
   messages: [
@@ -89,6 +99,8 @@ export default {
     { id: 'rocketyard', at: [23, 35], radius: 6, speaker: 'RANGE', text: 'ROCKET YARD: 1.5 s a rocket, a wide blast, a direct hit adds more, bell nodes take double, plate does not turn it. It hurts YOU inside 65% of the blast. Corner barrels move.' },
     { id: 'gravityyard', at: [36, 36], radius: 7, speaker: 'RANGE', text: 'GRAVITY (key 9): hold RIGHT mouse within 8 m, near screen middle (the crosshair widens): lifts a crate/barrel/sack or drags a creature in. LEFT throws it, or punts if empty-handed.' },
     { id: 'carbinelane', at: [12, 49], radius: 5, speaker: 'RANGE', text: 'CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit.' },
+    { id: 'mortaryard', at: [49, 37], radius: 5, speaker: 'RANGE', text: 'MORTAR (key 0): the shell flies TO the ring, high, over the crates and up onto the ledge. Two rockets a shell, nothing inside 9 m, and the blast hurts YOU too.' },
+    { id: 'breathyard', at: [53, 48], radius: 6, speaker: 'RANGE', text: 'BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

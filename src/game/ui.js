@@ -4,7 +4,7 @@ import { gravTarget } from '../engine/gravity.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
-const NEW_WEAPON_TOASTS = { weapon_carbine: 'Harbour carbine  (7): no bloom, a round in the head does 2.4x', weapon_linethrower: 'Rocket line-thrower  (8): a wide blast; it hurts you too', weapon_fork: 'Vael tuning-fork  (9): hold aim to lift, fire to throw or punt', weapon_chainsaw: "Shipwright's chainsaw  (6): hold fire; it is loud and it stalls" };
+const NEW_WEAPON_TOASTS = { weapon_carbine: 'Harbour carbine  (7): no bloom, a round in the head does 2.4x', weapon_linethrower: 'Rocket line-thrower  (8): a wide blast; it hurts you too', weapon_fork: 'Vael tuning-fork  (9): hold aim to lift, fire to throw or punt', weapon_mortar: 'Bell-breaker mortar  (0): the shell lands on the ring; two rockets a shell; it hurts you too', weapon_chainsaw: "Shipwright's chainsaw  (6): hold fire; it is loud and it stalls" };
 import { describeNext, TRACKS } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
@@ -97,7 +97,7 @@ export class UI {
       else if (e.type === 'parry') this.crossNote('PARRY', '#ffd45a'); else if (e.type === 'block') this.crossNote('BLOCK', '#c4d4d0'); else if (e.type === 'guard_break') this.crossNote('GUARD BROKEN', '#e0583a'); else if (e.type === 'pin') this.crossNote('PINNED', '#7ffff0');
     }
     if (mark) this.hitMark(mark === 'hit' ? '' : mark);
-    for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'dry_feed') this.toast('Out of ammunition: the cannon feed clanks a flare home'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
+    for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'door_breath') this.toast('It opens when the ship breathes in.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'dry_feed') this.toast('Out of ammunition: the cannon feed clanks a flare home'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
   /** In-world transmissions/notes are shown IN ORDER, one at a time, each long enough to read (55 ms per character, 4 s minimum, then a short gap), never on top of the title card.
    *  The radio blip plays when a message is actually shown. */
   comms(e) { this.comq.push(e); this.pumpComms(); }
@@ -130,7 +130,7 @@ export class UI {
     { const C = wd.charge, bar = $('charge'); const lo = melee ? 0.12 : C ? C.min : 0, f = C ? Math.min(1, Math.max(0, ((p.charge || 0) - lo) / (C.max - lo))) : 0, on = !!C && (p.charge || 0) > lo && (melee || have > 0);
       bar.classList.toggle('on', on); bar.classList.toggle('fist', melee); bar.classList.toggle('full', on && f >= 1); bar.firstElementChild.style.width = Math.round(f * 100) + '%'; }
     { const mid = melee ? p.weapon : (MELEE_ORDER.includes(p.meleeWeapon) ? p.meleeWeapon : 'fists');
-      $('hud-weapons').innerHTML = SLOT_KEYS.map((id, i) => (id === 'melee' ? `<span class="${melee ? 'on' : ''}">${i + 1} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>` : p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${i + 1} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join(''); }
+      $('hud-weapons').innerHTML = SLOT_KEYS.map((id, i) => (id === 'melee' ? `<span class="${melee ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>` : p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join(''); }
     $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
     $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle'), bossEl = $('boss');
