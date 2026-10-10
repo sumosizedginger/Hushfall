@@ -1,0 +1,11 @@
+[
+  {"name":"01-the-vestibule","x":5.5,"z":17.5,"yaw":-1.571,"pitch":0.02,"open":true},
+  {"name":"02-the-passage","x":12.5,"z":17.5,"yaw":-1.571,"pitch":0.02,"open":true},
+  {"name":"03-the-room","x":17.5,"z":17.5,"yaw":-1.571,"pitch":-0.12,"open":true},
+  {"name":"04-the-steps","x":18.5,"z":15.5,"yaw":-1.862,"pitch":-0.2,"open":true},
+  {"name":"05-the-stone","x":22.5,"z":17.5,"yaw":-1.571,"pitch":-0.25,"open":true},
+  {"name":"06-the-dome","x":24.5,"z":20.5,"yaw":0,"pitch":0.8,"open":true},
+  {"name":"07-the-cache","x":29.5,"z":14.5,"yaw":-3.142,"pitch":-0.1,"open":true},
+  {"name":"08-the-way-out","x":31.5,"z":17.5,"yaw":-1.571,"pitch":0.02,"open":true},
+  {"name":"09-the-nook","x":37.5,"z":17.5,"yaw":-1.571,"pitch":0.02,"open":true}
+]

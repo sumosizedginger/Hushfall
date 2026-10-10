@@ -652,6 +652,142 @@
       "transparent": false,
       "sha256": "b57a8f8566c2d3040302b38141ff921a285ed696393105ff12d74cee33258d2c",
       "bytes": 78406
+    },
+    "wall_glass_a": {
+      "seed": 9411,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "238837d73964ba1cae25e7ac101eb0f50b0565fc6390b15b30c33c0c6e9839ba",
+      "bytes": 10611
+    },
+    "floor_prism_a": {
+      "seed": 9412,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6e0a10e3aed7a558cf20ad56c9b97435ccecbf5b8f39fe19e512879e1b9bc5a3",
+      "bytes": 9090
+    },
+    "wall_quiet_a": {
+      "seed": 9413,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c9c03ef2151329d7403e9b758fbb10ff8e9d32d2727ca5893104756ce3185317",
+      "bytes": 15607
+    },
+    "floor_quiet_a": {
+      "seed": 9414,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "93385635d6474907e38a4858ccddc6f18ad300c63b91c692dd76903556f7b47c",
+      "bytes": 30089
+    },
+    "wall_dock_a": {
+      "seed": 9415,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "726944441ff3410b49584d3ca21e87a4d3a5a7dc83f56db9168c1cbc8ecb630c",
+      "bytes": 14245
+    },
+    "floor_dock_a": {
+      "seed": 9416,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "22d27338f5a6979d512e73bad8277ae0820968592074edaf34bf7b0e73d80613",
+      "bytes": 17100
+    },
+    "wall_orchard_a": {
+      "seed": 9417,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e4c1f10afba2ddd0be5f25c29c8900287439af35c79d957be5ac90d026b6543f",
+      "bytes": 18548
+    },
+    "wall_bark_a": {
+      "seed": 9418,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f61b1cdcb92dc6b0457308a747440882aed653f8a5b6aabbf025185c0b0ce434",
+      "bytes": 11150
+    },
+    "floor_moss_a": {
+      "seed": 9419,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "fdc59f0ad3e206b6aa7bb76b6fb5eead6acc3f8d17ac16507afadfd4d0acd100",
+      "bytes": 27560
+    },
+    "wall_approach_a": {
+      "seed": 9420,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a0120664b469309bb98bae5e0844b339803728502e4c8732f9e632623ee10a1f",
+      "bytes": 7062
+    },
+    "floor_approach_a": {
+      "seed": 9421,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e255f3d4adc5f7ea4a19203eaed6f6ceda20e244193f1d8c535a5615f485efa5",
+      "bytes": 12639
+    },
+    "wall_stair_a": {
+      "seed": 9422,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "855fa1c59306a5239e9b541349def0e9005a01ac06dcd8f5b5d9f09af54283bd",
+      "bytes": 7407
+    },
+    "floor_stair_a": {
+      "seed": 9423,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "dba959de5e843dfd59b694ac7ef096de9b4435f68c3e0dfa2e32ad4b8560ed9d",
+      "bytes": 10723
+    },
+    "wall_gate_a": {
+      "seed": 9424,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6031221be601b4ca81a331e503913e103ba016b59e8a83a81581e8492afe5f45",
+      "bytes": 20633
+    },
+    "floor_gate_a": {
+      "seed": 9425,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f5fb6d871865ae9605eeffd22aab6fe0bb002712d050cf2282250090e6cbc99e",
+      "bytes": 28123
+    },
+    "sky_gate": {
+      "seed": 9426,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "dfa58a9cb68e6878ab821383f1108531fc8b4b3d77bb1ff0f847f1acba585fdc",
+      "bytes": 23569
+    },
+    "sky_gate_below": {
+      "seed": 9427,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "544ff654a04a0853246615cb387329191dc305a00f4400c953b72a3d7cfdbe9d",
+      "bytes": 33760
     }
   }
 }

@@ -32,6 +32,7 @@ for (const v of views) {
   if (v.open && !opened) { await T('t.setup_openDoors()'); opened = true; }
   const yaw = typeof v.yaw === 'string' ? YAW[v.yaw] : v.yaw;
   await T(`t.setup_teleport(${v.x * 2}, ${v.z * 2}, ${yaw}); t.setup_player({ pitch: ${v.pitch ?? 0}, hp: 100, hurt: 0 })`);
+  if (v.mirrors) await T(`t.setup_mirrors(${JSON.stringify(v.mirrors)})`);                                  // PT-033: put the Mirror Array's mirrors in a chosen state (ids -> rotation)
   if (v.wake) await T('t.setup_wakeAll()');
   if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100 })'); }
   if (v.ambient != null) await T(`t.setup_ambient(${v.ambient})`);

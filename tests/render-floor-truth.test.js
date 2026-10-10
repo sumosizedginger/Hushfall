@@ -35,7 +35,7 @@ const nearProp = (map, x, z) => map.props.some((p) => Math.hypot(p.x - x, p.z - 
 function judgeStatic(map, lv, w, shift = 0) {
   lv.group.updateMatrixWorld(true); const bad = []; let n = 0;
   for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
-    const k = map.kind(cx, cz); if (k === 'wall' || k === 'water' || map.sectorAt(cx, cz) >= 0) continue;
+    const k = map.kind(cx, cz); if (k === 'wall' || k === 'water' || k === 'void' || map.sectorAt(cx, cz) >= 0) continue;      // (open sky has no floor to draw: PT-032)
     for (const [ox, oz] of OFFSETS) {
       const x = (cx + 0.5) * map.cell + ox, z = (cz + 0.5) * map.cell + oz; if (nearProp(map, x, z)) continue;
       const sim = floorAt(w, x, z), drawn = surfaceBelow(lv.group, x, sim + 0.6, z); n++;

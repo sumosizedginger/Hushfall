@@ -2,7 +2,7 @@
 // builds contain none of it. Actions travel through the real input layer + fixed step; the only state writers are the
 // clearly-labelled setup_* helpers.
 import { Bot } from '../engine/bot.js';
-import { hashWorld, spawnEnemy } from '../engine/world.js';
+import { hashWorld, spawnEnemy, updateBeams } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
 import { sanitizeProgress } from '../engine/progress.js';
@@ -103,6 +103,13 @@ export function installTestHook(app) {
     clearOverlays() { ui.clearOverlays(); },
     /** wake every sleeping enemy (worst-case render/CPU sampling: everything animating and chasing) */
     setup_wakeAll() { for (const e of g.world.enemies) if (e.state === 'idle') { e.state = 'chase'; e.lastX = g.world.player.x; e.lastZ = g.world.player.z; e.lost = 0; } },
+    /** PT-033: set the mirrors (ids -> rotation 0..3) and trace the beams again: the stills and the browser check put the Mirror Array in a chosen state */
+    setup_mirrors(rots) { const w = g.world; if (!w.mirrors) return false; Object.assign(w.mirrors, rots); updateBeams(w, true); return true; },
+    /** PT-033: what the sim says about the beams and what the view has drawn: lit receivers, the mirror rotations, the plates' drawn yaws, how many bars of light, each receiver's glow */
+    beamProbe() {
+      const w = g.world, v = g.view?.beamView; if (!w?.mirrors || !v) return null;
+      return { lit: [...w.beams.lit], mirrors: { ...w.mirrors }, yaws: Object.fromEntries([...v.mirrors].map(([id, m]) => [id, m.yaw])), bars: v.lines.children.length, glow: Object.fromEntries([...v.receivers].map(([id, r]) => [id, r.lit])) };
+    },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     /** the weapon wheel (PT-013): is it open, what is selected, the clock scale; and push the pointer as the mouse would (the real mouse needs pointer lock, which the harness turns off) */

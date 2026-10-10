@@ -10,7 +10,7 @@ precision highp float;
 uniform sampler2D tColor, tDepth, tPaper;
 uniform vec2 uRes;
 uniform vec3 uShadowTint, uLightTint;
-uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug;
+uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug, uFrost;
 varying vec2 vUv;
 
 float invZ(vec2 uv) {
@@ -59,6 +59,8 @@ void main() {
 
   vec2 q = vUv - 0.5;
   col *= 1.0 - dot(q, q) * 0.9;                                         // vignette
+  col = mix(col, vec3(0.78, 0.9, 1.0), uFrost * clamp(dot(q, q) * 5.5 - 0.12, 0.0, 0.88));           // PT-033: frost creeping in from the edges while you are in vacuum
+  col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), uFrost * 0.35);
   col = mix(col, vec3(0.75, 0.05, 0.05), uDamage * clamp(dot(q, q) * 4.0 + 0.15, 0.0, 1.0));
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -74,7 +76,7 @@ export class PostPass {
     this.uniforms = {
       tColor: { value: null }, tDepth: { value: null }, tPaper: { value: paperTex }, uRes: { value: new THREE.Vector2(1, 1) },
       uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
-      uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 },
+      uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 }, uFrost: { value: 0 },
       uShadowTint: { value: new THREE.Vector3(0.9, 1.0, 1.08) }, uLightTint: { value: new THREE.Vector3(1.07, 1.0, 0.93) }, uSat: { value: 1 },
     };
     this.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: this.uniforms, vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false })));

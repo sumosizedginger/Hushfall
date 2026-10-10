@@ -377,7 +377,39 @@ export const SFX = {
     thump(c, out, t + 0.55, 80, 36, 0.3, 0.45);
     return 1.0;
   },
+  // --- Episode 4, Batch B (PT-033): the Mirror Array ---
+  mirror_turn(c, out, t, o) {                                   // a quarter step on a brass pivot: a ratchet click, then a ring of glass
+    thump(c, out, t, 200, 90, 0.08, 0.2);
+    noise(c, out, t, { dur: 0.08, a: 0.001, gain: 0.25, type: 'highpass', f0: 2500, off: o.r() });
+    tone(c, out, t + 0.04, { type: 'sine', f0: 1320, f1: 1290, a: 0.003, d: 0.5, gain: 0.07 });
+    tone(c, out, t + 0.04, { type: 'sine', f0: 1980, f1: 1960, a: 0.003, d: 0.4, gain: 0.04 });
+    return 0.7;
+  },
+  receiver_lit(c, out, t, o) {                                  // light arrives: a rising three-note chime over a soft low hum
+    tone(c, out, t, { type: 'sine', f0: 660, f1: 660, a: 0.01, d: 0.9, gain: 0.12 });
+    tone(c, out, t + 0.12, { type: 'sine', f0: 990, f1: 990, a: 0.01, d: 1.1, gain: 0.1 });
+    tone(c, out, t + 0.24, { type: 'sine', f0: 1320, f1: 1320, a: 0.01, d: 1.4, gain: 0.08 });
+    tone(c, out, t, { type: 'triangle', f0: 110, f1: 110, a: 0.2, d: 1.2, gain: 0.05 });
+    return 1.7;
+  },
+  receiver_dark(c, out, t, o) {                                 // the light goes: a falling tone and a click
+    tone(c, out, t, { type: 'sine', f0: 880, f1: 330, a: 0.005, d: 0.4, gain: 0.07 });
+    noise(c, out, t + 0.3, { dur: 0.06, a: 0.001, gain: 0.1, type: 'highpass', f0: 3000, off: o.r() });
+    return 0.5;
+  },
+  vacuum_rush(c, out, t, o) {                                   // the air leaves: a hiss that falls away to nothing, a thud through the soles, a high tick of frost
+    noise(c, out, t, { dur: 1.2, a: 0.01, gain: 0.3, type: 'highpass', f0: 4200, f1: 600, q: 0.8, off: o.r() });
+    thump(c, out, t, 70, 30, 0.3, 0.5);
+    tone(c, out, t + 0.1, { type: 'sine', f0: 3400, f1: 1200, a: 0.01, d: 0.8, gain: 0.04 });
+    return 1.3;
+  },
+  air_return(c, out, t, o) {                                    // the air comes back: a soft rush rising, a breath
+    noise(c, out, t, { dur: 0.9, a: 0.25, gain: 0.2, type: 'lowpass', f0: 300, f1: 2200, q: 0.7, off: o.r() });
+    tone(c, out, t + 0.1, { type: 'sine', f0: 220, f1: 330, a: 0.2, d: 0.6, gain: 0.05 });
+    return 1.0;
+  },
   // --- Episode 3, Batch E (PT-030): the Brood Vat, the Reed, the Grand Cantor ---
+
   vat_swell(c, out, t, o) {                                     // a lid straining: a low gurgle climbing, the groan of iron under pressure, a hiss at the top
     noise(c, out, t, { dur: 1.3, a: 0.9, gain: 0.2, type: 'lowpass', f0: 120, f1: 520, q: 1.4, off: o.r() });
     tone(c, out, t, { type: 'sawtooth', f0: 46, f1: 74, a: 0.7, d: 0.6, gain: 0.14, lp: 260, vib: 6 });

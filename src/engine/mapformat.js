@@ -30,7 +30,7 @@ export class MapData {
     this.cell = src.cellSize ?? CELL; this.ceiling = src.ceilingHeight ?? DEFAULT_CEILING;
     this.tiles = src.grid.map((r) => [...r]);
     this.h = this.tiles.length; this.w = this.tiles[0].length;
-    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
+    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null, interlock: d.interlock ?? null, startOpen: !!d.open }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
     this.hasVoid = src.grid.some((r) => r.includes('_'));                                  // PT-032: a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
     this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
@@ -48,12 +48,15 @@ export class MapData {
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
+    this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
     this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable);                 // the STATIC props (collision, nav, the merged level mesh)
     this.movables = this.entities.filter((e) => e.type === 'prop' && e.movable);                // PT-022: props the gravity tool can lift and throw (world.phys, drawn one by one, never part of the static props)
+    { const cellOf = (e) => [Math.floor(e.at[0]), Math.floor(e.at[1])], of = (kind) => this.props.filter((e) => e.kind === kind);      // PT-033: the beam tracer's emitters, mirrors and receivers (beams.js); they are ordinary solid props too
+      this.mirrors = of('mirror').map((e) => ({ id: e.id, at: cellOf(e), rot: e.rot ?? 0 })); this.emitters = of('emitter').map((e) => ({ id: e.id, at: cellOf(e), dir: e.dir ?? 'e' })); this.receivers = of('receiver').map((e) => ({ id: e.id, at: cellOf(e) })); }
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
     this.growth = src.growth || [];                                                      // where the Vael's growth started (PT-021): view data, the simulation never reads it
@@ -126,6 +129,12 @@ function validateMapChecks(src) {
     if (!Array.isArray(d.at) || tile(d.at[0], d.at[1]) !== 'D') { err(`doors entry ${JSON.stringify(d.at)} is not on a 'D' tile`); continue; }
     doorKeys.add(d.at.join(','));
     if (d.key != null && !KEYS[d.key]) err(`door ${d.at} needs unknown key '${d.key}'`);
+    if (d.interlock != null) {                                           // PT-033: an airlock: the partner is a door that says the same of this one
+      const pr = Array.isArray(d.interlock) ? doors.find((q) => Array.isArray(q.at) && q.at.join(',') === d.interlock.join(',')) : null;
+      if (!pr) err(`door ${d.at}: interlock must be the cell of another door`); else if (!Array.isArray(pr.interlock) || pr.interlock.join(',') !== d.at.join(',')) err(`door ${d.at}: its interlock partner ${d.interlock} must name it back`);
+      if (d.breath != null || d.remote || d.soundlock != null) err(`door ${d.at}: a lock door is opened by Use: no breath, remote or sound-lock`);
+    }
+    if (d.open != null && (d.open !== true || !d.remote || d.breath != null)) err(`door ${d.at}: open: true (a hull door that starts open) must be a remote door with no breath`);
     if (d.soundlock != null) {                                           // PT-029: a sound-lock door only opens (by Use) when nothing loud has been heard near it for `quiet` s
       const k = d.soundlock;
       if (typeof k !== 'object' || !(k.quiet >= 2 && k.quiet <= 12) || (k.radius != null && !(k.radius >= 8))) err(`door ${d.at}: soundlock needs { quiet between 2 and 12 s, radius >= 8 m }`);
@@ -159,7 +168,7 @@ function validateMapChecks(src) {
   const players = ents.filter((e) => e.type === 'player');
   if (players.length !== 1) err(`expected exactly 1 player entity, found ${players.length}`);
   if (!ents.some((e) => e.type === 'exit')) err('no exit entity');
-  const keyPickups = new Set();
+  const keyPickups = new Set(), beamIds = new Set();
   ents.forEach((e, i) => {
     const tag = `entity #${i} (${e.type}${e.kind ? ':' + e.kind : ''})`;
     if (!Array.isArray(e.at) || e.at.length !== 2 || !e.at.every(Number.isFinite)) return err(`${tag} has bad 'at'`);
@@ -173,6 +182,11 @@ function validateMapChecks(src) {
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
     else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit', 'switch'].includes(e.type)) err(`${tag}: unknown entity type`);
+    if (e.type === 'prop' && (e.kind === 'mirror' || e.kind === 'emitter' || e.kind === 'receiver')) {                                       // PT-033: the beam tracer's props
+      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`); else { if (beamIds.has(e.id)) err(`${tag}: duplicate beam id '${e.id}'`); beamIds.add(e.id); }
+      if (e.kind === 'mirror' && !(Number.isInteger(e.rot ?? 0) && (e.rot ?? 0) >= 0 && (e.rot ?? 0) <= 3)) err(`${tag}: rot must be 0, 1, 2 or 3`);
+      if (e.kind === 'emitter' && !'nesw'.includes(e.dir ?? 'e')) err(`${tag}: dir must be n, e, s or w`);
+    }
     if (e.movable != null && (e.type !== 'prop' || e.movable !== true || !PHYS[e.kind])) err(`${tag}: movable is for a crate, a barrel or a sack (movable: true)`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
   });
@@ -252,6 +266,12 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
     let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
     if (!floor) err(`${tag}: no floor under it`);
+  }
+  for (const [i, v] of (src.vacuum || []).entries()) {                               // PT-033: regions of vacuum
+    const tag = `vacuum #${i}`, cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && tile(c[0], c[1]) === 'D';
+    if (!Array.isArray(v?.rect) || v.rect.length !== 4 || !v.rect.every(Number.isInteger) || v.rect[0] > v.rect[2] || v.rect[1] > v.rect[3] || v.rect[0] < 0 || v.rect[1] < 0 || v.rect[2] >= w || v.rect[3] >= h) err(`${tag}: rect must be [x0, z0, x1, z1] inside the grid`);
+    if (!Array.isArray(v?.seals) || !v.seals.length || !v.seals.every(cellOk)) err(`${tag}: seals must list door cells (a hull door)`);
+    if (v?.and != null && (!Array.isArray(v.and) || !v.and.every(cellOk))) err(`${tag}: and must list door cells`);
   }
   const ventAts = new Set();                                                          // PT-032: launch vents
   for (const [i, v] of (src.vents || []).entries()) {
@@ -349,9 +369,10 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (wn.startsWith('key:')) { if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`); }
     else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
     else if (wn.startsWith('msg:')) { if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`); }
+    else if (wn.startsWith('lit:')) { if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`); }
     else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
     else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
-    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> (got '${wn}')`);
+    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> (got '${wn}')`);
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);
   }
@@ -359,7 +380,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   for (const id of sectorIds) if (!drivenSectors.has(id) && !cycling.has(id)) err(`sector '${id}' is never moved by any switch or trigger`);
   for (const id of cycling) if (drivenSectors.has(id)) err(`sector '${id}' has a cycle (it moves on a clock): no switch or trigger may move it too`);
   if (src.quality != null && (typeof src.quality !== 'object' || Array.isArray(src.quality))) err('quality must be an object');
-  for (const d of src.doors || []) if (d.remote && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
+  for (const d of src.doors || []) if (d.remote && !d.open && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);
   const exitIds = new Set(), exitCells = new Map(); let exitN = 0;
   for (const e of ents) if (e.type === 'exit') {           // ids: explicit, else 'exit' + the exit's index among ALL exits (exactly what MapData does; audit R04)

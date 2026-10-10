@@ -72,6 +72,13 @@ export const LOOKS = {
   tether: { hemi: [0xd8e4f8, 0x1c2230, 2.3], sun: [0xfff4dc, 1.9, [-12, 16, -4]], lamp: 0.9, exposure: 1, grade: GR([0.94, 0.98, 1.1], [1.08, 1.04, 0.92], 0.8), shade: { foot: 0.28, ao: 0.34, patch: 0.08 } },          // Episode 4, the Ascent Tether: a hard white sun, rust and frost, the black behind it
   wreck: { hemi: [0x5c9096, 0x0c1418, 1.35], sun: [0xa8e4ec, 0.55, [-6, 10, -8]], lamp: 1.6, exposure: 1, grade: GR([0.82, 1.04, 1.08], [1.06, 1.02, 0.9], 0.95), shade: { foot: 0.42, ao: 0.46, patch: 0.12 } },            // the Wreck Belt: torn hulls, cold teal shade, sparks
   rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
+  mirror: { hemi: [0x7a6ac0, 0x201838, 1.9], sun: [0xffd890, 0.35, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.92, 0.92, 1.18], [1.14, 1.04, 0.86], 1.05), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },          // Episode 4, the Mirror Array: dark violet glass, the gold of the beams
+  quiet: { hemi: [0xc0a47c, 0x3a2c20, 2.0], sun: [0xffd8a0, 0.3, [-6, 14, -6]], lamp: 2.3, exposure: 1, grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8), shade: { foot: 0.5, ao: 0.5, patch: 0.1 } },                                   // the Quiet Room: smoky bronze, one warm lamp
+  dock: { hemi: [0xd8f0f4, 0x4a6670, 2.6], sun: [0xe8ffff, 0.8, [-5, 16, -4]], lamp: 0.8, exposure: 1, grade: GR([0.88, 1.04, 1.1], [1.02, 1.03, 1.0], 0.75), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },                       // the Cold Dock: sterile cyan-white strip light, hazard yellow
+  orchard: { hemi: [0xc8e8a0, 0x2a4020, 2.2], sun: [0xfff0b0, 1.2, [-8, 16, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.06, 0.9], [1.1, 1.04, 0.84], 1.1), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },                      // the Drift Orchard: green-gold, soft, weightless
+  approach: { hemi: [0x8890b8, 0x181a30, 1.5], sun: [0xe8ecff, 0.5, [-6, 14, -6]], lamp: 1.45, exposure: 1, grade: GR([0.9, 0.94, 1.14], [1.06, 1.02, 0.96], 0.85), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },                  // the Gatekeeper's Approach: grey stone and indigo, the Gate's light at the far end
+  stair: { hemi: [0x4a50a0, 0xc0c8ff, 1.5], sun: [0xe8f0ff, 0.5, [0, 20, 0]], lamp: 1.2, exposure: 1, grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0), shade: { foot: 0.3, ao: 0.4, patch: 0.1 } },                                  // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere)
+  gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
 /**
@@ -105,10 +112,13 @@ export const BREATH = { warn: 1.2, fade: 0.8 };
 /** FALLING LOADS (PT-032; src/engine/loads.js): the warning, the settling cloud, and what a landing does to someone under it */
 export const LOADS = { warn: 1.5, linger: 1.2, damage: 30, enemyDamage: 80 };
 export const LOWG = { g: 3.2, steer: 0.28, ventCooldown: 0.5, setBackCooldown: 1.5, voidDepth: 6, voidFallG: 14, voidDamage: 15, minTime: 1, maxTime: 8, maxAir: 14 };
+/** AIRLOCKS AND VACUUM (PT-033; src/engine/airlock.js): how long a lock's second door stays refused after the first has shut (the pressure equalising), and what a body in vacuum takes */
+export const LOCK = { cycle: 3, hold: 2 };
+export const VACUUM = { dps: 2, tick: 0.5 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', N: 'wall_lattice_a', O: 'wall_hull_a', F: 'wall_foundry_a', H: 'wall_throat_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', N: 'wall_lattice_a', O: 'wall_hull_a', F: 'wall_foundry_a', H: 'wall_throat_a', J: 'wall_glass_a', G: 'wall_dock_a', Q: 'wall_orchard_a', U: 'wall_bark_a', A: 'wall_approach_a', '1': 'wall_stair_a', '2': 'wall_gate_a', '3': 'wall_quiet_a' };      // Episode 4: glass, dock, orchard, bark, approach, stair, gate, quiet            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
@@ -119,6 +129,8 @@ export const FLOOR_SKINS = {
   w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' },
   a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
   '+': { kind: 'floor', tex: 'floor_hull_a' },       // Episode 4: the wreck's roofed hull floor (the plate of h, under a lid)
+  '4': { kind: 'floor', tex: 'floor_prism_a' }, '5': { kind: 'floor', tex: 'floor_quiet_a' }, x: { kind: 'floor', tex: 'floor_dock_a' }, '6': { kind: 'floor', tex: 'floor_moss_a' }, '7': { kind: 'outdoor', tex: 'floor_moss_a' },
+  '8': { kind: 'floor', tex: 'floor_approach_a' }, '9': { kind: 'floor', tex: 'floor_stair_a' }, '&': { kind: 'outdoor', tex: 'floor_stair_a' }, ';': { kind: 'floor', tex: 'floor_gate_a' },       // Episode 4 (PT-033): prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
 };
 
 /**
@@ -287,6 +299,12 @@ export const PROPS = {
   organ: { radius: 1.0, blocksCell: true, blocksSight: true },       // an organ case of pipes: a wall of bronze
   vat: { radius: 1.0, blocksCell: true },                // the Foundry's green-lit cauldron
   loomstring: { radius: 0.3, blocksCell: false },        // the Loom's string frame: posts and taut gold cables (you walk through the cables' gap; the posts are thin)
+  // Episode 4, Batch B (PT-033, beams.js): the Mirror Array's furniture; drawn by the view from the sim's own state (never merged into the static level mesh)
+  mirror: { radius: 0.62, blocksCell: true },            // a mirror on a plinth: Use turns it a quarter step
+  emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
+  receiver: { radius: 0.62, blocksCell: true },          // lit while a beam enters its cell
+  // Episode 4, Batch C (PT-033): the dock's furniture
+  lighter: { radius: 1.6, blocksCell: true, blocksSight: false },    // a Vael shuttle on its struts: a wall of hull to walk round and take cover behind (rounds stop on it, creatures see over it)
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */

@@ -8,6 +8,7 @@ import { buildGrowth } from './growth.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
+import { makeLighter } from './models_e4.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -190,6 +191,7 @@ export function buildLevel(map, tex) {
   let seed = 7;
   const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
   for (const p of map.props) {
+    if (p.kind === 'mirror' || p.kind === 'emitter' || p.kind === 'receiver') continue;                       // PT-033: the Mirror Array's furniture is drawn by GameView from the sim's own state (beamfx.js)
     const yaw = (rnd() - 0.5) * 0.5; let m = null; const pcx = Math.floor(p.at[0]), pcz = Math.floor(p.at[1]), fy = fl(pcx, pcz), cy = hasCeil(map.kind(pcx, pcz)) ? ce(pcx, pcz) : fy + H;
     if (p.kind === 'crate') { m = makeCrate(tex.crate_wood_a); m.position.set(p.x, fy + 0.55, p.z); m.rotation.y = yaw; }
     else if (p.kind === 'crate2') { m = makeCrate2(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = yaw; }
@@ -209,6 +211,7 @@ export function buildLevel(map, tex) {
     else if (p.kind === 'cradle') { const r = makeCradle(tex.tollbearer_atlas); m = r.group; m.position.set(p.x, cy, p.z); r.light.position.set(p.x, cy - 1.8, p.z); group.add(r.light); lights.push(r.light); }
     else if (p.kind === 'bellnode') { m = makeBellNode(); m.position.set(p.x, fy, p.z); }
     else if (p.kind === 'pew') { m = makePew(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
+    else if (p.kind === 'lighter') { m = makeLighter(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'organ') { m = makeOrgan(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'vat') { m = makeVat(); m.position.set(p.x, fy, p.z); }
     else if (p.kind === 'loomstring') { m = makeLoomString(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }

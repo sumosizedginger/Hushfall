@@ -43,14 +43,14 @@ export function compile(lv) {
   }
   for (const g of lv.groups || []) for (const e of entities) if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;
   for (let z = 0; z < h; z++) for (let x = 0; x < w; x++) {
-    if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });
+    if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorInterlock?.[x + ',' + z] ? { interlock: lv.doorInterlock[x + ',' + z] } : {}), ...(lv.doorStartOpen?.includes(x + ',' + z) ? { open: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });
     if (geo[z][x] === 'X') closets.push({ at: [x, z] });
   }
   const out = {
     format: 1, id: lv.id, version: lv.version ?? 1, name: lv.name, ...(lv.cellSize ? { cellSize: lv.cellSize } : {}), ...(lv.ceilingHeight ? { ceilingHeight: lv.ceilingHeight } : {}),
     ...(lv.atmosphere ? { atmosphere: lv.atmosphere } : {}), ...(lv.keyLabels ? { keyLabels: lv.keyLabels } : {}), grid: geo, ...(heights ? { heights } : {}), ...(ceilings ? { ceilings } : {}), ...(fx ? { fx } : {}),
     doors, secrets: lv.secrets || [], ...(closets.length ? { closets } : {}), ...(lv.sectors ? { sectors: lv.sectors } : {}), ...(lv.triggers ? { triggers: lv.triggers } : {}),
-    entities, ...(lv.scenery ? { scenery: lv.scenery } : {}), ...(lv.par ? { par: lv.par } : {}), ...(lv.intro ? { intro: lv.intro } : {}), ...(lv.outro ? { outro: lv.outro } : {}), ...(lv.messages ? { messages: lv.messages } : {}), ...(lv.decals ? { decals: lv.decals } : {}), ...(lv.growth ? { growth: lv.growth } : {}), ...(lv.pulses ? { pulses: lv.pulses } : {}), ...(lv.vents ? { vents: lv.vents } : {}), ...(lv.loads ? { loads: lv.loads } : {}), ...(lv.objective ? { objective: lv.objective } : {}), ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
+    entities, ...(lv.scenery ? { scenery: lv.scenery } : {}), ...(lv.par ? { par: lv.par } : {}), ...(lv.intro ? { intro: lv.intro } : {}), ...(lv.outro ? { outro: lv.outro } : {}), ...(lv.messages ? { messages: lv.messages } : {}), ...(lv.decals ? { decals: lv.decals } : {}), ...(lv.growth ? { growth: lv.growth } : {}), ...(lv.pulses ? { pulses: lv.pulses } : {}), ...(lv.vents ? { vents: lv.vents } : {}), ...(lv.loads ? { loads: lv.loads } : {}), ...(lv.vacuum ? { vacuum: lv.vacuum } : {}), ...(lv.objective ? { objective: lv.objective } : {}), ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
     ...(lv.quality ? { quality: lv.quality } : {}),
     ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
   };

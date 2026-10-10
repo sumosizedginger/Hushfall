@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { loadAll, titleArtUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
+import { lockBusy } from '../engine/airlock.js';
 import CAMPAIGN from '../../CAMPAIGN_MANIFEST.json';
 import { nextMapId, mapName } from './campaign.js';
 import { InputState } from '../engine/input.js';
@@ -338,7 +339,9 @@ function rangePanel() {
 }
 /** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
 function doorPrompt(w) {
-  const t = useTarget(w); if (t?.breath && !t.secret) return t.open > 0.05 ? '' : 'It opens when the ship breathes in';
+  const t = useTarget(w); if (t?.mirrorId) return `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] turn the mirror`;
+  if (t?.interlock && t.target === 0 && t.open <= 0.05 && lockBusy(w, t)) return 'The airlock is cycling';
+  if (t?.breath && !t.secret) return t.open > 0.05 ? '' : 'It opens when the ship breathes in';
   if (t?.soundlock && !t.secret && t.target !== 1 && t.open <= 0.05 && w.noise && w.time - w.noise.t < t.soundlock.quiet) return 'The lock is listening: be quiet';
   if (!t || t.secret || t.target === 1 || t.open > 0.05) return '';
   if (t.key && !w.player.keys.includes(t.key)) return `Locked: needs the ${KEYS[t.key]?.name.toLowerCase() || 'key'}`;

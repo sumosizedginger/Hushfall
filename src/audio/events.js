@@ -113,6 +113,12 @@ export function soundsForEvent(e) {
     case 'vent_launch': return [{ id: 'vent_launch', pos: at(e) }];
     case 'air_land': return [{ id: 'air_land', gain: Math.min(1, 0.4 + (e.speed ?? 0) * 0.12) }];
     case 'void_fall': return [{ id: 'void_fall' }];
+    case 'mirror_turn': return [{ id: 'mirror_turn', pos: at(e) }];                                                   // PT-033: the Mirror Array
+    case 'receiver_lit': return [{ id: 'receiver_lit', pos: at(e) }];
+    case 'receiver_dark': return [{ id: 'receiver_dark', pos: at(e), gain: 0.6 }];
+    case 'door_cycling': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];                                       // PT-033: airlocks and vacuum
+    case 'vacuum_enter': return [{ id: 'vacuum_rush' }];
+    case 'vacuum_leave': return [{ id: 'air_return' }];
     case 'wade': return e.kind === 's' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
     case 'alarm': return [{ id: 'alarm_bell' }];
     case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];

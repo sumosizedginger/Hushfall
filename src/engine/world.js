@@ -3,7 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, LOADS } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -16,6 +16,8 @@ import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
 import { spawnPhys, physAt, physBlocks, blastProps, updatePhys, updateShoves, gravInput, gravDrop, rangePhys } from './gravity.js';      // PT-022: the gravity tool and the movable props (nothing here runs on a map without movable props unless the fork is in hand)
 import { designate as mortarShot } from './mortar.js';                                                              // PT-027: the Bell-breaker mortar (indirect fire)
 import { sawStep } from './saw.js';                                                                                  // PT-022: the chainsaw's held fire
+import { traceBeams, nextRot } from './beams.js';                                                                    // PT-033: the Mirror Array's light (lazy state: only a map with an emitter has `w.mirrors` and `w.beams`)
+import { lockBusy, inVacuum } from './airlock.js';                                                                    // PT-033: airlocks and vacuum (lazy: only a map that has them uses them)
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -79,8 +81,9 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
   if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
-  for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}) }); }
+  for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
+  if (map.emitters.length) { w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot])); w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
   return w;
 }
 
@@ -89,6 +92,18 @@ export const emit = (w, type, data = {}) => w.events.push({ type, tick: w.tick, 
 
 // ---------------------------------------------------------------- collision
 export const doorAtCell = (w, cx, cz) => w.doors.find((d) => d.cx === cx && d.cz === cz);
+/** PT-033: trace the beams again; a receiver that becomes lit or dark says so (the view and the audio read the events, a trigger reads `w.beams.lit`) */
+export function updateBeams(w, silent = false) {
+  const open = (cx, cz) => { const d = doorAtCell(w, cx, cz); return !!d && d.open >= 0.85; };
+  const t = traceBeams(w.map, w.mirrors, open), was = w.beams.lit, cell = w.map.cell;
+  if (!silent) for (const r of w.map.receivers) { const on = t.lit.includes(r.id), off = !was.includes(r.id); if (on && off) emit(w, 'receiver_lit', { id: r.id, x: (r.at[0] + 0.5) * cell, z: (r.at[1] + 0.5) * cell }); else if (!on && !off) emit(w, 'receiver_dark', { id: r.id, x: (r.at[0] + 0.5) * cell, z: (r.at[1] + 0.5) * cell }); }
+  w.beams.lit = t.lit;
+}
+/** PT-033: Use on a mirror turns it a quarter step clockwise */
+export function turnMirror(w, id) {
+  const m = w.map.mirrors.find((q) => q.id === id); if (!m) return;
+  w.mirrors[id] = nextRot(w.mirrors[id]); emit(w, 'mirror_turn', { id, rot: w.mirrors[id], x: (m.at[0] + 0.5) * w.map.cell, z: (m.at[1] + 0.5) * w.map.cell }); updateBeams(w);
+}
 export function cellSolid(w, cx, cz) {
   const m = w.map, k = m.kind(cx, cz);
   if (k === 'wall') return true;
@@ -150,6 +165,12 @@ function inFront(e, p, cos) { const dx = p.x - e.x, dz = p.z - e.z, d = Math.hyp
 export const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
 
 // ---------------------------------------------------------------- damage
+/** PT-033: a body in a region of vacuum takes VACUUM.dps a second (the difficulty scales it, as a toxic bed's); `p.vac` is lazy state that only a map with vacuum has */
+function vacuumStep(w, dt, diff) {
+  const p = w.player, on = inVacuum(w, p.x, p.z);
+  if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; hurtPlayer(w, Math.round(VACUUM.dps * VACUUM.tick * diff.enemyDamage)); } } else p.vacT = 0;
+  if (on !== !!p.vac) { p.vac = on; emit(w, on ? 'vacuum_enter' : 'vacuum_leave', {}); }
+}
 function hurtPlayer(w, dmg) {
   const p = w.player; if (p.hp <= 0 || dmg <= 0) return;
   const absorbed = Math.min(p.armor, Math.floor(dmg * PLAYER.armorAbsorb));
@@ -532,6 +553,12 @@ export function useTarget(w) {
     const cx = Math.floor((p.x + fx * s) / map.cell), cz = Math.floor((p.z + fz * s) / map.cell), k = map.kind(cx, cz);
     if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); if (d?.closet) break; return d; }         // a closet panel is a wall to the player
     if (k === 'wall') break;
+  }
+  // mirrors (PT-033): the nearest one within reach that the player is facing
+  if (map.mirrors.length) {
+    let bm = null, bdm = 1e9;
+    for (const m of map.mirrors) { const mx = (m.at[0] + 0.5) * map.cell, mz = (m.at[1] + 0.5) * map.cell, dx = mx - p.x, dz = mz - p.z, d = Math.hypot(dx, dz); if (d < PLAYER.useReach + 0.7 && Math.abs(floorAt(w, mx, mz) - p.y) < 1.5 && (dx * fx + dz * fz) / (d || 1) > 0.7 && d < bdm) { bdm = d; bm = m; } }
+    if (bm) return { mirrorId: bm.id, rot: w.mirrors[bm.id], secret: false, target: 0, open: 0, key: null, remote: false, sealed: false };
   }
   // wall switches: the nearest one within reach that the player is facing
   let best = null, bd = 1e9;
@@ -982,6 +1009,7 @@ export function step(w, cmd) {
   }
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
   if (fxc && FX[fxc].dps) { p.hazardT = (p.hazardT || 0) + dt; if (p.hazardT >= 0.5) { p.hazardT -= 0.5; hurtPlayer(w, Math.round(FX[fxc].dps * 0.5 * diff.enemyDamage)); } } else p.hazardT = 0;
+  if (map.vacuum.length) vacuumStep(w, dt, diff);                                                                 // PT-033: vacuum (airlock.js)
   if (!p.air) p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
   if (p.heat > 0) p.heat = Math.max(0, p.heat - dt * (WEAPONS[p.weapon].heatDecay || 1.4));
   p.cooldown = Math.max(0, p.cooldown - dt); p.hurt = Math.max(0, p.hurt - dt * 1.2); p.kick = Math.max(0, p.kick - dt * 0.4);
@@ -1002,12 +1030,14 @@ export function step(w, cmd) {
   // use: first door/secret panel along the view ray
   if (cmd.use) {
     const hit = useTarget(w);
-    if (hit?.switchId) activateSwitch(w, map.switches.find((s) => s.id === hit.switchId));
+    if (hit?.mirrorId) turnMirror(w, hit.mirrorId);
+    else if (hit?.switchId) activateSwitch(w, map.switches.find((s) => s.id === hit.switchId));
     else if (hit) {
       if (hit.soundlock && w.time - (w.noise?.t ?? -99) < hit.soundlock.quiet && Math.hypot(w.noise.x - (hit.cx + 0.5) * map.cell, w.noise.z - (hit.cz + 0.5) * map.cell) < hit.soundlock.radius) emit(w, 'door_listen', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-029: the lock is listening: it will not open to Use until it has heard nothing for `quiet` s
       else if (hit.breath) emit(w, 'door_breath', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-027: it opens when the ship breathes in, whatever you do
       else if (hit.sealed || hit.remote) emit(w, 'door_remote', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // opened elsewhere (a switch, or an event)
       else if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
+      else if (hit.interlock && hit.target === 0 && lockBusy(w, hit)) emit(w, 'door_cycling', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-033: the other door of the airlock is open or the air is still moving
       else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }
     }
   }
@@ -1034,8 +1064,8 @@ export function step(w, cmd) {
       const cxw = (d.cx + 0.5) * map.cell, czw = (d.cz + 0.5) * map.cell;
       const occupied = [p, ...w.enemies.filter((e) => e.state !== 'dead')].some((o) => Math.hypot(o.x - cxw, o.z - czw) < DOOR.autoCloseClearance);
       d.hold = occupied ? 0 : d.hold + dt;
-      if (d.hold >= DOOR.holdOpen) { d.target = 0; emit(w, 'door_close', { cx: d.cx, cz: d.cz, x: cxw, z: czw }); }
-    } else if (d.target === 0 && d.open > 0) d.open = Math.max(0, d.open - dt * DOOR.speed);
+      if (d.hold >= (d.interlock ? LOCK.hold : DOOR.holdOpen)) { d.target = 0; emit(w, 'door_close', { cx: d.cx, cz: d.cz, x: cxw, z: czw }); }
+    } else if (d.target === 0 && d.open > 0) { d.open = Math.max(0, d.open - dt * DOOR.speed); if (d.open === 0 && d.interlock) d.closedAt = w.time; }
   }
 
   if (map.pulses?.length) updateSpores(w);
@@ -1094,6 +1124,7 @@ export function step(w, cmd) {
   const pcx = Math.floor(p.x / map.cell), pcz = Math.floor(p.z / map.cell);
   for (const s of map.secrets) if (!w.secretsFound.includes(s.id) && s.cells.some(([cx, cz]) => cx === pcx && cz === pcz)) { w.secretsFound.push(s.id); w.stats.secrets++; emit(w, 'secret', { id: s.id }); }
 
+  if (w.beams) updateBeams(w);                                                                                   // PT-033: the beams follow the mirrors and the doors
   updateTriggers(w);
   if (map.range) { rangePlayer(w, dt); rangePhys(w, dt); }                                                       // the dev range: you cannot die, run dry or stay hurt (range.js)
 

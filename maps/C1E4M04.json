@@ -1,0 +1,844 @@
+{
+ "format": 1,
+ "id": "C1E4M04",
+ "version": 1,
+ "name": "Mirror Array",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#10081c",
+  "fogDensity": 0.009,
+  "sky": "orbit",
+  "look": "mirror"
+ },
+ "grid": [
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4444JJ4444JJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444JJ4444444JJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444444444JJ444444444JJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ44444444444J4444444444JJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJ444JJJJJJJJJJJJJJJJJJ444444444444J44444444444JJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJ444JJJJJJJJJJJJJJJJJ4444444444444J444444444444JJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJ444JJJJJJJJJJJJJJJJ44444444444444J4444444444444JJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJSJJJJJJJJJJJJJJJJ444444444444444J44444444444444JJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJ4JJJJJJJJJJJJJJJ4444444444444444J444444444444444JJJJJJJJJJJJ",
+  "JJJJJJJJJ4444444JJJJJJJJJJJJ4444444444444444J444444444444444JJJJJJJJJJJJ",
+  "JJJJJJJ44444444444JJJJJJJJJJ4444444444444444D4444444444444444JJJJJJJJJJJ",
+  "JJJJJJ4444444444444JJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
+  "JJJJJJ4444444444444JJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
+  "JJJJJ444444444444444JJJJJJJJJ444444444444JJJJJJ444444444444444JJJJJJJJJJ",
+  "JJJJJ44444444444444444444D44444444444444JJJJJJJJ44444444444444JJJJJJJJJJ",
+  "JJJJJ444444444444444JJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJ4444444444444JJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJ4444444444444JJJJJJJJJJ4444444444JJJJJJJJJJ4444444444JJJJJJJJJJJJJ",
+  "JJJJJJJ44444444444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJDJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJ4444444JJJJJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJ4JJJJJJJJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ44444444444JJJJJJJJ44444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444444444444JJJJJJ444444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
+  "JJJJJJJJJ444444444JJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
+  "JJJJJJJJ44444444444JJJJJJJJJJJJ4444444444444J4444444444444444JJJJJJJJJJJ",
+  "JJJJJJJ444444444444444444D444444444444444444D444444444444444JJJJJJJJJJJJ",
+  "JJJJJJ444444444444444JJJJJJJJJJJ444444444444J444444444444444JJJJJJJJJJJJ",
+  "JJJJJJ444444444444444JJJJJJJJJJJJ44444444444J44444444444444JJJJJJJJJJJJJ",
+  "JJJJJJ444444444444444JJJJJJJJJJJJJ4444444444J4444444444444JJJJJJJJJJJJJJ",
+  "JJJJJJJ4444444444444JJJJJJJJJJJJJJJ444444444J444444444444JJJJJJJJJJJJJJJ",
+  "JJJJJJJJ44444444444JJJJJJJJJJJJJJJJJJ4444444J44444444444JJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJ444444444JJJJJJJJJJJJJJJJJJJJ444444J4444444444JJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJ444444444JJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJ4444444JJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJ4444JJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJXJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ44444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ44444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ"
+ ],
+ "heights": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  ".......................................4444..4444.......................",
+  "....................................4444444..4444444....................",
+  "..................................444444444..444444444..................",
+  ".................................444444333.......444444.................",
+  "................................4444433322.........44444................",
+  "...............................4444.322211...........4444...............",
+  "..............................4444...211..............4444..............",
+  ".............................4444......................4444.............",
+  "............................4444........................4444............",
+  "............................444.........................3444............",
+  "............................444..........111111.......1234444...........",
+  ".......................................1122222211.....1223444...........",
+  "......................................122222222221.....123444...........",
+  ".....................................1222......2221....1233444..........",
+  ".....................................122........221.....12.444..........",
+  "....................................122..........221.......444..........",
+  "....................................122..........221.......444..........",
+  "....................................122..........221....................",
+  "....................................122..........221....................",
+  "....................................122..........221.......444..........",
+  "....................................122..........221.......444..........",
+  ".....................................122........221........444..........",
+  ".....................................1222......2221........444..........",
+  "......................................122222222221........444...........",
+  ".......................................1122222211.........444...........",
+  ".........................................111111..........4444...........",
+  ".........................................................444............",
+  "........................................................4444............",
+  ".......................................................4444.............",
+  "................................................112...4444..............",
+  "..............................................112223.4444...............",
+  "..............................................2233344444................",
+  "..............................................333444444.................",
+  ".............................................444444444..................",
+  ".............................................4444444....................",
+  ".............................................4444.......................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "ceilings": [
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  ".......................................eeee..eeee.......................",
+  "....................................eeeefff..fffeeee....................",
+  "..................................eeeffffgg..ggffffeee..................",
+  ".................................eefffggggghhgggggfffee.................",
+  "................................eeffggghhhhhhhhhhgggffee................",
+  "...............................effggghhiiiiiiiiiihhgggffe...............",
+  "..............................effgghhiiijjjjjjjjiiihhggffe..............",
+  ".............................eefgghhiijjjkkkkkkjjjiihhggfee.............",
+  "............................eefgghhiijjkkkkllkkkkjjiihhggfee............",
+  "............................effghhijjkkkllllllllkkkjjihhgffe............",
+  "............................efgghiijkkllmmmmmmmmllkkjiihggfee...........",
+  "..............................ghiijkkllmmnnnnnnmmllkkjiihgffe...........",
+  "..............................ghijjkllmmnnoooonnmmllkjjihggfe...........",
+  ".............................ghiijkklmmno......onmmlkkjiihgfee..........",
+  ".............................ghijjklmmno........onmmlkjjihgffe..........",
+  ".............................ghijkklmnn..........nnmlkkjihggfe..........",
+  ".............................ghijkklmno..........onmlkkjihggfe..........",
+  ".............................hhijkllmno..........onmllkjihh.............",
+  ".............................hhijkllmno..........onmllkjihh.............",
+  ".............................ghijkklmno..........onmlkkjihggfe..........",
+  ".............................ghijkklmnn..........nnmlkkjihggfe..........",
+  ".............................ghijjklmmno........onmmlkjjihgffe..........",
+  ".............................ghiijkklmmno......onmmlkkjiihgfee..........",
+  "..............................ghijjkllmmnnoooonnmmllkjjihggfe...........",
+  "..............................ghiijkkllmmnnnnnnmmllkkjiihgffe...........",
+  "...............................ghiijkkllmmmmmmmmllkkjiihggfee...........",
+  "...............................ghhijjkkkllllllllkkkjjihhgffe............",
+  "................................ghhiijjkkkkllkkkkjjiihhggfee............",
+  ".................................ghhiijjjkkkkkkjjjiihhggfee.............",
+  "..................................ghhiiijjjjjjjjiiihhggffe..............",
+  "...................................gghhiiiiiiiiiihhgggffe...............",
+  ".....................................gghhhhhhhhhhgggffee................",
+  ".......................................gggghhgggggfffee.................",
+  ".............................................ggffffeee..................",
+  ".............................................fffeeee....................",
+  ".............................................eeee.......................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................",
+  "........................................................................"
+ ],
+ "doors": [
+  {
+   "at": [44, 28],
+   "remote": true
+  },
+  {
+   "at": [25, 32],
+   "remote": true
+  },
+  {
+   "at": [52, 36],
+   "remote": true
+  },
+  {
+   "at": [25, 44],
+   "remote": true
+  },
+  {
+   "at": [44, 44],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "niche",
+   "panel": [12, 25],
+   "cells": [
+    [11, 24],
+    [12, 24],
+    [13, 24],
+    [11, 23],
+    [12, 23],
+    [13, 23],
+    [11, 22],
+    [12, 22],
+    [13, 22]
+   ]
+  }
+ ],
+ "closets": [
+  {
+   "at": [38, 54]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "door-in",
+   "when": "lit:r0",
+   "do": [
+    {
+     "open": [25, 32]
+    },
+    {
+     "objective": "The array: light each receiver in turn, then send the light on"
+    },
+    {
+     "message": "opened"
+    }
+   ]
+  },
+  {
+   "id": "door-1",
+   "when": "lit:r1",
+   "do": [
+    {
+     "open": [44, 28]
+    },
+    {
+     "objective": "The north screen is open. Send the light through it, to the north-east receiver"
+    }
+   ]
+  },
+  {
+   "id": "door-2",
+   "when": "lit:r2",
+   "do": [
+    {
+     "open": [52, 36]
+    },
+    {
+     "objective": "The east screen is open. On to the south-east receiver"
+    }
+   ]
+  },
+  {
+   "id": "door-3",
+   "when": "lit:r3",
+   "do": [
+    {
+     "open": [44, 44]
+    },
+    {
+     "objective": "The south screen is open. The last mirror, south-west, opens the exit"
+    }
+   ]
+  },
+  {
+   "id": "door-out",
+   "when": "lit:rx",
+   "do": [
+    {
+     "open": [25, 44]
+    },
+    {
+     "objective": "The exit is open: south-west, west of the last mirror"
+    },
+    {
+     "shake": 1
+    }
+   ]
+  },
+  {
+   "id": "door-secret",
+   "when": "lit:rs",
+   "do": [
+    {
+     "open": [38, 54]
+    },
+    {
+     "exit": {
+      "id": "secret",
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "Something opened in the south wall of the last chamber"
+    },
+    {
+     "shake": 1
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [8, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "emitter",
+   "id": "e0",
+   "at": [7, 30],
+   "dir": "e"
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "m0",
+   "at": [12, 30],
+   "rot": 2
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "r0",
+   "at": [12, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "emitter",
+   "id": "e1",
+   "at": [36, 25],
+   "dir": "s"
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "mb",
+   "at": [36, 28],
+   "rot": 2
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "r1",
+   "at": [32, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "mc",
+   "at": [52, 28],
+   "rot": 1
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "r2",
+   "at": [52, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "md",
+   "at": [52, 44],
+   "rot": 3
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "r3",
+   "at": [56, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "me",
+   "at": [36, 44],
+   "rot": 0
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "rx",
+   "at": [36, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "receiver",
+   "id": "rs",
+   "at": [36, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "xa",
+   "at": [40, 29],
+   "rot": 0
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "xb",
+   "at": [48, 43],
+   "rot": 1
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [16, 28],
+   "facing": -1.012
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [9, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [15, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [17, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [15, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [16, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [14, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [9, 36]
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [33, 22],
+   "facing": -1.156
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 29],
+   "facing": -1.418
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 25],
+   "facing": -1.31
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [42, 23],
+   "facing": -1.285
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [33, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [39, 29]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [36, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "acolyte",
+   "at": [53, 28],
+   "facing": -1.46
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 24],
+   "facing": -1.36
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 26],
+   "facing": -1.389
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [55, 23],
+   "facing": -1.361
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [47, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [48, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [51, 33]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [53, 44],
+   "facing": -1.811
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 47],
+   "facing": -1.924
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [52, 39],
+   "facing": -1.706
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [53, 49],
+   "facing": -1.912
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [46, 45]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [49, 42]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [48, 42]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [51, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [38, 46],
+   "facing": -1.98
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 40],
+   "facing": -1.834
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 44],
+   "facing": -1.971
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [38, 42]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [36, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [39, 42]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [10, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [16, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [11, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [13, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [12, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [11, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [36, 60]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [40, 60]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [37, 63]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [39, 63]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [38, 64]
+  },
+  {
+   "type": "exit",
+   "at": [11, 46],
+   "dest": "next"
+  },
+  {
+   "type": "exit",
+   "id": "secret",
+   "at": [38, 62],
+   "dest": "secret",
+   "locked": true
+  }
+ ],
+ "par": {
+  "time": 480
+ },
+ "intro": {
+  "title": "MIRROR ARRAY",
+  "lines": [
+   "The Gate is focused here, through glass.",
+   "A beam wants somewhere to go."
+  ]
+ },
+ "outro": "The array lets the light through. Somewhere ahead a ring is being made ready.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [8, 33],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Mirror Array: where the Gate is focused. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops."
+  },
+  {
+   "id": "lesson",
+   "at": [12, 33],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "The light wants somewhere to go."
+  },
+  {
+   "id": "opened",
+   "at": [28, 32],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "The way into the array is open."
+  },
+  {
+   "id": "nw",
+   "at": [34, 31],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it."
+  },
+  {
+   "id": "acolyte",
+   "at": [50, 30],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they are not going anywhere."
+  },
+  {
+   "id": "se",
+   "at": [50, 42],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other."
+  },
+  {
+   "id": "sw",
+   "at": [38, 44],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that was not meant to be found."
+  },
+  {
+   "id": "secret",
+   "at": [38, 52],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "The wall at the end of the niche is not a wall."
+  }
+ ],
+ "objective": "The antechamber: turn the mirror so the light reaches the receiver. It opens the way into the array",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [10, 70],
+  "botSeconds": [30, 900],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "closets"
+  ],
+  "skins": 2,
+  "enemyKinds": {
+   "acolyte": 1,
+   "chorister": 3,
+   "tollbearer": 4,
+   "gaunt": 3
+  },
+  "scaleClass": "COMPRESSION",
+  "tallReason": "the mirror drum is a named hall: a dome 12 m over the column so that the light has room to run",
+  "introduces": "the beam tracer: one-sided mirrors you turn with Use, an emitter, receivers that open the screen doors for good: the first real puzzle of the game"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": [
+   [
+    14,
+    32,
+    17,
+    36
+   ]
+  ]
+ }
+}

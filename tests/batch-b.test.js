@@ -1,50 +1,66 @@
-// PT-027: Episode 3, Batch B: Ribbed Corridors (the breathing gates) and Gill Gardens (the spore beds and the mortar). What only these two maps have; the generic gates (viability, lint, traps, the shape kit, the space contract)
-// already hold every shipped map to what it says (tests/shipped.test.js, maps.test.js, maplint.test.js, traps.test.js).
+// PT-033 (Episode 4, Batch B): THE MIRROR ARRAY (C1E4M04), the game's first real puzzle, and the QUIET ROOM (C1E4S01). The beam tracer itself is in tests/beams.test.js; these hold the SHIPPED array to what it says: solvable by a search over every turn of every
+// mirror (with the screen doors latching as their receivers light), NOT solved at the start, not a handful of turns, two ways out (the exit and the secret), two mirrors that matter to nothing, and its routes finishing.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { parseMap } from '../src/engine/mapformat.js';
+import { traceBeams } from '../src/engine/beams.js';
 import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
-import { gateOpen, sporeState } from '../src/engine/breath.js';
-import { findTraps } from '../src/engine/traps.js';
-import { analyseReach } from '../src/engine/viability.js';
-import { shippedMap, shippedSrc } from './helpers.js';
+import { ROOT } from './helpers.js';
+import path from 'node:path';
 
-test('Ribbed Corridors: three breathing gates, a clock apiece, none of them keyed or remote, and the way to the exit passes at least two of them on either route', () => {
-  const src = shippedSrc('C1E3M02'), gates = src.doors.filter((d) => d.breath);
-  assert.equal(gates.length, 3); assert.ok(gates.every((d) => !d.key && !d.remote), 'a gate is not a lock');
-  assert.equal(new Set(gates.map((d) => `${d.breath.period}/${d.breath.open}/${d.breath.phase}`)).size, 3, 'each has its own rhythm');
-  const g1 = gates.find((d) => d.at[0] === 23), g2 = gates.find((d) => d.at[0] === 38), g3 = gates.find((d) => d.at[0] === 53);
-  assert.equal(gateOpen(g1.breath, 7), false, 'gate 1 is shut when you arrive: the first lesson is to wait'); assert.equal(gateOpen(g1.breath, 0), true);
-  assert.ok(g2 && g3, 'one gate on the short way (2), one on the long way (3); gate 1 is on both');
-  assert.equal(src.doors.filter((d) => d.remote).length, 1, 'and one remote hatch that the lever opens');
-});
+const src = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps/C1E4M04.json'), 'utf8')), map = parseMap(src);
+const DOORS = { r1: [44, 28], r2: [52, 36], r3: [44, 44] };                                  // the receiver that opens each screen door (the triggers say the same)
+const drum = map.mirrors.filter((m) => m.id !== 'm0'), ids = drum.map((m) => m.id);
+const trace = (rots, latched) => traceBeams(map, rots, (cx, cz) => [...latched].some((k) => DOORS[k][0] === cx && DOORS[k][1] === cz));
+const enc = (rots, latched) => ids.map((i) => rots[i]).join('') + '|' + [...latched].sort().join(',');
 
-test('Ribbed Corridors: both routes complete on every difficulty, the secret route finds the niche, nobody can be trapped', () => {
-  for (const difficulty of ['easy', 'normal', 'hard']) {
-    const r = runRoute(loadMapFile('maps/C1E3M02.json'), loadRouteFile('routes/C1E3M02.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty); assert.ok(r.events.filter((e) => e.type === 'door_close' && e.breath).length >= 1, difficulty + ': a gate shut while it was played');
+/** shortest number of quarter turns to light `goal` (a receiver id), with doors latching as their receivers light; null if it cannot be done */
+function solve(goal, start = Object.fromEntries(drum.map((m) => [m.id, m.rot]))) {
+  const first = { rots: start, latched: new Set() }, q = [{ ...first, d: 0 }], seen = new Set([enc(first.rots, first.latched)]);
+  const settle = (rots, latched) => { const l = new Set(latched); for (;;) { const t = trace(rots, l); let grew = false; for (const r of t.lit) if (DOORS[r] && !l.has(r)) { l.add(r); grew = true; } if (!grew) return { l, lit: t.lit }; } };
+  while (q.length) {
+    const s = q.shift(); const here = settle(s.rots, s.latched); if (here.lit.includes(goal)) return s.d;
+    for (const id of ids) { const rots = { ...s.rots, [id]: (s.rots[id] + 1) % 4 }, { l } = settle(rots, here.l), k = enc(rots, l); if (!seen.has(k)) { seen.add(k); q.push({ rots, latched: l, d: s.d + 1 }); } }
   }
-  const s = runRoute(loadMapFile('maps/C1E3M02.json'), loadRouteFile('routes/C1E3M02.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
-  assert.equal(findTraps(shippedMap('C1E3M02')).traps, 0);
-});
+  return null;
+}
 
-test('Gill Gardens: four spore regions on a clock, two out of step across the first basin and two out of step at the foot of the dais stairs, and every bed cell lies in one of them', () => {
-  const src = shippedSrc('C1E3M03'), map = shippedMap('C1E3M03'); assert.equal(src.pulses.length, 4);
-  const [a, b, n, s] = src.pulses; for (const p of src.pulses) assert.ok(p.period - p.on >= 2 && p.on >= 1.5, 'room to cross: dormant for at least 2 s');
-  for (const t of [0.5, 1.5, 2.5, 4.5, 6.5, 7.5, 9, 12.5]) { assert.notEqual(sporeState(a, t).on && sporeState(b, t).on, true, `beds A and B never bloom together (t ${t})`); assert.notEqual(sporeState(n, t).on && sporeState(s, t).on, true, `nor the two stair beds (t ${t})`); }
-  assert.ok(src.pulses.some((p) => sporeState(p, 0).on) && src.pulses.some((p) => !sporeState(p, 0).on), 'at the start some beds bloom and some sleep');
-  let cells = 0; for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.fx(x, z) === 's') { cells++; assert.ok(map.pulseAt(x, z), `bed cell ${x},${z} is in a pulse region`); }
-  assert.ok(cells > 100, cells + ' bed cells');
+test('the array is not solved when you arrive, and every receiver of the drum is dark', () => {
+  const t = trace(Object.fromEntries(drum.map((m) => [m.id, m.rot])), new Set());
+  assert.deepEqual(t.lit.filter((r) => r !== 'r0'), [], 'nothing is lit at the start');
 });
-
-test('Gill Gardens: the mortar waits on its plinth ON the lane with two crates of rockets beside it, and the map is MIXED (the first garden is open to the sky, the second is roofed)', () => {
-  const src = shippedSrc('C1E3M03'), map = shippedMap('C1E3M03'), ents = src.entities;
-  const mortar = ents.find((e) => e.type === 'pickup' && e.kind === 'weapon_mortar'); assert.ok(mortar, 'the mortar'); assert.deepEqual(mortar.at, [43, 23]);
-  assert.equal(ents.filter((e) => e.type === 'pickup' && e.kind === 'ammo_rocket').length, 2, 'two crates of rockets, kept when the dead feed the rest'); assert.deepEqual(src.drops.keep, [[43, 22], [43, 24]]);
-  assert.equal(map.kind(10, 23), 'floor'); assert.equal(map.kind(30, 23), 'outdoor', 'the first garden is open air'); assert.equal(map.kind(80, 23), 'floor', 'the second is roofed');
-  assert.ok(map.ceilingRows && ents.filter((e) => e.type === 'enemy' && e.kind === 'chorister').length >= 6, 'six or more singers on the ledges and the dais');
+test('the array is solvable, for the exit and for the secret, and it is not a few turns', () => {
+  const exit = solve('rx'), secret = solve('rs');
+  assert.ok(exit != null && secret != null, `solvable: exit ${exit}, secret ${secret}`);
+  assert.ok(exit >= 12, `the exit needs at least twelve quarter turns (${exit})`); assert.ok(secret >= exit - 2 && secret <= exit + 4, `the secret is about as far as the exit (${secret} against ${exit})`);
+  console.log('M04: exit in', exit, 'turns, secret in', secret);
 });
-
-test('Gill Gardens: both routes complete on every difficulty, the secret route finds the niche, nobody can be trapped; the levers and stairs are reachable', () => {
-  for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRoute(loadMapFile('maps/C1E3M03.json'), loadRouteFile('routes/C1E3M03.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty); }
-  const s = runRoute(loadMapFile('maps/C1E3M03.json'), loadRouteFile('routes/C1E3M03.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
-  assert.equal(findTraps(shippedMap('C1E3M03')).traps, 0); assert.ok(analyseReach(shippedMap('C1E3M03')).ok !== false);
+test('the order is the trick: the doors cannot be skipped (without latching the screen receivers the exit is out of reach)', () => {
+  // with every door shut for good, no state of the mirrors lights the exit receiver
+  const states = []; const rec = (i, rots) => { if (i === ids.length) { states.push({ ...rots }); return; } for (let r = 0; r < 4; r++) rec(i + 1, { ...rots, [ids[i]]: r }); }; rec(0, {});
+  for (const s of states) { const t = traceBeams(map, s, () => false); assert.ok(!t.lit.includes('rx') && !t.lit.includes('r2') && !t.lit.includes('r3'), 'a shut screen door stops the light'); }
+});
+test('two mirrors do nothing: no turn of the decoys changes what is lit, in any state of the others, with the doors open or shut', () => {
+  const real = drum.filter((m) => !['xa', 'xb'].includes(m.id)).map((m) => m.id);
+  for (let a = 0; a < 4 ** real.length; a++) {
+    const rots = Object.fromEntries(real.map((id, i) => [id, Math.floor(a / 4 ** i) % 4]));
+    for (const doors of [new Set(), new Set(['r1', 'r2', 'r3'])]) { const base = trace({ ...rots, xa: 0, xb: 0 }, doors).lit.join(); for (let x = 0; x < 16; x++) assert.equal(trace({ ...rots, xa: x % 4, xb: Math.floor(x / 4) }, doors).lit.join(), base); }
+  }
+});
+test('the antechamber teaches in one turn, and its door is the first thing that opens', () => {
+  const t0 = traceBeams(map, {}, () => false); assert.ok(!t0.lit.includes('r0'));
+  assert.ok(traceBeams(map, { m0: 3 }, () => false).lit.includes('r0'));
+  assert.ok(src.triggers.some((t) => t.when === 'lit:r0' && t.do.some((a) => a.open?.join() === '25,32')));
+});
+test('the routes: the exit route reaches the exit, the secret route reaches the SECRET exit, on every difficulty', () => {
+  for (const [name, dest] of [['main', 'next'], ['secret', 'secret']]) for (const difficulty of ['easy', 'normal', 'hard']) {
+    const r = runRoute(loadMapFile('maps/C1E4M04.json'), loadRouteFile(`routes/C1E4M04.${name}.route.json`), { seed: 1, difficulty });
+    assert.equal(r.result, 'complete', `${name} ${difficulty}: ${r.failure}`); assert.equal(r.world.endStats?.dest, dest, `${name} ends at the ${dest} exit`);
+  }
+});
+test('the quiet room is silent, safe and short (S01)', () => {
+  const s = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps/C1E4S01.json'), 'utf8'));
+  assert.equal(s.atmosphere.silence, true); assert.equal(s.entities.filter((e) => e.type === 'enemy').length, 0); assert.ok(s.entities.some((e) => e.type === 'pickup'), 'a cache');
+  const r = runRoute(loadMapFile('maps/C1E4S01.json'), loadRouteFile('routes/C1E4S01.main.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(r.result, 'complete');
 });

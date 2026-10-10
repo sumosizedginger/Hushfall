@@ -5,6 +5,7 @@ import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
+import { lockBusy } from './airlock.js';                                                  // PT-033: a lock's second door waits for the air: the bot stands and waits, as it does at a sound-lock
 import { loadState, loadAtCell } from './loads.js';
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
@@ -247,6 +248,7 @@ export class Bot {
     const w = this.w, p = w.player;
     if (op.op === 'switch') { const sw = w.map.switches.find((q) => q.id === op.id); return !!sw && Math.hypot(sw.px - p.x, sw.pz - p.z) < 3.5 && !this.done; }
     if (op.op === 'use') return Math.hypot((op.at[0] + 0.5) * w.map.cell - p.x, (op.at[1] + 0.5) * w.map.cell - p.z) < 3.0;
+    if (op.op === 'mirror') { const m = w.map.mirrors.find((q) => q.id === op.id); return !!m && Math.hypot((m.at[0] + 0.5) * w.map.cell - p.x, (m.at[1] + 0.5) * w.map.cell - p.z) < 3.0 && w.mirrors[op.id] !== op.rot; }          // PT-033: a human turns a mirror under fire
     return false;
   }
   aimAt(x, z) { const p = this.w.player; this.in.addYaw(clamp(norm(Math.atan2(-(x - p.x), -(z - p.z)) - p.yaw), -0.15, 0.15)); }
@@ -277,7 +279,7 @@ export class Bot {
     else if (op.op === 'use') {
       const d = w.doors.find((q) => q.cx === op.at[0] && q.cz === op.at[1]);
       if (d && d.target === 1) done = true;
-      else { const listening = d?.soundlock && w.time - (w.noise?.t ?? -99) < d.soundlock.quiet; done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), listening ? (this.stillFor = 0) : this.pressUse(), false); }          // PT-029: a sound-lock door listens: stand still and quiet until it has heard nothing for its `quiet` s
+      else { const listening = (d?.soundlock && w.time - (w.noise?.t ?? -99) < d.soundlock.quiet) || (d?.interlock && lockBusy(w, d)); done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), listening ? (this.stillFor = 0) : this.pressUse(), false); }          // PT-029: a sound-lock door listens: stand still and quiet until it has heard nothing for its `quiet` s
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
@@ -287,6 +289,15 @@ export class Bot {
       if (!sw) this.failed = 'no switch ' + op.id;
       else if (w.switchState[op.id]?.used) done = true;
       else done = this.follow([Math.floor(sw.at[0]), Math.floor(sw.at[1])], 0.6, 1.3) && (this.aimAt(sw.px, sw.pz), this.pressUse(), false);
+    } else if (op.op === 'mirror') {                                                                                                // PT-033: stand beside a mirror and turn it until it faces `rot`
+      const mi = w.map.mirrors.find((q) => q.id === op.id);
+      if (!mi) this.failed = 'no mirror ' + op.id;
+      else if (w.mirrors[op.id] === op.rot) done = true;
+      else {
+        const mx = (mi.at[0] + 0.5) * w.map.cell, mz = (mi.at[1] + 0.5) * w.map.cell;
+        const stand = op.from ?? [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dz]) => [mi.at[0] + dx, mi.at[1] + dz]).filter(([x, z]) => this.passable0(x, z)).sort((a, b) => Math.hypot((a[0] + 0.5) * w.map.cell - p.x, (a[1] + 0.5) * w.map.cell - p.z) - Math.hypot((b[0] + 0.5) * w.map.cell - p.x, (b[1] + 0.5) * w.map.cell - p.z))[0];
+        if (!stand) this.failed = 'no cell beside mirror ' + op.id; else if (this.follow(stand, 0.5, 1.2)) { this.aimAt(mx, mz); this.pressUse(); }
+      }
     } else if (op.op === 'waitplatform') {
       const i = w.map.sectors.findIndex((q) => q.id === op.id), def = w.map.sectors[i]; if (!def?.cycle) this.failed = 'no timing platform ' + op.id; else { this.setHeld('forward', false); this.setHeld('sprint', false); done = platformReady(def, w.time, op.at ?? 'high', op.min ?? 3); }
     } else if (op.op === 'waitsector') {

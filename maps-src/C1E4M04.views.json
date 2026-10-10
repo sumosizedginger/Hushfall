@@ -1,0 +1,22 @@
+[
+  {"name":"01-antechamber","x":8.5,"z":33.5,"yaw":-1.279,"pitch":0.02,"open":true},
+  {"name":"02-the-lesson","x":12.5,"z":33.5,"yaw":0,"pitch":0.05,"open":true},
+  {"name":"03-the-lesson-lit","x":12.5,"z":33.5,"yaw":0,"pitch":0.05,"open":true,"mirrors":{"m0":3},"ticks":20},
+  {"name":"04-the-passage","x":27.5,"z":32.5,"yaw":-1.571,"pitch":0.02,"open":true},
+  {"name":"05-the-first-chamber","x":34.5,"z":31.5,"yaw":-0.785,"pitch":0.12,"open":true},
+  {"name":"06-the-first-receiver-lit","x":35.5,"z":30.5,"yaw":1.279,"pitch":0.02,"open":true,"mirrors":{"mb":0},"ticks":20},
+  {"name":"07-the-light-through-the-door","x":40.5,"z":29.5,"yaw":-1.571,"pitch":0,"open":true,"mirrors":{"mb":1},"ticks":20},
+  {"name":"08-the-second-receiver","x":50.5,"z":30.5,"yaw":0,"pitch":0.02,"open":true,"mirrors":{"mb":1,"mc":0},"ticks":20},
+  {"name":"09-the-light-down-the-east-side","x":53.5,"z":33.5,"yaw":-3.142,"pitch":0,"open":true,"mirrors":{"mb":1,"mc":3},"ticks":20},
+  {"name":"10-the-third-receiver","x":52.5,"z":41.5,"yaw":-1.768,"pitch":0.02,"open":true,"mirrors":{"mb":1,"mc":3,"md":1},"ticks":20},
+  {"name":"11-the-last-mirror","x":38.5,"z":42.5,"yaw":2.944,"pitch":0,"open":true,"mirrors":{"mb":1,"mc":3,"md":0,"me":1},"ticks":20},
+  {"name":"12-the-secret-receiver","x":38.5,"z":46.5,"yaw":2.944,"pitch":0.02,"open":true,"mirrors":{"mb":1,"mc":3,"md":0,"me":2},"ticks":20},
+  {"name":"13-the-drum-from-the-gallery","x":33.5,"z":23.5,"yaw":-2.396,"pitch":0.05,"open":true,"ticks":10},
+  {"name":"14-the-column","x":41.5,"z":30.5,"yaw":-2.356,"pitch":0,"open":true},
+  {"name":"15-a-gallery","x":56.5,"z":24.5,"yaw":2.356,"pitch":0.05,"open":true},
+  {"name":"16-the-exit-passage","x":28.5,"z":44.5,"yaw":1.571,"pitch":0,"open":true},
+  {"name":"17-the-exit-room","x":16.5,"z":46.5,"yaw":1.571,"pitch":0.02,"open":true},
+  {"name":"18-the-secret-passage","x":38.5,"z":50.5,"yaw":-3.142,"pitch":0.02,"open":true},
+  {"name":"19-the-cache-room","x":38.5,"z":60.5,"yaw":-3.142,"pitch":0.02,"open":true},
+  {"name":"20-the-niche","x":12.5,"z":23.5,"yaw":0,"pitch":0.02,"open":true}
+]
