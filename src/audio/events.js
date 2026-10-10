@@ -5,6 +5,7 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
+  sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',
   spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
   shot_impact_silent: 'reserved',
@@ -32,8 +33,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -117,6 +118,9 @@ export function soundsForEvent(e) {
     case 'receiver_lit': return [{ id: 'receiver_lit', pos: at(e) }];
     case 'receiver_dark': return [{ id: 'receiver_dark', pos: at(e), gain: 0.6 }];
     case 'door_cycling': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];                                       // PT-033: airlocks and vacuum
+    case 'sweep_tell': return [{ id: 'sweep_tell', pos: at(e) }];                                                   // PT-033: the Gate Warden's sweep
+    case 'sweep_hit': return [{ id: 'sweep_hit', pos: at(e), gain: 0.9 }];
+    case 'seal_shatter': return [{ id: 'seal_shatter', pos: at(e) }];
     case 'vacuum_enter': return [{ id: 'vacuum_rush' }];
     case 'vacuum_leave': return [{ id: 'air_return' }];
     case 'wade': return e.kind === 's' || e.kind === 'd' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
@@ -136,7 +140,7 @@ export function soundsForEvent(e) {
     case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
-    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

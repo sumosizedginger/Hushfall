@@ -661,4 +661,81 @@ export function grandcantor(tex) {
   }, { maxLift: 6 });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, feeder, graftmother };
+// ------------------------------------------------------------------------------------------------------------------ GATE WARDEN (PT-033, Episode 4 Batch E: the Campaign One boss, an arch in the mouth of the Gate)
+/** A tall stilted arch of ivory bone standing in two great brass bells on stone plinths, plated in white bell-chitin and hooped in brass, with a RING OF LIGHT standing behind it (a ring is nothing else's silhouette) and one great EYE hanging from the keystone in a
+ *  socket with a lid. Two long arms hang in front of the legs and end in bells for fists; two small bells hang inside the arch; a crest of bone spines crowns it. The eye is the sweep: the lid lifts through the tell and the eye turns after the beam (`p.sweep`: 0 none,
+ *  0..1 the tell, 1..2 the beam; `p.aim`: the beam's angle relative to the Warden's own). The pulse is the arms going up and the ring flaring; the slam brings the fists down. Dead, the arch goes over forward, the ring out. It never walks. */
+export function gatewarden(tex) {
+  const C = cellsOf('gatewarden'), A = 1.55, YS = 4.45, LEG = 5, ARC = 9, YB = 0.8;
+  const pts = [], rad = [];
+  for (let i = 0; i <= LEG; i++) { pts.push([-A, YB + (YS - YB) * i / LEG, 0]); rad.push(0.42 - 0.04 * i / LEG); }
+  for (let i = 1; i < ARC; i++) { const th = PI - PI * i / ARC; pts.push([A * K(th), YS + A * S(th), 0]); rad.push(0.38 - 0.02 * S(th)); }
+  for (let i = LEG; i >= 0; i--) { pts.push([A, YB + (YS - YB) * i / LEG, 0]); rad.push(0.42 - 0.04 * i / LEG); }
+  return makeCreature(tex, (R) => {
+    for (const s of [-1, 1]) {
+      R.box(null, 1.7, 0.26, 1.5, C.stone, { pos: [s * A, 0.13, 0] });
+      R.bell(null, 1.1, 0.64, C.bronze, C.bronzeDk, { pos: [s * A, 0.24, 0], seg: 8 });                                                                  // each leg stands in a great bell
+      R.tor(null, 0.64, 0.05, 3, 10, C.trim, { pos: [s * A, 0.3, 0], rot: [PI / 2, 0, 0] });
+      for (let i = 0; i < 3; i++) R.lump(null, 0.3, 0, 0.12, 4 + i + (s > 0 ? 3 : 0), C.chitin, { pos: [s * A, 1.7 + i * 1.05, 0.26 - 0.06 * i], scale: [0.95, 1.45, 0.7] });     // plates of bell-chitin up the leg
+      for (const y of [1.45, 2.65, 3.85]) R.tor(null, 0.44, 0.06, 3, 8, C.bronze, { pos: [s * A, y, 0], rot: [PI / 2, 0, 0] });
+    }
+    R.tube(null, pts, rad, 7, C.bone, { name: 'arch' });
+    for (let i = 0; i < 5; i++) { const th = PI * (0.12 + 0.19 * i); R.lump(null, 0.26, 0, 0.12, 12 + i, C.chitin, { pos: [A * K(th), YS + A * S(th) + 0.02, 0.2], scale: [0.9, 0.8, 0.7] }); }       // and plates along the curve
+    R.box(null, 0.8, 0.62, 0.95, C.stone, { pos: [0, YS + A + 0.2, 0] }); R.tor(null, 0.42, 0.05, 3, 8, C.trim, { pos: [0, YS + A + 0.2, 0.48], rot: [0, 0, 0], scale: [1, 0.7, 1] });
+    for (const [x, tilt, h] of [[0, 0, 0.62], [-0.38, 0.45, 0.46], [0.38, -0.45, 0.46], [-0.7, 0.85, 0.34], [0.7, -0.85, 0.34]]) R.cone(null, 0.09, h, 5, C.bone, { pos: [x, YS + A + 0.5 + h / 2 - 0.18 * Math.abs(x), 0], rot: [0, 0, tilt] });          // the crest
+    // THE RING OF LIGHT, behind: a halo of teal light with beads travelling round it
+    R.joint('ring', null, [0, 3.85, -0.95]);
+    R.tor('ring', 2.05, 0.09, 5, 28, 'glow', { name: 'halo' });
+    R.tor('ring', 2.05, 0.05, 3, 20, C.iron, { pos: [0, 0, -0.1] });
+    for (let i = 0; i < 8; i++) { const a = (i / 8) * PI * 2; R.sph('ring', 0.15, 4, 3, 'glow', { pos: [S(a) * 2.05, K(a) * 2.05, 0.02], name: 'bead' + i }); }
+    // THE EYE, hung from the keystone by a thick cord, in a socket with a lid
+    R.tube(null, [[0, YS + A - 0.1, 0.02], [0, YS + A - 0.7, 0.06], [0, YS + 0.1, 0.1]], 0.16, 6, C.boneDk);
+    R.joint('eyeG', null, [0, 3.7, 0.1]);
+    R.sph('eyeG', 0.58, 10, 7, C.bone); R.sph('eyeG', 0.27, 8, 6, 'glow', { pos: [0, 0, 0.42], name: 'iris' }); R.box('eyeG', 0.06, 0.42, 0.05, C.iron, { pos: [0, 0, 0.7], name: 'slit' });
+    R.prim('eyeG', new THREE.SphereGeometry(0.66, 10, 4, 0, PI * 2, 0, PI / 2), C.chitinDk, { rot: [PI, 0, 0] });                                                // the socket: a bowl under the eye
+    R.joint('lid', 'eyeG', [0, 0, 0]); R.prim('lid', new THREE.SphereGeometry(0.66, 10, 4, 0, PI * 2, 0, PI / 2), C.chitin);                                       // the lid: a dome that lifts back
+    R.tor('lid', 0.5, 0.05, 3, 10, C.trim, { pos: [0, 0.3, 0.3], rot: [0.9, 0, 0], scale: [1, 0.7, 1] });
+    // two small bells inside the arch
+    for (const s of [-1, 1]) { R.joint('hb' + (s > 0 ? 'B' : 'A'), null, [s * 0.95, 5.2, 0]); R.bell('hb' + (s > 0 ? 'B' : 'A'), 0.7, 0.27, C.bronze, C.bronzeDk, { pos: [0, -0.7, 0], seg: 7 }); }
+    // THE ARMS: long, in front of the legs, bells for fists
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) {
+      R.limb(null, n, [s * (A + 0.05), 3.9, 0.66], { a: 1.4, b: 1.5, r0: 0.23, r1: 0.19, r2: 0.15, cellA: C.boneDk, cellB: C.bone, seg: 6 });
+      R.lump(n, 0.3, 0, 0.12, 20 + s, C.chitinDk, { pos: [0, 0.05, 0], scale: [1.1, 0.9, 1] });
+      R.bell(n + 'M', 0.62, 0.3, C.bronze, C.bronzeDk, { pos: [0, -1.5 - 0.62, 0], seg: 6 }); R.tor(n + 'M', 0.3, 0.04, 3, 8, C.trim, { pos: [0, -1.5 - 0.6, 0], rot: [PI / 2, 0, 0] });
+    }
+  }, (p, J, R) => {
+    const t = p.t, d = ease(clamp01(p.dead)), a = p.attack, sw = p.sweep || 0, fl = p.flash || 0, awake = p.awake !== false;
+    const rear = a > 0 ? ease(clamp01(a / 0.55)) * (1 - ease(clamp01((a - 0.8) / 0.2))) : 0, slam = a > 0.55 ? ease(clamp01((a - 0.55) / 0.12)) * (1 - ease(clamp01((a - 0.7) / 0.3))) : 0;
+    const open = d > 0 ? 0 : sw > 0 ? ease(clamp01(sw / 0.55)) : awake ? 0.22 + 0.06 * S(t * 0.9) : 0;
+    J.lid.rotation.x = -open * 1.3; J.eyeG.rotation.y = sw > 1 ? Math.max(-1.3, Math.min(1.3, p.aim || 0)) : (sw > 0 ? (p.aim || 0) * ease(clamp01(sw)) * 0.9 : 0.1 * S(t * 0.6)) * (1 - d);
+    J.iris.scale.setScalar(d > 0.05 || open < 0.12 ? 0.001 : (0.55 + 0.45 * open) * (1 + 0.1 * S(t * 3) + 0.9 * fl + (sw > 1 ? 0.35 : 0))); J.slit.scale.set(1, open < 0.12 || d > 0.05 ? 0.001 : 1, 1);
+    J.armA.rotation.x = -2.4 * rear + 1.95 * slam + 0.04 * S(t * 0.8) - 0.1 * d + 0.5 * d; J.armB.rotation.x = -2.4 * rear + 1.95 * slam + 0.04 * S(t * 0.8 + 1) - 0.1 * d + 0.5 * d;
+    J.armA.rotation.z = 0.12 * rear + 0.06 * S(t * 0.7); J.armB.rotation.z = -0.12 * rear - 0.06 * S(t * 0.7 + 1);
+    J.armAM.rotation.x = -0.5 * rear - 0.1 * S(t * 1.1); J.armBM.rotation.x = -0.5 * rear - 0.1 * S(t * 1.1 + 1);
+    J.hbA.rotation.z = S(t * 1.5) * 0.1 * (1 - d) + 0.2 * rear * S(t * 9); J.hbB.rotation.z = S(t * 1.3 + 2) * 0.1 * (1 - d) - 0.2 * rear * S(t * 9 + 1);
+    J.ring.rotation.z = t * (0.35 + 0.9 * rear + 0.5 * Math.min(1, sw)); J.ring.scale.setScalar(d > 0.1 ? 0.001 : 1 + 0.03 * S(t * 2) + 0.14 * rear + 0.05 * Math.min(1, sw));
+    for (let i = 0; i < 8; i++) J['bead' + i].scale.setScalar(d > 0.1 ? 0.001 : 0.7 + 0.5 * (0.5 + 0.5 * S(t * 3 - i)) + 1.0 * rear);
+    J.halo.scale.setScalar(d > 0.1 ? 0.001 : 1);
+    J.rig.rotation.x = 0.08 * slam + 1.5 * d; J.rig.position.z = 0.15 * slam;                                                       // it leans into the blow; dead, the arch goes over forward
+  }, { maxLift: 8 });
+}
+
+// ------------------------------------------------------------------------------------------------------------------ SEAL (PT-033: a seal on the Warden's arch; a node: an ARMILLARY, three crossed rings of old brass round a diamond of light, on a bone post and a stone plinth)
+export function seal(tex) {
+  const C = cellsOf('seal');
+  return makeCreature(tex, (R) => {
+    R.cyl(null, 0.42, 0.5, 0.2, 8, C.stone, { pos: [0, 0.1, 0] });
+    R.cyl(null, 0.1, 0.17, 0.5, 6, C.bone, { pos: [0, 0.45, 0] }); R.tor(null, 0.17, 0.04, 3, 8, C.bronzeDk, { pos: [0, 0.68, 0], rot: [PI / 2, 0, 0] });
+    R.joint('gem', null, [0, 1.56, 0]);
+    R.prim('gem', new THREE.OctahedronGeometry(0.3, 0), 'glow', { scale: [1, 1.5, 1], name: 'core' });
+    for (let i = 0; i < 3; i++) R.tor('gem', 0.95, 0.09, 3, 20, i === 0 ? C.trim : C.bronze, { rot: [0, (i * PI) / 3, 0] });                 // three vertical rings, a third of a turn apart: round from every side
+    R.tor('gem', 0.95, 0.07, 3, 20, C.bronzeDk, { rot: [PI / 2, 0, 0] });                                                                      // and the equator
+  }, (p, J, R) => {
+    const t = p.t, d = ease(clamp01(p.dead));
+    J.gem.position.y = 1.56 + 0.05 * S(t * 1.6) * (1 - d) - 0.8 * d; J.gem.rotation.y = t * 0.5; J.gem.rotation.z = 0.9 * d; J.gem.scale.setScalar(1 - 0.55 * d);          // dead: the rings fold in as the cage drops
+    J.core.scale.set(1, 1.5, 1).multiplyScalar(d > 0.1 ? 0.001 : 1 + 0.1 * S(t * 3) + 0.8 * (p.flash || 0));
+    J.rig.rotation.z = 1.5 * d;
+  });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother };

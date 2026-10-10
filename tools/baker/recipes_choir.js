@@ -256,6 +256,25 @@ const KINDS = {
       leg: cell({ grad: ['#5e544a', '#221e1a'], blots: [{ cols: ['#7e7266', '#3e3830'], n: 4, r: [6, 11], a: 200 }], marks: [{ col: '#0e0c0a', wt: 1.6, n: 4, dir: 'v', len: [14, 30] }] }),
     },
   },
+  gatewarden: {                      // PT-033: the Gate's own colours, white stone and bone with gold trim: enamel-white bell-chitin plates seamed with blue-grey, ivory bone, brass bells, a black iron socket (the Throat is red and brass, the Cantor violet: the Warden is pale)
+    seed: 2330, cells: {
+      stone: cell({ grad: ['#d8d4c8', '#7c786c'], blots: [{ cols: ['#b8b4a6', '#a4a090', '#e8e4d8'], n: 6, r: [5, 11], a: 190 }], marks: [{ col: '#38352e', wt: 1.7, n: 4, dir: 'h' }, { col: '#f6f2e6', wt: 1.1, n: 3, dir: 'v', len: [8, 18] }] }),
+      stoneDk: cell({ grad: ['#7c786c', '#2c2a26'], blots: [{ cols: ['#5a5a4c', '#9a9684'], n: 5, r: [5, 10], a: 190 }], marks: [{ col: '#100f0c', wt: 1.7, n: 4, dir: 'v', len: [12, 30] }] }),
+      bone: BONE(0.06), boneDk: cell({ grad: ['#c4baa0', '#726850'], marks: [{ col: '#3e3626', wt: 1.5, n: 5, dir: 'v', len: [16, 38] }, { col: '#f0e8d0', wt: 1.1, n: 3, dir: 'd', len: [8, 14] }] }),
+      chitin: cell({ grad: ['#eceee8', '#8e9aa6'], marks: [{ col: '#3a4450', wt: 2.0, n: 4, dir: 'h' }, { col: '#ffffff', wt: 1.3, n: 4, dir: 'v', len: [8, 20] }, { kind: 'cpencil', col: '#aab4bc', wt: 1.2, n: 4, dir: 'd', len: [8, 16] }] }),
+      chitinDk: cell({ grad: ['#8e9aa6', '#2c343e'], marks: [{ col: '#10161c', wt: 1.9, n: 4, dir: 'h' }, { col: '#c4ccd4', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON('#4a4a52', '#18181e'), mouth: MOUTH('#1c0a10'), verd: VERD(),
+      trim: cell({ grad: ['#fbeeaa', '#b48e36'], marks: [{ col: '#5a4010', wt: 1.7, n: 3, dir: 'h' }, { col: '#fffbe0', wt: 1.2, n: 4, dir: 'v', len: [6, 14] }] }),
+    },
+  },
+  seal: {                            // PT-033: a bone plinth, a cage of old brass, a pale stone cap: the light inside is the glow
+    seed: 2331, cells: {
+      stone: cell({ grad: ['#d8d4c8', '#7c786c'], blots: [{ cols: ['#b8b4a6', '#e8e4d8'], n: 5, r: [5, 10], a: 190 }], marks: [{ col: '#38352e', wt: 1.7, n: 3, dir: 'h' }, { col: '#f6f2e6', wt: 1.1, n: 3, dir: 'v', len: [8, 18] }] }),
+      stoneDk: cell({ grad: ['#7c786c', '#2c2a26'], marks: [{ col: '#100f0c', wt: 1.7, n: 4, dir: 'v', len: [12, 30] }] }),
+      bone: BONE(0.06), bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON('#4a4a52', '#18181e'),
+      trim: cell({ grad: ['#fbeeaa', '#b48e36'], marks: [{ col: '#5a4010', wt: 1.7, n: 3, dir: 'h' }, { col: '#fffbe0', wt: 1.2, n: 4, dir: 'v', len: [6, 14] }] }),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

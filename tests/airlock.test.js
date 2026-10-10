@@ -38,8 +38,8 @@ test('an airlock: the second door is refused while the first is open and for LOC
   at(w, 7, -Math.PI / 2); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'the second is refused'); assert.equal(d2.target, 0);
   assert.equal(useTarget(w)?.interlock?.join(), '5,2'); assert.equal(lockBusy(w, d2), true);
   // let the first shut (nobody in it, holdOpen seconds), then the equalising time
-  Object.assign(w.player, { x: cellC(7) }); const shut = run(w, Math.ceil(9 / TICK)); assert.ok(shut.some((e) => e.type === 'door_close'), 'the first door shut'); assert.equal(d1.open, 0);
-  at(w, 7); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'still cycling: the air is moving'); assert.equal(d2.target, 0);
+  Object.assign(w.player, { x: cellC(7) }); let shut = []; for (let i = 0; i < Math.ceil(9 / TICK) && !shut.some((e) => e.type === 'door_close'); i++) { step(w, idle()); shut.push(...drainEvents(w)); } assert.ok(shut.some((e) => e.type === 'door_close'), 'the first door shut'); for (let i = 0; i < 40 && d1.open > 0; i++) { step(w, idle()); drainEvents(w); } assert.equal(d1.open, 0);
+  at(w, 7); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'still cycling: the air is moving (it has not been LOCK.cycle seconds since it shut)'); assert.equal(d2.target, 0);
   run(w, Math.ceil((LOCK.cycle + 0.2) / TICK)); at(w, 7); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_open' && e.cx === 8), 'cycled: the second opens'); assert.equal(d2.target, 1);
   // and now the first is refused (the second is open), and the chamber is in vacuum
   at(w, 4); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'the first is refused now'); assert.equal(inVacuum(w, cellC(6), cellC(2)), true);
@@ -50,7 +50,8 @@ test('vacuum hurts the player a second at a time (scaled by the difficulty), nev
   assert.ok(Math.abs(lost - 2 * VACUUM.dps) <= VACUUM.dps * VACUUM.tick + 1, `about ${2 * VACUUM.dps} in two seconds (${lost})`);
   runActions(w, [{ close: [15, 2] }]); const open0 = doorAtCell(w, 15, 2); ev = run(w, 140); assert.equal(open0.open, 0, 'the hull door is shut'); assert.ok(ev.some((e) => e.type === 'vacuum_leave'), 'and says that the air is back'); const hp1 = w.player.hp;
   run(w, 60); assert.equal(w.player.hp, hp1, 'no more damage'); assert.equal(inVacuum(w, cellC(11), cellC(2)), false);
-  const hard = world(dock(), { difficulty: 'hard' }); Object.assign(hard.player, { x: cellC(11), z: cellC(2), hp: 100 }); run(hard, Math.round(2 / TICK)); assert.ok(100 - hard.player.hp > lost, 'harder is worse');
+  const lossIn = (difficulty) => { const q = world(dock(), { difficulty }); Object.assign(q.player, { x: cellC(11), z: cellC(2), hp: 100 }); run(q, Math.round(8 / TICK)); return 100 - q.player.hp; };
+  const easy = lossIn('easy'), normal = lossIn('normal'), hard = lossIn('hard'); assert.ok(easy < normal && normal < hard, `harder is worse (${easy} < ${normal} < ${hard} over eight seconds)`);
 });
 test('a world with no vacuum has no vacuum state and no lock state on its doors', () => {
   const src = dock(); src.vacuum = undefined; src.doors = [{ at: [5, 2] }, { at: [8, 2] }, { at: [15, 2] }]; delete src.vacuum;

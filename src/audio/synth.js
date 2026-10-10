@@ -463,6 +463,50 @@ export const SFX = {
     thump(c, out, t + 1.6, 70, 26, 0.9, 0.6);
     return 3.2;
   },
+  gatewarden_alert(c, out, t, o) {                              // a gate noticing you: a hinge the size of a house, a boom from inside the arch, bells that stay shut
+    tone(c, out, t, { type: 'sawtooth', f0: 38, f1: 31, a: 0.5, d: 2.2, gain: 0.24, lp: 260, vib: 1.5 });
+    noise(c, out, t, { dur: 1.6, a: 0.3, gain: 0.12, type: 'bandpass', f0: 240, f1: 120, q: 3.5, off: o.r() });
+    thump(c, out, t + 0.5, 90, 30, 0.5, 0.7);
+    bell(c, out, t + 0.6, 131, { decay: 2.4, gain: 0.1, ratio: 2.5, index: 0.8 });
+    return 2.8;
+  },
+  gatewarden_draw(c, out, t, o) {                               // the arch drawing wind through itself before a ring goes out or a fist comes down
+    tone(c, out, t, { type: 'sine', f0: 60, f1: 180, a: 0.8, d: 0.4, gain: 0.2 });
+    noise(c, out, t, { dur: 1.3, a: 0.9, gain: 0.14, type: 'bandpass', f0: 200, f1: 1600, q: 1.3, off: o.r() });
+    bell(c, out, t + 0.2, 196, { decay: 1.4, gain: 0.07, ratio: 2.7, index: 0.9 });
+    return 1.5;
+  },
+  gatewarden_die(c, out, t, o) {                                // the gate falls: stone cracking along its whole height, a ring of light going out as a long falling tone, then the keystone
+    noise(c, out, t, { dur: 0.5, a: 0.002, gain: 0.34, type: 'bandpass', f0: 1100, f1: 300, q: 1.0, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 880, f1: 55, a: 0.02, d: 2.6, gain: 0.2 });
+    for (let i = 0; i < 6; i++) bell(c, out, t + 0.25 + i * 0.3, 392 * Math.pow(0.78, i), { decay: 1.3, gain: 0.08, ratio: 2.7, index: 1 });
+    noise(c, out, t + 0.5, { dur: 2.8, a: 0.3, gain: 0.2, type: 'lowpass', f0: 1600, f1: 70, off: o.r() });
+    thump(c, out, t + 1.9, 60, 24, 1.0, 0.75);
+    return 3.8;
+  },
+  sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
+    tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
+    tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });
+    noise(c, out, t + 1.4, { dur: 1.0, a: 0.9, gain: 0.09, type: 'highpass', f0: 3000, f1: 6000, q: 0.8, off: o.r() });
+    return 2.5;
+  },
+  sweep_hit(c, out, t, o) {                                     // the beam crossing you: a hot crackle and a falling whine
+    noise(c, out, t, { dur: 0.22, a: 0.002, gain: 0.3, type: 'bandpass', f0: 3200, f1: 900, q: 1.1, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 1400, f1: 180, a: 0.004, d: 0.3, gain: 0.14, lp: 3000 });
+    thump(c, out, t, 110, 40, 0.25, 0.3);
+    return 0.5;
+  },
+  seal_shatter(c, out, t, o) {                                  // a seal breaking under the reflected light: glass in a stone hall, then the bells the glass was holding
+    noise(c, out, t, { dur: 0.3, a: 0.001, gain: 0.34, type: 'highpass', f0: 2400, f1: 7000, q: 0.9, off: o.r() });
+    for (let i = 0; i < 5; i++) bell(c, out, t + 0.04 + i * 0.07, 1318 * (1 + 0.21 * i), { decay: 0.7, gain: 0.07, ratio: 3.3, index: 0.7 });
+    thump(c, out, t, 140, 44, 0.3, 0.4);
+    bell(c, out, t + 0.1, 262, { decay: 1.6, gain: 0.1, ratio: 2.5, index: 1 });
+    return 1.8;
+  },
+  seal_die(c, out, t, o) {                                      // the crack of the cage: short and dry (the shatter is its own sound)
+    noise(c, out, t, { dur: 0.18, a: 0.001, gain: 0.26, type: 'bandpass', f0: 1800, f1: 600, q: 1.2, off: o.r() });
+    return 0.3;
+  },
   ward_ping(c, out, t, o) {                                     // a hit that something sang away: a small glassy ding
     bell(c, out, t, 880, { decay: 0.35, gain: 0.12, ratio: 3.5, index: 0.7 });
     return 0.4;

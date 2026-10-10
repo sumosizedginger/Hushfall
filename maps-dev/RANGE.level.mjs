@@ -5,7 +5,7 @@
 // Cells are 2 m. x = column, z = row (south is +z). An enemy's `facing` is the direction it looks as (sin, cos): 0 = south (+z), PI = north, PI/2 = east, -PI/2 = west.
 import { Level } from '../tools/mapkit/builder.mjs';
 
-const L = new Level(62, 112);
+const L = new Level(62, 134);
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
 
 // ---- rooms ---------------------------------------------------------------------------------------------------------------
@@ -32,6 +32,8 @@ L.room([2, 74, 45, 88], { floor: 'f', wall: 'C' }); L.rect([21, 71, 23, 73], 'f'
 // the LOADS yard (two falling loads across a corridor, a second one half a cycle behind the first)
 L.room([2, 92, 45, 108], { floor: ':', wall: 'C' }); L.rect([3, 89, 5, 91], 'f'); L.rect([14, 93, 29, 107], '_');
 L.rect([46, 99, 47, 101], ':'); L.room([48, 92, 59, 108], { floor: ':', wall: 'C' });
+// PT-033: the seventh range, south of the sky yard (an opening at x 21..23): the GATE YARD, nine metres to the ceiling for the Gate Warden (7.2 m)
+L.room([2, 113, 45, 130], { floor: 'f', wall: 'C' }); L.rect([21, 109, 23, 112], 'f'); L.ceiling([2, 113, 45, 130], 9);
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
@@ -41,6 +43,8 @@ L.putAll('m', [[8, 77], [22, 77], [36, 77], [8, 86], [22, 86], [36, 86]]);      
 L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50], [30, 50]]);                           // the second range's lamps
 L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
 L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
+L.putAll('m', [[8, 116], [22, 116], [36, 116], [8, 127], [22, 127], [36, 127]]);                                              // the gate yard's lamps
+L.putAll('P', [[16, 118], [16, 124]]);                                                                                       // two pillars: cover from the sweep
 L.put(22, 24, '@');                                              // the hub: the sponges north, the pair and the far sponge on this row, the crowd and the water north-east
 
 // ---- targets -------------------------------------------------------------------------------------------------------------------
@@ -115,6 +119,14 @@ E.push({ type: 'switch', id: 'foundry', at: [2, 82], wall: 'west', once: true, d
 t('tollbearer', 36, 96, WEST, 'inert', SPONGE); t('gaunt', 38, 100, WEST, 'inert', SPONGE); t('bellhand', 36, 104, WEST, 'inert', SPONGE); t('chorister', 42, 98, WEST, 'inert', SPONGE);
 t('tollbearer', 8, 104, EAST, 'inert', SPONGE);
 
+// ---- PT-033: the gate yard (Episode 4): the Gate Warden ----
+// sponges (the outline, the hit volume): the Warden and two Seals; the live one behind the lever fights as in the game: the sweep (the pillars stop it; the mirror turns it north onto the third Seal), the ring pulse, the Drone-Gills out of its alcoves
+t('gatewarden', 8, 118, S, 'inert', SPONGE); t('seal', 4, 123, S, 'inert', SPONGE); t('seal', 12, 123, S, 'inert', SPONGE);
+E.push({ type: 'enemy', kind: 'gatewarden', at: [40, 121], facing: WEST, group: 'gate', summons: [[34, 115], [34, 127], [38, 115], [38, 127]] });
+E.push({ type: 'enemy', kind: 'seal', at: [38, 118], group: 'gate' }, { type: 'enemy', kind: 'seal', at: [38, 124], group: 'gate' }, { type: 'enemy', kind: 'seal', at: [27, 115], group: 'gate' });
+E.push({ type: 'prop', kind: 'mirror', id: 'gm', at: [27, 121], rot: 1 });
+E.push({ type: 'switch', id: 'gate', at: [2, 121], wall: 'west', once: true, do: [{ wake: 'gate' }, { objective: 'The Warden is awake: stand west of the mirror and let the sweep find it' }, { shake: 1.2 }] });
+
 const layers = L.layers();
 
 export default {
@@ -144,6 +156,7 @@ export default {
     { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front and opens to bash. A Mother weeps pools and broods. An Acolyte wards: everything within 9 m takes half. The lever wakes the east.' },
     { id: 'foundryyard', at: [10, 79], radius: 8, speaker: 'RANGE', text: 'FOUNDRY YARD: a Brood Vat swells for 1.2 s, then drops a creature; kill the vat and the brood stops. Reeds shield the Grand Cantor. The west lever wakes the live vats.' },
     { id: 'airyard', at: [8, 98], radius: 7, speaker: 'RANGE', text: 'SKY YARD: step on a lit plate and you are thrown to its landing; steer a little in the air, shoot as you go. Miss the deck and the sky sets you back (15 hurt).' },
+    { id: 'gateyard', at: [10, 115], radius: 8, speaker: 'RANGE', text: 'GATE YARD: a Warden and two Seals to shoot. The lever wakes the live one: a 2.4 s tell, then a beam (pillars stop it; the mirror turns it onto the third Seal; no seals, no shield).' },
     { id: 'loadsyard', at: [53, 94], radius: 6, speaker: 'RANGE', text: 'LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],

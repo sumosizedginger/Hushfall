@@ -364,7 +364,9 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   for (const t of src.triggers || []) {
     const tag = `trigger '${t.id}'`;
     if (!t.id || trIds.has(t.id)) err(`${tag}: missing or duplicate id`); trIds.add(t.id);
-    const wn = String(t.when ?? '');
+    const whens = Array.isArray(t.when) ? t.when : [t.when];                                       // PT-033: a list of conditions is an AND (the Hollow Stair: all four levers)
+    if (Array.isArray(t.when) && (t.when.length < 2 || t.when.some((q) => q === 'enter' || q === 'start'))) err(`${tag}: a list of conditions needs two or more of key: dead: msg: time: sector: lit:`);
+    for (const wn of whens.map((q) => String(q ?? ''))) {
     if (wn === 'enter') { if (!Array.isArray(t.at) || t.at.length !== 2 || !t.at.every(Number.isFinite)) err(`${tag}: 'enter' needs at:[cx,cz]`); }
     else if (wn.startsWith('key:')) { if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`); }
     else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
@@ -373,6 +375,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
     else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
     else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> (got '${wn}')`);
+    }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);
   }

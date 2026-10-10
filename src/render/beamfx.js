@@ -3,6 +3,7 @@
 // are `w.mirrors`, the lit receivers `w.beams.lit`, the doors `w.doors`; the lines are traced again here with the same pure function (the sim and the picture cannot disagree).
 import * as THREE from 'three';
 import { traceBeams, BEAM, DIRS } from '../engine/beams.js';
+import { ENEMIES } from '../engine/defs.js';
 
 const lam = (o) => new THREE.MeshLambertMaterial(o);
 const bas = (o) => new THREE.MeshBasicMaterial(o);
@@ -61,4 +62,34 @@ export function makeBeamView(map, tex = {}) {
     for (const e of emitters) e.halo.material.opacity = 0.3 + 0.1 * Math.sin(time * 3);
   }
   return { group, update, mirrors, receivers, lines };
+}
+
+// ------------------------------------------------------------------------------------------------------------------ THE GATE WARDEN'S SWEEP (PT-033, Batch E; engine/sweep.js)
+/** The Warden's beam, drawn from `e.sweepLine` (the sim's own traced polyline, so the picture cannot disagree with the hurt): in the tell a thin dim line along the angle it will start from, in the sweep a hot bar with a halo, from the eye
+ *  down to the beam's height over the first few metres and then level, through every bounce a mirror gave it. Pooled unit boxes, nothing allocated per frame. */
+export function makeSweepView() {
+  const group = new THREE.Group(), pool = [], unit = new THREE.BoxGeometry(1, 1, 1), V0 = new THREE.Vector3(), V1 = new THREE.Vector3();
+  const mats = { core: bas({ color: 0xfff6d8 }), halo: add({ color: 0xffc860, opacity: 0.4 }), outer: add({ color: 0x9ad8ff, opacity: 0.16 }), warn: add({ color: 0xffe9a8, opacity: 0.3 }) };
+  const take = (i, mat) => { let m = pool[i]; if (!m) { m = new THREE.Mesh(unit, mat); m.frustumCulled = false; group.add(m); pool[i] = m; } m.material = mat; m.visible = true; return m; };
+  const seg = (i, a, b, wd, mat) => { const m = take(i, mat), len = V0.copy(b).sub(a).length(); if (len < 0.01) { m.visible = false; return i + 1; } m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(wd, wd, len); m.lookAt(b); return i + 1; };
+  function update(w, time) {
+    let n = 0;
+    for (const e of w.enemies) {
+      const S = ENEMIES[e.kind]?.sweep; if (!S || (e.sweepT ?? -1) < 0 || !e.sweepLine || e.dead >= 1) continue;
+      const pts = e.sweepLine.pts, beam = e.sweepLine.beam, flick = 1 + 0.15 * Math.sin(time * 40), eyeY = (e.y ?? 0) + 3.8;
+      for (let i = 0; i + 1 < pts.length; i++) {
+        let a = new THREE.Vector3(pts[i][0], S.beamY, pts[i][1]), b = new THREE.Vector3(pts[i + 1][0], S.beamY, pts[i + 1][1]);
+        if (i === 0) {                                                                                       // out of the eye, then down to the beam's height
+          const dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz) || 1, k = Math.min(1, 6 / L), m = new THREE.Vector3(a.x + dx * k, S.beamY, a.z + dz * k); a = new THREE.Vector3(a.x, eyeY, a.z);
+          if (beam) { n = seg(n, a, m, 0.08 * flick, mats.core); n = seg(n, a, m, 0.28 * flick, mats.halo); }
+          else n = seg(n, a, m, 0.05, mats.warn);
+          a = m;
+        }
+        if (beam) { n = seg(n, a, b, 0.1 * flick, mats.core); n = seg(n, a, b, S.width * 0.9 * flick, mats.halo); n = seg(n, a, b, S.width * 2.2, mats.outer); }
+        else n = seg(n, a, b, 0.05, mats.warn);
+      }
+    }
+    for (let i = n; i < pool.length; i++) if (pool[i]) pool[i].visible = false;
+  }
+  return { group, update, dispose() { unit.dispose(); for (const m of Object.values(mats)) m.dispose(); } };
 }

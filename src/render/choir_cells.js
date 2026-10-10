@@ -18,6 +18,8 @@ export const CHOIR_CELLS = {
   vat:         ['iron', 'ironDk', 'rust', 'dome', 'domeDk', 'copper', 'verd', 'pipe', 'slime'],          // PT-030 (Episode 3, Batch E): the Foundry's spawner
   reed:        ['flesh', 'fleshDk', 'stone', 'bronze', 'bronzeDk', 'bone', 'verd', 'mouth', 'cord'],          // PT-030: a pipe the Grand Cantor sings through
   grandcantor: ['skin', 'flesh', 'fleshDk', 'chitin', 'chitinDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd', 'horn', 'hornIn', 'trim', 'leg'],          // PT-030: the Episode 3 boss
+  gatewarden:  ['stone', 'stoneDk', 'bone', 'boneDk', 'chitin', 'chitinDk', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd', 'trim'],          // PT-033 (Episode 4, Batch E): the Gate Warden, the Campaign One boss
+  seal:        ['stone', 'stoneDk', 'bone', 'bronze', 'bronzeDk', 'iron', 'trim'],          // PT-033: a seal on the Warden's arch (a node)
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);

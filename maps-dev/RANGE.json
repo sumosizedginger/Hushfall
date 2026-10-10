@@ -119,7 +119,29 @@
   "#C::::::::::::________________::::::::::::::::CC::::::::::::C#",
   "#C::::::::::::________________::::::::::::::::CC::::::::::::C#",
   "#C::::::::::::::::::::::::::::::::::::::::::::CC::::::::::::C#",
-  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#####################fff######################################",
+  "#####################fff######################################",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC###############",
   "##############################################################",
   "##############################################################"
  ],
@@ -166,6 +188,28 @@
   ".................................................12345666666..",
   ".................................................12345666666..",
   ".................................................12345666666..",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -349,6 +393,28 @@
   "..............................................................",
   "..............................................................",
   "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii................",
+  "..............................................................",
+  "..............................................................",
   ".............................................................."
  ],
  "fx": [
@@ -402,6 +468,28 @@
   "..................................................ssssssss....",
   "..................................................ssssssss....",
   "..................................................ssssssss....",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -725,6 +813,46 @@
    "type": "prop",
    "kind": "lamp",
    "at": [36, 86]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 116]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 116]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 116]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 118]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 124]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 127]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 127]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 127]
   },
   {
    "type": "enemy",
@@ -1872,6 +2000,89 @@
    "hp": 5000
   },
   {
+   "type": "enemy",
+   "kind": "gatewarden",
+   "at": [8, 118],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "seal",
+   "at": [4, 123],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "seal",
+   "at": [12, 123],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gatewarden",
+   "at": [40, 121],
+   "facing": -1.5707963267948966,
+   "group": "gate",
+   "summons": [
+    [34, 115],
+    [34, 127],
+    [38, 115],
+    [38, 127]
+   ]
+  },
+  {
+   "type": "enemy",
+   "kind": "seal",
+   "at": [38, 118],
+   "group": "gate",
+   "facing": -2.973
+  },
+  {
+   "type": "enemy",
+   "kind": "seal",
+   "at": [38, 124],
+   "group": "gate",
+   "facing": -2.983
+  },
+  {
+   "type": "enemy",
+   "kind": "seal",
+   "at": [27, 115],
+   "group": "gate",
+   "facing": -3.087
+  },
+  {
+   "type": "prop",
+   "kind": "mirror",
+   "id": "gm",
+   "at": [27, 121],
+   "rot": 1
+  },
+  {
+   "type": "switch",
+   "id": "gate",
+   "at": [2, 121],
+   "wall": "west",
+   "once": true,
+   "do": [
+    {
+     "wake": "gate"
+    },
+    {
+     "objective": "The Warden is awake: stand west of the mirror and let the sweep find it"
+    },
+    {
+     "shake": 1.2
+    }
+   ]
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [45, 27]
@@ -1982,6 +2193,13 @@
    "radius": 7,
    "speaker": "RANGE",
    "text": "SKY YARD: step on a lit plate and you are thrown to its landing; steer a little in the air, shoot as you go. Miss the deck and the sky sets you back (15 hurt)."
+  },
+  {
+   "id": "gateyard",
+   "at": [10, 115],
+   "radius": 8,
+   "speaker": "RANGE",
+   "text": "GATE YARD: a Warden and two Seals to shoot. The lever wakes the live one: a 2.4 s tell, then a beam (pillars stop it; the mirror turns it onto the third Seal; no seals, no shield)."
   },
   {
    "id": "loadsyard",

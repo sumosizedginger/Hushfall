@@ -18,6 +18,7 @@ import { designate as mortarShot } from './mortar.js';                          
 import { sawStep } from './saw.js';                                                                                  // PT-022: the chainsaw's held fire
 import { traceBeams, nextRot } from './beams.js';                                                                    // PT-033: the Mirror Array's light (lazy state: only a map with an emitter has `w.mirrors` and `w.beams`)
 import { lockBusy, inVacuum } from './airlock.js';                                                                    // PT-033: airlocks and vacuum (lazy: only a map that has them uses them)
+import { sweepStep } from './sweep.js';                                                                              // PT-033: the Gate Warden's sweep
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -83,7 +84,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
   for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
-  if (map.emitters.length) { w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot])); w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
+  if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
+  if (map.emitters.length) { w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
   return w;
 }
 
@@ -102,7 +104,7 @@ export function updateBeams(w, silent = false) {
 /** PT-033: Use on a mirror turns it a quarter step clockwise */
 export function turnMirror(w, id) {
   const m = w.map.mirrors.find((q) => q.id === id); if (!m) return;
-  w.mirrors[id] = nextRot(w.mirrors[id]); emit(w, 'mirror_turn', { id, rot: w.mirrors[id], x: (m.at[0] + 0.5) * w.map.cell, z: (m.at[1] + 0.5) * w.map.cell }); updateBeams(w);
+  w.mirrors[id] = nextRot(w.mirrors[id]); emit(w, 'mirror_turn', { id, rot: w.mirrors[id], x: (m.at[0] + 0.5) * w.map.cell, z: (m.at[1] + 0.5) * w.map.cell }); if (w.beams) updateBeams(w);
 }
 export function cellSolid(w, cx, cz) {
   const m = w.map, k = m.kind(cx, cz);
@@ -169,7 +171,7 @@ export const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin
 /** PT-033: a body in a region of vacuum takes VACUUM.dps a second (the difficulty scales it, as a toxic bed's); `p.vac` is lazy state that only a map with vacuum has */
 function vacuumStep(w, dt, diff) {
   const p = w.player, on = inVacuum(w, p.x, p.z);
-  if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; hurtPlayer(w, Math.round(VACUUM.dps * VACUUM.tick * diff.enemyDamage)); } } else p.vacT = 0;
+  if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; p.vacAcc = (p.vacAcc || 0) + VACUUM.dps * VACUUM.tick * diff.enemyDamage; const whole = Math.floor(p.vacAcc); p.vacAcc -= whole; hurtPlayer(w, whole); } } else p.vacT = 0;          // fractions carry over: Easy and Hard feel it too
   if (on !== !!p.vac) { p.vac = on; emit(w, on ? 'vacuum_enter' : 'vacuum_leave', {}); }
 }
 function hurtPlayer(w, dmg) {
@@ -682,6 +684,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   const p = w.player, enraged = nodesAlive(w) === 0, P = def.pulse;
   e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt); e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
   if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }       // PT-030: the second ring of a double pulse (the Grand Cantor)
+  if (def.sweep && sweepStep(w, e, def, diff, dt, sees, dist, { emit, hurtPlayer, damageEnemy, solid: (cx, cz) => cellSolid(w, cx, cz) })) return true;                  // PT-033: the Gate Warden's sweep
   if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
     if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo) e.echoT = P.echo.gap; }

@@ -34,9 +34,11 @@ for (const v of views) {
   await T(`t.setup_teleport(${v.x * 2}, ${v.z * 2}, ${yaw}); t.setup_player({ pitch: ${v.pitch ?? 0}, hp: 100, hurt: 0 })`);
   if (v.mirrors) await T(`t.setup_mirrors(${JSON.stringify(v.mirrors)})`);                                  // PT-033: put the Mirror Array's mirrors in a chosen state (ids -> rotation)
   if (v.wake) await T('t.setup_wakeAll()');
-  if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100 })'); }
+  if (v.killNodes) await T('t.setup_killNodes()');                                                                  // PT-033: the Gate Warden without its shield
+  if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100, hurt: 0 })'); }
   if (v.ambient != null) await T(`t.setup_ambient(${v.ambient})`);
   await T('t.clearOverlays(); t.render(0.02)');
+  if (v.probe) console.log(v.name, JSON.stringify(await T('t.sweepProbe()')));
   await savePng(page, path.join(out, v.name + '.png')); console.log('shot', v.name);
 }
 console.log(JSON.stringify({ errors }));

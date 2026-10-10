@@ -204,11 +204,11 @@ export const recipesE4b = {
   // ---- the light from below (the shaft of the Hollow Stair): at the horizon indigo, going down to a blinding white at the nadir; rays and a ring -----------------------------------------------------------------------------------------------
   sky_gate_below: {
     seed: 9427, width: 512, height: 256,
-    draw: R((g, w, h) => {
-      g.bg('#ffffff'); gradient(g, w, h, [[0, '#9aa0e8'], [0.18, '#c8ccff'], [0.5, '#f0f0ff'], [1, '#ffffff']]);
-      for (let i = 0; i < 40; i++) { const x = g.rnd(0, w), len = g.rnd(50, 200); ink(g, x, 0, x + g.rnd(-30, 30), len, '#6a70d0', g.rnd(2, 8), g.rnd(30, 80)); }
-      for (let r = 40; r < 400; r += 70) skyBlot(g, 256, 230, r * 1.6, r * 0.5, '#8a90e0', 28);
-      skyBlot(g, 256, 250, 260, 90, '#ffffff', 255);
+    draw: R((g, w, h) => {                                                                    // only the lower half of the picture is seen (row 128 the horizon, row 256 the nadir): indigo at the horizon, rising to a RING of white and dropping to a dark eye at the very bottom
+      g.bg('#12143c'); gradient(g, w, h, [[0, '#12143c'], [0.5, '#2a2c80'], [0.62, '#5a5ec8'], [0.74, '#c8ccff'], [0.82, '#ffffff'], [0.9, '#a8acf0'], [1, '#34368c']]);
+      for (let i = 0; i < 46; i++) { const x = g.rnd(0, w), y0 = g.rnd(150, 215); ink(g, x, y0, x + g.rnd(-18, 18), y0 + g.rnd(25, 70), '#ffffff', g.rnd(2, 8), g.rnd(40, 100)); }       // rays standing up out of the ring
+      for (let i = 0; i < 30; i++) { const x = g.rnd(0, w), y0 = g.rnd(130, 175); ink(g, x, y0, x + g.rnd(-14, 14), y0 + g.rnd(20, 60), '#1c1e5c', g.rnd(3, 9), g.rnd(40, 90)); }  // and the shadow of the stair on the walls of the shaft
+      skyBlot(g, 256, 214, 520, 40, '#ffffff', 140); skyBlot(g, 256, 252, 300, 60, '#12143c', 120);
     }),
   },
 };

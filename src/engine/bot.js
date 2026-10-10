@@ -121,10 +121,13 @@ export class Bot {
   bossTick() {
     const w = this.w, p = w.player, boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead');
     if (!boss) { for (const a of ['fire', 'aim', 'forward', 'back', 'right', 'sprint']) this.setHeld(a, false); return true; }
-    const danger = (boss.pulseT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5);
+    // the Gate Warden stands a whole arena away: a ring it has only just drawn breath for, or one that is still forty metres off, is no reason to stop (a human takes cover when the ring is about to arrive, and always from the beam)
+    const far = !!ENEMIES[boss.kind].sweep;
+    const ringsMatter = !far || p.hp < 45;                                                                                // a ring costs 13: only the beam is worth hiding from while there is hit points to spare
+    const danger = (ringsMatter && (boss.pulseT ?? -1) >= 0) || (boss.sweepT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || (ringsMatter && w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5));
     if (danger) {
-      if (hasLOS(w, boss.x, boss.z, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
-      if (this.cover && hasLOS(w, boss.x, boss.z, p.x, p.z)) {                                       // still exposed: go
+      if (this.exposedTo(boss, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
+      if (this.cover && this.exposedTo(boss, p.x, p.z)) {                                       // still exposed: go
         const t = this.combatTarget(); if (t && t.d < 5) this.fight(t); else { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false); }
         this.steerTo(this.cover[0], this.cover[1], 0.4); this.setHeld('sprint', true); return false;
       }
@@ -151,12 +154,19 @@ export class Bot {
     }
     return best;
   }
+  /** a point the boss can see: for the Gate Warden also a point a body-width to either side of it (its beam is 0.9 m wide: a corner is not cover from it) */
+  exposedTo(boss, x, z) {
+    const w = this.w; if (hasLOS(w, boss.x, boss.z, x, z)) return true;
+    if (!ENEMIES[boss.kind].sweep) return false;
+    const dx = x - boss.x, dz = z - boss.z, l = Math.hypot(dx, dz) || 1, px = -dz / l, pz = dx / l;
+    return hasLOS(w, boss.x, boss.z, x + px * 1.0, z + pz * 1.0) || hasLOS(w, boss.x, boss.z, x - px * 1.0, z - pz * 1.0);
+  }
   /** the nearest point within 9 m that the boss has no line to (behind a pillar), or null */
   findCover(boss) {
     const w = this.w, p = w.player; let best = null, bd = 1e9;
     for (const r of [2, 3, 4, 5.5, 7, 9]) for (let k = 0; k < 16; k++) {
       const a = k / 16 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r;
-      if (hasLOS(w, boss.x, boss.z, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue;
+      if (this.exposedTo(boss, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue;
       const d = r + 0.3 * Math.hypot(x - boss.x, z - boss.z); if (d < bd) { bd = d; best = [x, z]; }
     }
     return best;
@@ -264,7 +274,7 @@ export class Bot {
     const w = this.w, p = w.player, op = this.route[this.i];
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after
     else if (this.usePressed) this.usePressed = false;
-    if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
+    if (++this.opTicks > this.maxOp * (op.op === 'killboss' ? 2 : 1)) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];

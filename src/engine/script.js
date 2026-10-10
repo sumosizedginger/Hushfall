@@ -58,6 +58,7 @@ const cond = {
   enter: (w, t) => Math.hypot(w.player.x - t.x, w.player.z - t.z) <= t.r,
 };
 function conditionMet(w, t) {
+  if (Array.isArray(t.when)) return t.when.every((q) => conditionMet(w, { ...t, when: q }));                  // PT-033: a list is an AND
   const c = String(t.when);
   if (c === 'start' || c === 'enter') return cond[c](w, t);
   if (c.startsWith('key:')) return w.player.keys.includes(c.slice(4));

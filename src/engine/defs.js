@@ -76,7 +76,7 @@ export const LOOKS = {
   quiet: { hemi: [0xc0a47c, 0x3a2c20, 2.0], sun: [0xffd8a0, 0.3, [-6, 14, -6]], lamp: 2.3, exposure: 1, grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8), shade: { foot: 0.5, ao: 0.5, patch: 0.1 } },                                   // the Quiet Room: smoky bronze, one warm lamp
   dock: { hemi: [0xd8f0f4, 0x4a6670, 2.6], sun: [0xe8ffff, 0.8, [-5, 16, -4]], lamp: 0.8, exposure: 1, grade: GR([0.88, 1.04, 1.1], [1.02, 1.03, 1.0], 0.75), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },                       // the Cold Dock: sterile cyan-white strip light, hazard yellow
   orchard: { hemi: [0xc8e8a0, 0x2a4020, 2.2], sun: [0xfff0b0, 1.2, [-8, 16, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.06, 0.9], [1.1, 1.04, 0.84], 1.1), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },                      // the Drift Orchard: green-gold, soft, weightless
-  approach: { hemi: [0x8890b8, 0x181a30, 1.5], sun: [0xe8ecff, 0.5, [-6, 14, -6]], lamp: 1.45, exposure: 1, grade: GR([0.9, 0.94, 1.14], [1.06, 1.02, 0.96], 0.85), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },                  // the Gatekeeper's Approach: grey stone and indigo, the Gate's light at the far end
+  approach: { hemi: [0x98a0c8, 0x2a2c4c, 2.1], sun: [0xe8ecff, 0.6, [-6, 14, -6]], lamp: 1.9, exposure: 1, grade: GR([0.9, 0.94, 1.14], [1.06, 1.02, 0.96], 0.85), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },                  // the Gatekeeper's Approach: grey stone and indigo, the Gate's light at the far end
   stair: { hemi: [0x4a50a0, 0xc0c8ff, 1.5], sun: [0xe8f0ff, 0.5, [0, 20, 0]], lamp: 1.2, exposure: 1, grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0), shade: { foot: 0.3, ao: 0.4, patch: 0.1 } },                                  // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere)
   gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
@@ -130,7 +130,7 @@ export const FLOOR_SKINS = {
   a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
   '+': { kind: 'floor', tex: 'floor_hull_a' },       // Episode 4: the wreck's roofed hull floor (the plate of h, under a lid)
   '4': { kind: 'floor', tex: 'floor_prism_a' }, '5': { kind: 'floor', tex: 'floor_quiet_a' }, x: { kind: 'floor', tex: 'floor_dock_a' }, '6': { kind: 'floor', tex: 'floor_moss_a' }, '7': { kind: 'outdoor', tex: 'floor_moss_a' },
-  '8': { kind: 'floor', tex: 'floor_approach_a' }, '9': { kind: 'floor', tex: 'floor_stair_a' }, '&': { kind: 'outdoor', tex: 'floor_stair_a' }, ';': { kind: 'floor', tex: 'floor_gate_a' },       // Episode 4 (PT-033): prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
+  '8': { kind: 'floor', tex: 'floor_approach_a' }, '9': { kind: 'floor', tex: 'floor_stair_a' }, '&': { kind: 'outdoor', tex: 'floor_stair_a' }, ';': { kind: 'floor', tex: 'floor_gate_a' }, '<': { kind: 'outdoor', tex: 'floor_gate_a' },       // Episode 4 (PT-033): prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
 };
 
 /**
@@ -376,3 +376,11 @@ ENEMIES.grandcantor = { name: 'Grand Cantor', poise: 8, hp: 900, speed: 1.1, gai
   attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 2.4, damage: 36 }, boss: true,
   shield: { reduce: 0.05, y: 3.0, r: 3.8, note: ['REED', 'REEDS', 'STILL SING'] }, pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 13, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } }, enragedPulseCooldown: 4.6,
   shots: { count: 3, spread: 0.24, speed: 8.5, damage: 8, cooldown: 5, aimHeight: 1.2, muzzleY: 4.2, always: true }, summon: { kind: 'chorister', count: 2, every: 30, max: 3 }, stagger: 3.0 };
+/** THE GATE WARDEN (PT-033, Episode 4 Batch E; design/EPISODE4.md E5): the Campaign One boss. An arch of grafted bone and bell-chitin standing in the mouth of the Gate with a ring of light behind it (a silhouette of its own: nothing else is a ring). It does not move.
+ *  Shielded (5%) while any of its three SEALS (nodes on the arch) stand; a seal's death staggers it, the last drops the shield. A SWEEP (src/engine/sweep.js): after a 2.4 s tell a beam from its eye turns through 143 degrees in 2.8 s (pillars stop it, the Mirror Array's
+ *  mirrors turn it: a reflected stretch through a seal shatters it); a ring pulse like the Cantors'; Drone-Gills called out of the Gate (from the entity's `summons` cells); and it slams what stands at its feet. */
+ENEMIES.gatewarden = { name: 'Gate Warden', poise: 8, hp: 900, speed: 0, gait: 1, radius: 1.6, height: 7.2, hitRadius: 1.9, hitForward: 0, sight: 80, turnRate: 1.2, keepAway: 0,
+  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 3.4, damage: 40 }, boss: true,
+  shield: { reduce: 0.05, y: 3.6, r: 4.2, note: ['SEAL', 'SEALS', 'STAND'] }, pulse: { cooldown: 10, windup: 1.4, speed: 8, damage: 10, width: 1.3, maxR: 44, hitHeight: 1.0 }, enragedPulseCooldown: 8,
+  sweep: { first: 6, cooldown: 10, tell: 2.4, duration: 2.8, arc: 2.5, damage: 18, width: 0.6, range: 64, hitCd: 1.0, beamY: 1.0 }, summon: { kind: 'gill', count: 1, every: 30, max: 2 }, stagger: 3.0 };
+ENEMIES.seal = { name: 'Seal', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 2.6, hitRadius: 0.95, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };      // a seal on the Gate Warden's arch: a node

@@ -28,7 +28,7 @@ import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/de
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
-import { makeBeamView } from './beamfx.js';
+import { makeBeamView, makeSweepView } from './beamfx.js';
 import { inVacuum } from '../engine/airlock.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
@@ -58,7 +58,8 @@ export class GameView {
       if (map.hasVoid && below) { this.skyBelow = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshBasicMaterial({ map: below, side: THREE.BackSide, fog: false, depthWrite: false })); this.skyBelow.renderOrder = -1; scene.add(this.skyBelow); }
       this.ventViews = map.vents.map((v) => { const vv = makeVentView(map, v, map.floor(v.at[0], v.at[1])); scene.add(vv.group); return vv; });        // the launch plates
       this.loadViews = map.loads.map((L) => { const lv = makeLoadView(map, L, map.floor(L.rect[0], L.rect[1])); scene.add(lv.group); return lv; });      // the falling loads
-      this.beamView = map.emitters.length ? makeBeamView(map, tex) : null; if (this.beamView) scene.add(this.beamView.group);              // PT-033: the Mirror Array's emitters, mirrors, receivers and the light between them
+      this.beamView = map.emitters.length || map.mirrors.length ? makeBeamView(map, tex) : null; if (this.beamView) scene.add(this.beamView.group);
+      this.sweepView = map.entities.some((q) => q.type === 'enemy' && ENEMIES[q.kind]?.sweep) ? makeSweepView() : null; if (this.sweepView) scene.add(this.sweepView.group);          // PT-033: the Gate Warden's beam              // PT-033: the Mirror Array's emitters, mirrors, receivers and the light between them
       this.airK = 0; }
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
@@ -261,7 +262,8 @@ export class GameView {
       let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : def.spawner && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / def.spawner.swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
+      const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
@@ -392,7 +394,7 @@ export class GameView {
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
-    this.beamView?.update(w, dt, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
+    this.beamView?.update(w, dt, this.time); this.sweepView?.update(w, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
     this.ventViews?.forEach((vv) => updateVentView(vv, this.time, dt)); this.loadViews?.forEach((lv, i) => updateLoadView(lv, this.map.loads[i], w.time + alpha * TICK));      // PT-032: the plates breathe, the loads fall on the clock
     this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes

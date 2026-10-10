@@ -658,8 +658,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "238837d73964ba1cae25e7ac101eb0f50b0565fc6390b15b30c33c0c6e9839ba",
-      "bytes": 10611
+      "sha256": "7ad41126c2d65a4d916f040558396ad16b009777a864aa8a9a0b6fa80cde597e",
+      "bytes": 21587
     },
     "floor_prism_a": {
       "seed": 9412,
@@ -674,16 +674,16 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "c9c03ef2151329d7403e9b758fbb10ff8e9d32d2727ca5893104756ce3185317",
-      "bytes": 15607
+      "sha256": "2f23d3e0ff5736b94c67faef969258b80763d72f99739214524131c4741587c6",
+      "bytes": 15868
     },
     "floor_quiet_a": {
       "seed": 9414,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "93385635d6474907e38a4858ccddc6f18ad300c63b91c692dd76903556f7b47c",
-      "bytes": 30089
+      "sha256": "ee555348964267f812194043f8c95d75ba3cdc36707886775475b53b8975d804",
+      "bytes": 31859
     },
     "wall_dock_a": {
       "seed": 9415,
@@ -786,8 +786,24 @@
       "width": 512,
       "height": 256,
       "transparent": false,
-      "sha256": "544ff654a04a0853246615cb387329191dc305a00f4400c953b72a3d7cfdbe9d",
-      "bytes": 33760
+      "sha256": "592e739eea8010bc423e64a2674e0a387328cfc6aef13f90b4ddf44cd2e5211a",
+      "bytes": 34517
+    },
+    "choir_gatewarden": {
+      "seed": 2330,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "25d6b3372eca4448e55c0897599af4ac384146d99029d9ad2ad0b440662d02db",
+      "bytes": 37155
+    },
+    "choir_seal": {
+      "seed": 2331,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8ea2dcc91120b84b3cf71ff3d767ee058c47dd480d2c3d74c69ddf23957023b4",
+      "bytes": 21724
     }
   }
 }

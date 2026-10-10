@@ -110,6 +110,12 @@ export function installTestHook(app) {
       const w = g.world, v = g.view?.beamView; if (!w?.mirrors || !v) return null;
       return { lit: [...w.beams.lit], mirrors: { ...w.mirrors }, yaws: Object.fromEntries([...v.mirrors].map(([id, m]) => [id, m.yaw])), bars: v.lines.children.length, glow: Object.fromEntries([...v.receivers].map(([id, r]) => [id, r.lit])) };
     },
+    /** PT-033: the Gate Warden: what the sim says (the sweep clock, the traced line) and what the view has drawn (the beam's meshes in view, the eye's lid and iris) */
+    sweepProbe() {
+      const w = g.world, e = w?.enemies.find((q) => q.kind === 'gatewarden'), v = g.view; if (!e || !v) return null;
+      const rig = v.enemyViews.get(e.id), meshes = v.sweepView ? v.sweepView.group.children.filter((m) => m.visible).length : 0;
+      return { state: e.state, sweepT: e.sweepT ?? -1, beam: !!e.sweepLine?.beam, linePts: e.sweepLine?.pts.length ?? 0, drawn: meshes, lid: rig?.J?.lid?.rotation.x ?? null, iris: rig?.J?.iris?.scale.x ?? null, aim: rig?.J?.eyeG?.rotation.y ?? null, seals: w.enemies.filter((q) => q.kind === 'seal' && q.state !== 'dead').length };
+    },
     setup_clearEnemies() { for (const e of g.world.enemies) e.state = 'dead'; },
     setup_player(fields) { Object.assign(g.world.player, fields); },
     /** the weapon wheel (PT-013): is it open, what is selected, the clock scale; and push the pointer as the mouse would (the real mouse needs pointer lock, which the harness turns off) */

@@ -1,0 +1,11 @@
+[
+  { "name": "01-route", "x": 48.5, "z": 90.5, "yaw": 0, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "02-route", "x": 48.5, "z": 90.5, "yaw": 0, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "03-route", "x": 48.5, "z": 82.5, "yaw": 0, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "04-route", "x": 48.5, "z": 76.5, "yaw": -0.105, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "05-route", "x": 50.5, "z": 57.5, "yaw": 0.464, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "06-route", "x": 48.5, "z": 56.5, "yaw": -0.03, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "07-route", "x": 48.5, "z": 53.5, "yaw": -3.142, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "08-route", "x": 48.5, "z": 57.5, "yaw": -0.029, "pitch": 0.02, "open": true, "ticks": 10 },
+  { "name": "09-exit", "x": 48.5, "z": 9.5, "yaw": -3.142, "pitch": 0.02, "open": true, "ticks": 10 }
+]
