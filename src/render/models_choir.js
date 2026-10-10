@@ -543,4 +543,122 @@ export function acolyte(tex) {
   }, { maxLift: 3 });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, feeder, graftmother };
+// ------------------------------------------------------------------------------------------------------------------ BROOD VAT (PT-030, Episode 3 Batch E: the Foundry's spawner, a riveted cistern on stilts under a membrane dome)
+/** a water-tower: a riveted iron tank held 3 m up on four splayed legs braced by a ring, copper bands, a gauge, four pipes arching over its shoulder to vents that glow, a dome of yellow-green membrane on top with a dark shape stirring in it, and a long drain
+ *  hanging from its belly to a flared spout at knee height, which is where the brood drops from. It is tall and mostly air below the tank, so it can be told from every creature (the low shell of the Bulwark, the stepped throne of the Mother) at a glance.
+ *  `p.swell` (the sim's vat_swell, 0..1) is the dome bulging, the vents flaring and the whole tank shuddering; killed, the dome slumps, the vents go out and the tank sags on its legs. */
+export function vat(tex) {
+  const C = cellsOf('vat');
+  return makeCreature(tex, (R) => {
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      R.tube(null, [[sx * 1.0, 0.0, sz * 1.0], [sx * 0.82, 1.5, sz * 0.82], [sx * 0.62, 3.0, sz * 0.62]], [0.13, 0.11, 0.1], 5, C.ironDk);                                                    // a stilt
+      R.box(null, 0.4, 0.12, 0.4, C.iron, { pos: [sx * 1.0, 0.06, sz * 1.0] });
+    }
+    for (const [x0, z0, x1, z1] of [[-0.82, -0.82, 0.82, -0.82], [0.82, -0.82, 0.82, 0.82], [0.82, 0.82, -0.82, 0.82], [-0.82, 0.82, -0.82, -0.82]]) R.tube(null, [[x0, 1.5, z0], [(x0 + x1) / 2, 1.5, (z0 + z1) / 2], [x1, 1.5, z1]], 0.045, 4, C.iron);       // the ring of braces
+    R.tor(null, 0.9, 0.09, 3, 14, C.rust, { pos: [0, 3.0, 0], rot: [PI / 2, 0, 0] });                                                                                                     // the platform ring
+    R.joint('tank', null, [0, 0, 0]);
+    R.lathe('tank', V2([[0.45, 3.0], [0.8, 3.18], [0.98, 3.6], [0.96, 4.0], [0.8, 4.28], [0.6, 4.4]]), 14, C.iron);                                                                       // the tank
+    R.tor('tank', 0.97, 0.055, 3, 16, C.copper, { pos: [0, 3.5, 0], rot: [PI / 2, 0, 0] }); R.tor('tank', 0.95, 0.055, 3, 16, C.copper, { pos: [0, 3.98, 0], rot: [PI / 2, 0, 0] });         // copper bands
+    for (let i = 0; i < 4; i++) { const a = i * 1.7 + 0.6; R.lump('tank', 0.26, 0, 0.16, i + 3, C.rust, { pos: [S(a) * 0.96, 3.45 + i * 0.2, K(a) * 0.96], scale: [1, 1.1, 0.4], rot: [0, a, 0] }); }      // rust bleeding through
+    R.cyl('tank', 0.19, 0.19, 0.07, 10, C.copper, { pos: [0, 3.65, 0.98], rot: [PI / 2, 0, 0] }); R.cyl('tank', 0.11, 0.11, 0.08, 8, C.ironDk, { pos: [0, 3.65, 1.02], rot: [PI / 2, 0, 0] });      // a gauge
+    R.tube('tank', [[0, 3.05, 0], [0.02, 2.3, 0.05], [0.0, 1.5, 0.1], [0, 0.95, 0.12]], [0.2, 0.17, 0.15, 0.14], 6, C.pipe);                                                              // the drain
+    R.cone('tank', 0.34, 0.34, 8, C.copper, { pos: [0, 0.78, 0.12], rot: [PI, 0, 0] }); R.sph('tank', 0.09, 5, 4, 'glow', { pos: [0, 0.52, 0.12], name: 'drip' });                          // the spout, and the light of what hangs from it
+    R.joint('dome', 'tank', [0, 4.38, 0]);
+    R.lump('dome', 0.64, 1, 0.1, 6, C.dome, { scale: [1, 0.74, 1], name: 'domeMesh' });                                                                                                   // the membrane
+    R.lump('dome', 0.3, 0, 0.16, 9, C.domeDk, { pos: [0.28, 0.08, 0.2], scale: [1, 0.7, 1] }); R.lump('dome', 0.24, 0, 0.16, 12, C.slime, { pos: [-0.24, 0.1, -0.16], scale: [1, 0.7, 1] });
+    R.tor('dome', 0.65, 0.06, 3, 16, C.copper, { pos: [0, -0.04, 0], rot: [PI / 2, 0, 0] });                                                                                              // the clamp ring
+    for (let i = 0; i < 4; i++) {                                                                                                                                                         // pipes over the shoulder to vents
+      const a = i * PI / 2 + PI / 4;
+      R.tube('tank', [[S(a) * 0.9, 3.7, K(a) * 0.9], [S(a) * 1.06, 4.0, K(a) * 1.06], [S(a) * 0.9, 4.45, K(a) * 0.9], [S(a) * 0.6, 4.62, K(a) * 0.6]], [0.075, 0.07, 0.065, 0.055], 5, i % 2 ? C.copper : C.pipe);
+      R.sph('tank', 0.075, 5, 4, 'glow', { pos: [S(a) * 0.6, 4.66, K(a) * 0.6], name: 'vent' + i });
+    }
+    R.J.nvents = 4;
+  }, (p, J, R) => {
+    const t = p.t, d = ease(clamp01(p.dead)), sw = p.swell ?? 0, br = S(t * 1.6);
+    const sh = sw * 0.02 * S(t * 38);                                                                                       // the shudder of a vessel under pressure
+    J.dome.scale.set((1 + 0.02 * br + 0.5 * sw + sh) * (1 + 0.15 * d), (1 + 0.03 * br + 0.85 * sw) * (1 - 0.88 * d), (1 + 0.02 * br + 0.5 * sw - sh) * (1 + 0.15 * d)); J.dome.position.y = 4.38 - 0.12 * d;
+    for (let i = 0; i < J.nvents; i++) J['vent' + i].scale.setScalar(d > 0.1 ? 0.001 : 0.5 + 0.3 * (0.5 + 0.5 * S(t * 2.2 + i * 1.3)) + 1.5 * sw);
+    J.drip.scale.setScalar(d > 0.1 ? 0.001 : 0.8 + 0.3 * S(t * 3 + 1) + 1.2 * sw);
+    J.tank.position.x = sh * 0.6; J.tank.position.y = -0.35 * d; J.tank.rotation.z = 0.06 * d;
+  }, { maxLift: 2 });
+}
+
+// ------------------------------------------------------------------------------------------------------------------ REED (PT-030, Episode 3 Batch E: a bagpipe grown from the floor of the Throat, the Grand Cantor's shield node)
+/** a verdigris stone, a tall bronze chanter with ivory collars and finger holes, a bladder of pale hide laced with cord held aloft round its top and a crook over it with a glowing mouth: a shepherd's staff that breathes. The bag swells and the pipe hums
+ *  (the glow flares when it is struck); killed, the bag empties and the pipe leans over. 3.4 m, thin below and round above: the opposite of the Bulwark's low shell and of the Vat's barrel. */
+export function reed(tex) {
+  const C = cellsOf('reed');
+  return makeCreature(tex, (R) => {
+    R.cyl(null, 0.7, 0.78, 0.22, 10, C.stone, { pos: [0, 0.11, 0] });
+    R.joint('pipes', null, [0, 0, 0]);
+    R.cyl('pipes', 0.15, 0.2, 2.4, 8, C.bronze, { pos: [0, 1.4, 0] });                                                                                     // the chanter
+    for (const y of [0.55, 1.1, 1.65]) R.tor('pipes', 0.2, 0.045, 3, 10, C.bone, { pos: [0, y, 0], rot: [PI / 2, 0, 0] });
+    for (let i = 0; i < 4; i++) R.sph('pipes', 0.055, 4, 3, C.mouth, { pos: [0, 0.6 + i * 0.28, 0.17] });                                                    // finger holes
+    R.joint('bag', 'pipes', [0, 2.62, 0]);
+    R.lump('bag', 0.62, 1, 0.1, 5, C.flesh, { scale: [1, 0.92, 1] }); R.lump('bag', 0.34, 0, 0.14, 8, C.fleshDk, { pos: [0.38, -0.1, 0.26], scale: [1, 0.9, 0.7] });
+    for (let i = 0; i < 6; i++) { const a = i * 1.05 + 0.4; R.tube('bag', [[S(a) * 0.4, 0.4, K(a) * 0.4], [S(a + 0.18) * 0.62, 0.0, K(a + 0.18) * 0.62], [S(a) * 0.4, -0.4, K(a) * 0.4]], 0.028, 4, C.cord); }      // the lacing, zig-zag
+    R.tube('pipes', [[0, 3.1, 0], [0.22, 3.36, 0], [0.62, 3.4, 0], [0.9, 3.16, 0], [0.96, 2.86, 0]], [0.11, 0.1, 0.09, 0.08, 0.07], 5, C.bronzeDk);              // the crook
+    R.cone('pipes', 0.2, 0.34, 7, C.bronze, { pos: [0.96, 2.7, 0], rot: [PI, 0, 0] }); R.sph('pipes', 0.075, 5, 4, 'glow', { pos: [0.96, 2.54, 0], name: 'mouthGlow' });
+  }, (p, J, R) => {
+    const t = p.t, d = ease(clamp01(p.dead)), br = S(t * 1.4), fl = p.flash || 0;
+    J.bag.scale.set((1 + 0.05 * br) * (1 + 0.2 * d), (1 - 0.06 * br) * (1 - 0.8 * d), (1 + 0.05 * br) * (1 + 0.2 * d)); J.bag.position.y = 2.62 - 0.35 * d;
+    J.pipes.rotation.z = 0.012 * S(t * 23) * (1 - d) + 0.5 * d; J.pipes.rotation.x = 0.004 * S(t * 31) * (1 - d);                                           // they hum; dead, they lean over
+    J.mouthGlow.scale.setScalar(d > 0.1 ? 0.001 : 1 + 0.3 * S(t * 4) + 1.6 * fl);
+  }, { maxLift: 2 });
+}
+
+// ------------------------------------------------------------------------------------------------------------------ GRAND CANTOR (PT-030, Episode 3 Batch E: the Choir's voice, four legs and a horn the size of a doorway)
+/** a trumpet flare as a lathe profile, lip (r0) at y = 0 up to the throat (r1) at y = h, ascending in y so it faces outward; `k` > 1 flares it late */
+const trumpet = (h, r0, r1, k, n) => Array.from({ length: n + 1 }, (_, i) => new THREE.Vector2(Math.max(0.001, r1 + (r0 - r1) * Math.pow(1 - i / n, k)), (h * i) / n));
+/** a low heavy four-legged body of oxblood flesh under black chitin plates; a neck that rises and bends over it, ending in a great brass HORN (green at the seams, its throat raw and red) that faces the player and takes the place of a face; a crest of seven ivory
+ *  organ pipes along the back; three bells slung under the belly and a tail with one more. Its pulse is the horn drawing breath: the body rears, the horn lifts, the pipes light and the throat glows; the slam drops the horn on you. Dead, it folds onto its knees and
+ *  lets the horn down. Seen from the front it is a round brass mouth on four spread legs, from the side a long arch: nothing else is a horn. */
+export function grandcantor(tex) {
+  const C = cellsOf('grandcantor'), HL = 1.55, TILT = 0.6;
+  return makeCreature(tex, (R) => {
+    R.joint('body', null, [0, 2.5, 0]);
+    for (const [n, x, z] of [['legFA', -0.95, 1.05], ['legFB', 0.95, 1.05], ['legBA', -0.95, -1.05], ['legBB', 0.95, -1.05]]) {                                // four legs, splayed
+      R.limb('body', n, [x, -0.2, z], { a: 1.07, b: 1.07, r0: 0.24, r1: 0.19, r2: 0.15, cellA: C.leg, cellB: C.chitinDk, seg: 7 });
+      R.box(n + 'M', 0.6, 0.14, 0.8, C.iron, { pos: [0, -1.12, 0.12] }); R.J[n].rotation.z = -Math.sign(x) * 0.22;
+    }
+    R.lump('body', 1.0, 1, 0.1, 3, C.flesh, { scale: [1.0, 0.8, 1.7], name: 'torso' });
+    for (let i = 0; i < 4; i++) R.lump('body', 0.55, 0, 0.12, 10 + i, C.chitin, { pos: [0, 0.55, -1.0 + i * 0.7], scale: [1.2, 0.45, 0.75] });                  // plates down the back
+    for (let i = 0; i < 3; i++) R.tor('body', 0.76 + 0.06 * (i % 2), 0.05, 3, 14, C.bronzeDk, { pos: [0, 0, -0.85 + i * 0.85], rot: [0, PI / 2, 0], scale: [0.8, 0.8, 1] });    // hoops round the belly
+    // THE NECK AND THE HORN
+    R.tube('body', [[0, 0.1, 1.05], [0, 0.6, 1.25], [0, 1.2, 1.15], [0, 1.75, 0.95]], [0.58, 0.48, 0.4, 0.34], 7, C.fleshDk, { name: 'neck' });
+    for (const s of [-1, 1]) { R.sph('body', 0.1, 4, 3, C.iron, { pos: [s * 0.38, 1.0, 1.4] }); R.sph('body', 0.05, 4, 3, 'glow', { pos: [s * 0.38, 1.0, 1.5] }); }       // two small eyes on the neck: the horn is the face
+    R.joint('horn', 'body', [0, 1.75, 0.95], [-(PI / 2 + TILT), 0, 0]);
+    const P = trumpet(HL, 1.2, 0.2, 2.0, 10), rAt = (y) => 0.2 + (1.2 - 0.2) * Math.pow(1 - y / HL, 2.0);
+    R.lathe('horn', P, 14, C.horn, { pos: [0, -HL, 0], name: 'hornMesh' });
+    R.lathe('horn', P.map((v) => new THREE.Vector2(Math.max(0.001, v.x - 0.05), v.y)), 14, C.hornIn, { pos: [0, -HL, 0], inside: true });                    // the throat: raw and ridged
+    R.tor('horn', 1.2, 0.09, 4, 18, C.bronze, { pos: [0, -HL, 0], rot: [PI / 2, 0, 0] });
+    for (const y of [0.4, 0.8, 1.2]) R.tor('horn', rAt(y) + 0.015, 0.045, 3, 14, C.trim, { pos: [0, y - HL, 0], rot: [PI / 2, 0, 0] });
+    R.cyl('horn', 0.4, 0.2, 0.06, 10, 'glow', { pos: [0, 0.5 - HL, 0], name: 'plug' });                                                                    // the light deep in the throat
+    R.J.hornEchoes = R.echo(R.J.hornMesh, 1, 0.1);
+    // THE CREST: seven ivory and bronze organ pipes along the back, mouths lit
+    const HS = [1.1, 1.5, 1.9, 2.2, 1.9, 1.5, 1.2];
+    for (let i = 0; i < 7; i++) {
+      const h = HS[i], z = -1.2 + i * 0.4;
+      R.joint('pipe' + i, 'body', [0, 0.62, z], [-0.22, 0, 0]); R.cyl('pipe' + i, 0.09, 0.13, h, 6, i % 2 ? C.bronze : C.bone, { pos: [0, h / 2, 0] }); R.cone('pipe' + i, 0.15, 0.12, 6, C.bronzeDk, { pos: [0, h + 0.04, 0], rot: [PI, 0, 0] });
+      R.sph('pipe' + i, 0.075, 4, 3, 'glow', { pos: [0, h + 0.1, 0], name: 'pm' + i });
+    }
+    R.J.npipes = 7;
+    // THE BELLS: three slung under the belly, one on the tail
+    for (let i = 0; i < 3; i++) { R.joint('bb' + i, 'body', [(i - 1) * 0.45, -0.62, 0.5 - i * 0.2]); R.bell('bb' + i, 0.6, 0.27, C.bronze, C.bronzeDk, { pos: [0, -0.6, 0], seg: 6 }); }
+    R.tube('body', [[0, 0.1, -1.7], [0, -0.1, -2.2], [0, -0.45, -2.55], [0, -0.9, -2.65]], [0.3, 0.22, 0.16, 0.1], 6, C.fleshDk, { name: 'tail' });
+    R.joint('tb', 'body', [0, -0.9, -2.65]); R.bell('tb', 0.5, 0.22, C.bronze, C.bronzeDk, { pos: [0, -0.5, 0], seg: 6 });
+  }, (p, J, R) => {
+    const t = p.t, w = p.walk, ph = p.phase, a = p.attack, d = ease(clamp01(p.dead)), br = S(t * 1.1);
+    const rear = a > 0 ? ease(clamp01(a / 0.55)) * (1 - ease(clamp01((a - 0.8) / 0.2))) : 0, slam = a > 0.55 ? ease(clamp01((a - 0.55) / 0.12)) * (1 - ease(clamp01((a - 0.7) / 0.3))) : 0;
+    const sw = S(ph) * 0.5 * w; J.legFA.rotation.x = J.legBB.rotation.x = sw * (1 - d); J.legFB.rotation.x = J.legBA.rotation.x = -sw * (1 - d);
+    for (const [n, s] of [['legFAM', 1], ['legBBM', 1], ['legFBM', -1], ['legBAM', -1]]) J[n].rotation.x = (0.1 + Math.max(0, K(ph) * s) * 0.5 * w) * (1 - d) + 1.2 * d;
+    J.body.position.y = 2.5 + Math.abs(S(ph)) * 0.06 * w + 0.025 * br - 1.0 * d; J.rig.rotation.z = 1.3 * d;                  // dead: it goes over onto its side, legs out J.body.rotation.x = -0.2 * rear + 0.05 * S(ph) * w + 0.12 * slam; J.body.rotation.z = 0.04 * S(ph) * w + 0.05 * d;
+    J.horn.rotation.x = -(PI / 2 + TILT) - 0.4 * rear + 0.85 * slam + 0.9 * d;
+    J.plug.scale.setScalar(d > 0.1 ? 0.001 : 1 + 0.25 * S(t * 3.3) + 1.3 * rear); R.ring(J.hornEchoes, d > 0 ? 0 : rear);
+    for (let i = 0; i < J.npipes; i++) J['pm' + i].scale.setScalar(d > 0.1 ? 0.001 : 0.5 + 0.3 * (0.5 + 0.5 * S(t * 1.8 + i)) + 1.2 * rear * (0.5 + 0.5 * S(t * 9 - i)));
+    for (let i = 0; i < 3; i++) J['bb' + i].rotation.z = S(t * 1.7 + i * 2) * 0.12 * (1 - d) + 0.3 * S(ph + i) * w;
+    J.tb.rotation.z = S(t * 1.3) * 0.15 * (1 - d) + 0.3 * S(ph * 0.5) * w; J.tb.rotation.x = 0.1 * S(t * 0.9);
+  }, { maxLift: 6 });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, feeder, graftmother };

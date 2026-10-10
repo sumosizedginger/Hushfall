@@ -32,8 +32,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -93,7 +93,7 @@ export function soundsForEvent(e) {
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
     case 'armor_hit': return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
     case 'shield_hit': return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];
-    case 'node_severed': return [{ id: 'node_sever', pos: at(e) }];
+    case 'node_severed': return e.kind === 'vat' ? [] : [{ id: 'node_sever', pos: at(e) }];                      // a vat bursts (enemy_died) instead of ringing off
     case 'warden_crash': return [{ id: 'warden_crash', pos: at(e) }];
     case 'sexton_channel': return [{ id: 'sexton_channel', pos: at(e) }];
     case 'enemy_revived': return [{ id: 'revive', pos: at(e) }];
@@ -112,17 +112,19 @@ export function soundsForEvent(e) {
     case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
     case 'exit_unlock': return [{ id: 'gate_unlock' }];
     case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
-    case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : 'toll_shot', pos: at(e) }];
+    case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : e.kind === 'grandcantor' ? 'horn_blast' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
     case 'ward_hit': return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
     case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
     case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];
+    case 'vat_swell': return [{ id: 'vat_swell', pos: at(e) }];
+    case 'vat_birth': return [{ id: 'vat_birth', pos: at(e) }];
     case 'tear_windup': return [{ id: 'tear_windup', pos: at(e) }];
     case 'tear_lob': return [{ id: 'tear_lob', pos: at(e) }];
     case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
-    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

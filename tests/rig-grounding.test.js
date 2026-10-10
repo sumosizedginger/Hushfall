@@ -54,7 +54,7 @@ test('a corpse lies ON the floor: the dead pose is lifted onto the contact plane
   for (const [kind, make] of Object.entries(RIGS)) for (const g of [0, 3]) {
     const v = make(); placed(v, g); v.pose({ ...BASE, dead: 1 }); const { min, max } = lowest(v);
     if (Math.abs(min - g) > GROUND_BAND.buried) bad.push(`${kind} on ${g} m: lowest vertex ${(min - g).toFixed(3)} from the floor`);
-    if (kind !== 'bellnode' && kind !== 'feeder' && max - g > 1.6 * (kind === 'cantor' ? 2 : kind === 'graftmother' ? 2.5 : 1)) bad.push(`${kind} on ${g} m: a dead body still ${(max - g).toFixed(2)} m tall`);
+    if (kind !== 'bellnode' && kind !== 'feeder' && kind !== 'vat' && kind !== 'reed' && max - g > 1.6 * (kind === 'cantor' ? 2 : kind === 'graftmother' || kind === 'grandcantor' ? 2.5 : 1)) bad.push(`${kind} on ${g} m: a dead body still ${(max - g).toFixed(2)} m tall`);
   }
   assert.equal(bad.length, 0, bad.join(' | '));
 });

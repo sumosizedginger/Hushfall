@@ -5,7 +5,7 @@
 // Cells are 2 m. x = column, z = row (south is +z). An enemy's `facing` is the direction it looks as (sin, cos): 0 = south (+z), PI = north, PI/2 = east, -PI/2 = west.
 import { Level } from '../tools/mapkit/builder.mjs';
 
-const L = new Level(62, 74);
+const L = new Level(62, 92);
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
 
 // ---- rooms ---------------------------------------------------------------------------------------------------------------
@@ -25,10 +25,14 @@ L.fx([50, 47, 57, 49], 's');                                                    
 // PT-028: the fourth range, south of the second (an opening in its south wall): the ELITE yard, sponges and swingers of the Bulwark Shell and the Weeping Mother in the north half of it, a lever and a live brood fight in the east half
 L.room([2, 56, 45, 70], { floor: 'f', wall: 'C' }); L.rect([21, 53, 23, 55], 'f');
 
+// PT-030: the fifth range, south of the elite yard (an opening in its south wall): the FOUNDRY yard (sponge vats, a live pair behind a lever) and the Choir's reeds and its Grand Cantor (a sponge for the outline and the hit volume)
+L.room([2, 74, 45, 88], { floor: 'f', wall: 'C' }); L.rect([21, 71, 23, 73], 'f');
+
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
 L.putAll('P', [[28, 11], [28, 16], [28, 21]]);
 L.putAll('m', [[8, 60], [22, 60], [36, 60], [8, 68], [22, 68], [36, 68]]);                                                  // the elite yard's lamps
+L.putAll('m', [[8, 77], [22, 77], [36, 77], [8, 86], [22, 86], [36, 86]]);                                                  // the foundry yard's lamps
 L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50], [30, 50]]);                           // the second range's lamps
 L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
 L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
@@ -94,6 +98,13 @@ const yard = (kind, x, z) => E.push({ type: 'enemy', kind, at: [x, z], facing: W
 for (const [kind, x, z] of [['weeping', 41, 63], ['bulwark', 34, 60], ['bulwark', 34, 66], ['chorister', 43, 58], ['chorister', 43, 69], ['acolyte', 38, 63]]) yard(kind, x, z);
 E.push({ type: 'switch', id: 'yard', at: [2, 62], wall: 'west', once: true, do: [{ wake: 'yard' }, { objective: 'The yard is awake: a Mother, two Bulwarks, an Acolyte, two singers' }, { shake: 1.2 }] });
 
+// ---- PT-030: the foundry yard and the throat ----
+// north row, sponges: two Brood Vats (the outline and the hit volume; a sponge vat never births), three Reeds (150 hp: they fall and stand up again), the Grand Cantor (it keeps its own hit points; the reeds shield it)
+t('vat', 6, 78, S, 'inert', SPONGE); t('vat', 12, 78, N, 'inert', SPONGE); t('reed', 18, 78, S, 'inert'); t('reed', 22, 78, S, 'inert'); t('reed', 26, 78, S, 'inert'); t('grandcantor', 37, 80, S, 'inert');
+// the live pair, asleep until the lever: they swell and birth Gaunts (the first) and a Gaunt and a Tollbearer in turn (the second), three alive at most each; kill the vat and the brood stops
+E.push({ type: 'enemy', kind: 'vat', at: [8, 85], facing: S, group: 'foundry', spawns: ['gaunt'] }, { type: 'enemy', kind: 'vat', at: [16, 85], facing: S, group: 'foundry' });
+E.push({ type: 'switch', id: 'foundry', at: [2, 82], wall: 'west', once: true, do: [{ wake: 'foundry' }, { objective: 'The vats are awake: kill a vat and its brood stops' }, { shake: 1.2 }] });
+
 const layers = L.layers();
 
 export default {
@@ -119,6 +130,7 @@ export default {
     { id: 'mortaryard', at: [49, 37], radius: 5, speaker: 'RANGE', text: 'MORTAR (key 0): the shell flies TO the ring, high, over the crates and up onto the ledge. Two rockets a shell, nothing inside 9 m, and the blast hurts YOU too.' },
     { id: 'breathyard', at: [53, 48], radius: 6, speaker: 'RANGE', text: 'BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then.' },
     { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front and opens to bash. A Mother weeps pools and broods. An Acolyte wards: everything within 9 m takes half. The lever wakes the east.' },
+    { id: 'foundryyard', at: [10, 79], radius: 8, speaker: 'RANGE', text: 'FOUNDRY YARD: a Brood Vat swells for 1.2 s, then drops a creature; kill the vat and the brood stops. Reeds shield the Grand Cantor. The west lever wakes the live vats.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

@@ -330,3 +330,18 @@ ENEMIES.weeping = { name: 'Weeping Mother', poise: 3, hp: 380, speed: 1.0, gait:
   attack: { range: 3.0, reach: 3.7, windup: 0.5, duration: 1.8, cooldown: 1.3, damage: 32, heavy: true, knock: 1.2 },
   brood: { kind: 'gaunt', count: 2, every: 16, max: 4, swell: 1.8, first: 6 },
   tears: { every: 5.5, first: 3, windup: 0.9, minRange: 4, maxRange: 30, gravity: 9, minFlight: 0.9, maxFlight: 2.2, speedPerM: 0.1, r: 1.8, life: 6 } };
+
+// ---- Episode 3, Batch E (PT-030, owner overnight go 2026-10-09): the Foundry's spawner and the Throat's boss -----------------------------------------------------------------------------------------------
+// Brood Vat: the SPAWNER (spawner denial). An iron cauldron sealed under a dome. It wakes when it sees you inside `spawner.range` m (or on noise, or when a map's `wake` names its group), and then every `every` s (x the difficulty's reaction) its dome swells
+// for `swell` s (announced: a sound and a bulging dome) and `count` creatures of the kinds in `kinds` (a map entity may name its own with `spawns`) drop beside it, at most `max` of ITS brood alive. It never fights. It is a NODE in the sim's sense
+// (immobile, never flinches, takes double from a rocket, drops nothing, an Acolyte's ward does not reach it), so a vat is something to destroy, not to outlast: killing it is the denial. NOTE a boss's shield counts any living node: a map with a boss has no vats.
+ENEMIES.vat = { name: 'Brood Vat', hp: 220, speed: 0, gait: 0, radius: 1.0, height: 4.9, hitRadius: 1.08, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true,
+  spawner: { kinds: ['gaunt', 'tollbearer'], count: 1, every: 8, first: 3, swell: 1.2, max: 3, range: 30 } };
+// Reed: one of the pipes the Grand Cantor sings through (the Throat's bell node, grown: immobile; destroying them all breaks the boss's shield).
+ENEMIES.reed = { name: 'Reed', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 3.5, hitRadius: 0.7, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
+// Grand Cantor: the Episode 3 boss, the Choir's voice itself: a four-legged body that carries a horn the size of a doorway. Shielded (5%) while any reed stands. Its pulse is a DOUBLE RING (`pulse.echo`: the second ring leaves `gap` s after the first, so
+// one step behind stone is not enough: hold the cover until both have gone by), it calls Choristers from the alcoves of its chamber (`summon`), fans toll-shots from the start (`shots.always`, wider and faster once the reeds are gone) and slams what reaches it.
+ENEMIES.grandcantor = { name: 'Grand Cantor', poise: 8, hp: 900, speed: 1.1, gait: 3.5, radius: 0.9, height: 6.2, hitRadius: 1.95, hitForward: 0.6, sight: 70, turnRate: 1.7, keepAway: 7,
+  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 2.4, damage: 36 }, boss: true,
+  shield: { reduce: 0.05, y: 3.0, r: 3.8, note: ['REED', 'REEDS', 'STILL SING'] }, pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 16, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } }, enragedPulseCooldown: 4.6,
+  shots: { count: 5, spread: 0.2, speed: 8.5, damage: 10, cooldown: 4.2, aimHeight: 1.2, muzzleY: 4.2, always: true }, summon: { kind: 'chorister', count: 2, every: 26, max: 4 }, stagger: 3.0 };

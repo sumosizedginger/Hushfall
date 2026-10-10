@@ -73,7 +73,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -208,7 +208,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, !opts.burn, !!opts.burn);                    // being shot wakes you, whether or not you can see the shooter (a creature set alight wakes alone: it does not call its neighbours, the burst that lit it already made its noise)
   if (e.hp <= 0 && e.state !== 'dead') {
     e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
-    if (def.node) { emit(w, 'node_severed', { id: e.id, x: e.x, z: e.z }); for (const c of w.enemies) if (ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
+    if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
   return false;
@@ -652,9 +652,10 @@ function supportStep(w, e, def, dt, sees, dist) {
 function bossStep(w, e, def, diff, dt, sees, dist) {
   const p = w.player, enraged = nodesAlive(w) === 0, P = def.pulse;
   e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt); e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
+  if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }       // PT-030: the second ring of a double pulse (the Grand Cantor)
   if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
-    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; }
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo) e.echoT = P.echo.gap; }
     return true;
   }
   if (P && sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
@@ -704,6 +705,34 @@ function acolyteStep(w, e, def, diff, dt, sees, dist) {
   if (sees && e.pulseCd <= 0 && dist > 3 && dist <= P.maxR) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
   if (sees && dist < def.keepAway) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
   return false;
+}
+
+// ---------------------------------------------------------------- the Brood Vat (PT-030)
+/**
+ * Brood Vat: asleep until it sees the player inside `spawner.range` (or a noise / a map's `wake` wakes it). Awake, it counts `every` s (x the difficulty's reaction), swells its dome for `swell` s (announced: the `vat_swell` event; the view draws the dome bulging)
+ * and then `count` creatures drop beside it (`vat_birth`), at most `max` of ITS brood alive; when its brood is full it looks again in two seconds. It never fights and is a node: killing it ends the brood (what is already born stays).
+ */
+function vatStep(w, e, def, diff, dt) {
+  const S = def.spawner, p = w.player;
+  if (e.vatT === undefined) { e.vatT = -1; e.summonCd = S.first; e.brood = []; e.vatN = 0; }
+  if (e.state === 'idle') { if (p.hp > 0 && Math.hypot(p.x - e.x, p.z - e.z) < S.range && hasLOS(w, e.x, e.z, p.x, p.z)) wakeEnemy(w, e, false, true); else return; }
+  e.summonCd = Math.max(0, e.summonCd - dt);
+  if (e.vatT >= 0) {
+    e.vatT += dt;
+    if (e.vatT >= S.swell) {
+      e.vatT = -1; e.summonCd = S.every * diff.reaction; e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead')); const taken = [], kinds = e.spawns ?? S.kinds;
+      for (let i = 0; i < S.count && e.brood.length < S.max; i++) {
+        const kind = kinds[e.vatN++ % kinds.length], spot = broodSpot(w, e, kind, taken); if (!spot) break; taken.push(spot);
+        const g = spawnEnemy(w, kind, spot[0], spot[1], Math.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true, vat: true });
+      }
+      emit(w, 'vat_birth', { id: e.id, x: e.x, z: e.z });
+    }
+    return;
+  }
+  if (e.summonCd <= 0) {
+    e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead'));
+    if (e.brood.length < S.max) { e.vatT = 0; emit(w, 'vat_swell', { id: e.id, x: e.x, z: e.z }); } else e.summonCd = 2;
+  }
 }
 
 // ---------------------------------------------------------------- the Weeping Mother (PT-028)
@@ -800,7 +829,8 @@ function updateEnemy(w, e, diff, dt) {
   if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
-  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; return; }          // staggered: it does nothing
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
+  if (def.spawner && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
   if (def.node) return;
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)

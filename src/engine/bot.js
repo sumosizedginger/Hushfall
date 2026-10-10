@@ -114,7 +114,7 @@ export class Bot {
   bossTick() {
     const w = this.w, p = w.player, boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead');
     if (!boss) { for (const a of ['fire', 'aim', 'forward', 'back', 'right', 'sprint']) this.setHeld(a, false); return true; }
-    const danger = (boss.pulseT ?? -1) >= 0 || w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5);
+    const danger = (boss.pulseT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5);
     if (danger) {
       if (hasLOS(w, boss.x, boss.z, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
       if (this.cover && hasLOS(w, boss.x, boss.z, p.x, p.z)) {                                       // still exposed: go

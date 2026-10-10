@@ -346,6 +346,60 @@ export const SFX = {
     thump(c, out, t + 0.45, 95, 38, 0.3, 0.4);
     return 1.4;
   },
+  // --- Episode 3, Batch E (PT-030): the Brood Vat, the Reed, the Grand Cantor ---
+  vat_swell(c, out, t, o) {                                     // a lid straining: a low gurgle climbing, the groan of iron under pressure, a hiss at the top
+    noise(c, out, t, { dur: 1.3, a: 0.9, gain: 0.2, type: 'lowpass', f0: 120, f1: 520, q: 1.4, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 46, f1: 74, a: 0.7, d: 0.6, gain: 0.14, lp: 260, vib: 6 });
+    tone(c, out, t + 0.2, { type: 'triangle', f0: 180, f1: 330, a: 0.6, d: 0.5, gain: 0.05 });
+    noise(c, out, t + 0.95, { dur: 0.45, a: 0.1, gain: 0.07, type: 'highpass', f0: 3500, off: o.r() });
+    return 1.5;
+  },
+  vat_birth(c, out, t, o) {                                     // the dome splits: a thick wet pop, a gout, something heavy landing on the grating
+    thump(c, out, t, 150, 40, 0.3, 0.46);
+    noise(c, out, t, { dur: 0.55, a: 0.003, gain: 0.3, type: 'lowpass', f0: 2000, f1: 260, q: 0.8, off: o.r() });
+    tone(c, out, t + 0.05, { type: 'sawtooth', f0: 220, f1: 70, a: 0.01, d: 0.35, gain: 0.1, lp: 600 });
+    thump(c, out, t + 0.4, 70, 30, 0.2, 0.3);
+    return 0.8;
+  },
+  vat_burst(c, out, t, o) {                                     // the vat gives up: iron shearing, a flood of liquid, a long boiling fall to nothing
+    noise(c, out, t, { dur: 0.35, a: 0.002, gain: 0.34, type: 'bandpass', f0: 1400, f1: 500, q: 1.2, off: o.r() });
+    thump(c, out, t, 120, 34, 0.5, 0.55);
+    noise(c, out, t + 0.1, { dur: 1.8, a: 0.05, gain: 0.22, type: 'lowpass', f0: 1800, f1: 140, q: 0.9, off: o.r() });
+    tone(c, out, t + 0.2, { type: 'sine', f0: 90, f1: 28, a: 0.02, d: 1.4, gain: 0.2 });
+    return 2.0;
+  },
+  reed_die(c, out, t, o) {                                      // a reed pipe splits: the note rises, cracks into breath, and the pipe rings off the stone
+    tone(c, out, t, { type: 'sawtooth', f0: 330, f1: 520, a: 0.02, d: 0.28, gain: 0.16, lp: 2200, vib: 7 });
+    noise(c, out, t + 0.22, { dur: 0.6, a: 0.01, gain: 0.2, type: 'bandpass', f0: 900, f1: 2800, q: 1.1, off: o.r() });
+    bell(c, out, t + 0.3, 262, { decay: 1.3, gain: 0.1, ratio: 2.4, index: 1.2 });
+    thump(c, out, t + 0.45, 100, 36, 0.3, 0.36);
+    return 1.7;
+  },
+  grandcantor_alert(c, out, t, o) {                             // a chord that is a building clearing its throat: three horns a fifth apart, far too low
+    for (const [f, g] of [[55, 0.26], [82.4, 0.2], [110, 0.14]]) tone(c, out, t, { type: 'sawtooth', f0: f, f1: f * 0.97, a: 0.4, d: 2.0, gain: g, lp: 380, vib: 2.5 });
+    bell(c, out, t + 0.2, 196, { decay: 2.0, gain: 0.1, ratio: 2.7, index: 0.9 });
+    noise(c, out, t, { dur: 1.8, a: 0.5, gain: 0.07, type: 'lowpass', f0: 500, f1: 150, off: o.r() });
+    return 2.4;
+  },
+  grandcantor_draw(c, out, t, o) {                              // the double pulse gathering: the horn takes a breath that climbs a whole octave
+    tone(c, out, t, { type: 'sawtooth', f0: 70, f1: 140, a: 0.9, d: 0.5, gain: 0.22, lp: 600, vib: 4 });
+    tone(c, out, t, { type: 'sine', f0: 140, f1: 280, a: 1.0, d: 0.3, gain: 0.12 });
+    noise(c, out, t, { dur: 1.3, a: 1.0, gain: 0.1, type: 'bandpass', f0: 300, f1: 1800, q: 1.2, off: o.r() });
+    return 1.5;
+  },
+  horn_blast(c, out, t, o) {                                    // a fan of toll-shots out of a horn: one short, ugly brass note
+    tone(c, out, t, { type: 'sawtooth', f0: 165, f1: 150, a: 0.01, d: 0.3, gain: 0.2, lp: 900 });
+    tone(c, out, t, { type: 'square', f0: 330, f1: 300, a: 0.01, d: 0.18, gain: 0.07, lp: 1400 });
+    noise(c, out, t, { dur: 0.3, a: 0.004, gain: 0.14, type: 'bandpass', f0: 600, f1: 1400, q: 1.5, off: o.r() });
+    return 0.5;
+  },
+  grandcantor_die(c, out, t, o) {                               // the horn loses its breath: a fall through every note it ever held, bells failing behind it, then a building settling
+    tone(c, out, t, { type: 'sawtooth', f0: 170, f1: 28, a: 0.03, d: 2.6, gain: 0.26, lp: 520, vib: 3.5 });
+    for (let i = 0; i < 7; i++) bell(c, out, t + 0.2 + i * 0.22, 466 * Math.pow(0.8, i), { decay: 1.1, gain: 0.07, ratio: 2.8, index: 1 });
+    noise(c, out, t + 0.6, { dur: 2.4, a: 0.2, gain: 0.18, type: 'lowpass', f0: 1800, f1: 90, off: o.r() });
+    thump(c, out, t + 1.6, 70, 26, 0.9, 0.6);
+    return 3.2;
+  },
   ward_ping(c, out, t, o) {                                     // a hit that something sang away: a small glassy ding
     bell(c, out, t, 880, { decay: 0.35, gain: 0.12, ratio: 3.5, index: 0.7 });
     return 0.4;

@@ -15,6 +15,9 @@ export const CHOIR_CELLS = {
   bulwark:     ['skin', 'flesh', 'shell', 'shellDk', 'shellIn', 'chitin', 'chitinDk', 'bone', 'iron', 'mouth', 'bronze'],          // PT-028 (Episode 3, Batch C): the shield-bearer
   weeping:     ['skin', 'flesh', 'fleshDk', 'robe', 'robeDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'mouth', 'verd'],      // PT-028: the brood-mother
   acolyte:     ['skin', 'robe', 'robeDk', 'trim', 'bronze', 'bronzeDk', 'bone', 'iron', 'mouth'],          // PT-029 (Episode 3, Batch D): the Choir's attendant
+  vat:         ['iron', 'ironDk', 'rust', 'dome', 'domeDk', 'copper', 'verd', 'pipe', 'slime'],          // PT-030 (Episode 3, Batch E): the Foundry's spawner
+  reed:        ['flesh', 'fleshDk', 'stone', 'bronze', 'bronzeDk', 'bone', 'verd', 'mouth', 'cord'],          // PT-030: a pipe the Grand Cantor sings through
+  grandcantor: ['skin', 'flesh', 'fleshDk', 'chitin', 'chitinDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd', 'horn', 'hornIn', 'trim', 'leg'],          // PT-030: the Episode 3 boss
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);

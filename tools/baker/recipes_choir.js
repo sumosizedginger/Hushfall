@@ -220,6 +220,42 @@ const KINDS = {
       bronze: BRONZE(), bronzeDk: BRONZE_DK(), bone: BONE(0.12), iron: IRON(), mouth: MOUTH('#2a0c12'),
     },
   },
+  vat: {                             // PT-030: riveted rust-black iron and copper pipes, a dome of sickly yellow-green membrane with a dark shape stirring inside it: the Foundry is rust, sulphur and copper (the others are grey, violet, indigo, ivory, saffron)
+    seed: 2315, cells: {
+      iron: IRON('#4e4842', '#1e1a16'),
+      ironDk: cell({ grad: ['#322e28', '#100e0c'], marks: [{ col: '#6a6258', wt: 1.3, n: 4, dir: 'h' }, { col: '#060504', wt: 1.6, n: 4, dir: 'v', len: [10, 24] }] }),
+      rust: cell({ grad: ['#c8682a', '#5c2410'], blots: [{ cols: ['#8a3c18', '#e8944c', '#3a1608'], n: 6, r: [4, 9], a: 210 }], marks: [{ col: '#2a0e04', wt: 1.8, n: 4, dir: 'v', len: [12, 30] }, { col: '#f4b878', wt: 1.1, n: 3, dir: 'd', len: [8, 14] }] }),
+      dome: cell({ grad: ['#dce864', '#7c8c22'], extra: (g, X, Y) => { veins(g, X, Y, '#3a4a0c', 1.6, 6); g.noStroke(); g.fill('#2a3408', 150); g.circle(X + 32, Y + 26, 18); g.blob([[X + 14, Y + 56], [X + 20, Y + 40], [X + 34, Y + 36], [X + 48, Y + 42], [X + 52, Y + 56]], '#2a3408', { a: 150, curv: 0.5, ink: false }); } }),   // the membrane: veined, with a dark shape inside (head and shoulders)
+      domeDk: cell({ grad: ['#7c8c22', '#2e3808'], extra: (g, X, Y) => veins(g, X, Y, '#d0dc78', 1.5, 6) }),
+      copper: cell({ grad: ['#e68c4c', '#8c3e22'], blots: [{ cols: ['#5a8a6a', '#3e6a52'], n: 4, r: [4, 8], a: 220 }], marks: [{ col: '#4a1c08', wt: 1.7, n: 3, dir: 'h' }, { col: '#ffcc94', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      verd: VERD(),
+      pipe: cell({ grad: ['#70745e', '#262820'], blots: [{ cols: ['#8e907a', '#46483a'], n: 4, r: [6, 11], a: 200 }], marks: [{ col: '#0e100a', wt: 1.6, n: 4, dir: 'h' }, { col: '#c0c4a8', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      slime: cell({ grad: ['#b0cc2c', '#3c5612'], extra: (g, X, Y) => veins(g, X, Y, '#e6f090', 1.5, 7) }),
+    },
+  },
+  reed: {                            // PT-030: a bagpipe grown: a bladder of pale hide laced with cord on a verdigris stone, drone pipes of bronze and ivory
+    seed: 2316, cells: {
+      flesh: FLESH('#c88480', '#723a3e', '#f4d8c8'),
+      fleshDk: cell({ grad: ['#723a3e', '#2e1418'], extra: (g, X, Y) => veins(g, X, Y, '#d48e8a', 1.5, 6) }),
+      stone: cell({ grad: ['#7e7e6a', '#34342c'], blots: [{ cols: ['#5e6a40', '#9c9c86'], n: 5, r: [5, 10], a: 200 }], marks: [{ col: '#161610', wt: 1.5, n: 4, dir: 'h' }, { col: '#bcbca4', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), bone: BONE(0.1), verd: VERD(), mouth: MOUTH('#2a0c12'), cord: ROPE(),
+    },
+  },
+  grandcantor: {                     // PT-030: black-violet chitin plates over oxblood flesh, ivory pipes, and a brass horn gone green at the seams with a raw red throat: the Throat is red and brass (the Cantor is violet and ivory, the Mother ivory and flesh)
+    seed: 2317, cells: {
+      skin: SKIN('#bcaca2', '#78685e', '#6a4e72', '#483c38'),
+      flesh: FLESH('#a0404a', '#56222c', '#eac0b2'),
+      fleshDk: cell({ grad: ['#56222c', '#200a12'], extra: (g, X, Y) => veins(g, X, Y, '#bc6e78', 1.5, 6) }),
+      chitin: cell({ grad: ['#40405a', '#16161e'], marks: [{ col: '#0a0a10', wt: 2.0, n: 5, dir: 'h' }, { col: '#9494b4', wt: 1.2, n: 4, dir: 'v', len: [8, 18] }, { kind: 'cpencil', col: '#60607c', wt: 1.2, n: 4, dir: 'd', len: [8, 16] }] }),
+      chitinDk: cell({ grad: ['#22222e', '#08080e'], marks: [{ col: '#04040a', wt: 1.8, n: 4, dir: 'h' }, { col: '#52526e', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      bone: BONE(0.08), boneDk: cell({ grad: ['#bcb08a', '#6e6448'], marks: [{ col: '#3e3626', wt: 1.5, n: 5, dir: 'v', len: [16, 38] }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON('#4a4e58', '#1a1c20'), mouth: MOUTH('#2a0a10'), verd: VERD(),
+      horn: cell({ grad: ['#e4b454', '#8c5c1e'], blots: [{ cols: ['#7aa45c', '#4c7c4a', '#5e8c52'], n: 6, r: [5, 10], a: 215 }], marks: [{ col: '#3a2006', wt: 1.9, n: 4, dir: 'h' }, { col: '#fff2b4', wt: 1.1, n: 4, dir: 'v', len: [8, 18] }] }),
+      hornIn: cell({ grad: ['#661e28', '#14060a'], marks: [{ col: '#b44450', wt: 1.5, n: 5, dir: 'h' }, { col: '#0a0204', wt: 1.7, n: 4, dir: 'v', len: [12, 34] }] }),
+      trim: cell({ grad: ['#f6e4a4', '#a88c3c'], marks: [{ col: '#5a4010', wt: 1.7, n: 3, dir: 'h' }, { col: '#fff8d0', wt: 1.2, n: 4, dir: 'v', len: [6, 14] }] }),
+      leg: cell({ grad: ['#5e544a', '#221e1a'], blots: [{ cols: ['#7e7266', '#3e3830'], n: 4, r: [6, 11], a: 200 }], marks: [{ col: '#0e0c0a', wt: 1.6, n: 4, dir: 'v', len: [14, 30] }] }),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),
