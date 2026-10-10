@@ -8,7 +8,7 @@ Doom-like and intended for Easy, the movement and feel liked (nothing about them
 ## Batch plan (the builder's)
 | batch | maps | the engine step it needs first | what it proves | state |
 |---|---|---|---|---|
-| A | M01 Ascent Tether, M02 Wreck Belt | THE AIR STATE + LAUNCH VENTS (low gravity without a jump key) and FALLING LOADS (a clock hazard) | vertical climb under falling loads; drifting between hulks | not started |
+| A | M01 Ascent Tether, M02 Wreck Belt | THE AIR STATE + LAUNCH VENTS (low gravity without a jump key) and FALLING LOADS (a clock hazard) | vertical climb under falling loads; drifting between hulks | **ENGINE BUILT 2026-10-10** (the air state, vents, open sky and its set-back, falling loads, the orbit skies, the tether and wreck materials and looks, the Range's sky yard and loads yard: node tests 678, 414 route runs identical to before; seen in the real renderer in the Range); **the maps are NOT started: the owner tries the vents in the Range first** |
 | B | M03 Cold Dock | INTERLOCKED AIRLOCK DOORS + VACUUM REGIONS | doors that must be cycled; a room that hurts while its hull is open | not started |
 | C | M04 Mirror Array, S01 The Quiet Room | THE BEAM TRACER (emitters, turnable mirrors, receivers) | the first real puzzle; the secret exit | not started |
 | D | M05 Drift Orchard, M06 Gatekeeper's Approach | DRIFT (a low-friction floor effect for the zero-g arena); no other engine | the open zero-g arena; a gauntlet of elites | not started |

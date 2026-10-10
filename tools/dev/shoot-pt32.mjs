@@ -42,7 +42,7 @@ if (want.has('loads')) {
   await at(53, 100, 'north', 0.1); await T('t.tick(60 * 4)'); await shot('loads-calm');
   await T('t.tick(60 * 3.1)'); await shot('loads-warning-7.1s'); R.probes.h = await T('t.airProbe()');
   await T('t.tick(60 * 0.7)'); await shot('loads-warning-7.8s-glow');
-  await T('t.tick(60 * 0.4)'); await shot('loads-impact-8.2s'); await T('t.tick(60 * 0.4)'); await shot('loads-wreck-8.6s'); R.probes.i = await T('t.airProbe()');
+  await T('t.tick(60 * 0.4)'); await shot('loads-impact-8.2s'); await T('t.tick(60 * 0.1)'); await shot('loads-wreck-8.3s'); R.probes.i = await T('t.airProbe()');
   // a walker crushed: a Gaunt standing in the next rect when it lands (t 12)
   await T("t.setup_spawnEnemy('gaunt', 108, 207, 0, 'idle')"); await T('t.setup_enemy(t.state().enemies[t.state().enemies.length - 1].id, { sightR: 0.01 })'); await T('t.tick(60 * 2.6)'); await shot('loads-second-warning'); await T('t.tick(60 * 1.2)'); await shot('loads-second-impact'); R.probes.j = await T('t.state().enemies.slice(-1)[0]');
 }
