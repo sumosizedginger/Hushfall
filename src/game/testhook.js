@@ -72,7 +72,7 @@ export function installTestHook(app) {
     eliteProbe() {
       if (!g.view || !g.world) return null; const v = g.view, w = g.world;
       return { tears: v.tearViews.size, simTears: w.tears?.length ?? 0, pools: [...v.poolViews.values()].map((m) => ({ opacity: m.material.opacity, scale: m.scale.x, x: m.position.x, y: m.position.y, z: m.position.z })), simPools: (w.patches ?? []).map((q) => ({ x: q.x, z: q.z, r: q.r, life: q.life })),
-        shells: w.enemies.filter((e) => e.kind === 'bulwark').map((e) => ({ id: e.id, attackT: e.attackT, hinge: v.enemyViews.get(e.id)?.J.shell.rotation.x ?? null })), mothers: w.enemies.filter((e) => e.kind === 'weeping').map((e) => ({ id: e.id, broodT: e.broodT ?? -1, pulseT: e.pulseT ?? -1, sac: v.enemyViews.get(e.id)?.J.sac0.scale.x ?? null })) };
+        shells: w.enemies.filter((e) => e.kind === 'bulwark' && e.state !== 'dead').map((e) => ({ id: e.id, attackT: e.attackT, hinge: v.enemyViews.get(e.id)?.J.shell.rotation.x ?? null })), mothers: w.enemies.filter((e) => e.kind === 'weeping' && e.state !== 'dead').map((e) => ({ id: e.id, broodT: e.broodT ?? -1, pulseT: e.pulseT ?? -1, sac: v.enemyViews.get(e.id)?.J.sac0.scale.x ?? null })) };
     },
     /** where the Cantor's shield and the ring beams are drawn (world space) */
     encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
