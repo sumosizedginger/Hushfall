@@ -65,6 +65,10 @@ export const LOOKS = {
   cradle: { hemi: [0x58b4a4, 0x2a1830, 1.3], sun: [0x70f0d0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.06, 1.06], [1.1, 1.03, 0.88], 1), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },             // the Vael's rooms: wet teal, the pods are the light
   pump: { hemi: [0x78988a, 0x16201a, 1.5], sun: [0xd0e0c0, 0.7, [-4, 16, -2]], lamp: 1.3, exposure: 1, grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },               // pumps and slurry: industrial green-black
   choir: { hemi: [0x86a89a, 0x241a2e, 1.6], sun: [0xbfe8d8, 0.8, [-9, 12, -6]], lamp: 1.35, exposure: 1, grade: GR([0.88, 1.04, 1.02], [1.06, 1.02, 0.9], 0.9), shade: { foot: 0.38, ao: 0.45, patch: 0.12 } },       // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
+  loom: { hemi: [0x7a6a9c, 0x1a1026, 1.25], sun: [0xf0d890, 0.35, [-6, 14, -6]], lamp: 1.65, exposure: 1, grade: GR([0.9, 0.94, 1.16], [1.14, 1.04, 0.8], 0.95), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },             // the Resonance Loom: dim, violet-black, the lamps and the strings are gold
+  loft: { hemi: [0xc49a66, 0x2a1a10, 1.55], sun: [0xffd89a, 0.9, [-8, 12, -5]], lamp: 1.4, exposure: 1, grade: GR([1.02, 0.9, 0.8], [1.15, 1.03, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },                   // the Choir Loft: amber and walnut, the warm room
+  foundry: { hemi: [0x4a7a52, 0x0e1a10, 1.05], sun: [0xa8ff90, 0.22, [-6, 14, -6]], lamp: 1.75, exposure: 1, grade: GR([0.8, 1.08, 0.84], [1.08, 1.12, 0.74], 1.05), shade: { foot: 0.48, ao: 0.5, patch: 0.12 } },    // the Spore Foundry: green-black iron, the glow is the light
+  throat: { hemi: [0xb0587a, 0x2a0e1e, 1.2], sun: [0xff9ab8, 0.4, [-5, 12, -5]], lamp: 1.5, exposure: 1, grade: GR([1.08, 0.82, 0.98], [1.18, 0.92, 0.9], 1.12), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },                // the Cantor's Throat: wet pink and red-violet
   rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -93,7 +97,7 @@ export const BREATH = { warn: 1.2, fade: 0.8 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', F: 'wall_foundry_a', H: 'wall_throat_a' };            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
@@ -101,6 +105,7 @@ export const FLOOR_SKINS = {
   l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
   b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
   o: { kind: 'floor', tex: 'floor_gill_a' }, u: { kind: 'outdoor', tex: 'floor_gill_a' },       // Episode 3 (PT-027): the gill gardens' damp floor, roofed and open to the sky
+  w: { kind: 'floor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
 };
 
 /**
@@ -264,6 +269,11 @@ export const PROPS = {
   shelf: { radius: 0.7, blocksCell: true, blocksSight: true },
   lantern: { radius: 0, blocksCell: false },             // small lamp on a hook: warm light, survivors' signal
   bellnode: { radius: 0.7, blocksCell: false },          // decor twin of the boss ring nodes
+  // Episode 3, Batches D and E (PT-029, PT-030): the second half's own furniture
+  pew: { radius: 0.85, blocksCell: true },               // a church pew: 1.2 m of cover (rounds stop on it, creatures see over it)
+  organ: { radius: 1.0, blocksCell: true, blocksSight: true },       // an organ case of pipes: a wall of bronze
+  vat: { radius: 1.0, blocksCell: true },                // the Foundry's green-lit cauldron
+  loomstring: { radius: 0.3, blocksCell: false },        // the Loom's string frame: posts and taut gold cables (you walk through the cables' gap; the posts are thin)
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */

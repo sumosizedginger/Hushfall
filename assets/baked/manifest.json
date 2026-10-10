@@ -516,6 +516,70 @@
       "transparent": false,
       "sha256": "39d71a20f6ecdb1f4112f2a770247d547f361eb8027e2dbfac34db5fc65c113c",
       "bytes": 26646
+    },
+    "wall_loom_a": {
+      "seed": 9311,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ec16f3e812ab8f1d821d54f00f0e368b79a852325ce5d5ffedf0cb7054c22f2a",
+      "bytes": 17092
+    },
+    "floor_loom_a": {
+      "seed": 9312,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4fe69a398a06645cf669b84ed12aa6e83e51a7cbbfbc3a2da91bc692adcb7854",
+      "bytes": 31182
+    },
+    "wall_loft_a": {
+      "seed": 9313,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "5b68d0d29ffb4957a828044141383ee508bdbc1d5597dd8e5ef985d2d68a7a5f",
+      "bytes": 15250
+    },
+    "floor_loft_a": {
+      "seed": 9314,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e517f10614c4dfc31c21d58867422a17e56c760c03cc64e4e25c25c21d17b235",
+      "bytes": 14464
+    },
+    "wall_foundry_a": {
+      "seed": 9315,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "20e16050d6cfe8831929b7d5ac6ac4e3e76f734aad99bffe63a67cc59c8cbd97",
+      "bytes": 19257
+    },
+    "floor_foundry_a": {
+      "seed": 9316,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "9ed183114e7e832d25dc2041f7ac4143bea93772f31dd6df6ba08d360096df2d",
+      "bytes": 18654
+    },
+    "wall_throat_a": {
+      "seed": 9317,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "35dec7bf3bc230e8c619c8ccb19a46c5bc5b2f689ccfd4acf327272595cc88b7",
+      "bytes": 23872
+    },
+    "floor_throat_a": {
+      "seed": 9318,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a56daf74ab3be456c2c6fe0620813bdac60432fa1425e706bafd10882d81e6ce",
+      "bytes": 35799
     }
   }
 }

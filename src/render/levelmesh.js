@@ -7,6 +7,7 @@ import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
+import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -206,6 +207,10 @@ export function buildLevel(map, tex) {
     else if (p.kind === 'shelf') { m = makeShelf(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'cradle') { const r = makeCradle(tex.tollbearer_atlas); m = r.group; m.position.set(p.x, cy, p.z); r.light.position.set(p.x, cy - 1.8, p.z); group.add(r.light); lights.push(r.light); }
     else if (p.kind === 'bellnode') { m = makeBellNode(); m.position.set(p.x, fy, p.z); }
+    else if (p.kind === 'pew') { m = makePew(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
+    else if (p.kind === 'organ') { m = makeOrgan(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
+    else if (p.kind === 'vat') { m = makeVat(); m.position.set(p.x, fy, p.z); }
+    else if (p.kind === 'loomstring') { m = makeLoomString(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     if (m) dressing.add(m);
   }
   // scenery: non-colliding landmarks, possibly far outside the playable grid
