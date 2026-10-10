@@ -1,0 +1,756 @@
+{
+ "format": 1,
+ "id": "C1E3M07",
+ "version": 1,
+ "name": "The Spore Foundry",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "fog": "#101c14",
+  "fogDensity": 0.013,
+  "sky": "night",
+  "look": "foundry"
+ },
+ "grid": [
+  "####################################################",
+  "################################FFFFFF##############",
+  "##############################FFFffffFFF############",
+  "##############################FffffffffF############",
+  "##############################FffffffffF############",
+  "##############################FffffffffF############",
+  "##############################FffffffffF############",
+  "##############################FffffffffF############",
+  "##############################FffffffffF############",
+  "##############################FFFffffFFF############",
+  "################################FFqFFF##############",
+  "#################################FqF################",
+  "#################################FqF################",
+  "#################################FqF################",
+  "#################################FqF################",
+  "##############################FFFFqFFFF#############",
+  "############################FFFjjjjjjjFFF###########",
+  "##########################FFFjjjjjjjjjjjFFF#########",
+  "#########################FFjjjjjjjjjjjjjjjFF########",
+  "########################FFjjjjjjjjjjjjjjjjjFF#######",
+  "#######################FFjjjjjjjjjjjjjjjjjjjFF######",
+  "#######################FjjjjjjjjjjjjjjjjjjjjjF######",
+  "######################FFjjjjjjjjjjjjjjjjjjjjjFF#####",
+  "######FFF#############FjjjjjjjjjjjjjjjjjjjjjjjF#####",
+  "####FFFgFFF##########FFjjjjjjjjjjjjjjjjjjjjjjjFF####",
+  "###FFgggggFF#########FjjjjjjjjjjFFFFjjjjjjjjjjjF####",
+  "##FFgggggggFF########FjjjjjjjjjFFFFFFjjjjjjjjjjF####",
+  "##FgggggggggFFFFFFFFFFjjjjjjjjFFFFFFFFjjjjjjjjjF####",
+  "##FgggggggggDqqqqqqqqqjjjjjjjjFFFFFFFFjjjjjjjjjF####",
+  "##FgggggggggFFFFFFFFFFjjjjjjjjFFFFFFFFjjjjjjjjjF####",
+  "##FgggggggggF########FjjjjjjjjjFFFFFFjjjjjjjjjjF####",
+  "##FFgggggggFF########FjjjjjjjjjjFFFFjjjjjjjjjjjF####",
+  "###FFgggggFF#########FjjjjjjjjjjjjjjjjjjjjjjjjjF####",
+  "####FFFgFFF##########FFjjjjjjjjjjjjjjjjjjjjjjjFF####",
+  "######FFF#############FjjjjjjjjjjjjjjjjjjjjjjjF#####",
+  "######################FFjjjjjjjjjjjjjjjjjjjjjFF#####",
+  "#######################FjjjjjjjjjjjjjjjjjjjjjF######",
+  "#######################FFjjjjjjjjjjjjjjjjjjjFF######",
+  "########################FFjjjjjjjjjjjjjjjjjFF#######",
+  "#########################FFjjjjjjjjjjjjjjjFF########",
+  "##########################FFFjjjjjjjjjjjFFF#########",
+  "############################FFFjjjjjjjFFF###########",
+  "##############################FFFFSFFFF#############",
+  "###############################FFjjjjFF#############",
+  "###############################FjjjjjjF#############",
+  "##############################FFjjjjjjFF############",
+  "##############################FjjjjjjjjF############",
+  "##############################FFjjjjjjFF############",
+  "###############################FjjjjjjF#############",
+  "###############################FFjjjjFF#############",
+  "################################FFFFFF##############",
+  "####################################################",
+  "####################################################",
+  "####################################################",
+  "####################################################",
+  "####################################################"
+ ],
+ "ceilings": [
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  ".....................eeeeeeeeeeeeeeeeeeeeeeeeeee....",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "...................................................."
+ ],
+ "fx": [
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "............................xx........xx............",
+  "...........................xxxx......xxxx...........",
+  "............................xxxx....xxxx............",
+  ".............................xx......xx.............",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  ".............................xx......xx.............",
+  "............................xxxx....xxxx............",
+  "...........................xxxx......xxxx...........",
+  "............................xx........xx............",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "....................................................",
+  "...................................................."
+ ],
+ "doors": [
+  {
+   "at": [12, 28]
+  }
+ ],
+ "secrets": [
+  {
+   "id": "loose-panel",
+   "panel": [34, 42],
+   "cells": [
+    [34, 43],
+    [34, 44],
+    [34, 45]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "hall",
+   "when": "enter",
+   "at": [22, 28],
+   "radius": 2.5,
+   "do": [
+    {
+     "objective": "Break the four vats on the ring: the exit is north and opens when they are dead"
+    }
+   ]
+  },
+  {
+   "id": "foundry-cold",
+   "when": "dead:vats",
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The vats are dead. The exit is open: north"
+    },
+    {
+     "shake": 2
+    },
+    {
+     "message": "done"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [34, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [31, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [38, 5]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [31, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [34, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [34, 12]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 17],
+   "facing": -1.156
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [34, 17]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 17],
+   "facing": -1.249
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [29, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [39, 21]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [25, 22],
+   "facing": -1.279
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 22],
+   "facing": -1.414
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 24],
+   "facing": -1.363
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [9, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [24, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [43, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [44, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [4, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 26],
+   "facing": -1.107
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [23, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [24, 26]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [45, 26],
+   "facing": -1.521
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [23, 27]
+  },
+  {
+   "type": "player",
+   "at": [5, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [23, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [27, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 28],
+   "facing": -1.571
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [23, 29]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [41, 29],
+   "facing": -1.599
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [23, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [24, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [4, 31]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [9, 31],
+   "facing": -2.214
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [45, 31],
+   "facing": -1.646
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [9, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [24, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [43, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [44, 32]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 33],
+   "facing": -1.828
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [25, 35],
+   "facing": -1.907
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [43, 35],
+   "facing": -1.753
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [29, 36]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [39, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "sexton",
+   "at": [36, 38],
+   "facing": -1.883
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 40],
+   "facing": -2.018
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [34, 40]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 40],
+   "facing": -1.92
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 44]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [35, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [31, 46]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 46]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [35, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [38, 46]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [32, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [36, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [33, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [34, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [35, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "tint": "teal",
+   "at": [34, 49]
+  },
+  {
+   "type": "exit",
+   "at": [34, 5],
+   "locked": true,
+   "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "vat",
+   "at": [27, 22],
+   "group": "vats",
+   "facing": "south",
+   "spawns": [
+    "gaunt"
+   ]
+  },
+  {
+   "type": "enemy",
+   "kind": "vat",
+   "at": [41, 22],
+   "group": "vats",
+   "facing": "south"
+  },
+  {
+   "type": "enemy",
+   "kind": "vat",
+   "at": [41, 35],
+   "group": "vats",
+   "facing": "south",
+   "spawns": [
+    "gaunt"
+   ]
+  },
+  {
+   "type": "enemy",
+   "kind": "vat",
+   "at": [27, 35],
+   "group": "vats",
+   "facing": "south",
+   "spawns": [
+    "tollbearer"
+   ]
+  }
+ ],
+ "par": {
+  "time": 480
+ },
+ "intro": {
+  "title": "THE SPORE FOUNDRY",
+  "lines": [
+   "The ship casts its bell-bearers here.",
+   "Do not wait for the vats to run dry."
+  ]
+ },
+ "outro": "Next: the Cantor's Throat. What the Foundry makes, the Throat sings to.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [5, 28],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, the Foundry. Whatever the Choir wants more of, it grows here. I am reading four vats on a ring round a furnace. Break them and the way out opens."
+  },
+  {
+   "id": "hall",
+   "at": [20, 28],
+   "radius": 2.5,
+   "speaker": "INES",
+   "text": "It is a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Do not stand where they can see you and wait."
+  },
+  {
+   "id": "vat",
+   "at": [26, 31],
+   "radius": 4,
+   "speaker": "HULL",
+   "text": "The dome swells, then something drops out of the spout. Kill the vat and it stops. What it has already made stays made."
+  },
+  {
+   "id": "troughs",
+   "at": [34, 38],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Slag in the troughs. It burns. The pillars are cover from the vats, and the floor between them is yours."
+  },
+  {
+   "id": "panel",
+   "at": [34, 40],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "One panel in the south wall rings wrong. Hollow."
+  },
+  {
+   "id": "done",
+   "at": [34, 13],
+   "radius": 2,
+   "speaker": "SIGNAL HOUSE",
+   "text": "All four vats are dead. The north passage is open. Whatever was casting bell-bearers is cold."
+  }
+ ],
+ "objective": "Break the four brood vats: the exit opens when they are dead",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "enemies": [14, 60],
+  "botSeconds": [50, 800],
+  "mechanics": [
+   "triggers",
+   "secret"
+  ],
+  "skins": 4,
+  "enemyKinds": {
+   "vat": 4,
+   "tollbearer": 8,
+   "gaunt": 4,
+   "bellhand": 2,
+   "sexton": 1
+  },
+  "scaleClass": "COMPRESSION",
+  "tallReason": "the casting hall is the episode's one named foundry: 7 m to the vault because the vats stand 4.9 m tall",
+  "introduces": "SPAWNER DENIAL: four brood vats on a ring round a furnace swell and birth Gaunts and Tollbearers for as long as they live; the exit is locked until they are dead, so the only answer is to break them while the ring fights back"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": [
+   [
+    23,
+    26,
+    24,
+    30
+   ]
+  ]
+ }
+}

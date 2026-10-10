@@ -1,0 +1,18 @@
+[
+  {"name":"01-arrival","x":5.5,"z":28.5,"yaw":"east"},
+  {"name":"02-the-door","x":11.5,"z":28.5,"yaw":"east"},
+  {"name":"03-passage","x":17.5,"z":28.5,"yaw":"east","open":true},
+  {"name":"04-hall-mouth","x":22.5,"z":28.5,"yaw":"east","pitch":0.05,"open":true},
+  {"name":"05-south-west-vat","x":24.5,"z":31.5,"yaw":-2.356,"pitch":0.2,"open":true,"wake":true,"ticks":150},
+  {"name":"06-south-ring","x":34.5,"z":39.5,"yaw":"east","pitch":0.04,"open":true},
+  {"name":"07-the-trough","x":36.5,"z":36.5,"yaw":"north","pitch":-0.1,"open":true},
+  {"name":"08-south-east-vat","x":43.5,"z":32.5,"yaw":"south","pitch":0.2,"open":true,"wake":true,"ticks":150},
+  {"name":"09-east-side","x":44.5,"z":28.5,"yaw":"north","pitch":0.04,"open":true},
+  {"name":"10-north-east-vat","x":41.5,"z":25.5,"yaw":-0.785,"pitch":0.2,"open":true,"wake":true,"ticks":150},
+  {"name":"11-north-ring","x":34.5,"z":18.5,"yaw":"west","pitch":0.04,"open":true},
+  {"name":"12-north-west-vat","x":31.5,"z":19.5,"yaw":0.785,"pitch":0.2,"open":true,"wake":true,"ticks":150},
+  {"name":"13-the-core-from-above","x":22.5,"z":28.5,"yaw":"east","pitch":-0.15,"open":true},
+  {"name":"14-north-passage","x":34.5,"z":13.5,"yaw":"north","open":true},
+  {"name":"15-exit","x":34.5,"z":6.5,"yaw":"north","open":true},
+  {"name":"16-cellar","x":34.5,"z":46.5,"yaw":"south","open":true}
+]
