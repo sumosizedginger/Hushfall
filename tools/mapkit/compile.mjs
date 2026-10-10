@@ -43,7 +43,7 @@ export function compile(lv) {
   }
   for (const g of lv.groups || []) for (const e of entities) if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;
   for (let z = 0; z < h; z++) for (let x = 0; x < w; x++) {
-    if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}) });
+    if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });
     if (geo[z][x] === 'X') closets.push({ at: [x, z] });
   }
   const out = {

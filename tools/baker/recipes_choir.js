@@ -211,6 +211,15 @@ const KINDS = {
       mouth: MOUTH('#220a10'), verd: VERD(),
     },
   },
+  acolyte: {                         // PT-029: saffron and ox-blood vestments, gold trim, pale skin, bone and bronze: the warm one of the choir (the others are grey, violet, indigo, ivory)
+    seed: 2314, cells: {
+      skin: SKIN('#d6d0c0', '#8a8474', '#7a5a70', '#4a463e'),
+      robe: cell({ grad: ['#e0aa4a', '#8a5a1e'], marks: [{ col: '#5a3410', wt: 1.7, n: 7, dir: 'v', len: [20, 46] }, { kind: 'cpencil', col: '#f4d890', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }], blots: [{ cols: ['#b8782a', '#7a4a18'], n: 3, r: [6, 11], a: 150 }] }),
+      robeDk: cell({ grad: ['#963430', '#3a0e0e'], marks: [{ col: '#1c0606', wt: 1.7, n: 6, dir: 'v', len: [18, 40] }, { col: '#d07a6a', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      trim: cell({ grad: ['#f4d884', '#a07a2a'], marks: [{ col: '#5a4010', wt: 1.7, n: 3, dir: 'h' }, { col: '#fff4c0', wt: 1.2, n: 5, dir: 'v', len: [6, 14] }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), bone: BONE(0.12), iron: IRON(), mouth: MOUTH('#2a0c12'),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

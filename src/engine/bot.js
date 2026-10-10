@@ -1,9 +1,10 @@
 // Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
-// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to}.
+// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to} | waitplatform {id, at: 'high'|'low', min} (a timing platform, PT-029).
 import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
 import { cellFloor } from './terrain.js';
 import { gateRemaining, sporeState } from './breath.js';
+import { platformReady } from './platforms.js';
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
 export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
@@ -252,14 +253,14 @@ export class Bot {
       this.calm = 0; this.wasFighting = true; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
-      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
+      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
     else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('left', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
     else if (op.op === 'use') {
       const d = w.doors.find((q) => q.cx === op.at[0] && q.cz === op.at[1]);
       if (d && d.target === 1) done = true;
-      else done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), this.pressUse(), false);
+      else { const listening = d?.soundlock && w.time - (w.noise?.t ?? -99) < d.soundlock.quiet; done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), listening ? (this.stillFor = 0) : this.pressUse(), false); }          // PT-029: a sound-lock door listens: stand still and quiet until it has heard nothing for its `quiet` s
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
@@ -269,12 +270,14 @@ export class Bot {
       if (!sw) this.failed = 'no switch ' + op.id;
       else if (w.switchState[op.id]?.used) done = true;
       else done = this.follow([Math.floor(sw.at[0]), Math.floor(sw.at[1])], 0.6, 1.3) && (this.aimAt(sw.px, sw.pz), this.pressUse(), false);
+    } else if (op.op === 'waitplatform') {
+      const i = w.map.sectors.findIndex((q) => q.id === op.id), def = w.map.sectors[i]; if (!def?.cycle) this.failed = 'no timing platform ' + op.id; else { this.setHeld('forward', false); this.setHeld('sprint', false); done = platformReady(def, w.time, op.at ?? 'high', op.min ?? 3); }
     } else if (op.op === 'waitsector') {
       const s = w.sectors.find((q) => q.id === op.id), def = w.map.sectors.find((q) => q.id === op.id), goal = op.to === 'high' ? def?.high : def?.low;
       if (!s) this.failed = 'no sector ' + op.id; else done = Math.abs(s.h - goal) < 1e-6 && Math.abs(s.target - goal) < 1e-6;
     }
     else this.failed = 'unknown op ' + op.op;
-    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'killboss' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform' && op.op !== 'killboss' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
     if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }

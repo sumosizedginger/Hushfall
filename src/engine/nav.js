@@ -10,14 +10,14 @@ import { cellFloor } from './terrain.js';
 const QUANT = 0.25;   // metres: a moving floor is treated as standing at the nearest quarter metre, so a field is rebuilt a few times per metre of travel, not every tick (audit R09)
 const q = (h) => Math.round(h / QUANT) * QUANT;
 /** floor height as the navigation field sees it: moving floors quantised, static floors exact */
-function navFloor(w, cx, cz) { const m = w.map; if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return q(w.sectors[si].h); } return cellFloor(w, cx, cz); }
+function navFloor(w, cx, cz) { const m = w.map; if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return m.sectors[si].cycle ? q(m.sectors[si].high) : q(w.sectors[si].h); } return cellFloor(w, cx, cz); }      // (PT-029: a timing platform counts at its high stop: the field is the same on every tick, a creature waits at the edge for the beat)
 
 const NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
 const MAX_FIELDS = 4;
 /** everything a distance field depends on besides the target: which doors are passable and where each moving floor is. A field is valid exactly while this is unchanged, so it never depends on cache history (audit A07: resume == uninterrupted). */
 function navVersion(w) {
   let v = ''; for (const d of w.doors) v += d.breath || d.open >= DOOR.passableAt ? '1' : '0';
-  for (const s of w.sectors) v += '|' + q(s.h); return v;
+  w.sectors.forEach((s, i) => { if (!w.map.sectors[i].cycle) v += '|' + q(s.h); }); return v;
 }
 
 function blockedCells(m) {

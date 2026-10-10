@@ -308,6 +308,11 @@ export const SUPPRESS = { time: 0.9, cone: 0.9 };
 ENEMIES.bulwark = { name: 'Bulwark Shell', poise: 3, hp: 240, speed: 1.4, gait: 4.5, radius: 0.75, height: 1.85, hitRadius: 1.12, sight: 26, turnRate: 1.5,
   attack: { range: 2.5, reach: 3.1, windup: 0.5, duration: 1.7, cooldown: 1.1, damage: 24, heavy: true, knock: 1.6 },
   armor: { front: 0.07, cos: 0.05, stunMult: 1.8, opens: true } };
+// Cantor Acolyte (PT-029, Episode 3 Batch D): the Choir's attendant, a tall thin figure on stilts with a halo of bells. It WARDS: while it is awake (and not staggered) every other creature within `ward.r` m takes `ward.reduce` of the damage
+// it would (a ring on the floor shows how far), so it is the first thing to kill in a crowd; it keeps its distance (`keepAway`) and sings a small tone pulse (`pulse`: the Cantor's ring, smaller: stone stops it and standing 1 m higher passes under it).
+ENEMIES.acolyte = { name: 'Cantor Acolyte', poise: 3, hp: 170, speed: 1.7, gait: 5.5, radius: 0.45, height: 3.0, hitRadius: 0.82, sight: 34, turnRate: 2.6, keepAway: 9,
+  attack: { range: 2.0, reach: 2.6, windup: 0.6, duration: 1.2, cooldown: 1.2, damage: 14 },
+  ward: { r: 9, reduce: 0.5 }, pulse: { cooldown: 6, first: 3, windup: 1.0, speed: 8, damage: 14, width: 1.1, maxR: 18, hitHeight: 1.0 } };
 // Weeping Mother: the elite brood-mother, an organ throne hung with cradle sacs. She barely walks (`stand`: she plants herself that many metres from you and works from there), WEEPS (`tears`: every `every` s, after a
 // `windup` s tell, a slow tear is lobbed to where you stand (she goes no further than `leash` m from her throne); it lands in a pool that slows (`FX.p`) and burns for `life` s, the arc is long enough to see and to leave), and BROODS (`brood`: a sac swells for `swell` s, then
 // `count` creatures of `kind` drop beside her, `max` alive at most). Up close she slams. Kill the brood or kill the mother; keep moving either way.

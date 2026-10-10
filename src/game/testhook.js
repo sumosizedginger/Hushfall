@@ -71,7 +71,7 @@ export function installTestHook(app) {
     /** PT-028: what the view draws for the two elites: the Weeping Mother's tears in the air and the pools they leave (against the sim's), each Bulwark Shell's hinge angle (the open carapace is the tell) and each Mother's sac swell */
     eliteProbe() {
       if (!g.view || !g.world) return null; const v = g.view, w = g.world;
-      return { tears: v.tearViews.size, simTears: w.tears?.length ?? 0, pools: [...v.poolViews.values()].map((m) => ({ opacity: m.material.opacity, scale: m.scale.x, x: m.position.x, y: m.position.y, z: m.position.z })), simPools: (w.patches ?? []).map((q) => ({ x: q.x, z: q.z, r: q.r, life: q.life })),
+      return { wards: v.wardViews.size, tears: v.tearViews.size, simTears: w.tears?.length ?? 0, pools: [...v.poolViews.values()].map((m) => ({ opacity: m.material.opacity, scale: m.scale.x, x: m.position.x, y: m.position.y, z: m.position.z })), simPools: (w.patches ?? []).map((q) => ({ x: q.x, z: q.z, r: q.r, life: q.life })),
         shells: w.enemies.filter((e) => e.kind === 'bulwark' && e.state !== 'dead').map((e) => ({ id: e.id, attackT: e.attackT, hinge: v.enemyViews.get(e.id)?.J.shell.rotation.x ?? null })), mothers: w.enemies.filter((e) => e.kind === 'weeping' && e.state !== 'dead').map((e) => ({ id: e.id, broodT: e.broodT ?? -1, pulseT: e.pulseT ?? -1, sac: v.enemyViews.get(e.id)?.J.sac0.scale.x ?? null })) };
     },
     /** where the Cantor's shield and the ring beams are drawn (world space) */

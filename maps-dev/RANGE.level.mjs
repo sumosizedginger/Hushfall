@@ -87,9 +87,12 @@ t('bulwark', 6, 58, S, 'inert', SPONGE); t('bulwark', 12, 58, N, 'inert', SPONGE
 // the middle row: a Bulwark that bashes when you come close (it OPENS to strike: shoot it then), one that never turns (circle it), a Mother that slams
 t('bulwark', 8, 64, S, 'turn', { sight: 12 }); t('bulwark', 14, 64, EAST, 'fixed', { sight: 8 }); t('weeping', 24, 64, S, 'turn', { sight: 8 });
 // the live yard (east): a Mother with two Bulwarks and two singers, asleep until the lever (they fight as in the game: tears, brood, plate, bursts)
+// PT-029, the Cantor Acolyte: a sponge (the outline, the hit volume), a swinger that sings its pulse at you and keeps away, and a WARD demonstration (a 'turn' Acolyte with three sponge Tollbearers inside its nine metres: they take half; the readout shows it)
+t('acolyte', 28, 58, S, 'inert', SPONGE); t('acolyte', 28, 64, S, 'turn', { sight: 14 });
+t('acolyte', 6, 68, S, 'turn', { sight: 3 }); for (const [x, z] of [[2, 66], [10, 66], [6, 70]]) t('tollbearer', x, z, S, 'inert', SPONGE);
 const yard = (kind, x, z) => E.push({ type: 'enemy', kind, at: [x, z], facing: WEST, group: 'yard' });
-for (const [kind, x, z] of [['weeping', 41, 63], ['bulwark', 34, 60], ['bulwark', 34, 66], ['chorister', 43, 58], ['chorister', 43, 69]]) yard(kind, x, z);
-E.push({ type: 'switch', id: 'yard', at: [2, 62], wall: 'west', once: true, do: [{ wake: 'yard' }, { objective: 'The yard is awake: a Weeping Mother, two Bulwark Shells and two singers' }, { shake: 1.2 }] });
+for (const [kind, x, z] of [['weeping', 41, 63], ['bulwark', 34, 60], ['bulwark', 34, 66], ['chorister', 43, 58], ['chorister', 43, 69], ['acolyte', 38, 63]]) yard(kind, x, z);
+E.push({ type: 'switch', id: 'yard', at: [2, 62], wall: 'west', once: true, do: [{ wake: 'yard' }, { objective: 'The yard is awake: a Mother, two Bulwarks, an Acolyte, two singers' }, { shake: 1.2 }] });
 
 const layers = L.layers();
 
@@ -115,7 +118,7 @@ export default {
     { id: 'carbinelane', at: [12, 49], radius: 5, speaker: 'RANGE', text: 'CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit.' },
     { id: 'mortaryard', at: [49, 37], radius: 5, speaker: 'RANGE', text: 'MORTAR (key 0): the shell flies TO the ring, high, over the crates and up onto the ledge. Two rockets a shell, nothing inside 9 m, and the blast hurts YOU too.' },
     { id: 'breathyard', at: [53, 48], radius: 6, speaker: 'RANGE', text: 'BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then.' },
-    { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front (blasts, bolts and the mallet go through) and opens to bash: shoot it then. A Mother weeps pools and broods. The lever wakes the east.' },
+    { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front and opens to bash. A Mother weeps pools and broods. An Acolyte wards: everything within 9 m takes half. The lever wakes the east.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

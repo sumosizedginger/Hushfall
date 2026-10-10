@@ -8,7 +8,7 @@ export class Level {
   constructor(w, h, { fill = '#' } = {}) {
     this.w = w; this.h = h; this.g = Array.from({ length: h }, () => Array(w).fill(fill));
     this.ht = Array.from({ length: h }, () => Array(w).fill(0)); this.ce = Array.from({ length: h }, () => Array(w).fill('.')); this.fxl = Array.from({ length: h }, () => Array(w).fill('.'));
-    this.ob = Array.from({ length: h }, () => Array(w).fill('.')); this.doorKeys = {}; this.doorBreath = {}; this.remoteDoors = []; this.overwrites = []; this.usedHeights = false; this.usedCeil = false; this.usedFx = false;
+    this.ob = Array.from({ length: h }, () => Array(w).fill('.')); this.doorKeys = {}; this.doorBreath = {}; this.doorSoundlock = {}; this.remoteDoors = []; this.overwrites = []; this.usedHeights = false; this.usedCeil = false; this.usedFx = false;
   }
   #in(x, z) { return x >= 0 && z >= 0 && x < this.w && z < this.h; }
   #each(r, f) { for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) if (this.#in(x, z)) f(x, z); }
@@ -35,7 +35,7 @@ export class Level {
   /** a floor effect over a rectangle: 'w' wading water, 'x' toxic residue, '.' clears */
   fx(r, c) { this.usedFx = true; this.#each(r, (x, z) => { this.fxl[z][x] = c; }); return this; }
   /** a door; `breath: { period, open, phase }` makes it a BREATHING gate (src/engine/breath.js): it opens for `open` of every `period` seconds on its own and nothing else opens it */
-  door(x, z, { key = null, remote = false, breath = null } = {}) { this.g[z][x] = 'D'; if (key) this.doorKeys[x + ',' + z] = key; if (remote) this.remoteDoors.push(x + ',' + z); if (breath) this.doorBreath[x + ',' + z] = breath; return this; }
+  door(x, z, { key = null, remote = false, breath = null, soundlock = null } = {}) { this.g[z][x] = 'D'; if (key) this.doorKeys[x + ',' + z] = key; if (remote) this.remoteDoors.push(x + ',' + z); if (breath) this.doorBreath[x + ',' + z] = breath; if (soundlock) this.doorSoundlock[x + ',' + z] = soundlock; return this; }
   closet(x, z) { this.g[z][x] = 'X'; return this; }
   secretPanel(x, z) { this.g[z][x] = 'S'; return this; }
   /** place object symbols: put(x,z,'t') or putAll('t', [[x,z],...]) */
@@ -48,7 +48,7 @@ export class Level {
     // doors, closet panels and secret panels sit on level ground: take the height of the first floor cell beside them
     for (let z = 0; z < this.h; z++) for (let x = 0; x < this.w; x++) if ('DXS'.includes(this.g[z][x])) for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (this.#floorLike(this.g[z + dz]?.[x + dx] ?? '#')) { this.ht[z][x] = this.ht[z + dz][x + dx]; break; }
     const rows = (a, f = (v) => v) => a.map((r) => r.map(f).join(''));
-    return { geometry: rows(this.g), heights: this.usedHeights ? rows(this.ht, hchar) : undefined, ceilings: this.usedCeil ? rows(this.ce) : undefined, fx: this.usedFx ? rows(this.fxl) : undefined, objects: rows(this.ob), doorKeys: this.doorKeys, doorBreath: this.doorBreath, remoteDoors: this.remoteDoors, placementWarnings: this.overwrites };
+    return { geometry: rows(this.g), heights: this.usedHeights ? rows(this.ht, hchar) : undefined, ceilings: this.usedCeil ? rows(this.ce) : undefined, fx: this.usedFx ? rows(this.fxl) : undefined, objects: rows(this.ob), doorKeys: this.doorKeys, doorBreath: this.doorBreath, doorSoundlock: this.doorSoundlock, remoteDoors: this.remoteDoors, placementWarnings: this.overwrites };
   }
 }
 export { hchar };

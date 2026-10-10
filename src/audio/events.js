@@ -32,8 +32,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -82,6 +82,7 @@ export function soundsForEvent(e) {
     case 'door_open': return [{ id: e.breath ? 'gate_in' : 'door_open', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];       // a breathing gate sighs all the time: quieter than a door somebody opened
     case 'door_close': return [{ id: e.breath ? 'gate_out' : 'door_close', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];
     case 'door_breath': return [{ id: 'door_locked', pos: at(e), gain: 0.5 }];
+    case 'door_listen': return [{ id: 'door_locked', pos: at(e), gain: 0.6 }];
     case 'spore_warn': return [{ id: 'spore_swell', pos: at(e), gain: 0.8 }];
     case 'spore_bloom': return [{ id: 'spore_puff', pos: at(e) }];
     case 'door_locked': return [{ id: 'door_locked', pos: at(e) }];
@@ -113,6 +114,7 @@ export function soundsForEvent(e) {
     case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
     case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
+    case 'ward_hit': return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
     case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
     case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];
     case 'tear_windup': return [{ id: 'tear_windup', pos: at(e) }];
@@ -120,7 +122,7 @@ export function soundsForEvent(e) {
     case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
-    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

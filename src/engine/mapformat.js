@@ -30,10 +30,11 @@ export class MapData {
     this.cell = src.cellSize ?? CELL; this.ceiling = src.ceilingHeight ?? DEFAULT_CEILING;
     this.tiles = src.grid.map((r) => [...r]);
     this.h = this.tiles.length; this.w = this.tiles[0].length;
-    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
+    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
     this.flat = !this.heightRows && !this.ceilingRows;                                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
-    this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low' }));
+    this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low', cycle: s.cycle ? { period: s.cycle.period, hold: s.cycle.hold, phase: s.cycle.phase ?? 0 } : null }));      // PT-029: a `cycle` sector is a TIMING PLATFORM (platforms.js)
+    this.hasSoundlock = (src.doors || []).some((d) => d.soundlock);                              // PT-029: a map with a sound-lock door records the player's noise (world.noise)
     this.sectorIndex = new Map(); this.sectors.forEach((s, i) => s.cells.forEach(([cx, cz]) => this.sectorIndex.set(cx + ',' + cz, i)));
     this.triggers = (src.triggers || []).map((t) => ({ ...t, x: t.at ? (t.at[0] + 0.5) * this.cell : 0, z: t.at ? (t.at[1] + 0.5) * this.cell : 0, r: (t.radius ?? 1.5) * this.cell }));
     this.groups = [...new Set((src.entities || []).filter((e) => e.group).map((e) => e.group))];
@@ -120,6 +121,11 @@ function validateMapChecks(src) {
     if (!Array.isArray(d.at) || tile(d.at[0], d.at[1]) !== 'D') { err(`doors entry ${JSON.stringify(d.at)} is not on a 'D' tile`); continue; }
     doorKeys.add(d.at.join(','));
     if (d.key != null && !KEYS[d.key]) err(`door ${d.at} needs unknown key '${d.key}'`);
+    if (d.soundlock != null) {                                           // PT-029: a sound-lock door only opens (by Use) when nothing loud has been heard near it for `quiet` s
+      const k = d.soundlock;
+      if (typeof k !== 'object' || !(k.quiet >= 2 && k.quiet <= 12) || (k.radius != null && !(k.radius >= 8))) err(`door ${d.at}: soundlock needs { quiet between 2 and 12 s, radius >= 8 m }`);
+      if (d.breath != null || d.remote) err(`door ${d.at}: a sound-lock door is opened by Use: it has no breath and is not remote`);
+    }
     if (d.breath != null) {                                              // PT-027: a breathing gate opens on a clock and nothing else opens it
       const b = d.breath;
       if (typeof b !== 'object' || !(b.period >= 2) || !(b.open > 0 && b.open < 1) || (b.phase != null && typeof b.phase !== 'number')) err(`door ${d.at}: breath needs { period >= 2, open between 0 and 1, phase }`);
@@ -242,6 +248,11 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!(Number.isFinite(s.low) && Number.isFinite(s.high) && s.low < s.high)) err(`${tag}: needs numeric low < high (metres)`);
     if (s.start != null && s.start !== 'low' && s.start !== 'high') err(`${tag}: start must be 'low' or 'high'`);
     if (s.speed != null && !(s.speed > 0)) err(`${tag}: speed must be positive`);
+    if (s.cycle != null) {                                                               // PT-029: a timing platform rises and falls on a clock of its own
+      const C = s.cycle, sp = s.speed ?? 1.2, mv = (s.high - s.low) / sp;
+      if (typeof C !== 'object' || !(C.period >= 4) || !(C.hold >= 1.5) || (C.phase != null && typeof C.phase !== 'number')) err(`${tag}: cycle needs { period >= 4, hold >= 1.5, phase }`);
+      else if (C.period - C.hold - 2 * mv < 1.5) err(`${tag}: a platform must wait at the bottom for at least 1.5 s (period ${C.period}, hold ${C.hold}, travel ${mv.toFixed(2)} s each way)`);
+    }
     for (const [cx, cz] of s.cells) {
       if (!walkable(tile(cx, cz))) err(`${tag}: cell ${cx},${cz} is not a floor cell`);
       if (sectorOf.has(cx + ',' + cz)) err(`${tag}: cell ${cx},${cz} is already in another sector`); sectorOf.set(cx + ',' + cz, s.id);
@@ -308,7 +319,9 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);
   }
-  for (const id of sectorIds) if (!drivenSectors.has(id)) err(`sector '${id}' is never moved by any switch or trigger`);
+  const cycling = new Set((src.sectors || []).filter((s) => s.cycle).map((s) => s.id));
+  for (const id of sectorIds) if (!drivenSectors.has(id) && !cycling.has(id)) err(`sector '${id}' is never moved by any switch or trigger`);
+  for (const id of cycling) if (drivenSectors.has(id)) err(`sector '${id}' has a cycle (it moves on a clock): no switch or trigger may move it too`);
   if (src.quality != null && (typeof src.quality !== 'object' || Array.isArray(src.quality))) err('quality must be an object');
   for (const d of src.doors || []) if (d.remote && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);

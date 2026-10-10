@@ -329,6 +329,27 @@ export const SFX = {
     thump(c, out, t + 1.0, 80, 30, 0.5, 0.5);
     return 1.7;
   },
+  // --- Episode 3, Batch D (PT-029): the Cantor Acolyte ---
+  acolyte_alert(c, out, t, o) {                                 // a held three-note chord sung through bells: calm, wrong
+    for (const [f, d] of [[261.6, 1.6], [329.6, 1.4], [392, 1.3]]) bell(c, out, t, f, { decay: d, gain: 0.1, ratio: 2.7, index: 0.9 });
+    tone(c, out, t, { type: 'sine', f0: 196, f1: 190, a: 0.15, d: 1.3, gain: 0.14, vib: 5 });
+    return 1.6;
+  },
+  acolyte_draw(c, out, t, o) {                                  // the windup of its pulse: a shimmer of bells rising, a held note leaning up
+    for (let i = 0; i < 6; i++) bell(c, out, t + i * 0.14, 392 * Math.pow(1.19, i), { decay: 0.7, gain: 0.07, ratio: 3, index: 1 });
+    tone(c, out, t, { type: 'sine', f0: 180, f1: 360, a: 0.3, d: 0.7, gain: 0.12 });
+    return 1.2;
+  },
+  acolyte_die(c, out, t, o) {                                   // the bells let go in a falling run, then the weight of the robe
+    for (let i = 0; i < 5; i++) bell(c, out, t + i * 0.09, 523 * Math.pow(0.84, i), { decay: 0.9, gain: 0.09, ratio: 2.8, index: 1.1 });
+    noise(c, out, t + 0.1, { dur: 0.6, gain: 0.1, type: 'lowpass', f0: 1200, f1: 160, off: o.r() });
+    thump(c, out, t + 0.45, 95, 38, 0.3, 0.4);
+    return 1.4;
+  },
+  ward_ping(c, out, t, o) {                                     // a hit that something sang away: a small glassy ding
+    bell(c, out, t, 880, { decay: 0.35, gain: 0.12, ratio: 3.5, index: 0.7 });
+    return 0.4;
+  },
   shot_whiz(c, out, t, o) {                                     // a round going by close: a thin, fast crack of air
     noise(c, out, t, { dur: 0.16, a: 0.004, gain: 0.24, type: 'bandpass', f0: 2600, f1: 5400, q: 1.6, off: o.r() });
     tone(c, out, t, { type: 'sine', f0: 3200, f1: 1500, a: 0.002, d: 0.1, gain: 0.05 });

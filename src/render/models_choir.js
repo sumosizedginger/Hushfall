@@ -504,4 +504,43 @@ export function weeping(tex) {
   }, { maxLift: 5 });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, feeder, graftmother };
+// ------------------------------------------------------------------------------------------------------------------ CANTOR ACOLYTE (PT-029, Episode 3 Batch D: the Choir's attendant, a stilted figure with a wheel of bells behind its head)
+/** a tall thin figure on bare stilt legs in a short saffron robe, a pointed mitre, both hands raised round a tuning fork; behind the head and shoulders a great bronze WHEEL (a ring, four spokes, six small bells hung from the rim) that turns and glows
+ *  while it wards and flares when it sings its pulse. The outline is a thin line with a circle behind it: nothing else in the game is. */
+export function acolyte(tex) {
+  const C = cellsOf('acolyte');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 1.16, 0]);
+    legs(R, 'hips', 0.1, { a: 0.58, b: 0.56, r0: 0.075, r1: 0.058, r2: 0.045, cellA: C.bone, cellB: C.bone, seg: 5, fw: 0.1, fh: 0.06, fl: 0.24 }, C.bronzeDk);
+    R.joint('spine', 'hips', [0, 0.05, 0]);
+    R.cyl('spine', 0.1, 0.13, 0.78, 7, C.skin, { pos: [0, 0.46, 0], scale: [1, 1, 0.8] });
+    R.pleat('spine', V2([[0.13, 0.9], [0.17, 0.78], [0.21, 0.5], [0.25, 0.12], [0.29, -0.2], [0.3, -0.3]]), 12, 6, 0.05, C.robe, { scale: [1, 1, 0.8] });        // the robe: a narrow cone to the knee
+    R.tor('spine', 0.29, 0.03, 4, 14, C.trim, { pos: [0, -0.28, 0], rot: [PI / 2, 0, 0] });                                                                            // gold at the hem
+    R.cyl('spine', 0.05, 0.06, 0.82, 6, C.trim, { pos: [0, 0.42, 0.14], scale: [1, 1, 0.25] });                                                                         // the stole down the front
+    for (const s of [-1, 1]) R.lump('spine', 0.1, 0, 0.12, s + 20, C.robeDk, { pos: [s * 0.2, 0.88, 0], scale: [1.8, 0.8, 1.1] });                                      // broad dark shoulders
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) {                                                                                                                  // both arms raised in a V round a tuning fork
+      R.limb('spine', n, [s * 0.17, 0.88, 0], { a: 0.34, b: 0.38, r0: 0.05, r1: 0.042, r2: 0.036, cellA: C.robe, cellB: C.skin, seg: 5 });
+      R.lump(n + 'M', 0.05, 0, 0.1, s + 22, C.skin, { pos: [0, -0.42, 0], scale: [0.9, 1.3, 0.8] });
+      for (const d of [-1, 1]) R.cyl(n + 'M', 0.014, 0.018, 0.3, 4, C.bone, { pos: [d * 0.03, -0.62, 0] });                                                             // the tines of a fork held in the hand
+    }
+    head(R, C, { neckAt: [0, 0.92, 0.03], r: 0.12, tall: 1.3, neck: 0.16, cell: C.skin, eyes: 'both', eyeX: 0.045, seed: 12 });
+    R.cone('head', 0.15, 0.34, 7, C.robe, { pos: [0, 0.3, -0.01], rot: [-0.05, 0, 0] }); R.tor('head', 0.12, 0.018, 3, 10, C.trim, { pos: [0, 0.16, 0], rot: [PI / 2, 0, 0] });         // the mitre
+    // THE WHEEL: a ring behind the head and shoulders, four spokes, six bells hung from the rim; it turns in its own plane
+    R.joint('halo', 'spine', [0, 0.8, -0.24]);
+    R.tor('halo', 0.9, 0.05, 5, 30, C.bronze, { name: 'ring' }); R.tor('halo', 0.7, 0.025, 4, 26, 'glow', { name: 'ringGlow' });
+    for (let k = 0; k < 6; k++) { const a = k * PI / 3 + PI / 6; R.tube('halo', [[0, 0, 0], [K(a) * 0.45, S(a) * 0.45, 0], [K(a) * 0.88, S(a) * 0.88, 0]], [0.03, 0.022, 0.02], 4, C.bronzeDk); }
+    R.sph('halo', 0.06, 5, 4, 'glow', { name: 'hub' });
+    for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2; R.joint('hb' + i, 'halo', [K(a) * 0.9, S(a) * 0.9, 0]); R.bell('hb' + i, 0.2, 0.09, C.bronze, C.bronzeDk, { pos: [0, -0.16, 0], seg: 6 }); }
+    R.J.ringEchoes = R.echo(R.J.ring, 1, 0.18);
+  }, (p, J, R) => {
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.03, headX: 0.1, jawOpen: 0.1, hipY: 1.16, stride: 0.5 }), up = p.attack > 0 ? h.raise : 0, d = ease(clamp01(p.dead));
+    J.legA.rotation.x *= 0.7; J.legB.rotation.x *= 0.7;
+    J.armA.rotation.x = -2.3 - 0.4 * up + 0.05 * S(t * 1.1); J.armB.rotation.x = -2.3 - 0.4 * up - 0.05 * S(t * 1.1); J.armA.rotation.z = -0.5 - 0.25 * up; J.armB.rotation.z = 0.5 + 0.25 * up; J.armAM.rotation.x = J.armBM.rotation.x = -0.3;
+    J.halo.rotation.z = t * (0.5 + 2.4 * up) * (1 - d); J.halo.rotation.y = 0.12 * S(t * 0.7);
+    J.ringGlow.scale.setScalar(d > 0.1 ? 0.001 : 1 + 0.06 * S(t * 3) + 0.4 * up); J.hub.scale.setScalar(d > 0.1 ? 0.001 : 0.8 + 0.3 * S(t * 4) + 1.4 * up);
+    for (let i = 0; i < 6; i++) J['hb' + i].rotation.z = -J.halo.rotation.z + S(t * 2.1 + i) * 0.12;                            // the bells hang true as the wheel turns
+    R.ring(J.ringEchoes, up * (1 - h.rec));
+  }, { maxLift: 3 });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, feeder, graftmother };

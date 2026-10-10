@@ -1,6 +1,7 @@
 // Authored events: switches and triggers run lists of actions. Everything is sim state (plain data), evaluated in fixed ticks, deterministic.
 // Actions are validated by mapformat.validateKit; the sim can therefore assume the shapes below.
 import { wakeEnemy, spawnEnemy, doorAtCell, emit } from './world.js';
+import { platformState } from './platforms.js';
 
 const cellPos = (w, cx, cz) => ({ x: (cx + 0.5) * w.map.cell, z: (cz + 0.5) * w.map.cell });
 
@@ -39,7 +40,13 @@ export function runActions(w, list) { for (const a of list || []) runAction(w, a
 
 /** advance moving floors */
 export function updateSectors(w, dt) {
-  for (const s of w.sectors) {
+  for (let i = 0; i < w.sectors.length; i++) {
+    const s = w.sectors[i], def = w.map.sectors[i];
+    if (def.cycle) {                                                                         // PT-029: a timing platform stands where its clock puts it (platforms.js); it announces the start and the end of each move
+      const st = platformState(def, w.time), was = s.ph; s.h = st.h; s.target = st.h; s.ph = st.phase;
+      if (was !== undefined && was !== st.phase) { if (st.phase === 'down' || st.phase === 'up') emit(w, 'sector_start', { id: s.id, up: st.phase === 'up', ...cellPos(w, ...def.cells[0]) }); else emit(w, 'sector_stop', { id: s.id, ...cellPos(w, ...def.cells[0]) }); }
+      continue;
+    }
     if (Math.abs(s.h - s.target) < 1e-6) continue;
     const dir = Math.sign(s.target - s.h); s.h += dir * Math.min(Math.abs(s.target - s.h), s.speed * dt);
     if (Math.abs(s.h - s.target) < 1e-6) { s.h = s.target; const def = w.map.sectors.find((q) => q.id === s.id); emit(w, 'sector_stop', { id: s.id, ...cellPos(w, ...def.cells[0]) }); }

@@ -1,6 +1,7 @@
 // Headless, deterministic simulation. Fixed 1/60 s ticks, seeded RNG, plain-data state (JSON-serialisable).
 // Nothing here touches DOM/Three/time/Math.random. The renderer reads state and drains events.
 import { gateOpen, sporeState } from './breath.js';
+import { cycleHeight } from './platforms.js';
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
@@ -61,7 +62,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       meleeWeapon: [...MELEE_ORDER].reverse().find((id) => (carry?.weapons ?? []).includes(id)) ?? 'fists', lastWeapon: null,              // what key 6 brings up (the heaviest found melee weapon you carry in, else the fists); what Q swaps back to
     },
     enemies: [], projectiles: [], enemyShots: [], pulses: [], pickups: [], doors: [], burns: [],      // burns: the flare cannon's burning ground
-    sectors: map.sectors.map((s) => { const h = s.start === 'high' ? s.high : s.low; return { id: s.id, h, target: h, speed: s.speed }; }),      // moving floors (lifts, ramps)
+    sectors: map.sectors.map((s) => { const h = s.cycle ? cycleHeight(s, 0) : s.start === 'high' ? s.high : s.low; return { id: s.id, h, target: h, speed: s.speed }; }),      // moving floors (lifts, ramps)
     triggerState: Object.fromEntries(map.triggers.map((t) => [t.id, { fired: false }])), switchState: Object.fromEntries(map.switches.map((s) => [s.id, { used: false, on: false }])),
     exitLocked: Object.fromEntries(map.exits.map((x) => [x.id, !!x.locked])), objective: map.objective ?? null,
     upgrades: sanitizeUpgrades(carry?.upgrades),                         // the campaign's persistent upgrade tiers (progress.js): they set the ammunition and armour CAPS, nothing else; the sim never changes them
@@ -77,7 +78,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
   if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
-  for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}) }); }
+  for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   return w;
 }
@@ -185,6 +186,7 @@ export function wakeEnemy(w, e, loud, scripted = false) {
 }
 /** Loud noise (gunfire, explosion): idle enemies within `radius` wake if nothing solid is between, or if it is very close. */
 export function noise(w, x, z, radius) {
+  if (w.map.hasSoundlock) w.noise = { t: w.time, x, z };                                   // PT-029: a sound-lock door listens (only a map that has one records this)
   for (const e of w.enemies) {
     if (e.state !== 'idle') continue; const d = Math.hypot(e.x - x, e.z - z);
     if (d < radius && (d < NOISE.closeRange || hasLOS(w, x, z, e.x, e.z))) wakeEnemy(w, e, false);
@@ -198,6 +200,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
     else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
   }
+  if (!def.ward && !def.node && !def.boss) { const A = wardOf(w, e); if (A) { dmg *= ENEMIES.acolyte.ward.reduce; emit(w, 'ward_hit', { id: e.id, x: e.x, z: e.z }); } }          // PT-029: an awake Acolyte's ward
   if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
   else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
@@ -683,6 +686,26 @@ function strafeStep(w, e, def, dt) {
   e.strafeDir = -e.strafeDir; return false;
 }
 
+// ---------------------------------------------------------------- the Cantor Acolyte (PT-029)
+/** the awake, unstaggered Acolyte whose ward covers creature `e` (another creature than the one asked about, within ward.r), or null */
+function wardOf(w, e) {
+  for (const a of w.enemies) { if (a === e || a.kind !== 'acolyte' || a.state === 'dead' || a.state === 'idle' || a.hold === 'inert' || (a.stunT || 0) > 0) continue; if (Math.hypot(a.x - e.x, a.z - e.z) < ENEMIES.acolyte.ward.r) return ENEMIES.acolyte.ward; }
+  return null;
+}
+/** Acolyte: a tone pulse after a windup (the Cantor's ring, smaller), and it keeps away from the player; returns true when the tick is used up */
+function acolyteStep(w, e, def, diff, dt, sees, dist) {
+  const P = def.pulse; e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt);
+  if ((e.pulseT ?? -1) >= 0) {
+    e.pulseT += dt; e.walk *= 0.85;
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; }
+    return true;
+  }
+  if (e.attackT >= 0) return false;
+  if (sees && e.pulseCd <= 0 && dist > 3 && dist <= P.maxR) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
+  if (sees && dist < def.keepAway) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  return false;
+}
+
 // ---------------------------------------------------------------- the Weeping Mother (PT-028)
 /** the pool a tear left under a point, or null: the effect char 'p' (FX.p) */
 function patchAt(w, x, z) { for (const q of w.patches) if (Math.hypot(x - q.x, z - q.z) < q.r) return 'p'; return null; }
@@ -802,6 +825,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
   if (def.boss && !e.hold && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
+  if (def.ward && !e.hold && acolyteStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.lunge) {
     const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
     if ((e.lungeT ?? -1) >= 0) {
@@ -890,7 +914,8 @@ export function step(w, cmd) {
     const hit = useTarget(w);
     if (hit?.switchId) activateSwitch(w, map.switches.find((s) => s.id === hit.switchId));
     else if (hit) {
-      if (hit.breath) emit(w, 'door_breath', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-027: it opens when the ship breathes in, whatever you do
+      if (hit.soundlock && w.time - (w.noise?.t ?? -99) < hit.soundlock.quiet && Math.hypot(w.noise.x - (hit.cx + 0.5) * map.cell, w.noise.z - (hit.cz + 0.5) * map.cell) < hit.soundlock.radius) emit(w, 'door_listen', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-029: the lock is listening: it will not open to Use until it has heard nothing for `quiet` s
+      else if (hit.breath) emit(w, 'door_breath', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-027: it opens when the ship breathes in, whatever you do
       else if (hit.sealed || hit.remote) emit(w, 'door_remote', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // opened elsewhere (a switch, or an event)
       else if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
       else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }

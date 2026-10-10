@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { FACTORIES } from '../src/render/models_choir.js';
 import { silhouette, iou } from '../tools/dev/sil-lib.mjs';
 
-const GUARDED = ['bulwark', 'weeping'];                 // Episode 3 Batch C after the repair; the later batches' creatures are added to this list as they are built
+const GUARDED = ['bulwark', 'weeping', 'acolyte'];                 // Episode 3 Batch C after the repair; the later batches' creatures are added to this list as they are built
 const BAR = 0.5;
 const kinds = Object.keys(FACTORIES);
 

@@ -508,6 +508,14 @@
       "transparent": false,
       "sha256": "a3f362b49a39707d37b8c60fefd27193274547e07d4c208712748225a8a50684",
       "bytes": 40255
+    },
+    "choir_acolyte": {
+      "seed": 2314,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "39d71a20f6ecdb1f4112f2a770247d547f361eb8027e2dbfac34db5fc65c113c",
+      "bytes": 26646
     }
   }
 }
