@@ -1,0 +1,17 @@
+[
+  {"name":"01-arrival","x":5.5,"z":29.5,"yaw":"east"},
+  {"name":"02-narthex-mouth","x":12.5,"z":29.5,"yaw":"east"},
+  {"name":"03-nave-west","x":16.5,"z":29.5,"yaw":"east","pitch":0.06},
+  {"name":"04-north-gallery","x":24.5,"z":12.5,"yaw":"south","pitch":-0.1,"wake":true,"ticks":20},
+  {"name":"05-colonnade","x":30.5,"z":29.5,"yaw":"east"},
+  {"name":"06-centre","x":44.5,"z":29.5,"yaw":"east","pitch":0.04},
+  {"name":"07-supply","x":52.5,"z":29.5,"yaw":"east","pitch":0.12},
+  {"name":"08-foot-of-the-dais","x":56.5,"z":29.5,"yaw":"east","pitch":0.2,"wake":true,"ticks":40},
+  {"name":"09-the-dais","x":64.5,"z":29.5,"yaw":"east","pitch":0.08},
+  {"name":"10-the-throne","x":67.5,"z":28.5,"yaw":"east","pitch":0.12,"wake":true,"ticks":30},
+  {"name":"11-south-gallery","x":72.5,"z":46.5,"yaw":"north","pitch":-0.05},
+  {"name":"14-hollow-rib","x":30.5,"z":10.5,"yaw":"north","open":true},
+  {"name":"15-tunnel","x":30.5,"z":6.5,"yaw":"north","open":true},
+  {"name":"12-gate","x":77.5,"z":29.5,"yaw":"east","open":true},
+  {"name":"13-exit","x":80.5,"z":29.5,"yaw":"east","open":true}
+]

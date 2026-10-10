@@ -209,6 +209,22 @@ export class Bot {
     if (t - this.sporeSince > reg.period + 1) return false;
     return true;
   }
+  /** PT-028: standing in a Weeping Mother's pool, or under a tear that will land on it within a second: a human walks out (the pool slows and burns). Returns true while it is walking out. */
+  escapePool() {
+    const w = this.w, p = w.player; if (!this.fights || (!w.patches?.length && !w.tears?.length)) { this.poolExit = null; return false; }
+    let c = null;
+    for (const q of w.patches ?? []) if (Math.hypot(p.x - q.x, p.z - q.z) < q.r + 0.3) { c = q; break; }
+    if (!c) for (const q of w.tears ?? []) { const lx = q.x + q.vx * q.left / 60, lz = q.z + q.vz * q.left / 60; if (q.left < 70 && Math.hypot(p.x - lx, p.z - lz) < q.r + 0.5) { c = { x: lx, z: lz, r: q.r }; break; } }
+    if (!c) { this.poolExit = null; return false; }
+    if (!this.poolExit || Math.hypot(this.poolExit[0] - c.x, this.poolExit[1] - c.z) < c.r + 0.2) {
+      let best = null, bd = -1;
+      for (let k = 0; k < 16; k++) { const a = k / 16 * Math.PI * 2, d = c.r + 1.4, x = c.x + Math.sin(a) * d, z = c.z + Math.cos(a) * d; if (!moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue; const score = -Math.hypot(x - p.x, z - p.z); if (bd < 0 || score > bd) { bd = score; best = [x, z]; } }
+      this.poolExit = best;
+    }
+    if (!this.poolExit) return false;
+    this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('left', false); this.setHeld('right', false); this.setHeld('sprint', true);
+    this.steerTo(this.poolExit[0], this.poolExit[1], 0.3); return true;
+  }
   /** standing at the lever/door of a switch or use op: a human pulls it even with something shooting at them */
   atUsePoint(op) {
     const w = this.w, p = w.player;
@@ -230,6 +246,7 @@ export class Bot {
     if (++this.opTicks > this.maxOp) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
+    if (this.escapePool()) { this.stillFor = 0; return; }
     const t = op.op === 'killboss' || this.atUsePoint(op) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.wasFighting = true; this.fight(t);

@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
+  "generatedBy": "tools/bake.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -492,6 +492,22 @@
       "transparent": false,
       "sha256": "14e2d3ba88f84cf776c71271ad1e592fc598e205d0fca808b769f5bad9d5ee92",
       "bytes": 40728
+    },
+    "choir_bulwark": {
+      "seed": 2312,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "222c8e979fcc36517babf851c2516a46b869478107a32abffb597ea8b68e7661",
+      "bytes": 37728
+    },
+    "choir_weeping": {
+      "seed": 2313,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a3f362b49a39707d37b8c60fefd27193274547e07d4c208712748225a8a50684",
+      "bytes": 40255
     }
   }
 }

@@ -63,7 +63,25 @@
   "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
   "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
   "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
-  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#####################fff######################################",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
+  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC###############",
   "##############################################################",
   "##############################################################"
  ],
@@ -110,6 +128,24 @@
   ".................................................12345666666..",
   ".................................................12345666666..",
   ".................................................12345666666..",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -176,6 +212,24 @@
   "..................................................ssssssss....",
   "..................................................ssssssss....",
   "..................................................ssssssss....",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
+  "..............................................................",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -383,6 +437,36 @@
    "type": "prop",
    "kind": "lamp",
    "at": [52, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [8, 68]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 68]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 68]
   },
   {
    "type": "enemy",
@@ -1255,6 +1339,107 @@
    "sight": 10
   },
   {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [6, 58],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [12, 58],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "weeping",
+   "at": [20, 59],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [8, 64],
+   "facing": 0,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [14, 64],
+   "facing": 1.5707963267948966,
+   "hold": "fixed",
+   "sight": 8
+  },
+  {
+   "type": "enemy",
+   "kind": "weeping",
+   "at": [24, 64],
+   "facing": 0,
+   "hold": "turn",
+   "sight": 8
+  },
+  {
+   "type": "enemy",
+   "kind": "weeping",
+   "at": [41, 63],
+   "facing": -1.5707963267948966,
+   "group": "yard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [34, 60],
+   "facing": -1.5707963267948966,
+   "group": "yard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [34, 66],
+   "facing": -1.5707963267948966,
+   "group": "yard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [43, 58],
+   "facing": -1.5707963267948966,
+   "group": "yard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [43, 69],
+   "facing": -1.5707963267948966,
+   "group": "yard"
+  },
+  {
+   "type": "switch",
+   "id": "yard",
+   "at": [2, 62],
+   "wall": "west",
+   "once": true,
+   "do": [
+    {
+     "wake": "yard"
+    },
+    {
+     "objective": "The yard is awake: a Weeping Mother, two Bulwark Shells and two singers"
+    },
+    {
+     "shake": 1.2
+    }
+   ]
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [45, 27]
@@ -1344,6 +1529,13 @@
    "radius": 6,
    "speaker": "RANGE",
    "text": "BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then."
+  },
+  {
+   "id": "eliteyard",
+   "at": [10, 61],
+   "radius": 8,
+   "speaker": "RANGE",
+   "text": "ELITE YARD: a Bulwark takes 7% from the front (blasts, bolts and the mallet go through) and opens to bash: shoot it then. A Mother weeps pools and broods. The lever wakes the east."
   },
   {
    "id": "vael",

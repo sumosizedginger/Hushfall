@@ -68,6 +68,12 @@ export function installTestHook(app) {
       return { ring: v.aimRing ? { visible: v.aimRing.visible, x: v.aimRing.position.x, y: v.aimRing.position.y, z: v.aimRing.position.z } : null, beds: (v.lvl.sporeViews ?? []).map((s) => ({ bed: s.bed.opacity, mist: s.mist.opacity, mistVisible: s.mist.visible })),
         gates: w.doors.filter((d) => d.breath).map((d) => { const m = v.lvl.doorViews.get(d.cx + ',' + d.cz); return { cx: d.cx, cz: d.cz, open: d.open, target: d.target, y: m ? m.position.y - (m.userData.base ?? 0) : null, span: m?.userData.span ?? null }; }), shells: w.projectiles.filter((q) => q.weapon === 'mortar').length };
     },
+    /** PT-028: what the view draws for the two elites: the Weeping Mother's tears in the air and the pools they leave (against the sim's), each Bulwark Shell's hinge angle (the open carapace is the tell) and each Mother's sac swell */
+    eliteProbe() {
+      if (!g.view || !g.world) return null; const v = g.view, w = g.world;
+      return { tears: v.tearViews.size, simTears: w.tears?.length ?? 0, pools: [...v.poolViews.values()].map((m) => ({ opacity: m.material.opacity, scale: m.scale.x, x: m.position.x, y: m.position.y, z: m.position.z })), simPools: (w.patches ?? []).map((q) => ({ x: q.x, z: q.z, r: q.r, life: q.life })),
+        shells: w.enemies.filter((e) => e.kind === 'bulwark').map((e) => ({ id: e.id, attackT: e.attackT, hinge: v.enemyViews.get(e.id)?.J.shell.rotation.x ?? null })), mothers: w.enemies.filter((e) => e.kind === 'weeping').map((e) => ({ id: e.id, broodT: e.broodT ?? -1, pulseT: e.pulseT ?? -1, sac: v.enemyViews.get(e.id)?.J.sac0.scale.x ?? null })) };
+    },
     /** where the Cantor's shield and the ring beams are drawn (world space) */
     encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */

@@ -1,0 +1,9 @@
+[
+  { "name": "01-arrival", "x": 4.5, "z": 14.5, "yaw": "east" },
+  { "name": "02-hall-mouth", "x": 12.5, "z": 14.5, "yaw": "east" },
+  { "name": "03-the-stalls", "x": 19.5, "z": 14.5, "yaw": "east" },
+  { "name": "04-hall-south", "x": 15.5, "z": 19.5, "yaw": "north", "pitch": 0.05 },
+  { "name": "05-alcove-mouth", "x": 29.5, "z": 14.5, "yaw": "east" },
+  { "name": "06-the-bell", "x": 33.5, "z": 14.5, "yaw": "east", "pitch": 0.05 },
+  { "name": "07-exit", "x": 39.5, "z": 14.5, "yaw": "east" }
+]

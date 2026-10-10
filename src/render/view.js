@@ -73,6 +73,7 @@ export class GameView {
     // Gate 2 effects: channel beams and node links (thin teal cylinders), the Cantor's shield, expanding tone-pulse rings
     this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); this.beamMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.55, depthWrite: false }); this.beams = new Map();
     this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
+    this.tearGeo = new THREE.IcosahedronGeometry(0.36, 1); this.tearMat = new THREE.MeshBasicMaterial({ color: 0xffd468 }); this.tearCoreGeo = new THREE.IcosahedronGeometry(0.17, 0); this.tearCoreMat = new THREE.MeshBasicMaterial({ color: 0xfffbe6 }); this.tearViews = new Map(); this.poolGeo = new THREE.CircleGeometry(1, 28); this.poolViews = new Map();       // PT-028: a Weeping Mother's tears in the air and the pools they leave
     this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
     this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
     this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.2, 0.75, 6); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
@@ -241,7 +242,8 @@ export class GameView {
       // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
       let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if (def.boss && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle' });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
+      const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
@@ -304,6 +306,20 @@ export class GameView {
       m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK); m.userData.ring.rotation.set(this.time * 5, this.time * 3, 0); m.scale.setScalar(1 + 0.15 * Math.sin(this.time * 18));
     }
     for (const [id, m] of this.shotViews) if (!seen.has(id)) { this.scene.remove(m); this.shotViews.delete(id); }
+    seen.clear();                                                                                                    // PT-028: the tears in flight (a warm bead with a trailing drop) and the pools they leave (the spore bed's own painted overlay, amber, fading as they dry)
+    for (const q of w.tears ?? []) {
+      seen.add(q.id); let m = this.tearViews.get(q.id);
+      if (!m) { m = new THREE.Mesh(this.tearGeo, this.tearMat); m.add(new THREE.Mesh(this.tearCoreGeo, this.tearCoreMat)); this.scene.add(m); this.tearViews.set(q.id, m); }
+      m.position.set(q.x + q.vx * alpha * TICK, q.y + q.vy * alpha * TICK, q.z + q.vz * alpha * TICK); const st = 1 + 0.18 * Math.sin(this.time * 14 + q.id); m.scale.set(st, 1.3 / st, st);
+    }
+    for (const [id, m] of this.tearViews) if (!seen.has(id)) { this.scene.remove(m); this.tearViews.delete(id); }
+    seen.clear();
+    for (const q of w.patches ?? []) {
+      seen.add(q.id); let m = this.poolViews.get(q.id);
+      if (!m) { m = new THREE.Mesh(this.poolGeo, new THREE.MeshBasicMaterial({ map: this.tex.floor_spore_a, color: 0xf0c060, transparent: true, opacity: 0.8, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })); m.rotation.x = -Math.PI / 2; m.renderOrder = 2; this.scene.add(m); this.poolViews.set(q.id, m); }
+      const age = (w.time - q.t0), grow = Math.min(1, age / 0.25); m.position.set(q.x, floorAt(w, q.x, q.z) + 0.06, q.z); m.scale.setScalar(Math.max(0.05, q.r * (0.4 + 0.6 * grow))); m.rotation.z = this.time * 0.2; m.material.opacity = 0.8 * Math.min(1, q.life / 1.0) * (0.85 + 0.15 * Math.sin(this.time * 4 + q.id));
+    }
+    for (const [id, m] of this.poolViews) if (!seen.has(id)) { this.scene.remove(m); m.material.dispose(); this.poolViews.delete(id); }
     this.flareLight.intensity = lead ? 40 : 0; if (lead) this.flareLight.position.copy(lead.position);
     this.updateMortarRing(w);
     this.rocketLight.intensity = rocketLead ? 50 * (0.85 + 0.15 * Math.sin(this.time * 50)) : 0; if (rocketLead) this.rocketLight.position.copy(rocketLead.position);
@@ -421,6 +437,7 @@ export class GameView {
   dispose() {
     for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
     this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();
+    this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     this.post.dispose();

@@ -73,7 +73,7 @@ test('the Tollbearer\'s EARLY graft (Episode 1) keeps the shipped hit volume: dr
 });
 
 test('draw-call and triangle budget of an AWAKE creature (a mesh is a call): static parts of a joint are merged, the cost stays near the shipped rigs', () => {
-  const CEIL = { graftmother: 56 };
+  const CEIL = { graftmother: 56, weeping: 40 };
   for (const kind of CHOIR_KINDS) {
     const { meshes, tris } = stats(FACTORIES[kind](null));
     assert.ok(meshes <= (CEIL[kind] ?? 32), `${kind}: ${meshes} meshes awake`); assert.ok(tris <= 3200, `${kind}: ${tris} triangles`);

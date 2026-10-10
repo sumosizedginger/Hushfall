@@ -1,0 +1,436 @@
+{
+ "format": 1,
+ "id": "C1E3S01",
+ "version": 1,
+ "name": "The Choirless Chamber",
+ "ceilingHeight": 3.6,
+ "atmosphere": {
+  "fog": "#c4c8c0",
+  "fogDensity": 0.01,
+  "sky": "overcast",
+  "ambient": 0.9,
+  "look": "salt",
+  "silence": true
+ },
+ "grid": [
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "###########PPPPfffPPPfffPPPPP#################",
+  "###########PffffffffffffffffP#################",
+  "###########PffffffffffffffffP#################",
+  "###########PffffffffffffffffP#################",
+  "###########PffffffffffffffffP#PPPPfffPPPPP####",
+  "##PPPPPPPP#PffffffffffffffffP#PffffffffffP####",
+  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
+  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
+  "##PnnnnnnP#PffffffffffffffffP#Pfffffffffff####",
+  "##Pnnnnnnnnnffffffffffffffffffffffffffffff####",
+  "##PnnnnnnP#PffffffffffffffffP#Pfffffffffff####",
+  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
+  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
+  "##PPPPPPPP#PffffffffffffffffP#PffffffffffP####",
+  "###########PffffffffffffffffP#PPPPfffPPPPP####",
+  "###########PffffffffffffffffP#################",
+  "###########PffffffffffffffffP#################",
+  "###########PffffffffffffffffP#################",
+  "###########PPPPfffPPPfffPPPPP#################",
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "##############################################",
+  "##############################################"
+ ],
+ "doors": [],
+ "secrets": [],
+ "triggers": [
+  {
+   "id": "hall",
+   "when": "enter",
+   "at": [14, 14],
+   "radius": 3,
+   "do": [
+    {
+     "objective": "The alcove is at the east end of the hall"
+    }
+   ]
+  },
+  {
+   "id": "alcove",
+   "when": "enter",
+   "at": [31, 14],
+   "radius": 2.5,
+   "do": [
+    {
+     "objective": "Take what was left for you. The way out is behind the bell"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [13, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [26, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [19, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [25, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [23, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [34, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [36, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [39, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [4, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [7, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [25, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [35, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 13]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [34, 13]
+  },
+  {
+   "type": "player",
+   "at": [5, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [6, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [19, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [22, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "bellnode",
+   "at": [36, 14]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [38, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [34, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [4, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [7, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [25, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 16]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [35, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [34, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "shelf",
+   "at": [36, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [39, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [16, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [23, 18]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [15, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [19, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [20, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [24, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [25, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [13, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [26, 21]
+  }
+ ],
+ "par": {
+  "time": 150
+ },
+ "intro": {
+  "title": "THE CHOIRLESS CHAMBER",
+  "lines": [
+   "The hum has stopped.",
+   "Listen to what the ship is not saying."
+  ]
+ },
+ "outro": "Back to the ship. The Resonance Loom is next.",
+ "messages": [
+  {
+   "id": "arrive",
+   "at": [5, 14],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, I have lost the hum. Not faded: gone. There is no signal where you are standing. I do not know whether to be glad."
+  },
+  {
+   "id": "hall",
+   "at": [19, 14],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "No ribs. No growth. Plaster and stone, and rows of empty stalls. Someone scrubbed the Song out of these walls and kept it out."
+  },
+  {
+   "id": "quiet",
+   "at": [36, 14],
+   "radius": 4,
+   "speaker": "THE QUIET ONE",
+   "text": "I was a voice, once. I stopped. The Song is a count of who is left to sing. Go to the Loom and cut the thread. It is how they tune you."
+  },
+  {
+   "id": "bell",
+   "at": [34, 14],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "A bell with its tongue cut out. Someone did this on purpose, and cleaned up after."
+  }
+ ],
+ "objective": "Walk the hall. It is silent",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 10,
+   "shell": 14,
+   "rivet": 60
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ]
+ },
+ "quality": {
+  "safe": true,
+  "enemies": [0, 0],
+  "botSeconds": [5, 300],
+  "mechanics": [
+   "triggers"
+  ],
+  "skins": 3,
+  "scaleClass": "COMPRESSION",
+  "introduces": "the Choirless Chamber: the first place in the ship the Song does not reach (no score, no ambience, no tolling: only your own sound), and the first word from a Vael that left the Choir"
+ }
+}

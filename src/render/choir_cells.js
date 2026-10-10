@@ -12,6 +12,8 @@ export const CHOIR_CELLS = {
   gill:        ['dome', 'domeDk', 'under', 'fringeA', 'fringeB', 'sac', 'heart', 'bone', 'tendril'],
   feeder:      ['skin', 'wrapA', 'wrapB', 'wrapDk', 'bone', 'bronze', 'bronzeDk', 'iron', 'cable', 'mouth', 'stand'],
   chorister:   ['skin', 'robe', 'robeDk', 'stole', 'chitin', 'chitinDk', 'horn', 'hornDk', 'bone', 'iron', 'mouth'],          // PT-026 (Episode 3): the eleventh creature
+  bulwark:     ['skin', 'flesh', 'shell', 'shellDk', 'shellIn', 'chitin', 'chitinDk', 'bone', 'iron', 'mouth', 'bronze'],          // PT-028 (Episode 3, Batch C): the shield-bearer
+  weeping:     ['skin', 'flesh', 'fleshDk', 'robe', 'robeDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'mouth', 'verd'],      // PT-028: the brood-mother
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);

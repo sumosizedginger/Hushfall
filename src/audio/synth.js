@@ -269,6 +269,66 @@ export const SFX = {
     thump(c, out, t + 0.55, 90, 40, 0.2, 0.45);
     return 0.95;
   },
+  // --- Episode 3, Batch C (PT-028): the Bulwark Shell and the Weeping Mother ---
+  bulwark_alert(c, out, t, o) {                                 // a shell grinding on itself: a low creak with a hard clack as the plates seat
+    tone(c, out, t, { type: 'sawtooth', f0: 96, f1: 70, a: 0.05, d: 0.7, gain: 0.2, lp: 520, vib: 4 });
+    noise(c, out, t, { dur: 0.6, a: 0.04, gain: 0.14, type: 'bandpass', f0: 380, f1: 240, q: 3, off: o.r() });
+    thump(c, out, t + 0.5, 150, 60, 0.12, 0.3);
+    return 0.9;
+  },
+  bulwark_open(c, out, t, o) {                                  // the carapace lifting to strike: a wet crack, a grinding rise, then the release
+    noise(c, out, t, { dur: 0.34, a: 0.01, gain: 0.26, type: 'bandpass', f0: 500, f1: 2200, q: 1.8, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 70, f1: 150, a: 0.12, d: 0.3, gain: 0.16, lp: 700 });
+    thump(c, out, t + 0.02, 220, 80, 0.1, 0.34);
+    return 0.5;
+  },
+  bulwark_die(c, out, t, o) {                                   // the shell lets go: plates falling on plates, then the weight
+    noise(c, out, t, { dur: 0.7, a: 0.004, gain: 0.3, type: 'highpass', f0: 1800, f1: 500, off: o.r() });
+    tone(c, out, t + 0.05, { type: 'sawtooth', f0: 120, f1: 40, a: 0.03, d: 0.8, gain: 0.2, lp: 400 });
+    thump(c, out, t + 0.3, 90, 32, 0.4, 0.5);
+    return 1.2;
+  },
+  weeping_alert(c, out, t, o) {                                 // a keening wail that never quite becomes a word
+    tone(c, out, t, { type: 'sine', f0: 300, f1: 238, a: 0.12, d: 1.0, gain: 0.2, vib: 9 });
+    tone(c, out, t, { type: 'triangle', f0: 452, f1: 360, a: 0.2, d: 0.9, gain: 0.09, vib: 7 });
+    noise(c, out, t, { dur: 1.0, a: 0.15, gain: 0.07, type: 'bandpass', f0: 1100, f1: 700, q: 2, off: o.r() });
+    return 1.3;
+  },
+  brood_swell(c, out, t, o) {                                   // a sac filling: low wet pressure rising, a creak at the top
+    noise(c, out, t, { dur: 1.7, a: 1.0, gain: 0.2, type: 'lowpass', f0: 160, f1: 700, q: 1.2, off: o.r() });
+    tone(c, out, t, { type: 'sine', f0: 55, f1: 96, a: 1.0, d: 0.7, gain: 0.22 });
+    noise(c, out, t + 1.1, { dur: 0.5, a: 0.2, gain: 0.07, type: 'bandpass', f0: 1800, f1: 3000, q: 4, off: o.r() });
+    return 1.9;
+  },
+  brood_birth(c, out, t, o) {                                   // the sac gives way: a wet burst, then two bodies hitting the floor
+    thump(c, out, t, 180, 45, 0.26, 0.42);
+    noise(c, out, t, { dur: 0.5, a: 0.004, gain: 0.3, type: 'lowpass', f0: 2400, f1: 300, q: 0.8, off: o.r() });
+    thump(c, out, t + 0.3, 80, 36, 0.18, 0.28);
+    return 0.7;
+  },
+  tear_windup(c, out, t, o) {                                   // she draws a breath through a sob: a falling note and a wet intake
+    tone(c, out, t, { type: 'sine', f0: 420, f1: 250, a: 0.06, d: 0.8, gain: 0.17, vib: 8 });
+    noise(c, out, t, { dur: 0.8, a: 0.4, gain: 0.1, type: 'bandpass', f0: 700, f1: 1500, q: 2.5, off: o.r() });
+    return 0.9;
+  },
+  tear_lob(c, out, t, o) {                                      // the throw: a soft rushing arc
+    noise(c, out, t, { dur: 0.45, a: 0.03, gain: 0.2, type: 'bandpass', f0: 500, f1: 1400, q: 1.4, off: o.r() });
+    thump(c, out, t, 110, 60, 0.12, 0.2);
+    return 0.5;
+  },
+  tear_land(c, out, t, o) {                                     // a heavy drop into something that hisses: a plop, a spatter, a sizzle
+    thump(c, out, t, 160, 50, 0.22, 0.4);
+    noise(c, out, t, { dur: 0.45, a: 0.003, gain: 0.26, type: 'lowpass', f0: 3200, f1: 500, q: 0.7, off: o.r() });
+    noise(c, out, t + 0.1, { dur: 0.8, a: 0.1, gain: 0.08, type: 'highpass', f0: 4200, off: o.r() });
+    return 0.95;
+  },
+  weeping_die(c, out, t, o) {                                   // the wail breaks upward and falls away; the sacs let go behind it
+    tone(c, out, t, { type: 'sine', f0: 280, f1: 410, a: 0.08, d: 0.35, gain: 0.2, vib: 10 });
+    tone(c, out, t + 0.4, { type: 'sine', f0: 410, f1: 60, a: 0.02, d: 1.3, gain: 0.2, vib: 6 });
+    noise(c, out, t + 0.5, { dur: 1.1, gain: 0.16, type: 'lowpass', f0: 1400, f1: 120, off: o.r() });
+    thump(c, out, t + 1.0, 80, 30, 0.5, 0.5);
+    return 1.7;
+  },
   shot_whiz(c, out, t, o) {                                     // a round going by close: a thin, fast crack of air
     noise(c, out, t, { dur: 0.16, a: 0.004, gain: 0.24, type: 'bandpass', f0: 2600, f1: 5400, q: 1.6, off: o.r() });
     tone(c, out, t, { type: 'sine', f0: 3200, f1: 1500, a: 0.002, d: 0.1, gain: 0.05 });

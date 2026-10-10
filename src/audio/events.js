@@ -15,6 +15,7 @@ export const SILENT_EVENTS = {
   trigger: 'bookkeeping: what a trigger DOES makes the sound',
   exit_lock: 'bookkeeping',
   phys_respawn: 'the dev Range only: a broken prop comes back, the view just puts it there',
+  pool_dry: 'view-only: a tear pool dries up (PT-028); the landing carries the sound',
   drop: 'a box a creature dropped appears (PT-025): the view shows it, taking it plays the ordinary pickup sound',
 };
 export const RADIO_SOUND = 'radio';
@@ -31,8 +32,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -107,14 +108,19 @@ export function soundsForEvent(e) {
     case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
     case 'wade': return e.kind === 's' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
     case 'alarm': return [{ id: 'alarm_bell' }];
-    case 'enemy_spawn': return [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
+    case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
     case 'exit_unlock': return [{ id: 'gate_unlock' }];
     case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
     case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
+    case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
+    case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];
+    case 'tear_windup': return [{ id: 'tear_windup', pos: at(e) }];
+    case 'tear_lob': return [{ id: 'tear_lob', pos: at(e) }];
+    case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
-    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

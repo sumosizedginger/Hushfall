@@ -183,6 +183,34 @@ const KINDS = {
       bone: BONE(0.1), iron: IRON(), mouth: MOUTH('#2a0c12'),
     },
   },
+  bulwark: {                         // PT-028: a pearl conch with growth rings and ochre flecks, nacre inside, bronze-bound; drowned grey skin and raw flesh where the shell opens
+    seed: 2312, cells: {
+      skin: SKIN('#a9b09a', '#6f7a64', '#5c4f78', '#3c4436'),
+      flesh: FLESH('#b85c62', '#6a2a34', '#f0c8bc'),
+      shell: cell({ grad: ['#cfc2b2', '#5c4c62'], blots: [{ cols: ['#a8703c', '#5a3c2c'], n: 8, r: [3, 7], a: 200 }],                                                                          // the outside of the conch: ivory, ochre flecks, ring on ring of growth
+        marks: [{ col: '#2c2030', wt: 2.0, n: 5, dir: 'h' }, { col: '#f0e8d8', wt: 1.2, n: 3, dir: 'v', len: [10, 24] }, { kind: 'cpencil', col: '#7a6a62', wt: 1.2, n: 5, dir: 'd', len: [8, 16] }] }),
+      shellDk: cell({ grad: ['#7c6e80', '#2a2030'], marks: [{ col: '#120c18', wt: 1.7, n: 4, dir: 'h' }, { col: '#b8a8b8', wt: 1.1, n: 3, dir: 'v', len: [8, 18] }] }),
+      shellIn: cell({ grad: ['#f2cce4', '#a47cba'], marks: [{ col: '#ffffff', wt: 1.3, n: 4, dir: 'h' }, { col: '#7a5a96', wt: 1.5, n: 4, dir: 'v', len: [14, 36] }], blots: [{ cols: ['#e8a8d0', '#c0b0e8'], n: 4, r: [8, 14], a: 160 }] }),   // the inside: nacre, pink going to lavender, bands of sheen
+      chitin: cell({ grad: ['#e4dece', '#8e8776'], marks: [{ col: '#5a5444', wt: 1.7, n: 5, dir: 'h' }, { col: '#fffaf0', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      chitinDk: cell({ grad: ['#8e8776', '#3e3a30'], marks: [{ col: '#201e18', wt: 1.6, n: 4, dir: 'h' }, { col: '#b8b09c', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      bone: BONE(0.1), iron: IRON('#52585e', '#1e2024'), mouth: MOUTH('#2a0c12'), bronze: BRONZE(),
+    },
+  },
+  weeping: {                         // PT-028: a dark mourning robe streaked pale where the tears ran, pale skin, ivory and bronze pipes, amber sacs with a person in each
+    seed: 2313, cells: {
+      skin: SKIN('#d0c8b8', '#8c8576', '#6a5e84', '#4a463e'),
+      flesh: FLESH('#b04e58', '#6a2430', '#f0c8c0'),
+      fleshDk: cell({ grad: ['#6a2430', '#2e0e16'], extra: (g, X, Y) => veins(g, X, Y, '#c0707a', 1.5, 6) }),
+      robe: cell({ grad: ['#5e5482', '#1e1a34'], marks: [{ col: '#0e0a1c', wt: 1.9, n: 7, dir: 'v', len: [20, 46] }, { col: '#c4bcdc', wt: 1.2, n: 4, dir: 'v', len: [18, 40], top: true }, { kind: 'cpencil', col: '#8a80b0', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),      // damp black-violet cloth with pale streaks running down from the top: where she has wept
+      robeDk: cell({ grad: ['#36304e', '#120e22'], marks: [{ col: '#6a5e90', wt: 1.2, n: 5, dir: 'v', len: [12, 28] }, { col: '#0a0614', wt: 1.5, n: 4, dir: 'v', len: [14, 36] }] }),
+      bone: BONE(0.05), boneDk: cell({ grad: ['#bcb08a', '#6e6448'], marks: [{ col: '#3e3626', wt: 1.5, n: 5, dir: 'v', len: [16, 38] }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON('#4a4e58', '#1a1c20'),
+      sac: cell({ grad: ['#e6b45c', '#9a6a2c'], extra: (g, X, Y) => {                                                                                                                              // a cradle sac: amber membrane, veined, a dark shape inside (a head and shoulders)
+        veins(g, X, Y, '#6a3c10', 1.5, 6); g.noStroke(); g.fill('#3a2230', 170); g.circle(X + 32, Y + 22, 15); g.blob([[X + 12, Y + 56], [X + 16, Y + 38], [X + 32, Y + 33], [X + 48, Y + 38], [X + 52, Y + 56]], '#3a2230', { a: 170, curv: 0.5, ink: false }); } }),
+      sacDk: cell({ grad: ['#7a5230', '#2e1a0c'], extra: (g, X, Y) => { veins(g, X, Y, '#b88a54', 1.5, 6); g.noStroke(); g.fill('#12080a', 150); g.circle(X + 32, Y + 22, 14); g.blob([[X + 12, Y + 56], [X + 16, Y + 38], [X + 32, Y + 33], [X + 48, Y + 38], [X + 52, Y + 56]], '#12080a', { a: 150, curv: 0.5, ink: false }); } }),
+      mouth: MOUTH('#220a10'), verd: VERD(),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

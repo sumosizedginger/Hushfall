@@ -194,7 +194,7 @@ export function noise(w, x, z, radius) {
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
 export function damageEnemy(w, e, dmg, opts = {}) {
   const def = ENEMIES[e.kind];
-  if (def.armor && !opts.splash && !opts.pierceArmor) {                             // plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore it
+  if (def.armor && !opts.splash && !opts.pierceArmor && !(def.armor.opens && e.attackT >= 0)) {                             // (a Bulwark Shell's carapace is open while it bashes, PT-028) plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore it
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
     else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
   }
@@ -683,6 +683,76 @@ function strafeStep(w, e, def, dt) {
   e.strafeDir = -e.strafeDir; return false;
 }
 
+// ---------------------------------------------------------------- the Weeping Mother (PT-028)
+/** the pool a tear left under a point, or null: the effect char 'p' (FX.p) */
+function patchAt(w, x, z) { for (const q of w.patches) if (Math.hypot(x - q.x, z - q.z) < q.r) return 'p'; return null; }
+/** a free spot on a ring round the mother for a creature of `kind` (toward the player first, then round the ring), or null */
+function broodSpot(w, e, kind, taken) {
+  const r = ENEMIES[kind].radius, toward = Math.atan2(w.player.x - e.x, w.player.z - e.z);
+  for (const off of [0.5, -0.5, 1.1, -1.1, 1.7, -1.7, 2.4, -2.4, 3.0]) for (const d of [2.3, 3.0]) {
+    const a = toward + off, x = e.x + Math.sin(a) * d, z = e.z + Math.cos(a) * d;
+    if (!blockedCircle(w, x, z, r + 0.05) && !tooHigh(w, e, x, z, r) && moveClear(w, e.x, e.z, x, z, r) && !taken.some(([tx, tz]) => Math.hypot(tx - x, tz - z) < r * 2.2)) return [x, z];
+  }
+  return null;
+}
+/**
+ * Weeping Mother: she plants herself `stand` metres from the player and works from there. BROOD: a sac swells (`brood.swell` s, announced, she stops) and `count` creatures drop beside her, at most `max` of her brood alive.
+ * TEARS: after a `windup` s tell a slow tear is lobbed to the place the player stands (an arc long enough to see: it lands a flight later) and leaves a pool (`updateTears`). Up close the ordinary swing in updateEnemy takes over.
+ * Returns true when the tick is used up.
+ */
+function motherStep(w, e, def, diff, dt, sees, dist) {
+  const B = def.brood, T = def.tears, p = w.player;
+  if (e.broodT === undefined) { e.broodT = -1; e.shotCd = T.first; e.summonCd = B.first; e.brood = []; e.home = { x: e.x, z: e.z }; }
+  e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
+  if (e.attackT >= 0) return false;                                                                          // she is in the middle of a slam: updateEnemy finishes it
+  if (e.broodT >= 0) {
+    e.broodT += dt; e.walk *= 0.85;
+    if (e.broodT >= B.swell) {
+      e.broodT = -1; e.summonCd = B.every; e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead')); const taken = [];
+      for (let i = 0; i < B.count && e.brood.length < B.max; i++) {
+        const spot = broodSpot(w, e, B.kind, taken); if (!spot) break; taken.push(spot);
+        const g = spawnEnemy(w, B.kind, spot[0], spot[1], Math.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true });
+      }
+      emit(w, 'brood_birth', { id: e.id, x: e.x, z: e.z });
+    }
+    return true;
+  }
+  if ((e.pulseT ?? -1) >= 0) {                                                                                // the tear's windup (she draws it up, then throws)
+    e.pulseT += dt; e.walk *= 0.85;
+    if (e.pulseT >= T.windup) { e.pulseT = -1; e.shotCd = T.every; lobTear(w, e, def); }
+    return true;
+  }
+  if (!sees) return false;
+  if (e.summonCd <= 0) {
+    e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead'));
+    if (e.brood.length < B.max) { e.broodT = 0; emit(w, 'brood_swell', { id: e.id, x: e.x, z: e.z }); return true; }
+    e.summonCd = 2;                                                                                           // the brood is full: look again in a moment
+  }
+  if (e.shotCd <= 0 && dist >= T.minRange && dist <= T.maxRange) { e.pulseT = 0; emit(w, 'tear_windup', { id: e.id, x: e.x, z: e.z }); return true; }
+  if (dist <= def.stand && dist > def.attack.range + 0.4) { e.walk = Math.max(0, e.walk - dt * 3); return true; }      // planted: she works from here
+  if (def.leash && dist > def.attack.range + 0.4 && Math.hypot(e.x - e.home.x, e.z - e.home.z) >= def.leash) { e.walk = Math.max(0, e.walk - dt * 3); return true; }      // and a throne is a throne: she goes no further than `leash` m from where she sits
+  return false;
+}
+/** throw a tear to where the player stands: a flight of `speedPerM` s a metre between `minFlight` and `maxFlight`, the arc exact for this integrator (vy from the gravity and the height difference) */
+function lobTear(w, e, def) {
+  const T = def.tears, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.5, oz = e.z + Math.cos(e.yaw) * 0.5, oy = e.y + def.height * 0.8, tx = p.x, tz = p.z, ty = floorAt(w, tx, tz) + 0.05;
+  const d = Math.hypot(tx - ox, tz - oz), flight = clamp(d * T.speedPerM, T.minFlight, T.maxFlight), n = Math.max(1, Math.round(flight / TICK)), g = T.gravity, tt = n * TICK;
+  const vy = (ty - oy) / tt + 0.5 * g * (tt + TICK);                                                         // the per-tick integrator (vy -= g dt; y += vy dt) lands exactly on ty after n ticks
+  (w.tears ?? (w.tears = [])).push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: (tx - ox) / tt, vy, vz: (tz - oz) / tt, g, left: n, r: T.r, life: T.life });
+  w.patches ??= []; emit(w, 'tear_lob', { id: e.id, x: ox, y: oy, z: oz });
+}
+/** the tears in flight, and the pools they leave */
+function updateTears(w, dt) {
+  for (let i = w.tears.length - 1; i >= 0; i--) {
+    const q = w.tears[i]; q.vy -= q.g * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.z += q.vz * dt; q.left--;
+    const solid = cellSolid(w, Math.floor(q.x / w.map.cell), Math.floor(q.z / w.map.cell));
+    if (q.left <= 0 || solid || q.y <= floorAt(w, q.x, q.z) + 0.02) {
+      w.tears.splice(i, 1); if (solid) continue;
+      w.patches.push({ id: w.nextId++, x: q.x, z: q.z, r: q.r, life: q.life, t0: w.time }); emit(w, 'tear_land', { x: q.x, y: floorAt(w, q.x, q.z), z: q.z, r: q.r });
+    }
+  }
+  for (let i = (w.patches?.length ?? 0) - 1; i >= 0; i--) { const q = w.patches[i]; q.life -= dt; if (q.life <= 0) { emit(w, 'pool_dry', { x: q.x, z: q.z }); w.patches.splice(i, 1); } }
+}
 function updatePulses(w, dt) {
   const p = w.player;
   for (let i = w.pulses.length - 1; i >= 0; i--) {
@@ -707,7 +777,7 @@ function updateEnemy(w, e, diff, dt) {
   if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
-  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; return; }          // staggered: it does nothing
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; return; }          // staggered: it does nothing
   if (def.node) return;
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
@@ -731,6 +801,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
   if (def.boss && !e.hold && bossStep(w, e, def, diff, dt, sees, dist)) return;
+  if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.lunge) {
     const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
     if ((e.lungeT ?? -1) >= 0) {
@@ -751,7 +822,7 @@ function updateEnemy(w, e, diff, dt) {
     if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
       e.struck = true;
       if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
-      else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+      else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, Math.sin(e.yaw) * def.attack.knock, Math.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
@@ -792,7 +863,7 @@ export function step(w, cmd) {
   p.recover = Math.max(0, p.recover - dt);
   p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
   p.sprint = clamp(p.sprint + (p.sprinting ? 1 : -1) * dt / PLAYER.sprintBlendTime, 0, 1);
-  const fxc = fxAt(w, p.x, p.z), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
+  const fxc = fxAt(w, p.x, p.z) ?? (w.patches?.length ? patchAt(w, p.x, p.z) : null), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
   p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * a; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * a;
   tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
@@ -857,7 +928,7 @@ export function step(w, cmd) {
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
-  updateEnemyShots(w, diff, dt); updatePulses(w, dt);
+  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.tears) updateTears(w, dt);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {

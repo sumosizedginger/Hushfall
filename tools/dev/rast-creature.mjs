@@ -1,7 +1,7 @@
 // A node-only software rasteriser for a CREATURE rig (no browser, no GPU, one core): the rig exactly as the game builds it (src/render/models_choir.js FACTORIES), posed with its own pose function, sampled from its own baked
 // atlas (assets/baked/choir_<kind>.png) by UV, lit by a simple hemisphere + key light. It has NO ink, NO value banding and NO paper grain (the real post pass is not here): it is for COMPOSITION (does the horn point where it
 // should, does the silhouette read, are the proportions right, what colour is each part), never for the final look. Made for PT-026 (the Chorister) when the owner's mouse rule forbids a Chrome job for every look at a rig.
-//   node tools/dev/rast-creature.mjs <out.png> <kind[,kind...]> [--views=front,three,side,sing,walk,dead] [--w=300] [--dist=5.2] [--cy=1.15]
+//   node tools/dev/rast-creature.mjs <out.png> <kind[,kind...]> [--views=front,three,side,sing,walk,dead] [--atlas=<dir>] [--w=300] [--dist=5.2] [--cy=1.15]
 // views: front (facing the camera), three (a three-quarter turn), side, back, sing (the attack pose, front: 0.6 through the arm-raise tell), walk (mid-stride, three-quarter), dead (the topple, three-quarter).
 import * as THREE from 'three';
 import fs from 'node:fs';
@@ -17,7 +17,7 @@ const POSES = {
 };
 const srgbToLin = (c) => c.map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)), linToSrgb = (x) => (x <= 0.0031308 ? x * 12.92 : 1.055 * x ** (1 / 2.4) - 0.055);
 const KEY = new THREE.Vector3(-1, 1.4, 1.2).normalize(), SKY = new THREE.Color(0x9fb8d0), GND = new THREE.Color(0x3a2a30), KEYC = new THREE.Color(0xffe0b0);
-const atlases = {}; const atlasOf = (kind) => (atlases[kind] ??= PNG.sync.read(fs.readFileSync(new URL(`../../assets/baked/choir_${kind}.png`, import.meta.url))));
+const atlases = {}; const atlasOf = (kind) => (atlases[kind] ??= PNG.sync.read(fs.readFileSync(flags.atlas ? `${flags.atlas}/choir_${kind}.png` : new URL(`../../assets/baked/choir_${kind}.png`, import.meta.url))));      // --atlas=<dir>: another folder of choir_<kind>.png (flat stand-ins before a bake, or a BAKE_PREVIEW folder)
 const sample = (png, u, v) => { const x = Math.min(png.width - 1, Math.max(0, Math.floor(u * png.width))), y = Math.min(png.height - 1, Math.max(0, Math.floor((1 - v) * png.height))), i = (y * png.width + x) * 4; return [png.data[i] / 255, png.data[i + 1] / 255, png.data[i + 2] / 255]; };
 
 function render(kind, view) {

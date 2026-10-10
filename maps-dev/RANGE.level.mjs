@@ -5,7 +5,7 @@
 // Cells are 2 m. x = column, z = row (south is +z). An enemy's `facing` is the direction it looks as (sin, cos): 0 = south (+z), PI = north, PI/2 = east, -PI/2 = west.
 import { Level } from '../tools/mapkit/builder.mjs';
 
-const L = new Level(62, 56);
+const L = new Level(62, 74);
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
 
 // ---- rooms ---------------------------------------------------------------------------------------------------------------
@@ -22,9 +22,13 @@ L.rect([48, 44, 59, 44], 'C'); L.door(53, 44, { breath: { period: 8, open: 0.5, 
 L.rect([54, 30, 59, 41], 'f'); L.height([54, 30, 59, 41], 6); L.stairs([48, 38, 53, 41], 'x', 0, 6);                    // the ledge, 3 m up, and the stair to it (a way back down: there is no trap)
 L.fx([50, 47, 57, 49], 's');                                                                                          // the spore bed: blooms 3 s of every 8, glows for 1.2 s before
 
+// PT-028: the fourth range, south of the second (an opening in its south wall): the ELITE yard, sponges and swingers of the Bulwark Shell and the Weeping Mother in the north half of it, a lever and a live brood fight in the east half
+L.room([2, 56, 45, 70], { floor: 'f', wall: 'C' }); L.rect([21, 53, 23, 55], 'f');
+
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
 L.putAll('P', [[28, 11], [28, 16], [28, 21]]);
+L.putAll('m', [[8, 60], [22, 60], [36, 60], [8, 68], [22, 68], [36, 68]]);                                                  // the elite yard's lamps
 L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50], [30, 50]]);                           // the second range's lamps
 L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
 L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
@@ -77,6 +81,16 @@ t('tollbearer', 45, 36, WEST, 'inert', SPONGE); t('tollbearer', 45, 40, WEST, 'i
 t('tollbearer', 36, 47, N, 'inert', SPONGE); t('tollbearer', 39, 47, N, 'inert', SPONGE); t('tollbearer', 42, 47, N, 'inert', SPONGE);
 t('gaunt', 41, 42, WEST, 'turn', { sight: 12 }); t('tollbearer', 41, 38, WEST, 'turn', { sight: 12 }); t('bellhand', 31, 46, EAST, 'turn', { sight: 16 }); t('wardengraft', 43, 49, N, 'turn', { sight: 10 });
 
+// ---- PT-028: the elite yard ----
+// north row, sponges: a Bulwark Shell shows its plate (a direct hit does 7%: use a blast, the harpoon or the mallet), one shows its back (everything lands), a Weeping Mother (the sponge does not weep: she stands for the hit volume and the rig)
+t('bulwark', 6, 58, S, 'inert', SPONGE); t('bulwark', 12, 58, N, 'inert', SPONGE); t('weeping', 20, 59, S, 'inert', SPONGE);
+// the middle row: a Bulwark that bashes when you come close (it OPENS to strike: shoot it then), one that never turns (circle it), a Mother that slams
+t('bulwark', 8, 64, S, 'turn', { sight: 12 }); t('bulwark', 14, 64, EAST, 'fixed', { sight: 8 }); t('weeping', 24, 64, S, 'turn', { sight: 8 });
+// the live yard (east): a Mother with two Bulwarks and two singers, asleep until the lever (they fight as in the game: tears, brood, plate, bursts)
+const yard = (kind, x, z) => E.push({ type: 'enemy', kind, at: [x, z], facing: WEST, group: 'yard' });
+for (const [kind, x, z] of [['weeping', 41, 63], ['bulwark', 34, 60], ['bulwark', 34, 66], ['chorister', 43, 58], ['chorister', 43, 69]]) yard(kind, x, z);
+E.push({ type: 'switch', id: 'yard', at: [2, 62], wall: 'west', once: true, do: [{ wake: 'yard' }, { objective: 'The yard is awake: a Weeping Mother, two Bulwark Shells and two singers' }, { shake: 1.2 }] });
+
 const layers = L.layers();
 
 export default {
@@ -101,6 +115,7 @@ export default {
     { id: 'carbinelane', at: [12, 49], radius: 5, speaker: 'RANGE', text: 'CARBINE LANE: sponges at 20, 40, 60, 80 m along the south wall. No bloom. A round in the top of the body is a HEAD shot (x2.4, staggers); the readout shows the last hit.' },
     { id: 'mortaryard', at: [49, 37], radius: 5, speaker: 'RANGE', text: 'MORTAR (key 0): the shell flies TO the ring, high, over the crates and up onto the ledge. Two rockets a shell, nothing inside 9 m, and the blast hurts YOU too.' },
     { id: 'breathyard', at: [53, 48], radius: 6, speaker: 'RANGE', text: 'BREATH: the gate opens 4 s of every 8 and never shuts on you; the spore bed blooms 3 s of every 8 (it glows first) and burns and slows only then.' },
+    { id: 'eliteyard', at: [10, 61], radius: 8, speaker: 'RANGE', text: 'ELITE YARD: a Bulwark takes 7% from the front (blasts, bolts and the mallet go through) and opens to bash: shoot it then. A Mother weeps pools and broods. The lever wakes the east.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

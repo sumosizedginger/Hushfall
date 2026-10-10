@@ -50,8 +50,9 @@ export class AudioEngine {
     const t = this.ctx.currentTime, v = clamp(s.masterVolume, 0, 1);
     this.master.gain.setTargetAtTime(v * v * 1.1, t, 0.05);                     // squared: perceptually even slider
     this.sfxBus.gain.setTargetAtTime(clamp(s.sfxVolume, 0, 1), t, 0.05);
-    this.ambBus.gain.setTargetAtTime(clamp(s.sfxVolume, 0, 1), t, 0.05);
-    this.musicBus.gain.setTargetAtTime(clamp(s.musicVolume, 0, 1) * 0.55, t, 0.05);
+    const q = this.silent ? 0 : 1;                                              // PT-028: a map with atmosphere.silence (the Choirless Chamber) has no score and no ambience
+    this.ambBus.gain.setTargetAtTime(clamp(s.sfxVolume, 0, 1) * q, t, this.silent ? 0.6 : 0.05);
+    this.musicBus.gain.setTargetAtTime(clamp(s.musicVolume, 0, 1) * 0.55 * q, t, this.silent ? 0.6 : 0.05);
   }
 
   /** play a recipe; pos = [x, z] world metres for positional playback */
@@ -76,9 +77,9 @@ export class AudioEngine {
     }
   }
 
-  _applyMuffle() { if (!this.ctx) return; const t = this.ctx.currentTime, m = this.muffled || this.dead; this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25); this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (m ? 0.35 : 1), t, 0.25); }
+  _applyMuffle() { if (!this.ctx) return; const t = this.ctx.currentTime, m = this.muffled || this.dead; this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25); this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (this.silent ? 0 : m ? 0.35 : 1), t, 0.25); }
   setMuffled(b) { this.muffled = b; this._applyMuffle(); }
-  newLevel() { this.dead = false; this.tension = 0; this.bellTimers.clear(); this._applyMuffle(); }
+  newLevel() { this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
 
   /** per-frame: listener, footsteps, ambience mix, tension-driven music, enemy bells, low-health heartbeat */
   update(world, dt, map) {
@@ -89,6 +90,8 @@ export class AudioEngine {
     const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
     if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
     else { L.setPosition(p.x, PLAYER.eye, p.z); L.setOrientation(fx, 0, fz, 0, 1, 0); }
+    const silent = !!map.atmosphere?.silence;
+    if (silent !== !!this.silent) { this.silent = silent; this.applySettings(this.settings); this._applyMuffle(); }
     const interior = map.isInterior(p.x, p.z);
     this.reverbSend.gain.setTargetAtTime(interior ? 0.28 : 0.1, c.currentTime, 0.4);
     // footsteps: one per head-bob cycle, when actually moving
@@ -108,7 +111,7 @@ export class AudioEngine {
     this.tension += (target - this.tension) * clamp(dt * (target > this.tension ? 1.2 : 0.35), 0, 1);      // rises fast, falls slowly
     this.music.setIntensity(world.status === 'playing' ? this.tension : 0);
     this.ambience.update({ interior: interior ? 1 : 0, hush, level: 1 });
-    if (interior && this.clock > this.nextCreak) { this.play('creak', { pos: [p.x + (this.rand() - 0.5) * 20, p.z + (this.rand() - 0.5) * 20], gain: 0.8 }); this.nextCreak = this.clock + 9 + this.rand() * 14; }
+    if (interior && !silent && this.clock > this.nextCreak) { this.play('creak', { pos: [p.x + (this.rand() - 0.5) * 20, p.z + (this.rand() - 0.5) * 20], gain: 0.8 }); this.nextCreak = this.clock + 9 + this.rand() * 14; }
     if (p.hp > 0 && p.hp < 30 && world.status === 'playing' && this.clock > this.nextBeat) { this.play('heartbeat', { gain: 0.9 * (1 - p.hp / 30) + 0.2 }); this.nextBeat = this.clock + 0.55 + p.hp / 60; }
   }
 

@@ -291,6 +291,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   }
   if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
+  if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
   if (src.atmosphere?.look != null && !LOOKS[src.atmosphere.look]) err(`atmosphere.look must be one of ${Object.keys(LOOKS).join(', ')}`);
   const trIds = new Set();
   for (const t of src.triggers || []) {

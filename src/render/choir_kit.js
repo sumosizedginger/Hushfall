@@ -121,7 +121,7 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
     /** a lathe; a profile written crown-first (top to bottom) gets its v flipped so the TOP of the atlas cell is the top of the part (paint dirt at the bottom of a cell) */
     lathe(parent, profile, seg, cell, o) { const g = new THREE.LatheGeometry(ascending(profile), seg); if (o?.inside) insideOut(g); const m = R.prim(parent, g, cell, o); m.userData.profile = profile; return m; },
     /** a pleated lathe: coats, robes (pleatGeom) */
-    pleat(parent, profile, seg, k, amp, cell, o = {}) { const g = pleatGeom(profile, seg, k, amp, o.hem ?? 0.7, o.phi); const m = R.prim(parent, g, cell, o); m.userData.profile = profile; return m; },
+    pleat(parent, profile, seg, k, amp, cell, o = {}) { const g = pleatGeom(profile, seg, k, amp, o.hem ?? 0.7, o.phi); if (o.inside) insideOut(g); const m = R.prim(parent, g, cell, o); m.userData.profile = profile; return m; },
     /** a church bell (churchBell profile) with its dark inside disc and lip ring; returns the bell mesh (echo-able) */
     bell(parent, h, rLip, cell, cellDk, o = {}) {
       const b = R.lathe(parent, churchBell(h, rLip, o.shape), o.seg ?? 10, cell, { pos: o.pos, rot: o.rot, scale: o.scale, name: o.name });
