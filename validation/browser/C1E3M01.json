@@ -1,7 +1,7 @@
 {
   "mapId": "C1E3M01",
-  "when": "2026-10-10T00:27:52.293Z",
-  "commit": "51510f2",
+  "when": "2026-10-10T03:01:12.539Z",
+  "commit": "50511c9",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,11 +11,11 @@
   "mapSha": "ce38b9c3e8d169b1",
   "routesSha": "eeada3ab9e6767f5",
   "sources": {
-    "engine": "fc1606991854db2b",
-    "render": "6f22835626329b24",
-    "game": "6a4cfbd1802034c1",
-    "audio": "711965f435282a23",
-    "assets": "53c2963b5d4c422b"
+    "engine": "4a86ea760827aa57",
+    "render": "f00a3182efc97278",
+    "game": "cf38ea60b841f17f",
+    "audio": "29b1dab47c66d87f",
+    "assets": "c5a7fd41e920c2a6"
   },
   "routes": {
     "main": {
