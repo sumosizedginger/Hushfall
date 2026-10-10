@@ -20,6 +20,13 @@ export class Level {
     if (height != null) this.height(r, height); return this;
   }
   #floorLike(c) { return FLOOR_CHARS.includes(c); }
+  /** an ELLIPSE of floor (centre cx, cz in cells, radii rx, rz) with a wall drawn round it: a round room (PT-028; the rooms of the Choirless Chamber and the Resonance Loom); returns the Set of 'x,z' cells */
+  disc(cx, cz, rx, rz, floor = '.', wall = '#') {
+    const cells = new Set();
+    for (let z = Math.floor(cz - rz) - 1; z <= Math.ceil(cz + rz) + 1; z++) for (let x = Math.floor(cx - rx) - 1; x <= Math.ceil(cx + rx) + 1; x++) if (this.#in(x, z) && ((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2 <= 1) { this.g[z][x] = floor; cells.add(x + ',' + z); }
+    for (const k of cells) { const [x, z] = k.split(',').map(Number); for (let dx = -1; dx <= 1; dx++) for (let dz = -1; dz <= 1; dz++) { const nx = x + dx, nz = z + dz; if (this.#in(nx, nz) && !cells.has(nx + ',' + nz) && this.g[nz][nx] === '#') this.g[nz][nx] = wall; } }
+    return cells;
+  }
   /** put a wall skin on a rectangle (solid blocks: pillars, counters, partitions) */
   wall(r, c = '#') { return this.rect(r, c); }
   /** floor height (0.5 m units) over a rectangle */
