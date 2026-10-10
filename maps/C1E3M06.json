@@ -27,7 +27,7 @@
   "##################EiiiiiiiE########EEEEzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "##################EiiiiiiiE####EEEEEiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "##################EiiiiiiiEEEEEEiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "##################EEiiiiiEEEiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
+  "##################EEiiiiEEEEiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "###################EEESEiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "###############EEEEEiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "######EEE####EEEiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
@@ -235,6 +235,16 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [22, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [20, 12]
+  },
+  {
+   "type": "pickup",
    "kind": "health_large",
    "at": [21, 12]
   },
@@ -242,6 +252,11 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [23, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [24, 12]
   },
   {
    "type": "prop",
@@ -277,6 +292,16 @@
    "kind": "pew",
    "yaw": 1.5707963267948966,
    "at": [58, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [21, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [23, 15]
   },
   {
    "type": "prop",

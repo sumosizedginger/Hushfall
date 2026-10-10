@@ -26,6 +26,7 @@ L.height([62, CZ - 1, 70, CZ + 1], 7);
 L.room([63, CZ, 64, CZ], { floor: 'i', wall: WALL }); L.door(62, CZ, { remote: true });             // the conductor's door at the top of the aisle
 L.disc(69, CZ + 0.5, 4.5, 4, 'i', WALL); L.height([60, 10, 75, 38], 7);                             // the exit room
 L.disc(22, 13.5, 3.5, 3.5, 'i', WALL); L.secretPanel(22, 17); L.height([18, 9, 26, 17], 2);         // the niche behind the pew-back (the second tier's north wall)
+L.rect([24, 16, 24, 16], WALL);                                                                   // the wedge widens by a cell at x 24 and its floor met the niche's edge there: an open way into the secret (found by the owner, 2026-10-10); the panel is the only way in
 
 // ---- objects --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 L.put(4, CZ, '@'); L.put(70, CZ, '>');
