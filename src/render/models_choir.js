@@ -361,14 +361,14 @@ export function chorister(tex) {
     legs(R, 'hips', 0.1, { a: 0.46, b: 0.44, r0: 0.085, r1: 0.066, r2: 0.05, cellA: C.robeDk, cellB: C.chitinDk }, C.chitinDk);
     R.joint('spine', 'hips', [0, 0.05, 0]);
     R.cyl('spine', 0.13, 0.16, 0.72, 8, C.skin, { pos: [0, 0.36, 0], scale: [1, 1, 0.75] });
-    R.pleat('spine', V2([[0.13, 0.84], [0.19, 0.78], [0.235, 0.62], [0.25, 0.42], [0.275, 0.2], [0.32, -0.02], [0.36, -0.22]]), 12, 6, 0.06, C.robe, { scale: [1, 1, 0.75] });             // the surplice
+    R.pleat('spine', V2([[0.13, 0.84], [0.19, 0.78], [0.235, 0.62], [0.27, 0.42], [0.34, 0.2], [0.46, -0.02], [0.6, -0.22]]), 14, 6, 0.06, C.robe, { scale: [1, 1, 0.78] });             // the surplice
     R.lump('spine', 0.14, 1, 0.14, 4, C.chitin, { pos: [0.27, 0.8, 0], scale: [1.35, 0.7, 1.1] });                                                                                          // a chitin pauldron on the screen-right shoulder
     R.lump('spine', 0.11, 0, 0.14, 2, C.robe, { pos: [-0.25, 0.77, 0], scale: [1.2, 0.8, 1] });
     for (let i = 0; i < 3; i++) R.lump('spine', 0.085, 0, 0.1, 5 + i, C.chitin, { pos: [0.02 * i, 0.5 + i * 0.12, 0.15], scale: [1.5 - i * 0.2, 0.55, 0.5] });                           // ribs of chitin through the linen
     R.cyl('spine', 0.06, 0.07, 0.86, 6, C.stole, { pos: [0, 0.3, 0.2], scale: [1, 1, 0.22] });                                                                                              // the stole, hanging down the front: a long round strip, not a card
     // organ pipes grown up the spine
-    [[-0.12, 0.34, -0.1], [-0.04, 0.5, 0.06], [0.05, 0.42, -0.06], [0.13, 0.28, 0.1]].forEach(([x, h, lean], i) => {
-      R.joint('pipe' + i, 'spine', [x, 0.78, -0.2], [-0.12 + lean * 0.5, 0, x * 1.4]); R.cyl('pipe' + i, 0.028, 0.04, h, 6, C.horn, { pos: [0, h / 2, 0] }); R.tor('pipe' + i, 0.034, 0.012, 3, 8, C.chitinDk, { pos: [0, h * 0.45, 0], rot: [PI / 2, 0, 0] });
+    [[-0.3, 0.3, -0.1], [-0.2, 0.38, 0.06], [-0.1, 0.44, -0.06], [0, 0.46, 0.1], [0.1, 0.44, -0.06], [0.2, 0.38, 0.06], [0.3, 0.3, -0.1]].forEach(([x, h, lean], i) => {          // a fan of seven (a halo of pipes behind the head and shoulders: the Chorister's outline from the front, PT-028)
+      R.joint('pipe' + i, 'spine', [x * 0.9, 0.78, -0.2], [-0.12 + lean * 0.5, 0, -x * 2.6]); R.cyl('pipe' + i, 0.028, 0.04, h, 6, C.horn, { pos: [0, h / 2, 0] }); R.tor('pipe' + i, 0.034, 0.012, 3, 8, C.chitinDk, { pos: [0, h * 0.45, 0], rot: [PI / 2, 0, 0] });
       R.cone('pipe' + i, 0.04, 0.06, 6, C.hornDk, { pos: [0, h + 0.02, 0] });
     });
     // arms: A (screen-left) raised and bent, the conductor's hand; B hangs forward at the hip
@@ -405,38 +405,42 @@ export function bulwark(tex) {
   const AX = -0.62;                                                                                                            // the lathe's axis lies this far behind the hinge, so the plate bulges ahead of the body
   const onPlate = (y, a, lift = 0.02) => { const r = radiusAt(y) + lift; return [S(a) * r, y, AX + K(a) * r]; };
   return makeCreature(tex, (R) => {
-    R.joint('hips', null, [0, 0.52, 0]);
-    legs(R, 'hips', 0.32, { a: 0.24, b: 0.26, r0: 0.2, r1: 0.17, r2: 0.14, cellA: C.chitin, cellB: C.chitinDk, seg: 7, fw: 0.38, fh: 0.14, fl: 0.5 }, C.iron);
+    // PT-028 repair: the first Bulwark was a tall dome like a Feeder or a Warden's chest (silhouette overlap 0.66 / 0.58). It is now LOW and WIDE: a crab-like carapace 2.4 m across and 1.8 m high on four stubs of legs, edged with a row of spikes.
+    R.joint('hips', null, [0, 0.36, 0]);
+    legs(R, 'hips', 0.55, { a: 0.18, b: 0.2, r0: 0.2, r1: 0.17, r2: 0.14, cellA: C.chitin, cellB: C.chitinDk, seg: 7, fw: 0.42, fh: 0.13, fl: 0.55 }, C.iron);
     R.joint('spine', 'hips', [0, 0.06, 0]);
-    R.lump('spine', 0.5, 1, 0.1, 4, C.flesh, { pos: [0, 0.55, 0.0], scale: [1.05, 0.95, 0.85] });                                  // the soft body, that the shell covers
-    R.cyl('spine', 0.4, 0.5, 0.2, 9, C.chitinDk, { pos: [0, 0.1, 0], scale: [1, 1, 0.85] });                                       // a belt of plate at the hips
-    R.lump('spine', 0.46, 1, 0.1, 7, C.chitin, { pos: [0, 0.85, -0.32], scale: [1.05, 1.0, 0.45] });                              // the mantle on its back
-    R.box('spine', 0.44, 0.17, 0.03, C.mouth, { pos: [0, 0.5, 0.405] }); for (const s of [-1, 1]) R.box('spine', 0.14, 0.035, 0.03, 'glow', { pos: [s * 0.15, 0.72, 0.385], rot: [0, 0, -s * 0.25] });     // a mouth and two slits of light in the belly
+    R.lump('spine', 0.5, 1, 0.1, 4, C.flesh, { pos: [0, 0.42, 0.0], scale: [1.55, 0.8, 0.9] });                                    // the soft body, that the shell covers
+    R.cyl('spine', 0.5, 0.58, 0.2, 10, C.chitinDk, { pos: [0, 0.08, 0], scale: [1.5, 1, 0.8] });                                   // a belt of plate at the hips
+    R.lump('spine', 0.46, 1, 0.1, 7, C.chitin, { pos: [0, 0.68, -0.32], scale: [1.7, 0.9, 0.45] });                                // the mantle on its back
+    R.box('spine', 0.5, 0.17, 0.03, C.mouth, { pos: [0, 0.38, 0.4] }); for (const s of [-1, 1]) R.box('spine', 0.16, 0.035, 0.03, 'glow', { pos: [s * 0.24, 0.58, 0.38], rot: [0, 0, -s * 0.25] });     // a mouth and two slits of light in the belly
     for (const [n, s] of [['armA', -1], ['armB', 1]]) {                                                                              // thick arms that hold the grips behind the shell
-      R.limb('spine', n, [s * 0.52, 0.98, 0.02], { a: 0.4, b: 0.42, r0: 0.15, r1: 0.12, r2: 0.1, cellA: C.chitin, cellB: C.skin, seg: 7 });
-      R.lump(n + 'M', 0.13, 1, 0.14, s + 7, C.skin, { pos: [0, -0.5, 0], scale: [1, 1.2, 1] });
-      for (const d of [-1, 0, 1]) R.cone(n + 'M', 0.026, 0.22, 4, C.bone, { pos: [d * 0.065, -0.7, 0.03], rot: [PI, 0, 0] });
+      R.limb('spine', n, [s * 0.74, 0.8, 0.02], { a: 0.34, b: 0.36, r0: 0.15, r1: 0.12, r2: 0.1, cellA: C.chitin, cellB: C.skin, seg: 7 });
+      R.lump(n + 'M', 0.13, 1, 0.14, s + 7, C.skin, { pos: [0, -0.42, 0], scale: [1, 1.2, 1] });
+      for (const d of [-1, 0, 1]) R.cone(n + 'M', 0.026, 0.22, 4, C.bone, { pos: [d * 0.065, -0.62, 0.03], rot: [PI, 0, 0] });
     }
-    head(R, C, { neckAt: [0, 1.0, 0.08], r: 0.17, tall: 1.25, neck: 0.3, cell: C.skin, eyes: 'one', eyeX: 0.065, seed: 9 });
-    // THE SHELL, hinged at its crown just in front of the neck
-    R.joint('shell', 'spine', [0, 1.14, 0.64]);
-    R.pleat('shell', V2(PROFILE), 18, 7, 0.05, C.shell, { pos: [0, 0, AX], phi: [-1.05, 2.1], hem: 0.5 });                         // the outside: a whorl, ridged
-    R.pleat('shell', V2(PROFILE.map(([r, y]) => [r - 0.05, y])), 18, 7, 0.02, C.shellIn, { pos: [0, 0, AX], phi: [-1.05, 2.1], hem: 0.3, inside: true });         // the nacre lining, seen when it opens
-    for (const [y, c] of [[-0.62, C.shellDk], [-1.02, C.shellDk]]) { const pts = Array.from({ length: 9 }, (_, i) => { const a = -1.0 + i * 0.25; return onPlate(y, a, 0.03); }); R.tube('shell', pts, [0.035, 0.05, 0.055, 0.058, 0.06, 0.058, 0.055, 0.05, 0.035], 5, c); }      // two growth ridges across the face
-    { const pts = Array.from({ length: 10 }, (_, i) => { const a = -0.95 + i * 0.2; return onPlate(-1.5 + (i / 9) * 1.35, a, 0.04); }); R.tube('shell', pts, [0.03, 0.045, 0.055, 0.06, 0.065, 0.065, 0.06, 0.055, 0.045, 0.03], 5, C.bronze); }       // the spiral
-    { const pts = Array.from({ length: 9 }, (_, i) => { const a = -1.0 + i * 0.25; return [S(a) * 1.0, -1.54, AX + K(a) * 1.0]; }); R.tube('shell', pts, 0.07, 6, C.bronze, { name: 'lip' }); }                              // the bound lip
+    head(R, C, { neckAt: [0, 0.78, 0.12], r: 0.17, tall: 1.25, neck: 0.22, cell: C.skin, eyes: 'one', eyeX: 0.065, seed: 9 });
+    // THE SHELL, hinged at its crown just in front of the neck, widened and shortened (the joint's scale: a pose never writes it)
+    R.joint('shell', 'spine', [0, 0.98, 0.64]); R.J.shell.scale.set(1.38, 0.84, 1);
+    R.pleat('shell', V2(PROFILE), 18, 7, 0.05, C.shell, { pos: [0, 0, AX], phi: [-1.1, 2.2], hem: 0.5 });                          // the outside: a whorl, ridged
+    R.pleat('shell', V2(PROFILE.map(([r, y]) => [r - 0.05, y])), 18, 7, 0.02, C.shellIn, { pos: [0, 0, AX], phi: [-1.1, 2.2], hem: 0.3, inside: true });         // the nacre lining, seen when it opens
+    for (const [y, c] of [[-0.62, C.shellDk], [-1.02, C.shellDk]]) { const pts = Array.from({ length: 9 }, (_, i) => { const a = -1.05 + i * 0.26; return onPlate(y, a, 0.03); }); R.tube('shell', pts, [0.035, 0.05, 0.055, 0.058, 0.06, 0.058, 0.055, 0.05, 0.035], 5, c); }      // two growth ridges across the face
+    { const pts = Array.from({ length: 10 }, (_, i) => { const a = -1.0 + i * 0.22; return onPlate(-1.5 + (i / 9) * 1.35, a, 0.04); }); R.tube('shell', pts, [0.03, 0.045, 0.055, 0.06, 0.065, 0.065, 0.06, 0.055, 0.045, 0.03], 5, C.bronze); }       // the spiral
+    { const pts = Array.from({ length: 9 }, (_, i) => { const a = -1.05 + i * 0.26; return [S(a) * 1.0, -1.54, AX + K(a) * 1.0]; }); R.tube('shell', pts, 0.07, 6, C.bronze, { name: 'lip' }); }                              // the bound lip
+    // the spikes: a jagged edge along the carapace's shoulders (a smooth dome was what a Feeder and a bell node are)
+    for (let i = 0; i < 9; i++) { const a = -1.0 + i * 0.25, y = -0.9 - 0.05 * Math.abs(i - 4), p = onPlate(y, a, 0.0); R.joint('sp' + i, 'shell', p, [0, a, 0]); R.cone('sp' + i, 0.09, 0.42 - 0.03 * Math.abs(i - 4), 5, C.shellDk, { pos: [0, 0, 0.05], rot: [1.0, 0, 0] }); }
     R.cone('shell', 0.2, 0.7, 8, C.shell, { pos: [-0.32, 0.12, AX + 0.34], rot: [0.12, 0, 0.55] }); R.tor('shell', 0.17, 0.035, 4, 10, C.bronze, { pos: [-0.28, -0.02, AX + 0.34], rot: [PI / 2 + 0.12, 0.55, 0] });   // the spire, leaning off the crown (clear of the head)
     R.J.lipEchoes = R.echo(R.J.lip, 1, 0.5);
   }, (p, J, R) => {
     const t = p.t, w = p.walk, ph = p.phase, a = p.attack, d = ease(clamp01(p.dead));
     const sw = S(ph) * 0.5 * w; J.legA.rotation.x = sw; J.legB.rotation.x = -sw; J.legAM.rotation.x = 0.1 + Math.max(0, K(ph)) * 0.5 * w; J.legBM.rotation.x = 0.1 + Math.max(0, -K(ph)) * 0.5 * w;
-    J.hips.position.y = 0.5 + Math.abs(S(ph)) * 0.04 * w; J.spine.rotation.z = S(ph) * 0.05 * w; J.spine.rotation.x = 0.04 + 0.03 * S(t * 1.2);
+    J.hips.position.y = 0.34 + Math.abs(S(ph)) * 0.04 * w; J.spine.rotation.z = S(ph) * 0.05 * w; J.spine.rotation.x = 0.04 + 0.03 * S(t * 1.2);
     const open = a > 0 ? ease(clamp01(a / 0.2)) * (1 - ease(clamp01((a - 0.86) / 0.14))) : 0, lurch = a > 0 ? ease(clamp01((a - 0.42) / 0.12)) * (1 - ease(clamp01((a - 0.62) / 0.2))) : 0;
-    J.shell.rotation.x = -1.05 * open + 0.03 * S(t * 1.5) * (1 - d); J.shell.position.y = 1.14 + 0.1 * open;
+    J.shell.rotation.x = -1.05 * open + 0.03 * S(t * 1.5) * (1 - d); J.shell.position.y = 0.98 + 0.1 * open;
     J.rig.position.z = 0.55 * lurch;                                                                                                // the bash: the whole creature lurches at you
     J.armA.rotation.x = -0.75 - 0.5 * open + 0.1 * S(ph) * w; J.armB.rotation.x = -0.75 - 0.5 * open - 0.1 * S(ph) * w; J.armA.rotation.z = -0.1 - 0.15 * open; J.armB.rotation.z = 0.1 + 0.15 * open; J.armAM.rotation.x = J.armBM.rotation.x = -0.55 - 0.3 * open;
     J.head.rotation.x = 0.1 + 0.05 * S(t * 0.9) - 0.4 * open; J.head.rotation.z = S(t * 0.6) * 0.06; J.jaw.rotation.x = 0.1 + 0.5 * open;
     R.ring(J.lipEchoes, open * (1 - lurch));
+    J.shell.scale.z = 1 - 0.45 * d;                                                                                                     // the shell sags as it dies
     J.rig.rotation.x = -1.5 * d;                                                                                                       // dead: it topples backwards and lies on its back, shell up, like a turtle
   });
 }
@@ -448,24 +452,26 @@ export function weeping(tex) {
   const C = cellsOf('weeping');
   return makeCreature(tex, (R) => {
     R.joint('body', null, [0, 0, 0]);
-    R.pleat('body', V2([[0.3, 2.05], [0.46, 1.85], [0.68, 1.35], [0.84, 0.75], [0.89, 0.2], [0.9, 0.0]]), 20, 9, 0.07, C.robe, { scale: [1, 1, 0.92] });                       // the skirt: she is seated in it, a bell of dark pleats
-    R.pleat('body', V2([[0.5, 1.2], [0.68, 0.95], [0.84, 0.45], [0.86, 0.1]]), 18, 6, 0.05, C.robeDk, { scale: [1.0, 1, 0.92], phi: [0.4, 2.4] });                                  // a darker panel down the front
-    R.tor('body', 0.91, 0.07, 5, 24, C.bronzeDk, { pos: [0, 0.07, 0], rot: [PI / 2, 0, 0] });                                                                                  // the plinth ring
-    for (const [y, r] of [[0.72, 0.85], [1.32, 0.7]]) R.tor('body', r, 0.04, 4, 20, C.bronze, { pos: [0, y, 0], rot: [PI / 2, 0, 0] });                                         // bands round the skirt
-    // THE PIPES: a fan of organ pipes grown up the back of the throne, mouths lit
-    for (let i = 0; i < 7; i++) {
-      const k = i - 3, x = k * 0.27, lean = k * 0.1, h = 1.58 - Math.abs(k) * 0.16 + (i % 2) * 0.08;
-      R.joint('pipe' + i, 'body', [x, 1.55, -0.55 - Math.abs(k) * 0.03], [-0.1, 0, -lean]);
-      R.cyl('pipe' + i, 0.07, 0.1, h, 7, i % 2 ? C.bone : C.bronze, { pos: [0, h / 2, 0] }); R.cone('pipe' + i, 0.12, 0.1, 7, C.bronzeDk, { pos: [0, h + 0.03, 0], rot: [PI, 0, 0] });
-      R.sph('pipe' + i, 0.065, 5, 4, 'glow', { pos: [0, h + 0.07, 0], name: 'pm' + i });
+    // PT-028 repair: the first Mother was a smooth bell like the Cantor's robe (silhouette overlap 0.50). She is now THREE STEPPED DRUMS (a tiered throne) with sacs hung on arms that stand out from the middle tier, and a wide fan of pipes behind.
+    R.pleat('body', V2([[0.98, 0.0], [1.0, 0.1], [0.96, 0.62], [0.9, 0.7]]), 16, 8, 0.06, C.robe, { scale: [1, 1, 0.92] });
+    R.pleat('body', V2([[0.7, 0.62], [0.72, 0.7], [0.68, 1.3], [0.6, 1.38]]), 14, 7, 0.06, C.robeDk, { scale: [1, 1, 0.92] });
+    R.pleat('body', V2([[0.5, 1.3], [0.5, 1.4], [0.46, 2.0], [0.36, 2.08]]), 12, 6, 0.05, C.robe, { scale: [1, 1, 0.92] });
+    R.tor('body', 1.0, 0.07, 5, 26, C.bronzeDk, { pos: [0, 0.07, 0], rot: [PI / 2, 0, 0] });                                                                                    // the plinth ring
+    for (const [y, r] of [[0.66, 0.94], [1.34, 0.66], [2.02, 0.44]]) R.tor('body', r, 0.05, 4, 22, C.bronze, { pos: [0, y, 0], rot: [PI / 2, 0, 0] });                       // a bronze band between the drums
+    // THE PIPES: a wide fan of nine organ pipes grown up the back of the throne, mouths lit
+    for (let i = 0; i < 9; i++) {
+      const k = i - 4, x = k * 0.3, lean = k * 0.14, h = 1.5 - Math.abs(k) * 0.1 + (i % 2) * 0.08;
+      R.joint('pipe' + i, 'body', [x * 0.8, 1.7, -0.42 - Math.abs(k) * 0.02], [-0.1, 0, -lean]);
+      R.cyl('pipe' + i, 0.07, 0.1, h, 5, i % 2 ? C.bone : C.bronze, { pos: [0, h / 2, 0] }); R.cone('pipe' + i, 0.12, 0.1, 5, C.bronzeDk, { pos: [0, h + 0.03, 0], rot: [PI, 0, 0] });
+      R.sph('pipe' + i, 0.065, 4, 3, 'glow', { pos: [0, h + 0.07, 0], name: 'pm' + i });
     }
-    R.J.npipes = 7;
+    R.J.npipes = 9;
     // THE MOTHER: a pale figure in the throne, bowed
     R.joint('torso', 'body', [0, 1.95, 0.05]);
     R.lump('torso', 0.5, 1, 0.1, 3, C.skin, { pos: [0, 0.32, 0], scale: [1.05, 1.1, 0.8] });
     R.pleat('torso', V2([[0.34, 0.95], [0.48, 0.82], [0.6, 0.52], [0.6, 0.12]]), 12, 5, 0.04, C.robe, { scale: [1, 1, 0.8], phi: [-0.9, PI * 2 - 1.8] });                                  // a shawl over the shoulders
     for (const [n, s] of [['armA', -1], ['armB', 1]]) {                                                                                                                      // long arms that cradle the sac in her lap
-      R.limb('torso', n, [s * 0.54, 0.76, 0.05], { a: 0.6, b: 0.6, r0: 0.15, r1: 0.12, r2: 0.09, cellA: C.skin, cellB: C.skin, seg: 7 });
+      R.limb('torso', n, [s * 0.54, 0.76, 0.05], { a: 0.6, b: 0.6, r0: 0.15, r1: 0.12, r2: 0.09, cellA: C.skin, cellB: C.skin, seg: 5 });
       R.lump(n + 'M', 0.1, 1, 0.14, s + 5, C.skin, { pos: [0, -0.7, 0], scale: [0.9, 1.4, 0.8] }); for (const d of [-1, 0, 1]) R.cone(n + 'M', 0.02, 0.24, 4, C.bone, { pos: [d * 0.05, -0.92, 0.01], rot: [PI, 0, 0] });
     }
     R.lump('torso', 0.2, 1, 0.1, 71, C.sac, { pos: [0, -0.05, 0.62], scale: [0.9, 1.1, 0.9], name: 'babe' }); R.lump('torso', 0.09, 0, 0.1, 72, C.fleshDk, { pos: [0, -0.04, 0.7], scale: [0.8, 1, 0.8] });       // the one she holds in her lap
@@ -474,11 +480,12 @@ export function weeping(tex) {
     R.cone('head', 0.3, 0.62, 8, C.robeDk, { pos: [0, 0.2, -0.05], rot: [0.2, 0, 0] });                                                                                       // the cowl
     R.box('head', 0.15, 0.1, 0.03, C.mouth, { pos: [0, -0.04, 0.17] });
     for (const s of [-1, 1]) { R.sph('head', 0.03, 4, 3, 'glow', { pos: [s * 0.065, 0.15, 0.18] }); R.cyl('head', 0.012, 0.016, 0.34, 4, 'glow', { pos: [s * 0.075, -0.02, 0.19], name: s < 0 ? 'tearL' : 'tearR' }); }   // two lines of light down the face: the tears
-    // THE SACS: six cradle sacs on rods round the skirt, a captive in each
+    // THE SACS: six cradle sacs hung on bronze arms that stand out from the middle drum, a captive in each
     for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * PI * 2 + 0.3, r = 0.9, big = 0.24 + (i % 2) * 0.04;
-      R.joint('sc' + i, 'body', [S(a) * r, 1.28, K(a) * r * 0.95], [0, a, 0]); R.cyl('sc' + i, 0.025, 0.025, 0.45, 5, C.bronze, { pos: [0, 0.05, 0.1], rot: [0.3, 0, 0] });
-      R.lump('sc' + i, big, 1, 0.1, i + 50, i % 2 ? C.sac : C.sacDk, { pos: [0, -0.28, 0.22], scale: [0.85, 1.55, 0.85], name: 'sac' + i }); R.lump('sc' + i, big * 0.55, 0, 0.1, i + 60, C.fleshDk, { pos: [0, -0.28, 0.22], scale: [0.7, 1.4, 0.7] });
+      const a = (i / 6) * PI * 2 + 0.3, big = 0.26 + (i % 2) * 0.04, tx = S(a) * 1.4, tz = K(a) * 1.4;
+      R.tube('body', [[S(a) * 0.62, 1.15, K(a) * 0.62], [S(a) * 1.0, 1.4, K(a) * 1.0], [tx, 1.32, tz]], [0.07, 0.055, 0.045], 5, C.bronze);
+      R.joint('sc' + i, 'body', [tx, 1.32, tz], [0, a, 0]); R.cyl('sc' + i, 0.02, 0.02, 0.3, 5, C.iron, { pos: [0, -0.14, 0] });
+      R.lump('sc' + i, big, 1, 0.1, i + 50, i % 2 ? C.sac : C.sacDk, { pos: [0, -0.52, 0], scale: [0.85, 1.55, 0.85], name: 'sac' + i }); R.lump('sc' + i, big * 0.55, 0, 0.1, i + 60, C.fleshDk, { pos: [0, -0.52, 0], scale: [0.7, 1.4, 0.7] });
     }
     R.J.nsacs = 6;
     R.J.echoSkirt = R.echo(R.J.sac0, 1, 0.3);

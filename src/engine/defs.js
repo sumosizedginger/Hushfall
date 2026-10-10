@@ -305,13 +305,13 @@ export const SUPPRESS = { time: 0.9, cone: 0.9 };
 // Bulwark Shell: the shield-bearer, a conch carapace on short legs. Its carapace is CLOSED while it walks: a direct hit from the front half-plane does `armor.front` (7%) of its damage (splash, a harpoon bolt, the mallet's head
 // and the tuning-fork's throws ignore it, and so does anything from behind or the side). It turns slowly (`turnRate`), so a player who circles it is behind it in a second. It OPENS to strike (`armor.opens`: for as long as its
 // bash lasts, shots land in full) and the bash is heavy (breaks a guard) and shoves the player back (`attack.knock`). A stagger (a parry, a stun) leaves it open for `stunMult` x damage. Escort of the singers: the wall they stand behind.
-ENEMIES.bulwark = { name: 'Bulwark Shell', poise: 3, hp: 240, speed: 1.4, gait: 4.5, radius: 0.7, height: 2.2, hitRadius: 0.95, sight: 26, turnRate: 1.5,
+ENEMIES.bulwark = { name: 'Bulwark Shell', poise: 3, hp: 240, speed: 1.4, gait: 4.5, radius: 0.75, height: 1.85, hitRadius: 1.12, sight: 26, turnRate: 1.5,
   attack: { range: 2.5, reach: 3.1, windup: 0.5, duration: 1.7, cooldown: 1.1, damage: 24, heavy: true, knock: 1.6 },
   armor: { front: 0.07, cos: 0.05, stunMult: 1.8, opens: true } };
 // Weeping Mother: the elite brood-mother, an organ throne hung with cradle sacs. She barely walks (`stand`: she plants herself that many metres from you and works from there), WEEPS (`tears`: every `every` s, after a
 // `windup` s tell, a slow tear is lobbed to where you stand (she goes no further than `leash` m from her throne); it lands in a pool that slows (`FX.p`) and burns for `life` s, the arc is long enough to see and to leave), and BROODS (`brood`: a sac swells for `swell` s, then
 // `count` creatures of `kind` drop beside her, `max` alive at most). Up close she slams. Kill the brood or kill the mother; keep moving either way.
-ENEMIES.weeping = { name: 'Weeping Mother', poise: 3, hp: 380, speed: 1.0, gait: 3.5, radius: 0.9, height: 3.3, hitRadius: 1.15, sight: 40, turnRate: 1.6, stand: 11, leash: 5,
+ENEMIES.weeping = { name: 'Weeping Mother', poise: 3, hp: 380, speed: 1.0, gait: 3.5, radius: 0.9, height: 3.3, hitRadius: 1.45, sight: 40, turnRate: 1.6, stand: 11, leash: 5,
   attack: { range: 3.0, reach: 3.7, windup: 0.5, duration: 1.8, cooldown: 1.3, damage: 32, heavy: true, knock: 1.2 },
   brood: { kind: 'gaunt', count: 2, every: 16, max: 4, swell: 1.8, first: 6 },
   tears: { every: 5.5, first: 3, windup: 0.9, minRange: 4, maxRange: 30, gravity: 9, minFlight: 0.9, maxFlight: 2.2, speedPerM: 0.1, r: 1.8, life: 6 } };
