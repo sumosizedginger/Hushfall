@@ -280,6 +280,7 @@ function padPress(a) {
 }
 function padRelease(a) { if (a === 'weaponLast') return lastWeaponUp(); if (a === 'sprint' && !settings.sprintToggle) return; g.input.release(a); }
 function pollPad(dt) {
+  if (import.meta.env.DEV && g.manual) { g.input.setAnalog(0, 0); return; }                      // the dev test hook owns the clock: a controller that happens to be plugged into the machine (a stick at rest is never exactly zero) must not steer a bot or a still (found 2026-10-10: every real-game route stalled, the same commits that had passed)
   const list = navigator.getGamepads ? Array.from(navigator.getGamepads()) : [], gp = list.find((x) => x && x.connected && x.mapping === 'standard') ?? list.find((x) => x && x.connected) ?? null; g.gp = gp;
   const playing = g.mode === 'playing', scale = playing ? adsSensScale() * settings.sensitivity * (g.world && !g.wheel.open ? assistScale(g.world, settings.gamepad.assist) : 1) : 1;
   const out = g.pad.poll(snapshotOf(gp), dt, scale);
