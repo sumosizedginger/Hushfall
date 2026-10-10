@@ -477,6 +477,16 @@
   },
   {
    "type": "prop",
+   "kind": "lamp",
+   "at": [22, 20]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [35, 20]
+  },
+  {
+   "type": "prop",
    "kind": "loomstring",
    "at": [38, 21]
   },
@@ -494,11 +504,21 @@
    "group": "east"
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [28, 23]
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [51, 23],
    "facing": -1.465,
    "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [31, 24]
   },
   {
    "type": "enemy",
@@ -535,6 +555,16 @@
    "kind": "tollbearer",
    "at": [9, 26],
    "facing": -1.19
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [21, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [37, 26]
   },
   {
    "type": "prop",
@@ -673,6 +703,11 @@
    "at": [9, 32]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [31, 33]
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [38, 33],
@@ -685,6 +720,11 @@
    "at": [54, 33],
    "facing": -1.67,
    "group": "heart"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [28, 34]
   },
   {
    "type": "enemy",
@@ -715,6 +755,16 @@
    "type": "prop",
    "kind": "loomstring",
    "at": [21, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [22, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [35, 37]
   },
   {
    "type": "enemy",

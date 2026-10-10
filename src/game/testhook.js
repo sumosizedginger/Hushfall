@@ -4,7 +4,7 @@
 import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
-import { PLAYER, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
 import { sanitizeProgress } from '../engine/progress.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
@@ -74,6 +74,17 @@ export function installTestHook(app) {
       return { wards: v.wardViews.size, tears: v.tearViews.size, simTears: w.tears?.length ?? 0, pools: [...v.poolViews.values()].map((m) => ({ opacity: m.material.opacity, scale: m.scale.x, x: m.position.x, y: m.position.y, z: m.position.z })), simPools: (w.patches ?? []).map((q) => ({ x: q.x, z: q.z, r: q.r, life: q.life })),
         shells: w.enemies.filter((e) => e.kind === 'bulwark' && e.state !== 'dead').map((e) => ({ id: e.id, attackT: e.attackT, hinge: v.enemyViews.get(e.id)?.J.shell.rotation.x ?? null })), mothers: w.enemies.filter((e) => e.kind === 'weeping' && e.state !== 'dead').map((e) => ({ id: e.id, broodT: e.broodT ?? -1, pulseT: e.pulseT ?? -1, sac: v.enemyViews.get(e.id)?.J.sac0.scale.x ?? null })) };
     },
+    /** PT-030: the Brood Vats' and the Grand Cantor's state (sim) and how they are drawn (the dome's height scale, the horn's tilt), for the stills and the browser check */
+    foundryProbe() {
+      if (!g.view || !g.world) return null; const v = g.view, w = g.world;
+      return { vats: w.enemies.filter((e) => e.kind === 'vat').map((e) => ({ id: e.id, state: e.state, vatT: e.vatT ?? -1, brood: (e.brood ?? []).length, dome: v.enemyViews.get(e.id)?.J.dome.scale.y ?? null })),
+        grand: w.enemies.filter((e) => e.kind === 'grandcantor').map((e) => ({ id: e.id, state: e.state, hp: e.hp, stunT: e.stunT ?? 0, pulseT: e.pulseT ?? -1, echoT: e.echoT ?? 0, horn: v.enemyViews.get(e.id)?.J.horn.rotation.x ?? null })),
+        reeds: w.enemies.filter((e) => e.kind === 'reed' && e.state !== 'dead').length, pulses: w.pulses.length, pulseViews: v.pulseViews.size, born: w.enemies.filter((e) => e.summoned).length };
+    },
+    /** PT-029: every moving floor: the sim's height, the height the view draws it at, and the clock (a timing platform follows `platformState`) */
+    sectorProbe() { if (!g.view || !g.world) return null; return { time: g.world.time, sectors: g.world.sectors.map((s, i) => ({ id: s.id, h: s.h, y: g.view.lvl.sectorViews[i]?.position.y ?? null, ph: s.ph ?? null })) }; },
+    /** PT-030: every node (bell nodes, feeders, reeds, vats) dead at once: a boss with none left has no shield (the Range's stills) */
+    setup_killNodes() { for (const e of g.world.enemies) if (ENEMIES[e.kind].node) { e.state = 'dead'; e.hp = 0; e.dead = 1; } },
     /** where the Cantor's shield and the ring beams are drawn (world space) */
     encounterProbe() { return g.view ? encounterProbe(g.view) : null; },
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */

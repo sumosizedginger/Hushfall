@@ -36,6 +36,7 @@ L.put(27, 41, '1');                                                      // the 
 L.putAll('t', [[24, 18], [34, 40], [21, 38], [36, 18]]);                                            // sleepers on the walkways
 L.put(40, 24, '6'); L.put(40, 31, 'b'); L.put(39, 34, 't'); L.putAll('g', [[38, 22], [38, 33]]);    // the east ledge: an Acolyte (symbol 6) warding a Bulwark Shell (3), a Bellhand, runners
 L.putAll('t', [[51, 23], [51, 34], [54, 24], [54, 33]]); L.put(54, 28, '6'); L.put(52, 28, 'x');       // the Heart: the tuned in rows, an Acolyte, a Sexton
+L.putAll('m', [[22, 20], [35, 20], [22, 37], [35, 37], [28, 23], [28, 34], [31, 24], [31, 33], [21, 26], [37, 26]]);          // gold lamps hung from the vault over the pit, the ledges and the platforms: the hall was black without them (the first real-game stills)
 L.putAll('5', [[21, 20], [21, 37], [26, 18], [32, 18], [26, 39], [32, 39], [38, 21], [38, 36]]);    // the Loom's string frames (symbol 5: loomstring), standing on the ledges
 // the cellar (the secret): a cache
 L.putAll('H', [[28, 45], [30, 45]]); L.putAll('v', [[28, 47], [30, 47]]); L.putAll('e', [[27, 46], [31, 46]]); L.putAll('r', [[28, 44], [30, 44]]); L.put(29, 47, 'a');

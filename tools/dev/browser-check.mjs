@@ -6,6 +6,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
+import { platformState } from '../../src/engine/platforms.js';
 import crypto from 'node:crypto';
 import { PNG } from 'pngjs';
 import { textSha, sourceShas } from '../textsha.mjs';
@@ -305,6 +306,37 @@ try {
   { await T("t.newGame('normal', 3, { mapId: 'C1E3M04' })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); await T('t.setup_teleport(88, 58, -Math.PI / 2); t.setup_player({ pitch: 0, hp: 100000 })'); const id = await T("t.setup_spawnEnemy('bulwark', 96, 58, Math.PI / 2, 'idle')");
     await T('t.render(0.02)'); const shut = (await T('t.eliteProbe()')).shells[0]; await T(`t.setup_enemy(${id}, { state: 'chase', attackT: 0.5 })`); await T('t.render(0.5)'); await T('t.render(0.5)'); const open = (await T('t.eliteProbe()')).shells[0];
     check('the Bulwark Shell\'s carapace is drawn shut while it walks and open while the sim has it bashing (hinge angle follows attackT)', Math.abs(shut.hinge) < 0.15 && open.hinge < -0.6, `shut hinge ${shut.hinge}, open hinge ${open.hinge}`); }
+  // ---- Episode 3, Batch D (PT-029): timing platforms, the listening lock, the Acolyte's ward ---------------------------------------------------------------------------------------------------------------
+  // the platforms of the Resonance Loom: the slab the view draws is where the sim's floor is, and the sim's floor is where the clock (platforms.js) puts it, at five moments; and they do move
+  await T("t.newGame('normal', 3, { mapId: 'C1E3M05' })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
+  { const defs = loadMapFile('maps/C1E3M05.json').sectors.filter((s) => s.cycle), rows = []; let worst = 0, last = 0; const hs = new Set();
+    for (const secs of [2, 6, 10, 14, 21]) { await T(`t.tick(${60 * (secs - last)})`); last = secs; await T('t.render(0.02)'); const p = await T('t.sectorProbe()'); for (const s of p.sectors) { const d = defs.find((q) => q.id === s.id), want = platformState(d, p.time).h; worst = Math.max(worst, Math.abs(s.y - s.h), Math.abs(s.h - want)); hs.add(s.id + ':' + s.h.toFixed(2)); } rows.push({ t: +p.time.toFixed(2), h: p.sectors.map((s) => +s.h.toFixed(2)) }); }
+    check('timing platforms in the live game: the drawn slab = the sim floor = the clock at five moments (within 1 cm), and the platforms rise and fall', defs.length === 4 && worst < 0.01 && hs.size >= 8, `worst ${worst.toFixed(4)} m; ${JSON.stringify(rows)}`); }
+  // the sound-lock: after a shot beside it the first door of the Loom says it is listening; after five quiet seconds it does not
+  await T("t.newGame('normal', 3, { mapId: 'C1E3M05', realtime: true })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
+  { await T('t.setup_teleport(22.4, 57, -Math.PI / 2); t.setup_player({ pitch: 0 })'); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.tick(10)'); await sleep(900); const loud = await text('use-hint');
+    await T('t.tick(60 * 6)'); await sleep(900); const quiet = await text('use-hint');
+    check('the sound-lock says it is listening after a shot beside it, and not after six quiet seconds', /listening/.test(loud) && !/listening/.test(quiet), `loud "${loud}", quiet "${quiet}"`); }
+  // the Acolyte's ward ring: drawn while it is awake and unstaggered, gone when it sleeps or is staggered
+  await T("t.newGame('normal', 3, { mapId: 'C1E3M04' })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
+  { await T('t.setup_teleport(88, 58, -Math.PI / 2); t.setup_player({ pitch: 0, hp: 100000 })'); const id = await T("t.setup_spawnEnemy('acolyte', 104, 58, Math.PI / 2, 'idle')"); await T('t.tick(1)'); await T('t.render(0.02)'); const asleep = (await T('t.eliteProbe()')).wards;
+    await T(`t.setup_enemy(${id}, { state: 'chase', hp: 100000, pulseCd: 99 })`); await T('t.render(0.02)'); const awake = (await T('t.eliteProbe()')).wards;
+    await T(`t.setup_enemy(${id}, { stunT: 3 })`); await T('t.render(0.02)'); const stunned = (await T('t.eliteProbe()')).wards;
+    check('the Acolyte\'s ward ring is drawn while it is awake and not staggered (0 asleep, 1 awake, 0 staggered)', asleep === 0 && awake === 1 && stunned === 0, `asleep ${asleep}, awake ${awake}, staggered ${stunned}`); }
+  // ---- Episode 3, Batch E (PT-030): the Brood Vat and the Grand Cantor -----------------------------------------------------------------------------------------------------------------------------------------
+  // a vat swells (the dome the view draws grows with the sim's swell), then is back to rest after its birth, and a creature stands beside it
+  await T("t.newGame('normal', 3, { mapId: 'C1E3M07' })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
+  { await T('t.setup_teleport(48, 57, -Math.PI / 2); t.setup_player({ pitch: 0, hp: 100000 })'); const id = await T("t.setup_spawnEnemy('vat', 64, 57, Math.PI, 'chase')"); await T(`t.setup_enemy(${id}, { summonCd: 99 })`); await T('t.tick(1)'); await T('t.render(0.02)'); const rest = (await T('t.foundryProbe()')).vats[0].dome;
+    await T(`t.setup_enemy(${id}, { vatT: 1.0 })`); await T('t.render(0.02)'); const swollen = (await T('t.foundryProbe()')).vats[0].dome;
+    await T(`t.setup_enemy(${id}, { vatT: 1.15, summonCd: 99 })`); await T('t.tick(12)'); await T('t.render(0.02)'); const after = await T('t.foundryProbe()'), born = after.born;
+    check('a Brood Vat swells in the live game (the dome the view draws grows with the sim\'s swell), then rests and has birthed a creature', swollen > rest * 1.5 && after.vats[0].dome < rest * 1.2 && born === 1 && after.vats[0].brood === 1, `dome rest ${rest.toFixed(2)}, swollen ${swollen.toFixed(2)}, after ${after.vats[0].dome.toFixed(2)}, born ${born}`); }
+  // the Grand Cantor: the horn rears for its pulse, the view draws a ring for each of the sim's two, and the shield stands round it while a reed lives and is gone when none does
+  await T("t.newGame('normal', 3, { mapId: 'C1E3M08' })"); await T('t.clearOverlays(); t.setup_openDoors()');
+  { await T('t.setup_teleport(104, 56, -Math.PI / 2); t.setup_player({ pitch: 0.1, hp: 100000 })'); await T('t.setup_wakeAll()'); await T('t.tick(2)'); await T('t.render(0.02)'); const rest = (await T('t.foundryProbe()')).grand[0], id = rest.id, sh1 = (await T('t.encounterProbe()')).shield, bpos = (await T('t.state()')).enemies.find((e) => e.id === id);
+    await T(`t.setup_enemy(${id}, { pulseT: 1.15 })`); await T('t.render(0.02)'); const rear = (await T('t.foundryProbe()')).grand[0];
+    await T(`t.setup_enemy(${id}, { pulseT: -1, pulseCd: 0, shotCd: 99, summonCd: 99 })`); await T('for (let i = 0; i < 600; i++) { t.tick(1); if (t.foundryProbe().pulses > 0) break; }'); await T('for (let i = 0; i < 90; i++) { t.tick(1); if (t.foundryProbe().pulses > 1) break; }'); await T('t.render(0.02)'); const two = await T('t.foundryProbe()');
+    await T('t.setup_killNodes()'); await T('t.render(0.02)'); const sh0 = (await T('t.encounterProbe()')).shield;
+    check('the Grand Cantor in the live game: the horn rears for its pulse, the view draws a ring for each of the sim\'s two, and its shield is drawn at 3 m while a reed stands and gone when none does', rear.horn < rest.horn - 0.25 && two.pulses === 2 && two.pulseViews === 2 && !!sh1 && Math.abs(sh1.y - ((bpos.y ?? 0) + 3.0)) < 0.5 && sh0 === null, `horn ${rest.horn?.toFixed(2)} -> ${rear.horn?.toFixed(2)}, sim rings ${two.pulses}, drawn ${two.pulseViews}, shield ${JSON.stringify(sh1)}, then ${JSON.stringify(sh0)}`); }
   // debris lands on the terrain under it: an explosion over the M02 gallery (floor 3 m) must not let a chip fall more than a frame's travel below that floor
   await T("t.newGame('normal', 3, { mapId: 'C1E1M02' })"); await T("t.emitView([{ type: 'explode', x: 52.4, y: 3.9, z: 13.6 }, { type: 'impact', x: 52.4, y: 3.6, z: 13.6 }])");
   { let minRel = Infinity, seen = 0; for (let i = 0; i < 40; i++) { await T('t.render(0.016)'); for (const p of await T('t.debrisProbe()')) if (p.floor != null) { seen++; minRel = Math.min(minRel, p.y - p.floor); } }

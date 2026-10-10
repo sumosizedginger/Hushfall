@@ -26,7 +26,7 @@ L.fx([50, 47, 57, 49], 's');                                                    
 L.room([2, 56, 45, 70], { floor: 'f', wall: 'C' }); L.rect([21, 53, 23, 55], 'f');
 
 // PT-030: the fifth range, south of the elite yard (an opening in its south wall): the FOUNDRY yard (sponge vats, a live pair behind a lever) and the Choir's reeds and its Grand Cantor (a sponge for the outline and the hit volume)
-L.room([2, 74, 45, 88], { floor: 'f', wall: 'C' }); L.rect([21, 71, 23, 73], 'f');
+L.room([2, 74, 45, 88], { floor: 'f', wall: 'C' }); L.rect([21, 71, 23, 73], 'f'); L.ceiling([2, 74, 45, 88], 9);          // 9 m: the Grand Cantor stands 6.2 m
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
