@@ -72,5 +72,5 @@ test('a reed is a node: it shields the Grand Cantor (5% while one stands), its f
 test('the Grand Cantor calls Choristers from the alcoves it was given (at most `max` alive), and fans toll-shots from the start (always), more once the reeds are gone', () => {
   const { w } = field(); const b = at(w, 'grandcantor', 24, 0); b.summons = [[0, -6], [0, 6], [8, -6], [8, 6]].map(([dx, dz]) => [w.player.x + 12 + dx, w.player.z + dz]); at(w, 'reed', 12, 8);
   let shots = 0; const kinds = new Set(); for (let i = 0; i < 60 * 60; i++) { step(w, idle()); for (const e of drainEvents(w)) { if (e.type === 'enemy_shot' && e.kind === 'grandcantor') shots++; if (e.type === 'enemy_spawn' && !e.brood) kinds.add(e.kind); } for (const e of w.enemies) if (e.kind === 'chorister') e.hp = 1e9; }
-  assert.ok(shots >= 3, shots + ' fans of toll-shots with a reed standing'); assert.deepEqual([...kinds], ['chorister']); const n = alive(w, 'chorister'); assert.ok(n >= 2 && n <= G.summon.max, n + ' singers called');
+  assert.ok(shots >= 3, shots + ' fans of toll-shots with a reed standing'); assert.deepEqual([...kinds], ['chorister']); const n = alive(w, 'chorister'); assert.ok(n >= 2 && n <= G.summon.max + G.summon.count - 1, n + ' singers called (a call may overshoot max by count - 1, as the Cantor does)');
 });

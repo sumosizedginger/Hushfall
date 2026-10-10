@@ -108,7 +108,7 @@ test('every map that says drops has no ammunition box in its PUBLIC part except 
     withDrops++; const pub = findTraps(parseMap(src), { secrets: false }), keep = src.drops.keep ?? [], kept = (e) => keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3]));
     for (const e of src.entities.filter((x) => x.type === 'pickup' && /^ammo_/.test(x.kind))) if (pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1])))) assert.ok(kept(e), `${f}: a ground ammunition box at ${e.at} in the public part`);
   }
-  assert.equal(withDrops, 22, 'all twenty-two maps with enemies are fed by drops (the sixteen of Episodes 1 and 2, the Landing Scar, the two of Batch B, Marrow Nave and the two of Batch D)');
+  assert.equal(withDrops, 24, 'all twenty-four maps with enemies are fed by drops (the sixteen of Episodes 1 and 2, the Landing Scar, the two of Batch B, Marrow Nave and the two of each of Batches D and E)');
 });
 
 test('a drop-fed map plays: drops happen, they are taken, the run is the same twice, and the route still completes on every difficulty (Lamplighter Hill)', () => {

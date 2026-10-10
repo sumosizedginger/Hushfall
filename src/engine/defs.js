@@ -343,5 +343,5 @@ ENEMIES.reed = { name: 'Reed', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 
 // one step behind stone is not enough: hold the cover until both have gone by), it calls Choristers from the alcoves of its chamber (`summon`), fans toll-shots from the start (`shots.always`, wider and faster once the reeds are gone) and slams what reaches it.
 ENEMIES.grandcantor = { name: 'Grand Cantor', poise: 8, hp: 900, speed: 1.1, gait: 3.5, radius: 0.9, height: 6.2, hitRadius: 1.95, hitForward: 0.6, sight: 70, turnRate: 1.7, keepAway: 7,
   attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 2.4, damage: 36 }, boss: true,
-  shield: { reduce: 0.05, y: 3.0, r: 3.8, note: ['REED', 'REEDS', 'STILL SING'] }, pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 16, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } }, enragedPulseCooldown: 4.6,
-  shots: { count: 5, spread: 0.2, speed: 8.5, damage: 10, cooldown: 4.2, aimHeight: 1.2, muzzleY: 4.2, always: true }, summon: { kind: 'chorister', count: 2, every: 26, max: 4 }, stagger: 3.0 };
+  shield: { reduce: 0.05, y: 3.0, r: 3.8, note: ['REED', 'REEDS', 'STILL SING'] }, pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 13, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } }, enragedPulseCooldown: 4.6,
+  shots: { count: 3, spread: 0.24, speed: 8.5, damage: 8, cooldown: 5, aimHeight: 1.2, muzzleY: 4.2, always: true }, summon: { kind: 'chorister', count: 2, every: 30, max: 3 }, stagger: 3.0 };

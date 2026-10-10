@@ -1,0 +1,17 @@
+[
+  {"name":"01-arrival","x":5.5,"z":28.5,"yaw":"east"},
+  {"name":"02-the-door","x":11.5,"z":28.5,"yaw":"east"},
+  {"name":"03-the-gullet","x":17.5,"z":28.5,"yaw":"east","open":true},
+  {"name":"04-first-rib","x":27.5,"z":29.5,"yaw":"east","pitch":0.04,"open":true,"wake":true,"ticks":20},
+  {"name":"05-second-segment","x":33.5,"z":30.5,"yaw":"north","pitch":0.04,"open":true},
+  {"name":"06-third-segment","x":37.5,"z":25.5,"yaw":"south","pitch":0.05,"open":true,"wake":true,"ticks":30},
+  {"name":"07-the-last-rib","x":42.5,"z":31.5,"yaw":"north","pitch":0.05,"open":true,"wake":true,"ticks":30},
+  {"name":"08-the-bells-mouth","x":46.5,"z":23.5,"yaw":"east","pitch":0.08,"open":true},
+  {"name":"09-the-bell","x":51.5,"z":28.5,"yaw":"east","pitch":0.12,"open":true,"wake":true,"ticks":40},
+  {"name":"10-the-grand-cantor","x":58.5,"z":28.5,"yaw":"east","pitch":0.35,"open":true,"wake":true,"ticks":30},
+  {"name":"11-the-reeds","x":55.5,"z":24.5,"yaw":-1.9,"pitch":0.2,"open":true},
+  {"name":"12-the-ring-of-pillars","x":53.5,"z":35.5,"yaw":"north","pitch":0.05,"open":true},
+  {"name":"13-north-passage","x":57.5,"z":12.5,"yaw":"north","open":true},
+  {"name":"14-exit","x":57.5,"z":6.5,"yaw":"north","open":true},
+  {"name":"15-cellar","x":17.5,"z":33.5,"yaw":"south","open":true}
+]
