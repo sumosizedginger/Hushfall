@@ -580,6 +580,30 @@
       "transparent": false,
       "sha256": "a56daf74ab3be456c2c6fe0620813bdac60432fa1425e706bafd10882d81e6ce",
       "bytes": 35799
+    },
+    "choir_vat": {
+      "seed": 2315,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4675c615aed436434f84ada873025646cae9df72518a67eb82a99ff6e8ee28e8",
+      "bytes": 29631
+    },
+    "choir_reed": {
+      "seed": 2316,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1eeed848c51c46127009ecf254c84db39565b91d655bbdcc8c1a25cae2950f4d",
+      "bytes": 24536
+    },
+    "choir_grandcantor": {
+      "seed": 2317,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f28ca634642d4aacd29fe1a9d9af9a2d04275b0cc27f3df129f1a8f8864f5373",
+      "bytes": 45127
     }
   }
 }
