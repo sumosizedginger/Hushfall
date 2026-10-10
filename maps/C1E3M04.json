@@ -14,59 +14,59 @@
   "####################################################################################################",
   "####################################################################################################",
   "#########################VVVVVVVVVVV################################################################",
-  "#########################VnnnnnnnnnV################################################################",
-  "#########################VnnnnnnnnnV################################################################",
-  "#########################VnnnnnnnnnV################################################################",
-  "#########################VnnnnnnnnnV################################################################",
-  "#########################VnnnnnnnnnV################################################################",
-  "##############VVVVVVVVVVVVVVVVSVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV#######################",
-  "##############VVooooooooooooooooooooooooooooooooooooooooooooooooooooooooVVVVV#######################",
-  "##############VooooooooooooooooooooooooooooooooooooooooooooooooooooooooooVVVV#######################",
-  "##############VoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooVVV#######################",
-  "##############VooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooVV#######################",
-  "##############VoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmV#######################",
-  "#######n######VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmV#######################",
-  "######nnn#####VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##VVVVnnnVVVVVVmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmsssssssssssssmV#######################",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmsssssssssssssmV#######################",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmRRmmmmmmmmmmmmsssssssssssssmVVVVnnnVVVV#############",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmsssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnnnssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnnnssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnnnssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssmDnnnnnnnnnV#############",
-  "##VnnnnnnnnnnnnssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnnnssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmsssssssssssssmVnnnnnnnnnV#############",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmRRmmmmmmmmmmmmsssssssssssssmVVVVnnnVVVV#############",
-  "##VnnnnnnnnnnVVmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmsssssssssssssmV#######################",
-  "##VVVVnnnVVVVVVmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmsssssssssssssmV#######################",
-  "######nnn#####VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "#######n######VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmRRmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmRRmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmV#######################",
-  "##############VoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VVooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VVVoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VVVVooooooooooooooooooooooooooooooooooooooooooooooooooooooooooV#######################",
-  "##############VVVVVooooooooooooooooooooooooooooooooooooooooooooooooooooooooVV#######################",
-  "##############VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV#######################",
-  "####################################################################################################",
-  "####################################################################################################",
-  "####################################################################################################",
-  "####################################################################################################",
-  "####################################################################################################",
+  "#########################VnnnnnnnnnVVVVVVVVVV######VVVVVVVVV########################################",
+  "#########################VnnnnnnnnnVVuuuuuuuV######VuuuuuuuV########################################",
+  "#########################VnnnnnnnnnVVuuuuuuuV######VuuuuuuuV########################################",
+  "#########################VnnnnnnnnnVVuuuuuuuV######VuuuuuuuV########################################",
+  "#########################VnnnnnnnnnVVuuuuuuuV######VuuuuuuuV########################################",
+  "##############VVVVVVVVVVVVVVVVSVVVVVVuuuuuuuVVVVVVVVuuuuuuuVVVV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooVVooooooooVVooVVooooooooVVooVVooooooooooVVVVV#################################",
+  "##############VmmmmmmmmsmmuuuumsmmmmmmmsuuuummmsmmmmmmuuuummmmssssVVVV##############################",
+  "##############VmmmmmmmmsmmuuuumsmmmmmmmsuuuummmsmmmmmmuuuummmmsssssssVV#############################",
+  "##############VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmssssssssVVV###########################",
+  "##############VmmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmssssssssssVV##########################",
+  "##############VmmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssVV#########################",
+  "##############VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmRRmmssssssssssssV#########################",
+  "#######n######VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmRRmmssssssssssssVV########################",
+  "######nnn#####VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssssV########################",
+  "##VVVVnnnVVVVVVmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssssVV#######################",
+  "##VVVnnnnnnVVVVmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsRRmmmmmmmmmsssssssssssssssssV#######################",
+  "##VVnnnnnnnnVVVmmmmmmmmsmmmmmmmsmmRRmmmsmmmmmmmsRRmmmmmmmmmsssssssssssssssssVVVVnnnVVVV#############",
+  "##VnnnnnnnnnnVVmmmmmmmmsmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmmmmmsssssssssssssssssVnnnnnnnnnV#############",
+  "##VnnnnnnnnnnnnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssVnnnnnnnnnV#############",
+  "##VnnnnnnnnnnnnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssVnnnnnnnnnV#############",
+  "##VnnnnnnnnnnnnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssDnnnnnnnnnV#############",
+  "##VnnnnnnnnnnnnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssVnnnnnnnnnV#############",
+  "##VnnnnnnnnnnnnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssVnnnnnnnnnV#############",
+  "##VnnnnnnnnnnVVmmmmmmmmsmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmmmmmsssssssssssssssssVnnnnnnnnnV#############",
+  "##VVnnnnnnnnVVVmmmmmmmmsmmmmmmmsmmRRmmmsmmmmmmmsRRmmmmmmmmmsssssssssssssssssVVVVnnnVVVV#############",
+  "##VVVnnnnnnVVVVmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsRRmmmmmmmmmsssssssssssssssssV#######################",
+  "##VVVVnnnVVVVVVmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssssVV#######################",
+  "######nnn#####VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssssV########################",
+  "#######n######VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmRRmmssssssssssssVV########################",
+  "##############VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmRRmmssssssssssssV#########################",
+  "##############VmmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmsssssssssssVV#########################",
+  "##############VmmmmmmmmsmmRRmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmssssssssssVV##########################",
+  "##############VmmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmsmmmmmmmmmmmmmmssssssssVVV###########################",
+  "##############VmmmmmmmmsmmuuuumsmmmmmmmsuuuummmsmmmmmmuuuummmmsssssssVV#############################",
+  "##############VmmmmmmmmsmmuuuumsmmmmmmmsuuuummmsmmmmmmuuuummmmssssVVVV##############################",
+  "##############VoooooooVVooooooooVVooVVooooooooVVooVVooooooooooVVVVV#################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VoooooooooooooooooooooooooooooooooooooooooooooooV#####################################",
+  "##############VVVVVVVVVVVVVVVVVVVVVVVuuuuuuuVVVVVVVVuuuuuuuVVVV#####################################",
+  "####################################VuuuuuuuV######VuuuuuuuV########################################",
+  "####################################VuuuuuuuV######VuuuuuuuV########################################",
+  "####################################VuuuuuuuV######VuuuuuuuV########################################",
+  "####################################VuuuuuuuV######VuuuuuuuV########################################",
+  "####################################VVVVVVVVV######VVVVVVVVV########################################",
   "####################################################################################################",
   "####################################################################################################",
   "####################################################################################################",
@@ -77,17 +77,19 @@
   "....................................................................................................",
   "....................................................................................................",
   "..........................666666666.................................................................",
-  "..........................666666666.................................................................",
-  "..........................666666666.................................................................",
-  "..........................666666666.................................................................",
-  "..........................666666666.................................................................",
-  "..............................6.....................................................................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
-  "................123456666666666666666666666666666666666666666666666666666666........................",
+  "..........................666666666..6666666........6666666.........................................",
+  "..........................666666666..6666666........6666666.........................................",
+  "..........................666666666..6666666........6666666.........................................",
+  "..........................666666666..6666666........6666666.........................................",
+  "..............................6......6666666........6666666.........................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "................1234566666666666666666666666666666666666666666......................................",
+  "..........................6666..........6666..........6666..........................................",
+  "..........................6666..........6666..........6666..........................................",
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
@@ -95,20 +97,17 @@
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
-  "....................................................................................................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..........................................................12345666666666666.........................",
-  "..........................................................12345666666666666.........................",
-  "..........................................................12345666666666666.........................",
-  "..........................................................12345666666666666.........................",
-  "..........................................................12345666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
-  "..............................................................6666666666666.........................",
+  "...........................................................44444444444444444........................",
+  "...........................................................44444444444444444....444.................",
+  "...........................................................444444445666666644444444444..............",
+  "........................................................123444444445666666644444444444..............",
+  "........................................................123444444445666666644444444444..............",
+  "........................................................123444444445666666644444444444..............",
+  "........................................................123444444445666666644444444444..............",
+  "........................................................123444444445666666644444444444..............",
+  "...........................................................444444445666666644444444444..............",
+  "...........................................................44444444444444444....444.................",
+  "...........................................................44444444444444444........................",
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
@@ -116,18 +115,19 @@
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
-  "....................................................................................................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "...............666666666666666666666666666666666666666666666666666666654321.........................",
-  "....................................................................................................",
-  "....................................................................................................",
-  "....................................................................................................",
-  "....................................................................................................",
-  "....................................................................................................",
+  "..........................6666..........6666..........6666..........................................",
+  "..........................6666..........6666..........6666..........................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  "...............66666666666666666666666666666666666666666654321......................................",
+  ".....................................6666666........6666666.........................................",
+  ".....................................6666666........6666666.........................................",
+  ".....................................6666666........6666666.........................................",
+  ".....................................6666666........6666666.........................................",
+  ".....................................6666666........6666666.........................................",
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
@@ -144,12 +144,12 @@
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
@@ -179,12 +179,12 @@
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
-  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee........................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
+  "...............eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee......................................",
   "....................................................................................................",
   "....................................................................................................",
   "....................................................................................................",
@@ -305,6 +305,36 @@
    "at": [33, 4]
   },
   {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "bellnode",
+   "at": [40, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [42, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "bellnode",
+   "at": [55, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [57, 4]
+  },
+  {
    "type": "pickup",
    "kind": "health_large",
    "at": [28, 5]
@@ -328,6 +358,16 @@
    "type": "pickup",
    "kind": "ammo_rivet",
    "at": [33, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [40, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 6]
   },
   {
    "type": "enemy",
@@ -431,16 +471,6 @@
    "at": [56, 24]
   },
   {
-   "type": "prop",
-   "kind": "lantern",
-   "at": [4, 25]
-  },
-  {
-   "type": "prop",
-   "kind": "lantern",
-   "at": [11, 25]
-  },
-  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 25],
@@ -462,9 +492,19 @@
    "group": "dais"
   },
   {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [5, 26]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [10, 26]
+  },
+  {
    "type": "pickup",
    "kind": "health_small",
-   "at": [4, 27]
+   "at": [6, 27]
   },
   {
    "type": "pickup",
@@ -520,41 +560,46 @@
   {
    "type": "pickup",
    "kind": "armor_vest",
-   "at": [46, 29]
+   "at": [44, 29]
   },
   {
    "type": "pickup",
    "kind": "health_large",
+   "at": [47, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [49, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
    "at": [50, 29]
   },
   {
    "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [51, 29]
+  },
+  {
+   "type": "pickup",
    "kind": "ammo_flare",
+   "at": [52, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
    "at": [53, 29]
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [54, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_rivet",
-   "at": [55, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "ammo_flare",
+   "kind": "health_small",
    "at": [56, 29]
   },
   {
    "type": "pickup",
-   "kind": "ammo_shell",
-   "at": [57, 29]
-  },
-  {
-   "type": "pickup",
-   "kind": "health_small",
+   "kind": "health_large",
    "at": [60, 29]
   },
   {
@@ -582,7 +627,7 @@
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [4, 31]
+   "at": [6, 31]
   },
   {
    "type": "pickup",
@@ -602,12 +647,12 @@
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [4, 33]
+   "at": [5, 32]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [11, 33]
+   "at": [10, 32]
   },
   {
    "type": "enemy",
@@ -715,9 +760,49 @@
   {
    "type": "enemy",
    "kind": "chorister",
-   "at": [58, 47],
-   "facing": -1.898,
+   "at": [50, 47],
+   "facing": -1.951,
    "group": "galleries-s"
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [40, 52]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 52]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "bellnode",
+   "at": [40, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [42, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [53, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "bellnode",
+   "at": [55, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [57, 54]
   },
   {
    "type": "prop",
@@ -870,9 +955,9 @@
   "scale": 1,
   "keep": [
    [
-    53,
+    49,
     29,
-    57,
+    53,
     29
    ]
   ]

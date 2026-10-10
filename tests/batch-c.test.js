@@ -41,8 +41,8 @@ test('Marrow Nave: both routes complete on every difficulty; the main route meet
 
 test('Marrow Nave: the only ammunition boxes are the supply station on the lane before the dais and the tunnel\'s cache; the dead feed the rest', () => {
   const src = shippedSrc('C1E3M04'), boxes = src.entities.filter((e) => e.type === 'pickup' && /^ammo_/.test(e.kind));
-  const station = boxes.filter((e) => e.at[1] === 29 && e.at[0] >= 53 && e.at[0] <= 57), tunnel = boxes.filter((e) => e.at[1] <= 7);
-  assert.ok(station.length >= 3 && tunnel.length >= 3 && station.length + tunnel.length === boxes.length, `${station.length} on the road, ${tunnel.length} in the tunnel, ${boxes.length} in all`); assert.deepEqual(src.drops.keep, [[53, 29, 57, 29]]);
+  const station = boxes.filter((e) => e.at[1] === 29 && e.at[0] >= 49 && e.at[0] <= 53), tunnel = boxes.filter((e) => e.at[1] <= 7);
+  assert.ok(station.length >= 3 && tunnel.length >= 3 && station.length + tunnel.length === boxes.length, `${station.length} on the road, ${tunnel.length} in the tunnel, ${boxes.length} in all`); assert.deepEqual(src.drops.keep, [[49, 29, 53, 29]]);
 });
 
 test('Marrow Nave: the Weeping Mother keeps to her throne (she never comes down the stairs, whatever the player does)', () => {

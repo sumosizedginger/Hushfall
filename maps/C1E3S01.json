@@ -18,25 +18,25 @@
   "##############################################",
   "##############################################",
   "##############################################",
-  "###########PPPPfffPPPfffPPPPP#################",
-  "###########PffffffffffffffffP#################",
-  "###########PffffffffffffffffP#################",
-  "###########PffffffffffffffffP#################",
-  "###########PffffffffffffffffP#PPPPfffPPPPP####",
-  "##PPPPPPPP#PffffffffffffffffP#PffffffffffP####",
-  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
-  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
-  "##PnnnnnnP#PffffffffffffffffP#Pfffffffffff####",
-  "##Pnnnnnnnnnffffffffffffffffffffffffffffff####",
-  "##PnnnnnnP#PffffffffffffffffP#Pfffffffffff####",
-  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
-  "##PnnnnnnP#PffffffffffffffffP#PffffffffffP####",
-  "##PPPPPPPP#PffffffffffffffffP#PffffffffffP####",
-  "###########PffffffffffffffffP#PPPPfffPPPPP####",
-  "###########PffffffffffffffffP#################",
-  "###########PffffffffffffffffP#################",
-  "###########PffffffffffffffffP#################",
-  "###########PPPPfffPPPfffPPPPP#################",
+  "#################PPPPPPP######################",
+  "###############PPPfffffPPP####################",
+  "#############PPPfffffffffPPP##################",
+  "#############PfffffffffffffP##################",
+  "####PPPP####PPfffffffffffffPP##PPPPPPPPP######",
+  "##PPPnnPPP##PfffffffffffffffP#PPfffffffPP#####",
+  "##PnnnnnnP#PPfffffffffffffffPPPfffffffffPP####",
+  "#PPnnnnnnPPPfffffffffffffffffPfffffffffffP####",
+  "#PnnnnnnnnPPfffffffffffffffffPfffffffffffP####",
+  "#PnnnnnnnnnnfffffffffffffffffffffffffffffP####",
+  "#PnnnnnnnnPPfffffffffffffffffPfffffffffffP####",
+  "#PPnnnnnnPPPfffffffffffffffffPfffffffffffP####",
+  "##PnnnnnnP#PPfffffffffffffffPPPfffffffffPP####",
+  "##PPPnnPPP##PfffffffffffffffP#PPfffffffPP#####",
+  "####PPPP####PPfffffffffffffPP##PPPPPPPPP######",
+  "#############PfffffffffffffP##################",
+  "#############PPPfffffffffPPP##################",
+  "###############PPPfffffPPP####################",
+  "#################PPPPPPP######################",
   "##############################################",
   "##############################################",
   "##############################################",
@@ -74,62 +74,72 @@
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [13, 7]
+   "at": [15, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [17, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [18, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [19, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [21, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [22, 9]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [23, 9]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [26, 7]
+   "at": [25, 9]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [14, 8]
+   "at": [13, 11]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [15, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [18, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [19, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [20, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [21, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [24, 8]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [25, 8]
+   "at": [14, 11]
   },
   {
    "type": "prop",
    "kind": "pillar",
-   "at": [16, 10]
+   "at": [15, 11]
   },
   {
    "type": "prop",
    "kind": "pillar",
-   "at": [23, 10]
+   "at": [25, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [26, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [27, 11]
   },
   {
    "type": "prop",
@@ -160,26 +170,6 @@
    "type": "prop",
    "kind": "lantern",
    "at": [7, 12]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [14, 12]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [15, 12]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [24, 12]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [25, 12]
   },
   {
    "type": "pickup",
@@ -256,26 +246,6 @@
    "at": [7, 16]
   },
   {
-   "type": "prop",
-   "kind": "table",
-   "at": [14, 16]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [15, 16]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [24, 16]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [25, 16]
-  },
-  {
    "type": "pickup",
    "kind": "health_large",
    "at": [33, 16]
@@ -284,6 +254,36 @@
    "type": "pickup",
    "kind": "ammo_flare",
    "at": [35, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [13, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [14, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [15, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [25, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [26, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "table",
+   "at": [27, 17]
   },
   {
    "type": "prop",
@@ -307,63 +307,43 @@
   },
   {
    "type": "prop",
-   "kind": "pillar",
-   "at": [16, 18]
-  },
-  {
-   "type": "prop",
-   "kind": "pillar",
-   "at": [23, 18]
+   "kind": "lantern",
+   "at": [15, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [14, 20]
+   "at": [17, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [15, 20]
+   "at": [18, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [18, 20]
+   "at": [19, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [19, 20]
+   "at": [21, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [20, 20]
+   "at": [22, 19]
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [21, 20]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [24, 20]
-  },
-  {
-   "type": "prop",
-   "kind": "table",
-   "at": [25, 20]
+   "at": [23, 19]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [13, 21]
-  },
-  {
-   "type": "prop",
-   "kind": "lantern",
-   "at": [26, 21]
+   "at": [25, 19]
   }
  ],
  "par": {

@@ -1,38 +1,34 @@
-// C1E3S01 THE CHOIRLESS CHAMBER (secret): the silent inverse of the ship. A Vael defector's message. (Episode 3, The Choir Ships; Gate 4 batch 3, Batch C, owner go 2026-10-09.)
-// Entered from Marrow Nave's secret exit; returns to the Resonance Loom (not built yet). Somewhere inside the grown ship is a room that was scrubbed of the Song and kept that way: plain plaster, flagstones, empty choir stalls in rows, a
-// bell with its tongue cut out. No enemies, and no sound of the ship at all (`atmosphere.silence`: the audio keeps your own footsteps and your guns and nothing else: no score, no ambience, no tolling). A Vael that left the Choir
-// left a message in the alcove at the end, and a cache. Scale class COMPRESSION (all roofed); the walls are plaster, the opposite of the ribs.
+// C1E3S01 THE CHOIRLESS CHAMBER (secret): the silent inverse of the ship. A Vael defector's message. (Episode 3, The Choir Ships; Gate 4 batch 3, Batch C, owner go 2026-10-09; the rooms were redrawn the same night after the owner asked "are they all boxes?")
+// Entered from Marrow Nave's secret exit; returns to the Resonance Loom. Somewhere inside the grown ship is a room that was scrubbed of the Song and kept that way: plain plaster, flagstones, empty choir stalls in arcs, a bell with its tongue cut
+// out. No enemies, and no sound of the ship at all (`atmosphere.silence`: the audio keeps your own footsteps and your guns and nothing else: no score, no ambience, no tolling). A Vael that left the Choir left a message in the alcove at the end,
+// and a cache. Three ROUND rooms (a vestibule, a round hall with four pillars and the stalls in two arcs, an oval alcove) joined by short passages; scale class COMPRESSION (all roofed); the walls are plaster, the opposite of the ribs.
 import { Level } from '../tools/mapkit/builder.mjs';
-import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(46, 30);
 const WALL = 'P';
+/** an ellipse of floor (cx, cz, rx, rz) with a wall drawn round it: the rooms of this map are round, because the ship's are not */
+function disc(cx, cz, rx, rz, floor) {
+  const cells = new Set();
+  for (let z = Math.floor(cz - rz) - 1; z <= Math.ceil(cz + rz) + 1; z++) for (let x = Math.floor(cx - rx) - 1; x <= Math.ceil(cx + rx) + 1; x++) if (((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2 <= 1) { L.rect([x, z, x, z], floor); cells.add(x + ',' + z); }
+  for (const k of cells) { const [x, z] = k.split(',').map(Number); for (let dx = -1; dx <= 1; dx++) for (let dz = -1; dz <= 1; dz++) { const nx = x + dx, nz = z + dz; if (!cells.has(nx + ',' + nz) && L.g[nz]?.[nx] === '#') L.g[nz][nx] = WALL; } }
+}
 
-// the antechamber, the hall of stalls, the defector's alcove
-L.room([3, 11, 8, 17], { floor: 'n', wall: WALL });
-L.room([12, 6, 27, 22], { floor: 'f', wall: WALL }); L.rect([9, 14, 11, 14], 'n');
-L.room([31, 10, 40, 18], { floor: 'f', wall: WALL }); L.rect([28, 14, 30, 14], 'f');
+// the vestibule, the round hall of stalls, the defector's oval alcove, and the passages between them
+disc(5.5, 14, 3.8, 4.2, 'n'); disc(20, 14, 8.5, 8.5, 'f'); disc(35, 14, 5.8, 4.8, 'f');
+L.room([9, 14, 11, 14], { floor: 'n', wall: WALL }); L.room([28, 14, 30, 14], { floor: 'f', wall: WALL });
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 L.put(5, 14, '@'); L.put(38, 14, '>');
 L.putAll('n', [[4, 12], [4, 16], [7, 12], [7, 16]]); L.put(6, 14, 'h');
-// the hall: pillars and rows of empty stalls (tables) either side of the way through; lanterns
-L.putAll('P', [[16, 10], [16, 18], [23, 10], [23, 18]]);
-for (const z of [8, 20]) for (const x of [14, 15, 18, 19, 20, 21, 24, 25]) L.put(x, z, 'f');
-for (const z of [12, 16]) for (const x of [14, 15, 24, 25]) L.put(x, z, 'f');
-L.putAll('n', [[13, 7], [26, 7], [13, 21], [26, 21], [19, 14]]);
+// the hall: four pillars in a ring, the empty stalls (tables) in two arcs either side of the way through; lanterns
+L.putAll('P', [[15, 11], [15, 17], [25, 11], [25, 17]]);
+for (const z of [9, 19]) for (const x of [17, 18, 19, 21, 22, 23]) L.put(x, z, 'f');
+for (const z of [11, 17]) for (const x of [13, 14, 26, 27]) L.put(x, z, 'f');
+L.putAll('n', [[15, 9], [25, 9], [15, 19], [25, 19], [19, 14]]);
 L.putAll('h', [[14, 14], [22, 14]]);
 // the alcove: a bell with its tongue cut out (the bellnode prop, silent), two shelves of nothing, the cache
 L.put(36, 14, 'N'); L.putAll('F', [[36, 11], [36, 17]]); L.putAll('n', [[32, 11], [32, 17], [39, 11], [39, 17]]);
 L.putAll('H', [[33, 12], [33, 16]]); L.putAll('v', [[34, 11], [34, 17]]); L.putAll('e', [[33, 13], [33, 15]]); L.putAll('r', [[34, 13], [34, 15]]); L.putAll('a', [[35, 12], [35, 16]]);
-
-// ---- PT-021, rooms that are not boxes (the lane of the routes decides what may be cut) -----------------------------------------------------------------------------------------------------
-const S = new Shape(L, { lane: laneOf('C1E3S01'), keep: [] });
-S.hall([12, 6, 27, 22], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 2 });
-S.hall([31, 10, 40, 18], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 1 }, e: { w: 3, gap: 2, d: 1 } }, cut: 1 });
-S.chamfer([3, 11, 8, 17], 'nw ne sw se', 1);
-console.log('C1E3S01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
-// ---- end PT-021 shaping ----
 
 const layers = L.layers();
 
@@ -59,6 +55,5 @@ const MAP = {
     scaleClass: 'COMPRESSION', introduces: 'the Choirless Chamber: the first place in the ship the Song does not reach (no score, no ambience, no tolling: only your own sound), and the first word from a Vael that left the Choir' },
 };
 
-MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 
 export default MAP;
