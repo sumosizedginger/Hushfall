@@ -1,14 +1,14 @@
 {
   "mapId": "C1E3M06",
-  "when": "2026-10-10T06:57:15.368Z",
-  "commit": "870d4b6",
+  "when": "2026-10-10T16:27:12.896Z",
+  "commit": "03f9eb4",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "ce9c58b45dce0fc7",
+  "mapSha": "2629f51d3c34b0af",
   "routesSha": "08d9ac13cf10b26d",
   "sources": {
     "engine": "bcd3f9215ec3aea3",
@@ -21,20 +21,20 @@
     "main": {
       "ok": true,
       "ticks": 3363,
-      "hash": "7f1cb344",
+      "hash": "7ee84343",
       "nodeTicks": 3363,
-      "nodeHash": "7f1cb344",
+      "nodeHash": "7ee84343",
       "agree": true,
       "kills": 17,
       "secrets": 0,
-      "wallSeconds": 1
+      "wallSeconds": 3
     },
     "secret": {
       "ok": true,
       "ticks": 4198,
-      "hash": "aa96bc6b",
+      "hash": "74885950",
       "nodeTicks": 4198,
-      "nodeHash": "aa96bc6b",
+      "nodeHash": "74885950",
       "agree": true,
       "kills": 17,
       "secrets": 1,
@@ -90,12 +90,12 @@
     {
       "name": "real-game route C1E3M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=3363 wall=1s"
+      "detail": "status=complete failed=null ticks=3363 wall=3s"
     },
     {
       "name": "real-game route C1E3M06.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 3363/7f1cb344 vs node 3363/7f1cb344"
+      "detail": "browser 3363/7ee84343 vs node 3363/7ee84343"
     },
     {
       "name": "real-game route C1E3M06.secret: completes in the browser",
@@ -105,7 +105,7 @@
     {
       "name": "real-game route C1E3M06.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4198/aa96bc6b vs node 4198/aa96bc6b"
+      "detail": "browser 4198/74885950 vs node 4198/74885950"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -153,5 +153,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 12
+  "wallSeconds": 16
 }
