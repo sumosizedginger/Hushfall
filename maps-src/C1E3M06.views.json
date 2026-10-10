@@ -1,0 +1,15 @@
+[
+  {"name":"01-arrival","x":4.5,"z":24.5,"yaw":"east"},
+  {"name":"02-the-passage","x":11.5,"z":24.5,"yaw":"east","pitch":0.04},
+  {"name":"03-first-tier","x":16.5,"z":24.5,"yaw":"east","pitch":0.06},
+  {"name":"04-the-tuned","x":22.5,"z":24.5,"yaw":"east","pitch":0.08,"wake":true,"ticks":30},
+  {"name":"05-behind-the-rows","x":31.5,"z":24.5,"yaw":"east","pitch":0.08,"wake":true,"ticks":30},
+  {"name":"06-supply-station","x":37.5,"z":24.5,"yaw":"east","pitch":0.1},
+  {"name":"07-the-open-tiers","x":43.5,"z":24.5,"yaw":"east","pitch":0.12,"wake":true,"ticks":30},
+  {"name":"08-the-rake-from-above","x":55.5,"z":24.5,"yaw":"west","pitch":-0.18},
+  {"name":"09-top-tier","x":58.5,"z":24.5,"yaw":"east","pitch":0.05},
+  {"name":"10-the-lever","x":60.5,"z":19.5,"yaw":"east"},
+  {"name":"11-conductors-door","x":61.5,"z":24.5,"yaw":"east","open":true},
+  {"name":"12-exit","x":66.5,"z":24.5,"yaw":"east","open":true},
+  {"name":"13-niche","x":22.5,"z":14.5,"yaw":"north","open":true}
+]

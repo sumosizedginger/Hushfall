@@ -1,0 +1,15 @@
+[
+  {"name":"01-arrival","x":4.5,"z":28.5,"yaw":"east"},
+  {"name":"02-spool-room","x":8.5,"z":28.5,"yaw":"east","pitch":0.04},
+  {"name":"03-the-lock","x":11.5,"z":28.5,"yaw":"east"},
+  {"name":"04-warp-hall-west","x":17.5,"z":28.5,"yaw":"east","pitch":0.1,"open":true},
+  {"name":"05-the-pit","x":20.5,"z":28.5,"yaw":"east","pitch":0.2,"open":true},
+  {"name":"06-north-walk","x":24.5,"z":16.5,"yaw":"east","pitch":0.02,"open":true,"wake":true,"ticks":20},
+  {"name":"07-platforms-from-above","x":21.5,"z":24.5,"yaw":-2.356,"pitch":0.35,"open":true,"ticks":120},
+  {"name":"08-east-ledge","x":37.5,"z":28.5,"yaw":"east","pitch":0.05,"open":true,"wake":true,"ticks":30},
+  {"name":"09-second-lock","x":41.5,"z":28.5,"yaw":"east","open":true},
+  {"name":"10-the-heart","x":47.5,"z":28.5,"yaw":"east","pitch":0.04,"open":true,"wake":true,"ticks":30},
+  {"name":"11-the-lever","x":55.5,"z":27.5,"yaw":"east","open":true},
+  {"name":"12-exit","x":63.5,"z":28.5,"yaw":"east","open":true},
+  {"name":"13-cellar","x":29.5,"z":45.5,"yaw":"south","open":true}
+]
