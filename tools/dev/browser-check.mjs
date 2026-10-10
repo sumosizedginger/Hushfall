@@ -25,6 +25,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port: 521
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await page.evaluateOnNewDocument(() => { navigator.getGamepads = () => [null, null, null, null]; });          // a controller plugged into the machine (a DualSense with a stick at rest) steers the page in its real-time sections: this check is about the keyboard and the mouse (tools/dev/probe-pad.mjs installs its own fake pad)
 await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e));
 page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
