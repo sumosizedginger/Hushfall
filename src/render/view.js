@@ -293,7 +293,7 @@ export class GameView {
         rocketLead = rocketLead || m;
       } else if (bomb) {                                                                                              // PT-027: the bomb tumbles along its arc and leaves a thin trail of smoke; its fuse spark flickers
         m.rotation.set(this.time * 3.1 + q.id, this.time * 2.3, 0); m.userData.spark.scale.setScalar(0.7 + 0.5 * Math.sin(this.time * 40 + q.id));
-        m.userData.puffT -= dt; if (m.userData.puffT <= 0) { m.userData.puffT = 0.06; const pf = new THREE.Mesh(this.puffGeo, this.puffMat); pf.position.copy(m.position); pf.scale.setScalar(0.5); this.scene.add(pf); this.puffs.push({ m: pf, t: 0, max: 0.7 + this.rnd() * 0.3 }); }
+        m.userData.puffT -= dt; m.userData.age = (m.userData.age ?? 0) + dt; if (m.userData.puffT <= 0 && m.userData.age > 0.25) { m.userData.puffT = 0.07; const sp = Math.hypot(q.vx, q.vy, q.vz) || 1, pf = new THREE.Mesh(this.puffGeo, this.puffMat); pf.position.copy(m.position).addScaledVector(new THREE.Vector3(q.vx / sp, q.vy / sp, q.vz / sp), -0.4); pf.scale.setScalar(0.3); this.scene.add(pf); this.puffs.push({ m: pf, t: 0, max: 0.6 + this.rnd() * 0.3 }); }
       } else lead = lead || m;
     }
     for (const [id, m] of this.projViews) if (!seen.has(id)) { this.scene.remove(m); this.projViews.delete(id); }
@@ -350,7 +350,7 @@ export class GameView {
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
-    this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.3 + 0.07 * Math.sin(this.time * 3.1 + i) : 0.3 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
+    this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
     for (const sw of this.map.switches) { const r = this.lvl.switchViews.get(sw.id); if (!r) continue; const used = w.switchState?.[sw.id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; r.group.position.y = floorAt(w, sw.x, sw.z) + 1.35; }        // a panel on a moving floor rides with it

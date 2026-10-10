@@ -45,7 +45,7 @@ if (want.has('mortar')) {
 if (want.has('breath')) {
   // the breath yard: the partition at z = 44 cells with a gate at x = 53 (period 8, open 4 s); the spore bed x 50..57, z 47..49 (blooms 3 s of every 8, glows from 6.8 s)
   await T("t.newGame('normal', 3, { mapId: 'RANGE' })"); await T('t.clearOverlays()'); await T('t.tick(5)');
-  const gx = 53.5 * 2, gz = 41.5 * 2; await T(`t.setup_teleport(${gx}, ${gz}, ${YAW.south})`); await T('t.setup_player({ pitch: 0.02, weapon: "flare", switchT: 0 })');
+  const gx = 53.5 * 2, gz = 42.4 * 2; await T(`t.setup_teleport(${gx}, ${gz}, ${YAW.south})`); await T('t.setup_player({ pitch: 0.02, weapon: "flare", switchT: 0 })');
   for (const [name, sec] of [['gate-open', 2.0], ['gate-closing', 4.25], ['gate-shut', 5.5], ['gate-opening', 8.3]]) { await toTime(sec); await shot('breath-' + name); }
   const sx = 49.5 * 2, sz = 51.0 * 2, bx = 54 * 2, bz = 48 * 2; await T(`t.setup_teleport(${sx}, ${sz}, ${face(sx, sz, bx, bz)})`); await T('t.setup_player({ pitch: -0.08, hp: 100 })');
   await T("t.newGame('normal', 3, { mapId: 'RANGE' })"); await T(`t.setup_teleport(${sx}, ${sz}, ${face(sx, sz, bx, bz)})`); await T('t.setup_player({ pitch: -0.08, weapon: "flare", switchT: 0 })'); await T('t.clearOverlays()');
