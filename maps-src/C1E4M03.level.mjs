@@ -14,16 +14,17 @@ const hw = (d) => 5 + Math.floor((4 * (d - 17)) / 23);                          
 const HATCH_D = 31, BAY_END = 30;
 const set = (x, z, ch, h = 4) => { L.g[z][x] = ch; L.ht[z][x] = h; };
 const ceil = (x, z, u) => { L.ce[z][x] = hchar(u); };
+const BAR = new Set(), POCK = new Set(), EXCH = new Set(), LOCKC = new Set();                           // PT-035: the cells of the barracks, the pockets, the exit chamber and the lock chambers (the materials pass below)
 
 // ---- the hub: a square of floor 15 across round a solid spine; four arms (9 wide, 5 long) towards the bays; the spine's face holds the couplings' seat ----
 for (let dz = -7; dz <= 7; dz++) for (let dx = -7; dx <= 7; dx++) { if (Math.abs(dx) <= 2 && Math.abs(dz) <= 2) continue; set(CX + dx, CZ + dz, 'x', 4); ceil(CX + dx, CZ + dz, 22); }
 for (const bay of Object.keys(BAYS)) for (let d = 8; d <= (bay === 'N' ? 10 : 11); d++) for (let lat = -4; lat <= 4; lat++) { const [x, z] = B(bay, d, lat); set(x, z, 'x', 4); ceil(x, z, 22); }
-for (const bay of ['N', 'E', 'W']) { const [x, z] = B(bay, 12, 0); set(x, z, 'x', 4); }                                  // the narrow passage into a lock
+for (const bay of ['N', 'E', 'W']) { const [x, z] = B(bay, 12, 0); set(x, z, 'x', 4); LOCKC.add(x + ',' + z); }                                  // the narrow passage into a lock
 // ---- the locks (north, east, west): D1 at depth 13, the chamber at 14 and 15, D2 at 16; north has D0 at 12 (opened by the spine's switch) ----
 const doorsOf = {};
 for (const bay of ['N', 'E', 'W']) {
   const d1 = B(bay, 13), d2 = B(bay, 16);
-  set(...B(bay, 14), 'x', 4); set(...B(bay, 15), 'x', 4);
+  set(...B(bay, 14), 'x', 4); set(...B(bay, 15), 'x', 4); LOCKC.add(B(bay, 14).join(',')); LOCKC.add(B(bay, 15).join(','));
   L.door(d1[0], d1[1], { interlock: d2 }); L.door(d2[0], d2[1], { interlock: d1 }); L.ht[d1[1]][d1[0]] = 4; L.ht[d2[1]][d2[0]] = 4;
   doorsOf[bay] = { d1, d2 };
 }
@@ -48,24 +49,24 @@ for (const bay of ['N', 'E', 'W']) for (const lat of [-5, 0, 5]) {
 const POCKETS = [['W', 21, -1], ['W', 24, 1], ['W', 27, -1]];
 for (const [bay, d, side] of POCKETS) {
   const w0 = hw(d), [dx, dz] = B(bay, d, side * (w0 + 1)); L.door(dx, dz, {}); L.ht[dz][dx] = 0;
-  for (let k = -1; k <= 1; k++) for (let j = 2; j <= 4; j++) { const [x, z] = B(bay, d + k, side * (w0 + j)); set(x, z, 'x', 0); ceil(x, z, 10); }
+  for (let k = -1; k <= 1; k++) for (let j = 2; j <= 4; j++) { const [x, z] = B(bay, d + k, side * (w0 + j)); set(x, z, 'x', 0); ceil(x, z, 10); POCK.add(x + ',' + z); }
 }
 // ---- the secret: a niche behind a loose panel in the south (arrival) bay's wall ----
 const panelAt = B('S', 24, -(hw(24) + 1)); L.secretPanel(panelAt[0], panelAt[1]); L.ht[panelAt[1]][panelAt[0]] = 0;
 const nicheCells = []; for (let k = -1; k <= 1; k++) for (let j = 2; j <= 4; j++) { const [x, z] = B('S', 24 + k, -(hw(24) + j)); set(x, z, 'x', 0); ceil(x, z, 10); nicheCells.push([x, z]); }
 // ---- the exit chamber west of the north bay, its door on the bay's west wall ----
 const EXITD = 25, ew = hw(EXITD); const exitDoor = B('N', EXITD, -(ew + 1)); L.door(exitDoor[0], exitDoor[1], { remote: true }); L.ht[exitDoor[1]][exitDoor[0]] = 0;
-for (let k = -2; k <= 2; k++) for (let j = 2; j <= 6; j++) { const [x, z] = B('N', EXITD + k, -(ew + j)); set(x, z, 'x', 0); ceil(x, z, 10); }
+for (let k = -2; k <= 2; k++) for (let j = 2; j <= 6; j++) { const [x, z] = B('N', EXITD + k, -(ew + j)); set(x, z, 'x', 0); ceil(x, z, 10); EXCH.add(x + ',' + z); }
 const EXIT = B('N', EXITD, -(ew + 4));
 // ---- the barracks: four round rooms in the corners, a door each in the hub's outer wall ----
 const QUARTERS = [[1, -1], [-1, -1], [1, 1], [-1, 1]];
 for (const [sx, sz] of QUARTERS) {
   const cx = CX + sx * 17, cz = CZ + sz * 14;
-  for (let z = cz - 7; z <= cz + 7; z++) for (let x = cx - 7; x <= cx + 7; x++) { const r = Math.hypot(x + 0.5 - cx - 0.5, z + 0.5 - cz - 0.5); if (r <= 5.6) set(x, z, 'x', r <= 2.4 ? 6 : r <= 4 ? 5 : 4); }
+  for (let z = cz - 7; z <= cz + 7; z++) for (let x = cx - 7; x <= cx + 7; x++) { const r = Math.hypot(x + 0.5 - cx - 0.5, z + 0.5 - cz - 0.5); if (r <= 5.6) { set(x, z, 'x', r <= 2.4 ? 6 : r <= 4 ? 5 : 4); BAR.add(x + ',' + z); } }
   const dxo = CX + sx * 8, dzo = CZ + sz * 7;                                                                          // the door in the hub wall (x = +-8, z = +-7)
   L.door(dxo, dzo, {}); L.ht[dzo][dxo] = 4;
-  for (let x = dxo + sx; sx * x <= sx * cx; x += sx) set(x, dzo, 'x', 4);                                           // the corridor out of the door, then in towards the room
-  for (let z = dzo; sz * z <= sz * (cz - sz * 3); z += sz) set(cx, z, 'x', 4);
+  for (let x = dxo + sx; sx * x <= sx * cx; x += sx) { set(x, dzo, 'x', 4); BAR.add(x + ',' + dzo); }                                           // the corridor out of the door, then in towards the room
+  for (let z = dzo; sz * z <= sz * (cz - sz * 3); z += sz) { set(cx, z, 'x', 4); BAR.add(cx + ',' + z); }
 }
 // ---- vacuum: one strip per cell of depth (the taper), the pockets stay out of it; a lock's chamber is in vacuum while its bay-side door and the bay's hatches are open ----
 const VACUUM = [];
@@ -111,6 +112,22 @@ for (const [k, i] of [['armor_vest', 0], ['ammo_shell', 1], ['health_large', 4],
 put('prop', 'lantern', [EXIT[0] + 1, EXIT[1] + 1]);
 // the switches: the spine's seat (both couplings) and the panel at the north bay's far west wall
 const SPINE = [CX, CZ + 3], HULLSW = B('N', 28, -hw(28));
+// ---- PT-035, the materials (the outside audits and the owner's own eye: Cold Dock was "one room nine times", one white-cyan panel over one white-cyan deck from the arrival to the exit). The BAYS stay the cold white they are (that is the dock). Everything people made
+// for themselves is warm and dark against it: the crew's barracks and the closets in the walls are timber over carpet, the exit chamber brick over carpet, the secret niche timber; the spine and the lock chambers are riveted iron. Only the character of a wall or a floor
+// changes, never its kind: no route, sight line, shot or breath of air moves (tools/dev/route-fingerprint.mjs proves it). ----
+{
+  const isOpen = (x, z) => FLOORS.has(L.g[z]?.[x]), NICHE = new Set(nicheCells.map((c) => c.join(',')));
+  const wallPlan = [];
+  for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
+    if (L.g[z][x] !== 'G') continue;
+    let barr = false, exch = false, lockc = false;
+    for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { const k = (x + dx) + ',' + (z + dz); if (!isOpen(x + dx, z + dz)) continue; if (BAR.has(k) || POCK.has(k) || NICHE.has(k)) barr = true; else if (EXCH.has(k)) exch = true; else if (LOCKC.has(k)) lockc = true; }
+    if (barr) wallPlan.push([x, z, 'W']); else if (exch) wallPlan.push([x, z, 'B']); else if (lockc || (Math.abs(x - CX) <= 2 && Math.abs(z - CZ) <= 2)) wallPlan.push([x, z, 'I']);
+  }
+  for (const [x, z, sk] of wallPlan) L.g[z][x] = sk;
+  for (const k of [...BAR, ...POCK, ...EXCH, ...NICHE]) { const [x, z] = k.split(',').map(Number); if (L.g[z][x] === 'x') L.g[z][x] = 'c'; }
+}
+// ---- end PT-035 materials ----
 const MAP = {
   id: 'C1E4M03', name: 'Cold Dock', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8c4cc', fogDensity: 0.006, sky: 'orbit', ambient: 0.9, look: 'dock' },

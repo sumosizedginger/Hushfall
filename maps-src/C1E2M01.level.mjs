@@ -81,11 +81,13 @@ L.putAll('e', [[47, 17], [47, 27]]); L.putAll('r', [[47, 20], [47, 24], [50, 22]
 L.putAll('j', [[23, 20], [23, 24], [37, 20], [41, 24]]);                                           // lampposts, off the centre lane: `m` hangs from the ceiling and floats in open air (PT-007)
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M01'), keep: [[21, 18]] });                                                      // the sluice wheel's wall stays
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M01'), keep: [[21, 18]] });                                                      // the sluice wheel's wall stays
 S.bays('n', 10, 13, 42, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('s', 34, 13, 42, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('w', 10, 12, 32, { w: 3, gap: 3, d: 1, floor: 'l' });   // sluice recesses in the pan's ring wall
 const h0 = S.bayLog.length;
 S.hall([46, 14, 64, 29], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, s: { w: 3, gap: 3, d: 2, heart: true } }, cut: 2 }); S.dressBays('cradle', h0);        // the receiving hall: a cradle hangs in each apse
 S.chamfer([66, 19, 73, 25], 'nw ne sw se', 1); S.chamfer([3, 19, 9, 25], 'nw ne sw se', 1);
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([46, 14, 64, 29]); 
 console.log('C1E2M01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

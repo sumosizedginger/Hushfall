@@ -57,6 +57,6 @@ test('a prop that blocks its cell never closes the way to the exit or leaves a p
 test('the Pump Cathedral\'s east catwalk runs wall to wall: the strip behind it and the east bays are at catwalk height (the trench is gone), so the only drops left are into the nave, which the cage climbs again', () => {
   const m = shippedMap('C1E2M06');
   for (let z = 8; z <= 42; z++) assert.equal(m.floor(57, z), 4, `(57, ${z}) is at catwalk height, not a trench`);
-  for (const [x, z] of [[58, 10], [58, 16], [58, 22], [59, 28], [58, 34], [58, 40]]) if (m.kind(x, z) === 'floor') assert.equal(m.floor(x, z), 4, `the bay at ${x},${z} is level with the catwalk`);
+  for (const [x, z] of [[58, 10], [58, 16], [58, 22], [59, 28], [58, 34], [58, 40]]) if (m.kind(x, z) === 'floor') assert.ok([4, 4.5].includes(m.floor(x, z)), `the bay at ${x},${z} is level with the catwalk or one step (0.5 m) above it, never below it (PT-035: the alcoves are raised a step; a bay below the catwalk would be the trench again): ${m.floor(x, z)}`);
   assert.equal(findTraps(m).traps, 0);
 });

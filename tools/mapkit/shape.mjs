@@ -3,21 +3,25 @@
 //   - a corner or a pilaster is built only on open floor cells with no object in or beside them, no door, no panel and no change of height, never in a cell that a route walks, and never where a sight line from the route to a creature crosses (a wall there changes who sees whom: it wakes a sleeper, it aims a shot);
 //   - an operation that cannot be done safely is SKIPPED and written to `report.skipped` (nothing is half done), so a map's source can ask for more than it will get and still be correct.
 // Floor, height and ceiling of a bay are those of the room cell it opens from (no water, no residue: a bay is dry). Only the geometry layer changes: the objects, the routes and the sim do not move (`tools/dev/route-fingerprint.mjs` proves it).
-//   const S = new Shape(L, { lane, keep, foes });  lane: optional Set of 'x,z' the TRAFFIC of the routes, the player's and every creature's (tools/dev/lane-of.mjs), kept clear of anything solid; foes: [[x, z]] creatures a trigger spawns; keep: [[x, z], ...] wall cells that must stay wall (the wall a switch is set in)
+//   const S = new Shape(L, { lane, keep, foes, bayDefaults });  bayDefaults: { up, lid } applied to every bay that does not say its own (PT-035: the Episode 2 rooms cut their bays as raised alcoves under a lower vault)
+//   const S0 = new Shape(L, { lane, keep, foes });  lane: optional Set of 'x,z' the TRAFFIC of the routes, the player's and every creature's (tools/dev/lane-of.mjs), kept clear of anything solid; foes: [[x, z]] creatures a trigger spawns; keep: [[x, z], ...] wall cells that must stay wall (the wall a switch is set in)
 //   S.bay(x, z, 'n', { w: 3, d: 1, heart: true })   a bay out of the wall at (x, z) (the first wall cell beyond the room) towards 'n' (z - 1), 's', 'e' or 'w'; heart: one more cell, one wide, behind the middle; round: the two outer corners of a deep bay stay wall
-//   S.bays(side, along, from, to, { w, gap, d, heart, skip })   bays spaced along a wall: `along` is the wall cell row (side n/s) or column (side e/w), from/to the range of the other axis
+//   S.bay(..., { up, lid })                         up: raise the alcove's floor by that many half-metre units (1 = one step, always walkable); lid: its vault, that many units above the room's floor (roofed rooms only; at least 5 so the head clears 2.4 m)
+//   S.bays(side, along, from, to, { w, gap, d, heart, skip, up, lid })   bays spaced along a wall: `along` is the wall cell row (side n/s) or column (side e/w), from/to the range of the other axis
 //   S.chamfer(rect, 'nw ne sw se', n = 2, skin)     cut the corners of the room rect [x0, z0, x1, z1] (n = 1: one cell; n = 2: a three-cell diagonal; n = 3: six)
+//   S.ledges(rect, { sides: 'nsew', depth: 2, up: 1, lid: 7, min: 6 })   a raised strip along the walls of a roofed room, in clean runs only (PT-035; joins the alcoves of bayDefaults)
 //   S.nibs(side, along, from, to, every, { skin, start })  pilasters: one wall cell jutting from the wall into the room every `every` cells
 //   S.report                                         { bays, corners, nibs, skipped: [reasons] }
 import fs from 'node:fs';
 import path from 'node:path';
 import { FLOOR_SKINS, WALL_SKINS } from '../../src/engine/defs.js';
+import { hchar } from './builder.mjs';
 
 const DIR = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] };
 const isFloor = (c) => c in FLOOR_SKINS, isWall = (c) => c in WALL_SKINS;
 
 export class Shape {
-  constructor(L, { lane = null, margin = 1, keep = [], foes = [], foeSymbols = 'tgbxwKGYZ' } = {}) { this.L = L; this.lane = lane; this.margin = margin; this.foeCells = foes; this.foeSymbols = foeSymbols; this.keep = new Set(keep.map(([x, z]) => x + ',' + z)); this.report = { bays: 0, corners: 0, nibs: 0, skipped: [] }; this.bayLog = []; this.ops = 0; this.maxOps = process.env.SHAPE_MAX ? Number(process.env.SHAPE_MAX) : Infinity; }
+  constructor(L, { lane = null, margin = 1, keep = [], foes = [], foeSymbols = 'tgbxwKGYZ', bayDefaults = {} } = {}) { this.bayDefaults = bayDefaults; this.L = L; this.lane = lane; this.margin = margin; this.foeCells = foes; this.foeSymbols = foeSymbols; this.keep = new Set(keep.map(([x, z]) => x + ',' + z)); this.report = { bays: 0, corners: 0, nibs: 0, skipped: [] }; this.bayLog = []; this.ops = 0; this.maxOps = process.env.SHAPE_MAX ? Number(process.env.SHAPE_MAX) : Infinity; }
   /** SHAPE_MAX=<n> applies only the first n operations (a bisect aid: which one moved a route?) */
   #go(what) { if (this.ops >= this.maxOps) { this.#skip(what, 'beyond SHAPE_MAX'); return false; } this.ops++; if (process.env.SHAPE_TRACE) console.log('shape op', this.ops, what); return true; }
   #g(x, z) { return this.L.get(x, z); }
@@ -51,7 +55,7 @@ export class Shape {
   #lane(x, z, pad = 0) { if (!this.lane) return false; for (let dz = -pad; dz <= pad; dz++) for (let dx = -pad; dx <= pad; dx++) if (this.lane.has((x + dx) + ',' + (z + dz))) return true; return false; }
 
   /** a bay at the wall cell (x, z), opening towards the room that lies on the opposite side of `dir` (dir = the way the bay digs: 'n' digs towards -z, so the room is to its south) */
-  bay(x, z, dir, { w = 3, d = 1, heart = false, round = false, skin = null, floor = null } = {}) {
+  bay(x, z, dir, { w = 3, d = 1, heart = false, round = false, skin = null, floor = null, up = this.bayDefaults.up ?? 0, lid = this.bayDefaults.lid ?? null } = {}) {
     const [dx, dz] = DIR[dir], ax = Math.abs(dz), az = Math.abs(dx), tag = `bay ${dir} @${x},${z}`;     // (ax, az): the direction along the wall
     const half = (w - 1) / 2; if (!Number.isInteger(half)) return this.#skip(tag, 'w must be odd');
     const cells = [];                                                                                            // the carved cells, row i = depth i (0 = the wall cell the bay opens from)
@@ -68,20 +72,23 @@ export class Shape {
     }
     if (!this.#go(tag)) return false;
     const src = room[half], fl = floor ?? this.#g(src[0], src[1]), sk = skin;
+    if (lid != null && lid - up < 5 && FLOOR_SKINS[floor ?? this.#g(room[half][0], room[half][1])]?.kind === 'floor') return this.#skip(tag, 'a lid that low leaves no headroom');
+    const f0 = this.L.ht[src[1]][src[0]], vault = lid != null && FLOOR_SKINS[fl]?.kind === 'floor';       // up / lid (PT-035): a raised alcove (up half-metre units above the room's floor, one is a step) under a lower vault (lid units above the ROOM's floor, in a roofed room only; headroom stays 2.4 m or more)
+    if (up) this.L.usedHeights = true; if (vault) this.L.usedCeil = true;
     for (const [cx, cz] of cells) {
-      this.L.g[cz][cx] = fl; this.L.ht[cz][cx] = this.L.ht[src[1]][src[0]]; this.L.ce[cz][cx] = this.L.ce[src[1]][src[0]]; this.L.fxl[cz][cx] = '.';
+      this.L.g[cz][cx] = fl; this.L.ht[cz][cx] = f0 + up; this.L.ce[cz][cx] = vault ? hchar(f0 + lid) : this.L.ce[src[1]][src[0]]; this.L.fxl[cz][cx] = '.';
     }
     if (sk) for (const [cx, cz] of cells) for (let oz = -1; oz <= 1; oz++) for (let ox = -1; ox <= 1; ox++) { const nx = cx + ox, nz = cz + oz; if (!set.has(nx + ',' + nz) && (nx - x) * dx + (nz - z) * dz !== -1 && isWall(this.#g(nx, nz))) this.L.g[nz][nx] = sk; }
     this.report.bays++; this.bayLog.push({ dir, x, z, w, d, heart, cells, deep: [x + dx * (d - 1 + (heart ? 1 : 0)), z + dz * (d - 1 + (heart ? 1 : 0))], mouth: room[half] }); return true;
   }
 
   /** bays along a wall, centred and evenly spaced: side 'n' = the wall is north of the room (a row, `along` = z of its first wall cell), 's' south, 'e' east, 'w' west (a column, `along` = x); from..to is the range along it. heart: true | 'alt' (every other one) */
-  bays(side, along, from, to, { w = 3, gap = 2, d = 1, heart = false, round = false, skin = null, floor = null, skip = [] } = {}) {
+  bays(side, along, from, to, { w = 3, gap = 2, d = 1, heart = false, round = false, skin = null, floor = null, skip = [], up, lid } = {}) {
     const vertical = side === 'e' || side === 'w', len = to - from + 1, n = Math.floor((len + gap) / (w + gap)); if (n < 1) return;
     const off = Math.floor((len - (n * w + (n - 1) * gap)) / 2);
     for (let i = 0; i < n; i++) {
       const t = from + off + i * (w + gap) + (w - 1) / 2; if (skip.includes(t)) continue;
-      const x = vertical ? along : t, z = vertical ? t : along; this.bay(x, z, side, { w, d, heart: heart === 'alt' ? i % 2 === 0 : heart, round, skin, floor });
+      const x = vertical ? along : t, z = vertical ? t : along; this.bay(x, z, side, { w, d, heart: heart === 'alt' ? i % 2 === 0 : heart, round, skin, floor, up, lid });
     }
   }
 
@@ -123,6 +130,30 @@ export class Shape {
         for (const [cx, cz] of cells) { this.L.g[cz][cx] = sk; this.L.fxl[cz][cx] = '.'; } this.report.corners++; done = true;
       }
       if (!done) this.#skip(tag, why);
+    }
+  }
+
+  /** ledges (PT-035): a raised strip of floor along a wall of a ROOFED room, `depth` cells deep, `up` half-metre units above the room's floor (one is a step, always walkable) under a lower vault (`lid` units above the room's floor), in runs of at least `min` clean
+   *  cells only: plain roofed floor at the room's own height, no object in or beside, no route or creature within two cells. A ledge joins the alcoves the bays make at the same height. It changes no route, no sight line (a step is far below an eye) and no shot. */
+  ledges(rect, { sides = 'nsew', depth = 2, up = 1, lid = 7, min = 6 } = {}) {
+    const [x0, z0, x1, z1] = rect, heights = new Map();
+    for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) if (isFloor(this.#g(x, z))) { const h = this.L.ht[z][x]; heights.set(h, (heights.get(h) ?? 0) + 1); }
+    const base = [...heights.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]; if (base == null) return;
+    for (const side of sides) {
+      const horizontal = side === 'n' || side === 's'; let run = [];
+      const flush = () => {
+        const tag = `ledge ${side} of ${rect}`;
+        if (run.length >= min * depth) { if (this.#go(tag)) { this.L.usedHeights = true; for (const [x, z] of run) { this.L.ht[z][x] = base + up; if (lid != null) { this.L.usedCeil = true; this.L.ce[z][x] = hchar(base + lid); } } this.report.ledges = (this.report.ledges ?? 0) + 1; } }
+        else if (run.length) this.#skip(tag, `a run of only ${run.length / depth} clean cells`);
+        run = [];
+      };
+      for (let t = horizontal ? x0 : z0; t <= (horizontal ? x1 : z1); t++) {
+        const col = []; let ok = true;
+        for (let k = 0; k < depth; k++) { const x = horizontal ? t : (side === 'w' ? x0 + k : x1 - k), z = horizontal ? (side === 'n' ? z0 + k : z1 - k) : t; col.push([x, z]); }
+        for (const [x, z] of col) { const c = this.#g(x, z); if (!isFloor(c) || FLOOR_SKINS[c].kind !== 'floor' || this.L.ht[z][x] !== base || this.#objNear(x, z) || this.#lane(x, z, 2)) { ok = false; break; } }
+        if (ok) run.push(...col); else flush();
+      }
+      flush();
     }
   }
 

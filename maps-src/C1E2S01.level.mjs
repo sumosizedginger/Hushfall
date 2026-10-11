@@ -27,10 +27,12 @@ L.putAll('F', [[34, 12], [34, 20], [38, 12], [38, 20]]); L.putAll('f', [[36, 14]
 L.putAll('v', [[34, 15], [34, 17]]); L.putAll('H', [[35, 13], [35, 19]]); L.putAll('e', [[37, 15], [37, 17]]); L.putAll('r', [[39, 13], [39, 19]]); L.putAll('a', [[38, 16], [40, 16]]); L.putAll('n', [[33, 13], [43, 16]]);
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2S01'), keep: [[32, 12]] });                                                      // the vault lever's wall stays
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2S01'), keep: [[32, 12]] });                                                      // the vault lever's wall stays
 S.hall([11, 8, 31, 24], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 }, w: { w: 3, gap: 3, d: 1 } }, cut: 3 });
 S.hall([33, 11, 43, 21], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 1 }, e: { w: 3, gap: 2, d: 1 } }, cut: 2 });
 S.chamfer([3, 13, 9, 19], 'nw ne sw se', 1);
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([11, 8, 31, 24]); S.ledges([33, 11, 43, 21]); 
 console.log('C1E2S01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

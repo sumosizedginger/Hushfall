@@ -54,12 +54,14 @@ L.putAll('P', [[69, 20], [69, 26], [73, 23]]); L.putAll('H', [[66, 21], [66, 25]
 L.put(52, 36, 'v'); L.put(54, 36, 'H'); L.put(52, 38, 'e'); L.put(54, 38, 'r');
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M04'), keep: [[70, 13]] });                                                      // the flue lever's wall stays
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M04'), keep: [[70, 13]] });                                                      // the flue lever's wall stays
 S.hall([11, 15, 31, 31], { sides: { n: { w: 3, gap: 3, d: 2, heart: 'alt' }, s: { w: 3, gap: 3, d: 2, heart: 'alt' }, w: { w: 3, gap: 3, d: 1 } }, cut: 3 });   // the charging hall
 S.hall([42, 13, 63, 33], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 3 });                                                       // the firing gallery
 S.hall([65, 14, 77, 32], { sides: { s: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3, d: 1 } }, cut: 2 });                                                       // the flue chamber
 S.chamfer([3, 20, 9, 26], 'nw ne sw se', 1);
 S.dressBays('lantern');
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([11, 15, 31, 31]); S.ledges([42, 13, 63, 33]); S.ledges([65, 14, 77, 32]); 
 console.log('C1E2M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

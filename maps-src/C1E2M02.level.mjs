@@ -80,7 +80,7 @@ L.putAll('O', [[64, 21], [64, 29], [68, 21], [68, 29]]); L.putAll('D', [[66, 21]
 L.putAll('H', [[63, 22], [63, 28]]); L.putAll('e', [[64, 23], [64, 27], [64, 25]]); L.put(65, 25, 'r');
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M02'), keep: [[40, 20]], foes: [[6, 22], [7, 25], [6, 24], [6, 26], [6, 28]] });                                                      // the valve wheel's wall stays
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M02'), keep: [[40, 20]], foes: [[6, 22], [7, 25], [6, 24], [6, 26], [6, 28]] });                                                      // the valve wheel's wall stays
 for (const [a, b] of [[12, 21], [31, 49], [58, 70]]) { S.bays('n', 4, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('s', 47, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); }     // salt sheds and sluice recesses in the pan's long walls, clear of the brine channels
 for (const [a, b] of [[6, 18], [32, 45]]) { S.bays('w', 9, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); S.bays('e', 72, a, b, { w: 3, gap: 3, d: 1, floor: 'l' }); }
 S.dressBays('barrel');

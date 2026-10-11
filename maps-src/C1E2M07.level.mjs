@@ -43,12 +43,14 @@ L.putAll('O', [[54, 18], [54, 26], [58, 17], [58, 27]]); L.putAll('D', [[56, 20]
 L.putAll('P', [[58, 21], [58, 23]]); L.putAll('H', [[53, 19], [53, 25]]); L.putAll('e', [[53, 20], [53, 24]]); L.putAll('r', [[54, 22], [60, 18]]); L.putAll('a', [[60, 26], [55, 22]]);
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M07'), keep: [[15, 17], [33, 11], [49, 13], [57, 15]] });                         // the four breakers' walls stay
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M07'), keep: [[15, 17], [33, 11], [49, 13], [57, 15]] });                         // the four breakers' walls stay
 S.hall([3, 18, 16, 26], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2, d: 1 } }, cut: 2 });                      // the pump gallery
 S.hall([18, 12, 34, 32], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 3 });                     // the vat hall
 S.hall([36, 14, 50, 30], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 2 });                     // the settling tanks
 const s0 = S.bayLog.length;
 S.hall([52, 16, 63, 28], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, s: { w: 3, gap: 3, d: 2, heart: true }, e: { w: 3, gap: 3, d: 2, heart: true } }, cut: 2 }); S.dressBays('cradle', s0);   // the sump heart: a cradle in each apse
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([3, 18, 16, 26]); S.ledges([18, 12, 34, 32]); S.ledges([36, 14, 50, 30]); S.ledges([52, 16, 63, 28]); 
 console.log('C1E2M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

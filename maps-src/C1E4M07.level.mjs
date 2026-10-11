@@ -148,6 +148,18 @@ const RAMP_SUPPLY = [182, 270, 358].map((deg) => cellOf(deg, 21));
 RAMP_SUPPLY.forEach(([cx, cz], i) => { for (const [k, dx, dz] of [['ammo_shell', 0, 0], ['ammo_rivet', 1, 0], ['ammo_flare', 0, 1], ['ammo_rivet', 1, 1]]) { const p = [cx + dx, cz + dz]; if (isFloor(...p) && !used.has(p.join(','))) { used.add(p.join(',')); ents.push({ type: 'pickup', kind: k, at: p }); } } });
 if (SECRET) { const [qx, qz] = SECRET.centre; for (const [k, dx, dz] of [['ammo_shell', -1, -1], ['ammo_rivet', 1, -1], ['ammo_flare', 0, 1], ['health_large', 1, 1], ['armor_vest', -1, 1]]) ents.push({ type: 'pickup', kind: k, at: [qx + dx, qz + dz] }); }
 
+// ---- PT-035, the materials (the outside audits: the whole climb was one navy stone over one navy floor, so the sixteen metres read as a single colour). Now the climb passes THROUGH materials on its way to the light: the foot and the first landing are the
+// dark slate and navy arches you start in; the second landing is brass organ pipes over a gold-diamond floor; the third is purple and gold loom-work; the fourth and the way out are Gate marble over the white-ringed floor. A ramp wears the material of the landing it
+// climbs TO, so each change arrives before you do. Only the character of a wall or a floor changes, never its kind (every floor used is an outdoor floor, every wall a plain wall): no route, sight line or shot moves. ----
+{
+  const MAT = { r0: ['1', '&'], l1: ['1', 's'], r1: ['E', 'z'], l2: ['E', 'z'], r2: ['M', 'e'], l3: ['M', 'e'], r3: ['2', '<'], l4: ['2', '<'] };
+  for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
+    const c = L.g[z][x], r = rad(x, z); if (r >= DRUM + 1.5) continue;
+    const sct = sectorOf(x, z); if (!sct) continue;
+    if (c === '&') { if (sct[0] !== 'r0') L.g[z][x] = MAT[sct[0]][1]; } else if (c === '1') L.g[z][x] = MAT[sct[0]][0];
+  }
+}
+// ---- end PT-035 materials ----
 const MAP = {
   id: 'C1E4M07', name: 'The Hollow Stair', version: 1, ceilingHeight: 40, par: { time: 600 },
   atmosphere: { fog: '#161c44', fogDensity: 0.0032, sky: 'gate', look: 'stair' },

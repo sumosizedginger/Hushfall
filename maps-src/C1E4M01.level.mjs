@@ -132,13 +132,13 @@ const E = (kind, s0, off = 0) => put('enemy', kind, s0, off);
 // tube 1 and cabin 1
 E('gaunt', 15, -1); E('tollbearer', 18, 1); E('sexton', 24, 1); E('tollbearer', 25, -1); E('gaunt', 33, 0); E('gaunt', 38, 1);
 // open stretch 1: the first load alone on the long clock
-E('tollbearer', 56, -1); E('bellhand', 84, 1); E('gaunt', 62, 1); E('chorister', 80, -2); E('gaunt', 88, 0); E('tollbearer', 94, 1);
+E('tollbearer', 56, -1); E('bellhand', 84, 1); E('gaunt', 62, 1); E('chorister', 80, -2); E('gaunt', 88, 0); E('gill', 94, 1);
 // tube 2 and cabin 2
-E('chorister', 112, 1); E('gaunt', 104, 0); E('tollbearer', 109, -1); E('bellhand', 120, 0); E('tollbearer', 121, 1); E('gaunt', 138, 0);
+E('chorister', 112, 1); E('gaunt', 104, 0); E('tollbearer', 109, -1); E('bellhand', 120, 0); E('gill', 121, 1); E('gaunt', 138, 0);
 // open stretch 2, the loads and the freight bay
-E('tollbearer', 150, -1); E('tollbearer', 152, 1); E('chorister', 154, -2); E('bellhand', 176, 0); E('tollbearer', 172, -1); E('tollbearer', 185, 1); E('chorister', 178, -2); E('gaunt', 188, 0); E('gaunt', 191, 1);
+E('tollbearer', 150, -1); E('bellhand', 152, 1); E('chorister', 154, -2); E('bellhand', 176, 0); E('tollbearer', 172, -1); E('gill', 185, 1); E('chorister', 178, -2); E('gaunt', 188, 0); E('gaunt', 191, 1);
 // tube 3 and cabin 3
-E('gaunt', 198, 0); E('tollbearer', 206, -1); E('gaunt', 211, 1); E('tollbearer', 226, 1); E('chorister', 227, -1); E('tollbearer', 232, 0);
+E('gaunt', 198, 0); E('tollbearer', 206, -1); E('gaunt', 211, 1); E('tollbearer', 226, 1); E('chorister', 227, -1); E('gill', 232, 0);
 // health and armour on the road, ammunition kept in cabin 1 and cabin 3 (see MAP.drops)
 const P = (kind, s0, off = 0) => put('pickup', kind, s0, off);
 P('health_small', 8, 1); P('health_small', 44, 0); P('health_small', 66, 1); P('health_large', 96, 0); P('health_small', 112, 1); P('health_large', 142, 0); P('health_small', 156, 1); P('armor_vest', 187, -1); P('health_small', 200, 0); P('health_small', 218, 1); P('health_large', 233, 0);

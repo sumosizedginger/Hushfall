@@ -13,6 +13,7 @@ const RANKS = [                                                                 
 ];
 const SCREENS = [{ z: 90, gaps: [-16, 16], h0: 0 }, { z: 71, gaps: [-6, 11], h0: 2 }, { z: 52, gaps: [-12, 5], h0: 4 }, { z: 33, gaps: [-4, 9], h0: 6 }, { z: 16, gaps: [0], h0: 8 }];      // each 2 thick (z and z + 1 = the rank above is at z - 1 ...)
 const set = (x, z, ch, h, ce) => { L.g[z][x] = ch; L.ht[z][x] = h; if (ce != null) L.ce[z][x] = hchar(ce); };
+const TUN = new Set(), CHB = new Set();                                                                   // PT-035: the cells of the service tunnels and of the Mother's chamber (the materials pass below)
 
 // ---- the five ranks and the yard: floor between the funnel's walls, a lid over everything but the court -------------------------------------------------------------------------------------------------------------------
 for (const r of RANKS) for (let z = r.z0; z <= r.z1; z++) for (let x = CX - hw(z); x <= CX + hw(z); x++) { if (r.id === 'R1') set(x, z, 's', r.h); else set(x, z, '8', r.h, r.ce); }
@@ -26,16 +27,16 @@ for (const sc of SCREENS) { const above = RANKS.find((r) => r.z1 === sc.z - 1), 
 const tunnel = (side) => {
   for (let z = 56; z <= 107; z++) {
     const h = Math.round((4 * (107 - z)) / 51), x0 = side < 0 ? CX - hw(z) - 5 : CX + hw(z) + 3;
-    for (let o = 0; o < 3; o++) set(x0 + o, z, '8', h, h + 8);
+    for (let o = 0; o < 3; o++) { set(x0 + o, z, '8', h, h + 8); TUN.add((x0 + o) + ',' + z); }
   }
   // the mouths: three cells open on to the court (z 106..108) and, in the east tunnel, on to the third rank (z 57..59)
-  for (const [zA, zB, h] of side < 0 ? [[105, 107, 0]] : [[105, 107, 0], [57, 59, 4]]) for (let z = zA; z <= zB; z++) { const xa = side < 0 ? CX - hw(z) - 3 : CX + hw(z) + 1, xb = side < 0 ? CX - hw(z) : CX + hw(z) + 3; for (let x = Math.min(xa, xb); x <= Math.max(xa, xb); x++) set(x, z, h === 0 ? 's' : '8', h, h === 0 ? null : 20); }
+  for (const [zA, zB, h] of side < 0 ? [[105, 107, 0]] : [[105, 107, 0], [57, 59, 4]]) for (let z = zA; z <= zB; z++) { const xa = side < 0 ? CX - hw(z) - 3 : CX + hw(z) + 1, xb = side < 0 ? CX - hw(z) : CX + hw(z) + 3; for (let x = Math.min(xa, xb); x <= Math.max(xa, xb); x++) { set(x, z, h === 0 ? 's' : '8', h, h === 0 ? null : 20); TUN.add(x + ',' + z); } }
 };
 tunnel(-1); tunnel(1);
 // ---- the Mother's chamber: a round room on the west flank of the third rank, joined to it by a corridor three cells wide (and to the court by the west tunnel): she is not on the straight way through, you go to her ----
 const CH = [8, 62];
-for (let z = CH[1] - 8; z <= CH[1] + 8; z++) for (let x = 1; x <= CH[0] + 8; x++) if (Math.hypot(x + 0.5 - CH[0] - 0.5, z + 0.5 - CH[1] - 0.5) <= 7) set(x, z, '8', 4, 18);
-for (let z = 61; z <= 63; z++) for (let x = CH[0] + 5; x <= CX - hw(62) - 1; x++) set(x, z, '8', 4, 18);
+for (let z = CH[1] - 8; z <= CH[1] + 8; z++) for (let x = 1; x <= CH[0] + 8; x++) if (Math.hypot(x + 0.5 - CH[0] - 0.5, z + 0.5 - CH[1] - 0.5) <= 7) { set(x, z, '8', 4, 18); CHB.add(x + ',' + z); }
+for (let z = 61; z <= 63; z++) for (let x = CH[0] + 5; x <= CX - hw(62) - 1; x++) { set(x, z, '8', 4, 18); CHB.add(x + ',' + z); }
 // ---- cover: fallen colossi (blocks of stone) and colonnades of pillars; the exit and the Gate behind it ----------------------------------------------------------------------------------------------------------------------------
 const FLOORS = new Set(Object.keys(FLOOR_SKINS)), isFloor = (x, z) => FLOORS.has(L.g[z]?.[x]);
 for (const [x, z, w, d] of [[CX - 12, 100, 3, 2], [CX + 10, 98, 3, 2], [CX - 4, 104, 4, 2], [CX - 14, 82, 2, 3], [CX + 8, 80, 2, 3], [CX - 6, 63, 3, 2], [CX + 4, 61, 3, 2], [CX - 10, 44, 3, 2], [CX + 6, 42, 3, 2], [CX - 3, 25, 2, 2]]) for (let j = 0; j < d; j++) for (let i = 0; i < w; i++) if (isFloor(x + i, z + j)) L.g[z + j][x + i] = 'A';
@@ -73,9 +74,35 @@ let secret = null;
     const cells = []; for (let k = 1; k <= 3; k++) for (let j = -1; j <= 1; j++) { set(x + k, z + j, '8', L.ht[z][x - 1], L.ht[z][x - 1] + 8); cells.push([x + k, z + j]); }
     L.g[z][x] = 'S'; L.ht[z][x] = L.ht[z][x - 1]; secret = { panel: [x, z], cells }; } }
 if (secret) { const c = secret.cells; for (const [k, i] of [['armor_vest', 4], ['ammo_shell', 1], ['ammo_rivet', 7], ['health_large', 5]]) put('pickup', k, c[i]); } else console.log('C1E4M06: no cell for the secret');
+// ---- PT-035, the materials (the outside audits: "one material in one hue": the five ranks were one purple-grey stone over one lavender tile from the court to the Gate, in the dark). Now every rank has its own stone and the Gate's light ARRIVES rank by
+// rank: the stalls are timber over planks, the Mother's rank and her chamber brick over flagstone and carpet, the steps grey tower stone over tile, the last rank and the yard Gate marble over the white-ringed floor, the service tunnels riveted iron over grating.
+// Only the CHARACTER of a wall or a floor changes, never its kind (every skin used is a plain wall or a plain roofed floor): no route, no sight line and no shot moves (tools/dev/route-fingerprint.mjs proves it).
+{
+  const RANK_SKIN = { R1: ['A', 's'], R2: ['W', '.'], R3: ['B', 'f'], R4: ['T', 't'], R5: ['2', ';'], YARD: ['2', ';'] };
+  const rankOf = (z) => RANKS.find((r) => z >= r.z0 && z <= r.z1) ?? (SCREENS.some((sc) => z === sc.z || z === sc.z + 1) ? RANKS.find((r) => r.z1 === SCREENS.find((sc) => z === sc.z || z === sc.z + 1).z - 1) : null);
+  if (secret) for (const [cx, cz] of secret.cells) TUN.add(cx + ',' + cz);
+  const isOpen = (x, z) => FLOORS.has(L.g[z]?.[x]);
+  const wallPlan = [];
+  for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
+    if (L.g[z][x] !== 'A') continue;
+    let rankFloor = false, chamber = false, tunnel = false;
+    for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { const k = (x + dx) + ',' + (z + dz); if (!isOpen(x + dx, z + dz)) continue; if (CHB.has(k)) chamber = true; else if (TUN.has(k)) tunnel = true; else rankFloor = true; }
+    const r = rankOf(z);
+    if (rankFloor && r) wallPlan.push([x, z, RANK_SKIN[r.id][0]]); else if (chamber) wallPlan.push([x, z, 'B']); else if (tunnel) wallPlan.push([x, z, 'I']);
+  }
+  for (const [x, z, sk] of wallPlan) L.g[z][x] = sk;
+  for (let z = 0; z < H; z++) for (let x = 0; x < W; x++) {
+    if (L.g[z][x] !== '8') continue; const k = x + ',' + z;
+    if (CHB.has(k)) L.g[z][x] = 'c'; else if (TUN.has(k)) L.g[z][x] = 'g'; else { const r = rankOf(z); if (r) L.g[z][x] = RANK_SKIN[r.id][1]; }
+  }
+  for (const e of ents) if (e.type === 'prop' && e.kind === 'pillar') { const r = rankOf(e.at[1]); if (r) e.skin = RANK_SKIN[r.id][0]; }
+  // warm pools of light: a lantern at the foot of the screens' flanks and by each rank's side walls (a prop with no body: it blocks nothing)
+  for (const [x, z] of [[-26, 86], [26, 86], [-22, 68], [22, 68], [-18, 49], [18, 49], [-14, 30], [14, 30], [-8, 13], [8, 13], [-24, 106], [24, 106]]) put('prop', 'lantern', [CX + x, z]);
+}
+// ---- end PT-035 materials ----
 const MAP = {
   id: 'C1E4M06', name: "Gatekeeper's Approach", version: 1, ceilingHeight: 4.2, par: { time: 600 },
-  atmosphere: { fog: '#1c1e34', fogDensity: 0.007, sky: 'gate', ambient: 0.9, look: 'approach' },
+  atmosphere: { fog: '#34365a', fogDensity: 0.005, sky: 'gate', ambient: 0.9, look: 'approach' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: "GATEKEEPER'S APPROACH", lines: ['Everything the Vael had left is standing in this hall.', 'The Gate is at the far end, and it is very bright.'] },
   outro: 'The hall opens. Above the last steps the light stops being a rumour and becomes a thing you can look at.',

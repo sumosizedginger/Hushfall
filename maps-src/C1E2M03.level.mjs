@@ -65,11 +65,13 @@ L.putAll('H', [[63, 12], [63, 28]]); L.putAll('e', [[64, 20], [65, 14]]); L.putA
 L.put(25, 3, 'v'); L.put(27, 3, 'H'); L.put(26, 2, 'e'); L.put(25, 2, 'r'); L.put(27, 2, 'a');
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M03'), keep: [[12, 5], [36, 12], [12, 29], [57, 20]] });                          // the four levers' walls stay
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M03'), keep: [[12, 5], [36, 12], [12, 29], [57, 20]] });                          // the four levers' walls stay
 S.bays('n', 5, 12, 37, { w: 3, gap: 3, d: 1 }); S.bays('s', 29, 13, 37, { w: 3, gap: 3, d: 1 }); S.bays('w', 10, 7, 14, { w: 3, gap: 3, d: 1 }); S.bays('w', 10, 24, 27, { w: 3, gap: 3, d: 1 });   // the shed's end bays
 const d0 = S.bayLog.length;
 S.hall([62, 11, 76, 29], { sides: { n: { w: 3, gap: 3, d: 1 }, s: { w: 3, gap: 3, d: 1 } }, cut: 2 }); S.dressBays('crate2', d0);   // the dock
 S.chamfer([3, 16, 9, 22], 'nw ne sw se', 1);
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([62, 11, 76, 29]); 
 console.log('C1E2M03 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

@@ -51,11 +51,13 @@ L.putAll('g', [[46, 9], [46, 41], [25, 14], [25, 36]]); L.putAll('t', [[34, 9], 
 L.put(7, 11, 'v'); L.put(10, 11, 'H'); L.put(7, 13, 'e'); L.put(10, 13, 'r'); L.put(8, 12, 'f'); L.put(9, 11, 'a'); L.put(8, 10, 'F');
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
-const S = new Shape(L, { lane: laneOf('C1E2M06'), keep: [[35, 44], [50, 23], [48, 23]], foes: [[55, 17], [55, 33]] });                                  // the drain lever's wall and the cage levers' walls stay
+const S = new Shape(L, { bayDefaults: { up: 1, lid: 7 }, lane: laneOf('C1E2M06'), keep: [[35, 44], [50, 23], [48, 23]], foes: [[55, 17], [55, 33]] });                                  // the drain lever's wall and the cage levers' walls stay
 const n0 = S.bayLog.length;
 S.hall([13, 7, 57, 43], { sides: { n: { w: 3, gap: 4, d: 2, heart: true }, s: { w: 3, gap: 4, d: 2, heart: true }, w: { w: 3, gap: 3, d: 2, heart: 'alt' }, e: { w: 3, gap: 3, d: 2, heart: 'alt' } }, cut: 3 });   // the nave: chapels down both walls, the corners cut
 S.dressBays('lantern', n0);
 S.chamfer([3, 21, 11, 28], 'nw ne sw se', 2); S.chamfer([6, 10, 11, 14], 'nw ne sw se', 1);
+// PT-035: raised ledges along the walls of the roofed rooms, in clean runs (a half-metre step under a lower vault; joins the alcoves)
+S.ledges([13, 7, 57, 43]); 
 console.log('C1E2M06 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 

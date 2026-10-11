@@ -110,6 +110,21 @@ let secret = null;
     }
   } }
 if (secret) { const c = secret.cells; for (const [k, i] of [['armor_vest', 4], ['ammo_shell', 1], ['ammo_rivet', 7], ['health_large', 5]]) put('pickup', k, c[i]); } else console.log('C1E4M05: no cell for the secret');
+// ---- PT-035, the materials (the outside audits: "one material in one hue": the whole orchard was one bright lawn and one olive wall, a lawn with slabs on it). Now every island has its OWN ground (a different place to land): the south island keeps the moss you arrive on, the
+// south-west is dark silt (the beds), the north-west old wet cobbles (a paved yard gone under), the north cream salt-crust (it is where the glass is gone and the light is white), the north-east slate, the south-east the dark gill-garden floor; the dock is a hazard-striped
+// deck (the way in is a ship's, not a garden's), the greenhouses are planked inside, and every island has two lanterns: warm pools on a green night. The drift is the FX layer, not the floor character: no island drifts any differently, no route, sight line or shot moves. ----
+{
+  const GROUND = { S: '7', SW: 'm', NW: ':', N: 'l', NE: 's', SE: 'u' };
+  for (const isl of RING) { const [a0, a1] = [isl.a + 180 - 30, isl.a + 180 + 30]; put('prop', 'lantern', near(isl, 7.5, a0)); put('prop', 'lantern', near(isl, 7.5, a1)); }
+  for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
+    const c = L.g[z][x];
+    if (c === '7') {
+      if (z >= 83 && rOf(x, z, CX, 89.5) <= 5.2) { L.g[z][x] = 'd'; continue; }
+      const isl = RING.find((i) => rOf(x, z, i.cx, i.cz) <= 10); if (isl) L.g[z][x] = GROUND[isl.id];
+    } else if (c === '6' && rOf(x, z, CX, CZ) > 8.5) L.g[z][x] = '.';
+  }
+}
+// ---- end PT-035 materials ----
 const MAP = {
   id: 'C1E4M05', name: 'Drift Orchard', version: 1, ceilingHeight: 20, par: { time: 400 },
   atmosphere: { fog: '#cfe4b4', fogDensity: 0.004, sky: 'orbit', ambient: 0.9, look: 'orchard' },
