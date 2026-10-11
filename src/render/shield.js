@@ -5,7 +5,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
-export const SHIELD = { bands: [{ y: 0.55, h: 0.7, spin: 0.55 }, { y: 0, h: 0.8, spin: -0.4 }, { y: -0.55, h: 0.7, spin: 0.7 }], plates: 10, arc: 0.5, rest: 0.42, flare: 0.95 };
+export const SHIELD = { bands: [{ y: 0.55, h: 0.7, spin: 0.55 }, { y: 0, h: 0.8, spin: -0.4 }, { y: -0.55, h: 0.7, spin: 0.7 }], plates: 6, arc: 0.34, rest: 0.2, flare: 0.95 };   // PT-035: ten plates of 0.5 rad at 0.42 (a near-solid drum: the boss showed only as ink lines inside a teal slab at every reveal) became six of 0.34 at 0.2: about a third of the cage is plate, the body shows between; a hit still flares it to 0.95
 
 export function makeShield() {
   const group = new THREE.Group(), rings = [];
