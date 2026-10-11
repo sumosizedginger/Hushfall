@@ -23,6 +23,7 @@ import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
+import { graftStage } from './graftstage.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
@@ -32,7 +33,6 @@ import { makeBeamView, makeSweepView } from './beamfx.js';
 import { inVacuum } from '../engine/airlock.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
-const graftStage = (map) => (Number(/^CdE(d)/.exec(map?.id ?? '')?.[1] ?? 2) >= 2 ? 2 : 0);
 const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, (tex, map) => CHOIR[kind](tex[choirAtlasName(kind)], { stage: graftStage(map) })]));
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
