@@ -1,12 +1,12 @@
 {
-  "when": "2026-10-10T07:07:14.946Z",
-  "commit": "870d4b6",
+  "when": "2026-10-11T05:08:30.417Z",
+  "commit": "0c5db55",
   "sources": {
-    "engine": "bcd3f9215ec3aea3",
-    "render": "92c7cbbbeaf7976f",
-    "game": "2bd487a82b19b820",
-    "audio": "0e41b26c13e78b6c",
-    "assets": "6011da476d374aac"
+    "engine": "56f05f2dab0c9edc",
+    "render": "f2ffb507757ccd67",
+    "game": "19217a9d6fa3c8a4",
+    "audio": "cbb273a8733b7eda",
+    "assets": "5ecd8f3772774324"
   },
   "renderGround": {
     "band": {
@@ -15,58 +15,58 @@
     },
     "totals": {
       "asleep": {
-        "rows": 753,
-        "raised": 211,
+        "rows": 979,
+        "raised": 382,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.017
+        "highest": 0.05
       },
       "awake": {
-        "rows": 1506,
-        "raised": 211,
+        "rows": 1958,
+        "raised": 383,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.101
+        "highest": 0.121
       },
       "matrix": {
-        "rows": 1894,
-        "raised": 795,
+        "rows": 2949,
+        "raised": 1571,
         "violations": 0,
         "deepest": 0,
         "highest": 0.181
       },
       "dying": {
-        "rows": 756,
-        "raised": 214,
+        "rows": 982,
+        "raised": 385,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.005
+        "highest": 0.043
       },
       "corpses": {
-        "rows": 756,
-        "raised": 214,
+        "rows": 982,
+        "raised": 385,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.026
+        "highest": 0.04
       },
       "movingFloors": {
         "rows": 200,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.116
+        "highest": 0.125
       }
     },
     "violationCount": 0,
     "hitVolume": {
       "tollbearer": {
-        "drawnHeight": 2.206,
+        "drawnHeight": 2.246,
         "hitHeight": 2.25,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
         "hitRadius": 0.4,
         "hitForward": 0,
         "colliderRadius": 0.4,
-        "drawnWidthX": 1.271
+        "drawnWidthX": 1.075
       },
       "gaunt": {
         "drawnHeight": 1.507,
@@ -79,14 +79,14 @@
         "drawnWidthX": 0.777
       },
       "bellhand": {
-        "drawnHeight": 2.336,
+        "drawnHeight": 2.332,
         "hitHeight": 2.35,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
         "hitRadius": 0.38,
         "hitForward": 0,
         "colliderRadius": 0.38,
-        "drawnWidthX": 0.959
+        "drawnWidthX": 0.988
       },
       "sexton": {
         "drawnHeight": 2.331,
@@ -166,7 +166,7 @@
         "hitRadius": 0.65,
         "hitForward": 0,
         "colliderRadius": 0.36,
-        "drawnWidthX": 1.381
+        "drawnWidthX": 1.075
       },
       "bulwark": {
         "drawnHeight": 1.826,
@@ -227,6 +227,26 @@
         "hitForward": 0.6,
         "colliderRadius": 0.9,
         "drawnWidthX": 2.58
+      },
+      "seal": {
+        "drawnHeight": 2.617,
+        "hitHeight": 2.6,
+        "drawnAboveHit": 0.017,
+        "hitCoversFractionOfDrawn": 0.994,
+        "hitRadius": 0.95,
+        "hitForward": 0,
+        "colliderRadius": 0.7,
+        "drawnWidthX": 2.049
+      },
+      "gatewarden": {
+        "drawnHeight": 7.12,
+        "hitHeight": 7.2,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 1.9,
+        "hitForward": 0,
+        "colliderRadius": 1.6,
+        "drawnWidthX": 4.8
       }
     },
     "cantor": {
@@ -382,7 +402,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=27"
+      "detail": "mode=playing tick=26"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -427,7 +447,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=34 last=toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire,flare_boom,burn_start"
+      "detail": "played=35 last=wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,flare_fire,step_outdoor,flare_boom,burn_start"
     },
     {
       "name": "Escape pauses (live)",
@@ -442,7 +462,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.61 m, ratio 1.56"
+      "detail": "walk 4.34 m, sprint 6.46 m, ratio 1.49"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -477,7 +497,7 @@
     {
       "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=146 exits=0"
+      "detail": "visible=true painted=230400 explored=148 exits=0"
     },
     {
       "name": "Tab again closes the automap",
@@ -547,7 +567,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=145 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,radio,enemy_hit,pickup_health,level_complete"
+      "detail": "played=149 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,pump,creak,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,radio,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -622,7 +642,7 @@
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9521 wall=11s"
+      "detail": "status=complete failed=null ticks=9521 wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
@@ -642,7 +662,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6272 wall=5s"
+      "detail": "status=complete failed=null ticks=6272 wall=4s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
@@ -652,7 +672,7 @@
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8369 wall=11s"
+      "detail": "status=complete failed=null ticks=8369 wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -672,7 +692,7 @@
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9671 wall=7s"
+      "detail": "status=complete failed=null ticks=9671 wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
@@ -682,7 +702,7 @@
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10411 wall=13s"
+      "detail": "status=complete failed=null ticks=10411 wall=11s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
@@ -725,34 +745,34 @@
       "detail": "C1E1M06/playing"
     },
     {
-      "name": "render truth coverage: 27 maps, all 10 enemy kinds, 211 enemies on raised floors (a census that saw nothing would pass vacuously)",
+      "name": "render truth coverage: 36 maps, all 10 enemy kinds, 382 enemies on raised floors (a census that saw nothing would pass vacuously)",
       "ok": true,
-      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,gill,feeder,graftmother,chorister,bulwark,weeping,acolyte,vat,reed,grandcantor; raised 211; pose rows 1894"
+      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,gill,feeder,graftmother,chorister,bulwark,weeping,acolyte,vat,reed,grandcantor,seal,gatewarden; raised 382; pose rows 2949"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "753 rows (211 on raised floors), 0 violations, deepest 0 m, highest 0.017 m; every one of the 753 enemies was measured: true"
+      "detail": "979 rows (382 on raised floors), 0 violations, deepest 0 m, highest 0.05 m; every one of the 979 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "1506 rows (211 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 753 enemies: true"
+      "detail": "1958 rows (383 on raised floors), 0 violations, deepest 0 m, highest 0.121 m; two samples of all 979 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "1894 rows (795 on raised floors), 0 violations, deepest 0 m, highest 0.181 m"
+      "detail": "2949 rows (1571 on raised floors), 0 violations, deepest 0 m, highest 0.181 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 756 rows (214 on raised floors), 0 violations, deepest 0 m, highest 0.005 m || corpses: 756 rows (214 on raised floors), 0 violations, deepest 0 m, highest 0.026 m"
+      "detail": "dying: 982 rows (385 on raised floors), 0 violations, deepest 0 m, highest 0.043 m || corpses: 982 rows (385 on raised floors), 0 violations, deepest 0 m, highest 0.04 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
       "ok": true,
-      "detail": "200 rows (145 on raised floors), 0 violations, deepest 0 m, highest 0.116 m"
+      "detail": "200 rows (145 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
     },
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
@@ -762,12 +782,12 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.159, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.155, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
       "ok": true,
-      "detail": "tollbearer 2.206 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.336 drawn / 2.35 hit; sexton 2.331 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
+      "detail": "tollbearer 2.246 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.332 drawn / 2.35 hit; sexton 2.331 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
     },
     {
       "name": "picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets)",
@@ -812,12 +832,12 @@
     {
       "name": "spore beds in the live game: blooming = bright with mist and it burns, dormant = dim, no mist, no damage",
       "ok": true,
-      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.46371804351732243,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
+      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4637388107978882,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
     },
     {
       "name": "the Weeping Mother weeps in the live game: a tear is drawn in the air while the sim has one, then a pool, flat on the floor, at the place the sim put it",
       "ok": true,
-      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5605916581050792,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
+      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5600619859933037,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
     },
     {
       "name": "the Weeping Mother broods in the live game: her sacs swell on the view while the sim swells, then two Gaunts stand beside her",
@@ -852,17 +872,27 @@
     {
       "name": "the Grand Cantor in the live game: the horn rears for its pulse, the view draws a ring for each of the sim's two, and its shield is drawn at 3 m while a reed stands and gone when none does",
       "ok": true,
-      "detail": "horn -2.17 -> -2.56, sim rings 2, drawn 2, shield {\"x\":128.9984422920723,\"y\":3,\"z\":56.96337011894674,\"r\":3.8763366173078797}, then null"
+      "detail": "horn -2.17 -> -2.56, sim rings 2, drawn 2, shield {\"x\":128.9984422920723,\"y\":3,\"z\":56.96337011894674,\"r\":3.876324641972787}, then null"
+    },
+    {
+      "name": "a vent in the live game: the plate throws the player, the camera follows the arc (higher than the ground view, tracking the body) and the field of view opens; after the landing both are back",
+      "ok": true,
+      "detail": "ground y 0.00 cam 1.60 fov 70.0; flying y 4.75 cam 6.35 fov 75.0; landed y 0.00 cam 1.60 fov 70.0; plates drawn 4"
+    },
+    {
+      "name": "a falling load in the live game: not drawn between landings, drawn dropping with a hazard glow during the warning, a squashed wreck just after the impact, gone a second or two later",
+      "ok": true,
+      "detail": "calm {\"visible\":false,\"y\":0,\"scaleY\":0.974242424242423,\"glow\":0,\"shadow\":0,\"rect\":[48,96,59,98]} warning {\"visible\":true,\"y\":14.765432098765435,\"scaleY\":1,\"glow\":0.21722222222222207,\"shadow\":0.15277777777777754,\"rect\":[48,96,59,98]} after {\"visible\":true,\"y\":0,\"scaleY\":0.665151515151515,\"glow\":0.3030303030303029,\"shadow\":0.33333333333333326,\"rect\":[48,96,59,98]} gone {\"visible\":false,\"y\":0,\"scaleY\":0.665151515151515,\"glow\":0,\"shadow\":0,\"rect\":[48,96,59,98]}"
     },
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "450 samples, lowest chip 0.006 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "469 samples, lowest chip 0.003 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
       "ok": true,
-      "detail": "[{\"kind\":\"tollbearer\",\"n\":26441,\"normal\":0.226,\"classic\":0.223},{\"kind\":\"bellhand\",\"n\":6206,\"normal\":0.165,\"classic\":0.163}]"
+      "detail": "[{\"kind\":\"tollbearer\",\"n\":24034,\"normal\":0.228,\"classic\":0.225},{\"kind\":\"bellhand\",\"n\":6313,\"normal\":0.168,\"classic\":0.167}]"
     },
     {
       "name": "quick load restores the saved state (hp back, tick back)",
@@ -897,17 +927,17 @@
     {
       "name": "render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles",
       "ok": true,
-      "detail": "{\"pier\":[194,194,37280,37280],\"plaza\":[175,175,34410,34410],\"warehouse\":[96,96,19320,19320],\"plaza-all-awake\":[414,414,34410,34410],\"warehouse-all-awake\":[146,146,19368,19368],\"m03-market\":[173,173,57572,57572],\"m03-market-all-awake\":[611,611,57620,57620],\"m05-terrace\":[108,108,35648,35648],\"m05-terrace-all-awake\":[320,320,35648,35648],\"m06-quay\":[159,159,53592,53592],\"m06-quay-all-awake\":[636,636,53592,53592],\"m07-atrium\":[181,181,49590,49590],\"m08-chamber\":[274,274,46816,46816],\"m08-chamber-all-awake\":[521,521,46460,46460]}"
+      "detail": "{\"pier\":[196,194,37360,37280],\"plaza\":[177,175,34648,34410],\"warehouse\":[98,96,20506,19320],\"plaza-all-awake\":[395,414,34648,34410],\"warehouse-all-awake\":[145,146,20554,19368],\"m03-market\":[175,173,58468,57572],\"m03-market-all-awake\":[571,611,58516,57620],\"m05-terrace\":[110,108,38480,35648],\"m05-terrace-all-awake\":[304,320,38480,35648],\"m06-quay\":[161,159,54582,53592],\"m06-quay-all-awake\":[593,636,54582,53592],\"m07-atrium\":[183,181,50644,49590],\"m08-chamber\":[276,274,49024,46816],\"m08-chamber-all-awake\":[505,521,48668,46460]}"
     },
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":194,\"triangles\":37280,\"geometries\":1139,\"textures\":74,\"programs\":21},\"plaza\":{\"calls\":175,\"triangles\":34410,\"geometries\":1139,\"textures\":74,\"programs\":21},\"warehouse\":{\"calls\":96,\"triangles\":19320,\"geometries\":1139,\"textures\":74,\"programs\":21},\"plaza-all-awake\":{\"calls\":414,\"triangles\":34410,\"geometries\":1371,\"textures\":74,\"programs\":21},\"warehouse-all-awake\":{\"calls\":146,\"triangles\":19368,\"geometries\":1371,\"textures\":74,\"programs\":21},\"m03-market\":{\"calls\":173,\"triangles\":57572,\"geometries\":1173,\"textures\":74,\"programs\":20},\"m03-market-all-awake\":{\"calls\":611,\"triangles\":57620,\"geometries\":1572,\"textures\":74,\"programs\":20},\"m05-terrace\":{\"calls\":108,\"triangles\":35648,\"geometries\":1137,\"textures\":74,\"programs\":17},\"m05-terrace-all-awake\":{\"calls\":320,\"triangles\":35648,\"geometries\":1305,\"textures\":74,\"programs\":17},\"m06-quay\":{\"calls\":159,\"triangles\":53592,\"geometries\":1208,\"textures\":74,\"programs\":18},\"m06-quay-all-awake\":{\"calls\":636,\"triangles\":53592,\"geometries\":1648,\"textures\":74,\"programs\":18},\"m07-atrium\":{\"calls\":181,\"triangles\":49590,\"geometries\":1169,\"textures\":74,\"programs\":18},\"m08-chamber\":{\"calls\":274,\"triangles\":46816,\"geometries\":1244,\"textures\":74,\"programs\":17},\"m08-chamber-all-awake\":{\"calls\":521,\"triangles\":46460,\"geometries\":1483,\"textures\":74,\"programs\":17}}"
+      "detail": "{\"pier\":{\"calls\":196,\"triangles\":37360,\"geometries\":1140,\"textures\":97,\"programs\":23},\"plaza\":{\"calls\":177,\"triangles\":34648,\"geometries\":1140,\"textures\":97,\"programs\":23},\"warehouse\":{\"calls\":98,\"triangles\":20506,\"geometries\":1140,\"textures\":97,\"programs\":23},\"plaza-all-awake\":{\"calls\":395,\"triangles\":34648,\"geometries\":1351,\"textures\":97,\"programs\":23},\"warehouse-all-awake\":{\"calls\":145,\"triangles\":20554,\"geometries\":1351,\"textures\":97,\"programs\":23},\"m03-market\":{\"calls\":175,\"triangles\":58468,\"geometries\":1174,\"textures\":97,\"programs\":22},\"m03-market-all-awake\":{\"calls\":571,\"triangles\":58516,\"geometries\":1531,\"textures\":97,\"programs\":22},\"m05-terrace\":{\"calls\":110,\"triangles\":38480,\"geometries\":1138,\"textures\":97,\"programs\":19},\"m05-terrace-all-awake\":{\"calls\":304,\"triangles\":38480,\"geometries\":1288,\"textures\":97,\"programs\":19},\"m06-quay\":{\"calls\":161,\"triangles\":54582,\"geometries\":1209,\"textures\":97,\"programs\":20},\"m06-quay-all-awake\":{\"calls\":593,\"triangles\":54582,\"geometries\":1604,\"textures\":97,\"programs\":20},\"m07-atrium\":{\"calls\":183,\"triangles\":50644,\"geometries\":1170,\"textures\":97,\"programs\":20},\"m08-chamber\":{\"calls\":276,\"triangles\":49024,\"geometries\":1245,\"textures\":97,\"programs\":19},\"m08-chamber-all-awake\":{\"calls\":505,\"triangles\":48668,\"geometries\":1466,\"textures\":97,\"programs\":19}}"
     },
     {
       "name": "render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)",
       "ok": true,
-      "detail": "{\"pier\":194,\"plaza\":175,\"warehouse\":96,\"plaza-all-awake\":414,\"warehouse-all-awake\":146,\"m03-market\":173,\"m03-market-all-awake\":611,\"m05-terrace\":108,\"m05-terrace-all-awake\":320,\"m06-quay\":159,\"m06-quay-all-awake\":636,\"m07-atrium\":181,\"m08-chamber\":274,\"m08-chamber-all-awake\":521}"
+      "detail": "{\"pier\":196,\"plaza\":177,\"warehouse\":98,\"plaza-all-awake\":395,\"warehouse-all-awake\":145,\"m03-market\":175,\"m03-market-all-awake\":571,\"m05-terrace\":110,\"m05-terrace-all-awake\":304,\"m06-quay\":161,\"m06-quay-all-awake\":593,\"m07-atrium\":183,\"m08-chamber\":276,\"m08-chamber-all-awake\":505}"
     },
     {
       "name": "looking at a closed door within reach shows how to open it",
@@ -1002,17 +1032,17 @@
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
       "ok": true,
-      "detail": "geometries 1139->1139, textures 74->74, programs 21->21"
+      "detail": "geometries 1140->1140, textures 97->97, programs 23->23"
     },
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=101.6ms"
+      "detail": "frames=900 avg=113.0ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 2083 ms, p95 583 ms"
+      "detail": "worst 2067 ms, p95 600 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -1023,16 +1053,16 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 101.55433333333336,
-    "p95Ms": 583.2999999999884,
-    "worstMs": 2083.2999999999884
+    "avgMs": 112.9985555555555,
+    "p95Ms": 600.0999999999767,
+    "worstMs": 2066.7000000000116
   },
   "gl": {
-    "geometries": 1185,
-    "textures": 74,
+    "geometries": 1180,
+    "textures": 97,
     "calls": 1,
     "triangles": 2,
-    "programs": 21
+    "programs": 23
   },
   "note": "perf numbers are software-GL and are NOT a performance claim"
 }
