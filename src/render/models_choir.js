@@ -55,7 +55,8 @@ export function tollbearer(tex, o = {}) {
     R.J.bellEchoes = R.echo(bell, 1, 0.14);
     if (big) R.cone('spine', 0.12, 0.6, 5, C.bone, { pos: [-0.34, 0.12, -0.05], rot: [0, 0, 1.15] });                                         // a bone spur grown from the other hip
   }, (p, J, R) => {
-    const t = p.t, h = humanoidPose(p, J, big ? { stoop: 0.2, lean: 0.06, headX: 0.5, headZ: 0.32, jawOpen: 0.5, hipY: 0.94 } : { stoop: 0.14, lean: 0.03, headX: 0.35, headZ: 0.2, jawOpen: 0.4, hipY: 0.96 });
+    const t = p.t, h = humanoidPose(p, J, big ? { stoop: 0.2, lean: -0.10, headX: 0.5, headZ: 0.32, jawOpen: 0.5, hipY: 0.94 } : { stoop: 0.14, lean: -0.1, headX: 0.35, headZ: 0.2, jawOpen: 0.4, hipY: 0.96 });
+    J.armA.rotation.z = -0.16;                                                                                                                      // PT-035: it slumps toward the weight of the bell and the other arm trails out: no other creature's outline leans or trails
     const ring = h.raise * (1 - h.rec);
     J.bellPivot.rotation.z = S(t * 1.7) * 0.05 + S(p.phase - 0.9) * 0.3 * p.walk + 0.5 * h.raise * (1 - h.slam) - 0.4 * h.slam * (1 - h.rec);       // the pendulum: it lags the stride and is thrown out by the raised arm
     J.bell.rotation.x = S(t * 1.3) * 0.04 + 0.2 * h.slam;
@@ -108,7 +109,7 @@ export function bellhand(tex) {
     R.joint('hips', null, [0, 0.9, 0]);
     legs(R, 'hips', 0.1, { a: 0.47, b: 0.43, r0: 0.09, r1: 0.07, r2: 0.05, cellA: C.trou, cellB: C.trou }, C.coatDk);
     R.joint('spine', 'hips', [0, 0.05, 0]);
-    R.pleat('spine', V2([[0.1, 0.84], [0.17, 0.78], [0.225, 0.62], [0.235, 0.4], [0.255, 0.18], [0.3, -0.05], [0.34, -0.26]]), 12, 6, 0.05, C.coat, { scale: [1, 1, 0.75] });       // the long coat, buttoned to the throat
+    R.pleat('spine', V2([[0.1, 0.84], [0.16, 0.78], [0.2, 0.62], [0.2, 0.4], [0.21, 0.18], [0.24, -0.05], [0.27, -0.26]]), 12, 6, 0.05, C.coat, { scale: [1, 1, 0.75] });       // the long coat, buttoned to the throat
     R.lathe('spine', V2([[0.22, 0.95], [0.2, 0.9], [0.15, 0.82], [0.12, 0.78]]), 10, C.coatDk, { pos: [0, 0, 0.02] });                                                          // a flared collar: the head stands in it like a clapper
     R.tor('spine', 0.2, 0.03, 4, 12, C.bronze, { pos: [0, 0.93, 0.02], rot: [PI / 2, 0, 0] });
     for (const s of [-1, 1]) R.lump('spine', 0.11, 0, 0.18, s + 5, C.coat, { pos: [s * 0.24, 0.72, 0], scale: [1.2, 0.8, 1] });
@@ -126,7 +127,7 @@ export function bellhand(tex) {
     head(R, C, { neckAt: [0, 0.86, 0.03], r: 0.15, tall: 1.2, neck: 0.1, eyes: 'both' });
     R.cyl('head', 0.14, 0.16, 0.22, 8, C.hat, { pos: [0, 0.3, -0.01], name: 'hat' }); R.cyl('head', 0.23, 0.23, 0.025, 12, C.hat, { pos: [0, 0.2, -0.01] }); R.tor('head', 0.155, 0.02, 4, 10, C.bronze, { pos: [0, 0.25, -0.01], rot: [PI / 2, 0, 0] });   // the stovepipe hat of a town crier
   }, (p, J, R) => {
-    const t = p.t, h = humanoidPose(p, J, { stoop: 0.14, lean: 0.05, headX: 0.25, headZ: 0.12, jawOpen: 0.3, hipY: 0.9, stride: 0.6 });
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.14, lean: 0.10, headX: 0.25, headZ: 0.12, jawOpen: 0.3, hipY: 0.9, stride: 0.6 });
     const ring = h.raise * (1 - h.rec), up = p.attack > 0 ? h.raise * (1 - h.slam) : 0, sl = p.attack > 0 ? h.slam * (1 - h.rec) : 0;
     J.armA.rotation.set(-0.15 * up - 0.5 * sl, 0, -0.35 - 0.6 * up + 0.2 * sl); J.armAM.rotation.set(-0.35 * sl, 0, -2.79 + 0.5 * up);         // the forearm stands up beside the head; the tell lifts it, the strike throws the bell forward
     const live = p.awake ? 1 : 0;                                                                                                                    // a sleeper is silent: the view says whether the creature is awake (idle = asleep)
@@ -361,7 +362,7 @@ export function chorister(tex) {
     legs(R, 'hips', 0.1, { a: 0.46, b: 0.44, r0: 0.085, r1: 0.066, r2: 0.05, cellA: C.robeDk, cellB: C.chitinDk }, C.chitinDk);
     R.joint('spine', 'hips', [0, 0.05, 0]);
     R.cyl('spine', 0.13, 0.16, 0.72, 8, C.skin, { pos: [0, 0.36, 0], scale: [1, 1, 0.75] });
-    R.pleat('spine', V2([[0.13, 0.84], [0.19, 0.78], [0.235, 0.62], [0.27, 0.42], [0.34, 0.2], [0.46, -0.02], [0.6, -0.22]]), 14, 6, 0.06, C.robe, { scale: [1, 1, 0.78] });             // the surplice
+    R.pleat('spine', V2([[0.13, 0.84], [0.18, 0.78], [0.21, 0.62], [0.22, 0.42], [0.25, 0.2], [0.3, -0.02], [0.36, -0.22]]), 14, 6, 0.06, C.robe, { scale: [1, 1, 0.78] });             // the surplice (PT-035: a narrow column now, so the Sexton's cone is the only cone)
     R.lump('spine', 0.14, 1, 0.14, 4, C.chitin, { pos: [0.27, 0.8, 0], scale: [1.35, 0.7, 1.1] });                                                                                          // a chitin pauldron on the screen-right shoulder
     R.lump('spine', 0.11, 0, 0.14, 2, C.robe, { pos: [-0.25, 0.77, 0], scale: [1.2, 0.8, 1] });
     for (let i = 0; i < 3; i++) R.lump('spine', 0.085, 0, 0.1, 5 + i, C.chitin, { pos: [0.02 * i, 0.5 + i * 0.12, 0.15], scale: [1.5 - i * 0.2, 0.55, 0.5] });                           // ribs of chitin through the linen
@@ -387,8 +388,8 @@ export function chorister(tex) {
     R.J.hornEchoes = R.echo(horn, 1, 0.12);
   }, (p, J, R) => {
     const t = p.t, h = humanoidPose(p, J, { stoop: 0.07, lean: 0.03, headX: 0.12, headZ: 0, jawOpen: 0, hipY: 0.92, stride: 0.6 }), ring = h.raise * (1 - h.rec);
-    J.armA.rotation.x = -1.2 + S(t * 1.4) * 0.06 - 0.45 * ring + S(p.phase) * 0.12 * p.walk; J.armA.rotation.z = -0.12; J.armAM.rotation.x = -0.95 - 0.2 * ring;                          // the conductor's arm, up
-    J.armB.rotation.x = -0.4 + S(p.phase) * 0.35 * p.walk; J.armBM.rotation.x = -0.35; J.armB.rotation.z = 0.1;
+    J.armA.rotation.x = -0.15 + S(t * 1.4) * 0.06 - 0.3 * ring + S(p.phase) * 0.12 * p.walk; J.armA.rotation.z = -1.15 - 0.4 * ring; J.armAM.rotation.x = -0.25 - 0.2 * ring; J.armAM.rotation.z = -0.9;                          // the conductor's arm, up
+    J.armB.rotation.x = -0.15 + S(p.phase) * 0.2 * p.walk; J.armBM.rotation.x = -0.25; J.armB.rotation.z = 1.15 + 0.4 * ring; J.armBM.rotation.z = 0.9;                                              // PT-035: both hands raised in the singer's goalpost: the Chorister is the one outline that is wide at the top and narrow below
     J.head.rotation.x = 0.04 - 0.5 * ring + S(t * 38) * 0.03 * ring; J.head.rotation.y = S(t * 0.7) * 0.12 * (1 - ring);                                                                    // it throws its head back to sing, the horn swings up
     J.throat.scale.setScalar(1 + 0.18 * S(t * 3) + 1.5 * ring); R.ring(J.hornEchoes, p.attack > 0 ? ring : 0);
     for (let i = 0; J['pipe' + i]; i++) J['pipe' + i].rotation.x = -0.12 + S(t * 1.5 + i * 1.7) * 0.05 + 0.18 * ring * S(t * 30 + i);                                                         // the pipes tremble as it sings
