@@ -55,6 +55,7 @@ export function installTestHook(app) {
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
     /** render truth: per enemy, the sim's x/y/z + ground (groundAt) next to the world-space bounds and root position actually drawn (see GameView.enemyBounds) */
+    shadowProbe() { const sh = g.view?.shadows; return sh ? { count: sh.mesh.count, visible: sh.mesh.visible, inScene: !!sh.mesh.parent, opacity: sh.mesh.material.opacity } : null; },                                  // PT-035: the contact shadows (shadows.js)
     enemyBounds() { return g.view && g.world ? enemyBounds(g.view, g.world) : []; },
     enemyScreenRect(id) { return g.view && g.world ? enemyScreenRect(g.view, g.world, id) : null; },
     /** feed events to the view as the game does (impact / explode make debris) and read the debris back */

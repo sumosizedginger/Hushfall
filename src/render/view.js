@@ -24,6 +24,7 @@ import { lightWeights } from './lightbudget.js';
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
+import { makeShadows } from './shadows.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
@@ -93,6 +94,7 @@ export class GameView {
     this.rocketLight = new THREE.PointLight(0xff9a40, 0, 16, 2); scene.add(this.rocketLight); this.puffGeo = new THREE.IcosahedronGeometry(0.16, 0); this.puffMat = new THREE.MeshBasicMaterial({ color: 0xa8a29a, transparent: true, opacity: 0.55, depthWrite: false }); this.puffs = [];
     this.woodMat = new THREE.MeshBasicMaterial({ color: 0x8a6a3a }); this.shocks = []; this.shockGeo = new THREE.TorusGeometry(1, 0.03, 4, 28); this.shockMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
     this.physViews = new Map(); this.tractor = null; this.puntT = 9; this.boomK = 1;
+    this.shadows = makeShadows(); this.scene.add(this.shadows.mesh);                                // PT-035: a soft contact shadow under every live creature (shadows.js: one instanced mesh)
     this.shield = null; this.shieldFlash = 0; this.ripples = [];       // the boss's shield is bands of plates (shield.js), and a hit it absorbs sends a ring of sound out
     this.beforeStep(world);
   }
@@ -272,6 +274,7 @@ export class GameView {
       } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
     }
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); }
+    { const discs = []; for (const e of w.enemies) { if (e.state === 'dead') continue; const v = this.enemyViews.get(e.id), def = ENEMIES[e.kind]; if (v) discs.push({ x: v.root.position.x, y: v.root.position.y, z: v.root.position.z, r: def.radius, fade: def.flying ? 0.55 : 1 }); } this.shadows.update(discs); }      // the floor under each creature, its collision radius; a flyer's disc is smaller (it is higher)
     // channel beams (Sexton -> corpse), node links (ring -> Cantor), the shield, tone pulses
     { const live = new Set(); let boss = null; const nodes = [];
       for (const e of w.enemies) {
