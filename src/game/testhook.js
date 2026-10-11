@@ -6,6 +6,7 @@ import { hashWorld, spawnEnemy, updateBeams } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
 import { sanitizeProgress } from '../engine/progress.js';
+import { ENDINGS, stepSequence, skipSequence } from './ending.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
@@ -97,7 +98,19 @@ export function installTestHook(app) {
     /** send a moving floor to its 'high' or 'low' stop (the same field the switch actions set) */
     setup_sectorTo(id, pos) { const s = g.world.sectors.find((q) => q.id === id), def = g.world.map.sectors.find((q) => q.id === id); s.target = pos === 'high' ? def.high : def.low; },
     setup_ambient(v) { g.world.ambient = v; if (g.view) g.view.ambient = v; },
-    showScreen(name, data = {}) { ui.show(name, data); },                                                  // a screen with sample data, for the front-end stills (PT-021 step 4)
+    showScreen(name, data = {}) { ui.show(name, data); },
+    /** PT-036: the campaign epilogue as if the finale's exit had just been taken (the map in hand need not be one). `at` = seconds to step the sequence first, or 'tally' to go straight to the tally */
+    setup_epilogue(at = 0, campaign = 1) {
+      app.startEpilogue({ campaign, ...ENDINGS[campaign] }); const e = g.ending;
+      e.seq = at === 'tally' ? skipSequence(e.seq, e.def.cards) : stepSequence(e.seq, e.def.cards, at); app.syncEpilogue(); return window.__GAME_TEST__.epilogueProbe();
+    },
+    /** PT-036: what the shell says about the epilogue and what the page shows (the card, the typed text, the tally's rows, the picture loaded) */
+    epilogueProbe() {
+      const e = g.ending, el = (id) => document.getElementById(id), art = el('ending-art');
+      return { mode: g.mode, screen: ui.screen, active: !!e, card: e ? e.seq.i : null, phase: e?.seq.phase ?? null, tallied: e?.tallied ?? null, who: el('ending-who').textContent, text: el('ending-text').textContent, title: el('ending-title').textContent,
+        tallyShown: !el('ending-tally').classList.contains('hidden'), tallyRows: el('tally-eps').children.length, discs: el('tally-eps').querySelectorAll('.disc').length, totals: el('tally-totals').children.length, art: art.src.split('/').pop(), artLoaded: art.complete && art.naturalWidth > 0 };
+    },
+    press_epilogue() { app.epiloguePress(); return window.__GAME_TEST__.epilogueProbe(); },                                                  // a screen with sample data, for the front-end stills (PT-021 step 4)
     setup_look(name) { g.view?.setPlace(lookOf({ look: name })); },                                  // try another place's light on the map in hand (PT-021 stills)
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */

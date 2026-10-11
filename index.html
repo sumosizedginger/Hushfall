@@ -135,6 +135,43 @@ button.buy:hover,button.buy:focus-visible{padding-left:14px;border-color:var(--t
 button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:var(--paper);background:none}
 @media (max-width:860px){#screen-complete .panel{grid-template-columns:1fr}#rank-line,#screen-complete #stat-rows,#locker-box{grid-column:1;grid-row:auto}}
 @media (max-width:760px){#locker{grid-template-columns:1fr}#screen-title{padding-left:6vw}}
+/* ---- the end of a campaign (PT-036: "we need a real ending beat"). The Gate's picture, one line of the epilogue at a time typed over it, then the tally of the whole campaign. */
+#screen-ending{background:#05060a;align-items:flex-end;overflow:hidden;cursor:pointer}
+#ending-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;filter:saturate(1.06) contrast(1.05) brightness(.92);animation:endingdrift 90s ease-out forwards}
+@keyframes endingdrift{from{transform:scale(1)}to{transform:scale(1.1)}}
+#screen-ending::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,#05060af7 0,#05060acc 24%,#05060a40 50%,transparent 70%),radial-gradient(ellipse at 50% 42%,transparent 38%,#05060ab0 100%)}
+#screen-ending.is-tally::before{background:radial-gradient(ellipse at 50% 50%,#05060ad8,#05060af4)}
+#screen-ending.is-tally #ending-card,#screen-ending.is-tally #ending-head,#screen-ending.is-tally #ending-hint{display:none}
+#ending-head{position:absolute;z-index:2;top:8vh;left:0;right:0;text-align:center;text-shadow:3px 3px 0 #000b,0 0 60px #ffd45a30;animation:endingin 3.2s ease both}
+#ending-head small{display:block;letter-spacing:.55em;font-size:12px;text-transform:uppercase;color:var(--bronze);margin-bottom:12px}
+#ending-head h1{font-size:clamp(40px,7vw,104px);letter-spacing:.34em;margin-right:-.34em}
+@keyframes endingin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+#ending-card{position:relative;z-index:2;width:min(880px,90vw);margin:0 auto 12vh;text-align:center;min-height:9.5em;text-shadow:2px 2px 0 #000}
+#ending-card.in{animation:endingin .6s ease both}
+#ending-who{display:block;font:12px ui-monospace,Consolas,monospace;letter-spacing:.42em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;min-height:1.2em}
+#ending-card[data-who="INES"] #ending-who{color:var(--bronze)}
+#ending-text{margin:0;font:400 clamp(20px,2.5vw,31px)/1.5 var(--serif);letter-spacing:.03em;color:var(--paper)}
+#ending-card[data-who="narrator"] #ending-text{font-style:italic;color:#d8d2c0}
+#ending-card.typing #ending-text::after{content:"\258C";margin-left:3px;color:var(--teal);animation:endingcaret .8s steps(2) infinite}
+@keyframes endingcaret{50%{opacity:0}}
+#ending-hint{position:absolute;z-index:2;right:22px;bottom:14px;font:11px ui-monospace,Consolas,monospace;letter-spacing:.18em;color:#7f9490;text-transform:uppercase;pointer-events:none}
+#ending-tally{position:absolute;z-index:3;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4vh 4vw;cursor:default;animation:endingin 1.2s ease both}
+#ending-tally.hidden{display:none}
+#ending-tally h2{border:0;text-align:center;font-size:clamp(20px,2.4vw,30px);letter-spacing:.38em;margin:0 0 4px}
+#ending-tally .sub{text-align:center;letter-spacing:.12em;margin-bottom:18px}
+#tally-eps{display:grid;gap:7px;width:min(780px,92vw)}
+#tally-eps .ep{display:grid;grid-template-columns:minmax(150px,1fr) auto minmax(60px,auto);align-items:center;gap:14px;border-bottom:1px solid #1d272b;padding:6px 2px}
+#tally-eps .ep b{font:400 15px var(--serif);letter-spacing:.2em;text-transform:uppercase;color:var(--bronze)}
+#tally-eps .discs{display:flex;gap:7px}
+#tally-eps .disc{display:inline-grid;place-items:center;width:30px;height:30px;border:2px solid currentColor;border-radius:50%;font:400 15px/1 var(--serif);color:#3a4a4e}
+#tally-eps .disc.r-S{color:#ffd45a}#tally-eps .disc.r-A{color:var(--teal)}#tally-eps .disc.r-B{color:var(--paper)}#tally-eps .disc.r-C{color:#9fb4b0}
+#tally-eps .sec{font:11px ui-monospace,Consolas,monospace;letter-spacing:.14em;color:#8fa4a0;text-align:right;text-transform:uppercase}#tally-eps .sec.found{color:var(--teal)}
+#tally-totals{width:min(780px,92vw);margin-top:16px;display:grid;grid-template-columns:1fr 1fr;column-gap:36px}
+#tally-note{color:#7f9490;font-size:11px;letter-spacing:.08em;margin:6px 0 0;width:min(780px,92vw)}
+#tally-next{margin:22px 0 6px;text-align:center}#tally-next small{display:block;letter-spacing:.5em;font-size:11px;text-transform:uppercase;color:var(--teal)}
+#tally-next strong{display:block;font:400 clamp(22px,2.8vw,34px) var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--paper);margin:6px 0 2px}#tally-next em{color:#c4d0cc;font:italic 15px var(--serif)}
+#ending-tally button{width:auto;min-width:260px;text-align:center;border:1px solid var(--brass);margin-top:10px}
+@media (max-width:700px){#tally-totals{grid-template-columns:1fr}#tally-eps .ep{grid-template-columns:1fr auto}#tally-eps .sec{display:none}}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
@@ -206,6 +243,14 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 
 <div id="screen-complete" class="screen hidden">
   <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
+</div>
+
+<div id="screen-ending" class="screen hidden">
+  <img id="ending-art" alt="">
+  <div id="ending-head"><small id="ending-kicker"></small><h1 id="ending-title"></h1></div>
+  <div id="ending-card"><b id="ending-who"></b><p id="ending-text"></p></div>
+  <div id="ending-tally" class="hidden"><h2 id="tally-title"></h2><div class="sub" id="tally-sub"></div><div id="tally-eps"></div><div id="tally-totals" class="rows"></div><div id="tally-note"></div><div id="tally-next"></div><button id="btn-ending">Continue</button></div>
+  <div id="ending-hint">Enter to go on · Esc to skip</div>
 </div>
 <script type="module" src="/src/game/main.js"></script>
 </body></html>

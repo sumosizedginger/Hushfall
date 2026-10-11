@@ -1,6 +1,6 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
 import * as THREE from 'three';
-import { loadAll, titleArtUrl } from '../render/textures.js';
+import { loadAll, titleArtUrl, endingArtUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
@@ -23,6 +23,7 @@ import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, app
 import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } from './wheel.js';
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
+import { endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -51,7 +52,7 @@ try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false }); } catch 
 renderer.setPixelRatio(1); renderer.autoClear = false;
 canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode = 'title'; document.exitPointerLock?.(); fatal('The graphics context was lost (a GPU reset or driver hiccup). Reload the page to continue: a quick save is not affected.'); });
 const tex = await loadAll().catch((err) => { fatal('Could not load the painted textures: ' + err.message); throw err; });
-document.getElementById('title-art').src = titleArtUrl();
+document.getElementById('title-art').src = titleArtUrl(); document.getElementById('ending-art').src = endingArtUrl();
 
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
@@ -73,6 +74,7 @@ const ui = new UI({
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
   nextLevel: () => nextLevel(),
+  epiloguePress: () => epiloguePress(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
@@ -134,7 +136,7 @@ const nextCarry = () => ({ ...carryOver(g.world), upgrades: { ...g.progress.upgr
 /** the intermission screen's data: the stats, the rank this run earned, the salvage it paid, the Locker */
 function completeData() {
   const m = MAPS[g.mapId], e = g.lastEarn;
-  return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId,
+  return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId, campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
     rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '' };
 }
 /** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
@@ -150,8 +152,28 @@ function buyUpgrade(track) {
   if (r.ok) { g.progress = r.progress; commitProgress(); }
   ui.show('complete', completeData());
 }
+/** PT-036, the end of a campaign: the finale's exit shows the epilogue (cards typed over the Gate's picture, then the tally of the whole campaign), THEN the intermission (rank, Locker, next map) as for any map.
+ *  The records are already written when it starts (earn + commitProgress ran at the exit), so closing the game here loses nothing. */
+function startEpilogue(ending) {
+  g.input.releaseAll(); g.ending = { def: ending, seq: startSequence(), tallied: false }; g.mode = 'epilogue';
+  ui.show('ending', { ending }); syncEpilogue(); audio.play('gate_chord');
+}
+/** show what the sequence says now: the card being typed, or (once the last card has been read) the tally */
+function syncEpilogue() {
+  const e = g.ending; if (!e) return;
+  const v = viewSequence(e.seq, e.def.cards);
+  if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def); } } else ui.endingView(v);
+}
+/** Enter, Space, a click or the pad's A: finish the card, go on, or (in the tally) leave for the intermission */
+function epiloguePress() {
+  const e = g.ending; if (g.mode !== 'epilogue' || !e) return;
+  if (e.tallied) { if (ui.canAct()) finishEpilogue(); return; }
+  e.seq = pressSequence(e.seq, e.def.cards); syncEpilogue();
+}
+const epilogueSkip = () => { const e = g.ending; if (g.mode !== 'epilogue' || !e || e.tallied) return; e.seq = skipSequence(e.seq, e.def.cards); syncEpilogue(); };
+function finishEpilogue() { g.ending = null; g.mode = 'complete'; ui.show('complete', completeData()); }
 function quitToTitle() {
-  cancelWheel(); g.mapOpen = false; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
+  cancelWheel(); g.mapOpen = false; g.ending = null; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
 function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
@@ -226,6 +248,7 @@ addEventListener('keydown', (e) => {
   if (e.repeat) return;
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
+  if (g.mode === 'epilogue') { if (e.code === 'Escape') { e.preventDefault(); epilogueSkip(); } else if ((e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { e.preventDefault(); epiloguePress(); } return; }
   if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.nextLevel(); return; }
   if (e.code === 'F5' && g.mode === 'playing') { e.preventDefault(); quickSave(); return; }
   if (e.code === 'F9' && (g.mode === 'playing' || g.mode === 'paused')) { e.preventDefault(); quickLoad(); return; }
@@ -263,6 +286,7 @@ const navRepeat = new NavRepeat();
 const menuItems = () => { const scr = document.querySelector('.screen:not(.hidden)'); return scr ? [...scr.querySelectorAll('button, input, select, summary')].filter((el) => !el.disabled && el.offsetParent !== null) : []; };
 /** the pad in a menu: D-pad or left stick moves the focus, A / Cross confirms (fixed, so the menus always work whatever is rebound), B / Circle or the pause button backs out of the pause menu */
 function padMenu(out, dt) {
+  if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
   const d = navRepeat.update(navDir(g.pad.down, out.move), dt), items = menuItems(); if (!items.length) return;
   const cur = items.indexOf(document.activeElement);
   if (cur < 0) { if (d || out.pressed.length) items[0].focus(); return; }
@@ -321,11 +345,14 @@ function frame(now) {
     g.timer -= dt;
     if (g.timer <= 0 && MAPS[g.mapId].range) quitToTitle();                              // the dev range has no scoring, salvage or next map: its exit just goes back to the title
     else if (g.timer <= 0) {
-      g.mode = 'complete'; g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
+      g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record
-      commitProgress(); ui.show('complete', completeData());
+      commitProgress();
+      const ending = endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest);                // a campaign's last map: the epilogue first (PT-036)
+      if (ending) startEpilogue(ending); else { g.mode = 'complete'; ui.show('complete', completeData()); }
     }
   }
+  else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
@@ -358,4 +385,4 @@ if (import.meta.env.DEV) {                                                 // de
   }
 }
 if (import.meta.env.DEV) addEventListener('keydown', (e) => { if (e.code === 'F8' && g.world?.map.range) { e.preventDefault(); const steps = [1, 0.5, 0.25, 0.1], i = steps.indexOf(g.devScale ?? 1); g.devScale = steps[(i + 1) % steps.length]; } });      // the range's slow motion (PT-020): watch a swing at a tenth of its speed in the real game
-if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK }));
+if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue }));

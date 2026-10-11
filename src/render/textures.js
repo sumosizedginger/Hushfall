@@ -62,3 +62,5 @@ export async function loadAll() {
   return out;
 }
 export const titleArtUrl = () => URL_BY_NAME.ui_title_art;
+/** the picture behind the campaign epilogue (PT-036): its own painting once baked, the Gate's sky until then (the game never depends on the bake) */
+export const endingArtUrl = () => URL_BY_NAME.ui_ending_art ?? URL_BY_NAME.sky_gate;

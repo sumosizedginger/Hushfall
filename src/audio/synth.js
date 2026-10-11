@@ -484,6 +484,15 @@ export const SFX = {
     thump(c, out, t + 1.9, 60, 24, 1.0, 0.75);
     return 3.8;
   },
+  gate_chord(c, out, t, o) {                                    // the Gate stands open (PT-036, the campaign epilogue): one low bell struck, an open fifth blooming above it one bell at a time and left ringing, a long breath of air under all of it
+    bell(c, out, t, 73.4, { decay: 5.5, gain: 0.2, ratio: 2.76, index: 1.2 });
+    bell(c, out, t + 0.9, 146.8, { decay: 5, gain: 0.15, ratio: 3.5, index: 1.3 });
+    bell(c, out, t + 1.8, 220, { decay: 5, gain: 0.12, ratio: 3.5, index: 1.1 });
+    bell(c, out, t + 2.8, 440, { decay: 4.5, gain: 0.07, ratio: 3.5, index: 0.9 });
+    tone(c, out, t, { type: 'sine', f0: 36.7, f1: 36.7, a: 1.4, d: 5.5, gain: 0.1 });
+    noise(c, out, t + 0.3, { dur: 4.5, a: 1.8, gain: 0.04, type: 'bandpass', f0: 700, f1: 1500, q: 0.8, off: o.r() });
+    return 6.5;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

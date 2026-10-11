@@ -15,6 +15,7 @@ import { pickupToast } from './toasts.js';
 
 const $ = (id) => document.getElementById(id);
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const fmtLong = (s) => `${Math.floor(s / 3600)}:${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const TOASTS = {
   pickup: (e) => pickupToast(e.kind),                                         // amounts come from PICKUPS (toasts.js)
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
@@ -33,6 +34,7 @@ export class UI {
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
+    $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
     $('set-fov').oninput = (e) => this.h.setSetting('fov', Number(e.target.value)); $('set-bright').oninput = (e) => this.h.setSetting('brightness', Number(e.target.value));
@@ -74,8 +76,33 @@ export class UI {
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
       $('rank-line').innerHTML = `<span class="rank r-${data.rank}">${data.rank}</span><span>score ${data.score.toFixed(2)} · ${data.gain > 0 ? '+' + data.gain + ' salvage' : 'no new salvage'}${data.record && data.record.rank !== data.rank ? ' · best ' + data.record.rank : ''}</span>`;
       this.locker(data.progress, data.lockerNote ?? '');
-      $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
+      $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : data.campaignEnd ? 'The Gate is open. Campaign Two is not built yet.' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
     }
+    if (name === 'ending') this.endingOpen(data.ending);
+  }
+  /** the campaign epilogue (PT-036): the heading and an empty card; main.js feeds it `endingView` every frame, then `endingTally` */
+  endingOpen(e) {
+    $('screen-ending').classList.remove('is-tally'); $('ending-tally').classList.add('hidden');
+    $('ending-kicker').textContent = e.kicker; $('ending-title').textContent = e.title;
+    $('ending-who').textContent = ''; $('ending-text').textContent = ''; this._endingCard = -1;
+  }
+  /** one frame of the sequence (ending.js viewSequence): a new card fades in under its speaker, its text is typed */
+  endingView(v) {
+    if (v.tally) return;
+    const card = $('ending-card');
+    if (v.index !== this._endingCard) { this._endingCard = v.index; card.className = ''; void card.offsetWidth; card.className = 'in'; card.dataset.who = v.who || 'narrator'; $('ending-who').textContent = v.who; }
+    if ($('ending-text').textContent !== v.text) $('ending-text').textContent = v.text;
+    card.classList.toggle('typing', !v.full);
+  }
+  /** the whole campaign at a glance (ending.js tally): a row per episode with a disc per map, the totals, and what comes next */
+  endingTally(t, e) {
+    $('screen-ending').classList.add('is-tally'); $('ending-tally').classList.remove('hidden'); this.shownAt = performance.now();        // (a held key cannot skip it)
+    $('tally-title').textContent = `${e.kicker.replace(/^End of /, '')} · ${e.name}`; $('tally-sub').textContent = `${t.cleared} of ${t.total} maps finished`;
+    $('tally-eps').innerHTML = t.episodes.map((ep) => `<div class="ep"><b>${ep.title}</b><span class="discs">${ep.maps.map((m) => `<i class="disc${m.rank ? ' r-' + m.rank : ''}" title="${m.name}">${m.rank ?? '·'}</i>`).join('')}</span><span class="sec${ep.secretMapsFound ? ' found' : ''}">${ep.secretMaps ? (ep.secretMapsFound ? 'secret found' : 'secret unfound') : ''}</span></div>`).join('');
+    const ranks = ['S', 'A', 'B', 'C'].map((r) => `${r} ${t.ranks[r]}`).join(' · ');
+    $('tally-totals').innerHTML = [['Ranks', ranks], ['Kills', String(t.kills)], ['Secrets found', String(t.secrets)], ['Secret maps', `${t.secretMapsFound} / ${t.secretMaps}`], ['Time', fmtLong(t.time)], ['Salvage in hand', String(t.salvage)]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
+    $('tally-note').textContent = 'The best you have done on each map. The time is the sum of each map\'s fastest finish, not one sitting.';
+    $('tally-next').innerHTML = `<small>${e.next.kicker}</small><strong>${e.next.name}</strong><em>${e.next.line}</em>`;
   }
   /** the Locker on the intermission: one row per upgrade track (the next tier, what it gives, what it costs) and the salvage in hand. Buying is the shell's job (h.buyUpgrade). */
   locker(p, note = '') {
