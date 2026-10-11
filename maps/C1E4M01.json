@@ -377,7 +377,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [59, 33],
    "facing": -1.007
   },
@@ -407,7 +407,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [44, 55],
    "facing": -1.312
   },
@@ -425,7 +425,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [17, 43],
    "facing": -0.322
   },
@@ -449,7 +449,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [35, 18],
    "facing": -0.498
   },
@@ -503,7 +503,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [33, 47],
    "facing": -0.934
   },

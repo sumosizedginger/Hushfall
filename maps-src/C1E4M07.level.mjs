@@ -110,9 +110,9 @@ E('tollbearer', 90, 22); E('tollbearer', 98, 26); E('gaunt', 102, 19);          
 E('gaunt', 116, 18); E('gaunt', 124, 26); E('gaunt', 134, 20); E('gaunt', 146, 27); E('gaunt', 156, 23);                                                    // L1: the swarm
 E('tollbearer', 120, 22); E('tollbearer', 129, 23); E('tollbearer', 141, 24); E('tollbearer', 152, 19); E('tollbearer', 158, 26);
 E('bellhand', 178, 20);                                                                                                                                  // ramp 1
-E('bellhand', 208, 21); E('sexton', 232, 24); E('tollbearer', 244, 19);                                                                                    // L2
+E('bellhand', 208, 21); E('sexton', 232, 24); E('gill', 244, 19);                                                                                    // L2
 E('chorister', 386, 13.8); E('chorister', 400, 13.8); E('chorister', 416, 13.8);                                                                          // the crossfire: singers on the far inner edges
-E('tollbearer', 262, 20); E('tollbearer', 275, 18);                                                                                                      // ramp 2
+E('tollbearer', 262, 20); E('bellhand', 275, 18);                                                                                                      // ramp 2
 E('bulwark', 318, 21); E('acolyte', 304, 17); E('gaunt', 312, 26); E('gaunt', 334, 23); E('tollbearer', 298, 24);                                          // L3: the shell and the ward
 E('wardengraft', 350, 18);                                                                                                                               // ramp 3
 E('weeping', 418, 23); E('gaunt', 396, 20); E('tollbearer', 404, 22);                                                                                // L4: the Mother and a Warden

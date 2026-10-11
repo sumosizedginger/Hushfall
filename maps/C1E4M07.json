@@ -480,7 +480,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [24, 15],
    "facing": 0.322
   },
@@ -510,7 +510,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [34, 15],
    "facing": 0.077
   },
