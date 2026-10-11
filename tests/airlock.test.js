@@ -40,9 +40,28 @@ test('an airlock: the second door is refused while the first is open and for LOC
   // let the first shut (nobody in it, holdOpen seconds), then the equalising time
   Object.assign(w.player, { x: cellC(7) }); let shut = []; for (let i = 0; i < Math.ceil(9 / TICK) && !shut.some((e) => e.type === 'door_close'); i++) { step(w, idle()); shut.push(...drainEvents(w)); } assert.ok(shut.some((e) => e.type === 'door_close'), 'the first door shut'); for (let i = 0; i < 40 && d1.open > 0; i++) { step(w, idle()); drainEvents(w); } assert.equal(d1.open, 0);
   at(w, 7); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'still cycling: the air is moving (it has not been LOCK.cycle seconds since it shut)'); assert.equal(d2.target, 0);
-  run(w, Math.ceil((LOCK.cycle + 0.2) / TICK)); at(w, 7); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_open' && e.cx === 8), 'cycled: the second opens'); assert.equal(d2.target, 1);
+  at(w, 7); ev = run(w, Math.ceil((LOCK.cycle + 0.2) / TICK)); assert.ok(ev.some((e) => e.type === 'door_open' && e.cx === 8), 'cycled: the second opens BY ITSELF (the press while it cycled was kept)'); assert.equal(d2.target, 1);
   // and now the first is refused (the second is open), and the chamber is in vacuum
   at(w, 4); ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'the first is refused now'); assert.equal(inVacuum(w, cellC(6), cellC(2)), true);
+});
+test('a Use while the lock is cycling is kept (owner 2026-10-10, "the lock won\'t open"): the first door shuts at once, the second opens by itself when the air has settled, no second press needed', () => {
+  const w = world(dock()); const d1 = doorAtCell(w, 5, 2), d2 = doorAtCell(w, 8, 2);
+  at(w, 4); run(w, 2, (i) => idle({ use: i === 0 })); assert.equal(d1.target, 1);
+  Object.assign(w.player, { x: cellC(7), z: cellC(2), yaw: -Math.PI / 2 }); const t0 = w.time;                                              // in the chamber, at the far door, the first door still open behind
+  let ev = run(w, 2, (i) => idle({ use: i === 0 })); assert.ok(ev.some((e) => e.type === 'door_cycling'), 'told it is cycling'); assert.equal(d2.want, true, 'and the press is kept');
+  ev = run(w, 40); assert.ok(ev.some((e) => e.type === 'door_close' && e.cx === 5), 'the first door is shut NOW, not after its LOCK.hold'); assert.ok(w.time - t0 < LOCK.hold, 'well inside the time it would have waited by itself');
+  ev = run(w, Math.ceil((LOCK.cycle + 1) / TICK)); const opened = ev.find((e) => e.type === 'door_open' && e.cx === 8); assert.ok(opened, 'the second door opened by itself'); assert.equal(d2.want, false); assert.equal(d1.target, 0, 'and the first stayed shut');
+  assert.ok(opened.tick * TICK - t0 >= LOCK.cycle, 'but not before the air had settled (LOCK.cycle after the first shut)');
+});
+test('a queued door forgets the press when you walk off, and waits while a body stands in the other doorway', () => {
+  const w = world(dock()); const d1 = doorAtCell(w, 5, 2), d2 = doorAtCell(w, 8, 2);
+  at(w, 4); run(w, 2, (i) => idle({ use: i === 0 })); Object.assign(w.player, { x: cellC(7), z: cellC(2), yaw: -Math.PI / 2 }); run(w, 2, (i) => idle({ use: i === 0 })); assert.equal(d2.want, true);
+  Object.assign(w.player, { x: cellC(7) + 2 * LOCK.giveUp }); run(w, 2); assert.equal(d2.want, false, 'forgotten: the player is far from the door');
+  // a creature standing in the first doorway holds it open, so the queue waits: the lock never opens both doors at once
+  const src2 = dock(); src2.entities.push({ type: 'enemy', kind: 'gaunt', at: [1, 2] }); const w2 = world(src2); const e1 = doorAtCell(w2, 5, 2), e2 = doorAtCell(w2, 8, 2), gaunt = w2.enemies[0]; at(w2, 4); run(w2, 2, (i) => idle({ use: i === 0 }));
+  const hold = () => { Object.assign(gaunt, { x: cellC(5), z: cellC(2), state: 'idle', hp: 1000 }); Object.assign(w2.player, { x: cellC(7), z: cellC(2), hp: 100000 }); };
+  hold(); w2.player.yaw = -Math.PI / 2; run(w2, 2, (i) => { hold(); return idle({ use: i === 0 }); }); run(w2, 60 * 8, () => { hold(); return idle(); });
+  assert.equal(e1.target, 1, 'held open by the body in it'); assert.equal(e2.target, 0, 'so the second door waits (never both open)');
 });
 test('vacuum hurts the player a second at a time (scaled by the difficulty), never a creature; it says so on entering and leaving; shutting the hull door ends it', () => {
   const w = world(dock()); Object.assign(w.player, { x: cellC(11), z: cellC(2), hp: 100 }); const hp0 = w.player.hp;

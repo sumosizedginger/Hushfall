@@ -979,6 +979,15 @@ function updateEnemy(w, e, diff, dt) {
   }
 }
 
+/** PT-033 (owner 2026-10-10: "the lock won't open"): a Use on an airlock door that is still cycling is not thrown away. `want` is set by that press: the OTHER door is told to shut now (unless somebody stands in it), and this one opens by itself the moment the air has settled (airlock.js `lockBusy`). Walking more than LOCK.giveUp metres away forgets it. Lazy: only a lock door that was pressed while busy ever has it, and the route bot never presses a busy door. */
+function lockQueued(w, d) {
+  const pr = w.doors.find((q) => q.cx === d.interlock[0] && q.cz === d.interlock[1]), p = w.player, cell = w.map.cell, cxw = (d.cx + 0.5) * cell, czw = (d.cz + 0.5) * cell;
+  if (!pr || d.target === 1 || Math.hypot(p.x - cxw, p.z - czw) > LOCK.giveUp) { d.want = false; return; }
+  const px = (pr.cx + 0.5) * cell, pz = (pr.cz + 0.5) * cell;
+  if (pr.target === 1 && pr.open >= 1 && ![p, ...w.enemies.filter((e) => e.state !== 'dead')].some((o) => Math.hypot(o.x - px, o.z - pz) < DOOR.autoCloseClearance)) { pr.target = 0; emit(w, 'door_close', { cx: pr.cx, cz: pr.cz, x: px, z: pz }); }
+  if (!lockBusy(w, d)) { d.want = false; d.target = 1; d.hold = 0; emit(w, 'door_open', { cx: d.cx, cz: d.cz, secret: d.secret, x: cxw, z: czw }); }
+}
+
 // ---------------------------------------------------------------- step
 export function step(w, cmd) {
   if (w.status !== 'playing') return;
@@ -1042,7 +1051,7 @@ export function step(w, cmd) {
       else if (hit.breath) emit(w, 'door_breath', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-027: it opens when the ship breathes in, whatever you do
       else if (hit.sealed || hit.remote) emit(w, 'door_remote', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // opened elsewhere (a switch, or an event)
       else if (hit.key && !p.keys.includes(hit.key)) emit(w, 'door_locked', { key: hit.key, cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });
-      else if (hit.interlock && hit.target === 0 && lockBusy(w, hit)) emit(w, 'door_cycling', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-033: the other door of the airlock is open or the air is still moving
+      else if (hit.interlock && hit.target === 0 && lockBusy(w, hit)) { hit.want = true; emit(w, 'door_cycling', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }          // PT-033: the other door of the airlock is open or the air is still moving; the press is KEPT (owner 2026-10-10, "the lock won't open"): the other door shuts now and this one opens by itself when the air has settled (the door loop below)
       else if (hit.target === 0) { hit.target = 1; hit.hold = 0; emit(w, 'door_open', { cx: hit.cx, cz: hit.cz, secret: hit.secret, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell }); }
     }
   }
@@ -1064,6 +1073,7 @@ export function step(w, cmd) {
   // doors
   for (const d of w.doors) {
     if (d.breath) { breathGate(w, d, dt); continue; }
+    if (d.want) lockQueued(w, d);                                                                           // PT-033: a Use that came while the airlock was cycling is kept
     if (d.target === 1 && d.open < 1) { d.open = Math.min(1, d.open + dt * DOOR.speed); }
     else if (d.target === 1 && d.open >= 1 && !d.secret) {
       const cxw = (d.cx + 0.5) * map.cell, czw = (d.cz + 0.5) * map.cell;

@@ -340,7 +340,7 @@ function rangePanel() {
 /** what pressing Use would do right now, as text ('' = nothing): a closed door says how to open it, a locked one says what it needs. Secret panels never advertise themselves. */
 function doorPrompt(w) {
   const t = useTarget(w); if (t?.mirrorId) return `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] turn the mirror`;
-  if (t?.interlock && t.target === 0 && t.open <= 0.05 && lockBusy(w, t)) return 'The airlock is cycling';
+  if (t?.interlock && t.target === 0 && t.open <= 0.05 && lockBusy(w, t)) return t.want ? 'The airlock is cycling: it opens by itself' : `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] the airlock is cycling: it opens by itself when the air has settled`;
   if (t?.breath && !t.secret) return t.open > 0.05 ? '' : 'It opens when the ship breathes in';
   if (t?.soundlock && !t.secret && t.target !== 1 && t.open <= 0.05 && w.noise && w.time - w.noise.t < t.soundlock.quiet) return 'The lock is listening: be quiet';
   if (!t || t.secret || t.target === 1 || t.open > 0.05) return '';
