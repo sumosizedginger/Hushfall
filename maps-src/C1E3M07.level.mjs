@@ -41,6 +41,13 @@ L.putAll('n', [[34, 4], [31, 6], [38, 6]]);
 // the cellar (the secret): a cache
 L.putAll('H', [[33, 46], [35, 46]]); L.putAll('v', [[33, 48], [35, 48]]); L.putAll('e', [[32, 47], [36, 47]]); L.putAll('r', [[33, 44], [35, 44]]); L.put(34, 48, 'a');
 
+// ---- PT-035, the materials (the outside audits and my own eye: the Foundry was one green, wall and floor, and the furnace you fight round did not look hot). The core of the furnace is kiln brick with the fire in its joints and the floor round it is clinker and ember cracks. Only the character of a wall or a
+// floor changes, never its kind: no route, sight line or shot moves (tools/dev/route-fingerprint.mjs proves it). ----
+for (let z = 0; z < 56; z++) for (let x = 0; x < 52; x++) {
+  const r = Math.hypot(x + 0.5 - CX, z + 0.5 - CZ);
+  if (L.g[z][x] === WALL && r < 5.2) L.g[z][x] = 'Y'; else if (L.g[z][x] === 'j' && r < 7.6) L.g[z][x] = 'k';
+}
+// ---- end PT-035 materials ----
 const layers = L.layers();
 
 const VATS = [[27, 22, ['gaunt']], [41, 22, null], [41, 35, ['gaunt']], [27, 35, ['tollbearer']]];           // (the SW vat is the first: order by id = how a route meets them)

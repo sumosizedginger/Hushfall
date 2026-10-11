@@ -47,6 +47,16 @@ putSafe([[52, 24], [52, 33], [58, 26], [58, 31], [61, 22], [61, 35], [54, 20], [
 L.putAll('H', [[16, 33], [18, 33]]); L.putAll('v', [[16, 35], [18, 35]]); L.putAll('e', [[15, 34], [19, 34]]); L.putAll('r', [[16, 31], [18, 31]]); L.put(17, 35, 'a');
 
 if (skipped.length) console.log('C1E3M08: skipped (not floor):', skipped.join('; '));
+// ---- PT-035, the materials (the outside audits and my own eye: the Throat was one crimson, horn and bell alike, so the boss's chamber was not a place). The four ribs and the baffle are bone-pale rib-work against the crimson, and the BELL itself is brass: organ pipes on its walls and a gold-diamond
+// floor, so the room where the Grand Cantor stands reads as the bell it is. Only the character of a wall or a floor changes, never its kind: no route, sight line or shot moves. ----
+{
+  for (const [x0, z0, x1, z1] of [[30, CZ - 6, 30, CZ + 1], [35, CZ - 1, 35, CZ + 7], [40, CZ - 8, 40, CZ + 2], [44, CZ - 3, 44, CZ + 9], [48, 25, 49, 31]]) for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) if (L.g[z][x] === WALL) L.g[z][x] = 'V';
+  for (let z = 0; z < 58; z++) for (let x = 0; x < 74; x++) {
+    const r = Math.hypot((x + 0.5 - 57) / 13, (z + 0.5 - 28.5) / 14.5);
+    if (L.g[z][x] === WALL && x >= 46 && r > 0.85 && r < 1.2 && !(z < 14 || z > 43 && x > 53 && z > 44)) L.g[z][x] = 'E'; else if (L.g[z][x] === 'y' && x >= 46 && r <= 1) L.g[z][x] = 'i';
+  }
+}
+// ---- end PT-035 materials ----
 const layers = L.layers();
 
 const REEDS = [[51, 25], [51, 32], [63, 20], [63, 37]];
