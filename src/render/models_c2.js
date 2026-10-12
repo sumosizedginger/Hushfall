@@ -32,3 +32,12 @@ export function makeSpire() {
   const b = new THREE.Mesh(new THREE.SphereGeometry(0.4, 5, 4), bead); b.position.y = 28.6; g.add(b);
   return g;
 }
+
+/** a grave of the Reliquary Road (the Vael keep the dead of every world they have sung): a low mound of pale grit with a slab stood on end at its head, a band of bronze across the slab, and (alternating) a bundle laid on the mound in the dead's own cloth. 1.1 m. */
+export function makeGrave(variant = 0) {
+  const g = new THREE.Group(), grit = lam({ color: 0xb8aa8c }), slab = lam({ color: 0x8a8a98 }), bronze = lam({ color: 0xb8863c, emissive: 0x20140a }), cloth = lam({ color: [0x7a2e22, 0x2e4a6a, 0xd0c8a8, 0x4a5a2c][variant % 4] });
+  const mound = new THREE.Mesh(new THREE.SphereGeometry(0.62, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2), grit); mound.scale.set(1, 0.34, 1.6); g.add(mound);
+  g.add(box(0.5, 1.0, 0.1, slab, 0, 0.5, -0.78)); g.add(box(0.54, 0.09, 0.14, bronze, 0, 0.78, -0.78));
+  if (variant % 2) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.9, 6), cloth); b.rotation.z = Math.PI / 2; b.rotation.y = 0.1; b.position.set(0, 0.26, 0.15); g.add(b); }
+  return g;
+}

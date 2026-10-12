@@ -64,6 +64,14 @@ for (const [x, z] of [[17, 14], [23, 14], [97, 63], [105, 63], [64, 34], [70, 37
 const SEC = { panel: [95, 60], cells: [[93, 59], [94, 59], [93, 60], [94, 60], [93, 61], [94, 61]] };
 { for (const [x, z] of SEC.cells) { setCell(L, x, z, ')', PL, 12); } box(L, [92, 58, 95, 58], '$', PL); box(L, [92, 62, 95, 62], '$', PL); box(L, [92, 59, 92, 61], '$', PL); setCell(L, 95, 59, '$', PL); setCell(L, 95, 61, '$', PL); setCell(L, 95, 60, 'S', PL);
   PK('armor_vest', 93, 59); PK('health_large', 94, 61); PK('ammo_shell', 93, 61); PK('ammo_rivet', 94, 59); PK('ammo_flare', 93, 60); }
+// ---- rooms that are not boxes (tools/mapkit/shape.mjs; the routes prove nothing moved) ----
+import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+const S = new Shape(L, { lane: laneOf('C2M02'), keep: [[20, 8], [66, 33], [101, 64]] });                  // the relay levers' walls stay
+S.hall([14, 8, 25, 15], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, w: { w: 3, gap: 3, d: 2 }, e: { w: 3, gap: 3, d: 2 } }, cut: 2 });
+S.hall([96, 56, 106, 64], { sides: { s: { w: 3, gap: 3, d: 2, heart: true }, w: { w: 3, gap: 3, d: 2 }, e: { w: 3, gap: 3, d: 2 } }, cut: 2 });
+S.chamfer([120, 32, 128, 39], 'ne se', 2);
+console.log('C2M02 shape:', S.summary()); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
+// ---- end shaping ----
 const MAP = {
   id: 'C2M02', name: 'Glass Steppe', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#d8b49a', fogDensity: 0.0035, sky: 'anselm', look: 'steppe' },

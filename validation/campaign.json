@@ -4,8 +4,8 @@
   "main": 62,
   "secret": 6,
   "counts": {
-    "PLANNED": 29,
-    "IMPLEMENTED": 39,
+    "PLANNED": 28,
+    "IMPLEMENTED": 40,
     "AGENT_VERIFIED": 0,
     "COMPLETE": 0
   },
@@ -51,7 +51,7 @@
     "C2M01": "IMPLEMENTED",
     "C2M02": "IMPLEMENTED",
     "C2M03": "IMPLEMENTED",
-    "C2M04": "PLANNED",
+    "C2M04": "IMPLEMENTED",
     "C2M05": "PLANNED",
     "C2M06": "PLANNED",
     "C2M07": "PLANNED",

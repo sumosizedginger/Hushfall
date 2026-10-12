@@ -318,6 +318,7 @@ export const PROPS = {
   emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
   receiver: { radius: 0.62, blocksCell: true },          // lit while a beam enters its cell
   // Episode 4, Batch C (PT-033): the dock's furniture
+  grave: { radius: 0.32, blocksCell: false },            // PT-037 (Campaign 2 Act A): a grave of the Reliquary Road: a slab on a low mound, low enough to step over a creature's reach but a solid post to a round
   resonator: { radius: 0.4, blocksCell: false },        // PT-037 (Campaign 2, resonator.js): a standing tuning-fork: it rings at a noise and calls what sleeps
   lighter: { radius: 1.6, blocksCell: true, blocksSight: false },    // a Vael shuttle on its struts: a wall of hull to walk round and take cover behind (rounds stop on it, creatures see over it)
 };
@@ -327,7 +328,7 @@ export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, s
 
 /** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
  *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */
-export const RESONATOR = { hear: 0.6, delay: 0.2, cooldown: 3, lure: 18, chain: 9, pulse: { speed: 9, maxR: 7, width: 1.1, damage: 5 } };
+export const RESONATOR = { hear: 0.6, delay: 0.2, cooldown: 3, lure: 18, chain: 9, pulse: { speed: 9, maxR: 7, width: 1.1, damage: 4 } };
 export const DOOR = { speed: 1.5, passableAt: 0.85, holdOpen: 5, autoCloseClearance: 1.3 };
 export const FACING = { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI };
 

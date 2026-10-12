@@ -9,7 +9,7 @@ import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, mak
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 import { makeLighter } from './models_e4.js';
-import { makeFork, makeGateArch, makeSpire } from './models_c2.js';
+import { makeFork, makeGateArch, makeSpire, makeGrave } from './models_c2.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -219,6 +219,7 @@ export function buildLevel(map, tex) {
     else if (p.kind === 'lighter') { m = makeLighter(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'organ') { m = makeOrgan(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'vat') { m = makeVat(); m.position.set(p.x, fy, p.z); }
+    else if (p.kind === 'grave') { m = makeGrave(Math.floor(p.x * 7 + p.z * 3)); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'resonator') { m = makeFork(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'loomstring') { m = makeLoomString(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     if (m) dressing.add(m);
