@@ -60,6 +60,7 @@ const cond = {
 function conditionMet(w, t) {
   if (Array.isArray(t.when)) return t.when.every((q) => conditionMet(w, { ...t, when: q }));                  // PT-033: a list is an AND
   const c = String(t.when);
+  if (c.startsWith('not:')) return !conditionMet(w, { ...t, when: c.slice(4) });                                   // PT-037: the opposite of a condition (a seed ripens at time:90 unless not:dead:seed has stopped being true)
   if (c === 'start' || c === 'enter') return cond[c](w, t);
   if (c.startsWith('key:')) return w.player.keys.includes(c.slice(4));
   if (c.startsWith('msg:')) return w.messagesSeen.includes(c.slice(4));

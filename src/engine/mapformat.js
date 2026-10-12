@@ -367,7 +367,9 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!t.id || trIds.has(t.id)) err(`${tag}: missing or duplicate id`); trIds.add(t.id);
     const whens = Array.isArray(t.when) ? t.when : [t.when];                                       // PT-033: a list of conditions is an AND (the Hollow Stair: all four levers)
     if (Array.isArray(t.when) && (t.when.length < 2 || t.when.some((q) => q === 'enter' || q === 'start'))) err(`${tag}: a list of conditions needs two or more of key: dead: msg: time: sector: lit:`);
-    for (const wn of whens.map((q) => String(q ?? ''))) {
+    for (const wn0 of whens.map((q) => String(q ?? ''))) {
+    const neg = wn0.startsWith('not:'), wn = neg ? wn0.slice(4) : wn0;                                          // PT-037: 'not:<condition>' is the opposite of any condition that is not a position or the start (a seed that ripens unless its bell is dead: not:dead:seed)
+    if (neg && (wn === 'enter' || wn === 'start' || wn.startsWith('not:'))) { err(`${tag}: 'not:' needs a key: dead: msg: time: sector: or lit: condition (got '${wn0}')`); continue; }
     if (wn === 'enter') { if (!Array.isArray(t.at) || t.at.length !== 2 || !t.at.every(Number.isFinite)) err(`${tag}: 'enter' needs at:[cx,cz]`); }
     else if (wn.startsWith('key:')) { if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`); }
     else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
