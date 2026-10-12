@@ -1,0 +1,56 @@
+[
+{
+"name": "01-start",
+"x": 35.5,
+"z": 58.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-garden",
+"x": 35.5,
+"z": 48.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-beds",
+"x": 35.5,
+"z": 42.5,
+"yaw": -0.996,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-bed-west",
+"x": 20.5,
+"z": 35.5,
+"yaw": -1.134,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-center",
+"x": 35.5,
+"z": 36.5,
+"yaw": -0.0,
+"pitch": -0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-exit",
+"x": 35.5,
+"z": 14.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

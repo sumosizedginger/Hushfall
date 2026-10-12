@@ -238,6 +238,37 @@ export function cantor(tex) {
   }, { maxLift: 5 });
 }
 
+// ------------------------------------------------------------------------------------------------------------------ SUB-CANTOR (PT-039: the conductor of one district, a lesser Cantor and an afraid one: a tall thin bell of grey-green robe, a cowl, a pale mask, a baton)
+export function subcantor(tex) {
+  const C = cellsOf('subcantor');
+  return makeCreature(tex, (R) => {
+    R.joint('sc', null, [0, 0, 0]); R.J.sc.scale.setScalar(0.92);                                                                                                                              // a lesser Cantor: four fifths of the real one
+    R.joint('hips', 'sc', [0, 1.0, 0]);
+    legs(R, 'hips', 0.12, { a: 0.5, b: 0.5, r0: 0.12, r1: 0.1, r2: 0.08, cellA: C.robeDk, cellB: C.robeDk, seg: 6 }, C.robeDk);
+    R.pleat('hips', V2([[0.17, 3.0], [0.21, 2.7], [0.28, 2.2], [0.4, 1.6], [0.52, 1.0], [0.62, 0.4], [0.66, 0.02], [0.66, 0.0]]), 16, 8, 0.045, C.robe, { pos: [0, -0.98, 0] });          // the body is a bell of washed cloth
+    R.tor('hips', 0.5, 0.045, 4, 18, C.sash, { pos: [0, 0.18, 0], rot: [PI / 2, 0, 0] });                                                                                                  // a belt of linen
+    R.box('hips', 0.16, 1.0, 0.04, C.sash, { pos: [0.2, -0.3, 0.46], rot: [0, 0, 0.12] });                                                                                                  // the sash that hangs from it, cut with the tally of the district
+    R.joint('spine', 'hips', [0, 1.95, 0]);
+    R.cyl('spine', 0.22, 0.3, 0.55, 8, C.robe, { pos: [0, 0.2, 0], scale: [1, 1, 0.78] });
+    R.cone('spine', 0.4, 0.18, 10, C.sash, { pos: [0, 0.52, 0], rot: [PI, 0, 0] });                                                                                                         // a linen collar
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) {
+      R.limb('spine', n, [s * 0.3, 0.46, 0], { a: 0.62, b: 0.62, r0: 0.09, r1: 0.075, r2: 0.06, cellA: C.robe, cellB: C.skin, seg: 7 });
+      R.lump(n + 'M', 0.08, 0, 0.12, 6, C.skin, { pos: [0, -0.7, 0], scale: [0.95, 1.4, 0.8] });
+      R.cone(n, 0.42, 1.05, 9, C.robeDk, { pos: [0, -0.5, 0], rot: [PI, 0, 0] });                                                                                                         // a bell sleeve hanging from the shoulder: the silhouette is a column with wings
+    }
+    R.cyl('armBM', 0.022, 0.022, 1.3, 5, C.bone, { pos: [0, -0.7, 0.5], rot: [PI / 2, 0, 0] }); R.sph('armBM', 0.06, 6, 4, 'glow', { pos: [0, -0.7, 1.15], name: 'batonTip' });                       // the baton, pointing forward from the hand
+    R.joint('neck', 'spine', [0, 0.52, 0.02]); R.cyl('neck', 0.07, 0.09, 0.22, 6, C.skin, { pos: [0, 0.08, 0] });
+    R.joint('head', 'neck', [0, 0.2, 0]); R.lump('head', 0.2, 1, 0.08, 17, C.bone, { pos: [0, 0.13, 0], scale: [0.8, 1.25, 1] });                                                           // a pale mask
+    R.cone('head', 0.34, 0.62, 9, C.robe, { pos: [0, 0.22, -0.04] }); R.cyl('head', 0.62, 0.62, 0.05, 14, C.robeDk, { pos: [0, 0.02, -0.02] });                                                  // the cowl pulled forward over a wide brim
+    R.sph('head', 0.035, 6, 4, 'glow', { pos: [-0.07, 0.18, 0.17] }); R.sph('head', 0.035, 6, 4, 'glow', { pos: [0.07, 0.18, 0.17] }); R.box('head', 0.1, 0.05, 0.02, C.mouth, { pos: [0, 0.04, 0.17] });
+  }, (p, J, R) => {
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.22, headX: 0.4, hipY: 1.0, stride: 0.3, jawOpen: 0 });
+    const open = p.attack > 0 ? h.raise : 0;
+    J.armA.rotation.z = -2.5 - 0.2 * open; J.armA.rotation.x = -0.2; J.armB.rotation.z = 0.7 + 0.3 * open; J.armB.rotation.x = -0.6 - 0.5 * open;                            // one arm flung up before the face, the baton arm out: an afraid man conducting
+    J.spine.rotation.z += 0.36; J.head.rotation.z = -0.2 + S(t * 8) * 0.025; J.batonTip.scale.setScalar(1 + 0.3 * S(t * 3) + 1.5 * open);
+  }, { maxLift: 5 });
+}
+
 // ------------------------------------------------------------------------------------------------------------------ BELL NODE (RESONATOR: a tuning fork struck into the ground, a bell floating between the tines)
 export function bellnode(tex) {
   const C = cellsOf('bellnode');
@@ -838,4 +869,4 @@ export function zealot(tex) {
   });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot };
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, subcantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot };

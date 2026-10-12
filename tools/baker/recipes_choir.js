@@ -300,6 +300,15 @@ const KINDS = {
       mouth: MOUTH('#2a0c12'),
     },
   },
+  subcantor: {                       // PT-039: the Sub-Cantor: an ash-green robe washed grey, a sash of linen cut with tally marks (it keeps the count of one district), a pale mask, bronze gone green at the edges: the Cantor's cousin, smaller and plainer and afraid
+    seed: 3901, cells: {
+      skin: SKIN('#c8c8c0', '#8a8a84', '#585868', '#3c3c42'),
+      robe: cell({ grad: ['#b4c8ae', '#566a5a'], marks: [{ col: '#1a2420', wt: 1.9, n: 7, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#e0ecd8', wt: 1.3, n: 4, dir: 'd', len: [10, 18] }], blots: [{ cols: ['#8aa088', '#cadcc4'], n: 3, r: [6, 11], a: 120 }] }),
+      robeDk: cell({ grad: ['#7a9080', '#34443a'], marks: [{ col: '#101814', wt: 1.7, n: 6, dir: 'v', len: [16, 40] }, { col: '#b4c8b0', wt: 1.1, n: 3, dir: 'v', len: [8, 14] }] }),
+      sash: cell({ grad: ['#e8e2cc', '#b8b098'], marks: [{ col: '#4a4030', wt: 1.6, n: 14, dir: 'v', len: [8, 16] }, { col: '#7a6e50', wt: 1.2, n: 3, dir: 'h' }] }),
+      bone: BONE(0.05), bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON(), mouth: MOUTH('#1c1014'), verd: VERD(),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

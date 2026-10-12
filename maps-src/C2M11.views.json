@@ -1,0 +1,92 @@
+[
+{
+"name": "01-vestibule",
+"x": 54.5,
+"z": 84.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-stair",
+"x": 54.5,
+"z": 76.5,
+"yaw": -0.0,
+"pitch": 0.12,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-colonnade-west",
+"x": 54.5,
+"z": 56.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-colonnade-east",
+"x": 54.5,
+"z": 56.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-gallery",
+"x": 24.5,
+"z": 47.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-captains",
+"x": 24.5,
+"z": 26.5,
+"yaw": -0.0,
+"pitch": 0.02,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-silent-room",
+"x": 84.5,
+"z": 46.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-silent-far",
+"x": 90.5,
+"z": 28.5,
+"yaw": 0.951,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-seat",
+"x": 53.5,
+"z": 24.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "10-gate-west",
+"x": 40.5,
+"z": 17.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

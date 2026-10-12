@@ -189,6 +189,17 @@ export const SFX = {
   sexton_channel(c, out, t, o) { tone(c, out, t, { type: 'sawtooth', f0: 300, f1: 900, a: 0.9, d: 1.3, gain: 0.12, lp: 2600, vib: 8 }); bell(c, out, t + 0.4, 1180, { decay: 2, gain: 0.15, ratio: 3.5, index: 1.4 }); noise(c, out, t, { dur: 2, a: 1.2, gain: 0.1, type: 'bandpass', f0: 1500, f1: 4000, q: 2, off: o.r() }); return 2.3; },
   revive(c, out, t, o) { bell(c, out, t, 110, { decay: 2.4, gain: 0.5, ratio: 2.6, index: 1.6 }); tone(c, out, t, { f0: 200, f1: 90, d: 0.6, gain: 0.2 }); noise(c, out, t + 0.05, { dur: 0.5, gain: 0.25, type: 'highpass', f0: 2500, off: o.r() }); return 2.5; },
   tone_pulse(c, out, t, o) { tone(c, out, t, { f0: 62, f1: 38, a: 0.05, d: 1.4, gain: 0.75 }); bell(c, out, t, 73.4, { decay: 2.8, gain: 0.55, ratio: 2.5, index: 1.4 }); noise(c, out, t, { dur: 1.1, a: 0.2, gain: 0.25, type: 'lowpass', f0: 240, q: 0.8, off: o.r() }); return 3; },
+  pulse_back(c, out, t, o) { tone(c, out, t, { f0: 38, f1: 66, a: 0.04, d: 1.2, gain: 0.6 }); bell(c, out, t + 0.05, 87.3, { decay: 2.2, gain: 0.4, ratio: 2.5, index: 1.4 }); noise(c, out, t, { dur: 0.9, a: 0.5, gain: 0.2, type: 'lowpass', f0: 160, f1: 420, q: 0.8, off: o.r() }); return 2.4; },      // PT-039: the ring has met the wall and is coming back: the same low tone, rising, with a bell that has been struck by the wall
+  subcantor_alert(c, out, t, o) {                               // PT-039: a conductor that has seen you: one note, held a little too long, and a breath that shakes (it does not speak)
+    tone(c, out, t, { f0: 164, f1: 156, a: 0.25, d: 1.6, gain: 0.14, lp: 600, vib: 6 }); bell(c, out, t + 0.1, 98, { decay: 2.4, gain: 0.22, ratio: 2.6, index: 1.2 }); noise(c, out, t, { dur: 0.5, a: 0.15, gain: 0.08, type: 'bandpass', f0: 700, q: 2.5, off: o.r() }); return 2.2;
+  },
+  subcantor_draw(c, out, t, o) {                                // the pulse gathering: the baton comes up and a single held note leans on the breath, rising a whole tone and no further
+    tone(c, out, t, { f0: 130, f1: 146, a: 0.6, d: 1.3, gain: 0.16, lp: 520, vib: 5 }); bell(c, out, t + 0.5, 196, { decay: 1.4, gain: 0.12, ratio: 2.8, index: 1.3 }); return 1.5;
+  },
+  subcantor_die(c, out, t, o) {                                 // a phrase stopped in the middle of a bar: the held note cuts off, four forks ring on without it, then one by one they stop
+    tone(c, out, t, { f0: 164, f1: 150, a: 0.02, d: 0.5, gain: 0.2, lp: 700, vib: 6 }); for (let i = 0; i < 4; i++) bell(c, out, t + 0.4 + i * 0.55, 440 * Math.pow(0.84, i), { decay: 1.4 - i * 0.18, gain: 0.09, ratio: 2.7, index: 1 });
+    noise(c, out, t + 0.6, { dur: 1.8, a: 0.4, gain: 0.1, type: 'lowpass', f0: 900, f1: 80, off: o.r() }); thump(c, out, t + 2.2, 60, 24, 0.7, 0.5); return 3.2;
+  },
   pulse_hit(c, out, t, o) { thump(c, out, t, 85, 36, 0.35, 0.85); bell(c, out, t, 196, { decay: 0.9, gain: 0.35, ratio: 3, index: 1.5 }); return 1; },
   warden_roar(c, out, t, o) { tone(c, out, t, { type: 'sawtooth', f0: 92, f1: 66, a: 0.1, d: 0.9, gain: 0.26, lp: 320 }); noise(c, out, t, { dur: 0.8, a: 0.1, gain: 0.3, type: 'bandpass', f0: 420, f1: 260, q: 1.1, off: o.r() }); bell(c, out, t, 70, { decay: 1.6, gain: 0.3, ratio: 2.8, index: 1.6 }); return 1.7; },
   cantor_call(c, out, t, o) { for (const [f, d] of [[73.4, 3.2], [110, 3], [146.8, 2.8], [220, 2.4]]) bell(c, out, t, f, { decay: d, gain: 0.3, ratio: 2.6, index: 1.3 }); tone(c, out, t, { f0: 148, f1: 104, a: 0.2, d: 1.6, gain: 0.16, lp: 500, vib: 4 }); return 3.4; },

@@ -124,7 +124,7 @@ export class Bot {
     // the Gate Warden stands a whole arena away: a ring it has only just drawn breath for, or one that is still forty metres off, is no reason to stop (a human takes cover when the ring is about to arrive, and always from the beam)
     const far = !!ENEMIES[boss.kind].sweep;
     const ringsMatter = !far || p.hp < 45;                                                                                // a ring costs 13: only the beam is worth hiding from while there is hit points to spare
-    const danger = (ringsMatter && (boss.pulseT ?? -1) >= 0) || (boss.sweepT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || (ringsMatter && w.pulses.some((q) => q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5));
+    const danger = (ringsMatter && (boss.pulseT ?? -1) >= 0) || (boss.sweepT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || (ringsMatter && w.pulses.some((q) => (q.back ? q.r > Math.hypot(p.x - q.x, p.z - q.z) - 1.5 : q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5)));      // (PT-039: a ring that has turned back is dangerous while it is still outside the player: it is coming in)
     if (danger) {
       if (this.exposedTo(boss, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
       if (this.cover && this.exposedTo(boss, p.x, p.z)) {                                       // still exposed: go

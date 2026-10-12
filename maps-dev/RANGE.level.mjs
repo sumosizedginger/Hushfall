@@ -142,6 +142,7 @@ for (const [x, z] of [[51, 123], [54, 122], [57, 124], [52, 127], [56, 127], [54
 // ---- PT-038: the songkeeper yard (Campaign 2, Act B): the Zealot ----
 L.putAll('m', [[52, 77], [56, 77], [52, 87], [56, 87]]);
 t('zealot', 51, 78, S, 'inert', SPONGE); t('zealot', 56, 78, N, 'inert', SPONGE);                                                                  // sponges: one facing you, one with its back to you (the lance, the crest, the stance)
+t('subcantor', 54, 81, S, 'inert', SPONGE);                                                                                                       // PT-039: the Sub-Cantor (a sponge: the outline, the hit volume and the ring that turns back)
 t('zealot', 51, 85, WEST, 'turn', { sight: 12 }); t('zealot', 56, 85, WEST, 'turn', { sight: 12 });                                              // swingers: a thrust from 3.5 m, a lunge across a gap; a hit grafts (a slower walk for three seconds)
 
 // ---- PT-037: the current and fork yard ----

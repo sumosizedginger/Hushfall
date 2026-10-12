@@ -23,6 +23,7 @@ export const CHOIR_CELLS = {
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
   vaelfolk:    ['skin', 'skinDk', 'crystal', 'crystalDk', 'frill', 'rib', 'eye', 'cord', 'mouth'],          // PT-037 (Campaign 2, Act A): the Vael civilian, the first Vael who is not a weapon
   zealot:      ['skin', 'hood', 'hoodDk', 'plate', 'plateDk', 'bronze', 'bronzeDk', 'bone', 'iron', 'cord', 'mouth'],          // PT-038 (Campaign 2, Act B): the Songkeeper under arms
+  subcantor:   ['skin', 'robe', 'robeDk', 'sash', 'bone', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd'],          // PT-039 (Campaign 2, Act B): the conductor of one district, an afraid one, in the grey-green of a robe that has been washed too often
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);
 /** the baked texture name of a kind's atlas */

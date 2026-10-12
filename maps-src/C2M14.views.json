@@ -1,0 +1,74 @@
+[
+{
+"name": "01-start",
+"x": 48.5,
+"z": 92.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-garden",
+"x": 48.5,
+"z": 80.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-plaza",
+"x": 48.5,
+"z": 66.5,
+"yaw": -0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-tree",
+"x": 48.5,
+"z": 60.5,
+"yaw": -0.0,
+"pitch": 0.35,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-chimes",
+"x": 48.5,
+"z": 45.5,
+"yaw": 2.513,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-avenue",
+"x": 48.5,
+"z": 38.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-grove",
+"x": 78.5,
+"z": 58.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-spiral",
+"x": 30.5,
+"z": 70.5,
+"yaw": -0.785,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+}
+]

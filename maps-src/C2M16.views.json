@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 6.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-hall",
+"x": 22.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-heart",
+"x": 42.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.28,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-waist",
+"x": 52.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-boss",
+"x": 58.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-lobe",
+"x": 82.5,
+"z": 50.5,
+"yaw": 1.071,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-forks",
+"x": 70.5,
+"z": 36.5,
+"yaw": 1.212,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-exit",
+"x": 84.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-seam",
+"x": 26.5,
+"z": 36.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

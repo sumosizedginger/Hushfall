@@ -61,5 +61,5 @@ const MAP = {
     scaleClass: 'SET-PIECE', reason: 'a garden is open ground and nobody in it means harm: the player is meant to walk it slowly and read it', introduces: 'the Silent Orchard: a ring of ten beds, no creatures, no sound, and the longest piece of text in the act: the Tender, who was freed at the Cantor Outpost and walked down' },
 };
 console.log('C2S01: beds', beds.length, 'pickups', P.ents.filter((e) => e.type === 'pickup').length);
-export const waypoints = { main: [[35, 56, 0], [35, 48, 0], [48, 42, 0], [52, 31, 0], [48, 20, 0], [35, 14, 0], [35, 8, 0], [35, 5, 0]] };
+export const waypoints = { main: [[35, 56, 0], [35, 48, 0], ...beds.map(([x, z]) => [x, z, 0]), [35, 31, 0], [35, 14, 0], [35, 8, 0], [35, 5, 0]] };
 export default MAP;

@@ -2209,6 +2209,14 @@
   },
   {
    "type": "enemy",
+   "kind": "subcantor",
+   "at": [54, 81],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
    "kind": "zealot",
    "at": [51, 85],
    "facing": -1.5707963267948966,

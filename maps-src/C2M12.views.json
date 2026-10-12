@@ -1,0 +1,83 @@
+[
+{
+"name": "01-narthex",
+"x": 48.5,
+"z": 98.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-nave",
+"x": 48.5,
+"z": 88.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-drowned",
+"x": 48.5,
+"z": 72.5,
+"yaw": 1.406,
+"pitch": -0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-aisle",
+"x": 24.5,
+"z": 86.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-chapel",
+"x": 14.5,
+"z": 52.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-steps",
+"x": 48.5,
+"z": 42.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-loft",
+"x": 48.5,
+"z": 30.5,
+"yaw": -0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-crypt",
+"x": 92.5,
+"z": 52.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-wave",
+"x": 48.5,
+"z": 62.5,
+"yaw": 1.326,
+"pitch": -0.05,
+"open": true,
+"ticks": 10
+}
+]

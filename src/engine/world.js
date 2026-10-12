@@ -738,7 +738,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   if (def.sweep && sweepStep(w, e, def, diff, dt, sees, dist, { emit, hurtPlayer, damageEnemy, solid: (cx, cz) => cellSolid(w, cx, cz) })) return true;                  // PT-033: the Gate Warden's sweep
   if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
-    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo) e.echoT = P.echo.gap; }
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo) e.echoT = P.echo.gap; }
     return true;
   }
   if (P && sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
@@ -892,11 +892,12 @@ function updatePulses(w, dt) {
   const p = w.player;
   for (let i = w.pulses.length - 1; i >= 0; i--) {
     const q = w.pulses[i]; q.r += q.speed * dt;
+    if (q.reflectAt && !q.back && q.r >= q.reflectAt) { q.back = true; q.speed = -Math.abs(q.speed); q.hit = false; emit(w, 'pulse_back', { x: q.x, z: q.z, r: q.r }); }      // PT-039: the Sub-Cantor's ring turns at the wall and comes home: it can hurt a second time
     if (!q.hit && p.hp > 0) {
       const d = Math.hypot(p.x - q.x, p.z - q.z);
       if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < 1.0 && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, q.dmg); emit(w, 'pulse_hit', {}); }      // cover breaks the line; standing a metre above the floor clears the ring
     }
-    if (q.r > q.maxR) w.pulses.splice(i, 1);
+    if (q.back ? q.r <= 0.6 : q.r > q.maxR) w.pulses.splice(i, 1);
   }
 }
 

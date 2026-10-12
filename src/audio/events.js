@@ -35,8 +35,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -102,6 +102,7 @@ export function soundsForEvent(e) {
     case 'enemy_revived': return [{ id: 'revive', pos: at(e) }];
     case 'pulse': return [{ id: 'tone_pulse', pos: at(e) }];
     case 'pulse_hit': return [{ id: 'pulse_hit' }];
+    case 'pulse_back': return [{ id: 'pulse_back', pos: at(e) }];                         // PT-039: the Sub-Cantor's ring turns at the wall and comes home
     case 'switch': return [{ id: 'switch_click', pos: at(e) }];
     case 'switch_dead': return [{ id: 'switch_dead', pos: at(e) }];
     case 'dry_feed': return [{ id: 'switch_click', gain: 0.8 }];
@@ -152,7 +153,7 @@ export function soundsForEvent(e) {
     case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
     case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
     case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
-    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

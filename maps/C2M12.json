@@ -731,6 +731,24 @@
    ]
   },
   {
+   "id": "stair",
+   "when": [
+    "dead:choir",
+    "msg:rope"
+   ],
+   "do": [
+    {
+     "exit": {
+      "id": "main",
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "The organ has opened the stair: the exit is behind the altar"
+    }
+   ]
+  },
+  {
    "id": "nave",
    "when": "enter",
    "at": [48, 84],
@@ -1723,15 +1741,6 @@
    "once": true,
    "do": [
     {
-     "exit": {
-      "id": "main",
-      "set": "unlock"
-     }
-    },
-    {
-     "objective": "The organ has opened the stair: the exit is behind the altar"
-    },
-    {
      "message": "rope"
     }
    ]
@@ -1800,10 +1809,10 @@
   },
   {
    "id": "wing",
-   "at": [24, 52],
-   "radius": 4,
+   "at": [48, 52],
+   "radius": 5,
    "speaker": "INES",
-   "text": "A chapel with its own roof and a dry floor. The singer in it is not a Drowned. It was never in the water."
+   "text": "The transept has dry chapels at both ends, a long way off across the water. A singer stands in each, small at this distance. Neither of them is a Drowned."
   },
   {
    "id": "choir",
@@ -1854,7 +1863,7 @@
    "at": [1, 1],
    "radius": 0.1,
    "speaker": "HULL",
-   "text": "The rope at the north wall rings the organ. The stair behind the altar was kept shut by the same rope, from this side."
+   "text": "The rope at the north wall rings the organ. The stair behind the altar is held shut by the choir and the organ together: it opens when the loft is silent and the rope is pulled."
   }
  ],
  "objective": "Walk the causeway up the nave to the sanctuary. The exit is behind the altar, and the choir that keeps the Drowned standing is between",
@@ -1862,7 +1871,7 @@
   "hp": 100,
   "armor": 50,
   "ammo": {
-   "flare": 30,
+   "flare": 44,
    "shell": 20,
    "rivet": 90,
    "bolt": 10,

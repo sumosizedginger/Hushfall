@@ -61,8 +61,8 @@ for (const [x, z] of [[46, 80], [62, 80], [46, 70], [62, 70], [54, 66]]) PR('lan
 for (let x = 20; x <= 88; x += 8) { PR('lantern', x, 55); }                                                           // the colonnade is lit
 for (let z = 14; z <= 44; z += 6) { PR('lantern', 9, z); PR('lantern', 39, z); PR('lamp', 24, z); }                // the gallery blazes: lamps down the carpet
 for (const [x, z] of [[84, 38], [96, 28], [84, 20], [71, 15], [70, 34]]) PR('lantern', x, z);                          // one lantern in each of the Silent's rooms: they live by a little light
-for (const [x, z] of [[50, 14], [56, 14], [50, 22], [56, 22]]) PR('lamp', x, z);                                         // the seat
-for (const [x, z] of [[24, 14], [24, 24], [24, 34], [24, 44]]) PR('stall', x, z);                                         // nothing: censers (the stall prop is a table with an awning)
+for (const [x, z] of [[50, 14], [56, 14], [50, 22], [56, 22]]) PR('lamp', x, z);
+for (const [x, z] of [[24, 14], [24, 24], [24, 34], [24, 44]]) PR('pillar', x, z);                                                                          // four stone posts down the carpet (cover: the stalls these used to be were market stalls)                                         // the seat
 // ---- supplies (ammunition comes from the dead) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of [[48, 82], [60, 82], [54, 72], [30, 56], [78, 56], [54, 56], [20, 40], [34, 40], [24, 20], [38, 14], [84, 40], [96, 30], [84, 18], [70, 36], [72, 14], [54, 20]]) PK((x + z) % 3 ? 'health_small' : 'health_large', x, z);
 for (const [x, z] of [[54, 62], [24, 28], [36, 24], [96, 26], [70, 16]]) PK('armor_vest', x, z);
@@ -71,7 +71,7 @@ PK('armor_vest', xs - 1, zn - 4); PK('health_large', xs + 1, zn - 4); PK('ammo_s
 for (const [x, z, k] of [[40, 55, 'tollbearer'], [68, 55, 'tollbearer'], [54, 50, 'tollbearer'], [30, 60, 'gaunt'], [78, 60, 'gaunt'], [24, 55, 'bellhand'], [86, 55, 'bellhand']]) E(k, x, z);
 for (const [x, z] of [[26, 56], [32, 62], [76, 56], [70, 60]]) E('vaelfolk', x, z);
 // ---- the Songkeepers' wing: ranks of Zealots down the carpet, porters, a Bulwark at the middle, an Acolyte behind it, the two captains on the dais ----------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[20, 38], [28, 38], [20, 28], [28, 28]]) E('zealot', x, z, { facing: S });
+for (const [x, z] of [[20, 36], [28, 36], [24, 28]]) E('zealot', x, z, { facing: S });
 E('zealot', 21, 14, { facing: S, group: 'captains' }); E('zealot', 27, 14, { facing: S, group: 'captains' });
 for (const [x, z, k] of [[10, 42, 'tollbearer'], [38, 42, 'tollbearer'], [10, 30, 'tollbearer'], [38, 30, 'tollbearer'], [10, 18, 'tollbearer'], [38, 18, 'tollbearer'], [14, 34, 'gaunt'], [34, 34, 'gaunt'], [14, 24, 'gaunt'], [34, 24, 'gaunt']]) E(k, x, z);
 E('chorister', 18, 22); E('chorister', 30, 22);

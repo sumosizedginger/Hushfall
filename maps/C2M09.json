@@ -1218,8 +1218,8 @@
   },
   {
    "id": "zealot",
-   "at": [60, 36],
-   "radius": 5,
+   "at": [31, 44],
+   "radius": 4,
    "speaker": "INES",
    "text": "One on the east terraces is standing still with a lance as long as a mast. Armoured, and its feet apart, the way a man stands who means to stay."
   },
@@ -1232,7 +1232,7 @@
   },
   {
    "id": "plate",
-   "at": [47, 49],
+   "at": [46, 57],
    "radius": 3,
    "speaker": "RINGING PLATE",
    "text": "Run a nail down it: nine hundred and four voices owed by this district. The count beside it is two hundred short, and it was the same last year."

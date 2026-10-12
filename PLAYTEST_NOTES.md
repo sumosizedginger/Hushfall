@@ -393,3 +393,16 @@ The new pieces, tried in the dev build: pick `DEEP The Deep Range (dev only)` on
 3. **The chimes:** Use the tree: it plays a phrase (watch the fruit); answer on the chimes (Use or a shot). Is it a puzzle, or a memory test? The window is 8 s between notes in the Deep Range.
 4. **The caves:** is the SHAPE right (the tunnel, the grotto, the bowl)? The bowl is dark and hard to see; the plan of it is `design/` nowhere yet: say if it needs more light in a real map.
 Known weak points, unfixed: the Zealot's awake pose was only judged from stills; the Deep's own wall and floor skins are not built (the Deep Range wears the Range's concrete); no sound listened to.
+
+## PT-039 · Campaign 2 Act B, the Sounding Deep (C2M09 to C2M16 and C2S01) · UNPLAYED · what to look at first
+Eight maps and a secret, in order (the nine are in design/ACTB.md "AS BUILT, B1 to B4"). You play on Easy: the numbers below are what the perfect bot took, not what you will. Please tell me, map by map:
+1. **C2M09 Sounding Deep Gate:** the lantern (L) in the dark tunnel (is 50 oil and a tin every ten metres right?); the bowl (is it readable, is the descent fun, is it too big?); the first Zealot across the bowl; the watch that comes when you enter the plaza; the lever on the pulpit and the drum.
+2. **C2M10 Echo Markets:** is it a market? Do the folk read as a crowd? A shot calls everything within twice its radius: is the quiet way (melee, the uncharged arc lamp, the fork) a real answer? The north gate waits for six quiet seconds: is that fair or a stall?
+3. **C2M11 Undercantor Halls:** the two wings; do you feel the choice? C2M12 answers it with one line only.
+4. **C2M12 The Drowned Choir and C2S01 the Orchard:** the Drowned (tinted Tollbearers), the causeway, three waves rising; the arc lamp in the water; the crypt (a secret exit). The Tender's seven pieces: read them in order.
+5. **C2M13 Lantern Ossuary:** the dark. Is the oil right? Is it a maze or a spiral? Pellew's logs.
+6. **C2M14 Harmonic Gardens:** the chimes: is it a puzzle or a memory test? 8 s between notes, three rounds (3, 4, 5 notes), the beds wake after each wall.
+7. **C2M15 Ash Basilica:** the gauntlet of five stations. Is it too hard on Easy? The aisles are the high ground.
+8. **C2M16 Sounding Deep Heart:** the Sub-Cantor and its ring that comes back. Does the returning ring read (a sound, a ring shrinking)? Is the cover (six pillars round the dais) enough? The forks first, then the conductor.
+Known weak points, unfixed: the Sub-Cantor's pose and look were judged from silhouettes and stills; no new sound has been listened to; the Deep's lights were judged from stills only (the dark ones are dark by design); the heart mass hanging over C2M16's waist is static; the prose is the plain first draft.
+

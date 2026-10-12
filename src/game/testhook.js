@@ -52,7 +52,11 @@ export function installTestHook(app) {
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
     // -- low-level setup (state writers; tests only) --
     setup_teleport(x, z, yaw) { const p = g.world.player; p.x = x; p.z = z; if (yaw != null) p.yaw = yaw; p.y = groundAt(g.world, x, z, PLAYER.radius); g.view.eyeBase = p.y; g.view.beforeStep(g.world); },
-    setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle') { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; return e.id; },
+    setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle', variant = null) { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; if (variant) e.variant = variant; return e.id; },
+    /** PT-039: a tone pulse of the Sub-Cantor's kind (it turns back at `reflect` m) from (x, z), and what the view draws of the creature `id`: the colour of its first atlas material */
+    setup_pulse(x, z, reflect = 22) { const w = g.world, P = ENEMIES.subcantor.pulse; w.pulses.push({ id: w.nextId++, x, z, y: groundAt(w, x, z, 0.3), r: 0.6, speed: P.speed, dmg: 0, width: P.width, maxR: P.maxR, hit: false, reflectAt: reflect }); },
+    tintProbe(id) { const v = g.view?.enemyViews.get(id); if (!v) return null; let c = null; v.root.traverse((o) => { if (!c && o.isMesh && o.material?.map && o.material.color) c = o.material.color.getHex(); }); return c; },
+    pulseProbe() { const w = g.world, v = g.view; return { pulses: w.pulses.map((q) => ({ r: q.r, back: !!q.back, hit: q.hit })), views: v.pulseViews.size }; },
     setup_enemy(id, fields) { Object.assign(g.world.enemies.find((e) => e.id === id), fields); },
     setup_addPickup(kind, x, z) { g.world.pickups.push({ id: g.world.nextId++, kind, x, z }); },
     /** render truth: per enemy, the sim's x/y/z + ground (groundAt) next to the world-space bounds and root position actually drawn (see GameView.enemyBounds) */

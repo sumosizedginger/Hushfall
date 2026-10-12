@@ -599,22 +599,22 @@
   },
   {
    "type": "prop",
-   "kind": "stall",
+   "kind": "pillar",
    "at": [25, 14]
   },
   {
    "type": "prop",
-   "kind": "stall",
+   "kind": "pillar",
    "at": [24, 24]
   },
   {
    "type": "prop",
-   "kind": "stall",
+   "kind": "pillar",
    "at": [24, 34]
   },
   {
    "type": "prop",
-   "kind": "stall",
+   "kind": "pillar",
    "at": [25, 44]
   },
   {
@@ -821,25 +821,19 @@
   {
    "type": "enemy",
    "kind": "zealot",
-   "at": [20, 38],
+   "at": [20, 36],
    "facing": 0
   },
   {
    "type": "enemy",
    "kind": "zealot",
-   "at": [28, 38],
+   "at": [28, 36],
    "facing": 0
   },
   {
    "type": "enemy",
    "kind": "zealot",
-   "at": [20, 28],
-   "facing": 0
-  },
-  {
-   "type": "enemy",
-   "kind": "zealot",
-   "at": [28, 28],
+   "at": [25, 28],
    "facing": 0
   },
   {

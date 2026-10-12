@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Level } from '../tools/mapkit/builder.mjs';
 import { FLOORS } from '../tools/mapkit/c2.mjs';
-import { blob, finger, tiers, smooth, skinWalls, boxiness, rng, ringNoise } from '../tools/mapkit/cave.mjs';
+import { blob, finger, tiers, amphitheatre, smooth, skinWalls, boxiness, rng, ringNoise } from '../tools/mapkit/cave.mjs';
 
 const fresh = (w = 90, h = 70) => new Level(w, h, { fill: '!' });
 const snap = (L) => JSON.stringify([L.g, L.ht, L.ce]);
@@ -98,4 +98,16 @@ test('a small cave map built from the kit is connected and is not a box (the kit
   const cells = smooth(L, [...hall, ...arm, ...arm2], 2); skinWalls(L, '!', '$');
   const R = reach(L, [50, 40]); assert.ok(R.has('88,66') && R.has('12,14'), 'both arms reach their ends');
   assert.ok(cells.length > 900); assert.ok(boxiness(cells) < 0.6, 'a cave system is far from a box: ' + boxiness(cells).toFixed(2));
+});
+
+test('an amphitheatre has a flat plaza, terraces up to a promenade, a ramp that climbs a unit a cell and cliffs elsewhere; a ramp at two turns is still a ramp (PT-039)', () => {
+  const L = fresh(104, 92), A = amphitheatre(L, 58, 50, { rx: 31, rz: 27, steps: 6, rise: 2, bottom: 6, plaza: 0.5, ramps: 2, rampAt: Math.PI, rampWidth: 4, seed: 91, ch: 's' });
+  assert.equal(A.top, 18); assert.equal(A.height(58, 50), 6, 'the middle is the plaza floor'); assert.equal(A.step(58, 50), 0);
+  const rim = A.cells.filter(([x, z]) => A.step(x, z) === 6 && !A.ramp(x, z))[0]; assert.equal(A.height(...rim), 18, 'the promenade is the top');
+  assert.ok(reach(L, [58, 50], 1).has(rim.join(',')), 'the rim can be climbed to from the plaza by the sim step rule (the ramps)');
+  assert.ok(boxiness(A.cells) < 0.85);
+  const nr = fresh(104, 92), N = amphitheatre(nr, 58, 50, { rx: 31, rz: 27, steps: 6, rise: 2, bottom: 6, plaza: 0.5, ramps: 0, seed: 91, ch: 's' }), r2 = N.cells.filter(([x, z]) => N.step(x, z) === 6)[0];
+  assert.ok(!reach(nr, [58, 50], 1).has(r2.join(',')), 'with no ramp the terraces are cliffs');
+  const north = A.cells.filter(([x, z]) => z < 30 && A.ramp(x, z)); assert.equal(north.length, 0, 'a ramp at pi and one at 2 pi (the same angle as 0) are two ramps, west and east, and none in the north');
+  assert.throws(() => amphitheatre(fresh(), 40, 35, { rx: 12, rz: 12, steps: 8, rise: 2 }), /steeper than a step/);
 });

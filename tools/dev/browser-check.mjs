@@ -510,6 +510,19 @@ try {
     const tree = deepMap.entities.find((e) => e.kind === 'chimetree'); await T(`t.setup_teleport(${(tree.at[0] + 0.5) * 2}, ${(tree.at[1] + 0.5) * 2 + 2.3}, 0); t.setup_player({ pitch: -0.1 })`); await T('t.tick(2)'); await T("t.press('use')"); await T('t.tick(2)'); await T("t.release('use')"); await T('t.tick(50)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const playing = await T('t.chimeProbe()');
     check('chimes in the live game: a struck chime flares (drawn bigger than a quiet one), and the tree playing lights one of its fruit and its light', !!quiet && g0(struck) > g0(quiet) + 0.3 && playing.fruit.some((f) => f.scale > 1.2) && playing.treeLight > 0.5, `glow ${g0(quiet)?.toFixed(2)} -> ${g0(struck)?.toFixed(2)}; fruit ${JSON.stringify(playing.fruit?.map((f) => f.scale.toFixed(2)))}, light ${playing.treeLight?.toFixed?.(1)}`); }
 
+  // ---- Campaign 2, Act B, the batches (PT-039): the Sub-Cantor drawn, a ring that turns back drawn, a Drowned tinted ---------------------------------------------------------------------------------------------------------------------
+  { await T("t.newGame('normal', 3, { mapId: 'C2M16' })"); await T('t.clearOverlays()'); await T('t.setup_clearEnemies()'); const p0 = (await T('t.state()')).player;
+    const sc = await T(`t.setup_spawnEnemy('subcantor', ${p0.x + 9}, ${p0.z}, ${Math.PI / 2}, 'idle')`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)'); for (let i = 0; i < 4; i++) await T('t.render(0.05)');
+    const eb = (await T('t.enemyBounds()')).find((q) => q.id === sc), hgt = eb && eb.max[1] - eb.min[1];
+    check('the Sub-Cantor in the live game is drawn: a real box, as tall as the sim says (3.8 m)', !!eb && [...eb.min, ...eb.max].every(Number.isFinite) && Math.abs(hgt - 3.8) < 0.4, `height ${hgt?.toFixed?.(2)}`);
+    await T('t.setup_clearEnemies()'); await T(`t.setup_pulse(${p0.x + 9}, ${p0.z}, 12)`); let outView = 0, backSeen = false, backView = 0;
+    for (let i = 0; i < 80 && !backSeen; i++) { await T('t.tick(6)'); await T('t.render(0.02)'); const pr = await T('t.pulseProbe()'); outView = Math.max(outView, pr.views); if (pr.pulses.some((q) => q.back)) { backSeen = true; await T('t.render(0.02)'); backView = (await T('t.pulseProbe()')).views; } }
+    check('a ring that turns back is drawn going out and coming home (the sim turned it at 12 m; the view holds a ring on both legs)', backSeen && outView >= 1 && backView >= 1, `out ${outView}, turned ${backSeen}, back ${backView}`); }
+  { await T("t.newGame('normal', 3, { mapId: 'C2M12' })"); await T('t.clearOverlays()'); await T('t.setup_clearEnemies()'); const p0 = (await T('t.state()')).player;
+    const a = await T(`t.setup_spawnEnemy('tollbearer', ${p0.x + 3}, ${p0.z}, 0, 'idle')`), d = await T(`t.setup_spawnEnemy('tollbearer', ${p0.x + 5}, ${p0.z}, 0, 'idle', 'drowned')`); await T('t.tick(2)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)');
+    const ca = await T(`t.tintProbe(${a})`), cd = await T(`t.tintProbe(${d})`);
+    check('a Drowned wears its kind\'s rig in a tint: the same Tollbearer, a different colour (the variant reaches the view)', ca != null && cd != null && ca !== cd, `plain ${ca?.toString?.(16)}, drowned ${cd?.toString?.(16)}`); }
+
   // ---- 6. lifecycle: repeated level transitions must not leak GPU resources --------------------------------------------
   await T("t.newGame('normal', 4)"); await T('t.tick(5)'); const g0 = await T('t.gl()');
   for (let i = 0; i < 12; i++) { await T(`t.newGame('normal', ${10 + i})`); await T('t.tick(3)'); }

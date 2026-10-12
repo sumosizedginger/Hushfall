@@ -96,12 +96,12 @@ export const LOOKS = {
   deepgate: { hemi: [0x5a6a90, 0x10121e, 1.3], sun: [0x8898c0, 0.3, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.9, 0.96, 1.14], [1.16, 1.04, 0.84], 1.0), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },          // the Sounding Deep Gate: blue-black stone, the city's amber lights far below
   markets: { hemi: [0xd0b090, 0x2a2018, 1.55], sun: [0xffc890, 0.4, [-8, 12, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.94, 0.9], [1.14, 1.02, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },            // the Echo Markets: warm lamplight on pale wet stone
   halls: { hemi: [0xa0a8c8, 0x1e2030, 1.6], sun: [0xd0d8ff, 0.5, [-6, 14, -6]], lamp: 1.3, exposure: 1, grade: GR([0.9, 0.96, 1.12], [1.08, 1.0, 0.92], 0.85), shade: { foot: 0.38, ao: 0.42, patch: 0.1 } },                  // the Undercantor Halls: cold marble, bronze, a lit wing and a dim one
-  drowned: { hemi: [0x4a7868, 0x0c1814, 1.15], sun: [0x90e0c0, 0.3, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.84, 1.06, 0.98], [1.0, 1.06, 0.9], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.14 } },              // the Drowned Choir: green-black water, pale shafts
+  drowned: { hemi: [0x5a8c78, 0x0c1814, 1.55], sun: [0x90e0c0, 0.4, [-6, 14, -6]], lamp: 1.8, exposure: 1, grade: GR([0.84, 1.06, 0.98], [1.0, 1.06, 0.9], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.14 } },              // the Drowned Choir: green-black water, pale shafts
   ossuary: { hemi: [0x483c34, 0x08080c, 0.38], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.12, 1.02, 0.86], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },           // the Lantern Ossuary: almost black, bone white where the lantern reaches
   gardens: { hemi: [0x58a888, 0x20184a, 0.95], sun: [0xa0ffd0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.08, 1.02], [1.1, 1.0, 1.04], 1.1), shade: { foot: 0.4, ao: 0.46, patch: 0.12 } },               // the Harmonic Gardens: phosphor green and violet
   basilica: { hemi: [0x908c90, 0x24201c, 1.4], sun: [0xff9050, 0.6, [-8, 10, -4]], lamp: 1.5, exposure: 1, grade: GR([0.94, 0.94, 0.96], [1.18, 0.98, 0.8], 0.7), shade: { foot: 0.4, ao: 0.46, patch: 0.1 } },               // the Ash Basilica: ash grey, a fire at the altar
-  heart: { hemi: [0xa04a78, 0x1e0818, 1.2], sun: [0xff70b0, 0.4, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05), shade: { foot: 0.42, ao: 0.5, patch: 0.14 } },                // the Sounding Deep Heart: red-violet, a pulse
-  tender: { hemi: [0xc0d8a8, 0x2a3a28, 1.9], sun: [0xffe8b0, 0.9, [-8, 14, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.04, 0.92], [1.08, 1.02, 0.88], 0.95), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },               // the Silent Orchard: soft green-gold, a garden kept by someone
+  heart: { hemi: [0xb85a88, 0x1e0818, 1.7], sun: [0xff80c0, 0.6, [-6, 14, -6]], lamp: 1.9, exposure: 1, grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05), shade: { foot: 0.42, ao: 0.5, patch: 0.14 } },                // the Sounding Deep Heart: red-violet, a pulse
+  tender: { hemi: [0xb0c898, 0x2a3a28, 1.4], sun: [0xffe8b0, 0.5, [-8, 14, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.04, 0.92], [1.08, 1.02, 0.88], 0.95), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },               // the Silent Orchard: soft green-gold, a garden kept by someone
   gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -344,7 +344,7 @@ export const PROPS = {
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
-export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {}, rib: {}, cityface: {}, hangrock: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
+export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {}, rib: {}, cityface: {}, hangrock: {}, heartmass: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
 
 /** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
  *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */
@@ -422,6 +422,13 @@ ENEMIES.gatewarden = { name: 'Gate Warden', poise: 8, hp: 900, speed: 0, gait: 1
   attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 3.4, damage: 40 }, boss: true,
   shield: { reduce: 0.05, y: 3.6, r: 4.2, note: ['SEAL', 'SEALS', 'STAND'] }, pulse: { cooldown: 10, windup: 1.4, speed: 8, damage: 10, width: 1.3, maxR: 44, hitHeight: 1.0 }, enragedPulseCooldown: 8,
   sweep: { first: 6, cooldown: 10, tell: 2.4, duration: 2.8, arc: 2.5, damage: 18, width: 0.6, range: 64, hitCd: 1.0, beamY: 1.0 }, summon: { kind: 'gill', count: 1, every: 30, max: 2 }, stagger: 3.0 };
+/** THE SUB-CANTOR (PT-039, Act B; the boss of the Sounding Deep Heart): the conductor of ONE district, a lesser Cantor and an afraid one: it keeps its distance (`keepAway`), never speaks, and breathes out a tone pulse whose RING TURNS BACK at `pulse.reflect` m (the wall of its bowl)
+ *  and comes home to it as its own voice: cover that held for the ring going out must be held again for the ring coming in (the first hit does not spend the ring: `hit` is cleared when it turns). Shielded (5%) while any of its four FORKS (`bellnode`, the nodes that
+ *  hold the note it no longer remembers) stands; calls Gaunts out of its `summons` cells; fans toll-shots once the forks are down (enraged). Every number a first guess. */
+ENEMIES.subcantor = { name: 'Sub-Cantor', poise: 8, hp: 560, speed: 1.5, gait: 5, radius: 0.6, height: 3.8, hitRadius: 0.72, sight: 70, turnRate: 2.2, keepAway: 9,
+  attack: { range: 3.0, reach: 3.5, windup: 0.8, duration: 1.6, cooldown: 2.6, damage: 24 }, boss: true,
+  shield: { reduce: 0.05, y: 1.9, r: 1.7, note: ['FORK', 'FORKS', 'STILL HOLD THE NOTE'] }, pulse: { cooldown: 7, windup: 1.3, speed: 9, damage: 12, width: 1.3, maxR: 60, hitHeight: 1.0, reflect: 22 }, enragedPulseCooldown: 5,
+  shots: { count: 3, spread: 0.26, speed: 8.5, damage: 7, cooldown: 5.5, aimHeight: 1.2, muzzleY: 2.8 }, summon: { kind: 'gaunt', count: 2, every: 26, max: 4 }, stagger: 3.0 };
 ENEMIES.seal = { name: 'Seal', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 2.6, hitRadius: 0.95, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };      // a seal on the Gate Warden's arch: a node
 
 // ---- Campaign 2, Act A (PT-037; design/CAMPAIGN2.md E1): THE QUIET FOLK ------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,83 @@
+[
+{
+"name": "01-entry",
+"x": 30.5,
+"z": 126.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-bay1",
+"x": 30.5,
+"z": 117.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-aisle",
+"x": 14.5,
+"z": 112.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-bay2",
+"x": 30.5,
+"z": 96.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-bay3",
+"x": 30.5,
+"z": 74.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-bay4",
+"x": 30.5,
+"z": 52.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-bay5",
+"x": 30.5,
+"z": 30.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-altar",
+"x": 30.5,
+"z": 12.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-crypt",
+"x": 8.5,
+"z": 110.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

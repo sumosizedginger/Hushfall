@@ -94,3 +94,14 @@ export function makeHangRock() {
   for (let i = 0; i < 9; i++) { const a = i * 2.4, r = 1 + (i % 4) * 1.1, len = 1.2 + ((i * 37) % 10) * 0.42, c = new THREE.Mesh(new THREE.ConeGeometry(0.35 + (i % 3) * 0.18, len, 6), rock); c.rotation.x = Math.PI; c.position.set(Math.cos(a) * r, -len / 2, Math.sin(a) * r); g.add(c); }
   return g;
 }
+
+/** the mass at the heart of the Deep (scenery, PT-039): a cluster of swollen red-violet lumps hung from the roof by a stem of vein, 9 m tall, with a pale glowing core and a ring of smaller sacs: static (the look's light does the pulsing) */
+export function makeHeartMass() {
+  const g = new THREE.Group(), flesh = lam({ color: 0xa03468, emissive: 0x3a0c24 }), dark = lam({ color: 0x5a1a3a, emissive: 0x1a0610 }), core = bas({ color: 0xffb0dc }), vein = lam({ color: 0xc85088, emissive: 0x401428 });
+  const lump = (r, x, y, z, m, sy = 1) => { const o = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), m); o.position.set(x, y, z); o.scale.y = sy; return o; };
+  g.add(lump(2.9, 0, 3.4, 0, flesh, 1.15)); g.add(lump(2.0, 2.5, 2.4, 1.0, dark)); g.add(lump(1.9, -2.4, 2.6, -1.2, dark)); g.add(lump(1.7, 0.8, 6.0, 0.6, flesh)); g.add(lump(1.4, -1.6, 5.2, 1.6, flesh)); g.add(lump(1.2, 0, 3.4, 2.7, core));
+  for (let i = 0; i < 6; i++) { const a = i * 1.05 + 0.3; g.add(lump(0.7, Math.cos(a) * 3.1, 1.2 + (i % 3) * 0.9, Math.sin(a) * 3.1, i % 2 ? dark : flesh)); }
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.3, 12, 8), vein); stem.position.set(0, 13, 0); g.add(stem);                               // the stem it hangs by, a single thick vein to the roof
+  for (let i = 0; i < 4; i++) { const a = i * 1.57 + 0.4, c = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.35, 11, 6), vein); c.position.set(Math.cos(a) * 1.1, 12.2, Math.sin(a) * 1.1); g.add(c); }
+  return g;
+}
