@@ -172,6 +172,20 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #tally-next strong{display:block;font:400 clamp(22px,2.8vw,34px) var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--paper);margin:6px 0 2px}#tally-next em{color:#c4d0cc;font:italic 15px var(--serif)}
 #ending-tally button{width:auto;min-width:260px;text-align:center;border:1px solid var(--brass);margin-top:10px}
 @media (max-width:700px){#tally-totals{grid-template-columns:1fr}#tally-eps .ep{grid-template-columns:1fr auto}#tally-eps .sec{display:none}}
+/* ---- the Record (PT-037: players want the lore): every message received, replayed by map, in the order of the campaign. */
+#screen-record .panel{width:min(780px,94vw);height:min(88vh,860px);display:flex;flex-direction:column;overflow:hidden}
+#record-sub{color:#8fa4a0;font-size:12px;letter-spacing:.08em;margin:-6px 0 12px}
+#record-list{flex:1;overflow-y:auto;padding-right:10px;margin-bottom:8px}
+#record-list h3{margin:22px 0 6px;font:400 15px var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid #26333a;padding-bottom:4px}
+#record-list h3 small{color:#7f9490;letter-spacing:.2em;font-size:10px;margin-left:10px}
+#record-list h3:first-child{margin-top:4px}
+.rec{margin:10px 0;padding-left:12px;border-left:2px solid #2b3a3f}
+.rec b{display:block;font-weight:400;font-size:10px;letter-spacing:.26em;color:var(--teal);text-transform:uppercase}
+.rec p{margin:2px 0 0;font:16px/1.45 var(--serif);color:#e4dfcd}
+.rec.doc{border-left-color:var(--bronze)}.rec.doc b{color:var(--bronze)}.rec.doc p{font-style:italic;color:#d6cfba}
+#record-list h3.cur{color:var(--teal)}
+#record-empty{color:#8fa4a0;font:italic 16px var(--serif);margin:30px 0}
+#screen-record button{margin-top:6px}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
@@ -195,6 +209,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
     <h1>HUSHFALL</h1><div class="sub">Port Marrow · the first night · Episode 1 preview</div>
     <button id="btn-continue">Continue</button>
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
+    <button id="btn-record-title">The Record</button>
     <div class="legend" id="legend-title"></div>
     <div class="note" id="title-note"></div>
     <div id="dev-levels" class="hidden" style="margin-top:12px;font-size:12px;opacity:.85">DEV level picker (not in the shipped game): <select id="dev-map"></select> <select id="dev-diff"><option>easy</option><option selected>normal</option><option>hard</option></select> salvage <input id="dev-salvage" type="number" min="0" max="999" value="0" style="width:56px"> <button id="dev-go" style="width:auto;min-width:72px">Play</button></div>
@@ -206,6 +221,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
     <h2>PAUSED</h2>
     <button id="btn-resume">Resume</button>
     <div class="row"><button id="btn-save">Quick save</button><button id="btn-load">Quick load</button></div>
+    <button id="btn-record">The Record</button>
     <details id="settings-box"><summary>Settings</summary>
     <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"></label>
     <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
@@ -233,6 +249,15 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
     <details id="pad-box"><summary>Controller buttons (click one, then press a button on the pad)</summary><div id="padcontrols" class="rows"></div><button id="btn-reset-pad">Reset controller buttons to default</button><div class="note" id="pad-note"></div></details>
     <div class="row"><button id="btn-restart">Restart level</button><button id="btn-quit">Quit to title</button></div>
     <div class="note" id="pause-note"></div>
+  </div>
+</div>
+
+<div id="screen-record" class="screen hidden">
+  <div class="panel">
+    <h2>THE RECORD</h2>
+    <div id="record-sub"></div>
+    <div id="record-list"></div>
+    <button id="btn-record-close">Back</button>
   </div>
 </div>
 

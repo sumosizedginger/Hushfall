@@ -112,7 +112,11 @@ export function installTestHook(app) {
       return { mode: g.mode, screen: ui.screen, active: !!e, card: e ? e.seq.i : null, phase: e?.seq.phase ?? null, tallied: e?.tallied ?? null, who: el('ending-who').textContent, text: el('ending-text').textContent, title: el('ending-title').textContent,
         tallyShown: !el('ending-tally').classList.contains('hidden'), tallyRows: el('tally-eps').children.length, discs: el('tally-eps').querySelectorAll('.disc').length, totals: el('tally-totals').children.length, art: art.src.split('/').pop(), artLoaded: art.complete && art.naturalWidth > 0 };
     },
-    press_epilogue() { app.epiloguePress(); return window.__GAME_TEST__.epilogueProbe(); },                                                  // a screen with sample data, for the front-end stills (PT-021 step 4)
+    press_epilogue() { app.epiloguePress(); return window.__GAME_TEST__.epilogueProbe(); },
+    /** PT-037: open the Record as the pause menu or the title would, and what the page then shows */
+    openRecord(from = 'pause') { app.openRecord(from); return window.__GAME_TEST__.recordProbe(); },
+    closeRecord() { app.closeRecord(); return { screen: ui.screen }; },
+    recordProbe() { const el = (id) => document.getElementById(id); return { screen: ui.screen, sub: el('record-sub').textContent, groups: el('record-list').querySelectorAll('h3').length, entries: el('record-list').querySelectorAll('.rec').length, docs: el('record-list').querySelectorAll('.rec.doc').length, current: el('record-list').querySelector('h3.cur')?.dataset.map ?? null, record: g.progress.record ?? null }; },                                                  // a screen with sample data, for the front-end stills (PT-021 step 4)
     setup_look(name) { g.view?.setPlace(lookOf({ look: name })); },                                  // try another place's light on the map in hand (PT-021 stills)
     setup_openDoors() { for (const d of g.world.doors) { d.open = 1; d.target = 1; } },
     /** hide the title card / queued transmissions / tips, so screenshots show what a player sees after the intro */

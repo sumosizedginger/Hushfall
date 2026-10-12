@@ -34,6 +34,7 @@ export class UI {
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
+    $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
@@ -79,6 +80,15 @@ export class UI {
       $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : data.campaignEnd ? 'The Gate is open. Campaign Two is not built yet.' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
     }
     if (name === 'ending') this.endingOpen(data.ending);
+    if (name === 'record') this.recordOpen(data.view, data.counts, data.current);
+  }
+  /** the Record (PT-037, record.js): a heading per map with entries, each message under its speaker; found documents are set apart; the map being played is scrolled into view */
+  recordOpen(view, counts, current) {
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    $('record-sub').textContent = counts.all ? `${counts.all} messages received, ${counts.docs} of them found documents. Each is kept the first time it reaches you.` : '';
+    $('record-list').innerHTML = view.length ? view.map((gr) => `<h3 data-map="${gr.mapId}"${gr.mapId === current ? ' class="cur"' : ''}>${esc(gr.name)}<small>${esc(gr.mapId)}</small></h3>` + gr.entries.map((e) => `<div class="rec${e.document ? ' doc' : ''}"><b>${esc(e.speaker || 'unsigned')}</b><p>${esc(e.text)}</p></div>`).join('')).join('') : '<div id="record-empty">Nothing yet. What you hear and read along the way is kept here.</div>';
+    $('record-list').scrollTop = 0; const cur = $('record-list').querySelector('h3.cur'); if (cur) cur.scrollIntoView?.({ block: 'start' });
+    $('btn-record-close').focus?.();
   }
   /** the campaign epilogue (PT-036): the heading and an empty card; main.js feeds it `endingView` every frame, then `endingTally` */
   endingOpen(e) {

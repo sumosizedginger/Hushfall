@@ -24,6 +24,7 @@ import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } fro
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
 import { endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
+import { recordAdd, recordView, recordCounts } from './record.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -75,6 +76,7 @@ const ui = new UI({
   quitToTitle: () => quitToTitle(),
   nextLevel: () => nextLevel(),
   epiloguePress: () => epiloguePress(),
+  openRecord: (from) => openRecord(from), closeRecord: () => closeRecord(),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
@@ -102,6 +104,23 @@ function loadFirstSave() {
   for (const [slot, r] of slots) if (applySave(r.save, slot)) return true;
   return null;
 }
+// ---- the Record (PT-037, record.js): every message received, replayed from the pause menu and the title ----
+/** the progress the title's Record shows: the newest readable save's (what Continue would load), else whatever this session holds */
+const titleProgress = () => {
+  const slots = ['quick', 'auto'].map((slot) => store.read(slot)).filter((r) => r.ok).sort((a, b) => (b.save.savedAt ?? 0) - (a.save.savedAt ?? 0));
+  return slots.length ? sanitizeProgress(slots[0].save.progress) : g.progress;
+};
+function openRecord(from) {
+  g.recordFrom = from === 'title' ? 'title' : 'pause';
+  const view = recordView(CAMPAIGN, MAPS, g.recordFrom === 'title' ? titleProgress() : g.progress);
+  ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null });
+}
+function closeRecord() {
+  if (ui.screen !== 'record') return;
+  if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
+}
+/** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
+function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) if (e.type === 'message') g.progress = recordAdd(g.progress, g.mapId, e.id); }
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
@@ -210,7 +229,7 @@ function stepOnce() {
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
     console.error(e); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' }); return;
   }
-  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
+  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
 }
@@ -246,6 +265,7 @@ addEventListener('keydown', (e) => {
   if (g.capturePad) { e.preventDefault(); e.stopPropagation(); if (e.code === 'Escape') cancelPadCapture('Cancelled.'); return; }
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
+  if (ui.screen === 'record') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeRecord(); } return; }          // the Record is read, not played: Esc (or the pause key) goes back to where it was opened from
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
   if (g.mode === 'epilogue') { if (e.code === 'Escape') { e.preventDefault(); epilogueSkip(); } else if ((e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { e.preventDefault(); epiloguePress(); } return; }
@@ -287,6 +307,12 @@ const menuItems = () => { const scr = document.querySelector('.screen:not(.hidde
 /** the pad in a menu: D-pad or left stick moves the focus, A / Cross confirms (fixed, so the menus always work whatever is rebound), B / Circle or the pause button backs out of the pause menu */
 function padMenu(out, dt) {
   if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
+  if (ui.screen === 'record') {                                                                       // the Record (PT-037): up and down scroll it, A or B goes back
+    const d = navRepeat.update(navDir(g.pad.down, out.move), dt), list = document.getElementById('record-list');
+    if (list && d === 'up') list.scrollTop -= 90; else if (list && d === 'down') list.scrollTop += 90;
+    if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) closeRecord();
+    return;
+  }
   const d = navRepeat.update(navDir(g.pad.down, out.move), dt), items = menuItems(); if (!items.length) return;
   const cur = items.indexOf(document.activeElement);
   if (cur < 0) { if (d || out.pressed.length) items[0].focus(); return; }
@@ -385,4 +411,4 @@ if (import.meta.env.DEV) {                                                 // de
   }
 }
 if (import.meta.env.DEV) addEventListener('keydown', (e) => { if (e.code === 'F8' && g.world?.map.range) { e.preventDefault(); const steps = [1, 0.5, 0.25, 0.1], i = steps.indexOf(g.devScale ?? 1); g.devScale = steps[(i + 1) % steps.length]; } });      // the range's slow motion (PT-020): watch a swing at a tenth of its speed in the real game
-if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue }));
+if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue, openRecord, closeRecord }));

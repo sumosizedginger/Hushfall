@@ -44,6 +44,11 @@ export function sanitizeProgress(p) {
   out.salvage = Number.isFinite(p.salvage) ? Math.max(0, Math.floor(p.salvage)) : 0;
   out.upgrades = sanitizeUpgrades(p.upgrades);
   if (p.records && typeof p.records === 'object') for (const [id, r] of Object.entries(p.records)) if (r && RANK_ORDER.includes(r.rank)) out.records[id] = { rank: r.rank, score: Number(r.score) || 0, time: Number(r.time) || 0, kills: Number(r.kills) || 0, secrets: Number(r.secrets) || 0, paid: Math.max(0, Math.floor(r.paid) || 0) };
+  if (p.record && typeof p.record === 'object') {                                         // PT-037, THE RECORD: the ids of the messages a player has received, per map (the text is read from the map, so a corrected line corrects the Record). Lazy: absent until the first message.
+    const rec = {};
+    for (const [id, list] of Object.entries(p.record)) if (Array.isArray(list)) { const ids = [...new Set(list.filter((x) => typeof x === 'string' && x.length > 0 && x.length <= 48))].slice(0, 400); if (ids.length) rec[String(id).slice(0, 16)] = ids; }
+    if (Object.keys(rec).length) out.record = rec;
+  }
   return out;
 }
 
