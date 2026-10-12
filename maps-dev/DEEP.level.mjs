@@ -32,7 +32,7 @@ const put = (type, kind, at, extra) => P.put(type, kind, at, extra);
 put('prop', 'lantern', [9, 57]); put('prop', 'lantern', [15, 63]); put('prop', 'lantern', [8, 62]);                                        // the hall is lit
 put('prop', 'lantern', [48, 30]); put('prop', 'lantern', [53, 24]);                                                                        // the grotto's way in and its north side
 for (const [x, z] of [[68, 58], [76, 58], [64, 64], [80, 64], [72, 69]]) put('prop', 'lantern', [x, z]);                                    // the grove
-put('prop', 'lantern', [36, 21]);                                                                                                           // the top of the bowl
+for (const [x, z] of [[36, 21], [12, 12], [30, 8], [14, 24], [23, 17], [34, 28]]) put('prop', 'lantern', [x, z]);                                                                                                           // the top of the bowl
 for (const [x, z] of [[20, 55], [31, 49], [43, 43], [58, 40]]) put('pickup', 'oil', [x, z]);                                                  // oil along the road
 put('pickup', 'oil', [24, 20]); put('pickup', 'health_large', [86, 63]);
 // the tunnel: three sleepers and a Tollbearer (asleep: it wakes by sight at its own range, light or none)

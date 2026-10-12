@@ -349,6 +349,31 @@
    "at": [36, 21]
   },
   {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 24]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [23, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [33, 28]
+  },
+  {
    "type": "pickup",
    "kind": "oil",
    "at": [20, 56]

@@ -43,7 +43,7 @@ export function makeChimeView(map) {
         const mark = new THREE.Mesh(new THREE.CircleGeometry(0.13, 12), bas({ color: 0xffffff, map: textures[n], transparent: true, depthWrite: false })); mark.position.copy(orb.position).multiplyScalar(1.0); mark.position.x += Math.sin(a) * 0.205; mark.position.z += Math.cos(a) * 0.205; mark.lookAt(mark.position.x * 2, mark.position.y, mark.position.z * 2); g.add(mark);
         fruit.push({ orb, col, note: n, tree: pr.id });
       }
-      const light = new THREE.PointLight(0xffe8b0, 0, 12, 2); light.position.y = 3.3; g.add(light); group.add(g); fruit.light = light;
+      const light = new THREE.PointLight(0xffe8b0, 0, 12, 1.5); light.position.set(0, 3.9, 0); g.add(light); group.add(g); fruit.light = light;
     }
   }
   return {
@@ -56,7 +56,7 @@ export function makeChimeView(map) {
       }
       const lt = w.chimes?.lastTree; let lit = 0;
       for (const f of fruit) { const since = lt && lt.note === f.note ? w.time - lt.t : Infinity, k = since < 1.1 ? Math.pow(1 - since / 1.1, 1.4) : 0; f.orb.material.color.copy(f.col).multiplyScalar(0.3 + 0.95 * k); f.orb.scale.setScalar(1 + 0.45 * k); lit = Math.max(lit, k); }
-      if (fruit.light) fruit.light.intensity = 40 * lit;
+      if (fruit.light) fruit.light.intensity = 12 * lit;
     },
   };
 }
