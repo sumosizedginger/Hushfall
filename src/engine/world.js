@@ -19,6 +19,7 @@ import { sawStep } from './saw.js';                                             
 import { traceBeams, nextRot } from './beams.js';                                                                    // PT-033: the Mirror Array's light (lazy state: only a map with an emitter has `w.mirrors` and `w.beams`)
 import { lockBusy, inVacuum } from './airlock.js';                                                                    // PT-033: airlocks and vacuum (lazy: only a map that has them uses them)
 import { sweepStep } from './sweep.js';                                                                              // PT-033: the Gate Warden's sweep
+import { folkStep, folkHears, frighten } from './folk.js';                                                            // PT-037: the Vael civilians (peaceful: states 'calm' and 'flee', never 'idle' or 'chase')
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -30,7 +31,7 @@ const hidden = (o, k, v) => Object.defineProperty(o, k, { value: v, enumerable: 
 /** the one place an enemy record is built (createWorld and tests both use it) */
 export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
   const def = ENEMIES[kind], diff = DIFFICULTY[w.difficulty];
-  const e = { id: w.nextId++, kind, x, z, y: groundAt(w, x, z, def.radius), group: null, yaw, hp: def.hp * diff.enemyHp, state: 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0, stunT: 0, chargeT: -1, chargeCd: 0, channelT: -1, supCd: 0, revived: 0, pulseCd: 2, pulseT: -1, summonCd: 8, shotCd: 2 };
+  const e = { id: w.nextId++, kind, x, z, y: groundAt(w, x, z, def.radius), group: null, yaw, hp: def.hp * diff.enemyHp, state: def.peaceful ? 'calm' : 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0, stunT: 0, chargeT: -1, chargeCd: 0, channelT: -1, supCd: 0, revived: 0, pulseCd: 2, pulseT: -1, summonCd: 8, shotCd: 2 };
   w.enemies.push(e); return e;
 }
 
@@ -213,6 +214,7 @@ export function wakeEnemy(w, e, loud, scripted = false) {
 export function noise(w, x, z, radius) {
   if (w.map.hasSoundlock) w.noise = { t: w.time, x, z };                                   // PT-029: a sound-lock door listens (only a map that has one records this)
   for (const e of w.enemies) {
+    if (e.state === 'calm' || e.state === 'flee') { folkHears(w, e, x, z, radius); continue; }          // PT-037: a peaceful creature runs from it instead of waking
     if (e.state !== 'idle') continue; const d = Math.hypot(e.x - x, e.z - z);
     if (d < radius && (d < NOISE.closeRange || hasLOS(w, x, z, e.x, e.z))) wakeEnemy(w, e, false);
   }
@@ -230,9 +232,12 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
   e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
+  if (def.peaceful && e.hp > 0) frighten(w, e, w.player.x, w.player.z);                                  // PT-037: hurt, it runs (from the one who did it)
   if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, !opts.burn, !!opts.burn);                    // being shot wakes you, whether or not you can see the shooter (a creature set alight wakes alone: it does not call its neighbours, the burst that lit it already made its noise)
   if (e.hp <= 0 && e.state !== 'dead') {
-    e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1; w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
+    e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1;
+    if (def.peaceful) { w.stats.innocents = (w.stats.innocents ?? 0) + 1; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, folk: true }); emit(w, 'innocent', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }          // PT-037: an innocent is not a kill, and leaves nothing
+    w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
     if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
@@ -407,7 +412,7 @@ function fireArc(w, def, f = 0) {
   const cone = (def.lock.hip * (1 - p.ads) + def.lock.ads * p.ads) * (1 + 0.5 * f), forks = f > 0.3 ? C.forks : 1;
   const cands = [];
   for (const e of w.enemies) {
-    if (e.state === 'dead') continue;
+    if (e.state === 'dead' || ENEMIES[e.kind].peaceful) continue;                                         // (PT-037: the lamp never locks onto a peaceful Vael)
     const [tx, ty, tz] = arcPoint(e), dx = tx - ex, dy = ty - ey, dz = tz - ez, d = Math.hypot(dx, dy, dz); if (d > range || d < 0.3) continue;
     const ang = Math.acos(Math.min(1, Math.max(-1, (dx * dir[0] + dy * dir[1] + dz * dir[2]) / d))), slack = Math.atan2(hitCylinder(e).r, d);          // a wide body is easier to lock than a thin one at the same distance
     if (ang - slack > cone || !rayClear(w, ex, ey, ez, tx, ty, tz)) continue;
@@ -427,7 +432,7 @@ function fireArc(w, def, f = 0) {
       path.push(cur.pt); hit.add(cur.e); struck.push([cur.e, dmg]); dmg *= fall;
       let next = null, nd = jump;
       for (const e of w.enemies) {
-        if (e.state === 'dead' || hit.has(e)) continue;
+        if (e.state === 'dead' || hit.has(e) || ENEMIES[e.kind].peaceful) continue;
         const pt = arcPoint(e), d = Math.hypot(pt[0] - cur.pt[0], pt[1] - cur.pt[1], pt[2] - cur.pt[2]);
         if (d < nd && rayClear(w, cur.pt[0], cur.pt[1], cur.pt[2], pt[0], pt[1], pt[2])) { nd = d; next = { e, pt }; }
       }
@@ -921,6 +926,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.node) return;
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
+  if (def.peaceful) { folkStep(w, e, def, dt); return; }                                 // PT-037: it never fights: it wanders, watches, and runs (folk.js)
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? def.sight) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
@@ -1149,7 +1155,7 @@ export function step(w, cmd) {
     const near = map.exits.find((x) => Math.hypot(p.x - x.x, p.z - x.z) < 1.4 && Math.abs(floorAt(w, x.x, x.z) - p.y) < 1.5);
     if (near && w.exitLocked[near.id]) { if (w.tick % 90 === 0) emit(w, 'exit_locked', { x: near.x, z: near.z }); }
     else if (near) {
-      w.status = 'complete'; w.endStats = { time: w.time, kills: w.stats.kills, items: w.stats.items, secrets: w.stats.secrets, total: w.stats.total, damageTaken: w.stats.damageTaken, dest: near.dest };
+      w.status = 'complete'; w.endStats = { time: w.time, kills: w.stats.kills, items: w.stats.items, secrets: w.stats.secrets, total: w.stats.total, damageTaken: w.stats.damageTaken, dest: near.dest, ...(w.stats.innocents ? { innocents: w.stats.innocents } : {}) };
       emit(w, 'level_complete', { dest: near.dest });
     }
   }

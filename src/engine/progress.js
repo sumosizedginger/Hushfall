@@ -1,7 +1,7 @@
 // Campaign progression (owner decision, PT-008, 2026-10-05): a RANK per map (S/A/B/C from time, kills and secrets), SALVAGE earned from ranks and secrets, and persistent UPGRADES bought with it
 // (a bigger ammunition satchel, better plate). Pure data in, data out: the simulation reads only the upgrade tiers (caps, below); the shell owns the salvage, the records and the buying.
 // Every number here is a tunable first guess: nobody has played it. Change them here, not in the callers.
-import { AMMO_MAX, PLAYER } from './defs.js';
+import { AMMO_MAX, PLAYER, FOLK } from './defs.js';
 
 export const RANK = {
   weights: { withSecrets: { kills: 0.4, time: 0.35, secrets: 0.25 }, noSecrets: { kills: 0.55, time: 0.45 } },
@@ -31,7 +31,8 @@ export function rankFor(end, par) {
   let time = 1; if (par) { time = 0; for (const [limit, score] of RANK.time) if (end.time / par <= limit) { time = score; break; } }
   const hasSecrets = (total.secrets ?? 0) > 0, secrets = hasSecrets ? Math.min(1, end.secrets / total.secrets) : null;
   const w = hasSecrets ? RANK.weights.withSecrets : RANK.weights.noSecrets;
-  const score = Math.round((w.kills * kills + w.time * time + (hasSecrets ? w.secrets * secrets : 0)) * 1000) / 1000;
+  const cost = Math.min(FOLK.innocentMax, (end.innocents ?? 0) * FOLK.innocentCost);                          // PT-037: a Vael who never raised a hand and is dead costs the rank, and only a map that has such Vael ever carries the count
+  const score = Math.max(0, Math.round((w.kills * kills + w.time * time + (hasSecrets ? w.secrets * secrets : 0) - cost) * 1000) / 1000);
   const rank = (RANK.thresholds.find(([, min]) => score >= min) ?? ['C'])[0];
   return { rank, score, parts: { kills, time, secrets } };
 }

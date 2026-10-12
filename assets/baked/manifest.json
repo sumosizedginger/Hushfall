@@ -485,6 +485,14 @@
       "sha256": "8ea2dcc91120b84b3cf71ff3d767ee058c47dd480d2c3d74c69ddf23957023b4",
       "bytes": 21724
     },
+    "choir_vaelfolk": {
+      "seed": 3701,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "77c7662fe48262dc0aecd691591c7e548497125993e5c7f216c530dd1d20b4b0",
+      "bytes": 26223
+    },
     "choir_graftmother": {
       "seed": 2310,
       "width": 256,

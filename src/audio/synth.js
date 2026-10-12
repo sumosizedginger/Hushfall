@@ -493,6 +493,23 @@ export const SFX = {
     noise(c, out, t + 0.3, { dur: 4.5, a: 1.8, gain: 0.04, type: 'bandpass', f0: 700, f1: 1500, q: 0.8, off: o.r() });
     return 6.5;
   },
+  folk_fear(c, out, t, o) {                                     // a Vael civilian startled (PT-037): a thin glass note that jumps and breaks; they cannot sing, only startle
+    tone(c, out, t, { type: 'sine', f0: 880, f1: 1480, a: 0.01, d: 0.22, gain: 0.16, vib: 9 });
+    tone(c, out, t + 0.1, { type: 'triangle', f0: 1320, f1: 990, a: 0.008, d: 0.2, gain: 0.08, vib: 14 });
+    noise(c, out, t, { dur: 0.18, gain: 0.05, type: 'bandpass', f0: 3600, f1: 5200, q: 2.4, off: o.r() });
+    return 0.45;
+  },
+  folk_die(c, out, t, o) {                                      // the glass note falls and stops, then the body
+    tone(c, out, t, { type: 'sine', f0: 700, f1: 160, a: 0.01, d: 0.55, gain: 0.16, vib: 6 });
+    tone(c, out, t, { type: 'triangle', f0: 1050, f1: 240, a: 0.01, d: 0.45, gain: 0.07 });
+    noise(c, out, t + 0.05, { dur: 0.3, gain: 0.08, type: 'lowpass', f0: 1800, f1: 300, off: o.r() });
+    thump(c, out, t + 0.42, 80, 40, 0.14, 0.4);
+    return 0.9;
+  },
+  innocent_toll(c, out, t) {                                    // one dull bell, after the body falls: the count of what was never an enemy
+    bell(c, out, t, 123, { decay: 1.6, gain: 0.14, ratio: 2.76, index: 0.8 });
+    return 2.0;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

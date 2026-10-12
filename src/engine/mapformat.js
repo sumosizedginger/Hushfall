@@ -89,7 +89,7 @@ export class MapData {
   /** door/secret slab runs along 'x' when the wall line is east-west */
   doorAxis(cx, cz) { return this.isWall(cx - 1, cz) && this.isWall(cx + 1, cz) ? 'x' : 'z'; }
   counts() {
-    return { enemies: this.entities.filter((e) => e.type === 'enemy').length, items: this.entities.filter((e) => e.type === 'pickup' && !PICKUPS[e.kind]?.key).length, secrets: this.secrets.length };
+    return { enemies: this.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length, items: this.entities.filter((e) => e.type === 'pickup' && !PICKUPS[e.kind]?.key).length, secrets: this.secrets.length };
   }
 }
 

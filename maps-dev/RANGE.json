@@ -122,26 +122,26 @@
   "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
   "#####################fff######################################",
   "#####################fff######################################",
-  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
   "##############################################################",
   "##############################################################"
  ],
@@ -831,13 +831,28 @@
   },
   {
    "type": "prop",
+   "kind": "lamp",
+   "at": [52, 116]
+  },
+  {
+   "type": "prop",
    "kind": "pillar",
    "at": [16, 118]
   },
   {
    "type": "prop",
+   "kind": "lamp",
+   "at": [58, 121]
+  },
+  {
+   "type": "prop",
    "kind": "pillar",
    "at": [16, 124]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 126]
   },
   {
    "type": "prop",
@@ -2083,6 +2098,70 @@
    ]
   },
   {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [51, 116],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [55, 116],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [51, 123],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [54, 122],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [57, 124],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [52, 127],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [56, 127],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "vaelfolk",
+   "at": [54, 119],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [45, 27]
@@ -2207,6 +2286,13 @@
    "radius": 6,
    "speaker": "RANGE",
    "text": "LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them."
+  },
+  {
+   "id": "folkyard",
+   "at": [52, 121],
+   "radius": 6,
+   "speaker": "RANGE",
+   "text": "FOLK YARD: Vael civilians never attack. They watch, and run from a shot with the fan folded. The arc never locks on. A dead one is an INNOCENT: a rank cost (here they stand up)."
   },
   {
    "id": "vael",

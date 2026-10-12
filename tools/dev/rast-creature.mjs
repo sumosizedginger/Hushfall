@@ -2,7 +2,7 @@
 // atlas (assets/baked/choir_<kind>.png) by UV, lit by a simple hemisphere + key light. It has NO ink, NO value banding and NO paper grain (the real post pass is not here): it is for COMPOSITION (does the horn point where it
 // should, does the silhouette read, are the proportions right, what colour is each part), never for the final look. Made for PT-026 (the Chorister) when the owner's mouse rule forbids a Chrome job for every look at a rig.
 //   node tools/dev/rast-creature.mjs <out.png> <kind[,kind...]> [--views=front,three,side,sing,walk,dead] [--atlas=<dir>] [--w=300] [--dist=5.2] [--cy=1.15]
-// views: front (facing the camera), three (a three-quarter turn), side, back, sing (the attack pose, front: 0.6 through the arm-raise tell), walk (mid-stride, three-quarter), dead (the topple, three-quarter).
+// views: front (facing the camera), three (a three-quarter turn), side, back, sing (the attack pose, front: 0.6 through the arm-raise tell), walk (mid-stride, three-quarter), fear (running, afraid: the frill folded), calm (a slow step, the frill open), dead (the topple, three-quarter).
 import * as THREE from 'three';
 import fs from 'node:fs';
 import { PNG } from 'pngjs';
@@ -13,7 +13,7 @@ const flags = Object.fromEntries(args.filter((a) => a.startsWith('--')).map((a) 
 const VIEWS = (flags.views ?? 'front,three,side,sing').split(','), W = Number(flags.w ?? 300), H = Math.round(W * 1.25), DIST = Number(flags.dist ?? 5.2), CY = Number(flags.cy ?? 1.15), FOV = 34, NEAR = 0.1;
 const POSES = {
   front: { yaw: 0, p: {} }, three: { yaw: 0.75, p: {} }, side: { yaw: Math.PI / 2, p: {} }, back: { yaw: Math.PI, p: {} },
-  sing: { yaw: 0.35, p: { attack: 0.6 } }, walk: { yaw: 0.75, p: { walk: 1, phase: 1.1 } }, dead: { yaw: 0.75, p: { dead: 1 } },
+  sing: { yaw: 0.35, p: { attack: 0.6 } }, walk: { yaw: 0.75, p: { walk: 1, phase: 1.1 } }, fear: { yaw: 0.75, p: { walk: 1, phase: 1.1, afraid: true } }, calm: { yaw: 0.35, p: { walk: 0.3, phase: 0.6 } }, dead: { yaw: 0.75, p: { dead: 1 } },
 };
 const srgbToLin = (c) => c.map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)), linToSrgb = (x) => (x <= 0.0031308 ? x * 12.92 : 1.055 * x ** (1 / 2.4) - 0.055);
 const KEY = new THREE.Vector3(-1, 1.4, 1.2).normalize(), SKY = new THREE.Color(0x9fb8d0), GND = new THREE.Color(0x3a2a30), KEYC = new THREE.Color(0xffe0b0);

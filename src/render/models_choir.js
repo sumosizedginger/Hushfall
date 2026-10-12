@@ -739,4 +739,55 @@ export function seal(tex) {
   });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother };
+// ------------------------------------------------------------------------------------------------------------------ VAEL CIVILIAN (PT-037, Campaign 2 Act A: the first Vael who is not a weapon)
+/** a tall, thin person of milk-glass: bird-hocked legs, a spindle of a torso, long arms folded over the belly, crystal grown from the shoulders and along the spine, a belt of undyed cord, a narrow head with gold eyes, and a
+ *  FAN-FRILL of ribs and amber membrane behind the head that stands open while it is calm and folds shut when it is afraid (`p.afraid`): the widest thing about it is at head height, which no coat-wearer's outline has, and the
+ *  fold is the fear tell. Warm and pale where the hostile Vael are bronze and oxblood; gold eyes where theirs are teal. 2.1 m, no weapon, hands empty. */
+export function vaelfolk(tex) {
+  const C = cellsOf('vaelfolk');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 0.96, 0]);
+    for (const [n, s] of [['legA', -1], ['legB', 1]]) {                                                                                         // long legs, the knee turned the bird's way
+      R.joint(n, 'hips', [s * 0.12, 0, 0]); R.cyl(n, 0.07, 0.055, 0.5, 6, C.skin, { pos: [0, -0.25, 0] });
+      R.joint(n + 'M', n, [0, -0.5, 0]); R.cyl(n + 'M', 0.05, 0.034, 0.5, 6, C.skinDk, { pos: [0, -0.25, 0] }); R.box(n + 'M', 0.1, 0.04, 0.34, C.skinDk, { pos: [0, -0.48, 0.1] });
+    }
+    R.joint('spine', 'hips', [0, 0.04, 0]);
+    R.lathe('spine', V2([[0.05, 0], [0.10, 0.1], [0.13, 0.34], [0.15, 0.52], [0.11, 0.63], [0.05, 0.69]]), 8, C.skin, { scale: [1, 1, 0.68] });          // the spindle of the torso
+    for (let i = 0; i < 6; i++) R.cone('spine', 0.05 - i * 0.004, 0.2 + (i % 2) * 0.1, 4, i % 2 ? C.crystalDk : C.crystal, { pos: [0, 0.1 + i * 0.095, -0.11], rot: [-0.9, 0, 0] });      // the ridge of crystal down the back
+    for (const s of [-1, 1]) for (const [dx, h, lean] of [[0.2, 0.34, 0.5], [0.27, 0.24, 0.9], [0.14, 0.42, 0.2]]) R.cone('spine', 0.045, h, 4, dx > 0.2 ? C.crystalDk : C.crystal, { pos: [s * dx, 0.66 + h * 0.4, -0.02], rot: [0, 0, -s * lean] });     // crystal grown from each shoulder
+    const strips = 7;
+    for (let i = 0; i < strips; i++) {                                                                                                          // the belt of cord: strands hanging to the knee
+      const a = (i / strips) * PI * 2 + 0.2, len = 0.34 + 0.1 * ((i * 5) % 3);
+      R.joint('cord' + i, 'hips', [S(a) * 0.16, 0.02, K(a) * 0.11], [0, a, 0]); R.rag('cord' + i, 0.05, len, 0.03, 0.4, C.cord, { pos: [0, -len / 2, 0] });
+    }
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) {
+      R.limb('spine', n, [s * 0.19, 0.62, 0], { a: 0.45, b: 0.5, r0: 0.045, r1: 0.04, r2: 0.03, cellA: C.skin, cellB: C.skinDk, seg: 6 });
+      for (const d of [-1, 0, 1]) R.cone(n + 'M', 0.014, 0.17, 4, C.rib, { pos: [d * 0.03, -0.55, 0.01], rot: [PI, 0, 0] });                       // three long fingers
+    }
+    R.joint('neck', 'spine', [0, 0.68, 0.02]); R.cyl('neck', 0.04, 0.05, 0.2, 6, C.skin, { pos: [0, 0.085, 0] });
+    R.joint('head', 'neck', [0, 0.19, 0.03]);
+    R.lump('head', 0.11, 1, 0.06, 4, C.skin, { pos: [0, 0.12, 0.02], scale: [0.78, 1.4, 0.95] });                                              // a long narrow head
+    for (const s of [-1, 1]) R.sph('head', 0.032, 5, 4, C.eye, { pos: [s * 0.058, 0.17, 0.102] });
+    R.box('head', 0.065, 0.014, 0.02, C.mouth, { pos: [0, 0.04, 0.108] });
+    R.joint('frill', 'head', [0, 0.1, -0.07], [-0.16, 0, 0]);                                                                                  // the fan: a half disc of membrane and seven ribs, leaning back
+    R.prim('frill', new THREE.CylinderGeometry(0.35, 0.35, 0.014, 16, 1, false, PI / 2, PI), C.frill, { rot: [PI / 2, 0, 0], name: 'fan' });
+    for (let i = 0; i < 7; i++) { const a = -1.3 + i * (2.6 / 6); R.cone('frill', 0.013, 0.4, 3, C.rib, { pos: [S(a) * 0.2, K(a) * 0.2, 0.01], rot: [0, 0, -a] }); }
+    R.tor('frill', 0.35, 0.011, 3, 14, C.rib, { rot: [0, 0, 0] });
+  }, (p, J, R) => {
+    const t = p.t, w = p.walk, ph = p.phase, d = ease(clamp01(p.dead)), fear = p.afraid ? 1 : 0, run = clamp01((w - 0.35) / 0.55), swing = S(ph) * (0.35 + 0.5 * run) * w;
+    J.legA.rotation.x = -0.28 + swing; J.legB.rotation.x = -0.28 - swing;
+    J.legAM.rotation.x = 0.7 + Math.max(0, K(ph)) * 0.7 * w; J.legBM.rotation.x = 0.7 + Math.max(0, -K(ph)) * 0.7 * w;
+    J.hips.position.y = 0.96 - 0.02 + Math.abs(S(ph)) * 0.04 * w - 0.6 * d;
+    J.spine.rotation.x = 0.1 + 0.2 * run + S(t * 1.1) * 0.02; J.spine.rotation.y = -S(ph) * 0.1 * w;
+    const calmA = -0.18, calmB = -0.7, flA = -S(ph) * 0.9 * w - 0.25, flB = -0.5 - Math.max(0, S(ph + 1)) * 0.5 * w;                          // calm: the hands folded over the belly; running: the arms pump
+    J.armA.rotation.x = calmA + (flA - calmA) * run; J.armB.rotation.x = calmA + (-flA - 0.5 - calmA) * run; J.armA.rotation.z = -0.78 + 0.66 * run; J.armB.rotation.z = 0.78 - 0.66 * run;                                                  // calm: the arms held out from the body, hands open (a person with nothing to hide); running: tucked in
+    J.armAM.rotation.x = calmB + (flB - calmB) * run; J.armBM.rotation.x = calmB + (flB - calmB) * run;
+    J.neck.rotation.x = 0.05 + 0.15 * fear; J.head.rotation.x = 0.1 - 0.2 * fear + S(t * 0.8) * 0.03; J.head.rotation.z = S(t * 0.6) * 0.05;
+    const open = (1 - 0.8 * fear) * (1 - 0.5 * d) + 0.025 * S(t * 2.2) * (1 - fear);                                                           // the fan stands open, breathing, and folds when it is afraid
+    J.frill.scale.set(Math.max(0.1, open), 1 - 0.1 * fear, 1); J.frill.rotation.x = -0.16 - 0.45 * fear + 0.5 * d;
+    for (let i = 0; J['cord' + i]; i++) J['cord' + i].rotation.x = S(t * 1.5 + i * 1.3) * 0.08 + 0.4 * w * S(ph + i);
+    J.rig.rotation.x = -d * 1.45 + (p.dead > 0.85 ? S((p.dead - 0.85) * 40) * 0.02 : 0);
+  });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk };

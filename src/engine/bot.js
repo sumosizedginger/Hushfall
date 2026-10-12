@@ -72,7 +72,7 @@ export class Bot {
     const w = this.w, p = w.player; let best = null, bd = 16;
     const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead');
     for (const e of w.enemies) {
-      if (e.state === 'dead' || (e.state === 'idle' && !ENEMIES[e.kind].node)) continue;
+      if (e.state === 'dead' || ENEMIES[e.kind].peaceful || (e.state === 'idle' && !ENEMIES[e.kind].node)) continue;
       if (ringUp && ENEMIES[e.kind].boss) continue;                                                // shielded: cut the ring first
       const d = Math.hypot(e.x - p.x, e.z - p.z);
       if (d < bd && hasLOS(w, p.x, p.z, e.x, e.z)) { best = e; bd = d; }
@@ -85,7 +85,7 @@ export class Bot {
     const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
     const plated = !!ENEMIES[t.e.kind].armor, hr = p.weapon === 'harpoon' ? 1.3 : 1, hd = ENEMIES[t.e.kind];
     const wantHarpoon = p.weapons.includes('harpoon') && (p.ammo.bolt || 0) > 0 && ((plated && t.d > 3) || (t.d > 9 / hr && (!!hd.ranged || !!hd.hover)));       // the long gun: plate (the bolt goes through it) and shooters or flyers that are not close
-    const near = w.enemies.filter((e) => e !== t.e && e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - t.e.x, e.z - t.e.z) < 4.5).length;
+    const near = w.enemies.filter((e) => e !== t.e && e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind].peaceful && Math.hypot(e.x - t.e.x, e.z - t.e.z) < 4.5).length;
     const wantArc = !wantHarpoon && p.weapons.includes('arc') && (p.ammo.cell || 0) > 0 && t.d < (p.weapon === 'arc' ? 11 : 9) && (near >= 1 || !!hd.hover);       // the lamp: a clutch of bodies, or a flyer, inside its reach (the arc jumps)
     const wantFlare = !wantHarpoon && !wantArc && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
     const wantScatter = !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
@@ -293,7 +293,7 @@ export class Bot {
       if (d && d.target === 1) done = true;
       else { const listening = (d?.soundlock && w.time - (w.noise?.t ?? -99) < d.soundlock.quiet) || (d?.interlock && lockBusy(w, d)); done = this.follow(op.at, 0.6, 1.9) && (this.aimAt((op.at[0] + 0.5) * w.map.cell, (op.at[1] + 0.5) * w.map.cell), listening ? (this.stillFor = 0) : this.pressUse(), false); }          // PT-029: a sound-lock door listens: stand still and quiet until it has heard nothing for its `quiet` s
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
-    } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
+    } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind].peaceful && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
     else if (op.op === 'killboss') done = this.bossTick();
     else if (op.op === 'switch') {

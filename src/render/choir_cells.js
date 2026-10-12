@@ -21,6 +21,7 @@ export const CHOIR_CELLS = {
   gatewarden:  ['stone', 'stoneDk', 'bone', 'boneDk', 'chitin', 'chitinDk', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd', 'trim'],          // PT-033 (Episode 4, Batch E): the Gate Warden, the Campaign One boss
   seal:        ['stone', 'stoneDk', 'bone', 'bronze', 'bronzeDk', 'iron', 'trim'],          // PT-033: a seal on the Warden's arch (a node)
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
+  vaelfolk:    ['skin', 'skinDk', 'crystal', 'crystalDk', 'frill', 'rib', 'eye', 'cord', 'mouth'],          // PT-037 (Campaign 2, Act A): the Vael civilian, the first Vael who is not a weapon
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);
 /** the baked texture name of a kind's atlas */

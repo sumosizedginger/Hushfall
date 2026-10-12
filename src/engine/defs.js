@@ -384,3 +384,19 @@ ENEMIES.gatewarden = { name: 'Gate Warden', poise: 8, hp: 900, speed: 0, gait: 1
   shield: { reduce: 0.05, y: 3.6, r: 4.2, note: ['SEAL', 'SEALS', 'STAND'] }, pulse: { cooldown: 10, windup: 1.4, speed: 8, damage: 10, width: 1.3, maxR: 44, hitHeight: 1.0 }, enragedPulseCooldown: 8,
   sweep: { first: 6, cooldown: 10, tell: 2.4, duration: 2.8, arc: 2.5, damage: 18, width: 0.6, range: 64, hitCd: 1.0, beamY: 1.0 }, summon: { kind: 'gill', count: 1, every: 30, max: 2 }, stagger: 3.0 };
 ENEMIES.seal = { name: 'Seal', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 2.6, hitRadius: 0.95, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };      // a seal on the Gate Warden's arch: a node
+
+// ---- Campaign 2, Act A (PT-037; design/CAMPAIGN2.md E1): THE QUIET FOLK ------------------------------------------------------------------------------------------------------------------------------
+// A VAEL CIVILIAN is the first Vael who is not a weapon: PEACEFUL. It never attacks. It stands near its post (`wander`), turns to look at the player, and RUNS from gunfire, blasts and being hit (`FOLK`, src/engine/folk.js);
+// nothing automatic ever picks it (the arc lamp's lock, the route bot). It can still be shot: a dead one is an INNOCENT (never a kill: `stats.innocents`, a cost to the rank, a line on the results, no drop).
+// Its states are 'calm' and 'flee', never 'idle' / 'chase', so nothing that wakes or counts sleepers touches it.
+ENEMIES.vaelfolk = { name: 'Vael civilian', peaceful: true, poise: 0.5, hp: 26, speed: 3.6, gait: 8, radius: 0.42, height: 2.42, hitRadius: 0.4, sight: 12, turnRate: 5, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 } };
+export const FOLK = {
+  calmSpeed: 0.9,           // m/s while it wanders
+  wanderEvery: 5,           // s: a new place to stand (or the same one) a few metres from its post
+  wanderR: 3.2,             // m from its post
+  hear: 1.0,                // a noise frightens it inside radius x hear (and with a clear line, or very close, as for any sleeper)
+  fearT: 5,                 // s it keeps running after the last shot, blast or blow it noticed
+  look: 7,                  // m: it turns to look at the player inside this, while calm
+  innocentCost: 0.1,        // rank score lost per innocent harmed (src/engine/progress.js rankFor), at most `innocentMax` in all
+  innocentMax: 0.4,
+};

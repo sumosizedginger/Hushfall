@@ -275,6 +275,19 @@ const KINDS = {
       trim: cell({ grad: ['#fbeeaa', '#b48e36'], marks: [{ col: '#5a4010', wt: 1.7, n: 3, dir: 'h' }, { col: '#fffbe0', wt: 1.2, n: 4, dir: 'v', len: [6, 14] }] }),
     },
   },
+  vaelfolk: {                        // PT-037: the Vael civilian: milk-glass skin, crystal on the shoulders and spine, an amber fan-frill behind the head, undyed cord, gold eyes. Warm and pale where the hostile Vael are bronze and oxblood.
+    seed: 3701, cells: {
+      skin: cell({ grad: ['#e2e8da', '#9aa896'], blots: [{ cols: ['#c6d2c2', '#f0f4e8'], n: 5, r: [5, 10], a: 170 }], marks: [{ col: '#667666', wt: 1.4, n: 3, dir: 'v', len: [14, 30] }], extra: (g, X, Y) => veins(g, X, Y, '#7e96a2', 1.2, 6) }),
+      skinDk: cell({ grad: ['#a2b09e', '#4c5850'], marks: [{ col: '#2a342e', wt: 1.5, n: 4, dir: 'v', len: [12, 30] }, { col: '#d4dccc', wt: 1.1, n: 3, dir: 'v', len: [6, 12] }] }),
+      crystal: cell({ grad: ['#f4fafc', '#9cbace'], marks: [{ col: '#587a90', wt: 1.5, n: 4, dir: 'u', len: [14, 30] }, { col: '#ffffff', wt: 1.2, n: 3, dir: 'd', len: [8, 16] }] }),
+      crystalDk: cell({ grad: ['#9cbace', '#34505e'], marks: [{ col: '#1c303c', wt: 1.5, n: 4, dir: 'u', len: [12, 26] }] }),
+      frill: cell({ grad: ['#f4cc84', '#b0603c'], blots: [{ cols: ['#e8a860', '#cc7a48'], n: 4, r: [6, 11], a: 150 }], extra: (g, X, Y) => { radial(g, X + 32, Y + 32, 3, 31, 15, '#8a3a28', 1.7); g.noStroke(); g.fill('#fff0c0', 120); g.circle(X + 32, Y + 32, 9); } }),
+      rib: cell({ grad: ['#eee2c4', '#8c7c58'], marks: [{ col: '#4a3e28', wt: 1.5, n: 4, dir: 'v', len: [14, 30] }] }),
+      eye: cell({ base: '#ffe9a2', extra: (g, X, Y) => { g.noStroke(); g.fill('#a8641e', 255); g.circle(X + 32, Y + 32, 26); g.fill('#fff6d0', 255); g.circle(X + 26, Y + 26, 9); } }),
+      cord: cell({ grad: ['#cdb98e', '#7c6844'], marks: [{ col: '#4e4028', wt: 1.6, n: 5, dir: 'h' }, { col: '#ecdcb0', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      mouth: cell({ base: '#2a1c1e' }),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

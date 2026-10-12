@@ -4,7 +4,7 @@ import { runRoute } from './harness.js';
 import { createWorld } from './world.js';
 import { BOT_GUNS } from './bot.js';
 import { analyseReach } from './reach.js';
-import { WALL_SKINS, FLOOR_SKINS, PICKUPS, PLAYER, DIFFICULTY, WEAPONS } from './defs.js';
+import { WALL_SKINS, FLOOR_SKINS, PICKUPS, PLAYER, DIFFICULTY, WEAPONS, ENEMIES } from './defs.js';
 
 const DIFFS = ['easy', 'normal', 'hard'];
 /** the ammunition the route bot fights with (PT-023): the capacity the gates count is what a bot with THOSE guns can use; a carbine round or a rocket would only inflate the total and hide a shortage of the rest, and a found melee weapon has no ammunition at all */
@@ -39,7 +39,7 @@ export function firedBy(events) { const by = {}; for (const e of events) if (e.t
 /** enemies a level can put in front of the player: placed ones plus those its scripts spawn */
 export function threatCount(map) {
   const spawned = [...map.switches.map((x) => x.do), ...map.triggers.map((t) => t.do)].flat().filter((a) => a?.spawn).length;
-  return map.entities.filter((e) => e.type === 'enemy').length + spawned;
+  return map.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length + spawned;
 }
 
 /** run the main route with a perfect fighter and a passive runner on every difficulty */
@@ -103,14 +103,14 @@ export function viabilityChecks(v, par, { safe = false } = {}) {
 
 /** structural facts a level's `quality` block can be checked against */
 export function levelFacts(map) {
-  const kinds = {}; for (const e of map.entities) if (e.type === 'enemy') kinds[e.kind] = (kinds[e.kind] || 0) + 1;
+  const kinds = {}; for (const e of map.entities) if (e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful) kinds[e.kind] = (kinds[e.kind] || 0) + 1;      // (the peaceful are scenery to the quality gates: PT-037)
   const keys = new Set(map.entities.filter((e) => e.type === 'pickup' && e.kind.startsWith('key_')).map((e) => e.kind));
   const wallSkins = new Set(), floorSkins = new Set();
   for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) { const c = map.tile(x, z); if (c in WALL_SKINS) wallSkins.add(c); else if (c in FLOOR_SKINS) floorSkins.add(c); }
   let maxFloor = 0; if (!map.flat) for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) !== 'wall') maxFloor = Math.max(maxFloor, map.floor(x, z));
   let fx = 0; if (map.fxRows) for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.fx(x, z)) fx++;
   return {
-    enemies: map.entities.filter((e) => e.type === 'enemy').length, enemyKinds: kinds, keys: keys.size, closets: [...map.doors.values()].filter((d) => d.closet).length, triggers: map.triggers.length, switches: map.switches.length,
+    enemies: map.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length, enemyKinds: kinds, keys: keys.size, closets: [...map.doors.values()].filter((d) => d.closet).length, triggers: map.triggers.length, switches: map.switches.length,
     sectors: map.sectors.length, heights: !map.flat && maxFloor > 0, maxFloor, fxCells: fx, skins: wallSkins.size + floorSkins.size, wallSkins: [...wallSkins], floorSkins: [...floorSkins],
     props: map.entities.filter((e) => e.type === 'prop').length, secrets: map.secrets.length, cells: map.w * map.h, gates: [...map.doors.values()].filter((d) => d.breath).length, spores: map.pulses.length,
   };

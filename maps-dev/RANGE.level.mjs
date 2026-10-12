@@ -34,6 +34,8 @@ L.room([2, 92, 45, 108], { floor: ':', wall: 'C' }); L.rect([3, 89, 5, 91], 'f')
 L.rect([46, 99, 47, 101], ':'); L.room([48, 92, 59, 108], { floor: ':', wall: 'C' });
 // PT-033: the seventh range, south of the sky yard (an opening at x 21..23): the GATE YARD, nine metres to the ceiling for the Gate Warden (7.2 m)
 L.room([2, 113, 45, 130], { floor: 'f', wall: 'C' }); L.rect([21, 109, 23, 112], 'f'); L.ceiling([2, 113, 45, 130], 9);
+// PT-037: the eighth range, east of the gate yard (an opening at x 46..47): the FOLK YARD, Vael civilians (peaceful: a sponge pair for the outline and the hit volume, and a small crowd that lives)
+L.room([48, 113, 59, 130], { floor: 'f', wall: 'C' }); L.rect([46, 120, 47, 122], 'f');
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
@@ -44,6 +46,7 @@ L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50
 L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
 L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
 L.putAll('m', [[8, 116], [22, 116], [36, 116], [8, 127], [22, 127], [36, 127]]);                                              // the gate yard's lamps
+L.putAll('m', [[52, 116], [52, 126], [58, 121]]);                                                                           // the folk yard's lamps
 L.putAll('P', [[16, 118], [16, 124]]);                                                                                       // two pillars: cover from the sweep
 L.put(22, 24, '@');                                              // the hub: the sponges north, the pair and the far sponge on this row, the crowd and the water north-east
 
@@ -127,6 +130,10 @@ E.push({ type: 'enemy', kind: 'seal', at: [38, 118], group: 'gate' }, { type: 'e
 E.push({ type: 'prop', kind: 'mirror', id: 'gm', at: [27, 121], rot: 1 });
 E.push({ type: 'switch', id: 'gate', at: [2, 121], wall: 'west', once: true, do: [{ wake: 'gate' }, { objective: 'The Warden is awake: stand west of the mirror and let the sweep find it' }, { shake: 1.2 }] });
 
+// ---- PT-037: the folk yard (Campaign 2, Act A): the Vael civilian ----
+t('vaelfolk', 51, 116, S, 'inert', SPONGE); t('vaelfolk', 55, 116, S, 'inert', SPONGE);                                                        // sponges: the fan and the hit volume
+for (const [x, z] of [[51, 123], [54, 122], [57, 124], [52, 127], [56, 127], [54, 119]]) t('vaelfolk', x, z, WEST, 'turn', { sight: 12 });    // a crowd that lives: it watches you, walks a few metres, runs from a shot (and stands up again, as every target does)
+
 const layers = L.layers();
 
 export default {
@@ -158,6 +165,7 @@ export default {
     { id: 'airyard', at: [8, 98], radius: 7, speaker: 'RANGE', text: 'SKY YARD: step on a lit plate and you are thrown to its landing; steer a little in the air, shoot as you go. Miss the deck and the sky sets you back (15 hurt).' },
     { id: 'gateyard', at: [10, 115], radius: 8, speaker: 'RANGE', text: 'GATE YARD: a Warden and two Seals to shoot. The lever wakes the live one: a 2.4 s tell, then a beam (pillars stop it; the mirror turns it onto the third Seal; no seals, no shield).' },
     { id: 'loadsyard', at: [53, 94], radius: 6, speaker: 'RANGE', text: 'LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them.' },
+    { id: 'folkyard', at: [52, 121], radius: 6, speaker: 'RANGE', text: 'FOLK YARD: Vael civilians never attack. They watch, and run from a shot with the fan folded. The arc never locks on. A dead one is an INNOCENT: a rank cost (here they stand up).' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };
