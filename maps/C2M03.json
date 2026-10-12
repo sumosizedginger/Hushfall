@@ -468,13 +468,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [40, 59],
    "facing": 0.185
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [52, 59],
    "facing": -0.185
   },
@@ -499,21 +499,21 @@
   {
    "type": "enemy",
    "kind": "bulwark",
-   "at": [42, 47],
-   "facing": 0.091,
+   "at": [42, 44],
+   "facing": 0.085,
    "group": "court"
   },
   {
    "type": "enemy",
    "kind": "bulwark",
-   "at": [50, 47],
-   "facing": -0.091,
+   "at": [50, 44],
+   "facing": -0.085,
    "group": "court"
   },
   {
    "type": "enemy",
    "kind": "acolyte",
-   "at": [46, 46],
+   "at": [46, 45],
    "facing": 0,
    "group": "court"
   },
@@ -533,16 +533,16 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
-   "at": [40, 47],
-   "facing": 0.136,
+   "kind": "gaunt",
+   "at": [35, 44],
+   "facing": 0.23,
    "group": "court"
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
-   "at": [52, 47],
-   "facing": -0.136,
+   "kind": "gaunt",
+   "at": [57, 44],
+   "facing": -0.23,
    "group": "court"
   },
   {
@@ -596,13 +596,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
-   "at": [46, 9],
-   "facing": 0
-  },
-  {
-   "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [46, 11],
    "facing": 0
   },
@@ -671,7 +665,7 @@
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [47, 46]
+   "at": [46, 46]
   },
   {
    "type": "pickup",

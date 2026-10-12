@@ -43,7 +43,7 @@ The owner, 2026-10-11: "ALL DECISIONS ARE YOURS, KNOW PLAYERS ARE GOING TO WANT 
 2. **Concrete nouns and numbers over feelings.** "Eleven boats, all pointing the same way" beats "an eerie stillness". Never name an emotion Ines is supposed to have.
 3. **No stock phrases:** no "echoes of", "whispers", "a testament to", "tapestry", "dance of", "symphony of", "ancient", "eldritch", "cosmic", "unspeakable", "chilling", "haunting", "eerie", "silence that speaks", "the weight of". No "not X but Y" for effect; no triplets for rhythm; no rhetorical question ending a line; no line that ends on a one-word fragment for drama; no dash-splice for gravitas.
 4. **Each speaker uses their own words** (section 4). If two speakers could swap lines, rewrite one.
-5. **Short.** A message is at most two sentences and 180 characters (the format's limit). A log may be three short lines. The Record (the pause-menu screen) shows them again, so none has to explain what the one before it said.
+5. **Short.** A message is at most 180 characters (the format's limit) and four short sentences (INES, HULL); a found document (a log, a ledger, a plate, a tally) may run to six short lines, and the Tender five (she speaks in short plain sentences). The Record (the pause-menu screen) shows them again, so none has to explain what the one before it said.
 6. **Say it once.** A fact stated in a message is not restated in the objective, the outro and the intro.
 7. **Leave the reader to put two facts together.** The Tender says "the ones who sang"; a plate counts a number; the player draws the line.
 

@@ -567,7 +567,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [56, 52],
    "facing": -1.172
   },
@@ -580,18 +580,18 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [38, 37],
-   "facing": -0.573
-  },
-  {
-   "type": "enemy",
-   "kind": "tollbearer",
    "at": [50, 36],
    "facing": -0.785
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
+   "at": [38, 37],
+   "facing": -0.573
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
    "at": [60, 37],
    "facing": -0.935
   },
@@ -723,13 +723,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [35, 14],
    "facing": -0.305
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [45, 14],
    "facing": -0.464
   },

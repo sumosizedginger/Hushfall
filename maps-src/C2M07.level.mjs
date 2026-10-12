@@ -34,12 +34,12 @@ const { E, P: PK, PR } = P;
 const SEEDS = [['s', 36, 60, 45, 36, 58], ['s', 40, 60, 70, 40, 58], ['w', 16, 36, 100, 18, 36], ['w', 16, 40, 125, 18, 40], ['e', 60, 36, 160, 58, 36], ['e', 60, 40, 185, 58, 40], ['n', 36, 16, 220, 36, 18], ['n', 40, 16, 245, 40, 18]];       // [shed, x, z, ripens at (s), where the bell-bearer steps out]
 SEEDS.forEach(([, x, z], i) => E('bellnode', x, z, { group: 'seed' + i }));
 // ---- the yard ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[24, 56], [52, 56], [24, 24], [52, 24], [30, 46], [46, 46], [30, 30], [46, 30]]) E('tollbearer', x, z);
+for (const [x, z] of [[24, 56], [52, 56], [24, 24], [52, 24]]) E('tollbearer', x, z); for (const [x, z] of [[30, 46], [46, 46], [30, 30], [46, 30]]) E('gaunt', x, z);
 for (const [x, z] of [[20, 50], [56, 50], [20, 26], [56, 26], [38, 24]]) E('gaunt', x, z);
 for (const [tx, tz] of TOW) E('bellhand', tx, tz);
 E('tollbearer', 36, 49); E('tollbearer', 40, 49); E('tollbearer', 38, 47); E('gaunt', 34, 50); E('bellhand', 42, 46);          // at the kiln house's south gap
 E('gill', 52, 46);
-for (const k of ['n', 'e', 's', 'w']) { const r = SHED[k]; E('tollbearer', Math.round((r[0] + r[2]) / 2), Math.round((r[1] + r[3]) / 2)); }     // a keeper in each shed
+for (const k of ['n', 'e', 's', 'w']) { const r = SHED[k]; E(k === 'n' || k === 's' ? 'bellhand' : 'tollbearer', Math.round((r[0] + r[2]) / 2), Math.round((r[1] + r[3]) / 2)); }     // a keeper in each shed
 E('gaunt', CX, 6); E('tollbearer', CX - 1, 18); E('bulwark', CX + 3, 19);                                  // (a shell in the north shed: the last fight)                                                          // the way out
 // ---- the forks at each shed door (a cluster of three): a broken seed rung out loud calls the yard ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of [[34, 25], [42, 51], [51, 34], [25, 42]]) { PR('resonator', x, z); PR('resonator', x + 2, z + 1); PR('resonator', x + 1, z - 2); }

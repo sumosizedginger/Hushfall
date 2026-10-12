@@ -40,14 +40,14 @@ LV.forEach(({ zb }) => {
 cluster(22, 22); cluster(58, 22);                                                                             // and on the plateau, outside the tower
 // ---- the harvesters and the guards -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of [[24, 66], [36, 67], [48, 66], [58, 67]]) E('tollbearer', x, z);                         // field one
-for (const [x, z] of [[22, 51], [34, 52], [46, 51], [56, 52]]) E('tollbearer', x, z);
-for (const [x, z] of [[24, 36], [38, 37], [50, 36], [60, 37]]) E('tollbearer', x, z);
+for (const [x, z] of [[22, 51], [34, 52], [46, 51]]) E('tollbearer', x, z); E('gaunt', 56, 52);
+for (const [x, z] of [[24, 36], [50, 36]]) E('tollbearer', x, z); E('gaunt', 38, 37); E('gaunt', 60, 37);
 E('gaunt', 26, 60); E('gaunt', 46, 59); E('gaunt', 34, 45); E('gaunt', 52, 44); E('gaunt', 28, 29); E('gaunt', 46, 30);   // the halls
 E('bellhand', 56, 45); E('bellhand', 36, 30); E('bellhand', 56, 59);
 E('sexton', 40, 59); E('sexton', 24, 44); E('sexton', 44, 29);
 E('gill', 30, 62); E('gill', 50, 48); E('gill', 30, 34); E('gill', 50, 14);
 E('tollbearer', 28, 20); E('tollbearer', 52, 20); E('bulwark', 37, 19); E('bulwark', 43, 19); E('gaunt', 40, 12);         // the plateau and the tower
-E('tollbearer', 35, 14); E('tollbearer', 45, 14); E('gaunt', 40, 3);
+E('gaunt', 35, 14); E('gaunt', 45, 14); E('gaunt', 40, 3);
 // ---- supplies and furniture -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of [[19, 68], [40, 66], [62, 66], [62, 58], [24, 52], [62, 52], [18, 44], [40, 50], [62, 44], [20, 38], [40, 33], [62, 30], [20, 22], [40, 26], [60, 22]]) PK(x % 3 ? 'health_small' : 'health_large', x, z);
 PK('armor_vest', 62, 62); PK('armor_vest', 18, 47); PK('armor_vest', 62, 32); PK('armor_vest', 40, 26);

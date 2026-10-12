@@ -50,14 +50,14 @@ for (const [x, z] of [[40, 76], [52, 78], [44, 84], [48, 70]]) E('tollbearer', x
 for (const [x, z] of [[38, 80], [54, 74], [46, 88]]) E('gaunt', x, z);
 E('gill', 42, 70); E('gill', 50, 80);
 E('bellhand', 30, 70, { group: 'terrace' }); E('bellhand', 30, 78, { group: 'terrace' }); E('bellhand', 61, 70, { group: 'terrace' }); E('bellhand', 61, 78, { group: 'terrace' });
-E('tollbearer', 40, 59); E('tollbearer', 52, 59);                                                                          // asleep in the ditch
+E('gaunt', 40, 59); E('gaunt', 52, 59);                                                                          // asleep in the ditch
 E('tollbearer', 60, 60); E('tollbearer', 63, 60); E('bellhand', 62, 61);                                                  // the hut
-E('bulwark', 42, 47); E('bulwark', 50, 47); E('acolyte', 46, 46);                                                         // the court: two shells under an Acolyte's ward at the keep's stairs
-for (const [x, z] of [[36, 38], [56, 38], [40, 47], [52, 47]]) E('tollbearer', x, z);
+E('bulwark', 42, 44); E('bulwark', 50, 44); E('acolyte', 46, 45);                                                         // the court: two shells under an Acolyte's ward at the keep's stairs
+for (const [x, z] of [[36, 38], [56, 38]]) E('tollbearer', x, z); E('gaunt', 35, 44); E('gaunt', 57, 44);
 for (const [x, z] of [[34, 32], [58, 32], [46, 26]]) E('gaunt', x, z);
 E('chorister', PTS[0][0], PTS[0][1], { group: 'court' }); E('chorister', PTS[4][0], PTS[4][1], { group: 'court' });
 E('tollbearer', 41, 32); E('tollbearer', 51, 32);                                                                          // the keep's corridor
-E('tollbearer', 46, 9); E('tollbearer', 46, 11); E('gaunt', 46, 7);                                                       // the way out
+E('gaunt', 46, 11); E('gaunt', 46, 7);                                                       // the way out
 // the three in the cage: THE TENDER and two who stopped singing (peaceful: they never fight; they run from a shot)
 E('vaelfolk', 46, 37, { group: 'caged' }); E('vaelfolk', 45, 36, { group: 'caged' }); E('vaelfolk', 47, 38, { group: 'caged' });
 // ---- supplies and furniture ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
