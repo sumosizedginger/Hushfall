@@ -41,3 +41,12 @@ export function makeGrave(variant = 0) {
   if (variant % 2) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.9, 6), cloth); b.rotation.z = Math.PI / 2; b.rotation.y = 0.1; b.position.set(0, 0.26, 0.15); g.add(b); }
   return g;
 }
+
+/** a colossal rib arching over a road (scenery): one half of a bone ring 11 m across and nearly 12 m tall, a hand's breadth of verdigris at its foot, set across the road (its plane faces +x / -x). */
+export function makeRib() {
+  const g = new THREE.Group(), bone = lam({ color: 0xe0d6bc, emissive: 0x181408 }), verd = lam({ color: 0x6a8a62 });
+  const arc = new THREE.Mesh(new THREE.TorusGeometry(5.8, 0.55, 6, 24, Math.PI), bone); arc.position.y = 0.2; g.add(arc);
+  for (const s of [-1, 1]) { g.add(cyl(0.8, 0.95, 1.4, 6, verd, s * 5.8, 0.7, 0)); }
+  const mid = new THREE.Mesh(new THREE.TorusGeometry(5.8, 0.18, 4, 24, Math.PI), verd); mid.scale.set(0.86, 0.86, 1); mid.position.set(0, 0.2, 0.55); g.add(mid);
+  return g;
+}

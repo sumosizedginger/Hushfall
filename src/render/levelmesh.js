@@ -9,7 +9,7 @@ import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, mak
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 import { makeLighter } from './models_e4.js';
-import { makeFork, makeGateArch, makeSpire, makeGrave } from './models_c2.js';
+import { makeFork, makeGateArch, makeSpire, makeGrave, makeRib } from './models_c2.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -233,6 +233,7 @@ export function buildLevel(map, tex) {
     else if (sc.kind === 'crane' || sc.kind === 'gantry') { m = makeCrane(); }
     else if (sc.kind === 'arch') m = makeGateArch();
     else if (sc.kind === 'spire') m = makeSpire();
+    else if (sc.kind === 'rib') m = makeRib();
     if (!m) continue;
     m.position.x = sc.x; m.position.z = sc.z; m.position.y += sc.y ?? 0; m.rotation.y = sc.yaw ?? 0; if (sc.scale) m.scale.setScalar(sc.scale); dressing.add(m);
   }
