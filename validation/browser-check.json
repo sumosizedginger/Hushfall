@@ -1,12 +1,12 @@
 {
-  "when": "2026-10-12T04:59:11.935Z",
-  "commit": "faad1c1",
+  "when": "2026-10-12T17:46:32.887Z",
+  "commit": "42977d8",
   "sources": {
-    "engine": "5d9d43f174885290",
-    "render": "a7bfd5b9ac8690f1",
-    "game": "6b2753c1a380e7b8",
-    "audio": "d2ac93bcf8ca82ff",
-    "assets": "36a05690b34657ef"
+    "engine": "acee66aefea766f9",
+    "render": "8e49f8cdcdcafd03",
+    "game": "1d80c1c78541a170",
+    "audio": "8275bb214d0d428b",
+    "assets": "945f2db47fba7939"
   },
   "renderGround": {
     "band": {
@@ -402,7 +402,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=25"
+      "detail": "mode=playing tick=13"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -437,7 +437,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.16 m"
+      "detail": "moved 6.37 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -447,7 +447,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=34 last=toll_soft,hurt,strike,toll_soft,radio,step_outdoor,step_outdoor,step_outdoor,step_outdoor,flare_fire,flare_boom,burn_start"
+      "detail": "played=35 last=wheeze_windup,toll_soft,hurt,strike,radio,step_outdoor,step_outdoor,step_outdoor,step_outdoor,flare_fire,flare_boom,burn_start"
     },
     {
       "name": "Escape pauses (live)",
@@ -462,7 +462,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.44 m, ratio 1.52"
+      "detail": "walk 4.34 m, sprint 6.67 m, ratio 1.54"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -497,7 +497,7 @@
     {
       "name": "real Tab opens the automap, it paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=146 exits=0"
+      "detail": "visible=true painted=230400 explored=148 exits=0"
     },
     {
       "name": "Tab again closes the automap",
@@ -567,7 +567,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=149 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,pump,radio,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
+      "detail": "played=156 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,pump,radio,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -622,7 +622,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7380 wall=6s"
+      "detail": "status=complete failed=null ticks=7380 wall=9s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
@@ -632,7 +632,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8162 wall=6s"
+      "detail": "status=complete failed=null ticks=8162 wall=16s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
@@ -642,7 +642,7 @@
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9521 wall=9s"
+      "detail": "status=complete failed=null ticks=9521 wall=13s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
@@ -652,7 +652,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8099 wall=7s"
+      "detail": "status=complete failed=null ticks=8099 wall=16s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
@@ -662,7 +662,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6272 wall=5s"
+      "detail": "status=complete failed=null ticks=6272 wall=6s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
@@ -672,7 +672,7 @@
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8369 wall=10s"
+      "detail": "status=complete failed=null ticks=8369 wall=12s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -682,7 +682,7 @@
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6103 wall=13s"
+      "detail": "status=complete failed=null ticks=6103 wall=16s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
@@ -692,7 +692,7 @@
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9671 wall=11s"
+      "detail": "status=complete failed=null ticks=9671 wall=12s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
@@ -702,7 +702,7 @@
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10411 wall=14s"
+      "detail": "status=complete failed=null ticks=10411 wall=38s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
@@ -782,7 +782,7 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.167, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.159, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -812,7 +812,7 @@
     {
       "name": "one burst of the lamp in the live game spends one cell, jumps down a line of three bodies (each hit, each for less), draws its lightning and lights the level",
       "ok": true,
-      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 32.9"
+      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 5.5"
     },
     {
       "name": "picking up the mortar equips it: key 0 on the HUD, ROCKETS on the ammo label, a toast that names it, 6 rockets in the sim",
@@ -832,12 +832,12 @@
     {
       "name": "spore beds in the live game: blooming = bright with mist and it burns, dormant = dim, no mist, no damage",
       "ok": true,
-      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4765765654157675,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
+      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4765590289368333,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
     },
     {
       "name": "the Weeping Mother weeps in the live game: a tear is drawn in the air while the sim has one, then a pool, flat on the floor, at the place the sim put it",
       "ok": true,
-      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5605916581050764,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
+      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5679370161412078,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
     },
     {
       "name": "the Weeping Mother broods in the live game: her sacs swell on the view while the sim swells, then two Gaunts stand beside her",
@@ -872,7 +872,7 @@
     {
       "name": "the Grand Cantor in the live game: the horn rears for its pulse, the view draws a ring for each of the sim's two, and its shield is drawn at 3 m while a reed stands and gone when none does",
       "ok": true,
-      "detail": "horn -2.17 -> -2.56, sim rings 2, drawn 2, shield {\"x\":128.9984422920723,\"y\":3,\"z\":56.96337011894674,\"r\":3.8740746866692115}, then null"
+      "detail": "horn -2.17 -> -2.56, sim rings 2, drawn 2, shield {\"x\":128.9984422920723,\"y\":3,\"z\":56.96337011894674,\"r\":3.8740746866692293}, then null"
     },
     {
       "name": "a vent in the live game: the plate throws the player, the camera follows the arc (higher than the ground view, tracking the body) and the field of view opens; after the landing both are back",
@@ -887,7 +887,7 @@
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "433 samples, lowest chip 0.007 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "481 samples, lowest chip 0.006 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -932,7 +932,7 @@
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":196,\"triangles\":37360,\"geometries\":1140,\"textures\":98,\"programs\":23},\"plaza\":{\"calls\":177,\"triangles\":34648,\"geometries\":1140,\"textures\":98,\"programs\":23},\"warehouse\":{\"calls\":98,\"triangles\":20506,\"geometries\":1140,\"textures\":98,\"programs\":23},\"plaza-all-awake\":{\"calls\":395,\"triangles\":34648,\"geometries\":1351,\"textures\":98,\"programs\":23},\"warehouse-all-awake\":{\"calls\":145,\"triangles\":20554,\"geometries\":1351,\"textures\":98,\"programs\":23},\"m03-market\":{\"calls\":175,\"triangles\":58468,\"geometries\":1174,\"textures\":98,\"programs\":22},\"m03-market-all-awake\":{\"calls\":571,\"triangles\":58516,\"geometries\":1531,\"textures\":98,\"programs\":22},\"m05-terrace\":{\"calls\":110,\"triangles\":38480,\"geometries\":1138,\"textures\":98,\"programs\":19},\"m05-terrace-all-awake\":{\"calls\":304,\"triangles\":38480,\"geometries\":1288,\"textures\":98,\"programs\":19},\"m06-quay\":{\"calls\":161,\"triangles\":54582,\"geometries\":1209,\"textures\":98,\"programs\":20},\"m06-quay-all-awake\":{\"calls\":593,\"triangles\":54582,\"geometries\":1604,\"textures\":98,\"programs\":20},\"m07-atrium\":{\"calls\":183,\"triangles\":50644,\"geometries\":1170,\"textures\":98,\"programs\":20},\"m08-chamber\":{\"calls\":276,\"triangles\":49024,\"geometries\":1245,\"textures\":98,\"programs\":19},\"m08-chamber-all-awake\":{\"calls\":505,\"triangles\":48668,\"geometries\":1466,\"textures\":98,\"programs\":19}}"
+      "detail": "{\"pier\":{\"calls\":196,\"triangles\":37360,\"geometries\":1140,\"textures\":99,\"programs\":23},\"plaza\":{\"calls\":177,\"triangles\":34648,\"geometries\":1140,\"textures\":99,\"programs\":23},\"warehouse\":{\"calls\":98,\"triangles\":20506,\"geometries\":1140,\"textures\":99,\"programs\":23},\"plaza-all-awake\":{\"calls\":395,\"triangles\":34648,\"geometries\":1351,\"textures\":99,\"programs\":23},\"warehouse-all-awake\":{\"calls\":145,\"triangles\":20554,\"geometries\":1351,\"textures\":99,\"programs\":23},\"m03-market\":{\"calls\":175,\"triangles\":58468,\"geometries\":1174,\"textures\":99,\"programs\":22},\"m03-market-all-awake\":{\"calls\":571,\"triangles\":58516,\"geometries\":1531,\"textures\":99,\"programs\":22},\"m05-terrace\":{\"calls\":110,\"triangles\":38480,\"geometries\":1138,\"textures\":99,\"programs\":19},\"m05-terrace-all-awake\":{\"calls\":304,\"triangles\":38480,\"geometries\":1288,\"textures\":99,\"programs\":19},\"m06-quay\":{\"calls\":161,\"triangles\":54582,\"geometries\":1209,\"textures\":99,\"programs\":20},\"m06-quay-all-awake\":{\"calls\":593,\"triangles\":54582,\"geometries\":1604,\"textures\":99,\"programs\":20},\"m07-atrium\":{\"calls\":183,\"triangles\":50644,\"geometries\":1170,\"textures\":99,\"programs\":20},\"m08-chamber\":{\"calls\":276,\"triangles\":49024,\"geometries\":1245,\"textures\":99,\"programs\":19},\"m08-chamber-all-awake\":{\"calls\":505,\"triangles\":48668,\"geometries\":1466,\"textures\":99,\"programs\":19}}"
     },
     {
       "name": "render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)",
@@ -987,42 +987,42 @@
     {
       "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2185,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2238,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":29,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2185,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2238,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":29,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2185,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2238,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":29,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2185,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2238,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
       "ok": true,
-      "detail": "{\"rows\":28,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
+      "detail": "{\"rows\":29,\"hiddenInList\":0,\"rowsOverlappingButton\":0,\"gapToButton\":10,\"partialRow\":false}"
     },
     {
       "name": "with WebGL unavailable the game says so on screen (no inert title)",
@@ -1035,9 +1035,9 @@
       "detail": "screen record, groups 3, entries 30 of 30, documents 5, after Back: pause"
     },
     {
-      "name": "peaceful Vael in the live game: a calm one and a frightened one are both drawn, and the frightened one is drawn differently (its frill folds); neither is chasing",
+      "name": "peaceful Vael in the live game: a calm one and a frightened one are both drawn (a real box, a person tall), and the frightened one is drawn differently (its frill folds); neither is chasing",
       "ok": true,
-      "detail": "calm 1.68 x 2.46 (calm), afraid 0.00 x 0.00 (flee)"
+      "detail": "calm 1.42 x 2.46 (calm), afraid 1.32 x 2.38 (flee)"
     },
     {
       "name": "a fork in the live game: nothing is drawn while it stands quiet, a shot beside it makes the sim ring it and the view draws the ring",
@@ -1055,39 +1055,30 @@
       "detail": "creatures 38 -> 39 at 47 s, without a mesh: 0"
     },
     {
-      "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
+      "name": "a Zealot in the live game is drawn: a real box, about as tall as the sim says (2.3 m), and as wide as a person in armour",
       "ok": true,
-      "detail": "geometries 1140->1140, textures 108->108, programs 23->23"
+      "detail": "height 2.26, width 1.62"
     },
     {
-      "name": "real-time loop runs frames without exceptions",
+      "name": "a Zealot that reaches the player lands its lance and the graft takes (the walk is slowed by the sim)",
       "ok": true,
-      "detail": "frames=900 avg=139.1ms"
+      "detail": "grafted true"
     },
     {
-      "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
+      "name": "the hand lantern in the live game: out, its light is off and the gauge shows the oil; lit, the light is on, the gauge says LIT and the oil burns",
       "ok": true,
-      "detail": "worst 1867 ms, p95 733 ms"
+      "detail": "out {\"lamp\":{\"on\":false,\"oil\":45},\"light\":{\"intensity\":0,\"k\":0},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"45\",\"label\":\"OIL · L\"}}; lit {\"lamp\":{\"on\":true,\"oil\":43.966666666666725},\"light\":{\"intensity\":16.12177730956662,\"k\":0.9999704983962796},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"44\",\"label\":\"OIL · LIT\"}}"
     },
     {
       "name": "no uncaught exceptions or console errors",
-      "ok": true,
-      "detail": ""
+      "ok": false,
+      "detail": "script: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON\n    at #evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:361:23)\n    at async ExecutionContext.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:288:16)\n    at async IsolatedWorld.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/IsolatedWorld.js:104:16)\n    at async CdpFrame.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:364:20)\n    at async CdpPage.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:832:20)\n    at async file:///D:/Doom-actb/tools/dev/browser-check.mjs:507:140"
     }
   ],
-  "errors": [],
-  "perf": {
-    "frames": 900,
-    "avgMs": 139.05411111111107,
-    "p95Ms": 733.3000000000466,
-    "worstMs": 1866.5
-  },
-  "gl": {
-    "geometries": 1180,
-    "textures": 108,
-    "calls": 1,
-    "triangles": 2,
-    "programs": 23
-  },
+  "errors": [
+    "script: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON\n    at #evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:361:23)\n    at async ExecutionContext.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:288:16)\n    at async IsolatedWorld.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/cdp/IsolatedWorld.js:104:16)\n    at async CdpFrame.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:364:20)\n    at async CdpPage.evaluate (file:///D:/Doom/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:832:20)\n    at async file:///D:/Doom-actb/tools/dev/browser-check.mjs:507:140"
+  ],
+  "perf": null,
+  "gl": null,
   "note": "perf numbers are software-GL and are NOT a performance claim"
 }
