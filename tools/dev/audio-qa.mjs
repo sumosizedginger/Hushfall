@@ -44,7 +44,9 @@ const ids = await call('await t.sfxIds()');
 const rows = [], failures = [];
 const check = (name, ok, detail) => { if (!ok) failures.push(`${name}: ${detail}`); };
 for (const id of ids) {
-  const a = await call(`await t.audioRender('${id}', 3)`), b = await call(`await t.audioRender('${id}', 3)`);
+  let a = await call(`await t.audioRender('${id}', 3)`), len = 3;
+  if (a.duration > 2.8) { len = Math.min(10, Math.ceil(a.duration + 0.5)); a = await call(`await t.audioRender('${id}', ${len})`); }   // a long sound (the Gate's chord, 6.5 s) is rendered for as long as it says it lasts, then must still decay: the threshold below is unchanged
+  const b = await call(`await t.audioRender('${id}', ${len})`);
   const env = envelope(a.b64, a.rate);
   fs.writeFileSync(path.join(outDir, id + '.wav'), wav(a.rate, a.b64));
   const row = { id, seconds: +a.duration.toFixed(2), peak: +a.peak.toFixed(3), rms: +a.rms.toFixed(4), loudestWindowRms: +env.loudestWindowRms.toFixed(4), tailRms: +env.tailRms.toFixed(5), audibleSeconds: env.audibleSeconds, nan: a.nan, maxDiffLSB: maxDiff(a.b64, b.b64), bitExact: a.b64 === b.b64 };
@@ -52,7 +54,7 @@ for (const id of ids) {
   check(id + ' finite', a.nan === 0, `${a.nan} non-finite samples`);
   check(id + ' audible', env.loudestWindowRms > 0.01, `loudest 50 ms window RMS ${env.loudestWindowRms.toFixed(4)}`);
   check(id + ' not clipped', a.peak <= 1.0, `peak ${a.peak.toFixed(3)}`);
-  check(id + ' decays before render end', env.tailRms < 0.004, `tail RMS ${env.tailRms.toFixed(5)} (sound still ringing at 3 s)`);
+  check(id + ' decays before render end', env.tailRms < 0.004, `tail RMS ${env.tailRms.toFixed(5)} (sound still ringing at ${len} s)`);
   check(id + ' reproducible offline (<= 8 LSB, about -72 dBFS; not claimed bit-exact)', row.maxDiffLSB <= 8, `two renders differ by up to ${row.maxDiffLSB} LSB`);
 }
 const music = {};

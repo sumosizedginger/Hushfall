@@ -5,7 +5,7 @@ import { Bot } from '../engine/bot.js';
 import { hashWorld, spawnEnemy, updateBeams } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
-import { sanitizeProgress } from '../engine/progress.js';
+import { sanitizeProgress, earn } from '../engine/progress.js';
 import { ENDINGS, stepSequence, skipSequence } from './ending.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
 
@@ -101,6 +101,8 @@ export function installTestHook(app) {
     showScreen(name, data = {}) { ui.show(name, data); },
     /** PT-036: the campaign epilogue as if the finale's exit had just been taken (the map in hand need not be one). `at` = seconds to step the sequence first, or 'tally' to go straight to the tally */
     setup_epilogue(at = 0, campaign = 1) {
+      const w = g.world; if (w && !w.endStats) w.endStats = { time: 640, kills: 41, items: 12, secrets: 1, total: { enemies: 44, secrets: 1, items: 14 }, damageTaken: 90, dest: 'main' };
+      if (w && !g.lastEarn) { g.lastEarn = earn(g.progress, g.mapId, w.endStats, g.world.map.par?.time); g.progress = g.lastEarn.progress; }               // what the real exit did before it started the epilogue
       app.startEpilogue({ campaign, ...ENDINGS[campaign] }); const e = g.ending;
       e.seq = at === 'tally' ? skipSequence(e.seq, e.def.cards) : stepSequence(e.seq, e.def.cards, at); app.syncEpilogue(); return window.__GAME_TEST__.epilogueProbe();
     },

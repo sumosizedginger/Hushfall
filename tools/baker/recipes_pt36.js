@@ -44,8 +44,8 @@ export const recipesPT36 = {
       // the rings of sound, the same teal as the title picture, spreading from where she stands
       for (const [rx, ry, a] of [[12, 3, 220], [26, 6, 180], [44, 10, 140], [68, 15, 100], [98, 22, 60]]) ring(CX, 186, rx * 2, ry * 2, '#3fffe0', a, 1.3);
       // the figure: a column of oilskin, a hood, a lamp in the hand, her back to us
-      tri(CX - 7, 190, CX + 7, 190, CX, 168, '#030304'); g.solid(CX - 4, 168, 8, 14, '#030304'); dot(CX, 164, 7, '#030304');
-      seg(CX - 4, 174, CX - 11, 183, '#030304', 2.2); dot(CX - 12, 185, 4.2, '#ffe0a0'); dot(CX - 12, 185, 14, '#ffb45a', 70); dot(CX - 12, 185, 30, '#ffb45a', 34);       // the lamp
+      tri(CX - 10, 192, CX + 10, 192, CX, 158, '#030304'); g.solid(CX - 6, 158, 12, 21, '#030304'); dot(CX, 152, 10, '#030304');
+      seg(CX - 6, 166, CX - 16, 178, '#030304', 3); dot(CX - 17, 181, 6, '#ffe0a0'); dot(CX - 17, 181, 20, '#ffb45a', 70); dot(CX - 17, 181, 42, '#ffb45a', 34);       // the lamp
       oval(CX - 10, 192, 52, 7, '#ffb45a', 56); oval(CX - 10, 192, 28, 4, '#ffd48a', 80);                                                                               // its pool on the planks
       for (let i = 0; i < 60; i++) dot(g.rnd(0, w), g.rnd(0, h), g.rnd(0.7, 1.5), pick(g, ['#fff0d8', '#ffd890']), g.rnd(30, 90));                                        // the grain of the air
     }),

@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs",
+  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -421,6 +421,70 @@
       "sha256": "3d7c9507f5a7eaad7bb1644a4e27537d843853bb8e542830f82ea4fd0b2605ec",
       "bytes": 35134
     },
+    "choir_bulwark": {
+      "seed": 2312,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "222c8e979fcc36517babf851c2516a46b869478107a32abffb597ea8b68e7661",
+      "bytes": 37728
+    },
+    "choir_weeping": {
+      "seed": 2313,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a3f362b49a39707d37b8c60fefd27193274547e07d4c208712748225a8a50684",
+      "bytes": 40255
+    },
+    "choir_acolyte": {
+      "seed": 2314,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "39d71a20f6ecdb1f4112f2a770247d547f361eb8027e2dbfac34db5fc65c113c",
+      "bytes": 26646
+    },
+    "choir_vat": {
+      "seed": 2315,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4675c615aed436434f84ada873025646cae9df72518a67eb82a99ff6e8ee28e8",
+      "bytes": 29631
+    },
+    "choir_reed": {
+      "seed": 2316,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1eeed848c51c46127009ecf254c84db39565b91d655bbdcc8c1a25cae2950f4d",
+      "bytes": 24536
+    },
+    "choir_grandcantor": {
+      "seed": 2317,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f28ca634642d4aacd29fe1a9d9af9a2d04275b0cc27f3df129f1a8f8864f5373",
+      "bytes": 45127
+    },
+    "choir_gatewarden": {
+      "seed": 2330,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "25d6b3372eca4448e55c0897599af4ac384146d99029d9ad2ad0b440662d02db",
+      "bytes": 37155
+    },
+    "choir_seal": {
+      "seed": 2331,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8ea2dcc91120b84b3cf71ff3d767ee058c47dd480d2c3d74c69ddf23957023b4",
+      "bytes": 21724
+    },
     "choir_graftmother": {
       "seed": 2310,
       "width": 256,
@@ -493,30 +557,6 @@
       "sha256": "14e2d3ba88f84cf776c71271ad1e592fc598e205d0fca808b769f5bad9d5ee92",
       "bytes": 40728
     },
-    "choir_bulwark": {
-      "seed": 2312,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "222c8e979fcc36517babf851c2516a46b869478107a32abffb597ea8b68e7661",
-      "bytes": 37728
-    },
-    "choir_weeping": {
-      "seed": 2313,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "a3f362b49a39707d37b8c60fefd27193274547e07d4c208712748225a8a50684",
-      "bytes": 40255
-    },
-    "choir_acolyte": {
-      "seed": 2314,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "39d71a20f6ecdb1f4112f2a770247d547f361eb8027e2dbfac34db5fc65c113c",
-      "bytes": 26646
-    },
     "wall_loom_a": {
       "seed": 9311,
       "width": 256,
@@ -580,30 +620,6 @@
       "transparent": false,
       "sha256": "a56daf74ab3be456c2c6fe0620813bdac60432fa1425e706bafd10882d81e6ce",
       "bytes": 35799
-    },
-    "choir_vat": {
-      "seed": 2315,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "4675c615aed436434f84ada873025646cae9df72518a67eb82a99ff6e8ee28e8",
-      "bytes": 29631
-    },
-    "choir_reed": {
-      "seed": 2316,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "1eeed848c51c46127009ecf254c84db39565b91d655bbdcc8c1a25cae2950f4d",
-      "bytes": 24536
-    },
-    "choir_grandcantor": {
-      "seed": 2317,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "f28ca634642d4aacd29fe1a9d9af9a2d04275b0cc27f3df129f1a8f8864f5373",
-      "bytes": 45127
     },
     "wall_lattice_a": {
       "seed": 9401,
@@ -789,21 +805,13 @@
       "sha256": "592e739eea8010bc423e64a2674e0a387328cfc6aef13f90b4ddf44cd2e5211a",
       "bytes": 34517
     },
-    "choir_gatewarden": {
-      "seed": 2330,
-      "width": 256,
-      "height": 256,
+    "ui_ending_art": {
+      "seed": 3601,
+      "width": 320,
+      "height": 200,
       "transparent": false,
-      "sha256": "25d6b3372eca4448e55c0897599af4ac384146d99029d9ad2ad0b440662d02db",
-      "bytes": 37155
-    },
-    "choir_seal": {
-      "seed": 2331,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "8ea2dcc91120b84b3cf71ff3d767ee058c47dd480d2c3d74c69ddf23957023b4",
-      "bytes": 21724
+      "sha256": "f7f64fd9c6e95e72f70311b9f005f5bde6eb88d122456f086a953014f195813b",
+      "bytes": 67651
     }
   }
 }
