@@ -224,16 +224,16 @@ export const WEAPONS = {
 // `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
 // `hitForward` (default 0: metres ahead of the feet along the facing) fit the drawn body. Measured on the real rigs and enforced by tests/hit-volume-fair.test.js (owner decision 2026-10-05, PT-005).
 export const ENEMIES = {
-  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  tollbearer: { hush: true, name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
   gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
   // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
-  bellhand: { name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
+  bellhand: { hush: true, name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
 };
 
 // ---- Gate 2 roster ---------------------------------------------------------------------------------------------------------
 // Sexton: support. Keeps its distance and raises the fallen after a visible channel (a teal beam from its bell to the corpse). Kill it first, or interrupt it by hurting it.
-ENEMIES.sexton = { name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, height: 2.35, sight: 28, turnRate: 3.5, attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
+ENEMIES.sexton = { hush: true, name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, height: 2.35, sight: 28, turnRate: 3.5, attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
   support: { range: 11, channel: 2.2, cooldown: 5, reviveHp: 0.5, keepAway: 8, maxRevives: 2, kinds: ['tollbearer', 'gaunt', 'bellhand'] } };
 // Warden-Graft: elite. Plate on the front arc (direct hits from the front do a third of the damage; splash and hits from behind do not care). Charges in a straight line after a
 // readable windup; a charge into a wall or prop staggers it, and it takes extra damage while it is down. The flare cannon and a step to the side are the answers.
@@ -282,6 +282,7 @@ export const PICKUPS = {
   weapon_linethrower: { type: 'weapon', weapon: 'linethrower', ammo: 'rocket', amount: 4 },
   weapon_mortar: { type: 'weapon', weapon: 'mortar', ammo: 'rocket', amount: 6 },                   // PT-027: three shells' worth of the line-thrower's rockets
   ammo_rocket: { type: 'ammo', ammo: 'rocket', amount: 3 },
+  oil: { type: 'oil', amount: 30 },                                                                                  // PT-038: a tin of lamp oil for the hand lantern (only taken where the map has a lantern, and not past `max`)
   weapon_fork: { type: 'weapon', weapon: 'fork' },
   weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },
   armor_vest: { type: 'armor', amount: 50 },
@@ -425,4 +426,11 @@ export const FOLK = {
 // across a gap (the Gaunt's dash, with a point on it). A hit GRAFTS (`graft`): the damage of the blow and `time` seconds of `GRAFT.slow` off the player's walking speed, a bronze sting. Hard to stagger (`poise`).
 ENEMIES.zealot = { name: 'Zealot', poise: 2.2, hp: 110, speed: 2.3, gait: 7, radius: 0.42, height: 2.3, hitRadius: 0.62, hitForward: 0, sight: 32, turnRate: 3.4,
   attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 }, lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 }, graft: { time: 3 } };
-export const GRAFT = { slow: 0.38 };                     // the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)
+export const GRAFT = { slow: 0.38 };
+
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md E5): THE HAND LANTERN ---------------------------------------------------------------------------------------------------------------------------
+// A map that says `atmosphere.dark: true` is a dark place: creatures notice the player from `sightDark` metres, or from `sightLit` when the lantern is lit or the player stands within `radius` of a lit prop
+// (`lightProps`). The Hush-driven kinds (`hush: true` in their definition) follow the Hush and not the light and keep their ordinary range. The lantern is the map's `lantern: { oil, max, eternal }`
+// (lazy: `p.lamp` exists only where the map has one): it burns `burn` oil a second while lit; an oil tin gives `PICKUPS.oil.amount`. `eternal` is Ines's own lamp (it never burns out).
+export const LANTERN = { sightDark: 6, sightLit: 24, radius: 8, burn: 1, max: 90, lightProps: ['lantern', 'lamp'] };
+                     // the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)

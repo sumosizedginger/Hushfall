@@ -3,7 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -87,6 +87,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
+  if (map.lantern) w.player.lamp = { on: false, oil: map.lantern.oil, max: map.lantern.max ?? LANTERN.max, eternal: !!map.lantern.eternal };          // PT-038 (E5): the hand lantern: lazy, only a map that carries one has it
+  if (map.dark) w.lit = false;                                                                                  // ...and only a dark place keeps the 'is the player lit' flag
   if (map.props.some((p) => p.kind === 'resonator')) w.resonators = makeResonators(map);            // PT-037 (resonator.js)
   if (map.emitters.length) { w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
   return w;
@@ -186,6 +188,30 @@ function hurtPlayer(w, dmg) {
   const absorbed = Math.min(p.armor, Math.floor(dmg * PLAYER.armorAbsorb));
   p.armor -= absorbed; const real = dmg - absorbed; p.hp -= real; p.hurt = 1; w.stats.damageTaken += real;
   emit(w, 'hurt', { amount: real });
+}
+
+/** how far a creature notices the player (PT-038, E5): its own range, except in a dark place, where it is `sightDark` unless the player is lit; the Hush-driven kinds ignore the light */
+function sightIn(w, def) {
+  if (!w.map.dark || def.hush) return def.sight;
+  return Math.min(def.sight, w.lit ? LANTERN.sightLit : LANTERN.sightDark);
+}
+
+/** is the player lit this tick: the lantern is lit, or a lit prop (a lantern, a lamp) is within `LANTERN.radius` of them (computed once a tick in a dark place, never elsewhere) */
+function playerLit(w) {
+  const p = w.player; if (p.lamp?.on) return true;
+  for (const q of w.map.props) if (LANTERN.lightProps.includes(q.kind) && Math.hypot(q.x - p.x, q.z - p.z) < LANTERN.radius) return true;
+  return false;
+}
+
+/** the lantern's own clock (lazy: only where the map has one): the toggle, the burn, the cough when the oil is gone */
+function updateLamp(w, cmd, dt) {
+  const p = w.player, L = p.lamp; if (!L) return;
+  if (cmd.lamp && p.hp > 0) {
+    if (L.on) { L.on = false; emit(w, 'lamp', { on: false }); }
+    else if (L.oil > 0 || L.eternal) { L.on = true; emit(w, 'lamp', { on: true }); }
+    else emit(w, 'lamp_dry', {});
+  }
+  if (L.on && !L.eternal) { L.oil = Math.max(0, L.oil - LANTERN.burn * dt); if (L.oil <= 0) { L.on = false; emit(w, 'lamp_out', {}); } }
 }
 
 /**
@@ -943,7 +969,7 @@ function updateEnemy(w, e, diff, dt) {
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
   if (def.peaceful) { folkStep(w, e, def, dt); return; }                                 // PT-037: it never fights: it wanders, watches, and runs (folk.js)
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
-  const sees = dist < (e.sightR ?? def.sight) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
+  const sees = dist < (e.sightR ?? sightIn(w, def)) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
   if (e.hold && !sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0) { homeStep(w, e, def, dt, true); return; }      // a range target that cannot see you goes back to its post and its heading
   if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
@@ -1014,6 +1040,7 @@ export function step(w, cmd) {
   if (w.status !== 'playing') return;
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
   w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
+  if (p.lamp) updateLamp(w, cmd, dt); if (map.dark) w.lit = playerLit(w);                         // PT-038 (E5)
   updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
@@ -1143,6 +1170,7 @@ export function step(w, cmd) {
     else if (def.type === 'armor' && p.armor < aCap) { p.armor = Math.min(aCap, p.armor + def.amount); took = true; }
     else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < mCap) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
+    else if (def.type === 'oil' && p.lamp && p.lamp.oil < p.lamp.max) { p.lamp.oil = Math.min(p.lamp.max, p.lamp.oil + def.amount); took = true; }          // PT-038: lamp oil (only where there is a lantern, and not past its tank)
     else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (def.ammo && (p.ammo[def.ammo] || 0) < mCap))) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => ALL_WEAPONS.indexOf(a) - ALL_WEAPONS.indexOf(b)); p.lastWeapon = p.weapon; p.weapon = def.weapon; if (isMelee(def.weapon)) p.meleeWeapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; p.charge = 0; p.swingT = -1; }
       if (def.ammo) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; }

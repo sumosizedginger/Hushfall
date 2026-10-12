@@ -130,7 +130,10 @@ export function soundsForEvent(e) {
     case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
     case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : e.kind === 'grandcantor' ? 'horn_blast' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
-    case 'graft': return [{ id: 'graft_hit', gain: 0.9 }];                                                                 // PT-038: a Zealot's lance landed and the graft took
+    case 'graft': return [{ id: 'graft_hit', gain: 0.9 }];
+    case 'lamp': return [{ id: e.on ? 'lamp_on' : 'lamp_off', gain: 0.8 }];                                                            // PT-038: the hand lantern
+    case 'lamp_out': return [{ id: 'lamp_out', gain: 0.9 }];
+    case 'lamp_dry': return [{ id: 'lamp_dry', gain: 0.7 }];                                                                 // PT-038: a Zealot's lance landed and the graft took
     case 'ward_hit': return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
     case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
     case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];

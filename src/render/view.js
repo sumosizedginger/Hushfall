@@ -1,6 +1,7 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
+import { makeHandLantern, makePickupOil } from './models_c2.js';
 import { makeFlareCannon, makeScattergun, makePickup, makeCrate, makeBarrel } from './models.js';
 import { makeSack } from './models_g2.js';
 import { makeCarbine, makePickupCarbine } from './models_carbine.js';
@@ -39,7 +40,7 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
-const pickupMaker = (kind) => (/^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
+const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
   : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
 export class GameView {
@@ -68,6 +69,7 @@ export class GameView {
     const ws = this.weaponScene = new THREE.Scene(); this.weaponCam = new THREE.PerspectiveCamera(58, 16 / 9, NEAR, FAR);
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
+    if (map.lantern) { this.handLamp = new THREE.PointLight(0xffc070, 0, 24, 2); scene.add(this.handLamp); this.lampK = 0; this.lampModel = makeHandLantern(); this.lampModel.position.set(-0.34, -0.27, -0.56); ws.add(this.lampModel); }          // PT-038 (E5): the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light count means no shader recompile) and a brass lantern held low at the left of the weapon view
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
     const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), mortar: makeMortar(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
@@ -241,6 +243,12 @@ export class GameView {
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
+    if (this.handLamp) {                                                                                                // PT-038: the lantern's light follows the eye, fades in and out in a fifth of a second, flickers, and sinks as the oil runs low
+      const L = p.lamp, on = L?.on ? 1 : 0, low = L && !L.eternal && L.oil < 10 ? 0.45 + 0.055 * L.oil : 1; this.lampK += (on - this.lampK) * Math.min(1, dt * 9);
+      const fl = 1 + 0.07 * Math.sin(this.time * 13.1) + 0.05 * Math.sin(this.time * 7.7 + 1) + 0.03 * Math.sin(this.time * 31);
+      this.handLamp.intensity = 150 * this.lampK * fl * low; this.handLamp.position.set(this.cam.position.x, this.cam.position.y - 0.15, this.cam.position.z);
+      const m = this.lampModel; m.userData.core.color.setScalar(0.35 + 0.65 * this.lampK * low); m.userData.flame.scale.setScalar(0.5 + 0.55 * this.lampK * fl); m.position.y = -0.27 + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK); m.rotation.z = 0.05 * Math.sin(this.time * 1.3);
+    }
     this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
     this.airK += ((w.player.air ? 1 : 0) - this.airK) * Math.min(1, dt * 6);                                                // PT-032: the view opens a little in the air
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint

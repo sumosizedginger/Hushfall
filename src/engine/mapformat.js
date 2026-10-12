@@ -51,6 +51,7 @@ export class MapData {
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
+    this.dark = src.atmosphere?.dark === true; this.lantern = src.lantern ?? null;                // PT-038 (E5): a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
@@ -360,6 +361,11 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
+  if (src.atmosphere?.dark != null && typeof src.atmosphere.dark !== 'boolean') err('atmosphere.dark must be true or false');
+  if (src.lantern != null) {
+    const l = src.lantern; if (typeof l !== 'object' || Array.isArray(l)) err('lantern must be { oil, max, eternal }');
+    else { if (!(l.oil >= 0 && l.oil <= 600)) err('lantern.oil must be 0 to 600'); if (l.max != null && !(l.max >= 1 && l.max <= 600)) err('lantern.max must be 1 to 600'); if (l.eternal != null && typeof l.eternal !== 'boolean') err('lantern.eternal must be true or false'); if (src.atmosphere?.dark !== true) err('a lantern needs atmosphere.dark: true (it is carried where it is dark)'); }
+  }
   if (src.atmosphere?.look != null && !LOOKS[src.atmosphere.look]) err(`atmosphere.look must be one of ${Object.keys(LOOKS).join(', ')}`);
   const trIds = new Set();
   for (const t of src.triggers || []) {

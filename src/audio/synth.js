@@ -543,6 +543,28 @@ export const SFX = {
     bell(c, out, t + 0.5, 698, { decay: 0.5, gain: 0.07, ratio: 3.1, index: 0.4 });
     return 1.3;
   },
+  // --- Campaign 2, Act B (PT-038): the hand lantern ---
+  lamp_on(c, out, t, o) {                                       // a brass shutter slid and a wick catching: a dry click, a soft breath of flame
+    thump(c, out, t, 900, 500, 0.05, 0.1);
+    noise(c, out, t + 0.03, { dur: 0.22, a: 0.05, gain: 0.07, type: 'bandpass', f0: 700, f1: 1300, q: 1.2, off: o.r() });
+    tone(c, out, t + 0.05, { type: 'sine', f0: 220, f1: 260, a: 0.06, d: 0.2, gain: 0.04 });
+    return 0.35;
+  },
+  lamp_off(c, out, t, o) {                                      // the shutter closing: a short click and the flame drawn in
+    thump(c, out, t, 700, 380, 0.05, 0.09);
+    noise(c, out, t + 0.01, { dur: 0.16, a: 0.002, gain: 0.05, type: 'lowpass', f0: 1800, f1: 400, off: o.r() });
+    return 0.25;
+  },
+  lamp_out(c, out, t, o) {                                      // the oil gone: the flame gutters, a cough of smoke, a last tick of hot brass
+    noise(c, out, t, { dur: 0.5, a: 0.02, gain: 0.1, type: 'bandpass', f0: 500, f1: 180, q: 1.4, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 190, f1: 90, a: 0.02, d: 0.35, gain: 0.07, lp: 600, vib: 12 });
+    thump(c, out, t + 0.55, 1200, 900, 0.03, 0.06);
+    return 0.8;
+  },
+  lamp_dry(c, out, t) {                                         // pressed with no oil: the shutter clicks and nothing happens
+    thump(c, out, t, 520, 360, 0.04, 0.08);
+    return 0.15;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

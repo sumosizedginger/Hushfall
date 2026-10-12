@@ -274,6 +274,10 @@ export class Bot {
     const w = this.w, p = w.player, op = this.route[this.i];
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after
     else if (this.usePressed) this.usePressed = false;
+    if (p.lamp) {                                                                    // PT-038 (E5): in a dark place the bot carries its lantern lit, unless a route op says otherwise ({ op: 'lamp', on: false })
+      if (this.lampPressed) { this.in.release('lamp'); this.lampPressed = false; }
+      else if (w.map.dark && (op.op === 'lamp' ? op.on !== false : (this.lampWanted ?? true)) !== p.lamp.on && (p.lamp.on || p.lamp.oil > 0 || p.lamp.eternal)) { this.in.press('lamp'); this.lampPressed = true; }
+    }
     if (++this.opTicks > this.maxOp * (op.op === 'killboss' ? 2 : 1)) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
@@ -295,6 +299,7 @@ export class Bot {
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind].peaceful && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
+    else if (op.op === 'lamp') { this.lampWanted = op.on !== false; done = true; }                                                 // PT-038: the lantern lit or out from here on
     else if (op.op === 'killboss') done = this.bossTick();
     else if (op.op === 'switch') {
       const sw = w.map.switches.find((s) => s.id === op.id);
