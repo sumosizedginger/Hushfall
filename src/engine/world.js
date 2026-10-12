@@ -3,6 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
+import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
@@ -87,6 +88,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
+  { const ch = makeChimes(map); if (ch) w.chimes = ch; }                                                           // PT-038 (E6): chime state, only where the map has a chime or a tree
   if (map.lantern) w.player.lamp = { on: false, oil: map.lantern.oil, max: map.lantern.max ?? LANTERN.max, eternal: !!map.lantern.eternal };          // PT-038 (E5): the hand lantern: lazy, only a map that carries one has it
   if (map.dark) w.lit = false;                                                                                  // ...and only a dark place keeps the 'is the player lit' flag
   if (map.props.some((p) => p.kind === 'resonator')) w.resonators = makeResonators(map);            // PT-037 (resonator.js)
@@ -367,14 +369,14 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
 // ---------------------------------------------------------------- weapons
 /** Scatter def.pellets rays from the eye. Pellets stop at walls, closed doors, solid props, and the first enemy they touch. */
 function fireHitscan(w, def, cone) {
-  const p = w.player, map = w.map, hits = new Map(), push = new Map(), heads = new Set(); let impacts = 0;
+  const p = w.player, map = w.map, hits = new Map(), push = new Map(), heads = new Set(), struckChimes = new Set(); let impacts = 0;
   for (let i = 0; i < def.pellets; i++) {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone });
     let x = p.x, y = p.y + PLAYER.eye, z = p.z, target = null, stop = false, dist = 0;
     for (dist = 0.25; dist <= def.range && !target && !stop; dist += 0.25) {
       x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
       if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
-      for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
+      for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) { stop = true; if (pr.kind === 'chime' && w.chimes && !struckChimes.has(pr)) struckChimes.add(pr); }
       if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
       if (stop) break;
       for (const e of w.enemies) if (e.state !== 'dead' && insideHit(e, x, y, z, 0.05)) { target = e; break; }
@@ -389,6 +391,7 @@ function fireHitscan(w, def, cone) {
       const k = push.get(target.id) || { e: target, x: 0, z: 0 }; k.x += f[0] * def.knock * fall; k.z += f[2] * def.knock * fall; push.set(target.id, k);      // applied after the volley: pellets are simultaneous
     } else if (stop && impacts < 3 && i % 3 === 0) { emit(w, 'impact', { x, y, z }); impacts++; }
   }
+  for (const pr of struckChimes) strikeChime(w, pr, emit);                                                  // PT-038: a shot that stopped on a chime struck it (once a volley)
   const range0 = new Map([...hits.values()].map((e) => [e, Math.hypot(e.x - p.x, e.z - p.z)]));                    // how far it was when it was hit: before the knockback carries it away
   for (const k of push.values()) tryMove(w, k.e, k.x, k.z, ENEMIES[k.e.kind].radius);
   for (const e of hits.values()) if (e.state !== 'dead') { hitEffects(w, e, def.hit, range0.get(e)); if (heads.has(e)) hitEffects(w, e, { flinch: def.head.flinch }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
@@ -602,6 +605,7 @@ export function useTarget(w) {
     if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); if (d?.closet) break; return d; }         // a closet panel is a wall to the player
     if (k === 'wall') break;
   }
+  { const ch = chimeTarget(w); if (ch) return { chimeProp: ch, secret: false, target: 0, open: 0, key: null, remote: false, sealed: false }; }          // PT-038: a chime or the tree
   // mirrors (PT-033): the nearest one within reach that the player is facing
   if (map.mirrors.length) {
     let bm = null, bdm = 1e9;
@@ -1093,7 +1097,8 @@ export function step(w, cmd) {
   // use: first door/secret panel along the view ray
   if (cmd.use) {
     const hit = useTarget(w);
-    if (hit?.mirrorId) turnMirror(w, hit.mirrorId);
+    if (hit?.chimeProp) { if (hit.chimeProp.kind === 'chime') strikeChime(w, hit.chimeProp, emit); else playTree(w, hit.chimeProp, emit); }
+    else if (hit?.mirrorId) turnMirror(w, hit.mirrorId);
     else if (hit?.switchId) activateSwitch(w, map.switches.find((s) => s.id === hit.switchId));
     else if (hit) {
       if (hit.soundlock && w.time - (w.noise?.t ?? -99) < hit.soundlock.quiet && Math.hypot(w.noise.x - (hit.cx + 0.5) * map.cell, w.noise.z - (hit.cz + 0.5) * map.cell) < hit.soundlock.radius) emit(w, 'door_listen', { cx: hit.cx, cz: hit.cz, x: (hit.cx + 0.5) * map.cell, z: (hit.cz + 0.5) * map.cell });          // PT-029: the lock is listening: it will not open to Use until it has heard nothing for `quiet` s
@@ -1189,6 +1194,7 @@ export function step(w, cmd) {
   const pcx = Math.floor(p.x / map.cell), pcz = Math.floor(p.z / map.cell);
   for (const s of map.secrets) if (!w.secretsFound.includes(s.id) && s.cells.some(([cx, cz]) => cx === pcx && cz === pcz)) { w.secretsFound.push(s.id); w.stats.secrets++; emit(w, 'secret', { id: s.id }); }
 
+  if (w.chimes) updateChimes(w, dt, emit);                                                                       // PT-038: the chime tree's phrase goes on
   if (w.beams) updateBeams(w);                                                                                   // PT-033: the beams follow the mirrors and the doors
   updateTriggers(w);
   if (map.range) { rangePlayer(w, dt); rangePhys(w, dt); }                                                       // the dev range: you cannot die, run dry or stay hurt (range.js)

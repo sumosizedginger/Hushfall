@@ -51,6 +51,7 @@ export class MapData {
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
+    this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
     this.dark = src.atmosphere?.dark === true; this.lantern = src.lantern ?? null;                // PT-038 (E5): a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
@@ -188,6 +189,11 @@ function validateMapChecks(src) {
       if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`); else { if (beamIds.has(e.id)) err(`${tag}: duplicate beam id '${e.id}'`); beamIds.add(e.id); }
       if (e.kind === 'mirror' && !(Number.isInteger(e.rot ?? 0) && (e.rot ?? 0) >= 0 && (e.rot ?? 0) <= 3)) err(`${tag}: rot must be 0, 1, 2 or 3`);
       if (e.kind === 'emitter' && !'nesw'.includes(e.dir ?? 'e')) err(`${tag}: dir must be n, e, s or w`);
+    }
+    if (e.type === 'prop' && (e.kind === 'chime' || e.kind === 'chimetree')) {                                                                  // PT-038: chimes and the tree
+      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`); else { if (beamIds.has(e.id)) err(`${tag}: duplicate id '${e.id}'`); beamIds.add(e.id); }
+      if (e.kind === 'chime' && !(Number.isInteger(e.note) && e.note >= 0 && e.note < 5)) err(`${tag}: a chime's note must be 0 to 4`);
+      if (e.kind === 'chimetree' && !(Array.isArray(e.plays) && e.plays.length && e.plays.every((q) => (src.chimes ?? []).some((c) => c.id === q)))) err(`${tag}: a chimetree needs plays: a list of phrase ids that exist in the map's chimes`);
     }
     if (e.movable != null && (e.type !== 'prop' || e.movable !== true || !PHYS[e.kind])) err(`${tag}: movable is for a crate, a barrel or a sack (movable: true)`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
@@ -362,6 +368,14 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
   if (src.atmosphere?.dark != null && typeof src.atmosphere.dark !== 'boolean') err('atmosphere.dark must be true or false');
+  if (src.chimes != null) {
+    if (!Array.isArray(src.chimes)) err('chimes must be a list of { id, phrase, window }');
+    else { const ids = new Set(); for (const [i, q] of src.chimes.entries()) { const tag = `chimes #${i}`;
+      if (typeof q?.id !== 'string' || !q.id) err(`${tag}: needs an id`); else { if (ids.has(q.id)) err(`${tag}: duplicate id '${q.id}'`); ids.add(q.id); }
+      if (!Array.isArray(q?.phrase) || q.phrase.length < 2 || q.phrase.length > 8 || !q.phrase.every((n) => Number.isInteger(n) && n >= 0 && n < 5)) err(`${tag}: phrase must be 2 to 8 notes, each 0 to 4`);
+      if (!(q?.window >= 1 && q.window <= 30)) err(`${tag}: window must be 1 to 30 seconds between notes`); } }
+    const chimeProps = (src.entities || []).filter((q) => q.type === 'prop' && q.kind === 'chime'); if (Array.isArray(src.chimes) && src.chimes.length && !chimeProps.length) err('a map with chimes needs at least one chime prop');
+  }
   if (src.lantern != null) {
     const l = src.lantern; if (typeof l !== 'object' || Array.isArray(l)) err('lantern must be { oil, max, eternal }');
     else { if (!(l.oil >= 0 && l.oil <= 600)) err('lantern.oil must be 0 to 600'); if (l.max != null && !(l.max >= 1 && l.max <= 600)) err('lantern.max must be 1 to 600'); if (l.eternal != null && typeof l.eternal !== 'boolean') err('lantern.eternal must be true or false'); if (src.atmosphere?.dark !== true) err('a lantern needs atmosphere.dark: true (it is carried where it is dark)'); }
@@ -380,10 +394,11 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (wn.startsWith('key:')) { if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`); }
     else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
     else if (wn.startsWith('msg:')) { if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`); }
+    else if (wn.startsWith('seq:')) { if (!(src.chimes || []).some((q) => q.id === wn.slice(4))) err(`${tag}: unknown phrase in '${wn}'`); }                       // PT-038: a chime phrase has been played
     else if (wn.startsWith('lit:')) { if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`); }
     else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
     else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
-    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> (got '${wn}')`);
+    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> (got '${wn}')`);
     }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);

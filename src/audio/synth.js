@@ -565,6 +565,42 @@ export const SFX = {
     thump(c, out, t, 520, 360, 0.04, 0.08);
     return 0.15;
   },
+  // --- Campaign 2, Act B (PT-038): the chimes (a pentatonic: five notes that cannot clash) ---
+  chime_0(c, out, t) {                                          // a glass-and-brass bell, note 0
+    bell(c, out, t, 392, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 784, f1: 784, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_1(c, out, t) {                                          // a glass-and-brass bell, note 1
+    bell(c, out, t, 440, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 880, f1: 880, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_2(c, out, t) {                                          // a glass-and-brass bell, note 2
+    bell(c, out, t, 523, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1046, f1: 1046, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_3(c, out, t) {                                          // a glass-and-brass bell, note 3
+    bell(c, out, t, 587, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1174, f1: 1174, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_4(c, out, t) {                                          // a glass-and-brass bell, note 4
+    bell(c, out, t, 659, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1318, f1: 1318, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_ok(c, out, t) {                                         // a phrase answered: the five notes run up and a low note settles under them
+    [392, 523, 659, 784, 1046].forEach((f, i) => bell(c, out, t + i * 0.09, f, { decay: 1.2, gain: 0.1, ratio: 2.76, index: 0.4 }));
+    tone(c, out, t, { type: 'sine', f0: 196, f1: 196, a: 0.05, d: 1.6, gain: 0.08 });
+    return 2.0;
+  },
+  chime_play(c, out, t) {                                       // the tree gathers itself before it plays: a low breath of wood and a small shiver of glass
+    tone(c, out, t, { type: 'sine', f0: 98, f1: 130, a: 0.25, d: 0.5, gain: 0.07 });
+    bell(c, out, t + 0.2, 1568, { decay: 0.3, gain: 0.03, ratio: 3.1, index: 0.3 });
+    return 0.8;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

@@ -5,6 +5,7 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
+  chime_played: 'view-only: the tree has finished its phrase; its notes carry the sounds (chimes.js)',
   sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',
   spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
@@ -131,6 +132,9 @@ export function soundsForEvent(e) {
     case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : e.kind === 'grandcantor' ? 'horn_blast' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
     case 'graft': return [{ id: 'graft_hit', gain: 0.9 }];
+    case 'chime_note': return [{ id: 'chime_' + (e.note | 0), pos: at(e), gain: e.who === 'tree' ? 0.7 : 1 }];                                // PT-038 (E6): the five notes
+    case 'chime_seq': return [{ id: 'chime_ok', gain: 0.9 }];
+    case 'chime_play': return [{ id: 'chime_play', pos: at(e), gain: 0.8 }];
     case 'lamp': return [{ id: e.on ? 'lamp_on' : 'lamp_off', gain: 0.8 }];                                                            // PT-038: the hand lantern
     case 'lamp_out': return [{ id: 'lamp_out', gain: 0.9 }];
     case 'lamp_dry': return [{ id: 'lamp_dry', gain: 0.7 }];                                                                 // PT-038: a Zealot's lance landed and the graft took

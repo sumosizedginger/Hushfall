@@ -260,6 +260,7 @@ export class Bot {
     const w = this.w, p = w.player;
     if (op.op === 'switch') { const sw = w.map.switches.find((q) => q.id === op.id); return !!sw && Math.hypot(sw.px - p.x, sw.pz - p.z) < 3.5 && !this.done; }
     if (op.op === 'use') return Math.hypot((op.at[0] + 0.5) * w.map.cell - p.x, (op.at[1] + 0.5) * w.map.cell - p.z) < 3.0;
+    if (op.op === 'chime') { const q = w.map.props.find((r) => (r.kind === 'chime' || r.kind === 'chimetree') && r.id === op.id); return !!q && Math.hypot(q.x - p.x, q.z - p.z) < 3.0; }          // PT-038
     if (op.op === 'mirror') { const m = w.map.mirrors.find((q) => q.id === op.id); return !!m && Math.hypot((m.at[0] + 0.5) * w.map.cell - p.x, (m.at[1] + 0.5) * w.map.cell - p.z) < 3.0 && w.mirrors[op.id] !== op.rot; }          // PT-033: a human turns a mirror under fire
     return false;
   }
@@ -314,6 +315,19 @@ export class Bot {
         const mx = (mi.at[0] + 0.5) * w.map.cell, mz = (mi.at[1] + 0.5) * w.map.cell;
         const stand = op.from ?? [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dz]) => [mi.at[0] + dx, mi.at[1] + dz]).filter(([x, z]) => this.passable0(x, z)).sort((a, b) => Math.hypot((a[0] + 0.5) * w.map.cell - p.x, (a[1] + 0.5) * w.map.cell - p.z) - Math.hypot((b[0] + 0.5) * w.map.cell - p.x, (b[1] + 0.5) * w.map.cell - p.z))[0];
         if (!stand) this.failed = 'no cell beside mirror ' + op.id; else if (this.follow(stand, 0.5, 1.2)) { this.aimAt(mx, mz); this.pressUse(); }
+      }
+    } else if (op.op === 'chime') {                                                                                                 // PT-038 (E6): stand beside a chime (or the tree) and strike it (or hear it); done when the sim says it rang, or the tree has finished its phrase
+      const pr = w.map.props.find((q) => (q.kind === 'chime' || q.kind === 'chimetree') && q.id === op.id), C = w.chimes;
+      if (!pr || !C) this.failed = 'no chime ' + op.id;
+      else {
+        const count = () => (pr.kind === 'chime' ? C.struck[pr.id] : C.played[pr.id]) || 0; if (this.chimeBase == null) this.chimeBase = count();
+        if (count() > this.chimeBase && !C.play) { done = true; this.chimeBase = null; }
+        else if (C.play) this.setHeld('forward', false);                                                                              // the tree is playing: listen
+        else {
+          const cx = Math.floor(pr.x / w.map.cell), cz = Math.floor(pr.z / w.map.cell);
+          const stand = op.from ?? [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dz]) => [cx + dx, cz + dz]).filter(([x, z]) => this.passable0(x, z)).sort((a, b) => Math.hypot((a[0] + 0.5) * w.map.cell - p.x, (a[1] + 0.5) * w.map.cell - p.z) - Math.hypot((b[0] + 0.5) * w.map.cell - p.x, (b[1] + 0.5) * w.map.cell - p.z))[0];
+          if (!stand) this.failed = 'no cell beside chime ' + op.id; else if (this.follow(stand, 0.5, 1.2)) { this.aimAt(pr.x, pr.z); this.pressUse(); }
+        }
       }
     } else if (op.op === 'waitplatform') {
       const i = w.map.sectors.findIndex((q) => q.id === op.id), def = w.map.sectors[i]; if (!def?.cycle) this.failed = 'no timing platform ' + op.id; else { this.setHeld('forward', false); this.setHeld('sprint', false); done = platformReady(def, w.time, op.at ?? 'high', op.min ?? 3); }

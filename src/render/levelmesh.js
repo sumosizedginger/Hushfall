@@ -199,6 +199,7 @@ export function buildLevel(map, tex) {
   let seed = 7;
   const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
   for (const p of map.props) {
+    if (p.kind === 'chime' || p.kind === 'chimetree') continue;                                                // PT-038: drawn by GameView from the sim's own state (chimefx.js)
     if (p.kind === 'mirror' || p.kind === 'emitter' || p.kind === 'receiver') continue;                       // PT-033: the Mirror Array's furniture is drawn by GameView from the sim's own state (beamfx.js)
     const yaw = (rnd() - 0.5) * 0.5; let m = null; const pcx = Math.floor(p.at[0]), pcz = Math.floor(p.at[1]), fy = fl(pcx, pcz), cy = hasCeil(map.kind(pcx, pcz)) ? ce(pcx, pcz) : fy + H;
     if (p.kind === 'crate') { m = makeCrate(tex.crate_wood_a); m.position.set(p.x, fy + 0.55, p.z); m.rotation.y = yaw; }

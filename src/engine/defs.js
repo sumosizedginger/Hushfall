@@ -317,7 +317,9 @@ export const PROPS = {
   // Episode 4, Batch B (PT-033, beams.js): the Mirror Array's furniture; drawn by the view from the sim's own state (never merged into the static level mesh)
   mirror: { radius: 0.62, blocksCell: true },            // a mirror on a plinth: Use turns it a quarter step
   emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
-  receiver: { radius: 0.62, blocksCell: true },          // lit while a beam enters its cell
+  receiver: { radius: 0.62, blocksCell: true },
+  chime: { radius: 0.4, blocksCell: true },              // PT-038 (E6): a note on a plinth: Use or a shot strikes it
+  chimetree: { radius: 0.9, blocksCell: true },          // PT-038: the Great Chime-Tree: Use plays the phrase of the next round          // lit while a beam enters its cell
   // Episode 4, Batch C (PT-033): the dock's furniture
   grave: { radius: 0.32, blocksCell: false },            // PT-037 (Campaign 2 Act A): a grave of the Reliquary Road: a slab on a low mound, low enough to step over a creature's reach but a solid post to a round
   resonator: { radius: 0.4, blocksCell: false },        // PT-037 (Campaign 2, resonator.js): a standing tuning-fork: it rings at a noise and calls what sleeps
@@ -427,6 +429,9 @@ export const FOLK = {
 ENEMIES.zealot = { name: 'Zealot', poise: 2.2, hp: 110, speed: 2.3, gait: 7, radius: 0.42, height: 2.3, hitRadius: 0.62, hitForward: 0, sight: 32, turnRate: 3.4,
   attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 }, lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 }, graft: { time: 3 } };
 export const GRAFT = { slow: 0.38 };
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md E6): CHIMES (src/engine/chimes.js) ---------------------------------------------------------------------------------------------------------------------
+// five notes, each with a glyph and a colour as well as a pitch (a puzzle is never audio-only); `beat` s between the notes a tree plays, `lead` s before the first, the last `keep` notes struck are remembered
+export const CHIME = { notes: 5, glyphs: ['circle', 'triangle', 'square', 'diamond', 'ring'], colors: ['#f2b84a', '#3fd0c0', '#9a7ae0', '#e0584a', '#f4f0e0'], beat: 0.7, lead: 0.5, keep: 16 };
 
 // ---- Campaign 2, Act B (PT-038; design/ACTB.md E5): THE HAND LANTERN ---------------------------------------------------------------------------------------------------------------------------
 // A map that says `atmosphere.dark: true` is a dark place: creatures notice the player from `sightDark` metres, or from `sightLit` when the lantern is lit or the player stands within `radius` of a lit prop
