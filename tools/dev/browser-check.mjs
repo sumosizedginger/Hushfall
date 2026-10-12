@@ -490,6 +490,26 @@ try {
     await T(`t.tick(${Math.round((t0 + 2) * 60)})`); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const st = await T('t.state()'), bb = await T('t.enemyBounds()'), fresh = st.enemies.filter((e) => !bb.some((q) => q.id === e.id));
     check('a seed in the live game: left alone it cracks on its clock (one more creature than at the start), and every creature in the sim, the new one too, is drawn', st.enemies.length >= n0 + 1 && fresh.length === 0, `creatures ${n0} -> ${st.enemies.length} at ${t0 + 2} s, without a mesh: ${fresh.length}`); }
 
+  // ---- Campaign 2, Act B (PT-038): the Zealot, the hand lantern and the chimes in the live page (the Deep Range) -----------------------------------------------------------------------------------------------------------
+  // the Zealot: drawn, a real box, as tall as the sim says; a lance that lands grafts (the HUD of the sim: the player's graft clock) and the walk is slower
+  { await T("t.newGame('normal', 3, { mapId: 'DEEP' })"); await T('t.clearOverlays()'); await T('t.setup_clearEnemies()'); const p0 = (await T('t.state()')).player;
+    const z = await T(`t.setup_spawnEnemy('zealot', ${p0.x + 3.2}, ${p0.z}, ${Math.PI / 2}, 'chase')`); await T('t.setup_player({ hp: 100000 })'); await T('t.tick(2)'); for (let i = 0; i < 4; i++) await T('t.render(0.05)');
+    const eb = (await T('t.enemyBounds()')).find((q) => q.id === z), hgt = eb && eb.max[1] - eb.min[1], wid = eb && eb.max[0] - eb.min[0];
+    check('a Zealot in the live game is drawn: a real box, about as tall as the sim says (2.3 m), and as wide as a person in armour', !!eb && [...eb.min, ...eb.max].every(Number.isFinite) && Math.abs(hgt - 2.3) < 0.35 && wid > 0.8, `height ${hgt?.toFixed?.(2)}, width ${wid?.toFixed?.(2)}`);
+    let grafted = false; for (let i = 0; i < 60 && !grafted; i++) { await T('t.tick(10)'); grafted = (await T('t.state()')).player.graftT > 0; }
+    check('a Zealot that reaches the player lands its lance and the graft takes (the walk is slowed by the sim)', grafted, `grafted ${grafted}`); }
+  // the hand lantern: out, the held lantern and the gauge are there and the light is off; lit, the light fades up and the gauge says so; oil burns
+  { await T("t.newGame('normal', 3, { mapId: 'DEEP' })"); await T('t.clearOverlays()'); await T('t.setup_clearEnemies()');
+    for (let i = 0; i < 4; i++) await T('t.render(0.05)'); await sleep(400); const out = await T('t.lampProbe()');
+    await T("t.press('lamp')"); await T('t.tick(2)'); await T("t.release('lamp')"); await T('t.tick(60)'); for (let i = 0; i < 12; i++) await T('t.render(0.05)'); await sleep(400); const lit = await T('t.lampProbe()');
+    check('the hand lantern in the live game: out, its light is off and the gauge shows the oil; lit, the light is on, the gauge says LIT and the oil burns', out.model && out.light.intensity < 0.5 && out.hud.shown && /OIL/.test(out.hud.label) && lit.lamp.on && lit.light.intensity > 8 && /LIT/.test(lit.hud.label) && lit.lamp.oil < out.lamp.oil, `out ${JSON.stringify(out)}; lit ${JSON.stringify(lit)}`); }
+  // the chimes: Use on a chime flares its glyph in the drawn scene, the tree plays and a fruit lights, an answered phrase is seen by the sim
+  { await T("t.newGame('normal', 3, { mapId: 'DEEP' })"); await T('t.clearOverlays()'); await T('t.setup_clearEnemies()'); const deepMap = await mapJson('DEEP'), c0 = deepMap.entities.find((e) => e.id === 'c0');
+    await T(`t.setup_teleport(${(c0.at[0] + 0.5) * 2 - 1.1}, ${(c0.at[1] + 0.5) * 2}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.15, hp: 100000 })`); await T('t.tick(2)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const quiet = await T('t.chimeProbe()');
+    await T("t.press('use')"); await T('t.tick(2)'); await T("t.release('use')"); await T('t.tick(6)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const struck = await T('t.chimeProbe()'), g0 = (p) => p.chimes.find((q) => q.id === 'c0').glow;
+    const tree = deepMap.entities.find((e) => e.kind === 'chimetree'); await T(`t.setup_teleport(${(tree.at[0] + 0.5) * 2}, ${(tree.at[1] + 0.5) * 2 + 2.3}, 0); t.setup_player({ pitch: -0.1 })`); await T('t.tick(2)'); await T("t.press('use')"); await T('t.tick(2)'); await T("t.release('use')"); await T('t.tick(50)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const playing = await T('t.chimeProbe()');
+    check('chimes in the live game: a struck chime flares (drawn bigger than a quiet one), and the tree playing lights one of its fruit and its light', !!quiet && g0(struck) > g0(quiet) + 0.3 && playing.fruit.some((f) => f.scale > 1.2) && playing.treeLight > 0.5, `glow ${g0(quiet)?.toFixed(2)} -> ${g0(struck)?.toFixed(2)}; fruit ${JSON.stringify(playing.fruit?.map((f) => f.scale.toFixed(2)))}, light ${playing.treeLight?.toFixed?.(1)}`); }
+
   // ---- 6. lifecycle: repeated level transitions must not leak GPU resources --------------------------------------------
   await T("t.newGame('normal', 4)"); await T('t.tick(5)'); const g0 = await T('t.gl()');
   for (let i = 0; i < 12; i++) { await T(`t.newGame('normal', ${10 + i})`); await T('t.tick(3)'); }
