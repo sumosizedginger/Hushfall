@@ -20,7 +20,7 @@ test('the frozen fixture layout (the hall-and-quay test map) is a valid map with
 
 test('map validation rejects broken maps (negative cases)', () => {
   bad((s) => { s.grid[3] += '#'; }, /grid row 3 has length/);
-  bad((s) => setTile(s, 5, 5, '?'), /unknown tile/);
+  bad((s) => setTile(s, 5, 5, '"'), /unknown tile/);                       // (a double quote: never a tile; the symbols that were free are now skins, PT-037)
   bad((s) => setTile(s, 0, 4, '.'), /edge .* not a wall/);
   bad((s) => { s.doors.pop(); }, /'D' tile at 27,3 has no doors entry/);
   bad((s) => { s.doors[1].key = 'gold'; }, /unknown key/);
