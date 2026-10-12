@@ -2,10 +2,10 @@
   "mapId": "C2M01",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "0aa9843",
+  "codeVersion": "f01b5d5",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "e67ab70021488883",
+  "mapSha": "fe3349db4ec15d4c",
   "assetVersion": "cf3d07bec11dcde9",
   "engineSha": "b820226d216825ab",
   "sources": {
@@ -15,7 +15,7 @@
     "audio": "d2ac93bcf8ca82ff",
     "assets": "cf3d07bec11dcde9"
   },
-  "routesSha": "e1fba3b1ed81c5cf",
+  "routesSha": "d297c68697138fb3",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -25,7 +25,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5436,
-      "finalHash": "2a80c30c",
+      "finalHash": "0aca6a8b",
       "kills": 43,
       "secrets": 0,
       "items": 3,
@@ -37,7 +37,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5764,
-      "finalHash": "4a2db30d",
+      "finalHash": "f5d2f36e",
       "kills": 43,
       "secrets": 0,
       "items": 3,
@@ -49,7 +49,7 @@
       "seed": 1,
       "result": "complete",
       "ticks": 5784,
-      "finalHash": "0b820cad",
+      "finalHash": "98e1c7d4",
       "kills": 43,
       "secrets": 0,
       "items": 3,
@@ -60,8 +60,8 @@
       "difficulty": "easy",
       "seed": 1,
       "result": "complete",
-      "ticks": 5918,
-      "finalHash": "b84ce089",
+      "ticks": 6223,
+      "finalHash": "21298865",
       "kills": 43,
       "secrets": 1,
       "items": 3,
@@ -72,8 +72,8 @@
       "difficulty": "normal",
       "seed": 1,
       "result": "complete",
-      "ticks": 6355,
-      "finalHash": "86549512",
+      "ticks": 6655,
+      "finalHash": "f64d7302",
       "kills": 43,
       "secrets": 1,
       "items": 3,
@@ -84,8 +84,8 @@
       "difficulty": "hard",
       "seed": 1,
       "result": "complete",
-      "ticks": 5909,
-      "finalHash": "12a71295",
+      "ticks": 6234,
+      "finalHash": "55a04b94",
       "kills": 43,
       "secrets": 1,
       "items": 3,
@@ -99,7 +99,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 5764,
-    "finalHash": "4a2db30d",
+    "finalHash": "f5d2f36e",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -322,17 +322,17 @@
       {
         "name": "route C2M01.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "98.6 s"
+        "detail": "103.7 s"
       },
       {
         "name": "route C2M01.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "105.9 s"
+        "detail": "110.9 s"
       },
       {
         "name": "route C2M01.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "98.5 s"
+        "detail": "103.9 s"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 59 damage)",

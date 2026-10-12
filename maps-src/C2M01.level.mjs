@@ -91,7 +91,7 @@ const MAP = {
     { id: 'seal', at: [16, 28], radius: 0.1, speaker: 'INES', text: 'Door is shut. Signal House, no answer. Logging it anyway: day one, a beach, the Gate dark behind me.' },
     { id: 'rows', at: [21, 28], radius: 5, speaker: 'INES', text: 'Oilskins. Marrow boat crews in two rows, facing the water. They were put here and told to wait.' },
     { id: 'camp', at: [21, 19], radius: 2.5, speaker: 'CAMP LEDGER', text: 'WATER: the lake is salt. FOOD: nine days. Two of ours went out in the night and stood on the sand. Keep moving. Keep the lamp lit.' },
-    { id: 'north', at: [31, 14], radius: 5, speaker: 'HULL', text: 'Singers on the north dune. Their rounds shake your aim. Rock to rock, and do not stand in the open.' },
+    { id: 'north', at: [31, 19], radius: 4, speaker: 'HULL', text: 'Singers on the north dune. Their rounds shake your aim. Rock to rock, and do not stand in the open.' },
     { id: 'breach', at: [46, 28], radius: 2.5, speaker: 'MARROW GIRL LOG', text: 'Third night of the Hush. Skipper took her out past the bar to get clear. The Gate opened under the keel. We did not sink. We arrived.' },
     { id: 'engine', at: [62, 27], radius: 3, speaker: 'INES', text: 'Iron plate, a boiler gone cold, and the stair to the deck is up the north end. The wood is Marrow oak. I know the smell.' },
     { id: 'deck', at: [66, 11], radius: 3, speaker: 'INES', text: 'From the deck you can see the whole cove. And the only other thing standing up out here: needles, three of them, a long way off.' },

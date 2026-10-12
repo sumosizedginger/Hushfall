@@ -878,8 +878,8 @@
   },
   {
    "id": "north",
-   "at": [31, 14],
-   "radius": 5,
+   "at": [31, 19],
+   "radius": 4,
    "speaker": "HULL",
    "text": "Singers on the north dune. Their rounds shake your aim. Rock to rock, and do not stand in the open."
   },
