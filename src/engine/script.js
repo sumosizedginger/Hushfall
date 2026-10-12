@@ -24,10 +24,11 @@ export function runAction(w, a) {
   } else if (k === 'wake') { for (const e of w.enemies) if (e.group === v && e.state === 'idle') wakeEnemy(w, e, true, true); }
   else if (k === 'spawn') {
     const e = spawnEnemy(w, v.kind, (v.at[0] + 0.5) * m.cell, (v.at[1] + 0.5) * m.cell, typeof v.facing === 'number' ? v.facing : (v.facing ? { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI }[v.facing] : Math.PI));
-    if (v.group) e.group = v.group; w.stats.total.enemies++;
+    if (v.group) e.group = v.group; if (v.variant) e.variant = v.variant; w.stats.total.enemies++;
     emit(w, 'enemy_spawn', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     if (v.wake !== false) wakeEnemy(w, e, false, true);
   }
+  else if (k === 'choose') { (w.choices ??= {})[v.id] = v.value; emit(w, 'choice', { id: v.id, value: v.value }); }                              // PT-039: a remembered choice (lazy state; the shell keeps it in progress.choices and the next map's world starts with it)
   else if (k === 'sector') sectorTarget(w, v.id, v.to);
   else if (k === 'message') { const msg = m.messages.find((q) => q.id === v); if (msg && !w.messagesSeen.includes(v)) { w.messagesSeen.push(v); emit(w, 'message', { id: v, speaker: msg.speaker || '', text: msg.text }); } }
   else if (k === 'exit') { const id = v.id; for (const x of m.exits) if (!id || x.id === id) w.exitLocked[x.id] = v.set === 'lock'; emit(w, v.set === 'lock' ? 'exit_lock' : 'exit_unlock', {}); }
@@ -53,6 +54,8 @@ export function updateSectors(w, dt) {
   }
 }
 
+/** does the remembered choice match a spec '<id>=<value>' (or '<id>!=<value>')? A world with no choices holds none: '=' is false and '!=' is true */
+export function choiceHolds(w, spec) { const neg = spec.includes('!='), [id, val] = spec.split(neg ? '!=' : '='); return neg ? w.choices?.[id] !== val : w.choices?.[id] === val; }
 const cond = {
   start: (w) => w.tick >= 1,
   enter: (w, t) => Math.hypot(w.player.x - t.x, w.player.z - t.z) <= t.r,
@@ -67,6 +70,7 @@ function conditionMet(w, t) {
   if (c.startsWith('time:')) return w.time >= Number(c.slice(5));
   if (c.startsWith('dead:')) { const g = c.slice(5), members = w.enemies.filter((e) => e.group === g); return members.length > 0 && members.every((e) => e.state === 'dead'); }
   if (c.startsWith('lit:')) return !!w.beams && w.beams.lit.includes(c.slice(4));
+  if (c.startsWith('choice:')) return choiceHolds(w, c.slice(7));                                                                            // PT-039
   if (c.startsWith('seq:')) return w.chimes?.matched?.[c.slice(4)] != null;                                                  // PT-038: a chime phrase was played (chimes.js)                                             // PT-033: a receiver is lit (beams.js)
   if (c.startsWith('sector:')) { const [, id, pos] = c.split(':'), s = w.sectors.find((q) => q.id === id), def = w.map.sectors.find((q) => q.id === id); return !!s && Math.abs(s.h - s.target) < 1e-6 && Math.abs(s.h - (pos === 'high' ? def.high : def.low)) < 1e-6; }
   return false;

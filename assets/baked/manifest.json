@@ -916,6 +916,94 @@
       "transparent": false,
       "sha256": "8cf3f2ea17d04ae61b9806e60f79535e71f9c040707a8835c4a3142cf4537c8b",
       "bytes": 33637
+    },
+    "wall_deeprock_a": {
+      "seed": 9601,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "2eee843ccd51a67bc2fe1dd324fe69ef3670b4bfce2a8413fa459e6eed695956",
+      "bytes": 18081
+    },
+    "wall_citystone_a": {
+      "seed": 9602,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "759bec2c8975bd57edae6d4550653d31ceff4d8853dce198e67edda69957bd02",
+      "bytes": 11069
+    },
+    "wall_marblebronze_a": {
+      "seed": 9603,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8039fe90c9b37c44285bd452352a3da01dcb0c85392344f54c10abcca07ca382",
+      "bytes": 8345
+    },
+    "wall_drowned_a": {
+      "seed": 9604,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "287635a7d06241dd5f58c162349a2c8c85a98a89e57cd57f5d91248cd841d715",
+      "bytes": 9074
+    },
+    "wall_ossuary_a": {
+      "seed": 9605,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c45a0eca632c01838632afbb2febef9c1f602283f3890aeb10b7439d45f32f10",
+      "bytes": 14624
+    },
+    "wall_ashstone_a": {
+      "seed": 9606,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3d006eb8cd99bf54a9503b20328369e08278c70685499fed87ee89e394da833a",
+      "bytes": 16658
+    },
+    "wall_heartflesh_a": {
+      "seed": 9607,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4a70b3534997ded78a25e8b9e0e2363ef139c89ce223f5d0f2fab27af33c0dbb",
+      "bytes": 23961
+    },
+    "floor_flowstone_a": {
+      "seed": 9611,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3cdd9f805a666064fa2fb2dcf5c5650222ad98818e47553b667c97ab651d8f27",
+      "bytes": 30106
+    },
+    "floor_marble_a": {
+      "seed": 9612,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3a1f438019a23dce17aabd63fc195b68322bd73e10a05cf8af069ab60fb893de",
+      "bytes": 6242
+    },
+    "floor_flesh_a": {
+      "seed": 9613,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4089f4d3cd335b47ee49832acb4884862f13deb08d8853ea7021dedfe96d8717",
+      "bytes": 26281
+    },
+    "sky_deep": {
+      "seed": 9620,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ba296365f07a30f37d580c481cf8d285dc7d4c6d9fc6ee0c9ddfb4306b44bec5",
+      "bytes": 58618
     }
   }
 }

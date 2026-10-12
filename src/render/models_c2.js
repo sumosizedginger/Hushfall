@@ -70,3 +70,27 @@ export function makePickupOil() {
   const glint = new THREE.Mesh(new THREE.IcosahedronGeometry(0.03, 0), new THREE.MeshBasicMaterial({ color: 0xffd488 })); glint.position.y = 0.46; g.add(glint);
   return g;
 }
+
+/** a Vael city built into the wall of a cavern (scenery, PT-039, Act B): five terraces of pale stone houses stepped up a cliff 26 m wide and 20 m tall, a window or two lit amber in every house, a bridge of gold lamps between the terraces, a dark mouth of a stair in the middle. Faces +z. The windows are a deterministic pattern (no random stream). */
+export function makeCityFace() {
+  const g = new THREE.Group(), stone = lam({ color: 0x9a927e, emissive: 0x0e0c08 }), dark = lam({ color: 0x241e1c }), win = bas({ color: 0xffc060 }), lamp = bas({ color: 0xffe0a0 }), cliff = lam({ color: 0x1c2234 });
+  g.add(box(30, 22, 2.4, cliff, 0, 11, -1.6));
+  const h = (i, j) => { const v = Math.sin(i * 12.9898 + j * 78.233) * 43758.5453; return v - Math.floor(v); };
+  for (let t = 0; t < 5; t++) {
+    const y0 = t * 3.8, n = 8 - (t % 2), w = 26 / n - 0.4;
+    for (let i = 0; i < n; i++) {
+      const x = -13 + (i + 0.5) * (26 / n), hh = 2.2 + h(t, i) * 1.7, dd = 1.4 + h(i, t) * 1.2;
+      g.add(box(w, hh, dd, stone, x, y0 + hh / 2, 0.3 + dd / 2 - 1.2)); g.add(box(w * 0.5, 0.35, dd + 0.2, dark, x, y0 + hh + 0.17, 0.3 + dd / 2 - 1.2));
+      const nw = 1 + Math.floor(h(i + 3, t) * 3); for (let k = 0; k < nw; k++) g.add(box(0.5, 0.7, 0.1, win, x - w / 2 + 0.7 + k * (w - 1.4) / Math.max(1, nw - 1 || 1) * (nw > 1 ? 1 : 0.5), y0 + hh * 0.55, 0.3 + dd - 1.18));
+    }
+    for (let i = 0; i < 9; i++) { const b = new THREE.Mesh(new THREE.SphereGeometry(0.16, 5, 4), lamp); b.position.set(-12 + i * 3, y0 + 3.55, 0.9); g.add(b); }
+  }
+  g.add(box(2.4, 6, 0.3, dark, 0, 3, 1.0));
+  return g;
+}
+/** a stand of stalactites hanging from a cavern roof (scenery, PT-039): nine cones of wet stone, 1 to 5 m long, hung from y = 0 downward in a cluster 8 m across; place it at the roof's height */
+export function makeHangRock() {
+  const g = new THREE.Group(), rock = lam({ color: 0x2a3248, emissive: 0x06080c });
+  for (let i = 0; i < 9; i++) { const a = i * 2.4, r = 1 + (i % 4) * 1.1, len = 1.2 + ((i * 37) % 10) * 0.42, c = new THREE.Mesh(new THREE.ConeGeometry(0.35 + (i % 3) * 0.18, len, 6), rock); c.rotation.x = Math.PI; c.position.set(Math.cos(a) * r, -len / 2, Math.sin(a) * r); g.add(c); }
+  return g;
+}

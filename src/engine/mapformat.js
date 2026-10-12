@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, LOADS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, LOADS, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -18,7 +18,7 @@ for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
 const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
 const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights'];
+export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose'];
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -52,6 +52,7 @@ export class MapData {
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
+    this.echo = src.atmosphere?.echo ?? 1;                                                      // PT-039 (Act B): a place where every noise carries `echo` times as far (the Echo Markets' well); 1 = the ordinary world
     this.dark = src.atmosphere?.dark === true; this.lantern = src.lantern ?? null;                // PT-038 (E5): a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
@@ -180,6 +181,7 @@ function validateMapChecks(src) {
     if (e.type === 'enemy' && !ENEMIES[e.kind]) err(`${tag}: unknown enemy kind`);
     if (e.type === 'enemy' && e.hold != null && !RANGE.holdModes.includes(e.hold)) err(`${tag}: hold must be one of ${RANGE.holdModes.join(', ')}`);
     if (e.type === 'enemy' && e.hp != null && !(e.hp > 0)) err(`${tag}: hp must be a positive number`);
+    if (e.type === 'enemy' && e.variant != null && !VARIANTS[e.variant]) err(`${tag}: unknown variant '${e.variant}' (${Object.keys(VARIANTS).join(', ')})`);
     if (e.type === 'enemy' && e.sight != null && !(e.sight > 0)) err(`${tag}: sight must be a positive number of metres`);
     if ((e.hold != null || e.hp != null || e.sight != null) && !src.range) err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
@@ -240,6 +242,7 @@ function validateMapChecks(src) {
     if (!Array.isArray(m.at) || m.at.length !== 2 || !m.at.every(Number.isFinite) || m.at[0] < 0 || m.at[1] < 0 || m.at[0] >= w || m.at[1] >= h) err(`${tag}: 'at' must be inside the grid`);
     if (typeof m.text !== 'string' || !m.text.trim()) err(`${tag}: empty text`); else if (m.text.length > 180) err(`${tag}: text too long (${m.text.length} > 180)`);
     if (m.radius != null && !(m.radius > 0 && m.radius <= 8)) err(`${tag}: radius must be in (0, 8] cells`);
+    if (m.choice != null && !/^[a-z0-9-]{1,24}(=|!=)[a-z0-9-]{1,24}$/.test(String(m.choice))) err(`${tag}: choice must be '<id>=<value>' or '<id>!=<value>'`);                      // PT-039: shown only when the remembered choice matches (or does not)
   }
   if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
@@ -352,6 +355,8 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
     else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
     else if (k === 'objective') { if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`); }
+    else if (k === 'choose') { if (!v || !/^[a-z0-9-]{1,24}$/.test(v.id ?? '') || !/^[a-z0-9-]{1,24}$/.test(v.value ?? '')) err(`${tag}: choose needs {id, value} of 1-24 lower-case letters, digits or dashes`); }                   // PT-039: a remembered choice (progress.choices, read by later maps)
+    if (k === 'spawn' && v?.variant != null && !VARIANTS[v.variant]) err(`${tag}: unknown variant '${v.variant}'`);
   };
   const swIds = new Set();
   for (const e of ents) if (e.type === 'switch') {
@@ -368,6 +373,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
   if (src.atmosphere?.dark != null && typeof src.atmosphere.dark !== 'boolean') err('atmosphere.dark must be true or false');
+  if (src.atmosphere?.echo != null && !(src.atmosphere.echo >= 1 && src.atmosphere.echo <= 4)) err('atmosphere.echo must be a number from 1 to 4');
   if (src.chimes != null) {
     if (!Array.isArray(src.chimes)) err('chimes must be a list of { id, phrase, window }');
     else { const ids = new Set(); for (const [i, q] of src.chimes.entries()) { const tag = `chimes #${i}`;
@@ -395,10 +401,11 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
     else if (wn.startsWith('msg:')) { if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`); }
     else if (wn.startsWith('seq:')) { if (!(src.chimes || []).some((q) => q.id === wn.slice(4))) err(`${tag}: unknown phrase in '${wn}'`); }                       // PT-038: a chime phrase has been played
+    else if (wn.startsWith('choice:')) { if (!/^choice:[a-z0-9-]{1,24}=[a-z0-9-]{1,24}$/.test(wn)) err(`${tag}: '${wn}' must be choice:<id>=<value>`); }                      // PT-039: a choice an earlier map recorded
     else if (wn.startsWith('lit:')) { if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`); }
     else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
     else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
-    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> (got '${wn}')`);
+    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> (got '${wn}')`);
     }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);

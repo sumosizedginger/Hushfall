@@ -1,0 +1,1392 @@
+{
+ "format": 1,
+ "id": "C2M15",
+ "version": 1,
+ "name": "Ash Basilica",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "look": "basilica",
+  "fog": "#14100e",
+  "fogDensity": 0.012
+ },
+ "grid": [
+  "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[[''''''|''''''|''''[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[['^^^^^^^^^^^^^^^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[['^^^^^^^^^^^^^^^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[['^^^^^^^^^^^^^^^^|'[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[['^^^^^^^^^^^^^^^^''[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[['^^|^^^^^^^^^^|^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[[|^^^^^^^^^^^^^^^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[|'^^^^^^^^^^^^^^^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[|''^^^^^^^^^^^^^^^^'[[[[[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[['''''''''''''''''''''D''''''''''''''''''''[[[[[[[[[",
+  "[[[[[[[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[[[[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffff))))))))))))))))))))))))))fffffff|'[[[[[[[[",
+  "[''[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffff))))))))))))))))))))))))))fffffff|'[[[[[[[[",
+  "[''[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[|''['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['''''''''''''''''''''D''''''''''''''''''''[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffff))))))))))))))))))))))))))fffffff|'[[[[[[[[",
+  "[''[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|''''''''''''''''''''D''''''''''''''''''''[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffff))))))))))))))))))))))))))fffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'''''''''''''''''''''D'''''''''''''''''''|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[|''['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))||))))))||))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))||))))))||))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|'''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[[|''['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''''''''''''''''''''''D'''''''''''''''''''''[[[[[[[[",
+  "[[[[[[|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[[|''['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[[|''[['fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[|''[[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffff))))))))))))))))))))))))))fffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[['''|'''fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[['^^^^^'fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[['^^^^^'fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|^^^^^'fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|'^^^^^Sfffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[|''^^^^^'fffffffffff'))))||))))))||))'fffffffffff|'[[[[[[[[",
+  "['''^^^^^'fffffffffff'))))||))))))||))'fffffffffff''[[[[[[[[",
+  "[[['^^^^^'fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[[[''|''''fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[[|''[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[[|''[[['fffffff))))))))))))))))))))))))))fffffff'[[[[[[[[[",
+  "[[|''[[[[|fffffffffff'))))))))))))))))'fffffffffff'[[[[[[[[[",
+  "[|''[[[[|'fffffffffff'))))))))))))))))'fffffffffff|'[[[[[[[[",
+  "[''[[[[|''fffffffffff'))))))))))))))))'fffffffffff''[[[[[[[[",
+  "[[[[[[|''''''|''''''|''''')))))))))''''''|''''''|''[[[[[[[[[",
+  "[[[[[|''[[[[|''[[[[|''[[[')))))))))'[[[[|''[[[[|''[[[[[[[[[[",
+  "[[[[|''[[[[|''[[[[|''[[[[|)))))))))'[[[|''[[[[|''[[[[[[[[[[[",
+  "[[[|''[[[[|''[[[[|''[[[[|')))))))))'[[|''[[[[|''[[[[[[[[[[[[",
+  "[[|''[[[[|''[[[[|''[[[[|'')))))))))'[|''[[[[|''[[[[[[[[[[[[[",
+  "[|''[[[[|''[[[[|''[[[[|''')))))))))'|''[[[[|''[[[[[[[[[[[[[[",
+  "[''[[[[|''[[[[|''[[[[|''[')))))))))|''[[[[|''[[[[[[[[[[[[[[[",
+  "[[[[[[|''[[[[|''[[[[|''[[')))))))))''[[[[|''[[[[[[[[[[[[[[[[",
+  "[[[[[|''[[[[|''[[[[|''[[['|''''''|''[[[[|''[[[[[[[[[[[[[[[[[",
+  "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[["
+ ],
+ "heights": [
+  "............................................................",
+  "............................................................",
+  "......................8888888888888888......................",
+  "......................8888999999998888......................",
+  "......................8888999999998888......................",
+  "......................8888999999998888......................",
+  "......................8888888888888888......................",
+  "......................8888888888888888......................",
+  "......................8888888888888888......................",
+  "......................8888888888888888......................",
+  "..............................8.............................",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..............................8.............................",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..............................8.............................",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..............................8.............................",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..............................8.............................",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "....ccccc.ccccccccccc.8888888888888888.ccccccccccc..........",
+  "....ccccc.ccccccccba98888888888888888889abcccccccc..........",
+  "....ccccc.ccccccccba98888888888888888889abcccccccc..........",
+  "....ccccccccccccccba98888888888888888889abcccccccc..........",
+  "....ccccc.ccccccccccc.8888888888888888.ccccccccccc..........",
+  "....ccccc.ccccccccccc.8888888888888888.ccccccccccc..........",
+  "....ccccc.ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccba98888888888888888889abcccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........ccccccccccc.8888888888888888.ccccccccccc..........",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "..........................888888888.........................",
+  "............................................................",
+  "............................................................"
+ ],
+ "ceilings": [
+  "............................................................",
+  "............................................................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "......................yyyyyyyyyyyyyyyy......................",
+  "............................................................",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "............................................................",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "............................................................",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "............................................................",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "............................................................",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "....ooooo.yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........yyyyyyyyyyy.yyyyyyyyyyyyyyyy.yyyyyyyyyyy..........",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "..........................ooooooooo.........................",
+  "............................................................",
+  "............................................................"
+ ],
+ "doors": [
+  {
+   "at": [30, 10],
+   "remote": true
+  },
+  {
+   "at": [30, 32],
+   "remote": true
+  },
+  {
+   "at": [30, 54],
+   "remote": true
+  },
+  {
+   "at": [30, 76],
+   "remote": true
+  },
+  {
+   "at": [30, 98],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "crypt",
+   "panel": [9, 110],
+   "cells": [
+    [4, 107],
+    [5, 107],
+    [6, 107],
+    [7, 107],
+    [8, 107],
+    [4, 108],
+    [5, 108],
+    [6, 108],
+    [7, 108],
+    [8, 108],
+    [4, 109],
+    [5, 109],
+    [6, 109],
+    [7, 109],
+    [8, 109],
+    [4, 110],
+    [5, 110],
+    [6, 110],
+    [7, 110],
+    [8, 110],
+    [4, 111],
+    [5, 111],
+    [6, 111],
+    [7, 111],
+    [8, 111],
+    [4, 112],
+    [5, 112],
+    [6, 112],
+    [7, 112],
+    [8, 112],
+    [4, 113],
+    [5, 113],
+    [6, 113],
+    [7, 113],
+    [8, 113]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "gate1",
+   "when": "dead:s1",
+   "do": [
+    {
+     "open": [30, 98]
+    },
+    {
+     "objective": "The first screen is open: the Weeping Mother holds the second bay"
+    }
+   ]
+  },
+  {
+   "id": "gate2",
+   "when": "dead:s2",
+   "do": [
+    {
+     "open": [30, 76]
+    },
+    {
+     "objective": "The second screen is open: an Acolyte and three Zealots hold the third"
+    }
+   ]
+  },
+  {
+   "id": "gate3",
+   "when": "dead:s3",
+   "do": [
+    {
+     "open": [30, 54]
+    },
+    {
+     "objective": "The third screen is open: a rank of Zealots holds the fourth"
+    }
+   ]
+  },
+  {
+   "id": "gate4",
+   "when": "dead:s4",
+   "do": [
+    {
+     "open": [30, 32]
+    },
+    {
+     "objective": "The fourth screen is open: the last bay, and a Warden-Graft"
+    }
+   ]
+  },
+  {
+   "id": "gate5",
+   "when": "dead:s5",
+   "do": [
+    {
+     "open": [30, 10]
+    },
+    {
+     "objective": "The last screen is open. The altar and the exit are beyond"
+    }
+   ]
+  },
+  {
+   "id": "bay1",
+   "when": "enter",
+   "at": [30, 112],
+   "radius": 5,
+   "do": [
+    {
+     "objective": "The first bay: a Bulwark Shell holds the screen"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [30, 124]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 103]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 103]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 113]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 113]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 99]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 99]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 109]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 109]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 81]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 81]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 91]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 91]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 77]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 77]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 87]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 87]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 59]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 59]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 69]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 69]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 55]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 55]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 65]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 65]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 47]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 33]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 43]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 43]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [36, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [28, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [14, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [45, 21]
+  },
+  {
+   "type": "prop",
+   "kind": "organ",
+   "at": [25, 3]
+  },
+  {
+   "type": "prop",
+   "kind": "organ",
+   "at": [35, 3]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [28, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [32, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [35, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 122]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 126]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 117]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 105]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 105]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [14, 115]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [45, 111]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [30, 95]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 83]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 83]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [14, 93]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [45, 89]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 73]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 61]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 61]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [14, 71]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [45, 67]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [30, 51]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 39]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [14, 49]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [45, 45]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [30, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [14, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [45, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [30, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [28, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [32, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [6, 108]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [7, 110]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [5, 109]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [7, 112]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [5, 111]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [6, 112]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_cell",
+   "at": [6, 110]
+  },
+  {
+   "type": "enemy",
+   "kind": "bulwark",
+   "at": [30, 103],
+   "group": "s1",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [26, 104],
+   "group": "s1",
+   "facing": 0.197
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 104],
+   "group": "s1",
+   "facing": -0.197
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 110],
+   "group": "s1",
+   "facing": 0.405
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 110],
+   "group": "s1",
+   "facing": -0.405
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 105],
+   "group": "s1",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 114],
+   "group": "s1",
+   "facing": 0.381
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 108],
+   "group": "s1",
+   "facing": 0.124
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [32, 108],
+   "group": "s1",
+   "facing": -0.124
+  },
+  {
+   "type": "enemy",
+   "kind": "weeping",
+   "at": [30, 81],
+   "group": "s2",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 84],
+   "group": "s2",
+   "facing": 0.149
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 84],
+   "group": "s2",
+   "facing": -0.149
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [30, 90],
+   "group": "s2",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [26, 92],
+   "group": "s2",
+   "facing": 0.124
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 92],
+   "group": "s2",
+   "facing": -0.124
+  },
+  {
+   "type": "enemy",
+   "kind": "acolyte",
+   "at": [30, 62],
+   "group": "s3",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [24, 58],
+   "group": "s3",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [30, 58],
+   "group": "s3",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [36, 58],
+   "group": "s3",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 66],
+   "group": "s3",
+   "facing": 0.103
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 66],
+   "group": "s3",
+   "facing": -0.103
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 70],
+   "group": "s3",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [25, 36],
+   "group": "s4",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [30, 36],
+   "group": "s4",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [35, 36],
+   "group": "s4",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [28, 42],
+   "group": "s4",
+   "facing": 0.024
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 46],
+   "group": "s4",
+   "facing": 0.077
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 46],
+   "group": "s4",
+   "facing": -0.077
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [30, 16],
+   "group": "s5",
+   "facing": 0
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [25, 26],
+   "group": "s5",
+   "facing": 0.051
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [35, 26],
+   "group": "s5",
+   "facing": -0.051
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [24, 24],
+   "group": "s5",
+   "facing": 0.06
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [36, 24],
+   "group": "s5",
+   "facing": -0.06
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [14, 62],
+   "facing": 0.253
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 40],
+   "facing": -0.177
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [14, 22],
+   "facing": 0.156
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 106],
+   "facing": 0.661
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 106],
+   "facing": -0.625
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 84],
+   "facing": 0.337
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [43, 84],
+   "facing": -0.314
+  },
+  {
+   "type": "exit",
+   "at": [30, 3],
+   "dest": "next"
+  }
+ ],
+ "scenery": [],
+ "par": {
+  "time": 660
+ },
+ "intro": {
+  "title": "ASH BASILICA",
+  "lines": [
+   "A house of the Song, burned out and kept.",
+   "Five stations down the nave. At each one, someone who wants the Grafting to go on."
+  ]
+ },
+ "outro": "Behind the altar a stair goes down. The ash on it has been walked by many feet, all going the same way.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [30, 124],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "Ash on the flags, soot to the roof and a long nave of five bays in a row. Everything that can burn has. The stone is still warm at the foot of the walls."
+  },
+  {
+   "id": "raised",
+   "at": [30, 117],
+   "radius": 4,
+   "speaker": "HULL",
+   "text": "The aisles are two metres up, and the ramps through the pillars are the only ways onto them. High ground costs a flight of steps and gives the nave in front of you."
+  },
+  {
+   "id": "haul",
+   "at": [30, 106],
+   "radius": 4,
+   "speaker": "RINGING PLATE",
+   "text": "First station, THE HAUL. Run a nail down it: the line is drawn in, hand over hand, by all of the ones who are able. It is owed."
+  },
+  {
+   "id": "slip",
+   "at": [30, 100],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Haul, hold, chock, fit, float. That is a launch. Five stages, in that order, on every slip I ever stood beside. They are launching something here."
+  },
+  {
+   "id": "hold",
+   "at": [30, 84],
+   "radius": 4,
+   "speaker": "RINGING PLATE",
+   "text": "Second station, THE HOLD. The line is made fast. It is not lost if it is held: the Mother holds it, and weeps, and does not let go."
+  },
+  {
+   "id": "chock",
+   "at": [30, 62],
+   "radius": 4,
+   "speaker": "RINGING PLATE",
+   "text": "Third station, THE CHOCK. A wedge is set and the wheel is stopped. The wheel is a person who has been asked to stand still."
+  },
+  {
+   "id": "fit",
+   "at": [30, 40],
+   "radius": 4,
+   "speaker": "RINGING PLATE",
+   "text": "Fourth station, THE FIT. The bell is fitted. A rank of the willing holds the one who is being fitted, so that it is done without fear."
+  },
+  {
+   "id": "float",
+   "at": [30, 18],
+   "radius": 4,
+   "speaker": "RINGING PLATE",
+   "text": "Fifth station, THE FLOAT. The first toll. After it the fitted one is no longer asked anything, because it has been answered."
+  },
+  {
+   "id": "zealot",
+   "at": [30, 34],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "Spears in a rank, shoulder to shoulder, and the rank is facing the screen and not me. They are guarding the one behind them from the ones in front."
+  },
+  {
+   "id": "hollow",
+   "at": [10, 110],
+   "radius": 2,
+   "speaker": "HULL",
+   "text": "The west aisle wall of the first bay rings hollow behind a pillar that has been taken out of the row."
+  },
+  {
+   "id": "crypt",
+   "at": [6, 110],
+   "radius": 4,
+   "speaker": "A SILENT (NOTE)",
+   "text": "The ones of this house who would not be fitted are put here. Their bells are on the wall, unfitted, in a row. Take what they left."
+  },
+  {
+   "id": "altar",
+   "at": [30, 6],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "An organ with no pipes left but the lowest ones, and the lowest are warm. Somebody is still playing this house. Very slowly. One note a minute."
+  }
+ ],
+ "objective": "Fight up the nave, bay by bay. Each screen opens when the ones who hold it are dead. The altar is at the north end",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 50,
+  "ammo": {
+   "flare": 14,
+   "shell": 20,
+   "rivet": 90,
+   "bolt": 10,
+   "cell": 40,
+   "round": 50,
+   "rocket": 4
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ]
+ },
+ "quality": {
+  "enemies": [40, 90],
+  "botSeconds": [40, 900],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "secret"
+  ],
+  "skins": 6,
+  "enemyKinds": {
+   "bulwark": 1,
+   "weeping": 1,
+   "acolyte": 1,
+   "zealot": 6,
+   "wardengraft": 1,
+   "chorister": 3,
+   "tollbearer": 8,
+   "gaunt": 8,
+   "bellhand": 2
+  },
+  "scaleClass": "COMPRESSION",
+  "introduces": "the elite gauntlet: five stations of the Grafting down a burned nave, each held by an elite or a rank (a Bulwark, the Weeping Mother, an Acolyte with Zealots, a rank of Zealots, a Warden-Graft), raised aisles for the high ground, and a screen that opens when its keepers are dead"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": []
+ }
+}

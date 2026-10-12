@@ -1,0 +1,110 @@
+[
+{
+"name": "01-south-gate",
+"x": 44.5,
+"z": 82.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-outer-street",
+"x": 28.5,
+"z": 70.5,
+"yaw": -1.571,
+"pitch": -0.02,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-alley",
+"x": 44.5,
+"z": 70.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-street2",
+"x": 40.5,
+"z": 66.5,
+"yaw": -1.373,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-plaza",
+"x": 38.5,
+"z": 54.5,
+"yaw": -0.852,
+"pitch": -0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-well",
+"x": 44.5,
+"z": 53.5,
+"yaw": -0.0,
+"pitch": -0.35,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-well-south",
+"x": 44.5,
+"z": 34.5,
+"yaw": -3.142,
+"pitch": -0.3,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-crowd",
+"x": 29.5,
+"z": 38.5,
+"yaw": -3.142,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-north-street",
+"x": 44.5,
+"z": 17.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "10-north-gate",
+"x": 44.5,
+"z": 12.5,
+"yaw": -0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "11-store",
+"x": 13.5,
+"z": 44.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "12-outer-lamps",
+"x": 14.5,
+"z": 33.5,
+"yaw": -0.675,
+"pitch": 0.12,
+"open": true,
+"ticks": 10
+}
+]

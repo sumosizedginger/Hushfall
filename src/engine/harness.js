@@ -14,8 +14,8 @@ const mulberry = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.i
 /**
  * Play a route with the bot. Robustness options degrade the PLAYER, not the level: tremor adds +-tremor rad of aim error on every fire tick (a human is not a perfect shot); ammoScale scales every ammo pickup (a human wastes shots).
  */
-export function runRoute(map, route, { seed = 1, difficulty = 'normal', maxTicks = 60 * 60 * 6, world = null, onTick = null, fights = true, weave = false, tremor = 0, ammoScale = null } = {}) {
-  const w = world || createWorld(map, { seed, difficulty, ammoScale });
+export function runRoute(map, route, { seed = 1, difficulty = 'normal', maxTicks = 60 * 60 * 6, world = null, onTick = null, fights = true, weave = false, tremor = 0, ammoScale = null, choices = null } = {}) {
+  const w = world || createWorld(map, { seed, difficulty, ammoScale, choices });
   const input = new InputState(), bot = new Bot(w, input, route, { fights, weave }), events = [];
   if (tremor) { const rnd = mulberry(seed * 977 + 13), sample = input.sample.bind(input); input.sample = () => { const c = sample(); if (c.fire) { c.yaw += (rnd() + rnd() + rnd() - 1.5) * tremor; c.pitch += (rnd() + rnd() + rnd() - 1.5) * tremor; } return c; }; }
   let ticks = 0;

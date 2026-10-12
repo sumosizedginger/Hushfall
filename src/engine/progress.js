@@ -50,6 +50,11 @@ export function sanitizeProgress(p) {
     for (const [id, list] of Object.entries(p.record)) if (Array.isArray(list)) { const ids = [...new Set(list.filter((x) => typeof x === 'string' && x.length > 0 && x.length <= 48))].slice(0, 400); if (ids.length) rec[String(id).slice(0, 16)] = ids; }
     if (Object.keys(rec).length) out.record = rec;
   }
+  if (p.choices && typeof p.choices === 'object') {                                      // PT-039 (Act B): the choices a player has made (a wing taken at C2M11): id -> value, short lower-case tokens. Lazy: absent until the first choice.
+    const ch = {};
+    for (const [id, v] of Object.entries(p.choices)) if (/^[a-z0-9-]{1,24}$/.test(id) && typeof v === 'string' && /^[a-z0-9-]{1,24}$/.test(v)) ch[id] = v;
+    if (Object.keys(ch).length) out.choices = ch;
+  }
   return out;
 }
 

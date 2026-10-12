@@ -50,7 +50,7 @@ test('skins: B is a wall, p is open-air floor, and doors may sit in brick walls'
   assert.equal(m.isInterior(1 * 2 + 1, 1 * 2 + 1), true);
   assert.equal(validateMap(mini(['#######', '#.....#', '#BBDBB#', '#..p..#', '#######'], { doors: [{ at: [3, 2], key: null }] })).ok, true);
   assert.equal(m.doorAxis(3, 2), 'x');
-  assert.equal(validateMap(mini(['#######', '#."...#', '#######'])).ok, false, 'unknown tile still rejected');
+  assert.equal(validateMap(mini(['#######', '#.\\...#', '#######'])).ok, false, 'unknown tile still rejected');
 });
 
 test('entities may stand on pier planks; not on water or brick', () => {

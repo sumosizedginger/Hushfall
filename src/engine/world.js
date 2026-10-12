@@ -4,14 +4,14 @@ import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN, ECHO } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
 import { maybeDrop, updateDrops, trackFired } from './drops.js';
 import { navWaypoint } from './nav.js';
-import { updateSectors, updateTriggers, activateSwitch } from './script.js';
+import { updateSectors, updateTriggers, activateSwitch, choiceHolds } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
 import { spawnPhys, physAt, physBlocks, blastProps, updatePhys, updateShoves, gravInput, gravDrop, rangePhys } from './gravity.js';      // PT-022: the gravity tool and the movable props (nothing here runs on a map without movable props unless the fork is in hand)
@@ -48,12 +48,13 @@ export function arrivalInventory(carry, entry) {
   return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons, ...(carry.upgrades ? { upgrades: carry.upgrades } : {}) };      // the persistent upgrade tiers ride along: they are never part of a map's authored loadout
 }
 
-export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null, ammoScale = null } = {}) {
+export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null, ammoScale = null, choices = null } = {}) {
   carry = arrivalInventory(carry, map.entryLoadout ?? null);
   const diff = DIFFICULTY[difficulty];
   if (!diff) throw new Error('unknown difficulty ' + difficulty);
   const w = {
     ...(ammoScale != null ? { ammoScale } : {}),                        // robustness testing only: a level whose ammo pickups are scaled (a player who wastes shots)
+    ...(choices && Object.keys(choices).length ? { choices: { ...choices } } : {}),                // PT-039: what earlier maps remembered (progress.choices): lazy, a world without any has no field
     v: 1, mapId: map.id, mapVersion: map.version, seed, difficulty, rngState: initialRngState(seed), tick: 0, time: 0,
     status: 'playing',                       // playing | dead | complete
     nextId: 1,
@@ -80,7 +81,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.variant) en.variant = e.variant; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -253,6 +254,7 @@ export function wakeEnemy(w, e, loud, scripted = false) {
 }
 /** Loud noise (gunfire, explosion): idle enemies within `radius` wake if nothing solid is between, or if it is very close. */
 export function noise(w, x, z, radius) {
+  if (w.map.echo !== 1 && radius > ECHO.loud) radius *= w.map.echo;                       // PT-039 (Act B): in a place with an echo a loud noise carries that much further (a quiet one does not)
   if (w.resonators) resonatorsHear(w, x, z, radius);                                       // PT-037: a fork in earshot will ring
   if (w.map.hasSoundlock) w.noise = { t: w.time, x, z };                                   // PT-029: a sound-lock door listens (only a map that has one records this)
   for (const e of w.enemies) {
@@ -1187,7 +1189,7 @@ export function step(w, cmd) {
   if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) {
     updateExplored(w);
     // in-world messages (transmissions, notes): shown once, the first time the player comes within range
-    for (const m of map.messages) if (!w.messagesSeen.includes(m.id) && Math.hypot(p.x - m.x, p.z - m.z) <= m.r) { w.messagesSeen.push(m.id); emit(w, 'message', { id: m.id, speaker: m.speaker || '', text: m.text }); }
+    for (const m of map.messages) if (!w.messagesSeen.includes(m.id) && Math.hypot(p.x - m.x, p.z - m.z) <= m.r && (!m.choice || choiceHolds(w, m.choice))) { w.messagesSeen.push(m.id); emit(w, 'message', { id: m.id, speaker: m.speaker || '', text: m.text }); }
   }          // automap: remember what has been seen
 
   // secrets: found when the player stands in one of the secret's cells

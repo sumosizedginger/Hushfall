@@ -6,6 +6,7 @@
 //   blob(L, cx, cz, rx, rz, { seed, rough, ch, h, lidMid, lidEdge })   a chamber: an ellipse whose edge wanders (rough 0.2 = a cave, 0 = an ellipse), with a domed lid
 //   finger(L, [x0, z0], [x1, z1], { seed, width, wobble, ch, h })       a winding passage that wanders about the straight line and ends exactly on its target; never narrower than two cells
 //   tiers(L, cx, cz, { rx, rz, rings, rise, ramps, seed, rough, ... })  concentric terraces (a bowl, an amphitheatre) going DOWN to the middle, a stair cut through every ring at each ramp angle
+//   amphitheatre(L, cx, cz, { rx, rz, steps, rise, plaza, ... })       a bowl with a flat plaza in the middle and terraces up to a promenade rim, a ramp corridor at each angle (PT-039)
 //   smooth(L, cells, passes)                                            removes one-cell nubs and fills one-cell pits among the cells a call carved (a cave has no wall-hair)
 //   skinWalls(L, solid, wall)                                           the solid cells that touch carved floor take the wall skin
 import { setCell, FLOORS } from './c2.mjs';
@@ -21,6 +22,8 @@ export function ringNoise(seed) {
   return (th) => parts.reduce((s, q) => s + q.a * Math.sin(q.k * th + q.p), 0) / norm;
 }
 
+/** the shortest distance between two angles, 0 to pi (an angle may be any number of turns away: a ramp at 2 pi is a ramp at 0) */
+const angDist = (a, b) => Math.abs(((a - b + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI);
 const solidOf = (L, solid) => solid ?? L.g[0][0];                                   // the map's edge is always solid fill: whatever it is IS the rock
 const inside = (L, x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1;       // never the outermost ring of cells
 const key = (x, z) => x + ',' + z;
@@ -75,11 +78,33 @@ export function tiers(L, cx, cz, { rx, rz, rings = 5, rise = 3, top = 14, ramps 
     const dx = (x + 0.5 - cx) / rx, dz = (z + 0.5 - cz) / rz, d = Math.hypot(dx, dz), th = Math.atan2(dz, dx), edge = 1 + rough * f(th);
     if (d > edge) continue;
     const inward = 1 - d / edge, ring = Math.min(rings - 1, Math.floor(inward * rings));
-    const onRamp = rampAngles.some((a) => { let da = Math.abs(th - a); da = Math.min(da, Math.PI * 2 - da); return da * Math.min(rx, rz) * Math.max(0.15, d) <= rampWidth / 2; });
+    const onRamp = rampAngles.some((a) => { return angDist(th, a) * Math.min(rx, rz) * Math.max(0.15, d) <= rampWidth / 2; });
     const hh = onRamp ? Math.max(0, Math.round(top - rise * rings * inward)) : Math.max(0, top - ring * rise);
     setCell(L, x, z, ch, hh, lid); cells.push([x, z]); H.set(key(x, z), hh); RG.set(key(x, z), ring);
   }
   return { cells, height: (x, z) => H.get(key(x, z)) ?? null, ring: (x, z) => RG.get(key(x, z)) ?? null };
+}
+
+/**
+ * An AMPHITHEATRE (PT-039, Act B): a bowl with a flat PLAZA in the middle (`plaza` = its radius as a fraction of the bowl's) and `steps` terraces of `rise` units (0.5 m) climbing from it to the rim, which wanders (rough). At each of
+ * `ramps` angles a corridor `rampWidth` cells wide climbs smoothly (never steeper than one unit a cell, or it throws) so the whole bowl can be walked; elsewhere the terraces are cliffs, free to drop from and impossible to climb.
+ * The rim is the top terrace (a promenade). Returns { cells, height(x, z), step(x, z) (0 = the plaza), ramp(x, z), top, bottom }.
+ */
+export function amphitheatre(L, cx, cz, { rx, rz, steps = 6, rise = 2, bottom = 8, plaza = 0.4, ramps = 2, rampAt = 0, rampWidth = 3, seed = 1, rough = 0.1, ch = '.', lid = null, solid = null } = {}) {
+  const rock = solidOf(L, solid), f = ringNoise(seed), cells = [], H = new Map(), ST = new Map(), RP = new Set();
+  const top = bottom + steps * rise, rampAngles = Array.from({ length: ramps }, (_, i) => rampAt + (i * Math.PI * 2) / ramps);
+  const R = Math.min(rx, rz) * (1 - rough), slope = (steps * rise) / ((1 - plaza) * R);
+  if (slope > 1 + 1e-9) throw new Error(`amphitheatre: a ramp of ${steps * rise} units over ${((1 - plaza) * R).toFixed(1)} cells is steeper than a step (${slope.toFixed(2)}): fewer steps, a smaller rise, a smaller plaza or a bigger bowl`);
+  for (let z = Math.floor(cz - rz * (1 + rough)) - 1; z <= Math.ceil(cz + rz * (1 + rough)) + 1; z++) for (let x = Math.floor(cx - rx * (1 + rough)) - 1; x <= Math.ceil(cx + rx * (1 + rough)) + 1; x++) {
+    if (!inside(L, x, z) || L.g[z][x] !== rock) continue;
+    const dx = (x + 0.5 - cx) / rx, dz = (z + 0.5 - cz) / rz, d = Math.hypot(dx, dz), th = Math.atan2(dz, dx), edge = 1 + rough * f(th);
+    if (d > edge) continue;
+    const u = d / edge, t = Math.max(0, Math.min(1, (u - plaza) / (1 - plaza)));
+    const onRamp = u > plaza && rampAngles.some((a) => { return angDist(th, a) * Math.min(rx, rz) * Math.max(0.15, d) <= rampWidth / 2; });
+    const st = u <= plaza ? 0 : Math.max(1, Math.ceil(t * steps)), hh = onRamp ? bottom + Math.round(t * steps * rise) : bottom + st * rise;
+    setCell(L, x, z, ch, hh, lid); cells.push([x, z]); H.set(key(x, z), hh); ST.set(key(x, z), st); if (onRamp) RP.add(key(x, z));
+  }
+  return { cells, height: (x, z) => H.get(key(x, z)) ?? null, step: (x, z) => ST.get(key(x, z)) ?? null, ramp: (x, z) => RP.has(key(x, z)), top, bottom };
 }
 
 /**

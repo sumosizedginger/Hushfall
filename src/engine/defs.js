@@ -22,6 +22,10 @@ export const PLAYER = {
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
+/** ECHO (PT-039, Act B; a map's atmosphere.echo): a noise louder than `loud` metres carries `echo` times as far (a shot in the Echo Markets' well); the quiet ones (the arc lamp uncharged, a blow, the fork) carry as they always did: that is the whole of the answer */
+export const ECHO = { loud: 16 };
+/** ENEMY VARIANTS (PT-039, Act B): a map entity (or a `spawn` action) of an ordinary kind may wear a variant: a tint on its rig and nothing else (the Drowned of C2M12 are Tollbearers in the colours the water made of them) */
+export const VARIANTS = { drowned: { name: 'Drowned', tint: 0x6f9a8c } };
 export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, mortar: 32, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
 export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 };
 /** every GUN in one stable order (save sorting, the HUD's list, the next / previous ring); a weapon occupies its place once owned. */
@@ -88,6 +92,16 @@ export const LOOKS = {
   bellwright: { hemi: [0xc89878, 0x2a1a14, 1.5], sun: [0xff8040, 1.4, [-12, 6, -6]], lamp: 1.4, exposure: 1, grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the Bellwright Yard: kiln orange, soot
   ascent: { hemi: [0xe8e0f0, 0x504860, 2.5], sun: [0xfff0d8, 1.8, [-6, 16, -5]], lamp: 1, exposure: 1, grade: GR([0.92, 0.96, 1.1], [1.08, 1.03, 0.9], 0.85), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },              // the Threshold Ascent: high, thin, clear air
   deep: { hemi: [0x40506a, 0x0a0c14, 0.42], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.94, 0.98, 1.12], [1.1, 1.02, 0.9], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },          // PT-038: the Deep Range (dev only): a cave that is dark but for a hand lantern and a few hung ones
+  // ---- Campaign 2, Act B, THE SOUNDING DEEP (PT-039): the Vael under the stone; amber lamps and a lantern are the light ---------------------------------------------------------------------------------------------------------------------------------------
+  deepgate: { hemi: [0x5a6a90, 0x10121e, 1.3], sun: [0x8898c0, 0.3, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.9, 0.96, 1.14], [1.16, 1.04, 0.84], 1.0), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },          // the Sounding Deep Gate: blue-black stone, the city's amber lights far below
+  markets: { hemi: [0xd0b090, 0x2a2018, 1.55], sun: [0xffc890, 0.4, [-8, 12, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.94, 0.9], [1.14, 1.02, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },            // the Echo Markets: warm lamplight on pale wet stone
+  halls: { hemi: [0xa0a8c8, 0x1e2030, 1.6], sun: [0xd0d8ff, 0.5, [-6, 14, -6]], lamp: 1.3, exposure: 1, grade: GR([0.9, 0.96, 1.12], [1.08, 1.0, 0.92], 0.85), shade: { foot: 0.38, ao: 0.42, patch: 0.1 } },                  // the Undercantor Halls: cold marble, bronze, a lit wing and a dim one
+  drowned: { hemi: [0x4a7868, 0x0c1814, 1.15], sun: [0x90e0c0, 0.3, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.84, 1.06, 0.98], [1.0, 1.06, 0.9], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.14 } },              // the Drowned Choir: green-black water, pale shafts
+  ossuary: { hemi: [0x483c34, 0x08080c, 0.38], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.12, 1.02, 0.86], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },           // the Lantern Ossuary: almost black, bone white where the lantern reaches
+  gardens: { hemi: [0x58a888, 0x20184a, 0.95], sun: [0xa0ffd0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.08, 1.02], [1.1, 1.0, 1.04], 1.1), shade: { foot: 0.4, ao: 0.46, patch: 0.12 } },               // the Harmonic Gardens: phosphor green and violet
+  basilica: { hemi: [0x908c90, 0x24201c, 1.4], sun: [0xff9050, 0.6, [-8, 10, -4]], lamp: 1.5, exposure: 1, grade: GR([0.94, 0.94, 0.96], [1.18, 0.98, 0.8], 0.7), shade: { foot: 0.4, ao: 0.46, patch: 0.1 } },               // the Ash Basilica: ash grey, a fire at the altar
+  heart: { hemi: [0xa04a78, 0x1e0818, 1.2], sun: [0xff70b0, 0.4, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05), shade: { foot: 0.42, ao: 0.5, patch: 0.14 } },                // the Sounding Deep Heart: red-violet, a pulse
+  tender: { hemi: [0xc0d8a8, 0x2a3a28, 1.9], sun: [0xffe8b0, 0.9, [-8, 14, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.04, 0.92], [1.08, 1.02, 0.88], 0.95), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },               // the Silent Orchard: soft green-gold, a garden kept by someone
   gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -132,7 +146,8 @@ export const VACUUM = { dps: 2, tick: 0.5 };
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
 export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', N: 'wall_lattice_a', O: 'wall_hull_a', F: 'wall_foundry_a', H: 'wall_throat_a', J: 'wall_glass_a', G: 'wall_dock_a', Q: 'wall_orchard_a', U: 'wall_bark_a', A: 'wall_approach_a', '1': 'wall_stair_a', '2': 'wall_gate_a', '3': 'wall_quiet_a',
-  '!': 'wall_glasscrust_a', '$': 'wall_saltplate_a', '%': 'wall_basalt_a', '*': 'wall_bonecoral_a', '=': 'wall_reliquary_a', '?': 'wall_chitin_a' };      // Campaign 2 Act A (PT-037, recipes_c2a.js): fused glass crust, rusted salt plate, basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin      // Episode 4: glass, dock, orchard, bark, approach, stair, gate, quiet            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+  '!': 'wall_glasscrust_a', '$': 'wall_saltplate_a', '%': 'wall_basalt_a', '*': 'wall_bonecoral_a', '=': 'wall_reliquary_a', '?': 'wall_chitin_a',
+  '[': 'wall_deeprock_a', ']': 'wall_citystone_a', '|': 'wall_marblebronze_a', '}': 'wall_drowned_a', '"': 'wall_ossuary_a', "'": 'wall_ashstone_a', '0': 'wall_heartflesh_a' };      // Campaign 2 Act B (PT-039, recipes_c2b.js): cave rock, city stone, cold marble and bronze, drowned stone, ossuary bone, basilica ash, the heart's membrane;      // Campaign 2 Act A (PT-037, recipes_c2a.js): fused glass crust, rusted salt plate, basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin      // Episode 4: glass, dock, orchard, bark, approach, stair, gate, quiet            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
   t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
@@ -146,6 +161,7 @@ export const FLOOR_SKINS = {
   '4': { kind: 'floor', tex: 'floor_prism_a' }, '5': { kind: 'floor', tex: 'floor_quiet_a' }, x: { kind: 'floor', tex: 'floor_dock_a' }, '6': { kind: 'floor', tex: 'floor_moss_a' }, '7': { kind: 'outdoor', tex: 'floor_moss_a' },
   '8': { kind: 'floor', tex: 'floor_approach_a' }, '9': { kind: 'floor', tex: 'floor_stair_a' }, '&': { kind: 'outdoor', tex: 'floor_stair_a' }, ';': { kind: 'floor', tex: 'floor_gate_a' }, '<': { kind: 'outdoor', tex: 'floor_gate_a' },       // Episode 4 (PT-033): prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
   '(': { kind: 'outdoor', tex: 'floor_glasssand_a' }, ')': { kind: 'floor', tex: 'floor_basaltflag_a' }, '-': { kind: 'outdoor', tex: 'floor_terrace_a' }, ',': { kind: 'outdoor', tex: 'floor_chitin_a' }, '/': { kind: 'floor', tex: 'floor_chitin_a' },       // Campaign 2 Act A (PT-037): glass sand, basalt flags, terrace turf, aqueduct chitin (open and roofed)
+  '{': { kind: 'floor', tex: 'floor_flowstone_a' }, '^': { kind: 'floor', tex: 'floor_marble_a' }, '>': { kind: 'floor', tex: 'floor_flesh_a' }, '@': { kind: 'outdoor', tex: 'floor_flowstone_a' },       // Campaign 2 Act B (PT-039): flowstone, marble, the heart's skin
 };
 
 /**
@@ -328,7 +344,7 @@ export const PROPS = {
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
-export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {}, rib: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
+export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {}, rib: {}, cityface: {}, hangrock: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
 
 /** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
  *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */

@@ -27,7 +27,7 @@ import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
-import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
@@ -215,6 +215,12 @@ export class GameView {
   }
 
   /** PT-027: while the mortar is in hand a ring on the ground says where the shell will land (the sim's own `designate`, so it cannot disagree): a broad ring the size of the blast and a small mark in the middle; amber, dimmer when the minimum range pushed it out */
+  /** a variant of a creature (the Drowned, VARIANTS in defs.js) wears its kind's rig with every material multiplied by the variant's tint; the tinted copies are cached per material and variant (a crowd of fifty shares them) and disposed with the view */
+  tintRig(root, variant) {
+    const tint = new THREE.Color(VARIANTS[variant].tint), cache = (this.tintCache ??= new Map());
+    const tinted = (m) => { if (!m?.color) return m; const k = variant + ':' + m.uuid; let n = cache.get(k); if (!n) { n = m.clone(); n.color.multiply(tint); cache.set(k, n); } return n; };
+    root.traverse((o) => { if (o.material) o.material = Array.isArray(o.material) ? o.material.map(tinted) : tinted(o.material); });
+  }
   updateMortarRing(w) {
     const p = w.player, on = p.weapon === 'mortar' && p.hp > 0 && w.status === 'playing';
     if (!on) { if (this.aimRing) this.aimRing.visible = false; return; }
@@ -264,7 +270,7 @@ export class GameView {
     const seen = new Set();
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
-      if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
+      if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
@@ -486,6 +492,7 @@ this.chimeView?.update(w, this.time);     this.beamView?.update(w, dt, this.time
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
+    for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose();
     this.scene.clear(); this.weaponScene.clear();
   }

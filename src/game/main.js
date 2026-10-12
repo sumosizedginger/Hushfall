@@ -120,7 +120,7 @@ function closeRecord() {
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
-function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) if (e.type === 'message') g.progress = recordAdd(g.progress, g.mapId, e.id); }
+function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') g.progress = recordAdd(g.progress, g.mapId, e.id); else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
@@ -134,7 +134,7 @@ addEventListener('resize', resize);
 function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
-  g.world = world || createWorld(map, { seed, difficulty, carry });
+  g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
   g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
@@ -161,7 +161,7 @@ function completeData() {
 /** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
 function commitProgress() {
   if (!g.nextId || !g.world) return;
-  try { const w = createWorld(MAPS[g.nextId], { seed: g.seed + 1, difficulty: g.difficulty, carry: nextCarry() }); store.write('auto', makeSave(w, 'level-start', { now: Date.now(), progress: g.progress })); }
+  try { const w = createWorld(MAPS[g.nextId], { seed: g.seed + 1, difficulty: g.difficulty, carry: nextCarry(), choices: g.progress?.choices ?? null }); store.write('auto', makeSave(w, 'level-start', { now: Date.now(), progress: g.progress })); }
   catch (e) { g.lockerNote = 'Progress could not be saved: ' + e.message; }
 }
 function buyUpgrade(track) {
