@@ -1,0 +1,74 @@
+[
+{
+"name": "01-start",
+"x": 26.5,
+"z": 54.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-yard",
+"x": 30.5,
+"z": 48.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-kiln-gap",
+"x": 38.5,
+"z": 52.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-kiln-inside",
+"x": 38.5,
+"z": 46.5,
+"yaw": 0,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-furnace",
+"x": 30.5,
+"z": 38.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-south-shed",
+"x": 38.5,
+"z": 54.5,
+"yaw": 3.142,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-tower",
+"x": 24.5,
+"z": 26.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-north-shed",
+"x": 38.5,
+"z": 22.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+}
+]

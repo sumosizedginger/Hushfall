@@ -15,7 +15,7 @@ import { PROPS } from '../src/engine/defs.js';
 import { ROOT } from './helpers.js';
 
 const TOL = 0.02;                                                              // metres: flat quads at a cell's floor height; nothing else is expected between the sim and the mesh
-const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).sort();
+const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).sort().filter((id) => !process.env.FLOOR_MAPS || process.env.FLOOR_MAPS.split(',').includes(id));      // FLOOR_MAPS=C2M05,C2M01 checks just those (the whole set takes about 8 minutes)
 const load = (id) => parseMap(JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', id + '.json'), 'utf8')));
 const stubTex = () => new Proxy({}, { get: () => new THREE.Texture() });
 const OFFSETS = [[0, 0], [0.6, 0.6], [-0.6, 0.6], [0.6, -0.6], [-0.6, -0.6]];  // metres from a cell centre (a cell is 2 m)
@@ -48,7 +48,7 @@ function judgeStatic(map, lv, w, shift = 0) {
 test('the drawn floor is where the sim says it is: every walkable cell of every shipped map (5 samples per cell), within 2 cm', () => {
   let total = 0; const bad = [];
   for (const id of ids) { const map = load(id), w = createWorld(map, { seed: 1 }), lv = buildLevel(map, stubTex()), r = judgeStatic(map, lv, w); total += r.n; bad.push(...r.bad); }
-  assert.ok(total > 5000, `the check must actually sample the maps (${total} samples)`);
+  assert.ok(total > (process.env.FLOOR_MAPS ? 500 : 5000), `the check must actually sample the maps (${total} samples)`);
   assert.equal(bad.length, 0, `${bad.length} of ${total} samples disagree, e.g. ${bad.slice(0, 4).join(' | ')}`);
 });
 

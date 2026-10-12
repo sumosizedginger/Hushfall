@@ -1,0 +1,110 @@
+[
+{
+"name": "01-landing-gate",
+"x": 11.5,
+"z": 28.5,
+"yaw": 1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-landing-door",
+"x": 12.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-beach-rows",
+"x": 19.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-north-dune",
+"x": 30.5,
+"z": 19.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-lagoon",
+"x": 22.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-breach",
+"x": 42.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-hold",
+"x": 48.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-engine",
+"x": 60.5,
+"z": 27.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-deck",
+"x": 66.5,
+"z": 11.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "10-arcade",
+"x": 77.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "11-cleft",
+"x": 82.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "12-camp",
+"x": 21.5,
+"z": 21.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+}
+]

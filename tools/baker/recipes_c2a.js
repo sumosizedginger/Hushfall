@@ -119,8 +119,8 @@ export const recipesC2a = {
   floor_terrace_a: {
     seed: 9513, width: 256, height: 256,
     draw: R((g) => {
-      g.bg('#a89a58'); g.solid(0, 0, 256, 256, '#a89a58');
-      for (let r = 0; r < 8; r++) { const y = r * 32; g.solid(0, y, 256, 26, pick(g, ['#a89a58', '#b4a664', '#9a8c4e'])); g.solid(0, y + 26, 256, 6, '#3c3018'); g.solid(0, y + 24, 256, 2, '#6a5a2a'); }
+      g.bg('#968a58'); g.solid(0, 0, 256, 256, '#968a58');                                                       // PT-037 (after the real-game still): the first draft was eight dark seams a metre, a loud yellow stripe with a moire at distance: four low rows, a soft seam
+      for (let r = 0; r < 4; r++) { const y = r * 64; g.solid(0, y, 256, 58, pick(g, ['#968a58', '#a09460', '#8c8052'])); g.solid(0, y + 58, 256, 6, '#5a4c2c'); g.solid(0, y + 56, 256, 2, '#74663a'); }
       for (let i = 0; i < 150; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); ink(g, x, y, x + g.rnd(-2, 2), y - g.rnd(4, 10), pick(g, ['#d8c878', '#7a8a3c', '#c0ae64', '#5a6a2c']), g.rnd(1, 2), 190); }       // stubble
       for (let i = 0; i < 12; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(14, 40), pick(g, ['#c8b878', '#8a7c42']), 90);
     }),

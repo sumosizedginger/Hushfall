@@ -461,6 +461,34 @@ try {
     await p2.goto('http://localhost:5210/', { waitUntil: 'domcontentloaded', timeout: 0 }); await p2.waitForFunction("!document.getElementById('screen-error').classList.contains('hidden')", { timeout: 60000 }).catch(() => {});
     const msg = await p2.$eval('#error-text', (e) => e.textContent).catch(() => ''); check('with WebGL unavailable the game says so on screen (no inert title)', /WebGL/.test(msg), msg.slice(0, 90)); await b2.close(); }
 
+  // ---- Campaign 2, Act A (PT-037): the pieces the node tests cannot see, what the live page draws against the sim -----------------------------------------------------------------------------------------------------------
+  const mapJson = (id) => page.evaluate(`fetch('/maps/${id}.json').then((r) => r.json())`);
+  // the Record: messages received on three maps are listed by map, in the screen the pause menu opens, found documents counted apart from voices; Back leaves it
+  { const ids = {}; let total = 0; for (const id of ['C1E1M01', 'C2M01', 'C2M03']) { ids[id] = (await mapJson(id)).messages.map((m) => m.id); total += ids[id].length; }
+    await T("t.newGame('normal', 3, { mapId: 'C2M03' })"); await T('t.clearOverlays()'); await T(`t.setup_progress({ record: ${JSON.stringify(ids)} })`);
+    const rec = await T("t.openRecord('pause')"); const closed = await T('t.closeRecord()');
+    check('the Record in the live page: the screen opens, lists every message received (51-ish across three maps), by map, with found documents counted apart, and Back leaves it', rec.screen === 'record' && rec.groups === 3 && rec.entries === total && rec.docs >= 1 && closed.screen !== 'record', `screen ${rec.screen}, groups ${rec.groups}, entries ${rec.entries} of ${total}, documents ${rec.docs}, after Back: ${closed.screen}`); }
+  // the peaceful Vael: a calm one and a fleeing one standing side by side are DRAWN differently (the frill folds when it is afraid), both have a mesh in the scene, and neither is in a fighting state
+  { await T("t.newGame('normal', 3, { mapId: 'C2M03' })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); const p0 = (await T('t.state()')).player;
+    const a = await T(`t.setup_spawnEnemy('vaelfolk', ${p0.x - 1.5}, ${p0.z - 3.5}, 0, 'calm')`), b = await T(`t.setup_spawnEnemy('vaelfolk', ${p0.x + 1.5}, ${p0.z - 3.5}, 0, 'calm')`);
+    await T(`t.setup_enemy(${b}, { state: 'flee' })`); await T('t.tick(3)'); for (let i = 0; i < 6; i++) await T('t.render(0.05)');
+    const bb = await T('t.enemyBounds()'), ea = bb.find((q) => q.id === a), eb = bb.find((q) => q.id === b), w = (q) => q.max[0] - q.min[0], h = (q) => q.max[1] - q.min[1];
+    check('peaceful Vael in the live game: a calm one and a frightened one are both drawn, and the frightened one is drawn differently (its frill folds); neither is chasing', !!ea && !!eb && ea.state === 'calm' && eb.state === 'flee' && (Math.abs(w(ea) - w(eb)) > 0.05 || Math.abs(h(ea) - h(eb)) > 0.05), `calm ${ea && w(ea).toFixed(2)} x ${ea && h(ea).toFixed(2)} (${ea?.state}), afraid ${eb && w(eb).toFixed(2)} x ${eb && h(eb).toFixed(2)} (${eb?.state})`); }
+  // a resonator: a shot beside a fork makes the sim ring it, and the view draws that ring (a pulse the same as the Cantors')
+  { await T("t.newGame('normal', 3, { mapId: 'C2M04' })"); await T('t.setup_clearEnemies(); t.clearOverlays()'); const r = (await mapJson('C2M04')).entities.find((e) => e.kind === 'resonator');
+    await T(`t.setup_teleport(${(r.at[0] + 0.5) * 2}, ${(r.at[1] + 0.5) * 2 + 3.2}, 0); t.setup_player({ pitch: -0.05, hp: 100000 })`); await T('t.tick(3)'); await T('t.render(0.02)'); const quiet = await T('t.foundryProbe()');
+    await T("t.press('fire')"); await T('t.tick(12)'); await T("t.release('fire')"); await T('t.tick(10)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const rung = await T('t.foundryProbe()');
+    check('a fork in the live game: nothing is drawn while it stands quiet, a shot beside it makes the sim ring it and the view draws the ring', quiet.pulses === 0 && rung.pulses > 0 && rung.pulseViews > 0, `quiet: sim rings ${quiet.pulses}; after a shot: sim rings ${rung.pulses}, drawn ${rung.pulseViews}`); }
+  // current: a player who stands still in the first channel of the aqueduct is carried along it by the sim (east, 2.2 m/s on the cell)
+  { await T("t.newGame('normal', 3, { mapId: 'C2M06' })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
+    await T('t.setup_teleport(105, 89, 0); t.setup_player({ pitch: -0.3, hp: 100000 })'); const x0 = (await T('t.state()')).player.x; await T('t.tick(60)'); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const x1 = (await T('t.state()')).player.x;
+    check('current in the live game: standing still in the aqueduct\'s first channel carries the player east by more than a metre in a second', x1 - x0 > 1.0, `x ${x0.toFixed(2)} -> ${x1.toFixed(2)}`); }
+  // a seed (Bellwright Yard): left alone it warns and cracks on the clock, and the bell-bearer that steps out has a mesh in the scene like every other creature
+  { const m7 = await mapJson('C2M07'), crack = m7.triggers.find((t) => t.id === 'crack0'), t0 = Number(crack.when[0].slice(5));
+    await T("t.newGame('normal', 3, { mapId: 'C2M07' })"); await T('t.clearOverlays()'); await T('t.setup_player({ hp: 100000 })'); const n0 = (await T('t.state()')).enemies.length;
+    await T(`t.tick(${Math.round((t0 + 2) * 60)})`); for (let i = 0; i < 3; i++) await T('t.render(0.05)'); const st = await T('t.state()'), bb = await T('t.enemyBounds()'), fresh = st.enemies.filter((e) => !bb.some((q) => q.id === e.id));
+    check('a seed in the live game: left alone it cracks on its clock (one more creature than at the start), and every creature in the sim, the new one too, is drawn', st.enemies.length >= n0 + 1 && fresh.length === 0, `creatures ${n0} -> ${st.enemies.length} at ${t0 + 2} s, without a mesh: ${fresh.length}`); }
+
   // ---- 6. lifecycle: repeated level transitions must not leak GPU resources --------------------------------------------
   await T("t.newGame('normal', 4)"); await T('t.tick(5)'); const g0 = await T('t.gl()');
   for (let i = 0; i < 12; i++) { await T(`t.newGame('normal', ${10 + i})`); await T('t.tick(3)'); }

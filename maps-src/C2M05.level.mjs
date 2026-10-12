@@ -87,7 +87,7 @@ const MAP = {
   secrets: [{ id: 'slab', panel: SEC.panel, cells: SEC.cells }],
   groups: [...CLOSETS.map((c, i) => ({ name: 'cl' + i, rect: [c.nx, c.z, c.nx, c.z] })), { name: 'guard', rect: [26, 8, 33, 14] }],
   entities: [...P.ents, { type: 'switch', id: 'door', at: [15, 14], wall: 'west', once: true, do: [{ message: 'lever' }] }, { type: 'exit', at: GOAL, dest: 'next', locked: true }],
-  scenery: [{ kind: 'rib', at: [29, 70], yaw: 1.5708 }, { kind: 'rib', at: [29, 38], yaw: 1.5708 }, { kind: 'rib', at: [29, 102], yaw: 1.5708 }, { kind: 'spire', at: [8, -10] }, { kind: 'spire', at: [50, -16] }],
+  scenery: [{ kind: 'rib', at: [29.5, 68], yaw: 0, scale: 1.65 }, { kind: 'rib', at: [29.5, 38], yaw: 0, scale: 1.65 }, { kind: 'rib', at: [29.5, 102], yaw: 0, scale: 1.65 }, { kind: 'spire', at: [8, -10] }, { kind: 'spire', at: [50, -16] }],
   messages: msgs,
   triggers: [
     { id: 'guard-down', when: ['dead:guard', 'msg:lever'], do: [{ exit: { set: 'unlock' } }, { message: 'open' }, { objective: 'The door is open: the exit is behind it' }, { shake: 1.5 }] },

@@ -1,0 +1,74 @@
+[
+{
+"name": "01-start",
+"x": 70.5,
+"z": 46.5,
+"yaw": 1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-channel1",
+"x": 52.5,
+"z": 44.5,
+"yaw": 1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-weir",
+"x": 14.5,
+"z": 38.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-channel2",
+"x": 20.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-eastweir",
+"x": 64.5,
+"z": 24.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-top",
+"x": 60.5,
+"z": 13.5,
+"yaw": 1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-siphon",
+"x": 24.5,
+"z": 12.5,
+"yaw": 1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-roofed",
+"x": 50.5,
+"z": 44.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+}
+]

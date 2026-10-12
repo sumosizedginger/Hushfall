@@ -73,6 +73,7 @@ PR('lamppost', 14, 28); PR('lamppost', 14, 25); PR('lamppost', 14, 31);
 // ---- the secret: the south hut's back wall is hollow: a lifeboat buried in the dune with a store (a cache of the camp's, kept) ---------------------------------------------------------------------------------------------------------
 const SEC = { panel: [21, 42], cells: [[20, 43], [21, 43], [22, 43], [20, 44], [21, 44], [22, 44]] };
 { const fl = dune(21, 40); setCell(L, 21, 42, 'S', fl); for (const [x, z] of SEC.cells) setCell(L, x, z, '.', fl, fl + 7); ring(L, '!', (x, z) => ((x >= 18 && x <= 24 && z >= 42 && z <= 46) ? '$' : null));
+  for (const [x, z] of [[23, 43], [23, 44], [23, 45], [20, 45], [21, 45], [22, 45]]) setCell(L, x, z, '$', dune(x, z));     // the dune ran up to the secret's east and south edge: wall it (tests/secrets-sealed.test.js)
   PK('armor_vest', 20, 44); PK('health_large', 22, 44); PK('ammo_shell', 20, 43); PK('ammo_rivet', 22, 43); PK('ammo_flare', 21, 44); }
 const MAP = {
   id: 'C2M01', name: 'Threshold Beach', version: 1, ceilingHeight: 4.2, par: { time: 360 },

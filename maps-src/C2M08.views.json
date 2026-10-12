@@ -1,0 +1,74 @@
+[
+{
+"name": "01-gatehall",
+"x": 20.5,
+"z": 90.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-stair",
+"x": 22.5,
+"z": 82.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-terrace1",
+"x": 30.5,
+"z": 72.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-lift",
+"x": 35.5,
+"z": 66.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-market",
+"x": 36.5,
+"z": 56.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-terrace3",
+"x": 36.5,
+"z": 40.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-summit",
+"x": 36.5,
+"z": 27.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-spire",
+"x": 36.5,
+"z": 23.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]
