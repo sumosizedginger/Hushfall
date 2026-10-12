@@ -87,6 +87,7 @@ export const LOOKS = {
   aqueduct: { hemi: [0x9cc8b4, 0x1e3a34, 2.0], sun: [0xf0ffd8, 1.2, [-8, 14, -6]], lamp: 1, exposure: 1, grade: GR([0.86, 1.06, 1.02], [1.04, 1.04, 0.9], 0.95), shade: { foot: 0.3, ao: 0.38, patch: 0.1 } },             // the Chitin Aqueduct: wet green-white, the water is the light
   bellwright: { hemi: [0xc89878, 0x2a1a14, 1.5], sun: [0xff8040, 1.4, [-12, 6, -6]], lamp: 1.4, exposure: 1, grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the Bellwright Yard: kiln orange, soot
   ascent: { hemi: [0xe8e0f0, 0x504860, 2.5], sun: [0xfff0d8, 1.8, [-6, 16, -5]], lamp: 1, exposure: 1, grade: GR([0.92, 0.96, 1.1], [1.08, 1.03, 0.9], 0.85), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },              // the Threshold Ascent: high, thin, clear air
+  deep: { hemi: [0x40506a, 0x0a0c14, 0.42], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.94, 0.98, 1.12], [1.1, 1.02, 0.9], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },          // PT-038: the Deep Range (dev only): a cave that is dark but for a hand lantern and a few hung ones
   gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
