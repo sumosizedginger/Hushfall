@@ -9,6 +9,7 @@ import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, mak
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 import { makeLighter } from './models_e4.js';
+import { makeFork } from './models_c2.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -85,7 +86,7 @@ export function buildLevel(map, tex) {
 
   const walls = new Map(), floors = new Map(), risers = new Map(), ceil = new Quads(), ceilSteps = new Quads(), fascia = new Quads();
   const bucket = (m, key) => { let q = m.get(key); if (!q) m.set(key, q = new Quads()); return q; };
-  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads() }, wsize = 3000;
+  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads(), '>': new Quads(), '<': new Quads(), '^': new Quads(), v: new Quads() }, wsize = 3000;
   const sporeBed = map.pulses.map(() => new Quads()), sporeMist = map.pulses.map(() => new Quads());      // PT-027: a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js)         // the sea reaches past the fog: no black gap at the horizon from a high vantage
   const sectorQ = map.sectors.map(() => ({ top: new Map(), skirt: new Map() }));
 
@@ -140,6 +141,10 @@ export function buildLevel(map, tex) {
   // wading water and toxic residue: translucent overlays just above the floor (they share the sea texture; the view pulses the toxic one)
   const fxMats = {};
   if (!fxQuads.w.empty) { fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false }); const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w); m.renderOrder = 2; group.add(m); }
+  for (const c of ['>', '<', '^', 'v']) if (!fxQuads[c].empty) {                                                 // PT-037: a current is wading water that flows: its own copy of the sea texture, scrolled along its direction by the view (view.js), tinted greener than still water
+    const t = tex.water_dusk.clone(); t.needsUpdate = true; t.repeat.copy(tex.water_dusk.repeat); fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });
+    const m = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c]); m.renderOrder = 2; group.add(m);
+  }
   if (!fxQuads.x.empty) { fxMats.x = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x3fffc0, transparent: true, opacity: 0.62, depthWrite: false }); const m = new THREE.Mesh(fxQuads.x.geometry(), fxMats.x); m.renderOrder = 2; group.add(m); }
 
   // ceiling beams along x through each interior row run (only where the ceiling height is constant along the run)
@@ -214,6 +219,7 @@ export function buildLevel(map, tex) {
     else if (p.kind === 'lighter') { m = makeLighter(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'organ') { m = makeOrgan(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'vat') { m = makeVat(); m.position.set(p.x, fy, p.z); }
+    else if (p.kind === 'resonator') { m = makeFork(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     else if (p.kind === 'loomstring') { m = makeLoomString(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
     if (m) dressing.add(m);
   }

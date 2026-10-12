@@ -140,6 +140,7 @@ export function soundsForEvent(e) {
     case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
+    case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
     case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
     case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
     case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];

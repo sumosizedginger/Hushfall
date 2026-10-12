@@ -493,6 +493,13 @@ export const SFX = {
     noise(c, out, t + 0.3, { dur: 4.5, a: 1.8, gain: 0.04, type: 'bandpass', f0: 700, f1: 1500, q: 0.8, off: o.r() });
     return 6.5;
   },
+  resonator_ring(c, out, t, o) {                                // a standing fork struck by a noise nowhere near it: a clear ping, then a long pure ring that beats against its own octave
+    tone(c, out, t, { type: 'sine', f0: 523, f1: 523, a: 0.002, d: 2.4, gain: 0.2 });
+    tone(c, out, t, { type: 'sine', f0: 1046 * 1.003, f1: 1046 * 1.003, a: 0.002, d: 1.6, gain: 0.09 });
+    bell(c, out, t, 523, { decay: 0.6, gain: 0.07, ratio: 5.4, index: 0.5 });
+    noise(c, out, t, { dur: 0.05, gain: 0.08, type: 'highpass', f0: 4000, f1: 6000, q: 0.8, off: o.r() });
+    return 2.6;
+  },
   folk_fear(c, out, t, o) {                                     // a Vael civilian startled (PT-037): a thin glass note that jumps and breaks; they cannot sing, only startle
     tone(c, out, t, { type: 'sine', f0: 880, f1: 1480, a: 0.01, d: 0.22, gain: 0.16, vib: 9 });
     tone(c, out, t + 0.1, { type: 'triangle', f0: 1320, f1: 990, a: 0.008, d: 0.2, gain: 0.08, vib: 14 });

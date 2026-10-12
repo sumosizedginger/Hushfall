@@ -26,7 +26,7 @@ import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
-import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
@@ -400,6 +400,7 @@ export class GameView {
     this.beamView?.update(w, dt, this.time); this.sweepView?.update(w, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
     this.ventViews?.forEach((vv) => updateVentView(vv, this.time, dt)); this.loadViews?.forEach((lv, i) => updateLoadView(lv, this.map.loads[i], w.time + alpha * TICK));      // PT-032: the plates breathe, the loads fall on the clock
     this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
+    for (const [c, f] of [['>', [1, 0]], ['<', [-1, 0]], ['^', [0, -1]], ['v', [0, 1]]]) { const m = this.lvl.fxMats[c]; if (m) m.map.offset.set(-f[0] * this.time * FLOW.push / 8, -f[1] * this.time * FLOW.push / 8); }          // PT-037: a current's surface slides the way it pushes (8 m a texture tile)
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
     for (const sw of this.map.switches) { const r = this.lvl.switchViews.get(sw.id); if (!r) continue; const used = w.switchState?.[sw.id]?.used; r.lamp.material.color.setHex(used ? 0x4aff7a : 0xff4a3a); r.lever.rotation.x = used ? -0.5 : 0.4; r.group.position.y = floorAt(w, sw.x, sw.z) + 1.35; }        // a panel on a moving floor rides with it

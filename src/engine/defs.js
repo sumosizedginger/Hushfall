@@ -100,9 +100,12 @@ export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { na
 /** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
 export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
-export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 }, d: { name: 'drift', speed: 1, grip: 0.1 } };      // `d` (PT-033, Episode 4 Batch D): DRIFT, a floor with almost no grip: the body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the speed cap is the walking speed      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
+export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 }, d: { name: 'drift', speed: 1, grip: 0.1 },
+  '>': { name: 'current east', speed: 0.78, water: true, flow: [1, 0] }, '<': { name: 'current west', speed: 0.78, water: true, flow: [-1, 0] }, '^': { name: 'current north', speed: 0.78, water: true, flow: [0, -1] }, 'v': { name: 'current south', speed: 0.78, water: true, flow: [0, 1] } };      // PT-037 (Campaign 2 Act A, E3): CURRENT, wading water that PUSHES (`flow` is the direction: > east, < west, ^ north (-z), v south (+z)), FLOW.push m/s on top of whatever you do, on the player and every awake walker; it conducts the arc lamp like any wading water (`water`)      // `d` (PT-033, Episode 4 Batch D): DRIFT, a floor with almost no grip: the body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the speed cap is the walking speed      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
 /** THE SHIP BREATHES (PT-027, Episode 3 Batch B; src/engine/breath.js): `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing gate never closes on anyone within DOOR.autoCloseClearance */
 export const BREATH = { warn: 1.2, fade: 0.8 };
+/** CURRENT (PT-037, E3): how hard a flowing floor (FX '>' '<' '^' 'v') pushes a body that stands on it, in m/s, added to its own movement (a walker upstream at full speed still gains ground: 6.4 x 0.78 - 2.2 = 2.8 m/s) */
+export const FLOW = { push: 2.2 };
 /**
  * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
  * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.
@@ -304,12 +307,16 @@ export const PROPS = {
   emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
   receiver: { radius: 0.62, blocksCell: true },          // lit while a beam enters its cell
   // Episode 4, Batch C (PT-033): the dock's furniture
+  resonator: { radius: 0.4, blocksCell: false },        // PT-037 (Campaign 2, resonator.js): a standing tuning-fork: it rings at a noise and calls what sleeps
   lighter: { radius: 1.6, blocksCell: true, blocksSight: false },    // a Vael shuttle on its struts: a wall of hull to walk round and take cover behind (rounds stop on it, creatures see over it)
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
 export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {} };
 
+/** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
+ *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */
+export const RESONATOR = { hear: 0.6, delay: 0.2, cooldown: 3, lure: 18, chain: 9, pulse: { speed: 9, maxR: 7, width: 1.1, damage: 5 } };
 export const DOOR = { speed: 1.5, passableAt: 0.85, holdOpen: 5, autoCloseClearance: 1.3 };
 export const FACING = { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI };
 

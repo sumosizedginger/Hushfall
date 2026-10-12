@@ -1,7 +1,7 @@
 // Where the world remembers (PT-021 step 2, "nothing sticks: no blood, scorch, body, drag mark or growth crossing a wall"). PURE: a sim event (or a map's own list) in, a list of decal SPECS out; decals.js draws them. Nothing here
 // touches the simulation or is saved: the marks are the view's memory of what the events said, so a loaded save starts clean and the map's own marks (what was there before you arrived) come back.
 // A spec is { ring, cell, pos: [x, y, z], n: [nx, ny, nz], w, h, rot, tint, a, grow } in world metres; `cell` indexes the 4 x 4 `decals_atlas` (DECALS in defs.js names them).
-import { DECALS } from '../engine/defs.js';
+import { DECALS, FX } from '../engine/defs.js';
 
 /** the smear and the drip are painted neutral in the atlas and coloured here */
 const TINT = { blood: [0.62, 0.1, 0.08], ichor: [0.14, 0.8, 0.66] };
@@ -13,7 +13,7 @@ export function floorSpot(map, x, z, lift = 0.014) {
   const S = map.cell, cx = Math.floor(x / S), cz = Math.floor(z / S), k = map.kind(cx, cz);
   if (k === 'wall' || k === 'water') return null;
   if (map.sectorAt(cx, cz) >= 0) return null;
-  const fx = map.fx(cx, cz); if (fx === 'w' || fx === 'x' || fx === 'h') return null;
+  const fx = map.fx(cx, cz); if (fx === 'w' || fx === 'x' || fx === 'h' || FX[fx]?.flow) return null;                     // (a current is water: PT-037)
   return { pos: [x, map.floor(cx, cz) + lift, z], n: [0, 1, 0] };
 }
 

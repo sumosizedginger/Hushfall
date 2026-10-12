@@ -3,7 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -19,7 +19,8 @@ import { sawStep } from './saw.js';                                             
 import { traceBeams, nextRot } from './beams.js';                                                                    // PT-033: the Mirror Array's light (lazy state: only a map with an emitter has `w.mirrors` and `w.beams`)
 import { lockBusy, inVacuum } from './airlock.js';                                                                    // PT-033: airlocks and vacuum (lazy: only a map that has them uses them)
 import { sweepStep } from './sweep.js';                                                                              // PT-033: the Gate Warden's sweep
-import { folkStep, folkHears, frighten } from './folk.js';                                                            // PT-037: the Vael civilians (peaceful: states 'calm' and 'flee', never 'idle' or 'chase')
+import { folkStep, folkHears, frighten } from './folk.js';
+import { makeResonators, resonatorsHear, updateResonators } from './resonator.js';                                   // PT-037: the standing forks (lazy: only a map with a resonator prop has `w.resonators`)                                                            // PT-037: the Vael civilians (peaceful: states 'calm' and 'flee', never 'idle' or 'chase')
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -86,6 +87,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
+  if (map.props.some((p) => p.kind === 'resonator')) w.resonators = makeResonators(map);            // PT-037 (resonator.js)
   if (map.emitters.length) { w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
   return w;
 }
@@ -153,6 +155,10 @@ export function tryMove(w, o, dx, dz, r) {
   }
   o.y = groundAt(w, o.x, o.z, r);
 }
+/** wading water or a current: what the arc lamp conducts through (PT-037: a current is water that moves) */
+function inWater(w, x, z) { const c = fxAt(w, x, z); return c === 'w' || !!(c && FX[c]?.water); }
+/** PT-037 (E3): a flowing floor pushes whoever stands on it, FLOW.push m/s, on top of their own movement */
+function flowPush(w, o, r, dt) { const c = fxAt(w, o.x, o.z), f = c && FX[c]?.flow; if (f) tryMove(w, o, f[0] * FLOW.push * dt, f[1] * FLOW.push * dt, r); }
 export function hasLOS(w, x0, z0, x1, z1) {
   const S = w.map.cell, d = Math.hypot(x1 - x0, z1 - z0), n = Math.ceil(d / 0.4), flat = w.map.flat && w.map.sectors.length === 0;
   const ya = flat ? 0 : floorAt(w, x0, z0) + 1.4, yb = flat ? 0 : floorAt(w, x1, z1) + 1.4;                     // eye line from head to head; a ledge above it blocks the view, a step below it does not
@@ -212,6 +218,7 @@ export function wakeEnemy(w, e, loud, scripted = false) {
 }
 /** Loud noise (gunfire, explosion): idle enemies within `radius` wake if nothing solid is between, or if it is very close. */
 export function noise(w, x, z, radius) {
+  if (w.resonators) resonatorsHear(w, x, z, radius);                                       // PT-037: a fork in earshot will ring
   if (w.map.hasSoundlock) w.noise = { t: w.time, x, z };                                   // PT-029: a sound-lock door listens (only a map that has one records this)
   for (const e of w.enemies) {
     if (e.state === 'calm' || e.state === 'flee') { folkHears(w, e, x, z, radius); continue; }          // PT-037: a peaceful creature runs from it instead of waking
@@ -443,9 +450,9 @@ function fireArc(w, def, f = 0) {
   // water: a struck body standing in wading water conducts the shock to everything else standing in that water
   let conducted = 0;
   for (const [e] of [...struck]) {
-    if (fxAt(w, e.x, e.z) !== 'w' || ENEMIES[e.kind].flying) continue;
+    if (!inWater(w, e.x, e.z) || ENEMIES[e.kind].flying) continue;
     for (const o of w.enemies) {
-      if (conducted >= W.max) break; if (o.state === 'dead' || hit.has(o) || ENEMIES[o.kind].flying || fxAt(w, o.x, o.z) !== 'w' || Math.hypot(o.x - e.x, o.z - e.z) > W.r) continue;
+      if (conducted >= W.max) break; if (o.state === 'dead' || hit.has(o) || ENEMIES[o.kind].flying || !inWater(w, o.x, o.z) || Math.hypot(o.x - e.x, o.z - e.z) > W.r) continue;
       hit.add(o); struck.push([o, base * W.mult]); paths.push([arcPoint(e), arcPoint(o)]); conducted++;
     }
   }
@@ -924,6 +931,7 @@ function updateEnemy(w, e, diff, dt) {
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
   if (def.spawner && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
   if (def.node) return;
+  if (w.map.hasCurrent && e.state !== 'idle' && !def.flying && !e.hold && def.speed > 0) flowPush(w, e, def.radius, dt);          // PT-037: a walker in a current is carried by it (a sleeper is not: it lies where the map put it)
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
   if (def.peaceful) { folkStep(w, e, def, dt); return; }                                 // PT-037: it never fights: it wanders, watches, and runs (folk.js)
@@ -1025,6 +1033,7 @@ export function step(w, cmd) {
     const ag = fxc && FX[fxc].grip != null ? a * FX[fxc].grip : a;                                              // PT-033: a drift floor has almost no grip (FX.d): the same pull, a tenth of the rate
     p.vx += ((fx * sf * fwdSpeed + rx * sx * speed) - p.vx) * ag; p.vz += ((fz * sf * fwdSpeed + rz * sx * speed) - p.vz) * ag;
     tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);
+    if (w.map.hasCurrent) flowPush(w, p, PLAYER.radius, dt);                                                         // PT-037: the current carries you
     if (w.map.vents.length || w.map.hasVoid) groundAir(w, p, dt);
   }
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
@@ -1095,7 +1104,7 @@ export function step(w, cmd) {
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
-  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.tears) updateTears(w, dt);
+  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {

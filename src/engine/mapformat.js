@@ -32,6 +32,7 @@ export class MapData {
     this.h = this.tiles.length; this.w = this.tiles[0].length;
     this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null, interlock: d.interlock ?? null, startOpen: !!d.open }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
+    this.hasCurrent = !!this.fxRows && this.fxRows.some((r) => /[<>^v]/.test(r));          // PT-037 (E3): a flowing floor somewhere in the map
     this.hasVoid = src.grid.some((r) => r.includes('_'));                                  // PT-032: a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
     this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
     this.vents = (src.vents || []).map((v) => ({ at: v.at, to: v.to, time: v.time, g: v.g ?? null }));      // PT-032: launch plates (LOWG in defs.js)
