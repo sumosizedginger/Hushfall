@@ -1,9 +1,9 @@
 {
-  "when": "2026-10-12T04:59:11.769Z",
-  "commit": "faad1c1",
+  "when": "2026-10-12T17:04:32.219Z",
+  "commit": "f36e3b4",
   "sources": {
-    "engine": "5d9d43f174885290",
-    "render": "a7bfd5b9ac8690f1",
+    "engine": "8d3a080492f423a0",
+    "render": "594f4d9aaa15bf15",
     "game": "6b2753c1a380e7b8",
     "audio": "d2ac93bcf8ca82ff",
     "assets": "36a05690b34657ef"
@@ -42,12 +42,12 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.971, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.974, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.167, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.164, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -1969,7 +1969,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.971
+        "r": 2.974
       },
       "farthestBodyCornerFromShieldCentre": 2.846,
       "ring": [
@@ -2039,7 +2039,7 @@
         "x": 87,
         "y": 2.2,
         "z": 27,
-        "r": 3.167
+        "r": 3.164
       },
       "farthestBodyCornerFromShieldCentre": 3.188,
       "ring": [

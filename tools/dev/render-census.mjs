@@ -47,7 +47,7 @@ function vantage(m, ex, ez, dist = 5) {
 export async function runRenderCensus({ T, root, check, shot = null, log = console.log, only = null }) {
   const defs = await import(pathToFileURL(path.join(root, 'src/engine/defs.js')).href), { ENEMIES } = defs;
   const { parseMap } = await import(pathToFileURL(path.join(root, 'src/engine/mapformat.js')).href);
-  const allIds = fs.readdirSync(path.join(root, 'maps')).filter((f) => /^C\dE\d[MS]\d\d\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
+  const allIds = fs.readdirSync(path.join(root, 'maps')).filter((f) => /^C\d(E\d)?[MS]\d\d\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
   const mapIds = only ? allIds.filter((i) => only.includes(i)) : allIds;           // `only`: one map (or a few) checked on their own; the campaign-wide coverage rules below then do not apply
   const rows = async () => T('t.enemyBounds()');
   const report = { band: GROUND_BAND, maps: {}, movingFloors: [], cantor: null, graftmother: null, shots: [] };
