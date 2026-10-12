@@ -92,3 +92,9 @@ test('it is a creature the sim can save and the shell can read: a hit volume and
   const d = ENEMIES.vaelfolk; for (const k of ['hp', 'speed', 'gait', 'radius', 'height', 'sight', 'turnRate']) assert.ok(Number.isFinite(d[k]) && d[k] > 0, k);
   assert.equal(TICK, 1 / 60);
 });
+
+test('a civilian put to flee with no sound to flee from has a real yaw and a real place (it was once NaN, and a NaN rig is not drawn at all)', () => {
+  const w = world(), e = folk(w); e.state = 'flee';
+  run(w, 90);
+  assert.ok(Number.isFinite(e.yaw) && Number.isFinite(e.x) && Number.isFinite(e.z) && Number.isFinite(e.walk), `yaw ${e.yaw}, x ${e.x}, z ${e.z}, walk ${e.walk}`);
+});

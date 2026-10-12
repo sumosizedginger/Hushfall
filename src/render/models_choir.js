@@ -779,8 +779,8 @@ export function vaelfolk(tex) {
     J.legAM.rotation.x = 0.7 + Math.max(0, K(ph)) * 0.7 * w; J.legBM.rotation.x = 0.7 + Math.max(0, -K(ph)) * 0.7 * w;
     J.hips.position.y = 0.96 - 0.02 + Math.abs(S(ph)) * 0.04 * w - 0.6 * d;
     J.spine.rotation.x = 0.1 + 0.2 * run + S(t * 1.1) * 0.02; J.spine.rotation.y = -S(ph) * 0.1 * w;
-    const calmA = -0.18, calmB = -0.7, flA = -S(ph) * 0.9 * w - 0.25, flB = -0.5 - Math.max(0, S(ph + 1)) * 0.5 * w;                          // calm: the hands folded over the belly; running: the arms pump
-    J.armA.rotation.x = calmA + (flA - calmA) * run; J.armB.rotation.x = calmA + (-flA - 0.5 - calmA) * run; J.armA.rotation.z = -0.78 + 0.66 * run; J.armB.rotation.z = 0.78 - 0.66 * run;                                                  // calm: the arms held out from the body, hands open (a person with nothing to hide); running: tucked in
+    const calmA = -0.18, calmB = -0.95, flA = -S(ph) * 0.9 * w - 0.25, flB = -0.5 - Math.max(0, S(ph + 1)) * 0.5 * w;                          // calm: the hands folded over the belly; running: the arms pump
+    J.armA.rotation.x = calmA + (flA - calmA) * run; J.armB.rotation.x = calmA + (-flA - 0.5 - calmA) * run; J.armA.rotation.z = -0.66 + 0.54 * run - S(t * 0.9) * 0.05 * (1 - run); J.armB.rotation.z = 0.66 - 0.54 * run + S(t * 0.9 + 1.7) * 0.05 * (1 - run);                                                  // calm: the arms held out from the body, hands open (a person with nothing to hide); running: tucked in
     J.armAM.rotation.x = calmB + (flB - calmB) * run; J.armBM.rotation.x = calmB + (flB - calmB) * run;
     J.neck.rotation.x = 0.05 + 0.15 * fear; J.head.rotation.x = 0.1 - 0.2 * fear + S(t * 0.8) * 0.03; J.head.rotation.z = S(t * 0.6) * 0.05;
     const open = (1 - 0.8 * fear) * (1 - 0.5 * d) + 0.025 * S(t * 2.2) * (1 - fear);                                                           // the fan stands open, breathing, and folds when it is afraid

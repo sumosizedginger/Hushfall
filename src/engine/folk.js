@@ -28,6 +28,7 @@ export function folkStep(w, e, def, dt) {
   e.homeX ??= e.x; e.homeZ ??= e.z;
   const turnTo = (a, rate) => { const d = wrap(a - e.yaw); e.yaw += Math.max(-rate * dt, Math.min(rate * dt, d)); return Math.abs(d); };
   if (e.state === 'flee') {
+    e.fearX ??= e.x; e.fearZ ??= e.z - 1; e.fearT ??= FOLK.fearT;                                                  // (a creature put to flee by hand, with no sound to flee from, once got a yaw of NaN and was not drawn at all)
     e.fearT -= dt;
     if (e.fearT <= 0) { e.state = 'calm'; e.homeX = e.x; e.homeZ = e.z; e.goX = undefined; return; }          // it settles where it ended up
     const away = Math.atan2(e.x - e.fearX, e.z - e.fearZ), clear = (a) => moveClear(w, e.x, e.z, e.x + Math.sin(a) * 1.4, e.z + Math.cos(a) * 1.4, def.radius);

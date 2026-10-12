@@ -63,7 +63,7 @@ if (want.has('folk')) {
   await stand(fx, fz, 4.5, -0.12, 0); await shot('folk-1-cage');
   const s0 = (await T('t.state()')).player;
   await T(`t.setup_teleport(${s0.x}, ${s0.z}, 0); t.setup_player({ pitch: -0.08, hp: 100000 })`);
-  const a = await T(`t.setup_spawnEnemy('vaelfolk', ${s0.x - 1.1}, ${s0.z - 3.4}, 0, 'calm')`), b = await T(`t.setup_spawnEnemy('vaelfolk', ${s0.x + 1.1}, ${s0.z - 3.4}, 0, 'flee')`);
+  const a = await T(`t.setup_spawnEnemy('vaelfolk', ${s0.x - 1.1}, ${s0.z - 3.4}, 0, 'calm')`), b = await T(`t.setup_spawnEnemy('vaelfolk', ${s0.x + 1.1}, ${s0.z - 3.4}, 0, 'calm')`); await T(`t.setup_enemy(${b}, { state: 'flee', fearT: 6, fearX: ${s0.x}, fearZ: ${s0.z} })`);
   await T('t.tick(4)'); for (let i = 0; i < 4; i++) await T('t.render(0.03)'); R.probes.folk = { calm: a, afraid: b }; await shot('folk-2-calm-and-afraid');
 }
 
