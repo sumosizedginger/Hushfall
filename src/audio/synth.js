@@ -517,6 +517,32 @@ export const SFX = {
     bell(c, out, t, 123, { decay: 1.6, gain: 0.14, ratio: 2.76, index: 0.8 });
     return 2.0;
   },
+  // --- Campaign 2, Act B (PT-038): the Zealot ---
+  zealot_alert(c, out, t, o) {                                  // a Songkeeper sees you: one flat bell note, a breath, and a short rising call, like a sentry's challenge
+    bell(c, out, t, 196, { decay: 0.9, gain: 0.12, ratio: 2.4, index: 0.6 });
+    tone(c, out, t + 0.25, { type: 'sawtooth', f0: 260, f1: 392, a: 0.03, d: 0.4, gain: 0.14, lp: 1500, vib: 5 });
+    noise(c, out, t + 0.2, { dur: 0.25, gain: 0.06, type: 'bandpass', f0: 1800, f1: 1200, q: 2, off: o.r() });
+    return 1.1;
+  },
+  zealot_draw(c, out, t, o) {                                   // the lance drawn back: a long hiss of cloth on bone and the small bell at its tip shaking once
+    noise(c, out, t, { dur: 0.5, a: 0.18, gain: 0.14, type: 'bandpass', f0: 900, f1: 2400, q: 1.6, off: o.r() });
+    bell(c, out, t + 0.1, 880, { decay: 0.25, gain: 0.07, ratio: 3.1, index: 0.4 });
+    return 0.6;
+  },
+  graft_hit(c, out, t, o) {                                     // the lance lands and the graft bites: a dull blow, a bronze sting that bends down, a thin drone that lasts as long as the slow
+    thump(c, out, t, 140, 50, 0.3, 0.3);
+    tone(c, out, t + 0.02, { type: 'sawtooth', f0: 1400, f1: 420, a: 0.004, d: 0.3, gain: 0.14, lp: 2400 });
+    bell(c, out, t + 0.04, 311, { decay: 0.7, gain: 0.09, ratio: 2.76, index: 0.8 });
+    tone(c, out, t + 0.3, { type: 'sine', f0: 118, f1: 100, a: 0.2, d: 1.8, gain: 0.07, vib: 4 });
+    return 2.2;
+  },
+  zealot_die(c, out, t, o) {                                    // plate on stone and the lance letting go: a clatter, a falling groan, the bell at the tip rolling out
+    noise(c, out, t, { dur: 0.5, a: 0.004, gain: 0.26, type: 'highpass', f0: 1600, f1: 700, off: o.r() });
+    tone(c, out, t + 0.04, { type: 'sawtooth', f0: 210, f1: 62, a: 0.03, d: 0.7, gain: 0.18, lp: 700, vib: 3 });
+    thump(c, out, t + 0.3, 100, 36, 0.35, 0.45);
+    bell(c, out, t + 0.5, 698, { decay: 0.5, gain: 0.07, ratio: 3.1, index: 0.4 });
+    return 1.3;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

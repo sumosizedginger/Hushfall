@@ -84,23 +84,23 @@
   "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCffffffffffffC#",
   "#####################fff#######################CffffffffffffC#",
   "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC###############",
-  "###fff########################################################",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCCCCCCCCCCCCCC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCffffffffffffC#",
+  "###fff#########################################CCCCCCCCCCCCCC#",
   "#CCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
   "#C::::::::::::::::::::::::::::::::::::::::::::CC::::::::::::C#",
   "#C::::::::::::________________::::::::::::::::CC::::::::::::C#",
@@ -812,6 +812,16 @@
   {
    "type": "prop",
    "kind": "lamp",
+   "at": [52, 77]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [56, 77]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
    "at": [8, 86]
   },
   {
@@ -823,6 +833,16 @@
    "type": "prop",
    "kind": "lamp",
    "at": [36, 86]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 87]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [56, 87]
   },
   {
    "type": "prop",
@@ -2173,6 +2193,38 @@
   },
   {
    "type": "enemy",
+   "kind": "zealot",
+   "at": [51, 78],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [56, 78],
+   "facing": 3.141592653589793,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [51, 85],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [56, 85],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
    "kind": "tollbearer",
    "at": [51, 59],
    "facing": 1.5707963267948966,
@@ -2361,6 +2413,13 @@
    "radius": 6,
    "speaker": "RANGE",
    "text": "CURRENT: the channel pushes east and conducts the arc. FORKS to the south: fire a rifle and they ring and wake the two sleepers; a blow or the arc is heard from less far."
+  },
+  {
+   "id": "zealotyard",
+   "at": [52, 82],
+   "radius": 6,
+   "speaker": "RANGE",
+   "text": "SONGKEEPER YARD: a Zealot thrusts from 3.5 m after the lance dips and lunges across a gap. A hit GRAFTS: you walk slower for three seconds. Two sponges, two swingers."
   },
   {
    "id": "vael",

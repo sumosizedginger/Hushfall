@@ -288,6 +288,18 @@ const KINDS = {
       mouth: cell({ base: '#2a1c1e' }),
     },
   },
+  zealot: {                          // PT-038: tempered bronze plate edged with verdigris, black-iron lames, an oxblood hood and cord, a bone lance bound in red: the Songkeeper under arms (the civilians are milk-glass and amber)
+    seed: 3801, cells: {
+      skin: SKIN('#c4bcb8', '#7c7478', '#6a4a58', '#3e383c'),
+      hood: cell({ grad: ['#7a2a30', '#34100f'], marks: [{ col: '#14060a', wt: 1.8, n: 6, dir: 'v', len: [18, 44] }, { kind: 'cpencil', col: '#b4585a', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }], blots: [{ cols: ['#5a1c22', '#8a3a3c'], n: 3, r: [6, 11], a: 140 }] }),
+      hoodDk: cell({ grad: ['#44161a', '#12060a'], marks: [{ col: '#060204', wt: 1.7, n: 6, dir: 'v', len: [16, 40] }, { col: '#8a3a3c', wt: 1.1, n: 3, dir: 'v', len: [8, 14] }] }),
+      plate: cell({ grad: ['#d6a04e', '#93602a'], blots: [{ cols: ['#6f9a7c', '#4e7a64'], n: 4, r: [3, 7], a: 210 }], marks: [{ col: '#4a2a0c', wt: 1.8, n: 3, dir: 'h' }, { col: '#f6d08a', wt: 1.2, n: 4, dir: 'v', len: [8, 18] }], extra: (g, X, Y) => { g.noStroke(); g.fill('#3a2208', 200); for (const [x, y] of [[10, 10], [54, 10], [10, 54], [54, 54]]) g.circle(X + x, Y + y, 3); } }),
+      plateDk: cell({ grad: ['#3c3a40', '#121216'], marks: [{ col: '#08080a', wt: 1.7, n: 4, dir: 'h' }, { col: '#8a7a58', wt: 1.1, n: 4, dir: 'v', len: [6, 14] }], extra: (g, X, Y) => { g.noStroke(); g.fill('#a89868', 220); for (const [x, y] of [[8, 8], [56, 8]]) g.circle(X + x, Y + y, 2.6); } }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), bone: BONE(0.04), iron: IRON('#3e4048', '#16171b'),
+      cord: cell({ grad: ['#b83a38', '#5a1414'], marks: [{ col: '#2a0808', wt: 1.7, n: 5, dir: 'h' }, { col: '#f0968a', wt: 1.1, n: 3, dir: 'v', len: [6, 14] }] }),
+      mouth: MOUTH('#2a0c12'),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

@@ -3,7 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -207,7 +207,14 @@ function strikePlayer(w, e, dmg, heavy = false) {
       emit(w, 'block', { x: e.x, z: e.z }); hurtPlayer(w, Math.max(1, Math.round(dmg * GUARD.block))); return 'block';
     }
   }
-  hurtPlayer(w, dmg); return 'hit';
+  hurtPlayer(w, dmg); graftPlayer(w, e); return 'hit';
+}
+
+/** a Zealot's lance that lands GRAFTS (PT-038): `p.graftT` is lazy state, set only here; it slows the walk (the speed line in updatePlayer) and counts down with the clock */
+function graftPlayer(w, e) {
+  const g = ENEMIES[e.kind].graft, p = w.player; if (!g || p.hp <= 0) return;
+  if (!(p.graftT > 0)) emit(w, 'graft', { x: p.x, z: p.z });
+  p.graftT = g.time;
 }
 
 /** Wake an enemy (idle -> chase) remembering where the player is; enemies near the one that woke are alerted too. */
@@ -1006,7 +1013,7 @@ function lockQueued(w, d) {
 export function step(w, cmd) {
   if (w.status !== 'playing') return;
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
-  w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt);
+  w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
   updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
@@ -1027,7 +1034,7 @@ export function step(w, cmd) {
   p.recover = Math.max(0, p.recover - dt);
   p.ads = clamp(p.ads + (aimHeld ? 1 : -1) * dt / PLAYER.adsTime, 0, 1);
   p.sprint = clamp(p.sprint + (p.sprinting ? 1 : -1) * dt / PLAYER.sprintBlendTime, 0, 1);
-  const fxc = fxAt(w, p.x, p.z) ?? (w.patches?.length ? patchAt(w, p.x, p.z) : null), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
+  const fxc = fxAt(w, p.x, p.z) ?? (w.patches?.length ? patchAt(w, p.x, p.z) : null), speed = PLAYER.speed * fxSpeed(fxc) * (1 - (1 - PLAYER.adsMoveMult) * p.ads) * (1 - 0.3 * p.guard) * (p.graftT > 0 ? 1 - GRAFT.slow : 1) * (p.saw && WEAPONS[p.weapon].saw ? 1 - WEAPONS[p.weapon].saw.slow * p.saw.spin : 1), fwdSpeed = speed * (p.sprinting ? PLAYER.sprintMult : 1);
   if (p.air) airMove(w, p, sx, sf, fx, fz, rx, rz, dt);                                                  // PT-032: a vent has thrown the player: low gravity, a little steering
   else {
     const ag = fxc && FX[fxc].grip != null ? a * FX[fxc].grip : a;                                              // PT-033: a drift floor has almost no grip (FX.d): the same pull, a tenth of the rate

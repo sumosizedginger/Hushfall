@@ -419,3 +419,10 @@ export const FOLK = {
   innocentCost: 0.1,        // rank score lost per innocent harmed (src/engine/progress.js rankFor), at most `innocentMax` in all
   innocentMax: 0.4,
 };
+
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md): THE ZEALOT ---------------------------------------------------------------------------------------------------------------------------------------
+// A Songkeeper under arms: a tall hooded Vael in bronze plate with a long bone lance (a bell at its tip). It keeps a lance's distance and THRUSTS (`attack.reach` 3.5 m, the dip of the lance is the tell) and lunges
+// across a gap (the Gaunt's dash, with a point on it). A hit GRAFTS (`graft`): the damage of the blow and `time` seconds of `GRAFT.slow` off the player's walking speed, a bronze sting. Hard to stagger (`poise`).
+ENEMIES.zealot = { name: 'Zealot', poise: 2.2, hp: 110, speed: 2.3, gait: 7, radius: 0.42, height: 2.3, hitRadius: 0.62, hitForward: 0, sight: 32, turnRate: 3.4,
+  attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 }, lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 }, graft: { time: 3 } };
+export const GRAFT = { slow: 0.38 };                     // the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)
