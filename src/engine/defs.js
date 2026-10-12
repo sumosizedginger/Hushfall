@@ -323,7 +323,7 @@ export const PROPS = {
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
-export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {} };
+export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
 
 /** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
  *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */

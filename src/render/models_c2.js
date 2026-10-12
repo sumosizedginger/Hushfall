@@ -14,3 +14,21 @@ export function makeFork() {
   const bead = new THREE.Mesh(new THREE.SphereGeometry(0.075, 6, 5), glass); bead.position.set(0, 1.04, 0); g.add(bead);
   return g;
 }
+
+/** the Gate seen from the shore of Anselm-Nine (scenery, 21 m tall, its feet in the water): a ring of old gold on two black stone pylons, a thinner ring of white light inside it, and a pale disc between them, dim now: the door has shut. Faces +z (it is seen from the east). */
+export function makeGateArch() {
+  const g = new THREE.Group(), gold = lam({ color: 0xd8b062, emissive: 0x4a3410 }), black = lam({ color: 0x0e0c12 }), light = bas({ color: 0xfff0cc }), disc = new THREE.MeshBasicMaterial({ color: 0xd8c8a0, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(10, 0.9, 8, 44), gold); ring.position.y = 10.4; g.add(ring);
+  const inner = new THREE.Mesh(new THREE.TorusGeometry(9.1, 0.14, 4, 44), light); inner.position.y = 10.4; g.add(inner);
+  const d = new THREE.Mesh(new THREE.CircleGeometry(9.1, 36), disc); d.position.y = 10.4; g.add(d);
+  for (const s of [-1, 1]) { g.add(box(2.4, 6, 2.4, black, s * 9.2, 3, 0)); g.add(box(1.2, 3, 1.2, gold, s * 9.2, 6.8, 0)); }
+  for (let i = 0; i < 9; i++) { const a = -0.9 + i * 0.225 + 1.35, rib = box(0.35, 3.4, 0.35, black, Math.cos(a) * 11.1, 10.4 + Math.sin(a) * 11.1, 0); rib.rotation.z = a - Math.PI / 2; g.add(rib); }        // ribs standing out of the ring's crown
+  return g;
+}
+/** a Vael spire seen far off (scenery): a pale needle of glass on a dark foot, 30 m tall, with a bright bead near its tip */
+export function makeSpire() {
+  const g = new THREE.Group(), glass = lam({ color: 0xcfdcd8, emissive: 0x1a2220 }), dark = lam({ color: 0x2a2030 }), bead = bas({ color: 0xffe7b0 });
+  g.add(cyl(0.9, 2.2, 3, 6, dark, 0, 1.5, 0)); g.add(cyl(0.1, 0.8, 27, 5, glass, 0, 16.5, 0));
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.4, 5, 4), bead); b.position.y = 28.6; g.add(b);
+  return g;
+}
