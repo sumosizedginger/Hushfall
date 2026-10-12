@@ -820,6 +820,94 @@
       "transparent": false,
       "sha256": "f7f64fd9c6e95e72f70311b9f005f5bde6eb88d122456f086a953014f195813b",
       "bytes": 67651
+    },
+    "wall_glasscrust_a": {
+      "seed": 9501,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f033dafee0c8ea4f2949814315a7c10ded8b569a15d97794341c6b7a34c0b2ef",
+      "bytes": 27086
+    },
+    "wall_saltplate_a": {
+      "seed": 9502,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c82cd1e6278b950c8419d21cfbeb47785975074c6cfe345c4a7c13a9d1ce3736",
+      "bytes": 16122
+    },
+    "wall_basalt_a": {
+      "seed": 9503,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "726b7cc2941a8c41c9cf738826a37fccb5c5ce738b2489d6468b051fadbba9ce",
+      "bytes": 9308
+    },
+    "wall_bonecoral_a": {
+      "seed": 9504,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "9d7c68b859ad6f4a495f9fb1e60e06feb893ea65733c3f049ec147d487a79c15",
+      "bytes": 33222
+    },
+    "wall_reliquary_a": {
+      "seed": 9505,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "b5e523ecdc7864c078d60a41532945ec85020d89e7e30c8cda56a4b8c356e454",
+      "bytes": 17106
+    },
+    "wall_chitin_a": {
+      "seed": 9506,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "e83ea97cf13aacc106e9a062ac950d45e8ecfc32f2ae9e4752a29a03d4e5c3c4",
+      "bytes": 12874
+    },
+    "floor_glasssand_a": {
+      "seed": 9511,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1f5f4ad9efe52246fea83700ab1a161b3a5c4d143750ab6b0ef0ce2a859a883a",
+      "bytes": 25628
+    },
+    "floor_basaltflag_a": {
+      "seed": 9512,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "fcb8c1c3697f5a7152bc233fb24d25c66ea4985a6e9f28f9f7e4d9fe88f86368",
+      "bytes": 9020
+    },
+    "floor_terrace_a": {
+      "seed": 9513,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8eb90e9039847611b2af97132b0d03bdfbedf2c7e1b407a6d83fa1fa1b8980a0",
+      "bytes": 15128
+    },
+    "floor_chitin_a": {
+      "seed": 9514,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d486cfd06a3603fa48220902c6c670f9870208fddc357fe4aa9664f9672fade4",
+      "bytes": 11502
+    },
+    "sky_anselm": {
+      "seed": 9515,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "7ad2172759ad43b29315a02333ed55919505a03e0637582f1fac7bac7ca28aab",
+      "bytes": 19293
     }
   }
 }
