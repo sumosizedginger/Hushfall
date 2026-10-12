@@ -517,6 +517,90 @@ export const SFX = {
     bell(c, out, t, 123, { decay: 1.6, gain: 0.14, ratio: 2.76, index: 0.8 });
     return 2.0;
   },
+  // --- Campaign 2, Act B (PT-038): the Zealot ---
+  zealot_alert(c, out, t, o) {                                  // a Songkeeper sees you: one flat bell note, a breath, and a short rising call, like a sentry's challenge
+    bell(c, out, t, 196, { decay: 0.9, gain: 0.12, ratio: 2.4, index: 0.6 });
+    tone(c, out, t + 0.25, { type: 'sawtooth', f0: 260, f1: 392, a: 0.03, d: 0.4, gain: 0.14, lp: 1500, vib: 5 });
+    noise(c, out, t + 0.2, { dur: 0.25, gain: 0.06, type: 'bandpass', f0: 1800, f1: 1200, q: 2, off: o.r() });
+    return 1.1;
+  },
+  zealot_draw(c, out, t, o) {                                   // the lance drawn back: a long hiss of cloth on bone and the small bell at its tip shaking once
+    noise(c, out, t, { dur: 0.5, a: 0.18, gain: 0.14, type: 'bandpass', f0: 900, f1: 2400, q: 1.6, off: o.r() });
+    bell(c, out, t + 0.1, 880, { decay: 0.25, gain: 0.07, ratio: 3.1, index: 0.4 });
+    return 0.6;
+  },
+  graft_hit(c, out, t, o) {                                     // the lance lands and the graft bites: a dull blow, a bronze sting that bends down, a thin drone that lasts as long as the slow
+    thump(c, out, t, 140, 50, 0.3, 0.3);
+    tone(c, out, t + 0.02, { type: 'sawtooth', f0: 1400, f1: 420, a: 0.004, d: 0.3, gain: 0.14, lp: 2400 });
+    bell(c, out, t + 0.04, 311, { decay: 0.7, gain: 0.09, ratio: 2.76, index: 0.8 });
+    tone(c, out, t + 0.3, { type: 'sine', f0: 118, f1: 100, a: 0.2, d: 1.8, gain: 0.07, vib: 4 });
+    return 2.2;
+  },
+  zealot_die(c, out, t, o) {                                    // plate on stone and the lance letting go: a clatter, a falling groan, the bell at the tip rolling out
+    noise(c, out, t, { dur: 0.5, a: 0.004, gain: 0.26, type: 'highpass', f0: 1600, f1: 700, off: o.r() });
+    tone(c, out, t + 0.04, { type: 'sawtooth', f0: 210, f1: 62, a: 0.03, d: 0.7, gain: 0.18, lp: 700, vib: 3 });
+    thump(c, out, t + 0.3, 100, 36, 0.35, 0.45);
+    bell(c, out, t + 0.5, 698, { decay: 0.5, gain: 0.07, ratio: 3.1, index: 0.4 });
+    return 1.3;
+  },
+  // --- Campaign 2, Act B (PT-038): the hand lantern ---
+  lamp_on(c, out, t, o) {                                       // a brass shutter slid and a wick catching: a dry click, a soft breath of flame
+    thump(c, out, t, 900, 500, 0.05, 0.1);
+    noise(c, out, t + 0.03, { dur: 0.22, a: 0.05, gain: 0.07, type: 'bandpass', f0: 700, f1: 1300, q: 1.2, off: o.r() });
+    tone(c, out, t + 0.05, { type: 'sine', f0: 220, f1: 260, a: 0.06, d: 0.2, gain: 0.04 });
+    return 0.35;
+  },
+  lamp_off(c, out, t, o) {                                      // the shutter closing: a short click and the flame drawn in
+    thump(c, out, t, 700, 380, 0.05, 0.09);
+    noise(c, out, t + 0.01, { dur: 0.16, a: 0.002, gain: 0.05, type: 'lowpass', f0: 1800, f1: 400, off: o.r() });
+    return 0.25;
+  },
+  lamp_out(c, out, t, o) {                                      // the oil gone: the flame gutters, a cough of smoke, a last tick of hot brass
+    noise(c, out, t, { dur: 0.5, a: 0.02, gain: 0.1, type: 'bandpass', f0: 500, f1: 180, q: 1.4, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 190, f1: 90, a: 0.02, d: 0.35, gain: 0.07, lp: 600, vib: 12 });
+    thump(c, out, t + 0.55, 1200, 900, 0.03, 0.06);
+    return 0.8;
+  },
+  lamp_dry(c, out, t) {                                         // pressed with no oil: the shutter clicks and nothing happens
+    thump(c, out, t, 520, 360, 0.04, 0.08);
+    return 0.15;
+  },
+  // --- Campaign 2, Act B (PT-038): the chimes (a pentatonic: five notes that cannot clash) ---
+  chime_0(c, out, t) {                                          // a glass-and-brass bell, note 0
+    bell(c, out, t, 392, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 784, f1: 784, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_1(c, out, t) {                                          // a glass-and-brass bell, note 1
+    bell(c, out, t, 440, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 880, f1: 880, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_2(c, out, t) {                                          // a glass-and-brass bell, note 2
+    bell(c, out, t, 523, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1046, f1: 1046, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_3(c, out, t) {                                          // a glass-and-brass bell, note 3
+    bell(c, out, t, 587, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1174, f1: 1174, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_4(c, out, t) {                                          // a glass-and-brass bell, note 4
+    bell(c, out, t, 659, { decay: 1.5, gain: 0.16, ratio: 2.76, index: 0.5 });
+    tone(c, out, t, { type: 'sine', f0: 1318, f1: 1318, a: 0.004, d: 1.1, gain: 0.07 });
+    return 1.8;
+  },
+  chime_ok(c, out, t) {                                         // a phrase answered: the five notes run up and a low note settles under them
+    [392, 523, 659, 784, 1046].forEach((f, i) => bell(c, out, t + i * 0.09, f, { decay: 1.2, gain: 0.1, ratio: 2.76, index: 0.4 }));
+    tone(c, out, t, { type: 'sine', f0: 196, f1: 196, a: 0.05, d: 1.6, gain: 0.08 });
+    return 2.0;
+  },
+  chime_play(c, out, t) {                                       // the tree gathers itself before it plays: a low breath of wood and a small shiver of glass
+    tone(c, out, t, { type: 'sine', f0: 98, f1: 130, a: 0.25, d: 0.5, gain: 0.07 });
+    bell(c, out, t + 0.2, 1568, { decay: 0.3, gain: 0.03, ratio: 3.1, index: 0.3 });
+    return 0.8;
+  },
   sweep_tell(c, out, t, o) {                                    // the eye opening: one pure tone climbing for the whole of the tell, shimmering, and a bright edge arriving last
     tone(c, out, t, { type: 'sine', f0: 220, f1: 1760, a: 0.4, d: 2.1, gain: 0.16, vib: 18 });
     tone(c, out, t + 0.3, { type: 'triangle', f0: 330, f1: 2640, a: 0.4, d: 1.9, gain: 0.07 });

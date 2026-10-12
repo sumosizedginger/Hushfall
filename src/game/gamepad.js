@@ -12,10 +12,10 @@ const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 /** default bindings: action -> pad codes. The table the owner was shown (design/WEAPONS_AND_CONTROLS_PLAN.md, W5). Slots 5 and 6 are reached with L1/R1 or the wheel; X/Square and B/Circle are left free. */
 export const PAD_DEFAULTS = {
   fire: ['Pad7'], aim: ['Pad6'], sprint: ['Pad10'], use: ['Pad0'], melee: ['Pad11'], weaponLast: ['Pad3'], weaponNext: ['Pad5'], weaponPrev: ['Pad4'],
-  weapon1: ['Pad14'], weapon2: ['Pad12'], weapon3: ['Pad15'], weapon4: ['Pad13'], map: ['Pad8'], pause: ['Pad9'],
+  weapon1: ['Pad14'], weapon2: ['Pad12'], weapon3: ['Pad15'], weapon4: ['Pad13'], lamp: ['Pad1'], map: ['Pad8'], pause: ['Pad9'],
 };
 /** the actions a pad may be bound to (movement and look are the sticks; turn/look keys have no pad button) */
-export const PAD_ACTIONS = ['fire', 'aim', 'sprint', 'use', 'melee', 'weaponLast', 'weaponNext', 'weaponPrev', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weapon7', 'weapon8', 'weapon9', 'weapon10', 'map', 'pause'];
+export const PAD_ACTIONS = ['fire', 'aim', 'sprint', 'use', 'melee', 'weaponLast', 'weaponNext', 'weaponPrev', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weapon7', 'weapon8', 'weapon9', 'weapon10', 'lamp', 'map', 'pause'];
 export const defaultPadBindings = () => JSON.parse(JSON.stringify(PAD_DEFAULTS));
 
 export const PAD_SETTINGS = { enabled: true, lookRate: 3.4, deadzone: 0.18, curve: 1.6, invertY: false, assist: 0.5, vibration: true, glyphs: 'auto' };   // lookRate: rad/s at full tilt (before the sensitivity slider)

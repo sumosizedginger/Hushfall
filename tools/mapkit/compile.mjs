@@ -52,6 +52,7 @@ export function compile(lv) {
     doors, secrets: lv.secrets || [], ...(closets.length ? { closets } : {}), ...(lv.sectors ? { sectors: lv.sectors } : {}), ...(lv.triggers ? { triggers: lv.triggers } : {}),
     entities, ...(lv.scenery ? { scenery: lv.scenery } : {}), ...(lv.par ? { par: lv.par } : {}), ...(lv.intro ? { intro: lv.intro } : {}), ...(lv.outro ? { outro: lv.outro } : {}), ...(lv.messages ? { messages: lv.messages } : {}), ...(lv.decals ? { decals: lv.decals } : {}), ...(lv.growth ? { growth: lv.growth } : {}), ...(lv.pulses ? { pulses: lv.pulses } : {}), ...(lv.vents ? { vents: lv.vents } : {}), ...(lv.loads ? { loads: lv.loads } : {}), ...(lv.vacuum ? { vacuum: lv.vacuum } : {}), ...(lv.objective ? { objective: lv.objective } : {}), ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
     ...(lv.quality ? { quality: lv.quality } : {}),
+    ...(lv.lantern ? { lantern: lv.lantern } : {}), ...(lv.chimes ? { chimes: lv.chimes } : {}),          // PT-038: the hand lantern and the chime phrases
     ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
   };
   let v = validateMap(out); if (!v.ok) errors.push(...v.errors);

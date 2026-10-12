@@ -7,6 +7,7 @@ const COL = {
   weeping: { skin: '#cfc6b4', flesh: '#a8484c', fleshDk: '#5e1e28', robe: '#4b4668', robeDk: '#2a263f', bone: '#e8e0c0', boneDk: '#a99d78', bronze: '#c58a40', bronzeDk: '#6a4018', iron: '#4a505a', sac: '#d8a850', sacDk: '#8a5a24', mouth: '#2a0c12', verd: '#78883a' },
   vat: { iron: '#4e4842', ironDk: '#322e28', rust: '#c8682a', dome: '#c8d84c', domeDk: '#7c8c22', copper: '#e68c4c', verd: '#78883a', pipe: '#70745e', slime: '#a8c428' },
   reed: { flesh: '#c88480', fleshDk: '#723a3e', stone: '#7e7e6a', bronze: '#c58a40', bronzeDk: '#6a4018', bone: '#e8e0c0', verd: '#78883a', mouth: '#2a0c12', cord: '#9c8a58' },
+  zealot: { skin: '#c4bcb8', hood: '#7a2a30', hoodDk: '#44161a', plate: '#d6a04e', plateDk: '#3c3a40', bronze: '#d89244', bronzeDk: '#7a4418', bone: '#eee4c8', iron: '#3e4048', cord: '#b83a38', mouth: '#2a0c12' },
   grandcantor: { skin: '#bcaca2', flesh: '#a0404a', fleshDk: '#56222c', chitin: '#40405a', chitinDk: '#22222e', bone: '#e8e0c0', boneDk: '#a99d78', bronze: '#c58a40', bronzeDk: '#6a4018', iron: '#4a4e58', mouth: '#2a0a10', verd: '#78883a', horn: '#e4b454', hornIn: '#661e28', trim: '#f6e4a4', leg: '#5e544a' },
 };
 const out = process.argv[2];

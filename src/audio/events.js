@@ -5,6 +5,7 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
+  chime_played: 'view-only: the tree has finished its phrase; its notes carry the sounds (chimes.js)',
   sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',
   spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
@@ -33,8 +34,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -130,6 +131,13 @@ export function soundsForEvent(e) {
     case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
     case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : e.kind === 'grandcantor' ? 'horn_blast' : 'toll_shot', pos: at(e) }];
     case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
+    case 'graft': return [{ id: 'graft_hit', gain: 0.9 }];
+    case 'chime_note': return [{ id: 'chime_' + (e.note | 0), pos: at(e), gain: e.who === 'tree' ? 0.7 : 1 }];                                // PT-038 (E6): the five notes
+    case 'chime_seq': return [{ id: 'chime_ok', gain: 0.9 }];
+    case 'chime_play': return [{ id: 'chime_play', pos: at(e), gain: 0.8 }];
+    case 'lamp': return [{ id: e.on ? 'lamp_on' : 'lamp_off', gain: 0.8 }];                                                            // PT-038: the hand lantern
+    case 'lamp_out': return [{ id: 'lamp_out', gain: 0.9 }];
+    case 'lamp_dry': return [{ id: 'lamp_dry', gain: 0.7 }];                                                                 // PT-038: a Zealot's lance landed and the graft took
     case 'ward_hit': return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
     case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
     case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];
@@ -143,7 +151,7 @@ export function soundsForEvent(e) {
     case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
     case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
     case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
-    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

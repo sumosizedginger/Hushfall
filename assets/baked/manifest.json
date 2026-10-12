@@ -908,6 +908,14 @@
       "transparent": false,
       "sha256": "7ad2172759ad43b29315a02333ed55919505a03e0637582f1fac7bac7ca28aab",
       "bytes": 19293
+    },
+    "choir_zealot": {
+      "seed": 3801,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8cf3f2ea17d04ae61b9806e60f79535e71f9c040707a8835c4a3142cf4537c8b",
+      "bytes": 33637
     }
   }
 }

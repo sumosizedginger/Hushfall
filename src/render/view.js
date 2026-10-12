@@ -1,6 +1,7 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
+import { makeHandLantern, makePickupOil } from './models_c2.js';
 import { makeFlareCannon, makeScattergun, makePickup, makeCrate, makeBarrel } from './models.js';
 import { makeSack } from './models_g2.js';
 import { makeCarbine, makePickupCarbine } from './models_carbine.js';
@@ -31,6 +32,7 @@ import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
 import { makeBeamView, makeSweepView } from './beamfx.js';
+import { makeChimeView } from './chimefx.js';
 import { inVacuum } from '../engine/airlock.js';
 
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
@@ -39,7 +41,7 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
-const pickupMaker = (kind) => (/^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
+const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
   : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
 export class GameView {
@@ -59,6 +61,7 @@ export class GameView {
       if (map.hasVoid && below) { this.skyBelow = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshBasicMaterial({ map: below, side: THREE.BackSide, fog: false, depthWrite: false })); this.skyBelow.renderOrder = -1; scene.add(this.skyBelow); }
       this.ventViews = map.vents.map((v) => { const vv = makeVentView(map, v, map.floor(v.at[0], v.at[1])); scene.add(vv.group); return vv; });        // the launch plates
       this.loadViews = map.loads.map((L) => { const lv = makeLoadView(map, L, map.floor(L.rect[0], L.rect[1])); scene.add(lv.group); return lv; });      // the falling loads
+      this.chimeView = map.props.some((q) => q.kind === 'chime' || q.kind === 'chimetree') ? makeChimeView(map) : null; if (this.chimeView) scene.add(this.chimeView.group);          // PT-038 (E6): the chimes and the tree
       this.beamView = map.emitters.length || map.mirrors.length ? makeBeamView(map, tex) : null; if (this.beamView) scene.add(this.beamView.group);
       this.sweepView = map.entities.some((q) => q.type === 'enemy' && ENEMIES[q.kind]?.sweep) ? makeSweepView() : null; if (this.sweepView) scene.add(this.sweepView.group);          // PT-033: the Gate Warden's beam              // PT-033: the Mirror Array's emitters, mirrors, receivers and the light between them
       this.airK = 0; }
@@ -68,6 +71,7 @@ export class GameView {
     const ws = this.weaponScene = new THREE.Scene(); this.weaponCam = new THREE.PerspectiveCamera(58, 16 / 9, NEAR, FAR);
     ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
+    if (map.lantern) { this.handLamp = new THREE.PointLight(0xffc070, 0, 22, 1.5); scene.add(this.handLamp); this.lampK = 0; this.lampModel = makeHandLantern(); this.lampModel.scale.setScalar(0.72); this.lampModel.position.set(-0.4, -0.3, -0.62); ws.add(this.lampModel); }          // PT-038 (E5): the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light count means no shader recompile) and a brass lantern held low at the left of the weapon view
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
     const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), mortar: makeMortar(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
@@ -241,6 +245,12 @@ export class GameView {
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
+    if (this.handLamp) {                                                                                                // PT-038: the lantern's light follows the eye, fades in and out in a fifth of a second, flickers, and sinks as the oil runs low
+      const L = p.lamp, on = L?.on ? 1 : 0, low = L && !L.eternal && L.oil < 10 ? 0.45 + 0.055 * L.oil : 1; this.lampK += (on - this.lampK) * Math.min(1, dt * 9);
+      const fl = 1 + 0.07 * Math.sin(this.time * 13.1) + 0.05 * Math.sin(this.time * 7.7 + 1) + 0.03 * Math.sin(this.time * 31);
+      this.handLamp.intensity = 17 * this.lampK * fl * low; this.handLamp.position.set(this.cam.position.x, this.cam.position.y - 0.15, this.cam.position.z);
+      const m = this.lampModel; m.userData.core.color.setScalar(0.35 + 0.65 * this.lampK * low); m.userData.flame.scale.setScalar(0.5 + 0.55 * this.lampK * fl); m.position.y = -0.3 + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK); m.rotation.z = 0.05 * Math.sin(this.time * 1.3);
+    }
     this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
     this.airK += ((w.player.air ? 1 : 0) - this.airK) * Math.min(1, dt * 6);                                                // PT-032: the view opens a little in the air
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
@@ -397,7 +407,7 @@ export class GameView {
     // doors
     for (const d of w.doors) { const v = this.lvl.doorViews.get(d.cx + ',' + d.cz); if (v) v.position.y = (v.userData.base ?? 0) + d.open * (v.userData.span ?? this.map.ceiling - 0.05); }
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
-    this.beamView?.update(w, dt, this.time); this.sweepView?.update(w, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
+this.chimeView?.update(w, this.time);     this.beamView?.update(w, dt, this.time); this.sweepView?.update(w, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
     this.ventViews?.forEach((vv) => updateVentView(vv, this.time, dt)); this.loadViews?.forEach((lv, i) => updateLoadView(lv, this.map.loads[i], w.time + alpha * TICK));      // PT-032: the plates breathe, the loads fall on the clock
     this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     for (const [c, f] of [['>', [1, 0]], ['<', [-1, 0]], ['^', [0, -1]], ['v', [0, 1]]]) { const m = this.lvl.fxMats[c], m2 = this.lvl.fxMats[c + '2']; if (m) m.map.offset.set(-f[0] * this.time * FLOW.push / 8, -f[1] * this.time * FLOW.push / 8); if (m2) m2.map.offset.set(-f[0] * this.time * FLOW.push * 1.7 / 8, -f[1] * this.time * FLOW.push * 1.7 / 8); }          // PT-037: a current's surface slides the way it pushes (8 m a texture tile)

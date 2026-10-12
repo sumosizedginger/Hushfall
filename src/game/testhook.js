@@ -26,7 +26,7 @@ export function installTestHook(app) {
     return {
       mode: g.mode, mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, tick: w?.tick ?? null, status: w?.status ?? null, hash: w ? hashWorld(w) : null,
       progress: JSON.parse(JSON.stringify(g.progress)), upgrades: w?.upgrades ?? null,
-      fov: g.view?.cam.fov ?? null, player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, ads: p.ads, sprint: p.sprint, sprinting: p.sprinting, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, weapons: p.weapons, cooldown: p.cooldown },
+      fov: g.view?.cam.fov ?? null, player: p && { x: p.x, z: p.z, yaw: p.yaw, pitch: p.pitch, ads: p.ads, sprint: p.sprint, sprinting: p.sprinting, hp: p.hp, armor: p.armor, ammo: p.ammo, keys: p.keys, weapon: p.weapon, weapons: p.weapons, cooldown: p.cooldown, graftT: p.graftT ?? 0, lamp: p.lamp ?? null },
       messagesSeen: w?.messagesSeen ?? null, explored: w ? w.explored.reduce((a, b) => a + b, 0) : null, stats: w?.stats ?? null, endStats: w?.endStats ?? null, secretsFound: w?.secretsFound ?? null,
       enemies: w?.enemies.map((e) => ({ id: e.id, x: e.x, z: e.z, hp: e.hp, state: e.state })) ?? null, pickups: w?.pickups.length ?? null,
       doors: w?.doors.map((d) => ({ cx: d.cx, cz: d.cz, open: d.open, target: d.target })) ?? null,
@@ -65,6 +65,10 @@ export function installTestHook(app) {
     setup_arcLife(seconds) { if (g.view) g.view.arcLife = seconds; },        // stills only: the lamp's lightning lives 0.09 s, too short to photograph
     boltProbe() { return g.view ? { streaks: g.view.bolts.filter((b) => b.streak).length, stuck: g.view.bolts.filter((b) => !b.streak).length, zoom: g.view.cam.fov, arcs: g.view.arcs.length, lamp: g.view.lampLight.intensity } : null; },        // the harpoon's view-only effects (streak, bolt left in a wall) and the camera's field of view
     /** PT-027: what the view draws for the ship's breath: the mortar's landing ring, each spore region's bed / mist, each breathing gate's slab height against the sim's `open` */
+    /** PT-038 (E5): what the view draws for the hand lantern: its light's strength, whether the held lantern is there, the HUD gauge text */
+    lampProbe() { const v = g.view, L = g.world?.player.lamp; return { lamp: L ? { on: L.on, oil: L.oil } : null, light: v?.handLamp ? { intensity: v.handLamp.intensity, k: v.lampK } : null, model: !!v?.lampModel, hud: { shown: !document.getElementById('hud-lamp').classList.contains('hidden'), oil: document.getElementById('hud-oil').textContent, label: document.getElementById('hud-oil-label').textContent } }; },
+    /** PT-038 (E6): what the chime view draws: each chime's glow and the tree's lit fruit (the sim's own clock decides) */
+    chimeProbe() { const cv = g.view?.chimeView; if (!cv) return null; return { chimes: [...cv.chimes].map(([id, c]) => ({ id, note: c.note, glow: c.glow.scale.x })), fruit: cv.fruit.map((f) => ({ note: f.note, scale: f.orb.scale.x })), treeLight: cv.fruit.light?.intensity ?? 0, played: g.world.chimes?.play ?? null, matched: Object.keys(g.world.chimes?.matched ?? {}) }; },
     breathProbe() {
       if (!g.view || !g.world) return null; const v = g.view, w = g.world;
       return { ring: v.aimRing ? { visible: v.aimRing.visible, x: v.aimRing.position.x, y: v.aimRing.position.y, z: v.aimRing.position.z } : null, beds: (v.lvl.sporeViews ?? []).map((s) => ({ bed: s.bed.opacity, mist: s.mist.opacity, mistVisible: s.mist.visible })),

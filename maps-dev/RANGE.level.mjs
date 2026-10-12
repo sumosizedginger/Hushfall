@@ -39,6 +39,9 @@ L.room([48, 113, 59, 130], { floor: 'f', wall: 'C' }); L.rect([46, 120, 47, 122]
 // PT-037: the ninth range, east of the elite yard (an opening at z 62..64): the CURRENT and FORK yard (a flowing channel with sponges; three forks beside two sleepers that wake when they ring)
 L.room([48, 56, 59, 72], { floor: 'f', wall: 'C' }); L.rect([46, 62, 47, 64], 'f'); L.fx([49, 58, 58, 61], '>'); L.fx([49, 62, 58, 62], '.');
 
+// PT-038: the tenth range, east of the foundry yard (an opening at z 80..82): the SONGKEEPER yard (Act B): Zealots, a pair of sponges for the outline and the hit volume and two swingers (the lance reaches 3.5 m, a hit grafts: a slower walk for three seconds)
+L.room([48, 75, 59, 89], { floor: 'f', wall: 'C' }); L.rect([46, 80, 47, 82], 'f');
+
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
 L.putAll('P', [[28, 11], [28, 16], [28, 21]]);
@@ -136,6 +139,11 @@ E.push({ type: 'switch', id: 'gate', at: [2, 121], wall: 'west', once: true, do:
 t('vaelfolk', 51, 116, S, 'inert', SPONGE); t('vaelfolk', 55, 116, S, 'inert', SPONGE);                                                        // sponges: the fan and the hit volume
 for (const [x, z] of [[51, 123], [54, 122], [57, 124], [52, 127], [56, 127], [54, 119]]) t('vaelfolk', x, z, WEST, 'turn', { sight: 12 });    // a crowd that lives: it watches you, walks a few metres, runs from a shot (and stands up again, as every target does)
 
+// ---- PT-038: the songkeeper yard (Campaign 2, Act B): the Zealot ----
+L.putAll('m', [[52, 77], [56, 77], [52, 87], [56, 87]]);
+t('zealot', 51, 78, S, 'inert', SPONGE); t('zealot', 56, 78, N, 'inert', SPONGE);                                                                  // sponges: one facing you, one with its back to you (the lance, the crest, the stance)
+t('zealot', 51, 85, WEST, 'turn', { sight: 12 }); t('zealot', 56, 85, WEST, 'turn', { sight: 12 });                                              // swingers: a thrust from 3.5 m, a lunge across a gap; a hit grafts (a slower walk for three seconds)
+
 // ---- PT-037: the current and fork yard ----
 t('tollbearer', 51, 59, EAST, 'inert', SPONGE); t('tollbearer', 55, 60, EAST, 'inert', SPONGE); t('gaunt', 57, 59, EAST, 'turn', { sight: 8 });     // in the water: the sponges and a swinger are carried east with the current
 E.push({ type: 'prop', kind: 'resonator', at: [51, 67] }, { type: 'prop', kind: 'resonator', at: [53, 68] }, { type: 'prop', kind: 'resonator', at: [52, 65] });
@@ -174,6 +182,7 @@ export default {
     { id: 'loadsyard', at: [53, 94], radius: 6, speaker: 'RANGE', text: 'LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them.' },
     { id: 'folkyard', at: [52, 121], radius: 6, speaker: 'RANGE', text: 'FOLK YARD: Vael civilians never attack. They watch, and run from a shot with the fan folded. The arc never locks on. A dead one is an INNOCENT: a rank cost (here they stand up).' },
     { id: 'currentyard', at: [52, 61], radius: 6, speaker: 'RANGE', text: 'CURRENT: the channel pushes east and conducts the arc. FORKS to the south: fire a rifle and they ring and wake the two sleepers; a blow or the arc is heard from less far.' },
+    { id: 'zealotyard', at: [52, 82], radius: 6, speaker: 'RANGE', text: 'SONGKEEPER YARD: a Zealot thrusts from 3.5 m after the lance dips and lunges across a gap. A hit GRAFTS: you walk slower for three seconds. Two sponges, two swingers.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };

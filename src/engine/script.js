@@ -66,7 +66,8 @@ function conditionMet(w, t) {
   if (c.startsWith('msg:')) return w.messagesSeen.includes(c.slice(4));
   if (c.startsWith('time:')) return w.time >= Number(c.slice(5));
   if (c.startsWith('dead:')) { const g = c.slice(5), members = w.enemies.filter((e) => e.group === g); return members.length > 0 && members.every((e) => e.state === 'dead'); }
-  if (c.startsWith('lit:')) return !!w.beams && w.beams.lit.includes(c.slice(4));                                             // PT-033: a receiver is lit (beams.js)
+  if (c.startsWith('lit:')) return !!w.beams && w.beams.lit.includes(c.slice(4));
+  if (c.startsWith('seq:')) return w.chimes?.matched?.[c.slice(4)] != null;                                                  // PT-038: a chime phrase was played (chimes.js)                                             // PT-033: a receiver is lit (beams.js)
   if (c.startsWith('sector:')) { const [, id, pos] = c.split(':'), s = w.sectors.find((q) => q.id === id), def = w.map.sectors.find((q) => q.id === id); return !!s && Math.abs(s.h - s.target) < 1e-6 && Math.abs(s.h - (pos === 'high' ? def.high : def.low)) < 1e-6; }
   return false;
 }

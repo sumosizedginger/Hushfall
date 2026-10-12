@@ -385,3 +385,11 @@ Built on my own picks at the owner's word ("ALL DECISIONS ARE YOURS"); the text 
 8. **The Record** (pause menu): is it what you meant by "players are going to want to know the lore"?
 9. **The ending of Campaign 1** (epilogue cards and tally, PT-036): first time through a real browser; the painting `ui_ending_art` and the sound `gate_chord`.
 Known weak points, unfixed: the Vael folk's pose (stiff, arms out), the Fork Fields' floor, the current, text quality, no sound check of the new sounds by ear. The map's pars, ammunition and difficulty are bot-tuned only.
+
+## PT-038 · Act B engine tranche (B0) · UNPLAYED · what to look at first
+The new pieces, tried in the dev build: pick `DEEP The Deep Range (dev only)` on the title screen (and walk to the tenth yard of the Range for the Zealots). Please tell me:
+1. **The hand lantern (L):** is the light a good pool (not a glare) and does the held brass lantern read? Does the oil gauge ("OIL · LIT") tell enough? Is 90 oil (a minute and a half, plus tins) a good size, or is darkness too punishing / too easy? A Gaunt asleep in the tunnel stays asleep until you are within 6 m if the lantern is out; lit it wakes from 24 m.
+2. **The Zealot:** the lance, the lunge, the graft (a slower walk for 3 s). Is the tell (the lance drawn back) readable? Is the figure's look right (a bronze, wide-stanced soldier)? The thrust reaches 3.5 m: too long?
+3. **The chimes:** Use the tree: it plays a phrase (watch the fruit); answer on the chimes (Use or a shot). Is it a puzzle, or a memory test? The window is 8 s between notes in the Deep Range.
+4. **The caves:** is the SHAPE right (the tunnel, the grotto, the bowl)? The bowl is dark and hard to see; the plan of it is `design/` nowhere yet: say if it needs more light in a real map.
+Known weak points, unfixed: the Zealot's awake pose was only judged from stills; the Deep's own wall and floor skins are not built (the Deep Range wears the Range's concrete); no sound listened to.

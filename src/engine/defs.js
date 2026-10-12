@@ -87,6 +87,7 @@ export const LOOKS = {
   aqueduct: { hemi: [0x9cc8b4, 0x1e3a34, 2.0], sun: [0xf0ffd8, 1.2, [-8, 14, -6]], lamp: 1, exposure: 1, grade: GR([0.86, 1.06, 1.02], [1.04, 1.04, 0.9], 0.95), shade: { foot: 0.3, ao: 0.38, patch: 0.1 } },             // the Chitin Aqueduct: wet green-white, the water is the light
   bellwright: { hemi: [0xc89878, 0x2a1a14, 1.5], sun: [0xff8040, 1.4, [-12, 6, -6]], lamp: 1.4, exposure: 1, grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the Bellwright Yard: kiln orange, soot
   ascent: { hemi: [0xe8e0f0, 0x504860, 2.5], sun: [0xfff0d8, 1.8, [-6, 16, -5]], lamp: 1, exposure: 1, grade: GR([0.92, 0.96, 1.1], [1.08, 1.03, 0.9], 0.85), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },              // the Threshold Ascent: high, thin, clear air
+  deep: { hemi: [0x40506a, 0x0a0c14, 0.42], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.94, 0.98, 1.12], [1.1, 1.02, 0.9], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },          // PT-038: the Deep Range (dev only): a cave that is dark but for a hand lantern and a few hung ones
   gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
@@ -224,16 +225,16 @@ export const WEAPONS = {
 // `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
 // `hitForward` (default 0: metres ahead of the feet along the facing) fit the drawn body. Measured on the real rigs and enforced by tests/hit-volume-fair.test.js (owner decision 2026-10-05, PT-005).
 export const ENEMIES = {
-  tollbearer: { name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  tollbearer: { hush: true, name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
   gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
   // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
-  bellhand: { name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
+  bellhand: { hush: true, name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
 };
 
 // ---- Gate 2 roster ---------------------------------------------------------------------------------------------------------
 // Sexton: support. Keeps its distance and raises the fallen after a visible channel (a teal beam from its bell to the corpse). Kill it first, or interrupt it by hurting it.
-ENEMIES.sexton = { name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, height: 2.35, sight: 28, turnRate: 3.5, attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
+ENEMIES.sexton = { hush: true, name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, height: 2.35, sight: 28, turnRate: 3.5, attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
   support: { range: 11, channel: 2.2, cooldown: 5, reviveHp: 0.5, keepAway: 8, maxRevives: 2, kinds: ['tollbearer', 'gaunt', 'bellhand'] } };
 // Warden-Graft: elite. Plate on the front arc (direct hits from the front do a third of the damage; splash and hits from behind do not care). Charges in a straight line after a
 // readable windup; a charge into a wall or prop staggers it, and it takes extra damage while it is down. The flare cannon and a step to the side are the answers.
@@ -282,6 +283,7 @@ export const PICKUPS = {
   weapon_linethrower: { type: 'weapon', weapon: 'linethrower', ammo: 'rocket', amount: 4 },
   weapon_mortar: { type: 'weapon', weapon: 'mortar', ammo: 'rocket', amount: 6 },                   // PT-027: three shells' worth of the line-thrower's rockets
   ammo_rocket: { type: 'ammo', ammo: 'rocket', amount: 3 },
+  oil: { type: 'oil', amount: 30 },                                                                                  // PT-038: a tin of lamp oil for the hand lantern (only taken where the map has a lantern, and not past `max`)
   weapon_fork: { type: 'weapon', weapon: 'fork' },
   weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },
   armor_vest: { type: 'armor', amount: 50 },
@@ -316,7 +318,9 @@ export const PROPS = {
   // Episode 4, Batch B (PT-033, beams.js): the Mirror Array's furniture; drawn by the view from the sim's own state (never merged into the static level mesh)
   mirror: { radius: 0.62, blocksCell: true },            // a mirror on a plinth: Use turns it a quarter step
   emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
-  receiver: { radius: 0.62, blocksCell: true },          // lit while a beam enters its cell
+  receiver: { radius: 0.62, blocksCell: true },
+  chime: { radius: 0.4, blocksCell: true },              // PT-038 (E6): a note on a plinth: Use or a shot strikes it
+  chimetree: { radius: 0.9, blocksCell: true },          // PT-038: the Great Chime-Tree: Use plays the phrase of the next round          // lit while a beam enters its cell
   // Episode 4, Batch C (PT-033): the dock's furniture
   grave: { radius: 0.32, blocksCell: false },            // PT-037 (Campaign 2 Act A): a grave of the Reliquary Road: a slab on a low mound, low enough to step over a creature's reach but a solid post to a round
   resonator: { radius: 0.4, blocksCell: false },        // PT-037 (Campaign 2, resonator.js): a standing tuning-fork: it rings at a noise and calls what sleeps
@@ -419,3 +423,20 @@ export const FOLK = {
   innocentCost: 0.1,        // rank score lost per innocent harmed (src/engine/progress.js rankFor), at most `innocentMax` in all
   innocentMax: 0.4,
 };
+
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md): THE ZEALOT ---------------------------------------------------------------------------------------------------------------------------------------
+// A Songkeeper under arms: a tall hooded Vael in bronze plate with a long bone lance (a bell at its tip). It keeps a lance's distance and THRUSTS (`attack.reach` 3.5 m, the dip of the lance is the tell) and lunges
+// across a gap (the Gaunt's dash, with a point on it). A hit GRAFTS (`graft`): the damage of the blow and `time` seconds of `GRAFT.slow` off the player's walking speed, a bronze sting. Hard to stagger (`poise`).
+ENEMIES.zealot = { name: 'Zealot', poise: 2.2, hp: 110, speed: 2.3, gait: 7, radius: 0.42, height: 2.3, hitRadius: 0.62, hitForward: 0, sight: 32, turnRate: 3.4,
+  attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 }, lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 }, graft: { time: 3 } };
+export const GRAFT = { slow: 0.38 };
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md E6): CHIMES (src/engine/chimes.js) ---------------------------------------------------------------------------------------------------------------------
+// five notes, each with a glyph and a colour as well as a pitch (a puzzle is never audio-only); `beat` s between the notes a tree plays, `lead` s before the first, the last `keep` notes struck are remembered
+export const CHIME = { notes: 5, glyphs: ['circle', 'triangle', 'square', 'diamond', 'ring'], colors: ['#f2b84a', '#3fd0c0', '#9a7ae0', '#e0584a', '#f4f0e0'], beat: 0.7, lead: 0.5, keep: 16 };
+
+// ---- Campaign 2, Act B (PT-038; design/ACTB.md E5): THE HAND LANTERN ---------------------------------------------------------------------------------------------------------------------------
+// A map that says `atmosphere.dark: true` is a dark place: creatures notice the player from `sightDark` metres, or from `sightLit` when the lantern is lit or the player stands within `radius` of a lit prop
+// (`lightProps`). The Hush-driven kinds (`hush: true` in their definition) follow the Hush and not the light and keep their ordinary range. The lantern is the map's `lantern: { oil, max, eternal }`
+// (lazy: `p.lamp` exists only where the map has one): it burns `burn` oil a second while lit; an oil tin gives `PICKUPS.oil.amount`. `eternal` is Ines's own lamp (it never burns out).
+export const LANTERN = { sightDark: 6, sightLit: 24, radius: 8, burn: 1, max: 90, lightProps: ['lantern', 'lamp'] };
+                     // the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)

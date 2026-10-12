@@ -50,3 +50,23 @@ export function makeRib() {
   const mid = new THREE.Mesh(new THREE.TorusGeometry(5.8, 0.18, 4, 24, Math.PI), verd); mid.scale.set(0.86, 0.86, 1); mid.position.set(0, 0.2, 0.55); g.add(mid);
   return g;
 }
+
+/** the hand lantern (PT-038, E5): a brass cage round a glowing core, a ring handle, seen small at the lower left of the weapon view; `glow` is the core's material so the view can dim it with the oil */
+export function makeHandLantern() {
+  const g = new THREE.Group(), brass = lam({ color: 0xb08a3c, emissive: 0x1c1408 }), core = new THREE.MeshBasicMaterial({ color: 0xffdca0 });
+  g.add(cyl(0.07, 0.085, 0.03, 8, brass, 0, -0.1, 0), cyl(0.045, 0.075, 0.05, 8, brass, 0, 0.115, 0));
+  const top = new THREE.Mesh(new THREE.ConeGeometry(0.075, 0.07, 8), brass); top.position.y = 0.17; g.add(top);
+  for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2, bar = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.2, 0.012), brass); bar.position.set(Math.sin(a) * 0.065, 0.005, Math.cos(a) * 0.065); g.add(bar); }
+  const flame = new THREE.Mesh(new THREE.IcosahedronGeometry(0.045, 1), core); flame.position.y = 0.01; g.add(flame);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.007, 4, 10, Math.PI), brass); ring.position.y = 0.2; g.add(ring);
+  g.userData.core = core; g.userData.flame = flame; return g;
+}
+
+/** a tin of lamp oil on the floor: a squat brass-red can with a spout and a glint (the pickup for the lantern) */
+export function makePickupOil() {
+  const g = new THREE.Group(), tin = lam({ color: 0xa0482c, emissive: 0x1c0a06 }), cap = lam({ color: 0xc9a24a, emissive: 0x1a1406 });
+  g.add(cyl(0.11, 0.12, 0.2, 8, tin, 0, 0.1, 0), cyl(0.04, 0.05, 0.05, 6, cap, 0, 0.225, 0));
+  const spout = new THREE.Mesh(new THREE.ConeGeometry(0.02, 0.1, 5), cap); spout.position.set(0.1, 0.18, 0); spout.rotation.z = -1.1; g.add(spout);
+  const glint = new THREE.Mesh(new THREE.IcosahedronGeometry(0.03, 0), new THREE.MeshBasicMaterial({ color: 0xffd488 })); glint.position.y = 0.46; g.add(glint);
+  return g;
+}

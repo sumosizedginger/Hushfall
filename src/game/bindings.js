@@ -3,7 +3,7 @@ import { ACTIONS, DEFAULT_BINDINGS } from '../engine/input.js';
 
 export const ACTION_LABELS = {
   forward: 'Move forward', back: 'Move back', left: 'Strafe left', right: 'Strafe right', turnLeft: 'Turn left', turnRight: 'Turn right', lookUp: 'Look up', lookDown: 'Look down',
-  fire: 'Fire', aim: 'Aim down sights', sprint: 'Sprint', use: 'Use / open', weapon1: 'Weapon 1', weapon2: 'Weapon 2', weapon3: 'Weapon 3', weapon4: 'Weapon 4', weapon5: 'Weapon 5', weapon6: 'Melee slot (press again to cycle)', weapon7: 'Weapon 7 (carbine)', weapon8: 'Weapon 8 (line-thrower)', weapon9: 'Weapon 9 (tuning-fork)', weapon10: 'Weapon 0 (mortar)', weaponLast: 'Last weapon (hold: weapon wheel)', melee: 'Quick melee', weaponNext: 'Next weapon', weaponPrev: 'Previous weapon', map: 'Automap', pause: 'Pause',
+  fire: 'Fire', aim: 'Aim down sights', sprint: 'Sprint', use: 'Use / open', weapon1: 'Weapon 1', weapon2: 'Weapon 2', weapon3: 'Weapon 3', weapon4: 'Weapon 4', weapon5: 'Weapon 5', weapon6: 'Melee slot (press again to cycle)', weapon7: 'Weapon 7 (carbine)', weapon8: 'Weapon 8 (line-thrower)', weapon9: 'Weapon 9 (tuning-fork)', weapon10: 'Weapon 0 (mortar)', weaponLast: 'Last weapon (hold: weapon wheel)', melee: 'Quick melee', lamp: 'Hand lantern (dark places)', weaponNext: 'Next weapon', weaponPrev: 'Previous weapon', map: 'Automap', pause: 'Pause',
 };
 export const SLOTS = 2;
 /** one-line controls reminder built from the CURRENT bindings (title, pause, and the first minute of a run) */

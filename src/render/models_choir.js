@@ -790,4 +790,52 @@ export function vaelfolk(tex) {
   });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk };
+// ------------------------------------------------------------------------------------------------------------------ ZEALOT (PT-038, Campaign 2 Act B: a Songkeeper under arms)
+/** A tall hooded Vael in tempered bronze: broad round pauldrons, a plate cuirass, a skirt of black-iron lames, a bone blade swept back from the hood, and a LONG lance held across the body, tip forward and up, with a small
+ *  bell below the blade. The lance is the silhouette (no other creature carries a diagonal that long) and the tell: it is drawn back and the tip dips on the windup, thrust out level on the blow, and held out flat on the lunge. */
+export function zealot(tex) {
+  const C = cellsOf('zealot');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 0.86, 0]);
+    legs(R, 'hips', 0.15, { a: 0.43, b: 0.43, r0: 0.11, r1: 0.09, r2: 0.065, cellA: C.plate, cellB: C.plateDk, seg: 7, fw: 0.15, fh: 0.1, fl: 0.36 }, C.iron);
+    for (let i = 0; i < 8; i++) { const a = (i / 8) * PI * 2 + 0.2; R.joint('lame' + i, 'hips', [S(a) * 0.22, 0.02, K(a) * 0.16], [0, a, 0]); R.joint('lamef' + i, 'lame' + i, [0, 0, 0], [-0.45, 0, 0]); R.box('lamef' + i, 0.26, 0.56, 0.035, i % 2 ? C.plate : C.plateDk, { pos: [0, -0.28, 0] }); }          // a skirt of lames that flares to the hem: an A of plate, which no coat-wearer's outline is
+    R.joint('spine', 'hips', [0, 0.05, 0]);
+    R.cyl('spine', 0.2, 0.25, 0.86, 9, C.plate, { pos: [0, 0.43, 0], scale: [1, 1, 0.7] });
+    R.tor('spine', 0.24, 0.04, 4, 12, C.bronzeDk, { pos: [0, 0.02, 0], rot: [PI / 2, 0, 0] });
+    R.box('spine', 0.1, 0.62, 0.05, C.plateDk, { pos: [0, 0.42, 0.18] });
+    for (const s of [-1, 1]) {
+      R.lump('spine', 0.27, 1, 0.1, s + 8, C.bronze, { pos: [s * 0.4, 0.78, 0], scale: [1.15, 0.78, 1.1] });
+      R.tor('spine', 0.24, 0.03, 4, 12, C.bronzeDk, { pos: [s * 0.4, 0.7, 0], rot: [PI / 2, 0, s * 0.18] });
+      R.cone('spine', 0.05, 0.22, 4, C.bone, { pos: [s * 0.44, 0.98, 0], rot: [0, 0, -s * 0.4] });
+    }
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.4, 0.72, 0], { a: 0.34, b: 0.36, r0: 0.072, r1: 0.06, r2: 0.05, cellA: C.plate, cellB: C.plateDk }); R.lump(n + 'M', 0.07, 0, 0.12, 5, C.iron, { pos: [0, -0.4, 0], scale: [1, 1.3, 0.9] }); }
+    head(R, C, { neckAt: [0, 0.86, 0.02], r: 0.14, tall: 1.2, neck: 0.1, cell: C.skin, eyes: 'both' });
+    R.cone('head', 0.19, 0.34, 8, C.hood, { pos: [0, 0.17, -0.05], rot: [0.28, 0, 0] });
+    R.cone('head', 0.04, 0.32, 4, C.bone, { pos: [0, 0.3, -0.2], rot: [-1.1, 0, 0] });
+    R.tor('head', 0.17, 0.022, 4, 10, C.bronze, { pos: [0, 0.1, 0], rot: [PI / 2, 0, 0] });
+    R.cone('spine', 0.18, 0.46, 6, C.hoodDk, { pos: [0, 0.78, -0.17], rot: [0.5, 0, 0] });                                                                  // the cowl falling over the back
+    // THE LANCE: held across the body at the chest; local +y is the shaft, rotated forward so the tip rides up and out in front
+    R.joint('lanceY', 'spine', [0.44, 0.2, 0.2], [0, 0, 0]); R.joint('lance', 'lanceY', [0, 0, 0], [1.3, 0, 0]);
+    R.cyl('lance', 0.028, 0.034, 1.8, 5, C.bone, { pos: [0, 0.1, 0] });
+    for (const y of [0.1]) R.cyl('lance', 0.04, 0.04, 0.07, 5, C.cord, { pos: [0, y, 0] });                                                // the binding where the hands go
+    R.cone('lance', 0.055, 0.28, 4, C.iron, { pos: [0, 1.14, 0] });
+    R.tor('lance', 0.05, 0.015, 4, 8, C.bronze, { pos: [0, 1.0, 0], rot: [PI / 2, 0, 0] });
+    R.joint('lbell', 'lance', [0, 0.92, 0.0]); R.bell('lbell', 0.16, 0.08, C.bronze, C.bronzeDk, { pos: [0, -0.16, 0.06], name: 'lbellMesh', seg: 5 }); R.sph('lbell', 0.03, 5, 4, 'glow', { pos: [0, -0.15, 0.06], name: 'lclapper' });
+  }, (p, J, R) => {
+    const t = p.t, lu = p.lunge, cr = Math.max(0, -lu), ex = Math.max(0, lu), h = humanoidPose(p, J, { stoop: 0.12, lean: 0.0, headX: 0.2, headZ: 0.0, jawOpen: 0.1, hipY: 0.86, stride: 0.55 });
+    const raise = h.raise * (1 - h.slam), slam = h.slam * (1 - h.rec), draw = Math.max(raise, cr);                                                       // drawn back: the tell (a thrust's windup or a lunge's crouch)
+    const carry = p.awake ? 1 : 0, eng = Math.max(carry, draw, slam, ex), dd = h.d;                                                                         // asleep, the lance stands upright at its side (a guard at rest); awake it is carried forward and up
+    J.spine.rotation.x += 0.18 * ex + 0.1 * slam - 0.1 * draw; J.hips.position.y -= 0.12 * cr;
+    const splay = 0.58 * (1 - 0.6 * Math.min(1, p.walk)); J.legA.rotation.z = -splay; J.legB.rotation.z = splay;                      // a planted, wide stance: an A of legs under the skirt (no robe or coat hides its legs)
+    const pitch = Math.min(1.55, 0.08 + 0.92 * carry + 0.3 * draw + 0.25 * slam + 0.15 * ex + 0.04 * S(t * 1.1));
+    J.lance.rotation.x = pitch * (1 - dd); J.lanceY.rotation.y = -0.5 * carry * (1 - 0.9 * Math.max(draw, slam, ex)) * (1 - dd);
+    J.lanceY.position.set(0.44 * (1 - eng), 0.2 + 0.3 * eng - 0.06 * draw, 0.2 + ((-0.38 * draw + 0.8 * slam + 0.55 * ex) * (1 - dd)));
+    const reach = 0.5 * slam + 0.3 * ex - 0.25 * draw, L = (lo, hi) => lo + (hi - lo) * eng;                                                              // the hands go where the lance goes
+    J.armA.rotation.x = L(-0.15, -0.95 - reach); J.armA.rotation.z = L(-0.14, -0.1 + 0.25 * draw); J.armAM.rotation.x = L(-0.3, -0.75 + 0.5 * slam);
+    J.armB.rotation.x = L(-0.45, -1.15 - reach); J.armB.rotation.z = L(0.12, 0.08); J.armBM.rotation.x = L(-0.6, -0.55 + 0.4 * slam);
+    J.lbell.rotation.x = S(t * 5.3 + p.phase) * (p.awake ? 0.18 + 0.2 * p.walk : 0.02) - 0.5 * slam; J.lclapper.scale.setScalar(1 + 0.3 * draw + 0.8 * slam);
+    for (let i = 0; J['lamef' + i]; i++) J['lamef' + i].rotation.x = -0.45 + S(t * 1.4 + i * 1.1) * 0.04 + 0.28 * p.walk * S(p.phase + i * 0.4);
+  });
+}
+
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot };
