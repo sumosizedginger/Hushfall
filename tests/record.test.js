@@ -35,7 +35,7 @@ test('progress carries the Record through a save and a damaged one is made safe;
 });
 
 test('which speakers are found documents and which are voices', () => {
-  for (const s of ["CHANDLER'S LOG", 'WARDEN LOG', 'CUSTOMS NOTICE', 'CUSTOMS MANIFEST', 'LEDGER', 'REGISTER', "A CHILD'S DRAWING", 'NET-LOFT NOTE', 'BEACON NOTES', 'FUNICULAR PLACARD', 'TICKET BOARD']) assert.equal(isDocument(s), true, s);
+  for (const s of ["CHANDLER'S LOG", 'WARDEN LOG', 'CUSTOMS NOTICE', 'CUSTOMS MANIFEST', 'LEDGER', 'REGISTER', "A CHILD'S DRAWING", 'NET-LOFT NOTE', 'BEACON NOTES', 'FUNICULAR PLACARD', 'TICKET BOARD', 'FORK PLATE', 'SLUICE PLATE', "BELLWRIGHT'S TALLY", 'A SILENT (NOTE)', 'PELLEW, MATE (LOG)']) assert.equal(isDocument(s), true, s);
   for (const s of ['INES', 'SIGNAL HOUSE', 'HULL', 'WARDEN CALDER', 'THE QUIET ONE', 'UNKNOWN (VAEL)', '', undefined]) assert.equal(isDocument(s), false, String(s));
 });
 

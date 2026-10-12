@@ -65,25 +65,25 @@
   "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
   "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
   "#####################fff######################################",
-  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
-  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
-  "#####################fff######################################",
-  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCC###############",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffffffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CffffffffffffffffffffffffffffffffffffffffffffCCffffffffffffC#",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCffffffffffffC#",
+  "#####################fff#######################CffffffffffffC#",
+  "#CCCCCCCCCCCCCCCCCCCCfffCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#",
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
   "#CffffffffffffffffffffffffffffffffffffffffffffC###############",
@@ -476,10 +476,10 @@
   "..............................................................",
   "..............................................................",
   "..............................................................",
-  "..............................................................",
-  "..............................................................",
-  "..............................................................",
-  "..............................................................",
+  ".................................................>>>>>>>>>>...",
+  ".................................................>>>>>>>>>>...",
+  ".................................................>>>>>>>>>>...",
+  ".................................................>>>>>>>>>>...",
   "..............................................................",
   "..............................................................",
   "..............................................................",
@@ -757,6 +757,11 @@
   {
    "type": "prop",
    "kind": "lamp",
+   "at": [52, 59]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
    "at": [8, 60]
   },
   {
@@ -783,6 +788,11 @@
    "type": "prop",
    "kind": "lamp",
    "at": [36, 68]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [52, 69]
   },
   {
    "type": "prop",
@@ -2162,6 +2172,57 @@
    "sight": 12
   },
   {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [51, 59],
+   "facing": 1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 60],
+   "facing": 1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [57, 59],
+   "facing": 1.5707963267948966,
+   "hold": "turn",
+   "sight": 8
+  },
+  {
+   "type": "prop",
+   "kind": "resonator",
+   "at": [51, 67]
+  },
+  {
+   "type": "prop",
+   "kind": "resonator",
+   "at": [53, 68]
+  },
+  {
+   "type": "prop",
+   "kind": "resonator",
+   "at": [52, 65]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [57, 69],
+   "facing": -1.5707963267948966
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [57, 71],
+   "facing": -1.5707963267948966
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [45, 27]
@@ -2293,6 +2354,13 @@
    "radius": 6,
    "speaker": "RANGE",
    "text": "FOLK YARD: Vael civilians never attack. They watch, and run from a shot with the fan folded. The arc never locks on. A dead one is an INNOCENT: a rank cost (here they stand up)."
+  },
+  {
+   "id": "currentyard",
+   "at": [52, 61],
+   "radius": 6,
+   "speaker": "RANGE",
+   "text": "CURRENT: the channel pushes east and conducts the arc. FORKS to the south: fire a rifle and they ring and wake the two sleepers; a blow or the arc is heard from less far."
   },
   {
    "id": "vael",

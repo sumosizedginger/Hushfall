@@ -11,7 +11,7 @@ export function recordAdd(progress, mapId, id) {
 }
 
 /** a found document (a log, a placard, a ledger, a note, a drawing) as opposed to a voice: the Record sets them apart */
-export const isDocument = (speaker) => /\b(LOG|LOGS|NOTE|NOTES|NOTICE|MANIFEST|LEDGER|REGISTER|BOOK|DRAWING|PLACARD|BOARD|INSCRIPTION|PLATE)\b/.test(speaker || '');
+export const isDocument = (speaker) => /\b(LOG|LOGS|NOTE|NOTES|NOTICE|MANIFEST|LEDGER|REGISTER|BOOK|DRAWING|PLACARD|BOARD|INSCRIPTION|PLATE|TALLY)\b/.test(speaker || '');
 
 /**
  * The Record as the screen shows it: a group per map that has entries, in manifest order, each entry resolved from the map's own messages in the order the MAP lists them (the order a player meets them).

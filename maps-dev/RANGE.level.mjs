@@ -36,6 +36,8 @@ L.rect([46, 99, 47, 101], ':'); L.room([48, 92, 59, 108], { floor: ':', wall: 'C
 L.room([2, 113, 45, 130], { floor: 'f', wall: 'C' }); L.rect([21, 109, 23, 112], 'f'); L.ceiling([2, 113, 45, 130], 9);
 // PT-037: the eighth range, east of the gate yard (an opening at x 46..47): the FOLK YARD, Vael civilians (peaceful: a sponge pair for the outline and the hit volume, and a small crowd that lives)
 L.room([48, 113, 59, 130], { floor: 'f', wall: 'C' }); L.rect([46, 120, 47, 122], 'f');
+// PT-037: the ninth range, east of the elite yard (an opening at z 62..64): the CURRENT and FORK yard (a flowing channel with sponges; three forks beside two sleepers that wake when they ring)
+L.room([48, 56, 59, 72], { floor: 'f', wall: 'C' }); L.rect([46, 62, 47, 64], 'f'); L.fx([49, 58, 58, 61], '>'); L.fx([49, 62, 58, 62], '.');
 
 // ---- dressing (lamps and a colonnade; the targets are entities below) ---------------------------------------------------------
 L.putAll('m', [[7, 8], [15, 8], [23, 8], [31, 9], [39, 9], [7, 26], [15, 26], [23, 26], [31, 26], [39, 26], [52, 12], [52, 20]]);
@@ -46,7 +48,7 @@ L.putAll('m', [[8, 35], [8, 44], [22, 35], [22, 44], [34, 35], [34, 44], [14, 50
 L.putAll('c', [[18, 37], [20, 37], [22, 37], [24, 37], [26, 37]]);
 L.putAll('m', [[52, 33], [52, 50], [58, 48]]); L.putAll('c', [[50, 36], [51, 36], [52, 36], [50, 32], [51, 32]]);                                // the third range's lamps; crates to arc over                                              // the rocket yard's wall of crates (static: a rocket stops on them)
 L.putAll('m', [[8, 116], [22, 116], [36, 116], [8, 127], [22, 127], [36, 127]]);                                              // the gate yard's lamps
-L.putAll('m', [[52, 116], [52, 126], [58, 121]]);                                                                           // the folk yard's lamps
+L.putAll('m', [[52, 116], [52, 126], [58, 121], [52, 59], [52, 69]]);                                                                           // the folk yard's lamps
 L.putAll('P', [[16, 118], [16, 124]]);                                                                                       // two pillars: cover from the sweep
 L.put(22, 24, '@');                                              // the hub: the sponges north, the pair and the far sponge on this row, the crowd and the water north-east
 
@@ -134,6 +136,11 @@ E.push({ type: 'switch', id: 'gate', at: [2, 121], wall: 'west', once: true, do:
 t('vaelfolk', 51, 116, S, 'inert', SPONGE); t('vaelfolk', 55, 116, S, 'inert', SPONGE);                                                        // sponges: the fan and the hit volume
 for (const [x, z] of [[51, 123], [54, 122], [57, 124], [52, 127], [56, 127], [54, 119]]) t('vaelfolk', x, z, WEST, 'turn', { sight: 12 });    // a crowd that lives: it watches you, walks a few metres, runs from a shot (and stands up again, as every target does)
 
+// ---- PT-037: the current and fork yard ----
+t('tollbearer', 51, 59, EAST, 'inert', SPONGE); t('tollbearer', 55, 60, EAST, 'inert', SPONGE); t('gaunt', 57, 59, EAST, 'turn', { sight: 8 });     // in the water: the sponges and a swinger are carried east with the current
+E.push({ type: 'prop', kind: 'resonator', at: [51, 67] }, { type: 'prop', kind: 'resonator', at: [53, 68] }, { type: 'prop', kind: 'resonator', at: [52, 65] });
+E.push({ type: 'enemy', kind: 'tollbearer', at: [57, 69], facing: WEST }, { type: 'enemy', kind: 'tollbearer', at: [57, 71], facing: WEST });          // asleep: a fork's ring wakes them without a sight line
+
 const layers = L.layers();
 
 export default {
@@ -166,6 +173,7 @@ export default {
     { id: 'gateyard', at: [10, 115], radius: 8, speaker: 'RANGE', text: 'GATE YARD: a Warden and two Seals to shoot. The lever wakes the live one: a 2.4 s tell, then a beam (pillars stop it; the mirror turns it onto the third Seal; no seals, no shield).' },
     { id: 'loadsyard', at: [53, 94], radius: 6, speaker: 'RANGE', text: 'LOADS: a container drops on the lit orange rect every 8 s (30 damage, it crushes a walker). The second lands four seconds after the first: cross between them.' },
     { id: 'folkyard', at: [52, 121], radius: 6, speaker: 'RANGE', text: 'FOLK YARD: Vael civilians never attack. They watch, and run from a shot with the fan folded. The arc never locks on. A dead one is an INNOCENT: a rank cost (here they stand up).' },
+    { id: 'currentyard', at: [52, 61], radius: 6, speaker: 'RANGE', text: 'CURRENT: the channel pushes east and conducts the arc. FORKS to the south: fire a rifle and they ring and wake the two sleepers; a blow or the arc is heard from less far.' },
     { id: 'vael', at: [43, 10], radius: 3, speaker: 'RANGE', text: 'VAEL: Gills (the lamp stuns them), a bell node and a feeder (the lamp does double). The two bosses take less damage while a node stands.' },
   ],
 };
