@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -134,4 +134,18 @@ test('C2M20: two cars ride a ring round a drop, the hub is reachable only by rid
   while (q.length) { const [x, z] = q.shift(); for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, nz = z + dz, key = nx + ',' + nz; if (!seen.has(key) && ok(nx, nz) && Math.abs(m.floor(nx, nz) - m.floor(x, z)) <= 0.6) { seen.add(key); q.push([nx, nz]); } } }
   assert.ok(!seen.has(hubCell.join(',')), 'the hub is an island: no walk reaches it'); assert.ok(!seen.has('96,48'), 'nor the east station');
   assert.ok(r.world.stats.damageTaken < 200);
+});
+
+test('C2M21: three catwalk rings at 0, 5 and 10 m joined by ramps (diagonals up to the middle, compass points to the top), a Resonant on every ring but the first has company, three valves and an exit that wants all three', () => {
+  const s = SRC.C2M21, map = shippedMap('C2M21');
+  const hs = new Set(); for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) === 'outdoor') hs.add(map.floor(x, z)); assert.ok(hs.has(0) && hs.has(5) && hs.has(10), 'the three rings: ' + [...hs].sort((a, b) => a - b).join());
+  assert.equal(s.entities.filter((e) => e.kind === 'resonant').length, 5); const sw = s.entities.filter((e) => e.type === 'switch'); assert.deepEqual(sw.map((q) => q.id).sort(), ['v1', 'v2', 'v3']);
+  const open = s.triggers.find((t) => t.id === 'open'); assert.deepEqual(open.when, ['msg:v1', 'msg:v2', 'msg:v3']); assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
+  // each valve is on its own ring (its floor is 0, 5, 10 m)
+  const fl = Object.fromEntries(sw.map((q) => [q.id, map.floor(q.at[0], q.at[1])])); assert.deepEqual([fl.v1, fl.v2, fl.v3], [0, 5, 10]);
+  // a Resonant alone does not ring; with company it does (the sim's beat), and a ring that crosses a pier or a floor a metre apart is not felt
+  const w = createWorld(map, { seed: 1 }); const R = w.enemies.find((e) => e.kind === 'resonant'); assert.ok(R);
+  const m0 = runRoute(map, route('C2M21'), { seed: 1 }); assert.equal(m0.world.stats.secrets, 0);
+  const sec = runRoute(map, route('C2M21', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1, 'the hatch');
+  assert.ok(m0.events.some((e) => e.type === 'resonant_ring') || sec.events.some((e) => e.type === 'resonant_ring'), 'a Resonant rang on the way');
 });

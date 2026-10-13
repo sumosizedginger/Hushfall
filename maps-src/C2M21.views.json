@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 6.5,
+"z": 50.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-first-valve",
+"x": 8.5,
+"z": 38.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-outer-ring",
+"x": 18.5,
+"z": 20.5,
+"yaw": -0.8,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-ramp",
+"x": 26.5,
+"z": 26.5,
+"yaw": -0.8,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-mid-ring",
+"x": 44.5,
+"z": 24.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-reactor",
+"x": 50.5,
+"z": 24.5,
+"yaw": 3.14,
+"pitch": 0.25,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-top-ring",
+"x": 50.5,
+"z": 37.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-valve-3",
+"x": 56.5,
+"z": 42.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-exit",
+"x": 44.5,
+"z": 48.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]
