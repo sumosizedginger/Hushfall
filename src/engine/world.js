@@ -936,7 +936,7 @@ function updateLoads(w) {
       o.idx = idx; o.warned = false; emit(w, 'load_land', { i, x, y: floorAt(w, x, z), z });
       if (p.hp > 0 && !p.air && inLoad(L, p.x, p.z, S, PLAYER.radius)) { emit(w, 'load_hit', { x: p.x, z: p.z }); hurtPlayer(w, Math.round(LOADS.damage * diff.enemyDamage)); }
       for (const e of w.enemies) { const d = ENEMIES[e.kind]; if (e.state !== 'dead' && !d.flying && !d.node && !d.boss && inLoad(L, e.x, e.z, S, 0)) damageEnemy(w, e, LOADS.enemyDamage); }
-    } else if (!o.warned && loadState(L, w.time).warn > 0) { o.warned = true; emit(w, 'load_warn', { i, x, z }); }
+    } else if (!o.warned && loadState(L, w.time).warn > 0) { o.warned = true; emit(w, 'load_warn', { i, x, z }); if (L.tremor) { emit(w, 'shake', { amount: L.tremor }); emit(w, 'tremor', { amount: L.tremor }); } }          // (PT-045: a strip of a collapse front that says `tremor` shakes the view as it begins to fall)
   });
 }
 

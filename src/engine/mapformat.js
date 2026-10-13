@@ -50,7 +50,7 @@ export class MapData {
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
-    this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
+    this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0, ...(l.start != null ? { start: l.start } : {}), ...(l.count != null ? { count: l.count } : {}), ...(l.loop != null ? { loop: l.loop } : {}), ...(l.tremor != null ? { tremor: l.tremor } : {}) }));      // PT-032: falling loads on a clock (loads.js)
     this.belts = (src.belts || []).map((b) => ({ rect: b.rect, period: b.period, phase: b.phase ?? 0, mode: b.mode ?? 'flip', on: b.on ?? null, speed: b.speed ?? BELT.speed }));      // PT-045 (E8a): conveyors on a clock (belts.js)
     this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null } : null;      // PT-045 (E12): the water level of the whole map on a clock (tide.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
@@ -285,6 +285,13 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (!Array.isArray(l.rect) || l.rect.length !== 4 || l.rect.some((n) => !Number.isInteger(n)) || l.rect[0] > l.rect[2] || l.rect[1] > l.rect[3] || l.rect[0] < 0 || l.rect[1] < 0 || l.rect[2] >= w || l.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`); continue; }
     if (!(l.period >= 4)) err(`${tag}: period must be at least 4 s (it is seen coming for ${LOADS.warn} s)`);
     if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
+    if (l.start != null || l.count != null || l.loop != null) {                       // PT-045: a scheduled load (a strip of the collapse front)
+      if (l.phase != null) err(`${tag}: a scheduled load (start, count, loop) uses start, not phase`);
+      if (l.start != null && !(Number.isFinite(l.start) && l.start >= 0)) err(`${tag}: start must be a time in seconds, 0 or more`);
+      if (l.count != null && !(Number.isInteger(l.count) && l.count >= 1 && l.count <= 999)) err(`${tag}: count must be a whole number from 1 to 999`);
+      if (l.loop != null && !(Number.isFinite(l.loop) && l.loop > (l.start ?? 0) + ((l.count ?? 1) - 1) * l.period + LOADS.linger)) err(`${tag}: loop must be longer than start plus the time of its last impact`);
+    }
+    if (l.tremor != null && !(l.tremor > 0 && l.tremor <= 3)) err(`${tag}: tremor must be in (0, 3]`);
     let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
     if (!floor) err(`${tag}: no floor under it`);
   }
