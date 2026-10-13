@@ -149,6 +149,9 @@ export const FLOW = { push: 2.2 };
  *  stops for `stop` s, carries you the other way for half, stops again; 'run': it runs for `on` s of every period and stands still for the rest. A belt eases to and from a stop over `ease` s (so the push is never a jump and the chevrons visibly slow before it stops);
  *  `speed` (m/s, default `speed` here) is how hard a running belt pushes: harder than a current, because it is a machine. */
 export const BELT = { speed: 3.0, stop: 0.8, ease: 0.6, minPeriod: 6 };
+/** THE TIDE (PT-045, drop B, E12; src/engine/tide.js): a map's `tide: { levels: [[t, h], ...], loop? }` is the water level of the WHOLE map in metres, a piecewise-linear function of the sim clock; a walkable cell whose floor is more than `wet` below it takes the wading effect
+ *  (FX 'w': slow, and the arc lamp conducts) and the view draws a sea at that height. It never drowns anyone: it takes standing room and speed, and it is the only thing in the game that changes which floors are cheap to stand on. */
+export const TIDE = { wet: 0.05, minH: -2, maxH: 40, maxPoints: 32 };
 /**
  * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
  * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.

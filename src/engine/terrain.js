@@ -1,8 +1,9 @@
 // Terrain queries for the sim: floor height (static per cell, or a moving sector), ceiling, floor effects.
 // Everything takes the world `w` because sector heights are sim state. A map with no terrain layers and no sectors is "flat": every
 // query short-circuits to 0, so Gate 1 maps and frozen test fixtures behave exactly as before.
-import { STEP, FX, LOWG } from './defs.js';
+import { STEP, FX, LOWG, TIDE } from './defs.js';
 import { sporeOnAt } from './breath.js';
+import { tideLevel } from './tide.js';
 
 const isFlat = (m) => m.flat && m.sectors.length === 0;
 
@@ -36,8 +37,10 @@ export function ceilingAt(w, x, z) {
 }
 /** the floor-effect char under a point ('w' | 'x' | null) */
 export function fxAt(w, x, z) {
-  const m = w.map; if (!m.fxRows) return null;
-  const cx = Math.floor(x / m.cell), cz = Math.floor(z / m.cell), c = m.fx(cx, cz);
-  return c && FX[c]?.pulse && !sporeOnAt(m, cx, cz, w.time) ? null : c;                 // PT-027: a spore bed does nothing while it is dormant (breath.js)
+  const m = w.map; if (!m.fxRows && !m.tide) return null;
+  const cx = Math.floor(x / m.cell), cz = Math.floor(z / m.cell), c = m.fxRows ? m.fx(cx, cz) : null, base = c && FX[c]?.pulse && !sporeOnAt(m, cx, cz, w.time) ? null : c;                 // PT-027: a spore bed does nothing while it is dormant (breath.js)
+  return base || (m.tide && tideWet(w, cx, cz) ? 'w' : base);                          // PT-045 (E12): the tide wets every walkable cell whose floor is under the water
 }
+/** is this cell under the tide right now (a walkable cell only: a wall, a door and the void are never flooded) */
+export function tideWet(w, cx, cz) { const m = w.map, k = m.kind(cx, cz); return (k === 'floor' || k === 'outdoor') && cellFloor(w, cx, cz) < tideLevel(m, w.time) - TIDE.wet; }
 export const fxSpeed = (c) => (c ? FX[c]?.speed ?? 1 : 1);

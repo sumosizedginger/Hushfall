@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, LOADS, BELT, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, LOADS, BELT, TIDE, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -52,6 +52,7 @@ export class MapData {
     this.objective = src.objective ?? null;
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
     this.belts = (src.belts || []).map((b) => ({ rect: b.rect, period: b.period, phase: b.phase ?? 0, mode: b.mode ?? 'flip', on: b.on ?? null, speed: b.speed ?? BELT.speed }));      // PT-045 (E8a): conveyors on a clock (belts.js)
+    this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null } : null;      // PT-045 (E12): the water level of the whole map on a clock (tide.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
@@ -286,6 +287,17 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
     let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
     if (!floor) err(`${tag}: no floor under it`);
+  }
+  if (src.tide != null) {                                                              // PT-045 (E12): the tide
+    const T = src.tide, L = T?.levels;
+    if (!T || typeof T !== 'object' || Array.isArray(T) || !Array.isArray(L) || L.length < 2 || L.length > TIDE.maxPoints || !L.every((q) => Array.isArray(q) && q.length === 2 && Number.isFinite(q[0]) && Number.isFinite(q[1]))) err(`tide must be { levels: [[t, h], ...] } with 2 to ${TIDE.maxPoints} points`);
+    else {
+      if (L[0][0] !== 0 || L.some((q, i) => i > 0 && !(q[0] > L[i - 1][0]))) err('tide: the first point is at t = 0 and the times rise');
+      if (L.some((q) => q[1] < TIDE.minH || q[1] > TIDE.maxH)) err(`tide: a level must be between ${TIDE.minH} and ${TIDE.maxH} m`);
+      if (T.loop != null && !(T.loop > L[L.length - 1][0])) err('tide: loop must be longer than the last point');
+      if (T.loop != null && L[L.length - 1][1] !== L[0][1]) err('tide: a looping tide must end at the level it starts at (the loop would jump)');
+      for (let i = 1; i < L.length; i++) if (Math.abs(L[i][1] - L[i - 1][1]) / (L[i][0] - L[i - 1][0]) > 0.5) err(`tide: the water may not rise or fall faster than 0.5 m a second (points ${i - 1} and ${i})`);
+    }
   }
   const beltRects = [];                                                                // PT-045 (E8a): clocked conveyors
   for (const [i, b] of (src.belts || []).entries()) {
