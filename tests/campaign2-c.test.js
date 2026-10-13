@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -148,4 +148,25 @@ test('C2M21: three catwalk rings at 0, 5 and 10 m joined by ramps (diagonals up 
   const m0 = runRoute(map, route('C2M21'), { seed: 1 }); assert.equal(m0.world.stats.secrets, 0);
   const sec = runRoute(map, route('C2M21', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1, 'the hatch');
   assert.ok(m0.events.some((e) => e.type === 'resonant_ring') || sec.events.some((e) => e.type === 'resonant_ring'), 'a Resonant rang on the way');
+});
+
+test('C2M22, the trough: four latches open the way to the lift, six of the Silent go down if the player came by the low halls and three if not, each speaks once, and the exit opens when the lift has gone', () => {
+  const s = SRC.C2M22, map = shippedMap('C2M22');
+  assert.equal(s.entities.filter((e) => e.type === 'switch').length, 4); assert.equal(s.entities.filter((e) => e.type === 'pickup' && /^ammo_/.test(e.kind)).length, 3, 'no ammunition on the road: only the hidden chapel has any'); assert.equal(s.drops.scale, 0.4);
+  const gate = s.doors.find((d) => d.remote); assert.ok(gate, 'the stair to the hall is shut until the call');
+  const play = (choices) => { const r = runRoute(map, route('C2M22'), { seed: 1, choices }); const seen = r.world.messagesSeen; const silent = r.world.enemies.filter((e) => e.group === 'silent'); return { r, seen, silent }; };
+  const six = play({ halls: 'silent' }), three = play({ halls: 'songkeepers' }), none = play(null);
+  for (const x of [six, three, none]) assert.equal(x.r.result, 'complete', x.r.failure);
+  assert.equal(six.silent.length, 6); assert.equal(three.silent.length, 3); assert.equal(none.silent.length, 3);
+  const lines = (x) => ['s1', 's2', 's2b', 's3', 's4', 's5', 's6'].filter((id) => x.seen.includes(id));
+  assert.deepEqual(lines(six), ['s1', 's2', 's3', 's4', 's5', 's6'], 'six voices, each its own line'); assert.deepEqual(lines(three), ['s1', 's2b', 's3'], 'three voices'); assert.deepEqual(lines(none), ['s1', 's2b', 's3']);
+  for (const x of [six, three]) { assert.ok(x.silent.every((e) => e.state !== 'dead'), 'the Silent are never hurt: they are taken'); assert.equal(x.r.world.stats.innocents ?? 0, 0); }
+  assert.ok(six.seen.includes('gone'));
+  // the lift is down when the exit opens
+  const w = six.r.world; assert.ok(w.sectors.find((q) => q.id === 'lift').h < 0.5, 'the lift is at the bottom of its shaft');
+  // the way to the hall is shut before the call: the route cannot pass the stair door without the four latches
+  const early = runRoute(map, [{ op: 'goto', at: [41, 69] }, { op: 'goto', at: [41, 80] }], { seed: 1 }); assert.notEqual(early.result, 'complete'); assert.ok(!early.world.messagesSeen.includes('hall'), 'the hall is not reached');
+  // the hidden chapel holds the longest text of the act
+  const sec = runRoute(map, route('C2M22', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1); assert.ok(['g1', 'g2', 'g3'].every((id) => sec.world.messagesSeen.includes(id)));
+  assert.ok(s.messages.filter((m) => /^g\d$/.test(m.id)).reduce((a, m) => a + m.text.length, 0) > 400, 'a testimony of some length');
 });

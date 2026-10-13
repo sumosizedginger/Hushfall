@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 41.5,
+"z": 11.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-arcade",
+"x": 24.5,
+"z": 12.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-chapel",
+"x": 6.5,
+"z": 11.5,
+"yaw": 3.14,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-garden",
+"x": 30.5,
+"z": 20.5,
+"yaw": -0.8,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-east-arm",
+"x": 68.5,
+"z": 30.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-stair",
+"x": 41.5,
+"z": 66.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-gate-hall",
+"x": 41.5,
+"z": 78.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-rail",
+"x": 41.5,
+"z": 90.5,
+"yaw": 3.14,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-exit",
+"x": 60.5,
+"z": 82.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

@@ -31,7 +31,7 @@ export function runAction(w, a) {
   }
   else if (k === 'choose') { (w.choices ??= {})[v.id] = v.value; emit(w, 'choice', { id: v.id, value: v.value }); }                              // PT-039: a remembered choice (lazy state; the shell keeps it in progress.choices and the next map's world starts with it)
   else if (k === 'sector') sectorTarget(w, v.id, v.to);
-  else if (k === 'message') { const msg = m.messages.find((q) => q.id === v); if (msg && !w.messagesSeen.includes(v)) { w.messagesSeen.push(v); emit(w, 'message', { id: v, speaker: msg.speaker || '', text: msg.text }); } }
+  else if (k === 'message') { const msg = m.messages.find((q) => q.id === v); if (msg && !w.messagesSeen.includes(v) && (!msg.choice || choiceHolds(w, msg.choice))) { w.messagesSeen.push(v); emit(w, 'message', { id: v, speaker: msg.speaker || '', text: msg.text }); } }                // PT-046: a message that is answered by a choice is delivered by an action only when the choice holds, as a positional one is
   else if (k === 'exit') { const id = v.id; for (const x of m.exits) if (!id || x.id === id) w.exitLocked[x.id] = v.set === 'lock'; emit(w, v.set === 'lock' ? 'exit_lock' : 'exit_unlock', {}); }
   else if (k === 'alert') { for (const e of w.enemies) if (e.state === 'idle') wakeEnemy(w, e, false, true); emit(w, 'alarm', {}); }
   else if (k === 'shake') emit(w, 'shake', { amount: v });
