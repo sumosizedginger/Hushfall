@@ -27,18 +27,18 @@ L.disc(85.5, 70, 10, 10, FL, 'P');
 // ---- the looks wing: fourteen rooms, each with its own walls and floor (the Greek letters are the Acts C and D skins, defs.js) --------------------------------------------------------------------------------------------------------------
 const LOOKS = [
   // [name, look, wall, floor, roofed, plate, dressing prop]
-  ['THE THROAT, C2M17', 'hive', 'α', 'Α', false, 'a gorge of folded flesh-rock with amber veins and a red sun behind the Hive tower. Judge: a place, or a brown room?', 'pillar'],
-  ['THE NERVE CATHEDRAL, C2M18', 'nerve', 'β', 'Β', false, 'a black lattice of pink nerves over a glowing red void. Judge: does it read as a lattice you cross, not a wall you pass?', 'pillar'],
+  ['THE THROAT, C2M17', 'hive', 'α', 'Α', false, 'a gorge of folded flesh-rock with amber veins and a red sun behind the Hive tower. Judge: a place, or a brown room?', 'pillar', 'hive'],
+  ['THE NERVE CATHEDRAL, C2M18', 'nerve', 'β', 'Β', false, 'a black lattice of pink nerves over a glowing red void. Judge: does it read as a lattice you cross, not a wall you pass?', 'pillar', 'hive'],
   ['THE BONE LOOM, C2M19', 'woven', 'γ', 'Γ', true, 'bone woven like basketwork, cream and old gold, warm light. Judge: a loom, or wallpaper?', 'organ'],
   ['THE VEIN RAIL, C2M20', 'veins', 'δ', 'Δ', true, 'iron plate over red muscle with blue vessels, a deck of diamond tread. Judge: a place a train runs through?', 'pillar'],
   ['THE PULSE FOUNDRY, C2M21', 'reactor', 'ε', 'Ε', true, 'copper panels and orange portholes, a grate that glows from beneath. Judge: heat, and the room the Resonants live in?', 'vat'],
   ['THE MOURNING HALLS, C2M22', 'mourning', 'ζ', 'Ζ', true, 'ash-white plaster, black cloth hung in scallops, almost no colour. Judge: quiet and grief, or an empty gallery?', 'pew'],
-  ['THE REPRISE, C2M23', 'copy', 'η', 'Η', false, 'the quay as the Hive remembers it, in glass, under two suns. Judge: wrong in a way you can feel, or a blue room?', 'pillar'],
+  ['THE REPRISE, C2M23', 'copy', 'η', 'Η', false, 'the quay as the Hive remembers it, in glass, under two suns. Judge: wrong in a way you can feel, or a blue room?', 'pillar', 'marrow_wrong'],
   ['CHOIR OF ONE, C2M24', 'conductor', 'θ', 'Θ', true, 'pale nerve-white stone, rows of seats, a ring of pink lamps. Judge: a hall built for a choir?', 'organ'],
-  ['THE DESCENT, C2M25', 'descent', 'ι', 'Ι', false, 'black wet stone, copper going green, a well. Judge: is it a different kind of dark from the Deep?', 'pillar'],
+  ['THE DESCENT, C2M25', 'descent', 'ι', 'Ι', false, 'black wet stone, copper going green, a well. Judge: is it a different kind of dark from the Deep?', 'pillar', 'root'],
   ['THE SILENT ROOTS, C2M26', 'roots', 'κ', 'Κ', true, 'wood, pale dead moss, loam: no green anywhere. Judge: a forest that is dead, or a brown cave?', 'pillar'],
-  ['THE FAULT LINE, C2M27', 'fault', 'λ', 'Λ', false, 'split basalt, copper light welling up in the cracks. Judge: a place about to fall?', 'pillar'],
-  ['THE LAST TIDE, C2M28', 'tide', 'μ', 'Μ', false, 'a round dock: lime line, weed, drowned oak, a mooring ring. Judge: the harbour again, or something else?', 'pillar'],
+  ['THE FAULT LINE, C2M27', 'fault', 'λ', 'Λ', false, 'split basalt, copper light welling up in the cracks. Judge: a place about to fall?', 'pillar', 'hive'],
+  ['THE LAST TIDE, C2M28', 'tide', 'μ', 'Μ', false, 'a round dock: lime line, weed, drowned oak, a mooring ring. Judge: the harbour again, or something else?', 'pillar', 'dusk'],
   ['INSIDE THE BELL, C2M29', 'rootbell', 'ν', 'Ν', true, 'bronze plates, verdigris, roots stitched through them, one copper glow. Judge: the inside of a bell?', 'pillar'],
   ['THE UNRUNG GATE, C2M30', 'unrung', 'ξ', 'Ξ', true, 'pale dim marble, one gold line, a path worn down the middle. Judge: the end of the road, or a corridor?', 'pillar'],
 ];
@@ -49,12 +49,12 @@ const SCEN = {                                                                  
   8: ['shaft', 44, 53, 0, 1.3, 0], 9: ['rootcolumn', 68, 51, 0, 1.4, 0], 13: ['arch', 158, 53, 0, 0.8, 0],
 };
 LOOKS.forEach((lk, i) => {
-  const [name, look, wall, floor, roofed, plate, prop] = lk, north = i < 7, [x0, x1] = north ? NORTH[i] : SOUTH[i - 7], z0 = north ? 9 : 33, z1 = north ? 23 : 47, mid = Math.round((x0 + x1) / 2), cz = (z0 + z1) / 2 | 0;
+  const [name, look, wall, floor, roofed, plate, prop, sky] = lk, north = i < 7, [x0, x1] = north ? NORTH[i] : SOUTH[i - 7], z0 = north ? 9 : 33, z1 = north ? 23 : 47, mid = Math.round((x0 + x1) / 2), cz = (z0 + z1) / 2 | 0;
   L.room([x0, z0, x1, z1], { floor, wall });
   const dz = north ? [24, 25] : [30, 32];
   L.rect([mid - 3, dz[0], mid + 3, dz[1]], floor);                                                                     // the doorway to the corridor, in the room's own floor
   if (roofed) L.ceiling([x0, z0, x1, z1], i === 12 ? 14 : i === 7 ? 12 : 7);
-  zones.push({ rect: [x0 - 1, north ? z0 - 1 : z0 - 3, x1 + 1, north ? z1 + 3 : z1 + 1], look, ...(SCEN[i] ? {} : {}) });
+  zones.push({ rect: [x0 - 1, north ? z0 - 1 : z0 - 3, x1 + 1, north ? z1 + 3 : z1 + 1], look, ...(sky ? { sky } : {}) });
   for (const [dx, dz2] of [[3, 3], [x1 - x0 - 3, 3], [3, z1 - z0 - 3], [x1 - x0 - 3, z1 - z0 - 3]]) put({ type: 'prop', kind: 'lamp', at: [x0 + dx, z0 + dz2] });
   put({ type: 'prop', kind: prop, at: [mid, cz] }); put({ type: 'prop', kind: prop, at: [x0 + 5, cz - 3] }); put({ type: 'prop', kind: prop, at: [x1 - 5, cz + 3] });
   say('look' + i, mid, north ? z1 - 2 : z0 + 2, 5, HULL, name + ': ' + plate);
@@ -110,7 +110,7 @@ const LINE_END = lx;
 say('line', 17, 110, 6, HULL, 'THE LINEUP: every creature in the game at true scale, as sponges: shortest first, then the bosses, then the nodes. Judge the new against the old: outline, height, colour.');
 // the variants: tints only
 const VAR = [['tollbearer', null], ['tollbearer', 'drowned'], ['tollbearer', 'hived'], ['tollbearer', 'woven'], ['tollbearer', 'crystal'], ['gaunt', null], ['gaunt', 'hived'], ['gaunt', 'woven'], ['gaunt', 'crystal']];
-VAR.forEach(([kind, variant], i) => enemy(kind, 24 + i * 6, 112, N, { hold: 'inert', hp: 5000, ...(variant ? { variant } : {}) }));
+VAR.forEach(([kind, variant], i) => enemy(kind, 24 + i * 3.5, 112, N, { hold: 'inert', hp: 5000, ...(variant ? { variant } : {}) }));
 say('var', 22, 109, 5, HULL, 'THE VARIANTS (the near row): plain, Drowned, Hived, Woven, Crystal. A tint on the same rig and nothing else. Is each a different creature, or a tint too far?');
 // ---- the hub, the start, the exit ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 L.put(85, 70, '@');

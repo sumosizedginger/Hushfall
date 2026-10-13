@@ -1451,7 +1451,7 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [30, 112],
+   "at": [27.5, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1460,7 +1460,7 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [36, 112],
+   "at": [31, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1469,7 +1469,7 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [42, 112],
+   "at": [34.5, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1478,7 +1478,7 @@
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [48, 112],
+   "at": [38, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1487,7 +1487,7 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [54, 112],
+   "at": [41.5, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000
@@ -1495,7 +1495,7 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [60, 112],
+   "at": [45, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1504,7 +1504,7 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [66, 112],
+   "at": [48.5, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1513,7 +1513,7 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [72, 112],
+   "at": [52, 112],
    "facing": 3.141592653589793,
    "hold": "inert",
    "hp": 5000,
@@ -1874,7 +1874,8 @@
     29,
     26
    ],
-   "look": "hive"
+   "look": "hive",
+   "sky": "hive"
   },
   {
    "rect": [
@@ -1883,7 +1884,8 @@
     55,
     26
    ],
-   "look": "nerve"
+   "look": "nerve",
+   "sky": "hive"
   },
   {
    "rect": [
@@ -1928,7 +1930,8 @@
     185,
     26
    ],
-   "look": "copy"
+   "look": "copy",
+   "sky": "marrow_wrong"
   },
   {
    "rect": [
@@ -1946,7 +1949,8 @@
     55,
     48
    ],
-   "look": "descent"
+   "look": "descent",
+   "sky": "root"
   },
   {
    "rect": [
@@ -1964,7 +1968,8 @@
     117,
     48
    ],
-   "look": "fault"
+   "look": "fault",
+   "sky": "hive"
   },
   {
    "rect": [
@@ -1973,7 +1978,8 @@
     143,
     48
    ],
-   "look": "tide"
+   "look": "tide",
+   "sky": "dusk"
   },
   {
    "rect": [

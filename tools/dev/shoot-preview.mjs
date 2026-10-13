@@ -67,20 +67,20 @@ if (['hub', 'bestiary', 'looks', 'scenery', 'lineup', 'variants'].some((k) => wa
     const xs = hive.entities.filter((e) => e.type === 'enemy' && e.at[1] === 107 && e.hold === 'inert').map((e) => e.at[0]);
     for (let k = 0; k < xs.length; k += 6) { const x = xs[Math.min(xs.length - 1, k + 2)]; await T(`t.setup_teleport(${(x + 0.5) * CELL}, ${111 * CELL}, 0); t.setup_player({ pitch: 0.0, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('lineup-' + String(k / 6 + 1).padStart(2, '0')); }
   }
-  if (want.has('variants')) { await T(`t.setup_teleport(${(30 + 0.5) * CELL}, ${(108 + 0.5) * CELL}, 3.14); t.setup_player({ pitch: -0.02, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('variants-1'); await T(`t.setup_teleport(${(55 + 0.5) * CELL}, ${(108 + 0.5) * CELL}, 3.14)`); await T('t.tick(2)'); await frames(6); await shot('variants-2'); }
+  if (want.has('variants')) { for (const [k, x] of [[1, 28], [2, 38]]) { await T(`t.setup_teleport(${(x + 0.5) * CELL}, ${(108 + 0.5) * CELL}, 3.14159); t.setup_player({ pitch: -0.02, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('variants-' + k); } }
 }
 const probe = () => T('t.hiveProbe()');
 const killAll = async (kind) => { for (let i = 0; i < 80; i++) { const hp = await T(`t.setup_hurtEnemy('${kind}', 1e7)`); if (hp == null) break; } };
 if (want.has('boss')) {
-  const CX = 62, CZ = 34; await open('HIVEBOSS'); R.probes.boss = {};
+  const hb = load('HIVEBOSS'), pod = hb.entities.find((e) => e.kind === 'hivecantor'), CX = pod.at[0], CZ = pod.at[1]; await open('HIVEBOSS'); R.probes.boss = {};
   await T(`t.setup_teleport(19, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.05, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('boss-1-start-hall');
-  await T(`t.setup_teleport(${(CX - 25) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.08, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('boss-2-the-gate');
-  await T(`t.setup_teleport(${(CX - 22.5) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.12, hp: 100000 })`); await T('t.tick(60)'); await frames(6); await shot('boss-3-bowl-from-the-rim'); R.probes.boss.awake = await probe();
+  await T(`t.setup_teleport(${(CX - 21) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.08, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('boss-2-the-gate');
+  await T(`t.setup_teleport(${(CX - 17.5) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.12, hp: 100000 })`); await T('t.tick(60)'); await frames(6); await shot('boss-3-bowl-from-the-rim'); R.probes.boss.awake = await probe();
   // the beat floors and the conductor's windup and ring
   let seen = {};
   for (let i = 0; i < 80 && !(seen.windup && seen.ring); i++) { await T('t.tick(10)'); await frames(1); const p = await probe(); if (p.cantor?.pulseT >= 0 && !seen.windup) { seen.windup = p.tick; await frames(2); await shot('boss-4-windup', 50); } if (p.pulses > 0 && !seen.ring) { seen.ring = p.tick; await frames(2); await shot('boss-5-ring', 50); R.probes.boss.ring = p; } }
   R.probes.boss.seen = seen;
-  await T(`t.setup_teleport(${(CX - 12) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: 0.15, hp: 100000 })`); await T('t.tick(2)'); await frames(8); await shot('boss-6-the-conductor'); R.probes.boss.threads = await probe();
+  await T(`t.setup_teleport(${(CX - 9) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: 0.15, hp: 100000 })`); await T('t.tick(2)'); await frames(8); await shot('boss-6-the-conductor'); R.probes.boss.threads = await probe();
   // the unison shield: a shot while the choir sings, then with the choir dead
   const hp0 = await T("t.setup_hurtEnemy('hivecantor', 100)"), hp1 = await T("t.setup_hurtEnemy('hivecantor', 100)"); R.probes.boss.shielded = { before: 1500, afterTwoHundred: hp1, lost: 1500 - hp1 };
   await killAll('tollbearer'); await killAll('chorister'); await killAll('zealot'); await T('t.tick(5)'); await frames(4); R.probes.boss.choirDead = await probe();

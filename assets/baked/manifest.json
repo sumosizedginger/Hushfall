@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs",
+  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -509,6 +509,38 @@
       "sha256": "b67b3e96c4aad9fed15603de934f69721d119abe9205b8949d0a714430b51482",
       "bytes": 30316
     },
+    "choir_resonant": {
+      "seed": 4301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c91b34c0f71da9aa7df5bb7f913ef028601ccb8049dd824d216937144d0aa6cf",
+      "bytes": 31601
+    },
+    "choir_hivecantor": {
+      "seed": 4302,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "348ec861089bac97e5103e85a475738dee1badcdfaf34fca7e85e7714e97319b",
+      "bytes": 30454
+    },
+    "choir_rootbell": {
+      "seed": 4303,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "900e613a845fd12a89bf6f47fc71c80c682d220baa64b343a54f7ed2adcb9b8d",
+      "bytes": 27155
+    },
+    "choir_rootanchor": {
+      "seed": 4304,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ffecf641851e2b93dad7b835f0a7856b51c1a254686ada511fdb66a93362062a",
+      "bytes": 20959
+    },
     "choir_graftmother": {
       "seed": 2310,
       "width": 256,
@@ -837,6 +869,14 @@
       "sha256": "f7f64fd9c6e95e72f70311b9f005f5bde6eb88d122456f086a953014f195813b",
       "bytes": 67651
     },
+    "ui_ending_art_2": {
+      "seed": 3602,
+      "width": 320,
+      "height": 200,
+      "transparent": false,
+      "sha256": "2cd380ed39152c6bfb6c21214368afc6c4d8296c2f759aa7fedae597e84f7270",
+      "bytes": 44103
+    },
     "wall_glasscrust_a": {
       "seed": 9501,
       "width": 256,
@@ -1012,38 +1052,6 @@
       "transparent": false,
       "sha256": "ba296365f07a30f37d580c481cf8d285dc7d4c6d9fc6ee0c9ddfb4306b44bec5",
       "bytes": 58618
-    },
-    "choir_resonant": {
-      "seed": 4301,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "c91b34c0f71da9aa7df5bb7f913ef028601ccb8049dd824d216937144d0aa6cf",
-      "bytes": 31601
-    },
-    "choir_hivecantor": {
-      "seed": 4302,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "348ec861089bac97e5103e85a475738dee1badcdfaf34fca7e85e7714e97319b",
-      "bytes": 30454
-    },
-    "choir_rootbell": {
-      "seed": 4303,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "900e613a845fd12a89bf6f47fc71c80c682d220baa64b343a54f7ed2adcb9b8d",
-      "bytes": 27155
-    },
-    "choir_rootanchor": {
-      "seed": 4304,
-      "width": 256,
-      "height": 256,
-      "transparent": false,
-      "sha256": "ffecf641851e2b93dad7b835f0a7856b51c1a254686ada511fdb66a93362062a",
-      "bytes": 20959
     },
     "wall_hivegorge_a": {
       "seed": 9701,
