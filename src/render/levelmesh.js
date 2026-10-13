@@ -192,6 +192,10 @@ export function buildLevel(map, tex) {
   for (const sw of map.switches) {
     const r = makeSwitchPanel(); const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[sw.wallDir] || [0, -1];
     r.group.position.set(sw.px, sw.fy + 1.35, sw.pz); r.group.rotation.y = Math.atan2(-dir[0], -dir[1]);           // faces away from the wall (local +z)
+    if (map.atmosphere.dark) {                                           // PT-039 (Lantern Ossuary: "impossible to find the switch"): in a dark map a lever shows a big lamp and throws a red glow on the wall round it, so it can be seen from down the corridor
+      r.lamp.scale.setScalar(2.6);
+      const lt = new THREE.PointLight(0xff4a3a, 22, 10, 2); lt.userData.base = 22; lt.position.set(sw.px - dir[0] * 0.5, sw.fy + 1.45, sw.pz - dir[1] * 0.5); group.add(lt); lights.push(lt); r.light = lt;
+    }
     group.add(r.group); switchViews.set(sw.id, r);
   }
 

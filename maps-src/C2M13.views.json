@@ -70,5 +70,23 @@
 "pitch": 0.0,
 "open": true,
 "ticks": 10
+},
+{
+"name": "09-winch-far",
+"x": 28.5,
+"z": 31.5,
+"yaw": 3.14159,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "10-winch-near",
+"x": 28.5,
+"z": 38.5,
+"yaw": 1.5708,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
 }
 ]

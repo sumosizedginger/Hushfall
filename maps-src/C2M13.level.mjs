@@ -49,12 +49,15 @@ for (let z = 2; z <= 4; z++) for (let x = 37; x <= 39; x++) { carve(x, z, SILT, 
 setCell(L, 38, 5, 'S', 14);
 // ---- walls: bone everywhere, rock where the funnel meets the floor -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) if (L.g[z][x] === ROCK) { let t = false; for (let dz = -1; dz <= 1 && !t; dz++) for (let dx = -1; dx <= 1; dx++) if ('{fn^'.includes(L.g[z + dz][x + dx])) { t = true; break; } if (t) L.g[z][x] = Math.hypot(x + 0.5 - CX, z + 0.5 - CZ) < 9.5 ? ROCK : BONE; }
-// the winch: a lever on the inner ring's outer wall that lets the well room's stair open (the exit is locked until it is thrown): found by scanning the inner ring for a cell with a wall beside it
-const WINCH = (() => { for (let d = 215; d < 215 + 360; d += 3) { const [x, z] = polar(11.2, d % 360); if (L.g[z][x] !== RING) continue; for (const [dx, dz, wall] of [[1, 0, 'east'], [-1, 0, 'west'], [0, 1, 'south'], [0, -1, 'north']]) if ((L.g[z + dz][x + dx] === BONE || L.g[z + dz][x + dx] === ROCK) && Math.hypot(x + dx + 0.5 - CX, z + dz + 0.5 - CZ) > 11.5) return { at: [x, z], wall }; } return null; })();
+// the winch: a lever on the inner ring's outer wall that lets the well room's stair open (the exit is locked until it is thrown). PT-039 playtest ("it is impossible to find the switch"): it was a small dark panel on a 6 m wide
+// ring, found by a scan, 3 m from the walking line, lit by nothing but its own thumb-sized lamp. It is now on the wall DIRECTLY OPPOSITE THE MOUTH OF THE WELL SPOKE (the one place every player stops and turns), a lantern hangs
+// beside it, its lamp glows red in a dark map (levelmesh.js), and the ring entry, the lit ring and the sealed gate each say where it is.
+const WINCH = { at: [26, 38], wall: 'west' };
+if (L.g[WINCH.at[1]][WINCH.at[0]] !== RING || ![BONE, ROCK].includes(L.g[38][25])) throw new Error('C2M13: the winch cell moved: ' + L.g[38][25] + ' ' + L.g[38][26]);
 const P = placer(L); L.put(38, 72, '@'); P.reserve(38, 72);
 const { E, P: PK, PR } = P;
 // ---- lanterns (a few hung in the niches: a lit stretch), oil on the lane ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-PR('lantern', 38, 70); PR('lantern', ...polar(30.5, 200)); PR('lantern', ...polar(20.5, 245)); PR('lantern', ...polar(10.5, 200)); PR('lantern', ...polar(7.5, 180));
+PR('lantern', 38, 70); PR('lantern', ...polar(30.5, 200)); PR('lantern', ...polar(20.5, 245)); PR('lantern', ...polar(10.5, 200)); PR('lantern', ...polar(7.5, 180)); PR('lantern', 27, 36);
 for (const k of [3, 9, 15]) if (niches[k]) PR('lantern', niches[k][0], niches[k][1]);
 PK('oil', 38, 69); PK('oil', ...polar(30.5, 135)); PK('oil', ...polar(25.5, 200)); PK('oil', ...polar(20.5, 230)); PK('oil', ...polar(10.5, 215));
 for (const [x, z] of SEC.cells.slice(0, 3)) PK('oil', x, z); if (SEC.cells[3]) PK('armor_vest', ...SEC.cells[3]); if (SEC.cells[4]) PK('health_large', ...SEC.cells[4]); if (SEC.cells[5]) PK('ammo_cell', ...SEC.cells[5]); if (SEC.cells[6]) PK('ammo_shell', ...SEC.cells[6]); if (SEC.cells[7]) PK('ammo_rivet', ...SEC.cells[7]);
@@ -94,6 +97,8 @@ const MAP = {
     { id: 'plate', at: polar(20.5, 250), radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: a count of the stacked. Four thousand and sixty, in this ring. The ring below is shorter.' },
     { id: 'log4', at: polar(10.5, 190), radius: 3, speaker: 'PELLEW, MARROW GIRL (LOG)', text: 'Day 16. One. The oil is out and I am writing by the last of the wick. The well is below me. There is something at the bottom of it that is' },
     { id: 'well', at: polar(7.5, 180), radius: 3, speaker: 'INES', text: 'She stopped at the top of the spoke. Her lantern is on the floor here, empty, with the wick burned to the stub. I will take the tin she did not need.' },
+    { id: 'winchhint', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'Round the ring, across from where the spoke goes down: a hung lantern, and under it a red lamp on an iron plate set in the bone. That is a lever.' },
+    { id: 'sealedhint', at: polar(3.5, 240), radius: 3, speaker: 'HULL', text: 'A plain gate at the bottom of the well, and no handle. If it is shut, a counterweight holds it, and the winch for that is on the inner ring, on the wall across from the spoke.' },
     { id: 'winch', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The winch turns a counterweight somewhere under the floor. Below, a stair has come up out of the well.' },
     { id: 'hollow', at: [38, 7], radius: 3, speaker: 'HULL', text: 'The outer wall rings hollow in the north, in the one stretch that has no niche cut in it.' },
     { id: 'sealed', at: [38, 3], radius: 3, speaker: 'PELLEW, MARROW GIRL (LOG)', text: 'Day 10. We sealed the spare tins in the wall for whoever came after, and left the north stretch bare to mark it. Eight tins and a pistol. God keep' },
@@ -101,7 +106,7 @@ const MAP = {
   triggers: [
     { id: 'ring3', when: 'enter', at: polar(30.5, 130), radius: 5, do: [{ objective: 'The outer ring: the spokes down are to the west and the north' }] },
     { id: 'ring2', when: 'enter', at: polar(20.5, 230), radius: 5, do: [{ objective: 'The middle ring: the way on is a spoke to the west' }] },
-    { id: 'ring1', when: 'enter', at: polar(10.5, 200), radius: 5, do: [{ objective: 'The inner ring: find the winch on its wall. The well room is the west spoke' }] },
+    { id: 'ring1', when: 'enter', at: polar(10.5, 232), radius: 5, do: [{ objective: 'Throw the winch: a lever on the ring wall across from the well spoke' }, { message: 'winchhint' }] },
   ],
   quality: { enemies: [30, 70], botSeconds: [40, 900], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 6, enemyKinds: { gaunt: 8, tollbearer: 8, zealot: 4, bellhand: 3, gill: 2, chorister: 2, sexton: 1, acolyte: 1, bulwark: 1 },
     scaleClass: 'COMPRESSION', introduces: 'the dark: a map lit only by the hand lantern, where oil is the resource, creatures that follow their eyes see you from 6 m unlit and 24 lit, and the logs of a lost Marrow crew lie in the niches' },

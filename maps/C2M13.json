@@ -288,11 +288,14 @@
   {
    "id": "ring1",
    "when": "enter",
-   "at": [28, 34],
+   "at": [31, 29],
    "radius": 5,
    "do": [
     {
-     "objective": "The inner ring: find the winch on its wall. The well room is the west spoke"
+     "objective": "Throw the winch: a lever on the ring wall across from the well spoke"
+    },
+    {
+     "message": "winchhint"
     }
    ]
   }
@@ -326,6 +329,11 @@
    "type": "prop",
    "kind": "lantern",
    "at": [30, 38]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [27, 36]
   },
   {
    "type": "prop",
@@ -686,7 +694,7 @@
   {
    "type": "enemy",
    "kind": "chorister",
-   "at": [27, 36],
+   "at": [28, 36],
    "facing": 4.886921905584122
   },
   {
@@ -722,7 +730,7 @@
   {
    "type": "switch",
    "id": "winch",
-   "at": [28, 31],
+   "at": [26, 38],
    "wall": "west",
    "once": true,
    "do": [
@@ -821,6 +829,20 @@
    "radius": 3,
    "speaker": "INES",
    "text": "She stopped at the top of the spoke. Her lantern is on the floor here, empty, with the wick burned to the stub. I will take the tin she did not need."
+  },
+  {
+   "id": "winchhint",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "A hung lantern ahead, and under it a red lamp on an iron plate in the bone. A lever. The ring ends where the spoke goes in; the plate is on the wall facing it."
+  },
+  {
+   "id": "sealedhint",
+   "at": [36, 34],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "A plain gate at the bottom of the well, and no handle. If it is shut, a counterweight holds it, and the winch for that is on the inner ring, on the wall across from the spoke."
   },
   {
    "id": "winch",
