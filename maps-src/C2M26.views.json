@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 8.5,
+"z": 89.5,
+"yaw": -0.8,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-forest",
+"x": 20.5,
+"z": 80.5,
+"yaw": -1.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-west-chamber",
+"x": 14.5,
+"z": 50.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-hub",
+"x": 50.5,
+"z": 64.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-south-chamber",
+"x": 50.5,
+"z": 82.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-east-chamber",
+"x": 84.5,
+"z": 50.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-stair",
+"x": 50.5,
+"z": 36.5,
+"yaw": 0.0,
+"pitch": 0.15,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-refectory",
+"x": 50.5,
+"z": 24.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-the-exit",
+"x": 50.5,
+"z": 6.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]
