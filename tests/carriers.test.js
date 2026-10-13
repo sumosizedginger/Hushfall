@@ -99,3 +99,13 @@ test('a car pulling out and coming to rest are events (the sound of a lift): one
   const w = world(yard([CAR])); const ev = runTo(w, 8 + 1.5 * 18 / 4 + 1).filter((e) => e.type === 'car_depart' || e.type === 'car_arrive');
   assert.deepEqual(ev.map((e) => e.type), ['car_depart', 'car_arrive']); assert.ok(near(ev[0].x, 23, 0.1) && near(ev[1].x, 41, 0.1), 'at the stops: ' + ev.map((e) => e.x.toFixed(1)));
 });
+
+test('a body in the air that comes down on a car\'s deck LANDS on it (it is a floor), and one that misses the deck over the void is a miss; a rider carried right along the deck\'s edge is not dropped by rounding', () => {
+  const w = world(yard([CAR])); const P = w.player;
+  Object.assign(P, { x: 22, z: 15, y: 2.5, vx: 0, vz: 0 }); P.air = { vy: 0, g: 3.2, bx: 0, bz: 0, sx: 0, sz: 0, t: 0, low: -0.4 }; const ev = [];
+  for (let i = 0; i < 90 && P.air; i++) { step(w, idle()); ev.push(...drainEvents(w)); } assert.ok(!P.air && near(P.y, 0, 0.05) && !ev.some((e) => e.type === 'void_fall'), 'landed on the deck: y ' + P.y + ' ' + ev.map((e) => e.type).join());
+  const m = world(yard([CAR])); Object.assign(m.player, { x: 30, z: 15, y: 2.5, vx: 0, vz: 0 }); m.player.air = { vy: 0, g: 3.2, bx: 0, bz: 0, sx: 0, sz: 0, t: 0, low: -0.4 }; const ev2 = [];
+  for (let i = 0; i < 240 && m.player.air; i++) { step(m, idle()); ev2.push(...drainEvents(m)); } assert.ok(ev2.some((e) => e.type === 'void_fall'), 'beside the deck, over the void: a miss');
+  const e = world(yard([CAR])); const car = e.map.cars[0]; Object.assign(e.player, { x: 25.9, z: 15, vx: 0, vz: 0 }); const evE = runTo(e, 8 + 1.5 * 18 / 4 + 1);      // 10 cm inside the deck's east edge (the deck spans x 20..26 at the west stop), carried the whole way
+  assert.ok(!evE.some((x) => x.type === 'void_fall') && e.player.x > 38 && e.player.x < 44.2, 'carried along the edge to the far dock: x ' + e.player.x.toFixed(2)); assert.equal(carState(car, e.time).stop, 1);
+});

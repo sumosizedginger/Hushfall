@@ -41,8 +41,8 @@ export function carState(car, t) {
 export function carRect(car, st) { const hw = car.size[0] * car.cell / 2, hd = car.size[1] * car.cell / 2; return [st.x - hw, st.z - hd, st.x + hw, st.z + hd]; }
 /** is the point (x, z) metres over the deck? (`slack` widens the deck, metres) */
 export function carCovers(car, st, x, z, slack = 0) { const r = carRect(car, st); return x >= r[0] - slack && x <= r[2] + slack && z >= r[1] - slack && z <= r[3] + slack; }
-/** the highest deck over the point at time t (metres), or -Infinity when no car is there */
-export function carDeckY(map, t, x, z) { let y = -Infinity; for (const car of map.cars) { const st = carState(car, t); if (st.y > y && carCovers(car, st, x, z)) y = st.y; } return y; }
+/** the highest deck over the point at time t (metres), or -Infinity when no car is there (`slack` widens every deck, metres: a body carried along an edge must not fall to rounding) */
+export function carDeckY(map, t, x, z, slack = 0) { let y = -Infinity; for (const car of map.cars) { const st = carState(car, t); if (st.y > y && carCovers(car, st, x, z, slack)) y = st.y; } return y; }
 /** the car whose deck the point is over at time t, with its state, or null */
 export function carAt(map, t, x, z) { for (const car of map.cars) { const st = carState(car, t); if (carCovers(car, st, x, z)) return { car, st }; } return null; }
 

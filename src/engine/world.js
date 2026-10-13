@@ -962,7 +962,7 @@ function groundAir(w, p, dt) {
   const m = w.map, cx = Math.floor(p.x / m.cell), cz = Math.floor(p.z / m.cell);
   if (m.ventCells.has(cx + ',' + cz)) { if (p.ventCd <= 0) { const v = m.vents.find((q) => q.at[0] === cx && q.at[1] === cz); if (v) launchFrom(w, p, v); } return; }
   if (m.hasVoid) {
-    if (m.cars.length && m.kind(cx, cz) === 'void') { if (carDeckY(m, w.time, p.x, p.z) === -Infinity) voidFall(w, p); return; }       // PT-045: over the void on a car's deck is riding (nothing to go back to mid-air); over the void with no deck under the feet is a miss
+    if (m.cars.length && m.kind(cx, cz) === 'void') { if (carDeckY(m, w.time, p.x, p.z, 0.05) === -Infinity) voidFall(w, p); return; }       // PT-045: over the void on a car's deck is riding (nothing to go back to mid-air); over the void with no deck under the feet is a miss
     p.lastSafe = { x: p.x, z: p.z };
   }
 }
@@ -979,7 +979,7 @@ function airMove(w, p, sx, sf, fx, fz, rx, rz, dt) {
   A.sx += ((fx * sf + rx * sx) * steer - A.sx) * k; A.sz += ((fz * sf + rz * sx) * steer - A.sz) * k;
   p.vx = A.bx + A.sx; p.vz = A.bz + A.sz;
   const y0 = p.y; tryMove(w, p, p.vx * dt, p.vz * dt, PLAYER.radius);                                      // (walls and ledges higher than the body stop it; tryMove puts p.y on the ground: the height below is the body's own)
-  const over = m.hasVoid && m.kind(Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)) === 'void';
+  const over = m.hasVoid && m.kind(Math.floor(p.x / m.cell), Math.floor(p.z / m.cell)) === 'void' && !(m.cars.length && carDeckY(m, w.time, p.x, p.z) > -Infinity);      // (a deck of a car under the body is a landing, not a miss: PT-045)
   A.vy -= (over && A.vy < 0 && y0 < A.low ? LOWG.voidFallG : A.g) * dt; let y = y0 + A.vy * dt;
   const roof = ceilingAt(w, p.x, p.z) - PLAYER.eye - 0.3; if (A.vy > 0 && y > roof) { y = Math.max(y0, roof); A.vy = 0; }
   const ground = groundAt(w, p.x, p.z, PLAYER.radius);
@@ -1084,7 +1084,7 @@ function updateEnemy(w, e, diff, dt) {
 function carryRider(w, p, dt) {
   for (const car of w.map.cars) {
     const a = carState(car, w.time - dt), b = carState(car, w.time);
-    if (!carCovers(car, a, p.x, p.z) || Math.abs(p.y - a.y) > CARS.board) continue;
+    if (!carCovers(car, a, p.x, p.z, 0.05) || Math.abs(p.y - a.y) > CARS.board) continue;
     const dx = b.x - a.x, dz = b.z - a.z; if (dx || dz) tryMove(w, p, dx, dz, PLAYER.radius);
     return;
   }
