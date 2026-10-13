@@ -1,0 +1,83 @@
+[
+{
+"name": "01-the-top",
+"x": 68.5,
+"z": 56.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-well",
+"x": 58.5,
+"z": 58.5,
+"yaw": 2.4,
+"pitch": 0.5,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-vent",
+"x": 59.5,
+"z": 58.5,
+"yaw": 2.0,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-landing-2",
+"x": 46.5,
+"z": 66.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-niche",
+"x": 20.5,
+"z": 58.5,
+"yaw": 1.57,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-resonant",
+"x": 14.5,
+"z": 32.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-landing-5",
+"x": 33.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-last",
+"x": 59.5,
+"z": 21.5,
+"yaw": 0.0,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-the-door",
+"x": 66.5,
+"z": 13.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+}
+]

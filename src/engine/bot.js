@@ -332,13 +332,13 @@ export class Bot {
       else if (w.map.dark && (op.op === 'lamp' ? op.on !== false : (this.lampWanted ?? true)) !== p.lamp.on && (p.lamp.on || p.lamp.oil > 0 || p.lamp.eternal)) { this.in.press('lamp'); this.lampPressed = true; }
     }
     if (++this.opTicks > this.maxOp * (op.op === 'killboss' ? 2 : 1)) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
-    if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
+    if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; this.lastAir = w.tick; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     if (this.escapePool()) { this.stillFor = 0; return; }
     const t = op.op === 'killboss' || this.atUsePoint(op) || (op.op === 'ride' && (this.rideState?.i === this.i ? this.rideState.phase >= 2 : false)) ? null : this.combatTarget();
     if (t) {
-      this.calm = 0; this.wasFighting = true; this.fight(t);
+      this.calm = 0; this.wasFighting = true; this.fight(t); if (t.d <= 4 && w.tick - (this.lastAir ?? -99999) < 900) this.stillFor = 0;          // (PT-046: landing from a vent among them and fighting them in your face is not being stuck)
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use' || op.op === 'chime') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
       if (op.op === 'kill' || op.op === 'ride') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }

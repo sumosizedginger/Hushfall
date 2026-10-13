@@ -1,0 +1,888 @@
+{
+ "format": 1,
+ "id": "C2M25",
+ "version": 1,
+ "name": "Root Bell Descent",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "look": "descent",
+  "sky": "root",
+  "dark": true,
+  "fog": "#0c1410",
+  "fogDensity": 0.012,
+  "ambient": 0.5
+ },
+ "grid": [
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιιιιιιιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιιιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιΙΙΙιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιΙΙΙιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιΙΙΙιιιιDιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιικκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκιSιιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιΛΛκκκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκκΑΑιιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιΛΛΛΛκκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκΑΑΑΑιιιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιΛΛΛΛΛΛκκκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκκΑΑΑΑΑΑιιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιΛΛΛΛΛΛΛΛκκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑιΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛκκΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑΑΑΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛκκΙΙΙΙΙΙΙΙΙ__________ΙΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛΙΙΙΙΙ__________________ΙΙΙΙΙΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιι",
+  "ιιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛΛΙΙΙ______________________ΙΙΙΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιι",
+  "ιιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛΛΛ__________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιι",
+  "ιιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛΛ______________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιι",
+  "ιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛΛ________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιι",
+  "ιιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛ__________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιι",
+  "ιιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛ____________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιι",
+  "ιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛΛ______________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιι",
+  "ιιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛ________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιι",
+  "ιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛΛ__________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιι",
+  "ιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛ____________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιιιιι",
+  "ιιιιιιΛΛΛΛΛΛΛΛΛΛΛΛ____________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιιιιι",
+  "ιιιιιΛΛΛΛΛΛΛΛΛΛΛΛ______________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιιιι",
+  "ιιιιιΛΛΛΛΛΛΛΛΛΛΛΛ______________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιιιι",
+  "ιιιιιΛΛΛΛΛΛΛΛΛΛΛ________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιιιι",
+  "ιιιιΛΛΛΛΛΛΛΛΛΛΛΛ________________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιιι",
+  "ιιιιΛΛΛΛΛΛΛΛΛΛΛ__________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιιι",
+  "ιιιιΛΛΛΛΛΛΛΛΛΛΛ__________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιιι",
+  "ιιιιΛΛΛΛΛΛΛΛΛΛΛ__________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιιι",
+  "ιιιΛΛΛΛΛΛΛΛΛΛΛΛ__________________________________________________ΑΑΑΑΑΑΑΑΑΑΑΑιιι",
+  "ιιιΛΛΛΛΛΛΛΛΛΛΛ____________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιι",
+  "ιιιΛΛΛΛΛΛΛΛΛΛΛ____________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιι",
+  "ιιιΛΛΛΛΛΛΛΛΛΛΛ____________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιι",
+  "ιιιΛΛΛΛΛΛΛΛΛΛΛ____________________________________________________ΑΑΑΑΑΑΑΑΑΑΑιιι",
+  "ιιικκκκκκκκΛΛΛ____________________________________________________ΑΑΑκκκκκκκκιιι",
+  "ιιικκκκκκκκΙΙΙ____________________________________________________ΙΙΙκκκκκκκκιιι",
+  "ιιιΙΙΙΙΙΙΙΙΙΙΙ____________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιι",
+  "ιιιΙΙΙΙΙΙΙΙΙΙΙ____________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιι",
+  "ιιιΙΙΙΙΙΙΙΙΙΙΙ____________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιι",
+  "ιιιΙΙΙΙΙΙΙΙΙΙΙ____________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιι",
+  "ιιιΙΙΙΙΙΙΙΙΙΙΙΙ__________________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιι",
+  "ιιιιΙΙΙΙΙΙΙΙΙΙΙ__________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιιι",
+  "ιιιιΙΙΙΙΙΙΙΙΙΙΙ__________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιιι",
+  "ιιιιΙΙΙΙΙΙΙΙΙΙΙ__________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιιι",
+  "ιιιιΙΙΙΙΙΙΙΙΙΙΙΙ________________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιιι",
+  "ιιιιιΙΙΙΙΙΙΙΙΙΙΙ________________________________________________ΙΙΙΙΙΙΙΙΙΙΙιιιιι",
+  "ιιιιιΙΙΙΙΙΙΙΙΙΙΙΙ______________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιιιι",
+  "ιιιιιΙΙΙΙΙΙΙΙΙΙΙΙ______________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιιιι",
+  "ιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙ____________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιιιιι",
+  "ιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙ____________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙιιιιιι",
+  "ιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙ__________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιι",
+  "ιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙ________________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιι",
+  "ιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙ______________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιι",
+  "ιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙ____________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιι",
+  "ιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙ__________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιι",
+  "ιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙ________________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιι",
+  "ιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙ______________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιι",
+  "ιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙ__________________________ΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιι",
+  "ιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΑΑΑ______________________ΑΑΑΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιι",
+  "ιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΑΑΑΑΑ__________________ΑΑΑΑΑΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑΑ__________ΑΑΑΑΑΑΑΑΑκκΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιΙΙΙΙΙΙΙΙκκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκΙΙΙΙΙΙΙΙιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιΙΙΙΙΙΙκκκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκκΙΙΙΙΙΙιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιΙΙΙΙκκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκΙΙΙΙιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιΙΙκκκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκκΙΙιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιικκΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑκκιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιΑΑΑΑΑΑΑΑΑΑΑΑιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι",
+  "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιι"
+ ],
+ "heights": [
+  "................................................................................",
+  "................................................................................",
+  "..................................................................a.............",
+  "..................................kkkkkkkkkkkk....................a.............",
+  "..............................kkkkkkkkkkkkkkkkkkkk................a.............",
+  "...........................kkkkkkkkkkkkkkkkkkkkkkkkkk......aaa....a.............",
+  "........................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...aaa....a.............",
+  "......................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.aaa....a.............",
+  ".......................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...a.....a.............",
+  "...................uu...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...aa.....a.............",
+  "..................uuuu..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..aaaa....a.............",
+  "................uuuuuu...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...aaaaaa..a.............",
+  "...............uuuuuuuu..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..aaaaaaaa.a.............",
+  "..............uuuuuuuuuu..kkkkkkkkkkkkkkkkkkkkkkkkkkkk..aaaaaaaaaaa.............",
+  ".............uuuuuuuuuuu..kkkkkkkkk..........kkkkkkkkk..aaaaaaaaaaa.............",
+  "............uuuuuuuuuuuuuukkkkk..................kkkkkaaaaaaaaaaaaaa............",
+  "...........uuuuuuuuuuuuuuukkk......................kkkaaaaaaaaaaaaaaa...........",
+  "...........uuuuuuuuuuuuuuuu..........................aaaaaaaaaaaaaaaa...........",
+  "..........uuuuuuuuuuuuuuu..............................aaaaaaaaaaaaaaa..........",
+  ".........uuuuuuuuuuuuuuu................................aaaaaaaaaaaaaaa.........",
+  ".........uuuuuuuuuuuuuu..................................aaaaaaaaaaaaaa.........",
+  "........uuuuuuuuuuuuuu....................................aaaaaaaaaaaaaa........",
+  ".......uuuuuuuuuuuuuu......................................aaaaaaaaaaaaaa.......",
+  ".......uuuuuuuuuuuuu........................................aaaaaaaaaaaaa.......",
+  "......uuuuuuuuuuuuu..........................................aaaaaaaaaaaaa......",
+  "......uuuuuuuuuuuu............................................aaaaaaaaaaaa......",
+  "......uuuuuuuuuuuu............................................aaaaaaaaaaaa......",
+  ".....uuuuuuuuuuuu..............................................aaaaaaaaaaaa.....",
+  ".....uuuuuuuuuuuu..............................................aaaaaaaaaaaa.....",
+  ".....uuuuuuuuuuu................................................aaaaaaaaaaa.....",
+  "....uuuuuuuuuuuu................................................aaaaaaaaaaaa....",
+  "....uuuuuuuuuuu..................................................aaaaaaaaaaa....",
+  "....uuuuuuuuuuu..................................................aaaaaaaaaaa....",
+  "....uuuuuuuuuuu..................................................aaaaaaaaaaa....",
+  "...uuuuuuuuuuuu..................................................aaaaaaaaaaaa...",
+  "...uuuuuuuuuuu....................................................aaaaaaaaaaa...",
+  "...uuuuuuuuuuu....................................................aaaaaaaaaaa...",
+  "...uuuuuuuuuuu....................................................aaaaaaaaaaa...",
+  "...uuuuuuuuuuu....................................................aaaaaaaaaaa...",
+  "...........uuu....................................................aaa...........",
+  "...........EEE....................................................YYY...........",
+  "...EEEEEEEEEEE....................................................YYYYYYYYYYY...",
+  "...EEEEEEEEEEE....................................................YYYYYYYYYYY...",
+  "...EEEEEEEEEEE....................................................YYYYYYYYYYY...",
+  "...EEEEEEEEEEE....................................................YYYYYYYYYYY...",
+  "...EEEEEEEEEEEE..................................................YYYYYYYYYYYY...",
+  "....EEEEEEEEEEE..................................................YYYYYYYYYYY....",
+  "....EEEEEEEEEEE..................................................YYYYYYYYYYY....",
+  "....EEEEEEEEEEE..................................................YYYYYYYYYYY....",
+  "....EEEEEEEEEEEE................................................YYYYYYYYYYYY....",
+  ".....EEEEEEEEEEE................................................YYYYYYYYYYY.....",
+  ".....EEEEEEEEEEEE..............................................YYYYYYYYYYYY.....",
+  ".....EEEEEEEEEEEE..............................................YYYYYYYYYYYY.....",
+  "......EEEEEEEEEEEE............................................YYYYYYYYYYYY......",
+  "......EEEEEEEEEEEE............................................YYYYYYYYYYYY......",
+  "......EEEEEEEEEEEEE..........................................YYYYYYYYYYYYY......",
+  ".......EEEEEEEEEEEEE........................................YYYYYYYYYYYYY.......",
+  ".......EEEEEEEEEEEEEE......................................YYYYYYYYYYYYYY.......",
+  "........EEEEEEEEEEEEEE....................................YYYYYYYYYYYYYY........",
+  ".........EEEEEEEEEEEEEE..................................YYYYYYYYYYYYYY.........",
+  ".........EEEEEEEEEEEEEEE................................YYYYYYYYYYYYYYY.........",
+  "..........EEEEEEEEEEEEEEE..............................YYYYYYYYYYYYYYY..........",
+  "...........EEEEEEEEEEEEEEEE..........................YYYYYYYYYYYYYYYY...........",
+  "...........EEEEEEEEEEEEEEEOOO......................OOOYYYYYYYYYYYYYYY...........",
+  "............EEEEEEEEEEEEEEOOOOO..................OOOOOYYYYYYYYYYYYYY............",
+  ".............EEEEEEEEEEE..OOOOOOOOO..........OOOOOOOOO..YYYYYYYYYYY.............",
+  "..............EEEEEEEEEE..OOOOOOOOOOOOOOOOOOOOOOOOOOOO..YYYYYYYYYY..............",
+  "...............EEEEEEEE..OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO..YYYYYYYY...............",
+  "................EEEEEE...OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO...YYYYYY................",
+  "..................EEEE..OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO..YYYY..................",
+  "...................EE...OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO...YY...................",
+  ".......................OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.......................",
+  "......................OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO......................",
+  "........................OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO........................",
+  "...........................OOOOOOOOOOOOOOOOOOOOOOOOOO...........................",
+  "..............................OOOOOOOOOOOOOOOOOOOO..............................",
+  "..................................OOOOOOOOOOOO..................................",
+  "................................................................................",
+  "................................................................................",
+  "................................................................................"
+ ],
+ "doors": [
+  {
+   "at": [66, 7],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "seam",
+   "panel": [60, 8],
+   "cells": [
+    [59, 7],
+    [60, 7],
+    [61, 7],
+    [59, 6],
+    [60, 6],
+    [61, 6],
+    [59, 5],
+    [60, 5],
+    [61, 5]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "landing-3",
+   "when": "enter",
+   "at": [15, 57],
+   "radius": 8,
+   "do": [
+    {
+     "objective": "Landing three: the Silent left a lamp and oil in the niche in the outer wall"
+    }
+   ]
+  },
+  {
+   "id": "landing-6",
+   "when": "enter",
+   "at": [62, 20],
+   "radius": 8,
+   "do": [
+    {
+     "objective": "The last landing: the lever on the outer wall opens the door to the north"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [68, 56]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [67, 45]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [61, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [68, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [74, 44]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [62, 66]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [48, 66]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [35, 67]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [42, 71]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [53, 72]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [28, 72]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [21, 60]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [13, 49]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [13, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [18, 67]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [5, 46]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [12, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [18, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [11, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [5, 35]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [17, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [31, 13]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [44, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [37, 8]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [26, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [51, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [58, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [66, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [66, 22]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [61, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [74, 33]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [64, 54],
+   "facing": 1.107
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [72, 46],
+   "facing": -0.381
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [61, 62],
+   "facing": 2.279
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [65, 49],
+   "facing": 0.405
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [62, 59],
+   "facing": 2.034
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [45, 69],
+   "facing": 2.085
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [34, 73],
+   "facing": 2.034
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [39, 67],
+   "facing": 1.933
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [50, 69],
+   "facing": 2.196
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [32, 65],
+   "facing": 1.816
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 59],
+   "facing": 1.631
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [8, 50],
+   "facing": 1.471
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [13, 55],
+   "facing": 1.553
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [17, 64],
+   "facing": 1.726
+  },
+  {
+   "type": "enemy",
+   "kind": "resonant",
+   "at": [14, 29],
+   "facing": 1.107
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [12, 25],
+   "facing": 1.065
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [16, 17],
+   "facing": 0.927
+  },
+  {
+   "type": "enemy",
+   "kind": "resonant",
+   "at": [41, 10],
+   "facing": 0.531
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 7],
+   "facing": 0.607
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [49, 7],
+   "facing": 0.37
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [70, 24],
+   "facing": -0.062
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [69, 31],
+   "facing": -0.04
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [61, 13],
+   "facing": 0.161
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [55, 61],
+   "facing": 1.938
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [28, 63],
+   "facing": 1.744
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [13, 42],
+   "facing": 1.322
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [24, 18],
+   "facing": 0.858
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [51, 16],
+   "facing": 0.402
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [67, 52]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [65, 47]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [43, 69]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [45, 65]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [15, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [20, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [12, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [14, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [34, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [64, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [59, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [47, 71]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [9, 31]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [63, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [71, 51]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [41, 67]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [11, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [37, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [10, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [9, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [9, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [11, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [59, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [60, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [61, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [59, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [60, 6]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [67, 17]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [69, 18]
+  },
+  {
+   "type": "switch",
+   "id": "door",
+   "at": [68, 17],
+   "wall": "east",
+   "once": true,
+   "do": [
+    {
+     "open": [66, 7]
+    },
+    {
+     "message": "door-open"
+    },
+    {
+     "objective": "The door in the wall of the last landing is open: the exit is beyond it"
+    }
+   ]
+  },
+  {
+   "type": "exit",
+   "at": [66, 3],
+   "dest": "next"
+  }
+ ],
+ "scenery": [
+  {
+   "kind": "shaft",
+   "at": [40, 40],
+   "y": 0,
+   "scale": 1
+  }
+ ],
+ "par": {
+  "time": 540
+ },
+ "intro": {
+  "title": "ROOT BELL DESCENT",
+  "lines": [
+   "A well thirty metres deep, in six landings.",
+   "The way down is across the dark."
+  ]
+ },
+ "outro": "The last landing is a root floor with a door in the wall. The door is open, and the corridor beyond it goes on down at the same slope as the rest of the country, towards a sound that is not a sound yet.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [68, 56],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "A well, and a floor at the bottom of it I can see from here, a long way down, by its own copper light. I count six ledges between me and it, and I count thirty metres."
+  },
+  {
+   "id": "vent",
+   "at": [63, 58],
+   "radius": 5,
+   "speaker": "HULL",
+   "text": "The plate at the end of each ledge throws you across the well to the next. It is lit. There is no other way down but a fall."
+  },
+  {
+   "id": "niche",
+   "at": [8, 58],
+   "radius": 4,
+   "speaker": "A SILENT (NOTE)",
+   "text": "A lit lamp holds the sound back. Keep it lit when the rings come. It is seen from far off, and the oil is what is in the tins here."
+  },
+  {
+   "id": "rings",
+   "at": [11, 29],
+   "radius": 6,
+   "speaker": "HULL",
+   "text": "The Resonant on this ledge rings on nothing now: the beat is gone, and it rings when something stands near it. A lit lantern cuts what reaches you to three-fifths."
+  },
+  {
+   "id": "door-lever",
+   "at": [68, 17],
+   "radius": 5,
+   "speaker": "HULL",
+   "text": "The lever on the wall by the last ledge opens the door to the north. Its lamp is lit."
+  },
+  {
+   "id": "door-shut",
+   "at": [66, 10],
+   "radius": 4,
+   "speaker": "HULL",
+   "text": "The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern."
+  },
+  {
+   "id": "door-open",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "HULL",
+   "text": "The door has gone back into the wall. The corridor beyond it slopes down."
+  },
+  {
+   "id": "seam",
+   "at": [60, 9],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "The outer wall of the last ledge rings hollow in one short run. There is a seam in the root."
+  },
+  {
+   "id": "cache",
+   "at": [60, 6],
+   "radius": 3,
+   "speaker": "A SILENT (NOTE)",
+   "text": "This is what I could carry down. I counted the ledges on the way: six, and I stopped counting after that."
+  }
+ ],
+ "vents": [
+  {
+   "at": [59, 58],
+   "to": [46, 66],
+   "time": 4.2
+  },
+  {
+   "at": [33, 66],
+   "to": [20, 58],
+   "time": 4.2
+  },
+  {
+   "at": [14, 47],
+   "to": [14, 32],
+   "time": 4.2
+  },
+  {
+   "at": [20, 21],
+   "to": [33, 13],
+   "time": 4.2
+  },
+  {
+   "at": [46, 13],
+   "to": [59, 21],
+   "time": 4.2
+  }
+ ],
+ "objective": "Go down: at the end of each landing a lit plate throws you across the well to the next. A lit lantern holds sound back; it is seen from far off",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 50,
+  "ammo": {
+   "flare": 20,
+   "shell": 36,
+   "rivet": 200,
+   "bolt": 18,
+   "cell": 50,
+   "round": 50,
+   "rocket": 8
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine",
+   "linethrower"
+  ]
+ },
+ "quality": {
+  "enemies": [20, 80],
+  "botSeconds": [40, 900],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "switches",
+   "secret"
+  ],
+  "skins": 5,
+  "enemyKinds": {
+   "tollbearer": 6,
+   "gaunt": 4,
+   "zealot": 5,
+   "chorister": 4,
+   "resonant": 2,
+   "gill": 3,
+   "bellhand": 1
+  },
+  "scaleClass": "SET-PIECE",
+  "reason": "the place is an open well: the player crosses a void between landings, and the fights are on ledges over a drop",
+  "introduces": "the descent: six landings thirty metres down, a vent across the dark between each, and the lamp that holds a ring of sound back"
+ },
+ "lantern": {
+  "oil": 120,
+  "max": 240
+ },
+ "lampHolds": {
+  "plain": 0.6,
+  "own": 0.4
+ }
+}
