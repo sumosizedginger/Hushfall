@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 6.5,
+"z": 83.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-first-crossing",
+"x": 24.5,
+"z": 83.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-belt",
+"x": 34.5,
+"z": 85.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-hall",
+"x": 48.5,
+"z": 70.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-loom",
+"x": 44.5,
+"z": 58.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-gates",
+"x": 50.5,
+"z": 28.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-cutting-room",
+"x": 50.5,
+"z": 10.5,
+"yaw": 0.0,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-north-lane",
+"x": 70.5,
+"z": 32.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-the-door",
+"x": 86.5,
+"z": 32.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

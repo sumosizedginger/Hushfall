@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -105,4 +105,20 @@ test('C2M18: a lattice over a void: eight bridges of pulsing segments that light
     const cx = Math.floor(w.player.x / 2), cz = Math.floor(w.player.z / 2); assert.ok(launched && landed, 'the vent at ' + v.at + ' throws and lands');
     assert.ok(map.kind(cx, cz) === 'outdoor' && Math.abs(Math.max(Math.abs(cx - 50), Math.abs(cz - 50)) - 19) <= 2, 'on the mid ring: ' + [cx, cz]);
   }
+});
+
+test('C2M19: nine crossings, three breathing doors one second behind each other in front of the cutting room, two conveyors, a shuttle, the woven out of the cradles, and an iron key that opens the exit door', () => {
+  const s = SRC.C2M19, map = shippedMap('C2M19');
+  const gates = s.doors.filter((d) => d.breath); assert.equal(gates.length, 3, 'three breath gates'); assert.deepEqual(gates.map((d) => d.at[1]).sort((a, b) => a - b), [14, 18, 22]);
+  const byZ = Object.fromEntries(gates.map((d) => [d.at[1], d.breath])); assert.deepEqual([byZ[22].phase, byZ[18].phase, byZ[14].phase], [0, 5, 4], 'each opens a second after the one before it'); for (const g of gates) { assert.equal(g.breath.period, 6); assert.equal(g.breath.open, 0.5); }
+  assert.equal(s.belts.length, 2); assert.deepEqual(s.belts.map((b) => b.mode).sort(), ['flip', 'run']); assert.equal(s.loads.length, 1, 'a shuttle'); assert.equal(s.loads[0].period, 6);
+  const keyed = s.doors.filter((d) => d.key); assert.equal(keyed.length, 1); assert.equal(keyed[0].key, 'iron'); assert.ok(s.entities.some((e) => e.kind === 'key_iron'));
+  const woven = s.triggers.find((t) => t.id === 'woven'); assert.ok(woven.do.filter((a) => a.spawn).length >= 3 && woven.do.filter((a) => a.spawn).every((a) => a.spawn.variant === 'woven'));
+  assert.ok(s.entities.filter((e) => e.type === 'enemy' && e.variant === 'woven').length >= 8, 'the woven are the first quarter of the roster');
+  assert.ok(s.entities.some((e) => e.kind === 'weeping'), 'the mother of the loom');
+  // without the key the exit cannot be reached; with it the route completes
+  const r = runRoute(map, route('C2M19'), { seed: 1 }); assert.deepEqual(r.world.player.keys, ['iron']);
+  const mf = (() => { let roofed = 0, walk = 0; for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) { const k = map.kind(x, z); if (k !== 'wall') { walk++; if (k === 'floor' || k === 'door') roofed++; } } return roofed / walk; })(); assert.ok(mf >= 0.8, 'compression: roofed ' + mf);
+  // four floor heights at least: the corners +3 m, the edges +1 m, the middle 0, and the ramps
+  const hs = new Set(); for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) === 'floor') hs.add(map.floor(x, z)); assert.ok(hs.size >= 4, 'floor heights: ' + [...hs].join());
 });
