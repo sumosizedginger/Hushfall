@@ -1,5 +1,5 @@
 // Semantic route bot. It READS world state but ACTS only through InputState (press/release/addYaw), i.e. the same path as a
-// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to} | waitplatform {id, at: 'high'|'low', min} (a timing platform, PT-029).
+// human. Used for canonical play paths and regression tests. Route ops: goto | use | kill | wait | switch {id} | waitsector {id, to} | waitplatform {id, at: 'high'|'low', min} (a timing platform, PT-029) | ride {id, board: [cx, cz], from: vertex, to: vertex, exit: [cx, cz]} (PT-046: wait on the dock beside a car's stop, step on while it dwells, ride it, step off at another stop).
 import { PLAYER, WEAPONS, ENEMIES, PROPS, PICKUPS, STEP, FX } from './defs.js';
 import { hasLOS, moveClear } from './world.js';
 import { cellFloor, fxAt } from './terrain.js';
@@ -7,6 +7,7 @@ import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
 import { lockBusy } from './airlock.js';                                                  // PT-033: a lock's second door waits for the air: the bot stands and waits, as it does at a sound-lock
 import { loadState, loadAtCell } from './loads.js';
+import { carState, carCovers } from './cars.js';                                           // PT-046: the ride op
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
 export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
@@ -171,6 +172,38 @@ export class Bot {
     }
     return best;
   }
+  /**
+   * PT-046 (E8b): ride a car. Phases: 0 walk to the dock cell beside the car's stop; 1 wait there until the car stands at the `from` stop with at least 3 s of dwell left; 2 step onto the deck; 3 stay on it (steered to its middle) until
+   * it stands at the `to` stop; 4 step off to the `exit` cell. Phases 2 to 4 ignore combat (a human is busy getting on and off); phases 0 and 1 fight as any op does.
+   */
+  rideOp(op) {
+    const w = this.w, p = w.player, m = w.map, car = m.cars.find((c) => c.id === op.id);
+    if (!car) { this.failed = 'no car ' + op.id; return false; }
+    if (this.rideState?.i !== this.i) this.rideState = { i: this.i, phase: 0, since: w.tick };
+    const R = this.rideState, st = carState(car, w.time), cell = m.cell, over = carCovers(car, st, p.x, p.z, -0.2);
+    if (R.phase === 0) { if (this.follow(op.board, 0.6, 0.9)) { R.phase = 1; } return false; }
+    if (R.phase === 1) {
+      this.setHeld('forward', false); this.setHeld('sprint', false);
+      if (st.stop === op.from && st.until >= 3.2) { R.phase = 2; R.since = w.tick; }
+      return false;
+    }
+    if (R.phase === 2) {
+      if (over && Math.hypot(st.x - p.x, st.z - p.z) < 1.2) { R.phase = 3; R.since = w.tick; this.setHeld('forward', false); this.setHeld('sprint', false); return false; }
+      if (st.stop !== op.from || st.until < 0.9) { R.phase = 1; this.setHeld('forward', false); return false; }            // it is leaving: wait for the next
+      this.setHeld('sprint', false); this.steerTo(st.x, st.z, 0.5); return false;
+    }
+    if (R.phase === 3) {
+      this.setHeld('sprint', false);
+      if (st.stop === op.to && st.until >= 1.6) { R.phase = 4; R.since = w.tick; return false; }
+      if (!over) { R.phase = 0; this.setHeld('forward', false); return false; }                                            // fell off: start again
+      this.steerTo(st.x, st.z, 0.7); return false;
+    }
+    // phase 4: step off
+    const gx = (op.exit[0] + 0.5) * cell, gz = (op.exit[1] + 0.5) * cell;
+    if (Math.hypot(gx - p.x, gz - p.z) < 0.9 && !over) { this.setHeld('forward', false); return true; }
+    if (w.tick - R.since > 60 * 12) { this.failed = 'could not step off the car ' + op.id; return false; }
+    this.setHeld('sprint', false); this.steerTo(gx, gz, 0.3); return false;
+  }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }
   // -- steering --------------------------------------------------------
   steerTo(x, z, arrive) {
@@ -284,12 +317,12 @@ export class Bot {
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     if (this.escapePool()) { this.stillFor = 0; return; }
-    const t = op.op === 'killboss' || this.atUsePoint(op) ? null : this.combatTarget();
+    const t = op.op === 'killboss' || this.atUsePoint(op) || (op.op === 'ride' && (this.rideState?.i === this.i ? this.rideState.phase >= 2 : false)) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.wasFighting = true; this.fight(t);
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use' || op.op === 'chime') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
-      if (op.op === 'kill') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
+      if (op.op === 'kill' || op.op === 'ride') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
     else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('left', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
@@ -329,6 +362,8 @@ export class Bot {
           if (!stand) this.failed = 'no cell beside chime ' + op.id; else if (this.follow(stand, 0.5, 1.2)) { this.aimAt(pr.x, pr.z); this.pressUse(); }
         }
       }
+    } else if (op.op === 'ride') {
+      done = this.rideOp(op);
     } else if (op.op === 'waitplatform') {
       const i = w.map.sectors.findIndex((q) => q.id === op.id), def = w.map.sectors[i]; if (!def?.cycle) this.failed = 'no timing platform ' + op.id; else { this.setHeld('forward', false); this.setHeld('sprint', false); done = platformReady(def, w.time, op.at ?? 'high', op.min ?? 3); }
     } else if (op.op === 'waitsector') {
@@ -336,7 +371,7 @@ export class Bot {
       if (!s) this.failed = 'no sector ' + op.id; else done = Math.abs(s.h - goal) < 1e-6 && Math.abs(s.target - goal) < 1e-6;
     }
     else this.failed = 'unknown op ' + op.op;
-    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform' && op.op !== 'killboss' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform' && op.op !== 'killboss' && op.op !== 'ride' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
     if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }
