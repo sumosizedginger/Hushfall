@@ -494,7 +494,7 @@ ENEMIES.resonant = { name: 'Resonant', poise: 3, hp: 420, speed: 1.1, gait: 3.6,
 ENEMIES.hivecantor = { name: 'Hive Cantor', poise: 9, hp: 1500, speed: 0, gait: 1, radius: 0.9, height: 3.9, hover: 1.1, flying: true, hitRadius: 0.5, sight: 90, turnRate: 1.6, keepAway: 0,
   attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, boss: true,
   unison: { group: 'choir', floor: 0.05 },
-  hive: { ring: { every: 8, at: 2, speed: 9, damage: 13, width: 1.3, maxR: 70, reflect: 40, echo: 0.95 } },
+  hive: { ring: { every: 8, at: 2, speed: 9, damage: 13, width: 1.3, maxR: 70, reflect: 40, echo: 0.95, h: 0.8 } },      // h: the ring is 0.8 m high: any floor a metre above the conductor's clears it, a half-step does not (PT-043 report 3)
   phases: [{ at: 0.5, choirDead: true, hive: { ring: { every: 4, at: 2 } }, summon: { kind: 'chorister', count: 3, every: 13, max: 6 } }] };
 /** THE ROOT BELL'S CLAPPER (the last boss, C2M29; design/ACTD.md section 4): the heart of the Bell, a mass of bronze and black root. Hung from the dome on a chain it swings as a PENDULUM (`bell`: rootbell.js, a pure function of the clock, the swing
  *  turns `turn` rad at every pass of the middle); it strikes a ring across the floor at each end of a swing; its lowest point crushes whoever stands under the middle of the swing. Four ROOT ANCHORS (nodes) take 70% of every hit while any stands and each one cut

@@ -129,3 +129,20 @@ test('THE TWO BOSS ARENAS can be climbed out of anywhere: no step up is higher t
     assert.ok(worst <= 0.6 + 1e-9, id + ': the highest step between two walkable cells is ' + worst + ' m');
   }
 });
+
+// PT-043 report 3 (the owner: "there is no way to avoid its damage ... I was being hit by its sound wave"): the Hive Cantor's ring is a plane 0.8 m high at the conductor's floor. Played in the sim with only the conductor awake and a player who stands still:
+// a tier a metre up is never hit, a floor cell with nothing in front is hit, and a cell in the shadow of a block of nerve is never hit.
+test('THE HIVE CANTOR\'S ARENA: its ring cannot hurt anyone a metre up, or behind a block; it does hurt a player standing in the open on the floor', () => {
+  const hits = (cell) => {
+    const { src, w } = world('HIVEBOSS', 'easy'), boss = w.enemies.find((e) => e.kind === 'hivecantor'); w.enemies = [boss]; boss.state = 'chase';
+    const S = w.map.cell; Object.assign(w.player, { x: (cell[0] + 0.5) * S, z: (cell[1] + 0.5) * S, yaw: 0 }); let n = 0;
+    for (let i = 0; i < 60 * 40; i++) { w.player.hp = 1e6; step(w, idle()); n += drainEvents(w).filter((e) => e.type === 'pulse_hit').length; }
+    return { n, y: w.player.y, boss };
+  };
+  const { src } = world('HIVEBOSS'), pod = src.entities.find((e) => e.kind === 'hivecantor'), CX = pod.at[0], CZ = pod.at[1];
+  assert.equal(hits([CX, CZ - 5]).n > 0, true, 'in the open on the floor the ring hurts');
+  const t1 = hits([CX, CZ - 9]); assert.ok(Math.abs(t1.y - 1) < 0.01, 'the cell is on tier 1, a metre up: ' + t1.y); assert.equal(t1.n, 0, 'tier 1 clears the ring');
+  const t2 = hits([CX + 11, CZ + 1]); assert.ok(t2.y >= 2 - 0.01); assert.equal(t2.n, 0, 'tier 2 clears the ring');
+  const half = hits([CX, CZ - 7]); assert.ok(Math.abs(half.y - 0.5) < 0.01, 'the half-step is 0.5 m up: ' + half.y); assert.ok(half.n > 0, 'a half-step is too low');
+  const shade = hits([CX - 7, CZ - 7]); assert.ok(shade.y < 0.7, 'a cell behind the north-west block, on the half-step: ' + shade.y); assert.equal(shade.n, 0, 'behind a block the ring never arrives');
+});

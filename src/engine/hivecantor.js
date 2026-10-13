@@ -9,10 +9,10 @@ export function hiveStep(ctx) {
   if (isBeatTick(w.tick)) {
     const n = beatNo(w.tick);
     if (onBeatOf(n + 1, ring.every, ring.at)) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }                 // the baton comes up one beat before
-    else if (onBeatOf(n, ring.every, ring.at)) { ctx.pulse(e.x, e.z, e.y, { speed: ring.speed, width: ring.width, maxR: ring.maxR, damage: ring.damage, reflectAt: ring.reflect }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; if (ring.echo) e.echoT = ring.echo; }
+    else if (onBeatOf(n, ring.every, ring.at)) { ctx.pulse(e.x, e.z, e.y, { speed: ring.speed, width: ring.width, maxR: ring.maxR, damage: ring.damage, reflectAt: ring.reflect, h: ring.h }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; if (ring.echo) e.echoT = ring.echo; }
   }
   if ((e.pulseT ?? -1) >= 0) e.pulseT += dt;
-  if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; ctx.pulse(e.x, e.z, e.y, { speed: ring.speed, width: ring.width, maxR: ring.maxR, damage: ring.damage, reflectAt: ring.reflect }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }
+  if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; ctx.pulse(e.x, e.z, e.y, { speed: ring.speed, width: ring.width, maxR: ring.maxR, damage: ring.damage, reflectAt: ring.reflect, h: ring.h }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }
   const S = ph?.summon;
   if (S && e.summons?.length) {
     e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
