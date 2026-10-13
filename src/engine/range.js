@@ -29,7 +29,6 @@ export function rangePlayer(w, dt) {
   if (p.hp < 1) p.hp = 1;                                                                 // the blow that would have killed you is still counted (the 'hurt' event carried it)
   if (r.hurtT >= RANGE.playerHealAfter) { p.hp = Math.max(p.hp, PLAYER.maxHp); p.armor = Math.max(p.armor, armorCap(w.upgrades)); }
   if (w.stats.shots !== r.shots) { r.shots = w.stats.shots; r.fireT = 0; } else r.fireT += dt;
-  if (p.lamp && !p.lamp.eternal && p.lamp.oil < p.lamp.max) p.lamp.oil = p.lamp.max;                // PT-045: the yard's lantern never runs dry (a range map with a lantern: the lamp yard)
   const kind = WEAPONS[p.weapon]?.ammo;
   if (r.fireT >= RANGE.refillAfter || (kind && (p.ammo[kind] || 0) <= 0)) for (const k of Object.keys(AMMO_MAX)) p.ammo[k] = Math.max(p.ammo[k] || 0, ammoCap(k, w.upgrades));
 }
