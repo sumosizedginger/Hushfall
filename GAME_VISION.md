@@ -6,7 +6,7 @@ Protagonist: **Ines Calder**, Tide-Warden (harbour pilot), immune to the Hush be
 
 ## Motive and strategy
 The Vael need a Song loud enough to open a permanent **Gate** to a living world. Every human mind is a note. Strategy: seed the Hush, herd survivors, graft them, then use the grafted as both army and instrument.
-Ending (provisional): the Root Bell can be silenced, not destroyed — Ines rings the counter-tone and closes the Gate, choosing to stay behind on the Vael side to keep it closed.
+Ending (provisional): the Root Bell can be silenced, not destroyed — Ines rings the counter-tone and closes the Gate, choosing to stay behind on the Vael side to keep it closed. [REVISED 2026-10-12: the counter-tone is the lamp (C1E1S01: "a counter-tone: a sound turned into light"); no emitter gadget; Ines lights the lamp at the Gate and stays to keep it lit. See design/LORE.md and design/ACTD.md.]
 
 ## Pillars
 1. **Fast readable combat**: distinct silhouettes and attack tells; movement is the defence.
@@ -25,7 +25,7 @@ Hush (audible tone) -> docility -> herding -> **cradle** (suspended, neural taps
 ## Weapon taxonomy (PROVISIONAL targets: planned 8, implemented 3, verified 0 by a human; 3 by automated tests + browser checks)
 Implemented 2026-09-30 (Gate 2): **Riveter driver** (slot 3): hitscan, 7 damage at ~12 rounds/s, accuracy blooms the longer you hold the trigger; the workhorse when shells and flares run dry, the answer to crowds of weak targets. Ammunition is per-weapon (rivets max 200).
 Implemented 2026-09-29: **Flare cannon** (slow arcing projectile, splash, self-damage, area denial) and **Tidewarden scattergun** (hitscan, 9 pellets, falloff, no splash: close-range punch). They force different decisions: the flare rewards distance and leading targets, the scattergun rewards closing in.
-Melee/tool sidearm · **Flare cannon** (slow heavy projectile, splash, area denial by burning light) · Sawn pump gun (close burst) · Rapid rivet driver (sustained, low stagger) · Harpoon rifle (piercing, slow reload) · Charge-arc lamp (charge, chain) · Bell-breaker mortar (arc, splash) · Counter-tone emitter (late, alternate behaviour).
+Melee/tool sidearm · **Flare cannon** (slow heavy projectile, splash, area denial by burning light) · Sawn pump gun (close burst) · Rapid rivet driver (sustained, low stagger) · Harpoon rifle (piercing, slow reload) · Charge-arc lamp (charge, chain) · Bell-breaker mortar (arc, splash) · Counter-tone emitter (late, alternate behaviour) [CUT 2026-10-12: the hand lantern is the counter-tone].
 
 ## Enemy taxonomy (PROVISIONAL: standard 6, elite 4, boss 8, set-piece 3; implemented 2026-09-30: standard 4, elite 1, boss 1)
 Implemented in Gate 2: **Bellhand** (ranged toll-shot, dodgeable), **Sexton** (support: channels over a corpse for 2.2 s and raises it at half health, twice at most; keeps away; hurting it interrupts the rite), **Warden-Graft** (elite: front plate takes 34% from direct hits, splash ignores it; a straight charge after a lowered-shoulder tell that stuns it for 2.6 s if it hits a wall or pillar), **Cantor** + six **bell nodes** (boss: 5% damage while any node rings; sever a node and it staggers; tone pulses are expanding rings that stone stops and that pass beneath a player standing 1 m higher; summons Gaunts; once the ring is broken it fans toll-shots).

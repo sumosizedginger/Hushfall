@@ -42,7 +42,7 @@ Original plan of eight is `GAME_VISION.md` "Weapon taxonomy" and `design/CAMPAIG
 | 5 | Charge-arc lamp | charge, range, water, Vael | built, **to be reworked** (W2) | C1E2M06 Pump Cathedral |
 | 6 | Melee / tool sidearm | melee | NOT built | docs: "early", no map fixed |
 | 7 | Bell-breaker mortar | arcing splash | NOT built | **C1E3M03 Gill Gardens** (docs: E3M03) |
-| 8 | Counter-tone emitter | alternate behaviour, not a gun | NOT built | docs: "late Campaign 2"; no map fixed. My candidate: near C2M29 The Root Bell (the boss is a bell) |
+| 8 | Counter-tone emitter | CUT 2026-10-12: the hand lantern is the counter-tone (design/LORE.md, design/ACTD.md); no gadget, no slot | NOT built, NOT PLANNED | docs: "late Campaign 2"; no map fixed. My candidate: near C2M29 The Root Bell (the boss is a bell) |
 
 Added by this pass **[MINE]**, placements are proposals and must be checked against each map's brief (every map introduces exactly ONE new thing, `CAMPAIGN_SPINE.md` rule 5):
 
@@ -186,7 +186,7 @@ Order, each step waits for the owner's go and for them to play the one before. B
 | 4 | L3 "the world" look pass (from `assessment.md`, approved plan C:/Users/sumos/.claude/plans/joyful-plotting-liskov.md) | decals, blood and bodies, real lighting and shadows, first-person hands and weapon polish, UI restyle, the alien room kit and surface variety (Episode 2's arrival rooms were one room eight times) | a go; they judge stills first |
 | 5 | Gate 4: Episode 3, The Choir Ships | nine maps in small batches the owner sets: C1E3M01 Landing Scar to M08 The Cantor's Throat + secret S01; the Vael themselves, resin interiors; new enemies (the Chorister suppression enemy, Bulwark Shell and Weeping Mother elites, the Grand Cantor boss); **the bell-breaker mortar at C1E3M03 Gill Gardens**; the Episode 3 colour/tone in the look bible | a batch go, then a playtest per batch |
 | 6 | Gate 4: Episode 4, The Hollow Sky | nine maps; NEW ENGINE WORK first: low gravity, vacuum doors, light-beam routing (Mirror Array) | the same |
-| 7 | Gate 4: Campaign 2 | thirty-two maps; the counter-tone emitter late (candidate near C2M29); upgrades/alt-fires instead of new guns | the same |
+| 7 | Gate 4: Campaign 2 | thirty-two maps; (the counter-tone emitter was CUT 2026-10-12: the lamp does it); upgrades/alt-fires instead of new guns | the same |
 
 Rules that do not change: one new thing per map (briefed before it is built), every map verified by the bots and the real game before the next, evidence regenerated from a clean commit, the owner awards COMPLETE.
 
