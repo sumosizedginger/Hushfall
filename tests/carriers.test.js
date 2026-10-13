@@ -106,6 +106,27 @@ test('a body in the air that comes down on a car\'s deck LANDS on it (it is a fl
   for (let i = 0; i < 90 && P.air; i++) { step(w, idle()); ev.push(...drainEvents(w)); } assert.ok(!P.air && near(P.y, 0, 0.05) && !ev.some((e) => e.type === 'void_fall'), 'landed on the deck: y ' + P.y + ' ' + ev.map((e) => e.type).join());
   const m = world(yard([CAR])); Object.assign(m.player, { x: 30, z: 15, y: 2.5, vx: 0, vz: 0 }); m.player.air = { vy: 0, g: 3.2, bx: 0, bz: 0, sx: 0, sz: 0, t: 0, low: -0.4 }; const ev2 = [];
   for (let i = 0; i < 240 && m.player.air; i++) { step(m, idle()); ev2.push(...drainEvents(m)); } assert.ok(ev2.some((e) => e.type === 'void_fall'), 'beside the deck, over the void: a miss');
-  const e = world(yard([CAR])); const car = e.map.cars[0]; Object.assign(e.player, { x: 25.9, z: 15, vx: 0, vz: 0 }); const evE = runTo(e, 8 + 1.5 * 18 / 4 + 1);      // 10 cm inside the deck's east edge (the deck spans x 20..26 at the west stop), carried the whole way
+  const e = world(yard([CAR])); const car = e.map.cars[0]; Object.assign(e.player, { x: 25.71, z: 15, vx: 0, vz: 0 }); const evE = runTo(e, 8 + 1.5 * 18 / 4 + 1);      // as far east as the body goes (the deck spans x 20..26 at the west stop and the body is 0.3 m), carried the whole way
   assert.ok(!evE.some((x) => x.type === 'void_fall') && e.player.x > 38 && e.player.x < 44.2, 'carried along the edge to the far dock: x ' + e.player.x.toFixed(2)); assert.equal(carState(car, e.time).stop, 1);
+});
+
+test('a rider who wanders over the deck at random (every direction, sprinting, pressed against the edges and the docks) through whole cycles of both cars is never dropped into the void and never leaves the deck except by stepping onto a dock', () => {
+  let s = 12345; const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  let total = 0;
+  for (let run = 0; run < 24; run++) {
+    const w = world(yard([{ ...CAR, dwell: 5 }, { id: 'up', size: [3, 3], path: [[11.5, 3.5, 0], [20.5, 3.5, 0]], speed: 5, dwell: 4, phase: run }])); Object.assign(w.player, { x: 18, z: run % 2 ? 15 : 7.5, yaw: -Math.PI / 2 });
+    const ev = []; let yaw = -Math.PI / 2, mx = 0, mz = 1, onDeck = 0;
+    for (let i = 0; i < 60 * 70 && w.status === 'playing'; i++) {
+      if (i % 25 === 0) {
+        if (rnd() < 0.5) { yaw += (rnd() - 0.5) * 3; mx = Math.round(rnd() * 2 - 1); mz = Math.round(rnd() * 2 - 1); }
+        else { const st = carState(w.map.cars[run % 2], w.time); yaw = Math.atan2(-(st.x - w.player.x), -(st.z - w.player.z)) + (rnd() - 0.5) * 0.4; mx = 0; mz = 1; }          // half the time: head for a car, and keep wandering once on it
+      }
+      w.player.yaw = yaw; step(w, idle({ move: [mx, mz], sprint: rnd() < 0.3 && mz > 0 })); ev.push(...drainEvents(w));
+      const p = w.player, over = w.map.kind(Math.floor(p.x / 2), Math.floor(p.z / 2)) === 'void'; if (over) onDeck++;
+      if (over) assert.ok(w.map.cars.some((c) => carCovers(c, carState(c, w.time), p.x, p.z, 0.06)), 'the centre is over the void only ever over a deck: run ' + run + ' tick ' + i + ' at ' + p.x + ',' + p.z + ' t ' + w.time.toFixed(3));
+      if (p.hp < 100) p.hp = 100;
+    }
+    assert.ok(!ev.some((e) => e.type === 'void_fall'), 'run ' + run + ' fell: ' + ev.filter((e) => e.type === 'void_fall').length); total += onDeck;
+  }
+  assert.ok(total > 3000, 'the fuzz spent time over the void on a deck: ' + total + ' ticks');
 });

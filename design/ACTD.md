@@ -27,6 +27,7 @@
 | **THE ROOT BELL** | the act's boss (section 4): the CLAPPER, its anchors, the roots, the arena | a definition, a rig, a recipe, a BAKE, sounds, a Range target, the silhouette guard, tests |
 | **ENDINGS[2]** | the epilogue cards, the closing titles, the painting `ui_ending_art_2`, the sound of the last chord | `src/game/ending.js` and `tests/ending.test.js` already do everything but write the data; the finale is already C2M30 |
 | **LOOKS AND ART** | six looks (`descent`, `roots`, `fault`, `tide`, `rootbell`, `unrung`), `tools/baker/recipes_c4.js` (about ten materials: black root wall, copper floor, root pillar, bronze, a bell's inside), scenery `rootcolumn`, `shaft`, skies `sky_root`, `sky_root_below`, `sky_gate_dim` | each bake a Chrome job at idle priority |
+**AS BUILT (PT-045, drop B):** E9 the noise tell (`noiseTell: true` on a map: QUIET / LOUD, the radius and, in the dark, the eye's range, on the HUD and as a ring on the automap), E12 the tide (with an optional `rect`, a loop that must end where it starts), E13 the taller format (`A-Z`, 30.5 m) and the clock for the falling loads (`start`, `count`, `loop`, `tremor`) are built and exercised in `HIVEYARDS` and `HIVEDARK` (the lamp's hold, the phases, MOTION, the small actions and the Root Bell were built in drop A). Nothing here has been played by a person.
 **CUT from the first plan:** the counter-tone emitter (`tone`), tonelock doors, a cone, a charge gauge, a new key and pad button. (`design/WEAPONS_AND_CONTROLS_PLAN.md` row 8 says so.)
 
 ## 3. THE BATCHES

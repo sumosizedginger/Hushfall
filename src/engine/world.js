@@ -135,7 +135,7 @@ export function blockedCircle(w, x, z, r, self = null) {
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
     if (!(fly ? cellSolid(w, cx, cz) : blocksMove(w, cx, cz, air))) continue;
     const nx = clamp(x, cx * S, (cx + 1) * S), nz = clamp(z, cz * S, (cz + 1) * S);
-    if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) { if (w.map.cars.length && self === w.player && w.map.kind(cx, cz) === 'void' && carDeckY(w.map, w.time, nx, nz) > -Infinity) continue; return true; }      // (PT-045: the void under a car's deck is a floor for the player, and for nobody else)
+    if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) { if (w.map.cars.length && self === w.player && w.map.kind(cx, cz) === 'void' && !(Math.floor(x / S) === cx && Math.floor(z / S) === cz && carDeckY(w.map, w.time, x, z) === -Infinity)) continue; return true; }      // (PT-045: in a map with cars the void blocks the player's CENTRE and not the whole body: a body may overhang an edge, so a deck that leaves a dock can never strand it inside a rule it no longer satisfies; the centre may be over a void cell only where a deck covers it)
   }
   if (self && !fly && tooHigh(w, self, x, z, r)) return true;                            // a ledge more than a step above the mover's feet
   const over = air && self.y > groundAt(w, x, z, r) + 2.2;                                                 // PT-033: a body in the air above the height of a prop or a creature passes over it

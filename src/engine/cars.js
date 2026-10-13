@@ -2,7 +2,7 @@
 // A map's `cars: [{ id, size: [w, d] cells, path: [[x, z, y?], ...], stops?: [vertex indices], speed?, dwell?, phase?, y? }]`; a path point is the CENTRE of the car in cell coordinates (10.5, 7.5 is the middle of cell 10,7; y is the deck height in metres,
 // the car's `y` if a point has none). A run from one stop to the next follows the vertices between them and eases in and out (smoothstep over arc length, so it never jerks); it waits `dwell` s at every stop. Pure functions of the sim clock (`w.time`),
 // like breath.js, platforms.js, loads.js, belts.js and tide.js: a save, a replay and the route bots need nothing stored. A map with no `cars` has `map.cars === []` and never reaches any of this.
-// The sim (world.js, terrain.js): a car is a floor patch (terrain asks the cars after the cells), the player whose feet were on the deck at the previous tick is moved by the deck's delta, the void under a car is walkable for the player and for nobody else, and a player
+// The sim (world.js, terrain.js): a car is a floor patch (terrain asks the cars after the cells), the player whose feet were on the deck at the previous tick is moved by the deck's delta, the void under a car is walkable for the player and for nobody else (in a map with cars the void blocks the player's CENTRE, not the whole body: a deck that leaves a dock can then never strand a body inside a rule it no longer meets), and a player
 // left over the void is a miss (the existing void rule: hurt, back on `p.lastSafe`, never killed). Creatures never board a car. Reach and the trap lint count a car as a ride between its stops (`carLinks`).
 import { CARS } from './defs.js';
 
