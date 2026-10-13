@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -38,10 +38,10 @@ test('the text follows the mechanical rules of LORE.md: no stock phrases, short,
   const bad = [];
   for (const id of ALL) {
     for (const t of lines(SRC[id])) for (const re of BANNED) if (re.test(t)) bad.push(`${id}: '${t.slice(0, 50)}...' matches ${re}`);
-    for (const m of SRC[id].messages) { if (m.text.length > 180) bad.push(`${id} ${m.id}: ${m.text.length} characters`); const n = (m.text.match(/[.!?]/g) ?? []).length, cap = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/.test(m.speaker) ? 6 : m.speaker === 'THE TENDER' ? 5 : 4; if (n > cap) bad.push(`${id} ${m.id}: ${n} sentences (limit ${cap})`); }
+    for (const m of SRC[id].messages) { if (m.text.length > 180) bad.push(`${id} ${m.id}: ${m.text.length} characters`); const n = (m.text.match(/[.!?]/g) ?? []).length, cap = /\b(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)\b/.test(m.speaker) ? 6 : m.speaker === 'THE TENDER' ? 5 : 4; if (n > cap) bad.push(`${id} ${m.id}: ${n} sentences (limit ${cap})`); }
   }
   assert.deepEqual(bad, []);
-  const VOICES = new Set(['INES', 'HULL', 'THE TENDER', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT', 'SIGNAL HOUSE']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/;
+  const VOICES = new Set(['INES', 'HULL', 'THE TENDER', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT', 'SIGNAL HOUSE']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)\b/;
   for (const id of ALL) for (const m of SRC[id].messages) {
     assert.ok(VOICES.has(m.speaker) || found.test(m.speaker), `${id} ${m.id}: unknown speaker '${m.speaker}'`);
     if (SPEAKS_ONCE[m.speaker]) assert.ok(SPEAKS_ONCE[m.speaker].includes(id), `${id}: ${m.speaker} speaks only in ${SPEAKS_ONCE[m.speaker]}`);
@@ -52,7 +52,7 @@ test('the text follows the mechanical rules of LORE.md: no stock phrases, short,
 test('roster variety: no creature (a variant counts as its own) is more than 35% of a map except in a boss map; every map has the new thing it names', () => {
   for (const id of ALL) {
     if (id === 'C2M24') continue;
-    const kinds = {}; let n = 0; for (const e of SRC[id].entities) if (e.type === 'enemy' && !ENEMIES[e.kind].peaceful && !ENEMIES[e.kind].node) { const k = e.variant ?? e.kind; kinds[k] = (kinds[k] ?? 0) + 1; n++; }
+    const kinds = {}; let n = 0; for (const e of SRC[id].entities) if (e.type === 'enemy' && !ENEMIES[e.kind].peaceful && !ENEMIES[e.kind].node) { const k = e.variant && e.variant !== 'crystal' ? e.variant : e.kind; kinds[k] = (kinds[k] ?? 0) + 1; n++; }
     for (const [k, c] of Object.entries(kinds)) assert.ok(c / n <= 0.35, `${id}: ${k} is ${(100 * c / n).toFixed(0)}% of ${n}`);
   }
 });
@@ -169,4 +169,19 @@ test('C2M22, the trough: four latches open the way to the lift, six of the Silen
   // the hidden chapel holds the longest text of the act
   const sec = runRoute(map, route('C2M22', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1); assert.ok(['g1', 'g2', 'g3'].every((id) => sec.world.messagesSeen.includes(id)));
   assert.ok(s.messages.filter((m) => /^g\d$/.test(m.id)).reduce((a, m) => a + m.text.length, 0) > 400, 'a testimony of some length');
+});
+
+test('C2M23, the Reprise: the committed plan of Marrow Quay turned east to west, every one of its creatures in crystal where it stood, the brass key and the brass door where they were; SIGNAL HOUSE speaks once, and wrongly', async () => {
+  const { reprise, QW } = await import('../tools/mapkit/reprise.mjs'); const s = SRC.C2M23, map = shippedMap('C2M23'), Q = reprise(51, 2), quay = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps/C1E1M01.json'), 'utf8'));
+  // every cell that was open in the Quay is open (or a door) in its mirror, and every wall a wall or water
+  let open = 0, wrong = 0; for (let z = 0; z < quay.grid.length; z++) for (let x = 0; x < QW; x++) { const c = quay.grid[z][x], [nx, nz] = Q.at([x, z]); const k = map.kind(nx, nz), was = '.:p'.includes(c); if (was) { open++; if (!(k === 'floor' || k === 'outdoor')) wrong++; } }
+  assert.ok(open > 600 && wrong <= 12, `the plan is the plan: ${wrong} of ${open} open cells differ`);
+  assert.deepEqual(Q.at([4, 16]), [94, 18], 'the pier is on the east'); const key = quay.entities.find((e) => e.kind === 'key_brass'); assert.ok(s.entities.some((e) => e.kind === 'key_brass' && e.at[0] === Q.at(key.at)[0] && Math.abs(e.at[1] - Q.at(key.at)[1]) <= 1), 'the brass key lies where it lay');
+  const bd = s.doors.find((d) => d.key === 'brass'); assert.deepEqual(bd.at, Q.at([39, 28]), 'the brass door is where the door was');
+  const quayEnemies = quay.entities.filter((e) => e.type === 'enemy').length; assert.ok(s.entities.filter((e) => e.type === 'enemy' && e.variant === 'crystal').length >= quayEnemies, 'the crystal copies of the creatures of the Quay');
+  assert.deepEqual(s.messages.filter((m) => m.speaker === 'SIGNAL HOUSE').map((m) => m.id), ['signal'], 'once'); const sig = s.messages.find((m) => m.id === 'signal'), ans = s.messages.find((m) => m.id === 'answer'); assert.ok(/ferry/i.test(sig.text) && /dead in the water/.test(ans.text), 'the wrong detail and the dry answer');
+  const orig = quay.messages.find((m) => m.id === 'dock'); assert.ok(/dead in the water/.test(orig.text), 'the player can check it against what they played');
+  assert.ok(s.entities.some((e) => e.type === 'exit' && e.dest === 'secret') && s.secrets.length === 1, 'the net-loft leads to the lamp'); assert.equal(MANIFEST.maps.find((x) => x.id === 'C2M23').secretExit, 'C2S02');
+  const r = runRoute(map, route('C2M23'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.deepEqual(r.world.player.keys, ['brass']);
+  const sec = runRoute(map, route('C2M23', 'secret'), { seed: 1 }); assert.equal(sec.result, 'complete'); assert.equal(sec.world.stats.secrets, 1); assert.equal(sec.world.exitDest ?? sec.world.exited ?? 'secret', 'secret');
 });

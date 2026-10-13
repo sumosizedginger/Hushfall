@@ -1,0 +1,83 @@
+[
+{
+"name": "01-pier",
+"x": 93.5,
+"z": 18.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-quay",
+"x": 80.5,
+"z": 18.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-warehouse",
+"x": 68.5,
+"z": 18.5,
+"yaw": 1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-door",
+"x": 60.5,
+"z": 27.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-jetty",
+"x": 59.5,
+"z": 31.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-town",
+"x": 59.5,
+"z": 39.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-lane",
+"x": 42.5,
+"z": 52.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-hill",
+"x": 30.5,
+"z": 76.5,
+"yaw": 1.571,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-the-house",
+"x": 20.5,
+"z": 88.5,
+"yaw": 1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+}
+]
