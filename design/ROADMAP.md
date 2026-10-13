@@ -1,6 +1,67 @@
-# THE ROAD TO THE END (PT-041, revised PT-042, 2026-10-12)
+# THE ROAD TO THE END (PT-041, revised PT-042, and the FULL PLAN of section 0, PT-044, 2026-10-13)
 
 The owner, after the plans for Acts C and D: "I want a full plan for both, I want to set you free and see what you do. Plus then I can play test it as well as have it audited like a mofo for how it looks by other agents, and then I can pass it to other people to try. So what is the plan to get to the end? Do we have a last boss?" Then, on the first version of this road: "how are we going to do that in a video game that people play after presenting fuckin' Doom for 50+ levels?", "Counter Tone Emitter? This is going to be one weird fuckin' lore", and "**PLAN!** I think first we should build a Dev level to test your new suggestions and everything, what the mobs look like, all of it." **This is the revised road: a dev level first (stage S0), then the free run.**
+
+## 0. THE FULL PLAN (PT-044, 2026-10-13, written after the owner played the Preview: "Better, much better, okay, now the full play to finish out the levels. We want it all mapped out.")
+**Where section 0 and sections 1 to 8 below disagree, section 0 wins** (sections 1 to 8 are the PT-041 / PT-042 text, kept for their detail: the last boss, the audit pack, the risks).
+
+### 0.1 Where we are (derived, today)
+- **68 slots; 53 built** (Campaign 1 all 36, Campaign 2 Acts A and B and the Silent Orchard); **15 remain: C2M17 to C2M30 and the secret C2S02.** Derived status: IMPLEMENTED 53, AGENT_VERIFIED 0 (the real-game evidence is stale on all of them, as the staleness rule intends: one regeneration is planned, S3), COMPLETE 0 (the owner's).
+- **The Preview (S0 drop A) is built and has been played.** The owner liked "most of your environments and choices" and called the Hive Cantor fight "better, much better" after three rounds of fixes (PLAYTEST_NOTES PT-043 reports 1 to 3): a black screen (an audio crash), lamps hung in the open, one-way pits, too many mobs in both boss fights, a grey ending, a ring with no answer. All fixed and tested. **Not yet seen: drop B (the mechanics yards).**
+- **Not pushed:** 10 local commits ahead of origin/main ebb2fa8 (the whole Preview). The full node suite last ran 952 of 952 (74 minutes at idle); since then only targeted tests ran.
+- **The standing rules this plan is built around:** every decision is mine and the owner overrules (their words); the owner plays on Easy; **no browser job of any length without a fresh explicit yes** (the fourth mouse complaint, 2026-10-13: `AGENTS.md` machine load); no push without their word; nobody but the owner awards COMPLETE.
+
+### 0.2 What the Preview taught, as five more laws for every remaining map (added to `design/ACTC.md` section 0 as laws 7 to 11; they bind both acts)
+7. **Every damage source has an answer the player can find** (a ring, a pulse, a front, a bloom, a beam: cover, a height, a clock or a distance, stated by the objective or a line, and a node test plays it against a player standing still). 8. **Lights:** a hung lamp only under a roof; a post, lantern or brazier in the open (the placement lint, now also on every dev map). 9. **No one-way pits:** a half-step back up from every tier or ledge a player can go down. 10. **Counts:** a boss or set-piece map has about 20 hostiles awake at once at most; waves wake in parts; adds are added after the base fight is judged. 11. **Colour:** no map is one grey; rooms differ in skin and light; saturation 0.6 or more in every look (C2M22 excepted, by design).
+
+### 0.3 The whole job, in order (each row ends with its local commit, tests green; "node" means no browser at all)
+| # | stage | what is built | how it is proved | the owner |
+|---|---|---|---|---|
+| 1 | **DROP B: the mechanics yards** (in `HIVE`, wing 3) | conveyors (E8a), cars (E8b; fallback named: conveyors + lifts), the tide (E12), the taller height format `A-Z` (E13: the one change that touches the map format), the falling front (loads `start`) and the sinking decks, the noise tell on the HUD and the automap (E9), the lamp yard, and the **automap marks** for levers, key doors and exits (law 1) | node: a test file per piece; `route-fingerprint.mjs check` over every shipped run (E13 and the cars are the ones it guards); the findability lint | **plays the yards** (DEV picker, Easy): the cars, the tide and the front are what only a person can judge |
+| 2 | **ACT C, batch C1** | C2M17 The Hive-Song Approach, C2M18 Nerve Cathedral | node: source, compile, routes, plan image, `verify-map` (every gate but the real-game evidence), the findability and placement lints, the avoidability test (law 7), `tests/campaign2-c.test.js` | none yet |
+| 3 | **C2** | C2M19 Bone Loom, C2M20 Vein Rail (the ride) | as above, plus the car's bot ops | none yet |
+| 4 | **C3** | C2M21 Pulse Foundry (the peak: Resonants), C2M22 Mourning Halls (the trough, the loss) | as above | none yet |
+| 5 | **C4** | C2M23 The Reprise (the Quay turned by a node tool), C2S02 Ines's Lamp, C2M24 Choir of One (the Hive Cantor, built from the arena the owner just played) | as above | **plays ACT C** (all nine maps; stills first, window W2) |
+| 6 | **ACT D, D1** | C2M25 Root Bell Descent (the dive: needs E13), C2M26 Silent Roots (the noise tell) | as above | none yet |
+| 7 | **D2** | C2M27 Fault Line (the front), C2M28 Last Tide (nine strokes; the tide) | as above | none yet |
+| 8 | **D3** | C2M29 The Root Bell (from the arena the owner played), C2M30 The Unrung Gate (from the walk the owner played; the ending's text is written last) | as above | **plays ACT D** and the whole ending (stills first, window W3) |
+| 9 | **S3 INTEGRATION** | one clean commit; the Act A and B polish from the lint (lamps and sealed-gate lines in C2M07, C2M08, C2M11, C2M12: messages and props only, the fingerprints must stay identical); campaign-level bots (every route of both campaigns on three difficulties, save/load at act boundaries, the Record, the choice carried from C2M11 to C2M12 and C2M22, the ending sequence); the full suite; **the real-game evidence regenerated once from that commit** (window W4) | `npm run verify`; `validate` shows AGENT_VERIFIED for every map that earns it | none; says when to open W4 |
+| 10 | **S4 RELEASE CANDIDATE** | README, a build that opens from any static host (`base: './'`, served and loaded), tester's guide, known-issues list, saved-game compatibility, settings and first-run sanity, a performance check, the AUDIT PACK (`review/rc1/`, section 6 below, window W5), tag `rc1` | it opens from a clean clone; the pack's index is true | **says push**; says where it is shared from |
+| 11 | **S5 PLAYTEST AND TRIAGE** | the owner plays and the outside agents audit; every finding BLOCKER / MAJOR / MINOR with its cause; one commit each, as in PT-035 | the same gates | plays; reports |
+| 12 | **AFTER** | the prose pass (every message, intro, outro, card and the Record against `design/LORE.md` section 5), listening to the new sounds, Hard difficulty if ever asked | | |
+
+### 0.4 The browser ledger (the only jobs that need a "window"; everything else is node and runs without asking)
+A window is ONE batched job (idle priority, two cores), asked for by name, started only after the owner's yes, ended when it reports; nothing runs between windows. **I ask once per window, say what it will do and how long it will hold the machine, and wait.**
+| window | after | what runs | about |
+|---|---|---|---|
+| **W1** | row 1 | the real-page probe and stills of the drop B yards, and the bakes (if a yard needs a new material) | 10 min |
+| **W2** | row 5 | stills of the nine Act C maps (the vantage tours), the real-page probe of what Act C draws against the sim (cars, the beat, the Resonant, the boss), the bakes of any new material | 15 to 20 min |
+| **W3** | row 8 | the same for the six Act D maps and the ending, the new sounds' audio QA | 15 min |
+| **W4** | row 9 | the shared browser check, every map's own real-game run (68), the render-truth census, the audio QA of every sound | 45 to 60 min (the long one: the owner steps away) |
+| **W5** | row 10 | the audit pack: the vantage tours of every map, the assessment captures | 20 min |
+
+If a window shows a defect, the fix is node work and a second, smaller window is asked for separately. If the owner never opens W2 to W5, the maps stay IMPLEMENTED (node-verified) and the game is still playable; AGENT_VERIFIED needs W4.
+
+### 0.5 What I decide now (the owner overrules any of it)
+- The order of rows 1 to 12 stands. The owner plays at three points (rows 1, 5 and 8) and then at S5; between them I do not stop for design questions.
+- Boss maps follow the Preview as played: **16 singers**, a flat podium, floor blocks and a 0.8 m ring (C2M24); two Zealots and two Choristers with the bell, two Zealots with the fall (C2M29); a stair all the way round the Bell. The adds that were cut come back only if the owner says the fight is too easy.
+- Every remaining map gets the avoidability test, the placement and findability lints, the half-step rule on any tiered arena, its own look and at least one room of a different material (laws 7 to 11).
+- A push is worth making **now** (the Preview is approved), after row 5, after row 8 and at row 10. I do not push without the owner's word.
+
+### 0.6 What I need from the owner
+1. **"go"**: starts rows 1 to 5 (drop B, then Act C) in node only. No browser, no mouse.
+2. **A word per window** ("W1 is open", and when the machine is free again: I never start one on my own).
+3. **Play** at rows 1, 5 and 8 (the DEV picker lists every map; Easy), and say KEEP / CHANGE / CUT in `PLAYTEST_NOTES.md` as before.
+4. **"push"** when they want the repository published (now is fine; row 5 is the next natural point).
+
+### 0.7 What is most likely to go wrong (new since section 7)
+1. **No browser means no eyes.** Until each window I judge a map by its plan image, its route story and the lints, not by how it looks; a map can pass every node gate and be ugly. The act windows exist to catch that early, and the laws (colour, lights, a different material per room) are the defence in between.
+2. **E13 (the taller format)** reaches every map's format: if the fingerprints move I stop and take the named fallback (C2M25 at 17 m).
+3. **The cars (E8b)** are the one engine piece nobody has felt: the owner's play of drop B is the gate; the fallback is conveyors and lifts.
+4. **The ending's text** is written last and is the least certain.
+5. **Length:** about 15 maps, one risky engine piece and 74 minutes of full suite per stage boundary: a node-only run is slower than a browser-assisted one, and I will say so in the stage reports rather than cut a gate.
+
+---
 
 ## 1. The last boss
 **Yes: the ROOT BELL (C2M29)**, the final boss of the whole game (`design/ACTD.md` section 4). It is a SHOOTING fight inside the bell: the boss is the Bell's heart, a 3.6 m clapper that swings on a pendulum across the arena (a moving target to lead), held by four root anchors you shoot from cover; cut them and it falls and CHARGES (bait it into a pillar and unload); in the last phase the lights fall, the Bell's note rolls rings across the floor, its heart cracks open, and the whole arsenal goes into it (the mortar, the rockets, the scattergun, the chainsaw). The Songkeepers' last guard and a pair of Resonants fight in the gaps. A lit lantern cuts the rings (the lamp is the counter-tone: Campaign 1's first secret already says so; there is no new gadget). When it falls it does not break: it hangs silent and the game's sound cuts out for a held second. C2M30 is then a four-minute walk up to the Gate and one last input: Ines lights the lamp and stays to keep it lit, as she told her father she would. Campaign 2's bosses in order: the Sub-Cantor (C2M16, built and played), the Hive Cantor (C2M24: a read-the-beat fight where killing the choir opens it), the Root Bell (C2M29). Campaign 1's four are built. Neither of the last two Campaign 2 bosses exists yet.
