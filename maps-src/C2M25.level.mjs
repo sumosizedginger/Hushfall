@@ -109,6 +109,7 @@ const MAP = {
     enemyKinds: { tollbearer: 6, gaunt: 4, zealot: 5, chorister: 4, resonant: 2, gill: 3, bellhand: 1 },
     scaleClass: 'SET-PIECE', reason: 'the place is an open well: the player crosses a void between landings, and the fights are on ledges over a drop', introduces: 'the descent: six landings thirty metres down, a vent across the dark between each, and the lamp that holds a ring of sound back' },
 };
+MAP.drops = { scale: 1, keep: [[NICHE[0] - 4, NICHE[1] - 4, NICHE[0] + 4, NICHE[1] + 4]] };                 // the Silent's niche keeps its tins and its rockets
 console.log('C2M25: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'start', START, 'door', DOORAT, 'exit', EX, 'seam', SECP.panel, 'vents', JSON.stringify(vents));
 const Q = (k, r, da) => pol(r, k * SEC + da);
 const landing = (k) => [Q(k, 31, 22), Q(k, 33, 36), Q(k, RI + 1.2, 42)];
