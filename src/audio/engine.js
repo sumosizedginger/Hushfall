@@ -89,8 +89,8 @@ export class AudioEngine {
     if (!this.ctx || this.ctx.state !== 'running') return;
     this.clock += dt; const c = this.ctx, p = world?.player;
     this.music.tick();
-    if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') { const bn = Math.floor(world.tick / 90); if (bn !== this.lastBeat) { this.lastBeat = bn; this.play('hive_beat', { gain: 0.5 }); } }          // PT-043: the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
     if (!p) { this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 }); this.music.setIntensity(0); return; }
+    if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') { const bn = Math.floor(world.tick / 90); if (bn !== this.lastBeat) { this.lastBeat = bn; this.play('hive_beat', { gain: 0.5 }); } }          // PT-043: the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
     const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
     if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
     else { L.setPosition(p.x, PLAYER.eye, p.z); L.setOrientation(fx, 0, fz, 0, 1, 0); }

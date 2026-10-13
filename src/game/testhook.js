@@ -181,7 +181,7 @@ export function installTestHook(app) {
     async audioMusic(seconds = 12, intensity = 0.8) { const { renderMusic } = await import('../audio/music.js'); const { rate, samples } = await renderMusic({ seconds, intensity }); return { rate, ...pcm(samples) }; },
     automap: async () => { const { automapModel } = await import('../engine/automap.js'); const m = automapModel(g.world); return { exploredCount: m.exploredCount, doors: m.doors.length, exits: m.exits.length, kinds: [...new Set(m.cells.map((c) => c.kind))] }; },
     mapOpen: () => g.mapOpen,
-    audioUnlock: () => audio.unlock(), audioLog: (n = 40) => audio.stats.log.slice(-n),
+    audioUnlock: () => audio.unlock(), audioClock: () => audio.clock, audioLog: (n = 40) => audio.stats.log.slice(-n),
     sfxIds: async () => Object.keys((await import('../audio/synth.js')).SFX),
   };
 }
