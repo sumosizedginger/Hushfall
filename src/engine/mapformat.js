@@ -1,6 +1,6 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, LOADS, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, LOADS, BELT, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -51,6 +51,7 @@ export class MapData {
     this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
     this.objective = src.objective ?? null;
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
+    this.belts = (src.belts || []).map((b) => ({ rect: b.rect, period: b.period, phase: b.phase ?? 0, mode: b.mode ?? 'flip', on: b.on ?? null, speed: b.speed ?? BELT.speed }));      // PT-045 (E8a): conveyors on a clock (belts.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
@@ -285,6 +286,21 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
     let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
     if (!floor) err(`${tag}: no floor under it`);
+  }
+  const beltRects = [];                                                                // PT-045 (E8a): clocked conveyors
+  for (const [i, b] of (src.belts || []).entries()) {
+    const tag = `belt #${i}`;
+    if (!Array.isArray(b?.rect) || b.rect.length !== 4 || b.rect.some((n) => !Number.isInteger(n)) || b.rect[0] > b.rect[2] || b.rect[1] > b.rect[3] || b.rect[0] < 0 || b.rect[1] < 0 || b.rect[2] >= w || b.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`); continue; }
+    const mode = b.mode ?? 'flip';
+    if (mode !== 'flip' && mode !== 'run') err(`${tag}: mode must be 'flip' or 'run'`);
+    if (!(b.period >= BELT.minPeriod)) err(`${tag}: period must be at least ${BELT.minPeriod} s`);
+    else if (mode === 'run' && !(b.on >= 2 && b.period - b.on >= 2)) err(`${tag}: a 'run' belt needs on >= 2 s and a rest of at least 2 s (period ${b.period}, on ${b.on})`);
+    if (b.phase != null && typeof b.phase !== 'number') err(`${tag}: phase must be a number`);
+    if (b.speed != null && !(b.speed >= 0.5 && b.speed <= 8)) err(`${tag}: speed must be 0.5 to 8 m/s`);
+    let flow = 0; if (hasF) for (let cz = b.rect[1]; cz <= b.rect[3]; cz++) for (let cx = b.rect[0]; cx <= b.rect[2]; cx++) if (FX[src.fx[cz][cx]]?.flow) flow++;
+    if (!flow) err(`${tag}: no flowing floor (> < ^ v in the fx layer) under it`);
+    for (const r of beltRects) if (b.rect[0] <= r[2] && b.rect[2] >= r[0] && b.rect[1] <= r[3] && b.rect[3] >= r[1]) err(`${tag}: overlaps another belt (a cell would have two clocks)`);
+    beltRects.push(b.rect);
   }
   for (const [i, v] of (src.vacuum || []).entries()) {                               // PT-033: regions of vacuum
     const tag = `vacuum #${i}`, cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && tile(c[0], c[1]) === 'D';

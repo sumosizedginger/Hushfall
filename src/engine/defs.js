@@ -136,7 +136,7 @@ export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.
 export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
 
 // ---- terrain (Gate 2 production kit) ----------------------------------------------------------------------------------
-/** heights are authored in 0.5 m units (0-9, a-z); an actor can step UP at most STEP metres and can drop any distance */
+/** heights are authored in 0.5 m units (0-9, a-z, and A-Z for 36 to 61: 30.5 m at most, PT-045); an actor can step UP at most STEP metres and can drop any distance */
 export const HEIGHT_UNIT = 0.5, STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
 export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 }, d: { name: 'drift', speed: 1, grip: 0.1 },
@@ -145,6 +145,10 @@ export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic 
 export const BREATH = { warn: 1.2, fade: 0.8 };
 /** CURRENT (PT-037, E3): how hard a flowing floor (FX '>' '<' '^' 'v') pushes a body that stands on it, in m/s, added to its own movement (a walker upstream at full speed still gains ground: 6.4 x 0.78 - 2.2 = 2.8 m/s) */
 export const FLOW = { push: 2.2 };
+/** CLOCKED CONVEYORS (PT-045, drop B, E8a; src/engine/belts.js): a map's `belts: [{ rect, period, phase, mode, on?, speed? }]` put a clock on the flowing floors (FX '>' '<' '^' 'v') under their rect. 'flip': the floor carries you the way it is drawn for half a period,
+ *  stops for `stop` s, carries you the other way for half, stops again; 'run': it runs for `on` s of every period and stands still for the rest. A belt eases to and from a stop over `ease` s (so the push is never a jump and the chevrons visibly slow before it stops);
+ *  `speed` (m/s, default `speed` here) is how hard a running belt pushes: harder than a current, because it is a machine. */
+export const BELT = { speed: 3.0, stop: 0.8, ease: 0.6, minPeriod: 6 };
 /**
  * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
  * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.

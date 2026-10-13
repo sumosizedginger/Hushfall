@@ -3,6 +3,7 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
+import { beltPush, beltAtCell } from './belts.js';                                                                // PT-045 (E8a): conveyors on a clock (lazy: a map with no `belts` never reaches them)
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
@@ -166,9 +167,13 @@ export function tryMove(w, o, dx, dz, r) {
   o.y = groundAt(w, o.x, o.z, r);
 }
 /** wading water or a current: what the arc lamp conducts through (PT-037: a current is water that moves) */
-function inWater(w, x, z) { const c = fxAt(w, x, z); return c === 'w' || !!(c && FX[c]?.water); }
+function inWater(w, x, z) { const c = fxAt(w, x, z); return c === 'w' || !!(c && FX[c]?.water && !(w.map.belts.length && beltAtCell(w.map, Math.floor(x / w.map.cell), Math.floor(z / w.map.cell)))); }      // (a conveyor is a machine, not water: PT-045)
 /** PT-037 (E3): a flowing floor pushes whoever stands on it, FLOW.push m/s, on top of their own movement */
-function flowPush(w, o, r, dt) { const c = fxAt(w, o.x, o.z), f = c && FX[c]?.flow; if (f) tryMove(w, o, f[0] * FLOW.push * dt, f[1] * FLOW.push * dt, r); }
+function flowPush(w, o, r, dt) {
+  const c = fxAt(w, o.x, o.z), f = c && FX[c]?.flow; if (!f) return;
+  if (w.map.belts.length) { const b = beltPush(w.map, o.x, o.z, w.time); if (b) { if (b.k) tryMove(w, o, f[0] * b.speed * b.k * dt, f[1] * b.speed * b.k * dt, r); return; } }      // PT-045 (E8a): a clocked belt pushes by its own speed, signed by its clock, and not at all while it stands still
+  tryMove(w, o, f[0] * FLOW.push * dt, f[1] * FLOW.push * dt, r);
+}
 export function hasLOS(w, x0, z0, x1, z1) {
   const S = w.map.cell, d = Math.hypot(x1 - x0, z1 - z0), n = Math.ceil(d / 0.4), flat = w.map.flat && w.map.sectors.length === 0;
   const ya = flat ? 0 : floorAt(w, x0, z0) + 1.4, yb = flat ? 0 : floorAt(w, x1, z1) + 1.4;                     // eye line from head to head; a ledge above it blocks the view, a step below it does not

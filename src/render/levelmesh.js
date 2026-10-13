@@ -2,7 +2,8 @@
 // Gate 2: per-cell floor heights with risers, per-cell ceilings, wall/floor skins, moving-floor sectors, wading/toxic overlays, switch panels, closets.
 import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
-import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, lookOf } from '../engine/defs.js';
+import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, FX, lookOf } from '../engine/defs.js';
+import { beltAtCell } from '../engine/belts.js';
 import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
@@ -119,7 +120,7 @@ export function buildLevel(map, tex) {
     }
     const fx = map.fx(cx, cz);
     if (fx === 's') { const pi = map.pulses.indexOf(map.pulseAt(cx, cz)); if (pi >= 0) { const x0 = cx * S, z0 = cz * S, bed = [[x0, y + 0.07, z0], [x0, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0]], mist = bed.map((r) => [r[0], y + 0.8, r[2]]); sporeBed[pi].add(bed, [0, 1, 0], bed.map((r) => [r[0] / 2, r[2] / 2])); sporeMist[pi].add(mist, [0, 1, 0], mist.map((r) => [r[0] / 6, r[2] / 6])); } }
-    if (fx && fx in fxQuads) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
+    if (fx && fx in fxQuads && !(map.belts.length && FX[fx]?.flow && beltAtCell(map, cx, cz))) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
   const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
   const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group) => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true })); parent.add(mesh); return mesh; };
