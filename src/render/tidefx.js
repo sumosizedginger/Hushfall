@@ -5,10 +5,10 @@ import { tideLevel, tideState } from '../engine/tide.js';
 
 /** { group, sea, update(w, dt, time) }: the sea is hidden while the level is under the lowest floor of the map (the dock is dry) */
 export function makeTideView(map, tex) {
-  const S = map.cell, W = map.w * S, H = map.h * S, group = new THREE.Group(), base = tex.water_dusk ?? new THREE.Texture();
+  const S = map.cell, R = map.tide.rect ?? [0, 0, map.w - 1, map.h - 1], W = (R[2] - R[0] + 1) * S, H = (R[3] - R[1] + 1) * S, group = new THREE.Group(), base = tex.water_dusk ?? new THREE.Texture();
   const t = base.clone(); t.needsUpdate = true; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(W / 8, H / 8);
   const mat = new THREE.MeshBasicMaterial({ map: t, color: 0x7fb4c4, transparent: true, opacity: 0.6, depthWrite: false, side: THREE.DoubleSide });
-  const sea = new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat); sea.rotation.x = -Math.PI / 2; sea.position.set(W / 2, -10, H / 2); sea.renderOrder = 2; sea.visible = false; group.add(sea);
+  const sea = new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat); sea.rotation.x = -Math.PI / 2; sea.position.set(R[0] * S + W / 2, -10, R[1] * S + H / 2); sea.renderOrder = 2; sea.visible = false; group.add(sea);
   const tv = { group, sea, mat, tex: t, update: (w, dt, time) => updateTideView(tv, w, dt, time) };
   return tv;
 }

@@ -51,3 +51,11 @@ test('in the world: the player is slowed in the water (FX w) and not before; the
   const d = world(dock({ levels: [[0, 0], [10, 0]] })); Object.assign(d.player, { x: 4.5 * S, z: 3.5 * S }); d.player.yaw = -Math.PI / 2; for (let i = 0; i < 200; i++) step(d, idle()); const e0 = d.player.x; for (let i = 0; i < 30; i++) step(d, idle({ move: [0, 1] })); const dry = d.player.x - e0;
   assert.ok(wet < dry * (FX.w.speed + 0.15) && wet > 0, `wading is slower: ${wet.toFixed(2)} m against ${dry.toFixed(2)} m dry`); assert.equal(w.status, 'playing'); assert.ok(w.player.hp === PLAYER.maxHp || w.player.hp > 0);
 });
+
+test('a tide may be confined to a rect of cells (one yard of a dev map): the water only reaches those cells, the validator checks the rect, the view sea covers just that rect', async () => {
+  const src = dock(undefined, {}); src.tide = { ...src.tide, rect: [1, 1, 14, 5] }; const m = parseMap(src), w = createWorld(m, { seed: 1, difficulty: 'normal' }); w.time = 30;
+  assert.equal(tideWet(w, 4, 3), true, 'inside the rect'); assert.equal(tideWet(w, 4, 6), false, 'just outside it (the row below)'); assert.equal(fxAt(w, 4.5 * 2, 3.5 * 2), 'w'); assert.equal(fxAt(w, 4.5 * 2, 6.5 * 2), null);
+  bad({ ...src, tide: { ...src.tide, rect: [1, 1, 99, 5] } }, /rect must be/); bad({ ...src, tide: { ...src.tide, rect: [5, 1, 2, 5] } }, /rect must be/); bad({ ...src, tide: { ...src.tide, rect: 'x' } }, /rect must be/);
+  const THREE = await import('three'); const { makeTideView } = await import('../src/render/tidefx.js'); const tv = makeTideView(m, new Proxy({}, { get: (o, k) => (o[k] ??= new THREE.Texture()) }));
+  assert.ok(Math.abs(tv.sea.geometry.parameters.width - 14 * 2) < 1e-9 && Math.abs(tv.sea.geometry.parameters.height - 5 * 2) < 1e-9, 'the sea is 14 x 5 cells'); assert.ok(Math.abs(tv.sea.position.x - (1 * 2 + 14)) < 1e-9);
+});

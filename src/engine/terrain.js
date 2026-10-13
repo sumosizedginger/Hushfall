@@ -44,5 +44,5 @@ export function fxAt(w, x, z) {
   return base || (m.tide && tideWet(w, cx, cz) ? 'w' : base);                          // PT-045 (E12): the tide wets every walkable cell whose floor is under the water
 }
 /** is this cell under the tide right now (a walkable cell only: a wall, a door and the void are never flooded) */
-export function tideWet(w, cx, cz) { const m = w.map, k = m.kind(cx, cz); return (k === 'floor' || k === 'outdoor') && cellFloor(w, cx, cz) < tideLevel(m, w.time) - TIDE.wet; }
+export function tideWet(w, cx, cz) { const m = w.map, k = m.kind(cx, cz), r = m.tide.rect; return (k === 'floor' || k === 'outdoor') && (!r || (cx >= r[0] && cx <= r[2] && cz >= r[1] && cz <= r[3])) && cellFloor(w, cx, cz) < tideLevel(m, w.time) - TIDE.wet; }
 export const fxSpeed = (c) => (c ? FX[c]?.speed ?? 1 : 1);

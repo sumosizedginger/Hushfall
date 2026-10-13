@@ -55,7 +55,7 @@ export class MapData {
     this.objective = src.objective ?? null;
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0, ...(l.start != null ? { start: l.start } : {}), ...(l.count != null ? { count: l.count } : {}), ...(l.loop != null ? { loop: l.loop } : {}), ...(l.tremor != null ? { tremor: l.tremor } : {}) }));      // PT-032: falling loads on a clock (loads.js)
     this.belts = (src.belts || []).map((b) => ({ rect: b.rect, period: b.period, phase: b.phase ?? 0, mode: b.mode ?? 'flip', on: b.on ?? null, speed: b.speed ?? BELT.speed }));      // PT-045 (E8a): conveyors on a clock (belts.js)
-    this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null } : null;      // PT-045 (E12): the water level of the whole map on a clock (tide.js)
+    this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null, rect: src.tide.rect ?? null } : null;      // PT-045 (E12): the water level of the whole map on a clock (tide.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
@@ -305,6 +305,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else {
       if (L[0][0] !== 0 || L.some((q, i) => i > 0 && !(q[0] > L[i - 1][0]))) err('tide: the first point is at t = 0 and the times rise');
       if (L.some((q) => q[1] < TIDE.minH || q[1] > TIDE.maxH)) err(`tide: a level must be between ${TIDE.minH} and ${TIDE.maxH} m`);
+      if (T.rect != null && (!Array.isArray(T.rect) || T.rect.length !== 4 || T.rect.some((n) => !Number.isInteger(n)) || T.rect[0] > T.rect[2] || T.rect[1] > T.rect[3] || T.rect[0] < 0 || T.rect[1] < 0 || T.rect[2] >= w || T.rect[3] >= h)) err('tide: rect must be [x0, z0, x1, z1] cells inside the grid (the water only reaches those cells)');
       if (T.loop != null && !(T.loop > L[L.length - 1][0])) err('tide: loop must be longer than the last point');
       if (T.loop != null && L[L.length - 1][1] !== L[0][1]) err('tide: a looping tide must end at the level it starts at (the loop would jump)');
       for (let i = 1; i < L.length; i++) if (Math.abs(L[i][1] - L[i - 1][1]) / (L[i][0] - L[i - 1][0]) > 0.5) err(`tide: the water may not rise or fall faster than 0.5 m a second (points ${i - 1} and ${i})`);
