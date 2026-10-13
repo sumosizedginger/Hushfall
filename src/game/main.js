@@ -1,6 +1,6 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
 import * as THREE from 'three';
-import { loadAll, titleArtUrl, endingArtUrl } from '../render/textures.js';
+import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url } from '../render/textures.js';
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
@@ -23,7 +23,7 @@ import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, app
 import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } from './wheel.js';
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
-import { endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
+import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordView, recordCounts } from './record.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
@@ -175,12 +175,14 @@ function buyUpgrade(track) {
  *  The records are already written when it starts (earn + commitProgress ran at the exit), so closing the game here loses nothing. */
 function startEpilogue(ending) {
   g.input.releaseAll(); g.ending = { def: ending, seq: startSequence(), tallied: false }; g.mode = 'epilogue';
+  document.getElementById('ending-art').src = ending.campaign === 2 ? endingArt2Url() : endingArtUrl();          // PT-043: each campaign's own picture
   ui.show('ending', { ending }); syncEpilogue(); audio.play('gate_chord');
 }
 /** show what the sequence says now: the card being typed, or (once the last card has been read) the tally */
 function syncEpilogue() {
   const e = g.ending; if (!e) return;
   const v = viewSequence(e.seq, e.def.cards);
+  if (v.tally && e.def.dev) { g.ending = null; quitToTitle(); return; }                              // PT-043: a dev map's draft epilogue ends at the title, with no tally of a campaign nobody finished
   if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def); } } else ui.endingView(v);
 }
 /** Enter, Space, a click or the pad's A: finish the card, go on, or (in the tally) leave for the intermission */
@@ -369,7 +371,7 @@ function frame(now) {
   else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
   else if (g.mode === 'ending') {
     g.timer -= dt;
-    if (g.timer <= 0 && MAPS[g.mapId].range) quitToTitle();                              // the dev range has no scoring, salvage or next map: its exit just goes back to the title
+    if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) { const de = MAPS[g.mapId].devEnding; if (de && ENDINGS[de.ending] && g.world.endStats?.dest === de.dest) startEpilogue({ campaign: de.ending, ...ENDINGS[de.ending], dev: true }); else quitToTitle(); }      // the dev range has no scoring, salvage or next map: its exit just goes back to the title (PT-043: a dev map may show a draft epilogue first)
     else if (g.timer <= 0) {
       g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record

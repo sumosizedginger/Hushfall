@@ -9,7 +9,7 @@ import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, mak
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 import { makeLighter } from './models_e4.js';
-import { makeFork, makeGateArch, makeSpire, makeGrave, makeRib, makeCityFace, makeHangRock, makeHeartMass } from './models_c2.js';
+import { makeFork, makeGateArch, makeSpire, makeGrave, makeRib, makeCityFace, makeHangRock, makeHeartMass, makeHiveTower, makeGanglion, makeReactor, makeRails, makeCrystalTower, makeRootColumn, makeShaft } from './models_c2.js';
 
 const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
 class Quads {
@@ -245,6 +245,8 @@ export function buildLevel(map, tex) {
     else if (sc.kind === 'cityface') m = makeCityFace();
     else if (sc.kind === 'hangrock') m = makeHangRock();
     else if (sc.kind === 'heartmass') m = makeHeartMass();
+    else if (sc.kind === 'hivetower') m = makeHiveTower(); else if (sc.kind === 'ganglion') m = makeGanglion(); else if (sc.kind === 'reactor') m = makeReactor(); else if (sc.kind === 'rails') m = makeRails();          // PT-043: the scenery of Acts C and D (models_c2.js)
+    else if (sc.kind === 'crystaltower') m = makeCrystalTower(); else if (sc.kind === 'rootcolumn') m = makeRootColumn(); else if (sc.kind === 'shaft') m = makeShaft();
     if (!m) continue;
     m.position.x = sc.x; m.position.z = sc.z; m.position.y += sc.y ?? 0; m.rotation.y = sc.yaw ?? 0; if (sc.scale) m.scale.setScalar(sc.scale); dressing.add(m);
   }
@@ -267,7 +269,8 @@ export function buildLevel(map, tex) {
     const bed = new THREE.MeshBasicMaterial({ map: tex.floor_spore_a ?? tex.floor_ember_a, color: 0xffffff, transparent: true, opacity: 0.2, depthWrite: false }), mist = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xd6ee8c, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
     if (!sporeBed[i].empty) { const m = new THREE.Mesh(sporeBed[i].geometry(), bed); m.renderOrder = 2; group.add(m); }
     if (!sporeMist[i].empty) { const m = new THREE.Mesh(sporeMist[i].geometry(), mist); m.renderOrder = 3; group.add(m); }
-    return { bed, mist };
+    if (p.tint != null) mist.color.setHex(p.tint);                                                                    // PT-043: the Hive's beds bloom pink-amber, not spore-green
+    return { bed, mist, tint: p.tint != null ? new THREE.Color(p.tint) : null };
   });
   { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
   return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews };

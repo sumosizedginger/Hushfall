@@ -8,6 +8,7 @@
 import * as THREE from 'three';
 import { makeCreature, humanoidPose, ease, clamp01 } from './choir_kit.js';
 import { cellsOf } from './choir_cells.js';
+import { resonant, hivecantor, rootbell, rootanchor } from './models_hive.js';          // PT-043: the creatures of Acts C and D
 
 const S = Math.sin, K = Math.cos, PI = Math.PI, V2 = (pts) => pts.map(([r, y]) => new THREE.Vector2(r, y));
 const legs = (R, hipsName, x, spec, footCell) => {
@@ -869,4 +870,4 @@ export function zealot(tex) {
   });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, subcantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot };
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, subcantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot, resonant, hivecantor, rootbell, rootanchor };

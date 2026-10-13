@@ -29,6 +29,25 @@ export const ENDINGS = {
     ],
     next: { kicker: 'Campaign Two', name: 'The Long Descent', line: 'The Gate is open.' },
   },
+  // PT-043: THE DRAFT of Campaign Two's epilogue (design/ACTD.md C2M30; written to be revised after the owner has played the descent). The facts it must carry, in order: the Bell has stopped; the Gate is a bell and a lit lamp holds it shut; someone has
+  // to stay and keep it lit; she told her father she would (Campaign 1's first secret, C1E1S01: "Keep it lit, and it holds the tone back from the harbour." / "I will keep it lit."); someone is listening on the other side.
+  2: {
+    title: 'THE UNRUNG GATE',
+    kicker: 'End of Campaign Two',
+    name: 'The Lamp',
+    cards: [
+      { who: '', text: 'The stair ends at a door that is also a bell. It is not ringing.' },
+      { who: 'SIGNAL HOUSE', text: 'Ines. I have you on the set. There is no line down there, and I have you.' },
+      { who: 'INES', text: 'There is a hook beside the door, the kind a lamp hangs from. My father told me what a lamp is for. I did not understand him.' },
+      { who: 'INES', text: 'You keep it lit, and it holds the tone back from the harbour.' },
+      { who: '', text: 'She hangs the lamp on the hook and lights it. The bell on the door goes quiet, and stays quiet.' },
+      { who: 'SIGNAL HOUSE', text: 'It is holding. Come back up, Ines. Somebody else can see to it.' },
+      { who: 'INES', text: 'There is nobody else. I said I would keep it lit.' },
+      { who: 'SIGNAL HOUSE', text: 'Then I will stay on the air. Somebody should be listening.' },
+      { who: '', text: 'On the far side of the door, a long way down, something answers the light with one note. It is not the Hush.' },
+    ],
+    next: { kicker: 'Hushfall', name: 'The End', line: 'Someone is listening.' },
+  },
 };
 
 /** the epilogue to show after finishing `id` by its normal exit, or null (not a finale, a secret exit, or a campaign without one) */

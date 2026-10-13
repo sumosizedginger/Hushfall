@@ -22,12 +22,14 @@ import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
+import { beatGlow, zoneBeat } from '../engine/hive.js';
+import { makeHiveView } from './hivefx.js';                                                                       // PT-043: the Hive Cantor's threads, the Root Bell's chain and shadow, the spikes
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
-import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
@@ -41,6 +43,11 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
+/** the Root Bell's clapper hangs on a pendulum: its lean in the rig's own axes (the top of the bell tilts toward the pivot, away from the side it is displaced to), and whether the Last Note has opened its heart */
+const bellPose = (e, yaw) => {
+  const rb = e.rb, hung = rb.mode === 'hung' && rb.t0 != null, phi = hung ? rb.phi ?? 0 : 0, dx = Math.cos(rb.theta ?? 0), dz = Math.sin(rb.theta ?? 0), c = Math.cos(yaw), s = Math.sin(yaw);
+  return { tiltX: (c * dx - s * dz) * phi, tiltZ: (s * dx + c * dz) * phi, last: rb.last ? 1 : 0 };
+};
 const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
   : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
@@ -53,6 +60,7 @@ export class GameView {
     this.ambient = map.atmosphere.ambient ?? 1;       // dark levels (Signal House) dim the general light: the lamps carry the scene
     this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR); this.setPlace(lookOf(map.atmosphere));       // the place's light and grade (PT-021)
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
+    this.hiveView = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.unison || q.kind === 'rootbell')) ? makeHiveView(scene) : null;       // PT-043: made with the view when the map has a conductor or a clapper (the clapper's light must not change the scene's light count in a fight)
     this.world = world; this.decals = new DecalLayer(tex.decals_atlas); scene.add(this.decals.mesh);       // marks that stay (PT-021): what the map started with, then what the events leave
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
@@ -109,6 +117,16 @@ export class GameView {
     this.baseFov = fov; this.adsFov = fov * (VIEW.adsFov / VIEW.fov);                                                      // aiming keeps the same zoom ratio at any field of view
   }
 
+  /** PT-043 (the Preview): a dev map may list `lookZones: [{ rect: [x0, z0, x1, z1], look, sky?, fog?, fogDensity? }]` (cells): the room the player stands in is lit and graded by that look and wears its sky and fog; elsewhere the map's own */
+  applyZone(zones, p) {
+    const cx = Math.floor(p.x / this.map.cell), cz = Math.floor(p.z / this.map.cell); let z = null;
+    for (const q of zones) if (cx >= q.rect[0] && cx <= q.rect[2] && cz >= q.rect[1] && cz <= q.rect[3]) { z = q; break; }
+    const id = z ? z.look + '|' + (z.sky ?? '') : '';
+    if (id === this.zoneId) return; this.zoneId = id;
+    const look = LOOKS[z?.look ?? this.map.atmosphere.look] ?? LOOKS.harbour; this.setPlace(look);
+    const fog = z?.fog ?? this.map.atmosphere.fog, dens = z?.fogDensity ?? this.map.atmosphere.fogDensity; this.scene.fog.color.set(fog); this.scene.fog.density = dens;
+    const skyTex = this.tex['sky_' + (z?.sky ?? this.map.atmosphere.sky ?? 'dusk')] ?? this.tex.sky_dusk; if (this.sky.material.map !== skyTex) { this.sky.material.map = skyTex; this.sky.material.needsUpdate = true; }
+  }
   /** call before each sim step so render can interpolate */
   beforeStep(w) {
     const p = w.player; Object.assign(this.prev.player, { x: p.x, z: p.z, y: p.y ?? 0, yaw: p.yaw, pitch: p.pitch }); if (this.eyeBase == null) this.eyeBase = p.y ?? 0;
@@ -262,12 +280,13 @@ export class GameView {
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position); this.skyBelow?.position.copy(this.cam.position);
+    if (this.map.lookZones) this.applyZone(this.map.lookZones, w.player);                                      // PT-043: a dev map's rooms are lit by their own look
     this.decals.update(dt);
     { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = this.look.hemi[2] * this.ambient; this.sun.intensity = this.look.sun[1] * this.ambient; }
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
     if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies
-    const seen = new Set();
+    const seen = new Set(), beatK = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time + alpha * TICK) : 0;          // the Hive's light curve (hive.js): the creatures' rigs and the static lights swell on the beat (render only)
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
       if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
@@ -278,10 +297,10 @@ export class GameView {
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
       // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
       let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
-      if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / def.pulse.windup);
+      if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / (def.pulse?.windup ?? def.hive?.windup ?? HIVE.beat));
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : def.spawner && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / def.spawner.swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee' });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
@@ -296,14 +315,14 @@ export class GameView {
       for (const e of w.enemies) {
         const def = ENEMIES[e.kind];
         if (def.support && (e.channelT ?? -1) >= 0) { const c = w.enemies.find((o) => o.id === e.channelTarget); if (c) { this.beam('ch' + e.id, e.x, (e.y ?? 0) + 1.7, e.z, c.x, (c.y ?? 0) + 0.3, c.z, 0.05 + 0.03 * Math.sin(this.time * 22)); live.add('ch' + e.id); } }
-        if (def.node && e.state !== 'dead') nodes.push(e); if (def.boss && e.state !== 'dead') boss = e;
+        if (def.node && e.state !== 'dead') nodes.push(e); if (def.boss && def.shield && e.state !== 'dead') boss = e;
       }
-      if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 1.7, n.z, boss.x, (boss.y ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
+      if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 3.2, n.z, boss.x, (boss.y ?? 0) + (boss.lift ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
       for (const [k, m] of this.beams) if (!live.has(k)) { this.scene.remove(m); this.beams.delete(k); }
       this.shieldFlash = Math.max(0, this.shieldFlash - dt * 4);
       if (boss && nodes.length) {
         if (!this.shield) { this.shield = makeShield(); this.scene.add(this.shield.group); }
-        const SH = ENEMIES[boss.kind].shield ?? {}; this.shield.group.visible = true; this.shield.group.position.set(boss.x, (boss.y ?? 0) + (SH.y ?? 2.4), boss.z); this.shield.group.scale.setScalar((SH.r ?? 2.9) + 0.08 * Math.sin(this.time * 5)); this.shield.update(this.time, this.shieldFlash);
+        const SH = ENEMIES[boss.kind].shield ?? {}; this.shield.group.visible = true; this.shield.group.position.set(boss.x, (boss.y ?? 0) + (boss.lift ?? 0) + (SH.y ?? 2.4), boss.z); this.shield.group.scale.setScalar((SH.r ?? 2.9) + 0.08 * Math.sin(this.time * 5)); this.shield.update(this.time, this.shieldFlash);
       } else if (this.shield?.group.visible) { this.shield.group.visible = false; this.shedShield(); }
       for (let i = this.ripples.length - 1; i >= 0; i--) { const r = this.ripples[i]; r.t += dt; if (r.t > 0.75) { this.scene.remove(r.m); r.m.material.dispose(); this.ripples.splice(i, 1); } else { r.m.scale.setScalar(1.4 + r.t * 8); r.m.material.opacity = 0.75 * (1 - r.t / 0.75); } }
       const pseen = new Set();
@@ -314,6 +333,8 @@ export class GameView {
       }
       for (const [id, m] of this.pulseViews) if (!pseen.has(id)) { this.scene.remove(m); m.material.dispose(); this.pulseViews.delete(id); }
     }
+    if (!this.hiveView && w.enemies.some((q) => ENEMIES[q.kind].unison || q.kind === 'rootbell')) this.hiveView = makeHiveView(this.scene);       // PT-043: the Hive Cantor's threads, the clapper's chain and shadow, the spikes
+    this.hiveView?.update(w, this.enemyViews, this.time);
     // pickups
     seen.clear();
     for (const it of w.pickups) {
@@ -415,7 +436,7 @@ export class GameView {
     w.sectors.forEach((s, i) => { const v = this.lvl.sectorViews[i]; if (v) v.position.y = s.h; });                       // moving floors
 this.chimeView?.update(w, this.time);     this.beamView?.update(w, dt, this.time); this.sweepView?.update(w, this.time);                                                                       // PT-033: the mirrors turn, the beams follow them
     this.ventViews?.forEach((vv) => updateVentView(vv, this.time, dt)); this.loadViews?.forEach((lv, i) => updateLoadView(lv, this.map.loads[i], w.time + alpha * TICK));      // PT-032: the plates breathe, the loads fall on the clock
-    this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
+    this.lvl.sporeViews?.forEach((v, i) => { const s = sporeState(this.map.pulses[i], w.time); v.bed.opacity = 0.16 + 0.78 * s.glow; v.bed.color.setScalar(0.55 + 0.45 * s.glow); if (v.tint) v.bed.color.multiply(v.tint); v.mist.opacity = s.on ? 0.42 + 0.08 * Math.sin(this.time * 3.1 + i) : 0.42 * Math.max(0, s.glow - 0.4) / 0.3; v.mist.visible = v.mist.opacity > 0.01; });          // PT-027: the beds swell before they bloom and the mist lingers
     for (const [c, f] of [['>', [1, 0]], ['<', [-1, 0]], ['^', [0, -1]], ['v', [0, 1]]]) { const m = this.lvl.fxMats[c], m2 = this.lvl.fxMats[c + '2']; if (m) m.map.offset.set(-f[0] * this.time * FLOW.push / 8, -f[1] * this.time * FLOW.push / 8); if (m2) m2.map.offset.set(-f[0] * this.time * FLOW.push * 1.7 / 8, -f[1] * this.time * FLOW.push * 1.7 / 8); }          // PT-037: a current's surface slides the way it pushes (8 m a texture tile)
     if (this.lvl.fxMats.x) this.lvl.fxMats.x.opacity = 0.55 + 0.12 * Math.sin(this.time * 2.4);                          // toxic residue breathes
     if (this.lvl.fxMats.h) this.lvl.fxMats.h.opacity = 0.84 + 0.08 * Math.sin(this.time * 3.1) + 0.04 * Math.sin(this.time * 7.7);                          // the ember bed flickers
@@ -435,10 +456,10 @@ this.chimeView?.update(w, this.time);     this.beamView?.update(w, dt, this.time
     this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
     const cp = this.cam.position, wp = new THREE.Vector3();
-    const lampK = this.look.lamp;
+    const lampK = this.look.lamp, hiveBeat = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time) : 0;
     for (const l of this.lvl.lights) {
       const b = l.userData.base * lampK, f = l.userData.flicker; l.getWorldPosition(wp);
-      l.intensity = f === 'pod' ? b * (0.8 + 0.2 * Math.sin(this.time * 2 + wp.x)) : b * (0.93 + 0.05 * Math.sin(this.time * 13 + wp.z) + 0.03 * Math.sin(this.time * 31));
+      l.intensity = (f === 'pod' ? b * (0.8 + 0.2 * Math.sin(this.time * 2 + wp.x)) : b * (0.93 + 0.05 * Math.sin(this.time * 13 + wp.z) + 0.03 * Math.sin(this.time * 31))) * (1 + 0.45 * hiveBeat);
       l.userData.d = wp.distanceToSquared(cp);
     }
     const lw = lightWeights(this.lvl.lights.map((l) => l.userData.d), LIGHT_BUDGET, LIGHT_FADE);       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
@@ -493,7 +514,7 @@ this.chimeView?.update(w, this.time);     this.beamView?.update(w, dt, this.time
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
-    this.post.dispose();
+    this.post.dispose(); this.hiveView?.dispose();
     this.scene.clear(); this.weaponScene.clear();
   }
 }

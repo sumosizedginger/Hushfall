@@ -11,6 +11,10 @@ const COL = {
   subcantor: { skin: '#c8c8c0', robe: '#7a8a78', robeDk: '#4a5a4c', sash: '#e8e2cc', bone: '#eee4c8', bronze: '#d89244', bronzeDk: '#7a4418', iron: '#565c66', mouth: '#1c1014', verd: '#6f9a7c' },
   grandcantor: { skin: '#bcaca2', flesh: '#a0404a', fleshDk: '#56222c', chitin: '#40405a', chitinDk: '#22222e', bone: '#e8e0c0', boneDk: '#a99d78', bronze: '#c58a40', bronzeDk: '#6a4018', iron: '#4a4e58', mouth: '#2a0a10', verd: '#78883a', horn: '#e4b454', hornIn: '#661e28', trim: '#f6e4a4', leg: '#5e544a' },
 };
+COL.resonant = { skin: '#a8907c', skinDk: '#6a5648', flesh: '#b0585e', wrap: '#8a4a30', wrapDk: '#5a2c1c', bone: '#e8e0c0', bronze: '#d89244', bronzeDk: '#7a4418', rope: '#9c8a58', verd: '#78883a', iron: '#4a505a', mouth: '#2a0c12' };
+COL.hivecantor = { skin: '#e6d4c8', skinDk: '#b49c92', flesh: '#b0585e', nerve: '#a8384e', nerveDk: '#5a1c2c', bone: '#eee4c8', bronze: '#d89244', bronzeDk: '#7a4418', shroud: '#cfc4b8', iron: '#4a505a', mouth: '#3a0a14', amber: '#ffb040' };
+COL.rootbell = { bronze: '#d89244', bronzeDk: '#7a4418', verd: '#78883a', root: '#2a2420', rootDk: '#16110e', chain: '#2c2e34', heart: '#ffb060', crack: '#ff8a30', bone: '#e8e0c0', iron: '#4a505a' };
+COL.rootanchor = { root: '#2a2420', rootDk: '#16110e', stone: '#7e7a6e', bronze: '#d89244', bronzeDk: '#7a4418', bone: '#e8e0c0', verd: '#78883a', heart: '#ffb060' };
 const out = process.argv[2];
 fs.mkdirSync(out, { recursive: true });
 for (const kind of Object.keys(COL)) {

@@ -24,6 +24,10 @@ export const CHOIR_CELLS = {
   vaelfolk:    ['skin', 'skinDk', 'crystal', 'crystalDk', 'frill', 'rib', 'eye', 'cord', 'mouth'],          // PT-037 (Campaign 2, Act A): the Vael civilian, the first Vael who is not a weapon
   zealot:      ['skin', 'hood', 'hoodDk', 'plate', 'plateDk', 'bronze', 'bronzeDk', 'bone', 'iron', 'cord', 'mouth'],          // PT-038 (Campaign 2, Act B): the Songkeeper under arms
   subcantor:   ['skin', 'robe', 'robeDk', 'sash', 'bone', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd'],          // PT-039 (Campaign 2, Act B): the conductor of one district, an afraid one, in the grey-green of a robe that has been washed too often
+  resonant:    ['skin', 'skinDk', 'flesh', 'wrap', 'wrapDk', 'bone', 'bronze', 'bronzeDk', 'rope', 'verd', 'iron', 'mouth'],          // PT-043 (Campaign 2, Act C): three Tollbearers fused at the hip, bound in rust-brown hide, a ring of bells welded round the waist
+  hivecantor:  ['skin', 'skinDk', 'flesh', 'nerve', 'nerveDk', 'bone', 'bronze', 'bronzeDk', 'shroud', 'iron', 'mouth', 'amber'],          // PT-043 (Act C boss): the conductor of the Hive: throat-pale, a crest of nerves, no coat
+  rootbell:    ['bronze', 'bronzeDk', 'verd', 'root', 'rootDk', 'chain', 'heart', 'crack', 'bone', 'iron'],          // PT-043 (Act D, the last boss): the Bell's clapper: bronze wrapped in black root, a heart that glows through a split
+  rootanchor:  ['root', 'rootDk', 'stone', 'bronze', 'bronzeDk', 'bone', 'verd', 'heart'],          // PT-043: one of the four root anchors that pin the clapper's chain
 };
 export const CHOIR_KINDS = Object.keys(CHOIR_CELLS);
 /** the baked texture name of a kind's atlas */

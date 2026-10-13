@@ -50,4 +50,43 @@ export const recipesPT36 = {
       for (let i = 0; i < 60; i++) dot(g.rnd(0, w), g.rnd(0, h), g.rnd(0.7, 1.5), pick(g, ['#fff0d8', '#ffd890']), g.rnd(30, 90));                                        // the grain of the air
     }),
   },
+  // PT-043, the end of Campaign Two: the picture behind ENDINGS[2] (the Unrung Gate). The Gate seen from the Vael side: a tall door of dark bronze that is also a bell (a bell in relief across both leaves, a seam of pale light down the middle and along its foot),
+  // a hook in the wall beside it with a lantern hung on it, the only warm light in the picture, and one small figure in an oilskin with her hand up to the lamp, her back to us. No rings of sound: nothing is ringing. Same conventions as ui_ending_art above.
+  ui_ending_art_2: {
+    seed: 3602, width: 320, height: 200,
+    draw: R((g, w, h) => {
+      const W2 = g.p.width / 2, H2 = g.p.height / 2;
+      const dot = (x, y, d, c, a = 255) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, d, d); g.p.pop(); };
+      const oval = (x, y, ww, hh, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const ring = (x, y, ww, hh, c, a, wt = 1) => { g.p.push(); g.p.noFill(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const seg = (x1, y1, x2, y2, c, wt, a = 255) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 - W2, y1 - H2, x2 - W2, y2 - H2); g.p.pop(); };
+      const tri = (x1, y1, x2, y2, x3, y3, c, a = 255) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.triangle(x1 - W2, y1 - H2, x2 - W2, y2 - H2, x3 - W2, y3 - H2); g.p.pop(); };
+      const quad = (x1, y1, x2, y2, x3, y3, x4, y4, c, a = 255) => { tri(x1, y1, x2, y2, x3, y3, c, a); tri(x1, y1, x3, y3, x4, y4, c, a); };
+      const CX = 176, FLOOR = 152;
+      g.noStroke(); g.bleed(0.8, 'out');
+      ['#040508', '#06070c', '#0a0a12', '#0e0d17', '#12101c', '#171322', '#1c1728'].forEach((c, i) => { g.fill(c, 250); g.rect(-10, i * 22 - 8, w + 20, 34); });             // the dark of a stone hall, a violet haze low down
+      // the wall and the door: a tall arch of dark bronze, two leaves, a bell in relief across them
+      quad(70, 0, 282, 0, 282, FLOOR, 70, FLOOR, '#0c0b12', 255);
+      for (let k = 0; k < 6; k++) seg(70, 24 + k * 22, 282, 24 + k * 22, '#050509', 1.2, 150);                                                                                    // courses of stone
+      quad(CX - 46, 34, CX + 46, 34, CX + 46, FLOOR, CX - 46, FLOOR, '#2a1c14', 255); oval(CX, 34, 92, 60, '#2a1c14', 255);
+      quad(CX - 40, 38, CX + 40, 38, CX + 40, FLOOR, CX - 40, FLOOR, '#3e2a1a', 255); oval(CX, 38, 80, 54, '#3e2a1a', 255);
+      for (let k = 0; k < 10; k++) { const c = ['#4a3220', '#56391f', '#46301c'][k % 3]; quad(CX - 38 + k * 8, 48, CX - 30 + k * 8, 48, CX - 30 + k * 8, FLOOR, CX - 38 + k * 8, FLOOR, c, 120); }
+      // the bell in relief: a dome, a straight waist, a flared lip
+      oval(CX, 64, 54, 46, '#6a4a28', 255); quad(CX - 24, 66, CX + 24, 66, CX + 34, 124, CX - 34, 124, '#6a4a28', 255); oval(CX, 126, 70, 12, '#7a5a30', 255);
+      oval(CX, 62, 40, 30, '#7e5a30', 160); seg(CX - 26, 98, CX + 26, 98, '#2a1c10', 1.6, 200); seg(CX - 31, 112, CX + 31, 112, '#2a1c10', 1.6, 200); ring(CX, 126, 70, 12, '#c8964a', 180, 1.4);
+      dot(CX, 40, 7, '#c8964a', 230); seg(CX, 28, CX, 36, '#1a1008', 2);                                                                                                           // the crown of the bell and the staple it hangs from
+      seg(CX, 34, CX, FLOOR, '#fff0c8', 1.6, 210); seg(CX - 40, FLOOR - 1, CX + 40, FLOOR - 1, '#fff0c8', 1.4, 190);                                                          // a seam of pale light down the middle and along its foot: the other side
+      oval(CX, FLOOR - 1, 100, 6, '#fff0c8', 40);
+      // the hook in the wall and the lantern on it: the only warm light
+      seg(112, 74, 112, 84, '#1a1210', 3); seg(112, 84, 120, 84, '#1a1210', 2.4); quad(106, 86, 116, 86, 118, 102, 104, 102, '#3a2a1a', 255); quad(108, 88, 114, 88, 115, 100, 107, 100, '#ffd890', 255); dot(111, 94, 8, '#fffbe6', 255);
+      for (let k = 0; k < 5; k++) oval(111, 94, 160 - k * 28, 150 - k * 26, '#ffb45a', 16 + k * 6);
+      // the floor: dark slabs in perspective, the lamp's pool on it
+      g.solid(0, FLOOR, w, h - FLOOR, '#07070b'); g.solid(0, FLOOR - 1, w, 2, '#241a1c');
+      for (let i = -8; i <= 8; i++) seg(CX + i * 6, FLOOR, CX + i * 40, h, '#030305', 1, 150); for (let k = 0; k < 5; k++) seg(0, FLOOR + 6 + k * 11, w, FLOOR + 6 + k * 11, '#030305', 0.9 + k * 0.2, 130);
+      oval(128, 168, 120, 14, '#ffb45a', 40); oval(128, 168, 66, 8, '#ffd48a', 60);
+      // the figure: a column of oilskin, a hood, one arm up to the lamp, her back to us
+      tri(112, 190, 138, 190, 125, 148, '#030304'); quad(119, 146, 131, 146, 133, 168, 117, 168, '#030304'); dot(125, 140, 11, '#030304'); seg(120, 150, 112, 126, '#030304', 3.2); dot(112, 124, 4, '#030304');
+      for (let i = 0; i < 70; i++) dot(g.rnd(0, w), g.rnd(0, h), g.rnd(0.7, 1.5), pick(g, ['#fff0d8', '#ffd890']), g.rnd(24, 80));                                                // the grain of the air
+    }),
+  },
 };

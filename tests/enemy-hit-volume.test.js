@@ -26,13 +26,13 @@ const cellC = (map, cx, cz) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell];
 
 /** the rig placed the way GameView places it, posed standing, and its exact world-space bounds */
 function drawn(kind, e) {
-  const v = RIGS[kind](); v.root.position.set(e.x, e.y, e.z); v.root.rotation.y = e.yaw; v.pose({ t: 1, walk: 0, phase: 0, attack: 0, lunge: 0, dead: 0, flash: 0 });
+  const v = RIGS[kind](); v.root.position.set(e.x, e.y, e.z); v.root.rotation.y = e.yaw; v.pose({ t: 1, walk: 0, phase: 0, attack: 0, lunge: 0, dead: 0, flash: 0, ...(e.lift != null ? { lift: e.lift } : {}) });          // (a body that hangs is drawn lifted by the sim's own `lift`, as GameView passes it: PT-043)
   v.root.updateMatrixWorld(true); const b = new THREE.Box3().setFromObject(v.root, true); return { min: b.min, max: b.max };
 }
 /** fire one rivet from `dist` m west of the enemy at world point (x, y, z); returns the damage the sim applied to the enemy */
 function shootAt(kind, floorCx, [fx, fy], seed = 1) {
   const map = arena(), w = createWorld(map, { seed }); w.enemies.length = 0;
-  const [ex, ez] = cellC(map, floorCx, 10), e = spawnEnemy(w, kind, ex, ez, -Math.PI / 2); e.state = 'idle'; e.hp = 100000;
+  const [ex, ez] = cellC(map, floorCx, 10), e = spawnEnemy(w, kind, ex, ez, -Math.PI / 2); e.state = 'idle'; e.hp = 100000; e.sightR = 0.1;          // (it stays asleep: a clapper that woke would swing, PT-043)
   const body = drawn(kind, e), y = body.min.y + fy * (body.max.y - body.min.y), x = e.x;
   Object.assign(w.player, { weapons: ['flare', 'rivet'], weapon: 'rivet', switchT: 0, x: e.x - 6, z: e.z, y: e.y });
   w.player.ammo.rivet = 20; w.player.yaw = -Math.PI / 2 + Math.PI;             // face +x: yaw = atan2(-(x - px), -(z - pz)) with the target east of the player
@@ -58,7 +58,7 @@ test('the drawn body stands on the hit volume: the sim axis passes through it, i
     // a hunched Gaunt reaches forward, so its drawn centre sits ~0.38 m from the axis the hit cylinder is centred on: the axis must be INSIDE the drawn body, the centre within a diameter
     if (!(d.min.x <= e.x && e.x <= d.max.x && d.min.z <= e.z && e.z <= d.max.z)) bad.push(`${kind}: the sim position (${e.x.toFixed(2)}, ${e.z.toFixed(2)}) is outside the drawn body's footprint`);
     if (Math.hypot(cxm - e.x, czm - e.z) > 2 * def.radius) bad.push(`${kind}: drawn body centre is ${Math.hypot(cxm - e.x, czm - e.z).toFixed(2)} m off the sim position (hit diameter ${2 * def.radius})`);
-    const base = e.y + (def.hover ?? 0);                                    // a flyer's body starts `hover` above its floor (it bobs a few cm, hence the wider tolerance)
+    const base = e.y + (e.lift ?? def.hover ?? 0);                           // a flyer's body starts `hover` above its floor (it bobs a few cm, hence the wider tolerance); a body that hangs, `lift` (PT-043)
     if (Math.abs(d.min.y - base) > (def.hover ? 0.08 : 0.03)) bad.push(`${kind} on ${e.y} m: drawn base ${d.min.y.toFixed(3)} is not on the sim's ground${def.hover ? ' + hover ' + def.hover : ''}`);
     if (!(mid > base && mid < base + def.height)) bad.push(`${kind} on ${e.y} m: drawn middle ${mid.toFixed(2)} is outside the hit volume ${base}..${base + def.height}`);
   }

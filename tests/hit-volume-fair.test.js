@@ -28,12 +28,12 @@ const cellC = (map, cx, cz) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell];
 /** a world with exactly one enemy, facing west (toward the player the tests put 6 m to its west) */
 function placed(kind, cx, seed = 1) {
   const map = arena(), w = createWorld(map, { seed }); w.enemies.length = 0;
-  const [ex, ez] = cellC(map, cx, 10), e = spawnEnemy(w, kind, ex, ez, -Math.PI / 2); e.state = 'idle'; e.hp = 1e6;
+  const [ex, ez] = cellC(map, cx, 10), e = spawnEnemy(w, kind, ex, ez, -Math.PI / 2); e.state = 'idle'; e.hp = 1e6; e.sightR = 0.1;          // (it stays asleep: a clapper that woke would swing, PT-043)
   return { w, e };
 }
 /** every vertex of the rig, placed exactly as GameView places it (root at the sim's x, y, z and yaw), standing */
 function vertsOf(kind, e) {
-  const v = RIGS[kind](); v.root.position.set(e.x, e.y, e.z); v.root.rotation.y = e.yaw; v.pose(STAND); v.root.updateMatrixWorld(true);
+  const v = RIGS[kind](); v.root.position.set(e.x, e.y, e.z); v.root.rotation.y = e.yaw; v.pose(e.lift != null ? { ...STAND, lift: e.lift } : STAND); v.root.updateMatrixWorld(true);          // (a body that hangs is drawn lifted by the sim's own `lift`, as GameView passes it: PT-043)
   const out = [], t = new THREE.Vector3();
   v.root.traverse((o) => { const pos = o.isMesh && o.geometry?.attributes?.position; if (!pos) return; for (let i = 0; i < pos.count; i++) { t.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld); out.push([t.x, t.y, t.z]); } });
   return out;

@@ -4,7 +4,7 @@ import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN, ECHO } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -21,6 +21,10 @@ import { traceBeams, nextRot } from './beams.js';                               
 import { lockBusy, inVacuum } from './airlock.js';                                                                    // PT-033: airlocks and vacuum (lazy: only a map that has them uses them)
 import { sweepStep } from './sweep.js';                                                                              // PT-033: the Gate Warden's sweep
 import { folkStep, folkHears, frighten } from './folk.js';
+import { isBeatTick, beatOk } from './hive.js';                                                                     // PT-043: the Hive beat (a pure function of the tick)
+import { unisonMult, phaseOf } from './phases.js';                                                                 // PT-043: the unison shield and the phases of a boss
+import { hiveStep } from './hivecantor.js';                                                                       // PT-043: the Hive Cantor's beat
+import { bellInit, bellMotion, bellStep, updateSpikes } from './rootbell.js';                                              // PT-043: the Root Bell's clapper
 import { makeResonators, resonatorsHear, updateResonators } from './resonator.js';                                   // PT-037: the standing forks (lazy: only a map with a resonator prop has `w.resonators`)                                                            // PT-037: the Vael civilians (peaceful: states 'calm' and 'flee', never 'idle' or 'chase')
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -34,6 +38,7 @@ const hidden = (o, k, v) => Object.defineProperty(o, k, { value: v, enumerable: 
 export function spawnEnemy(w, kind, x, z, yaw = Math.PI) {
   const def = ENEMIES[kind], diff = DIFFICULTY[w.difficulty];
   const e = { id: w.nextId++, kind, x, z, y: groundAt(w, x, z, def.radius), group: null, yaw, hp: def.hp * diff.enemyHp, state: def.peaceful ? 'calm' : 'idle', walk: 0, phase: 0, attackT: -1, cd: 0, struck: false, flash: 0, dead: 0, lungeT: -1, lungeCd: 0, lungeHit: false, lastX: null, lastZ: null, lost: 0, steer: 0, stunT: 0, chargeT: -1, chargeCd: 0, channelT: -1, supCd: 0, revived: 0, pulseCd: 2, pulseT: -1, summonCd: 8, shotCd: 2 };
+  if (def.bell) { const rb = bellInit(e, def, e.y); e.lift = Math.max(0, def.bell.top - rb.len - def.height / 2 - e.y); }          // PT-043: the Root Bell's clapper hangs from the moment it exists
   w.enemies.push(e); return e;
 }
 
@@ -81,7 +86,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.variant) en.variant = e.variant; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.variant) en.variant = e.variant; if (e.onBeat) en.onBeat = true; if (e.swing) en.swing = true; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); else if (e.sight > 0) en.sightR = e.sight; }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -274,6 +279,8 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   if (!def.ward && !def.node && !def.boss) { const A = wardOf(w, e); if (A) { dmg *= ENEMIES.acolyte.ward.reduce; emit(w, 'ward_hit', { id: e.id, x: e.x, z: e.z }); } }          // PT-029: an awake Acolyte's ward
   if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
   else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
+  if (def.unison) { const u = unisonMult(w, def); if (u < 1) { dmg *= u; if (u < 0.5) emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); } }                       // PT-043: the Hive Cantor takes a twentieth until its choir has fallen
+  if (def.bell && e.rb?.last) dmg *= def.bell.exposed;                                     // PT-043: the Root Bell's heart is open in the Last Note
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
   e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
   if (def.peaceful && e.hp > 0) frighten(w, e, w.player.x, w.player.z);                                  // PT-037: hurt, it runs (from the one who did it)
@@ -282,7 +289,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1;
     if (def.peaceful) { w.stats.innocents = (w.stats.innocents ?? 0) + 1; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, folk: true }); emit(w, 'innocent', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }          // PT-037: an innocent is not a kill, and leaves nothing
     w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
-    if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
+    if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && ENEMIES[c.kind].shield && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
   return false;
@@ -355,7 +362,7 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
   if (def.burn) ignite(w, x, y, z, def.burn);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
-    const ed = ENEMIES[e.kind], base = e.y + (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0)), lo = ed.hover ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
+    const ed = ENEMIES[e.kind], base = e.y + (e.lift ?? (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0))), lo = ed.hover || e.lift != null ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
       let dmg = def.splashDamage * (1 - d / def.splash) + def.direct; if (e === struck && def.directHit) dmg += def.directHit; if (ed.node && def.nodeMult) dmg *= def.nodeMult;       // PT-022: the rocket's direct hit, and a bell node takes the blast twice over
       const killed = damageEnemy(w, e, dmg, { splash: true });
@@ -681,7 +688,7 @@ function retreatStep(w, e, def, dt) {
 
 /** Warden-Graft: windup -> straight-line charge -> (hit the player | crash into geometry and stagger | give way to another body) */
 function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
-  const C = def.charge, p = w.player; e.chargeCd = Math.max(0, (e.chargeCd || 0) - dt);
+  const C = e.chargeC ?? def.charge, p = w.player; e.chargeCd = Math.max(0, (e.chargeCd || 0) - dt);
   if ((e.chargeT ?? -1) >= 0) {
     e.chargeT += dt;
     if (e.chargeT < C.windup) { e.walk *= 0.85; return true; }                                       // the tell: it stops and lowers its shoulder
@@ -700,7 +707,7 @@ function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
     }
     e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return false;
   }
-  if (sees && e.attackT < 0 && e.chargeCd <= 0 && dist >= C.min && dist <= C.max && dyv < 1.2 && moveClear(w, e.x, e.z, p.x, p.z, def.radius)) {
+  if (sees && e.attackT < 0 && e.chargeCd <= 0 && dist >= C.min && dist <= C.max && dyv < 1.2 && beatOk(w, e) && moveClear(w, e.x, e.z, p.x, p.z, def.radius)) {
     e.chargeT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true;
   }
   return false;
@@ -888,6 +895,18 @@ function updateTears(w, dt) {
   }
   for (let i = (w.patches?.length ?? 0) - 1; i >= 0; i--) { const q = w.patches[i]; q.life -= dt; if (q.life <= 0) { emit(w, 'pool_dry', { x: q.x, z: q.z }); w.patches.splice(i, 1); } }
 }
+/** PT-043 (design/ACTD.md section 1): a map that says `lampHolds` has a lit lantern cut a ring's damage to `plain` (or to `own` with Ines's eternal lamp): the lamp is the counter-tone (Campaign 1's first secret) */
+function lampHold(w, dmg) { const H = w.map.lampHolds, L = w.player.lamp; return H && L?.on ? Math.round(dmg * (L.eternal ? (H.own ?? LAMP_HOLDS.own) : (H.plain ?? LAMP_HOLDS.plain))) : dmg; }
+/** a ring on the floor from a spec { speed, width, maxR, damage (before the difficulty), reflectAt?, h? } */
+function pushPulse(w, diff, x, z, y, S) { w.pulses.push({ id: w.nextId++, x, z, y, r: 0.6, speed: S.speed, dmg: Math.round(S.damage * diff.enemyDamage), width: S.width, maxR: S.maxR, hit: false, ...(S.reflectAt ? { reflectAt: S.reflectAt } : {}), ...(S.h ? { h: S.h } : {}) }); }
+/** PT-043, the Resonant: on every beat, a ring whose damage grows with the company it keeps (awake, living, hostile creatures within `ring.near` m); alone it is only a slow brute */
+function resonantRing(w, e, def, diff) {
+  const R = def.ring, p = w.player; if (Math.hypot(p.x - e.x, p.z - e.z) > R.maxR + 6) return;
+  let n = 0; for (const o of w.enemies) { if (o === e || o.state === 'dead' || o.state === 'idle' || o.state === 'calm' || o.state === 'flee') continue; const od = ENEMIES[o.kind]; if (od.node || od.peaceful) continue; if (Math.hypot(o.x - e.x, o.z - e.z) < R.near) n++; }
+  if (n === 0) return;
+  pushPulse(w, diff, e.x, e.z, e.y, { speed: R.speed, width: R.width, maxR: R.maxR, damage: Math.min(R.cap, R.base * (1 + n)) });
+  emit(w, 'resonant_ring', { id: e.id, x: e.x, z: e.z, n });
+}
 function updatePulses(w, dt) {
   const p = w.player;
   for (let i = w.pulses.length - 1; i >= 0; i--) {
@@ -895,7 +914,7 @@ function updatePulses(w, dt) {
     if (q.reflectAt && !q.back && q.r >= q.reflectAt) { q.back = true; q.speed = -Math.abs(q.speed); q.hit = false; emit(w, 'pulse_back', { x: q.x, z: q.z, r: q.r }); }      // PT-039: the Sub-Cantor's ring turns at the wall and comes home: it can hurt a second time
     if (!q.hit && p.hp > 0) {
       const d = Math.hypot(p.x - q.x, p.z - q.z);
-      if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < 1.0 && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, q.dmg); emit(w, 'pulse_hit', {}); }      // cover breaks the line; standing a metre above the floor clears the ring
+      if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < (q.h ?? 1.0) && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, lampHold(w, q.dmg)); emit(w, 'pulse_hit', { held: w.map.lampHolds && p.lamp?.on ? 1 : 0 }); }      // cover breaks the line; standing a metre above the floor clears the ring
     }
     if (q.back ? q.r <= 0.6 : q.r > q.maxR) w.pulses.splice(i, 1);
   }
@@ -967,6 +986,7 @@ function updateEnemy(w, e, diff, dt) {
   const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4); if (e.slowT > 0) { e.slowT = Math.max(0, e.slowT - dt); e.slowAge = (e.slowAge || 0) + dt; if (e.slowAge >= SLOW_MAX || e.slowT === 0) { e.slowT = 0; e.slowAge = 0; e.slowImm = SLOW_IMMUNE; } } else if (e.slowImm > 0) e.slowImm = Math.max(0, e.slowImm - dt); if (e.intCd > 0) e.intCd = Math.max(0, e.intCd - dt);
   if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
+  if (def.bell) bellMotion({ w, e, def, dt, groundAt: (x, z, r) => groundAt(w, x, z, r) });          // PT-043: the Root Bell's clapper hangs on a pendulum (rootbell.js): its place is a function of the clock
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
   if (def.spawner && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
@@ -975,6 +995,7 @@ function updateEnemy(w, e, diff, dt) {
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)
   if (e.hold === 'inert') { if (e.post && Math.hypot(e.x - e.post.x, e.z - e.post.z) > 0.15 && !w.shoves?.some((q) => q.id === e.id)) homeStep(w, e, def, dt, false); else e.walk *= 0.9; return; }      // a target that only takes it (and walks back to its post when a blast, a punt or the beam has moved it)
   if (def.peaceful) { folkStep(w, e, def, dt); return; }                                 // PT-037: it never fights: it wanders, watches, and runs (folk.js)
+  if (def.ring && e.state !== 'idle' && isBeatTick(w.tick)) resonantRing(w, e, def, diff);          // PT-043: the Resonant rings on the beat
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? sightIn(w, def)) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
@@ -983,7 +1004,7 @@ function updateEnemy(w, e, diff, dt) {
   else if (!sees) e.lost = (e.lost || 0) + dt;
   // hunt: head for the last place the player was seen; give up after a while (or on arrival) and go back to sleep
   const tx = sees ? p.x : (e.lastX ?? p.x), tz = sees ? p.z : (e.lastZ ?? p.z), tdist = Math.hypot(tx - e.x, tz - e.z);
-  if (!sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
+  if (!sees && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
   // steering: straight at the target when it is in view and the ground allows it; otherwise follow the distance field around walls, doors and ledges
   let ax = tx, az = tz;
   if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
@@ -992,9 +1013,11 @@ function updateEnemy(w, e, diff, dt) {
   if (e.attackT < 0 && !dashing && e.hold !== 'fixed') e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
   e.cd = Math.max(0, e.cd - dt);
   if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
+  if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
-  if (def.boss && !e.hold && bossStep(w, e, def, diff, dt, sees, dist)) return;
+  if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, Math.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
+  if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.ward && !e.hold && acolyteStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.lunge) {
@@ -1009,7 +1032,7 @@ function updateEnemy(w, e, diff, dt) {
       } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
       return;
     }
-    if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return; }
+    if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max && beatOk(w, e)) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return; }
   }
   const R = def.ranged, engage = R ? R.hold : def.attack.range;
   if (e.attackT >= 0) {
@@ -1020,7 +1043,7 @@ function updateEnemy(w, e, diff, dt) {
       else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, Math.sin(e.yaw) * def.attack.knock, Math.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
-  } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange) {
+  } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange && beatOk(w, e)) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
   } else if (!e.hold && (def.flying || def.retreat) && R && sees && dist < (R.keep ?? R.minRange) && retreatStep(w, e, def, dt)) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait;
@@ -1029,7 +1052,7 @@ function updateEnemy(w, e, diff, dt) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
   } else {
     if (e.hold) e.walk = Math.max(0, e.walk - dt * 3); else if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
-    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0 && (e.hold !== 'turn' || inFront(e, p, ENEMY_STRIKE.cos))) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }      // (a range 'turn' target swings once it faces you, as a creature that walked up to you would; a 'fixed' one swings regardless)
+    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0 && beatOk(w, e) && (e.hold !== 'turn' || inFront(e, p, ENEMY_STRIKE.cos))) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }      // (a range 'turn' target swings once it faces you, as a creature that walked up to you would; a 'fixed' one swings regardless)
   }
 }
 
@@ -1146,7 +1169,7 @@ export function step(w, cmd) {
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
-  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
+  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.spikes) updateSpikes({ w, dt, emit, diff, spikes: ENEMIES.rootbell.bell.spikes, hurt: (d) => hurtPlayer(w, d) }); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {

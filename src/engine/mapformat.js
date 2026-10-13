@@ -18,7 +18,7 @@ for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
 const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
 const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose'];
+export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff'];      // PT-043: a sound cue, a rumble, and the end of the score
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -50,9 +50,13 @@ export class MapData {
     this.objective = src.objective ?? null;
     this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0 }));      // PT-032: falling loads on a clock (loads.js)
     this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
-    this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0 }));      // PT-027: spore regions that bloom on a clock (breath.js)
+    this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
     this.echo = src.atmosphere?.echo ?? 1;                                                      // PT-039 (Act B): a place where every noise carries `echo` times as far (the Echo Markets' well); 1 = the ordinary world
+    this.dev = !!src.dev;                                                                      // PT-043: a dev map that is NOT the Range (mortal, real rules): its exit goes back to the title without scoring
+    this.lookZones = src.lookZones ?? null;                                                    // PT-043 (dev maps only): rooms lit by their own look: [{ rect, look, sky?, fog?, fogDensity? }] (view.js applyZone)
+    this.devEnding = src.devEnding ?? null;                                                    // PT-043 (dev maps only): an exit with this `dest` shows the draft epilogue of that campaign instead of leaving at once
+    this.lampHolds = src.lampHolds ?? null;                                                    // PT-043 (design/ACTD.md): a lit lantern cuts the damage of a ring to `plain` of it (`own` with Ines's eternal lamp)
     this.dark = src.atmosphere?.dark === true; this.lantern = src.lantern ?? null;                // PT-038 (E5): a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
     this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
     this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
@@ -183,6 +187,8 @@ function validateMapChecks(src) {
     if (e.type === 'enemy' && e.hp != null && !(e.hp > 0)) err(`${tag}: hp must be a positive number`);
     if (e.type === 'enemy' && e.variant != null && !VARIANTS[e.variant]) err(`${tag}: unknown variant '${e.variant}' (${Object.keys(VARIANTS).join(', ')})`);
     if (e.type === 'enemy' && e.sight != null && !(e.sight > 0)) err(`${tag}: sight must be a positive number of metres`);
+    if (e.type === 'enemy' && e.onBeat != null && typeof e.onBeat !== 'boolean') err(`${tag}: onBeat must be true or false`);
+    if (e.type === 'enemy' && e.swing != null && typeof e.swing !== 'boolean') err(`${tag}: swing must be true or false (a range sponge Root Bell swings only if it says so)`);                 // PT-043: starts an attack only on a Hive beat (hive.js)
     if ((e.hold != null || e.hp != null || e.sight != null) && !src.range) err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
     else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
@@ -353,6 +359,10 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (k === 'message') { if (!msgIds.has(v)) err(`${tag}: message '${v}' does not exist`); }
     else if (k === 'exit') { if (!v || !['unlock', 'lock'].includes(v.set)) err(`${tag}: exit needs {set: 'unlock'|'lock', id?}`); }
     else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
+    else if (k === 'sound') { if (typeof v !== 'string' || !/^[a-z0-9_]{2,32}$/.test(v)) err(`${tag}: sound must be the name of a sound`); }                    // PT-043: a toll from a trigger (the name is checked against the synth by a test)
+    else if (k === 'tremor') { if (!(v > 0 && v <= 3)) err(`${tag}: tremor must be in (0, 3]`); }                                                       // PT-043: the view shakes and a low sound runs
+    else if (k === 'silence') { if (v !== true) err(`${tag}: silence must be true`); }
+    else if (k === 'beatOff') { if (v !== true) err(`${tag}: beatOff must be true`); }                                                                  // PT-043: the Hive's beat stops (hive.js zoneBeat reads w.beatOff)                                                                 // PT-043: from then on the score and the ambience are cut
     else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
     else if (k === 'objective') { if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`); }
     else if (k === 'choose') { if (!v || !/^[a-z0-9-]{1,24}$/.test(v.id ?? '') || !/^[a-z0-9-]{1,24}$/.test(v.value ?? '')) err(`${tag}: choose needs {id, value} of 1-24 lower-case letters, digits or dashes`); }                   // PT-039: a remembered choice (progress.choices, read by later maps)
@@ -402,10 +412,12 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (wn.startsWith('msg:')) { if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`); }
     else if (wn.startsWith('seq:')) { if (!(src.chimes || []).some((q) => q.id === wn.slice(4))) err(`${tag}: unknown phrase in '${wn}'`); }                       // PT-038: a chime phrase has been played
     else if (wn.startsWith('choice:')) { if (!/^choice:[a-z0-9-]{1,24}=[a-z0-9-]{1,24}$/.test(wn)) err(`${tag}: '${wn}' must be choice:<id>=<value>`); }                      // PT-039: a choice an earlier map recorded
+    else if (wn.startsWith('hp:')) { const m = /^hp:([A-Za-z0-9_-]+)<([0-9.]+)$/.exec(wn); if (!m || !(Number(m[2]) > 0 && Number(m[2]) <= 1)) err(`${tag}: '${wn}' must be hp:<group><fraction between 0 and 1>`); else if (!groups.has(m[1])) err(`${tag}: unknown group in '${wn}'`); }          // PT-043: a group has less than that share of its hit points left (phases.js)
+    else if (wn === 'lamp:on') { if (!src.lantern) err(`${tag}: lamp:on needs a map with a lantern`); }                                                           // PT-043: the hand lantern is lit (the Unrung Gate)
     else if (wn.startsWith('lit:')) { if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`); }
     else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
     else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
-    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> (got '${wn}')`);
+    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> | hp:<group><fraction (got '${wn}')`);
     }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);

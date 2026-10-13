@@ -309,6 +309,51 @@ const KINDS = {
       bone: BONE(0.05), bronze: BRONZE(), bronzeDk: BRONZE_DK(), iron: IRON(), mouth: MOUTH('#1c1014'), verd: VERD(),
     },
   },
+  resonant: {                        // PT-043: the Resonant: hide bound round three fused bodies, rust-brown and wet-dark, bruised grey skin, a ring of small bronze bells that has gone green at the lips
+    seed: 4301, cells: {
+      skin: SKIN('#b4a08c', '#6c5a4c', '#6e4a50', '#40342c'),
+      skinDk: cell({ grad: ['#7a6454', '#3a2e26'], blots: [{ cols: ['#5a3e44', '#2c2420'], n: 3, r: [6, 11], a: 190 }], marks: [{ col: '#1c1612', wt: 1.5, n: 5, dir: 'v', len: [12, 28] }] }),
+      flesh: FLESH('#b4584e', '#6a2a28', '#ecd2bc'),
+      wrap: cell({ grad: ['#a05a34', '#3e1c10'], marks: [{ col: '#1c0a06', wt: 1.9, n: 7, dir: 'v', len: [16, 38] }, { kind: 'cpencil', col: '#d89a68', wt: 1.3, n: 4, dir: 'd', len: [8, 14] }],           // the binding: wet leather, folds, a stitched seam
+        extra: (g, X, Y) => { g.stroke('2B', '#f0dcb0', 1.5); for (let k = 0; k < 6; k++) g.line(X + 10 + k * 8, Y + 30 + (k % 2) * 3, X + 13 + k * 8, Y + 36 + (k % 2) * 3); } }),
+      wrapDk: cell({ grad: ['#6a3a24', '#26100a'], marks: [{ col: '#a86a44', wt: 1.2, n: 5, dir: 'v', len: [10, 24] }] }),
+      bone: BONE(0.12), bronze: BRONZE(), bronzeDk: BRONZE_DK(), rope: ROPE(), verd: VERD(), iron: IRON(), mouth: MOUTH('#2a0c12'),
+    },
+  },
+  hivecantor: {                      // PT-043: the Hive Cantor: skin that has never seen the sun, throat-pink to ivory, bone, and the red-violet of nerves; no coat, no cloth but the strands under its waist
+    seed: 4302, cells: {
+      skin: cell({ grad: ['#f0dfd2', '#c4aa9c'], blots: [{ cols: ['#c08a96', '#e8c8c0'], n: 3, r: [7, 12], a: 120 }], marks: [{ kind: '2B', col: '#a85a6e', wt: 1.5, n: 4, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#8a6a68', wt: 1.1, n: 4, dir: 'd', len: [8, 16] }] }),
+      skinDk: cell({ grad: ['#c4aa9c', '#7a6258'], marks: [{ col: '#5a3a3e', wt: 1.5, n: 5, dir: 'v', len: [14, 34] }] }),
+      flesh: FLESH('#b85868', '#6a2432', '#f0d4c8'),
+      nerve: cell({ grad: ['#c04460', '#6a1830'], marks: [{ col: '#ff9ab8', wt: 1.4, n: 5, dir: 'v', len: [14, 40] }, { col: '#2a0610', wt: 1.7, n: 4, dir: 'h' }] }),
+      nerveDk: cell({ grad: ['#7a2440', '#2c0a18'], marks: [{ col: '#d0587c', wt: 1.1, n: 4, dir: 'v', len: [10, 26] }] }),
+      bone: BONE(0.02), bronze: BRONZE(), bronzeDk: BRONZE_DK(),
+      shroud: cell({ grad: ['#e4dcd0', '#a8a094'], marks: [{ col: '#6a6258', wt: 1.4, n: 7, dir: 'v', len: [20, 46] }, { kind: 'cpencil', col: '#f4eee4', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),
+      iron: IRON(), mouth: MOUTH('#3a0a14'),
+      amber: cell({ grad: ['#ffd070', '#e07a20'], marks: [{ col: '#fff0b0', wt: 1.4, n: 4, dir: 'v', len: [8, 20] }] }),
+    },
+  },
+  rootbell: {                        // PT-043: the Root Bell's clapper: bronze of the great bell, black root over it with a copper glint, a heart that is hot copper-white behind a split
+    seed: 4303, cells: {
+      bronze: cell({ grad: ['#d89244', '#7a4a1c'], blots: [{ cols: ['#6a8a4a', '#4e7040'], n: 4, r: [4, 9], a: 230 }], marks: [{ col: '#3a1c06', wt: 1.9, n: 4, dir: 'h' }, { col: '#f4c078', wt: 1.2, n: 4, dir: 'v', len: [10, 22] }] }),
+      bronzeDk: BRONZE_DK(), verd: VERD(),
+      root: cell({ grad: ['#34302a', '#16120e'], marks: [{ col: '#a8703a', wt: 1.3, n: 5, dir: 'v', len: [14, 38] }, { col: '#060403', wt: 1.8, n: 4, dir: 'd', len: [10, 22] }] }),
+      rootDk: cell({ grad: ['#1c1814', '#080604'], marks: [{ col: '#6a4624', wt: 1.1, n: 4, dir: 'v', len: [10, 28] }] }),
+      chain: IRON('#3a3c44', '#14151a'),
+      heart: cell({ grad: ['#fff4c0', '#ff9a30'], blots: [{ cols: ['#ffd070', '#ff7a20'], n: 4, r: [6, 12], a: 220 }] }),
+      crack: cell({ grad: ['#ffb040', '#c04a10'], marks: [{ col: '#fff0b0', wt: 1.5, n: 4, dir: 'v', len: [14, 40] }] }),
+      bone: BONE(0.1), iron: IRON(),
+    },
+  },
+  rootanchor: {                      // PT-043: a root anchor: black root with a copper glint on a grey stone footing, a bronze collar, an amber bud
+    seed: 4304, cells: {
+      root: cell({ grad: ['#34302a', '#16120e'], marks: [{ col: '#a8703a', wt: 1.3, n: 5, dir: 'v', len: [14, 38] }, { col: '#060403', wt: 1.8, n: 4, dir: 'd', len: [10, 22] }] }),
+      rootDk: cell({ grad: ['#1c1814', '#080604'], marks: [{ col: '#6a4624', wt: 1.1, n: 4, dir: 'v', len: [10, 28] }] }),
+      stone: cell({ grad: ['#8a8678', '#4a4840'], blots: [{ cols: ['#6a6a52', '#a8a490'], n: 4, r: [5, 10], a: 160 }], marks: [{ col: '#1e1c18', wt: 1.5, n: 4, dir: 'h' }] }),
+      bronze: BRONZE(), bronzeDk: BRONZE_DK(), bone: BONE(0.1), verd: VERD(),
+      heart: cell({ grad: ['#fff4c0', '#ff9a30'], blots: [{ cols: ['#ffd070', '#ff7a20'], n: 4, r: [6, 12], a: 220 }] }),
+    },
+  },
   graftmother: {
     seed: 2310, cells: {
       case: cell({ grad: ['#f0e8d0', '#b8ac88'], marks: [{ col: '#7a6e50', wt: 1.5, n: 6, dir: 'v', len: [20, 44] }, { kind: 'cpencil', col: '#a89a74', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }] }),

@@ -21,13 +21,14 @@ test('a finale is the last MAIN map of a campaign: the Gate Warden and the Unrun
   assert.equal(isFinale(MANIFEST, 'C1E4S01'), false, 'a secret map is never a finale'); assert.equal(isFinale(MANIFEST, 'NOPE'), false);
 });
 
-test('the Gate Warden has an epilogue by its normal exit and none by a secret exit; the other campaign has none yet', () => {
+test('the Gate Warden has an epilogue by its normal exit and none by a secret exit; Campaign Two has its draft', () => {
   const e = endingFor(MANIFEST, 'C1E4M08', 'next');
   assert.ok(e); assert.equal(e.campaign, 1); assert.equal(e.cards.length, CARDS.length);
   assert.equal(endingFor(MANIFEST, 'C1E4M08', undefined)?.campaign, 1, 'a missing dest is the normal exit');
   assert.equal(endingFor(MANIFEST, 'C1E4M08', 'secret'), null);
   assert.equal(endingFor(MANIFEST, 'C1E4M07', 'next'), null);
-  assert.equal(endingFor(MANIFEST, 'C2M30', 'next'), null, 'Campaign Two has no epilogue until it is written');
+  const e2 = endingFor(MANIFEST, 'C2M30', 'next'); assert.ok(e2 && e2.campaign === 2 && e2.cards.length >= 7, 'Campaign Two has its draft epilogue (PT-043, to be revised after the owner has played the descent)');
+  assert.equal(endingFor(MANIFEST, 'C2M30', 'secret'), null); assert.equal(endingFor(MANIFEST, 'C2M29', 'next'), null);
 });
 
 test('the epilogue is readable: spoken by the voices the campaign uses, each card short enough for a screen, and it points at the next campaign by its real name', () => {

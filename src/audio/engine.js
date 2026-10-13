@@ -1,5 +1,6 @@
 // AudioEngine: owns the WebAudio graph and turns sim state + drained events into sound. It only READS the world.
 // Browsers keep an AudioContext suspended until a user gesture: unlock() is called from real input events and is idempotent.
+import { zoneBeat } from '../engine/hive.js';
 import { SFX, seededRandom } from './synth.js';
 import { soundsForEvent } from './events.js';
 import { Music } from './music.js';
@@ -59,6 +60,7 @@ export class AudioEngine {
   play(id, { pos, gain = 1, delay = 0 } = {}) {
     const fn = SFX[id]; if (!fn) return false;
     if (!this.ctx || this.ctx.state !== 'running') { this.stats.dropped++; return false; }
+    if (this.hushT > this.clock && id !== 'step_plank') return false;                                         // PT-043: the held second of nothing after the Root Bell stops
     const c = this.ctx, t = c.currentTime + 0.005 + delay;
     const g = c.createGain(); g.gain.value = gain; let head = g;
     if (pos) {
@@ -74,23 +76,26 @@ export class AudioEngine {
     for (const e of events) {
       for (const s of soundsForEvent(e)) this.play(s.id, { pos: s.pos, gain: s.gain, delay: s.delay });
       if (e.type === 'player_died') { this.dead = true; this._applyMuffle(); }
+      if (e.type === 'silence') { this.hushT = this.clock + 1.4; this.stepAfterHush = true; }                  // PT-043: every sound cuts out for a held second, then one footstep
     }
   }
 
   _applyMuffle() { if (!this.ctx) return; const t = this.ctx.currentTime, m = this.muffled || this.dead; this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25); this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (this.silent ? 0 : m ? 0.35 : 1), t, 0.25); }
   setMuffled(b) { this.muffled = b; this._applyMuffle(); }
-  newLevel() { this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
+  newLevel() { this.lastBeat = -1; this.hushT = 0; this.stepAfterHush = false; this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
 
   /** per-frame: listener, footsteps, ambience mix, tension-driven music, enemy bells, low-health heartbeat */
   update(world, dt, map) {
     if (!this.ctx || this.ctx.state !== 'running') return;
     this.clock += dt; const c = this.ctx, p = world?.player;
     this.music.tick();
+    if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') { const bn = Math.floor(world.tick / 90); if (bn !== this.lastBeat) { this.lastBeat = bn; this.play('hive_beat', { gain: 0.5 }); } }          // PT-043: the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
     if (!p) { this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 }); this.music.setIntensity(0); return; }
     const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
     if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
     else { L.setPosition(p.x, PLAYER.eye, p.z); L.setOrientation(fx, 0, fz, 0, 1, 0); }
-    const silent = !!map.atmosphere?.silence;
+    const silent = !!map.atmosphere?.silence || !!world.silenced;                                                  // PT-043: a map's silence, or the one the Root Bell leaves (world.silenced)
+    if (this.stepAfterHush && this.clock >= this.hushT) { this.stepAfterHush = false; this.play('step_plank', { gain: 0.9 }); }
     if (silent !== !!this.silent) { this.silent = silent; this.applySettings(this.settings); this._applyMuffle(); }
     const interior = map.isInterior(p.x, p.z);
     this.reverbSend.gain.setTargetAtTime(interior ? 0.28 : 0.1, c.currentTime, 0.4);

@@ -2,7 +2,7 @@
 // builds contain none of it. Actions travel through the real input layer + fixed step; the only state writers are the
 // clearly-labelled setup_* helpers.
 import { Bot } from '../engine/bot.js';
-import { hashWorld, spawnEnemy, updateBeams } from '../engine/world.js';
+import { hashWorld, spawnEnemy, updateBeams, damageEnemy } from '../engine/world.js';
 import { groundAt } from '../engine/terrain.js';
 import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
 import { sanitizeProgress, earn } from '../engine/progress.js';
@@ -54,6 +54,19 @@ export function installTestHook(app) {
     setup_teleport(x, z, yaw) { const p = g.world.player; p.x = x; p.z = z; if (yaw != null) p.yaw = yaw; p.y = groundAt(g.world, x, z, PLAYER.radius); g.view.eyeBase = p.y; g.view.beforeStep(g.world); },
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle', variant = null) { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; if (variant) e.variant = variant; return e.id; },
     /** PT-039: a tone pulse of the Sub-Cantor's kind (it turns back at `reflect` m) from (x, z), and what the view draws of the creature `id`: the colour of its first atlas material */
+    /** PT-043 (the Preview): the new creatures and effects, what the SIM says and what the VIEW draws of it */
+    hiveProbe() {
+      const w = g.world, v = g.view; if (!w) return null;
+      const bell = w.enemies.find((e) => e.kind === 'rootbell'), hc = w.enemies.find((e) => e.kind === 'hivecantor'), bv = bell && v?.enemyViews.get(bell.id), hv = hc && v?.enemyViews.get(hc.id);
+      return {
+        tick: w.tick, beatOff: !!w.beatOff, silenced: !!w.silenced, spikes: (w.spikes ?? []).length, pulses: w.pulses.length, pulseViews: v?.pulseViews.size ?? 0,
+        bell: bell && { id: bell.id, state: bell.state, x: bell.x, z: bell.z, y: bell.y, lift: bell.lift, hp: bell.hp, mode: bell.rb?.mode, len: bell.rb?.len, amp: bell.rb?.amp, phi: bell.rb?.phi, last: !!bell.rb?.last, cut: bell.rb?.cut, rootY: bv?.root.position.y, rigY: bv?.rig.position.y, rootX: bv?.root.position.x, rootZ: bv?.root.position.z },
+        cantor: hc && { state: hc.state, hp: hc.hp, ph: hc.ph ?? 0, pulseT: hc.pulseT, rootY: hv?.root.position.y, rigY: hv?.rig.position.y },
+        anchors: w.enemies.filter((e) => e.kind === 'rootanchor').map((e) => e.state), choirAlive: w.enemies.filter((e) => e.group === 'choir' && e.state !== 'dead').length, choirTotal: w.enemies.filter((e) => e.group === 'choir').length,
+        drawn: v?.hiveView?.counts() ?? null, lamp: w.player.lamp ? { on: w.player.lamp.on } : null, ambient: w.ambient ?? null, hp: w.player.hp, objective: w.objective, status: w.status,
+      };
+    },
+    setup_hurtEnemy(kind, amount) { const w = g.world, e = w.enemies.find((q) => q.kind === kind && q.state !== 'dead'); if (e) damageEnemy(w, e, amount); return e ? e.hp : null; },
     setup_pulse(x, z, reflect = 22) { const w = g.world, P = ENEMIES.subcantor.pulse; w.pulses.push({ id: w.nextId++, x, z, y: groundAt(w, x, z, 0.3), r: 0.6, speed: P.speed, dmg: 0, width: P.width, maxR: P.maxR, hit: false, reflectAt: reflect }); },
     tintProbe(id) { const v = g.view?.enemyViews.get(id); if (!v) return null; let c = null; v.root.traverse((o) => { if (!c && o.isMesh && o.material?.map && o.material.color) c = o.material.color.getHex(); }); return c; },
     pulseProbe() { const w = g.world, v = g.view; return { pulses: w.pulses.map((q) => ({ r: q.r, back: !!q.back, hit: q.hit })), views: v.pulseViews.size }; },

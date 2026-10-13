@@ -20,6 +20,8 @@ export const SILENT_EVENTS = {
   phys_respawn: 'the dev Range only: a broken prop comes back, the view just puts it there',
   pool_dry: 'view-only: a tear pool dries up (PT-028); the landing carries the sound',
   drop: 'a box a creature dropped appears (PT-025): the view shows it, taking it plays the ordinary pickup sound',
+  beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
+  silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this (engine.js, PT-043: the Root Bell hangs still)',
 };
 export const RADIO_SOUND = 'radio';
 
@@ -35,8 +37,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert', resonant: 'resonant_alert', hivecantor: 'hivecantor_alert', rootbell: 'rootbell_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw', resonant: 'resonant_draw', hivecantor: 'hivecantor_draw', rootbell: 'rootbell_draw' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -150,10 +152,20 @@ export function soundsForEvent(e) {
     case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
     case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
+    case 'resonant_ring': return [{ id: 'resonant_ring', pos: at(e), gain: 0.55 }];                                      // PT-043: the Resonant's chord on the beat
+    case 'bell_strike': return [{ id: 'bell_strike', pos: at(e) }];                                                    // the Root Bell's clapper strikes (the end of a swing, the Last Note)
+    case 'bell_slam': return [{ id: 'bell_slam', pos: at(e) }];
+    case 'bell_crush': return [{ id: 'bell_crush', pos: at(e) }];
+    case 'bell_fall': return [{ id: 'bell_fall', pos: at(e) }];
+    case 'bell_last': return [{ id: 'bell_last', pos: at(e) }];
+    case 'spike_warn': return [{ id: 'spike_warn', pos: at(e), gain: 0.8 }];
+    case 'spike_strike': return [{ id: 'spike_strike', pos: at(e) }];
+    case 'cue': return [{ id: e.name ?? 'bell_strike' }];                                                              // a map's `{ sound: name }` action (script.js)
+    case 'tremor': return [{ id: 'tremor_rumble', gain: Math.min(1, 0.4 + (e.amount ?? 1) * 0.3) }];
     case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
     case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
     case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
-    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'resonant' ? 'resonant_die' : e.kind === 'hivecantor' ? 'hivecantor_die' : e.kind === 'rootbell' ? 'rootbell_die' : e.kind === 'rootanchor' ? 'anchor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

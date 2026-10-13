@@ -105,3 +105,59 @@ export function makeHeartMass() {
   for (let i = 0; i < 4; i++) { const a = i * 1.57 + 0.4, c = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.35, 11, 6), vein); c.position.set(Math.cos(a) * 1.1, 12.2, Math.sin(a) * 1.1); g.add(c); }
   return g;
 }
+
+// ---- PT-043 (the Preview): the scenery of Acts C and D. Plain primitives in plain materials, as the rest of this file; all of it far off and never collided with ----------------------------------------------------------------------------------------
+/** the Hive tower (scenery, 46 m): a tapering organ-tower of dark violet-red in six stacked drums, a band of amber light round each, bone ribs standing out of it, and a crown of six curved horns round a red core; the Hive's own landmark in every Act C sky */
+export function makeHiveTower() {
+  const g = new THREE.Group(), body = lam({ color: 0x4a1830, emissive: 0x14060e }), bone = lam({ color: 0xd8ccb0, emissive: 0x1c1810 }), amber = bas({ color: 0xffa83c }), core = bas({ color: 0xff5a44 });
+  let y = 0; for (let i = 0; i < 6; i++) { const r0 = 5.2 - i * 0.72, r1 = r0 - 0.6, h = 7.2 - i * 0.4; g.add(cyl(r1, r0, h, 10, body, 0, y + h / 2, 0)); g.add(cyl(r1 + 0.12, r1 + 0.12, 0.5, 10, amber, 0, y + h + 0.1, 0)); for (let k = 0; k < 6; k++) { const a = k * 1.047 + i * 0.4; g.add(box(0.5, h * 0.9, 0.5, bone, Math.cos(a) * (r0 + 0.1), y + h / 2, Math.sin(a) * (r0 + 0.1))); } y += h + 0.2; }
+  const sp = new THREE.Mesh(new THREE.SphereGeometry(1.6, 8, 6), core); sp.position.y = y + 1.2; g.add(sp);
+  for (let k = 0; k < 6; k++) { const a = k * 1.047; const h = new THREE.Mesh(new THREE.ConeGeometry(0.5, 7, 5), bone); h.position.set(Math.cos(a) * 2.3, y + 3.6, Math.sin(a) * 2.3); h.rotation.z = -Math.cos(a) * 0.35; h.rotation.x = Math.sin(a) * 0.35; g.add(h); }
+  return g;
+}
+/** a ganglion (scenery, 12 m): five swollen lumps of pink-violet flesh joined by thick cords, a bright bead on every knot, hung over a dark stalk: a node of the Hive's nerves */
+export function makeGanglion() {
+  const g = new THREE.Group(), flesh = lam({ color: 0xa03468, emissive: 0x3a0c24 }), dark = lam({ color: 0x4a1430, emissive: 0x14040c }), cord = lam({ color: 0xc85088, emissive: 0x2a0818 }), bead = bas({ color: 0xffc0e0 });
+  const lump = (r, x, y, z, m) => { const o = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), m); o.position.set(x, y, z); return o; };
+  g.add(cyl(0.8, 1.4, 5, 7, dark, 0, 2.5, 0)); g.add(lump(2.6, 0, 6.6, 0, flesh)); g.add(lump(1.8, 3.2, 7.4, 0.6, dark)); g.add(lump(1.7, -3, 7.6, -0.8, dark)); g.add(lump(1.5, 1, 9.6, 1.2, flesh)); g.add(lump(1.4, -1.4, 9.2, -1.4, flesh));
+  for (const [x, y, z, a] of [[1.6, 7, 0.3, -0.9], [-1.5, 7.1, -0.4, 0.9], [0.5, 8.4, 0.6, 0.2]]) { const c = cyl(0.22, 0.28, 3.4, 5, cord, x, y, z); c.rotation.z = a; g.add(c); }
+  for (let i = 0; i < 7; i++) { const b = new THREE.Mesh(new THREE.SphereGeometry(0.3, 5, 4), bead); b.position.set(Math.cos(i * 0.9) * 2.6, 6.6 + (i % 3) * 1.4, Math.sin(i * 0.9) * 2.6); g.add(b); }
+  return g;
+}
+/** a reactor stack (scenery, 18 m): a copper drum on a stone footing with rows of orange ports, horizontal pipes round it, a chimney with a plume of heat at the top */
+export function makeReactor() {
+  const g = new THREE.Group(), cu = lam({ color: 0x9a5a2a, emissive: 0x2a1204 }), dk = lam({ color: 0x3a2418 }), port = bas({ color: 0xff9a30 }), heat = bas({ color: 0xffd070 });
+  g.add(cyl(5.6, 6.2, 2, 10, dk, 0, 1, 0)); g.add(cyl(4.4, 4.6, 12, 12, cu, 0, 8, 0));
+  for (let r = 0; r < 3; r++) for (let k = 0; k < 8; k++) { const a = k * 0.785 + r * 0.39, p = new THREE.Mesh(new THREE.SphereGeometry(0.42, 5, 4), port); p.position.set(Math.cos(a) * 4.5, 4.4 + r * 3.4, Math.sin(a) * 4.5); g.add(p); }
+  for (const y of [5, 9, 13]) g.add(cyl(4.8, 4.8, 0.35, 12, dk, 0, y, 0));
+  g.add(cyl(1.2, 1.7, 5, 8, dk, 0, 16.5, 0)); const h = new THREE.Mesh(new THREE.ConeGeometry(1.4, 4, 6), heat); h.position.y = 20.5; g.add(h);
+  return g;
+}
+/** a trestle of rails (scenery, 44 m long): two iron rails on a row of stone piers, sleepers across them, running off into the dark along +z; the Vein Rail's viaduct seen from outside */
+export function makeRails() {
+  const g = new THREE.Group(), iron = lam({ color: 0x5a5e68, emissive: 0x0a0a0c }), stone = lam({ color: 0x6a5a58 }), tie = lam({ color: 0x2a2020 });
+  for (const x of [-0.9, 0.9]) g.add(box(0.2, 0.3, 44, iron, x, 6.1, 0));
+  for (let i = 0; i < 22; i++) { g.add(box(2.6, 0.2, 0.4, tie, 0, 5.85, -20 + i * 2)); if (i % 3 === 0) g.add(box(2.4, 6, 1.4, stone, 0, 2.9, -20 + i * 2)); }
+  return g;
+}
+/** a crystal tower (scenery, 30 m): a six-sided prism of pale blue glass tapering to a point, a brighter shaft in its heart, a base of broken facets: the copy of the Marrow lighthouse the Hive grew out of glass */
+export function makeCrystalTower() {
+  const g = new THREE.Group(), glass = new THREE.MeshLambertMaterial({ color: 0x9cd0ee, emissive: 0x1a3248, transparent: true, opacity: 0.78 }), heart = bas({ color: 0xe8f8ff });
+  g.add(cyl(2.6, 3.4, 22, 6, glass, 0, 11, 0)); const tip = new THREE.Mesh(new THREE.ConeGeometry(2.6, 9, 6), glass); tip.position.y = 26.5; g.add(tip); g.add(cyl(0.5, 0.7, 26, 5, heart, 0, 13, 0));
+  for (let k = 0; k < 7; k++) { const a = k * 0.9, f = new THREE.Mesh(new THREE.ConeGeometry(0.8 + (k % 3) * 0.4, 4 + (k % 4), 5), glass); f.position.set(Math.cos(a) * 4, 2, Math.sin(a) * 4); f.rotation.z = Math.cos(a) * 0.4; f.rotation.x = -Math.sin(a) * 0.4; g.add(f); }
+  return g;
+}
+/** a root column (scenery, 16 m): a great black root hung from the roof of the world, a cone narrowing downward with four branches that curl away, a copper line along its length: the Bell's own roots, seen standing in the dark */
+export function makeRootColumn() {
+  const g = new THREE.Group(), root = lam({ color: 0x1e1812, emissive: 0x060402 }), cu = bas({ color: 0xb8742c });
+  g.add(cyl(2.2, 0.5, 16, 8, root, 0, 8, 0)); const v = box(0.1, 15, 0.1, cu, 1.2, 8, 0); v.rotation.z = 0.06; g.add(v);
+  for (let k = 0; k < 4; k++) { const a = k * 1.57 + 0.4, b = new THREE.Mesh(new THREE.ConeGeometry(0.5, 7, 5), root); b.position.set(Math.cos(a) * 2.6, 12 - k * 1.5, Math.sin(a) * 2.6); b.rotation.z = Math.cos(a) * 1.0; b.rotation.x = -Math.sin(a) * 1.0; g.add(b); }
+  return g;
+}
+/** a shaft (scenery, 20 m): the well of the Descent seen from the side, a ring of dark stone 9 m across standing on its edge with a faint copper glow in its middle: where the stair goes down */
+export function makeShaft() {
+  const g = new THREE.Group(), stone = lam({ color: 0x2a2e2e, emissive: 0x040606 }), glow = new THREE.MeshBasicMaterial({ color: 0xff8a30, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(4.5, 1.1, 6, 20), stone); ring.position.y = 6; g.add(ring); const d = new THREE.Mesh(new THREE.CircleGeometry(3.6, 20), glow); d.position.y = 6; g.add(d);
+  g.add(box(2.4, 2, 2.4, stone, -5.4, 1, 0)); g.add(box(2.4, 2, 2.4, stone, 5.4, 1, 0));
+  return g;
+}

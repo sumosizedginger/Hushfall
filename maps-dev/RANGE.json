@@ -2217,6 +2217,38 @@
   },
   {
    "type": "enemy",
+   "kind": "resonant",
+   "at": [50, 88],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "hivecantor",
+   "at": [54, 88],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "rootbell",
+   "at": [58, 88],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "rootanchor",
+   "at": [57, 83],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
    "kind": "zealot",
    "at": [51, 85],
    "facing": -1.5707963267948966,

@@ -11,7 +11,7 @@ import { ENEMIES } from './defs.js';
 
 /** the cylinder as plain numbers: centre x/z in the world, radius, base y, top y */
 export function hitCylinder(e) {
-  const d = ENEMIES[e.kind], fwd = d.hitForward ?? 0, lift = d.hover ? d.hover * (1 - Math.min(1, e.dead ?? 0)) : 0;      // a flyer's body starts `hover` above its floor, and comes down as it dies
+  const d = ENEMIES[e.kind], fwd = d.hitForward ?? 0, lift = e.lift ?? (d.hover ? d.hover * (1 - Math.min(1, e.dead ?? 0)) : 0);      // a flyer's body starts `hover` above its floor, and comes down as it dies
   return { x: e.x + Math.sin(e.yaw) * fwd, z: e.z + Math.cos(e.yaw) * fwd, r: d.hitRadius ?? d.radius, y0: e.y + lift, y1: e.y + lift + d.height };
 }
 

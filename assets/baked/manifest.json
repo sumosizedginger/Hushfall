@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
+  "generatedBy": "tools/bake.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -1012,6 +1012,310 @@
       "transparent": false,
       "sha256": "ba296365f07a30f37d580c481cf8d285dc7d4c6d9fc6ee0c9ddfb4306b44bec5",
       "bytes": 58618
+    },
+    "choir_resonant": {
+      "seed": 4301,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c91b34c0f71da9aa7df5bb7f913ef028601ccb8049dd824d216937144d0aa6cf",
+      "bytes": 31601
+    },
+    "choir_hivecantor": {
+      "seed": 4302,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "348ec861089bac97e5103e85a475738dee1badcdfaf34fca7e85e7714e97319b",
+      "bytes": 30454
+    },
+    "choir_rootbell": {
+      "seed": 4303,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "900e613a845fd12a89bf6f47fc71c80c682d220baa64b343a54f7ed2adcb9b8d",
+      "bytes": 27155
+    },
+    "choir_rootanchor": {
+      "seed": 4304,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ffecf641851e2b93dad7b835f0a7856b51c1a254686ada511fdb66a93362062a",
+      "bytes": 20959
+    },
+    "wall_hivegorge_a": {
+      "seed": 9701,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d5cd3c69ae2096485c94c81f16969be5c5495b48e472566d9c014ef1b35f1047",
+      "bytes": 27481
+    },
+    "wall_nerve_a": {
+      "seed": 9702,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "597edd97788a1e126b2443b2d6fc979bc05c70a2391e7d6c514c0b9690c83f52",
+      "bytes": 21547
+    },
+    "wall_bonewoven_a": {
+      "seed": 9703,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "b6d28606311b5ebd9ef6526e80a48a8e32d902fd39a611ab57e366c4ca0380e2",
+      "bytes": 9776
+    },
+    "wall_vein_a": {
+      "seed": 9704,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "489a8f0d20b1e5700cb73b4d684cbd2053ea3b20949e0211a7c9a93e9f5320a6",
+      "bytes": 15031
+    },
+    "wall_reactor_a": {
+      "seed": 9705,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "a1fd75eae3b642aeca0d7de3dbbb64031e7441474b01546a83a7ffe99db189b8",
+      "bytes": 14094
+    },
+    "wall_mourning_a": {
+      "seed": 9706,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4d82116cb378a002961137dcc9eb900b476925365e57571b815b8342c2e14ac5",
+      "bytes": 7571
+    },
+    "wall_crystal_a": {
+      "seed": 9707,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8174d62c8bfed8d0735c8f80028b31d8a2660447e92a3775825460df17687352",
+      "bytes": 19312
+    },
+    "wall_amphi_a": {
+      "seed": 9708,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1e45354d8b20747ce9e36bff0e7c6d5d0d029b055bdfeae47d7c10306253bf5e",
+      "bytes": 10054
+    },
+    "floor_hivetrench_a": {
+      "seed": 9711,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4e8a17e3f205d55de6edffad0e34098874e24bcb0e4eafb9344e94b0f574365b",
+      "bytes": 14743
+    },
+    "floor_nervegrid_a": {
+      "seed": 9712,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "231662cd8ede4684a2bf03ed0787ab123e29c5c29555634148cdc232f066975f",
+      "bytes": 10416
+    },
+    "floor_loomweave_a": {
+      "seed": 9713,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d0c8b20df35260bebf6375a60eec2e30e2d9394ca1760f895566ed96c621c45b",
+      "bytes": 8359
+    },
+    "floor_veinrail_a": {
+      "seed": 9714,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "7fbae7b2797a131e6596d5b6879692e59c5be433f86bd44bead7ad4c1293a06f",
+      "bytes": 15640
+    },
+    "floor_reactor_a": {
+      "seed": 9715,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "64e5e33c6d1c9105363bb1198b046f9dd7c02d61180a8904d0563a6b35b42bde",
+      "bytes": 20449
+    },
+    "floor_mourning_a": {
+      "seed": 9716,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "c837057ef9ce70428f67e60fdc7f3a6f7910f1e236e48168304d31274b86b256",
+      "bytes": 6889
+    },
+    "floor_crystal_a": {
+      "seed": 9717,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "9826519cdc1bfb95ef2c4394848c120b59967e0a91422f100983c936b151860f",
+      "bytes": 30524
+    },
+    "floor_amphi_a": {
+      "seed": 9718,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1e39842259eec81056677191494d8cbd37f87989192456475c29bd37de6f2126",
+      "bytes": 6176
+    },
+    "sky_hive": {
+      "seed": 9720,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3f3fbb0381e2c9f4f1d6923f54eae36264787a4f94400d6e6225caa96297d3a3",
+      "bytes": 25308
+    },
+    "sky_hive_below": {
+      "seed": 9721,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6d09858fb318d52ef96d26587333f648e616cdf25828fd4406d94a5363048a4f",
+      "bytes": 37376
+    },
+    "sky_marrow_wrong": {
+      "seed": 9722,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6161b3cc6fa46a3193f3a5bd5dbd813afdc34fbcb5b19bb1b98f7e270b4142c4",
+      "bytes": 23771
+    },
+    "wall_rootwell_a": {
+      "seed": 9801,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "556b407d50acdd63b0bde805c1a82e373cc4c5c7a8c698e7bc96374a2c3d77a9",
+      "bytes": 26866
+    },
+    "wall_rootbark_a": {
+      "seed": 9802,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "caa4bf7d950db2281c18f592a52dd72949d0e46f8d84fd390cdb6d6d1acd945a",
+      "bytes": 12219
+    },
+    "wall_fault_a": {
+      "seed": 9803,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "68a650cd2b89b670159f767d4b6c107f62756657106f40d218f66d97a4bf12ae",
+      "bytes": 9014
+    },
+    "wall_tidestone_a": {
+      "seed": 9804,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "8b6a1096d4aa855fef630064d1b45c96b6bf47720e7ee07018a01a8ae80d7488",
+      "bytes": 9599
+    },
+    "wall_bellinside_a": {
+      "seed": 9805,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "3f85fea938fd8459e13e4dca6206665ea7c2f9186bcde49d042967cf9c8ee9a9",
+      "bytes": 15531
+    },
+    "wall_unrung_a": {
+      "seed": 9806,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "1bb1bd8928cbaeb83d6d68bf56896ba979f0d7bd5757405e6ef529a1c59860ab",
+      "bytes": 6944
+    },
+    "floor_rootwell_a": {
+      "seed": 9811,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "6c17994be099a21b67a5d8c84bd1a64a11dc6b08248cf720fb62af1d365bff81",
+      "bytes": 13486
+    },
+    "floor_rootloam_a": {
+      "seed": 9812,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "32770ccf4deb69c587d2d27158e119384bc632ad5165c18af9ed2bd9104029ae",
+      "bytes": 35576
+    },
+    "floor_faultrock_a": {
+      "seed": 9813,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "347e8e1b2a764116a0b9abe0dcfa5b6efc4b2d40ea45e04bbcef333c14f55d5b",
+      "bytes": 26958
+    },
+    "floor_tideplank_a": {
+      "seed": 9814,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "29c3045c715ddcb83b1aeabb05ad232c07c735bf2479f21ff60f4c67b476a589",
+      "bytes": 20364
+    },
+    "floor_bellstone_a": {
+      "seed": 9815,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d56fa6ec10fcd6e063e3148760e0eb3c5c95dadc359f4058788dc84d7110f434",
+      "bytes": 12319
+    },
+    "floor_unrung_a": {
+      "seed": 9816,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "ac9febc4f7f0e141aa072bf70d11aa61be5813b1741485d4e23294a7b104d1b6",
+      "bytes": 5239
+    },
+    "sky_root": {
+      "seed": 9820,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "682e9d36b355210e61d52a095486a02df092abd3d8c417cc324e0f26285317f1",
+      "bytes": 50670
+    },
+    "sky_root_below": {
+      "seed": 9821,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "4076562d3efce9b0cd87ef5f684ee2285ea5d3e7d935e0718bfb86942dbdbdb1",
+      "bytes": 20149
+    },
+    "sky_gate_dim": {
+      "seed": 9822,
+      "width": 512,
+      "height": 256,
+      "transparent": false,
+      "sha256": "d51ee1a048682a665d8f386a18adcbed5e16384fff471ad3e5ab9a4f98ae7c9a",
+      "bytes": 17177
     }
   }
 }

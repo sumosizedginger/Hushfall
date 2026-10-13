@@ -2,6 +2,7 @@
 // Actions are validated by mapformat.validateKit; the sim can therefore assume the shapes below.
 import { wakeEnemy, spawnEnemy, doorAtCell, emit } from './world.js';
 import { platformState } from './platforms.js';
+import { hpCondition } from './phases.js';
 
 const cellPos = (w, cx, cz) => ({ x: (cx + 0.5) * w.map.cell, z: (cz + 0.5) * w.map.cell });
 
@@ -36,6 +37,10 @@ export function runAction(w, a) {
   else if (k === 'shake') emit(w, 'shake', { amount: v });
   else if (k === 'lights') { w.ambient = v; emit(w, 'lights', { level: v }); }                      // the view eases toward this (a dark level brightening as the power comes back)
   else if (k === 'objective') { w.objective = v; emit(w, 'objective', { text: v }); }
+  else if (k === 'sound') emit(w, 'cue', { name: v });                                                // PT-043: a toll, a creak, a chord from a trigger (events.js plays the synth recipe of that name)
+  else if (k === 'tremor') { emit(w, 'shake', { amount: v }); emit(w, 'tremor', { amount: v }); }     // PT-043: the view shakes and a low sound runs under it
+  else if (k === 'beatOff') { w.beatOff = true; emit(w, 'beat_off', {}); }                                  // PT-043: the Hive Cantor is dead: the beat stops, the lights stop swelling (lazy state)
+  else if (k === 'silence') { w.silenced = true; emit(w, 'silence', {}); }                              // PT-043: the Root Bell hangs still: the score and the ambience are cut from now on (lazy state: only a map that says so has it)
 }
 export function runActions(w, list) { for (const a of list || []) runAction(w, a); }
 
@@ -73,6 +78,8 @@ function conditionMet(w, t) {
   if (c.startsWith('choice:')) return choiceHolds(w, c.slice(7));                                                                            // PT-039
   if (c.startsWith('seq:')) return w.chimes?.matched?.[c.slice(4)] != null;                                                  // PT-038: a chime phrase was played (chimes.js)                                             // PT-033: a receiver is lit (beams.js)
   if (c.startsWith('sector:')) { const [, id, pos] = c.split(':'), s = w.sectors.find((q) => q.id === id), def = w.map.sectors.find((q) => q.id === id); return !!s && Math.abs(s.h - s.target) < 1e-6 && Math.abs(s.h - (pos === 'high' ? def.high : def.low)) < 1e-6; }
+  if (c === 'lamp:on') return !!w.player.lamp?.on;                                                                    // PT-043: the hand lantern is lit
+  if (c.startsWith('hp:')) return !!hpCondition(w, c);                                                              // PT-043: a group is under a share of its hit points (phases.js)
   return false;
 }
 /** evaluate every unfired trigger; a fired trigger runs its actions once */

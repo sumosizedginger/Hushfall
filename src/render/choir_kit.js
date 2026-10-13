@@ -102,17 +102,17 @@ export function ragGeom(w, len, bend = 0.06, taper = 0.55, thick = 0.02) {
  */
 export function makeCreature(atlasTex, build, pose, opts = {}) {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
-  const glow = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
+  const glow = new THREE.MeshBasicMaterial({ color: 0x3fffe0 }), amber = new THREE.MeshBasicMaterial({ color: 0xffa23a });          // teal is the Hush's light; amber (PT-043) is the Hive's and the Root Bell's own
   const echoMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.4, depthWrite: false, side: THREE.BackSide });
   const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);
   const J = { rig }, echoes = [];
   const fit = (m, o = {}) => { if (o.pos) m.position.set(...o.pos); if (o.rot) m.rotation.set(...o.rot); if (o.scale) m.scale.set(...(Array.isArray(o.scale) ? o.scale : [o.scale, o.scale, o.scale])); return m; };
   const R = {
-    mat, glow, echoMat, J, rig, root, echoes,
+    mat, glow, amber, echoMat, J, rig, root, echoes,
     /** a named joint (a Group) under `parent` (a joint name, or null = the rig) */
     joint(name, parent, pos = [0, 0, 0], rot) { const g = new THREE.Group(); g.position.set(...pos); if (rot) g.rotation.set(...rot); (parent ? J[parent] : rig).add(g); J[name] = g; return g; },
     /** any geometry on the atlas (cell) or on glow (cell = 'glow'); o: {pos, rot, scale, name} */
-    prim(parent, geom, cell, o = {}) { const m = fit(new THREE.Mesh(cell === 'glow' ? geom : atlas(geom, cell), cell === 'glow' ? glow : (o.m ?? mat)), o); (parent ? J[parent] : rig).add(m); if (o.name) J[o.name] = m; return m; },
+    prim(parent, geom, cell, o = {}) { const m = fit(new THREE.Mesh(cell === 'glow' || cell === 'amber' ? geom : atlas(geom, cell), cell === 'glow' ? glow : cell === 'amber' ? amber : (o.m ?? mat)), o); (parent ? J[parent] : rig).add(m); if (o.name) J[o.name] = m; return m; },
     cyl(parent, rt, rb, h, seg, cell, o) { return R.prim(parent, new THREE.CylinderGeometry(rt, rb, h, seg), cell, o); },
     cone(parent, r, h, seg, cell, o) { return R.prim(parent, new THREE.ConeGeometry(r, h, seg), cell, o); },
     box(parent, w, h, d, cell, o) { return R.prim(parent, new THREE.BoxGeometry(w, h, d), cell, o); },
@@ -158,7 +158,7 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
     pose(p, J, R); ground(); opts.afterGround?.(p, J, R);
     const f = p.flash || 0; mat.emissive.setRGB(0.7 * f, 0.55 * f, 0.4 * f);
   }
-  return { root, rig, pose: posed, mat, glow, echoes, J, merged };
+  return { root, rig, pose: posed, mat, glow, amber, echoes, J, merged };
 }
 
 /** walking, breathing and the arm-raise attack for any two-legged build (joints legA/legB (+M), armA/armB (+M), spine, head, jaw, hips), the same maths as the shipped Tollbearer: tells keep their timing */
