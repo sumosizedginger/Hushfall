@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23', 'C2S02'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -28,9 +28,8 @@ test('Act C maps are in the manifest order, load, name their own look and the Hi
     const s = SRC[id]; assert.equal(validateMap(s).ok, true, id + ' ' + JSON.stringify(validateMap(s).errors));
     assert.ok(LOOKS[s.atmosphere.look] && s.atmosphere.look !== 'harbour', id + ' names its own look');
     assert.ok(s.intro?.title && s.intro.lines.length === 2 && s.outro, id + ' has an intro and an outro');
-    if (id !== 'C2M22' && id !== 'C2M23') assert.equal(s.atmosphere.beat, true, id + ': the Hive beat is felt here');
-    assert.equal(parseMap(s).atmosphere.beat, id !== 'C2M22' && id !== 'C2M23' ? true : parseMap(s).atmosphere.beat);
-  }
+    if (!['C2M22', 'C2M23', 'C2S02'].includes(id)) assert.equal(s.atmosphere.beat, true, id + ': the Hive beat is felt here');
+      }
   assert.equal(new Set(ALL.map((id) => SRC[id].atmosphere.look)).size, ALL.length, 'every map its own look');
 });
 
@@ -184,4 +183,14 @@ test('C2M23, the Reprise: the committed plan of Marrow Quay turned east to west,
   assert.ok(s.entities.some((e) => e.type === 'exit' && e.dest === 'secret') && s.secrets.length === 1, 'the net-loft leads to the lamp'); assert.equal(MANIFEST.maps.find((x) => x.id === 'C2M23').secretExit, 'C2S02');
   const r = runRoute(map, route('C2M23'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.deepEqual(r.world.player.keys, ['brass']);
   const sec = runRoute(map, route('C2M23', 'secret'), { seed: 1 }); assert.equal(sec.result, 'complete'); assert.equal(sec.world.stats.secrets, 1); assert.equal(sec.world.exitDest ?? sec.world.exited ?? 'secret', 'secret');
+});
+
+test("C2S02, Ines's lamp: a safe pier, the exit open from the first step, and taking the lamp is a remembered choice that makes the hand lantern burn without oil and hold a ring back harder", () => {
+  const s = SRC.C2S02, map = shippedMap('C2S02'); assert.equal(s.entities.filter((e) => e.type === 'enemy').length, 0); assert.equal(s.atmosphere.silence, true);
+  assert.equal(MANIFEST.maps.find((x) => x.id === 'C2S02').returnsTo, 'C2M24'); const ex = s.entities.find((e) => e.type === 'exit'); assert.ok(!ex.locked, 'a reward, never a requirement');
+  const took = runRoute(map, route('C2S02'), { seed: 1 }); assert.equal(took.result, 'complete'); assert.deepEqual(took.world.choices, { lamp: 'own' }); assert.ok(took.events.some((e) => e.type === 'choice'), 'the choice is announced (the shell keeps it)');
+  const left = runRoute(map, [{ op: 'goto', at: [19, 41] }], { seed: 1 }); assert.equal(left.result, 'complete'); assert.equal(left.world.choices, undefined);
+  // in a dark map with a lantern, the taken lamp is eternal; without it the oil burns
+  const dark = shippedMap('C2M13'); assert.equal(createWorld(dark, { seed: 1, choices: { lamp: 'own' } }).player.lamp.eternal, true); assert.equal(createWorld(dark, { seed: 1 }).player.lamp.eternal, false);
+  assert.equal(createWorld(shippedMap('C2M17'), { seed: 1, choices: { lamp: 'own' } }).player.lamp, undefined, 'a lit map has no lantern to change');
 });

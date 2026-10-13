@@ -97,7 +97,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
   if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
   { const ch = makeChimes(map); if (ch) w.chimes = ch; }                                                           // PT-038 (E6): chime state, only where the map has a chime or a tree
-  if (map.lantern) w.player.lamp = { on: false, oil: map.lantern.oil, max: map.lantern.max ?? LANTERN.max, eternal: !!map.lantern.eternal };          // PT-038 (E5): the hand lantern: lazy, only a map that carries one has it
+  if (map.lantern) w.player.lamp = { on: false, oil: map.lantern.oil, max: map.lantern.max ?? LANTERN.max, eternal: !!map.lantern.eternal || choices?.lamp === 'own' };          // PT-038 (E5): the hand lantern: lazy, only a map that carries one has it; PT-046: Ines's own lamp (taken in C2S02: choices.lamp = 'own') burns without oil and holds a ring back harder
   if (map.dark) w.lit = false;                                                                                  // ...and only a dark place keeps the 'is the player lit' flag
   if (map.props.some((p) => p.kind === 'resonator')) w.resonators = makeResonators(map);            // PT-037 (resonator.js)
   if (map.emitters.length) { w.beams = { lit: [] }; updateBeams(w, true); }          // PT-033: the beams (beams.js)
