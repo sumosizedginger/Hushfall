@@ -88,7 +88,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   };
   hidden(w, 'map', map); hidden(w, 'events', []);
   for (const e of map.entities) {
-    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.variant) en.variant = e.variant; if (e.onBeat) en.onBeat = true; if (e.swing) en.swing = true; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); else if (e.sight > 0) en.sightR = e.sight; }
+    if (e.type === 'enemy') { const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI); if (e.group) en.group = e.group; if (e.variant) en.variant = e.variant; if (e.onBeat) en.onBeat = true; if (e.swing) en.swing = true; if (e.rings) en.rings = true; if (e.spawns) en.spawns = e.spawns; if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]); if (e.hold) holdTarget(en, e); else if (e.sight > 0) en.sightR = e.sight; }
     else if (e.type === 'pickup') w.pickups.push({ id: w.nextId++, kind: e.kind, x: e.x, z: e.z, y: floorAt(w, e.x, e.z) });
   }
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
@@ -998,6 +998,12 @@ function homeStep(w, e, def, dt, turnHome) {
   e.walk = Math.max(0, e.walk - dt * 3);
   return (turnHome || e.hold === 'fixed') && face(e.post.yaw);
 }
+/** PT-045 (the lamp yard): the pulse of a boss on its own, for a range target that says `rings: true`: after its cooldown, when it sees you, a windup, then one ring (`reflect` as the boss's own); nothing else of bossStep. Only a range map can say it. */
+function ringStep(w, e, def, diff, dt, sees) {
+  const P = def.pulse; e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt);
+  if ((e.pulseT ?? -1) >= 0) { e.pulseT += dt; if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; } }
+  else if (sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+}
 function updateEnemy(w, e, diff, dt) {
   const p = w.player, def = ENEMIES[e.kind]; e.flash = Math.max(0, e.flash - dt * 4); if (e.slowT > 0) { e.slowT = Math.max(0, e.slowT - dt); e.slowAge = (e.slowAge || 0) + dt; if (e.slowAge >= SLOW_MAX || e.slowT === 0) { e.slowT = 0; e.slowAge = 0; e.slowImm = SLOW_IMMUNE; } } else if (e.slowImm > 0) e.slowImm = Math.max(0, e.slowImm - dt); if (e.intCd > 0) e.intCd = Math.max(0, e.intCd - dt);
   if (e.hold) holdUpkeep(w, e, dt, emit);                                          // a range target: heal when left alone, stand up again after a kill (range.js)
@@ -1015,6 +1021,7 @@ function updateEnemy(w, e, diff, dt) {
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? sightIn(w, def)) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
   if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
+  if (e.rings && def.pulse) ringStep(w, e, def, diff, dt, sees);                         // PT-045 (dev range only): a target that only RINGS (the lamp yard's Sub-Cantor): its pulse, and nothing else of a boss
   if (e.hold && !sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0) { homeStep(w, e, def, dt, true); return; }      // a range target that cannot see you goes back to its post and its heading
   if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
   else if (!sees) e.lost = (e.lost || 0) + dt;

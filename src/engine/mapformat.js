@@ -196,6 +196,7 @@ function validateMapChecks(src) {
     if (e.type === 'enemy' && e.variant != null && !VARIANTS[e.variant]) err(`${tag}: unknown variant '${e.variant}' (${Object.keys(VARIANTS).join(', ')})`);
     if (e.type === 'enemy' && e.sight != null && !(e.sight > 0)) err(`${tag}: sight must be a positive number of metres`);
     if (e.type === 'enemy' && e.onBeat != null && typeof e.onBeat !== 'boolean') err(`${tag}: onBeat must be true or false`);
+    if (e.type === 'enemy' && e.rings != null && (typeof e.rings !== 'boolean' || !src.range || !e.hold)) err(`${tag}: rings must be true or false, and only a range target that has a hold may ring (the lamp yard)`);
     if (e.type === 'enemy' && e.swing != null && typeof e.swing !== 'boolean') err(`${tag}: swing must be true or false (a range sponge Root Bell swings only if it says so)`);                 // PT-043: starts an attack only on a Hive beat (hive.js)
     if ((e.hold != null || e.hp != null || e.sight != null) && !src.range) err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
     else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
