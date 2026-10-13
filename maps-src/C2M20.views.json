@@ -1,0 +1,83 @@
+[
+{
+"name": "01-start",
+"x": 64.5,
+"z": 86.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-rail",
+"x": 64.5,
+"z": 74.5,
+"yaw": 3.14,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-hub",
+"x": 64.5,
+"z": 72.5,
+"yaw": 0.0,
+"pitch": 0.25,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-west-station",
+"x": 24.5,
+"z": 48.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-drop",
+"x": 36.5,
+"z": 50.5,
+"yaw": -1.571,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-pier",
+"x": 63.5,
+"z": 30.5,
+"yaw": 3.14,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-hub",
+"x": 63.5,
+"z": 42.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-east-station",
+"x": 100.5,
+"z": 48.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "09-exit",
+"x": 110.5,
+"z": 48.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

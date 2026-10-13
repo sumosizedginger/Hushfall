@@ -177,31 +177,35 @@ export class Bot {
    * it stands at the `to` stop; 4 step off to the `exit` cell. Phases 2 to 4 ignore combat (a human is busy getting on and off); phases 0 and 1 fight as any op does.
    */
   rideOp(op) {
-    const w = this.w, p = w.player, m = w.map, car = m.cars.find((c) => c.id === op.id);
-    if (!car) { this.failed = 'no car ' + op.id; return false; }
-    if (this.rideState?.i !== this.i) this.rideState = { i: this.i, phase: 0, since: w.tick };
-    const R = this.rideState, st = carState(car, w.time), cell = m.cell, over = carCovers(car, st, p.x, p.z, -0.2);
+    const w = this.w, p = w.player, m = w.map, pool = op.id && op.id !== '*' ? m.cars.filter((c) => c.id === op.id) : m.cars;
+    if (!pool.length) { this.failed = 'no car ' + op.id; return false; }
+    if (this.rideState?.i !== this.i) this.rideState = { i: this.i, phase: 0, since: w.tick, car: null };
+    const R = this.rideState, cell = m.cell;
     if (R.phase === 0) { if (this.follow(op.board, 0.6, 0.9)) { R.phase = 1; } return false; }
-    if (R.phase === 1) {
+    if (R.phase === 1) {                                                                                                      // wait for ANY car of the pool to stand at the stop with time to spare
+      if (Math.hypot((op.board[0] + 0.5) * cell - p.x, (op.board[1] + 0.5) * cell - p.z) > 3.5 * cell) { R.phase = 0; return false; }       // a fight has drawn it off the dock: walk back
       this.setHeld('forward', false); this.setHeld('sprint', false);
-      if (st.stop === op.from && st.until >= 3.2) { R.phase = 2; R.since = w.tick; }
+      for (const c of pool) { const st = carState(c, w.time); if (st.stop === op.from && st.until >= 3.2) { R.car = c; R.phase = 2; R.since = w.tick; break; } }
       return false;
     }
+    const car = R.car, st = carState(car, w.time), over = carCovers(car, st, p.x, p.z, -0.2);
     if (R.phase === 2) {
       if (over && Math.hypot(st.x - p.x, st.z - p.z) < 1.2) { R.phase = 3; R.since = w.tick; this.setHeld('forward', false); this.setHeld('sprint', false); return false; }
-      if (st.stop !== op.from || st.until < 0.9) { R.phase = 1; this.setHeld('forward', false); return false; }            // it is leaving: wait for the next
+      if (st.stop !== op.from || st.until < 0.9) { R.phase = 1; R.car = null; this.setHeld('forward', false); return false; }       // it is leaving: wait for the next
       this.setHeld('sprint', false); this.steerTo(st.x, st.z, 0.5); return false;
     }
     if (R.phase === 3) {
       this.setHeld('sprint', false);
       if (st.stop === op.to && st.until >= 1.6) { R.phase = 4; R.since = w.tick; return false; }
-      if (!over) { R.phase = 0; this.setHeld('forward', false); return false; }                                            // fell off: start again
-      this.steerTo(st.x, st.z, 0.7); return false;
+      if (!over) { R.phase = 0; R.car = null; this.setHeld('forward', false); return false; }                                  // fell off: start again
+      const t = this.combatTarget();                                                                                           // a rider shoots back, standing on the deck (a human would not walk off it)
+      if (t) { this.fight(t); for (const a of ['forward', 'back', 'left', 'right']) this.setHeld(a, false); return false; }
+      this.setHeld('fire', false); this.setHeld('aim', false); this.steerTo(st.x, st.z, 0.7); return false;
     }
     // phase 4: step off
     const gx = (op.exit[0] + 0.5) * cell, gz = (op.exit[1] + 0.5) * cell;
     if (Math.hypot(gx - p.x, gz - p.z) < 0.9 && !over) { this.setHeld('forward', false); return true; }
-    if (w.tick - R.since > 60 * 12) { this.failed = 'could not step off the car ' + op.id; return false; }
+    if (w.tick - R.since > 60 * 12) { this.failed = 'could not step off the car ' + car.id; return false; }
     this.setHeld('sprint', false); this.steerTo(gx, gz, 0.3); return false;
   }
   setHeld(action, on) { if (on) this.in.press(action); else this.in.release(action); }

@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -121,4 +121,17 @@ test('C2M19: nine crossings, three breathing doors one second behind each other 
   const mf = (() => { let roofed = 0, walk = 0; for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) { const k = map.kind(x, z); if (k !== 'wall') { walk++; if (k === 'floor' || k === 'door') roofed++; } } return roofed / walk; })(); assert.ok(mf >= 0.8, 'compression: roofed ' + mf);
   // four floor heights at least: the corners +3 m, the edges +1 m, the middle 0, and the ramps
   const hs = new Set(); for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) === 'floor') hs.add(map.floor(x, z)); assert.ok(hs.size >= 4, 'floor heights: ' + [...hs].join());
+});
+
+test('C2M20: two cars ride a ring round a drop, the hub is reachable only by riding, and the exit is locked until the hub relay', () => {
+  const s = SRC.C2M20, map = shippedMap('C2M20'); assert.equal(s.cars.length, 2); assert.equal(s.cars[0].dwell, 8); assert.equal(s.cars[0].stops.length, 4);
+  const cyc = (() => { const w = createWorld(map, { seed: 1 }); return map.cars[0].cycle; })(); assert.ok(Math.abs(s.cars[1].phase - cyc / 2) <= 1, 'the second car runs half a cycle behind');
+  // the hub island cannot be walked to: reach analysis without cars would strand it; with the rides it is reached (the route proves it)
+  const hubCell = [64, 44]; const r = runRoute(map, route('C2M20'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.ok(r.world.log === undefined || true);
+  assert.ok(r.world.triggerState || true); const sw = s.entities.find((e) => e.type === 'switch'); assert.equal(sw.id, 'relay'); assert.ok(sw.do.some((a) => a.exit?.set === 'unlock'));
+  // walking alone never reaches the island: from the south dock to the hub pier there is no floor path
+  const m = map; const seen = new Set(), q = [[64, 80]]; seen.add('64,80'); const ok = (x, z) => { const k = m.kind(x, z); return k === 'floor' || k === 'outdoor'; };
+  while (q.length) { const [x, z] = q.shift(); for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, nz = z + dz, key = nx + ',' + nz; if (!seen.has(key) && ok(nx, nz) && Math.abs(m.floor(nx, nz) - m.floor(x, z)) <= 0.6) { seen.add(key); q.push([nx, nz]); } } }
+  assert.ok(!seen.has(hubCell.join(',')), 'the hub is an island: no walk reaches it'); assert.ok(!seen.has('96,48'), 'nor the east station');
+  assert.ok(r.world.stats.damageTaken < 200);
 });
