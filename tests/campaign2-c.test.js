@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23', 'C2S02'];
+const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23', 'C2S02', 'C2M24'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -193,4 +193,18 @@ test("C2S02, Ines's lamp: a safe pier, the exit open from the first step, and ta
   // in a dark map with a lantern, the taken lamp is eternal; without it the oil burns
   const dark = shippedMap('C2M13'); assert.equal(createWorld(dark, { seed: 1, choices: { lamp: 'own' } }).player.lamp.eternal, true); assert.equal(createWorld(dark, { seed: 1 }).player.lamp.eternal, false);
   assert.equal(createWorld(shippedMap('C2M17'), { seed: 1, choices: { lamp: 'own' } }).player.lamp, undefined, 'a lit map has no lantern to change');
+});
+
+test('C2M24, Choir of One: the Hive Cantor over a flat podium, nine singers who act on the beat, three beat tiers, a real boss map (every box of ammunition on the ground), an exit that opens when the conductor dies and stops the beat', () => {
+  const s = SRC.C2M24, map = shippedMap('C2M24'), cantor = s.entities.find((e) => e.kind === 'hivecantor'); assert.ok(cantor); assert.equal(cantor.group, 'cantor');
+  const choir = s.entities.filter((e) => e.group === 'choir'); assert.equal(choir.length, 9); assert.ok(choir.every((e) => e.onBeat === true), 'the singers act on the beat'); assert.ok(!s.dev, 'the real rules');
+  assert.equal(s.pulses.length, 12, 'three tiers, four strips each'); assert.deepEqual([...new Set(s.pulses.map((q) => q.phase))].sort((a, b) => a - b), [-3, -1.5, 0], 'a beat apart, inner to outer');
+  assert.deepEqual(s.drops.keep, [[0, 0, 999, 999]], 'a boss map keeps every box'); assert.ok(s.entities.filter((e) => e.type === 'pickup' && /^ammo_/.test(e.kind)).length >= 14);
+  const ex = s.entities.find((e) => e.type === 'exit'); assert.equal(ex.locked, true); const down = s.triggers.find((t) => t.id === 'down'); assert.equal(down.when, 'dead:cantor'); assert.ok(down.do.some((a) => a.beatOff === true), 'the beat stops when it falls');
+  // the podium is flat (the ring is a plane at its floor): the floor under the conductor and the first ring of the arena are level
+  assert.equal(map.floor(54, 28), 0); assert.equal(map.floor(54 + 6, 28), 0); assert.ok(map.floor(54 + 12, 28) >= 1.5, 'a tier a metre and a half up');
+  const r = runRoute(map, route('C2M24'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.ok(r.world.beatOff === true, 'the beat is off'); assert.ok(r.world.enemies.find((e) => e.kind === 'hivecantor').state === 'dead');
+  const sec = runRoute(map, route('C2M24', 'secret'), { seed: 1 }); assert.equal(sec.result, 'complete', sec.failure); assert.equal(sec.world.stats.secrets, 1);
+  // the plate says the sum the first plate said
+  const m17 = SRC.C2M17.messages.find((m) => m.id === 'count'), m24 = s.messages.find((m) => m.id === 'plate'); assert.ok(/52,310/.test(m17.text) && /49,715/.test(m17.text) && /52,310/.test(m24.text) && /49,715/.test(m24.text) && /2,595/.test(m24.text), 'the same count, short by the same sum');
 });

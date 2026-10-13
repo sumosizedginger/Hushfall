@@ -1,0 +1,65 @@
+[
+{
+"name": "01-hall",
+"x": 9.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-gate",
+"x": 33.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-bowl",
+"x": 38.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-tiers",
+"x": 44.5,
+"z": 24.5,
+"yaw": -1.0,
+"pitch": 0.15,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-podium",
+"x": 50.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-dome",
+"x": 54.5,
+"z": 36.5,
+"yaw": 0.0,
+"pitch": 0.4,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-exit",
+"x": 72.5,
+"z": 28.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

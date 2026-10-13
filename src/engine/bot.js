@@ -70,14 +70,16 @@ export class Bot {
   // -- combat ----------------------------------------------------------
   combatTarget() {
     if (!this.fights || this.w.tick < (this.noFightUntil ?? 0)) return null;
-    const w = this.w, p = w.player; let best = null, bd = 16;
-    const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead');
+    const w = this.w, p = w.player; let best = null, bd = Infinity, bossT = null;
+    const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead'), conductor = w.enemies.find((n) => ENEMIES[n.kind].unison && n.state !== 'dead'), choirG = conductor ? ENEMIES[conductor.kind].unison.group : null;
     for (const e of w.enemies) {
-      if (e.state === 'dead' || ENEMIES[e.kind].peaceful || (e.state === 'idle' && !ENEMIES[e.kind].node)) continue;
+      if (e.state === 'dead' || ENEMIES[e.kind].peaceful || (e.state === 'idle' && !ENEMIES[e.kind].node && !(choirG && e.group === choirG))) continue;                   // (a singer of a living conductor's choir is a target even asleep: PT-046)
       if (ringUp && ENEMIES[e.kind].boss) continue;                                                // shielded: cut the ring first
-      const d = Math.hypot(e.x - p.x, e.z - p.z);
-      if (d < bd && hasLOS(w, p.x, p.z, e.x, e.z)) { best = e; bd = d; }
+      if (ENEMIES[e.kind].unison && w.enemies.some((o) => o.group === ENEMIES[e.kind].unison.group && o.state !== 'dead')) continue;          // PT-046: a conductor whose choir still sings takes a twentieth of a hit: the singers first
+      const d = Math.hypot(e.x - p.x, e.z - p.z), lim = ENEMIES[e.kind].hive ? 45 : 16;          // (PT-046: the Hive Cantor is a target from the far tiers, where its low ring does not reach; anything else within 16 m as ever)
+      if (d < lim && hasLOS(w, p.x, p.z, e.x, e.z)) { if (ENEMIES[e.kind].hive) { if (!bossT || d < bossT.d) bossT = { e, d }; } else if (d < bd) { best = e; bd = d; } }
     }
+    if (!best && bossT) return bossT;                                                                         // (the conductor only when nothing else is in reach: its summoned Choristers first, as a human would)
     return best ? { e: best, d: bd } : null;
   }
   fight(t) {
@@ -85,7 +87,7 @@ export class Bot {
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
     const sr = p.weapon === 'scattergun' ? 1.3 : 1, rr = p.weapon === 'rivet' ? 1.3 : 1;                       // hysteresis: hovering around a threshold must not flip weapons (every flip costs the raise time)
     const plated = !!ENEMIES[t.e.kind].armor, hr = p.weapon === 'harpoon' ? 1.3 : 1, hd = ENEMIES[t.e.kind];
-    const wantHarpoon = p.weapons.includes('harpoon') && (p.ammo.bolt || 0) > 0 && ((plated && t.d > 3) || (t.d > 9 / hr && (!!hd.ranged || !!hd.hover)));       // the long gun: plate (the bolt goes through it) and shooters or flyers that are not close
+    const wantHarpoon = p.weapons.includes('harpoon') && (p.ammo.bolt || 0) > 0 && ((plated && t.d > 3) || (t.d > 9 / hr && (!!hd.ranged || !!hd.hover) && !(hd.hive && (p.ammo.rivet || 0) > 30 && t.d < 15)));          // (the Hive Cantor hovers, but the rivet driver is the faster gun on it: 77 against the harpoon's 59 a second)       // the long gun: plate (the bolt goes through it) and shooters or flyers that are not close
     const near = w.enemies.filter((e) => e !== t.e && e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind].peaceful && Math.hypot(e.x - t.e.x, e.z - t.e.z) < 4.5).length;
     const wantArc = !wantHarpoon && p.weapons.includes('arc') && (p.ammo.cell || 0) > 0 && t.d < (p.weapon === 'arc' ? 11 : 9) && (near >= 1 || !!hd.hover);       // the lamp: a clutch of bodies, or a flyer, inside its reach (the arc jumps)
     const wantFlare = !wantHarpoon && !wantArc && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
@@ -104,7 +106,7 @@ export class Bot {
     else { const flight = t.d / def.speed, aimY = 1.0 + hv + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
-    const inRange = def.kind === 'arc' ? t.d < def.range * 0.9 : hitscan ? t.d < def.range * 0.5 : t.d > 2.8;
+    const inRange = def.kind === 'arc' ? t.d < def.range * 0.9 : hitscan ? t.d < def.range * (ENEMIES[t.e.kind].hive ? 0.9 : 0.5) : t.d > 2.8;          // (a gun is good for most of its range against the Hive Cantor, which the bot shoots from a far tier)
     const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
     this.setHeld('fire', shoot && (def.charge ? w.tick % 10 < 5 : true));         // a charging weapon (the lamp) fires on RELEASE: the bot taps it, five ticks down and five up (about six a second)
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
@@ -126,7 +128,7 @@ export class Bot {
     const far = !!ENEMIES[boss.kind].sweep;
     const ringsMatter = !far || p.hp < 45;                                                                                // a ring costs 13: only the beam is worth hiding from while there is hit points to spare
     const danger = (ringsMatter && (boss.pulseT ?? -1) >= 0) || (boss.sweepT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || (ringsMatter && w.pulses.some((q) => (q.back ? q.r > Math.hypot(p.x - q.x, p.z - q.z) - 1.5 : q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5)));      // (PT-039: a ring that has turned back is dangerous while it is still outside the player: it is coming in)
-    if (danger) {
+    if (danger && !this.heightClear(boss, p.y)) {
       if (this.exposedTo(boss, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
       if (this.cover && this.exposedTo(boss, p.x, p.z)) {                                       // still exposed: go
         const t = this.combatTarget(); if (t && t.d < 5) this.fight(t); else { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false); }
@@ -135,10 +137,11 @@ export class Bot {
       if (this.cover) { const t = this.combatTarget(); if (t && t.d < 5) this.fight(t); else for (const a of ['fire', 'forward', 'sprint']) this.setHeld(a, false); return false; }   // safe: hold until it passes
     } else this.cover = null;
     const t = this.combatTarget();
-    if (t) { this.calm = 0; this.fight(t); return false; }
+    if (t) { this.calm = 0; this.fight(t); if (this.heightClear(boss, p.y)) this.setHeld('forward', false); return false; }                  // (PT-046: on the tier it stays on the tier: walking down to the conductor is walking into its ring)
     this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('right', false);
     const want = this.forage(); if (want) { if (this.follow([Math.floor(want.x / w.map.cell), Math.floor(want.z / w.map.cell)], 0.5)) { const st = this.forageStuck?.id === want.id ? this.forageStuck : (this.forageStuck = { id: want.id, n: 0 }); if (++st.n > 180) (this.skipPickups ??= new Set()).add(want.id); } return false; }      // `follow` says 'close enough' (something sits on the exact spot): a pickup it cannot collect is given up, or the bot would forage at it forever instead of going for the boss              // quiet moment: top up
-    const nodes = w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
+    const cg = ENEMIES[boss.kind].unison?.group, singers = cg ? w.enemies.filter((e) => e.group === cg && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z)) : [];
+    const nodes = (singers.length ? singers : w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead')).slice().sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
     const goal = nodes[0] ?? boss, m = w.map;
     this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, 7);
     return false;
@@ -155,9 +158,12 @@ export class Bot {
     }
     return best;
   }
+  /** PT-046: the Hive Cantor's ring is a plane `h` metres high at the conductor's floor: a player standing more than that above it is under no ring and need not hide (a human climbs a tier). Only for a boss whose rings say so (`hive.ring.h`). */
+  heightClear(boss, y) { const h = ENEMIES[boss.kind].hive?.ring?.h; if (h == null) return false; const up = y - boss.y; const clear = up > h + 0.6 || (this.tierHold && up > h + 0.1); this.tierHold = clear; return clear; }          // (a little hysteresis: standing on the lip of a tier is still standing on it)
   /** a point the boss can see: for the Gate Warden also a point a body-width to either side of it (its beam is 0.9 m wide: a corner is not cover from it) */
   exposedTo(boss, x, z) {
-    const w = this.w; if (hasLOS(w, boss.x, boss.z, x, z)) return true;
+    const w = this.w; if (ENEMIES[boss.kind].hive?.ring?.h != null) { const cs = w.map.cell, fy = cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)); if (fy - boss.y > ENEMIES[boss.kind].hive.ring.h + 0.6) return false; }          // (a floor above the ring's plane is cover from it)
+    if (hasLOS(w, boss.x, boss.z, x, z)) return true;
     if (!ENEMIES[boss.kind].sweep) return false;
     const dx = x - boss.x, dz = z - boss.z, l = Math.hypot(dx, dz) || 1, px = -dz / l, pz = dx / l;
     return hasLOS(w, boss.x, boss.z, x + px * 1.0, z + pz * 1.0) || hasLOS(w, boss.x, boss.z, x - px * 1.0, z - pz * 1.0);
@@ -165,6 +171,15 @@ export class Bot {
   /** the nearest point within 9 m that the boss has no line to (behind a pillar), or null */
   findCover(boss) {
     const w = this.w, p = w.player; let best = null, bd = 1e9;
+    const rh = ENEMIES[boss.kind].hive?.ring?.h;
+    if (rh != null) {                                                                                                         // PT-046: against the Hive Cantor's low ring a human climbs a tier: the nearest floor a metre and more above the conductor's, within 14 m, with a clear walk (and a line to the boss: from there it can be shot)
+      for (const r of [2, 3, 4, 5.5, 7, 9, 11, 14]) for (let k = 0; k < 24 && !best; k++) {
+        const a = k / 24 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r, cs = w.map.cell;
+        if (cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)) - boss.y <= rh + 0.6 || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !hasLOS(w, boss.x, boss.z, x, z)) continue;
+        best = [x, z];
+      }
+      if (best) return best;
+    }
     for (const r of [2, 3, 4, 5.5, 7, 9]) for (let k = 0; k < 16; k++) {
       const a = k / 16 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r;
       if (this.exposedTo(boss, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue;
