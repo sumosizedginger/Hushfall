@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M17'];
+const BUILT = ['C2M17', 'C2M18'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -84,4 +84,25 @@ test('C2M17: the gorge is cut into chambers by rib arches the trench passes unde
   // the arches are solid on both banks and open in the trench: count rib-arch columns by scanning a diagonal-free straight leg (x 108..134, final leg)
   let columns = 0; for (let x = 108; x < 134; x++) { const col = []; for (let z = 18; z <= 42; z++) col.push(map.kind(x, z)); const walls = col.filter((k) => k === 'wall').length, open = col.filter((k) => k === 'floor' || k === 'outdoor').length; if (walls >= 10 && open >= 5 && col.slice(10, 15).every((k) => k !== 'wall')) columns++; }
   assert.ok(columns >= 1 && columns <= 6, 'the straight leg has rib arches that leave the trench open: ' + columns); void s;
+});
+
+test('C2M18: a lattice over a void: eight bridges of pulsing segments that light in turn from the rim inward, four vents across the void, four knots and a lever to open the exit', () => {
+  const s = SRC.C2M18, map = shippedMap('C2M18');
+  assert.equal(s.pulses.length, 32, 'eight bridges, four segments each'); assert.equal(s.vents.length, 4);
+  for (const q of s.pulses) { assert.equal(q.period, 6); assert.equal(q.on, 1.5); }
+  // along a bridge the segments bloom one beat apart, the outer one first, so the bloom travels inward
+  const west = s.pulses.filter((q) => q.rect[0] < 40 && q.rect[1] === 41).sort((a, b) => a.rect[0] - b.rect[0]); assert.equal(west.length, 4);
+  const first = west.map((q) => ((6 - q.phase) % 6)); assert.deepEqual(first, [0, 1.5, 3, 4.5].map((v) => v), 'the outermost blooms first: ' + first);
+  assert.equal(s.entities.filter((e) => e.kind === 'bellnode' && e.group === 'knots').length, 4, 'four knots');
+  const open = s.triggers.find((t) => t.id === 'open'); assert.deepEqual(open.when, ['dead:knots', 'msg:cut']); assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
+  let voids = 0; for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) === 'void') voids++; assert.ok(voids > 3000, 'a real drop: ' + voids);
+  assert.ok(Math.max(...Array.from({ length: map.h }, (_, z) => Array.from({ length: map.w }, (_, x) => (map.kind(x, z) === 'wall' || map.kind(x, z) === 'void' ? 0 : map.floor(x, z))).reduce((a, b) => Math.max(a, b), 0))) >= 3 - 1e-6, 'the island stands three metres up');
+  // each vent, walked onto from the outer side, throws the player across the void to a solid bridge cell of the mid ring (the old void rule would send them back to the start)
+  for (const v of s.vents) {
+    const w = createWorld(map, { seed: 1 }); w.enemies.length = 0; const dx = v.to[0] - v.at[0], dz = v.to[1] - v.at[1], d = Math.hypot(dx, dz), ux = dx / d, uz = dz / d;
+    Object.assign(w.player, { x: (v.at[0] + 0.5 - ux * 0.9) * 2, z: (v.at[1] + 0.5 - uz * 0.9) * 2, yaw: Math.atan2(-ux, -uz), vx: 0, vz: 0, hp: 1e6 });
+    let launched = false, landed = false; for (let i = 0; i < 60 * 8 && !landed; i++) { step(w, idle({ move: [0, i < 20 ? 1 : 0] })); for (const e of drainEvents(w)) { if (e.type === 'vent_launch') launched = true; if (e.type === 'air_land') landed = true; } }
+    const cx = Math.floor(w.player.x / 2), cz = Math.floor(w.player.z / 2); assert.ok(launched && landed, 'the vent at ' + v.at + ' throws and lands');
+    assert.ok(map.kind(cx, cz) === 'outdoor' && Math.abs(Math.max(Math.abs(cx - 50), Math.abs(cz - 50)) - 19) <= 2, 'on the mid ring: ' + [cx, cz]);
+  }
 });
