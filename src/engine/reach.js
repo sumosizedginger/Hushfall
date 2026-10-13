@@ -1,6 +1,7 @@
 // Static reachability on the cell grid: can the player get from spawn to the exit, given keys and doors?
 // Conservative: 4-connected cell walking; cells holding cell-blocking props are impassable.
 import { PICKUPS, PROPS, STEP } from './defs.js';
+import { carLinks } from './cars.js';
 
 export function analyseReach(map) {
   const blocked = new Set(map.props.filter((p) => PROPS[p.kind]?.blocksCell).map((p) => Math.floor(p.at[0]) + ',' + Math.floor(p.at[1])));
@@ -16,14 +17,16 @@ export function analyseReach(map) {
     if (k === 'door') { const d = map.doorAt(cx, cz); return !d.key || keys.has(d.key); }
     return false;
   };
+  const links = map.cars.length ? carLinks(map, STEP) : [], linkOf = new Map(); links.forEach((g, gi) => g.forEach((stop) => stop.forEach(([x, z]) => linkOf.set(x + ',' + z, gi))));      // PT-045: a car is a ride between the cells beside its stops
   let changed = true;
   while (changed) {
     changed = false;
-    reach.clear();
+    reach.clear(); const ridden = new Set();
     const [sx, sz] = [Math.floor(map.spawn.x / map.cell), Math.floor(map.spawn.z / map.cell)];
     const q = [[sx, sz]]; reach.add(sx + ',' + sz);
     while (q.length) {
       const [cx, cz] = q.pop();
+      const gi = linkOf.get(cx + ',' + cz); if (gi !== undefined && !ridden.has(gi)) { ridden.add(gi); for (const stop of links[gi]) for (const [x, z] of stop) { const k = x + ',' + z; if (!reach.has(k) && passable(x, z)) { reach.add(k); q.push([x, z]); } } }
       for (const v of map.vents) if (v.at[0] === cx && v.at[1] === cz && !reach.has(v.to.join(','))) { reach.add(v.to.join(',')); q.push([v.to[0], v.to[1]]); }      // PT-032: a vent plate throws the player to its landing
       for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = cx + dx, nz = cz + dz, k = nx + ',' + nz;

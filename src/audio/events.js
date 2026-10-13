@@ -113,6 +113,8 @@ export function soundsForEvent(e) {
     case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
     case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
     case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'car_depart': return [{ id: 'lift_rumble', pos: at(e) }];          // PT-045 (E8b): a car pulls out / comes to rest: the sound of a lift
+    case 'car_arrive': return [{ id: 'lift_thunk', pos: at(e) }];
     case 'load_warn': return [{ id: 'load_creak', pos: at(e) }];
     case 'load_land': return [{ id: 'load_crash', pos: at(e) }];
     case 'load_hit': return [{ id: 'pulse_hit' }];

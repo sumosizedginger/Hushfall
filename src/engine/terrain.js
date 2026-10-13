@@ -4,6 +4,7 @@
 import { STEP, FX, LOWG, TIDE } from './defs.js';
 import { sporeOnAt } from './breath.js';
 import { tideLevel } from './tide.js';
+import { carDeckY } from './cars.js';
 
 const isFlat = (m) => m.flat && m.sectors.length === 0;
 
@@ -14,20 +15,21 @@ export function cellFloor(w, cx, cz) {
   if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return w.sectors[si].h; }
   return m.flat ? 0 : m.floor(cx, cz);
 }
-export function floorAt(w, x, z) { const m = w.map; return isFlat(m) ? 0 : cellFloor(w, Math.floor(x / m.cell), Math.floor(z / m.cell)); }
+export function floorAt(w, x, z) { const m = w.map; if (isFlat(m)) return 0; const f = cellFloor(w, Math.floor(x / m.cell), Math.floor(z / m.cell)); return m.cars.length ? Math.max(f, carDeckY(m, w.time, x, z)) : f; }      // (PT-045: a car's deck is a floor over the point it covers)
 
 /** where an actor of radius r standing at (x,z) rests: the highest floor its footprint touches (centre + four edge points), like a Doom sector overlap */
 export function groundAt(w, x, z, r) {
   const m = w.map; if (isFlat(m)) return 0;
-  const S = m.cell; let g = cellFloor(w, Math.floor(x / S), Math.floor(z / S));
-  for (const [dx, dz] of [[r, 0], [-r, 0], [0, r], [0, -r]]) g = Math.max(g, cellFloor(w, Math.floor((x + dx) / S), Math.floor((z + dz) / S)));
+  const S = m.cell, cars = m.cars.length; let g = cellFloor(w, Math.floor(x / S), Math.floor(z / S)); if (cars) g = Math.max(g, carDeckY(m, w.time, x, z));
+  for (const [dx, dz] of [[r, 0], [-r, 0], [0, r], [0, -r]]) { g = Math.max(g, cellFloor(w, Math.floor((x + dx) / S), Math.floor((z + dz) / S))); if (cars) g = Math.max(g, carDeckY(m, w.time, x + dx, z + dz)); }
   return g;
 }
 /** highest floor under the footprint that is NOT a step too high: used to decide whether a move is blocked by a ledge */
 export function tooHigh(w, o, x, z, r) {
   const m = w.map; if (isFlat(m)) return false;
   const S = m.cell, y0 = o.y ?? 0;
-  for (const [dx, dz] of [[0, 0], [r, 0], [-r, 0], [0, r], [0, -r]]) if (cellFloor(w, Math.floor((x + dx) / S), Math.floor((z + dz) / S)) - y0 > STEP + 1e-6) return true;
+  const cars = m.cars.length;
+  for (const [dx, dz] of [[0, 0], [r, 0], [-r, 0], [0, r], [0, -r]]) { let f = cellFloor(w, Math.floor((x + dx) / S), Math.floor((z + dz) / S)); if (cars) f = Math.max(f, carDeckY(m, w.time, x + dx, z + dz)); if (f - y0 > STEP + 1e-6) return true; }
   return false;
 }
 /** ceiling above sea level at a point: the interior cell's ceiling, or Infinity in the open */

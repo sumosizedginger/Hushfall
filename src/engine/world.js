@@ -3,9 +3,10 @@
 import { gateOpen, sporeState } from './breath.js';
 import { cycleHeight } from './platforms.js';
 import { loadState, loadIndex, inLoad } from './loads.js';
+import { carState, carCovers, carDeckY } from './cars.js';                                                          // PT-045 (E8b): cars (lazy: a map with no `cars` never reaches them)
 import { beltPush, beltAtCell } from './belts.js';                                                                // PT-045 (E8a): conveyors on a clock (lazy: a map with no `belts` never reaches them)
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -134,7 +135,7 @@ export function blockedCircle(w, x, z, r, self = null) {
   for (let cz = Math.floor((z - r) / S); cz <= Math.floor((z + r) / S); cz++) for (let cx = Math.floor((x - r) / S); cx <= Math.floor((x + r) / S); cx++) {
     if (!(fly ? cellSolid(w, cx, cz) : blocksMove(w, cx, cz, air))) continue;
     const nx = clamp(x, cx * S, (cx + 1) * S), nz = clamp(z, cz * S, (cz + 1) * S);
-    if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) return true;
+    if ((x - nx) ** 2 + (z - nz) ** 2 < r * r) { if (w.map.cars.length && self === w.player && w.map.kind(cx, cz) === 'void' && carDeckY(w.map, w.time, nx, nz) > -Infinity) continue; return true; }      // (PT-045: the void under a car's deck is a floor for the player, and for nobody else)
   }
   if (self && !fly && tooHigh(w, self, x, z, r)) return true;                            // a ledge more than a step above the mover's feet
   const over = air && self.y > groundAt(w, x, z, r) + 2.2;                                                 // PT-033: a body in the air above the height of a prop or a creature passes over it
@@ -940,6 +941,13 @@ function updateLoads(w) {
   });
 }
 
+// ---------------------------------------------------------------- cars (PT-045, drop B, E8b)
+/** a car pulling out or coming to rest makes the sound of a lift (events only; lazy state: only a map with cars has `w.carSeen`) */
+function updateCars(w) {
+  const seen = w.carSeen ?? (w.carSeen = w.map.cars.map((c) => carState(c, w.time).moving));
+  w.map.cars.forEach((car, i) => { const s = carState(car, w.time); if (s.moving !== seen[i]) { seen[i] = s.moving; emit(w, s.moving ? 'car_depart' : 'car_arrive', { i, x: s.x, y: s.y, z: s.z }); } });
+}
+
 // ---------------------------------------------------------------- the air state and the launch vents (PT-032, Episode 4 Batch A)
 /** throw the player from a plate to its landing cell: an arc exact for the per-tick integrator (vy -= g dt; y += vy dt lands on y1 after n ticks, as lobTear does) */
 function launchFrom(w, p, v) {
@@ -953,7 +961,10 @@ function groundAir(w, p, dt) {
   p.ventCd = Math.max(0, (p.ventCd ?? 0) - dt);
   const m = w.map, cx = Math.floor(p.x / m.cell), cz = Math.floor(p.z / m.cell);
   if (m.ventCells.has(cx + ',' + cz)) { if (p.ventCd <= 0) { const v = m.vents.find((q) => q.at[0] === cx && q.at[1] === cz); if (v) launchFrom(w, p, v); } return; }
-  if (m.hasVoid) p.lastSafe = { x: p.x, z: p.z };
+  if (m.hasVoid) {
+    if (m.cars.length && m.kind(cx, cz) === 'void') { if (carDeckY(m, w.time, p.x, p.z) === -Infinity) voidFall(w, p); return; }       // PT-045: over the void on a car's deck is riding (nothing to go back to mid-air); over the void with no deck under the feet is a miss
+    p.lastSafe = { x: p.x, z: p.z };
+  }
 }
 /** open sky took the player: hurt, back on the last solid ground, not killed */
 function voidFall(w, p) {
@@ -1062,6 +1073,15 @@ function updateEnemy(w, e, diff, dt) {
 }
 
 /** PT-033 (owner 2026-10-10: "the lock won't open"): a Use on an airlock door that is still cycling is not thrown away. `want` is set by that press: the OTHER door is told to shut now (unless somebody stands in it), and this one opens by itself the moment the air has settled (airlock.js `lockBusy`). Walking more than LOCK.giveUp metres away forgets it. Lazy: only a lock door that was pressed while busy ever has it, and the route bot never presses a busy door. */
+/** PT-045 (E8b): a rider whose feet were on a car's deck at the previous tick is carried by the deck's motion since (the car is a pure function of the clock; creatures never board) */
+function carryRider(w, p, dt) {
+  for (const car of w.map.cars) {
+    const a = carState(car, w.time - dt), b = carState(car, w.time);
+    if (!carCovers(car, a, p.x, p.z) || Math.abs(p.y - a.y) > CARS.board) continue;
+    const dx = b.x - a.x, dz = b.z - a.z; if (dx || dz) tryMove(w, p, dx, dz, PLAYER.radius);
+    return;
+  }
+}
 function lockQueued(w, d) {
   const pr = w.doors.find((q) => q.cx === d.interlock[0] && q.cz === d.interlock[1]), p = w.player, cell = w.map.cell, cxw = (d.cx + 0.5) * cell, czw = (d.cz + 0.5) * cell;
   if (!pr || d.target === 1 || Math.hypot(p.x - cxw, p.z - czw) > LOCK.giveUp) { d.want = false; return; }
@@ -1076,6 +1096,7 @@ export function step(w, cmd) {
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
   w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
   if (p.lamp) updateLamp(w, cmd, dt); if (map.dark) w.lit = playerLit(w);                         // PT-038 (E5)
+  if (map.cars.length && !p.air) carryRider(w, p, dt);                                     // PT-045 (E8b): a car carries what stands on it, before anything else moves
   updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
@@ -1170,6 +1191,7 @@ export function step(w, cmd) {
 
   if (map.pulses?.length) updateSpores(w);
   if (map.loads?.length) updateLoads(w);
+  if (map.cars.length) updateCars(w);
 
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt);

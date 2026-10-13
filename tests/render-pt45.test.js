@@ -7,6 +7,9 @@ import { parseMap } from '../src/engine/mapformat.js';
 import { buildLevel } from '../src/render/levelmesh.js';
 import { makeBeltView, updateBeltView } from '../src/render/beltfx.js';
 import { makeTideView } from '../src/render/tidefx.js';
+import { makeCarView } from '../src/render/carfx.js';
+import { carState } from '../src/engine/cars.js';
+import { TICK } from '../src/engine/defs.js';
 import { BELT } from '../src/engine/defs.js';
 
 const tex = new Proxy({}, { get: (o, k) => (o[k] ??= new THREE.Texture()) });
@@ -45,4 +48,17 @@ test('the tide view is hidden while the water is below the map, then sits exactl
   const tv = makeTideView(map, tex); assert.equal(tv.sea.visible, false); let t = 0; const to = (tt) => { while (t < tt) { t += 1 / 60; tv.update({ map, time: t }, 1 / 60, t); } };
   to(5); assert.equal(tv.sea.visible, false, 'the water is out'); to(15); assert.equal(tv.sea.visible, true); assert.ok(Math.abs(tv.sea.position.y - (-2 + 3 * 0.5)) < 0.02, 'half way up: ' + tv.sea.position.y); to(25); assert.ok(Math.abs(tv.sea.position.y - 1) < 1e-6, 'held at a metre');
   to(40); assert.ok(Math.abs(tv.sea.position.y - 2.2) < 0.02); to(42); assert.ok(tv.sea.position.y < 2.2 && tv.sea.position.y > 1, 'and then the tide goes out again: ' + tv.sea.position.y); assert.ok(tv.mat.opacity > 0.4 && tv.mat.opacity < 0.8);
+});
+
+const carMap = () => { const W3 = 32, H3 = 16, grid = []; for (let z = 0; z < H3; z++) { let r = ''; for (let x = 0; x < W3; x++) r += x === 0 || z === 0 || x === W3 - 1 || z === H3 - 1 ? '#' : x >= 10 && x <= 21 ? '_' : ':'; grid.push(r); }
+  return parseMap({ format: 1, id: 'C1', version: 1, name: 'Cars', cellSize: 2, grid, doors: [], secrets: [], cars: [{ id: 'car', size: [3, 3], path: [[11.5, 7.5], [20.5, 7.5]], speed: 4, dwell: 8 }], entities: [{ type: 'player', at: [4, 7], facing: 'east' }, { type: 'exit', at: [28, 7] }] }); };
+
+test('a car view builds a deck, a rim and four posts, puts the deck where the clock says at the instant the player is drawn, and colours the rim by what the car is about to do', () => {
+  const map = carMap(), cv = makeCarView(map), v = cv.views[0]; assert.equal(cv.views.length, 1); let meshes = 0; v.group.traverse((o) => { if (o.isMesh) meshes++; }); assert.ok(meshes >= 12, 'deck, tread, undercarriage, four rim bars, four posts, four lamps: ' + meshes);
+  const w = (t) => ({ map, time: t });
+  cv.update(w(3), 1, 3); assert.ok(Math.abs(v.group.position.x - carState(map.cars[0], 3).x) < 1e-9, 'at rest it sits at the stop'); const dim = v.rim.color.r;
+  cv.update(w(7.5), 1, 0.01); const warnA = v.rim.color.clone(); cv.update(w(7.5), 1, 0.2); assert.notDeepEqual(warnA.toArray(), v.rim.color.toArray(), 'the rim blinks in the last two seconds of the dwell'); assert.ok(['ffa23a', 'fff2d0'].includes(v.rim.color.getHexString()), 'amber or white: ' + v.rim.color.getHexString());
+  cv.update(w(11), 1, 1); assert.equal(v.rim.color.getHexString(), '7ff0dc', 'pale teal while it runs'); assert.ok(v.group.position.x > 24 && v.group.position.x < 40);
+  cv.update(w(11), 0, 1); const early = v.group.position.x; cv.update(w(11), 1, 1); assert.ok(v.group.position.x > early, 'alpha 0 is a tick behind alpha 1: the deck is drawn at the instant the interpolated player is'); assert.ok(Math.abs(v.group.position.x - early - 4 * TICK) < 0.08);
+  for (let t = 0; t < 60; t += 1 / 30) cv.update(w(t), (t * 7) % 1, t); assert.ok(Number.isFinite(v.group.position.x + v.group.position.y + v.group.position.z)); assert.ok(dim <= 0.8);
 });

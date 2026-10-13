@@ -1,6 +1,8 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, LOADS, BELT, TIDE, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import { TICK, LOWG, LOADS, BELT, TIDE, CARS, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+
+import { makeCar, carState, boardingCells } from './cars.js';
 
 export const MAP_FORMAT = 1;
 // One char per cell. Several chars can share a kind: they differ only in how they are drawn (skins).
@@ -36,7 +38,8 @@ export class MapData {
     this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
     this.hasCurrent = !!this.fxRows && this.fxRows.some((r) => /[<>^v]/.test(r));          // PT-037 (E3): a flowing floor somewhere in the map
     this.hasVoid = src.grid.some((r) => r.includes('_'));                                  // PT-032: a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
-    this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
+    this.cars = (src.cars || []).map((c) => makeCar(c, this.cell));                      // PT-045 (E8b): floors that ride a loop on a clock (cars.js)
+    this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid && !this.cars.length;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
     this.vents = (src.vents || []).map((v) => ({ at: v.at, to: v.to, time: v.time, g: v.g ?? null }));      // PT-032: launch plates (LOWG in defs.js)
     this.ventCells = new Set(this.vents.map((v) => v.at.join(',')));
     this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low', cycle: s.cycle ? { period: s.cycle.period, hold: s.cycle.hold, phase: s.cycle.phase ?? 0 } : null }));      // PT-029: a `cycle` sector is a TIMING PLATFORM (platforms.js)
@@ -304,6 +307,35 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
       if (T.loop != null && !(T.loop > L[L.length - 1][0])) err('tide: loop must be longer than the last point');
       if (T.loop != null && L[L.length - 1][1] !== L[0][1]) err('tide: a looping tide must end at the level it starts at (the loop would jump)');
       for (let i = 1; i < L.length; i++) if (Math.abs(L[i][1] - L[i - 1][1]) / (L[i][0] - L[i - 1][0]) > 0.5) err(`tide: the water may not rise or fall faster than 0.5 m a second (points ${i - 1} and ${i})`);
+    }
+  }
+  { const cellM = src.cellSize ?? CELL, carIds = new Set();                              // PT-045 (E8b): cars
+    for (const [i, c] of (src.cars || []).entries()) {
+      const tag = `car #${i}${c?.id ? ' (' + c.id + ')' : ''}`, num = (x) => Number.isFinite(x); let carErr = 0; const cerr = (m) => { carErr++; err(m); };
+      if (typeof c?.id !== 'string' || !c.id) cerr(`${tag}: needs an id`); else { if (carIds.has(c.id)) cerr(`${tag}: duplicate id`); carIds.add(c.id); }
+      if (!Array.isArray(c?.size) || c.size.length !== 2 || !c.size.every((q) => num(q) && q >= CARS.minSize && q <= CARS.maxSize)) { cerr(`${tag}: size must be [w, d] cells, each ${CARS.minSize} to ${CARS.maxSize}`); continue; }
+      if (!Array.isArray(c.path) || c.path.length < 2 || c.path.length > 24 || !c.path.every((q) => Array.isArray(q) && (q.length === 2 || q.length === 3) && q.every(num))) { cerr(`${tag}: path must be 2 to 24 points [x, z] or [x, z, y] (cell coordinates of the centre, y in metres)`); continue; }
+      if (c.y != null && !num(c.y)) cerr(`${tag}: y must be a number (metres)`);
+      if (c.path.some((q) => (q[2] ?? c.y ?? 0) < -2 || (q[2] ?? c.y ?? 0) > 40)) cerr(`${tag}: a deck height must be between -2 and 40 m`);
+      if (c.path.some((q) => q[0] - c.size[0] / 2 < 0.5 || q[1] - c.size[1] / 2 < 0.5 || q[0] + c.size[0] / 2 > w - 0.5 || q[1] + c.size[1] / 2 > h - 0.5)) cerr(`${tag}: the deck leaves the map at a path point`);
+      if (c.stops != null && (!Array.isArray(c.stops) || c.stops.length < 2 || !c.stops.every((q) => Number.isInteger(q) && q >= 0 && q < c.path.length) || new Set(c.stops).size !== c.stops.length)) cerr(`${tag}: stops must be two or more different path indices`);
+      if (c.speed != null && !(c.speed >= 1 && c.speed <= 10)) cerr(`${tag}: speed must be 1 to 10 m/s`);
+      if (c.dwell != null && !(c.dwell >= CARS.minDwell && c.dwell <= 60)) cerr(`${tag}: dwell must be ${CARS.minDwell} to 60 s (time to step on)`);
+      if (c.phase != null && !num(c.phase)) cerr(`${tag}: phase must be a number`);
+      if (carErr) continue;
+      const car = makeCar(c, cellM); if (!(car.cycle > 0) || car.legs.some((l) => !(l.len > 0.5))) { cerr(`${tag}: two stops are on the same spot (every run must be at least half a metre long)`); continue; }
+      const mapLike = { kind: (x, z) => TILES[tile(x, z)], floor: floorOf };
+      for (const v of car.stops) if (!boardingCells(mapLike, car, v, STEP).length) cerr(`${tag}: nothing to board from at the stop on vertex ${v}: no floor within a step (${STEP} m) of the deck beside it`);
+      let bad = null;                                                                  // the deck sweeps the whole cycle: no wall in its way, and head room under a roof
+      for (let t = 0; t < car.cycle && !bad; t += 0.25) {
+        const st = carState(car, t), hw = c.size[0] * cellM / 2, hd = c.size[1] * cellM / 2;
+        for (const [dx, dz] of [[0, 0], [-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
+          const cx = Math.floor((st.x + dx * hw * 0.98) / cellM), cz = Math.floor((st.z + dz * hd * 0.98) / cellM), k = TILES[tile(cx, cz)];
+          if (k === 'wall' || k === 'door' || k === 'secret' || k === 'water') { bad = `drives into a ${k} at ${cx},${cz} (at ${t.toFixed(1)} s into its cycle)`; break; }
+          if (interior(tile(cx, cz)) && ceilOf(cx, cz) - st.y < MIN_HEADROOM) { bad = `has no head room under the roof at ${cx},${cz} (at ${t.toFixed(1)} s)`; break; }
+        }
+      }
+      if (bad) cerr(`${tag}: the deck ${bad}`);
     }
   }
   const beltRects = [];                                                                // PT-045 (E8a): clocked conveyors

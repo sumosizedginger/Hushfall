@@ -3,6 +3,7 @@
 // and a moving floor are optimistic exactly as reach.js is (a lever, a key or a lift can be worked, so a sector counts at either of its heights). A trap is a cell of the set reachable from the spawn that is NOT in the set of
 // cells that reach an exit. Used by `tools/dev/trap-cells.mjs`, by the map lint (and so by verify-map) and by tests/traps.test.js.
 import { STEP, PROPS } from './defs.js';
+import { carLinks } from './cars.js';
 
 /** `secrets: false` closes every secret panel and closet (the cells reachable from the spawn are then the map's PUBLIC part; `result.reach` is the set, `result.key(x, z)` its index). */
 /** `props`: 'static' also treats the cell of every static prop that blocks its cell (a crate, a stall, a pillar) as a wall; 'all' adds the movable props (a player without the tuning-fork cannot move them) */
@@ -25,6 +26,7 @@ export function findTraps(map, { props = null, secrets = true } = {}) {
     }
   }
   for (const v of map.vents) if (passable(v.at[0], v.at[1]) && passable(v.to[0], v.to[1])) add(key(v.at[0], v.at[1]), key(v.to[0], v.to[1]));      // PT-032: a vent plate throws the player to its landing (the void sets a miss back: it traps nobody)
+  for (const g of map.cars.length ? carLinks(map, STEP) : []) for (const a of g) for (const b of g) if (a !== b) { const rep = b.find(([x, z]) => passable(x, z)); if (rep) for (const [ax, az] of a) if (passable(ax, az)) add(key(ax, az), key(rep[0], rep[1])); }      // PT-045: a car carries a rider from any stop to any other (the loop comes round)
   const bfs = (starts, edges) => { const seen = new Set(starts), q = [...starts]; while (q.length) { const c = q.pop(); for (const n of edges.get(c) ?? []) if (!seen.has(n)) { seen.add(n); q.push(n); } } return seen; };
   const start = key(Math.floor(map.spawn.x / map.cell), Math.floor(map.spawn.z / map.cell)), reach = bfs([start], out);
   const toExit = bfs(map.exits.map((e) => key(Math.floor(e.at[0]), Math.floor(e.at[1]))), inn);

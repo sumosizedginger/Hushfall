@@ -152,6 +152,9 @@ export const BELT = { speed: 3.0, stop: 0.8, ease: 0.6, minPeriod: 6 };
 /** THE TIDE (PT-045, drop B, E12; src/engine/tide.js): a map's `tide: { levels: [[t, h], ...], loop? }` is the water level of the WHOLE map in metres, a piecewise-linear function of the sim clock; a walkable cell whose floor is more than `wet` below it takes the wading effect
  *  (FX 'w': slow, and the arc lamp conducts) and the view draws a sea at that height. It never drowns anyone: it takes standing room and speed, and it is the only thing in the game that changes which floors are cheap to stand on. */
 export const TIDE = { wet: 0.05, minH: -2, maxH: 40, maxPoints: 32 };
+/** CARS (PT-045, drop B, E8b; src/engine/cars.js): a rectangular floor that rides a closed polyline over the void on a pure clock, dwelling at its stops. `speed` is the PEAK speed of a run (m/s: a run eases in and out, its average is two thirds of it), `dwell` how long it waits at a stop
+ *  (never under `minDwell`: time to step on), `warn` how long before it leaves the rim lights blink (the tell), `board` how far a rider's feet may be from the deck and still be carried, `size` limits in cells. A car carries the player and nobody else (a creature never boards). */
+export const CARS = { speed: 4, dwell: 8, minDwell: 3, warn: 2, board: 0.35, minSize: 1, maxSize: 12 };
 /**
  * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
  * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.
