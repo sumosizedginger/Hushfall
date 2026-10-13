@@ -22,7 +22,7 @@ const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Ob
 // the height alphabet (PT-045, E13): `.` 0, `0-9` 0-9, `a-z` 10-35 (the original 17.5 m), `A-Z` 36-61 (31 m: the Root Bell Descent's shaft); a unit is HEIGHT_UNIT metres. Old maps use no capital, so they parse as they always did.
 export const HEIGHT_MAX_UNITS = 61;
 export const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : /[A-Z]/.test(c) ? c.charCodeAt(0) - 29 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff'];      // PT-043: a sound cue, a rumble, and the end of the score
+export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff', 'lamp'];      // PT-043: a sound cue, a rumble, and the end of the score
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -60,6 +60,7 @@ export class MapData {
     this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
     this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
     this.echo = src.atmosphere?.echo ?? 1;                                                      // PT-039 (Act B): a place where every noise carries `echo` times as far (the Echo Markets' well); 1 = the ordinary world
+    this.noiseTell = src.noiseTell === true;                                                    // PT-045 (E9): the HUD and the automap say how far a shot from the weapon in hand carries (noisetell.js)
     this.dev = !!src.dev;                                                                      // PT-043: a dev map that is NOT the Range (mortal, real rules): its exit goes back to the title without scoring
     this.lookZones = src.lookZones ?? null;                                                    // PT-043 (dev maps only): rooms lit by their own look: [{ rect, look, sky?, fog?, fogDensity? }] (view.js applyZone)
     this.devEnding = src.devEnding ?? null;                                                    // PT-043 (dev maps only): an exit with this `dest` shows the draft epilogue of that campaign instead of leaving at once
@@ -430,6 +431,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
     else if (k === 'sound') { if (typeof v !== 'string' || !/^[a-z0-9_]{2,32}$/.test(v)) err(`${tag}: sound must be the name of a sound`); }                    // PT-043: a toll from a trigger (the name is checked against the synth by a test)
     else if (k === 'tremor') { if (!(v > 0 && v <= 3)) err(`${tag}: tremor must be in (0, 3]`); }                                                       // PT-043: the view shakes and a low sound runs
+    else if (k === 'lamp') { if (v !== 'plain' && v !== 'own') err(`${tag}: lamp must be 'plain' or 'own'`); else if (!src.range) err(`${tag}: the lamp action is for the dev range only (the map must say range: true)`); }                                 // PT-045: switch the hand lantern between the plain one and Ines's own
     else if (k === 'silence') { if (v !== true) err(`${tag}: silence must be true`); }
     else if (k === 'beatOff') { if (v !== true) err(`${tag}: beatOff must be true`); }                                                                  // PT-043: the Hive's beat stops (hive.js zoneBeat reads w.beatOff)                                                                 // PT-043: from then on the score and the ambience are cut
     else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
@@ -451,6 +453,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
+  if (src.noiseTell != null && typeof src.noiseTell !== 'boolean') err('noiseTell must be true or false');
   if (src.atmosphere?.dark != null && typeof src.atmosphere.dark !== 'boolean') err('atmosphere.dark must be true or false');
   if (src.atmosphere?.echo != null && !(src.atmosphere.echo >= 1 && src.atmosphere.echo <= 4)) err('atmosphere.echo must be a number from 1 to 4');
   if (src.chimes != null) {

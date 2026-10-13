@@ -1,6 +1,8 @@
 // Automap model: what the player has actually seen, as plain data. The sim records exploration (deterministic, saved);
 // this module only turns it into a drawable description, so it is testable without a canvas.
 import { cellSolid } from './world.js';
+import { KEYS } from './defs.js';
+import { noiseTell } from './noisetell.js';
 
 export const EXPLORE_RADIUS_CELLS = 5;
 export const EXPLORE_EVERY_TICKS = 6;
@@ -42,8 +44,10 @@ export function automapModel(w) {
     const door = w.doors.find((d) => d.cx === cx && d.cz === cz);
     if (kind === 'secret') kind = door && door.open > 0 ? 'secret-revealed' : 'wall';
     cells.push({ cx, cz, kind });
-    if (kind === 'door') doors.push({ cx, cz, key: door?.key ?? null, open: door?.open ?? 0, axis: m.doorAxis(cx, cz) });
+    if (kind === 'door') doors.push({ cx, cz, key: door?.key ?? null, keyColor: door?.key ? KEYS[door.key]?.color ?? null : null, open: door?.open ?? 0, axis: m.doorAxis(cx, cz) });
   }
-  for (const e of m.exits) if (seen(Math.floor(e.x / m.cell), Math.floor(e.z / m.cell))) exits.push({ x: e.x, z: e.z });
-  return { w: m.w, h: m.h, cell: m.cell, name: m.name, cells, doors, exits, player: { x: w.player.x, z: w.player.z, yaw: w.player.yaw }, kills: w.stats.kills, secrets: w.stats.secrets, totals: w.stats.total, exploredCount: cells.length };
+  for (const e of m.exits) if (seen(Math.floor(e.x / m.cell), Math.floor(e.z / m.cell))) exits.push({ x: e.x, z: e.z, locked: !!w.exitLocked?.[e.id] });
+  const switches = [];                                                                                  // PT-045 (law 1 of design/ACTC.md, the Ossuary winch): a lever the player has SEEN stays on the map, red until it is thrown, green after
+  for (const s of m.switches) if (seen(Math.floor(s.at[0]), Math.floor(s.at[1]))) switches.push({ x: s.x, z: s.z, wall: s.wallDir, used: !!w.switchState?.[s.id]?.used });
+  return { w: m.w, h: m.h, cell: m.cell, name: m.name, cells, doors, exits, switches, noise: m.noiseTell ? { x: w.player.x, z: w.player.z, r: noiseTell(w).radius } : null, player: { x: w.player.x, z: w.player.z, yaw: w.player.yaw }, kills: w.stats.kills, secrets: w.stats.secrets, totals: w.stats.total, exploredCount: cells.length };
 }

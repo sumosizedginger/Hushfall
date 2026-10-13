@@ -1,6 +1,7 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
 import { gravTarget } from '../engine/gravity.js';
+import { noiseHud } from '../engine/noisetell.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
@@ -163,6 +164,8 @@ export class UI {
     { const gt = WEAPONS[p.weapon]?.grav ? gravTarget(w) : null; $('cross').classList.toggle('grab', gt === 'prop' || gt === 'creature'); $('cross').classList.toggle('held', gt === 'held'); }       // PT-022: the tuning-fork's crosshair: wide when it can take something, solid when it holds something
     { const lampEl = $('hud-lamp'), L = p.lamp; lampEl.classList.toggle('hidden', !L);                               // PT-038 (E5): the oil gauge, shown only where the map has a lantern; amber while it burns, red when nearly dry
       if (L) { $('hud-oil').textContent = L.eternal ? '∞' : Math.ceil(L.oil); $('hud-oil-label').textContent = L.on ? 'OIL · LIT' : 'OIL · L'; lampEl.classList.toggle('lit', !!L.on); lampEl.classList.toggle('low', !L.eternal && L.oil < 10); } }
+    { const nt = $('hud-noise'), on = !!w.map.noiseTell; nt.classList.toggle('hidden', !on);                          // PT-045 (E9): the noise tell: QUIET or LOUD for the weapon in hand, and how far a shot carries (only a map that says noiseTell)
+      if (on) { const n = noiseHud(w); $('hud-noise-v').textContent = n.value; $('hud-noise-label').textContent = n.label; nt.classList.toggle('loud', n.loud); } }
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
     $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], melee = wd.kind === 'melee', noAmmo = melee || wd.kind === 'tool', have = noAmmo ? 0 : p.ammo[wd.ammo] ?? 0, stalled = !!wd.saw && (p.saw?.stall ?? 0) > 0;
     $('hud-ammo').textContent = wd.saw ? (stalled ? 'STALL' : Math.round((p.saw?.heat ?? 0) * 100) + '%') : noAmmo ? '—' : have; $('hud-ammo-label').textContent = wd.saw ? 'ENGINE HEAT' : noAmmo ? 'NO AMMO NEEDED' : AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', (!noAmmo && have === 0) || stalled || (!!wd.saw && (p.saw?.heat ?? 0) > 0.75));

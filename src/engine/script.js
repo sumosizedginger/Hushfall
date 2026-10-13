@@ -40,6 +40,7 @@ export function runAction(w, a) {
   else if (k === 'sound') emit(w, 'cue', { name: v });                                                // PT-043: a toll, a creak, a chord from a trigger (events.js plays the synth recipe of that name)
   else if (k === 'tremor') { emit(w, 'shake', { amount: v }); emit(w, 'tremor', { amount: v }); }     // PT-043: the view shakes and a low sound runs under it
   else if (k === 'beatOff') { w.beatOff = true; emit(w, 'beat_off', {}); }                                  // PT-043: the Hive Cantor is dead: the beat stops, the lights stop swelling (lazy state)
+  else if (k === 'lamp') { const L = w.player.lamp; if (L) L.eternal = v === 'own'; }                                  // PT-045 (dev range only): the plain hand lantern, or Ines's own (eternal) lamp, so the lamp yard can feel both holds (mapformat refuses it outside a range map)
   else if (k === 'silence') { w.silenced = true; emit(w, 'silence', {}); }                              // PT-043: the Root Bell hangs still: the score and the ambience are cut from now on (lazy state: only a map that says so has it)
 }
 export function runActions(w, list) { for (const a of list || []) runAction(w, a); }
