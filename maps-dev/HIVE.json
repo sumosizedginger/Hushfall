@@ -1520,6 +1520,41 @@
    "variant": "crystal"
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [24, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [29, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [34, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [39, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [44, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [49, 110]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [54, 110]
+  },
+  {
    "type": "exit",
    "dest": "next",
    "at": [85, 115]

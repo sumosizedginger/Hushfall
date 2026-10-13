@@ -67,7 +67,7 @@ if (['hub', 'bestiary', 'looks', 'scenery', 'lineup', 'variants'].some((k) => wa
     const xs = hive.entities.filter((e) => e.type === 'enemy' && e.at[1] === 107 && e.hold === 'inert').map((e) => e.at[0]);
     for (let k = 0; k < xs.length; k += 6) { const x = xs[Math.min(xs.length - 1, k + 2)]; await T(`t.setup_teleport(${(x + 0.5) * CELL}, ${111 * CELL}, 0); t.setup_player({ pitch: 0.0, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('lineup-' + String(k / 6 + 1).padStart(2, '0')); }
   }
-  if (want.has('variants')) { for (const [k, x] of [[1, 28], [2, 38]]) { await T(`t.setup_teleport(${(x + 0.5) * CELL}, ${(108 + 0.5) * CELL}, 3.14159); t.setup_player({ pitch: -0.02, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('variants-' + k); } }
+  if (want.has('variants')) { for (const [k, x] of [[1, 26.5], [2, 34.5], [3, 42]]) { await T(`t.setup_teleport(${(x + 0.5) * CELL}, ${(109.2 + 0.5) * CELL}, 3.14159); t.setup_player({ pitch: -0.02, hp: 100000 })`); await T('t.tick(2)'); await frames(6); await shot('variants-' + k); } }
 }
 const probe = () => T('t.hiveProbe()');
 const killAll = async (kind) => { for (let i = 0; i < 80; i++) { const hp = await T(`t.setup_hurtEnemy('${kind}', 1e7)`); if (hp == null) break; } };
@@ -94,6 +94,9 @@ if (want.has('bell')) {
   await T("t.press('lamp')"); await T('t.tick(3)'); await T("t.release('lamp')"); await T('t.tick(10)'); await frames(8); await shot('bell-2-start-hall-lit');
   await T(`t.setup_teleport(${(CX - 14.5) * CELL}, ${(CZ + 0.5) * CELL}, ${-Math.PI / 2}); t.setup_player({ pitch: -0.1, hp: 100000 })`); await T('t.tick(30)'); await frames(8); await shot('bell-3-the-rim-lit'); R.probes.bell.awake = await probe();
   const samples = []; for (let k = 0; k < 14; k++) { await T('t.tick(30)'); await frames(1); samples.push(await probe()); if (k % 4 === 1) await shot('bell-4-swing-' + k, 50); } R.probes.bell.swing = samples.map((p) => ({ t: p.tick, x: +p.bell.x.toFixed(2), lift: +p.bell.lift.toFixed(2), phi: +(p.bell.phi ?? 0).toFixed(2), rootX: +p.bell.rootX.toFixed(2), rigY: +p.bell.rigY.toFixed(2), pulses: p.pulses, hp: p.hp }));
+  for (const [k, ticks] of [[0, 1], [1, 40], [2, 40]]) { await look(CX, CZ, 19, Math.PI / 2, 0.12, { wait: 3, ticks }); await shot('bell-4b-from-the-tier-' + k, 50); }                    // from the top tier across the bell
+  await look(CX, CZ, 8, Math.PI, 0.3, { wait: 3, ticks: 20 }); await shot('bell-4c-from-the-floor', 50); await look(CX, CZ, 7, Math.PI, 0.45, { wait: 3, ticks: 75 }); await shot('bell-4d-from-the-floor-2', 50);
+  await look(CX - 14.5, CZ, 0.1, -Math.PI / 2, -0.1, { wait: 2, ticks: 2 });
   for (let i = 0; i < 4; i++) await T("t.setup_hurtEnemy('rootanchor', 1e7)");
   await T('t.tick(20)'); await frames(3); await shot('bell-5-falling', 50); await T('t.tick(90)'); await frames(4); await shot('bell-6-on-the-ground', 100); R.probes.bell.ground = await probe();
   let seenSpike = false; for (let i = 0; i < 30 && !seenSpike; i++) { await T('t.tick(10)'); await frames(1); const p = await probe(); if (p.spikes > 0) { seenSpike = true; await frames(2); await shot('bell-7-spikes', 50); R.probes.bell.spikes = p; } }

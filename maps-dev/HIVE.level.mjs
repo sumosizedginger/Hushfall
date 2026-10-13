@@ -111,6 +111,7 @@ say('line', 17, 110, 6, HULL, 'THE LINEUP: every creature in the game at true sc
 // the variants: tints only
 const VAR = [['tollbearer', null], ['tollbearer', 'drowned'], ['tollbearer', 'hived'], ['tollbearer', 'woven'], ['tollbearer', 'crystal'], ['gaunt', null], ['gaunt', 'hived'], ['gaunt', 'woven'], ['gaunt', 'crystal']];
 VAR.forEach(([kind, variant], i) => enemy(kind, 24 + i * 3.5, 112, N, { hold: 'inert', hp: 5000, ...(variant ? { variant } : {}) }));
+for (let x = 24; x <= 54; x += 5) put({ type: 'prop', kind: 'lamp', at: [x, 110] });                                                                                              // light on the variants: a tint is hard to judge in the dark
 say('var', 22, 109, 5, HULL, 'THE VARIANTS (the near row): plain, Drowned, Hived, Woven, Crystal. A tint on the same rig and nothing else. Is each a different creature, or a tint too far?');
 // ---- the hub, the start, the exit ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 L.put(85, 70, '@');
