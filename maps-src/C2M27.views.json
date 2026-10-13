@@ -1,0 +1,74 @@
+[
+{
+"name": "01-the-west-end",
+"x": 8.5,
+"z": 8.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-rift",
+"x": 20.5,
+"z": 8.5,
+"yaw": -0.3,
+"pitch": 0.35,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-first-bridge",
+"x": 39.5,
+"z": 10.5,
+"yaw": 0.0,
+"pitch": 0.15,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-south-road",
+"x": 52.5,
+"z": 32.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-second-bridge",
+"x": 79.5,
+"z": 31.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-far-lip",
+"x": 100.5,
+"z": 9.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-lever",
+"x": 113.5,
+"z": 10.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-exit",
+"x": 120.5,
+"z": 8.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

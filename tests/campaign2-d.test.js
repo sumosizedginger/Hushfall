@@ -10,7 +10,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 
-const BUILT = ['C2M25', 'C2M26'];
+const BUILT = ['C2M25', 'C2M26', 'C2M27'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -71,4 +71,16 @@ test('C2M26, Silent Roots: dark and silent, the noise tell on, three chambers of
   // the refectory is sunk two metres below the forest
   assert.ok(map.floor(50, 15) < map.floor(50, 45) - 1.9, 'down a stair to the refectory');
   const sleeping = s.entities.filter((e) => e.type === 'enemy').length; assert.ok(sleeping >= 30, 'sleepers: ' + sleeping);
+});
+
+test('C2M27, Fault Line: a front of falling stones from the west end that a player who runs stays ahead of and one who stays is caught by, bridges that sink once crossed with a stair out of the pit, and a lever on the far lip that unlocks the exit', () => {
+  const s = SRC.C2M27, map = shippedMap('C2M27'); assert.ok(s.loads.length >= 30 && s.loads.every((l) => l.start >= 45 && l.count === 3), 'strips that start at 45 s and fall three times');
+  const starts = [...new Set(s.loads.map((l) => l.start))].sort((a, b) => a - b); assert.ok(starts.every((v, i) => i === 0 || v - starts[i - 1] === 12), 'a strip every twelve seconds, six cells (a metre a second)');
+  assert.deepEqual(s.sectors.map((q) => q.id), ['bridge1', 'bridge2', 'bridge3']); for (const q of s.sectors) { assert.equal(q.high - q.low, 1.5, 'a metre and a half'); }
+  // a player who does not run is caught by the front: standing at the west end for two minutes is hurt by the stones
+  const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...o });
+  const w = createWorld(map, { seed: 1 }); w.enemies.length = 0; w.player.hp = 1e6; let hits = 0; for (let i = 0; i < 60 * 120; i++) { step(w, idle()); for (const e of drainEvents(w)) if (e.type === 'load_hit') hits++; } assert.ok(hits >= 1, 'the front reached the west end: ' + hits + ' hits');
+  // the bot, running, is never hit by one
+  const r = runRoute(map, route('C2M27'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.equal(r.events.filter((e) => e.type === 'load_hit').length, 0, 'ahead of the front'); assert.ok(r.events.filter((e) => e.type === 'sector_start').length >= 2, 'both bridges sank');
+  const ex = s.entities.find((e) => e.type === 'exit'); assert.equal(ex.locked, true); assert.ok(s.entities.find((e) => e.type === 'switch').do.some((a) => a.exit?.set === 'unlock'));
 });
