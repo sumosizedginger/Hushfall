@@ -3,7 +3,7 @@
 // The INSIDE OF A BELL: a round chamber 44 m across (11 cells of radius) under a 17 m dome, dark but for the hand lantern (L), the copper of the roots and the boss's own glow. Three tiers of seating round the floor at +1, +2, +3 m, eight pillars of root on the tiers
 // (cover, and the foot of a pillar is a step: a ring passes over anyone a metre above it). Hung from the dome's centre, the CLAPPER (the Root Bell): a bronze cage round a copper heart, a PENDULUM (period 6 s, the line turns at every pass of the middle), a ring struck
 // across the floor at the end of a swing, a crush under the middle. FOUR ROOT ANCHORS (nodes, on the tier below the pillars) pin its chain: while one stands it takes 30% of a hit; each one cut lowers it and widens the swing. The last cut and it FALLS and becomes a ground boss:
-// a charge (a crash into stone stuns it), rooted spikes where you stand, the guard's second wave and a pair of Resonants. Under 30%: THE LAST NOTE (the lights fall, the note rolls the floor every three seconds over the tiers, the heart cracks open). At zero it does not break:
+// a charge (a crash into stone stuns it), rooted spikes where you stand, the guard's second wave (two Zealots). Under 30%: THE LAST NOTE (the lights fall, the note rolls the floor every three seconds over the tiers, the heart cracks open). At zero it does not break:
 // it hangs, and every sound in the game cuts out (the score, the ambience, the guns, your steps) for a held second, then one footstep. The stair north opens. A lit lantern cuts a ring to 0.6 (`lampHolds`). Every number a first guess, to be felt by the owner.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
@@ -15,7 +15,8 @@ const enemy = (kind, x, z, facing, extra = {}) => put({ type: 'enemy', kind, at:
 const FL = 'Ν', WL = 'ν';
 // the bell: a disc of radius 11: floor r < 5, tier 1 (+1 m) 5..7, tier 2 (+2 m) 7..9, tier 3 (+3 m) 9..11
 L.disc(CX, CZ, 11, 11, FL, WL);
-const hR = (r) => (r < 5 ? 0 : r < 7 ? 2 : r < 9 ? 4 : 6);
+// PT-043 report 1: "no way to step back up if you go down into the bell's hole": the tiers were 1 m risers and a player climbs 0.5 m at most; now a half-step ring at every radius, a stair all the way round
+const hR = (r) => (r < 5 ? 0 : r < 6 ? 1 : r < 7 ? 2 : r < 8 ? 3 : r < 9 ? 4 : r < 10 ? 5 : 6);
 for (let z = CZ - 12; z <= CZ + 12; z++) for (let x = CX - 12; x <= CX + 12; x++) { const r = Math.hypot(x - CX, z - CZ); if (r <= 11 && L.get(x, z) === FL) L.height([x, z, x, z], hR(r)); }
 L.ceiling([CX - 12, CZ - 12, CX + 12, CZ + 12], 17);
 // the way in: the start hall's corridor in the west rim (at the top tier), and the stair north of the rim (locked until the clapper hangs still)
@@ -27,8 +28,8 @@ const PIL = []; for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2 + 
 for (const [x, z, a] of PIL.filter((_, i) => i % 2 === 0)) enemy('rootanchor', Math.round(CX + Math.cos(a) * 6), Math.round(CZ + Math.sin(a) * 6), a + Math.PI, { group: 'anchors' });
 // the clapper over the middle
 enemy('rootbell', CX, CZ, EAST, { group: 'rootbell' });
-// the guard: wave one (asleep on tier 3, woken with the bell): three Zealots, four Choristers, an Acolyte
-const G1 = [['zealot', 0.5], ['zealot', 2.2], ['zealot', 3.9], ['chorister', 1.2], ['chorister', 2.9], ['chorister', 4.6], ['chorister', 5.6], ['acolyte', 0.0]];
+// the guard: wave one (asleep on tier 3, woken with the bell): two Zealots and two Choristers (PT-043 report 1: eight, with an Acolyte, "overwhelmed" the owner on Easy: the fight is about the clapper)
+const G1 = [['zealot', 1.0], ['zealot', 3.9], ['chorister', 2.4], ['chorister', 5.4]];
 for (const [kind, a] of G1) enemy(kind, Math.round(CX + Math.cos(a) * 10), Math.round(CZ + Math.sin(a) * 10), Math.atan2(CX - (CX + Math.cos(a) * 10), CZ - (CZ + Math.sin(a) * 10)), { group: 'guard1' });
 // light: the lantern in the start hall, a few lamps on the top tier (the arena is dark on purpose), oil on the road
 for (const [x, z] of [[14, CZ - 6], [14, CZ + 6], [24, CZ - 6], [24, CZ + 6], [CX - 14, CZ + 2], [CX - 14, CZ - 2]]) put({ type: 'prop', kind: 'lantern', at: [x, z] });
@@ -69,7 +70,7 @@ export default {
   ],
   triggers: [
     { id: 'in', when: 'enter', at: [CX - 14, CZ], radius: 4, do: [{ wake: 'rootbell' }, { wake: 'guard1' }, { message: 'guard' }, { objective: 'The clapper swings: shoot the four root anchors from cover' }] },
-    { id: 'anchors', when: 'dead:anchors', do: [spawn('zealot', CX - 7, CZ - 7, 0, 'guard2'), spawn('zealot', CX + 7, CZ - 7, 0, 'guard2'), spawn('zealot', CX - 7, CZ + 7, N, 'guard2'), spawn('zealot', CX + 7, CZ + 7, N, 'guard2'), spawn('resonant', CX, CZ - 10, 0, 'guard2'), spawn('resonant', CX, CZ + 10, N, 'guard2'), { message: 'drop' }, { tremor: 1.6 }, { objective: 'The chain is gone: it falls. Bait its charge into stone, then unload into it' }] },
+    { id: 'anchors', when: 'dead:anchors', do: [spawn('zealot', CX - 7, CZ - 7, 0, 'guard2'), spawn('zealot', CX + 7, CZ + 7, N, 'guard2'), { message: 'drop' }, { tremor: 1.6 }, { objective: 'The chain is gone: it falls. Bait its charge into stone, then unload into it' }] },
     { id: 'last', when: 'hp:rootbell<0.3', do: [{ lights: 0.25 }, { tremor: 1.2 }, { message: 'last' }, { objective: 'The Last Note: cover for the ring, then the whole arsenal into the heart' }] },
     { id: 'down', when: 'dead:rootbell', do: [{ silence: true }, { exit: { set: 'unlock' } }, { lights: 0.6 }, { message: 'hush' }, { objective: 'It hangs still. The stair is lit, north of the bell' }] },
   ],

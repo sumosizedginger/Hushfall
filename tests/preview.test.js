@@ -56,10 +56,10 @@ test('THE HIVE: the Resonant pens wake on the lever; a lone Resonant stays quiet
   const ev = run(w, 60 * 6).filter((e) => e.type === 'resonant_ring'); assert.ok(ev.length >= 3, 'the pens ring: ' + ev.length); assert.ok(ev.every((e) => e.n >= 1), 'only with company');
 });
 
-test('THE HIVE CANTOR\'S ARENA: 36 singers on the beat, a conductor over the podium, six pillars; the beat floors bloom inner, middle, outer on one bar', () => {
+test('THE HIVE CANTOR\'S ARENA: 16 singers on the beat, a conductor over the podium, six pillars; the beat floors bloom inner, middle, outer on one bar', () => {
   const { src, w } = world('HIVEBOSS'); const en = src.entities.filter((e) => e.type === 'enemy');
-  assert.equal(en.filter((e) => e.group === 'choir').length, 36); assert.ok(en.filter((e) => e.group === 'choir').every((e) => e.onBeat === true));
-  const c = (k) => en.filter((e) => e.group === 'choir' && e.kind === k).length; assert.equal(c('tollbearer'), 18); assert.equal(c('chorister'), 10); assert.equal(c('zealot'), 8);
+  assert.equal(en.filter((e) => e.group === 'choir').length, 16); assert.ok(en.filter((e) => e.group === 'choir').every((e) => e.onBeat === true));
+  const c = (k) => en.filter((e) => e.group === 'choir' && e.kind === k).length; assert.equal(c('tollbearer'), 8); assert.equal(c('chorister'), 4); assert.equal(c('zealot'), 4);
   const boss = en.find((e) => e.kind === 'hivecantor'); assert.ok(boss && boss.summons.length >= 4);
   assert.equal(src.pulses.length, 12, 'three tiers, four strips each'); const tiers = [src.pulses.slice(0, 4), src.pulses.slice(4, 8), src.pulses.slice(8, 12)];
   const on = (tier, t) => sporeState(tiers[tier][0], t).on;
@@ -91,7 +91,7 @@ test('THE ROOT BELL\'S ARENA: the clapper swings, rings the floor, falls when th
   for (const a of w.enemies.filter((e) => e.kind === 'rootanchor')) damageEnemy(w, a, 1e6);
   const ev = run(w, 60 * 5); const types = new Set(ev.map((e) => e.type)); for (const t of ['bell_fall', 'bell_slam', 'tremor', 'spawn']) if (t !== 'spawn' && t !== 'tremor') assert.ok(types.has(t), 'event ' + t);
   assert.equal(bell.rb.mode, 'ground'); assert.ok(w.enemies.some((e) => e.group === 'guard2'), 'the second wave comes');
-  assert.ok(w.enemies.filter((e) => e.group === 'guard2' && e.kind === 'resonant').length === 2, 'a pair of Resonants fight in the gaps');
+  assert.equal(w.enemies.filter((e) => e.group === 'guard2').length, 2, 'two Zealots come with the fall, and nothing else (PT-043 report 1: it was six)');
   bell.hp = ENEMIES.rootbell.hp * 0.25; bell.stunT = 0; const ev2 = run(w, 60 * 4); assert.equal(bell.rb.last, true); assert.ok(ev2.some((e) => e.type === 'bell_last')); assert.ok(w.ambient != null && w.ambient < 0.5, 'the lights fall: ' + w.ambient);
   damageEnemy(w, bell, 1e7); const ev3 = run(w, 60 * 6); assert.equal(w.silenced, true, 'the sound is cut'); assert.ok(ev3.some((e) => e.type === 'silence')); assert.equal(w.exitLocked[exit.id], false);
   assert.ok(Math.hypot(bell.x - bell.rb.cx, bell.z - bell.rb.cz) < 0.3 && bell.lift > 0.5, 'it hangs over the middle');
@@ -108,4 +108,24 @@ test('THE UNRUNG GATE: the lamp opens the door only at the door; the exit shows 
 test('the preview is deterministic: the same seed plays the arena twice to the same hash', () => {
   const play = () => { const { w } = world('HIVEBOSS'); for (const e of w.enemies) if (e.group) { e.state = 'chase'; e.lastX = w.player.x; e.lastZ = w.player.z; } run(w, 60 * 10); return JSON.stringify(w.enemies.map((e) => [Math.round(e.x * 100), Math.round(e.z * 100), Math.round(e.hp)])); };
   assert.equal(play(), play());
+});
+
+// PT-043 report 1 (the owner, playing the four dev levels): lamps hung from a sky with no ceiling in the Hive, and no way back up out of the two boss arenas' pits. The dev maps never went through tools/maplint.mjs; they do now.
+import { mapLintChecks } from '../tools/maplint.mjs';
+test('every Preview dev map passes the placement lint: no lamp floating in open air, no trap, no roofed slab over open ground', () => {
+  for (const id of ['HIVE', 'HIVEBOSS', 'BELLBOSS', 'HIVEEND']) {
+    const { map } = world(id), bad = mapLintChecks(map).filter((c) => !c.ok);
+    assert.deepEqual(bad.map((c) => id + ': ' + c.name + ' -> ' + c.detail), [], id);
+  }
+});
+
+test('THE TWO BOSS ARENAS can be climbed out of anywhere: no step up is higher than half a metre, so a player who went down a tier can come back', () => {
+  for (const id of ['HIVEBOSS', 'BELLBOSS']) {
+    const { map } = world(id); let worst = 0;
+    for (let z = 0; z < map.h - 1; z++) for (let x = 0; x < map.w - 1; x++) for (const [dx, dz] of [[1, 0], [0, 1]]) {
+      const a = map.kind(x, z), b = map.kind(x + dx, z + dz); if (a === 'wall' || b === 'wall' || a === 'void' || b === 'void') continue;
+      worst = Math.max(worst, Math.abs(map.floor(x, z) - map.floor(x + dx, z + dz)));
+    }
+    assert.ok(worst <= 0.6 + 1e-9, id + ': the highest step between two walkable cells is ' + worst + ' m');
+  }
 });

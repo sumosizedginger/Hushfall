@@ -1,6 +1,6 @@
 // THE HIVE CANTOR'S ARENA (PT-043, design/PREVIEW.md; Act C's boss, C2M24): a DEV-ONLY map with the REAL rules (a mortal player, ammunition that runs out, a heal station and caches, Retry from the death screen as in the game). Build it with
 //   node tools/dev/build-range.mjs HIVEBOSS     (maps-dev/HIVEBOSS.json); the DEV level picker lists it. Not one of the 68, never in maps/.
-// An AMPHITHEATRE of square rings 33 cells (66 m) across under a 17 m dome: a podium (+0.5 m) with the HIVE CANTOR hovering over it, an arena floor, three tiers of seats rising (+1, +2, +3 m) with 36 singers in them (Tollbearers 18, Choristers 10, Zealots 8: they
+// An AMPHITHEATRE of square rings 33 cells (66 m) across under a 17 m dome: a podium (+0.5 m) with the HIVE CANTOR hovering over it, an arena floor, three tiers of seats rising (+1, +2, +3 m) with 16 singers in them (Tollbearers 8, Choristers 4, Zealots 4: they
 // act on the beat, in unison, `onBeat`), six pillars of nerve for cover and for steps. The floors of the tiers are BEAT FLOORS (`pulses`, pink): the inner tier blooms on beat 1 of each bar, the middle on beat 2, the outer on beat 3: stand on the tier that is resting,
 // or on a step. The conductor's UNISON SHIELD: it takes 5% while the choir sings, more with every voice that falls; kill them and it is open. Its double returning ring comes on beat 3 of every other bar. Half its hit points or the choir dead: PHASE TWO: a ring every
 // bar and Choristers called from the dome. When it falls the beat stops. A start hall with the caches west of the bowl, the exit east of it (locked until the conductor is dead). Every number a first guess, to be felt by the owner.
@@ -14,7 +14,8 @@ const enemy = (kind, x, z, facing, extra = {}) => put({ type: 'enemy', kind, at:
 const FL = 'Θ', WL = 'θ';
 // the bowl: square rings (Chebyshev distance from the podium): podium <= 3 (+0.5 m), floor 4..9, tier 1 10..13 (+1 m), tier 2 14..17 (+2 m), tier 3 18..21 (+3 m)
 L.room([CX - 15, CZ - 15, CX + 15, CZ + 15], { floor: FL, wall: WL });
-const hOf = (d) => (d <= 2 ? 1 : d <= 6 ? 0 : d <= 9 ? 2 : d <= 12 ? 4 : 6);
+// PT-043 report 1: a tier is 1 m above the one inside it and a player climbs 0.5 m at most, so every tier has a half-step in front of it (the first cell of each tier): the bowl can be climbed out of anywhere
+const hOf = (d) => (d <= 2 ? 1 : d <= 6 ? 0 : d === 7 ? 1 : d <= 9 ? 2 : d === 10 ? 3 : d <= 12 ? 4 : d === 13 ? 5 : 6);
 for (let z = CZ - 15; z <= CZ + 15; z++) for (let x = CX - 15; x <= CX + 15; x++) L.height([x, z, x, z], hOf(Math.max(Math.abs(x - CX), Math.abs(z - CZ))));
 L.ceiling([CX - 16, CZ - 16, CX + 16, CZ + 16], 17);
 // the gates: the start hall's corridor in the west wall of the bowl, the exit corridor in the east one (both at the height of the top tier)
@@ -28,12 +29,13 @@ for (const [x, z] of PIL) L.wall([x, z, x + 1, z + 1], WL);
 const strips = (a, b) => [[CX - b, CZ - b, CX + b, CZ - a - 1], [CX - b, CZ + a + 1, CX + b, CZ + b], [CX - b, CZ - a, CX - a - 1, CZ + a], [CX + a + 1, CZ - a, CX + b, CZ + a]];
 const pulses = [];
 [[7, 9, 0], [10, 12, -1.5], [13, 15, -3]].forEach(([a, b, phase]) => { for (const r of strips(a, b)) { pulses.push({ rect: r, period: 6, on: 1.5, phase, tint: 0xff6a98 }); for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) if (L.get(x, z) === FL) L.fx([x, z, x, z], 's'); } });
-// the singers: 36 in the tiers, facing the podium, none on the west side near the gate
+// the singers: 16 in the tiers, facing the podium, none on the west side near the gate
 const seat = (tier, side, off) => { const d = [8, 11, 14][tier]; return side === 0 ? [CX + off, CZ - d] : side === 1 ? [CX + d, CZ + off] : side === 2 ? [CX + off, CZ + d] : [CX - d, CZ + off]; };
-const choir = []; const OFFS = [-6, -2, 2, 6];
+const choir = []; const OFFS = [-6, -2, 2, 6], SINGERS = 16;
 for (let tier = 0; tier < 3; tier++) for (let side = 0; side < 4; side++) for (const off of OFFS) { if (side === 3 && Math.abs(off) < 3) continue; const [x, z] = seat(tier, side, off); if (PIL.some(([px, pz]) => Math.abs(px + 0.5 - x) < 2.2 && Math.abs(pz + 0.5 - z) < 2.2)) continue; choir.push({ tier, x: Math.round(x), z: Math.round(z) }); }
-const KINDS = { 0: ['tollbearer'], 1: ['tollbearer', 'zealot'], 2: ['chorister', 'chorister', 'zealot'] }; const counts = { tollbearer: 18, chorister: 10, zealot: 8 }; let placed = 0;
-for (const c of choir) { if (placed >= 36) break; const list = KINDS[c.tier]; let kind = list[(c.x + c.z) % list.length]; if (counts[kind] <= 0) kind = Object.keys(counts).find((k) => counts[k] > 0); if (!kind || counts[kind] <= 0) continue; counts[kind]--; placed++; const f = Math.atan2(CX - c.x, CZ - c.z); enemy(kind, c.x, c.z, f, { group: 'choir', onBeat: true, ...(kind === 'tollbearer' ? { variant: 'hived' } : {}) }); }
+const KINDS = { 0: ['tollbearer'], 1: ['tollbearer', 'zealot'], 2: ['chorister', 'chorister', 'zealot'] }; const counts = { tollbearer: 8, chorister: 4, zealot: 4 }; let placed = 0, seen = 0;
+// PT-043 report 1: thirty-six singers on the beat overwhelmed the owner (on Easy): sixteen, spread over the seats (every seat that a running share of SINGERS / seats picks)
+for (const c of choir) { if (placed >= SINGERS) break; seen++; if (Math.floor(seen * SINGERS / choir.length) === Math.floor((seen - 1) * SINGERS / choir.length)) continue; const list = KINDS[c.tier]; let kind = list[(c.x + c.z) % list.length]; if (counts[kind] <= 0) kind = Object.keys(counts).find((k) => counts[k] > 0); if (!kind || counts[kind] <= 0) continue; counts[kind]--; placed++; const f = Math.atan2(CX - c.x, CZ - c.z); enemy(kind, c.x, c.z, f, { group: 'choir', onBeat: true, ...(kind === 'tollbearer' ? { variant: 'hived' } : {}) }); }
 // the conductor over the podium; its summons come out of the dome's corners in phase two
 enemy('hivecantor', CX, CZ, EAST, { group: 'cantor', summons: [[CX - 14, CZ - 14], [CX + 14, CZ - 14], [CX - 14, CZ + 14], [CX + 14, CZ + 14], [CX, CZ - 14], [CX, CZ + 14]] });
 // light: lamps round the top tier (pink, as the amphitheatre look), four lanterns at the podium's corners
@@ -55,7 +57,7 @@ export default {
   id: 'HIVEBOSS', name: 'The Hive Cantor (dev only)', version: 1, ceilingHeight: 4.2, dev: true,
   atmosphere: { look: 'conductor', fog: '#2a1a2c', fogDensity: 0.005, sky: 'hive', beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 12, cell: 60, round: 60, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'mortar', 'fork', 'chainsaw', 'boathook', 'marlinspike', 'mallet', 'axe'] },
-  intro: { title: 'THE HIVE CANTOR', lines: ['A bowl of seats, thirty-six singers, one conductor over the podium.', 'The real rules: you can die, ammunition runs out. Retry restarts the whole arena.'] },
+  intro: { title: 'THE HIVE CANTOR', lines: ['A bowl of seats, sixteen singers, one conductor over the podium.', 'The real rules: you can die, ammunition runs out. Retry restarts the whole arena.'] },
   objective: 'Cross the start hall to the bowl. The conductor takes 5% while the choir sings: break the choir',
   ...layers,
   pulses,
@@ -64,7 +66,7 @@ export default {
   startFacing: 'east',
   messages: [
     msg('start', 9, CZ, 6, 'HULL', 'THE HIVE CANTOR (dev). Caches here and on the top tier. The beat is the pulse under everything: the singers act on it, the floors bloom on it, the conductor rings on it.'),
-    msg('gate', CX - 18, CZ, 3, 'HULL', 'Three tiers and a podium: 36 singers, and the conductor takes 5% while they sing. A tier glows pink before it blooms: inner, middle, outer, a beat each.'),
+    msg('gate', CX - 18, CZ, 3, 'HULL', 'Three tiers and a podium: 16 singers, and the conductor takes 5% while they sing. A tier glows pink before it blooms: inner, middle, outer, a beat each.'),
     msg('ring', CX - 12, CZ, 4, 'HULL', 'Its ring goes out to the wall, turns, and comes home: twice. Cover that held going out must hold coming back. A pillar stops it; a step a metre up passes under.'),
     msg('half', 1, 1, 0.1, 'HULL', 'Half its strength gone or the choir silent: a ring every bar now, and Choristers from the dome. The beat is gone from nothing yet: end it.'),
     msg('dead', 2, 2, 0.1, 'HULL', 'The conductor is down and the beat has stopped. The lights hold still. East of the podium the corridor is open.'),

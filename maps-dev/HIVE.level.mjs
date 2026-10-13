@@ -8,7 +8,7 @@
 // The two boss arenas are in HIVEBOSS (the real rules), the ending is HIVEEND. Drop B (conveyors, cars, tide, tall shaft, collapse, noise tell) adds its yards to this map.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
-import { ENEMIES } from '../src/engine/defs.js';
+import { ENEMIES, FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 198, H = 120, L = new Level(W, H, { fill: '#' }); L.usedHeights = true; L.usedCeil = true;
 const S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
@@ -55,7 +55,7 @@ LOOKS.forEach((lk, i) => {
   L.rect([mid - 3, dz[0], mid + 3, dz[1]], floor);                                                                     // the doorway to the corridor, in the room's own floor
   if (roofed) L.ceiling([x0, z0, x1, z1], i === 12 ? 14 : i === 7 ? 12 : 7);
   zones.push({ rect: [x0 - 1, north ? z0 - 1 : z0 - 3, x1 + 1, north ? z1 + 3 : z1 + 1], look, ...(sky ? { sky } : {}) });
-  for (const [dx, dz2] of [[3, 3], [x1 - x0 - 3, 3], [3, z1 - z0 - 3], [x1 - x0 - 3, z1 - z0 - 3]]) put({ type: 'prop', kind: 'lamp', at: [x0 + dx, z0 + dz2] });
+  for (const [dx, dz2] of [[3, 3], [x1 - x0 - 3, 3], [3, z1 - z0 - 3], [x1 - x0 - 3, z1 - z0 - 3]]) put({ type: 'prop', kind: roofed && FLOOR_SKINS[floor].kind === 'floor' ? 'lamp' : 'lamppost', at: [x0 + dx, z0 + dz2] });      // PT-043 report 1: a lamp hangs from a ceiling; in the open, a post (the placement lint: tools/maplint.mjs)
   put({ type: 'prop', kind: prop, at: [mid, cz] }); put({ type: 'prop', kind: prop, at: [x0 + 5, cz - 3] }); put({ type: 'prop', kind: prop, at: [x1 - 5, cz + 3] });
   say('look' + i, mid, north ? z1 - 2 : z0 + 2, 5, HULL, name + ': ' + plate);
   if (SCEN[i]) { const [kind, sx, sz, sy, sc, yaw] = SCEN[i]; scen.push({ kind, at: [sx, sz], y: sy, scale: sc, yaw }); }
@@ -93,7 +93,7 @@ say('rb2', 55, 96, 6, HULL, 'ROOT ANCHORS: four pin the chain in the fight. Whil
 // ---- the scenery pavilion: east of the hub, open to the sky --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 L.room([96, 58, 140, 82], { floor: 'p', wall: 'P' }); L.room([89, 68, 95, 71], { floor: FL, wall: 'P' });
 zones.push({ rect: [95, 57, 141, 83], look: 'hive', sky: 'hive' });
-for (const [x, z] of [[100, 62], [136, 62], [100, 78], [136, 78], [118, 70]]) put({ type: 'prop', kind: 'lamp', at: [x, z] });
+for (const [x, z] of [[100, 62], [136, 62], [100, 78], [136, 78], [118, 70]]) put({ type: 'prop', kind: 'lamppost', at: [x, z] });
 for (const [kind, x, z, y, sc, yaw] of [['hivetower', 100, 54, 0, 1, 0], ['ganglion', 112, 54, 0, 1.3, 0], ['reactor', 124, 54, 0, 1.2, 0], ['crystaltower', 136, 54, 0, 1, 0], ['rootcolumn', 100, 88, 0, 1.2, 0], ['shaft', 114, 88, 0, 1.2, 0], ['rails', 130, 90, 0, 1, 1.5708]]) scen.push({ kind, at: [x, z], y, scale: sc, yaw });
 say('scen', 104, 70, 8, HULL, 'THE SCENERY, over the walls: tower, ganglion, reactor, crystal tower (north); root column, shaft, rails (south). In the maps they stand far off; look at each from here.');
 // ---- the lineup: every creature in the game, shortest first, and the variants ----------------------------------------------------------------------------------------------------------------------------------------------------------------

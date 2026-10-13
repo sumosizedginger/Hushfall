@@ -387,22 +387,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [11, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [25, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [11, 20]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [25, 20]
   },
   {
@@ -422,22 +422,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [37, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [51, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [37, 20]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [51, 20]
   },
   {
@@ -597,22 +597,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [167, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [181, 12]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [167, 20]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [181, 20]
   },
   {
@@ -667,22 +667,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [37, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [51, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [37, 44]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [51, 44]
   },
   {
@@ -737,22 +737,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [99, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [113, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [99, 44]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [113, 44]
   },
   {
@@ -772,22 +772,22 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [125, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [139, 36]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [125, 44]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [139, 44]
   },
   {
@@ -1179,27 +1179,27 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [100, 62]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [136, 62]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [100, 78]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [136, 78]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lamppost",
    "at": [118, 70]
   },
   {

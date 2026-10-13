@@ -6,11 +6,17 @@ import { placer } from '../tools/mapkit/c2.mjs';
 
 const W = 120, H = 26, L = new Level(W, H, { fill: '#' }); L.usedHeights = true; L.usedCeil = true;
 const P = placer(L, { silent: false }), ents = P.ents, put = (e) => ents.push(e);
-const FL = 'Ξ', WL = 'ξ', CZ = 13;
+const CZ = 13;
 // a corridor of five small rooms (x 6..~108), each opening into the next; the Gate at the end
-const ROOMS = [[6, 20, 'the floor of the Bell, the roots drawn back'], [24, 38, 'a stair up the shaft'], [42, 56, 'the Hive, the beat gone'], [60, 74, 'the Deep, a single bell'], [78, 92, 'the steppe under a low red sun'], [96, 110, 'the Gate']];
-ROOMS.forEach(([x0, x1], i) => { L.room([x0, CZ - 4, x1, CZ + 4], { floor: FL, wall: WL }); if (i) L.rect([ROOMS[i - 1][1] + 1, CZ - 1, x0 - 1, CZ + 1], FL); });
-L.rect([ROOMS[0][1] + 1, CZ - 1, ROOMS[1][0] - 1, CZ + 1], FL);
+// PT-043 report 1: "The Unrung gate seems extremely gray": the walk now passes THROUGH the places it recalls, each in its own skins and its own look (`lookZones`): the Bell's bronze, the shaft's black wet stone with its sky, the Hive's pale pink stone, the Deep's blue rock,
+// the steppe under its red sun (open to the sky), and only the Gate itself in pale marble (warmer than before). [x0, x1, what it is, wall, floor, look, sky or null for a roofed room]
+const ROOMS = [[6, 20, 'the floor of the Bell, the roots drawn back', 'ν', 'Ν', 'rootbell', null], [24, 38, 'a stair up the shaft', 'ι', 'Ι', 'descent', 'root'], [42, 56, 'the Hive, the beat gone', 'θ', 'Θ', 'conductor', null], [60, 74, 'the Deep, a single bell', '[', '{', 'deep', null], [78, 92, 'the steppe under a low red sun', '%', '-', 'threshold', 'anselm'], [96, 110, 'the Gate', 'ξ', 'Ξ', 'unrung', null]];
+const zones = [];
+ROOMS.forEach(([x0, x1, , wall, floor, look, sky], i) => {
+  L.room([x0, CZ - 4, x1, CZ + 4], { floor, wall });
+  if (i) L.rect([ROOMS[i - 1][1] + 1, CZ - 1, x0 - 1, CZ + 1], ROOMS[i - 1][4]);
+  zones.push({ rect: [x0 - 2, CZ - 5, x1 + 2, CZ + 5], look, ...(sky ? { sky } : {}) });
+});
 L.ceiling([4, CZ - 6, 112, CZ + 6], 6);
 // the one object of each room, and a lantern hung beside the last
 put({ type: 'prop', kind: 'pillar', at: [13, CZ - 2] }); put({ type: 'prop', kind: 'pillar', at: [13, CZ + 2] });
@@ -30,6 +36,7 @@ export default {
   intro: { title: 'THE UNRUNG GATE', lines: ['A short walk, in silence.', 'At the Gate: light the lamp (L), and keep it lit.'] },
   objective: 'Walk to the Gate. The lamp is yours: L',
   ...layers,
+  lookZones: zones,
   entities: ents.map((e) => ({ ...e })),
   scenery: [{ kind: 'arch', at: [118, CZ], y: 0, scale: 0.7, yaw: 1.5708 }],
   startFacing: 'east',
