@@ -10,14 +10,16 @@ export const MAP_FORMAT = 1;
 //   D door   S secret panel (drawn as wall until opened)
 //   Gate 2 skins: walls W timber, P plaster, C concrete, I iron plate, R Vael resin, T tower stone; floors t tile, g grating, c carpet, f flagstone, n silt (indoor), m silt, s slate (outdoor)
 //   X = a trigger-only panel (a closet door drawn as wall); listed in `closets`
-// Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z), `ceilings` (absolute ceiling height in
+// Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z A-Z, 31 m at most), `ceilings` (absolute ceiling height in
 // 0.5 m units, '.' = floor + ceilingHeight), `fx` (floor effect: w wading water, x toxic residue). Lists: `sectors` (moving floors), `closets`, `triggers`,
 // entities of type `switch`. See design/EPISODE1.md and tests/kit.test.js for the exact shapes.
 const TILES = { '~': 'water', _: 'void', D: 'door', S: 'secret', X: 'secret' };      // _ = the void (PT-032): open sky, no floor
 for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
 const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
-const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : NaN);
+// the height alphabet (PT-045, E13): `.` 0, `0-9` 0-9, `a-z` 10-35 (the original 17.5 m), `A-Z` 36-61 (31 m: the Root Bell Descent's shaft); a unit is HEIGHT_UNIT metres. Old maps use no capital, so they parse as they always did.
+export const HEIGHT_MAX_UNITS = 61;
+export const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : /[A-Z]/.test(c) ? c.charCodeAt(0) - 29 : NaN);
 export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff'];      // PT-043: a sound cue, a rumble, and the end of the score
 
 export class MapError extends Error {

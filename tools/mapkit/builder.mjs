@@ -2,7 +2,7 @@
 // All coordinates are cell coordinates (x = column, z = row), rectangles are inclusive [x0,z0,x1,z1]. Later calls overwrite earlier ones.
 import { FLOOR_SKINS } from '../../src/engine/defs.js';
 const FLOOR_CHARS = Object.keys(FLOOR_SKINS).join('');                      // every floor skin the engine knows: a new skin needs no edit here
-const hchar = (n) => (n <= 0 ? '.' : n < 10 ? String(n) : String.fromCharCode(87 + n));
+const hchar = (n) => { if (n <= 0) return '.'; if (n < 10) return String(n); if (n < 36) return String.fromCharCode(87 + n); if (n <= 61) return String.fromCharCode(29 + n); throw new Error('height ' + n + ' units is above the format (61 units, 30.5 m)'); };      // PT-045 (E13): 36-61 are the capitals A-Z
 
 export class Level {
   constructor(w, h, { fill = '#' } = {}) {
