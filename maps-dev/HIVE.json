@@ -1861,7 +1861,7 @@
    "at": [85, 70],
    "radius": 6,
    "speaker": "HULL",
-   "text": "THE HIVE PREVIEW (dev): north, the 14 looks; west, the bestiary; east, the scenery; south, the lineup and the exit. HIVEBOSS and HIVEEND are separate maps in the picker."
+   "text": "THE HIVE PREVIEW (dev): N the 14 looks, W the bestiary, E the scenery, S the lineup and the exit. More in the picker: HIVEBOSS, BELLBOSS, HIVEEND, HIVEYARDS, HIVEDARK."
   },
   {
    "id": "exit",

@@ -117,7 +117,7 @@ say('var', 22, 109, 5, HULL, 'THE VARIANTS (the near row): plain, Drowned, Hived
 L.put(85, 70, '@');
 put({ type: 'exit', dest: 'next', at: [85, 115] });
 for (const [x, z] of [[80, 66], [91, 66], [80, 74], [91, 74]]) put({ type: 'prop', kind: 'lamp', at: [x, z] });
-say('hub', 85, 70, 6, HULL, 'THE HIVE PREVIEW (dev): north, the 14 looks; west, the bestiary; east, the scenery; south, the lineup and the exit. HIVEBOSS and HIVEEND are separate maps in the picker.');
+say('hub', 85, 70, 6, HULL, 'THE HIVE PREVIEW (dev): N the 14 looks, W the bestiary, E the scenery, S the lineup and the exit. More in the picker: HIVEBOSS, BELLBOSS, HIVEEND, HIVEYARDS, HIVEDARK.');
 say('exit', 85, 112, 4, HULL, 'THE EXIT is south of here: it goes back to the title.');
 const layers = L.layers();
 
