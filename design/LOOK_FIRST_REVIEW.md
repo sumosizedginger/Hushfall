@@ -133,3 +133,24 @@ It covers 34 maps and the title, pause, death and epilogue screens at last, in t
 Not decided and not started; each needs the owner's word.
 
 Still unread after jobs 6 to 8: the C1E1M02 frames (all 21), most C1E1M08 frames (I read 22 and 24 of 26), most C1E2M05 and C2M02 frames (I read 3, 4, 8 and 12 of C1E2M05 and 3 and 8 of C2M02), 38 of the 45 weapon frames, the pause / settings / controls / record / complete / epilogue-1 / tally UI frames. They are on disk in review/self-audit/images and are not claimed here.
+
+## The enemy models, looked at on the current build (2026-10-14, "are you happy with your enemy models?")
+Evidence: `tools/look/shoot-rigs.mjs close` (all 26 creatures, 5 m, the dusk preset, through the game's real post pass; the largest bosses again at 14 m) and `poses` for the Tollbearer (idle, two walk phases, two tells, strike, dying, dead). Files `review/self-audit/enemies/`, `enemies-big/`, `poses-tollbearer/` (not committed). These are static frames of one rig at a time on a clean background: they judge shape, colour, silhouette and the Tollbearer's tell. They do NOT judge how any creature moves in a fight, how it sounds, or how it reads in a lit room at 480 px.
+
+Verdict: the concept is the strongest thing in the game and about a third of the roster is as good as the game will get; the common grunts have no menace, the second campaign's climax creatures are props, and at melee range the best models turn to a few chunky pixels.
+
+Tiers (my opinion, from these frames):
+- Hero art, would ship as it is: Gate Warden (an arch of bone and brass with a bell and a ring), Cantor (a tall navy robe, branching crown, fork hands), Bellhand (a top hat, a raised bell), Sexton (a white gown with a spiked crown), Bulwark (a plated dome with a spear helm).
+- Good: Tollbearer, Chorister, Zealot, Vael folk, Acolyte, Wardengraft.
+- Characters that do not yet read as creatures: Hive Cantor (a pale figure hanging with arms out, a scarecrow), Sub-Cantor (a horn on a cone), the Root Bell (a bronze cage round a lantern: the final boss), Resonant (a three-headed drum), Weeping Mother (an organ-front crab), Gaunt and Gill (cute and thin, not threatening).
+- Objects by design, each a different shape: Seal (an armillary), Root Anchor (a lamp on an X), Bell node (tines and a bell), Vat (a water tower), Reed (a bagpipe). They share no single "shoot this" cue.
+
+What a hit game would change:
+1. FACES. Every humanoid has a blank grey oval head with two teal dots. Nothing in the head says angry, awake or about to attack, and teal is on nearly everything, so the eyes carry no information. Give the grunts a face (brow, mouth) and make the eye colour the state tell (idle, hunting, striking). Render only, hit volumes untouched.
+2. MENACE AND MASS. Tollbearer, Gaunt and Chorister are narrow figures in a mid value. Part of this is forced: the project's hit-volume width rule (`check-rigs.mjs`) keeps the upright 2.3 m figures in one column (see PT-035). A wider grunt is a combat change and the owner's call.
+3. THE BELL IS THE WEAPON. The Tollbearer's tell is an arm raised straight up (good, readable in silhouette); the bell it is named for only shows a cyan glint. Make the bell swing and flare on the tell.
+4. ONE CUE FOR EVERY NODE. One shared glow ring or colour for everything the player must shoot to break a shield.
+5. THE CLIMAX CREATURES. The Hive Cantor, Sub-Cantor and Root Bell need a face or a gesture and a presence the size of the room. Design them first (the L0 look-bible tools: `tools/look/bake-concepts.mjs`), then build.
+6. CLOSE RANGE. The models are drawn to read at 5 to 10 m; at 1 m in the game's 480-pixel render a brute is a flat blur with a block of pixels in its chest (C2M20, frame 15). Show 480 and 640 side by side before the owner decides the default.
+7. MOTION IS UNSEEN. The Tollbearer's walk phases are nearly the same as its idle in these frames. Judging walk, windup and death needs a real fight in motion.
+Nothing here is built or started.
