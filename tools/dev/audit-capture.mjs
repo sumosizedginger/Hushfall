@@ -47,7 +47,7 @@ async function runMap(spec) {
   await shot('arrival_card', {}, true);
   await T('t.clearOverlays()'); await shot('arrival', {}, true);
   const ops = (await T(`t.startBot('${id}.main')`)).ops;
-  let s = await T('t.state()'), prevHp = s.player.hp, firstSight = false, close = false, fights = 0, hurts = 0, auto = false, done = false, tickCap = 14000;
+  let s = await T('t.state()'), prevHp = s.player.hp, firstSight = false, close = false, fights = 0, hurts = 0, auto = false, done = false, tickCap = Number(process.env.TICKCAP) || 14000;
   const N = lite ? 4 : 8, progDone = new Set();
   while (true) {
     const near = Math.min(...s.enemies.filter((e) => e.state !== 'dead' && e.state !== 'idle').map((e) => Math.hypot(e.x - s.player.x, e.z - s.player.z)), 99);
