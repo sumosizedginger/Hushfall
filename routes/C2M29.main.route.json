@@ -1,0 +1,1 @@
+[{"op":"goto","at":[7,42]},{"op":"goto","at":[20,42]},{"op":"goto","at":[30,42]},{"op":"killboss","max":400,"fallback":true},{"op":"goto","at":[44,36]},{"op":"goto","at":[44,28]},{"op":"goto","at":[44,25]}]

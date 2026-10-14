@@ -9,8 +9,9 @@ import { LOOKS, ENEMIES } from '../src/engine/defs.js';
 import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
+import { fxAt } from '../src/engine/terrain.js';
 
-const BUILT = ['C2M25', 'C2M26', 'C2M27'];
+const BUILT = ['C2M25', 'C2M26', 'C2M27', 'C2M28', 'C2M29'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -35,10 +36,10 @@ test('the text follows the mechanical rules of LORE.md: no stock phrases, short,
   const bad = [];
   for (const id of ALL) {
     for (const t of lines(SRC[id])) for (const re of BANNED) if (re.test(t)) bad.push(`${id}: '${t.slice(0, 50)}...' matches ${re}`);
-    for (const m of SRC[id].messages) { if (m.text.length > 180) bad.push(`${id} ${m.id}: ${m.text.length} characters`); const n = (m.text.match(/[.!?]/g) ?? []).length, cap = /(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)/.test(m.speaker) ? 6 : 4; if (n > cap) bad.push(`${id} ${m.id}: ${n} sentences (limit ${cap})`); }
+    for (const m of SRC[id].messages) { if (m.text.length > 180) bad.push(`${id} ${m.id}: ${m.text.length} characters`); const n = (m.text.match(/[.!?]/g) ?? []).length, cap = /\b(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)\b/.test(m.speaker) ? 6 : 4; if (n > cap) bad.push(`${id} ${m.id}: ${n} sentences (limit ${cap})`); }
   }
   assert.deepEqual(bad, []);
-  const VOICES = new Set(['INES', 'HULL', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT', 'SIGNAL HOUSE']), found = /(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)/;
+  const VOICES = new Set(['INES', 'HULL', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT', 'SIGNAL HOUSE']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE|MANIFEST)\b/;
   for (const id of ALL) for (const m of SRC[id].messages) { assert.ok(VOICES.has(m.speaker) || found.test(m.speaker), `${id} ${m.id}: unknown speaker '${m.speaker}'`); if (SPEAKS_ONCE[m.speaker]) assert.ok(SPEAKS_ONCE[m.speaker].includes(id), `${id}: ${m.speaker} speaks only in ${SPEAKS_ONCE[m.speaker]}`); }
 });
 
@@ -83,4 +84,40 @@ test('C2M27, Fault Line: a front of falling stones from the west end that a play
   // the bot, running, is never hit by one
   const r = runRoute(map, route('C2M27'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.equal(r.events.filter((e) => e.type === 'load_hit').length, 0, 'ahead of the front'); assert.ok(r.events.filter((e) => e.type === 'sector_start').length >= 2, 'both bridges sank');
   const ex = s.entities.find((e) => e.type === 'exit'); assert.equal(ex.locked, true); assert.ok(s.entities.find((e) => e.type === 'switch').do.some((a) => a.exit?.set === 'unlock'));
+});
+
+test('C2M28, Last Tide: eight strokes tolled by the dock and a ninth by hand, a hunting wave through four gates with each, a tide that climbs the lower steps, a last squad, a causeway gate and a rope that unlocks the exit', () => {
+  const s = SRC.C2M28, map = shippedMap('C2M28'), idleIn = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...o });
+  // eight tolled strokes, a plate counting each, eighteen seconds apart
+  const times = []; for (let k = 1; k <= 8; k++) { const t = s.triggers.find((q) => q.id === `w${k}-0`); assert.ok(t.do.some((a) => a.sound === 'toll') && t.do.some((a) => a.message === 'stroke' + k), 'stroke ' + k); assert.ok(s.messages.some((m) => m.id === 'stroke' + k && m.speaker === 'TIDE PLATE')); times.push(Number(t.when.slice(5))); }
+  assert.ok(times.every((v, i) => i === 0 || v - times[i - 1] === 18) && times[0] >= 30, 'a quiet start and a stroke every eighteen seconds: ' + times);
+  const rope = s.entities.find((e) => e.type === 'switch'); assert.equal(rope.id, 'rope'); assert.ok(rope.do.some((a) => a.sound === 'toll') && rope.do.some((a) => a.exit?.set === 'unlock'), 'the ninth stroke is the rope, and it unlocks the exit'); assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
+  // the waves hunt, and come from all four gates
+  const spawns = s.triggers.flatMap((t) => t.do.filter((a) => a.spawn).map((a) => a.spawn)); assert.ok(spawns.length >= 70 && spawns.every((q) => q.hunt === true && /^(w[1-8]|last)$/.test(q.group)), 'wave creatures: ' + spawns.length);
+  assert.equal(new Set(spawns.map((q) => (q.at[0] > 32 ? 1 : 0) + (q.at[1] > 32 ? 2 : 0))).size, 4, 'all four gates');
+  assert.ok(new Set(spawns.map((q) => q.kind)).size >= 7, 'a mixed roster'); assert.ok(!spawns.some((q) => q.kind === 'sexton' || q.kind === 'acolyte'), 'nothing that raises the dead or halves a hit in a stand the bot has to be able to finish');
+  // the tide: dry at the start, over the lowest step after the third stroke, over the middle step after the sixth, never over the highest
+  const w = createWorld(map, { seed: 1 }), at = (cx, cz) => fxAt(w, (cx + 0.5) * map.cell, (cz + 0.5) * map.cell), LOW = [32, 42], MID = [32, 50], TOP = [32, 57];
+  w.time = 0; assert.equal([LOW, MID, TOP].map((c) => at(...c)).join(), ',,', 'dry at the start');
+  w.time = 85; assert.equal(at(...LOW), 'w'); assert.equal(at(...MID), null); w.time = 200; assert.equal(at(...LOW), 'w'); assert.equal(at(...MID), 'w'); assert.equal(at(...TOP), null, 'the highest step stays dry');
+  // the stand: left alone, the creatures keep coming (none gives up), and the causeway stays shut because the last squad is never put down
+  const w2 = createWorld(map, { seed: 1 }); w2.player.hp = 1e9; for (let i = 0; i < 60 * 200; i++) { step(w2, idleIn()); drainEvents(w2); }
+  assert.equal(w2.enemies.filter((e) => e.hunt && e.state === 'idle').length, 0, 'nobody went back to sleep'); assert.ok(w2.enemies.some((e) => e.group === 'last'), 'the last squad came');
+  const gate = [...w2.doors.values()].find((d) => d.cx === 32 && d.cz === 29); assert.ok(gate && gate.target === 0, 'the causeway gate is still shut');
+  // the bot that fights holds, then opens the causeway, rings the rope and walks out
+  const r = runRoute(map, route('C2M28'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.ok(r.events.some((e) => e.type === 'door_open' && e.cx === 32 && e.cz === 29), 'the causeway opened'); assert.equal(r.world.stats.kills, r.world.stats.total.enemies, 'every creature of the stand was put down');
+});
+
+test('C2M29, The Root Bell: the final boss map (every weapon, every box stays, dark, the lamp holds a ring back), a clapper on a pendulum, four anchors that pin it, a fall, a last note and a silence that unlocks the stair', () => {
+  const s = SRC.C2M29, map = shippedMap('C2M29'); assert.equal(s.atmosphere.dark, true); assert.deepEqual(s.lampHolds, { plain: 0.6, own: 0.4 }); assert.ok(s.entryLoadout.weapons.length >= 14, 'every weapon from the start');
+  assert.deepEqual(s.drops.keep, [[0, 0, 71, 71]], 'a boss map keeps every ammunition box'); assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
+  const ents = s.entities.filter((e) => e.type === 'enemy'); assert.equal(ents.filter((e) => e.kind === 'rootbell').length, 1); assert.equal(ents.filter((e) => e.kind === 'rootanchor').length, 4); assert.equal(ents.filter((e) => e.group === 'guard1').length, 4, 'a small guard: the fight is about the clapper');
+  const T = (id) => s.triggers.find((t) => t.id === id); assert.ok(T('in').do.some((a) => a.wake === 'rootbell')); assert.equal(T('anchors').when, 'dead:anchors'); assert.equal(T('anchors').do.filter((a) => a.spawn).length, 2, 'two Zealots at the fall');
+  assert.equal(T('last').when, 'hp:rootbell<0.3'); assert.ok(T('last').do.some((a) => a.lights != null)); assert.ok(T('down').do.some((a) => a.silence) && T('down').do.some((a) => a.exit?.set === 'unlock'), 'the silence and the stair');
+  // three tiers round the floor, a half-step at every radius (a stair all the way round)
+  const hs = new Set(); for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (map.kind(x, z) === 'floor' && Math.hypot(x - 44, z - 42) < 11) hs.add(map.floor(x, z)); assert.deepEqual([...hs].sort((a, b) => a - b), [0, 0.5, 1, 1.5, 2, 2.5, 3]);
+  // the whole fight: it hangs and does not break, the sound is cut, the stair is open, and nothing else of the map was found on the way (the secret is a thing to look for)
+  const r = runRoute(map, route('C2M29'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.equal(r.world.stats.secrets, 0); assert.equal(r.world.silenced, true, 'the sound was cut');
+  const bell = r.world.enemies.find((e) => e.kind === 'rootbell'); assert.equal(bell.state, 'dead'); assert.equal(bell.rb.mode, 'rise', 'drawn back up and hung, not broken');
+  assert.ok(r.events.some((e) => e.type === 'bell_fall') && r.events.some((e) => e.type === 'bell_last') && r.events.some((e) => e.type === 'spike_strike' || e.type === 'spike_warn'), 'every phase happened');
 });

@@ -1,0 +1,74 @@
+[
+{
+"name": "01-the-hall",
+"x": 8.5,
+"z": 42.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-corridor",
+"x": 24.5,
+"z": 42.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-rim",
+"x": 33.5,
+"z": 42.5,
+"yaw": -1.571,
+"pitch": 0.2,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-across-the-bell",
+"x": 44.5,
+"z": 33.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-floor",
+"x": 39.5,
+"z": 42.5,
+"yaw": -1.571,
+"pitch": 0.45,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-an-anchor",
+"x": 38.5,
+"z": 36.5,
+"yaw": -2.356,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-seam",
+"x": 47.5,
+"z": 50.5,
+"yaw": 3.14,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-stair",
+"x": 44.5,
+"z": 30.5,
+"yaw": 0.0,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+}
+]
