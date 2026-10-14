@@ -50,13 +50,13 @@ Verdict: the look is a real look, and it is uneven. The skies, the ink-and-band 
 Strong: the Quay dusk sky and its silhouettes (tower, crane, bollards); the Cradle Annex (vine walls, glowing pods); the catacomb walls of C2M13 (drawers with skull labels, lit gold); creature turnarounds (distinct hues and outlines: red coat, navy coat, white gown, brown brute, horn robe); the pause, intermission and death screens (serif caps, amber rules, plain tables); the HUD (readable in every frame).
 
 Weak, ranked by how many frames it spoils:
-1. FLOORS. One tone with sparse noise: Quay plaza and pier, C2M11 colonnade, C2M12 nave (a flat green-grey road to the horizon), Glass Steppe, the Annex water as scanlines. The walls carry the detail; the floor is a flat plane in 12 of 30 world frames.
+1. FLOORS. One tone with sparse noise: Quay plaza and pier, C2M11 colonnade, C2M12 nave (a flat green-grey road to the horizon), Glass Steppe, the Annex water as scanlines. The walls carry the detail; the floor is a flat plane in most of the outdoor and corridor frames I read (I did not tally them).
 2. THE HELD GUN IS NOT IN THE WORLD'S LIGHT. The cannon is the same full gold in a black catacomb, a cold blue nave, a green garden and a sunset. It pins the lower right quarter of every frame and breaks the mood of any dark one. (The stills tours start with the default cannon, so the variety of what a player holds is not judged here.)
 3. LIGHT CLIPS INSTEAD OF GLOWING. C2M10: a lamp-lit pillar is one flat yellow, the figure beside it a featureless yellow-white cut-out; ten value bands and exposure 2.2 leave no mid-tone in a lit area.
 4. DARK MAPS ARE BLACK, NOT DARK. C2M13: pure-black wall masses, a black cut-out creature, one unidentified red slab; only the one lit wall reads. No ambient floor, so the player cannot tell shapes in the dark.
 5. THE SKY HAS CONFETTI. C2M11, C2M12, C2M14, C2M16: multicoloured pixel flecks over the dithered clouds read as noise in a still. Motion may change that; not judged.
 6. BOSSES READ AS PROPS. Sub-Cantor (C2M16): a crimson mass filling the top of the frame, no face, limb or tell. Cantor (C1E1M08, 10-08 build, BEFORE the shield fix): teal streaks across the walls read as glitches; whether the fix cured that is not seen.
-7. SEVEN IDENTICAL SIGNS OF A BOX. Repeated materials: the Annex's vine panel on every face (wallpaper), the same stall twice on the Quay, six identical crate stacks at the Customs Hall.
+7. REPEATED MATERIALS AND PROPS: the Annex's vine panel on every face (wallpaper), the same stall twice on the Quay, six identical crate stacks at the Customs Hall.
 8. HURT FLASH, and the title / key card text (see the first table).
 Open, owner's taste: the default 480-pixel render width gives close walls and pillars chunky blotches (C2M10 pillar, Customs Hall door wall). It IS the look approved 2026-09-29; the question is whether the default should be 640.
 
