@@ -1,0 +1,34 @@
+# Look first: review of the Gemini run and the Grok notes (2026-10-13)
+
+Source: `gemini-playthrough/` (46 PNGs, `play_report.json`, an empty `index.csv`; NOT committed, 46 large PNGs) and the text of a Grok review. Every frame but 037 was read. Gemini's chat text and Grok's text are CLAIMS; this note keeps only what a frame or the source confirms.
+
+## What the Gemini run is (and is not)
+- NOT a person playing. `tools/dev/playthrough-critic.mjs` (written by Gemini, untracked) drives the dev hook: `newGame`, `setup_teleport`, `setup_player` (hp 100000 for the melee frame), `startBot` and `stepBot(n)`; a frame is whatever the route bot's camera shows after n ticks. Headless Chrome on SwiftShader at 1280x720 (the prompt asked for a real GPU window).
+- 7 of the 18 Tier 1 maps (Range, C1E1M01, C1E1M02, C1E1M08, C1E2M05, C2M02, C2M30). No boss frame (071 and 072 are named "boss arena" and "cantor shield" and show a door and a corridor), no automap (054 is 053 again), no hurt frame outside the Range, no per-map notes, no SUMMARY, `index.csv` empty. Nothing of Acts B, C, D except the ending walk.
+- Gemini's weapon numbers: walk 5.70 / sprint 9.53 / "1.67x" are wrong. They were measured over 0.5 s from a standstill while the player was still accelerating. `PLAYER.speed` is 6.4 m/s, `sprintMult` 1.55 (9.92). Its advice to make ADS tighten the scattergun cone is already true (`spread` hip 0.075, ads 0.038).
+
+## Confirmed (frame and/or source)
+| # | Finding | Evidence | Fix (kind) |
+|---|---|---|---|
+| 1 | A hit of any size paints the rim of the screen solid red for about 0.8 s. Two points of damage hid the guns and targets. Grok and the frames agree. | Frames 024, 025, 028, 029, 032, 033, 036 (7 of 22 Range frames; "TAKEN last 2"). `hurtPlayer` sets `p.hurt = 1` for every hit, it decays at 1.2 per second (world.js), the shader mixes 75% red at full weight on the rim (post.js:64). | The view scales its own flash by the amount of the `hurt` event and caps the rim for small hits (render only; do not touch `p.hurt`, it is sim state). |
+| 2 | The best images are the outdoor skies and the Cradle Annex. | 050, 052, 090, 102 (skies, ink, banding hold together); 080 to 082 (vines, pods, teal water). | Keep as the look target. |
+| 3 | Flat floors carry the weakest frames: the Quay plaza, the Steppe spawn (black slabs, nothing else), the road, the teal water as horizontal stripes (82). Walls are rich, floors are a single grey. | 053, 090, 092, 082, 100. | Floor variety pass on the exemplar maps (decals, debris, puddles, two-tone dither). |
+| 4 | Viewmodels: the axe is the best. The fists read as two flat cream planks and a brick; the arc lamp is a cyan low-poly dome with black wireframe edges (not painted); the fork throws a flat pale hexagon at the wall; every gun shares one gold and black palette; the flare cannon (the start weapon of every map) fills the lower right and stays as bright as day in a black corridor. | 038, 039, 028, 034, 050, 080, 100. The fists frame may be an idle pose: a still cannot say. | Fists and arc lamp redraw; scene-lit viewmodel in dark places; a smaller start gun. |
+| 5 | Every ADS covers the lower middle of the screen with a slab (scattergun, flare, rivet driver, carbine). The harpoon and line-thrower peep rings are the good ones. | 021, 023, 025, 031, 027, 033. | Decision for the owner: how much is ADS worth in a DOOM-like. Not changed. |
+| 6 | The title still says "EPISODE 1 PREVIEW", the key card omits key 0, the dev picker shows. | 001. | One line each. |
+| 7 | Six identical crate stacks in a straight row at the Customs Hall arrival (a toy-soldier barricade); an off-palette bright teal slab column in the Quay warehouse (055), unexplained. | 060, 055. | Check intent in the sources; dress the row; find what the slab is. |
+| 8 | The HUD is clean and reads in every frame. | all | Keep. |
+
+## Not confirmed, kept as open
+- "You end up inside the bodies" (Grok). The collider is 0.32 (player) + 0.40 (Tollbearer) = 0.72 m eye to centre, the rig's 85%-radius is 0.44 (`check-rigs.mjs`), the near plane 0.1 m; the arms, bell and coat sit beyond the 85% radius. Plausible at the edges; no campaign frame shows it (frames 038 to 040 are teleported next to a Range target). Measure the rig's full extent before touching a collider.
+- "Message box in the middle of the screen" (Grok, the Range card): the objective box is top left in every frame here; no message pop-up was captured.
+- Gemini: enemies "wash out in daylight" (092 shows them high-contrast), blood does not reach walls (no frame shows a wall hit either way), the turn lag is "sublime" (one nudged sample).
+
+## What this run cannot judge
+Bosses, set pieces, the automap, damage in campaign maps, the dark maps, Act B to D rooms, any fight at close range, any motion, any sound.
+
+## Order this implies
+1. Cheap, render only, visible in every frame: findings 1, 6, and the lighting of the start gun.
+2. Art: fists, arc lamp, fork effect; the floor pass on the three exemplar maps: Marrow Quay (first impression), the Cradle Annex (the best place), Glass Steppe (the emptiest).
+3. One more capture, tighter than the first (list in the reply), before any level is redesigned.
+4. Then P1 to P3 of the Director's Plan (node only) as written.
