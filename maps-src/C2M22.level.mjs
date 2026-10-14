@@ -83,9 +83,9 @@ const MAP = {
   messages: [
     { id: 'start', at: [41, 11], radius: 5, speaker: 'INES', text: 'A cloister. The arcade is low and the garden in the middle is full of stones with names cut in them in a hand I cannot read. There is a candle lit at every corner of the building.' },
     { id: 'count', at: [41, 14], radius: 4, speaker: 'TALLY PLATE', text: 'THE SILENT IN THIS HOUSE: 6. TO THE LIFT, ON THE CALL. A number is crossed out and written again in the margin: 4.' },
-    { id: 'plan', at: [16, 28], radius: 6, speaker: 'HULL', text: 'The four chapels are at the corners. Each has a latch on the far wall, beside the candles. When all four are thrown the call goes out.' },
+    { id: 'plan', at: [16, 12], radius: 6, speaker: 'HULL', text: 'The four chapels are at the corners. Each has a latch on the far wall, beside the candles. When all four are thrown the call goes out.' },
     { id: 'hunt', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'A bell has gone in the south arm, three strokes. The Songkeepers on the rounds have stopped walking and turned to face the north-west chapel.' },
-    { id: 'zealot', at: [15, 36], radius: 6, speaker: 'INES', text: 'Songkeepers in the arcade, in pairs, walking the rounds. They are not looking for me yet. They are looking for what the chapels hold.' },
+    { id: 'zealot', at: [10, 13], radius: 6, speaker: 'INES', text: 'Songkeepers in the arcade, in pairs, walking the rounds. They are not looking for me yet. They are looking for what the chapels hold.' },
     chapelMsg('c1', [1, 1], 'The latch is thrown. The cell behind the altar is empty. The bench is still warm.'),
     chapelMsg('c2', [1, 1], 'The second latch. A cup on the floor, still wet. Whoever it held went out by the arcade without a sound.'),
     chapelMsg('c3', [1, 1], 'The third latch. The cell is open and there is a folded cloth on the bench. The candle beside it has just been lit.'),

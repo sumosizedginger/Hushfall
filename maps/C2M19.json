@@ -1426,7 +1426,7 @@
   },
   {
    "id": "shuttle",
-   "at": [58, 81],
+   "at": [50, 81],
    "radius": 5,
    "speaker": "HULL",
    "text": "The shuttle comes down on this corridor once a bar. Its shadow comes first, and the floor glows orange before it lands."

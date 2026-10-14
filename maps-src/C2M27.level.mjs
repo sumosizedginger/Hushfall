@@ -68,7 +68,7 @@ const MAP = {
   entities: [...P.ents,
     { type: 'switch', id: 'far-lip', at: LEVER.at, wall: LEVER.wall, once: true, do: [{ exit: { set: 'unlock' } }, { message: 'far-lip' }, { objective: 'The far lip is held. The exit is at the east end of the north road' }] },
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
-  scenery: [{ kind: 'shaft', at: [64, 20], y: -4, scale: 2 }],
+  scenery: [{ kind: 'shaft', at: [64, 20], y: -13, scale: 2 }],
   messages: [
     { id: 'start', at: [6, 8], radius: 5, speaker: 'INES', text: 'The stone is cold, and from the crack comes a light the colour of a forge. The whole country has cracked along one line, and the crack is as wide as a harbour mouth.' },
     { id: 'front', at: [14, 8], radius: 5, speaker: 'HULL', text: 'Forty-five seconds after you arrive the road starts to fall from the west end, a strip at a time, a metre a second. A strip falls three times; the view shakes first. Stay ahead.' },

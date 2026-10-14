@@ -1424,7 +1424,7 @@
   },
   {
    "id": "plan",
-   "at": [16, 28],
+   "at": [16, 12],
    "radius": 6,
    "speaker": "HULL",
    "text": "The four chapels are at the corners. Each has a latch on the far wall, beside the candles. When all four are thrown the call goes out."
@@ -1438,7 +1438,7 @@
   },
   {
    "id": "zealot",
-   "at": [15, 36],
+   "at": [10, 13],
    "radius": 6,
    "speaker": "INES",
    "text": "Songkeepers in the arcade, in pairs, walking the rounds. They are not looking for me yet. They are looking for what the chapels hold."

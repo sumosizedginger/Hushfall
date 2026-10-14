@@ -88,7 +88,7 @@ const MAP = {
     { id: 'strand', at: [20, 42], radius: 4, speaker: 'INES', text: 'A strand as thick as a hawser runs along the rail. A brass badge is fused into it, a Port Marrow harbour badge, number 118. The harbour issued them in order.' },
     { id: 'knots', at: [22, 36], radius: 6, speaker: 'HULL', text: 'A knot is where the lattice is tied off. There is one on every corner of this ring. Break all four and the strands they hold go slack.' },
     { id: 'tally', at: [50, 22], radius: 5, speaker: 'TALLY PLATE', text: 'HELD IN THE LATTICE: 1,218. Under it, in a second hand: NOT YET SUNG. The mark beside the number is the one the Vael use for a name.' },
-    { id: 'island', at: [50, 40], radius: 5, speaker: 'INES', text: 'The organ is rooted in the island like a tooth. Every strand in the cathedral comes back to it. There is a lever low on the root, under two lamps.' },
+    { id: 'island', at: [42, 40], radius: 5, speaker: 'INES', text: 'The organ is rooted in the island like a tooth. Every strand in the cathedral comes back to it. There is a lever low on the root, under two lamps.' },
     { id: 'lever', at: [C, C + 3], radius: 3, speaker: 'HULL', text: 'The cut lever is on the south face of the root, under the lamps. It does nothing while a knot still ties the lattice.' },
     { id: 'cut', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The root has let go of the strands. Every bridge has stopped lighting.' },
     { id: 'door', at: [C, 11], radius: 4, speaker: 'HULL', text: 'The north wall is shut. It opens when the four knots are broken and the root is cut, in either order.' },

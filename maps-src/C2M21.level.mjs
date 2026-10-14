@@ -93,10 +93,10 @@ const MAP = {
   messages: [
     { id: 'start', at: [7, C], radius: 5, speaker: 'INES', text: 'A pit of white light with three catwalks round it, one above another, and a wall between each. The light goes up and down about once every second and a half.' },
     { id: 'steam', at: [12, C - 8], radius: 6, speaker: 'HULL', text: 'A steam jet is lit for a beat before it fires. A segment that is dark has just fired and will not again for four seconds.' },
-    { id: 'resonant', at: [25, C - 14], radius: 7, speaker: 'INES', text: 'Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it is slow.' },
+    { id: 'resonant', at: [30, 30], radius: 7, speaker: 'INES', text: 'Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it is slow.' },
     { id: 'ring', at: [C - 20, C - 25], radius: 6, speaker: 'HULL', text: 'Its ring comes out of the waist on the beat. A pier of stone stops it, and so does a catwalk above or below it. Keep it away from the others.' },
-    { id: 'log', at: [C, C + 24], radius: 5, speaker: 'FOREMAN LOG', text: 'FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.' },
-    { id: 'ramps', at: [C - 36, C - 12], radius: 6, speaker: 'HULL', text: 'The ramps to the middle ring are at the corners, the ramps to the top at the points of the compass. You cannot go straight up.' },
+    { id: 'log', at: [41, 48], radius: 5, speaker: 'FOREMAN LOG', text: 'FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.' },
+    { id: 'ramps', at: [12, 31], radius: 6, speaker: 'HULL', text: 'The ramps to the middle ring are at the corners, the ramps to the top at the points of the compass. You cannot go straight up.' },
     { id: 'v1', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The first wheel is turned. The pipe beside it goes quiet and the steam on this ring is a shade lower.' },
     { id: 'v2', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The second wheel is turned. The pit is a little less white.' },
     { id: 'v3', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The third wheel is turned. The seal on the top ring has let go.' },

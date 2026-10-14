@@ -90,7 +90,7 @@ const MAP = {
     { id: 'thread', at: [24, Z0[2] + 5], radius: 5, speaker: 'PLATE', text: 'A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.' },
     { id: 'belt', at: [34, Z0[2] + 3], radius: 5, speaker: 'HULL', text: 'The floor of this corridor runs west for ten seconds and stands for eight. When the chevrons turn amber it is about to change.' },
     { id: 'breath', at: [49, 27], radius: 5, speaker: 'HULL', text: 'These doors breathe. Each is open three seconds in six, and each opens a second after the one in front. Go when the first opens and you are through all three.' },
-    { id: 'shuttle', at: [X0[1] + 14, Z0[2] + 3], radius: 5, speaker: 'HULL', text: 'The shuttle comes down on this corridor once a bar. Its shadow comes first, and the floor glows orange before it lands.' },
+    { id: 'shuttle', at: [50, 81], radius: 5, speaker: 'HULL', text: 'The shuttle comes down on this corridor once a bar. Its shadow comes first, and the floor glows orange before it lands.' },
     { id: 'cut', at: [50, 12], radius: 4, speaker: 'PLATE', text: 'CUTTING ROOM. The length of a thread is the length of a life: it is measured here and cut. The tally on the table is not finished.' },
     { id: 'key', at: [50, 8], radius: 4, speaker: 'HULL', text: 'The iron key lies on the cutting table, under the lamps. It opens the door at the east end of the north lane.' },
     { id: 'door', at: [EXD[0] - 2, EXD[1]], radius: 4, speaker: 'HULL', text: 'The door is shut. It takes an iron key, and the key is in the cutting room at the north end of the hall.' },
