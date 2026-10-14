@@ -22,11 +22,14 @@ test('the alphabet: every unit 0 to 61 has one character, hchar and hval are inv
   assert.ok(Number.isNaN(hval('{')) && Number.isNaN(hval('-')) && Number.isNaN(hval('é')), 'a character outside the alphabet is still not a height');
 });
 
+/** the shipped maps built AFTER the taller format (PT-046: the Root Bell's well is 30 m deep: C2M25 is the first main map that uses the capitals); every other shipped map is held to the old alphabet */
+const TALL = new Set(['C2M25.json']);
+
 test('nothing old moved: every cell of every shipped and dev map reads the same height and ceiling under the new alphabet as under the old', () => {
   let cells = 0, maps = 0;
   for (const dir of ['maps', 'maps-dev']) for (const f of fs.readdirSync(path.join(ROOT, dir)).filter((n) => n.endsWith('.json'))) {
     const src = JSON.parse(fs.readFileSync(path.join(ROOT, dir, f), 'utf8')); maps++;
-    for (const layer of [src.heights, src.ceilings]) if (layer) for (const row of layer) for (const c of row) { cells++; if (dir === 'maps-dev' && /[A-Z]/.test(c)) continue; assert.equal(hval(c), oldHval(c), f + ': ' + c); }      // (a dev map of drop B may use the capitals: they are the whole point of the format; no shipped map does)
+    for (const layer of [src.heights, src.ceilings]) if (layer) for (const row of layer) for (const c of row) { cells++; if ((dir === 'maps-dev' || TALL.has(f)) && /[A-Z]/.test(c)) continue; assert.equal(hval(c), oldHval(c), f + ': ' + c); }      // (a dev map of drop B may use the capitals: they are the whole point of the format; no shipped map does)
   }
   assert.ok(maps >= 55 && cells > 5e5, 'it read ' + maps + ' maps, ' + cells + ' cells');
 });
