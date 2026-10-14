@@ -7,6 +7,7 @@ import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
 import { lockBusy } from './airlock.js';                                                  // PT-033: a lock's second door waits for the air: the bot stands and waits, as it does at a sound-lock
 import { loadState, loadAtCell } from './loads.js';
+import { conditionMet } from './script.js';                                                // PT-046: the waitfor op asks the same question a trigger does
 import { carState, carCovers } from './cars.js';                                           // PT-046: the ride op
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
@@ -76,7 +77,7 @@ export class Bot {
       if (e.state === 'dead' || ENEMIES[e.kind].peaceful || (e.state === 'idle' && !ENEMIES[e.kind].node && !(choirG && e.group === choirG))) continue;                   // (a singer of a living conductor's choir is a target even asleep: PT-046)
       if (ringUp && ENEMIES[e.kind].boss) continue;                                                // shielded: cut the ring first
       if (ENEMIES[e.kind].unison && w.enemies.some((o) => o.group === ENEMIES[e.kind].unison.group && o.state !== 'dead')) continue;          // PT-046: a conductor whose choir still sings takes a twentieth of a hit: the singers first
-      const d = Math.hypot(e.x - p.x, e.z - p.z), lim = ENEMIES[e.kind].hive ? 45 : 16;          // (PT-046: the Hive Cantor is a target from the far tiers, where its low ring does not reach; anything else within 16 m as ever)
+      const d = Math.hypot(e.x - p.x, e.z - p.z), lim = ENEMIES[e.kind].hive ? 45 : (ENEMIES[e.kind].node && this.nodeReach) ? this.nodeReach : (this.standing || 16);          // (PT-046: the Hive Cantor is a target from the far tiers, where its low ring does not reach; anything else within 16 m as ever)
       if (d < lim && hasLOS(w, p.x, p.z, e.x, e.z)) { if (ENEMIES[e.kind].hive) { if (!bossT || d < bossT.d) bossT = { e, d }; } else if (d < bd) { best = e; bd = d; } }
     }
     if (!best && bossT) return bossT;                                                                         // (the conductor only when nothing else is in reach: its summoned Choristers first, as a human would)
@@ -93,8 +94,12 @@ export class Bot {
     const wantFlare = !wantHarpoon && !wantArc && plated && (p.ammo.flare || 0) > 0 && t.d > 4;                    // front plate: only splash gets through cleanly
     const wantScatter = !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('scattergun') && (p.ammo.shell || 0) > 0 && (t.d < 7 * sr || (t.e.kind === 'gaunt' && t.d < 10 * sr) || ((p.ammo.flare || 0) <= 0 && (p.ammo.rivet || 0) <= 0));   // and shells are all there is
     const wantRivet = !wantScatter && !wantFlare && !wantHarpoon && !wantArc && p.weapons.includes('rivet') && (p.ammo.rivet || 0) > 0 && (t.d < 14 * rr || (p.ammo.flare || 0) <= 0);                 // mid-range: the driver's steady stream (flares are for range and crowds)
-    const lastResort = p.weapons.includes('carbine') && (p.ammo.round || 0) > 0 && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0);          // PT-023: the carbine is the bot's LAST resort: with it in the pocket the sim's flare feed no longer carries a bot that has run out of everything else, so the bot has to use it
-    const wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : lastResort ? 'carbine' : 'flare';
+    const lastResort = p.weapons.includes('carbine') && (p.ammo.round || 0) > 0 && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0 && (id !== 'arc' || t.d < 11));          // PT-023: the carbine is the bot's LAST resort: with it in the pocket the sim's flare feed no longer carries a bot that has run out of everything else, so the bot has to use it
+    let wantId = wantHarpoon ? 'harpoon' : wantArc ? 'arc' : wantScatter ? 'scattergun' : wantRivet ? 'rivet' : lastResort ? 'carbine' : 'flare';
+    if (this.fallback) {                                                                                                    // PT-046 (an op with `fallback: true`: C2M28, C2M29): when the gun it wants is empty it takes whichever gun still has something in it, as a human does
+      const has = (id) => p.weapons.includes(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0;
+      if (!has(wantId)) { const alt = ['rivet', 'harpoon', 'scattergun', 'carbine', 'arc', 'flare'].find((id) => has(id) && (id !== 'arc' || t.d < 11) && (id !== 'scattergun' || t.d < 12)); if (alt) wantId = alt; }
+    }
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : wantId === 'arc' ? 'weapon5' : 'weapon7'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
     const def = BOT_GUNS.has(p.weapon) || (lastResort && p.weapon === 'carbine') ? WEAPONS[p.weapon] : WEAPONS[wantId], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
@@ -110,7 +115,7 @@ export class Bot {
     const shoot = Math.abs(yawErr) < (hitscan ? 0.09 : 0.06) && inRange && (p.ammo[def.ammo] || 0) > 0 && p.ads > 0.85 && p.switchT <= 0;
     this.setHeld('fire', shoot && (def.charge ? w.tick % 10 < 5 : true));         // a charging weapon (the lamp) fires on RELEASE: the bot taps it, five ticks down and five up (about six a second)
     this.setHeld('back', !hitscan && t.d < 2.8);                       // keep clear of our own flare splash
-    this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there
+    this.setHeld('forward', !inRange && t.d > 6);                       // not close enough for this weapon: close the distance instead of standing there (a bot that HOLDS a position, PT-046 C2M28, lets the enemy come: the landing is where the supplies are)
     // out of ammunition for everything it carries: the bot closes in and bashes (key V) instead of standing there with a dry gun (the old last-resort flare feed is gone, fists never run out)
     const dry = !lastResort && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0) && !plated && !ENEMIES[t.e.kind].boss;          // (never walks up to plate or a boss with fists: a player flanks, the bot just waits for the feed's flare)
     if (dry) { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('forward', t.d > 1.6); if (t.d < 2.3 && w.tick % 30 === 0) { this.in.press('melee'); this.releaseMelee = true; } }
@@ -125,8 +130,9 @@ export class Bot {
     const w = this.w, p = w.player, boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead');
     if (!boss) { for (const a of ['fire', 'aim', 'forward', 'back', 'right', 'sprint']) this.setHeld(a, false); return true; }
     // the Gate Warden stands a whole arena away: a ring it has only just drawn breath for, or one that is still forty metres off, is no reason to stop (a human takes cover when the ring is about to arrive, and always from the beam)
+    if (boss.rb && (this.dodgeSpikes() || this.dodgeCharge(boss))) return false;                                                                       // (PT-046, C2M29: the spikes first)
     const far = !!ENEMIES[boss.kind].sweep;
-    const ringsMatter = !far || p.hp < 45;                                                                                // a ring costs 13: only the beam is worth hiding from while there is hit points to spare
+    const ringsMatter = (!far || p.hp < 45) && !(boss.rb?.last && p.hp >= 45);                                           // (the Last Note's ring comes every three seconds: a bot with hit points to spare fights through it instead of cowering for good)                                                                                // a ring costs 13: only the beam is worth hiding from while there is hit points to spare
     const danger = (ringsMatter && (boss.pulseT ?? -1) >= 0) || (boss.sweepT ?? -1) >= 0 || (boss.echoT ?? 0) > 0 || (ringsMatter && w.pulses.some((q) => (q.back ? q.r > Math.hypot(p.x - q.x, p.z - q.z) - 1.5 : q.r < Math.hypot(p.x - q.x, p.z - q.z) + 1.5)));      // (PT-039: a ring that has turned back is dangerous while it is still outside the player: it is coming in)
     if (danger && !this.heightClear(boss, p.y)) {
       if (this.exposedTo(boss, p.x, p.z) && (!this.cover || w.tick > this.coverExpires)) { this.cover = this.findCover(boss); this.coverExpires = w.tick + 45; }
@@ -143,7 +149,51 @@ export class Bot {
     const cg = ENEMIES[boss.kind].unison?.group, singers = cg ? w.enemies.filter((e) => e.group === cg && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z)) : [];
     const nodes = (singers.length ? singers : w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead')).slice().sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
     const goal = nodes[0] ?? boss, m = w.map;
-    this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, 7);
+    if (boss.rb && goal !== boss) {                                                                                         // PT-046 (C2M29): an anchor with a pillar in front of it is shot from the next place on the SAME tier where it shows, not from the middle of the floor under the clapper
+      const cx = boss.rb.cx, cz = boss.rb.cz, r = Math.hypot(p.x - cx, p.z - cz), a0 = Math.atan2(p.z - cz, p.x - cx);
+      if (r > 8 && !hasLOS(w, p.x, p.z, goal.x, goal.z)) for (let k = 1; k <= 24; k++) for (const sgn of [1, -1]) {
+        const a = a0 + sgn * k * (Math.PI / 24), x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
+        if (!hasLOS(w, x, z, goal.x, goal.z) || !this.plainWalk(x, z, x, z)) continue;
+        this.follow([Math.floor(x / m.cell), Math.floor(z / m.cell)], 0.6, 0.8); return false;
+      }
+    }
+    this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, hasLOS(w, p.x, p.z, goal.x, goal.z) ? 7 : 1.5);          // (PT-046, C2M29: within seven metres but behind a pillar is not arrived: walk round it)
+    return false;
+  }
+  /** PT-046 (C2M29): a straight walk over plain floor (no door, no secret panel, nothing inside a secret room): a spot to dodge or hide in must not be a place the bot would have to open a panel to reach */
+  plainWalk(x0, z0, x1, z1) {
+    const m = this.w.map, n = Math.max(2, Math.ceil(Math.hypot(x1 - x0, z1 - z0) / 0.5));
+    for (let i = 1; i <= n; i++) {
+      const cx = Math.floor((x0 + (x1 - x0) * i / n) / m.cell), cz = Math.floor((z0 + (z1 - z0) * i / n) / m.cell), k = m.kind(cx, cz);
+      if (k !== 'floor' && k !== 'outdoor') return false;
+      for (const sc of m.secrets) if (sc.cells.some(([a, b]) => a === cx && b === cz)) return false;
+    }
+    return true;
+  }
+  /** PT-046 (C2M29): the Root Bell's rooted spikes are called a second ahead at the place you stand: step out of the circle (the nearest clear point two and a half metres off it) and keep going till it has struck */
+  dodgeSpikes() {
+    const w = this.w, p = w.player, S = ENEMIES.rootbell.bell.spikes; if (!w.spikes?.length) return false;
+    for (const q of w.spikes) {
+      if (q.struck) continue; const d = Math.hypot(p.x - q.x, p.z - q.z); if (d >= S.r + 0.9) continue;
+      const base = d > 0.2 ? Math.atan2(p.x - q.x, p.z - q.z) : 0; let best = null;
+      for (const off of [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6, 2.2, -2.2, Math.PI]) {
+        const a = base + off, x = q.x + Math.sin(a) * (S.r + 1.6), z = q.z + Math.cos(a) * (S.r + 1.6);
+        if (moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) && this.plainWalk(p.x, p.z, x, z) && Math.abs(cellFloor(w, Math.floor(x / w.map.cell), Math.floor(z / w.map.cell)) - p.y) < 0.9) { best = [x, z]; break; }
+      }
+      if (best) { this.setHeld('fire', false); this.setHeld('aim', false); this.steerTo(best[0], best[1], 0.3); this.setHeld('sprint', true); return true; }
+    }
+    return false;
+  }
+  /** PT-046 (C2M29): the clapper's charge is a straight dash after a second's tell: leave its line (a body's width and more on either side), whichever creature is nearer */
+  dodgeCharge(boss) {
+    const w = this.w, p = w.player; if ((boss.chargeT ?? -1) < 0) return false;
+    const fx = Math.sin(boss.yaw), fz = Math.cos(boss.yaw), rx = p.x - boss.x, rz = p.z - boss.z, along = rx * fx + rz * fz, lat = rx * fz - rz * fx;
+    if (along < -3 || along > 40 || Math.abs(lat) > 3.6) return false;
+    const sgn = lat >= 0 ? 1 : -1;
+    for (const s2 of [sgn, -sgn]) {
+      const x = p.x + fz * s2 * 4.2, z = p.z - fx * s2 * 4.2;
+      if (moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) && this.plainWalk(p.x, p.z, x, z) && Math.abs(cellFloor(w, Math.floor(x / w.map.cell), Math.floor(z / w.map.cell)) - p.y) < 0.9) { this.setHeld('fire', false); this.setHeld('aim', false); this.steerTo(x, z, 0.3); this.setHeld('sprint', true); return true; }
+    }
     return false;
   }
   /** a pickup worth walking to when nothing is shooting: health when hurt, armour when bare, ammo when low (within 16 m) */
@@ -152,6 +202,7 @@ export class Bot {
     const OWNER = { flare: 'flare', shell: 'scattergun', rivet: 'rivet', bolt: 'harpoon', cell: 'arc' };                 // ammunition for a gun it does not carry is not worth a walk (the boxes may be there for a later weapon, or for the player who found the gun)
     for (const it of w.pickups) {
       if (this.skipPickups?.has(it.id)) continue;
+      if (w.map.secrets.length) { const cx = Math.floor(it.x / w.map.cell), cz = Math.floor(it.z / w.map.cell); if (w.map.secrets.some((sc) => sc.cells.some(([a, b]) => a === cx && b === cz))) continue; }          // (PT-046: a box in a secret room is not on the way: the main route finds no secret)
       const def = PICKUPS[it.kind], d = Math.hypot(it.x - p.x, it.z - p.z); if (d >= bd || (it.drop && d > 7) || Math.abs(it.y - p.y) > 1.2) continue;          // a box a creature dropped is worth a short walk (7 m; the magnet brings it the last 3): not a march across a boss arena (PT-025)
       const low = def.type === 'health' ? p.hp < 85 : def.type === 'armor' ? p.armor < 40 : def.type === 'ammo' ? p.weapons.includes(OWNER[def.ammo] ?? 'none') && (p.ammo[def.ammo] || 0) < (def.ammo === 'rivet' ? 90 : def.ammo === 'shell' ? 14 : 8) : false;
       if (low) { best = it; bd = d; }
@@ -159,10 +210,12 @@ export class Bot {
     return best;
   }
   /** PT-046: the Hive Cantor's ring is a plane `h` metres high at the conductor's floor: a player standing more than that above it is under no ring and need not hide (a human climbs a tier). Only for a boss whose rings say so (`hive.ring.h`). */
-  heightClear(boss, y) { const h = ENEMIES[boss.kind].hive?.ring?.h; if (h == null) return false; const up = y - boss.y; const clear = up > h + 0.6 || (this.tierHold && up > h + 0.1); this.tierHold = clear; return clear; }          // (a little hysteresis: standing on the lip of a tier is still standing on it)
+  /** the vertical reach of the boss's ring right now (m above its floor): the Hive Cantor's ring, the Root Bell's ring and (once the Last Note has begun) its taller one; null for a boss with no low ring */
+  ringH(boss) { const d = ENEMIES[boss.kind], b = d.bell; return d.hive?.ring?.h ?? (b ? (boss.rb?.last ? b.lastRing.h : (b.ring.h ?? 1)) : null); }
+  heightClear(boss, y) { const h = this.ringH(boss); if (h == null) return false; const up = y - boss.y; const clear = up > h + 0.6 || (this.tierHold && up > h + 0.1); this.tierHold = clear; return clear; }          // (a little hysteresis: standing on the lip of a tier is still standing on it)
   /** a point the boss can see: for the Gate Warden also a point a body-width to either side of it (its beam is 0.9 m wide: a corner is not cover from it) */
   exposedTo(boss, x, z) {
-    const w = this.w; if (ENEMIES[boss.kind].hive?.ring?.h != null) { const cs = w.map.cell, fy = cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)); if (fy - boss.y > ENEMIES[boss.kind].hive.ring.h + 0.6) return false; }          // (a floor above the ring's plane is cover from it)
+    const w = this.w, rh0 = this.ringH(boss); if (rh0 != null) { const cs = w.map.cell, fy = cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)); if (fy - boss.y > rh0 + 0.6) return false; }          // (a floor above the ring's plane is cover from it)
     if (hasLOS(w, boss.x, boss.z, x, z)) return true;
     if (!ENEMIES[boss.kind].sweep) return false;
     const dx = x - boss.x, dz = z - boss.z, l = Math.hypot(dx, dz) || 1, px = -dz / l, pz = dx / l;
@@ -171,18 +224,18 @@ export class Bot {
   /** the nearest point within 9 m that the boss has no line to (behind a pillar), or null */
   findCover(boss) {
     const w = this.w, p = w.player; let best = null, bd = 1e9;
-    const rh = ENEMIES[boss.kind].hive?.ring?.h;
+    const rh = this.ringH(boss);
     if (rh != null) {                                                                                                         // PT-046: against the Hive Cantor's low ring a human climbs a tier: the nearest floor a metre and more above the conductor's, within 14 m, with a clear walk (and a line to the boss: from there it can be shot)
       for (const r of [2, 3, 4, 5.5, 7, 9, 11, 14]) for (let k = 0; k < 24 && !best; k++) {
         const a = k / 24 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r, cs = w.map.cell;
-        if (cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)) - boss.y <= rh + 0.6 || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !hasLOS(w, boss.x, boss.z, x, z)) continue;
+        if (cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)) - boss.y <= rh + 0.6 || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !this.plainWalk(p.x, p.z, x, z) || !hasLOS(w, boss.x, boss.z, x, z)) continue;
         best = [x, z];
       }
       if (best) return best;
     }
     for (const r of [2, 3, 4, 5.5, 7, 9]) for (let k = 0; k < 16; k++) {
       const a = k / 16 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r;
-      if (this.exposedTo(boss, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue;
+      if (this.exposedTo(boss, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !this.plainWalk(p.x, p.z, x, z)) continue;
       const d = r + 0.3 * Math.hypot(x - boss.x, z - boss.z); if (d < bd) { bd = d; best = [x, z]; }
     }
     return best;
@@ -331,17 +384,19 @@ export class Bot {
       if (this.lampPressed) { this.in.release('lamp'); this.lampPressed = false; }
       else if (w.map.dark && (op.op === 'lamp' ? op.on !== false : (this.lampWanted ?? true)) !== p.lamp.on && (p.lamp.on || p.lamp.oil > 0 || p.lamp.eternal)) { this.in.press('lamp'); this.lampPressed = true; }
     }
-    if (++this.opTicks > this.maxOp * (op.op === 'killboss' ? 2 : 1)) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
+    if (++this.opTicks > (op.max ? op.max * 60 : this.maxOp * (op.op === 'killboss' ? 2 : 1))) { this.failed = `op ${this.i} (${op.op}) timed out`; return; }
     if (p.air) { for (const a of ['forward', 'back', 'left', 'right', 'sprint']) this.setHeld(a, false); this.stillFor = 0; this.lastAir = w.tick; return; }       // PT-032: in the air the bot rides the arc (a steered bot misses what the throw would have hit)
     const moved = Math.hypot(p.x - this.lastPos[0], p.z - this.lastPos[1]);
     this.stillFor = moved > 0.02 ? 0 : this.stillFor + 1; if (moved > 0.02) this.lastPos = [p.x, p.z];
     if (this.escapePool()) { this.stillFor = 0; return; }
+    this.fallback = !!op.fallback; this.nodeReach = op.op === 'killboss' && op.fallback ? 26 : 0;                                     // (the Root Bell's anchors are shot from the tier they can be seen from: a human fires at what he can see)
+    this.standing = op.op === 'waitfor' ? (op.reach ?? 26) : 0;                                                                   // PT-046 (C2M28): a bot that holds a position answers a shooter at the range the shooter has, as a human would (16 m on the move, as ever)
     const t = op.op === 'killboss' || this.atUsePoint(op) || (op.op === 'ride' && (this.rideState?.i === this.i ? this.rideState.phase >= 2 : false)) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.wasFighting = true; this.fight(t); if (t.d <= 4 && w.tick - (this.lastAir ?? -99999) < 900) this.stillFor = 0;          // (PT-046: landing from a vent among them and fighting them in your face is not being stuck)
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
       if ((op.op === 'goto' || op.op === 'use' || op.op === 'chime') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
-      if (op.op === 'kill' || op.op === 'ride') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
+      if (op.op === 'kill' || op.op === 'ride') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitfor' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 4) this.failed = 'stuck in combat'; return; } }
     else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('left', false); this.setHeld('aim', false); this.calm++; }
     let done = false;
     if (op.op === 'goto') done = this.follow(op.at, 0.6);
@@ -352,6 +407,7 @@ export class Bot {
     // done when nothing awake is close by, or after 4 s of calm: an awake enemy can be stuck behind a wall with no path to us
     } else if (op.op === 'kill') done = !this.fights || (this.calm > 90 && !w.enemies.some((e) => e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind].peaceful && Math.hypot(e.x - p.x, e.z - p.z) < 14)) || this.calm > 240;
     else if (op.op === 'wait') done = this.opTicks >= op.seconds * 60;
+    else if (op.op === 'waitfor') done = conditionMet(w, { when: op.when });                                           // PT-046 (C2M28): stand and fight until a trigger condition holds ('time:200', 'dead:w8', a list is an AND); the wave comes to the bot
     else if (op.op === 'lamp') { this.lampWanted = op.on !== false; done = true; }                                                 // PT-038: the lantern lit or out from here on
     else if (op.op === 'killboss') done = this.bossTick();
     else if (op.op === 'switch') {
@@ -390,7 +446,7 @@ export class Bot {
       if (!s) this.failed = 'no sector ' + op.id; else done = Math.abs(s.h - goal) < 1e-6 && Math.abs(s.target - goal) < 1e-6;
     }
     else this.failed = 'unknown op ' + op.op;
-    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitsector' && op.op !== 'waitplatform' && op.op !== 'killboss' && op.op !== 'ride' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
+    if (this.stillFor > this.stuckTicks && op.op !== 'wait' && op.op !== 'waitfor' && op.op !== 'waitsector' && op.op !== 'waitplatform' && op.op !== 'killboss' && op.op !== 'ride' && !done) this.failed = `stuck during op ${this.i} (${op.op}) at ${p.x.toFixed(1)},${p.z.toFixed(1)}`;
     if (done) { this.log.push({ op: op, tick: w.tick }); this.i++; this.opTicks = 0; this.path = null; this.setHeld('forward', false); this.setHeld('sprint', false); this.stillFor = 0; }
   }
 }

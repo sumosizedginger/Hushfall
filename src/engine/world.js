@@ -1026,8 +1026,8 @@ function updateEnemy(w, e, diff, dt) {
   if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
   else if (!sees) e.lost = (e.lost || 0) + dt;
   // hunt: head for the last place the player was seen; give up after a while (or on arrival) and go back to sleep
-  const tx = sees ? p.x : (e.lastX ?? p.x), tz = sees ? p.z : (e.lastZ ?? p.z), tdist = Math.hypot(tx - e.x, tz - e.z);
-  if (!sees && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
+  const tx = (sees || e.hunt) ? p.x : (e.lastX ?? p.x), tz = (sees || e.hunt) ? p.z : (e.lastZ ?? p.z), tdist = Math.hypot(tx - e.x, tz - e.z);          // PT-046 (C2M28): a `hunt` creature (a wave out of the dock's gates) always knows where you stand and never goes back to sleep
+  if (!sees && !e.hunt && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
   // steering: straight at the target when it is in view and the ground allows it; otherwise follow the distance field around walls, doors and ledges
   let ax = tx, az = tz;
   if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }

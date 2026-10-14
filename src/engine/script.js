@@ -25,7 +25,7 @@ export function runAction(w, a) {
   } else if (k === 'wake') { for (const e of w.enemies) if (e.group === v && e.state === 'idle') wakeEnemy(w, e, true, true); }
   else if (k === 'spawn') {
     const e = spawnEnemy(w, v.kind, (v.at[0] + 0.5) * m.cell, (v.at[1] + 0.5) * m.cell, typeof v.facing === 'number' ? v.facing : (v.facing ? { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI }[v.facing] : Math.PI));
-    if (v.group) e.group = v.group; if (v.variant) e.variant = v.variant; w.stats.total.enemies++;
+    if (v.group) e.group = v.group; if (v.variant) e.variant = v.variant; if (v.hunt) e.hunt = true; w.stats.total.enemies++;
     emit(w, 'enemy_spawn', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     if (v.wake !== false) wakeEnemy(w, e, false, true);
   }
@@ -66,7 +66,7 @@ const cond = {
   start: (w) => w.tick >= 1,
   enter: (w, t) => Math.hypot(w.player.x - t.x, w.player.z - t.z) <= t.r,
 };
-function conditionMet(w, t) {
+export function conditionMet(w, t) {
   if (Array.isArray(t.when)) return t.when.every((q) => conditionMet(w, { ...t, when: q }));                  // PT-033: a list is an AND
   const c = String(t.when);
   if (c.startsWith('not:')) return !conditionMet(w, { ...t, when: c.slice(4) });                                   // PT-037: the opposite of a condition (a seed ripens at time:90 unless not:dead:seed has stopped being true)
