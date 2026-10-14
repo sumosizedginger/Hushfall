@@ -41,3 +41,23 @@ The self-audit's capture job (`tools/dev/audit-capture.mjs`, written, NEVER RUN:
 - Only the Hive-Song Approach (an S-shaped gorge with side chambers) has a plan that looks designed rather than generated.
 - What this says about the plan's laws: scale is not shape. The new level laws (12 to 20) and the eight secret kinds are aimed at exactly this; the Steppe, the Deep Gate and Silent Roots are the first three Campaign 2 maps to rework, with the Cradle Annex's art as the target for their rooms.
 - Not seen and not claimed: every height, ceiling and light of these maps, every fight, every message, and any frame of Acts B to D.
+
+## My own visual assessment (the same audit on my own game), 2026-10-13
+Frames read: Gemini's 46 (current commit, SwiftShader); the Act B tours `review/level-c2m10..16` (generated 10-12, current gun); the creature sheets `review/assessment-2` (10-10, BEFORE the PT-035 coat changes); `review/pt-021/final` UI and Cradle frames (10-08); the Quay tour `review/level-c1e1m01` (2026-10-05, BEFORE the world pass and the new guns: used for sky and palette only). The harness refused my own capture job twice (`tools/dev/audit-capture.mjs`, written, never run), so NOTHING of Acts C and D has been seen except Gemini's three C2M30 frames.
+
+Verdict: the look is a real look, and it is uneven. The skies, the ink-and-band treatment, the creature kit and the UI type are good and coherent. The ground, the light, the held gun and the boss staging are not at the same level, and the weakest frames are weak for the same reasons again and again.
+
+Strong: the Quay dusk sky and its silhouettes (tower, crane, bollards); the Cradle Annex (vine walls, glowing pods); the catacomb walls of C2M13 (drawers with skull labels, lit gold); creature turnarounds (distinct hues and outlines: red coat, navy coat, white gown, brown brute, horn robe); the pause, intermission and death screens (serif caps, amber rules, plain tables); the HUD (readable in every frame).
+
+Weak, ranked by how many frames it spoils:
+1. FLOORS. One tone with sparse noise: Quay plaza and pier, C2M11 colonnade, C2M12 nave (a flat green-grey road to the horizon), Glass Steppe, the Annex water as scanlines. The walls carry the detail; the floor is a flat plane in 12 of 30 world frames.
+2. THE HELD GUN IS NOT IN THE WORLD'S LIGHT. The cannon is the same full gold in a black catacomb, a cold blue nave, a green garden and a sunset. It pins the lower right quarter of every frame and breaks the mood of any dark one. (The stills tours start with the default cannon, so the variety of what a player holds is not judged here.)
+3. LIGHT CLIPS INSTEAD OF GLOWING. C2M10: a lamp-lit pillar is one flat yellow, the figure beside it a featureless yellow-white cut-out; ten value bands and exposure 2.2 leave no mid-tone in a lit area.
+4. DARK MAPS ARE BLACK, NOT DARK. C2M13: pure-black wall masses, a black cut-out creature, one unidentified red slab; only the one lit wall reads. No ambient floor, so the player cannot tell shapes in the dark.
+5. THE SKY HAS CONFETTI. C2M11, C2M12, C2M14, C2M16: multicoloured pixel flecks over the dithered clouds read as noise in a still. Motion may change that; not judged.
+6. BOSSES READ AS PROPS. Sub-Cantor (C2M16): a crimson mass filling the top of the frame, no face, limb or tell. Cantor (C1E1M08, 10-08 build, BEFORE the shield fix): teal streaks across the walls read as glitches; whether the fix cured that is not seen.
+7. SEVEN IDENTICAL SIGNS OF A BOX. Repeated materials: the Annex's vine panel on every face (wallpaper), the same stall twice on the Quay, six identical crate stacks at the Customs Hall.
+8. HURT FLASH, and the title / key card text (see the first table).
+Open, owner's taste: the default 480-pixel render width gives close walls and pillars chunky blotches (C2M10 pillar, Customs Hall door wall). It IS the look approved 2026-09-29; the question is whether the default should be 640.
+
+Fix order (render only, no sim change; a Chrome job before and after each): (1) the hurt flash; (2) light the held gun by the place (the `lightbudget` / `LOOKS` lamp and hemisphere into the weapon scene); (3) a floor pass: lift the baked patches' contrast in `shading.js`, add per-look floor decals (planks, grates, puddles, rope, cracks, rubble) on the three exemplar maps first; (4) soften the lit-area clip (value bands over a brighter mid range, a lamp pool that falls off instead of cutting); (5) an ambient floor for dark maps (a rim of cool light on wall edges); (6) judge the sky flecks in motion; (7) the boss staging after (1) to (5), from real frames of each boss.
