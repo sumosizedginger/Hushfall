@@ -1,0 +1,74 @@
+[
+{
+"name": "01-the-landing",
+"x": 32.5,
+"z": 57.5,
+"yaw": 0.0,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-top-step",
+"x": 14.5,
+"z": 50.5,
+"yaw": -0.756,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-gate-bay",
+"x": 44.5,
+"z": 44.5,
+"yaw": -2.356,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-middle-step",
+"x": 32.5,
+"z": 49.5,
+"yaw": 0.0,
+"pitch": 0.15,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-causeway",
+"x": 32.5,
+"z": 20.5,
+"yaw": 3.14,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-rope",
+"x": 32.5,
+"z": 30.5,
+"yaw": 3.14,
+"pitch": 0.25,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-exit",
+"x": 32.5,
+"z": 14.5,
+"yaw": 0.0,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-seam",
+"x": 38.5,
+"z": 8.5,
+"yaw": 0.0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

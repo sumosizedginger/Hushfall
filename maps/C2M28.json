@@ -1,0 +1,1967 @@
+{
+ "format": 1,
+ "id": "C2M28",
+ "version": 1,
+ "name": "Last Tide",
+ "ceilingHeight": 4.2,
+ "atmosphere": {
+  "look": "tide",
+  "sky": "anselm",
+  "fog": "#34382c",
+  "fogDensity": 0.006
+ },
+ "grid": [
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμΜΜΜμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμΜΜΜμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμιμμιμμιμμιμμιSμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμιμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμιμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμιμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμιμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμιμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμιμμμμμμμμμμ",
+  "μμμμμμμμμμιΜΜΜμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμΜΜΜμμμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμ",
+  "μμμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμμ",
+  "μμμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμ",
+  "μμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμ",
+  "μμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμ",
+  "μμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμ",
+  "μμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμ",
+  "μμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμ",
+  "μμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμ",
+  "μμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμ",
+  "μμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμ",
+  "μμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~ΜΜΜ~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΜΜΜ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~ΜΜΜ~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~ΜΜΜ~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~GGDGG~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΙΙΙΙΙΙΙ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΙΙGGGΙΙ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΙΙGGGΙΙ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΙΙGGGΙΙ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~ΙΙΙΙΙΙΙ~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~ΙΙΙΙΙ~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~~~~~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~~~~~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~~~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜ~~~~~~~ΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμ",
+  "μμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμ",
+  "μμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμ",
+  "μμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμ",
+  "μμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμ",
+  "μμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμ",
+  "μμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμ",
+  "μμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμ",
+  "μμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμμ",
+  "μμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμμμ",
+  "μμμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμμ",
+  "μμμμμμμμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμ",
+  "μμμμμμμμμμιΜΜΜμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμΜΜΜμμμμμμμμμμ",
+  "μμμμμμμμμμμμιμμμμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμιμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜιμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμιμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμιΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμιμΜΜΜΜΜΜΜΜΜΜΜΜΜΜΜμιμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμιμμιμμιμμιμμιμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ",
+  "μμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμμ"
+ ],
+ "heights": [
+  "................................................................",
+  "................................................................",
+  "................................................................",
+  ".....................................444........................",
+  ".....................................444........................",
+  "......................................4.........................",
+  ".........................444444444444444........................",
+  "......................444444444444444444444.....................",
+  "....................4444444444444444444444444...................",
+  "..................44444444444444444444444444444.................",
+  ".................4444444443333333333333444444444................",
+  "...........444..444444433333333333333333334444444..444..........",
+  "...........4444444444333332222222222222333334444444444..........",
+  "...........4444444443333222222222222222223333444444444..........",
+  "............44444433332222222222222222222223333444444...........",
+  "............44444333222222222222222222222222233344444...........",
+  "...........4444433322222222222222222222222222233344444..........",
+  "..........444443332222222222222222222222222222233344444.........",
+  ".........44444333222222222211111111111222222222233344444........",
+  ".........44444332222222221111111111111112222222223344444........",
+  "........44444332222222221111.........11112222222223344444.......",
+  "........444433322222221111.............111122222223334444.......",
+  ".......44444332222222111.................11122222223344444......",
+  ".......4444333222222211...................1122222223334444......",
+  ".......444433222222211.....................112222222334444......",
+  "......4444433222222111.........111.........1112222223344444.....",
+  "......444433222222211..........222..........112222222334444.....",
+  "......444433222222111..........333..........111222222334444.....",
+  "......44443322222211...........444...........11222222334444.....",
+  "......44443322222211..........44444..........11222222334444.....",
+  "......44443322222211.........4444444.........11222222334444.....",
+  "......44443322222211.........4444444.........11222222334444.....",
+  "......44443322222211.........4444444.........11222222334444.....",
+  "......44443322222211.........4444444.........11222222334444.....",
+  "......44443322222211.........4444444.........11222222334444.....",
+  "......44443322222211..........44444..........11222222334444.....",
+  "......44443322222211.........................11222222334444.....",
+  "......444433222222111.......................111222222334444.....",
+  "......444433222222211.......................112222222334444.....",
+  "......4444433222222111.....................1112222223344444.....",
+  ".......444433222222211.....................112222222334444......",
+  ".......4444333222222211...................1122222223334444......",
+  ".......44444332222222111.................11122222223344444......",
+  "........444433322222221111.............111122222223334444.......",
+  "........44444332222222221111.........11112222222223344444.......",
+  ".........44444332222222221111111111111112222222223344444........",
+  ".........44444333222222222211111111111222222222233344444........",
+  "..........444443332222222222222222222222222222233344444.........",
+  "...........4444433322222222222222222222222222233344444..........",
+  "............44444333222222222222222222222222233344444...........",
+  "............44444433332222222222222222222223333444444...........",
+  "...........4444444443333222222222222222223333444444444..........",
+  "...........4444444444333332222222222222333334444444444..........",
+  "...........444..444444433333333333333333334444444..444..........",
+  ".................4444444443333333333333444444444................",
+  "..................44444444444444444444444444444.................",
+  "....................4444444444444444444444444...................",
+  "......................444444444444444444444.....................",
+  ".........................444444444444444........................",
+  "................................................................",
+  "................................................................",
+  "................................................................",
+  "................................................................",
+  "................................................................"
+ ],
+ "doors": [
+  {
+   "at": [32, 29],
+   "remote": true
+  }
+ ],
+ "secrets": [
+  {
+   "id": "seam",
+   "panel": [38, 5],
+   "cells": [
+    [37, 4],
+    [38, 4],
+    [39, 4],
+    [37, 3],
+    [38, 3],
+    [39, 3]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "w1-0",
+   "when": "time:30",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke1"
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [52, 52],
+      "group": "w1",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w1",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w1-1",
+   "when": "time:33",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 52],
+      "group": "w1",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w1",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w1-2",
+   "when": "time:36",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 12],
+      "group": "w1",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "w1",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w1-3",
+   "when": "time:39",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [52, 12],
+      "group": "w1",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 12],
+      "group": "w1",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w2-0",
+   "when": "time:48",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke2"
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [12, 52],
+      "group": "w2",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w2",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w2-1",
+   "when": "time:51",
+   "do": [
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [12, 12],
+      "group": "w2",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "w2",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w2-2",
+   "when": "time:54",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 12],
+      "group": "w2",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 12],
+      "group": "w2",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w2-3",
+   "when": "time:57",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 52],
+      "group": "w2",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w3-0",
+   "when": "time:66",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke3"
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 12],
+      "group": "w3",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [11, 12],
+      "group": "w3",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w3-1",
+   "when": "time:69",
+   "do": [
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [52, 12],
+      "group": "w3",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [51, 12],
+      "group": "w3",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w3-2",
+   "when": "time:72",
+   "do": [
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [52, 52],
+      "group": "w3",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w3",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w3-3",
+   "when": "time:75",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 52],
+      "group": "w3",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w3",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-0",
+   "when": "time:84",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke4"
+    },
+    {
+     "spawn": {
+      "kind": "bulwark",
+      "at": [52, 12],
+      "group": "w4",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 12],
+      "group": "w4",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-1",
+   "when": "time:87",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 52],
+      "group": "w4",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w4",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-2",
+   "when": "time:90",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [12, 52],
+      "group": "w4",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [11, 52],
+      "group": "w4",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-3",
+   "when": "time:93",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [12, 12],
+      "group": "w4",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [11, 12],
+      "group": "w4",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w5-0",
+   "when": "time:102",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke5"
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [52, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [53, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w5-1",
+   "when": "time:105",
+   "do": [
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [13, 52],
+      "group": "w5",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w5-2",
+   "when": "time:108",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [12, 12],
+      "group": "w5",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "w5",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w5-3",
+   "when": "time:111",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 12],
+      "group": "w5",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [51, 12],
+      "group": "w5",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w6-0",
+   "when": "time:120",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke6"
+    },
+    {
+     "spawn": {
+      "kind": "gill",
+      "at": [12, 52],
+      "group": "w6",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w6",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w6-1",
+   "when": "time:123",
+   "do": [
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [12, 12],
+      "group": "w6",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "w6",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w6-2",
+   "when": "time:126",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 12],
+      "group": "w6",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 12],
+      "group": "w6",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w6-3",
+   "when": "time:129",
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [52, 52],
+      "group": "w6",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w6",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w7-0",
+   "when": "time:138",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke7"
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [11, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [13, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w7-1",
+   "when": "time:141",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [52, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [51, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [53, 12],
+      "group": "w7",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w7-2",
+   "when": "time:144",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [52, 52],
+      "group": "w7",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [51, 52],
+      "group": "w7",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [53, 52],
+      "group": "w7",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w7-3",
+   "when": "time:147",
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 52],
+      "group": "w7",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w7",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w8-0",
+   "when": "time:156",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.3
+    },
+    {
+     "message": "stroke8"
+    },
+    {
+     "spawn": {
+      "kind": "bulwark",
+      "at": [52, 12],
+      "group": "w8",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [51, 12],
+      "group": "w8",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [53, 12],
+      "group": "w8",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "w8-1",
+   "when": "time:159",
+   "do": [
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [52, 52],
+      "group": "w8",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 52],
+      "group": "w8",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [53, 52],
+      "group": "w8",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w8-2",
+   "when": "time:162",
+   "do": [
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 52],
+      "group": "w8",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "w8",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    }
+   ]
+  },
+  {
+   "id": "w8-3",
+   "when": "time:165",
+   "do": [
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 12],
+      "group": "w8",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "w8",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    }
+   ]
+  },
+  {
+   "id": "last",
+   "when": "time:184",
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.4
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [52, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gill",
+      "at": [51, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [53, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": -2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [13, 52],
+      "group": "last",
+      "hunt": true,
+      "facing": 2.356194490192345
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [12, 12],
+      "group": "last",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [11, 12],
+      "group": "last",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [13, 12],
+      "group": "last",
+      "hunt": true,
+      "facing": 0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [52, 12],
+      "group": "last",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [51, 12],
+      "group": "last",
+      "hunt": true,
+      "facing": -0.7853981633974483
+     }
+    },
+    {
+     "message": "last"
+    },
+    {
+     "objective": "The last squad is in the gates. Clear the dock and the causeway opens"
+    }
+   ]
+  },
+  {
+   "id": "mole",
+   "when": [
+    "dead:w8",
+    "dead:last"
+   ],
+   "do": [
+    {
+     "open": [32, 29]
+    },
+    {
+     "message": "mole"
+    },
+    {
+     "objective": "The causeway is open. The rope is on the plinth in the middle of the mole"
+    }
+   ]
+  },
+  {
+   "id": "tide1",
+   "when": "time:68",
+   "do": [
+    {
+     "objective": "The water is rising. Keep to the highest step"
+    }
+   ]
+  },
+  {
+   "id": "stand",
+   "when": "time:30",
+   "do": [
+    {
+     "objective": "Hold the dock. The gates open at every stroke"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [32, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [57, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [50, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [39, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [25, 57]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [14, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [7, 39]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [7, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [14, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [25, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [39, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [50, 14]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [57, 25]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [49, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [45, 45]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [37, 49]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [27, 49]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [19, 45]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [15, 37]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [15, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [19, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [27, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [37, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [45, 19]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [49, 27]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [54, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [48, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [32, 54]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [16, 48]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [10, 32]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [16, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [32, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "barrel",
+   "at": [48, 16]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [34, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [30, 34]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [30, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [34, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [52, 52]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 52]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [12, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [52, 12]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [31, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [33, 30]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [32, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [38, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [26, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [20, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [9, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [9, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [19, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [28, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [36, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [45, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [55, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [36, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [28, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [7, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [30, 7]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [57, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [30, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [34, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [31, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [33, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [31, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [33, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [32, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [33, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [29, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [35, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [29, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [28, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [36, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [28, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [36, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [27, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [35, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [29, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [38, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [27, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [37, 56]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [30, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [34, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [29, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [35, 55]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [31, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [34, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [30, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [35, 54]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [26, 57]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_bolt",
+   "at": [38, 58]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_cell",
+   "at": [32, 53]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [37, 4]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [38, 4]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [39, 4]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_round",
+   "at": [37, 3]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rocket",
+   "at": [38, 3]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [39, 3]
+  },
+  {
+   "type": "switch",
+   "id": "rope",
+   "at": [32, 30],
+   "wall": "south",
+   "once": true,
+   "do": [
+    {
+     "sound": "toll"
+    },
+    {
+     "tremor": 0.6
+    },
+    {
+     "message": "ninth"
+    },
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "objective": "Nine. The gate in the north wall is open: back across the dock to the exit"
+    }
+   ]
+  },
+  {
+   "type": "exit",
+   "at": [32, 6],
+   "dest": "next",
+   "locked": true
+  }
+ ],
+ "scenery": [
+  {
+   "kind": "tower",
+   "at": [32, 32]
+  },
+  {
+   "kind": "spire",
+   "at": [-8, 14]
+  },
+  {
+   "kind": "spire",
+   "at": [72, 50]
+  },
+  {
+   "kind": "spire",
+   "at": [20, 76]
+  }
+ ],
+ "par": {
+  "time": 600
+ },
+ "intro": {
+  "title": "LAST TIDE",
+  "lines": [
+   "The harbour has been copied in a smaller size, stone for stone, with the sea left out.",
+   "A bell hangs in the middle of it. Somebody rings it from outside."
+  ]
+ },
+ "outro": "Nine. The gate at the north end of the quay stood open, and the dock was still, and the water went on rising for a while with nothing left to climb.",
+ "messages": [
+  {
+   "id": "start",
+   "at": [32, 57],
+   "radius": 6,
+   "speaker": "INES",
+   "text": "Three steps of stone down to the water, and a bell on a mole. Marrow's north pier had a fog-bell that rang nine times at the turn of the tide. Somebody has copied it from memory."
+  },
+  {
+   "id": "plate",
+   "at": [32, 57],
+   "radius": 8,
+   "speaker": "TIDE PLATE",
+   "text": "NINE STROKES. THE DOCK RINGS THE FIRST EIGHT. THE NINTH IS RUNG BY HAND, ON THE MOLE."
+  },
+  {
+   "id": "gates",
+   "at": [41, 55],
+   "radius": 6,
+   "speaker": "HULL",
+   "text": "The four bays in the outer wall are gates. What comes in comes from them, a few seconds apart. The first stroke is thirty seconds after you land."
+  },
+  {
+   "id": "caches",
+   "at": [20, 54],
+   "radius": 6,
+   "speaker": "HULL",
+   "text": "Health and armour lie along the highest step. Pick them up before the first stroke; after it there is no time."
+  },
+  {
+   "id": "tide",
+   "at": [32, 50],
+   "radius": 6,
+   "speaker": "HULL",
+   "text": "The water will come over the lowest step at the third stroke and the middle step at the sixth. Wading slows you to under two thirds. The highest step stays dry."
+  },
+  {
+   "id": "last",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "HULL",
+   "text": "The gates have opened once more, and this is the last squad. When it falls, and the eighth wave with it, the gate on the causeway opens."
+  },
+  {
+   "id": "mole",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "HULL",
+   "text": "The causeway gate is open. The rope is on the plinth in the middle of the mole, under the lamps."
+  },
+  {
+   "id": "ninth",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "INES",
+   "text": "Nine. It sounds the same as the north pier's, to the half-second. Somebody listened to it for a very long time."
+  },
+  {
+   "id": "exit",
+   "at": [32, 10],
+   "radius": 5,
+   "speaker": "HULL",
+   "text": "The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole."
+  },
+  {
+   "id": "hollow",
+   "at": [38, 7],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "The outer wall of the highest step rings hollow in one short run, east of the exit. There is a seam."
+  },
+  {
+   "id": "cache",
+   "at": [38, 4],
+   "radius": 3,
+   "speaker": "A SILENT (NOTE)",
+   "text": "I kept the dock's tally on this wall, a mark a night for a year. The water took the first step of the quay. It never got as far as the wall."
+  },
+  {
+   "id": "stroke1",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "ONE. A GATE IN THE WALL IS OPEN."
+  },
+  {
+   "id": "stroke2",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "TWO."
+  },
+  {
+   "id": "stroke3",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "THREE. THE WATER IS COMING UP THE FIRST STEP."
+  },
+  {
+   "id": "stroke4",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "FOUR."
+  },
+  {
+   "id": "stroke5",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "FIVE."
+  },
+  {
+   "id": "stroke6",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "SIX. THE WATER IS COMING UP THE SECOND STEP."
+  },
+  {
+   "id": "stroke7",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "SEVEN."
+  },
+  {
+   "id": "stroke8",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "TIDE PLATE",
+   "text": "EIGHT. THE NINTH IS RUNG BY HAND."
+  }
+ ],
+ "tide": {
+  "levels": [
+   [0, -1],
+   [66, -1],
+   [78, 0.6],
+   [120, 0.6],
+   [132, 1.6]
+  ]
+ },
+ "objective": "Hold the dock. Eight strokes bring eight waves; the ninth is the rope on the mole",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 50,
+  "ammo": {
+   "flare": 20,
+   "shell": 30,
+   "rivet": 200,
+   "bolt": 18,
+   "cell": 50,
+   "round": 50,
+   "rocket": 6
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ]
+ },
+ "quality": {
+  "enemies": [0, 200],
+  "botSeconds": [60, 900],
+  "mechanics": [
+   "heights",
+   "triggers",
+   "switches",
+   "secret"
+  ],
+  "skins": 5,
+  "scaleClass": "SET-PIECE",
+  "reason": "the place is one round dock under an open sky: a stand on three steps round a basin, with a tide that climbs them",
+  "introduces": "the stand: the dock tolls eight strokes and a wave comes through four gates with each, the tide climbs the lower steps, and the ninth stroke is rung by hand"
+ },
+ "drops": {
+  "scale": 1,
+  "keep": [
+   [
+    24,
+    51,
+    40,
+    60
+   ]
+  ]
+ }
+}
