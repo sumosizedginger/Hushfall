@@ -157,7 +157,7 @@ export class Bot {
         this.follow([Math.floor(x / m.cell), Math.floor(z / m.cell)], 0.6, 0.8); return false;
       }
     }
-    this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, hasLOS(w, p.x, p.z, goal.x, goal.z) ? 7 : 1.5);          // (PT-046, C2M29: within seven metres but behind a pillar is not arrived: walk round it)
+    this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, boss.rb && !hasLOS(w, p.x, p.z, goal.x, goal.z) ? 1.5 : 7);          // (PT-046, C2M29: within seven metres but behind a pillar is not arrived: walk round it)
     return false;
   }
   /** PT-046 (C2M29): a straight walk over plain floor (no door, no secret panel, nothing inside a secret room): a spot to dodge or hide in must not be a place the bot would have to open a panel to reach */
