@@ -10,8 +10,9 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { runRoute } from '../src/engine/harness.js';
 import { fxAt } from '../src/engine/terrain.js';
+import { isFinale, ENDINGS } from '../src/game/ending.js';
 
-const BUILT = ['C2M25', 'C2M26', 'C2M27', 'C2M28', 'C2M29'];
+const BUILT = ['C2M25', 'C2M26', 'C2M27', 'C2M28', 'C2M29', 'C2M30'];
 const ALL = BUILT;
 const SRC = Object.fromEntries(ALL.map((id) => [id, shippedSrc(id)]));
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
@@ -120,4 +121,16 @@ test('C2M29, The Root Bell: the final boss map (every weapon, every box stays, d
   const r = runRoute(map, route('C2M29'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.equal(r.world.stats.secrets, 0); assert.equal(r.world.silenced, true, 'the sound was cut');
   const bell = r.world.enemies.find((e) => e.kind === 'rootbell'); assert.equal(bell.state, 'dead'); assert.equal(bell.rb.mode, 'rise', 'drawn back up and hung, not broken');
   assert.ok(r.events.some((e) => e.type === 'bell_fall') && r.events.some((e) => e.type === 'bell_last') && r.events.some((e) => e.type === 'spike_strike' || e.type === 'spike_warn'), 'every phase happened');
+});
+
+test('C2M30, The Unrung Gate: no combat, silent, an eternal lamp, six rooms of the descent in reverse, the Gate that opens only for a lit lamp, the finale of Campaign Two with its epilogue, and the last page of Pellew in a seam', () => {
+  const s = SRC.C2M30, map = shippedMap('C2M30'); assert.equal(s.atmosphere.silence, true); assert.equal(s.lantern.eternal, true); assert.equal(s.entities.filter((e) => e.type === 'enemy').length, 0, 'no combat'); assert.equal(s.quality.safe, true);
+  assert.equal(s.lookZones.length, 6, 'six rooms, each in its own light'); assert.equal(new Set(s.lookZones.map((z) => z.look)).size, 6);
+  assert.ok(isFinale(MANIFEST, 'C2M30'), 'the last main map of Campaign Two'); assert.ok(ENDINGS[2] && ENDINGS[2].cards.length >= 4, 'the epilogue (a first draft until the owner has played the descent)');
+  assert.equal(s.messages.filter((m) => m.speaker === 'SIGNAL HOUSE').length, 2, 'the voice from the other side: it answers at the Gate, then holds'); assert.ok(s.messages.some((m) => /LOG/.test(m.speaker) && /not the water/.test(m.text)), 'the page that finishes the sentence of the Ossuary');
+  const door = s.triggers.find((t) => t.id === 'door'); assert.deepEqual(door.when, ['msg:door', 'lamp:on']); assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
+  // the Gate opens for a LIT lamp only: with the lamp put out the walk ends at a locked exit, and lighting it opens the way
+  const R = route('C2M30'), head = R.slice(0, 6), tail = R.slice(6);                                                        // the walk to the steppe, then the Gate (goto 103, goto 106, wait, goto exit)
+  const dark = [...head, { op: 'lamp', on: false }, ...tail], r1 = runRoute(map, dark, { seed: 1 }); assert.notEqual(r1.result, 'complete', 'a dark lamp does not open the Gate');
+  const lit = [...head, { op: 'lamp', on: false }, ...tail.slice(0, 2), { op: 'lamp', on: true }, ...tail.slice(2)], r2 = runRoute(map, lit, { seed: 1 }); assert.equal(r2.result, 'complete', r2.failure);
 });

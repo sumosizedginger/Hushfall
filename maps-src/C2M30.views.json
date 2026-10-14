@@ -1,0 +1,74 @@
+[
+{
+"name": "01-the-bell-floor",
+"x": 8.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-the-shaft-stair",
+"x": 26.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-the-hive",
+"x": 44.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-the-deep",
+"x": 62.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.1,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-the-seam",
+"x": 67.5,
+"z": 15.5,
+"yaw": 3.14,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-the-steppe",
+"x": 80.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.15,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-the-gate-room",
+"x": 98.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.05,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-the-door",
+"x": 105.5,
+"z": 13.5,
+"yaw": -1.571,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+}
+]

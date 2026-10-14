@@ -1,0 +1,394 @@
+{
+ "format": 1,
+ "id": "C2M30",
+ "version": 1,
+ "name": "The Unrung Gate",
+ "ceilingHeight": 6,
+ "atmosphere": {
+  "look": "unrung",
+  "dark": true,
+  "silence": true,
+  "fog": "#2a2a32",
+  "fogDensity": 0.012,
+  "sky": "gate_dim"
+ },
+ "grid": [
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "#####ννννννννννννννννν#ιιιιιιιιιιιιιιιιι#θθθθθθθθθθθθθθθθθ#[[[[[[[[[[[[[[[[[#%%%%%%%%%%%%%%%%%#ξξξξξξξξξξξξξξξξξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘ{{{{{{{{{{{{{{{{{{------------------ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘ{{{{{{{{{{{{{{{{{{------------------ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘ{{{{{{{{{{{{{{{{{{------------------ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####νΝΝΝΝΝΝΝΝΝΝΝΝΝΝΝν#ιΙΙΙΙΙΙΙΙΙΙΙΙΙΙΙι#θΘΘΘΘΘΘΘΘΘΘΘΘΘΘΘθ#[{{{{{{{{{{{{{{{[#%---------------%#ξΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞξ########",
+  "#####ννννννννννννννννν#ιιιιιιιιιιιιιιιιι#θθθθθθθθθθθθθθθθθ#[[[[[[[[S[[[[[[[[#%%%%%%%%%%%%%%%%%#ξξξξξξξξξξξξξξξξξ########",
+  "##################################################################{{{###################################################",
+  "##################################################################{{{###################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################",
+  "########################################################################################################################"
+ ],
+ "heights": [
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................"
+ ],
+ "ceilings": [
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "....ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.......",
+  "........................................................................................................................",
+  "........................................................................................................................",
+  "........................................................................................................................"
+ ],
+ "doors": [],
+ "secrets": [
+  {
+   "id": "seam",
+   "panel": [67, 18],
+   "cells": [
+    [66, 19],
+    [67, 19],
+    [68, 19],
+    [66, 20],
+    [67, 20],
+    [68, 20]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "door",
+   "when": [
+    "msg:door",
+    "lamp:on"
+   ],
+   "do": [
+    {
+     "exit": {
+      "set": "unlock"
+     }
+    },
+    {
+     "message": "lit"
+    },
+    {
+     "objective": "The lamp is lit and the door is quiet. Walk through"
+    }
+   ]
+  },
+  {
+   "id": "first",
+   "when": "enter",
+   "at": [31, 13],
+   "radius": 5,
+   "do": [
+    {
+     "objective": "Up the stair, through the Hive and the Deep, across the steppe to the Gate"
+    }
+   ]
+  },
+  {
+   "id": "gate-arrive",
+   "when": "enter",
+   "at": [100, 13],
+   "radius": 3,
+   "do": [
+    {
+     "objective": "The Gate: light the lamp (L) and keep it lit"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "player",
+   "at": [8, 13],
+   "facing": "east"
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [13, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "pillar",
+   "at": [13, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "pew",
+   "at": [31, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "organ",
+   "at": [49, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [67, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [85, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [103, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "oil",
+   "at": [67, 19]
+  },
+  {
+   "type": "exit",
+   "dest": "next",
+   "at": [109, 13],
+   "locked": true
+  }
+ ],
+ "scenery": [
+  {
+   "kind": "arch",
+   "at": [118, 13],
+   "y": 0,
+   "scale": 0.7,
+   "yaw": 1.5708
+  }
+ ],
+ "par": {
+  "time": 240
+ },
+ "intro": {
+  "title": "THE UNRUNG GATE",
+  "lines": [
+   "A short walk, in silence.",
+   "At the Gate: light the lamp (L), and keep it lit."
+  ]
+ },
+ "outro": "The door is a door again. Behind you the stair is lit all the way down, and in front of you the lamp is steady.",
+ "messages": [
+  {
+   "id": "floor",
+   "at": [13, 13],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "The floor of the Bell. The roots have drawn back from the walls and left the stone clean, as if it had been waiting for someone to sweep it."
+  },
+  {
+   "id": "shaft",
+   "at": [31, 13],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "The stair goes up the inside of the shaft. A plate at the first landing says how far down this is. I do not read the number."
+  },
+  {
+   "id": "hive",
+   "at": [49, 13],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. Whatever kept the beat has stopped."
+  },
+  {
+   "id": "deep",
+   "at": [67, 13],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting."
+  },
+  {
+   "id": "hollow",
+   "at": [67, 16],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "One stretch of the south wall sounds different under my knuckles. Somebody has been here with a hand and a reason."
+  },
+  {
+   "id": "steppe",
+   "at": [85, 13],
+   "radius": 5,
+   "speaker": "INES",
+   "text": "A road across a plain under a low red sun. It is not the one I walked. It is the one that was always going to be here when I got to this end."
+  },
+  {
+   "id": "gate",
+   "at": [103, 13],
+   "radius": 4,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Ines. I have you on the set. There is no line down there, and I have you. What is in front of you?"
+  },
+  {
+   "id": "door",
+   "at": [106, 13],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A door that is also a bell. A hook beside it, the kind a lamp hangs from. My father said what a lamp is for. Light it, and keep it lit."
+  },
+  {
+   "id": "lit",
+   "at": [1, 1],
+   "radius": 0.1,
+   "speaker": "SIGNAL HOUSE",
+   "text": "The bell on the door has gone quiet. It is holding."
+  },
+  {
+   "id": "page",
+   "at": [67, 19],
+   "radius": 3,
+   "speaker": "PELLEW, MARROW GIRL (LOG)",
+   "text": "Day 16, later. ringing, once in a very long while. I have timed it against my pulse, and my pulse is slower than it was. It is not the water. Whoever finds this: not the water."
+  }
+ ],
+ "objective": "Walk to the Gate. The lamp is yours: L",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 0,
+  "ammo": {
+   "flare": 4
+  },
+  "weapons": [
+   "flare"
+  ]
+ },
+ "quality": {
+  "safe": true,
+  "enemies": [0, 0],
+  "botSeconds": [10, 600],
+  "mechanics": [
+   "triggers",
+   "secret"
+  ],
+  "skins": 8,
+  "scaleClass": "MIXED",
+  "tallReason": "six metres under the roofs: a stair up a shaft and a hall for a door that is also a bell",
+  "introduces": "the lamp at the Gate: the one input of the ending, and the lamp that holds a door shut"
+ },
+ "lantern": {
+  "oil": 60,
+  "max": 60,
+  "eternal": true
+ },
+ "lampHolds": {
+  "plain": 0.6,
+  "own": 0.4
+ },
+ "lookZones": [
+  {
+   "rect": [
+    4,
+    8,
+    22,
+    18
+   ],
+   "look": "rootbell"
+  },
+  {
+   "rect": [
+    22,
+    8,
+    40,
+    18
+   ],
+   "look": "descent",
+   "sky": "root"
+  },
+  {
+   "rect": [
+    40,
+    8,
+    58,
+    18
+   ],
+   "look": "conductor"
+  },
+  {
+   "rect": [
+    58,
+    8,
+    76,
+    18
+   ],
+   "look": "deep"
+  },
+  {
+   "rect": [
+    76,
+    8,
+    94,
+    18
+   ],
+   "look": "threshold",
+   "sky": "anselm"
+  },
+  {
+   "rect": [
+    94,
+    8,
+    112,
+    18
+   ],
+   "look": "unrung"
+  }
+ ]
+}
