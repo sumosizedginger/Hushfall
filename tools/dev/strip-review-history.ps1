@@ -2,7 +2,7 @@
 # Run from the repo root in PowerShell:   powershell -File tools\dev\strip-review-history.ps1
 # LOCAL ONLY: nothing is pushed. The backup bundle must exist first. Delete this file and review-strip-filter.sh afterwards.
 # After it: git push needs --force (the old origin/main sha is printed below and recorded in design/ARCHIVE_INDEX.md); that is the owner's word, not this script's.
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'   # git writes progress to stderr; failures are checked by $LASTEXITCODE and throw below
 $root = (git rev-parse --show-toplevel).Trim()
 Set-Location $root
 $bundle = 'D:\Doom_archive\pre-filter-2026-10-14.bundle'
