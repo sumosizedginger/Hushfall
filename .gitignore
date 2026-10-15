@@ -8,3 +8,11 @@ review/self-audit/
 # build output of any kind, including a tester's own build
 attack/**/dist/
 *.log.err
+
+# pictures and audio never enter git (PT-050): a tool writes them to disk, the task deletes them; only text is tracked under review/
+review/**/*.png
+review/**/*.wav
+review/**/*.jpg
+review/**/*.jpeg
+review/**/*.gif
+review/**/*.webp
