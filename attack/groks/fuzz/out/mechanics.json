@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ammo-string-fire",
+    "severity": "MAJOR",
+    "title": "string ammo then fire",
+    "detail": "ammo.flare=NaN ammo={\"flare\":null}"
+  },
+  {
+    "id": "neg-ammo-sticks",
+    "severity": "MINOR",
+    "title": "negative ammo is kept and only dry-fires",
+    "detail": "flare=-3"
+  },
+  {
+    "id": "events-null-fire",
+    "severity": "BLOCKER",
+    "title": "a save with events:null loads, then the first shot throws",
+    "detail": "TypeError: Cannot read properties of null (reading 'push')\n    at emit (file:///D:/Doom/src/engine/world.js:108:54)\n    at fireWeapon (file:///D:/Doom/src/engine/world.js:611:3)\n    at step (file:///D:/Doom/src/engine/world.js:1182:32)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at file:///D:/Doom/attack/groks/fuzz/mechanics.mjs:42:17"
+  },
+  {
+    "id": "keys-string",
+    "severity": "MAJOR",
+    "title": "player.keys as a string loads, and gaining a key throws",
+    "detail": "r.world.player.keys.push is not a function"
+  },
+  {
+    "id": "earn-null",
+    "severity": "BLOCKER",
+    "title": "loading a world already marked complete with no endStats throws in earn()",
+    "detail": "Cannot read properties of null (reading 'total')"
+  }
+]

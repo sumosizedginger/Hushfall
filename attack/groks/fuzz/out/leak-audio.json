@@ -1,0 +1,67 @@
+{
+  "plays": {
+    "requested": 600,
+    "played": 600,
+    "dropped": 0,
+    "perKind": {
+      "destination": 0,
+      "bus": 0,
+      "gain": 2600,
+      "connect": 6400,
+      "osc": 1400,
+      "start": 2000,
+      "stop": 2000,
+      "bufferSource": 600,
+      "buffer": 1,
+      "filter": 1000,
+      "panner": 200,
+      "nodes": 5800
+    }
+  },
+  "disconnectsDuringPlay": 0,
+  "engineRetainsShotNodes": [],
+  "shotSourcesLeftRunning": 0,
+  "statsLog": 200,
+  "music": {
+    "ctor": {
+      "destination": 0,
+      "bus": 1,
+      "gain": 6,
+      "connect": 15,
+      "osc": 5,
+      "start": 5,
+      "stop": 0,
+      "bufferSource": 0,
+      "buffer": 0,
+      "filter": 2,
+      "panner": 0,
+      "delay": 1,
+      "nodes": 15
+    },
+    "twentySecondsAtFullIntensity": {
+      "destination": 0,
+      "bus": 0,
+      "gain": 114,
+      "connect": 301,
+      "osc": 82,
+      "start": 114,
+      "stop": 82,
+      "bufferSource": 32,
+      "buffer": 32,
+      "filter": 64,
+      "panner": 0,
+      "delay": 0,
+      "nodes": 292
+    },
+    "hatBufferSources": 32,
+    "hatSourcesStopped": 0,
+    "musicObjectRetainsNoteNodes": [
+      "delay",
+      "gain",
+      "osc",
+      "osc",
+      "gain",
+      "filter"
+    ]
+  }
+}

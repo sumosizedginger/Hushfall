@@ -1,0 +1,122 @@
+[
+  {
+    "id": "bad-difficulty",
+    "severity": "MAJOR",
+    "title": "loadWorld threw instead of rejecting",
+    "detail": "unknown difficulty nightmare"
+  },
+  {
+    "id": "null-difficulty",
+    "severity": "MAJOR",
+    "title": "loadWorld threw instead of rejecting",
+    "detail": "unknown difficulty null"
+  },
+  {
+    "id": "empty-difficulty",
+    "severity": "MAJOR",
+    "title": "loadWorld threw instead of rejecting",
+    "detail": "unknown difficulty "
+  },
+  {
+    "id": "weapon-nope",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: Cannot read properties of undefined (reading 'saw')\n    at step (file:///D:/Doom/src/engine/world.js:1179:12)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at attempt (file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:28:15)\n    at file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:38:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)"
+  },
+  {
+    "id": "weapon-null",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: Cannot read properties of undefined (reading 'saw')\n    at step (file:///D:/Doom/src/engine/world.js:1179:12)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at attempt (file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:28:15)\n    at file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:39:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)"
+  },
+  {
+    "id": "weapon-deleted",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: Cannot read properties of undefined (reading 'saw')\n    at step (file:///D:/Doom/src/engine/world.js:1179:12)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at attempt (file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:28:15)\n    at file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:40:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)"
+  },
+  {
+    "id": "weapons-object",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: p.weapons.includes is not a function\n    at owns (file:///D:/Doom/src/engine/world.js:36:53)\n    at file:///D:/Doom/src/engine/world.js:1145:49\n    at Array.filter (<anonymous>)\n    at step (file:///D:/Doom/src/engine/world.js:1145:34)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)"
+  },
+  {
+    "id": "ammo-nan",
+    "severity": "MAJOR",
+    "title": "save loaded then broke an invariant",
+    "detail": "ammo.flare=null @tick 0"
+  },
+  {
+    "id": "ammo-string",
+    "severity": "MAJOR",
+    "title": "save loaded then broke an invariant",
+    "detail": "ammo.flare=lots @tick 0"
+  },
+  {
+    "id": "ammo-negative",
+    "severity": "MAJOR",
+    "title": "save loaded then broke an invariant",
+    "detail": "ammo.flare negative; ammo.rocket negative @tick 0"
+  },
+  {
+    "id": "inject-map",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: Cannot read properties of undefined (reading 'length')\n    at step (file:///D:/Doom/src/engine/world.js:1106:16)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at attempt (file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:28:15)\n    at file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:53:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)"
+  },
+  {
+    "id": "carry-bad-weapons",
+    "severity": "MAJOR",
+    "title": "loadWorld threw instead of rejecting",
+    "detail": "((intermediate value) ?? [\"flare\"]) is not iterable"
+  },
+  {
+    "id": "projectile-null",
+    "severity": "BLOCKER",
+    "title": "save loaded (ok:true) then step() threw",
+    "detail": "TypeError: Cannot read properties of null (reading 'weapon')\n    at step (file:///D:/Doom/src/engine/world.js:1210:49)\n    at runTicks (file:///D:/Doom/attack/groks/fuzz/harness.mjs:57:7)\n    at attempt (file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:28:15)\n    at file:///D:/Doom/attack/groks/fuzz/save-mutate.mjs:64:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)"
+  },
+  {
+    "id": "god-hp",
+    "severity": "MAJOR",
+    "title": "mid-level save keeps hp 1e9, armor 1e9 and rocket 1e9",
+    "detail": "hp=1000000000"
+  },
+  {
+    "id": "dup-key",
+    "severity": "MINOR",
+    "title": "two actions bound to KeyF: the legend still shows F for Fire, but Fire does not fire",
+    "detail": "use=true fire=false"
+  },
+  {
+    "id": "pad-NaN",
+    "severity": "MAJOR",
+    "title": "pad axes NaN,0 produced a non-finite move or look",
+    "detail": "{\"dz\":[null,null],\"look\":[0,0],\"move\":[0,0],\"lookOut\":[0,0]}"
+  },
+  {
+    "id": "pad-0",
+    "severity": "MAJOR",
+    "title": "pad axes 0,NaN produced a non-finite move or look",
+    "detail": "{\"dz\":[null,null],\"look\":[0,0],\"move\":[0,0],\"lookOut\":[0,0]}"
+  },
+  {
+    "id": "pad-Infinity",
+    "severity": "MAJOR",
+    "title": "pad axes Infinity,0 produced a non-finite move or look",
+    "detail": "{\"dz\":[null,0],\"look\":[0,0],\"move\":[0,0],\"lookOut\":[0,0]}"
+  },
+  {
+    "id": "pad--Infinity",
+    "severity": "MAJOR",
+    "title": "pad axes -Infinity,1 produced a non-finite move or look",
+    "detail": "{\"dz\":[null,0],\"look\":[0,0],\"move\":[0,0],\"lookOut\":[0,0]}"
+  },
+  {
+    "id": "loop-nan",
+    "severity": "MINOR",
+    "title": "FixedLoop.advance(NaN) poisons the accumulator",
+    "detail": null
+  }
+]

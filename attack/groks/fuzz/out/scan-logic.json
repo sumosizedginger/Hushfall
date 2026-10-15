@@ -1,0 +1,37 @@
+{
+  "findings": [
+    {
+      "id": "idle-hurt-C1E1M08",
+      "severity": "MAJOR",
+      "title": "C1E1M08 deals 41 damage to a player who does not move",
+      "detail": "triggers "
+    }
+  ],
+  "choiceWrites": [
+    {
+      "map": "C2M11",
+      "id": "halls",
+      "value": "songkeepers",
+      "trigger": "wing-w"
+    },
+    {
+      "map": "C2M11",
+      "id": "halls",
+      "value": "silent",
+      "trigger": "wing-e"
+    },
+    {
+      "map": "C2S02",
+      "id": "lamp",
+      "value": "own",
+      "trigger": "lamp"
+    }
+  ],
+  "choiceReads": [
+    {
+      "map": "C2M22",
+      "owner": "call-six",
+      "when": "choice:halls=silent"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ The 68-map target stands; nothing here reduces it. What a store needs and the ga
 | M10 | **Legal and admin.** Entity and tax, age-rating questionnaires, store fees | owner | not mine |
 | M11 | **Outside players.** 5 to 10 testers on a private itch.io link, an opt-in play log (workstream I) and a short form | owner recruits, I build the log | before the paid release |
 | M12 | **Release gate.** Only the owner awards COMPLETE; a push only on their word | owner | unchanged |
+| M13 | **Developer key.** When the build is finished (after RC1, never before): a code map for other engineers: `ARCHITECTURE.md` (the layers and the flow sim -> events -> render, audio and UI), the map format, how to add a creature, a weapon or a map, a glossary, a tour of the tests and tools, licence and contribution notes. Until then the repo keeps only what the game and its assessment need (`design/ARCHIVE_INDEX.md`) | me | after RC1 |
 Commercially, strangers will not play on Easy: Normal and Hard balance (Bot v2, the Director's Plan P2) matters more than it has so far.
 
 ## 3. The work queue, sized for low usage (the builder's order; each session ends stop-safe)
@@ -28,12 +29,16 @@ Sizes: S about one short session, M one long session, L two (first guesses). Eve
 | Session | Scope | Size | Window jobs (ledger in VISUAL_DIRECTION.md section 6) | Owner needs |
 |---|---|---|---|---|
 | **Session A: quick wins** (my choice for the first one) | F1 fork wall impact; V1 hurt flash; V2 crosshair, toast column, title and controls text | M | J1, J2, J17 (capture, covered by the 2026-10-14 yes) | try them in play |
+| **Session H1: hardening, saves and the frame loop** | prove the void softlock on a REAL route (a vent miss with the bot), then the save family: one strict validator, `loadWorld` never throws, a rejected slot is set aside; the frame-loop guard with an exportable error log; Grok's 16 contract tests go green (`design/HARDENING.md` section 2) | M | none (node only) | nothing |
 | **Session B: reading and pickups** | U1 pickup cards; U2 reading time and message priority; Tab pauses | M | J18 | play; a word on slow-while-reading |
+| **Session H2: hardening, economy, weapons, input** | the dry feed, the Brood Vat total, script spawns, the mortar through walls, the weapon step, an infinite yaw (`design/HARDENING.md`); `route-fingerprint.mjs check` after each | M | none (node only) | nothing |
 | **Session C: the Journal and the minimap** | U3 (and U3b if affordable), U4 | L | J19, J20 | play |
 | **Session D: light** | V3 gun in the place's light; V4 tone shoulder; V5 480 against 640 | M | J3 to J5 | a word on 640 |
 | **Session E: the chainsaw's voice** | S1 | M | J16 audio renders (a named yes each round) | LISTEN, say yes or no |
 | **Session F: commercial groundwork** | M2 licences and notices, M3 packaging note, M4 performance harness | M | none or one | the name search (M1), a low-end test machine |
+| **Session H3: hardening, GPU leaks** | the chime, tide, beam and sweep views and the Brood Vat corpses; extend the browser check's leak test to reload those maps many times | S | the browser check (a named yes) | the yes |
 | **Session G: floors, fists, faces** | V6 to V8 | L | J6 to J10; bakes J7, J9 need a named yes | play |
+| **Session T2: the tidy, part two** (only after the evidence regeneration) | retire the frozen look demo (`look.html`, `src/look`, `shoot-look`, the npm scripts `look` and `shoot`, recipes only it uses) after checking what the bake still needs; fold the one-off `shoot-ptNN` scripts away; trim `review/gate-1` and `gate-2` to the files tools read; a test that holds the repo layout rule (`AGENTS.md` "Repo hygiene") | S | none | nothing |
 | **Then, in the Director's Plan order as written** | P1 Measure, P2 Bot v2, P3 Weapons (mods, loads), P4 Exemplars, P5 and P6 level rollout, P7 Enemies and bosses with V9 and V10, P8 and P8b Story and cinematics, P9 Sound and the look sign-off (V11, V12), P10 Release (now M) | XL each | the single regeneration J15, bakes | play at each exit |
 The evidence regeneration stays ONCE, after the last visual and map change (any change in `src/render`, `src/game` or `assets/baked` stales every map's real-game evidence).
 

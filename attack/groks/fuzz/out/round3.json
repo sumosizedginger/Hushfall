@@ -1,0 +1,98 @@
+[
+  {
+    "id": "status-freeze",
+    "severity": "MAJOR",
+    "title": "a status other than playing/dead/complete loads and the sim never steps",
+    "detail": "status stayed banana"
+  },
+  {
+    "id": "earn-missing",
+    "severity": "BLOCKER",
+    "title": "status complete with endStats omitted loads, and earn() throws",
+    "detail": "Cannot read properties of undefined (reading 'total')"
+  },
+  {
+    "id": "earn-forged",
+    "severity": "MAJOR",
+    "title": "an empty endStats on a complete save pays salvage",
+    "detail": "{\"rank\":\"B\",\"score\":0.55,\"parts\":{\"kills\":1,\"time\":0,\"secrets\":null}} gain 1"
+  },
+  {
+    "id": "pickups-null",
+    "severity": "MAJOR",
+    "title": "pickups-null loaded then step threw",
+    "detail": "TypeError: Cannot read properties of null (reading 'drop')"
+  },
+  {
+    "id": "shots-null",
+    "severity": "MAJOR",
+    "title": "shots-null loaded then step threw",
+    "detail": "TypeError: Cannot read properties of null (reading 'life')"
+  },
+  {
+    "id": "burns-null",
+    "severity": "MAJOR",
+    "title": "burns-null loaded then step threw",
+    "detail": "TypeError: Cannot read properties of null (reading 't')"
+  },
+  {
+    "id": "proj-empty",
+    "severity": "MAJOR",
+    "title": "proj-empty loaded then broke an invariant",
+    "detail": "proj.x=undefined; proj.y=undefined; proj.z=undefined"
+  },
+  {
+    "id": "ammo-null-obj",
+    "severity": "MAJOR",
+    "title": "ammo-null-obj loaded then step threw",
+    "detail": "TypeError: Cannot read properties of null (reading 'flare')"
+  },
+  {
+    "id": "weapon-number",
+    "severity": "MAJOR",
+    "title": "weapon-number loaded then step threw",
+    "detail": "TypeError: Cannot read properties of undefined (reading 'saw')"
+  },
+  {
+    "id": "weapons-string-kill",
+    "severity": "MAJOR",
+    "title": "weapons saved as a string survives idle, then a kill throws in dropType",
+    "detail": "p.weapons.map is not a function"
+  },
+  {
+    "id": "render-weapon",
+    "severity": "BLOCKER",
+    "title": "GameView.render reads WEAPONS[weapon].adsFov with no guard, and frame() does not catch render",
+    "detail": "view.js:286 Cannot read properties of undefined (reading 'adsFov') (expression only; the page was not opened)"
+  },
+  {
+    "id": "complete-bad-weapon",
+    "severity": "BLOCKER",
+    "title": "status complete skips the step() weapon throw, so the uncaught render path is what runs",
+    "detail": "step returned, weapon still nope"
+  },
+  {
+    "id": "loop-nan",
+    "severity": "MINOR",
+    "title": "one NaN frame time freezes FixedLoop for the rest of the session",
+    "detail": "acc=NaN"
+  },
+  {
+    "id": "salvage-god",
+    "severity": "MAJOR",
+    "title": "sanitizeProgress keeps salvage 1e308 and buy() succeeds",
+    "detail": "salvage=1e+308"
+  },
+  {
+    "id": "hp-god",
+    "severity": "MAJOR",
+    "title": "a finite hp far above the cap loads and is kept",
+    "detail": "hp=1000000000 cap=100"
+  },
+  {
+    "id": "roster-dead",
+    "severity": "MAJOR",
+    "title": "a save that marks every enemy dead is accepted, so a dead: gate can be skipped",
+    "detail": "16 enemies"
+  }
+]
