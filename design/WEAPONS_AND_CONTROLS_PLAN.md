@@ -12,7 +12,7 @@ Legend: **[OWNER]** decided by the owner in chat. **[MINE]** my proposal, open t
 |---|---|
 | Weapons built | flare cannon (start weapon), Tidewarden scattergun (C1E1M01), Riveter driver (C1E1M02), Harpoon rifle (C1E2M02), Charge-arc lamp (C1E2M06). No melee anywhere; the sim feeds a flare when you have no ammunition (`world.js`, "there is no melee weapon") |
 | Aim down sights (PT-011) | rebuilt and **accepted by the owner ("Much better for ADS")**: `src/render/weapon-pose.js`, `weapon-sights.js`, `rig.sights`; preview tool `tools/dev/rast-weapon.mjs` (node only) |
-| Look redesign L1 (ten creatures) | in the tree, 6 local commits NOT pushed (`origin/main` is behind), evidence of all 18 maps STALE, frame time NOT measured; `design/LOOK_BIBLE.md` PART C |
+| Look redesign L1 (ten creatures) | in the tree, pushed with the rest (2026-10-14), evidence of all 18 maps STALE, frame time NOT measured; `design/LOOK_BIBLE.md` PART C |
 | Machine load | the owner's mouse stops reaching the whole screen while my Chrome jobs run; cause unknown. Rule in `AGENTS.md` ("Machine load"): idle priority, two cores, one render job at a time, no long job without the owner saying the machine is free |
 | Input | `src/engine/input.js`: 21 actions, digital movement, mouse/keyboard deltas for look; **no gamepad code**; the rebind screen is built from `ACTIONS` + `ACTION_LABELS` (`src/game/bindings.js`, `ui.js`) |
 
@@ -181,7 +181,7 @@ Order, each step waits for the owner's go and for them to play the one before. B
 | # | Step | What it is | Needs from the owner |
 |---|---|---|---|
 | 1 | The owner tests this batch | feel, lantern, melee, parry, keys, pad, wheel; findings go to `PLAYTEST_NOTES.md` first, then fixes | their play and findings |
-| 2 | Evidence + push | ONE regeneration of all 18 maps (also covers the unpushed creature redesign, frame time of the new creatures included), then push | "the machine is free" |
+| 2 | Evidence + push | ONE regeneration of all 18 maps (also covers the creature redesign, frame time of the new creatures included), then push | "the machine is free" |
 | 3 | Close the open findings | PT-009: the Locker perks are bought but not FELT (the owner could not tell what they do); balance numbers (all first guesses: weapons, melee, progression) tuned from their play; Episodes 1-2 human review (only they can award COMPLETE) | their notes on difficulty and perks |
 | 4 | L3 "the world" look pass (from `design/history/assessment.md`, approved plan C:/Users/sumos/.claude/plans/joyful-plotting-liskov.md) | decals, blood and bodies, real lighting and shadows, first-person hands and weapon polish, UI restyle, the alien room kit and surface variety (Episode 2's arrival rooms were one room eight times) | a go; they judge stills first |
 | 5 | Gate 4: Episode 3, The Choir Ships | nine maps in small batches the owner sets: C1E3M01 Landing Scar to M08 The Cantor's Throat + secret S01; the Vael themselves, resin interiors; new enemies (the Chorister suppression enemy, Bulwark Shell and Weeping Mother elites, the Grand Cantor boss); **the bell-breaker mortar at C1E3M03 Gill Gardens**; the Episode 3 colour/tone in the look bible | a batch go, then a playtest per batch |

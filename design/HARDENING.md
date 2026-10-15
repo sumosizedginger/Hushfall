@@ -2,6 +2,8 @@
 
 The owner sent two outside agents (Gemini and Grok) into the repo with `design/audits/ATTACK_PROMPT.md`: attack the game as the worst user who will ever download it. Both worked with node scripts and by reading code. No browser was opened, so nothing was seen on a GPU, in Firefox or Safari, on a real pad, or heard. Their work: `attack/gemini/` (report, ideas, 9 fuzz scripts, 12 tests) and `attack/groks/` (report, ideas, 12 scripts, 16 tests). This file is the merged, re-rated list and the place of every fix in the work queue (`design/COMMERCIAL_AND_USAGE_PLAN.md`). Commercial finish line: a store release must not brick a save, strand a player or leak until the machine slows, so the whole list is in the plan.
 
+**STATUS (2026-10-15): every finding is OPEN; nothing in `src` has been changed.** The testers' files are committed and pushed (`attack/`). First fix session: H1, right after Session A.
+
 ## 0. How far to trust it (my check, 2026-10-14, node only)
 - I ran every script. The Gemini fuzzers print what its report says (`fuzz_progress_proto`, `fuzz_save_overwrite`, `fuzz_void_softlock`, `fuzz_dry_feed`, `fuzz_mortar_wall_pierce`, `fuzz_weapon_step_neg` reproduce; `fuzz_save_roundtrip` PASSES, determinism holds across a save/load; `fuzz_sim_invariants` found nothing; `fuzz_gamepad_nan` shows a NaN look is already IGNORED, so only an Infinity yaw is in question). Grok: its 16 contract tests all FAIL on this tree, as its report says.
 - Gemini's 12 tests are DEMONSTRATIONS: they assert the vulnerable behaviour and PASS while the bug exists (their messages say VULNERABILITY). When a fix lands the test is inverted into a normal regression test. Grok's 16 are real contracts: red now, must go green.

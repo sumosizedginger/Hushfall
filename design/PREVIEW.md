@@ -49,7 +49,7 @@ The owner's findings go into `PLAYTEST_NOTES.md` (PT-042). Each piece is KEPT, C
 
 ---
 
-## AS BUILT, DROP A (PT-043, 2026-10-12 to 13, the owner's "Drop A is a go, show me what you got"; local commits 6a78593 and 900816d, NOT pushed)
+## AS BUILT, DROP A (PT-043, 2026-10-12 to 13, the owner's "Drop A is a go, show me what you got"; local commits 6a78593 and 900816d, since pushed (2026-10-14))
 
 **How to play it:** `npm run dev`, then the DEV level picker on the title screen: `HIVE The Hive Preview`, `HIVEBOSS The Hive Cantor`, `BELLBOSS The Root Bell`, `HIVEEND The Unrung Gate` (pick Easy; the HIVE map is the Range's rules: every weapon, ammunition refilled, you cannot die; the other three are the REAL rules: you can die, Retry restarts the whole arena). `HIVEEND` ends in the DRAFT epilogue of Campaign Two over its own painting. Stills of all of it, read by me, are in `review/preview/` (contact sheets first).
 
@@ -74,7 +74,7 @@ The owner's findings go into `PLAYTEST_NOTES.md` (PT-042). Each piece is KEPT, C
 
 ---
 
-## AS BUILT, DROP B (PT-045, 2026-10-13; the owner's goal: "build drop B so we can test them, then stop"; local commits, NOT pushed; NO BROWSER JOB WAS RUN)
+## AS BUILT, DROP B (PT-045, 2026-10-13; the owner's goal: "build drop B so we can test them, then stop"; local commits, since pushed (2026-10-14); NO BROWSER JOB WAS RUN)
 
 **How to play it:** `npm run dev`, then the DEV level picker on the title screen (Easy): **`HIVEYARDS The Hive Yards`** (belts, cars, the beat, the shaft, the tide, the collapse) and **`HIVEDARK The Hive Yards, the dark`** (the noise tell, the lamp). Both have the Range's rules (every weapon, ammunition refilled, a player who cannot die, F8 slows the game). The wing 3 of the plan could not stand inside `HIVE` (a map may hold 25600 cells and `HIVE` uses 23760), so the yards are two more dev maps; the DEV picker lists both. A yard says what it is and what to judge on a plate at its door (walk into the plate's circle). `Restart` in the pause menu puts everything back (the bridges of the collapse yard, the sleepers).
 

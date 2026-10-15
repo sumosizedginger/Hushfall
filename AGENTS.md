@@ -23,6 +23,7 @@ PLANNED -> IMPLEMENTED (loads) -> AGENT_VERIFIED (automated pass + canonical rou
 Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evidence goes stale if the map file changes. `CAMPAIGN_MANIFEST.json` is design intent only. Agents may not award COMPLETE.
 
 ## Commands
+- (PT-050) A command below that says it writes pictures or audio to `review/...` writes them to DISK ONLY: `review/**` images are git-ignored and are deleted when the task is done (see "Repo hygiene"). The look baseline `review/self-audit` stays on disk until the visual plan is accepted.
 - `npm ci` — reproducible install
 - `npm run dev` — dev server: game at http://localhost:5173/ (look demo at /look.html). The dev build exposes `window.__GAME_TEST__`.
 - `npm test` — node:test suite (engine, maps, saves, input, routes, settings, campaign/status model); headless, no browser
@@ -97,6 +98,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 ## Persistent files
 `design/WEAPONS_AND_CONTROLS_PLAN.md` the plan for weapon identity, melee, parry, controls, controller and the weapon wheel (steps 1-6 BUILT 2026-10-07 at the owner's go, awaiting their play; found melee weapons not yet placed on any map) · `design/LOOK_BIBLE.md` PART C = what the creature redesign shipped · `design/EPISODE1.md` per-map briefs and the kit table (intent, not status) · `design/CAMPAIGN2.md` the plan for Campaign 2, The Long Descent (PT-036; Act A built in PT-037, see its AS BUILT section) · `design/LORE.md` the lore canon and the rules for every line of text (PT-037) · `design/ACTB.md` Act B, the Sounding Deep (PT-038, built in PT-039) · `GAME_VISION.md` premise/targets · `ART_BIBLE.md` art rules/seeds/versions · `CAMPAIGN_MANIFEST.json` 68 slots ·
 `design/GATE3.md` Gate 3 plan, acceptance criteria and pilot log · `design/history/REPAIR_PLAN.md` the Gate 2 repair plan (history) · `PLAYTEST_NOTES.md` human playtest reports with causes, guards and the next work list (read before any code work) · `PRODUCTION_LOG.md` dated log + exact next task · `TESTING.md` tests/evidence · `validation/` machine evidence · `review/gate-N/` review bundles.
+`design/ROADMAP.md` the road to the end and the Director's Plan order · `design/VISUAL_DIRECTION.md` the look plan (V1 to V12, workstream U) with `design/LOOK_FIRST_REVIEW.md` as its evidence · `design/COMMERCIAL_AND_USAGE_PLAN.md` the finish line (workstream M), the work queue (Sessions A to H3, T2) and the low-usage protocol · `design/HARDENING.md` what the two hostile testers found and where each fix sits · `design/ARCHIVE_INDEX.md` the tidy: what moved, where it is, how to restore it · `design/PREVIEW.md` the dev maps · `design/ACTB.md` `design/ACTC.md` `design/ACTD.md` Campaign 2 Acts B to D · `design/EPISODE3.md` `design/EPISODE4.md` Campaign 1 Episodes 3 and 4 · `design/audits/` what outside agents said and the attack prompt · `design/history/` finished plans and the commit map · `attack/` the testers' scripts and reports (run from the repo root) · `tools/dev/` and `tools/look/` the dev tools (see Commands).
 
 ## p5.brush facts learned (see ART_BIBLE.md)
 - ESM instance mode: call `brush.instance(p)` before setup AND `brush.seed(n)` + `brush.noiseSeed(n)` explicitly; the `p.randomSeed` hook does not reach brush.
@@ -112,6 +114,7 @@ Status is computed by `npm run validate` from `validation/maps/<ID>.json`; evide
 - Every new top-level file or folder gets a line under "Persistent files". Nothing is deleted that cannot be regenerated: it is moved to `D:\Doom_archive\` and listed in `design/ARCHIVE_INDEX.md`.
 - `design/history/` holds finished plans (`REPAIR_PLAN.md`, `assessment.md`); `design/audits/` holds what outsiders said. Neither is an instruction.
 - The developer key (a code map for other engineers) is built when the game is finished (M13), not before.
+- Size (measured 2026-10-15): the game itself (code, maps, art, tests, tools, documents) is about 18 MB; the working tree without `node_modules` is about 223 MB, of which 195 MB is the look baseline `review/self-audit` (kept until the visual plan is accepted); `.git` is 11 MB; `node_modules` is 144 MB. GitHub main = 8dcf0e3, the stripped history, force-pushed on 2026-10-15 at the owner's word; any older clone must be re-cloned.
 
 ## Session start
 1. Confirm this file is loaded (CLAUDE.md imports it). 2. `git status`. 3. Read top of `PRODUCTION_LOG.md`, then `GAME_VISION.md`, `TESTING.md`.

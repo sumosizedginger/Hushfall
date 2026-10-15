@@ -115,7 +115,7 @@ Act D has fewer enemies than Act C and more rules, but every map in it is a figh
 4. **The ending's text** is written last and is the least certain; the callback to the Lighthouse Cellar must land for a player who skipped the secret too (it does: the cards say what the lamp does).
 5. **M26** combines two senses (ears and eyes) in a dark map: if it is confusing, the dark goes (the noise tell stays).
 
-## AS BUILT, ACT D (PT-046, 2026-10-13; the owner: "Ok, act c D lets go!"; local commits, NOT pushed; built in NODE ONLY: no browser job ran, nothing here has been drawn by a GPU or played by a person)
+## AS BUILT, ACT D (PT-046, 2026-10-13; the owner: "Ok, act c D lets go!"; local commits, since pushed (2026-10-14); built in NODE ONLY: no browser job ran, nothing here has been drawn by a GPU or played by a person)
 Six maps, all built, all passing every node gate of `verify-map` (the real-game evidence is stale on every map, as ever), each seen as a node-drawn plan image (`review/maps/`) and with a vantage tour (`maps-src/<ID>.views.json`, for `shoot-map.mjs` when a window is opened):
 | map | what it is | what is new in it |
 |---|---|---|

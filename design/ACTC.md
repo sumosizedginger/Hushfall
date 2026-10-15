@@ -157,7 +157,7 @@ The act's count is about 400 hostile placements (Act B's was about 300, not coun
 5. **The Hive Cantor** is three layers (unison, tiers, returning ring) in one fight; the owner may find it too busy. The cut line is the tier strikes (the shield and the ring stay).
 6. **Length.** Eight maps, two new creatures, one risky engine piece: the largest single act left. Each batch ends with the owner's play.
 
-## AS BUILT, ACT C (PT-046, 2026-10-13; the owner: "Ok, act c D lets go!"; local commits, NOT pushed; built in NODE ONLY: no browser job ran, nothing here has been drawn by a GPU or played by a person)
+## AS BUILT, ACT C (PT-046, 2026-10-13; the owner: "Ok, act c D lets go!"; local commits, since pushed (2026-10-14); built in NODE ONLY: no browser job ran, nothing here has been drawn by a GPU or played by a person)
 Eight maps and the secret, all built, all passing every node gate of `verify-map` (the real-game evidence is stale on every map, as ever), seen as node-drawn plan images (`review/maps/`) and with a vantage tour each (`maps-src/<ID>.views.json`, for `shoot-map.mjs` when a window is opened):
 | map | what it is | what is new in it |
 |---|---|---|
