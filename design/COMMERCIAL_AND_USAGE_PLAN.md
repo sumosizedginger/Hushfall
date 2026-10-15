@@ -30,7 +30,7 @@ Sizes: S about one short session, M one long session, L two (first guesses). Eve
 |---|---|---|---|---|
 | **Session A: quick wins** (my choice for the first one) | F1 fork wall impact; V1 hurt flash; V2 crosshair, toast column, title and controls text | M | J1, J2, J17 (capture, covered by the 2026-10-14 yes) | try them in play |
 | **Session H1: hardening, saves and the frame loop** | prove the void softlock on a REAL route (a vent miss with the bot), then the save family: one strict validator, `loadWorld` never throws, a rejected slot is set aside; the frame-loop guard with an exportable error log; Grok's 16 contract tests go green (`design/HARDENING.md` section 2) | M | none (node only) | nothing |
-| **Session B: reading and pickups** | U1 pickup cards; U2 reading time and message priority; Tab pauses | M | J18 | play; a word on slow-while-reading |
+| **Session B: reading and pickups** | U1 pickup cards; U2 the message log, unread badge and priority; Tab opens the Journal and pauses (no clock change for text, decided 2026-10-15) | M | J18 | play |
 | **Session H2: hardening, economy, weapons, input** | the dry feed, the Brood Vat total, script spawns, the mortar through walls, the weapon step, an infinite yaw (`design/HARDENING.md`); `route-fingerprint.mjs check` after each | M | none (node only) | nothing |
 | **Session C: the Journal and the minimap** | U3 (and U3b if affordable), U4 | L | J19, J20 | play |
 | **Session D: light** | V3 gun in the place's light; V4 tone shoulder; V5 480 against 640 | M | J3 to J5 | a word on 640 |
@@ -55,7 +55,7 @@ The evidence regeneration stays ONCE, after the last visual and map change (any 
 2. Platform order: the itch.io web build first, Steam through a desktop wrapper afterwards (recommended).
 3. The cut line if usage runs short: ship what is best first (Campaign 1 and Acts A and B at the highest polish) and finish the rest in later updates. The 68-map target stays; this is only an order.
 4. The result of the name search (M1) and which fallback names to keep.
-5. Whether slow-while-reading should default on for Normal (the first guess: Easy 0.25, Normal 0.4, Hard off).
+5. (Decided 2026-10-15: slow-while-reading is dropped; the player pauses to read.) Still open, default NO: should a found document open a pausing reader?
 
 ## 6. What I need from the owner, when they are back
 Play Session A's results and say whether it is still fun; run the name search (M1); say yes or no to the chainsaw WAVs when Session E renders them; a veto on anything here. Nothing blocks the node-only parts.
