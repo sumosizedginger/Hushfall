@@ -2,10 +2,10 @@
 
 The owner: "Tidy up the entire repo ... we only want the things needed for the game and to continue building and assessing." Nothing of value was deleted. Everything that left the working tree is in TWO places at once:
 
-1. the git tag `archive/pre-tidy-2026-10-14` (the commit before the tidy: every TRACKED file is one command away), and
+1. the backup bundle `D:\Doom_archive\pre-filter-2026-10-14.bundle` (every commit and tag exactly as they were before the history strip; the tag `archive/pre-tidy-2026-10-14` that used to point at the pre-tidy commit was deleted by the strip, the bundle still has it), and
 2. the folder `D:\Doom_archive\2026-10-14\` OUTSIDE the repo (the untracked material, which git never had, plus a second copy of the tracked stills).
 
-Restore one tracked folder: `git checkout archive/pre-tidy-2026-10-14 -- review/pt-029` (the same form works for any path in the table). Restore an untracked one: copy it back from `D:\Doom_archive\2026-10-14\`.
+Restore one tracked folder: `git clone D:\Doom_archive\pre-filter-2026-10-14.bundle D:\Doom_old`, then `git -C D:\Doom_old checkout archive/pre-tidy-2026-10-14 -- review/pt-029` and copy it over (the same form works for any path in the table); or copy it from `D:\Doom_archive\2026-10-14\review\`. Restore an untracked one: copy it back from `D:\Doom_archive\2026-10-14\`.
 
 ## What moved
 
@@ -47,6 +47,6 @@ Relocated inside the repo (still tracked or now tracked):
 ## Step two, same day: pictures out of git for good
 The owner: "stop screenshots from making it grow again, then get rid of any local files you don't need". Measured: the history held about 950 MB of PNG and 122 MB of WAV against about 60 MB of everything else.
 - DONE: `.gitignore` now ignores every image and audio file under `review/`; the 649 tracked ones were untracked in a normal commit; the regenerable ones were deleted from disk (copies: `D:\Doom_archive\2026-10-14\review-before-filter\`). Kept on disk, ignored: `review/self-audit` (the visual baseline) and `review/look-bible` (read by `tools/look`).
-- NOT DONE (git refused a history rewrite as destructive; the owner decides): stripping the same files out of ALL OLD COMMITS. The tool is ready: `powershell -File tools\dev\strip-review-history.ps1`, from the repo root, local only. It needs the backup bundle `D:\Doom_archive\pre-filter-2026-10-14.bundle` (946 MB, every commit and tag, verified), keeps all 296 commits and messages, writes `design/history/commit-map-2026-10-14.txt` (old hash, new hash, subject) and runs the garbage collection. Expected result: `.git` from about 990 MB to well under 100 MB (an estimate until it runs).
-- AFTER it runs, every commit hash changes, so GitHub needs a force push: `git push --force-with-lease=main:839f5a6d0f1a846b0a3f063fe75101cdea4f0c4f origin master:main`, only on the owner's word. The tag `archive/pre-tidy-2026-10-14` is then gone; to get an old picture back use the bundle: `git clone D:\Doom_archive\pre-filter-2026-10-14.bundle D:\Doom_old`.
+- DONE (the owner allowed bypass; local, NOT pushed): all images and audio were stripped out of ALL 300 commits with `git filter-branch` (messages, order and every non-image file kept). `.git`: 990 MB -> 11 MB (the pictures were 98% of it; a leftover linked worktree `D:\Doom-actb` of the merged Act B branch kept a further 350 MB alive through its own index and was removed with the branch `actb`; the three evidence JSONs that differed there are in `D:\Doom_archive\2026-10-14\actb-worktree-leftovers\`). Old hash -> new hash for every commit: `design/history/commit-map-2026-10-14.txt` (use it to find a commit quoted in `PRODUCTION_LOG.md`). The one-off script and its filter were deleted after use.
+- GitHub still holds the OLD history. Pushing the new one needs a force push, only on the owner's word: `git push --force-with-lease=main:839f5a6d0f1a846b0a3f063fe75101cdea4f0c4f origin master:main`. Anyone with an older clone must re-clone. To open the pre-strip backup: `git clone D:\Doom_archive\pre-filter-2026-10-14.bundle D:\Doom_old`.
 - To restore the pictures that left the disk today: copy from `D:\Doom_archive\2026-10-14\review-before-filter\` back into `review\` (they stay ignored).
