@@ -1,6 +1,6 @@
 # Look first: review of the Gemini run and the Grok notes (2026-10-13)
 
-Source: `gemini-playthrough/` (46 PNGs, `play_report.json`, an empty `index.csv`; NOT committed, 46 large PNGs) and the text of a Grok review. Every frame but 037 was read. Gemini's chat text and Grok's text are CLAIMS; this note keeps only what a frame or the source confirms.
+Source: `gemini-playthrough/` (now in the archive outside the repo, see design/ARCHIVE_INDEX.md; 46 PNGs, `play_report.json`, an empty `index.csv`; NOT committed, 46 large PNGs) and the text of a Grok review. Every frame but 037 was read. Gemini's chat text and Grok's text are CLAIMS; this note keeps only what a frame or the source confirms.
 
 ## What the Gemini run is (and is not)
 - NOT a person playing. `tools/dev/playthrough-critic.mjs` (written by Gemini, untracked) drives the dev hook: `newGame`, `setup_teleport`, `setup_player` (hp 100000 for the melee frame), `startBot` and `stepBot(n)`; a frame is whatever the route bot's camera shows after n ticks. Headless Chrome on SwiftShader at 1280x720 (the prompt asked for a real GPU window).

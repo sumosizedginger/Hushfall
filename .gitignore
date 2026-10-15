@@ -2,3 +2,9 @@ node_modules/
 dist/
 .DS_Store
 *.log
+
+# baseline frames of the 2026-10-14 look audit: kept on disk (the before of every visual check), not in git (180 MB)
+review/self-audit/
+# build output of any kind, including a tester's own build
+attack/**/dist/
+*.log.err

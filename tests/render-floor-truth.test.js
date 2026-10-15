@@ -1,4 +1,4 @@
-// REGRESSION PROTECTION for the grounding fix (PT-001 / PT-002; REPAIR_PLAN.md WP2). The census proves every enemy is drawn on the sim's ground; these two things were never asserted:
+// REGRESSION PROTECTION for the grounding fix (PT-001 / PT-002; design/history/REPAIR_PLAN.md WP2). The census proves every enemy is drawn on the sim's ground; these two things were never asserted:
 //   1. the drawn FLOOR surface is where the sim says the floor is (every shipped map, every walkable cell, plus each moving floor at both ends of its travel);
 //   2. pickups stand on the sim's ground and none stands on a moving floor (the sim sets a pickup's y once; a deck that carries it would leave it floating or buried).
 // The level mesh is built in Node with stub textures (geometry only) and ray-cast straight down from just above the sim's floor: the first opaque upward-facing surface hit must BE the floor.

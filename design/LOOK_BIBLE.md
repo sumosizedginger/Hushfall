@@ -155,7 +155,7 @@ New: `src/render/models_choir.js` (the rigs and the kit, moved from `tools/look`
 # PART A: the first pass (drawn studies)
 
 
-Why this exists: `assessment.md` found the renderer's painted/ink language is good and the content drawn through it is generic. The owner's brief (2026-10-06): *"distinct enemies ... things that look different than anything else out there ... keep the art style."* Their decisions: **everything is an instrument**; humans keep **dark torn oilskin**; tone **escalates by episode**; **look only first** (same ten kinds, same behaviours, same hit volumes).
+Why this exists: `design/history/assessment.md` found the renderer's painted/ink language is good and the content drawn through it is generic. The owner's brief (2026-10-06): *"distinct enemies ... things that look different than anything else out there ... keep the art style."* Their decisions: **everything is an instrument**; humans keep **dark torn oilskin**; tone **escalates by episode**; **look only first** (same ten kinds, same behaviours, same hit volumes).
 
 **What this document is not.** These are flat front-view design studies, not game renders. They prove silhouettes, families and rules; they do not prove how the 3D rigs, the 480-pixel frame or the ink/banding post pass will treat them; that is L1. Whether any of it is "different from anything else out there" is a design intent, not something I have verified: I did not survey other games. What I can say is that every choice below is derived from this game's own premise (the Hush, bells, cradles, grafting), which is what keeps it from being the generic zombie/alien kit.
 
@@ -336,7 +336,7 @@ Approve, revise or stop. If revise, the most useful answers:
 
 ## 9. What L1 will build and how it will be judged (after approval, not before)
 
-L1 rebuilds three things end to end: the **Tollbearer** (stage 0 and stage 2, to prove the escalation), the **Drone-Gill**, and the **cradle** (a sac with a person inside), plus one real tiling material set and the echo and chorus-sway tech. Same shot list as `assessment.md`, before and after, same spots. Acceptance: hit-volume fairness, rig grounding, entity-flag, e2-roster and render tests pass with their thresholds unchanged; silhouette overlap against every other kind < 0.5 **measured on the built rigs, not the studies**; the render-truth census passes; render cost not worse than the baseline. Cost: it changes `src/render/` and `assets/`, which invalidates the real-game evidence of all 18 maps; I will batch so there is one full regeneration for L1, not one per tweak.
+L1 rebuilds three things end to end: the **Tollbearer** (stage 0 and stage 2, to prove the escalation), the **Drone-Gill**, and the **cradle** (a sac with a person inside), plus one real tiling material set and the echo and chorus-sway tech. Same shot list as `design/history/assessment.md`, before and after, same spots. Acceptance: hit-volume fairness, rig grounding, entity-flag, e2-roster and render tests pass with their thresholds unchanged; silhouette overlap against every other kind < 0.5 **measured on the built rigs, not the studies**; the render-truth census passes; render cost not worse than the baseline. Cost: it changes `src/render/` and `assets/`, which invalidates the real-game evidence of all 18 maps; I will batch so there is one full regeneration for L1, not one per tweak.
 
 ## 10. Reproduce
 
