@@ -105,8 +105,11 @@ export function endStatsErrors(es) {
   return bad;
 }
 /** the VALUES of a saved world (worldShapeErrors sees only types and finiteness): status, guns, keys, caps, pickups, enemy states */
-export function worldValueErrors(snap) {
+export function worldValueErrors(snap, map = null) {
   const bad = [], P = snap.player, up = snap.upgrades && typeof snap.upgrades === 'object' ? snap.upgrades : null;
+  if (map && P && typeof P === 'object' && !(P.x >= 0 && P.x <= map.w * map.cell && P.z >= 0 && P.z <= map.h * map.cell)) bad.push('the player is outside the map');      // (a position the sim could never have made; the fuzz found a speed of 1e9 froze the tab)
+  if (P && typeof P === 'object') for (const [k, v] of Object.entries(P)) if (typeof v === 'number' && Math.abs(v) > (k === 'vx' || k === 'vz' ? 200 : 1e6)) { bad.push('player.' + k + ' = ' + v); break; }
+  if (map && Array.isArray(snap.enemies)) for (const e of snap.enemies) if (!(e.x >= -50 && e.x <= map.w * map.cell + 50 && e.z >= -50 && e.z <= map.h * map.cell + 50) || Math.abs(e.hp) > 1e6) { bad.push('enemy ' + e.id + ' is outside the map or has absurd hit points'); break; }
   if (!SAVE_STATUS.includes(snap.status)) bad.push('unknown status ' + String(snap.status));
   else if (snap.status === 'complete') bad.push(...endStatsErrors(snap.endStats));
   if (P && typeof P === 'object') {
@@ -139,7 +142,7 @@ function loadWorldUnsafe(save, mapLoader) {
     if (map.version !== c.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
     const w = createWorld(map, opts), snap = JSON.parse(JSON.stringify(save.world));
     const shape = worldShapeErrors(w, snap); if (shape.length) return { ok: false, reason: 'corrupt', detail: shape.join('; ') };
-    const vals = worldValueErrors(snap); if (vals.length) return { ok: false, reason: 'corrupt', detail: vals.join('; ') };
+    const vals = worldValueErrors(snap, map); if (vals.length) return { ok: false, reason: 'corrupt', detail: vals.join('; ') };
     const hidden = new Set(Object.getOwnPropertyNames(w).filter((k) => !Object.getOwnPropertyDescriptor(w, k).enumerable));      // the map and the event queue are not saved state: a save never overwrites them (Gemini-02, Grok G-02)
     for (const k of Object.keys(w)) delete w[k];
     for (const [k, v] of Object.entries(snap)) if (!hidden.has(k) && !HIDDEN_OR_DANGEROUS.has(k)) w[k] = v;

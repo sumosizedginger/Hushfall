@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 import { parseMap } from '../src/engine/mapformat.js';
 import { createWorld, step, drainEvents, spawnEnemy, carryOver } from '../src/engine/world.js';
 import { makeSave, parseSave, loadWorld, SAVE_VERSION } from '../src/engine/save.js';
+/** a save of a test world: the rooms keep the player near-immortal (hp 100000), which no real save contains and the loader now (rightly) refuses (PT-050 H1); the save is the honest one */
+const mid = (w) => { const s = makeSave(w, 'mid-level'); s.world.player.hp = Math.min(s.world.player.hp, 100); s.carry.hp = Math.min(s.carry.hp ?? 100, 100); return s; };
 import { WEAPONS, GUARD, BASH, MELEE_ORDER, WEAPON_ORDER, PICKUPS, ENEMIES } from '../src/engine/defs.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, melee: false, weaponLast: false, ...o });
@@ -121,11 +123,11 @@ test('toll-shots and tone pulses are NOT guarded (a deliberate limit); a swing c
 // ------------------------------------------------------------------------------------------------------------------------------ saves and determinism
 test('save: a v9 save (before melee) migrates to v10 and plays on; the new fields are present and at rest; a v10 mid-level save round-trips', () => {
   const w = room({ weapon: 'axe', weapons: ['flare', 'axe'] }); run(w, 5);
-  const save = JSON.parse(JSON.stringify(makeSave(w, 'mid-level'))); assert.equal(save.version, SAVE_VERSION);
+  const save = JSON.parse(JSON.stringify(mid(w))); assert.equal(save.version, SAVE_VERSION);
   const old = JSON.parse(JSON.stringify(save)); old.version = 9; delete old.world.burns; for (const k of ['charge', 'swingT', 'swingKind', 'swingHit', 'guard', 'guarding', 'parryW', 'parryCd', 'riposteT', 'brokenT', 'meleeWeapon', 'lastWeapon']) delete old.world.player[k];
   const p = parseSave(JSON.stringify(old)); assert.ok(p.ok && p.migratedFrom === 9, JSON.stringify(p).slice(0, 200)); assert.deepEqual(p.save.world.burns, []); assert.equal(p.save.world.player.swingT, -1); assert.equal(p.save.world.player.meleeWeapon, 'fists');
   const m = parseMap(src(hall())); const r = loadWorld(p.save, () => m); assert.ok(r.ok, JSON.stringify(r)); run(r.world, 60, () => idle({ aim: true, melee: true }));
-  const again = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m); assert.ok(again.ok); assert.equal(again.world.player.weapon, 'axe');
+  const again = loadWorld(parseSave(JSON.stringify(mid(w))).save, () => m); assert.ok(again.ok); assert.equal(again.world.player.weapon, 'axe');
 });
 test('melee is deterministic: the same inputs give the same world', () => {
   const play = () => { const w = room({ seed: 4 }); const es = [put(w, 'tollbearer', 2.2), put(w, 'gaunt', 3, 1)]; for (let t = 0; t < 400; t++) step(w, idle({ fire: t % 40 < 20, aim: t % 100 > 70, melee: t % 97 === 0, move: [0, t % 160 < 30 ? 1 : 0] })); return JSON.stringify([es.map((e) => [e.hp, e.x, e.z, e.stunT]), w.player]); };

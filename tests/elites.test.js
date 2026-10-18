@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import { parseMap } from '../src/engine/mapformat.js';
 import { createWorld, step, drainEvents, spawnEnemy } from '../src/engine/world.js';
 import { makeSave, parseSave, loadWorld } from '../src/engine/save.js';
+/** a save of a test world: the arenas keep the player near-immortal (hp 100000), which no real save contains and the loader now (rightly) refuses (PT-050 H1); the save is the honest one */
+const mid = (w) => { const s = makeSave(w, 'mid-level'); s.world.player.hp = Math.min(s.world.player.hp, 100); s.carry.hp = Math.min(s.carry.hp ?? 100, 100); return s; };
 import { ENEMIES } from '../src/engine/defs.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...o });
@@ -89,8 +91,8 @@ test('the Cantor summons Gaunts from its listed points, keeps its distance, and 
 });
 test('pulses, stagger and channel state survive a save; a v7 save (before the roster) migrates and plays on', () => {
   const m = arena(), w = quiet(m); at(w, 8, 10); const { c } = boss(w, 1); c.pulseCd = 0; run(w, 60 * 2);
-  const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world; assert.equal(back.pulses.length, w.pulses.length);
-  const old = JSON.parse(JSON.stringify(makeSave(w, 'mid-level'))); old.version = 7; delete old.world.pulses; const r = parseSave(JSON.stringify(old)); assert.equal(r.ok, true, r.detail); assert.equal(r.migratedFrom, 7);
+  const back = loadWorld(parseSave(JSON.stringify(mid(w))).save, () => m).world; assert.equal(back.pulses.length, w.pulses.length);
+  const old = JSON.parse(JSON.stringify(mid(w))); old.version = 7; delete old.world.pulses; const r = parseSave(JSON.stringify(old)); assert.equal(r.ok, true, r.detail); assert.equal(r.migratedFrom, 7);
   const w2 = loadWorld(r.save, () => m).world; run(w2, 120); assert.ok(Array.isArray(w2.pulses));
 });
 
@@ -119,6 +121,6 @@ test('pinned: the Cantor\'s pulse rings really exist before a save is taken, and
   const m = arena(), w = quiet(m); at(w, 8, 10); const { c } = boss(w, 1); c.pulseCd = 0;
   let n = 0; while (!w.pulses.length && n++ < 60 * 10) { step(w, idle()); drainEvents(w); }
   assert.ok(w.pulses.length > 0, 'a ring is in flight'); step(w, idle()); drainEvents(w);
-  const back = loadWorld(parseSave(JSON.stringify(makeSave(w, 'mid-level'))).save, () => m).world;
+  const back = loadWorld(parseSave(JSON.stringify(mid(w))).save, () => m).world;
   assert.deepEqual(back.pulses, w.pulses); run(back, 60); run(w, 60); assert.deepEqual(back.pulses, w.pulses, 'and they keep travelling in step');
 });

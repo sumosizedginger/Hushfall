@@ -158,7 +158,7 @@ function chaseStep(w, e, def, dt) {
 }
 /** move with axis-sliding collision, in steps of at most 0.25 m: a displacement larger than a wall is thick (the Warden's 3 m knockback) must stop AT the wall, not test only where it would land (audit A03) */
 export function tryMove(w, o, dx, dz, r) {
-  const n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / 0.25)), sx = dx / n, sz = dz / n;
+  const n = Math.min(64, Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / 0.25))), sx = dx / n, sz = dz / n;       // PT-050 H1: at most 64 sub-steps (16 m a tick; play uses 1 to 3): a speed of 1e9 in a damaged save was 66 million sub-steps, a frozen tab
   for (let i = 0; i < n; i++) {
     let moved = false;
     if (!blockedCircle(w, o.x + sx, o.z, r, o)) { o.x += sx; moved = true; }

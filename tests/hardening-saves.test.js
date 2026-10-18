@@ -65,6 +65,12 @@ test('G-05 / GEMINI-10: hit points, armour and ammunition that no honest game re
   assert.ok(carryErrors({ hp: 1e9 }).length && carryErrors({ ammo: { flare: 'x' } }).length && carryErrors({ weapons: 'flare' }).length && carryErrors(null).length && carryErrors({ hp: 100, armor: 50, ammo: { flare: 8 }, weapons: ['flare'] }).length === 0);
   rejected(loaded((s) => { s.carry.hp = 1e9; }, 'level-start'), 'a carry with hp 1e9'); rejected(loaded((s) => { s.carry.weapons = 'flare'; }, 'level-start'), 'a carry with weapons as a string');
 });
+test('a position outside the map or a speed of 1e9 is rejected; and even if one got through, a step cannot freeze the sim (the fuzz found 66 million sub-steps: a frozen tab)', () => {
+  rejected(loaded((s) => { s.world.player.vx = 1e9; }), 'vx 1e9'); rejected(loaded((s) => { s.world.player.vz = -1e9; }), 'vz -1e9'); rejected(loaded((s) => { s.world.player.x = 1e6; }), 'x far outside the map'); rejected(loaded((s) => { s.world.player.z = -5; }), 'z negative');
+  rejected(loaded((s) => { s.world.enemies[0].x = 1e9; }), 'an enemy far outside the map'); rejected(loaded((s) => { s.world.enemies[0].hp = 1e12; }), 'an enemy with absurd hit points');
+  const ok = loaded((s) => { s.world.player.vx = 12; s.world.player.vz = -9; }); assert.equal(ok.ok, true, 'an honest speed still loads: ' + ok.detail);
+  const w = createWorld(map, { seed: 1 }); w.player.vx = 1e9; const t0 = Date.now(); step(w, idle); assert.ok(Date.now() - t0 < 2000, 'a step with a speed of 1e9 took ' + (Date.now() - t0) + ' ms'); assert.ok(Number.isFinite(w.player.x));
+});
 test('GEMINI-02: a save that carries enumerable `map` or `events` keys cannot overwrite the live map or event queue; `__proto__` is not copied', () => {
   const r = loaded((s) => { s.world.map = { w: 1 }; s.world.events = { push: 'not a function' }; s.world.__proto__ = { hacked: true }; const raw = JSON.stringify(s).replace('"__proto__"', '"__proto__"'); void raw; });
   playable(r, 5); if (r.ok) { assert.equal(r.world.map, map, 'the live map'); assert.ok(Array.isArray(r.world.events)); assert.equal(r.world.hacked, undefined); }
@@ -99,10 +105,11 @@ test('mutation fuzz: damage every top-level and player field of a real save in s
   const targets = [...Object.keys(base.world).map((k) => ['world', k]), ...Object.keys(base.world.player).map((k) => ['player', k]), ...Object.keys(base.carry).map((k) => ['carry', k])];
   for (const [where, key] of targets) for (const g of garbage) {
     const s = JSON.parse(JSON.stringify(base)); (where === 'world' ? s.world : where === 'player' ? s.world.player : s.carry)[key] = JSON.parse(JSON.stringify(g));
-    const parsed = parseSave(JSON.stringify(s)); if (!parsed.ok) continue; let r;
+    const parsed = parseSave(JSON.stringify(s)); if (!parsed.ok) continue; let r; const t0 = Date.now();
     try { r = loadWorld(parsed.save, () => map); } catch (e) { failures.push(`${where}.${key}=${JSON.stringify(g)}: loadWorld threw ${e.message}`); continue; }
     if (!r.ok) { rejectedN++; continue; } accepted++;
     try { for (let i = 0; i < 3; i++) { step(r.world, i === 1 ? { ...idle, fire: true, use: true } : idle); drainEvents(r.world); } } catch (e) { failures.push(`${where}.${key}=${JSON.stringify(g)}: accepted, then step threw ${e.message}`); }
+    if (Date.now() - t0 > 3000) failures.push(`${where}.${key}=${JSON.stringify(g)}: accepted, then the sim took ${Date.now() - t0} ms (a hang)`);       // a frozen tab is worse than a throw
   }
   assert.ok(accepted > 50 && rejectedN > 50, `both outcomes happen (accepted ${accepted}, rejected ${rejectedN})`);
   assert.deepEqual(failures.slice(0, 12), [], failures.length + ' damaged saves were accepted and then broke the sim');
