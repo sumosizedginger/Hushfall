@@ -61,7 +61,9 @@ export function makeBeamView(map, tex = {}) {
     for (const [id, r] of receivers) { const on = (w.beams?.lit ?? []).includes(id) ? 1 : 0; r.lit += (on - r.lit) * Math.min(1, dt * 8); r.lens.material.color.setRGB(0.16 + 0.84 * r.lit, 0.12 + 0.72 * r.lit, 0.19 + 0.36 * r.lit); r.halo.material.opacity = r.lit * (0.45 + 0.15 * Math.sin(time * 5)); }
     for (const e of emitters) e.halo.material.opacity = 0.3 + 0.1 * Math.sin(time * 3);
   }
-  return { group, update, mirrors, receivers, lines };
+  /** PT-050 H-L3: free every geometry and material the view owns (the scene sweep in GameView.dispose gets them too; this makes the view whole by itself) */
+  function dispose() { group.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } }); for (const m of [coreM, haloM, outerM]) m.dispose(); }
+  return { group, update, mirrors, receivers, lines, dispose };
 }
 
 // ------------------------------------------------------------------------------------------------------------------ THE GATE WARDEN'S SWEEP (PT-033, Batch E; engine/sweep.js)

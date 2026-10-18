@@ -57,6 +57,7 @@ export class UI {
   /** the Journal (PT-049 U2): the Map tab is the automap the page draws behind it, the Log tab the messages of this map, newest first, the unread ones marked (journal.js). Text is escaped. */
   journalOpen({ log, mapName, tab }) {
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    $('card').classList.add('hidden');                                                                       // the arrival card is not left ghosted behind the dimmed Journal (seen in the PT-050 probe's still)
     $('journal-title').textContent = mapName ?? ''; $('journal-new').textContent = log.newCount ? `(${log.newCount} new)` : '';
     $('journal-list').innerHTML = log.entries.length ? log.entries.map((e) => `<div class="rec${e.document ? ' doc' : ''}${e.isNew ? ' new' : ''}"><b>${esc(e.speaker || 'unsigned')}</b><p>${esc(e.text)}</p></div>`).join('') + (log.earlier ? `<div id="journal-empty">${log.earlier} more from earlier maps are in the Record.</div>` : '') : `<div id="journal-empty">Nothing received on this map yet.${log.earlier ? ' ' + log.earlier + ' from earlier maps are in the Record.' : ''}</div>`;
     $('journal-log').scrollTop = 0; this.journalShowTab(tab);

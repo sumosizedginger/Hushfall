@@ -46,6 +46,7 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
+const freeRig = (root) => root.traverse((o) => { if (o.isMesh) o.geometry?.dispose(); });         // (geometry only: a rig's materials are cached and shared by its kind)
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
 /** the Root Bell's clapper hangs on a pendulum: its lean in the rig's own axes (the top of the bell tilts toward the pivot, away from the side it is displaced to), and whether the Last Note has opened its heart */
 const bellPose = (e, yaw) => {
@@ -316,7 +317,7 @@ export class GameView {
         v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false;
       } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
     }
-    for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); }
+    for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); freeRig(v.root); if (v.frozen) freeRig(v.frozen); }          // PT-050 H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
     { const discs = []; for (const e of w.enemies) { if (e.state === 'dead') continue; const v = this.enemyViews.get(e.id), def = ENEMIES[e.kind]; if (v) discs.push({ x: v.root.position.x, y: v.root.position.y, z: v.root.position.z, r: def.radius, fade: def.flying ? 0.55 : 1 }); } this.shadows.update(discs); }      // the floor under each creature, its collision radius; a flyer's disc is smaller (it is higher)
     // channel beams (Sexton -> corpse), node links (ring -> Cantor), the shield, tone pulses
     { const live = new Set(); let boss = null; const nodes = [];
@@ -523,6 +524,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose(); this.hiveView?.dispose();
+    for (const v of [this.tideView, this.chimeView, this.beamView, this.sweepView]) v?.dispose?.();                // PT-050 H-L1..L3: the textures a view owns (the scene sweep above frees only geometry and materials)
     this.scene.clear(); this.weaponScene.clear();
   }
 }

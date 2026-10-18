@@ -40,7 +40,7 @@ export function installTestHook(app) {
     state: snap,
     drainEvents() { const e = g.events; g.events = []; return e; },
     // -- semantic actions (same path as the keyboard) --
-    newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null } = {}) { app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.lockFailed = true; g.manual = !realtime; return snap(); },
+    newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null } = {}) { g.lockFailed = true; app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.manual = !realtime; return snap(); },
     realtime(on) { g.manual = !on; },
     press: (a) => g.input.press(a), release: (a) => g.input.release(a), addYaw: (r) => g.input.addYaw(r), addPitch: (r) => g.input.addPitch(r),
     tick(n = 1) { for (let i = 0; i < n; i++) { app.stepOnce(); if (g.mode !== 'playing') break; } render(); return snap(); },

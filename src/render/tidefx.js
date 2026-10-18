@@ -9,7 +9,7 @@ export function makeTideView(map, tex) {
   const t = base.clone(); t.needsUpdate = true; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(W / 8, H / 8);
   const mat = new THREE.MeshBasicMaterial({ map: t, color: 0x7fb4c4, transparent: true, opacity: 0.6, depthWrite: false, side: THREE.DoubleSide });
   const sea = new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat); sea.rotation.x = -Math.PI / 2; sea.position.set(R[0] * S + W / 2, -10, R[1] * S + H / 2); sea.renderOrder = 2; sea.visible = false; group.add(sea);
-  const tv = { group, sea, mat, tex: t, update: (w, dt, time) => updateTideView(tv, w, dt, time) };
+  const tv = { group, sea, mat, tex: t, update: (w, dt, time) => updateTideView(tv, w, dt, time), dispose() { t.dispose(); mat.dispose(); sea.geometry.dispose(); } };         // PT-050 H-L2: the clone is this view's own texture; the level mesh's water texture (`base`) is shared and stays
   return tv;
 }
 export function updateTideView(tv, w, dt, time = 0) {

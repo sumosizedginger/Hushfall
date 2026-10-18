@@ -86,6 +86,7 @@ addEventListener('keyup', (e) => keys.delete(e.code));
 document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; msg.textContent = locked ? '' : 'click to capture mouse · click again to fire'; });
 document.addEventListener('pointerlockerror', () => { lockFailed = true; msg.textContent = 'pointer lock unavailable: drag to look, click to fire'; });
 canvas.addEventListener('mousedown', () => {
+  if (!locked && !lockFailed && navigator.webdriver) lockFailed = true;                       // PT-050: a script-driven browser never asks for the pointer lock (src/game/lockpolicy.js)
   if (!locked && !lockFailed) { try { canvas.requestPointerLock(); } catch { lockFailed = true; } return; }
   dragging = true; fire();
 });

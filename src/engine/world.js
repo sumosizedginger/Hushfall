@@ -6,12 +6,13 @@ import { loadState, loadIndex, inLoad } from './loads.js';
 import { carState, carCovers, carDeckY } from './cars.js';                                                          // PT-045 (E8b): cars (lazy: a map with no `cars` never reaches them)
 import { beltPush, beltAtCell } from './belts.js';                                                                // PT-045 (E8a): conveyors on a clock (lazy: a map with no `belts` never reaches them)
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS, CORPSES } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
 import { maybeDrop, updateDrops, trackFired } from './drops.js';
+import { trimCorpses } from './corpses.js';
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch, choiceHolds } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
@@ -1103,7 +1104,8 @@ function lockQueued(w, d) {
 export function step(w, cmd) {
   if (w.status !== 'playing') return;
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
-  w.tick++; w.time = w.tick * dt; if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
+  w.tick++; w.time = w.tick * dt; if (w.tick % CORPSES.every === 0) trimCorpses(w);                          // PT-050 H-L4: the born corpses beyond the cap leave (nothing changes for a run that has fewer)
+  if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
   if (p.lamp) updateLamp(w, cmd, dt); if (map.dark) w.lit = playerLit(w);                         // PT-038 (E5)
   if (map.cars.length && !p.air) carryRider(w, p, dt);                                     // PT-045 (E8b): a car carries what stands on it, before anything else moves
   updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)

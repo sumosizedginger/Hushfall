@@ -165,6 +165,7 @@ export const CARS = { speed: 4, dwell: 8, minDwell: 3, warn: 2, board: 0.35, min
 export const LOADS = { warn: 1.5, linger: 1.2, damage: 30, enemyDamage: 80 };
 export const LOWG = { g: 3.2, steer: 0.28, ventCooldown: 0.5, setBackCooldown: 1.5, voidDepth: 6, voidFallG: 14, voidDamage: 15, minTime: 1, maxTime: 8, maxAir: 14 };
 /** AIRLOCKS AND VACUUM (PT-033; src/engine/airlock.js): how long a lock's second door stays refused after the first has shut (the pressure equalising), and what a body in vacuum takes */
+export const CORPSES = { cap: 24, every: 120 };                               // PT-050 H-L4: of the creatures a vat, a mother or a summoner BORE, at most `cap` corpses are kept (the oldest go), checked every `every` ticks; a mapped creature's body is never removed
 export const LOCK = { cycle: 3, hold: 2, giveUp: 6 };                       // giveUp: a queued door forgets the press when you walk this far (metres) from it
 export const VACUUM = { dps: 2, tick: 0.5 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */

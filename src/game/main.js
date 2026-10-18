@@ -4,6 +4,7 @@ import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url } from '../render/tex
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
+import { automated } from './lockpolicy.js';
 import CAMPAIGN from '../../CAMPAIGN_MANIFEST.json';
 import { nextMapId, mapName } from './campaign.js';
 import { InputState } from '../engine/input.js';
@@ -228,7 +229,9 @@ function lockDenied() {
   else ui.setPointerHint('Click the game to capture the mouse');
 }
 function requestLock(fromClick = false) {
-  if (g.lockFailed) return; g.lockClick = fromClick;
+  if (g.lockFailed) return;
+  if (automated()) { g.lockFailed = true; return; }                          // PT-050: a script-driven browser never asks for the pointer lock (it can hide and confine the real cursor; see lockpolicy.js)
+  g.lockClick = fromClick;
   try { const p = canvas.requestPointerLock?.(); p?.catch?.(lockDenied); } catch { lockDenied(); }
 }
 

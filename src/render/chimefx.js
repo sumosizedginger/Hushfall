@@ -47,7 +47,9 @@ export function makeChimeView(map) {
     }
   }
   return {
-    group, chimes, fruit,
+    group, chimes, fruit, textures,
+    /** PT-050 H-L1: the five glyph canvases are this view's own GPU textures (a material's dispose never frees its map): GameView.dispose calls this */
+    dispose() { for (const t of textures) t?.dispose(); },
     /** per frame: a struck chime flares and fades over 1.4 s, a tree's fruit lights for the note it just played */
     update(w, time) {
       for (const [id, c] of chimes) {
