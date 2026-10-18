@@ -1,5 +1,6 @@
 // Pure key-binding helpers for the remap screen: display names, applying a rebind with conflict handling, resetting.
 import { ACTIONS, DEFAULT_BINDINGS } from '../engine/input.js';
+import { SLOT_KEYS } from '../engine/defs.js';
 
 export const ACTION_LABELS = {
   forward: 'Move forward', back: 'Move back', left: 'Strafe left', right: 'Strafe right', turnLeft: 'Turn left', turnRight: 'Turn right', lookUp: 'Look up', lookDown: 'Look down',
@@ -9,7 +10,8 @@ export const SLOTS = 2;
 /** one-line controls reminder built from the CURRENT bindings (title, pause, and the first minute of a run) */
 export function legendText(b) {
   const k = (a) => prettyCode(b[a]?.[0]);
-  return `Move ${['forward', 'left', 'back', 'right'].map(k).join('')} · Look mouse · Fire ${k('fire')} · Aim ${k('aim')} · Sprint ${k('sprint')} · Use ${k('use')} · Weapons ${k('weapon1')} ${k('weapon2')} ${k('weapon3')} ${k('weapon4')} ${k('weapon5')} ${k('weapon6')} (melee) ${k('weapon7')} ${k('weapon8')} ${k('weapon9')} / wheel · Quick melee ${k('melee')} · Last weapon ${k('weaponLast')} (hold: wheel) · Map ${k('map')} · Pause ${k('pause')}`;
+  const weapons = SLOT_KEYS.map((s, i) => k('weapon' + (i + 1)) + (s === 'melee' ? ' (melee)' : '')).join(' ');                  // every slot of defs.js, the mortar's 0 included (PT-047 D5)
+  return `Move ${['forward', 'left', 'back', 'right'].map(k).join('')} · Look mouse · Fire ${k('fire')} · Aim ${k('aim')} · Sprint ${k('sprint')} · Use ${k('use')} · Weapons ${weapons} / wheel · Quick melee ${k('melee')} · Last weapon ${k('weaponLast')} (hold: wheel) · Map ${k('map')} · Pause ${k('pause')}`;
 }
 /** Escape cancels a capture and is how browsers release the mouse, so it cannot be assigned to an action. */
 export const RESERVED = new Set(['Escape']);

@@ -60,12 +60,13 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #hud-weapons{display:flex;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:2px 7px;font-size:11px;letter-spacing:.08em;color:#9fb4b0;background:#0d0f14b0}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}
 #hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
 #hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
-#toasts{position:fixed;left:50%;top:14%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
-#toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000}
+#toasts{position:fixed;right:16px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}        /* PT-047 V2: top right (it used to sit in the middle of the picture); the minimap of workstream U will go above it */
+#toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000;max-width:min(360px,44vw)}
 #comms{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);width:min(640px,92vw);background:#0d0f14ec;border:1px solid var(--slate);border-left:3px solid var(--teal);padding:8px 14px;pointer-events:none;z-index:3;text-shadow:1px 1px 0 #000}
 #comms b{display:block;color:var(--teal);letter-spacing:.18em;font-size:11px;margin-bottom:2px}#comms span{color:var(--paper)}
 #comms.note{border-left-color:var(--bronze)}#comms.note b{color:var(--bronze)}
 #card{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:3;animation:cardfade 6.5s ease forwards;text-shadow:2px 2px 0 #000}
+#card::before{content:"";position:absolute;left:0;right:0;top:50%;height:min(48vh,400px);transform:translateY(-50%);z-index:-1;background:linear-gradient(transparent,#000c 28%,#000c 72%,transparent)}      /* PT-047 V2: a dark band behind the two lines so they read on a bright ground */
 #card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 #objective{position:fixed;left:16px;top:12px;max-width:min(520px,60vw);font-size:12px;color:#c4d4d0;background:#0d0f14b8;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
@@ -214,7 +215,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 <div id="screen-title" class="screen hidden">
   <img id="title-art" alt=""><div class="rings"></div>
   <div class="panel">
-    <h1>HUSHFALL</h1><div class="sub">Port Marrow · the first night · Episode 1 preview</div>
+    <h1>HUSHFALL</h1><div class="sub">Port Marrow · the first night</div>
     <button id="btn-continue">Continue</button>
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
     <button id="btn-record-title">The Record</button>

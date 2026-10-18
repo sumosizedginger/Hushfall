@@ -19,7 +19,7 @@ if (indexFile && fs.existsSync(indexFile)) for (const l of fs.readFileSync(index
 const GUN = { x0: 980, y0: 520, x1: 1200, y1: 700 };
 const CORE = { x0: 800, y0: 540, x1: 1000, y1: 640 };      // fully inside the held cannon on the tick-0 frames (no message plate yet): the gun's own pixels, not the background round it
 const inGun = (x, y) => x >= GUN.x0 && x < GUN.x1 && y >= GUN.y0 && y < GUN.y1;
-const masked = (x, y) => y < 80 || y >= 660 || (y >= 100 && y < 260 && x >= 540 && x < 740) || (x >= 320 && x < 960 && y >= 510 && y < 612) || (x < 540 && y < 112);     // HUD strips, the toast column, the message plate, the objective box
+const masked = (x, y) => y < 80 || y >= 660 || (y >= 100 && y < 260 && x >= 540 && x < 740) || (x >= 320 && x < 960 && y >= 510 && y < 612) || (x < 540 && y < 112) || (x >= 880 && y < 190);      // (the toast column moved from the top middle to the top right in V2: both places are masked, the baseline frames have the old one)     // HUD strips, the toast column, the message plate, the objective box
 const luma = (r, g, b) => 0.299 * r + 0.587 * g + 0.114 * b;
 
 const rows = [];

@@ -12,7 +12,7 @@ import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
-import { pickupToast } from './toasts.js';
+import { pickupToast, pushToast, toastLabel, TOAST } from './toasts.js';
 import { crosshairCss } from './crosshair.js';
 
 const $ = (id) => document.getElementById(id);
@@ -24,7 +24,6 @@ const TOASTS = {
   switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',
   weapon_pickup: (e) => NEW_WEAPON_TOASTS[e.kind] ?? (e.kind === 'weapon_boathook' ? 'Boat hook  (6): long reach, it pulls them in' : e.kind === 'weapon_marlinspike' ? 'Marlinspike  (6): fast, three times as deadly in the back' : e.kind === 'weapon_mallet' ? "Lamplighter's mallet  (6): it staggers, and plate does not turn it" : e.kind === 'weapon_axe' ? 'Fire axe  (6): slow, it cleaves everything in front of you' : e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : e.kind === 'weapon_arc' ? 'Charge-arc lamp  (5): tap for an arc that picks its own targets; HOLD to charge a forked bolt (it conducts through water); it lights the dark' : 'Weapon'),
-  weapon_switch: (e) => WEAPONS[e.weapon]?.name || e.weapon,
 };
 
 export class UI {
@@ -127,7 +126,9 @@ export class UI {
     $('locker').innerHTML = Object.keys(TRACKS).map((t) => { const d = describeNext(p, t); return `<div><b>${d.name} · tier ${d.tier}/${TRACKS[t].costs.length}</b><span>${d.cost == null ? 'maxed' : `${d.cost} salvage<button class="buy" data-track="${t}"${p.salvage < d.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${d.text}</span></div>`; }).join('');
     $('locker-note').textContent = note;
   }
-  toast(text) { const d = document.createElement('div'); d.textContent = text; $('toasts').appendChild(d); setTimeout(() => d.remove(), 3200); if ($('toasts').children.length > 4) $('toasts').firstChild.remove(); }
+  /** PT-047 V2: a toast joins the model (toasts.js): equal consecutive ones merge, three at most; the DOM below only draws it */
+  toast(text) { this.toasts = pushToast(this.toasts, text, performance.now() / 1000); this.renderToasts(); setTimeout(() => this.renderToasts(), TOAST.life * 1000 + 60); }
+  renderToasts() { const now = performance.now() / 1000; this.toasts = (this.toasts ?? []).filter((t) => t.until > now); $('toasts').replaceChildren(...this.toasts.map((t) => { const d = document.createElement('div'); d.textContent = toastLabel(t); return d; })); }
   /** hotkeys (Enter/Space on the death and complete screens) are ignored for half a second after a screen appears, so a held fire key cannot skip it */
   canAct() { return performance.now() - this.shownAt > 500; }
   /** the crosshair's answers: a tick when you hit, red when it dies, grey on plate; a call-out for the guard and the pin */
