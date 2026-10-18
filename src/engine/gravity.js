@@ -225,10 +225,14 @@ export function updateShoves(w, dt) {
     if (s.t <= -dt) { list.splice(i--, 1); continue; }
     const ed = ENEMIES[e.kind], dx = s.vx * f * dt, dz = s.vz * f * dt, ix = e.x, iz = e.z, want = Math.hypot(dx, dz);
     tryMove(w, e, dx, dz, ed.radius);
-    if (want > 1e-4 && Math.hypot(e.x - ix, e.z - iz) < want * 0.4) {
+    // PT-048 (F1): the wall is found by the BLOCKED COMPONENT of the step, not by how far the creature got. tryMove slides along a wall, so an angled punt kept most of its distance and was struck only at a corner.
+    // `hit` = the share of the speed (0..1) on the axes the move could not finish, i.e. along the wall's normal: 1 head-on, sin(angle from the wall) when angled. A scrape under `glance` slides on; anything more ends the shove here.
+    const bx = dx !== 0 && (e.x - ix) * Math.sign(dx) < Math.abs(dx) - 1e-6, bz = dz !== 0 && (e.z - iz) * Math.sign(dz) < Math.abs(dz) - 1e-6;
+    const hit = want > 1e-4 ? Math.hypot(bx ? dx : 0, bz ? dz : 0) / want : 0;
+    if (want > 1e-4 && hit >= P.glance) {
       if (s.k > 0) {
         let other = null, od = 1e9; for (const o of w.enemies) { if (o === e || o.state === 'dead') continue; const d = Math.hypot(o.x - e.x, o.z - e.z) - ENEMIES[o.kind].radius - ed.radius; if (d < 0.35 && d < od && ((o.x - e.x) * dx + (o.z - e.z) * dz) > 0) { other = o; od = d; } }
-        const dmg = P.impact * Math.max(0.35, f), killed = damageEnemy(w, e, dmg, { pierceArmor: true });
+        const dmg = P.impact * Math.max(0.35, f) * Math.max(0.35, hit), killed = damageEnemy(w, e, dmg, { pierceArmor: true });
         emit(w, 'shove_impact', { id: e.id, kind: e.kind, x: e.x, y: e.y + ed.height * 0.5, z: e.z, killed, body: !!other });
         if (!killed) { e.stunT = Math.max(e.stunT || 0, P.stun); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
         if (other && !ENEMIES[other.kind].boss && !ENEMIES[other.kind].node) {
