@@ -1,0 +1,968 @@
+{
+ "rebuilt": [],
+ "floor": {
+  "C1E1M01": {
+   "density": 22,
+   "rangedShare": 19,
+   "ambushes": 0,
+   "kinds": 3,
+   "loops": 0,
+   "topShare": 50,
+   "symmetry": 0.6,
+   "walk": 719
+  },
+  "C1E1M02": {
+   "density": 29,
+   "rangedShare": 16,
+   "ambushes": 4,
+   "kinds": 3,
+   "loops": 0,
+   "topShare": 50,
+   "symmetry": 0.42,
+   "walk": 1310
+  },
+  "C1E1M03": {
+   "density": 21,
+   "rangedShare": 14,
+   "ambushes": 2,
+   "kinds": 3,
+   "loops": 0,
+   "topShare": 65,
+   "symmetry": 0.84,
+   "walk": 1759
+  },
+  "C1E1M04": {
+   "density": 28,
+   "rangedShare": 9,
+   "ambushes": 1,
+   "kinds": 3,
+   "loops": 0,
+   "topShare": 61,
+   "symmetry": 0.48,
+   "walk": 1555
+  },
+  "C1E1M05": {
+   "density": 19,
+   "rangedShare": 22,
+   "ambushes": 1,
+   "kinds": 4,
+   "loops": 9,
+   "topShare": 49,
+   "symmetry": 0.88,
+   "walk": 2428
+  },
+  "C1E1M06": {
+   "density": 24,
+   "rangedShare": 10,
+   "ambushes": 3,
+   "kinds": 4,
+   "loops": 0,
+   "topShare": 63,
+   "symmetry": 0.84,
+   "walk": 1635
+  },
+  "C1E1M07": {
+   "density": 33,
+   "rangedShare": 5,
+   "ambushes": 1,
+   "kinds": 4,
+   "loops": 0,
+   "topShare": 62,
+   "symmetry": 0.65,
+   "walk": 1112
+  },
+  "C1E1M08": {
+   "density": 25,
+   "rangedShare": 12,
+   "ambushes": 0,
+   "kinds": 7,
+   "loops": 0,
+   "topShare": 44,
+   "symmetry": 0.67,
+   "walk": 1649
+  },
+  "C1E2M01": {
+   "density": 26,
+   "rangedShare": 7,
+   "ambushes": 2,
+   "kinds": 4,
+   "loops": 2,
+   "topShare": 60,
+   "symmetry": 0.65,
+   "walk": 1155
+  },
+  "C1E2M02": {
+   "density": 21,
+   "rangedShare": 9,
+   "ambushes": 2,
+   "kinds": 3,
+   "loops": 2,
+   "topShare": 65,
+   "symmetry": 0.94,
+   "walk": 2619
+  },
+  "C1E2M03": {
+   "density": 25,
+   "rangedShare": 8,
+   "ambushes": 4,
+   "kinds": 4,
+   "loops": 7,
+   "topShare": 68,
+   "symmetry": 0.61,
+   "walk": 1503
+  },
+  "C1E2M04": {
+   "density": 32,
+   "rangedShare": 15,
+   "ambushes": 1,
+   "kinds": 3,
+   "loops": 1,
+   "topShare": 52,
+   "symmetry": 0.78,
+   "walk": 1035
+  },
+  "C1E2M05": {
+   "density": 22,
+   "rangedShare": 18,
+   "ambushes": 1,
+   "kinds": 4,
+   "loops": 1,
+   "topShare": 47,
+   "symmetry": 0.81,
+   "walk": 766
+  },
+  "C1E2M06": {
+   "density": 27,
+   "rangedShare": 14,
+   "ambushes": 1,
+   "kinds": 3,
+   "loops": 3,
+   "topShare": 61,
+   "symmetry": 0.78,
+   "walk": 1634
+  },
+  "C1E2M07": {
+   "density": 38,
+   "rangedShare": 13,
+   "ambushes": 3,
+   "kinds": 3,
+   "loops": 4,
+   "topShare": 55,
+   "symmetry": 0.51,
+   "walk": 809
+  },
+  "C1E2M08": {
+   "density": 14,
+   "rangedShare": 15,
+   "ambushes": 0,
+   "kinds": 5,
+   "loops": 5,
+   "topShare": 40,
+   "symmetry": 0.75,
+   "walk": 1479
+  },
+  "C1E3M01": {
+   "density": 21,
+   "rangedShare": 40,
+   "ambushes": 1,
+   "kinds": 5,
+   "loops": 0,
+   "topShare": 32,
+   "symmetry": 0.91,
+   "walk": 1219
+  },
+  "C1E3M02": {
+   "density": 25,
+   "rangedShare": 17,
+   "ambushes": 0,
+   "kinds": 5,
+   "loops": 1,
+   "topShare": 42,
+   "symmetry": 0.5,
+   "walk": 954
+  },
+  "C1E3M03": {
+   "density": 18,
+   "rangedShare": 28,
+   "ambushes": 2,
+   "kinds": 5,
+   "loops": 0,
+   "topShare": 50,
+   "symmetry": 0.68,
+   "walk": 1733
+  },
+  "C1E3M04": {
+   "density": 9,
+   "rangedShare": 17,
+   "ambushes": 3,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 43,
+   "symmetry": 0.88,
+   "walk": 2586
+  },
+  "C1E3M05": {
+   "density": 26,
+   "rangedShare": 14,
+   "ambushes": 1,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 52,
+   "symmetry": 0.68,
+   "walk": 807
+  },
+  "C1E3M06": {
+   "density": 14,
+   "rangedShare": 24,
+   "ambushes": 2,
+   "kinds": 7,
+   "loops": 0,
+   "topShare": 41,
+   "symmetry": 0.81,
+   "walk": 1185
+  },
+  "C1E3M07": {
+   "density": 33,
+   "rangedShare": 10,
+   "ambushes": 0,
+   "kinds": 5,
+   "loops": 1,
+   "topShare": 48,
+   "symmetry": 0.65,
+   "walk": 644
+  },
+  "C1E3M08": {
+   "density": 26,
+   "rangedShare": 8,
+   "ambushes": 0,
+   "kinds": 9,
+   "loops": 0,
+   "topShare": 46,
+   "symmetry": 0.75,
+   "walk": 1003
+  },
+  "C1E4M01": {
+   "density": 25,
+   "rangedShare": 36,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 31,
+   "symmetry": 0.51,
+   "walk": 1436
+  },
+  "C1E4M02": {
+   "density": 21,
+   "rangedShare": 35,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 2,
+   "topShare": 35,
+   "symmetry": 0.93,
+   "walk": 1602
+  },
+  "C1E4M03": {
+   "density": 15,
+   "rangedShare": 21,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 2,
+   "topShare": 42,
+   "symmetry": 0.76,
+   "walk": 1566
+  },
+  "C1E4M04": {
+   "density": 14,
+   "rangedShare": 19,
+   "ambushes": 0,
+   "kinds": 4,
+   "loops": 0,
+   "topShare": 38,
+   "symmetry": 0.55,
+   "walk": 1126
+  },
+  "C1E4M05": {
+   "density": 18,
+   "rangedShare": 45,
+   "ambushes": 1,
+   "kinds": 6,
+   "loops": 1,
+   "topShare": 34,
+   "symmetry": 0.96,
+   "walk": 2149
+  },
+  "C1E4M06": {
+   "density": 6,
+   "rangedShare": 22,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 5,
+   "topShare": 33,
+   "symmetry": 0.8,
+   "walk": 4398
+  },
+  "C1E4M07": {
+   "density": 20,
+   "rangedShare": 23,
+   "ambushes": 0,
+   "kinds": 10,
+   "loops": 0,
+   "topShare": 32,
+   "symmetry": 0.85,
+   "walk": 1577
+  },
+  "C1E4M08": {
+   "density": 10,
+   "rangedShare": 15,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 3,
+   "topShare": 35,
+   "symmetry": 0.95,
+   "walk": 2102
+  },
+  "C2M01": {
+   "density": 31,
+   "rangedShare": 28,
+   "ambushes": 2,
+   "kinds": 4,
+   "loops": 1,
+   "topShare": 43,
+   "symmetry": 0.57,
+   "walk": 1483
+  },
+  "C2M02": {
+   "density": 9,
+   "rangedShare": 33,
+   "ambushes": 1,
+   "kinds": 8,
+   "loops": 7,
+   "topShare": 31,
+   "symmetry": 0.87,
+   "walk": 6418
+  },
+  "C2M03": {
+   "density": 16,
+   "rangedShare": 26,
+   "ambushes": 2,
+   "kinds": 7,
+   "loops": 2,
+   "topShare": 35,
+   "symmetry": 0.66,
+   "walk": 2161
+  },
+  "C2M04": {
+   "density": 13,
+   "rangedShare": 19,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 1,
+   "topShare": 36,
+   "symmetry": 0.93,
+   "walk": 2698
+  },
+  "C2M05": {
+   "density": 26,
+   "rangedShare": 30,
+   "ambushes": 15,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 37,
+   "symmetry": 0.69,
+   "walk": 1671
+  },
+  "C2M06": {
+   "density": 17,
+   "rangedShare": 27,
+   "ambushes": 0,
+   "kinds": 5,
+   "loops": 0,
+   "topShare": 37,
+   "symmetry": 0.82,
+   "walk": 1737
+  },
+  "C2M07": {
+   "density": 23,
+   "rangedShare": 21,
+   "ambushes": 8,
+   "kinds": 6,
+   "loops": 2,
+   "topShare": 29,
+   "symmetry": 0.89,
+   "walk": 1673
+  },
+  "C2M08": {
+   "density": 12,
+   "rangedShare": 27,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 1,
+   "topShare": 40,
+   "symmetry": 0.85,
+   "walk": 2507
+  },
+  "C2M09": {
+   "density": 16,
+   "rangedShare": 20,
+   "ambushes": 1,
+   "kinds": 7,
+   "loops": 0,
+   "topShare": 39,
+   "symmetry": 0.56,
+   "walk": 2794
+  },
+  "C2M10": {
+   "density": 9,
+   "rangedShare": 21,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 19,
+   "topShare": 34,
+   "symmetry": 0.81,
+   "walk": 3121
+  },
+  "C2M11": {
+   "density": 8,
+   "rangedShare": 13,
+   "ambushes": 0,
+   "kinds": 5,
+   "loops": 2,
+   "topShare": 34,
+   "symmetry": 0.63,
+   "walk": 3851
+  },
+  "C2M12": {
+   "density": 14,
+   "rangedShare": 20,
+   "ambushes": 3,
+   "kinds": 6,
+   "loops": 2,
+   "topShare": 66,
+   "symmetry": 0.77,
+   "walk": 4319
+  },
+  "C2M13": {
+   "density": 26,
+   "rangedShare": 24,
+   "ambushes": 0,
+   "kinds": 9,
+   "loops": 8,
+   "topShare": 26,
+   "symmetry": 0.75,
+   "walk": 1614
+  },
+  "C2M14": {
+   "density": 8,
+   "rangedShare": 23,
+   "ambushes": 2,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 32,
+   "symmetry": 0.88,
+   "walk": 3819
+  },
+  "C2M15": {
+   "density": 9,
+   "rangedShare": 18,
+   "ambushes": 0,
+   "kinds": 9,
+   "loops": 0,
+   "topShare": 33,
+   "symmetry": 0.96,
+   "walk": 4278
+  },
+  "C2M16": {
+   "density": 10,
+   "rangedShare": 11,
+   "ambushes": 0,
+   "kinds": 6,
+   "loops": 0,
+   "topShare": 26,
+   "symmetry": 0.8,
+   "walk": 1835
+  },
+  "C2M17": {
+   "density": 16,
+   "rangedShare": 33,
+   "ambushes": 0,
+   "kinds": 9,
+   "loops": 0,
+   "topShare": 30,
+   "symmetry": 0.42,
+   "walk": 3459
+  },
+  "C2M18": {
+   "density": 17,
+   "rangedShare": 29,
+   "ambushes": 1,
+   "kinds": 9,
+   "loops": 25,
+   "topShare": 25,
+   "symmetry": 0.97,
+   "walk": 3772
+  },
+  "C2M19": {
+   "density": 25,
+   "rangedShare": 28,
+   "ambushes": 1,
+   "kinds": 9,
+   "loops": 5,
+   "topShare": 34,
+   "symmetry": 0.89,
+   "walk": 2135
+  },
+  "C2M20": {
+   "density": 20,
+   "rangedShare": 38,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 0,
+   "topShare": 32,
+   "symmetry": 0.99,
+   "walk": 1857
+  },
+  "C2M21": {
+   "density": 13,
+   "rangedShare": 17,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 9,
+   "topShare": 40,
+   "symmetry": 0.99,
+   "walk": 3317
+  },
+  "C2M22": {
+   "density": 6,
+   "rangedShare": 8,
+   "ambushes": 8,
+   "kinds": 7,
+   "loops": 0,
+   "topShare": 31,
+   "symmetry": 0.93,
+   "walk": 4325
+  },
+  "C2M23": {
+   "density": 23,
+   "rangedShare": 27,
+   "ambushes": 0,
+   "kinds": 10,
+   "loops": 13,
+   "topShare": 32,
+   "symmetry": 0.12,
+   "walk": 2896
+  },
+  "C2M24": {
+   "density": 7,
+   "rangedShare": 0,
+   "ambushes": 1,
+   "kinds": 3,
+   "loops": 0,
+   "topShare": 50,
+   "symmetry": 0.87,
+   "walk": 1466
+  },
+  "C2M25": {
+   "density": 13,
+   "rangedShare": 36,
+   "ambushes": 0,
+   "kinds": 7,
+   "loops": 1,
+   "topShare": 21,
+   "symmetry": 0.99,
+   "walk": 2101
+  },
+  "C2M26": {
+   "density": 6,
+   "rangedShare": 17,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 14,
+   "topShare": 33,
+   "symmetry": 0.8,
+   "walk": 5605
+  },
+  "C2M27": {
+   "density": 10,
+   "rangedShare": 22,
+   "ambushes": 0,
+   "kinds": 8,
+   "loops": 0,
+   "topShare": 32,
+   "symmetry": 0.93,
+   "walk": 3840
+  },
+  "C2M29": {
+   "density": 11,
+   "rangedShare": 22,
+   "ambushes": 2,
+   "kinds": 4,
+   "loops": 0,
+   "topShare": 44,
+   "symmetry": 0.29,
+   "walk": 786
+  }
+ },
+ "routes": {
+  "C1E1M01": {
+   "botSeconds": 71,
+   "firstFightS": 2,
+   "threatPct": 38,
+   "longestWalkM": 68
+  },
+  "C1E1M02": {
+   "botSeconds": 123,
+   "firstFightS": 0,
+   "threatPct": 48,
+   "longestWalkM": 141
+  },
+  "C1E1M03": {
+   "botSeconds": 159,
+   "firstFightS": 0,
+   "threatPct": 50,
+   "longestWalkM": 118
+  },
+  "C1E1M04": {
+   "botSeconds": 135,
+   "firstFightS": 3,
+   "threatPct": 52,
+   "longestWalkM": 175
+  },
+  "C1E1M05": {
+   "botSeconds": 139,
+   "firstFightS": 0,
+   "threatPct": 78,
+   "longestWalkM": 43
+  },
+  "C1E1M06": {
+   "botSeconds": 102,
+   "firstFightS": 0,
+   "threatPct": 82,
+   "longestWalkM": 58
+  },
+  "C1E1M07": {
+   "botSeconds": 161,
+   "firstFightS": 0,
+   "threatPct": 36,
+   "longestWalkM": 218
+  },
+  "C1E1M08": {
+   "botSeconds": 174,
+   "firstFightS": 0,
+   "threatPct": 58,
+   "longestWalkM": 57
+  },
+  "C1E2M01": {
+   "botSeconds": 80,
+   "firstFightS": 2,
+   "threatPct": 64,
+   "longestWalkM": 43
+  },
+  "C1E2M02": {
+   "botSeconds": 61,
+   "firstFightS": 2,
+   "threatPct": 68,
+   "longestWalkM": 35
+  },
+  "C1E2M03": {
+   "botSeconds": 70,
+   "firstFightS": 2,
+   "threatPct": 83,
+   "longestWalkM": 30
+  },
+  "C1E2M04": {
+   "botSeconds": 85,
+   "firstFightS": 2,
+   "threatPct": 71,
+   "longestWalkM": 42
+  },
+  "C1E2M05": {
+   "botSeconds": 46,
+   "firstFightS": 2,
+   "threatPct": 51,
+   "longestWalkM": 41
+  },
+  "C1E2M06": {
+   "botSeconds": 112,
+   "firstFightS": 2,
+   "threatPct": 68,
+   "longestWalkM": 128
+  },
+  "C1E2M07": {
+   "botSeconds": 77,
+   "firstFightS": 0,
+   "threatPct": 57,
+   "longestWalkM": 47
+  },
+  "C1E2M08": {
+   "botSeconds": 68,
+   "firstFightS": 2,
+   "threatPct": 70,
+   "longestWalkM": 33
+  },
+  "C1E3M01": {
+   "botSeconds": 54,
+   "firstFightS": 0,
+   "threatPct": 61,
+   "longestWalkM": 47
+  },
+  "C1E3M02": {
+   "botSeconds": 47,
+   "firstFightS": 5,
+   "threatPct": 68,
+   "longestWalkM": 37
+  },
+  "C1E3M03": {
+   "botSeconds": 72,
+   "firstFightS": 0,
+   "threatPct": 68,
+   "longestWalkM": 37
+  },
+  "C1E3M04": {
+   "botSeconds": 77,
+   "firstFightS": 2,
+   "threatPct": 73,
+   "longestWalkM": 53
+  },
+  "C1E3M05": {
+   "botSeconds": 74,
+   "firstFightS": 0,
+   "threatPct": 58,
+   "longestWalkM": 41
+  },
+  "C1E3M06": {
+   "botSeconds": 56,
+   "firstFightS": 2,
+   "threatPct": 60,
+   "longestWalkM": 58
+  },
+  "C1E3M07": {
+   "botSeconds": 88,
+   "firstFightS": 0,
+   "threatPct": 55,
+   "longestWalkM": 58
+  },
+  "C1E3M08": {
+   "botSeconds": 120,
+   "firstFightS": 5,
+   "threatPct": 70,
+   "longestWalkM": 60
+  },
+  "C1E4M01": {
+   "botSeconds": 122,
+   "firstFightS": 0,
+   "threatPct": 42,
+   "longestWalkM": 164
+  },
+  "C1E4M02": {
+   "botSeconds": 81,
+   "firstFightS": 0,
+   "threatPct": 56,
+   "longestWalkM": 58
+  },
+  "C1E4M03": {
+   "botSeconds": 113,
+   "firstFightS": 0,
+   "threatPct": 26,
+   "longestWalkM": 85
+  },
+  "C1E4M04": {
+   "botSeconds": 64,
+   "firstFightS": 0,
+   "threatPct": 44,
+   "longestWalkM": 70
+  },
+  "C1E4M05": {
+   "botSeconds": 68,
+   "firstFightS": 0,
+   "threatPct": 62,
+   "longestWalkM": 25
+  },
+  "C1E4M06": {
+   "botSeconds": 106,
+   "firstFightS": 5,
+   "threatPct": 49,
+   "longestWalkM": 80
+  },
+  "C1E4M07": {
+   "botSeconds": 119,
+   "firstFightS": 0,
+   "threatPct": 58,
+   "longestWalkM": 56
+  },
+  "C1E4M08": {
+   "botSeconds": 105,
+   "firstFightS": 0,
+   "threatPct": 61,
+   "longestWalkM": 50
+  },
+  "C2M01": {
+   "botSeconds": 96,
+   "firstFightS": 1,
+   "threatPct": 64,
+   "longestWalkM": 55
+  },
+  "C2M02": {
+   "botSeconds": 120,
+   "firstFightS": 0,
+   "threatPct": 70,
+   "longestWalkM": 62
+  },
+  "C2M03": {
+   "botSeconds": 106,
+   "firstFightS": 0,
+   "threatPct": 58,
+   "longestWalkM": 91
+  },
+  "C2M04": {
+   "botSeconds": 127,
+   "firstFightS": 0,
+   "threatPct": 55,
+   "longestWalkM": 173
+  },
+  "C2M05": {
+   "botSeconds": 129,
+   "firstFightS": 0,
+   "threatPct": 58,
+   "longestWalkM": 53
+  },
+  "C2M06": {
+   "botSeconds": 148,
+   "firstFightS": 0,
+   "threatPct": 44,
+   "longestWalkM": 45
+  },
+  "C2M07": {
+   "botSeconds": 71,
+   "firstFightS": 0,
+   "threatPct": 73,
+   "longestWalkM": 37
+  },
+  "C2M08": {
+   "botSeconds": 108,
+   "firstFightS": 0,
+   "threatPct": 61,
+   "longestWalkM": 80
+  },
+  "C2M09": {
+   "botSeconds": 91,
+   "firstFightS": 0,
+   "threatPct": 84,
+   "longestWalkM": 28
+  },
+  "C2M10": {
+   "botSeconds": 66,
+   "firstFightS": 1,
+   "threatPct": 79,
+   "longestWalkM": 23
+  },
+  "C2M11": {
+   "botSeconds": 71,
+   "firstFightS": 6,
+   "threatPct": 49,
+   "longestWalkM": 52
+  },
+  "C2M12": {
+   "botSeconds": 93,
+   "firstFightS": 2,
+   "threatPct": 79,
+   "longestWalkM": 65
+  },
+  "C2M13": {
+   "botSeconds": 82,
+   "firstFightS": 0,
+   "threatPct": 62,
+   "longestWalkM": 29
+  },
+  "C2M14": {
+   "botSeconds": 129,
+   "firstFightS": 1,
+   "threatPct": 60,
+   "longestWalkM": 190
+  },
+  "C2M15": {
+   "botSeconds": 182,
+   "firstFightS": 0,
+   "threatPct": 74,
+   "longestWalkM": 33
+  },
+  "C2M16": {
+   "botSeconds": 84,
+   "firstFightS": 2,
+   "threatPct": 63,
+   "longestWalkM": 58
+  },
+  "C2M17": {
+   "botSeconds": 132,
+   "firstFightS": 0,
+   "threatPct": 64,
+   "longestWalkM": 78
+  },
+  "C2M18": {
+   "botSeconds": 185,
+   "firstFightS": 0,
+   "threatPct": 66,
+   "longestWalkM": 60
+  },
+  "C2M19": {
+   "botSeconds": 125,
+   "firstFightS": 1,
+   "threatPct": 50,
+   "longestWalkM": 96
+  },
+  "C2M20": {
+   "botSeconds": 130,
+   "firstFightS": 12,
+   "threatPct": 55,
+   "longestWalkM": 77
+  },
+  "C2M21": {
+   "botSeconds": 83,
+   "firstFightS": 0,
+   "threatPct": 39,
+   "longestWalkM": 124
+  },
+  "C2M22": {
+   "botSeconds": 178,
+   "firstFightS": 0,
+   "threatPct": 46,
+   "longestWalkM": 122
+  },
+  "C2M23": {
+   "botSeconds": 168,
+   "firstFightS": 0,
+   "threatPct": 59,
+   "longestWalkM": 72
+  },
+  "C2M24": {
+   "botSeconds": 73,
+   "firstFightS": 5,
+   "threatPct": 85,
+   "longestWalkM": 46
+  },
+  "C2M25": {
+   "botSeconds": 116,
+   "firstFightS": 0,
+   "threatPct": 61,
+   "longestWalkM": 49
+  },
+  "C2M26": {
+   "botSeconds": 126,
+   "firstFightS": 3,
+   "threatPct": 45,
+   "longestWalkM": 119
+  },
+  "C2M27": {
+   "botSeconds": 89,
+   "firstFightS": 0,
+   "threatPct": 66,
+   "longestWalkM": 45
+  },
+  "C2M29": {
+   "botSeconds": 112,
+   "firstFightS": 4,
+   "threatPct": 89,
+   "longestWalkM": 52
+  }
+ },
+ "updated": "2026-10-18"
+}
