@@ -962,7 +962,7 @@ function groundAir(w, p, dt) {
   const m = w.map, cx = Math.floor(p.x / m.cell), cz = Math.floor(p.z / m.cell);
   if (m.ventCells.has(cx + ',' + cz)) { if (p.ventCd <= 0) { const v = m.vents.find((q) => q.at[0] === cx && q.at[1] === cz); if (v) launchFrom(w, p, v); } return; }
   if (m.hasVoid) {
-    if (m.cars.length && m.kind(cx, cz) === 'void') { if (carDeckY(m, w.time, p.x, p.z, 0.05) === -Infinity) voidFall(w, p); return; }       // PT-045: over the void on a car's deck is riding (nothing to go back to mid-air); over the void with no deck under the feet is a miss
+    if (m.kind(cx, cz) === 'void') { if (carDeckY(m, w.time, p.x, p.z, 0.05) === -Infinity) voidFall(w, p); return; }       // PT-045: over the void on a car's deck is riding (nothing to go back to mid-air); over the void with no deck under the feet is a miss. PT-050 H1 (Gemini-03): on a map WITHOUT cars too (carDeckY is -Infinity there): a body on the ground over open sky is put back, never remembered as "the last solid place" (1,740 random vent flights never reached this state; only a teleport or the 14 s timeout below could)
     p.lastSafe = { x: p.x, z: p.z };
   }
 }
@@ -988,7 +988,7 @@ function airMove(w, p, sx, sf, fx, fz, rx, rz, dt) {
     const speed = Math.abs(A.vy); p.y = ground; delete p.air; p.vx *= 0.35; p.vz *= 0.35; emit(w, 'air_land', { x: p.x, z: p.z, speed }); return;
   }
   p.y = y;
-  if (A.t > LOWG.maxAir) { p.y = ground; delete p.air; }                                                    // a body that has not come down in 14 s is put down (a ceiling, a wedge)
+  if (A.t > LOWG.maxAir) { if (over) return voidFall(w, p); p.y = ground; delete p.air; }                    // a body that has not come down in 14 s is put down (a ceiling, a wedge) - unless it is over open sky, where that is a miss (PT-050 H1)
 }
 
 /** a range target's way back to its post: walk there, then (a 'fixed' one, or one that cannot see you) turn back to its heading. Returns true while it is still moving or turning. */
