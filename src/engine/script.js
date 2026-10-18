@@ -93,7 +93,8 @@ export function updateTriggers(w) {
 
 export function activateSwitch(w, sw) {
   const st = w.switchState[sw.id]; if (!st) return;
-  if (sw.once && st.used) { emit(w, 'switch_dead', { id: sw.id, x: sw.px, z: sw.pz }); return; }
+  const single = sw.once || (Array.isArray(sw.do) && sw.do.some((a) => a && typeof a === 'object' && a.spawn));        // PT-050 H-E3: a switch that SPAWNS creatures is single-use whatever the map says (C1E1M03's north hoist had no `once`: every flip of the lever added four Gaunts to the kill total and to the ammunition drops)
+  if (single && st.used) { emit(w, 'switch_dead', { id: sw.id, x: sw.px, z: sw.pz }); return; }
   if (sw.needs?.length) {                                                                          // a switch that wants items (fuses): refuse until the player has them all, then spend them
     const missing = sw.needs.filter((k) => !w.player.keys.includes(k));
     if (missing.length) { emit(w, 'switch_need', { id: sw.id, missing, x: sw.px, z: sw.pz }); return; }

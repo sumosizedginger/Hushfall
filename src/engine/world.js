@@ -956,6 +956,8 @@ function launchFrom(w, p, v) {
   p.air = { vy, g, bx: (x1 - p.x) / tt, bz: (z1 - p.z) / tt, sx: 0, sz: 0, t: 0, low: Math.min(p.y, y1) - 0.4 }; p.ventCd = LOWG.ventCooldown; p.vx = p.air.bx; p.vz = p.air.bz;
   emit(w, 'vent_launch', { x: p.x, z: p.z });
 }
+/** PT-050 H-E1: what the last-resort feed hands out: flares (the cannon every player starts with and keeps), and only if a player somehow has no cannon, the ammunition of the first gun they do carry (Gemini-06: flares for a gun nobody holds were no feed at all) */
+function dryFeedType(p) { if (p.weapons.includes('flare')) return 'flare'; for (const id of SLOT_KEYS) { const a = WEAPONS[id]?.ammo; if (a && p.weapons.includes(id)) return a; } return 'flare'; }
 /** on the ground in a map with vents or open sky: a plate under the feet fires, and the last solid place stood on is remembered (the void sets the player back there) */
 function groundAir(w, p, dt) {
   p.ventCd = Math.max(0, (p.ventCd ?? 0) - dt);
@@ -1108,7 +1110,7 @@ export function step(w, cmd) {
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
   // look + move
-  p.yaw += cmd.yaw || 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -1.3, 1.3);
+  p.yaw += Number.isFinite(cmd.yaw) ? cmd.yaw : 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -1.3, 1.3);      // PT-050 H-I2: an infinite look value (a broken device) would make the view vector NaN for good
   let sx = clamp(cmd.move?.[0] || 0, -1, 1), sf = clamp(cmd.move?.[1] || 0, -1, 1);
   const len = Math.hypot(sx, sf); if (len > 1) { sx /= len; sf /= len; }
   const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
@@ -1148,7 +1150,7 @@ export function step(w, cmd) {
   if (slotKey === 'melee') want = isMelee(p.weapon) ? meleeOwned[(meleeOwned.indexOf(p.weapon) + 1) % meleeOwned.length] : curMelee;
   else if (slotKey) want = slotKey;
   else if (cmd.weaponLast) want = p.lastWeapon;
-  else if (cmd.weaponStep) { const ring = SLOT_KEYS.filter((id) => id === 'melee' || p.weapons.includes(id)).map((id) => (id === 'melee' ? curMelee : id)), i = ring.indexOf(isMelee(p.weapon) ? curMelee : p.weapon); want = ring[(i + cmd.weaponStep + ring.length) % ring.length]; }
+  else if (cmd.weaponStep) { const ring = SLOT_KEYS.filter((id) => id === 'melee' || p.weapons.includes(id)).map((id) => (id === 'melee' ? curMelee : id)), i = ring.indexOf(isMelee(p.weapon) ? curMelee : p.weapon), n = ring.length, st = Math.trunc(Number(cmd.weaponStep)) || 0; if (n) want = ring[(((i + st) % n) + n) % n]; }      // PT-050 H-I1: a true modulo (a step below -1 gave a negative index); the input layer only makes -1, 0 and 1
   if (want && want !== p.weapon && owns(p, want) && (p.swingT < 0 || p.swingHit)) {
     p.lastWeapon = p.weapon; p.weapon = want; if (isMelee(want)) p.meleeWeapon = want; p.switchT = WEAPONS[want].switchTime; p.charge = 0; p.swingT = -1; p.queuedT = 0; emit(w, 'weapon_switch', { weapon: want });
   }
@@ -1222,7 +1224,7 @@ export function step(w, cmd) {
 
   // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing: the flare cannon's feed drops one flare after a few seconds (and again each time it is spent).
   // PT-013 gave everybody fists, and the first version of this batch removed the feed ("fists mean you are never empty"). It is back, as a safety net: fists cannot hurt a plated Warden from the front (a bash does a third of its damage through the plate), so a player who ran dry in front of one could be soft-locked, and the robustness gate (a strafing fighter with 25% less ammunition pickups must finish C1E1M06) failed without it.
-  if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0 && Object.entries(WEAPONS).some(([id, wd]) => wd.ammo === k && p.weapons.includes(id)))) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; p.ammo.flare = (p.ammo.flare || 0) + PLAYER.dryFeed.amount; emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
+  if (p.hp > 0 && !Object.keys(AMMO_MAX).some((k) => (p.ammo[k] || 0) > 0 && Object.entries(WEAPONS).some(([id, wd]) => wd.ammo === k && p.weapons.includes(id)))) { p.feedT = (p.feedT ?? 0) + dt; if (p.feedT >= PLAYER.dryFeed.every) { p.feedT = 0; { const k = dryFeedType(p); p.ammo[k] = (p.ammo[k] || 0) + PLAYER.dryFeed.amount; } emit(w, 'dry_feed', { x: p.x, z: p.z }); } } else if (p.feedT) p.feedT = 0;
   // ammunition drops (PT-025): the guns fired this tick are noted and a box that has dropped slides toward the player; both do nothing on a map without `drops`
   if (w.map.drops) { trackFired(w); updateDrops(w, dt); }
   // pickups

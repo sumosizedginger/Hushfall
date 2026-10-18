@@ -33,6 +33,7 @@ export function designate(w, p, def, f = forwardVec(p), from = eyeOf(p), jitter 
   const D = def.designate, a = aimPoint(w, p, D, f), hx = Math.hypot(f[0], f[2]) || 1, ux = hx > 0.05 ? f[0] / hx : -Math.sin(p.yaw), uz = hx > 0.05 ? f[2] / hx : -Math.cos(p.yaw);
   let lx = a.x, lz = a.z, d = Math.hypot(lx - p.x, lz - p.z), clamped = false;
   if (d < D.minRange) { lx = p.x + ux * D.minRange; lz = p.z + uz * D.minRange; d = D.minRange; clamped = true; }
+  { const m = w.map; let guard = 0; while (guard++ < 64 && cellSolid(w, Math.floor(lx / m.cell), Math.floor(lz / m.cell))) { lx -= ux * 0.25; lz -= uz * 0.25; d = Math.hypot(lx - p.x, lz - p.z); clamped = true; } }      // PT-050 H-W1 (Gemini-04): the push-out to minRange must not land INSIDE a wall (4 of 4 aims at a near wall did, and the ring lied): walk it back to the wall's foot
   if (jitter) { lx += jitter[0] * d; lz += jitter[1] * d; }
   const ly = floorAt(w, lx, lz);
   const T0 = Math.min(D.tmax, Math.max(D.tmin, d / D.speed)), N = Math.max(2, Math.round(T0 / TICK)), T = N * TICK;

@@ -71,7 +71,7 @@ export function earn(progress, mapId, end, par) {
 
 /** buy the next tier of a track. -> { ok, progress, cost, reason } (reason: 'maxed' | 'salvage' | 'unknown') */
 export function buy(progress, track) {
-  const t = TRACKS[track]; if (!t) return { ok: false, progress, cost: 0, reason: 'unknown' };
+  const t = Object.hasOwn(TRACKS, track) ? TRACKS[track] : null; if (!t) return { ok: false, progress, cost: 0, reason: 'unknown' };       // (PT-050 H-S6: `toString` and `__proto__` are not upgrade tracks)
   const tier = clampTier(track, progress.upgrades?.[track]);
   if (tier >= t.costs.length) return { ok: false, progress, cost: 0, reason: 'maxed' };
   const cost = t.costs[tier]; if (progress.salvage < cost) return { ok: false, progress, cost, reason: 'salvage' };
@@ -80,6 +80,7 @@ export function buy(progress, track) {
 
 /** one line for the Locker: what the next tier of a track gives and costs ('maxed' when there is none) */
 export function describeNext(progress, track) {
+  if (!Object.hasOwn(TRACKS, track)) return { name: 'Unknown', tier: 0, text: '', cost: null };         // PT-050 H-S6
   const t = TRACKS[track], tier = clampTier(track, progress.upgrades?.[track]);
   if (tier >= t.costs.length) return { name: t.name, tier, text: 'fully upgraded', cost: null };
   const next = { ...progress.upgrades, [track]: tier + 1 };
