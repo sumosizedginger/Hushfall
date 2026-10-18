@@ -5,14 +5,13 @@ import { noiseHud } from '../engine/noisetell.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
-const NEW_WEAPON_TOASTS = { weapon_carbine: 'Harbour carbine  (7): no bloom, a round in the head does 2.4x', weapon_linethrower: 'Rocket line-thrower  (8): a wide blast; it hurts you too', weapon_fork: 'Vael tuning-fork  (9): hold aim to lift, fire to throw or punt', weapon_mortar: 'Bell-breaker mortar  (0): the shell lands on the ring; two rockets a shell; it hurts you too', weapon_chainsaw: "Shipwright's chainsaw  (6): hold fire; it is loud and it stalls" };
 import { describeNext, TRACKS } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
-import { pickupToast, pushToast, toastLabel, TOAST } from './toasts.js';
+import { pickupToast, pickupCard, cardIcon, pushToast, toastLabel, TOAST } from './toasts.js';
 import { crosshairCss } from './crosshair.js';
 
 const $ = (id) => document.getElementById(id);
@@ -23,7 +22,7 @@ const TOASTS = {
   door_locked: (e) => `Locked. Needs the ${KEYS[e.key]?.name.toLowerCase() || 'key'}.`,
   switch_need: (e, ui) => `It needs: ${e.missing.map((k) => (ui.keyLabels[k] ?? KEYS[k].name).toLowerCase()).join(', ')}.`,
   secret: () => 'A secret!',
-  weapon_pickup: (e) => NEW_WEAPON_TOASTS[e.kind] ?? (e.kind === 'weapon_boathook' ? 'Boat hook  (6): long reach, it pulls them in' : e.kind === 'weapon_marlinspike' ? 'Marlinspike  (6): fast, three times as deadly in the back' : e.kind === 'weapon_mallet' ? "Lamplighter's mallet  (6): it staggers, and plate does not turn it" : e.kind === 'weapon_axe' ? 'Fire axe  (6): slow, it cleaves everything in front of you' : e.kind === 'weapon_scattergun' ? 'Tidewarden scattergun  (2)' : e.kind === 'weapon_rivet' ? 'Riveter driver  (3): hold to fire' : e.kind === 'weapon_harpoon' ? 'Harpoon rifle  (4): hold aim to zoom, it goes through plate and bodies' : e.kind === 'weapon_arc' ? 'Charge-arc lamp  (5): tap for an arc that picks its own targets; HOLD to charge a forked bolt (it conducts through water); it lights the dark' : 'Weapon'),
+  weapon_pickup: (e) => pickupCard(e.kind)?.title ?? 'Weapon',                  // (the card of toasts.js shows the details; this is only the fallback when the page has no card element)
 };
 
 export class UI {
@@ -134,6 +133,12 @@ export class UI {
     $('locker').innerHTML = Object.keys(TRACKS).map((t) => { const d = describeNext(p, t); return `<div><b>${d.name} · tier ${d.tier}/${TRACKS[t].costs.length}</b><span>${d.cost == null ? 'maxed' : `${d.cost} salvage<button class="buy" data-track="${t}"${p.salvage < d.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${d.text}</span></div>`; }).join('');
     $('locker-note').textContent = note;
   }
+  /** PT-049 U1: a MAJOR pickup (a gun, a key) gets a card at lower centre, not a toast in the column: the icon, the name, one line of what it does (toasts.js pickupCard). -> true when it showed one */
+  showPickupCard(kind) {
+    const c = pickupCard(kind), el = c && $('pickup-card'); if (!el) return false;
+    el.innerHTML = `<i>${cardIcon(c.icon)}</i><div><b>${c.title}</b><span>${c.line}</span></div>`; if (el.style.setProperty) el.style.setProperty('--card', c.color); else el.style['--card'] = c.color;
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); return true;
+  }
   /** PT-047 V2: a toast joins the model (toasts.js): equal consecutive ones merge, three at most; the DOM below only draws it */
   toast(text) { this.toasts = pushToast(this.toasts, text, performance.now() / 1000); this.renderToasts(); setTimeout(() => this.renderToasts(), TOAST.life * 1000 + 60); }
   renderToasts() { const now = performance.now() / 1000; this.toasts = (this.toasts ?? []).filter((t) => t.until > now); $('toasts').replaceChildren(...this.toasts.map((t) => { const d = document.createElement('div'); d.textContent = toastLabel(t); return d; })); }
@@ -150,7 +155,7 @@ export class UI {
       else if (e.type === 'parry') this.crossNote('PARRY', '#ffd45a'); else if (e.type === 'block') this.crossNote('BLOCK', '#c4d4d0'); else if (e.type === 'guard_break') this.crossNote('GUARD BROKEN', '#e0583a'); else if (e.type === 'pin') this.crossNote('PINNED', '#7ffff0');
     }
     if (mark) this.hitMark(mark === 'hit' ? '' : mark);
-    for (const e of events) { if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'door_breath') this.toast('It opens when the ship breathes in.'); else if (e.type === 'door_listen') this.toast('The lock is listening. Be quiet.'); else if (e.type === 'lamp_out') this.toast('The lantern has burned dry.'); else if (e.type === 'lamp_dry') this.toast('No oil.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'dry_feed') this.toast('Out of ammunition: the cannon feed clanks a flare home'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'innocent') this.toast('It had no weapon.'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
+    for (const e of events) { if ((e.type === 'pickup' || e.type === 'weapon_pickup') && this.showPickupCard(e.kind)) continue; if (e.type === 'message') this.comms(e); else if (e.type === 'objective') this.toast('New objective'); else if (e.type === 'exit_locked') this.toast('The gate is sealed.'); else if (e.type === 'door_remote') this.toast('Opened from elsewhere.'); else if (e.type === 'door_breath') this.toast('It opens when the ship breathes in.'); else if (e.type === 'door_listen') this.toast('The lock is listening. Be quiet.'); else if (e.type === 'lamp_out') this.toast('The lantern has burned dry.'); else if (e.type === 'lamp_dry') this.toast('No oil.'); else if (e.type === 'switch_dead') this.toast('Already used.'); else if (e.type === 'dry_feed') this.toast('Out of ammunition: the cannon feed clanks a flare home'); else if (e.type === 'node_severed') this.toast('A bell falls silent.'); else if (e.type === 'enemy_revived') this.toast('A Sexton raised the fallen!'); else if (e.type === 'innocent') this.toast('It had no weapon.'); else if (e.type === 'pickup' && e.label) this.toast(e.label); else { const f = TOASTS[e.type]; if (f) this.toast(f(e, this)); } } }
   /** In-world transmissions/notes are shown IN ORDER, one at a time, each long enough to read (55 ms per character, 4 s minimum, then a short gap), never on top of the title card.
    *  The radio blip plays when a message is actually shown. */
   comms(e) { this.comq.push(e); this.pumpComms(); }

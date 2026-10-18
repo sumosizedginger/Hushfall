@@ -68,6 +68,11 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #comms.note{border-left-color:var(--bronze)}#comms.note b{color:var(--bronze)}
 #card{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:3;animation:cardfade 6.5s ease forwards;text-shadow:2px 2px 0 #000}
 #card::before{content:"";position:absolute;left:0;right:0;top:50%;height:min(48vh,400px);transform:translateY(-50%);z-index:-1;background:linear-gradient(transparent,#000c 28%,#000c 72%,transparent)}      /* PT-047 V2: a dark band behind the two lines so they read on a bright ground */
+#pickup-card{--card:var(--brass);position:fixed;left:50%;bottom:24%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;max-width:min(560px,92vw);padding:10px 20px 10px 12px;background:#0d0f14ee;border:1px solid var(--slate);border-left:4px solid var(--card);pointer-events:none;opacity:0;z-index:3;text-shadow:1px 1px 0 #000}
+#pickup-card.show{animation:pcard 2.6s ease forwards}
+#pickup-card i{display:block;width:46px;height:46px;color:var(--card);flex:none}#pickup-card svg{width:100%;height:100%;display:block}
+#pickup-card b{display:block;font-size:17px;letter-spacing:.08em;color:var(--paper)}#pickup-card span{display:block;font-size:13px;color:#c4d4d0;margin-top:2px}
+@keyframes pcard{0%{opacity:0;transform:translate(-50%,10px)}9%{opacity:1;transform:translate(-50%,0)}82%{opacity:1}100%{opacity:0}}      /* PT-049 U1: the card of a major pickup */
 #card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 #objective{position:fixed;left:16px;top:12px;max-width:min(520px,60vw);font-size:12px;color:#c4d4d0;background:#0d0f14b8;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
@@ -197,7 +202,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
-<div id="toasts"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
+<div id="toasts"></div><div id="pickup-card"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
 <div id="range-hud" class="hidden"></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
