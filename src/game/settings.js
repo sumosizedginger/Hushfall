@@ -1,6 +1,7 @@
 // Player settings, versioned like saves. Invalid or foreign data falls back to defaults and says so; it never half-loads.
 import { DEFAULT_BINDINGS, ACTIONS } from '../engine/input.js';
 import { PAD_SETTINGS, defaultPadBindings, sanitizePadBindings } from './gamepad.js';
+import { defaultCrosshair, sanitizeCrosshair } from './crosshair.js';
 
 export const SETTINGS_VERSION = 1;
 export const RESOLUTIONS = [320, 400, 480, 640, 800];
@@ -9,6 +10,7 @@ export const defaultSettings = () => ({
   internalWidth: 480, outline: true, paint: true, aimToggle: false, sprintToggle: false, fov: 70, brightness: 1, bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),
   wheelSlow: true, wheelToggle: false,                                        // the weapon wheel: slow/freeze time while open (owner decision D7); toggle-to-open instead of hold
   gamepad: { ...PAD_SETTINGS }, padBindings: defaultPadBindings(),            // the controller (gamepad.js)
+  crosshair: defaultCrosshair(),                                              // PT-048 / V2: style, size, colour, opacity of the crosshair (crosshair.js)
 });
 const clamp = (x, a, b, d) => (Number.isFinite(x) ? Math.min(b, Math.max(a, x)) : d);
 
@@ -34,6 +36,7 @@ export function sanitizeSettings(raw) {
   s.wheelSlow = raw.wheelSlow !== false; s.wheelToggle = raw.wheelToggle === true;
   { const g = raw.gamepad && typeof raw.gamepad === 'object' ? raw.gamepad : {}, P = PAD_SETTINGS; s.gamepad = { enabled: g.enabled !== false, lookRate: clamp(g.lookRate, 1, 8, P.lookRate), deadzone: clamp(g.deadzone, 0.05, 0.5, P.deadzone), curve: clamp(g.curve, 1, 3, P.curve), invertY: g.invertY === true, assist: clamp(g.assist, 0, 1, P.assist), vibration: g.vibration !== false, glyphs: ['auto', 'ps', 'xbox'].includes(g.glyphs) ? g.glyphs : 'auto' }; }
   s.padBindings = sanitizePadBindings(raw.padBindings);
+  s.crosshair = sanitizeCrosshair(raw.crosshair);                                 // an older save has none: the new default
   return { settings: s, notes };
 }
 

@@ -8,15 +8,19 @@ html,body{margin:0;height:100%;background:#07080c;overflow:hidden;color:var(--pa
 canvas{display:block;width:100vw;height:100vh}
 #automap{position:fixed;inset:0;pointer-events:none;z-index:4}
 .hidden{display:none!important}
-#cross{position:fixed;left:50%;top:50%;width:7px;height:7px;margin:-4px 0 0 -4px;border:1px solid var(--teal);border-radius:50%;opacity:.75;pointer-events:none}
+/* PT-048 / V2 (the owner: "the hollow circle is hard to see. A cross or a solid dot would be better"): a cross of four ticks round a centre dot, near white with a dark outline, so it reads on bright and dark ground alike. src/game/crosshair.js sets data-style and the variables --xc (colour), --xk (size factor) and --xo (opacity) from the player's settings; sizes are in vh, so it does not shrink on a big screen. The states below keep their meanings on the new shape. */
+#cross{--c:var(--xc,#f4f1e8);--k:var(--xk,1);--th:max(2px,calc(.28vh*var(--k)));--tick:max(6px,calc(.9vh*var(--k)));--sp0:max(3px,calc(.42vh*var(--k)));--sp:var(--sp0);--dot:var(--th);--glow:0 0 0 transparent;position:fixed;left:50%;top:50%;box-sizing:border-box;width:calc(2*(var(--sp) + var(--tick)));height:calc(2*(var(--sp) + var(--tick)));transform:translate(-50%,-50%);pointer-events:none;opacity:var(--xo,.95);background:linear-gradient(var(--c),var(--c)) 50% 0/var(--th) var(--tick) no-repeat,linear-gradient(var(--c),var(--c)) 50% 100%/var(--th) var(--tick) no-repeat,linear-gradient(var(--c),var(--c)) 0 50%/var(--tick) var(--th) no-repeat,linear-gradient(var(--c),var(--c)) 100% 50%/var(--tick) var(--th) no-repeat,radial-gradient(circle closest-side,var(--c) 92%,transparent 100%) 50% 50%/var(--dot) var(--dot) no-repeat;filter:drop-shadow(1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow(0 1px 0 #000) drop-shadow(0 -1px 0 #000) drop-shadow(var(--glow))}
+#cross[data-style=cross]{--dot:0px}
+#cross[data-style=dot]{--tick:0px;--dot:calc(var(--th)*2.4)}
+#cross[data-style=circle]{--tick:0px;--sp:max(3.5px,calc(.5vh*var(--k)));background:none;border:max(1px,calc(.14vh*var(--k))) solid var(--c);border-radius:50%}
 body:not([data-screen=""]) #cross{display:none}
-body[data-stance=ads] #cross{width:3px;height:3px;margin:-2px 0 0 -2px;background:var(--teal);border:none;opacity:.9}
+body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,calc(.3vh*var(--k)));--dot:calc(var(--th)*1.3)}
 body[data-stance=sprint] #cross{opacity:0}
-body[data-stance=guard] #cross{width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:3px;border-color:var(--bronze);opacity:.9}
-#cross.ripo{border-color:#ffd45a!important;box-shadow:0 0 10px #ffd45a;opacity:1}
-#cross.supp{width:30px;height:30px;margin:-16px 0 0 -16px;border-color:#e0583a;box-shadow:0 0 8px #e0583a;opacity:1}                    /* PT-026: a Chorister's fire is going by: your guns open up, so does the crosshair */
-#cross.grab{width:22px;height:22px;margin:-12px 0 0 -12px;border-color:#6ffff0;box-shadow:0 0 8px #6ffff0;opacity:1}                       /* PT-022: the tuning-fork has something in reach it could lift or drag */
-#cross.held{width:12px;height:12px;margin:-7px 0 0 -7px;background:#6ffff0;border-color:#6ffff0;box-shadow:0 0 12px #6ffff0;opacity:1}              /* ...and it holds something */
+body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
+#cross.ripo{--c:#ffd45a;--glow:0 0 6px #ffd45a;opacity:1}
+#cross.supp{--c:#e0583a;--sp:calc(var(--sp0)*3.6);--glow:0 0 6px #e0583a;opacity:1}                    /* PT-026: a Chorister's fire is going by: your guns open up, so does the crosshair (the ticks spread wide and red) */
+#cross.grab{--c:#6ffff0;--sp:calc(var(--sp0)*2.6);--glow:0 0 6px #6ffff0;opacity:1}                      /* PT-022: the tuning-fork has something in reach it could lift or drag (spread, cyan) */
+#cross.held{--c:#6ffff0;--tick:0px;--sp:calc(var(--th)*2.5);--dot:calc(var(--th)*4.5);--glow:0 0 8px #6ffff0;opacity:1}   /* ...and it holds something (a larger solid cyan dot) */
 #hitmark{position:fixed;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;pointer-events:none;opacity:0;z-index:2}
 #hitmark::before,#hitmark::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:28px;margin:-14px 0 0 -1px;background:var(--paper);transform:rotate(45deg);box-shadow:0 0 0 1px #0008}
 #hitmark::after{transform:rotate(-45deg)}
@@ -233,6 +237,10 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
     <label>Music <input id="set-music" type="range" min="0" max="1" step="0.05"></label>
     <label>Field of view <input id="set-fov" type="range" min="60" max="105" step="1"></label>
     <label>Brightness <input id="set-bright" type="range" min="0.6" max="1.8" step="0.05"></label>
+    <label>Crosshair <select id="set-xh-style"><option value="crossdot">Cross and dot</option><option value="cross">Cross</option><option value="dot">Dot</option><option value="circle">Circle</option></select></label>
+    <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
+    <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
+    <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
     <label>Render width <select id="set-res"></select></label>
     <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
     <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>

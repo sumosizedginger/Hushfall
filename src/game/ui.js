@@ -13,6 +13,7 @@ import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
 import { pickupToast } from './toasts.js';
+import { crosshairCss } from './crosshair.js';
 
 const $ = (id) => document.getElementById(id);
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -40,6 +41,8 @@ export class UI {
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
     $('set-fov').oninput = (e) => this.h.setSetting('fov', Number(e.target.value)); $('set-bright').oninput = (e) => this.h.setSetting('brightness', Number(e.target.value));
+    { const xh = (key, conv = (v) => v) => (e) => { this.xh = { ...this.xh, [key]: conv(e.target.value) }; this.h.setSetting('crosshair', this.xh); };      // PT-048 / V2: the crosshair's style, size, colour and opacity (crosshair.js)
+      $('set-xh-style').onchange = xh('style'); $('set-xh-size').onchange = xh('size'); $('set-xh-color').onchange = xh('color'); $('set-xh-opacity').oninput = xh('opacity', Number); }
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
@@ -47,6 +50,9 @@ export class UI {
     $('set-padassist').oninput = (e) => this.h.setPadSetting('assist', Number(e.target.value)); $('set-padvib').onchange = (e) => this.h.setPadSetting('vibration', e.target.checked); $('set-padglyph').onchange = (e) => this.h.setPadSetting('glyphs', e.target.value); $('btn-reset-pad').onclick = () => this.h.resetPadBindings();
     $('set-outline').onchange = (e) => this.h.setSetting('outline', e.target.checked); $('set-paint').onchange = (e) => this.h.setSetting('paint', e.target.checked);
   }
+  /** the crosshair's look from the player's settings (crosshair.js): `data-style` and three CSS variables on #cross; index.html does the drawing */
+  applyCrosshair(ch) { const el = $('cross'); if (!el) return; const { style, vars } = crosshairCss(ch); el.dataset.style = style; for (const [k, v] of Object.entries(vars)) { if (el.style.setProperty) el.style.setProperty(k, v); else el.style[k] = v; } }
+  syncCrosshair(ch) { this.xh = { ...ch }; $('set-xh-style').value = this.xh.style; $('set-xh-size').value = this.xh.size; $('set-xh-color').value = this.xh.color; $('set-xh-opacity').value = this.xh.opacity; this.applyCrosshair(this.xh); }
   syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */
