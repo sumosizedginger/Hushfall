@@ -26,6 +26,7 @@ import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordView, recordCounts } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
+import { journalLog, openTab } from './journal.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -62,7 +63,7 @@ const g = {
   progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
-  capture: null, mapOpen: false, manual: false, frameTimes: [], last: performance.now(),
+  capture: null, mapOpen: false, unread: new Set(), journalTab: 'map', manual: false, frameTimes: [], last: performance.now(),
 };
 
 g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintEngaged = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
@@ -72,6 +73,7 @@ const ui = new UI({
   buyUpgrade: (track) => buyUpgrade(track),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   crashToTitle: () => { ui.hideCrash(); ui.show('title', { canContinue: canContinue(), note: '' }); },
+  journalTab: (tab) => { g.journalTab = tab === 'log' ? 'log' : 'map'; ui.journalShowTab(g.journalTab); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   playRadio: () => audio.play(RADIO_SOUND),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
@@ -122,7 +124,7 @@ function closeRecord() {
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
-function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') g.progress = recordAdd(g.progress, g.mapId, e.id); else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
+function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') { g.progress = recordAdd(g.progress, g.mapId, e.id); g.unread.add(e.id); ui.setUnread(g.unread.size); } else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
@@ -134,7 +136,7 @@ function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings
 addEventListener('resize', resize);
 
 function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
-  g.loadedSlot = null; g.sinceLoad = 0;                                           // (applySave sets them again after this: a save that breaks the game in its first three seconds is set aside, PT-050 H1)
+  g.loadedSlot = null; g.sinceLoad = 0; g.unread = new Set(); ui.setUnread(0);                                           // (applySave sets them again after this: a save that breaks the game in its first three seconds is set aside, PT-050 H1)
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
@@ -201,6 +203,13 @@ function quitToTitle() {
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
 function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
+/** PT-049 U2: Tab opens the Journal and PAUSES (no clock change for text, decided 2026-10-15): it opens on the Log when a message has not been read, otherwise on the Map; what was unread has now been put in front of the player */
+function openJournal() {
+  if (g.mode !== 'playing' || !g.world) return;
+  cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.();
+  const log = journalLog({ maps: MAPS, progress: g.progress, mapId: g.mapId, unread: g.unread }); g.journalTab = openTab(log.newCount);
+  ui.show('journal', { log, mapName: MAPS[g.mapId]?.name ?? g.mapId, tab: g.journalTab }); g.unread = new Set(); ui.setUnread(0);
+}
 function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
 function quickSave() {
   if (!g.world) return;
@@ -229,7 +238,7 @@ function stepOnce() {
   { const wantToggle = settings.aimToggle && WEAPONS[g.world.player.weapon]?.kind !== 'melee'; if (g.aimToggleOn !== wantToggle) { g.input.setToggle('aim', wantToggle); g.aimToggleOn = wantToggle; } }      // with a melee weapon in hand Aim is the GUARD, and a guard is always a HOLD, whatever the aim-toggle setting says
   const cmd = g.input.sample();
   if (cmd.pause) { pause(); return; }
-  if (cmd.map) g.mapOpen = !g.mapOpen;                                            // UI-only toggle: the sim keeps running under the map
+  if (cmd.map) { if (settings.journalPause !== false) { openJournal(); return; } g.mapOpen = !g.mapOpen; }                                            // UI-only toggle: the sim keeps running under the map
   try { g.view.beforeStep(g.world); step(g.world, cmd); }
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
     console.error(e); const aside = quarantineLoaded(); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' + (aside ? ' The "' + aside + '" save was set aside; Continue will use the next one.' : '') }); return;
@@ -272,6 +281,7 @@ addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
   if (ui.screen === 'record') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeRecord(); } return; }          // the Record is read, not played: Esc (or the pause key) goes back to where it was opened from
+  if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
   if (g.mode === 'epilogue') { if (e.code === 'Escape') { e.preventDefault(); epilogueSkip(); } else if ((e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { e.preventDefault(); epiloguePress(); } return; }
@@ -401,7 +411,7 @@ function frameBody(now) {
   }
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
-  const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
+  const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
 }

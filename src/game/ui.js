@@ -31,6 +31,7 @@ export class UI {
     $('btn-easy').onclick = () => this.h.newGame('easy'); $('btn-normal').onclick = () => this.h.newGame('normal'); $('btn-hard').onclick = () => this.h.newGame('hard');
     $('btn-continue').onclick = () => this.h.continueGame();
     $('btn-crash-title').onclick = () => this.h.crashToTitle(); $('btn-crash-copy').onclick = () => this.copyCrash();
+    $('btn-journal-map').onclick = () => this.h.journalTab('map'); $('btn-journal-log').onclick = () => this.h.journalTab('log'); $('btn-journal-close').onclick = () => this.h.resume(); $('btn-journal-record').onclick = () => this.h.openRecord('pause');
     $('btn-resume').onclick = () => this.h.resume(); $('btn-save').onclick = () => this.h.quickSave(); $('btn-load').onclick = () => this.h.quickLoad();
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
@@ -45,6 +46,7 @@ export class UI {
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
+    $('set-journalpause').onchange = (e) => this.h.setSetting('journalPause', e.target.checked);
     $('set-pad').onchange = (e) => this.h.setPadSetting('enabled', e.target.checked); $('set-padlook').oninput = (e) => this.h.setPadSetting('lookRate', Number(e.target.value)); $('set-paddz').oninput = (e) => this.h.setPadSetting('deadzone', Number(e.target.value)); $('set-padinvert').onchange = (e) => this.h.setPadSetting('invertY', e.target.checked);
     $('set-padassist').oninput = (e) => this.h.setPadSetting('assist', Number(e.target.value)); $('set-padvib').onchange = (e) => this.h.setPadSetting('vibration', e.target.checked); $('set-padglyph').onchange = (e) => this.h.setPadSetting('glyphs', e.target.value); $('btn-reset-pad').onclick = () => this.h.resetPadBindings();
     $('set-outline').onchange = (e) => this.h.setSetting('outline', e.target.checked); $('set-paint').onchange = (e) => this.h.setSetting('paint', e.target.checked);
@@ -52,6 +54,16 @@ export class UI {
   /** the crosshair's look from the player's settings (crosshair.js): `data-style` and three CSS variables on #cross; index.html does the drawing */
   applyCrosshair(ch) { const el = $('cross'); if (!el) return; const { style, vars } = crosshairCss(ch); el.dataset.style = style; for (const [k, v] of Object.entries(vars)) { if (el.style.setProperty) el.style.setProperty(k, v); else el.style[k] = v; } }
   syncCrosshair(ch) { this.xh = { ...ch }; $('set-xh-style').value = this.xh.style; $('set-xh-size').value = this.xh.size; $('set-xh-color').value = this.xh.color; $('set-xh-opacity').value = this.xh.opacity; this.applyCrosshair(this.xh); }
+  /** the Journal (PT-049 U2): the Map tab is the automap the page draws behind it, the Log tab the messages of this map, newest first, the unread ones marked (journal.js). Text is escaped. */
+  journalOpen({ log, mapName, tab }) {
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    $('journal-title').textContent = mapName ?? ''; $('journal-new').textContent = log.newCount ? `(${log.newCount} new)` : '';
+    $('journal-list').innerHTML = log.entries.length ? log.entries.map((e) => `<div class="rec${e.document ? ' doc' : ''}${e.isNew ? ' new' : ''}"><b>${esc(e.speaker || 'unsigned')}</b><p>${esc(e.text)}</p></div>`).join('') + (log.earlier ? `<div id="journal-empty">${log.earlier} more from earlier maps are in the Record.</div>` : '') : `<div id="journal-empty">Nothing received on this map yet.${log.earlier ? ' ' + log.earlier + ' from earlier maps are in the Record.' : ''}</div>`;
+    $('journal-log').scrollTop = 0; this.journalShowTab(tab);
+  }
+  journalShowTab(tab) { const log = tab === 'log'; $('screen-journal').classList.toggle('map', !log); $('journal-log').classList.toggle('hidden', !log); $('btn-journal-map').classList.toggle('on', !log); $('btn-journal-log').classList.toggle('on', log); }
+  /** the HUD's count of messages not yet read in the Journal (main.js keeps the number) */
+  setUnread(n) { this.unread = n; $('hud-log').classList.toggle('hidden', !n); $('hud-log-n').textContent = String(n); }
   /** the crash screen (errorlog.js): over everything, plain words, the report text can be copied for a bug report */
   showCrash({ message, text, halted, aside }) {
     this.crashText = text; $('crash-text').textContent = (halted ? 'The game stopped itself because the same thing kept going wrong. Reload the page to start again.' : 'The game hit a problem and went back to the title. Your progress up to your last save is safe.') + (aside ? ` The "${aside}" save was set aside as damaged.` : '');
@@ -59,7 +71,7 @@ export class UI {
   }
   hideCrash() { $('screen-crash').classList.add('hidden'); }
   copyCrash() { const t = this.crashText ?? ''; try { navigator.clipboard.writeText(t).then(() => { $('btn-crash-copy').textContent = 'Copied'; }, () => { $('crash-detail').textContent = t; }); } catch { $('crash-detail').textContent = t; } }
-  syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle;
+  syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */
   syncBindings(b, capturing = null, note = '') {
@@ -94,6 +106,7 @@ export class UI {
     }
     if (name === 'ending') this.endingOpen(data.ending);
     if (name === 'record') this.recordOpen(data.view, data.counts, data.current);
+    if (name === 'journal') this.journalOpen(data);
   }
   /** the Record (PT-037, record.js): a heading per map with entries, each message under its speaker; found documents are set apart; the map being played is scrolled into view */
   recordOpen(view, counts, current) {

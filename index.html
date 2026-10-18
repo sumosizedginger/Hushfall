@@ -73,6 +73,14 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #pickup-card i{display:block;width:46px;height:46px;color:var(--card);flex:none}#pickup-card svg{width:100%;height:100%;display:block}
 #pickup-card b{display:block;font-size:17px;letter-spacing:.08em;color:var(--paper)}#pickup-card span{display:block;font-size:13px;color:#c4d4d0;margin-top:2px}
 @keyframes pcard{0%{opacity:0;transform:translate(-50%,10px)}9%{opacity:1;transform:translate(-50%,0)}82%{opacity:1}100%{opacity:0}}      /* PT-049 U1: the card of a major pickup */
+#screen-journal{flex-direction:column;justify-content:flex-start;align-items:stretch;background:none;pointer-events:none}      /* PT-049 U2: the Map tab shows the full-screen automap behind a thin bar, the Log tab a text panel */
+#screen-journal:not(.map){background:radial-gradient(ellipse at 50% 42%,#07080ccc,#07080cf5);pointer-events:auto}
+#journal-bar{pointer-events:auto;display:flex;align-items:center;gap:10px;padding:10px 16px;background:#07080ce6;border-bottom:1px solid var(--brass)}#journal-bar button{margin:0;min-width:0;padding:6px 16px}#journal-bar button.on{background:var(--brass);color:var(--ink)}
+#journal-title{flex:1;text-align:center;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);font-size:13px}#journal-new{color:var(--teal)}
+#journal-log{pointer-events:auto;width:min(720px,94vw);margin:18px auto;max-height:calc(100vh - 110px);overflow-y:auto;background:#0c0f14f0;border:1px solid var(--brass);padding:14px 22px;text-align:left}
+#journal-log .rec{margin:12px 0;padding-left:10px;border-left:3px solid #26333a}#journal-log .rec b{display:block;color:var(--bronze);letter-spacing:.12em;font-size:12px}#journal-log .rec p{margin:4px 0 0;color:#c4d4d0;line-height:1.45}#journal-log .rec.doc p{font-style:italic}
+#journal-log .rec.new{border-left-color:var(--teal)}#journal-log .rec.new b::after{content:" \00b7 NEW";color:var(--teal);letter-spacing:.15em;font-size:10px}#journal-empty{color:#7f9490;margin:18px 0}
+#hud .stat.logn b{color:var(--teal)}
 #card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 #objective{position:fixed;left:16px;top:12px;max-width:min(520px,60vw);font-size:12px;color:#c4d4d0;background:#0d0f14b8;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
@@ -211,6 +219,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
   <div class="stat hidden" id="hud-lamp"><b id="hud-oil">0</b><small id="hud-oil-label">OIL</small></div>
   <div class="stat hidden" id="hud-noise"><b id="hud-noise-v">QUIET</b><small id="hud-noise-label">NOISE</small></div>
   <div id="hud-weapons"></div>
+  <div class="stat logn hidden" id="hud-log"><b id="hud-log-n">0</b><small>NEW IN LOG (TAB)</small></div>
   <div id="hud-keys"></div><div class="grow"></div>
   <div class="side">KILLS <span id="hud-kills"></span><br>SECRETS <span id="hud-secrets"></span></div>
 </div>
@@ -218,6 +227,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 <div id="screen-loading" class="screen"><div class="panel"><h2>LOADING</h2><div class="sub">Unrolling the harbour…</div></div></div>
 <div id="screen-error" class="screen hidden"><div class="panel"><h2>CANNOT RUN</h2><div class="sub" id="error-text"></div><button id="btn-error-reload" onclick="location.reload()">Reload</button></div></div>
 <div id="screen-crash" class="screen hidden"><div class="panel"><h2>SOMETHING BROKE</h2><div class="sub" id="crash-text"></div><pre id="crash-detail"></pre><button id="btn-crash-title">Back to the title</button><button id="btn-crash-copy">Copy the report</button></div></div>
+<div id="screen-journal" class="screen hidden map"><div id="journal-bar"><button id="btn-journal-map" class="on">Map</button><button id="btn-journal-log">Log <b id="journal-new"></b></button><span id="journal-title"></span><button id="btn-journal-close">Close (Tab)</button></div><div id="journal-log" class="hidden"><div id="journal-list"></div><button id="btn-journal-record">The whole Record</button></div></div>
 
 <div id="screen-title" class="screen hidden">
   <img id="title-art" alt=""><div class="rings"></div>
@@ -254,6 +264,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
     <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
     <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
     <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
+    <label>Tab opens the Journal and pauses (off: a live map over the game) <input id="set-journalpause" type="checkbox"></label>
     <label>Controller <input id="set-pad" type="checkbox"></label>
     <label>Stick look speed <input id="set-padlook" type="range" min="1" max="8" step="0.1"></label>
     <label>Stick dead zone <input id="set-paddz" type="range" min="0.05" max="0.5" step="0.01"></label>

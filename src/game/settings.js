@@ -9,6 +9,7 @@ export const defaultSettings = () => ({
   version: SETTINGS_VERSION, sensitivity: 1, masterVolume: 0.8, sfxVolume: 1, musicVolume: 0.6,
   internalWidth: 480, outline: true, paint: true, aimToggle: false, sprintToggle: false, fov: 70, brightness: 1, bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),
   wheelSlow: true, wheelToggle: false,                                        // the weapon wheel: slow/freeze time while open (owner decision D7); toggle-to-open instead of hold
+  journalPause: true,                                                         // PT-049 U2: Tab opens the Journal and pauses (off: the old live map over the running game)
   gamepad: { ...PAD_SETTINGS }, padBindings: defaultPadBindings(),            // the controller (gamepad.js)
   crosshair: defaultCrosshair(),                                              // PT-048 / V2: style, size, colour, opacity of the crosshair (crosshair.js)
 });
@@ -35,7 +36,7 @@ export function sanitizeSettings(raw) {
   } else if (raw.bindings) notes.push('key bindings invalid; defaults used');
   { const taken = new Set();       // PT-050 H1 (Grok G-07): one key, one action (the pad's bindings already were). The first action in the list keeps a shared code; an action left with none gets its default keys back unless another action holds them
     for (const a of ACTIONS) { let codes = s.bindings[a].filter((c) => !taken.has(c)); if (!codes.length) codes = DEFAULT_BINDINGS[a].filter((c) => !taken.has(c)); s.bindings[a] = codes; for (const c of codes) taken.add(c); } }
-  s.wheelSlow = raw.wheelSlow !== false; s.wheelToggle = raw.wheelToggle === true;
+  s.wheelSlow = raw.wheelSlow !== false; s.journalPause = raw.journalPause !== false; s.wheelToggle = raw.wheelToggle === true;
   { const g = raw.gamepad && typeof raw.gamepad === 'object' ? raw.gamepad : {}, P = PAD_SETTINGS; s.gamepad = { enabled: g.enabled !== false, lookRate: clamp(g.lookRate, 1, 8, P.lookRate), deadzone: clamp(g.deadzone, 0.05, 0.5, P.deadzone), curve: clamp(g.curve, 1, 3, P.curve), invertY: g.invertY === true, assist: clamp(g.assist, 0, 1, P.assist), vibration: g.vibration !== false, glyphs: ['auto', 'ps', 'xbox'].includes(g.glyphs) ? g.glyphs : 'auto' }; }
   s.padBindings = sanitizePadBindings(raw.padBindings);
   s.crosshair = sanitizeCrosshair(raw.crosshair);                                 // an older save has none: the new default
