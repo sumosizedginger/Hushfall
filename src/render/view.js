@@ -28,6 +28,7 @@ import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
+import { HurtFlash } from './hurtflash.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
@@ -56,7 +57,7 @@ const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon
 
 export class GameView {
   constructor(renderer, tex, map, world) {
-    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9;
+    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash();
     const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
     const hemi = this.hemi = new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4); scene.add(hemi);
     const sun = this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
@@ -148,6 +149,7 @@ export class GameView {
   handleEvents(events) {
     const dctx = { map: this.map, ex: this.cam.position.x, ez: this.cam.position.z, rnd: () => this.rnd(), kindAt: (x, z) => { let best = null, bd = 2.5; for (const en of this.world?.enemies ?? []) { const d = Math.hypot(en.x - x, en.z - z); if (d < bd) { bd = d; best = en.kind; } } return best; } };
     for (const e of events) {
+      if (e.type === 'hurt') this.hurtFlash.hit(e.amount);                                                          // PT-047 V1: the screen flash follows the size of the hit (hurtflash.js); p.hurt stays sim state
       for (const spec of decalsForEvent(e, dctx)) this.decals.add(spec);                                          // a hit, a death, a blast, a bullet: the room keeps it
       if (e.type === 'fire') {
         const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower' || e.weapon === 'mortar', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
@@ -500,7 +502,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     if (rig.bolt) rig.bolt.visible = p.cooldown < 0.45 && p.ads < 0.4;                                                      // the harpoon leaves the muzzle; the next one seats as the action closes
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
     if (w.map.vacuum.length) { this.frost = (this.frost ?? 0) + ((inVacuum(w, p.x, p.z) ? 1 : 0) - (this.frost ?? 0)) * Math.min(1, dt * 3); this.post.uniforms.uFrost.value = this.frost; }          // PT-033: the frost at the edges of the picture while in vacuum
-    this.post.uniforms.uDamage.value = p.hurt;
+    this.post.uniforms.uDamage.value = this.hurtFlash.step(dt);
     this.post.render(() => { this.renderer.render(this.scene, this.cam); this.renderer.render(this.weaponScene, this.weaponCam); });
   }
 

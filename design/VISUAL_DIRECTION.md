@@ -45,6 +45,7 @@ Kept exactly as they are (the protect list): the ink outline and the banding, th
 Every phase ends with: `npm test` green, `tests/frame-loop.test.js` green (it runs the real frame loop of main.js over every map: run it after ANY change in `src/render`, `src/game`, `src/audio`), a before/after of the same named frames, and its own local commit.
 
 ### V1. The hurt flash (S to M; node-only first)
+- **STATUS 2026-10-18: node half DONE** (`src/render/hurtflash.js`, `tests/hurtflash.test.js`, frame-loop green, audit-capture trigger changed). Left: V1b (direction) and the capture proof J1 (needs a yes). The flash values are first guesses for the owner to judge.
 - **Build:** a pure module `src/render/hurtflash.js`: `flashFor(amount)` and a decay; `GameView` keeps its own `flash` (set on the `hurt` event from `amount`, decays by itself) and writes `post.uniforms.uDamage` from it instead of `p.hurt` (view.js:503). `p.hurt` stays sim state and untouched.
 - **Numbers (first guess):** peak = 0.12 + 0.85 x smoothstep(0, 30, amount); decay 2.6 per second for small hits, 1.2 for large; the rim shape of post.js:64 stays; a hit that armour fully absorbs does not flash.
 - **Direction (V1b, after the first part is proved):** add the attacker's `{ x, z }` to the `hurt` event (hurtPlayer takes an optional source; about ten call sites) and a `uHurtDir` so the vignette is heavier on the side the hit came from. The event payload is not hashed; prove it with `node tools/dev/route-fingerprint.mjs check` and `npm test`.
