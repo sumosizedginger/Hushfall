@@ -6,13 +6,13 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 
 | map | name | walk | enemies | dens | kinds | top% | rng% | lvl% | sym | loops | empty | keys | secr | ambush | botMin | first | gap | tier | flags |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C1E1M01 | Marrow Quay | 719 | 16 | 22 | 3 | 50 | 19 | 0 | 0.6 | 0 | 0 | 1 | 1 | 0 | 1.2 | 2 | 68 | A encounters and roster | thin roster, flat, few ambushes, one secret, no loop |
+| C1E1M01 | Marrow Quay | 719 | 16 | 22 | 3 | 50 | 19 | 0 | 0.6 | 0 | 0 | 1 | 1 | 1 | 1.2 | 2 | 68 | A encounters and roster | thin roster, flat, few ambushes, one secret, no loop |
 | C1E1M02 | Customs Hall | 1310 | 38 | 29 | 3 | 50 | 16 | 44 | 0.42 | 0 | 0 | 2 | 1 | 4 | 2 | 0 | 141 | A- light pass | thin roster, one secret, no loop |
-| C1E1M03 | Fishmarket Rows | 1759 | 37 | 21 | 3 | 65 | 14 | 11 | 0.84 | 0 | 0 | 0 | 0 | 2 | 2.6 | 0 | 118 | A encounters and roster | one-note tollbearer, thin roster |
-| C1E1M04 | The Drowned Chandlery | 1555 | 44 | 28 | 3 | 61 | 9 | 27 | 0.48 | 0 | 0 | 1 | 1 | 1 | 2.2 | 3 | 175 | A encounters and roster | one-note tollbearer, thin roster, melee-only, few ambushes, one secret, no loop |
-| C1E1M05 | Lamplighter Hill | 2428 | 45 | 19 | 4 | 49 | 22 | 80 | 0.88 | 9 | 0 | 0 | 0 | 1 | 2.3 | 0 | 43 | A- light pass | few ambushes |
-| C1E1M06 | Ferry Terminal | 1635 | 40 | 24 | 4 | 63 | 10 | 14 | 0.84 | 0 | 0 | 0 | 0 | 3 | 1.7 | 0 | 58 | A encounters and roster | one-note tollbearer |
-| C1E1M07 | Signal House | 1112 | 37 | 33 | 4 | 62 | 5 | 36 | 0.65 | 0 | 0 | 3 | 0 | 1 | 2.7 | 0 | 218 | A encounters and roster | one-note tollbearer, melee-only, few ambushes, no loop |
+| C1E1M03 | Fishmarket Rows | 1753 | 37 | 21 | 3 | 43 | 24 | 11 | 0.85 | 0 | 0 | 0 | 1 | 3 | 2.5 | 0 | 118 | A- light pass | thin roster, one secret |
+| C1E1M04 | The Drowned Chandlery | 1555 | 44 | 28 | 3 | 43 | 20 | 27 | 0.48 | 0 | 0 | 1 | 1 | 3 | 2.2 | 3 | 175 | A- light pass | thin roster, one secret, no loop |
+| C1E1M05 | Lamplighter Hill | 2434 | 45 | 18 | 4 | 33 | 29 | 79 | 0.87 | 9 | 0 | 0 | 1 | 2 | 2.2 | 0 | 43 | A- light pass | one secret |
+| C1E1M06 | Ferry Terminal | 1641 | 40 | 24 | 4 | 40 | 23 | 14 | 0.83 | 0 | 0 | 0 | 1 | 3 | 1.7 | 0 | 58 | A- light pass | one secret |
+| C1E1M07 | Signal House | 1118 | 37 | 33 | 4 | 51 | 16 | 36 | 0.64 | 0 | 0 | 3 | 1 | 2 | 2.7 | 0 | 218 | A- light pass | one-note tollbearer, one secret, no loop |
 | C1E1M08 | Bell Tower of St. Orrin | 1649 | 41 | 25 | 7 | 44 | 12 | 69 | 0.67 | 0 | 0 | 0 | 0 | 0 | 2.9 | 0 | 57 | KEEP (boss or set piece: judge by play) | few ambushes |
 | C1E1S01 | The Lighthouse Cellar | 220 | 0 | 0 | 0 | 0 | 0 | 22 | 0.24 | 0 | 0 | 0 | 0 | 0 | 0.7 | - | - | KEEP (no combat) |  |
 | C1E2M01 | Brine Gate | 1155 | 30 | 26 | 4 | 60 | 7 | 12 | 0.65 | 2 | 0 | 0 | 1 | 2 | 1.3 | 2 | 43 | A encounters and roster | one-note tollbearer, melee-only, no key, one secret |
@@ -75,7 +75,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2S01 | The Silent Orchard | 1837 | 0 | 0 | 0 | 0 | 0 | 8 | 0.98 | 0 | 0 | 0 | 0 | 0 | 0.8 | - | - | KEEP (no combat) | symmetrical, flat |
 | C2S02 | Ines's Lamp | 218 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0.3 | - | - | KEEP (no combat) | symmetrical |
 
-Tally: A encounters and roster 26, A- light pass 10, KEEP (boss or set piece: judge by play) 10, KEEP (no combat) 7, B structural 10, C exemplar 4, KEEP (a stand: its creatures come from triggers) 1
+Tally: A encounters and roster 22, A- light pass 14, KEEP (boss or set piece: judge by play) 10, KEEP (no combat) 7, B structural 10, C exemplar 4, KEEP (a stand: its creatures come from triggers) 1
 
 ## The rules
 ```json

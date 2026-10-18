@@ -52,10 +52,10 @@
   "######:B::::::::::::::::::::::::::::::::::::::::::::::B:##########",
   "######:BB::::::::::::::::::::::::::::::::::::::::::::BB:##########",
   "######BBBB::::::::::::::::::::::::::::::::::::::::::BBBB##########",
-  "######BWWWWWWWDWWWWWWWWW:::BBB:::BBB:::BBB:::BBB:::BBBBB##########",
-  "#######WfffffffffffffXfW:::###:::###:::###:::###:::###############",
-  "#######WfffffffffffffWWW##########################################",
-  "#######WfffffffffffffXfW##########################################",
+  "######BWWWWWWWDWWWWWWWWW:::BBB:::BBBBBBBSBBBBBBB:::BBBBB##########",
+  "#######WfffffffffffffXfW:::###:::#####B:::B#####:::###############",
+  "#######WfffffffffffffWWW##############B:::B#######################",
+  "#######WfffffffffffffXfW##############BBBBB#######################",
   "#######WfffffffffffffWWW##########################################",
   "#######WWWWWWWWWWWWWWW############################################",
   "##################################################################"
@@ -173,7 +173,16 @@
    "at": [14, 41]
   }
  ],
- "secrets": [],
+ "secrets": [
+  {
+   "id": "strongbox-room",
+   "panel": [40, 41],
+   "cells": [
+    [40, 42],
+    [40, 43]
+   ]
+  }
+ ],
  "closets": [
   {
    "at": [21, 42]
@@ -191,6 +200,47 @@
    "do": [
     {
      "objective": "Three Bellhands on the boardwalk: take them one at a time from behind the crates"
+    }
+   ]
+  },
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [24, 21],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 13],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [32, 21],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 29],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
     }
    ]
   }
@@ -318,7 +368,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [33, 14],
    "facing": -1.239
   },
@@ -334,7 +384,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [39, 14],
    "facing": -1.292
   },
@@ -409,7 +459,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [18, 20],
    "facing": -1.292
   },
@@ -435,7 +485,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [30, 20],
    "facing": -1.418
   },
@@ -451,7 +501,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [36, 20],
    "facing": -1.446
   },
@@ -626,7 +676,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [27, 26],
    "facing": -1.658
   },
@@ -782,7 +832,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [24, 32],
    "facing": -1.951
   },
@@ -973,7 +1023,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [45, 38],
    "facing": -1.9
   },
@@ -1018,6 +1068,21 @@
    "type": "prop",
    "kind": "shelf",
    "at": [18, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [39, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [40, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [41, 43]
   },
   {
    "type": "pickup",
@@ -1133,16 +1198,6 @@
    "type": "prop",
    "kind": "barrel",
    "at": [31, 42]
-  },
-  {
-   "type": "prop",
-   "kind": "barrel",
-   "at": [37, 42]
-  },
-  {
-   "type": "prop",
-   "kind": "barrel",
-   "at": [43, 42]
   },
   {
    "type": "prop",
@@ -1267,6 +1322,13 @@
    "radius": 1.5,
    "speaker": "BOAT HOOK",
    "text": "A gaff left on a stall post, the point still wet. It reaches further than a fist, and what it hooks comes to you."
+  },
+  {
+   "id": "strongbox-room",
+   "at": [40, 42],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A stallholder's cupboard, shut from the inside. Somebody hid here and left the good coat."
   }
  ],
  "decals": [
@@ -1303,6 +1365,13 @@
    "kind": "bloodpool",
    "at": [30, 9],
    "size": 1.1
+  },
+  {
+   "kind": "scrape",
+   "at": [39, 40],
+   "wall": "south",
+   "y": 1,
+   "size": 1
   }
  ],
  "objective": "Get up on the boardwalk (stairs, west end)",

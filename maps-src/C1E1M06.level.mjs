@@ -5,6 +5,8 @@
 //        -> kill it (flares round the plate, or dodge and let it hit a pillar) -> reinforcements -> board the ferry, east end.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { reroster } from '../tools/mapkit/roster.mjs';
 
 const L = new Level(68, 46);
 // concourse (interior, tall), the mezzanine along the north wall, its stairs at the east end
@@ -48,6 +50,12 @@ L.put(43, 5, 'n'); L.putAll('H', [[41, 9], [45, 9], [52, 21], [52, 27]]); L.putA
 // the ferry hold: idle until the winch; the Warden at the back, the rest close behind the ramp; lanterns aboard
 L.put(61, 24, 'w'); L.putAll('t', [[58, 20], [58, 28], [60, 20], [60, 28], [62, 22], [62, 26]]); L.putAll('g', [[58, 22], [58, 26], [60, 22]]); L.putAll('n', [[57, 19], [57, 29], [63, 24]]); L.putAll('C', [[62, 20], [62, 28]]);
 L.put(62, 24, '>');
+
+// ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): no kind over a third, over a quarter of the creatures shoot, a secret (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+reroster(L, { id: 'C1E1M06', lane: laneOf('C1E1M06'), plan: [{ from: 't', to: 'b', n: 5, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });          // eleven Bellhands killed the perfect bot on hard: nine is what it takes
+const E = new Encounters(L);
+E.secretRoom({ id: 'porters-cage', search: { region: [3, 3, 64, 42], prefer: [34, 23], lane: laneOf('C1E1M06') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: "A porter's cage under the ramp. The ferry company locked its lost property in here and kept the key." } });
+// ---- end PT-052 ----
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
 const S = new Shape(L, { lane: laneOf('C1E1M06'), keep: [[43, 2]], foes: [[59, 23], [59, 25], [62, 22], [58, 19], [58, 29], [60, 22]] });                                                       // the winch lever's wall stays
@@ -106,5 +114,8 @@ MAP.quality.introduces += "; also found here: the Harbour carbine, on a harbour 
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: what the kit built (the secret, its message and its hint) joins the map ----
+E.apply(MAP);
 
 export default MAP;

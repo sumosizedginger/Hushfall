@@ -5,6 +5,8 @@
 //        -> back to the radio room: install the fuses. The lights surge, the Vael speak, the sealed hatch opens.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { reroster } from '../tools/mapkit/roster.mjs';
 
 const L = new Level(60, 46);
 L.room([2, 21, 7, 25], { floor: ':', wall: 'B' });                              // porch (open air)
@@ -48,6 +50,13 @@ L.putAll('n', [[33, 21], [33, 25]]); L.putAll('t', [[35, 23]]); L.put(32, 23, 'a
 // attic: a long dark gallery. rafters, crates, three Tollbearers, two Bellhands on the gantry, the bell fuse beyond them
 L.putAll('C', [[48, 26], [52, 26], [48, 30], [52, 30], [46, 33], [54, 33]]); L.putAll('c', [[49, 26], [53, 30]]); L.putAll('o', [[50, 24], [50, 34]]); L.putAll('n', [[45, 24], [55, 24], [50, 28], [45, 34], [55, 34]]);
 L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]]); L.putAll('b', [[48, 13], [52, 13]]); L.put(50, 11, 'q'); L.putAll('h', [[46, 23], [55, 22]]); L.put(50, 22, 'e'); L.putAll('r', [[45, 13], [52, 22]]); L.put(55, 15, 'H');
+
+// ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): no kind over a third, three in ten creatures shoot (the Signal House was the quietest map: 5% shot), a cage at the line-thrower, a secret (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+reroster(L, { id: 'C1E1M07', lane: laneOf('C1E1M07'), plan: [{ from: 't', to: 'b', n: 4, pick: 'spread' }] });          // six Bellhands is the most the old bot takes in the dark on all three difficulties (eight or eleven killed it): the shooters and cap laws wait for Bot v2 (WAITING_FOR_BOT_V2 in tools/dev/director-audit.mjs)
+const E = new Encounters(L);
+E.cage({ at: [5, 8], radius: 1.5, cells: E.around([5, 8], { n: 3, min: 4, max: 8 }), kind: 'g' });                  // the line-thrower: lifting it brings three Gaunts in through the dark
+E.secretRoom({ id: 'relay-cupboard', search: { region: [3, 3, 56, 42], prefer: [30, 23], lane: laneOf('C1E1M07') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: 'A relay cupboard behind the switch frames. Someone left the spare fuses and a flask.' } });
+// ---- end PT-052 ----
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
 const S = new Shape(L, { lane: laneOf('C1E1M07'), keep: [[20, 7]] });                                                       // the radio lever's wall stays
@@ -112,5 +121,8 @@ MAP.quality.introduces += '; also found here: the Rocket line-thrower, in the st
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: what the kit built (the trigger, the secret, its message and its hint) joins the map ----
+E.apply(MAP);
 
 export default MAP;

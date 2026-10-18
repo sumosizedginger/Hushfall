@@ -22,7 +22,7 @@ test('map ids: campaign-1 episode maps, secrets and campaign-2 maps are recognis
 test('listMaps discovers every shipped map and its routes from the repository, with kind and episode from the manifest', () => {
   const maps = listMaps(ROOT), by = Object.fromEntries(maps.map((m) => [m.id, m]));
   for (const id of ['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01']) assert.ok(by[id], id + ' is discovered');
-  assert.deepEqual(by.C1E1M01.routes, ['main', 'secret']); assert.deepEqual(by.C1E1M03.routes, ['main']);
+  assert.deepEqual(by.C1E1M01.routes, ['main', 'secret']); assert.deepEqual(by.C1E1M03.routes, ['main', 'secret']); assert.deepEqual(by.C1E1M08.routes, ['main']);
   assert.equal(by.C1E1S01.kind, 'secret'); assert.equal(by.C1E1M08.kind, 'main'); assert.equal(by.C1E1M02.episode, 1); assert.equal(by.C1E1M02.name, 'Customs Hall');
   assert.ok(by.C1E1M02.hasSource && by.C1E1M02.hasViews, 'a map with maps-src files says so'); assert.ok(!by.C1E1M01.hasSource, 'M01 is a hand-written JSON (Gate 1)');
   assert.deepEqual(maps.map((m) => m.id), [...maps.map((m) => m.id)].sort(), 'sorted');

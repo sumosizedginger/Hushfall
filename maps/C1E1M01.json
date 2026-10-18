@@ -655,5 +655,40 @@
  ],
  "drops": {
   "scale": 1.5
- }
+ },
+ "groups": [],
+ "triggers": [
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [25, 22],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [25, 14],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [17, 22],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  }
+ ]
 }

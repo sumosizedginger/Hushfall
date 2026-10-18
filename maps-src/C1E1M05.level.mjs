@@ -4,6 +4,8 @@
 // Route: harbour road -> stairs to terrace 1 -> the funicular car (the ONLY way from terrace 1 to 2) -> stairs west (T3) -> stairs east (T4) -> stairs west (summit) -> light the beacon -> the gate opens -> exit.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { reroster } from '../tools/mapkit/roster.mjs';
 
 const L = new Level(56, 60);
 const TERR = [{ z0: 52, z1: 57, h: 0, f: ':' }, { z0: 43, z1: 51, h: 4, f: 's' }, { z0: 34, z1: 42, h: 8, f: ':' }, { z0: 25, z1: 33, h: 12, f: 's' }, { z0: 16, z1: 24, h: 16, f: ':' }, { z0: 5, z1: 15, h: 20, f: 'p' }];
@@ -38,6 +40,13 @@ L.putAll('t', [[10, 21], [22, 22], [30, 23], [44, 19], [50, 22]]); L.putAll('g',
 L.putAll('r', [[8, 19], [24, 17], [46, 21]]); L.putAll('e', [[16, 21], [40, 22]]); L.putAll('h', [[9, 18], [32, 21], [50, 18]]); L.put(48, 17, 'v'); L.put(12, 17, 'H'); L.put(47, 19, 'H'); L.putAll('a', [[21, 19], [42, 24]]);
 // the summit: three Tollbearers and two Bellhands around the beacon, the sealed gate at the east end
 L.putAll('t', [[16, 13], [26, 12], [38, 13]]); L.putAll('b', [[24, 9], [40, 8]]); L.put(32, 12, 'x'); L.putAll('r', [[10, 12], [28, 7], [44, 10]]); L.putAll('e', [[20, 13], [34, 12]]); L.putAll('H', [[48, 12], [8, 8]]); L.putAll('h', [[46, 8]]); L.put(50, 8, 'n');
+
+// ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): no kind over a third, nearly a third of the creatures shoot, a cage at the mallet, a secret (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+reroster(L, { id: 'C1E1M05', lane: laneOf('C1E1M05'), plan: [{ from: 't', to: 'b', n: 3, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });
+const E = new Encounters(L);
+E.cage({ at: [5, 49], radius: 1.5, cells: E.around([5, 49], { n: 3, min: 4, max: 8 }), kind: 'g' });                  // the mallet: lifting it brings three Gaunts in off the hill
+E.secretRoom({ id: 'lamplighter-locker', search: { region: [3, 3, 52, 57], prefer: [28, 30], lane: laneOf('C1E1M05') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: "A lamplighter's locker cut into the hill. Oil cans, a ladder, a coat nobody came back for." } });
+// ---- end PT-052 ----
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
 const S = new Shape(L, { lane: laneOf('C1E1M05'), keep: [[46, 6]], foes: [[24, 36], [30, 36]] });                                                       // the beacon lever's wall stays
@@ -100,5 +109,8 @@ MAP.quality.introduces += '; also found here: the lamplighter\'s mallet, at the 
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: what the kit built (groups, triggers, messages, the secret and its hint) joins the map ----
+E.apply(MAP);
 
 export default MAP;

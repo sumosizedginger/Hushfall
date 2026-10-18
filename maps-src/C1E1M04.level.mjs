@@ -4,6 +4,8 @@
 //        -> iron drain gate -> exit.  Secret route: office -> vault (toxic pools) -> resin panel in the east wall -> the lighthouse tunnel -> secret exit.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { reroster } from '../tools/mapkit/roster.mjs';
 
 const L = new Level(60, 54);
 
@@ -48,6 +50,13 @@ L.putAll('r', [[43, 40], [54, 36]]); L.putAll('v', [[43, 42]]); L.put(54, 43, 'H
 L.putAll('b', [[17, 40], [17, 46], [37, 43]]); L.putAll('t', [[24, 38], [30, 38], [26, 48], [32, 48], [20, 44]]); L.putAll('g', [[21, 38], [34, 40], [28, 46], [19, 48]]);
 L.putAll('Y', [[22, 39], [32, 39], [22, 47], [32, 47]]); L.putAll('Q', [[27, 41], [27, 45]]); L.putAll('e', [[17, 43], [37, 40], [30, 43]]); L.putAll('r', [[17, 38], [37, 46], [26, 43]]); L.putAll('H', [[17, 48], [37, 38]]); L.putAll('a', [[23, 43], [33, 43]]);
 L.putAll('g', [[20, 52], [24, 52], [36, 52]]); L.putAll('t', [[29, 52], [31, 52]]); L.put(30, 52, '>'); L.put(30, 50, 'h');
+
+// ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): a fifth of the creatures shoot, fewer Tollbearers, two more scripted ambushes (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+reroster(L, { id: 'C1E1M04', lane: laneOf('C1E1M04'), keep: [[29, 52], [31, 52]], plan: [{ from: 't', to: 'b', n: 5, pick: 'range' }, { from: 't', to: 'g', n: 3, pick: 'spread' }] });          // the two guards of the exit chamber stay as they were
+const E = new Encounters(L);
+E.dropIn({ at: [22, 28], radius: 2, cells: E.around([22, 28], { n: 3, min: 6, max: 10 }), kind: 'g' });                  // the flooded undercroft: three Gaunts come wading out of the pillars
+E.cage({ at: [51, 24], radius: 1.5, cells: E.around([51, 24], { n: 2, min: 3, max: 6 }), kind: 'g' });                  // the iron key on the chandler's desk: lifting it brings two Gaunts in from the shelves
+// ---- end PT-052 ----
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
 const S = new Shape(L, { lane: laneOf('C1E1M04'), foeSymbols: 'tgbxwKGZ' });
@@ -107,5 +116,8 @@ MAP.quality.introduces += '; also found here: the marlinspike, on the hook at th
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: what the kit built (groups, triggers, messages) joins the map ----
+E.apply(MAP);
 
 export default MAP;

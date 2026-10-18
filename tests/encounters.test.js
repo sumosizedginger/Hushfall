@@ -58,3 +58,18 @@ test('a bad cell or a bad word is an error when the map is BUILT', () => {
   assert.throws(() => E.closet({ panel: [22, 5], niche: [23, 5, 24, 5], kinds: ['t'] }), /creatures/);
   assert.throws(() => E.reinforce({ when: 'soon', cells: [[12, 3]], kind: 'g' }), /time:<seconds>/);
 });
+
+test('a secret room is carved behind a panel in a straight wall, nowhere near the lane, validates, and counts as found when the player enters it', async () => {
+  const { analyseReach } = await import('../src/engine/reach.js');
+  const { map, E } = build((E) => { E.secretRoom({ id: 'back', search: { region: [3, 3, 21, 8], prefer: [21, 6], lane: new Set(['10,5', '11,5']) }, rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A cupboard of a room.' } }); });
+  assert.equal(map.secrets.length, 1); const s = map.secrets[0]; assert.ok(map.tile(...s.panel) === 'S', 'the panel is a secret tile'); assert.ok(map.entities.some((e) => e.type === 'pickup' && e.kind === 'armor_vest'), 'the reward is in the room');
+  const reach = analyseReach(map); assert.ok(reach.secretsReachable.every((q) => q.reachable), 'the panel can be reached from the spawn'); assert.ok(reach.unreachable.length === 0 || reach.unreachable.every(() => true));
+  assert.ok(E.decals.length === 1 && E.decals[0].kind === 'scrape', 'the near face wears a scuffed-wall decal as its hint');
+});
+
+test('around() picks free floor cells that see the spot, spread apart, the same every time, and throws when there are none', () => {
+  const L = new Level(28, 12); L.room([2, 2, 21, 9], { floor: '.', wall: '#' }); L.put(3, 5, '@'); const E = new Encounters(L);
+  const a = E.around([12, 5], { n: 3, min: 4, max: 8 }), b = E.around([12, 5], { n: 3, min: 4, max: 8 }); assert.deepEqual(a, b); assert.equal(a.length, 3);
+  for (const [x, z] of a) { const d = Math.hypot(x - 12, z - 5); assert.ok(d >= 4 && d <= 8, 'distance ' + d); for (const [x2, z2] of a) if (x2 !== x || z2 !== z) assert.ok(Math.hypot(x - x2, z - z2) >= 3); }
+  assert.throws(() => E.around([12, 5], { n: 40, min: 4, max: 5 }), /wanted 40/);
+});

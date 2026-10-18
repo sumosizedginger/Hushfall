@@ -4,6 +4,8 @@
 //        south smokehouse (closets) -> south hoist switch -> the auction hall's two shutters -> exit.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { reroster } from '../tools/mapkit/roster.mjs';
 
 const L = new Level(66, 48);
 
@@ -43,6 +45,13 @@ L.putAll('h', [[15, 19], [27, 21], [39, 33], [21, 36]]); L.putAll('H', [[33, 26]
 L.putAll('t', [[22, 42], [22, 44]]); L.putAll('F', [[10, 43], [12, 43], [16, 43], [18, 43]]); L.put(14, 44, 'H'); L.putAll('e', [[10, 44], [18, 44]]); L.put(14, 43, 'n'); L.put(9, 42, 'r'); L.put(19, 42, 'r');
 // auction hall: the exit, the stage guards
 L.putAll('b', [[62, 24], [62, 26]]); L.putAll('t', [[60, 23], [60, 27]]); L.put(60, 25, 'H'); L.put(63, 25, '>'); L.put(59, 22, 'Q'); L.put(59, 28, 'Q');
+
+// ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): fewer Tollbearers, a quarter of the creatures shoot, a secret (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+reroster(L, { id: 'C1E1M03', lane: laneOf('C1E1M03'), keep: [[22, 42], [22, 44], [60, 23], [60, 27]], plan: [{ from: 't', to: 'b', n: 4, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });          // the closet pair and the stage guards stay as they were
+const E = new Encounters(L);
+E.secretRoom({ id: 'strongbox-room', search: { region: [8, 11, 50, 40], prefer: [40, 40], lane: laneOf('C1E1M03') }, rewards: ['v', 'H', 'r'], message: { speaker: 'INES', text: "A stallholder's cupboard, shut from the inside. Somebody hid here and left the good coat." } });
+E.dropIn({ at: [24, 21], radius: 2, cells: E.around([24, 21], { n: 3, min: 6, max: 10 }), kind: 'g' });                  // the middle of the rows: a pack of Gaunts closes in from the stalls as the player crosses the open
+// ---- end PT-052 ----
 
 // ---- PT-021, rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; props go into the new bays) ----
 const S = new Shape(L, { lane: laneOf('C1E1M03'), keep: [[52, 7], [14, 46]], foes: [[8, 22], [8, 24], [8, 26], [8, 28]] });                                                // the two hoist switches' walls stay
@@ -99,5 +108,8 @@ MAP.quality.introduces += '; also found here: the boat hook, a gaff left on a st
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: what the kit built (groups, triggers, messages, the secret and its hint) joins the map ----
+E.apply(MAP);
 
 export default MAP;

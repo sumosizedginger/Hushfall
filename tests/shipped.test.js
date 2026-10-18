@@ -72,7 +72,7 @@ test('canonical routes: main and secret complete on every difficulty with every 
   for (const name of ['C1E1M01.main', 'C1E1M01.secret']) for (const difficulty of ['easy', 'normal', 'hard']) {
     const r = runRoute(map, shippedRoute(name), { seed: 1, difficulty });
     assert.equal(r.result, 'complete', `${name} ${difficulty}: ${r.failure}`);
-    assert.equal(r.world.stats.kills, map.counts().enemies, `${name} ${difficulty}`);
+    assert.equal(r.world.stats.kills, r.world.stats.total.enemies, `${name} ${difficulty}`);          // every enemy of the world is dead, the ones a scripted ambush spawned included (PT-052: Marrow Quay has a drop-in now)
     assert.ok(r.world.player.keys.includes('brass'));
   }
 });

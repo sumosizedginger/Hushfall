@@ -19,9 +19,9 @@
   "##BBBppppppppppppppppppppppppppppppppppppppppppppppppB##",
   "##pBppppppppppppppppppppppppppppppppppppppppCCCCCCCCCB##",
   "##pppppppppppppppppppppppppppppppppppppppppppppppppppB##",
-  "##ppppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
-  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
-  "##BpppppppppppWWWWWWWWWpppppppWWWWWWWppppppppppppppppB##",
+  "##ppppppppppppWWWWWWSWWpppppppWWWWWWWppppppppppppppppB##",
+  "##BpppppppppppWWWWWpppWpppppppWWWWWWWppppppppppppppppB##",
+  "##BpppppppppppWWWWWpppWpppppppWWWWWWWppppppppppppppppB##",
   "##BpppppppppppWWWWWWWWWppppppppppppppppppppppppppppppB##",
   "##pppppppppppppppppppppppppppppppppppppppppppppppppppp##",
   "##pppppppppppppppppppppppppppppppppppppppppppppppppppp##",
@@ -135,7 +135,16 @@
   "........................................................"
  ],
  "doors": [],
- "secrets": [],
+ "secrets": [
+  {
+   "id": "lamplighter-locker",
+   "panel": [20, 8],
+   "cells": [
+    [20, 9],
+    [20, 10]
+   ]
+  }
+ ],
  "sectors": [
   {
    "id": "car",
@@ -194,6 +203,47 @@
      "objective": "Light the beacon: the lever on the summit north wall (east)"
     }
    ]
+  },
+  {
+   "id": "amb-cage-1",
+   "when": "enter",
+   "at": [5, 49],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [5, 43],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [11, 49],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [8, 44],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -225,6 +275,21 @@
    "facing": -0.41
   },
   {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [19, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [20, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [21, 10]
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [26, 12],
@@ -254,7 +319,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [38, 13],
    "facing": -0.681
   },
@@ -337,7 +402,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [22, 22],
    "facing": -0.499
   },
@@ -354,7 +419,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [30, 23],
    "facing": -0.682
   },
@@ -444,7 +509,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [24, 31],
    "facing": -0.695
   },
@@ -477,7 +542,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [10, 37],
    "facing": -0.322
   },
@@ -525,7 +590,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [46, 40],
    "facing": -1.228
   },
@@ -592,7 +657,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [22, 46],
    "facing": -1.107
   },
@@ -947,6 +1012,13 @@
    "radius": 1.5,
    "speaker": "LAMPLIGHTER",
    "text": "The lamplighter's mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it. Keep it for the Warden."
+  },
+  {
+   "id": "lamplighter-locker",
+   "at": [20, 9],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A lamplighter's locker cut into the hill. Oil cans, a ladder, a coat nobody came back for."
   }
  ],
  "decals": [
@@ -975,6 +1047,13 @@
    "wall": "north",
    "y": 1.5,
    "size": 1.4
+  },
+  {
+   "kind": "scrape",
+   "at": [19, 7],
+   "wall": "south",
+   "y": 1,
+   "size": 1
   }
  ],
  "objective": "Climb the hill. Stairs on the terraces, or take the funicular car",

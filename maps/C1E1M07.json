@@ -34,10 +34,10 @@
   "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
   "##IInnnnnnnnnI#WWtttttttWW################...............T##",
   "##IIIIIIIIDIIIWWWWWWDWWWWWWWWW###########................T##",
-  "########W....................W############...............T##",
-  "########W....................W#############T.............T##",
-  "########W....................W#############T.............T##",
-  "#BBBBBBBW....................IIIIIIIIIIIIIIT.............T##",
+  "########W....................IIIII########...............T##",
+  "########W....................IgggI#########T.............T##",
+  "########W....................IgggI#########T.............T##",
+  "#BBBBBBBW....................IISIIIIIIIIIIIT.............T##",
   "#BB:::::W....................IgggggggggggggT.............T##",
   "#B::::::W....................IgggggggggggggT...............#",
   "#B::::::D....................DgggggggggggggD...............#",
@@ -180,7 +180,16 @@
    "at": [18, 30]
   }
  ],
- "secrets": [],
+ "secrets": [
+  {
+   "id": "relay-cupboard",
+   "panel": [31, 20],
+   "cells": [
+    [31, 19],
+    [31, 18]
+   ]
+  }
+ ],
  "closets": [
   {
    "at": [12, 41]
@@ -241,6 +250,47 @@
     },
     {
      "objective": "All three fuses. Back to the radio room, north of the atrium"
+    }
+   ]
+  },
+  {
+   "id": "amb-cage-1",
+   "when": "enter",
+   "at": [5, 8],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [11, 8],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [6, 14],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [10, 11],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
     }
    ]
   }
@@ -393,6 +443,21 @@
    "at": [27, 18]
   },
   {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [30, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [31, 18]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [32, 18]
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 19],
@@ -475,7 +540,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [14, 23],
    "facing": -1.571
   },
@@ -535,7 +600,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [47, 24],
    "facing": -1.594
   },
@@ -557,7 +622,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [6, 25],
    "facing": -2.159
   },
@@ -808,7 +873,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [22, 36],
    "facing": -2.171
   },
@@ -1041,6 +1106,13 @@
    "radius": 1.5,
    "speaker": "ROCKET APPARATUS",
    "text": "The station's life-saving rocket, with a few rockets. It throws a line to a wreck; it throws this at a wall as well. Stand clear of it."
+  },
+  {
+   "id": "relay-cupboard",
+   "at": [31, 19],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A relay cupboard behind the switch frames. Someone left the spare fuses and a flask."
   }
  ],
  "decals": [
@@ -1067,6 +1139,13 @@
    "kind": "damp",
    "at": [6, 10],
    "size": 1.6
+  },
+  {
+   "kind": "scrape",
+   "at": [32, 21],
+   "wall": "north",
+   "y": 1,
+   "size": 1
   }
  ],
  "growth": [

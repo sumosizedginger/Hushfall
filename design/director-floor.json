@@ -1,10 +1,18 @@
 {
- "rebuilt": [],
+ "rebuilt": [
+  "C1E1M01",
+  "C1E1M02",
+  "C1E1M03",
+  "C1E1M04",
+  "C1E1M05",
+  "C1E1M06",
+  "C1E1M07"
+ ],
  "floor": {
   "C1E1M01": {
    "density": 22,
    "rangedShare": 19,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 3,
    "loops": 0,
    "topShare": 50,
@@ -23,52 +31,52 @@
   },
   "C1E1M03": {
    "density": 21,
-   "rangedShare": 14,
-   "ambushes": 2,
+   "rangedShare": 24,
+   "ambushes": 3,
    "kinds": 3,
    "loops": 0,
-   "topShare": 65,
+   "topShare": 43,
    "symmetry": 0.84,
-   "walk": 1759
+   "walk": 1753
   },
   "C1E1M04": {
    "density": 28,
-   "rangedShare": 9,
-   "ambushes": 1,
+   "rangedShare": 20,
+   "ambushes": 3,
    "kinds": 3,
    "loops": 0,
-   "topShare": 61,
+   "topShare": 43,
    "symmetry": 0.48,
    "walk": 1555
   },
   "C1E1M05": {
    "density": 19,
-   "rangedShare": 22,
-   "ambushes": 1,
+   "rangedShare": 29,
+   "ambushes": 2,
    "kinds": 4,
    "loops": 9,
-   "topShare": 49,
-   "symmetry": 0.88,
+   "topShare": 33,
+   "symmetry": 0.87,
    "walk": 2428
   },
   "C1E1M06": {
    "density": 24,
-   "rangedShare": 10,
+   "rangedShare": 23,
    "ambushes": 3,
    "kinds": 4,
    "loops": 0,
-   "topShare": 63,
-   "symmetry": 0.84,
+   "topShare": 40,
+   "symmetry": 0.83,
    "walk": 1635
   },
   "C1E1M07": {
    "density": 33,
-   "rangedShare": 5,
-   "ambushes": 1,
+   "rangedShare": 16,
+   "ambushes": 2,
    "kinds": 4,
    "loops": 0,
-   "topShare": 62,
-   "symmetry": 0.65,
+   "topShare": 51,
+   "symmetry": 0.64,
    "walk": 1112
   },
   "C1E1M08": {

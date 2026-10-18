@@ -46,10 +46,10 @@
   "##fffffffffffffffffffffffffB::::::::::::::::::::::::::II############",
   "##BBfffffffffffffffffffffffB::::::::::::::::::::::::::II############",
   "##BBBfffffffffffffffffffffBB::::::::::::::::::::::::::II############",
-  "##BBBBBfffBBBfffBBBfffBBBBBB::::::::::::::::::::::::::II############",
-  "#######fff###fff###fff#####B::::::::::::::::::::::::::II############",
-  "###########################B::::::::::::::::::::::::::II############",
-  "###########################B::::::::::::::::::::::::::II############",
+  "##BBBBBfffBBBfffBBBfffBBBSBB::::::::::::::::::::::::::II############",
+  "#######fff###fff###fff#BfffB::::::::::::::::::::::::::II############",
+  "#######################BfffB::::::::::::::::::::::::::II############",
+  "#######################BBBBB::::::::::::::::::::::::::II############",
   "###########################BB:::::::::::::::::::::::::II############",
   "###########################BBB:::::::::::::::::::::::III############",
   "###########################BBBBB:::BBBB:::BBBB:::BBBBBB#############",
@@ -159,7 +159,16 @@
    "at": [43, 7]
   }
  ],
- "secrets": [],
+ "secrets": [
+  {
+   "id": "porters-cage",
+   "panel": [25, 35],
+   "cells": [
+    [25, 36],
+    [25, 37]
+   ]
+  }
+ ],
  "sectors": [
   {
    "id": "ramp",
@@ -368,7 +377,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [46, 14],
    "facing": -1.383
   },
@@ -468,7 +477,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [37, 19],
    "facing": -1.48
   },
@@ -505,7 +514,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [50, 20],
    "facing": -1.527
   },
@@ -799,7 +808,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [60, 28],
    "facing": -1.678,
    "group": "hold"
@@ -811,7 +820,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [37, 29],
    "facing": -1.78
   },
@@ -822,7 +831,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [18, 30],
    "facing": -2.09
   },
@@ -833,7 +842,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [33, 30],
    "facing": -1.84
   },
@@ -963,7 +972,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [43, 33],
    "facing": -1.846
   },
@@ -979,7 +988,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [46, 34],
    "facing": -1.849
   },
@@ -1035,6 +1044,21 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [51, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [24, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [25, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [26, 37]
   },
   {
    "type": "prop",
@@ -1209,6 +1233,13 @@
    "radius": 1.5,
    "speaker": "HARBOUR GUARD",
    "text": "A harbour guard's carbine on the rack, a clip in it. No spread to it: put the round where the head is."
+  },
+  {
+   "id": "porters-cage",
+   "at": [25, 36],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A porter's cage under the ramp. The ferry company locked its lost property in here and kept the key."
   }
  ],
  "decals": [
@@ -1240,6 +1271,13 @@
    "kind": "bloodpool",
    "at": [14, 25],
    "size": 1.2
+  },
+  {
+   "kind": "scrape",
+   "at": [24, 34],
+   "wall": "south",
+   "y": 1,
+   "size": 1
   }
  ],
  "objective": "Cross the terminal. The winch is in the cabin on the north quay",

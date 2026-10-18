@@ -302,6 +302,79 @@
      "objective": "The drain gate, south wall of the cistern. Stay on the catwalk."
     }
    ]
+  },
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [22, 28],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [30, 28],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [22, 36],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [14, 28],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "amb-cage-2",
+   "when": "enter",
+   "at": [51, 24],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [47, 22],
+      "group": "amb-cage-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [53, 28],
+      "group": "amb-cage-2",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -504,7 +577,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [34, 25],
    "facing": -1.945
   },
@@ -559,13 +632,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [50, 28],
    "facing": -1.879
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [14, 29],
    "facing": -2.652
   },
@@ -627,7 +700,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [22, 32],
    "facing": -2.415
   },
@@ -707,13 +780,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [24, 38],
    "facing": -2.498
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [30, 38],
    "facing": -2.356
   },
@@ -878,7 +951,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [20, 44],
    "facing": -2.705
   },
@@ -931,7 +1004,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [32, 48],
    "facing": -2.489
   },
