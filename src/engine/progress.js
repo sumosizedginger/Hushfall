@@ -42,7 +42,7 @@ export const newProgress = () => ({ salvage: 0, upgrades: { ammo: 0, armor: 0 },
 /** a progress object read from a save or a dev field: anything malformed becomes safe zeros (a damaged save must not take the shell down) */
 export function sanitizeProgress(p) {
   const out = newProgress(); if (!p || typeof p !== 'object') return out;
-  out.salvage = Number.isFinite(p.salvage) ? Math.max(0, Math.floor(p.salvage)) : 0;
+  out.salvage = Number.isFinite(p.salvage) ? Math.min(1e9, Math.max(0, Math.floor(p.salvage))) : 0;      // PT-050 H1: a safe integer, never 1e308 (Grok G-05)
   out.upgrades = sanitizeUpgrades(p.upgrades);
   if (p.records && typeof p.records === 'object') for (const [id, r] of Object.entries(p.records)) if (r && RANK_ORDER.includes(r.rank)) out.records[id] = { rank: r.rank, score: Number(r.score) || 0, time: Number(r.time) || 0, kills: Number(r.kills) || 0, secrets: Number(r.secrets) || 0, paid: Math.max(0, Math.floor(r.paid) || 0) };
   if (p.record && typeof p.record === 'object') {                                         // PT-037, THE RECORD: the ids of the messages a player has received, per map (the text is read from the map, so a corrected line corrects the Record). Lazy: absent until the first message.
@@ -60,6 +60,8 @@ export function sanitizeProgress(p) {
 
 /** record a finished map. Only the IMPROVEMENT over what this map has already paid is awarded, so replaying a level cannot farm salvage. -> { progress, gain, record } */
 export function earn(progress, mapId, end, par) {
+  if (!end || typeof end !== 'object' || ![end.time, end.kills, end.secrets].every((v) => Number.isFinite(v) && v >= 0) || !end.total || typeof end.total !== 'object')      // PT-050 H1: a finish without real numbers pays nothing and records nothing (Grok G-01, G-04)
+    return { progress, gain: 0, record: progress.records?.[mapId] ?? null, result: { rank: 'C', score: 0, parts: { kills: 0, time: 0, secrets: null } } };
   const res = rankFor(end, par), value = salvageFor(res.rank, end.secrets), prev = progress.records[mapId];
   const paid = Math.max(prev?.paid ?? 0, value), gain = paid - (prev?.paid ?? 0);
   const record = { rank: prev && RANK_ORDER.indexOf(prev.rank) > RANK_ORDER.indexOf(res.rank) ? prev.rank : res.rank, score: Math.max(prev?.score ?? 0, res.score), time: prev ? Math.min(prev.time, end.time) : end.time,

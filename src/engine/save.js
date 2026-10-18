@@ -1,8 +1,8 @@
 // Versioned save data. Policy: a save is either migrated to the current version or rejected with an explicit reason.
 // Nothing is ever silently coerced. Unknown/newer versions and corrupt files are reported, not loaded.
 import { createWorld, carryOver } from './world.js';
-import { ENEMIES } from './defs.js';
-import { newProgress, sanitizeProgress } from './progress.js';
+import { ENEMIES, WEAPONS, KEYS, PICKUPS, DIFFICULTY, PLAYER, AMMO_MAX } from './defs.js';
+import { newProgress, sanitizeProgress, armorCap, ammoCap } from './progress.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
 export const SAVE_VERSION = 10;
@@ -72,22 +72,77 @@ export function worldShapeErrors(fresh, snap) {
     if (b === 'number' && !Number.isFinite(snap[k])) bad.push(`field ${k} is not finite`);
   }
   const P = snap.player; if (!P || typeof P !== 'object') bad.push('player missing'); else for (const [k, v] of Object.entries(fresh.player)) if (typeof v === 'number' && !Number.isFinite(P[k])) bad.push('player.' + k + ' is not finite');
+  if (P && typeof P === 'object') for (const [k, v] of Object.entries(fresh.player)) { const a = kindOf(v); if (k in P && a !== 'null' && a !== kindOf(P[k])) bad.push(`player.${k} is a ${kindOf(P[k])}, expected ${a}`); }       // PT-050 H1: a list stored as a string, an object as a number
   if (Array.isArray(snap.enemies)) for (const e of snap.enemies) { if (!ENEMIES[e?.kind]) bad.push('unknown enemy kind ' + e?.kind); else if (!Number.isFinite(e.x) || !Number.isFinite(e.z) || !Number.isFinite(e.hp)) bad.push('enemy ' + e.id + ' has a non-finite position or hp'); }
   for (const k of ['doors', 'sectors']) if (Array.isArray(snap[k]) && Array.isArray(fresh[k]) && snap[k].length !== fresh[k].length) bad.push(`${k} count ${snap[k].length} differs from the map's ${fresh[k].length}`);
   return bad.slice(0, 8);
 }
 
-/** Rebuild a world from a save. mapLoader(id) -> MapData. Mid-level saves need the same map version; otherwise fall back to level start. */
+// ---- PT-050 H1 (the hostile testers' save findings, design/HARDENING.md): a save the loader ACCEPTS must be one the game can play. Before, a save with the right shape but wrong VALUES (an unknown weapon, a string for a list, ammunition of 1e9,
+// a status nobody handles, a "complete" world with no end stats, an unknown difficulty) loaded fine and then threw in the frame loop, and Continue loaded it again at every start. The loader now refuses such a save with a reason and NEVER throws.
+const own = (o, k) => typeof k === 'string' && Object.hasOwn(o, k);
+const num = (v) => typeof v === 'number' && Number.isFinite(v);
+/** a number no honest game reaches: not a finite number, negative, or more than twice its cap (a generous bound: an edge case of normal play must never cost a player their save) */
+const absurd = (v, cap) => !num(v) || v < 0 || v > cap * 2 + 10;
+const SAVE_STATUS = ['playing', 'dead', 'complete'];
+const HIDDEN_OR_DANGEROUS = new Set(['__proto__', 'constructor', 'prototype']);
+
+/** what a level carries in (hit points, armour, ammunition, guns): only the fields that are present are checked, each against what the sim could have produced */
+export function carryErrors(c) {
+  if (!c || typeof c !== 'object' || Array.isArray(c)) return ['carry is not an object'];
+  const bad = [], up = c.upgrades && typeof c.upgrades === 'object' ? c.upgrades : null;
+  if (c.hp !== undefined && absurd(c.hp, PLAYER.maxHp)) bad.push('carry hp ' + String(c.hp));
+  if (c.armor !== undefined && absurd(c.armor, armorCap(up))) bad.push('carry armor ' + String(c.armor));
+  if (c.ammo !== undefined) { if (!c.ammo || typeof c.ammo !== 'object' || Array.isArray(c.ammo)) bad.push('carry ammo is not an object'); else for (const [k, v] of Object.entries(c.ammo)) if (!own(AMMO_MAX, k) || absurd(v, ammoCap(k, up))) bad.push('carry ammo ' + k + ' = ' + String(v)); }
+  if (c.weapons !== undefined && (!Array.isArray(c.weapons) || !c.weapons.every((id) => own(WEAPONS, id)))) bad.push('carry weapons is not a list of known weapons');
+  return bad.slice(0, 6);
+}
+/** a finished map's numbers: the rank and the salvage are computed from them, so a "complete" world without them cannot be played on (or paid for) */
+export function endStatsErrors(es) {
+  if (!es || typeof es !== 'object' || Array.isArray(es)) return ['endStats is not an object'];
+  const bad = []; for (const k of ['time', 'kills', 'secrets']) if (!num(es[k]) || es[k] < 0) bad.push('endStats.' + k + ' = ' + String(es[k]));
+  if (!es.total || typeof es.total !== 'object' || !num(es.total.enemies) || !num(es.total.secrets)) bad.push('endStats.total');
+  return bad;
+}
+/** the VALUES of a saved world (worldShapeErrors sees only types and finiteness): status, guns, keys, caps, pickups, enemy states */
+export function worldValueErrors(snap) {
+  const bad = [], P = snap.player, up = snap.upgrades && typeof snap.upgrades === 'object' ? snap.upgrades : null;
+  if (!SAVE_STATUS.includes(snap.status)) bad.push('unknown status ' + String(snap.status));
+  else if (snap.status === 'complete') bad.push(...endStatsErrors(snap.endStats));
+  if (P && typeof P === 'object') {
+    if (!own(WEAPONS, P.weapon)) bad.push('unknown weapon ' + String(P.weapon));
+    if (!Array.isArray(P.weapons) || !P.weapons.every((id) => own(WEAPONS, id))) bad.push('player.weapons is not a list of known weapons');
+    if (!Array.isArray(P.keys) || !P.keys.every((k) => own(KEYS, k))) bad.push('player.keys is not a list of known keys');
+    if (absurd(P.hp, PLAYER.maxHp)) bad.push('player.hp ' + String(P.hp)); if (absurd(P.armor, armorCap(up))) bad.push('player.armor ' + String(P.armor));
+    if (!P.ammo || typeof P.ammo !== 'object' || Array.isArray(P.ammo)) bad.push('player.ammo is not an object'); else for (const [k, v] of Object.entries(P.ammo)) if (!own(AMMO_MAX, k) || absurd(v, ammoCap(k, up))) bad.push('player.ammo.' + k + ' = ' + String(v));
+  }
+  { const d = snap.drops; if (d != null && (typeof d !== 'object' || Array.isArray(d) || !num(d.dry) || d.rngState == null || !d.seen || typeof d.seen !== 'object' || !d.firedAt || typeof d.firedAt !== 'object')) bad.push('the ammunition-drop state is damaged'); }      // lazy state `{ rngState, dry, seen, firedAt }` (drops.js): the fuzz found it accepted as a string or an empty object
+  if (Array.isArray(snap.pickups)) for (const it of snap.pickups) if (!it || typeof it !== 'object' || !own(PICKUPS, it.kind) || !num(it.x) || !num(it.z)) { bad.push('a pickup is not a known pickup with a position'); break; }
+  if (Array.isArray(snap.enemies)) for (const e of snap.enemies) if (typeof e.state !== 'string') { bad.push('enemy ' + e.id + ' has no state'); break; }
+  return bad.slice(0, 8);
+}
+
+/** Rebuild a world from a save. mapLoader(id) -> MapData. Mid-level saves need the same map version; otherwise fall back to level start.
+ *  -> { ok: true, world, degraded? } | { ok: false, reason, detail }. It NEVER throws: any failure while rebuilding is a rejected save (PT-050 H1). */
 export function loadWorld(save, mapLoader) {
-  const map = mapLoader(save.campaign.mapId);
-  if (!map) return { ok: false, reason: 'unknown-map', detail: save.campaign.mapId };
-  const opts = { seed: save.campaign.seed, difficulty: save.campaign.difficulty, carry: save.carry };
+  try { return loadWorldUnsafe(save, mapLoader); } catch (e) { return { ok: false, reason: 'corrupt', detail: 'load failed: ' + (e?.message ?? String(e)) }; }
+}
+function loadWorldUnsafe(save, mapLoader) {
+  const c = save?.campaign; if (!c || typeof c !== 'object') return { ok: false, reason: 'corrupt', detail: 'no campaign' };
+  if (!own(DIFFICULTY, c.difficulty)) return { ok: false, reason: 'corrupt', detail: 'unknown difficulty ' + String(c.difficulty) };
+  if (!num(c.seed)) return { ok: false, reason: 'corrupt', detail: 'seed is not a number' };
+  const carry = carryErrors(save.carry); if (carry.length) return { ok: false, reason: 'corrupt', detail: carry.join('; ') };
+  const map = mapLoader(c.mapId);
+  if (!map) return { ok: false, reason: 'unknown-map', detail: c.mapId };
+  const opts = { seed: c.seed, difficulty: c.difficulty, carry: save.carry };
   if (save.kind === 'mid-level') {
-    if (map.version !== save.campaign.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
+    if (map.version !== c.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
     const w = createWorld(map, opts), snap = JSON.parse(JSON.stringify(save.world));
     const shape = worldShapeErrors(w, snap); if (shape.length) return { ok: false, reason: 'corrupt', detail: shape.join('; ') };
+    const vals = worldValueErrors(snap); if (vals.length) return { ok: false, reason: 'corrupt', detail: vals.join('; ') };
+    const hidden = new Set(Object.getOwnPropertyNames(w).filter((k) => !Object.getOwnPropertyDescriptor(w, k).enumerable));      // the map and the event queue are not saved state: a save never overwrites them (Gemini-02, Grok G-02)
     for (const k of Object.keys(w)) delete w[k];
-    Object.assign(w, snap);
+    for (const [k, v] of Object.entries(snap)) if (!hidden.has(k) && !HIDDEN_OR_DANGEROUS.has(k)) w[k] = v;
     return { ok: true, world: w };
   }
   return { ok: true, world: createWorld(map, opts) };

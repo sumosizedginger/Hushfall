@@ -16,3 +16,5 @@ Run (node only, no browser, from the repo root):
     node --test attack/groks/regress/save-shape.test.js
 
 Rules for the next attacker: write only inside `attack/<your name>/`, keep a tester build in `attack/<name>/dist` (git-ignored), do not run the full `npm test`, no desktop or mouse control, headless browsers only with the owner's yes for that job.
+
+Status 2026-10-18: Grok's regress file now passes except three tests whose assertions demanded that a damaged save LOAD (the permanent version is `tests/hardening-saves.test.js`); two of Gemini's demonstration tests (GEMINI-02, GEMINI-10) fail on purpose because those bugs are fixed.

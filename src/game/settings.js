@@ -33,6 +33,8 @@ export function sanitizeSettings(raw) {
     const stored = ACTIONS.filter((a) => Array.isArray(raw.bindings[a])), taken = new Set(stored.flatMap((a) => s.bindings[a]));
     for (const a of ACTIONS) if (!stored.includes(a)) s.bindings[a] = s.bindings[a].filter((c) => !taken.has(c));
   } else if (raw.bindings) notes.push('key bindings invalid; defaults used');
+  { const taken = new Set();       // PT-050 H1 (Grok G-07): one key, one action (the pad's bindings already were). The first action in the list keeps a shared code; an action left with none gets its default keys back unless another action holds them
+    for (const a of ACTIONS) { let codes = s.bindings[a].filter((c) => !taken.has(c)); if (!codes.length) codes = DEFAULT_BINDINGS[a].filter((c) => !taken.has(c)); s.bindings[a] = codes; for (const c of codes) taken.add(c); } }
   s.wheelSlow = raw.wheelSlow !== false; s.wheelToggle = raw.wheelToggle === true;
   { const g = raw.gamepad && typeof raw.gamepad === 'object' ? raw.gamepad : {}, P = PAD_SETTINGS; s.gamepad = { enabled: g.enabled !== false, lookRate: clamp(g.lookRate, 1, 8, P.lookRate), deadzone: clamp(g.deadzone, 0.05, 0.5, P.deadzone), curve: clamp(g.curve, 1, 3, P.curve), invertY: g.invertY === true, assist: clamp(g.assist, 0, 1, P.assist), vibration: g.vibration !== false, glyphs: ['auto', 'ps', 'xbox'].includes(g.glyphs) ? g.glyphs : 'auto' }; }
   s.padBindings = sanitizePadBindings(raw.padBindings);
