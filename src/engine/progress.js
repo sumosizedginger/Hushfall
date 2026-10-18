@@ -1,7 +1,7 @@
 // Campaign progression (owner decision, PT-008, 2026-10-05): a RANK per map (S/A/B/C from time, kills and secrets), SALVAGE earned from ranks and secrets, and persistent UPGRADES bought with it
 // (a bigger ammunition satchel, better plate). Pure data in, data out: the simulation reads only the upgrade tiers (caps, below); the shell owns the salvage, the records and the buying.
 // Every number here is a tunable first guess: nobody has played it. Change them here, not in the callers.
-import { AMMO_MAX, PLAYER, FOLK } from './defs.js';
+import { AMMO_MAX, PLAYER, FOLK, ENEMIES } from './defs.js';
 
 export const RANK = {
   weights: { withSecrets: { kills: 0.4, time: 0.35, secrets: 0.25 }, noSecrets: { kills: 0.55, time: 0.45 } },
@@ -54,6 +54,10 @@ export function sanitizeProgress(p) {
     const ch = {};
     for (const [id, v] of Object.entries(p.choices)) if (/^[a-z0-9-]{1,24}$/.test(id) && typeof v === 'string' && /^[a-z0-9-]{1,24}$/.test(v)) ch[id] = v;
     if (Object.keys(ch).length) out.choices = ch;
+  }
+  if (Array.isArray(p.bestiary)) {                                                       // PT-052 U3b (the Bestiary): the kinds of creature the player has met, in the order of ENEMIES. Lazy: absent until the first meeting.
+    const met = new Set(p.bestiary.filter((k) => typeof k === 'string')), b = Object.keys(ENEMIES).filter((k) => met.has(k));
+    if (b.length) out.bestiary = b;
   }
   return out;
 }

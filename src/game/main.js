@@ -27,9 +27,11 @@ import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordView, recordCounts } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
-import { journalLog, openTab } from './journal.js';
+import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
+import { seenKinds, bestiaryPage } from './bestiary.js';
+import { drawMinimap, MINIMAP } from './minimap.js';
 
-const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
+const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap'), miniCanvas = document.getElementById('minimap');
 const MAPS = {};
 for (const src of Object.values(import.meta.glob('../../maps/*.json', { eager: true, import: 'default' }))) { const m = parseMap(src); MAPS[m.id] = m; }   // validates at load
 // PT-016: the dev-only weapons range lives in maps-dev/, never in maps/ (it is not a campaign map and no validation, status or test counts it); loaded only by the dev server
@@ -64,7 +66,7 @@ const g = {
   progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
-  capture: null, mapOpen: false, unread: new Set(), journalTab: 'map', manual: false, frameTimes: [], last: performance.now(),
+  capture: null, mapOpen: false, unread: new Set(), journalTab: 'map', objectives: [], miniN: 0, miniModel: null, manual: false, frameTimes: [], last: performance.now(),
 };
 
 g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintEngaged = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
@@ -74,7 +76,7 @@ const ui = new UI({
   buyUpgrade: (track) => buyUpgrade(track),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   crashToTitle: () => { ui.hideCrash(); ui.show('title', { canContinue: canContinue(), note: '' }); },
-  journalTab: (tab) => { g.journalTab = tab === 'log' ? 'log' : 'map'; ui.journalShowTab(g.journalTab); },
+  journalTab: (tab) => { g.journalTab = JOURNAL_TABS.includes(tab) ? tab : 'map'; ui.journalShowTab(g.journalTab); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   playRadio: () => audio.play(RADIO_SOUND),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
@@ -87,7 +89,7 @@ const ui = new UI({
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
   resetPadBindings: () => { g.capturePad = null; commitPadBindings(defaultPadBindings(), 'Controller buttons reset to default.'); },
   beginPadRebind: (action) => { g.capture = null; g.capturePad = { action }; ui.syncPadBindings(settings.padBindings, action, g.pad.family, 'Press a button on the pad. Esc cancels.'); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -125,7 +127,7 @@ function closeRecord() {
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
-function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') { g.progress = recordAdd(g.progress, g.mapId, e.id); g.unread.add(e.id); ui.setUnread(g.unread.size); } else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
+function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') { g.progress = recordAdd(g.progress, g.mapId, e.id); g.unread.add(e.id); ui.setUnread(g.unread.size); } else if (e.type === 'objective') { g.objectives.push(e.text); if (g.objectives.length > 60) g.objectives.shift(); } else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
@@ -141,7 +143,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
-  g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed;
+  g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed; g.objectives = g.world.objective ? [g.world.objective] : []; g.miniModel = null;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
@@ -209,7 +211,7 @@ function openJournal() {
   if (g.mode !== 'playing' || !g.world) return;
   cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.();
   const log = journalLog({ maps: MAPS, progress: g.progress, mapId: g.mapId, unread: g.unread }); g.journalTab = openTab(log.newCount);
-  ui.show('journal', { log, mapName: MAPS[g.mapId]?.name ?? g.mapId, tab: g.journalTab }); g.unread = new Set(); ui.setUnread(0);
+  ui.show('journal', { log, objectives: objectivesPage({ current: g.world.objective, history: g.objectives }), items: itemsPage({ player: g.world.player, upgrades: g.world.upgrades ?? g.progress.upgrades }), bestiary: bestiaryPage(g.progress.bestiary), mapName: MAPS[g.mapId]?.name ?? g.mapId, tab: g.journalTab }); g.unread = new Set(); ui.setUnread(0);
 }
 function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
 function quickSave() {
@@ -247,6 +249,7 @@ function stepOnce() {
     console.error(e); const aside = quarantineLoaded(); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' + (aside ? ' The "' + aside + '" save was set aside; Continue will use the next one.' : '') }); return;
   }
   g.sinceLoad = (g.sinceLoad ?? 0) + 1;
+  if (g.world.tick % 30 === 0 && !g.world.map.range) { const met = seenKinds(g.progress.bestiary, g.world.enemies); if (met.length && met !== g.progress.bestiary) g.progress = { ...g.progress, bestiary: met }; }          // PT-052 U3b: the Bestiary fills when a creature is first met
   const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
@@ -284,6 +287,7 @@ addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
   if (ui.screen === 'record') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeRecord(); } return; }          // the Record is read, not played: Esc (or the pause key) goes back to where it was opened from
+  if (ui.screen === 'journal' && g.mode === 'paused' && (e.code === 'ArrowRight' || e.code === 'ArrowLeft')) { e.preventDefault(); ui.h.journalTab(tabAfter(g.journalTab, e.code === 'ArrowRight' ? 1 : -1)); return; }          // PT-052 U3: left and right turn the Journal's pages
   if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
@@ -415,6 +419,7 @@ function frameBody(now) {
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
+  { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
 }
