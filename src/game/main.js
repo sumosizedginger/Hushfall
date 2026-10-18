@@ -25,6 +25,7 @@ import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordView, recordCounts } from './record.js';
+import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap');
 const MAPS = {};
@@ -70,6 +71,7 @@ const ui = new UI({
   newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
   buyUpgrade: (track) => buyUpgrade(track),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
+  crashToTitle: () => { ui.hideCrash(); ui.show('title', { canContinue: canContinue(), note: '' }); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   playRadio: () => audio.play(RADIO_SOUND),
   restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
@@ -125,13 +127,14 @@ function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
   g.progress = sanitizeProgress(save.progress);                             // the salvage, upgrades and records the save was made with
-  startLevel({ world: r.world, note: r.degraded }); return true;
+  startLevel({ world: r.world, note: r.degraded }); g.loadedSlot = slot; g.sinceLoad = 0; return true;
 }
 
 function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings.internalWidth); else renderer.setSize(innerWidth, innerHeight, false); }
 addEventListener('resize', resize);
 
 function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
+  g.loadedSlot = null; g.sinceLoad = 0;                                           // (applySave sets them again after this: a save that breaks the game in its first three seconds is set aside, PT-050 H1)
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
@@ -229,8 +232,9 @@ function stepOnce() {
   if (cmd.map) g.mapOpen = !g.mapOpen;                                            // UI-only toggle: the sim keeps running under the map
   try { g.view.beforeStep(g.world); step(g.world, cmd); }
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
-    console.error(e); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' }); return;
+    console.error(e); const aside = quarantineLoaded(); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' + (aside ? ' The "' + aside + '" save was set aside; Continue will use the next one.' : '') }); return;
   }
+  g.sinceLoad = (g.sinceLoad ?? 0) + 1;
   const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
@@ -357,7 +361,22 @@ function rumbleEvents(ev) {
 }
 
 // ---- frame loop --------------------------------------------------------------
-function frame(now) {
+/** a throw anywhere in a frame (errorlog.js guardedFrame): log it, put the game back on the title and say so plainly. A save that broke the game within its first three seconds of play is set aside, so Continue does not load it again (PT-050 H1). */
+function crash(e, n) {
+  console.error(e);
+  const report = makeReport(e, { mode: g.mode, map: g.mapId, tick: g.world?.tick, difficulty: g.difficulty, seed: g.seed, repeats: n, slot: g.loadedSlot ?? '' });
+  const list = appendReport(loadErrors(storage), report); saveErrors(storage, list);
+  const aside = quarantineLoaded();
+  try { g.input.releaseAll(); document.exitPointerLock?.(); cancelWheel(); } catch { /* best effort */ }
+  g.mode = 'title'; g.world = null; try { g.view?.dispose(); } catch { /* best effort */ } g.view = null;
+  ui.showCrash({ message: report.message, text: reportText(list.slice(-1)), halted: n >= 3, aside });
+}
+/** the save this session was loaded from, if it broke the game before it had proved itself (about three seconds of play): set aside as `<slot>.bad` and cleared, so the older one is used next */
+function quarantineLoaded() {
+  const slot = g.loadedSlot; if (!slot || (g.sinceLoad ?? 0) >= 180) return ''; g.loadedSlot = null;
+  try { return store.quarantine(slot) ? slot : ''; } catch { return ''; }
+}
+function frameBody(now) {
   const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
   g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
   pollPad(dt);
@@ -385,7 +404,6 @@ function frame(now) {
   const showMap = g.mapOpen && g.world && (g.mode === 'playing' || g.mode === 'dying'); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
-  requestAnimationFrame(frame);
 }
 /** the weapons range's readout (PT-016): shown only while a range map is being played */
 function rangePanel() {
@@ -404,6 +422,7 @@ function doorPrompt(w) {
   return `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] open`;
 }
 resize(); ui.show('title', { canContinue: canContinue(), note: settingsNotes.join(' ') });
+const frame = guardedFrame({ body: frameBody, schedule: (f) => requestAnimationFrame(f), onCrash: crash }).frame;      // the next frame is scheduled BEFORE the body runs: no throw can end the page loop (errorlog.js)
 requestAnimationFrame(frame);
 
 if (import.meta.env.DEV) {                                                 // dev-only title-screen level picker (index.html #dev-levels): any map, any difficulty, no need to play Episode 1 first

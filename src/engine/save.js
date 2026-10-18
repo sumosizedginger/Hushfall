@@ -154,4 +154,6 @@ export class SaveStore {
   write(slot, save) { this.s.setItem(this.p + slot, JSON.stringify(save)); }
   read(slot) { const t = this.s.getItem(this.p + slot); return t == null ? { ok: false, reason: 'empty', detail: slot } : parseSave(t); }
   clear(slot) { this.s.removeItem(this.p + slot); }
+  /** PT-050 H1: a slot that broke the game is set aside as `<slot>.bad` (the text is kept for a bug report) and cleared, so Continue falls through to the next slot instead of loading it again. -> true if there was something to set aside */
+  quarantine(slot) { const k = this.p + slot, t = this.s.getItem(k); if (t == null) return false; try { this.s.setItem(k + '.bad', t); } catch { /* storage full: it is still taken out of the way */ } this.s.removeItem(k); return true; }
 }

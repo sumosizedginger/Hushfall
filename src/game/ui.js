@@ -31,6 +31,7 @@ export class UI {
     this.h = handlers; this.screen = null; this.toastQueue = []; this.comq = new CommsQueue(); this.shownAt = 0; this._useHint = null; this.keyLabels = {};
     $('btn-easy').onclick = () => this.h.newGame('easy'); $('btn-normal').onclick = () => this.h.newGame('normal'); $('btn-hard').onclick = () => this.h.newGame('hard');
     $('btn-continue').onclick = () => this.h.continueGame();
+    $('btn-crash-title').onclick = () => this.h.crashToTitle(); $('btn-crash-copy').onclick = () => this.copyCrash();
     $('btn-resume').onclick = () => this.h.resume(); $('btn-save').onclick = () => this.h.quickSave(); $('btn-load').onclick = () => this.h.quickLoad();
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
@@ -52,6 +53,13 @@ export class UI {
   /** the crosshair's look from the player's settings (crosshair.js): `data-style` and three CSS variables on #cross; index.html does the drawing */
   applyCrosshair(ch) { const el = $('cross'); if (!el) return; const { style, vars } = crosshairCss(ch); el.dataset.style = style; for (const [k, v] of Object.entries(vars)) { if (el.style.setProperty) el.style.setProperty(k, v); else el.style[k] = v; } }
   syncCrosshair(ch) { this.xh = { ...ch }; $('set-xh-style').value = this.xh.style; $('set-xh-size').value = this.xh.size; $('set-xh-color').value = this.xh.color; $('set-xh-opacity').value = this.xh.opacity; this.applyCrosshair(this.xh); }
+  /** the crash screen (errorlog.js): over everything, plain words, the report text can be copied for a bug report */
+  showCrash({ message, text, halted, aside }) {
+    this.crashText = text; $('crash-text').textContent = (halted ? 'The game stopped itself because the same thing kept going wrong. Reload the page to start again.' : 'The game hit a problem and went back to the title. Your progress up to your last save is safe.') + (aside ? ` The "${aside}" save was set aside as damaged.` : '');
+    $('crash-detail').textContent = message; $('btn-crash-title').classList.toggle('hidden', !!halted); $('btn-crash-copy').textContent = 'Copy the report'; $('screen-crash').classList.remove('hidden');
+  }
+  hideCrash() { $('screen-crash').classList.add('hidden'); }
+  copyCrash() { const t = this.crashText ?? ''; try { navigator.clipboard.writeText(t).then(() => { $('btn-crash-copy').textContent = 'Copied'; }, () => { $('crash-detail').textContent = t; }); } catch { $('crash-detail').textContent = t; } }
   syncSettings(s) { $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */

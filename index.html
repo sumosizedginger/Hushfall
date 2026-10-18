@@ -21,6 +21,7 @@ body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px
 #cross.supp{--c:#e0583a;--sp:calc(var(--sp0)*3.6);--glow:0 0 6px #e0583a;opacity:1}                    /* PT-026: a Chorister's fire is going by: your guns open up, so does the crosshair (the ticks spread wide and red) */
 #cross.grab{--c:#6ffff0;--sp:calc(var(--sp0)*2.6);--glow:0 0 6px #6ffff0;opacity:1}                      /* PT-022: the tuning-fork has something in reach it could lift or drag (spread, cyan) */
 #cross.held{--c:#6ffff0;--tick:0px;--sp:calc(var(--th)*2.5);--dot:calc(var(--th)*4.5);--glow:0 0 8px #6ffff0;opacity:1}   /* ...and it holds something (a larger solid cyan dot) */
+#screen-crash{z-index:9}#crash-detail{white-space:pre-wrap;max-width:520px;color:#9fb4b0;font-size:11px;margin:10px 0;text-align:left}      /* PT-050 H1: the crash screen (errorlog.js), over everything */
 #hitmark{position:fixed;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;pointer-events:none;opacity:0;z-index:2}
 #hitmark::before,#hitmark::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:28px;margin:-14px 0 0 -1px;background:var(--paper);transform:rotate(45deg);box-shadow:0 0 0 1px #0008}
 #hitmark::after{transform:rotate(-45deg)}
@@ -211,6 +212,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 
 <div id="screen-loading" class="screen"><div class="panel"><h2>LOADING</h2><div class="sub">Unrolling the harbour…</div></div></div>
 <div id="screen-error" class="screen hidden"><div class="panel"><h2>CANNOT RUN</h2><div class="sub" id="error-text"></div><button id="btn-error-reload" onclick="location.reload()">Reload</button></div></div>
+<div id="screen-crash" class="screen hidden"><div class="panel"><h2>SOMETHING BROKE</h2><div class="sub" id="crash-text"></div><pre id="crash-detail"></pre><button id="btn-crash-title">Back to the title</button><button id="btn-crash-copy">Copy the report</button></div></div>
 
 <div id="screen-title" class="screen hidden">
   <img id="title-art" alt=""><div class="rings"></div>
