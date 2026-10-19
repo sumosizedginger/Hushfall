@@ -6,6 +6,8 @@
 // cost, never a death). Scale class COMPRESSION (all roofed, short sightlines). No new engine beyond the echo.
 // SHAPE: a wheel, not a box: a funnel well, a plaza ring, three belts of houses with seeded gaps and a few open squares, an outer street along the cave wall; the south gate and north gate are straight corridors.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, box, placer } from '../tools/mapkit/c2.mjs';
 import { blob, rng } from '../tools/mapkit/cave.mjs';
 
@@ -81,6 +83,11 @@ for (let n = 0, tries = 0; n < 40 && tries < 4000; tries++) {
   if (!(rr >= 9 && rr < 12.5) && !isStreet(rr)) continue; if (!P.isFloor(x, z) || Math.hypot(x - CX, z - 80) < 7 || Math.hypot(x - CX, z - 8) < 7) continue;
   if (E('vaelfolk', x, z, { facing: rnd() * 6.28 })) n++;
 }
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [39,65], radius: 2, cells: ENC.around([39,65], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M10', name: 'Echo Markets', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'markets', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
@@ -121,4 +128,8 @@ export const waypoints = (() => {
   const gate = [{ op: 'use', at: [CX, 5] }, [CX, 4, 0], [CX, 3, 0]];
   return { main: [...south, ...wheel, ...gate], secret: [...south, polar(38, 130), polar(38, 165), [xw + 2, CZ], { op: 'use', at: [xw - 1, CZ] }, [xw - 3, CZ, 0], [xw + 3, CZ, 0], polar(38, 130), ...wheel, ...gate] };
 })();
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M10', lane: [...(laneOf('C2M10') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

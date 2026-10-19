@@ -5,6 +5,7 @@
 //        on the flanks) -> the PUMP STATION (the valve wheel opens the east cradle hall and unlocks the exit; a secret cistern behind its east wall) -> the second causeway -> the east pan -> the cradle hall (what the valve woke) -> the hatch.
 // Open air vs roof (PT-007/PT-008): the floor skins `l m s p` are outdoor and get no ceiling; the hut, the station, the cistern and the hall are `. f` and are roofed. About a tenth of the map is roofed, on purpose.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(84, 52);
@@ -88,6 +89,11 @@ S.chamfer([2, 21, 8, 29], 'nw ne sw se', 1); S.chamfer([36, 21, 44, 29], 'nw ne 
 console.log('C1E2M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -149,5 +155,9 @@ MAP.entities.push(...[['ammo_round', 12, 25], ['ammo_round', 27, 25], ['ammo_rou
 MAP.drops = { scale: 1 };
 // the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand on the south side of the pump station road, appended last so no id shifts
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [43, 28], facing: -2.555 });
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M02', lane: [...(laneOf('C1E2M02') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":6},{"from":"tollbearer","to":"gaunt","pick":"spread","n":3}] };
+ENC.apply(MAP);
 
 export default MAP;

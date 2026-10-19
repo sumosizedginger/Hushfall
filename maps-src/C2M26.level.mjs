@@ -5,6 +5,8 @@
 // Each chamber holds one of the Silent, who refuses one thing and says where the sleepers are, and a LATCH (a candle beside it, named: "the west latch", "the south latch", "the east latch": in any order). When all three are thrown the refectory gate opens; the refectory is the brawl; the exit is beyond it.
 // A hollow root column holds a Songkeeper's reed and a tin. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 100, H = 100, L = new Level(W, H, { fill: 'κ' }); L.usedHeights = true; L.usedCeil = true;
@@ -64,6 +66,12 @@ for (const [x, z] of [[14, 52], [52, 86], [86, 46]]) PK('armor_vest', x, z);
 for (const [x, z] of [[20, 80], [44, 62], [76, 70], [24, 40]]) PK('oil', x, z);
 SEC.cells.slice(0, 4).forEach(([x, z], i) => PK(['armor_vest', 'oil', 'ammo_rocket', 'health_large'][i], x, z));
 const EXIT = [50, 4];
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [17,50], radius: 2, cells: ENC.around([17,50], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [72,55], radius: 2, cells: ENC.around([72,55], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M26', name: 'Silent Roots', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'roots', sky: 'root', dark: true, silence: true, fog: '#14120c', fogDensity: 0.014, ambient: 0.5 },
@@ -109,4 +117,13 @@ export const waypoints = {
   secret: [[8, 90, 0], Z(14, 84), Z(24, 80), Z(HB[0] + 3, HB[1] - 2), { op: 'use', at: SEC.panel }, [HB[0] + 3, HB[1] + 4, 0], Z(HB[0] + 3, HB[1] - 2), Z(20, 66), Z(26, 56), [30, 50, 0], Z(16, 50), { op: 'switch', id: 'r1' }, Z(30, 50), Z(38, 56), Z(44, 66), Z(50, 74), Z(50, 82), { op: 'switch', id: 'r2' }, Z(50, 72), Z(58, 64), Z(66, 56), Z(72, 50), Z(84, 50), { op: 'switch', id: 'r3' }, Z(72, 50), Z(60, 44), Z(52, 38), Z(50, 33), [50, 28, 0], [50, 25, 0], Z(50, 16), Z(50, 8), [50, 5, 0], [EXIT[0], EXIT[1], 0]],
 };
 void hubIn;
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M26', lane: [...(laneOf('C2M26') ?? [])], keep: [], plan: [{"from":"gaunt","to":"gill","pick":"spread","n":1},{"from":"gaunt","to":"chorister","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). The forest was 100 by 100 cells for 36 creatures (six per thousand cells, the sparsest map): sixteen columns and eighteen rows are taken out where nothing stands and no ramp runs.
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M26`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = [{axis:'x',cuts:[[3,4], [6,7], [11,12], [17,18], [21,22], [23,24], [31,32], [42,43], [57,58], [63,64], [68,69], [77,78], [82,83], [89,91], [96,97]]}, {axis:'z',cuts:[[7,8], [9,10], [13,14], [21,22], [23,24], [37,38], [41,42], [45,46], [53,54], [57,58], [59,60], [64,65], [71,73], [77,78], [89,90], [94,95], [96,97]]}];
+// ---- end PT-052 Level B squeeze ----
+
 export default MAP;

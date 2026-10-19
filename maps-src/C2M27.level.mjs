@@ -4,6 +4,8 @@
 // passed is a kill zone. The north road is broken at the middle: the way is down the first bridge (it SINKS once you have crossed: a stair climbs out of the pit on the far side), along the south road, up the second bridge (it sinks too) and on along the north road to the far lip.
 // There a lever (lit by the rift's glow, named from the first bridge) unlocks the exit. A third bridge in the east is an optional way to the south road's cache. A hollow in the north wall of the first stretch holds a cache. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 128, H = 44, L = new Level(W, H, { fill: 'λ' }); L.usedHeights = true;
@@ -55,6 +57,12 @@ for (const [x, z, k] of [[10, 8, 'health_small'], [24, 8, 'health_small'], [38, 
 for (const [x, z] of [[30, 8], [70, 31], [110, 9]]) PK('armor_vest', x, z);
 SEC.cells.slice(0, 5).forEach(([x, z], i) => PK(['armor_vest', 'ammo_rocket', 'ammo_rocket', 'health_large', 'ammo_round'][i], x, z));
 PK('armor_vest', 112, 32); PK('health_large', 116, 31); PK('ammo_rocket', 114, 33);                                                  // the cache of the south road's east end (the third bridge)
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [40,30], radius: 2, cells: ENC.around([40,30], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [59,31], radius: 2, cells: ENC.around([59,31], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M27', name: 'Fault Line', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'fault', sky: 'root', fog: '#20100a', fogDensity: 0.008 },
@@ -97,4 +105,8 @@ export const waypoints = {
   secret: [[6, 8, 0], Z(14, 7), Z(20, 7), { op: 'use', at: SEC.panel }, [20, 2, 0], Z(20, 7), Z(24, 8), Z(32, 8), Z(39, 11), Z(39, 18), Z(39, 24), [39, 27, 0], Z(40, 31), Z(48, 31), Z(58, 31), Z(66, 31), Z(76, 31), Z(79, 29), Z(79, 22), Z(79, 16), [79, 13, 0], Z(80, 9), Z(88, 8), Z(96, 9), Z(106, 8), { op: 'switch', id: 'far-lip' }, Z(114, 9), Z(120, 8), [EXIT[0], EXIT[1], 0]],
 };
 void mid;
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M27', lane: [...(laneOf('C2M27') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

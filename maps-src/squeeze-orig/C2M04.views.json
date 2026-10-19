@@ -1,0 +1,74 @@
+[
+{
+"name": "01-start",
+"x": 18.5,
+"z": 68.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "02-field",
+"x": 30.5,
+"z": 66.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "03-hall",
+"x": 22.5,
+"z": 60.5,
+"yaw": -1.571,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "04-stair",
+"x": 60.5,
+"z": 62.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "05-field2",
+"x": 40.5,
+"z": 52.5,
+"yaw": 0,
+"pitch": 0.0,
+"open": true,
+"ticks": 10
+},
+{
+"name": "06-plateau",
+"x": 40.5,
+"z": 28.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "07-tower",
+"x": 40.5,
+"z": 24.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+},
+{
+"name": "08-gate",
+"x": 40.5,
+"z": 10.5,
+"yaw": 0,
+"pitch": 0.04,
+"open": true,
+"ticks": 10
+}
+]

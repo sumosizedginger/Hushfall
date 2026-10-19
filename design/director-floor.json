@@ -23,17 +23,21 @@
   "C2M01",
   "C2M02",
   "C2M03",
+  "C2M04",
   "C2M05",
   "C2M06",
   "C2M07",
   "C2M09",
   "C2M11",
   "C2M13",
+  "C2M18",
   "C2M19",
   "C2M20",
   "C2M21",
   "C2M23",
-  "C2M25"
+  "C2M25",
+  "C2M26",
+  "C2M27"
  ],
  "floor": {
   "C1E1M01": {
@@ -128,11 +132,11 @@
   },
   "C1E2M02": {
    "density": 21,
-   "rangedShare": 9,
+   "rangedShare": 20,
    "ambushes": 2,
    "kinds": 3,
    "loops": 2,
-   "topShare": 65,
+   "topShare": 48,
    "symmetry": 0.94,
    "walk": 2619
   },
@@ -387,14 +391,14 @@
    "walk": 2161
   },
   "C2M04": {
-   "density": 13,
-   "rangedShare": 19,
-   "ambushes": 0,
+   "density": 18,
+   "rangedShare": 22,
+   "ambushes": 2,
    "kinds": 6,
    "loops": 1,
-   "topShare": 36,
-   "symmetry": 0.93,
-   "walk": 2698
+   "topShare": 33,
+   "symmetry": 0.91,
+   "walk": 2031
   },
   "C2M05": {
    "density": 26,
@@ -449,7 +453,7 @@
   "C2M10": {
    "density": 9,
    "rangedShare": 21,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 6,
    "loops": 19,
    "topShare": 34,
@@ -529,7 +533,7 @@
   "C2M18": {
    "density": 17,
    "rangedShare": 29,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 9,
    "loops": 25,
    "topShare": 25,
@@ -607,19 +611,19 @@
    "walk": 2101
   },
   "C2M26": {
-   "density": 6,
-   "rangedShare": 17,
-   "ambushes": 0,
+   "density": 10,
+   "rangedShare": 22,
+   "ambushes": 2,
    "kinds": 8,
-   "loops": 14,
-   "topShare": 33,
-   "symmetry": 0.8,
-   "walk": 5605
+   "loops": 12,
+   "topShare": 28,
+   "symmetry": 0.85,
+   "walk": 3776
   },
   "C2M27": {
    "density": 10,
    "rangedShare": 22,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 8,
    "loops": 0,
    "topShare": 32,
@@ -1087,6 +1091,18 @@
    "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
   },
   "C2M11": {
+   "skip": [
+    "density"
+   ],
+   "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
+  },
+  "C2M26": {
+   "skip": [
+    "density"
+   ],
+   "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
+  },
+  "C2M04": {
    "skip": [
     "density"
    ],

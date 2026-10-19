@@ -4,6 +4,7 @@
 // choose: the arc lamp (14 m: a fork hears it from 8 m), a blow (9 m) and the tuning-fork gun (12 m) are quiet; a rivet driver is heard from 12 m, a rocket from 18 m, and a row of twenty forks takes twenty seconds to ring through. Some forks wear a plate on their foot: they are people.
 // SHAPE: a hillside of terraces (0 / 2 / 4 / 6 m), halls with doorways to the fields, stair rooms at alternating ends, a round tower on the plateau (the big thing). Scale class MIXED (the halls, the stair rooms and the tower are roofed: about 46%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { setCell, ellipse, ellipseCells, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 80, H = 78, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -67,6 +68,12 @@ for (const { zb } of LV) { S.chamfer([XA, zb - 6, XB, zb], 'nw ne sw se', 2); S.
 S.chamfer([XA, 6, XB, 25], 'nw ne sw se', 3);
 console.log('C2M04 shape:', S.summary()); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end shaping ----
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [41,49], radius: 2, cells: ENC.around([41,49], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [62,25], radius: 2, cells: ENC.around([62,25], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M04', name: 'Tuning Fork Fields', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#d0c090', fogDensity: 0.005, sky: 'anselm', look: 'fields' },
@@ -103,4 +110,13 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M04: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'forks', P.ents.filter((e) => e.kind === 'resonator').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M04', lane: [...(laneOf('C2M04') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). The terraces were 80 by 75 cells for 36 creatures (thirteen per thousand cells): thirteen columns and eleven rows are taken out where nothing stands and no stair runs.
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M04`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = [{axis:'x',cuts:[[3,4], [7,8], [10,11], [17,18], [21,22], [25,26], [49,50], [51,52], [55,56], [61,62], [70,71], [72,73], [76,77]]}, {axis:'z',cuts:[[7,8], [13,14], [18,19], [21,22], [24,25], [39,40], [48,49], [54,55], [63,64], [73,75]]}];
+// ---- end PT-052 Level B squeeze ----
+
 export default MAP;

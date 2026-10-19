@@ -5,6 +5,8 @@
 // The verb is crossing on a clock. The way on: four nerve KNOTS on the corners of the outer ring (nodes: shoot them), then a CUT lever on the island at the foot of the organ; the exit on the north rim is locked until both.
 // Four vents across the void are the shortcuts; a rib-hollow in the rim's south wall holds a cache. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 100, H = 100, C = 50, L = new Level(W, H, { fill: 'β' }); L.usedHeights = true;
@@ -66,6 +68,11 @@ for (const [x, z] of [[78, 50], [22, 50], [50, 22]]) PK('armor_vest', x, z);
 PK('armor_vest', XS - 1, ZS + 2); PK('ammo_rocket', XS + 1, ZS + 2); PK('ammo_rocket', XS, ZS + 3); PK('health_large', XS, ZS + 1); PK('ammo_round', XS - 2, ZS + 3);
 
 const EXIT = [C, 7];
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [36,79], radius: 2, cells: ENC.around([36,79], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M18', name: 'Nerve Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'nerve', sky: 'hive', beat: true, fog: '#1c0e22', fogDensity: 0.01 },
@@ -113,4 +120,8 @@ export const waypoints = {
   main: [[6, 50, 0], ...main.slice(1), { op: 'switch', id: 'cut' }, [44, 46, 0], [42, 38], [42, 30], [42, 22], [42, 14], [44, 9, 0], [C, 8, 0], [C, 7, 0]],
   secret: [[6, 50, 0], [6, 70, 0], [6, 88, 0], [20, 93, 0], [XS, 93, 0], { op: 'use', at: [XS, ZS] }, [XS, ZS + 2, 0], [XS, 93, 0], [14, 42, 0], ...main.slice(2), { op: 'switch', id: 'cut' }, [44, 46, 0], [42, 38], [42, 30], [42, 22], [42, 14], [44, 9, 0], [C, 8, 0], [C, 7, 0]],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M18', lane: [...(laneOf('C2M18') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

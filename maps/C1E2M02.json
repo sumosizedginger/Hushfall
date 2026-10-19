@@ -305,7 +305,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [63, 9],
    "facing": -1.31
   },
@@ -317,13 +317,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [69, 10],
    "facing": -1.347
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [14, 11],
    "facing": -0.666
   },
@@ -346,7 +346,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [22, 12],
    "facing": -0.971
   },
@@ -805,7 +805,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [65, 24],
    "facing": -1.555,
    "group": "cradlehall"
@@ -905,7 +905,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [40, 27],
    "facing": -1.625
   },
@@ -1090,7 +1090,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [33, 31],
    "facing": -1.768
   },
@@ -1237,7 +1237,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [17, 37],
    "facing": -2.279
   },
@@ -1325,7 +1325,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [37, 41],
    "facing": -2.011
   },
