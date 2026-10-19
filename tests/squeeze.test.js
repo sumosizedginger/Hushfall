@@ -8,8 +8,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
-import { toShipped, toSource, removedBefore, squeezeMap, squeezeRoute, squeezeKeep, checkCuts } from '../tools/mapkit/squeeze.mjs';
+import { toShipped, toSource, removedBefore, squeezeMap, squeezeRoute, squeezeKeep, checkCuts, cellToShipped, cellToSource } from '../tools/mapkit/squeeze.mjs';
 import { loadMapFile, loadRouteFile, runRouteEither } from '../src/engine/harness.js';
+import { FLOOR_SKINS } from '../src/engine/defs.js';
 import { ROOT } from './helpers.js';
 
 test('the two conversions: a column that survives goes shipped and comes back; a column inside a cut lands on its edge; the count is continuous', () => {
@@ -62,4 +63,29 @@ test('Glass Steppe, the first squeezed map: the shipped JSON is what the squeeze
     // the routes are the originals under the same cuts (the originals are kept beside the lane files)
     const orig = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps-src', 'squeeze-orig', 'C2M02.main.route.json'), 'utf8')); assert.deepEqual(squeezeRoute(orig, spec), JSON.parse(fs.readFileSync(path.join(ROOT, 'routes', 'C2M02.main.route.json'), 'utf8')));
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('a list of specs squeezes the columns and then the rows; a cell converts to the shipped frame and back', () => {
+  const sq = [{ axis: 'x', cuts: [[2, 4]] }, { axis: 'z', cuts: [[1, 2]] }], { map } = squeezeMap(tiny(), sq);
+  assert.equal(map.grid.length, 3); assert.equal(map.grid[0].length, 8); assert.deepEqual(map.entities.map((e) => e.at), [[1, 1], [6, 1], [6, 1]]); assert.deepEqual(map.doors[0].at, [4, 1]);
+  assert.deepEqual(cellToShipped([8, 2], sq), [6, 1]); assert.deepEqual(cellToSource([6, 1], sq), [8, 2]); assert.deepEqual(cellToSource(cellToShipped([9, 2], sq), sq), [9, 2]); assert.deepEqual(squeezeRoute([{ op: 'goto', at: [8, 2] }], sq), [{ op: 'goto', at: [6, 1] }]);
+});
+
+test('every squeezed map: the shipped JSON is the squeeze of the drawing, every route completes on all three difficulties, and the scan would not cut a stair or the wall behind a lever there', async () => {
+  for (const id of ['C2M26', 'C2M04']) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sqt-'));
+    try {
+      const run = spawnSync(process.execPath, [path.join(ROOT, 'tools/mapkit/compile.mjs'), id], { cwd: ROOT, env: { ...process.env, SQUEEZE: 'off', MAP_OUT: dir }, encoding: 'utf8' }); assert.equal(run.status, 0, id + ': ' + (run.stderr || run.stdout).slice(0, 300));
+      const lv = (await import(pathToFileURL(path.join(ROOT, 'maps-src', id + '.level.mjs')).href)).default, sq = lv.squeeze; assert.ok(Array.isArray(sq) && sq.length === 2, id + ' squeezes on both axes');
+      const wide = JSON.parse(fs.readFileSync(path.join(dir, id + '.json'), 'utf8')), shipped = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', id + '.json'), 'utf8')), again = squeezeMap(wide, sq); assert.deepEqual(again.warnings, []); assert.deepEqual(JSON.parse(JSON.stringify(again.map)), shipped, id + ': the committed map is the squeeze of the drawing');
+      assert.ok(shipped.grid.length < wide.grid.length && shipped.grid[0].length < wide.grid[0].length, id + ' is smaller both ways');
+      // no cut column has a ramp or a stair running through it, and no cut touches the wall behind a lever or an exit (the rules of the scan, checked on the cuts the source holds)
+      const FL = (c) => c !== undefined && (Object.hasOwn(FLOOR_SKINS, c) || c === 'D' || c === 'S');
+      for (const spec of sq) { const ax = spec.axis === 'z' ? 1 : 0, N = ax ? wide.grid.length : wide.grid[0].length, O = ax ? wide.grid[0].length : wide.grid.length, ch = (c, o) => (ax ? wide.grid[c][o] : wide.grid[o][c]), ht = (c, o) => (ax ? wide.heights[c][o] : wide.heights[o][c]);
+        const near = new Set(); for (const e of wide.entities) if (e.type === 'switch' || e.type === 'exit') for (const d of [-1, 0, 1]) near.add(e.at[ax] + d);
+        for (const [a, b] of spec.cuts) for (let c = a; c < b; c++) { assert.ok(c >= 1 && c < N - 1, id + ' cut inside the map'); assert.ok(!near.has(c), `${id}: cut ${c} is next to a lever or an exit`); for (let o = 0; o < O; o++) if (FL(ch(c - 1, o)) && FL(ch(c + 1, o))) assert.equal(ht(c - 1, o), ht(c + 1, o), `${id}: a step runs through cut ${c} at ${o}`); } }
+      const map = loadMapFile(path.join(ROOT, 'maps', id + '.json'));
+      for (const rf of fs.readdirSync(path.join(ROOT, 'routes')).filter((f) => f.startsWith(id + '.') && f.endsWith('.route.json'))) for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRouteEither(map, loadRouteFile(path.join(ROOT, 'routes', rf)), { seed: 1, difficulty }); assert.equal(r.result, 'complete', `${id} ${rf} ${difficulty}: ${r.failure}`); }
+    } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+  }
 });
