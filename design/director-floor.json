@@ -35,6 +35,7 @@
   "C2M09",
   "C2M11",
   "C2M13",
+  "C2M17",
   "C2M18",
   "C2M19",
   "C2M20",
@@ -528,7 +529,7 @@
   "C2M17": {
    "density": 16,
    "rangedShare": 33,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 9,
    "loops": 0,
    "topShare": 30,
@@ -1125,6 +1126,12 @@
     "shooters"
    ],
    "why": "the brief of the Foundry asks for at least eight Tollbearers (the quality gate), which is 38% of 21 creatures against a cap of 35%, and two of them became Bellhands (shooters 10% to 19%, one short of 20%): a third conversion drops the Tollbearers under eight and the perfect fighter dies on hard; the way out is more creatures in 644 cells, which the bot gates do not take yet"
+  },
+  "C2M17": {
+   "skip": [
+    "density"
+   ],
+   "why": "the Approach is 148 x 60 with 54 creatures (16 per thousand cells against a floor of 18): a squeeze of it was tried (tools/dev/squeeze-map.mjs) and was restored because the hard seeds were completed by neither fighter; the second ambush is in; the density waits for a better bot"
   }
  }
 }

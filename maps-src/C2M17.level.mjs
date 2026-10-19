@@ -91,6 +91,7 @@ const gx = 137, gz = 30;
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
 ENC.dropIn({ at: [68,34], radius: 2, cells: ENC.around([68,34], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [124,31], radius: 2, cells: ENC.around([124,31], { n: 3, min: 4, max: 9 }), kind: 'g' });
 // ---- end PT-052 ----
 
 const MAP = {

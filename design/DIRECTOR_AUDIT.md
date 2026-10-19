@@ -18,24 +18,24 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C1E2M01 | Brine Gate | 1155 | 30 | 26 | 4 | 43 | 20 | 12 | 0.65 | 2 | 0 | 0 | 1 | 2 | 1.3 | 2 | 43 | A- light pass | no key, one secret |
 | C1E2M02 | Evaporation Pans | 2619 | 54 | 21 | 3 | 48 | 20 | 3 | 0.94 | 2 | 0 | 0 | 1 | 2 | 1 | 2 | 35 | KEEP (boss or set piece: judge by play) | long, thin roster, symmetrical, flat, no key, one secret |
 | C1E2M03 | Rail Yard | 1503 | 37 | 25 | 4 | 38 | 22 | 10 | 0.61 | 7 | 0 | 0 | 1 | 4 | 1.2 | 2 | 30 | A- light pass | no key, one secret |
-| C1E2M04 | Kiln Row | 1035 | 33 | 32 | 3 | 45 | 18 | 7 | 0.78 | 1 | 0 | 2 | 1 | 2 | 1.4 | 2 | 42 | A encounters and roster | thin roster, flat, one secret |
+| C1E2M04 | Kiln Row | 1035 | 33 | 32 | 4 | 39 | 21 | 7 | 0.78 | 1 | 0 | 2 | 1 | 2 | 1.5 | 2 | 42 | A encounters and roster | flat, one secret |
 | C1E2M05 | The Cradle Annex | 766 | 17 | 22 | 4 | 41 | 24 | 0 | 0.81 | 1 | 0 | 0 | 1 | 2 | 0.8 | 2 | 41 | A encounters and roster | flat, no key, one secret |
 | C1E2M06 | Pump Cathedral | 1634 | 44 | 27 | 4 | 52 | 20 | 33 | 0.78 | 3 | 2 | 0 | 1 | 2 | 1.8 | 2 | 128 | A- light pass | one-note tollbearer, no key, one secret, 2 empty rooms |
 | C1E2M07 | Slurry Undercroft | 809 | 31 | 38 | 4 | 42 | 23 | 6 | 0.51 | 4 | 0 | 0 | 1 | 3 | 1.2 | 0 | 47 | A encounters and roster | flat, no key, one secret |
 | C1E2M08 | The Grafting Floor | 1479 | 20 | 14 | 5 | 40 | 15 | 13 | 0.75 | 5 | 0 | 0 | 1 | 0 | 1.1 | 2 | 33 | KEEP (boss or set piece: judge by play) | thin, no key, few ambushes, one secret |
 | C1E2S01 | The Rime Vault | 565 | 0 | 0 | 0 | 0 | 0 | 3 | 0.78 | 0 | 0 | 3 | 0 | 0 | 0.6 | - | - | KEEP (no combat) | flat |
 | C1E3M01 | Landing Scar | 1219 | 25 | 21 | 5 | 32 | 40 | 50 | 0.91 | 0 | 0 | 0 | 1 | 2 | 0.9 | 0 | 47 | A encounters and roster | symmetrical, no key, one secret, no loop |
-| C1E3M02 | Ribbed Corridors | 954 | 24 | 25 | 5 | 38 | 21 | 0 | 0.5 | 1 | 0 | 0 | 1 | 0 | 0.9 | 5 | 37 | A encounters and roster | flat, no key, few ambushes, one secret |
+| C1E3M02 | Ribbed Corridors | 954 | 24 | 25 | 5 | 33 | 25 | 0 | 0.5 | 1 | 0 | 0 | 1 | 2 | 1 | 5 | 37 | A encounters and roster | flat, no key, one secret |
 | C1E3M03 | Gill Gardens | 1733 | 32 | 18 | 5 | 34 | 28 | 22 | 0.68 | 0 | 0 | 0 | 1 | 2 | 1.2 | 0 | 37 | A- light pass | no key, one secret, no loop |
 | C1E3M04 | Marrow Nave | 2586 | 23 | 9 | 6 | 43 | 17 | 40 | 0.88 | 0 | 0 | 0 | 1 | 3 | 1.3 | 2 | 53 | KEEP (boss or set piece: judge by play) | sparse, long, one secret |
 | C1E3M05 | Resonance Loom | 807 | 21 | 26 | 6 | 43 | 24 | 26 | 0.68 | 0 | 0 | 0 | 1 | 2 | 1.2 | 0 | 41 | A- light pass | no key, one secret, no loop |
 | C1E3M06 | The Choir Loft | 1185 | 17 | 14 | 7 | 35 | 24 | 78 | 0.81 | 0 | 0 | 0 | 1 | 2 | 0.9 | 2 | 58 | A encounters and roster | thin, no key, one secret, no loop |
-| C1E3M07 | The Spore Foundry | 644 | 21 | 33 | 5 | 48 | 10 | 0 | 0.65 | 1 | 0 | 0 | 1 | 0 | 1.5 | 0 | 58 | A encounters and roster | flat, no key, few ambushes, one secret |
+| C1E3M07 | The Spore Foundry | 644 | 21 | 33 | 5 | 38 | 19 | 0 | 0.65 | 1 | 0 | 0 | 1 | 2 | 1.7 | 0 | 58 | A encounters and roster | flat, no key, one secret |
 | C1E3M08 | The Cantor's Throat | 1003 | 26 | 26 | 9 | 46 | 8 | 0 | 0.75 | 0 | 0 | 0 | 1 | 0 | 2 | 5 | 60 | KEEP (boss or set piece: judge by play) | melee-only, flat, no key, few ambushes, one secret |
 | C1E3S01 | The Choirless Chamber | 367 | 0 | 0 | 0 | 0 | 0 | 0 | 0.81 | 0 | 0 | 0 | 0 | 0 | 0.2 | - | - | KEEP (no combat) |  |
 | C1E4M01 | Ascent Tether | 1436 | 36 | 25 | 6 | 31 | 36 | 70 | 0.51 | 0 | 0 | 0 | 1 | 0 | 2 | 0 | 164 | KEEP (boss or set piece: judge by play) | few ambushes, one secret |
 | C1E4M02 | Wreck Belt | 1602 | 34 | 21 | 6 | 32 | 35 | 76 | 0.93 | 2 | 0 | 1 | 1 | 2 | 1.4 | 0 | 58 | A encounters and roster | symmetrical, one secret |
-| C1E4M03 | Cold Dock | 1566 | 24 | 15 | 6 | 38 | 21 | 58 | 0.76 | 2 | 0 | 2 | 1 | 1 | 2 | 0 | 85 | A- light pass | few ambushes, one secret |
+| C1E4M03 | Cold Dock | 1542 | 24 | 16 | 6 | 33 | 25 | 58 | 0.71 | 2 | 0 | 2 | 1 | 2 | 2 | 0 | 85 | A- light pass | one secret |
 | C1E4M04 | Mirror Array | 1126 | 16 | 14 | 4 | 38 | 25 | 32 | 0.55 | 0 | 0 | 0 | 1 | 2 | 1.1 | 0 | 70 | A encounters and roster | thin, no key, one secret, no loop |
 | C1E4M05 | Drift Orchard | 2149 | 38 | 18 | 6 | 34 | 45 | 82 | 0.96 | 1 | 0 | 1 | 1 | 2 | 1.2 | 0 | 25 | A encounters and roster | symmetrical, one secret |
 | C1E4M06 | Gatekeeper's Approach | 3097 | 42 | 14 | 8 | 33 | 24 | 76 | 0.72 | 5 | 0 | 0 | 1 | 2 | 1.9 | 5 | 80 | C exemplar | thin, very long, no key, one secret |
@@ -49,7 +49,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2M05 | The Reliquary Road | 1671 | 43 | 26 | 6 | 35 | 30 | 73 | 0.69 | 0 | 0 | 0 | 1 | 15 | 2.2 | 0 | 53 | A- light pass | no key, one secret, no loop |
 | C2M06 | Chitin Aqueduct | 1737 | 30 | 17 | 5 | 33 | 27 | 68 | 0.82 | 0 | 0 | 0 | 1 | 2 | 2.5 | 0 | 45 | A- light pass | no key, one secret, no loop |
 | C2M07 | Bellwright Yard | 1673 | 38 | 23 | 6 | 29 | 21 | 33 | 0.89 | 2 | 0 | 0 | 1 | 8 | 1.2 | 0 | 37 | A encounters and roster | symmetrical, no key, one secret |
-| C2M08 | Threshold Ascent | 2507 | 30 | 12 | 8 | 33 | 27 | 73 | 0.85 | 1 | 0 | 0 | 1 | 1 | 1.8 | 0 | 80 | A encounters and roster | thin, long, no key, few ambushes, one secret |
+| C2M08 | Threshold Ascent | 1431 | 30 | 21 | 8 | 33 | 27 | 73 | 0.82 | 2 | 0 | 0 | 1 | 2 | 1.8 | 0 | 80 | A- light pass | no key, one secret |
 | C2M09 | Sounding Deep Gate | 2794 | 44 | 16 | 7 | 36 | 20 | 76 | 0.56 | 0 | 0 | 0 | 1 | 2 | 1.6 | 0 | 28 | KEEP (boss or set piece: judge by play) | long, no key, one secret |
 | C2M10 | Echo Markets | 3121 | 29 | 9 | 6 | 34 | 21 | 4 | 0.81 | 19 | 6 | 0 | 1 | 1 | 1.1 | 1 | 23 | B structural | sparse, very long, flat, no key, few ambushes, one secret, 6 empty rooms |
 | C2M11 | Undercantor Halls | 3851 | 32 | 8 | 6 | 31 | 22 | 12 | 0.63 | 2 | 4 | 0 | 1 | 2 | 1.4 | 6 | 52 | C exemplar | sparse, very long, no key, one secret, 4 empty rooms |
@@ -58,7 +58,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2M14 | Harmonic Gardens | 3819 | 31 | 8 | 6 | 32 | 23 | 4 | 0.88 | 0 | 3 | 0 | 1 | 2 | 2.1 | 1 | 190 | KEEP (boss or set piece: judge by play) | sparse, very long, flat, no key, one secret, 3 empty rooms |
 | C2M15 | Ash Basilica | 4278 | 40 | 9 | 9 | 33 | 18 | 51 | 0.96 | 0 | 0 | 0 | 1 | 0 | 3 | 0 | 33 | KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) | sparse, very long, symmetrical, no key, few ambushes, one secret, no loop |
 | C2M16 | Sounding Deep Heart | 1835 | 19 | 10 | 6 | 26 | 11 | 6 | 0.8 | 0 | 0 | 0 | 1 | 0 | 1.4 | 2 | 58 | KEEP (boss or set piece: judge by play) | sparse, flat, no key, few ambushes, one secret |
-| C2M17 | The Hive-Song Approach | 3459 | 54 | 16 | 9 | 30 | 33 | 48 | 0.42 | 0 | 2 | 0 | 1 | 1 | 2.3 | 0 | 78 | A encounters and roster | very long, no key, few ambushes, one secret, 2 empty rooms |
+| C2M17 | The Hive-Song Approach | 3459 | 54 | 16 | 9 | 30 | 33 | 48 | 0.42 | 0 | 2 | 0 | 1 | 2 | 2.4 | 0 | 78 | A encounters and roster | very long, no key, one secret, 2 empty rooms |
 | C2M18 | Nerve Cathedral | 3772 | 63 | 17 | 9 | 25 | 29 | 58 | 0.97 | 25 | 0 | 0 | 1 | 2 | 3 | 0 | 60 | KEEP (boss or set piece: judge by play) | very long, symmetrical, no key, one secret |
 | C2M19 | Bone Loom | 2135 | 53 | 25 | 9 | 34 | 28 | 57 | 0.89 | 5 | 0 | 1 | 1 | 2 | 2.2 | 1 | 96 | A encounters and roster | symmetrical, one secret |
 | C2M20 | Vein Rail | 1857 | 37 | 20 | 8 | 32 | 38 | 70 | 0.99 | 0 | 0 | 0 | 1 | 2 | 2.2 | 12 | 77 | KEEP (boss or set piece: judge by play) | symmetrical, no key, one secret |
@@ -75,7 +75,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2S01 | The Silent Orchard | 1837 | 0 | 0 | 0 | 0 | 0 | 8 | 0.98 | 0 | 0 | 0 | 0 | 0 | 0.8 | - | - | KEEP (no combat) | symmetrical, flat |
 | C2S02 | Ines's Lamp | 218 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0.3 | - | - | KEEP (no combat) | symmetrical |
 
-Tally: A encounters and roster 17, A- light pass 17, KEEP (boss or set piece: judge by play) 18, KEEP (no combat) 7, C exemplar 4, B structural 2, KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) 1, KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) 1, KEEP (a stand: its creatures come from triggers) 1
+Tally: A encounters and roster 16, A- light pass 18, KEEP (boss or set piece: judge by play) 18, KEEP (no combat) 7, C exemplar 4, B structural 2, KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) 1, KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) 1, KEEP (a stand: its creatures come from triggers) 1
 
 ## The rules
 ```json

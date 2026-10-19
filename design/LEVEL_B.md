@@ -23,3 +23,20 @@ THE TOOL: the squeeze (`tools/mapkit/squeeze.mjs`) learned three things on the w
 WHAT THE FLOOR SAID: a squeeze moves the mirror line and shrinks pillar blocks: Silent Roots' symmetry rose from 0.80 to 0.85 and its loops fell from 14 to 12 (the map is a third smaller, so there is MORE cover per cell); both are recorded by hand in `design/director-floor.json`.
 
 NOT DONE / NOT PROVEN: nothing is played by a person; the bot gates are chaotic near their edges, so a map that passes now may fail after any change; the squeezed maps' vantage tours (`maps-src/<ID>.views.json`) are converted but not re-shot; a squeeze makes a map's creatures meet sooner, so Normal and Hard feel denser than the numbers of the old bot say (the owner's Easy play of the exemplars was liked).
+
+## The six stragglers (2026-10-19, the goal "Hushfall Director's Plan")
+
+The six maps that still missed a law after Level B, worked with the tools of the squeeze and the encounter kit. Every one of them now meets the laws or has the remaining law written down in `design/director-floor.json` under `waiting`, with its reason. Nothing is played by a person.
+
+| map | what was done |
+|---|---|
+| C2M08 Threshold Ascent | **SQUEEZED on both axes** (19 columns and 18 rows out): 53 x 82, 1431 cells, density 12 -> 21; a second ambush (a drop-in at the middle of the climb); every law met |
+| C1E4M03 Cold Dock | **SQUEEZED** (8 columns, 8 rows: the four bays and their lock chambers leave little that holds nothing); a second ambush (a drop-in in the east bay), a Gaunt became a Bellhand (Gaunts 38% -> 33%, shooters 21% -> 25%); density 16 per thousand cells WAITS (four more creatures need places the locks do not use) |
+| C1E2M04 Kiln Row | the roster: two Tollbearers became Bellhands, one a Sexton (the fourth kind), one a Gaunt: Tollbearers 45% -> 39%, shooters 18% -> 21%; every law met; hard seed 3 is completed by neither policy, the gate asks two of three |
+| C1E3M02 Ribbed Corridors | two ambushes (drop-ins of three in the corridor line) and the roster (a Gaunt to a Bellhand, a Gaunt to a Chorister): Gaunts 38% -> 33%; every law met |
+| C1E3M07 The Spore Foundry | two ambushes of two, two Tollbearers became Bellhands; the Foundry's `drops.scale` went 1 -> 1.35 (the second pack cost the ammunition gate 3% and the dead pay it back); the cap (38%) and the shooters (19%) WAIT: the brief asks for eight Tollbearers, which is 38% of 21 creatures, and a third conversion kills the perfect fighter on hard |
+| C2M17 The Hive-Song Approach | a second ambush (a drop-in at the east end); density 16 per thousand cells WAITS: the squeeze was tried and restored, hard seeds completed by neither fighter |
+
+THE TOOLS: `tools/dev/squeeze-map.mjs <ID>` does one map's whole squeeze (scan both axes, write the block, write the routes, compile, play every route on every difficulty; it restores everything if a compile fails or a seed is completed by neither fighter). `tools/dev/try-enc.mjs <ID> '<plan>' '<ENC line;ENC line>' ... [--drops=1.3]` tries encounter lines (and a `drops.scale`) against the gates in a scratch folder and puts the source back: that is how every ambush above was placed. The squeeze learned the keys of the airlock maps (`close`, `interlock`, the `seals` and `and` lists of a vacuum region). `tests/squeeze.test.js` holds both new squeezed maps (the shipped JSON is the squeeze of the drawing, every route completes, no stair is cut), and `tests/batch-c.test.js` thinks in the drawing's cells and converts them to the shipped frame.
+
+WHAT THE GATES SAID: a pack of Gaunts is the cheapest ambush and one of them is nearly always accepted; two on a small map often cost the hard seeds or the ammunition slack, and the ammunition gate is repaired by the drops, not by a box on the road. A map with a quality gate (the Foundry: eight Tollbearers) cannot also meet the cap unless it has more creatures. 44 of 68 maps are REBUILT.

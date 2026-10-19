@@ -293,6 +293,47 @@
      }
     }
    ]
+  },
+  {
+   "id": "amb-dropin-2",
+   "when": "enter",
+   "at": [124, 31],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [119, 27],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [128, 26],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [130, 29],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
