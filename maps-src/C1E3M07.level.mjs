@@ -52,6 +52,8 @@ for (let z = 0; z < 56; z++) for (let x = 0; x < 52; x++) {
 // ---- end PT-035 materials ----
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
+ENC.dropIn({ at: [42,23], radius: 2, cells: ENC.around([42,23], { n: 2, min: 4, max: 8 }), kind: 'g' });
+ENC.dropIn({ at: [25,34], radius: 2, cells: ENC.around([25,34], { n: 2, min: 4, max: 8 }), kind: 'g' });
 
 // ---- end PT-052 ----
 
@@ -91,10 +93,10 @@ const MAP = {
 };
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): the supply station at the west mouth keeps its boxes; a vat's brood and the vats never drop, the rest of the hall does ----
-MAP.drops = { scale: 1, keep: [[23, 26, 24, 30]] };
+MAP.drops = { scale: 1.35, keep: [[23, 26, 24, 30]] };
 
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C1E3M07', lane: [...(laneOf('C1E3M07') ?? [])], keep: [], plan: [] };
+MAP.roster = { id: 'C1E3M07', lane: [...(laneOf('C1E3M07') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2}] };
 ENC.apply(MAP);
 
 export default MAP;

@@ -9,13 +9,16 @@
   "C1E1M07",
   "C1E2M01",
   "C1E2M03",
+  "C1E2M04",
   "C1E2M05",
   "C1E2M06",
   "C1E2M07",
   "C1E3M01",
+  "C1E3M02",
   "C1E3M03",
   "C1E3M05",
   "C1E3M06",
+  "C1E3M07",
   "C1E4M02",
   "C1E4M03",
   "C1E4M04",
@@ -154,11 +157,11 @@
   },
   "C1E2M04": {
    "density": 32,
-   "rangedShare": 18,
+   "rangedShare": 21,
    "ambushes": 2,
-   "kinds": 3,
+   "kinds": 4,
    "loops": 1,
-   "topShare": 45,
+   "topShare": 39,
    "symmetry": 0.78,
    "walk": 1035
   },
@@ -214,11 +217,11 @@
   },
   "C1E3M02": {
    "density": 25,
-   "rangedShare": 21,
-   "ambushes": 0,
+   "rangedShare": 25,
+   "ambushes": 2,
    "kinds": 5,
    "loops": 1,
-   "topShare": 38,
+   "topShare": 33,
    "symmetry": 0.5,
    "walk": 954
   },
@@ -264,11 +267,11 @@
   },
   "C1E3M07": {
    "density": 33,
-   "rangedShare": 10,
-   "ambushes": 0,
+   "rangedShare": 19,
+   "ambushes": 2,
    "kinds": 5,
    "loops": 1,
-   "topShare": 48,
+   "topShare": 38,
    "symmetry": 0.65,
    "walk": 644
   },
@@ -1115,6 +1118,13 @@
     "density"
    ],
    "why": "Cold Dock was squeezed by eight columns and eight rows (the four bays and their lock chambers leave little that holds nothing: 1670 to 1542 cells) and holds 24 creatures, 16 per thousand cells against a floor of 18; four more would need a place on the lane the locks do not already use, and the strafing fighter has no margin on hard: the rest waits for a better bot"
+  },
+  "C1E3M07": {
+   "skip": [
+    "cap",
+    "shooters"
+   ],
+   "why": "the brief of the Foundry asks for at least eight Tollbearers (the quality gate), which is 38% of 21 creatures against a cap of 35%, and two of them became Bellhands (shooters 10% to 19%, one short of 20%): a third conversion drops the Tollbearers under eight and the perfect fighter dies on hard; the way out is more creatures in 644 cells, which the bot gates do not take yet"
   }
  }
 }

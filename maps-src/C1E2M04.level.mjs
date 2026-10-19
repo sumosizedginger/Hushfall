@@ -130,7 +130,7 @@ MAP.drops = { scale: 1 };
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [26, 19], facing: -0.96 });
 
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C1E2M04', lane: [...(laneOf('C1E2M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+MAP.roster = { id: 'C1E2M04', lane: [...(laneOf('C1E2M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"sexton","pick":"range","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
 export default MAP;

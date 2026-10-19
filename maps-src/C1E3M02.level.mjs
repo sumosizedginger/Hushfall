@@ -62,6 +62,8 @@ console.log('C1E3M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
+ENC.dropIn({ at: [33,25], radius: 2, cells: ENC.around([33,25], { n: 3, min: 4, max: 8 }), kind: 'g' });
+ENC.dropIn({ at: [46,25], radius: 2, cells: ENC.around([46,25], { n: 3, min: 4, max: 8 }), kind: 'g' });
 
 // ---- end PT-052 ----
 
@@ -107,7 +109,7 @@ MAP.growth = [{ at: [56, 25], r: 26, power: 1.3 }];                             
 MAP.drops = { scale: 1 };
 
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C1E3M02', lane: [...(laneOf('C1E3M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
+MAP.roster = { id: 'C1E3M02', lane: [...(laneOf('C1E3M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1},{"from":"gaunt","to":"chorister","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
 export default MAP;

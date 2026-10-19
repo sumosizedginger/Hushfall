@@ -397,13 +397,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [17, 16],
    "facing": -1.043
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [28, 16],
    "facing": -1.275
   },
@@ -906,7 +906,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [63, 31],
    "facing": -1.708
   },
@@ -932,7 +932,7 @@
   },
   {
    "type": "enemy",
-   "kind": "bellhand",
+   "kind": "tollbearer",
    "at": [48, 33],
    "facing": -1.799
   },
