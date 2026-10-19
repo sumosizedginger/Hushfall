@@ -1,0 +1,21 @@
+# Performance and compatibility plan (M4 of the commercial workstream, written 2026-10-19; nothing here is measured on a machine other than the owner's)
+
+## What is known
+- The owner's machine (an RTX 3060 Ti class card) runs the game with real graphics at about 59 frames a second on the worst map found so far, Glass Steppe, after the enemy-navigation fix (PT-054: a distance-field cache that thrashed under hunters; 0.6 fps before, 59 after, measured by `HUNT=1 GPU=1 node tools/dev/probe-prof.mjs`). The owner confirmed "no stutter" on 2026-10-19.
+- The game renders at a LOW INTERNAL WIDTH (320 to 800 pixels, `RESOLUTIONS` in `src/game/settings.js`, then upscaled), so fill rate is small by design: what costs time is the simulation (creatures, navigation), the number of draw calls and the number of objects whose matrix is recomputed every frame. The probes below measure exactly those.
+- A production build is `dist/`: 165 files, 8.9 MB (6.0 MB of painted atlases, 3.0 MB of script, the maps inside it). `npm run check-dist` says it can be uploaded as it stands.
+- Every browser run so far was Chromium, either on SwiftShader (software) or on the owner's one card. Nothing has run on an integrated GPU, a laptop, Firefox or Safari, and no resolution but the ones the harness picked.
+
+## The minimum spec we are aiming at (a target, not a measurement)
+An integrated GPU of about 2020 (Intel Iris Xe class) at the game's 480-pixel default internal width, 60 frames a second on every map and 30 at worst on the 81-creature stand (C2M28 Last Tide) and the largest maps (C2M26 Silent Roots at 84 x 82, C2M09 Sounding Deep Gate at 104 x 92). A browser from the last two years: Chromium and Firefox first, Safari after.
+
+## How to measure it (each is ONE headless-Chrome job and needs the owner's named yes; the node ones need none)
+- Node, any machine: `node tools/dev/sim-cost.mjs [--difficulty=hard] <ID> ...` (the simulation's milliseconds per tick over a whole route: the creatures-and-navigation share of a frame), `node tools/dev/nav-bench.mjs [--hunters=30] <ID> ...`, `node tools/dev/scene-census.mjs <ID> ...` (objects, draw calls, matrices that recompute).
+- Browser, the owner's real card: `GPU=1 node tools/dev/probe-prof.mjs <outDir> <ID> ...` (`HUNT=1` is the worst case, `WAKE=1` wakes everyone, `FIRE=1` holds the trigger, `AUDIO=1` lets the audio run), `probe-perf-steady.mjs` (render time and draw calls per vantage and with each layer hidden), `probe-perf.mjs` (every frame of a whole route). Run them through `tools/dev/low.ps1` with absolute paths, one at a time.
+- On OTHER machines (a tester's laptop, a borrowed one): the same probes need Node and the repository, which a tester will not have. The way is the opt-in play log of workstream I / M11: the build records its own frame times and the percentiles it saw and writes them to a file the player can send. THAT IS NOT BUILT; it should be the first thing built when outside players are in sight.
+
+## The automatic quality fallback (a design, not built)
+If the 95th-percentile frame time over the last few seconds stays over 20 ms, step the INTERNAL WIDTH down one rung (800 -> 640 -> 480 -> 400 -> 320), never below the player's own choice minus two rungs, and tell nobody; step back up after thirty quiet seconds. Because the sim runs on a fixed step and never reads the frame rate, this changes only what is drawn. If the width ladder is not enough (the cost is draw calls, not pixels), the second rung of the ladder is to switch off the contact shadows (`src/render/shadows.js`) and halve the decal rings, which are the two layers the probes found cheapest to lose. It is a PURE controller (`frame times in, a rung out`, testable in node with a fake clock) plus three lines in `main.js`; it needs the frame-loop test to stay green and the settings screen to say "Resolution: Auto". Not built because nobody has seen a machine that needs it.
+
+## What would change the plan
+A real integrated-GPU number that is bad would move the work to draw-call merging (`src/render/merge.js`) and the creature rigs (a rig is many meshes: the kit merges the static parts of a joint, not the animated ones). A real number that is good means this file is done and the fallback stays a design.
