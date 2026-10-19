@@ -40,6 +40,7 @@ export const ENDINGS = {
       { who: 'SIGNAL HOUSE', text: 'Ines. I have you on the set. There is no line down there, and I have you.' },
       { who: 'INES', text: 'There is a hook beside the door, the kind a lamp hangs from. My father told me what a lamp is for. I did not understand him.' },
       { who: 'INES', text: 'You keep it lit, and it holds the tone back from the harbour.' },
+      { who: 'INES', text: 'A door is held from one side or the other. I am on this side of it.' },
       { who: '', text: 'She hangs the lamp on the hook and lights it. The bell on the door goes quiet, and stays quiet.' },
       { who: 'SIGNAL HOUSE', text: 'It is holding. Come back up, Ines. Somebody else can see to it.' },
       { who: 'INES', text: 'There is nobody else. I said I would keep it lit.' },

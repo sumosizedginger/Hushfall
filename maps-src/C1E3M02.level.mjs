@@ -81,7 +81,7 @@ const MAP = {
   secrets: [{ id: 'hollow-rib', panel: [56, 33], cells: [[56, 34], [56, 35], [56, 36]] }],
   groups: [{ name: 'chamber', rect: [24, 19, 37, 32] }, { name: 'gallery', rect: [22, 5, 52, 9] }, { name: 'heart', rect: [46, 19, 66, 32] }],
   entities: [
-    { type: 'switch', id: 'bellows', at: [66, 25], wall: 'east', do: [{ open: [67, 26] }, { objective: 'The hatch is open: the exit is at the east end of the last chamber' }, { shake: 1.2 }] },
+    { type: 'switch', id: 'bellows', at: [66, 25], wall: 'east', do: [{ open: [67, 26] }, { objective: 'The hatch is open: the exit is at the east end of the last corridor' }, { shake: 1.2 }] },
   ],
   messages: [
     { id: 'start', at: [5, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you are in. Those are not corridors, they are ribs. Keep to the floor and listen. The ship is breathing and you are in its lungs.' },

@@ -87,7 +87,7 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [5, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Pump Cathedral. The pump that drains the pans is in the middle of the nave. The cage on the east side is the only way up to the catwalks. Cross the floor first.' },
-    { id: 'nave', at: [14, 24], radius: 3, speaker: 'INES', text: 'This is not a pump house. This is a church for the pump. Look at the height of it, and at what is hung from the roof.' },
+    { id: 'nave', at: [14, 24], radius: 3, speaker: 'INES', text: 'A pump house built as a church. Look at the height of it, and at what is hung from the roof.' },
     { id: 'sump', at: [26, 24], radius: 3, speaker: 'INES', text: 'The water round the pump is up to your knees. It will slow you. Keep to the grate and the aisles.' },
     { id: 'cage', at: [47, 25], radius: 3, speaker: 'CAGE PLACARD', text: 'CAGE LIFT. LEVER ON THE CAGE RISES IT, CALL LEVER ON THE POST BRINGS IT DOWN. FOUR METRES. NO MORE THAN SIX PERSONS.' },
     { id: 'top', at: [54, 25], radius: 4, speaker: 'INES', text: 'Bellhands on both galleries. Stay off the edge of the catwalk, and use the pillars. The drain lever is on the south gallery.' },

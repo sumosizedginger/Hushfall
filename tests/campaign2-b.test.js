@@ -40,9 +40,9 @@ test('the text follows the mechanical rules of LORE.md: no stock phrases, short,
     for (const m of SRC[id].messages) { if (m.text.length > 180) bad.push(`${id} ${m.id}: ${m.text.length} characters`); const n = (m.text.match(/[.!?]/g) ?? []).length, cap = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/.test(m.speaker) ? 6 : m.speaker === 'THE TENDER' ? 5 : 4; if (n > cap) bad.push(`${id} ${m.id}: ${n} sentences (limit ${cap})`); }
   }
   assert.deepEqual(bad, []);
-  const VOICES = new Set(['INES', 'HULL', 'THE TENDER', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/;
+  const VOICES = new Set(['INES', 'HULL', 'THE TENDER', 'A SILENT', 'A SILENT (NOTE)', 'A ZEALOT', 'SIGNAL HOUSE']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/;
   for (const id of ALL) for (const m of SRC[id].messages) assert.ok(VOICES.has(m.speaker) || found.test(m.speaker), `${id} ${m.id}: unknown speaker '${m.speaker}'`);
-  assert.deepEqual(ALL.flatMap((id) => SRC[id].messages.filter((m) => m.speaker === 'SIGNAL HOUSE').map((m) => id)), [], 'SIGNAL HOUSE stays silent below the Gate');
+  assert.deepEqual(ALL.flatMap((id) => SRC[id].messages.filter((m) => m.speaker === 'SIGNAL HOUSE').map((m) => id)), ['C2M16'], 'SIGNAL HOUSE says nothing below the Gate but the last clear call at the end of the act (C2M16, the story pass)');
   assert.deepEqual(ALL.flatMap((id) => SRC[id].messages.filter((m) => m.speaker === 'A ZEALOT').map((m) => id)), ['C2M09'], 'a Zealot says its one line once, at the Gate');
   const tender = SRC.C2S01.messages.filter((m) => m.speaker === 'THE TENDER'); assert.equal(tender.length, 7, 'seven short pieces at seven beds: the longest text of the act');
   for (const t of tender) assert.ok(!/\b\w+'(t|s|re|ve|ll|d|m)\b/i.test(t.text), 'no contractions: ' + t.text);

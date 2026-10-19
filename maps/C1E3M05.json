@@ -430,7 +430,7 @@
    "radius": 3,
    "do": [
     {
-     "objective": "The lever is on the Heart's east wall"
+     "objective": "The lever is on the east wall of the Heart, past the platforms"
     }
    ]
   },
@@ -935,7 +935,7 @@
    "at": [11, 28],
    "radius": 2,
    "speaker": "INES",
-   "text": "It is listening. Your own gun is what it hears. Stand still. Count to four. It will let you through."
+   "text": "It is listening, and your own gun is what it hears. Stand still and count to four. It will let you through."
   },
   {
    "id": "hall",

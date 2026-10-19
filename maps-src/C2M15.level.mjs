@@ -77,7 +77,7 @@ const MAP = {
     { id: 'chock', at: [30, 62], radius: 4, speaker: 'RINGING PLATE', text: 'Third station, THE CHOCK. A wedge is set and the wheel is stopped. The wheel is a person who has been asked to stand still.' },
     { id: 'fit', at: [30, 40], radius: 4, speaker: 'RINGING PLATE', text: 'Fourth station, THE FIT. The bell is fitted. A rank of the willing holds the one who is being fitted, so that it is done without fear.' },
     { id: 'float', at: [30, 18], radius: 4, speaker: 'RINGING PLATE', text: 'Fifth station, THE FLOAT. The first toll. After it the fitted one is no longer asked anything, because it has been answered.' },
-    { id: 'zealot', at: [30, 34], radius: 5, speaker: 'INES', text: 'Spears in a rank, shoulder to shoulder, and the rank is facing the screen and not me. They are guarding the one behind them from the ones in front.' },
+    { id: 'zealot', at: [30, 34], radius: 5, speaker: 'INES', text: 'Spears in a rank, shoulder to shoulder, facing the screen with their backs to me. They guard the one behind them from the ones in front.' },
     { id: 'hollow', at: [10, 110], radius: 2, speaker: 'HULL', text: 'The west aisle wall of the first bay rings hollow behind a pillar that has been taken out of the row.' },
     { id: 'crypt', at: [6, 110], radius: 4, speaker: 'A SILENT (NOTE)', text: 'The ones of this house who would not be fitted are put here. Their bells are on the wall, unfitted, in a row. Take what they left.' },
     { id: 'altar', at: [30, 6], radius: 4, speaker: 'INES', text: 'An organ with no pipes left but the lowest ones, and the lowest are warm. Somebody is still playing this house. Very slowly. One note a minute.' },

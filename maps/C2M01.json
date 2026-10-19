@@ -890,6 +890,13 @@
    "text": "Oilskins. Marrow boat crews in two rows, facing the water. They were put here and told to wait."
   },
   {
+   "id": "bell",
+   "at": [26, 28],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A bell, a long way off across the lake, struck slowly. Nine strokes, then nothing. The fog-bell on the north pier at home does that, on the ninth stroke of the tide table."
+  },
+  {
    "id": "camp",
    "at": [21, 19],
    "radius": 2.5,

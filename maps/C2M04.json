@@ -1029,7 +1029,7 @@
      "message": "tune"
     },
     {
-     "objective": "The north gate is open: the corridor to the exit"
+     "objective": "The north gate is open: the corridor beyond it goes to the exit"
     },
     {
      "shake": 1.5

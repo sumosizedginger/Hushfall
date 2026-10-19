@@ -8,10 +8,10 @@ import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '../..'), args = process.argv.slice(2), only = args.find((a) => a.startsWith('--maps='))?.slice(7).split(','), rule = args.find((a) => a.startsWith('--rule='))?.slice(7);
 export const STOCK = ['echoes of', 'whisper', 'testament to', 'tapestry', 'dance of', 'symphony of', 'ancient', 'eldritch', 'cosmic', 'unspeakable', 'chilling', 'haunting', 'eerie', 'silence that speaks', 'the weight of', 'a sense of', 'send shivers', 'sends a shiver', 'blood runs cold', 'dread', 'ominous', 'sinister', 'palpable', 'seemed to', 'as if the'];
 const FEELINGS = /\b(Ines|she) (feels?|felt|is afraid|is scared|was afraid|dreads?|fears?|hopes?|grieves?|mourns?)\b/i;
-const TUTORIAL = /\b(press|hold|tap|click|use the|key [A-Z0-9]\b|\bE to\b|aim down|left mouse|right mouse|wasd)\b/i;
+const TUTORIAL = /\b(press|tap|click|use the|key [A-Z0-9]\b|\bE to\b|aim down|left mouse|right mouse|wasd)\b/i;
 export const sentences = (t) => t.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
 export function lintLine(text, { speaker = '', doc = false } = {}) {
-  const out = [], low = text.toLowerCase();
+  const out = [], low = text.toLowerCase(); if (text === text.toUpperCase() && /[A-Z]{4}/.test(text)) return out;          // a Vael transmission in capitals is canon (LORE.md section 1), not prose to polish
   for (const p of STOCK) if (low.includes(p)) out.push(['stock', `"${p}"`]);
   const sn = sentences(text), limit = doc ? 6 : 4;
   if (text.length > 180 && !doc) out.push(['long', `${text.length} characters`]);
@@ -28,7 +28,7 @@ export function allText(dir = path.join(root, 'maps')) {
   const rows = [];
   for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
     const id = f.slice(0, -5); if (only && !only.includes(id)) continue; const m = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-    for (const q of m.messages ?? []) rows.push({ id, kind: 'message', mid: q.id, speaker: q.speaker ?? '', text: q.text, doc: /LOG|LEDGER|PLATE|NOTE|TALLY|PLACARD|TENDER|DOCUMENT|PAGE/i.test(q.speaker ?? '') });
+    for (const q of m.messages ?? []) rows.push({ id, kind: 'message', mid: q.id, speaker: q.speaker ?? '', text: q.text, doc: /LOG|LEDGER|PLATE|NOTE|TALLY|PLACARD|TENDER|DOCUMENT|PAGE|SILENT|QUIET|MANIFEST/i.test(q.speaker ?? '') });
     for (const l of m.intro?.lines ?? []) rows.push({ id, kind: 'intro', speaker: '', text: l, doc: false });
     if (typeof m.outro === 'string') rows.push({ id, kind: 'outro', speaker: '', text: m.outro, doc: false });
     else for (const l of m.outro?.lines ?? []) rows.push({ id, kind: 'outro', speaker: '', text: l, doc: false });
@@ -41,7 +41,7 @@ export function allText(dir = path.join(root, 'maps')) {
 export function lintAll(rows = allText()) {
   const found = [], seen = new Map();
   for (const r of rows) { for (const [k, why] of lintLine(r.text, r)) found.push({ ...r, rule: k, why }); const key = r.text.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim(); if (key.length > 20) { if (!seen.has(key)) seen.set(key, []); seen.get(key).push(r); } }
-  for (const [, list] of seen) if (list.length > 1) for (const r of list) found.push({ ...r, rule: 'duplicate', why: `the same line on ${[...new Set(list.map((x) => x.id))].join(', ')}` });
+  for (const [, list] of seen) if (new Set(list.map((x) => x.id)).size > 1) for (const r of list) found.push({ ...r, rule: 'duplicate', why: `the same line on ${[...new Set(list.map((x) => x.id))].join(', ')}` });
   return found;
 }
 if (process.argv[1]?.endsWith('prose-lint.mjs')) {

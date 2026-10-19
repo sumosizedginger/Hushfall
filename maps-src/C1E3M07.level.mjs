@@ -80,7 +80,7 @@ const MAP = {
     { id: 'hall', at: [20, 28], radius: 2.5, speaker: 'INES', text: 'It is a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Do not stand where they can see you and wait.' },
     { id: 'vat', at: [26, 31], radius: 4, speaker: 'HULL', text: 'The dome swells, then something drops out of the spout. Kill the vat and it stops. What it has already made stays made.' },
     { id: 'troughs', at: [34, 38], radius: 4, speaker: 'INES', text: 'Slag in the troughs. It burns. The pillars are cover from the vats, and the floor between them is yours.' },
-    { id: 'panel', at: [34, 40], radius: 2, speaker: 'HULL', text: 'One panel in the south wall rings wrong. Hollow.' },
+    { id: 'panel', at: [34, 40], radius: 2, speaker: 'HULL', text: 'One panel in the south wall rings hollow.' },
     { id: 'done', at: [34, 13], radius: 2, speaker: 'SIGNAL HOUSE', text: 'All four vats are dead. The north passage is open. Whatever was casting bell-bearers is cold.' },
   ],
   triggers: [

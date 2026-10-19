@@ -60,7 +60,7 @@ const MAP = {
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
   growth: [{ at: [50, 22], r: 26, power: 1.1 }],                                                       // PT-021: the growth started at the graft table and has spread down the aisle (render only: thick here, a wet front at 26 m)
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
-  intro: { title: 'THE CRADLE ANNEX', lines: ['They are not making them here. They are growing them.', 'Do not touch anything that hangs.'] },
+  intro: { title: 'THE CRADLE ANNEX', lines: ['They do not make them here. They grow them.', 'Do not touch anything that hangs.'] },
   outro: 'Next: the Pump Cathedral. What the Works drains from the sea comes up through the floor of a church.',
   objective: 'Cross the aisle quietly. Nothing is awake yet: the release lever is in the table room, east',
   ...layers,

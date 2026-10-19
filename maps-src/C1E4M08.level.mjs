@@ -132,7 +132,7 @@ const MAP = {
   groups: [{ name: 'warden', rect: [WARDEN[0], WARDEN[1], WARDEN[0], WARDEN[1]] }, ...SEALS.map((s) => ({ name: 'seals', rect: [s[0], s[1], s[0], s[1]] }))],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'Calder, the Gate Warden. Three seals hold its shield up. Shoot them, or use its own beam: the plinths turn the light onto a seal. Its eye opens before the beam. Stone stops it.' },
+    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'Calder, the Gate Warden. Three seals hold its shield up: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it.' },
     { id: 'rim', at: [CX - 20, CZ - 15], radius: 4, speaker: 'INES', text: 'The wall has gaps: steps down to the arena. The rim goes all the way round. It is a place to run.' },
     { id: 'mirrors', at: [CX + 5, CZ + 3], radius: 4, speaker: 'HULL', text: 'Mirror plinths, one-sided: a back stops the light. Use turns one a quarter step. Light off the face runs straight on, and there are seals on those lines.' },
     { id: 'shield', at: [CX, CZ], radius: 0.1, speaker: 'INES', text: 'The last seal is gone. The shield is gone. Hit it with everything.' },

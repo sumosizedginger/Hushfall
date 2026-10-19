@@ -964,7 +964,7 @@
    "The island in the middle is the hub. The only way onto it is the car."
   ]
  },
- "outro": "The exit station is dark behind you. The rail runs on without a rider, round and round the drop, and the cars wait eight seconds at every stop, as if somebody were still getting on.",
+ "outro": "The exit station is dark behind you. The rail runs on without a rider, round the drop, and the cars wait eight seconds at every stop, as if somebody were still getting on.",
  "messages": [
   {
    "id": "start",

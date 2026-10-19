@@ -846,14 +846,14 @@
    "at": [44, 29],
    "radius": 4,
    "speaker": "HULL",
-   "text": "Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot. Or circle it. Or throw a bell-breaker over it."
+   "text": "Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot, or to circle it, or to throw a bell-breaker over it."
   },
   {
    "id": "mother",
    "at": [58, 29],
    "radius": 4,
    "speaker": "INES",
-   "text": "She is weeping. Where it lands it burns, and it slows you: walk out of it. Something is swelling on her skirt. Kill her. The gate will open."
+   "text": "She is weeping, and where it lands it burns and slows you: walk out of it. Something is swelling on her skirt. Kill her and the gate will open."
   },
   {
    "id": "hollow",

@@ -97,7 +97,7 @@ const MAP = {
     { id: 'notice', at: [19, 43], radius: 2.5, speaker: 'CUSTOMS NOTICE', text: 'All persons received will be counted. All persons counted will be processed. Please do not ring the bells.' },
     { id: 'hall', at: [26, 44], radius: 4, speaker: 'INES', text: 'Bells. Dozens of them, and every one in tune with the next. That is what wrong sounds like.' },
     { id: 'gallery', at: [46, 31], radius: 3, speaker: 'REGISTER', text: 'Last page. 212 received, 424 processed. The second count is the Graft.' },
-    { id: 'registry', at: [35, 26], radius: 3, speaker: 'INES', text: "They are not only taking people. They are filing them." },
+    { id: 'registry', at: [35, 26], radius: 3, speaker: 'INES', text: "They take people. Then they file them." },
     { id: 'ironkey', at: [44, 12], radius: 3, speaker: 'COUNTER-BOOK', text: "Final entry: 'Tone verified.' Then the ink stops, mid-word." },
     { id: 'exit', at: [58, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Fishmarket Rows next. That is where the town tried to run. Mind the lanes.' },
   ],

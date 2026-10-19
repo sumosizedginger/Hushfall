@@ -87,7 +87,8 @@ const MAP = {
       do: [{ lights: 1 }, { exit: { set: 'unlock' } }, { shake: 1.4 }, { message: 'vael' }, { objective: 'The set is live. The hatch in the radio room is open' }] },
   ],
   messages: [
-    { id: 'start', at: [3, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Signal House. The generator is down and the set is dead. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short. Do not waste it.' },
+    { id: 'start', at: [3, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Signal House. The generator is down. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.' },
+    { id: 'lamp-lit', at: [8, 23], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The lamp on the lighthouse is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.' },
     { id: 'dark', at: [12, 23], radius: 3, speaker: 'INES', text: 'It is dark on purpose. They cut the lamps so we cannot see them. The lanterns are yours: stay near them.' },
     { id: 'radio-locked', at: [20, 12], radius: 3, speaker: 'RADIO SET', text: 'The set is cold. Three fuse sockets, all empty: brass, iron, bell. The lever on the north wall waits for them.' },
     { id: 'cellar', at: [7, 10], radius: 3.5, speaker: 'INES', text: 'That bell-carrier is feeding the fallen back into the line. Kill it before it finishes.' },

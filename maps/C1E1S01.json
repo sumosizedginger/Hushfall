@@ -345,7 +345,7 @@
    "at": [7, 4],
    "radius": 3,
    "speaker": "BEACON NOTES",
-   "text": "The lamp flashes once a minute. Not for ships. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour."
+   "text": "The lamp flashes once a minute, for no ship. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour."
   },
   {
    "id": "end",

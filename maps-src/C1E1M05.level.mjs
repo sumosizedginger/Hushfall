@@ -81,7 +81,7 @@ const MAP = {
     { id: 'start', at: [4, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the hill. There are people at the top: the lamps along the switchbacks are theirs. Get to the summit beacon.' },
     { id: 'lamp', at: [6, 49], radius: 3, speaker: 'SURVIVOR (LAMP)', text: 'Lamps all the way up: that is us, showing you the road. Watch the cliff edges: they shoot down.' },
     { id: 'car', at: [26, 44], radius: 3, speaker: 'FUNICULAR PLACARD', text: 'Funicular. The only way up from terrace one to terrace two. Pull the lever on the car. If it is up, the call lever at its foot brings it down.' },
-    { id: 'sexton', at: [30, 32], radius: 5, speaker: 'INES', text: 'That one is not fighting. It is waiting for something to fall. Kill it first, and quickly.' },
+    { id: 'sexton', at: [30, 32], radius: 5, speaker: 'INES', text: 'That one waits for something to fall. Kill it first, and quickly.' },
     { id: 'high', at: [26, 21], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'Bellhands on the cliff edge over the next terrace! Use the houses; go round, not through.' },
     { id: 'summit', at: [40, 12], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'You made it up! Light the beacon: the lever on the north wall of the summit. We will open the gate.' },
     { id: 'gate', at: [50, 10], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there.' },

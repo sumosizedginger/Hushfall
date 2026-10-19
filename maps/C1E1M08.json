@@ -1069,7 +1069,7 @@
    "at": [30, 55],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Bell Tower. It has rung since the transmission. The signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top."
+   "text": "Calder, the Bell Tower. It has rung since the transmission, and the signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top."
   },
   {
    "id": "door",
@@ -1111,7 +1111,7 @@
    "at": [28, 17],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The tower is silent. The signal did not stop: it went somewhere else. The hatch is open. Go."
+   "text": "The tower is silent. The signal did not stop: it went somewhere else. The hatch is open."
   }
  ],
  "decals": [

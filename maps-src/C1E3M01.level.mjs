@@ -90,7 +90,7 @@ const MAP = {
     { id: 'sleepers', at: [7, 20], radius: 3, speaker: 'INES', text: 'People, standing. They have been standing there since it landed. Do not wake them if you can help it.' },
     { id: 'rim', at: [13, 22], radius: 2.5, speaker: 'INES', text: 'Singers on both rims. They sing in fours, and anything that goes past you shakes your aim. Cross rubble to rubble. Do not stand in the open.' },
     { id: 'high', at: [27, 22], radius: 3, speaker: 'INES', text: 'The ledges step down at the east end. If you can get up there they are close enough to hit with anything.' },
-    { id: 'breach', at: [33, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'It is open. It was not forced: it opened. This is not a wreck, Calder. It is still alive.' },
+    { id: 'breach', at: [33, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'It is open. It was not forced; it opened. This is no wreck, Calder: it is alive.' },
     { id: 'gullet', at: [38, 22], radius: 3, speaker: 'INES', text: 'Ribs. Those are ribs. Singers on the ledges again: get under them or get past them.' },
     { id: 'hollow', at: [44, 15], radius: 2, speaker: 'HULL', text: 'This rib is thinner than the rest. Put a knuckle to it and it answers like a bell.' },
     { id: 'throat', at: [59, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The valve on the north wall is the one thing in here that was made rather than grown. Turn it and the hatch should open.' },

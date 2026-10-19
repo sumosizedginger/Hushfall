@@ -85,7 +85,7 @@ const MAP = {
   atmosphere: { look: 'woven', fog: '#2a2214', fogDensity: 0.012, beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BONE LOOM', lines: ['Nine crossings under a roof of rails, and a cradle hung over every one.', 'The doors breathe on the beat. The way to the key is three of them.'] },
-  outro: 'The iron key turned and the door at the end of the north lane let go. The cradles above the crossings were all empty by then. Beyond the door a rail leads out, and the rail is warm.',
+  outro: 'The iron key turned and the door at the end of the north lane let go. The cradles above the crossings were all empty by then. Beyond the door a rail leads out, and it is warm.',
   objective: 'Cross the hall to the north: the iron key is in the cutting room behind three breathing doors. The locked door is at the east end of the north lane',
   ...L.layers(),
   secrets: [{ id: 'behind-the-frame', panel: SEC.panel, cells: SEC.cells }],

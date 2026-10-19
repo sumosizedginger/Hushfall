@@ -780,14 +780,14 @@
    "at": [42, 23],
    "radius": 3,
    "speaker": "HULL",
-   "text": "A bell-breaker, left on a plinth with its rockets. Aim and a ring shows on the ground: the shell goes THERE, over the cover, up onto a ledge. Key 0. It hurts you too."
+   "text": "A bell-breaker, left on a plinth with its rockets. The shell goes where the ring on the ground shows, over cover, up onto a ledge. It hurts you too."
   },
   {
    "id": "vault",
    "at": [52, 23],
    "radius": 4,
    "speaker": "INES",
-   "text": "People. Standing. They are not dead and they are not awake. Walk past them. Please."
+   "text": "People, standing. They are not dead and they are not awake. Walk past them, please."
   },
   {
    "id": "hollow",

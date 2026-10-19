@@ -78,7 +78,7 @@ const MAP = {
   scenery: [],
   messages: [
     { id: 'start', at: [48, 92], radius: 4, speaker: 'INES', text: 'Stone beds on a spiral, each one a little further round than the last. Whoever laid it out did not use a line or a plumb. They used a count.' },
-    { id: 'harvest', at: [48, 78], radius: 5, speaker: 'INES', text: 'Spearmen in green, walking the beds with long hooks. They are not guarding it. They are picking.' },
+    { id: 'harvest', at: [48, 78], radius: 5, speaker: 'INES', text: 'Spearmen in green walking the beds with long hooks, picking.' },
     { id: 'plate', at: [48, 70], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: five plants, five notes. A gardener grows one for each, and lays the bed so that a tone from one strikes the next.' },
     { id: 'tree', at: [48, 60], radius: 5, speaker: 'HULL', text: 'The tree in the middle plays a phrase when you use it: the fruit light in order, a note each. Answer on the chimes, in order, each within eight seconds of the last.' },
     { id: 'avenue', at: [48, 38], radius: 4, speaker: 'HULL', text: 'Three walls across the avenue to the north. The tree plays the next phrase that is not yet answered. A wrong note starts the phrase again.' },
@@ -87,7 +87,7 @@ const MAP = {
     { id: 'r3', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'Five, and the last wall is open. It was a count the whole way, and the first time the Song has been one I could repeat.' },
     { id: 'hollow', at: [xe, CZ + 6], radius: 2, speaker: 'HULL', text: 'The east edge of the garden rings hollow behind a planter with no plant in it.' },
     { id: 'grove', at: [xe + 4, CZ + 6], radius: 3, speaker: 'A SILENT (NOTE)', text: 'The seed of the chimes is pressed for oil. This is the last pressing before the count was called. Whoever has a lantern, take it.' },
-    { id: 'end', at: [48, 10], radius: 3, speaker: 'INES', text: 'The stair is cut very wide, and the steps are worn on both sides and not in the middle, as if the ones who used it were carrying something between them.' },
+    { id: 'end', at: [48, 10], radius: 3, speaker: 'INES', text: 'The stair is cut very wide, and the steps are worn on both sides and not in the middle, as though the ones who used it were carrying something between them.' },
   ],
   triggers: [
     { id: 'wall1', when: 'seq:r1', do: [{ open: [48, 30] }, { message: 'r1' }, { objective: 'The first wall is open. Use the tree again: the second phrase' }, ...wave1] },

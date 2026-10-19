@@ -152,7 +152,7 @@ const MAP = {
     { type: 'switch', id: 'hull', at: HULLSW, wall: 'west', do: [...HATCHES.N.map((h) => ({ close: h })), { open: exitDoor }, { objective: 'The hatches are shut and the air is back. The exit is west of the bay' }, { shake: 2 }, { message: 'air' }] }],
   messages: [
     { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Cold Dock: the Vael parked their fleet here. Two bays are open to the dark and the air in them is gone. A lock lets you in and out, but not both doors at once.' },
-    { id: 'hub', at: [CX, CZ + 5], radius: 3, speaker: 'INES', text: 'Look at the glass. Ships. Rank on rank of them, hanging. The couplings that start them are in the east and west bays. Seat both at the spine.' },
+    { id: 'hub', at: [CX, CZ + 5], radius: 3, speaker: 'INES', text: 'Look at the glass: ships, rank on rank of them, hanging. The couplings that start them are in the east and west bays. Seat both at the spine.' },
     { id: 'lock', at: B('E', 11), radius: 2.5, speaker: 'HULL', text: 'Airlock. Open the near door, step in, wait for it to shut and for the air to settle. The far door will not move until it has.' },
     { id: 'dash', at: B('E', 20), radius: 3, speaker: 'INES', text: 'No air. You lose it a second at a time. Do not stop to look.' },
     { id: 'pockets', at: B('W', 20), radius: 3, speaker: 'SIGNAL HOUSE', text: 'The walls are doored closets: pressurised, small, there for the crews. Breathe in one. You cannot be followed through a door.' },

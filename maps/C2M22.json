@@ -1406,7 +1406,7 @@
    "There is not much left to shoot with. There is not much to shoot."
   ]
  },
- "outro": "The lift came to the bottom and stopped. The shaft is a very long way down. The door in the east wall of the hall had unlocked itself by then, and nobody was in the room to hear it.",
+ "outro": "The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then, and nobody was in the room to hear it.",
  "messages": [
   {
    "id": "start",
@@ -1441,7 +1441,7 @@
    "at": [10, 13],
    "radius": 6,
    "speaker": "INES",
-   "text": "Songkeepers in the arcade, in pairs, walking the rounds. They are not looking for me yet. They are looking for what the chapels hold."
+   "text": "Songkeepers in the arcade, in pairs, walking the rounds. They are looking for what the chapels hold, and not for me yet."
   },
   {
    "id": "c1",

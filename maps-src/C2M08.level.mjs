@@ -79,6 +79,7 @@ const MAP = {
   scenery: [{ kind: 'spire', at: [8, 2] }, { kind: 'spire', at: [64, 4] }, { kind: 'spire', at: [36, -22] }, { kind: 'spire', at: [-6, 60] }],
   messages: [
     { id: 'start', at: [20, 91], radius: 3, speaker: 'INES', text: 'A gate hall at the foot of a cliff, and the cliff is a city: tiers of terraces up the face, stairs and lifts between them, all of it glass the colour of weak tea.' },
+    { id: 'static', at: [20, 88], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder. The lamp is lit. You are breaking up. Say again, Calder.' },
     { id: 'stair', at: [21, 80], radius: 3, speaker: 'HULL', text: 'The first stair is under a roof. At the top the terrace is open, and a Warden-Graft with its plate to you will charge down the whole length of it.' },
     { id: 'plate', at: [32, 71], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: the long number is shorter than it was at the Fields. By about a thousand. I do not know whether that is good news.' },
     { id: 'lift', at: [36, 65], radius: 2.5, speaker: 'HULL', text: 'The lift. A lever on the car sends it up; a call lever on each landing brings it down. Nothing on the next tier can reach you until it is up.' },

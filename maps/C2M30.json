@@ -269,14 +269,14 @@
    "at": [85, 13],
    "radius": 5,
    "speaker": "INES",
-   "text": "A road across a plain under a low red sun. It is not the one I walked. It is the one that was always going to be here when I got to this end."
+   "text": "A road across a plain under a low red sun. It was always going to be here when I got to this end. It is a different road from the one I walked."
   },
   {
    "id": "gate",
    "at": [103, 13],
    "radius": 4,
    "speaker": "SIGNAL HOUSE",
-   "text": "Ines. I have you on the set. There is no line down there, and I have you. What is in front of you?"
+   "text": "Ines. I have you on the set. There is no line down there, and I have you. Tell me what is in front of you."
   },
   {
    "id": "door",

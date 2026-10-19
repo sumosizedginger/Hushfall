@@ -37,7 +37,7 @@ test('the text follows the mechanical rules of LORE.md: no stock phrases, short,
   const VOICES = new Set(['INES', 'HULL', 'THE TENDER', 'A SILENT', 'A SILENT (NOTE)', 'SIGNAL HOUSE']), found = /\b(LOG|LEDGER|PLATE|TALLY|NOTE)\b/;
   for (const id of IDS) for (const m of SRC[id].messages) assert.ok(VOICES.has(m.speaker) || found.test(m.speaker), `${id} ${m.id}: unknown speaker '${m.speaker}'`);
   const sh = IDS.flatMap((id) => SRC[id].messages.filter((m) => m.speaker === 'SIGNAL HOUSE').map((m) => id + ' ' + m.id));
-  assert.deepEqual(sh, ['C2M01 start'], 'SIGNAL HOUSE is silent from the Gate on: one last line on the beach');
+  assert.deepEqual(sh, ['C2M01 start', 'C2M08 static'], 'SIGNAL HOUSE is nearly silent from the Gate on: the call through the Gate on the beach, and one static-washed call at the end of the act (PT-061, the story pass: the operator is never gone from the ear of the player)');
   const tender = IDS.flatMap((id) => SRC[id].messages.filter((m) => m.speaker === 'THE TENDER').map((m) => id));
   assert.deepEqual(tender, ['C2M03'], 'the Tender speaks once in Act A, when she is freed');
 });

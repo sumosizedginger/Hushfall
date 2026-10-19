@@ -98,6 +98,7 @@ const MAP = {
     { id: 'start', at: [11, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you are through. I have you for as long as the Gate holds behind you. After that it is just the set and the dark.' },
     { id: 'seal', at: [16, 28], radius: 0.1, speaker: 'INES', text: 'Door is shut. Signal House, no answer. Logging it anyway: day one, a beach, the Gate dark behind me.' },
     { id: 'rows', at: [21, 28], radius: 5, speaker: 'INES', text: 'Oilskins. Marrow boat crews in two rows, facing the water. They were put here and told to wait.' },
+    { id: 'bell', at: [26, 28], radius: 3, speaker: 'INES', text: 'A bell, a long way off across the lake, struck slowly. Nine strokes, then nothing. The fog-bell on the north pier at home does that, on the ninth stroke of the tide table.' },
     { id: 'camp', at: [21, 19], radius: 2.5, speaker: 'CAMP LEDGER', text: 'WATER: the lake is salt. FOOD: nine days. Two of ours went out in the night and stood on the sand. Keep moving. Keep the lamp lit.' },
     { id: 'north', at: [31, 19], radius: 4, speaker: 'HULL', text: 'Singers on the north dune. Their rounds shake your aim. Rock to rock, and do not stand in the open.' },
     { id: 'breach', at: [46, 28], radius: 2.5, speaker: 'MARROW GIRL LOG', text: 'Third night of the Hush. Skipper took her out past the bar to get clear. The Gate opened under the keel. We did not sink. We arrived.' },

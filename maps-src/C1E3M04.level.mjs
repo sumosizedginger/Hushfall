@@ -82,8 +82,8 @@ const MAP = {
   messages: [
     { id: 'start', at: [6, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the nave. There is no roof left: the ship tore it open to sing at the sky. Whatever sits at the far end is why the gate is sealed.' },
     { id: 'nave', at: [20, 29], radius: 3, speaker: 'INES', text: 'Two galleries, north and south, with singers on both. The pillars stop a round. Do not cross this floor in a straight line.' },
-    { id: 'shell', at: [44, 29], radius: 4, speaker: 'HULL', text: 'Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot. Or circle it. Or throw a bell-breaker over it.' },
-    { id: 'mother', at: [58, 29], radius: 4, speaker: 'INES', text: 'She is weeping. Where it lands it burns, and it slows you: walk out of it. Something is swelling on her skirt. Kill her. The gate will open.' },
+    { id: 'shell', at: [44, 29], radius: 4, speaker: 'HULL', text: 'Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot, or to circle it, or to throw a bell-breaker over it.' },
+    { id: 'mother', at: [58, 29], radius: 4, speaker: 'INES', text: 'She is weeping, and where it lands it burns and slows you: walk out of it. Something is swelling on her skirt. Kill her and the gate will open.' },
     { id: 'hollow', at: [30, 10], radius: 2.5, speaker: 'HULL', text: 'One rib of this wall is thin. A held breath, behind it.' },
     { id: 'gate', at: [79, 29], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'The gate is open. Past it the ship goes on singing, but it is quieter.' },
   ],

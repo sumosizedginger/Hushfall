@@ -67,7 +67,7 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Loom. Every door in there listens. Make a noise near one and it will not open for you until it has heard nothing for a while. Kill quietly, or wait.' },
-    { id: 'lock', at: [11, 28], radius: 2, speaker: 'INES', text: 'It is listening. Your own gun is what it hears. Stand still. Count to four. It will let you through.' },
+    { id: 'lock', at: [11, 28], radius: 2, speaker: 'INES', text: 'It is listening, and your own gun is what it hears. Stand still and count to four. It will let you through.' },
     { id: 'hall', at: [17, 28], radius: 3, speaker: 'HULL', text: 'A pit, and four floors that rise and fall on a beat, each two seconds behind the last. Step on the first when it is up, the next when it comes up. Or go round, past the singers.' },
     { id: 'east', at: [36, 28], radius: 3, speaker: 'INES', text: 'Another of the tall ones, a wheel of bells behind it. Whatever stands near it takes half. Kill it first.' },
     { id: 'heart', at: [47, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Rows of them, standing, asleep: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall.' },
@@ -78,7 +78,7 @@ const MAP = {
     { id: 'hall', when: 'enter', at: [17, 28], radius: 2.5, do: [{ objective: 'Cross the pit: the platforms rise on the beat, or go round the walkways' }] },
     { id: 'far', when: 'enter', at: [35, 28], radius: 3, do: [{ wake: 'east' }] },
     { id: 'lock2', when: 'enter', at: [41, 28], radius: 2, do: [{ objective: 'The second lock listens: kill the Acolyte, then be quiet for five seconds' }] },
-    { id: 'heart', when: 'enter', at: [47, 28], radius: 3, do: [{ objective: 'The lever is on the Heart\'s east wall' }] },
+    { id: 'heart', when: 'enter', at: [47, 28], radius: 3, do: [{ objective: 'The lever is on the east wall of the Heart, past the platforms' }] },
   ],
   quality: { enemies: [14, 60], botSeconds: [50, 700], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 4, enemyKinds: { acolyte: 2, chorister: 1, tollbearer: 8, gaunt: 4, bellhand: 2 },
     scaleClass: 'COMPRESSION', tallReason: 'the Warp Hall is the episode\'s one named loom: 7 m to the vault so the platforms have 5 m of air above their top',

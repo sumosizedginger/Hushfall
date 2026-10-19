@@ -1007,6 +1007,13 @@
    "text": "A gate hall at the foot of a cliff, and the cliff is a city: tiers of terraces up the face, stairs and lifts between them, all of it glass the colour of weak tea."
   },
   {
+   "id": "static",
+   "at": [14, 72],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder. The lamp is lit. You are breaking up. Say again, Calder."
+  },
+  {
    "id": "stair",
    "at": [15, 66],
    "radius": 3,

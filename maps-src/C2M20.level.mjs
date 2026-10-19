@@ -64,7 +64,7 @@ const MAP = {
   atmosphere: { look: 'veins', sky: 'hive', beat: true, fog: '#2a1418', fogDensity: 0.008 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'VEIN RAIL', lines: ['A rail round a drop, and two cars that never stop going round.', 'The island in the middle is the hub. The only way onto it is the car.'] },
-  outro: 'The exit station is dark behind you. The rail runs on without a rider, round and round the drop, and the cars wait eight seconds at every stop, as if somebody were still getting on.',
+  outro: 'The exit station is dark behind you. The rail runs on without a rider, round the drop, and the cars wait eight seconds at every stop, as if somebody were still getting on.',
   objective: 'Ride to the hub: the relay is on the island in the middle of the ring. A car stops at every station for eight seconds and the rim blinks before it leaves',
   ...L.layers(),
   secrets: [{ id: 'siding', panel: SEC.panel, cells: SEC.cells }],

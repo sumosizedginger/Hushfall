@@ -90,7 +90,7 @@ const MAP = {
   lantern: { oil: 120, max: 240 }, lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 36, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower'] },
   intro: { title: 'ROOT BELL DESCENT', lines: ['A well thirty metres deep, in six landings.', 'The way down is across the dark.'] },
-  outro: 'The last landing is a root floor with a door in the wall. The door is open, and the corridor beyond it goes on down at the same slope as the rest of the country, towards a sound that is not a sound yet.',
+  outro: 'The last landing is a root floor with an open door in the wall. The corridor beyond goes on down at the slope of the rest of the country, towards a sound that is not a sound yet.',
   objective: 'Go down: at the end of each landing a lit plate throws you across the well to the next. A lit lantern holds sound back; it is seen from far off',
   ...L.layers(),
   secrets: [{ id: 'seam', panel: SECP.panel, cells: SECP.cells }],

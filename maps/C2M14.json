@@ -1078,7 +1078,7 @@
    "at": [48, 78],
    "radius": 5,
    "speaker": "INES",
-   "text": "Spearmen in green, walking the beds with long hooks. They are not guarding it. They are picking."
+   "text": "Spearmen in green walking the beds with long hooks, picking."
   },
   {
    "id": "plate",
@@ -1141,7 +1141,7 @@
    "at": [48, 10],
    "radius": 3,
    "speaker": "INES",
-   "text": "The stair is cut very wide, and the steps are worn on both sides and not in the middle, as if the ones who used it were carrying something between them."
+   "text": "The stair is cut very wide, and the steps are worn on both sides and not in the middle, as though the ones who used it were carrying something between them."
   }
  ],
  "objective": "Cross the garden to the plaza. The tree in the middle plays a phrase: answer it on the chimes. Three phrases open the three walls",

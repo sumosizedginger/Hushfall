@@ -44,7 +44,7 @@ const MAP = {
     { id: 'log1', at: [9, 16], radius: 2.5, speaker: "WARDEN CALDER'S LOG", text: 'First entry. The hum in the chalk. I knew it for what it was. Ines hears none of it: the ear I damaged by accident may be the best thing I ever did.' },
     { id: 'drawing', at: [4, 18], radius: 2, speaker: "A CHILD'S DRAWING", text: 'A bell tower ringed in red crayon. In the corner, in your own hand at six years old: "the loud one".' },
     { id: 'stair', at: [6, 11], radius: 2, speaker: 'INES', text: 'Every step of this stair was cut by hand. He climbed it every night to keep the lamp lit. Every night for thirty years.' },
-    { id: 'lamp', at: [7, 4], radius: 3, speaker: 'BEACON NOTES', text: 'The lamp flashes once a minute. Not for ships. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour.' },
+    { id: 'lamp', at: [7, 4], radius: 3, speaker: 'BEACON NOTES', text: 'The lamp flashes once a minute, for no ship. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour.' },
     { id: 'end', at: [22, 19], radius: 2, speaker: 'INES', text: 'Thank you, Dad. I will keep it lit.' },
   ],
   quality: { safe: true, enemies: [0, 0], botSeconds: [20, 180], mechanics: ['heights'], skins: 4 },

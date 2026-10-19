@@ -827,7 +827,7 @@
    "One conductor stands between you and the stair."
   ]
  },
- "outro": "The conductor stopped in the middle of a bar. The forks rang on without it, one at a time, and then they stopped too. Beyond the corridor the stair goes down again, and it is very cold.",
+ "outro": "The conductor stopped in the middle of a bar. The forks rang on without it, one at a time, and then they stopped too. Beyond the corridor the stair goes down again, and it is cold.",
  "messages": [
   {
    "id": "start",
@@ -862,7 +862,7 @@
    "at": [60, 44],
    "radius": 5,
    "speaker": "INES",
-   "text": "One Vael on a round dais with a rod in one hand and the other up in front of its face. It is not looking at me. It is looking at the forks."
+   "text": "One Vael on a round dais with a rod in one hand and the other up in front of its face. It is looking at the forks."
   },
   {
    "id": "ring",
@@ -890,7 +890,7 @@
    "at": [26, 25],
    "radius": 3,
    "speaker": "A SILENT (NOTE)",
-   "text": "For whoever is sent to stop it. It does not want to be a conductor. It was never asked. Do not make it suffer: it has been afraid for a long time."
+   "text": "For whoever is sent to stop it. It never wanted to be a conductor, and nobody asked. Do not make it suffer: it has been afraid for a long time."
   },
   {
    "id": "dead",
@@ -905,6 +905,13 @@
    "radius": 3,
    "speaker": "INES",
    "text": "A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. Whatever is below this is not warm."
+  },
+  {
+   "id": "last-call",
+   "at": [92, 44],
+   "radius": 3,
+   "speaker": "SIGNAL HOUSE",
+   "text": "Calder, this is the last I can hold. The lamp is lit and the tea is cold. I am here until the set goes."
   }
  ],
  "objective": "Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe: break its four forks to drop its shield, then break it. Its ring comes back",

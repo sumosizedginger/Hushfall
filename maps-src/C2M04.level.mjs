@@ -85,7 +85,7 @@ const MAP = {
   secrets: [{ id: 'store', panel: SEC.panel, cells: SEC.cells }],
   groups: [],
   entities: [...P.ents,
-    { type: 'switch', id: 'tune', at: [32, 16], wall: 'west', once: true, do: [{ open: [40, 5] }, { message: 'tune' }, { objective: 'The north gate is open: the corridor to the exit' }, { shake: 1.5 }] },
+    { type: 'switch', id: 'tune', at: [32, 16], wall: 'west', once: true, do: [{ open: [40, 5] }, { message: 'tune' }, { objective: 'The north gate is open: the corridor beyond it goes to the exit' }, { shake: 1.5 }] },
     { type: 'exit', at: [40, 2], dest: 'next' }],
   scenery: [{ kind: 'spire', at: [12, -6] }, { kind: 'spire', at: [66, -10] }, { kind: 'spire', at: [40, -22] }],
   messages: [
