@@ -30,7 +30,7 @@ const isNum = (v) => typeof v === 'number';
 const isPair = (v) => Array.isArray(v) && v.length === 2 && v.every(isNum);
 
 /** remap a map definition's coordinates and cut its layers; `map` is the COMPILED map (grid / heights / ceilings / fx as arrays of strings). Returns { map, warnings }. */
-export function squeezeMap(map, spec) {
+export function squeezeOne(map, spec) {
   const axis = spec.axis === 'z' ? 1 : 0, cuts = spec.cuts, H = map.grid.length, W = map.grid[0].length;
   checkCuts(cuts, axis ? H : W);
   const R = (u) => toShipped(u, cuts), seen = new Map();
@@ -56,17 +56,28 @@ export function squeezeMap(map, spec) {
 }
 
 /** a drops.keep list (cells [x, z] and rectangles [x0, z0, x1, z1]) in the shipped frame */
-export function squeezeKeep(keep, spec) {
+function keepOne(keep, spec) {
   const axis = spec.axis === 'z' ? 1 : 0, R = (u) => toShipped(u, spec.cuts);
   return keep.map((k) => { const q = k.slice(); q[axis] = R(q[axis]); if (q.length === 4) q[axis + 2] = R(q[axis + 2]); return q; });
 }
 
 /** the same remap for a canonical route (a list of ops with `at` pairs) */
-export function squeezeRoute(route, spec) {
+function routeOne(route, spec) {
   const axis = spec.axis === 'z' ? 1 : 0;
   return route.map((op) => (isPair(op.at) ? { ...op, at: Object.assign(op.at.slice(), { [axis]: toShipped(op.at[axis], spec.cuts) }) } : { ...op }));
 }
 
+
+// ---- a map may be squeezed on BOTH axes: `MAP.squeeze` is one spec or a list of them, applied in order (a column set, then a row set) ----------------------------------------------------------------------------------------------------------------------------
+/** one spec or a list of specs -> a list */
+export const specList = (sq) => (Array.isArray(sq) ? sq : sq ? [sq] : []);
+export function squeezeMap(map, sq) { let m = map; const warnings = []; for (const spec of specList(sq)) { const r = squeezeOne(m, spec); m = r.map; warnings.push(...r.warnings); } return { map: m, warnings: [...new Set(warnings)] }; }
+export function squeezeKeep(keep, sq) { return specList(sq).reduce((k, spec) => keepOne(k, spec), keep); }
+export function squeezeRoute(route, sq) { return specList(sq).reduce((r, spec) => routeOne(r, spec), route); }
+/** a cell [x, z] of the SHIPPED map -> the cell it has in the authoring frame (the specs undone in the opposite order) */
+export function cellToSource(cell, sq) { const p = cell.slice(); for (const spec of specList(sq).slice().reverse()) { const ax = spec.axis === 'z' ? 1 : 0; p[ax] = toSource(p[ax], spec.cuts); } return p; }
+/** a cell [x, z] of the authoring frame -> the shipped map (a cell inside a cut lands on its edge) */
+export function cellToShipped(cell, sq) { const p = cell.slice(); for (const spec of specList(sq)) { const ax = spec.axis === 'z' ? 1 : 0; p[ax] = toShipped(p[ax], spec.cuts); } return p; }
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // the command line
 async function sourceOf(id) { return (await import(pathToFileURL(path.join(root, 'maps-src', id + '.level.mjs')).href)).default; }
@@ -81,12 +92,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const axis = ax === 'z' ? 1 : 0, H = map.grid.length, W = map.grid[0].length, N = axis ? H : W, O = axis ? W : H, ch = (c, o) => (axis ? map.grid[c][o] : map.grid[o][c]), ht = (c, o) => ((axis ? map.heights?.[c]?.[o] : map.heights?.[o]?.[c]) ?? '0');
     const used = new Array(N).fill(''), mark = (u, what) => { const c = Math.round(u); if (c >= 0 && c < N && !used[c].includes(what)) used[c] += (used[c] ? ' ' : '') + what; };
     // what makes a column un-cuttable: a creature, a pickup, a prop, a switch, the exit, the start, a door, a secret panel or its cells. Messages and triggers only have a CENTRE that moves with the map: they never block.
-    for (const e of map.entities) if (isPair(e.at)) mark(e.at[axis], e.type === 'enemy' ? 'E' : e.type === 'switch' ? 'SW' : e.type === 'exit' ? 'EXIT' : e.type === 'player' ? 'START' : e.type === 'prop' ? 'p' : 'k');
-    for (const d of map.doors ?? []) mark(d.at[axis], 'door'); for (const s of map.secrets ?? []) { mark(s.panel[axis], 'secret'); for (const c of s.cells) mark(c[axis], 'secret'); }
+    for (const e of map.entities) if (isPair(e.at)) { mark(e.at[axis], e.type === 'enemy' ? 'E' : e.type === 'switch' ? 'SW' : e.type === 'exit' ? 'EXIT' : e.type === 'player' ? 'START' : e.type === 'prop' ? 'p' : 'k'); if (e.type === 'switch' || e.type === 'exit') { mark(e.at[axis] - 1, 'wall'); mark(e.at[axis] + 1, 'wall'); } }          // a lever or an exit is set in a wall: the wall behind it must stay a wall
+    for (const d of map.doors ?? []) for (let k = -1; k <= 1; k++) mark(d.at[axis] + k, 'door'); for (const s of map.secrets ?? []) { for (let k = -1; k <= 1; k++) mark(s.panel[axis] + k, 'secret'); for (const c of s.cells) for (let k = -1; k <= 1; k++) mark(c[axis] + k, 'secret'); } for (const c of map.closets ?? []) for (let k = -1; k <= 1; k++) mark(c.at[axis] + k, 'closet');
     for (const [a, b] of keepOut) for (let c = a; c <= b; c++) mark(c, 'avoid');
     for (const v of map.vents ?? []) { mark(v.at[axis], 'vent'); mark(v.to[axis], 'vent'); }
     const jump = (c) => { let n = 0; for (let o = 0; o < O; o++) { if (ch(c - 1, o) !== ch(c + 1, o)) n++; else if (ht(c - 1, o) !== ht(c + 1, o)) n++; } return n; };
-    const blocked = (c) => c < 3 || c >= N - 3 || used[c] !== '', rows = [];
+    const stepAcross = (c) => { for (let o = 0; o < O; o++) if (isFloor(ch(c - 1, o)) && isFloor(ch(c + 1, o)) && ht(c - 1, o) !== ht(c + 1, o)) return true; return false; };          // a stair or a ramp runs ALONG the axis through this column: taking it out makes a taller step (the step rule is 0.6 m)
+    const blocked = (c) => c < 3 || c >= N - 3 || used[c] !== '' || stepAcross(c), rows = [];
     for (let c = 0; c < N; c++) rows.push({ c, used: used[c], jump: c > 0 && c < N - 1 ? jump(c) : 0 });
     if (want > 0) {                                   // pick `want` columns spread evenly: in each window the free column whose two neighbours already look most alike
       const picks = [], span = N / want;
@@ -99,14 +111,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       console.log(`${id}: ${W} x ${H}, axis ${axis ? 'z' : 'x'}; ${free.filter(Boolean).length} free columns in ${runs.length} runs (a..b exclusive, mean jump):`); console.log('  ' + runs.map((r) => `[${r.a},${r.b}) ${r.cost}`).join('   '));
     }
   } else if (cmd === 'routes' && id) {
-    const lv = await sourceOf(id), spec = lv.squeeze; if (!spec) { console.error(id + ' has no squeeze'); process.exit(1); }
+    const lv = await sourceOf(id), spec = lv.squeeze; if (!specList(spec).length) { console.error(id + ' has no squeeze'); process.exit(1); }
     const orig = path.join(root, 'maps-src', 'squeeze-orig'); fs.mkdirSync(orig, { recursive: true });
     for (const f of fs.readdirSync(path.join(root, 'routes')).filter((q) => q.startsWith(id + '.') && q.endsWith('.route.json'))) {
       const keep = path.join(orig, f); if (!fs.existsSync(keep)) fs.copyFileSync(path.join(root, 'routes', f), keep);
       const route = JSON.parse(fs.readFileSync(keep, 'utf8')); fs.writeFileSync(path.join(root, 'routes', f), JSON.stringify(squeezeRoute(route, spec))); console.log('wrote routes/' + f);
     }
     const vf = path.join(root, 'maps-src', id + '.views.json');                                           // the vantage tour of shoot-map.mjs: x / z in cells
-    if (fs.existsSync(vf)) { const keep = path.join(orig, id + '.views.json'); if (!fs.existsSync(keep)) fs.copyFileSync(vf, keep); const ax = spec.axis === 'z' ? 'z' : 'x';
-      fs.writeFileSync(vf, JSON.stringify(JSON.parse(fs.readFileSync(keep, 'utf8')).map((v) => (typeof v[ax] === 'number' ? { ...v, [ax]: toShipped(v[ax], spec.cuts) } : v)), null, 1)); console.log('wrote maps-src/' + id + '.views.json'); }
+    if (fs.existsSync(vf)) { const keep = path.join(orig, id + '.views.json'); if (!fs.existsSync(keep)) fs.copyFileSync(vf, keep);
+      fs.writeFileSync(vf, JSON.stringify(JSON.parse(fs.readFileSync(keep, 'utf8')).map((v) => (typeof v.x === 'number' && typeof v.z === 'number' ? (([x, z]) => ({ ...v, x, z }))(cellToShipped([v.x, v.z], spec)) : v)), null, 1)); console.log('wrote maps-src/' + id + '.views.json'); }
   } else { console.error('usage: squeeze.mjs scan <ID> [x|z]  |  routes <ID>'); process.exit(2); }
 }

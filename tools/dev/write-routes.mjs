@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { squeezeRoute } from '../mapkit/squeeze.mjs';
 const root = path.resolve(import.meta.dirname, '../..'), id = process.argv[2];
 if (!id) { console.error('usage: node tools/dev/write-routes.mjs <ID>'); process.exit(2); }
 const mod = await import(pathToFileURL(path.join(root, 'maps-src', id + '.level.mjs')).href);
@@ -13,6 +14,7 @@ for (const [name, list] of Object.entries(mod.waypoints)) {
   for (const w of list) {
     if (Array.isArray(w)) { ops.push({ op: 'goto', at: [w[0], w[1]] }); if (w[2] !== 0) ops.push({ op: 'kill' }); } else ops.push(w);
   }
-  fs.writeFileSync(path.join(root, 'routes', `${id}.${name}.route.json`), JSON.stringify(ops));
+  const shipped = mod.default?.squeeze ? squeezeRoute(ops, mod.default.squeeze) : ops;          // a squeezed map (tools/mapkit/squeeze.mjs): the waypoints are in the authoring frame, the shipped route is in the squeezed one
+  fs.writeFileSync(path.join(root, 'routes', `${id}.${name}.route.json`), JSON.stringify(shipped));
   console.log(`wrote routes/${id}.${name}.route.json (${ops.length} ops)`);
 }

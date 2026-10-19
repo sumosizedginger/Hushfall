@@ -29,6 +29,9 @@ export const RULES = {
   lockFrom: 'C1E2',               // locks are expected from this episode on (the Director's law 13)
 };
 const SETPIECES = new Set(['C1E3M04', 'C1E4M07', 'C2M28', 'C2M30', 'C1E4M01']);   // declared set pieces: judged on their own number, layout kept
+// PT-052 Level B (2026-10-19): a map that calls ITSELF a SET-PIECE (`quality.scaleClass`) is one: it is judged on its own numbers and its layout is kept (the audit's blunt rules had listed five of them as `B structural`); and two maps are DESIGNED to be what the rules call a fault:
+// the Mourning Halls are the campaign's trough (few creatures, melee, quiet, on purpose: its brief says so) and the Ash Basilica is an elite gauntlet (five elite fights in a row: the bot gates take no more).
+const DESIGNED = { C2M22: 'the trough of the campaign: short, quiet and melee on purpose', C2M15: 'an elite gauntlet: five elite fights, the bot gates take no more' };
 const BOSSES = new Set(['cantor', 'graftmother', 'grandcantor', 'gatewarden', 'subcantor', 'hivecantor', 'rootbell']);
 const EXEMPLARS = ['C2M02', 'C2M11', 'C2M21', 'C1E4M06'];                         // the Director's Plan, workstream B, level C (the four named exemplars)
 
@@ -57,7 +60,7 @@ export function auditMap(src) {
   const secrets = (map.secrets ?? []).length, sym = mirror(map, walk), rg = roomGraph(map);
   let botMin = null; try { const v = JSON.parse(fs.readFileSync(path.join(ROOT, 'validation', 'maps', map.id + '.json'), 'utf8')); botMin = v.canonicalRoute ? +(v.canonicalRoute.ticks * TICK / 60).toFixed(1) : null; } catch { /* no evidence file */ }
   const row = { id: map.id, name: map.name, walk: feel.walkable, enemies: total, density: feel.walkable ? Math.round(1000 * total / feel.walkable) : 0, kinds: Object.keys(kinds).length, topKind: top[0], topShare: total ? Math.round(100 * top[1] / total) : 0, rangedShare: total ? Math.round(100 * ranged / total) : 0,
-    levelsPct, floors: heights.size, symmetry: +sym.toFixed(2), keys, secrets, triggers, switches: switches.length, ambushes, botMin, boss, setpiece: SETPIECES.has(map.id), rooms: rg.rooms.length, loops: rg.loops, roomLoops: rg.roomLoops, emptyRooms: rg.emptyRooms.length };
+    levelsPct, floors: heights.size, symmetry: +sym.toFixed(2), keys, secrets, triggers, switches: switches.length, ambushes, botMin, boss, setpiece: SETPIECES.has(map.id) || src.quality?.scaleClass === 'SET-PIECE', rooms: rg.rooms.length, loops: rg.loops, roomLoops: rg.roomLoops, emptyRooms: rg.emptyRooms.length };
   const f = []; let structural = 0, roster = 0;
   if (total) {
     if (row.density < RULES.sparse[0]) { structural += 2; f.push('sparse'); } else if (row.density < RULES.sparse[1]) { structural += 1; f.push('thin'); }
@@ -76,7 +79,7 @@ export function auditMap(src) {
   if (row.emptyRooms >= 1) f.push(row.emptyRooms + ' empty room' + (row.emptyRooms > 1 ? 's' : ''));
   row.flags = f; row.structural = structural; row.roster = roster;
   // tier: KEEP = no combat or a boss / set piece judged by play; C = a named exemplar; B = structural change; A = encounters and rosters only (no geometry change); A- = a light pass
-  row.tier = !total ? (ambushes > 10 ? 'KEEP (a stand: its creatures come from triggers)' : 'KEEP (no combat)') : EXEMPLARS.includes(row.id) ? 'C exemplar' : (row.boss || row.setpiece) ? 'KEEP (boss or set piece: judge by play)' : structural >= 3 ? 'B structural' : (structural >= 1 || roster >= 2) ? 'A encounters and roster' : 'A- light pass';
+  row.tier = !total ? (ambushes > 10 ? 'KEEP (a stand: its creatures come from triggers)' : 'KEEP (no combat)') : EXEMPLARS.includes(row.id) ? 'C exemplar' : DESIGNED[row.id] ? `KEEP (designed: ${DESIGNED[row.id]}; judge by play)` : (row.boss || row.setpiece) ? 'KEEP (boss or set piece: judge by play)' : structural >= 3 ? 'B structural' : (structural >= 1 || roster >= 2) ? 'A encounters and roster' : 'A- light pass';
   return row;
 }
 

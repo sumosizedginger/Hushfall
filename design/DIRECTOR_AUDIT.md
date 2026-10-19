@@ -16,7 +16,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C1E1M08 | Bell Tower of St. Orrin | 1649 | 41 | 25 | 7 | 44 | 12 | 69 | 0.67 | 0 | 0 | 0 | 0 | 0 | 2.9 | 0 | 57 | KEEP (boss or set piece: judge by play) | few ambushes |
 | C1E1S01 | The Lighthouse Cellar | 220 | 0 | 0 | 0 | 0 | 0 | 22 | 0.24 | 0 | 0 | 0 | 0 | 0 | 0.7 | - | - | KEEP (no combat) |  |
 | C1E2M01 | Brine Gate | 1155 | 30 | 26 | 4 | 43 | 20 | 12 | 0.65 | 2 | 0 | 0 | 1 | 2 | 1.3 | 2 | 43 | A- light pass | no key, one secret |
-| C1E2M02 | Evaporation Pans | 2619 | 54 | 21 | 3 | 65 | 9 | 3 | 0.94 | 2 | 0 | 0 | 1 | 2 | 1 | 2 | 35 | B structural | long, one-note tollbearer, thin roster, melee-only, symmetrical, flat, no key, one secret |
+| C1E2M02 | Evaporation Pans | 2619 | 54 | 21 | 3 | 48 | 20 | 3 | 0.94 | 2 | 0 | 0 | 1 | 2 | 1 | 2 | 35 | KEEP (boss or set piece: judge by play) | long, thin roster, symmetrical, flat, no key, one secret |
 | C1E2M03 | Rail Yard | 1503 | 37 | 25 | 4 | 38 | 22 | 10 | 0.61 | 7 | 0 | 0 | 1 | 4 | 1.2 | 2 | 30 | A- light pass | no key, one secret |
 | C1E2M04 | Kiln Row | 1035 | 33 | 32 | 3 | 45 | 18 | 7 | 0.78 | 1 | 0 | 2 | 1 | 2 | 1.4 | 2 | 42 | A encounters and roster | thin roster, flat, one secret |
 | C1E2M05 | The Cradle Annex | 766 | 17 | 22 | 4 | 41 | 24 | 0 | 0.81 | 1 | 0 | 0 | 1 | 2 | 0.8 | 2 | 41 | A encounters and roster | flat, no key, one secret |
@@ -45,37 +45,37 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2M01 | Threshold Beach | 1483 | 46 | 31 | 4 | 39 | 28 | 52 | 0.57 | 1 | 0 | 0 | 1 | 2 | 1.7 | 1 | 55 | A- light pass | no key, one secret |
 | C2M02 | Glass Steppe | 4584 | 58 | 13 | 8 | 31 | 33 | 39 | 0.83 | 10 | 0 | 0 | 1 | 3 | 2.7 | 0 | 62 | C exemplar | thin, very long, no key, one secret |
 | C2M03 | Cantor Outpost | 2161 | 34 | 16 | 7 | 32 | 26 | 70 | 0.66 | 2 | 1 | 0 | 1 | 2 | 1.7 | 0 | 91 | A- light pass | no key, one secret, 1 empty room |
-| C2M04 | Tuning Fork Fields | 2698 | 36 | 13 | 6 | 36 | 19 | 69 | 0.93 | 1 | 0 | 0 | 1 | 0 | 2.1 | 0 | 173 | B structural | thin, long, symmetrical, no key, few ambushes, one secret |
+| C2M04 | Tuning Fork Fields | 2031 | 36 | 18 | 6 | 33 | 22 | 73 | 0.91 | 1 | 1 | 0 | 1 | 2 | 2.1 | 0 | 173 | A encounters and roster | symmetrical, no key, one secret, 1 empty room |
 | C2M05 | The Reliquary Road | 1671 | 43 | 26 | 6 | 35 | 30 | 73 | 0.69 | 0 | 0 | 0 | 1 | 15 | 2.2 | 0 | 53 | A- light pass | no key, one secret, no loop |
 | C2M06 | Chitin Aqueduct | 1737 | 30 | 17 | 5 | 33 | 27 | 68 | 0.82 | 0 | 0 | 0 | 1 | 2 | 2.5 | 0 | 45 | A- light pass | no key, one secret, no loop |
 | C2M07 | Bellwright Yard | 1673 | 38 | 23 | 6 | 29 | 21 | 33 | 0.89 | 2 | 0 | 0 | 1 | 8 | 1.2 | 0 | 37 | A encounters and roster | symmetrical, no key, one secret |
 | C2M08 | Threshold Ascent | 2507 | 30 | 12 | 8 | 33 | 27 | 73 | 0.85 | 1 | 0 | 0 | 1 | 1 | 1.8 | 0 | 80 | A encounters and roster | thin, long, no key, few ambushes, one secret |
-| C2M09 | Sounding Deep Gate | 2794 | 44 | 16 | 7 | 36 | 20 | 76 | 0.56 | 0 | 0 | 0 | 1 | 2 | 1.6 | 0 | 28 | A encounters and roster | long, no key, one secret |
-| C2M10 | Echo Markets | 3121 | 29 | 9 | 6 | 34 | 21 | 4 | 0.81 | 19 | 6 | 0 | 1 | 0 | 1.1 | 1 | 23 | B structural | sparse, very long, flat, no key, few ambushes, one secret, 6 empty rooms |
+| C2M09 | Sounding Deep Gate | 2794 | 44 | 16 | 7 | 36 | 20 | 76 | 0.56 | 0 | 0 | 0 | 1 | 2 | 1.6 | 0 | 28 | KEEP (boss or set piece: judge by play) | long, no key, one secret |
+| C2M10 | Echo Markets | 3121 | 29 | 9 | 6 | 34 | 21 | 4 | 0.81 | 19 | 6 | 0 | 1 | 1 | 1.1 | 1 | 23 | B structural | sparse, very long, flat, no key, few ambushes, one secret, 6 empty rooms |
 | C2M11 | Undercantor Halls | 3851 | 32 | 8 | 6 | 31 | 22 | 12 | 0.63 | 2 | 4 | 0 | 1 | 2 | 1.4 | 6 | 52 | C exemplar | sparse, very long, no key, one secret, 4 empty rooms |
-| C2M12 | The Drowned Choir | 4319 | 61 | 14 | 6 | 66 | 20 | 51 | 0.77 | 2 | 0 | 0 | 1 | 3 | 1.6 | 2 | 65 | B structural | thin, very long, one-note tollbearer, no key, one secret |
+| C2M12 | The Drowned Choir | 4319 | 61 | 14 | 6 | 66 | 20 | 51 | 0.77 | 2 | 0 | 0 | 1 | 3 | 1.6 | 2 | 65 | KEEP (boss or set piece: judge by play) | thin, very long, one-note tollbearer, no key, one secret |
 | C2M13 | Lantern Ossuary | 1614 | 42 | 26 | 9 | 26 | 24 | 59 | 0.75 | 8 | 0 | 0 | 1 | 2 | 1.5 | 0 | 29 | A- light pass | no key, one secret |
-| C2M14 | Harmonic Gardens | 3819 | 31 | 8 | 6 | 32 | 23 | 4 | 0.88 | 0 | 3 | 0 | 1 | 2 | 2.1 | 1 | 190 | B structural | sparse, very long, flat, no key, one secret, 3 empty rooms |
-| C2M15 | Ash Basilica | 4278 | 40 | 9 | 9 | 33 | 18 | 51 | 0.96 | 0 | 0 | 0 | 1 | 0 | 3 | 0 | 33 | B structural | sparse, very long, symmetrical, no key, few ambushes, one secret, no loop |
+| C2M14 | Harmonic Gardens | 3819 | 31 | 8 | 6 | 32 | 23 | 4 | 0.88 | 0 | 3 | 0 | 1 | 2 | 2.1 | 1 | 190 | KEEP (boss or set piece: judge by play) | sparse, very long, flat, no key, one secret, 3 empty rooms |
+| C2M15 | Ash Basilica | 4278 | 40 | 9 | 9 | 33 | 18 | 51 | 0.96 | 0 | 0 | 0 | 1 | 0 | 3 | 0 | 33 | KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) | sparse, very long, symmetrical, no key, few ambushes, one secret, no loop |
 | C2M16 | Sounding Deep Heart | 1835 | 19 | 10 | 6 | 26 | 11 | 6 | 0.8 | 0 | 0 | 0 | 1 | 0 | 1.4 | 2 | 58 | KEEP (boss or set piece: judge by play) | sparse, flat, no key, few ambushes, one secret |
 | C2M17 | The Hive-Song Approach | 3459 | 54 | 16 | 9 | 30 | 33 | 48 | 0.42 | 0 | 2 | 0 | 1 | 1 | 2.3 | 0 | 78 | A encounters and roster | very long, no key, few ambushes, one secret, 2 empty rooms |
-| C2M18 | Nerve Cathedral | 3772 | 63 | 17 | 9 | 25 | 29 | 58 | 0.97 | 25 | 0 | 0 | 1 | 1 | 3.1 | 0 | 60 | B structural | very long, symmetrical, no key, few ambushes, one secret |
+| C2M18 | Nerve Cathedral | 3772 | 63 | 17 | 9 | 25 | 29 | 58 | 0.97 | 25 | 0 | 0 | 1 | 2 | 3 | 0 | 60 | KEEP (boss or set piece: judge by play) | very long, symmetrical, no key, one secret |
 | C2M19 | Bone Loom | 2135 | 53 | 25 | 9 | 34 | 28 | 57 | 0.89 | 5 | 0 | 1 | 1 | 2 | 2.2 | 1 | 96 | A encounters and roster | symmetrical, one secret |
-| C2M20 | Vein Rail | 1857 | 37 | 20 | 8 | 32 | 38 | 70 | 0.99 | 0 | 0 | 0 | 1 | 2 | 2.2 | 12 | 77 | A encounters and roster | symmetrical, no key, one secret, no loop |
+| C2M20 | Vein Rail | 1857 | 37 | 20 | 8 | 32 | 38 | 70 | 0.99 | 0 | 0 | 0 | 1 | 2 | 2.2 | 12 | 77 | KEEP (boss or set piece: judge by play) | symmetrical, no key, one secret |
 | C2M21 | Pulse Foundry | 3317 | 42 | 13 | 8 | 33 | 21 | 50 | 0.99 | 9 | 3 | 0 | 1 | 2 | 1.6 | 0 | 124 | C exemplar | thin, very long, symmetrical, no key, one secret, 3 empty rooms |
-| C2M22 | Mourning Halls | 4325 | 26 | 6 | 7 | 31 | 8 | 22 | 0.93 | 0 | 1 | 0 | 1 | 8 | 3 | 0 | 122 | B structural | sparse, very long, melee-only, symmetrical, no key, one secret, 1 empty room |
+| C2M22 | Mourning Halls | 4325 | 26 | 6 | 7 | 31 | 8 | 22 | 0.93 | 0 | 1 | 0 | 1 | 8 | 3 | 0 | 122 | KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) | sparse, very long, melee-only, symmetrical, no key, one secret, 1 empty room |
 | C2M23 | The Reprise | 2896 | 66 | 23 | 10 | 32 | 27 | 21 | 0.12 | 13 | 0 | 1 | 1 | 2 | 2.9 | 0 | 72 | A encounters and roster | long, one secret |
 | C2M24 | Choir of One | 1466 | 10 | 7 | 3 | 50 | 0 | 47 | 0.87 | 0 | 0 | 0 | 1 | 1 | 1.2 | 5 | 46 | KEEP (boss or set piece: judge by play) | sparse, thin roster, no key, few ambushes, one secret |
-| C2M25 | Root Bell Descent | 2101 | 28 | 13 | 7 | 21 | 36 | 82 | 0.99 | 1 | 0 | 0 | 1 | 2 | 2.1 | 0 | 49 | A encounters and roster | thin, symmetrical, no key, one secret |
-| C2M26 | Silent Roots | 5605 | 36 | 6 | 8 | 33 | 17 | 34 | 0.8 | 14 | 4 | 0 | 1 | 0 | 2.1 | 3 | 119 | B structural | sparse, very long, no key, few ambushes, one secret, 4 empty rooms |
-| C2M27 | Fault Line | 3840 | 37 | 10 | 8 | 32 | 22 | 47 | 0.93 | 0 | 0 | 0 | 1 | 0 | 1.5 | 0 | 45 | B structural | sparse, very long, symmetrical, no key, few ambushes, one secret |
+| C2M25 | Root Bell Descent | 2101 | 28 | 13 | 7 | 21 | 36 | 82 | 0.99 | 1 | 0 | 0 | 1 | 2 | 2.1 | 0 | 49 | KEEP (boss or set piece: judge by play) | thin, symmetrical, no key, one secret |
+| C2M26 | Silent Roots | 3776 | 36 | 10 | 8 | 28 | 22 | 34 | 0.85 | 12 | 1 | 0 | 1 | 2 | 2.1 | 3 | 119 | B structural | sparse, very long, no key, one secret, 1 empty room |
+| C2M27 | Fault Line | 3840 | 37 | 10 | 8 | 32 | 22 | 47 | 0.93 | 0 | 0 | 0 | 1 | 2 | 1.6 | 0 | 45 | KEEP (boss or set piece: judge by play) | sparse, very long, symmetrical, no key, one secret |
 | C2M28 | Last Tide | 2174 | 0 | 0 | 0 | 0 | 0 | 67 | 0.92 | 1 | 0 | 0 | 1 | 33 | 4.3 | - | - | KEEP (a stand: its creatures come from triggers) | symmetrical, one secret |
 | C2M29 | The Root Bell | 786 | 9 | 11 | 4 | 44 | 22 | 35 | 0.29 | 0 | 0 | 0 | 1 | 2 | 1.9 | 4 | 52 | KEEP (boss or set piece: judge by play) | sparse, no key, one secret |
 | C2M30 | The Unrung Gate | 861 | 0 | 0 | 0 | 0 | 0 | 0 | 0.77 | 0 | 0 | 0 | 1 | 0 | 0.4 | - | - | KEEP (no combat) | flat, one secret |
 | C2S01 | The Silent Orchard | 1837 | 0 | 0 | 0 | 0 | 0 | 8 | 0.98 | 0 | 0 | 0 | 0 | 0 | 0.8 | - | - | KEEP (no combat) | symmetrical, flat |
 | C2S02 | Ines's Lamp | 218 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0.3 | - | - | KEEP (no combat) | symmetrical |
 
-Tally: A encounters and roster 19, A- light pass 17, KEEP (boss or set piece: judge by play) 10, KEEP (no combat) 7, B structural 10, C exemplar 4, KEEP (a stand: its creatures come from triggers) 1
+Tally: A encounters and roster 17, A- light pass 17, KEEP (boss or set piece: judge by play) 18, KEEP (no combat) 7, C exemplar 4, B structural 2, KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) 1, KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) 1, KEEP (a stand: its creatures come from triggers) 1
 
 ## The rules
 ```json
