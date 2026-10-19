@@ -61,7 +61,7 @@ test('G-02 events:null is rejected, or the first shot does not throw', () => {
 
 test('G-02 a string weapons list is rejected, or a kill does not throw in dropType', () => {
   const r = loaded((s) => { s.world.player.weapons = 'flare'; });
-  assert.equal(r.ok, true);
+  if (!r.ok) return;                                  // rejected on load (PT-050 H1): the contract is met
   const e = r.world.enemies.find((o) => o.state !== 'dead');
   e.hp = 0; e.state = 'dead';
   assert.doesNotThrow(() => maybeDrop(r.world, e));
@@ -72,7 +72,7 @@ test('G-02 keys stored as a string are rejected, or picking up a different key d
     s.world.player.keys = 'brass';
     s.world.pickups.push({ kind: 'key_iron', x: s.world.player.x, z: s.world.player.z, y: s.world.player.y ?? 0 });
   });
-  assert.equal(r.ok, true);
+  if (!r.ok) return;                                  // rejected on load (PT-050 H1): the contract is met
   assert.doesNotThrow(() => step(r.world, idle));
 });
 
@@ -101,7 +101,7 @@ test('G-05 hit points above the cap are rejected or clamped', () => {
 
 test('G-05 a string ammunition count cannot become NaN when fired', () => {
   const r = loaded((s) => { s.world.player.ammo.flare = 'lots'; });
-  assert.equal(r.ok, true);
+  if (!r.ok) return;                                  // rejected on load (PT-050 H1): the contract is met
   step(r.world, { ...idle, fire: true });
   assert.equal(Number.isFinite(r.world.player.ammo.flare), true, 'ammo=' + r.world.player.ammo.flare);
 });
