@@ -23,6 +23,7 @@ import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
 import { beatGlow, zoneBeat } from '../engine/hive.js';
+import { makeCreatureFx } from './creaturefx.js';                                                                  // PT-060: the Marksman's line of light and the Mender's tether
 import { makeHiveView } from './hivefx.js';                                                                       // PT-043: the Hive Cantor's threads, the Root Bell's chain and shadow, the spikes
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
@@ -65,6 +66,7 @@ export class GameView {
     this.ambient = map.atmosphere.ambient ?? 1;       // dark levels (Signal House) dim the general light: the lamps carry the scene
     this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR); this.setPlace(lookOf(map.atmosphere));       // the place's light and grade (PT-021)
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
+    this.creatureFx = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal)) ? makeCreatureFx(scene) : null;          // PT-060
     this.hiveView = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.unison || q.kind === 'rootbell')) ? makeHiveView(scene) : null;       // PT-043: made with the view when the map has a conductor or a clapper (the clapper's light must not change the scene's light count in a fight)
     this.world = world; this.decals = new DecalLayer(tex.decals_atlas); scene.add(this.decals.mesh);       // marks that stay (PT-021): what the map started with, then what the events leave
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
@@ -157,6 +159,7 @@ export class GameView {
         this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
         this.muzzleLight.color.setHex(e.load === 'slag' ? 0xff7a2a : e.load === 'rime' ? 0x9fdcff : e.load === 'pen' ? 0xfff2c8 : sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour (a load its own: PT-056)
       }
+      else if (e.type === 'snipe_shot') this.creatureFx?.shot(e);                                                      // PT-060: the line that was fired stays bright for a tenth of a second
       else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; this.vm.start(e.kind, e.tick * TICK); }
       else if (e.type === 'melee_hit') {
         this.vm.hit(e.kind, e.killed);                                                                                   // the weapon sticks in the body for a moment (the view model only)
@@ -311,7 +314,7 @@ export class GameView {
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / (def.pulse?.windup ?? def.hive?.windup ?? HIVE.beat));
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : def.spawner && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / def.spawner.swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
+      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
@@ -346,6 +349,8 @@ export class GameView {
     }
     if (!this.hiveView && w.enemies.some((q) => ENEMIES[q.kind].unison || q.kind === 'rootbell')) this.hiveView = makeHiveView(this.scene);       // PT-043: the Hive Cantor's threads, the clapper's chain and shadow, the spikes
     this.hiveView?.update(w, this.enemyViews, this.time);
+    if (!this.creatureFx && w.enemies.some((q) => ENEMIES[q.kind].snipe || ENEMIES[q.kind].heal)) this.creatureFx = makeCreatureFx(this.scene);          // (a creature spawned by a trigger)
+    this.creatureFx?.update(w, this.enemyViews, this.time, dt);
     // pickups
     seen.clear();
     for (const it of w.pickups) {
@@ -531,7 +536,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
-    this.post.dispose(); this.hiveView?.dispose();
+    this.post.dispose(); this.hiveView?.dispose(); this.creatureFx?.dispose();
     for (const v of [this.tideView, this.chimeView, this.beamView, this.sweepView]) v?.dispose?.();                // PT-050 H-L1..L3: the textures a view owns (the scene sweep above frees only geometry and materials)
     this.scene.clear(); this.weaponScene.clear();
   }

@@ -330,6 +330,14 @@ ENEMIES.feeder = { name: 'Cradle feeder', hp: 100, speed: 0, gait: 0, radius: 0.
 ENEMIES.graftmother = { name: 'Graft-Mother', poise: 8, hp: 680, speed: 0.8, keepAway: 0, gait: 3, radius: 0.9, height: 4.2, hitRadius: 1.4, sight: 70, turnRate: 1.6, attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 }, boss: true,
   shield: { reduce: 0.06, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] }, shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true }, summon: { kind: 'gill', count: 2, every: 18, max: 4 }, stagger: 3.0 };
 
+// ---- PT-060 (R8 of the Director's Plan): the two new archetypes; design/ENEMY_ROSTER.md. Every number a first guess, nothing played. ----
+// Marksman: a Songkeeper with a reed-rifle. A line of light follows you for `track` s, freezes for `lock` s, then the shot goes down it (marksman.js): move after it freezes and it misses, cover stops it. It keeps `keep` m away and backs off; at close range it fights with its hands.
+ENEMIES.marksman = { hush: true, name: 'Marksman', poise: 0.8, hp: 34, speed: 1.7, gait: 5.5, radius: 0.38, height: 2.5, hitRadius: 0.6, sight: 46, turnRate: 3.2, attack: { range: 1.8, reach: 2.3, windup: 0.6, duration: 1.3, cooldown: 1.2, damage: 12 },
+  snipe: { min: 10, max: 40, keep: 14, track: 0.9, lock: 0.45, cooldown: 3.4, damage: 18, width: 0.55, aimHeight: 1.2, muzzleY: 1.7 } };
+// Mender: a small Vael that mends the creatures near it (mender.js): `rate` hit points a second to the most hurt one within `range`, until it is whole (a creature is only started on below `below` of its hit points). It keeps `keepAway` m from you and never mends a node, a boss, a spawner or another Mender.
+ENEMIES.mender = { name: 'Mender', poise: 0.5, hp: 22, speed: 2.4, gait: 8, radius: 0.3, height: 1.4, sight: 30, turnRate: 4.5, attack: { range: 1.4, reach: 1.9, windup: 0.5, duration: 0.9, cooldown: 1.2, damage: 6 },
+  heal: { range: 8, rate: 7, keepAway: 9, below: 0.9 } };
+
 export const PICKUPS = {
   key_iron: { type: 'key', key: 'iron' },
   key_bell: { type: 'key', key: 'bell' },

@@ -870,4 +870,71 @@ export function zealot(tex) {
   });
 }
 
-export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, subcantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot, resonant, hivecantor, rootbell, rootanchor };
+// ------------------------------------------------------------------------------------------------------------------ MARKSMAN (PT-060, R8: a Songkeeper with a reed-rifle)
+/** A tall, slim Songkeeper in a lichen-grey cloak: a short mantle over the shoulders, one black-iron pauldron on the rifle side, legs showing (no coat to the floor), a monocle lens, and a long bone-white REED-RIFLE bound in brass with a flared muzzle. The rifle is the silhouette (a straight line
+ *  longer than the body is wide) and the tell: carried across the body when awake, laid to the shoulder when it takes aim, and the amber lens at the muzzle swells with `p.snipe` (0..1 over the whole tell). */
+export function marksman(tex) {
+  const C = cellsOf('marksman');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 1.1, 0]);
+    legs(R, 'hips', 0.13, { a: 0.55, b: 0.55, r0: 0.1, r1: 0.08, r2: 0.06, cellA: C.cloakDk, cellB: C.cloakDk, seg: 7, fw: 0.13, fh: 0.09, fl: 0.34 }, C.iron);
+    R.joint('spine', 'hips', [0, 0.05, 0]);
+    R.cyl('spine', 0.13, 0.17, 0.8, 8, C.cloakDk, { pos: [0, 0.4, 0], scale: [1, 1, 0.7] });
+    R.tor('spine', 0.2, 0.035, 4, 12, C.cord, { pos: [0, 0.03, 0], rot: [PI / 2, 0, 0] });
+    R.pleat('spine', V2([[0.12, 0.94], [0.26, 0.86], [0.38, 0.62], [0.46, 0.34], [0.5, 0.12]]), 14, 6, 0.05, C.cloak, { pos: [0, 0, -0.02], scale: [1, 1, 0.9] });                 // the mantle: shoulders to the ribs, ragged
+    R.lump('spine', 0.2, 1, 0.1, 5, C.plate, { pos: [0.3, 0.86, 0], scale: [1.1, 0.7, 1] });                                                                                // one pauldron, on the rifle side
+    R.box('spine', 0.12, 0.5, 0.05, C.cloakDk, { pos: [0, 0.4, 0.15] });
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.3, 0.8, 0], { a: 0.32, b: 0.34, r0: 0.065, r1: 0.055, r2: 0.046, cellA: C.cloak, cellB: C.skin }); hand(R, C, n, { len: 0.38, finger: 0.14 }); }
+    head(R, C, { neckAt: [0, 0.88, 0.02], r: 0.14, tall: 1.2, neck: 0.14, eyes: 'one' });
+    R.cyl('head', 0.4, 0.4, 0.025, 12, C.reed, { pos: [0, 0.2, 0] }); R.cyl('head', 0.15, 0.2, 0.12, 8, C.reedDk, { pos: [0, 0.27, 0] }); R.tor('head', 0.2, 0.02, 4, 12, C.cord, { pos: [0, 0.22, 0], rot: [PI / 2, 0, 0] });          // a flat reed hat: a wide brim that no other creature wears
+    R.tor('head', 0.07, 0.012, 4, 10, C.brass, { pos: [0.06, 0.1, 0.13] }); R.cyl('head', 0.003, 0.003, 0.2, 3, C.brass, { pos: [0.14, 0.0, 0.12], rot: [0, 0, 0.5] });          // the monocle and its chain
+    R.cone('spine', 0.17, 0.4, 6, C.cloakDk, { pos: [0, 0.74, -0.17], rot: [0.5, 0, 0] });
+    // THE REED-RIFLE: held at the right hip; local +y is the barrel, rotated forward so the muzzle rides out in front
+    R.joint('rifleY', 'spine', [0.32, 0.35, 0.18], [0, 0, 0]); R.joint('rifle', 'rifleY', [0, 0, 0], [0.4, 0, 0]);
+    R.cyl('rifle', 0.026, 0.034, 1.1, 6, C.reed, { pos: [0, 0.25, 0] });
+    for (const y of [-0.15, 0.2, 0.55, 0.78]) R.tor('rifle', 0.043, 0.012, 4, 8, C.brass, { pos: [0, y, 0], rot: [PI / 2, 0, 0] });
+    R.box('rifle', 0.07, 0.3, 0.11, C.reedDk, { pos: [0, -0.3, 0] });                                                                                                       // the stock
+    R.bell('rifle', 0.16, 0.08, C.brass, C.reedDk, { pos: [0, 0.88, 0], rot: [PI, 0, 0], name: 'muzzle', seg: 6 }); R.sph('rifle', 0.04, 5, 4, 'glow', { pos: [0, 0.97, 0], name: 'lens' });
+  }, (p, J, R) => {
+    const t = p.t, sn = p.snipe ?? 0, carry = p.awake ? 1 : 0, aim = Math.min(1, sn * 4), h = humanoidPose(p, J, { stoop: 0.06, lean: 0, headX: 0.22, headZ: 0, jawOpen: 0.08, hipY: 1.1, stride: 0.6 }), dd = h.d;
+    const splay = 0.4 * (1 - 0.6 * Math.min(1, p.walk)); J.legA.rotation.z = -splay; J.legB.rotation.z = splay;                                                             // a planted stance for the shot
+    J.spine.rotation.x -= 0.1 * aim; J.spine.rotation.y += 0.25 * aim;
+    const yk = (1 - carry) * (1 - aim);                                                                                                   // at rest the rifle is a YOKE across the shoulders (a T no other creature has); awake it comes down and forward, aimed it is at the shoulder
+    J.rifle.rotation.x = ((0.3 + 0.6 * carry + 0.7 * aim) * (1 - yk) + 0.05 * yk + 0.03 * S(t * 1.1)) * (1 - dd + dd * 0.4); J.rifleY.rotation.y = (-0.45 * carry * (1 - aim)) * (1 - dd); J.rifleY.rotation.z = (PI / 2) * yk * (1 - dd);
+    J.rifleY.position.set((0.32 - 0.22 * aim) * (1 - yk) + 0.28 * yk, (0.35 + 0.5 * aim + 0.05 * carry) * (1 - yk) + 0.86 * yk, (0.18 + 0.3 * aim) * (1 - yk) - 0.14 * yk);
+    const eng = Math.max(carry * 0.6, aim), L = (lo, hi) => lo + (hi - lo) * eng;
+    J.armA.rotation.x = L(-0.15, -1.15); J.armA.rotation.z = L(-0.1, -0.05); J.armAM.rotation.x = L(-0.3, -0.7);
+    J.armB.rotation.x = L(-0.45, -1.3 + 0.1 * S(t * 3) * (1 - aim)); J.armB.rotation.z = L(0.1, 0.08); J.armBM.rotation.x = L(-0.6, -0.9);
+    J.head.rotation.x -= 0.18 * aim; J.head.rotation.y = -0.28 * aim;                                                                                                      // cheek to the stock
+    J.lens.scale.setScalar(0.5 + 3.2 * sn + 0.25 * S(t * 9) * aim);
+  });
+}
+
+// ------------------------------------------------------------------------------------------------------------------ MENDER (PT-060, R8: a small Vael that mends)
+/** A small pale hooded Vael, a metre and a half at most, wrapped in milk-white bandage stitched with amber, a big round head with two lit eyes, one thin arm holding up a hooked staff with a lantern of amber glass. The lantern is the tell: it swells and the free hand reaches toward the one it mends when `p.heal` is 1. */
+export function mender(tex) {
+  const C = cellsOf('mender');
+  return makeCreature(tex, (R) => {
+    R.joint('hips', null, [0, 0.46, 0]);
+    legs(R, 'hips', 0.08, { a: 0.22, b: 0.22, r0: 0.06, r1: 0.05, r2: 0.04, cellA: C.robeDk, cellB: C.robeDk, seg: 6, fw: 0.09, fh: 0.06, fl: 0.24 }, C.robeDk);
+    R.joint('spine', 'hips', [0, 0.04, 0]);
+    R.pleat('spine', V2([[0.1, 0.5], [0.15, 0.38], [0.19, 0.2], [0.24, -0.06], [0.3, -0.3], [0.33, -0.42]]), 12, 6, 0.05, C.robe, { scale: [1, 1, 0.85] });                      // the wraps: a short bell of bandage to the knee
+    R.tor('spine', 0.19, 0.03, 4, 12, C.cord, { pos: [0, 0.18, 0], rot: [PI / 2, 0, 0] }); R.tor('spine', 0.28, 0.03, 4, 12, C.cord, { pos: [0, -0.2, 0], rot: [PI / 2, 0, 0] });
+    R.rag('spine', 0.1, 0.5, 0.04, 0.3, C.amber, { pos: [0, 0.44, 0.13] });                                                                                              // one amber stripe down the front
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.17, 0.46, 0], { a: 0.22, b: 0.24, r0: 0.04, r1: 0.035, r2: 0.03, cellA: C.robe, cellB: C.skin, seg: 6 }); hand(R, C, n, { len: 0.27, finger: 0.1, r: 0.045 }); }
+    head(R, C, { neckAt: [0, 0.5, 0.02], r: 0.17, tall: 1.05, neck: 0.1, eyes: 'both', eyeX: 0.07 });
+    R.cone('head', 0.2, 0.3, 8, C.robe, { pos: [0, 0.2, -0.05], rot: [0.3, 0, 0] });
+    R.tor('head', 0.2, 0.02, 4, 12, C.amber, { pos: [0, 0.12, 0], rot: [PI / 2, 0, 0] });
+    // THE STAFF AND ITS LANTERN: a thin pole in the free (right) hand, hooked at the top, an amber glass lantern hanging from the hook
+    R.joint('staff', 'armBM', [0, -0.27, 0.02], [0.2, 0, 0]);
+    R.cyl('staff', 0.014, 0.018, 1.1, 5, C.bone, { pos: [0, 0.3, 0] }); R.tube('staff', [[0, 0.84, 0], [0.0, 0.92, 0.06], [0.0, 0.88, 0.14], [0.0, 0.78, 0.14]], 0.012, 4, C.bone);
+    R.joint('lamp', 'staff', [0, 0.72, 0.14]); R.cyl('lamp', 0.07, 0.05, 0.16, 6, C.amber, { pos: [0, -0.08, 0] }); R.cone('lamp', 0.08, 0.07, 6, C.bronzeDk, { pos: [0, 0.03, 0] }); R.sph('lamp', 0.05, 5, 4, 'glow', { pos: [0, -0.08, 0], name: 'flame' });
+  }, (p, J, R) => {
+    const t = p.t, hl = p.heal ?? 0, h = humanoidPose(p, J, { stoop: 0.12, lean: 0, headX: 0.15, headZ: 0.06, jawOpen: 0.05, hipY: 0.46, stride: 0.4 }), dd = h.d;
+    J.armB.rotation.x = -0.7 - 0.2 * hl; J.armB.rotation.z = 0.2; J.armBM.rotation.x = -0.5; J.staff.rotation.x = 0.15 + 0.1 * S(t * 1.3) - 0.2 * hl;
+    J.armA.rotation.x = -0.15 - 1.1 * hl + 0.05 * S(t * 2); J.armAM.rotation.x = -0.3 - 0.4 * hl;                                                                         // the free hand reaches toward the one it mends
+    J.lamp.rotation.z = S(t * 1.7) * 0.06; J.flame.scale.setScalar(0.7 + 0.6 * hl + 0.12 * S(t * 7) + 0.4 * (p.awake ? 1 : 0));
+    J.rig.rotation.x += 0 * dd;
+  });
+}
+export const FACTORIES = { tollbearer, gaunt, bellhand, sexton, wardengraft, cantor, subcantor, bellnode, gill, chorister, bulwark, weeping, acolyte, vat, reed, grandcantor, gatewarden, seal, feeder, graftmother, vaelfolk, zealot, resonant, hivecantor, rootbell, rootanchor, marksman, mender };

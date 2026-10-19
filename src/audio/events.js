@@ -21,6 +21,7 @@ export const SILENT_EVENTS = {
   pool_dry: 'view-only: a tear pool dries up (PT-028); the landing carries the sound',
   drop: 'a box a creature dropped appears (PT-025): the view shows it, taking it plays the ordinary pickup sound',
   beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
+  mender_stop: 'view-only: the Mender\'s tether lets go; mender_start carries the sound (mender.js, PT-060)',
   silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this (engine.js, PT-043: the Root Bell hangs still)',
 };
 export const RADIO_SOUND = 'radio';
@@ -37,8 +38,8 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert', resonant: 'resonant_alert', hivecantor: 'hivecantor_alert', rootbell: 'rootbell_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw', resonant: 'resonant_draw', hivecantor: 'hivecantor_draw', rootbell: 'rootbell_draw' };
+const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert', resonant: 'resonant_alert', hivecantor: 'hivecantor_alert', rootbell: 'rootbell_alert', marksman: 'marksman_alert', mender: 'mender_alert' };
+const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw', resonant: 'resonant_draw', hivecantor: 'hivecantor_draw', rootbell: 'rootbell_draw', marksman: 'wheeze_windup', mender: 'wheeze_windup' };
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
@@ -54,6 +55,9 @@ export function soundsForEvent(e) {
     case 'guard_up': return [{ id: 'guard_up' }];
     case 'block': return [{ id: 'block' }];
     case 'guard_break': return [{ id: 'guard_break' }];
+    case 'snipe_tell': return [{ id: 'snipe_tell', pos: at(e) }];                                                                 // PT-060: the Marksman's line of light
+    case 'snipe_shot': return [{ id: 'snipe_shot', pos: [e.x0, e.z0] }];
+    case 'mender_start': return [{ id: 'mender_hum', pos: at(e), gain: 0.8 }];
     case 'burn': return [{ id: e.frost ? 'chill_crack' : 'burn_start', pos: at(e) }];
     case 'load_cycle': return [{ id: 'load_click', gain: 0.7 }];                                                              // PT-056: ammunition loads: the key that turns the gun to its next load
     case 'load_none': return [{ id: 'dry_click', gain: 0.5 }];
@@ -172,7 +176,7 @@ export function soundsForEvent(e) {
     case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
     case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
     case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
-    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'resonant' ? 'resonant_die' : e.kind === 'hivecantor' ? 'hivecantor_die' : e.kind === 'rootbell' ? 'rootbell_die' : e.kind === 'rootanchor' ? 'anchor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
+    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'resonant' ? 'resonant_die' : e.kind === 'hivecantor' ? 'hivecantor_die' : e.kind === 'rootbell' ? 'rootbell_die' : e.kind === 'marksman' ? 'marksman_die' : e.kind === 'mender' ? 'mender_die' : e.kind === 'rootanchor' ? 'anchor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
     case 'level_complete': return [{ id: 'level_complete' }];
     default: return [];
   }

@@ -146,6 +146,11 @@ t('subcantor', 54, 81, S, 'inert', SPONGE);                                     
 t('resonant', 50, 88, S, 'inert', SPONGE); t('hivecantor', 54, 88, S, 'inert', SPONGE); t('rootbell', 58, 88, S, 'inert', SPONGE); t('rootanchor', 57, 83, S, 'inert', SPONGE);          // PT-043: the Hive's and the Root's creatures as sponges (the full yards are in the Preview, maps-dev/HIVE): the Resonant, the Hive Cantor, the clapper (it swings) and an anchor
 t('zealot', 51, 85, WEST, 'turn', { sight: 12 }); t('zealot', 56, 85, WEST, 'turn', { sight: 12 });                                              // swingers: a thrust from 3.5 m, a lunge across a gap; a hit grafts (a slower walk for three seconds)
 
+// ---- PT-060 (R8): the Marksman and the Mender, in the songkeeper yard ----
+t('marksman', 52, 79, S, 'inert', SPONGE); t('mender', 56, 79, S, 'inert', SPONGE);                                                                   // sponges: the outline, the reed-rifle, the lantern
+t('marksman', 50, 86, WEST, 'turn', { sight: 40 });                                                                                              // a live one: a line of light follows you, freezes, then the shot: move when it freezes (the Range heals you)
+t('mender', 57, 86, WEST, 'turn', { sight: 12 });                                                                                                 // a live one beside the Zealots: hurt a Zealot and watch the tether; kill the Mender first
+
 // ---- PT-037: the current and fork yard ----
 t('tollbearer', 51, 59, EAST, 'inert', SPONGE); t('tollbearer', 55, 60, EAST, 'inert', SPONGE); t('gaunt', 57, 59, EAST, 'turn', { sight: 8 });     // in the water: the sponges and a swinger are carried east with the current
 E.push({ type: 'prop', kind: 'resonator', at: [51, 67] }, { type: 'prop', kind: 'resonator', at: [53, 68] }, { type: 'prop', kind: 'resonator', at: [52, 65] });

@@ -15,6 +15,8 @@ COL.resonant = { skin: '#a8907c', skinDk: '#6a5648', flesh: '#b0585e', wrap: '#8
 COL.hivecantor = { skin: '#e6d4c8', skinDk: '#b49c92', flesh: '#b0585e', nerve: '#a8384e', nerveDk: '#5a1c2c', bone: '#eee4c8', bronze: '#d89244', bronzeDk: '#7a4418', shroud: '#cfc4b8', iron: '#4a505a', mouth: '#3a0a14', amber: '#ffb040' };
 COL.rootbell = { bronze: '#d89244', bronzeDk: '#7a4418', verd: '#78883a', root: '#2a2420', rootDk: '#16110e', chain: '#2c2e34', heart: '#ffb060', crack: '#ff8a30', bone: '#e8e0c0', iron: '#4a505a' };
 COL.rootanchor = { root: '#2a2420', rootDk: '#16110e', stone: '#7e7a6e', bronze: '#d89244', bronzeDk: '#7a4418', bone: '#e8e0c0', verd: '#78883a', heart: '#ffb060' };
+COL.marksman = { skin: '#c6c8c2', cloak: '#7a8a72', cloakDk: '#3c4838', plate: '#34383f', bone: '#eee4c8', reed: '#e8dfc4', reedDk: '#8a7e5c', brass: '#d89244', iron: '#3a3e46', cord: '#e0a838', mouth: '#22181a' };
+COL.mender = { skin: '#e6e0d6', robe: '#e4dcc8', robeDk: '#9a8e78', amber: '#f0b048', bone: '#eee4c8', bronze: '#d89244', bronzeDk: '#7a4418', cord: '#e49a3c', mouth: '#2a1c1c' };
 const out = process.argv[2];
 fs.mkdirSync(out, { recursive: true });
 for (const kind of Object.keys(COL)) {

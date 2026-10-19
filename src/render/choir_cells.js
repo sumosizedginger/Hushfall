@@ -23,6 +23,8 @@ export const CHOIR_CELLS = {
   graftmother: ['case', 'caseDk', 'flesh', 'fleshDk', 'bone', 'boneDk', 'bronze', 'bronzeDk', 'iron', 'sac', 'sacDk', 'verd', 'horn', 'leg'],
   vaelfolk:    ['skin', 'skinDk', 'crystal', 'crystalDk', 'frill', 'rib', 'eye', 'cord', 'mouth'],          // PT-037 (Campaign 2, Act A): the Vael civilian, the first Vael who is not a weapon
   zealot:      ['skin', 'hood', 'hoodDk', 'plate', 'plateDk', 'bronze', 'bronzeDk', 'bone', 'iron', 'cord', 'mouth'],          // PT-038 (Campaign 2, Act B): the Songkeeper under arms
+  marksman:    ['skin', 'cloak', 'cloakDk', 'plate', 'bone', 'reed', 'reedDk', 'brass', 'iron', 'cord', 'mouth'],          // PT-060 (R8): the Songkeeper with a reed-rifle, in a lichen-grey cloak
+  mender:      ['skin', 'robe', 'robeDk', 'amber', 'bone', 'bronze', 'bronzeDk', 'cord', 'mouth'],          // PT-060 (R8): a small Vael that mends, in milk-white wraps stitched with amber
   subcantor:   ['skin', 'robe', 'robeDk', 'sash', 'bone', 'bronze', 'bronzeDk', 'iron', 'mouth', 'verd'],          // PT-039 (Campaign 2, Act B): the conductor of one district, an afraid one, in the grey-green of a robe that has been washed too often
   resonant:    ['skin', 'skinDk', 'flesh', 'wrap', 'wrapDk', 'bone', 'bronze', 'bronzeDk', 'rope', 'verd', 'iron', 'mouth'],          // PT-043 (Campaign 2, Act C): three Tollbearers fused at the hip, bound in rust-brown hide, a ring of bells welded round the waist
   hivecantor:  ['skin', 'skinDk', 'flesh', 'nerve', 'nerveDk', 'bone', 'bronze', 'bronzeDk', 'shroud', 'iron', 'mouth', 'amber'],          // PT-043 (Act C boss): the conductor of the Hive: throat-pale, a crest of nerves, no coat

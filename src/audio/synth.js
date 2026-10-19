@@ -592,6 +592,48 @@ export const SFX = {
     noise(c, out, t + 0.01, { dur: 0.16, a: 0.002, gain: 0.05, type: 'lowpass', f0: 1800, f1: 400, off: o.r() });
     return 0.25;
   },
+  // --- PT-060 (R8): the Marksman and the Mender ---
+  marksman_alert(c, out, t, o) {                                // a Songkeeper with a rifle sees you: a low reed note, a click of a cheek on a stock, a short breath
+    tone(c, out, t, { type: 'triangle', f0: 147, f1: 139, a: 0.06, d: 0.7, gain: 0.16, lp: 900, vib: 3 });
+    thump(c, out, t + 0.3, 1100, 700, 0.03, 0.1);
+    noise(c, out, t + 0.1, { dur: 0.3, a: 0.05, gain: 0.05, type: 'bandpass', f0: 1200, f1: 800, q: 2, off: o.r() });
+    return 0.9;
+  },
+  snipe_tell(c, out, t, o) {                                    // the line of light: a thin reed whine that climbs for the whole of the tell (about 1.35 s) and cuts off at the freeze
+    tone(c, out, t, { type: 'sine', f0: 520, f1: 1320, a: 0.5, d: 0.9, gain: 0.09, vib: 6 });
+    tone(c, out, t + 0.85, { type: 'square', f0: 1320, f1: 1320, a: 0.01, d: 0.45, gain: 0.05, lp: 2600 });
+    return 1.4;
+  },
+  snipe_shot(c, out, t, o) {                                    // the shot: a flat crack, the reed ringing after it, a long thin echo
+    noise(c, out, t, { dur: 0.09, a: 0.001, gain: 0.34, type: 'highpass', f0: 1800, f1: 1800, off: o.r() });
+    thump(c, out, t, 220, 60, 0.14, 0.36);
+    tone(c, out, t + 0.02, { type: 'sawtooth', f0: 1800, f1: 340, a: 0.002, d: 0.35, gain: 0.12, lp: 2400 });
+    tone(c, out, t + 0.1, { type: 'sine', f0: 392, f1: 388, a: 0.01, d: 1.2, gain: 0.06, vib: 4 });
+    return 1.4;
+  },
+  marksman_die(c, out, t, o) {                                  // the rifle clattering on stone, a reed note that goes flat
+    noise(c, out, t, { dur: 0.4, a: 0.004, gain: 0.22, type: 'highpass', f0: 1500, f1: 600, off: o.r() });
+    tone(c, out, t + 0.05, { type: 'triangle', f0: 175, f1: 80, a: 0.03, d: 0.8, gain: 0.16, lp: 800, vib: 4 });
+    thump(c, out, t + 0.25, 100, 40, 0.3, 0.4);
+    return 1.2;
+  },
+  mender_alert(c, out, t, o) {                                  // a small Vael sees you: two quick high notes, glass on glass
+    bell(c, out, t, 1175, { decay: 0.25, gain: 0.07, ratio: 3.1, index: 0.3 });
+    bell(c, out, t + 0.12, 1568, { decay: 0.3, gain: 0.06, ratio: 3.1, index: 0.3 });
+    return 0.5;
+  },
+  mender_hum(c, out, t, o) {                                    // the tether made: a soft warm hum that swells, with a faint shimmer of small bells
+    tone(c, out, t, { type: 'sine', f0: 262, f1: 330, a: 0.3, d: 1.2, gain: 0.07, vib: 5 });
+    tone(c, out, t + 0.1, { type: 'triangle', f0: 523, f1: 660, a: 0.4, d: 1.0, gain: 0.03, vib: 7 });
+    bell(c, out, t + 0.4, 1568, { decay: 0.4, gain: 0.03, ratio: 3.1, index: 0.3 });
+    return 1.5;
+  },
+  mender_die(c, out, t, o) {                                    // a small glass chime breaking, the hum going out
+    noise(c, out, t, { dur: 0.25, a: 0.002, gain: 0.16, type: 'highpass', f0: 3000, f1: 2000, off: o.r() });
+    bell(c, out, t + 0.02, 988, { decay: 0.5, gain: 0.07, ratio: 3.1, index: 0.5 });
+    tone(c, out, t + 0.05, { type: 'sine', f0: 330, f1: 110, a: 0.02, d: 0.5, gain: 0.08 });
+    return 0.9;
+  },
   // --- PT-056: ammunition loads ---
   load_click(c, out, t, o) {                                    // the gun turned to another load: two dry ratchet ticks of a brass collar
     thump(c, out, t, 1500, 900, 0.025, 0.08);

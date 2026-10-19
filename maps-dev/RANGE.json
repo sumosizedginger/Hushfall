@@ -2265,6 +2265,38 @@
   },
   {
    "type": "enemy",
+   "kind": "marksman",
+   "at": [52, 79],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "mender",
+   "at": [56, 79],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "marksman",
+   "at": [50, 86],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 40
+  },
+  {
+   "type": "enemy",
+   "kind": "mender",
+   "at": [57, 86],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "sight": 12
+  },
+  {
+   "type": "enemy",
    "kind": "tollbearer",
    "at": [51, 59],
    "facing": 1.5707963267948966,

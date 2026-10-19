@@ -1442,6 +1442,22 @@
   },
   {
    "type": "enemy",
+   "kind": "marksman",
+   "at": [77, 107],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "mender",
+   "at": [79, 107],
+   "facing": 0,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 112],
    "facing": 3.141592653589793,

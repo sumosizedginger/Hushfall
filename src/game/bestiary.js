@@ -25,6 +25,8 @@ export const BESTIARY = Object.freeze({
   subcantor: 'Its ring of sound comes back after it passes. Cut its nodes, then shoot it.',
   seal: "A ring of light round a diamond. It holds up the Gate Warden's shield.",
   vaelfolk: 'A Vael who never raised a hand. It will not fight, and hurting it costs you.',
+  marksman: 'A Songkeeper with a reed-rifle that shoots from far off. A line of light follows you, then stops: move when it stops, or get behind stone.',
+  mender: 'A small pale Vael with an amber lantern that mends the others while you are not looking. Shoot it first.',
   zealot: 'A bronze soldier with a lance. It thrusts from far off and lunges: stay out of the line.',
   resonant: 'A tall Vael whose steps ring through the floor. Keep moving and shoot from range.',
   hivecantor: "Conducts the Hive from above its choir. Its rings come on the Hive's beat. Break the unison, then shoot it.",

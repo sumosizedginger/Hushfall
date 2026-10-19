@@ -501,6 +501,22 @@
       "sha256": "8cf3f2ea17d04ae61b9806e60f79535e71f9c040707a8835c4a3142cf4537c8b",
       "bytes": 33637
     },
+    "choir_marksman": {
+      "seed": 6001,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "23c3afb0135c8146f832d4c5f98ab2b78eb9c1be5ff052f643abecff4861a655",
+      "bytes": 36026
+    },
+    "choir_mender": {
+      "seed": 6002,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "f10447195b4942fb707ec533d3c791e9da617c6f942b68a2e54747569be00e8f",
+      "bytes": 29406
+    },
     "choir_subcantor": {
       "seed": 3901,
       "width": 256,

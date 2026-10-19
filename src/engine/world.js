@@ -9,7 +9,9 @@ import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS, CORPSES } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { AMMO_LOADS } from './defs.js';
-import { modDef, modTier, addMod } from './mods.js';                                                                     // PT-057: weapon mods (lazy: only a player who has found one has `p.mods`)
+import { modDef, modTier, addMod } from './mods.js';
+import { snipeStep } from './marksman.js';                                                                                 // PT-060: the Marksman's frozen line (lazy: only a creature with `snipe` reaches it)
+import { healStep } from './mender.js';                                                                                    // PT-060: the Mender's tether (lazy: only a creature with `heal` reaches it)                                                                     // PT-057: weapon mods (lazy: only a player who has found one has `p.mods`)
 import { activeLoad, spendLoad, cycleLoad, loadedDef, applyLoadHit, addLoad } from './ammoloads.js';                    // PT-056: ammunition loads (lazy: only a player who has picked one up has `p.loads`)
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
@@ -728,6 +730,12 @@ const isNode = (n) => ENEMIES[n.kind].node && n.state !== 'dead';
 const nodesAlive = (w) => w.enemies.filter(isNode).length;
 
 /** step away from the player (Sextons and the Cantor keep their distance) */
+/** PT-060: one step toward a point (the Mender goes to the ones it tends), round whatever is in the way as the others do; false if it could not move */
+function stepToward(w, e, def, dt, x, z) {
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), to = Math.atan2(x - e.x, z - e.z);
+  for (const off of [0, 0.7, -0.7, 1.4, -1.4]) { const a = to + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd; if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); e.yaw = a; return true; } }
+  return false;
+}
 function retreatStep(w, e, def, dt) {
   const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), away = Math.atan2(e.x - w.player.x, e.z - w.player.z);
   for (const off of [0, 0.7, -0.7, 1.4, -1.4]) {
@@ -1057,7 +1065,7 @@ function updateEnemy(w, e, diff, dt) {
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (def.bell) bellMotion({ w, e, def, dt, groundAt: (x, z, r) => groundAt(w, x, z, r) });          // PT-043: the Root Bell's clapper hangs on a pendulum (rootbell.js): its place is a function of the clock
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
-  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.snipeT !== undefined) { e.snipeT = -1; e.snipeAim = null; } if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
   if (def.spawner && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
   if (def.node) return;
   if (w.map.hasCurrent && e.state !== 'idle' && !def.flying && !e.hold && def.speed > 0) flowPush(w, e, def.radius, dt);          // PT-037: a walker in a current is carried by it (a sleeper is not: it lies where the map put it)
@@ -1086,6 +1094,8 @@ function updateEnemy(w, e, diff, dt) {
   if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
+  if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)) })) return;          // PT-060: the Marksman's shot
+  if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
   if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, Math.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;

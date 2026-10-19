@@ -300,6 +300,31 @@ const KINDS = {
       mouth: MOUTH('#2a0c12'),
     },
   },
+  marksman: {                        // PT-060 (R8): a lichen-grey cloak over black-iron plate at the shoulders, a bone-white reed barrel bound in brass and amber cord: the Songkeeper who stays far away (cool and pale where the Zealot is bronze and oxblood)
+    seed: 6001, cells: {
+      skin: SKIN('#c6c8c2', '#80847e', '#5e5a66', '#3a3c40'),
+      cloak: cell({ grad: ['#9aa690', '#4a5848'], marks: [{ col: '#1a2218', wt: 1.9, n: 7, dir: 'v', len: [18, 44] }, { kind: 'cpencil', col: '#cdd6bf', wt: 1.2, n: 4, dir: 'd', len: [10, 18] }], blots: [{ cols: ['#7a8a74', '#b4c0a8'], n: 4, r: [5, 10], a: 140 }] }),
+      cloakDk: cell({ grad: ['#5e6c5a', '#222a20'], marks: [{ col: '#0c100a', wt: 1.7, n: 6, dir: 'v', len: [16, 40] }, { col: '#8a9a84', wt: 1.1, n: 3, dir: 'v', len: [8, 14] }] }),
+      plate: cell({ grad: ['#4a4e58', '#16181d'], marks: [{ col: '#08090b', wt: 1.7, n: 4, dir: 'h' }, { col: '#9ca2ac', wt: 1.1, n: 4, dir: 'v', len: [6, 14] }], extra: (g, X, Y) => { g.noStroke(); g.fill('#b4b8c0', 220); for (const [x, y] of [[8, 8], [56, 8], [8, 56], [56, 56]]) g.circle(X + x, Y + y, 2.6); } }),
+      bone: BONE(0.03),
+      reed: cell({ grad: ['#f2ead2', '#c8bc9a'], marks: [{ col: '#6a5e40', wt: 1.5, n: 4, dir: 'h' }, { col: '#fffaea', wt: 1.1, n: 3, dir: 'v', len: [10, 22] }], extra: (g, X, Y) => { g.noStroke(); g.fill('#7a6a44', 255); for (const x of [12, 26, 40, 54]) g.circle(X + x, Y + 32, 3.4); } }),
+      reedDk: cell({ grad: ['#b6aa88', '#665a3c'], marks: [{ col: '#2c2414', wt: 1.7, n: 4, dir: 'h' }, { col: '#e4d8b4', wt: 1.1, n: 3, dir: 'v', len: [8, 16] }] }),
+      brass: BRONZE(), iron: IRON('#44484f', '#14161a'),
+      cord: cell({ grad: ['#e0a838', '#8a5a14'], marks: [{ col: '#3a2406', wt: 1.7, n: 5, dir: 'h' }, { col: '#fff0b0', wt: 1.1, n: 3, dir: 'v', len: [6, 14] }] }),
+      mouth: MOUTH('#22181a'),
+    },
+  },
+  mender: {                          // PT-060 (R8): milk-white wraps stitched with amber thread, a small pale Vael with a lantern of glass: the one that stands behind the others (the civilians' milk-glass, wound like a bandage)
+    seed: 6002, cells: {
+      skin: cell({ grad: ['#eee8e0', '#c0b4aa'], blots: [{ cols: ['#d8b8a8', '#f4ece4'], n: 3, r: [6, 11], a: 130 }], marks: [{ kind: '2B', col: '#8a7a74', wt: 1.4, n: 4, dir: 'v', len: [14, 34] }, { kind: 'cpencil', col: '#e8a850', wt: 1.1, n: 3, dir: 'd', len: [8, 14] }] }),
+      robe: cell({ grad: ['#f2ece0', '#bcb09c'], marks: [{ col: '#4a4034', wt: 1.8, n: 6, dir: 'h' }, { col: '#e49a3c', wt: 1.3, n: 5, dir: 'v', len: [8, 18] }, { kind: 'cpencil', col: '#fffaf0', wt: 1.1, n: 3, dir: 'd', len: [10, 18] }] }),
+      robeDk: cell({ grad: ['#bcb09c', '#6a5e4a'], marks: [{ col: '#2c241a', wt: 1.7, n: 5, dir: 'h' }, { col: '#c8863a', wt: 1.1, n: 3, dir: 'v', len: [8, 14] }] }),
+      amber: cell({ grad: ['#ffd070', '#c4781c'], blots: [{ cols: ['#ffe8a0', '#e8a030'], n: 3, r: [6, 12], a: 200 }], marks: [{ col: '#6a3a08', wt: 1.5, n: 3, dir: 'v', len: [12, 26] }] }),
+      bone: BONE(0.02), bronze: BRONZE(), bronzeDk: BRONZE_DK(),
+      cord: cell({ grad: ['#e49a3c', '#7a4a10'], marks: [{ col: '#2c1804', wt: 1.7, n: 5, dir: 'h' }, { col: '#ffe0a0', wt: 1.1, n: 3, dir: 'v', len: [6, 14] }] }),
+      mouth: MOUTH('#2a1c1c'),
+    },
+  },
   subcantor: {                       // PT-039: the Sub-Cantor: an ash-green robe washed grey, a sash of linen cut with tally marks (it keeps the count of one district), a pale mask, bronze gone green at the edges: the Cantor's cousin, smaller and plainer and afraid
     seed: 3901, cells: {
       skin: SKIN('#c8c8c0', '#8a8a84', '#585868', '#3c3c42'),

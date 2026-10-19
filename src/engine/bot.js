@@ -136,7 +136,7 @@ export class Bot {
     this.setHeld('right', dodge || weave); this.setHeld('left', shooter && !weave && !dodge);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
   /** PT-052 (Bot v2, first half): weave: 2 strafes while ANY awake shooter is within range, not only while the creature it is fighting is one (a Bellhand's toll-shot is aimed at where the player IS: a moving player is not hit; with a Tollbearer in front and three Bellhands behind, the old weave stood still) */
-  shootersNear() { const w = this.w, p = w.player; for (const e of w.enemies) { if (e.state === 'dead' || e.state === 'idle') continue; const R = ENEMIES[e.kind].ranged; if (R && Math.hypot(e.x - p.x, e.z - p.z) < Math.min(R.maxRange, 20)) return true; } return false; }
+  shootersNear() { const w = this.w, p = w.player; for (const e of w.enemies) { if (e.state === 'dead' || e.state === 'idle') continue; const R = ENEMIES[e.kind].ranged, Sn = ENEMIES[e.kind].snipe; if (R && Math.hypot(e.x - p.x, e.z - p.z) < Math.min(R.maxRange, 20)) return true; if (Sn && Math.hypot(e.x - p.x, e.z - p.z) < Sn.max) return true; } return false; }          // (PT-060: a Marksman's line is a shooter too)
   /**
    * The boss op: cut the bell ring, then the singer. A tone pulse (windup or ring in flight) is answered by getting behind stone: cover is any nearby point the boss has no line to.
    * Otherwise fight the nearest thing in view; with nothing in view, walk toward the next node (or the boss once the ring is broken).
