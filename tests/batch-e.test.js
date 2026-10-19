@@ -49,7 +49,7 @@ test('Cantor\'s Throat: a gullet, four ribs that shut off the width in turn, a b
 test('Cantor\'s Throat: the reeds\' death fires the shield trigger, the boss\'s death unlocks the exit; the boss is shielded and staggered as the Cantor\'s defs say', () => {
   const map = shippedMap('C1E3M08'), w = createWorld(map, { seed: 1, difficulty: 'normal' }), reeds = w.enemies.filter((e) => e.kind === 'reed'), boss = w.enemies.find((e) => e.kind === 'grandcantor');
   assert.equal(reeds.length, 4); assert.ok(Object.values(w.exitLocked).every(Boolean)); w.player.hp = 1e9;
-  const before = boss.hp; damageEnemy(w, boss, 100); assert.ok(Math.abs((before - boss.hp) - 100 * ENEMIES.grandcantor.shield.reduce) < 1e-6, 'shielded while the reeds stand');
+  const before = boss.hp; damageEnemy(w, boss, 100); assert.equal(before - boss.hp, 100, 'no shield while the reeds stand (PT-062: a mobile fight)');
   const ev = []; for (const r of reeds) damageEnemy(w, r, 1e6); for (let i = 0; i < 3; i++) { step(w, idle()); ev.push(...drainEvents(w)); }
   assert.ok(ev.some((e) => e.type === 'trigger' && e.id === 'shield-down'), 'the shield-down trigger'); assert.ok(Object.values(w.exitLocked).every(Boolean), 'the exit is still locked');
   boss.stunT = 0; const b2 = boss.hp; damageEnemy(w, boss, 100); assert.equal(b2 - boss.hp, 100, 'the whole blow once the reeds are gone');

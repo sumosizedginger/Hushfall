@@ -67,7 +67,7 @@ const MAP = {
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 6: { type: 'enemy', kind: 'acolyte' } },
   intro: { title: 'THE CANTOR\'S THROAT', lines: ['Every note the Choir ever sang came out of this room.', 'Something is about to sing the last one.'] },
   outro: 'Episode three is done. The Choir ships fall silent. Whatever they were calling, it heard.',
-  objective: 'The Grand Cantor is at the bell, past the ribs. Its four reeds keep it shielded',
+  objective: 'The Grand Cantor is at the bell, past the ribs. It walks. While a reed sings it throws two rings',
   ...layers,
   secrets: [{ id: 'loose-panel', panel: [17, 29], cells: [[17, 30], [17, 31], [17, 32]] }],
   groups: [...REEDS.map(([x, z]) => ({ name: 'reeds', rect: [x, z, x, z] })), { name: 'cantor', rect: [64, 28, 64, 28] }],
@@ -81,19 +81,19 @@ const MAP = {
     { id: 'gullet', at: [17, 28], radius: 3, speaker: 'INES', text: 'It is wet. The walls are wet. Do not think about what the walls are.' },
     { id: 'ribs', at: [28, 28], radius: 3, speaker: 'HULL', text: 'Ribs, four of them, one wall to the other with a gap on alternate sides. It is a bend in a throat. They will be waiting at every gap.' },
     { id: 'singers', at: [38, 28], radius: 3, speaker: 'INES', text: 'Singers in the curve. A shell-back in front of them. Kill the tall one with the wheel first: everything near it takes half.' },
-    { id: 'bell', at: [47, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'There. Four-legged, a horn the size of a doorway. Shielded while the four reeds sing. Pillars are cover from the rings. It sings two. Wait for the second.' },
+    { id: 'bell', at: [47, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second.' },
     { id: 'panel', at: [17, 27], radius: 2, speaker: 'HULL', text: 'The panel in the gullet\'s south wall rings hollow.' },
-    { id: 'shield', at: [57, 28], radius: 0.1, speaker: 'INES', text: 'The reeds are silent. The shield is gone. Hit it with everything.' },
+    { id: 'shield', at: [57, 28], radius: 0.1, speaker: 'INES', text: 'The reeds are silent. One ring now, and it is angry. Hit it with everything.' },
     { id: 'broken', at: [57, 8], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The voice is gone, Calder. The ships are quiet. Whatever they were calling heard that. We should not be here when it answers.' },
   ],
   triggers: [
     { id: 'ribs', when: 'enter', at: [26, 28], radius: 3, do: [{ objective: 'Through the ribs: a gap on alternate sides. The bell is at the end' }] },
-    { id: 'shield-down', when: 'dead:reeds', do: [{ objective: 'The shield is down. Kill the Grand Cantor, east end of the bell' }, { shake: 2 }, { message: 'shield' }] },
+    { id: 'shield-down', when: 'dead:reeds', do: [{ objective: 'The reeds are cut: one ring now. Kill the Grand Cantor, east end of the bell' }, { shake: 2 }, { message: 'shield' }] },
     { id: 'cantor-dead', when: 'dead:cantor', do: [{ exit: { set: 'unlock' } }, { objective: 'The voice is gone. The exit is open: north of the bell' }, { shake: 3 }, { message: 'broken' }] },
   ],
   quality: { enemies: [14, 70], botSeconds: [60, 900], mechanics: ['triggers', 'secret'], skins: 5, enemyKinds: { grandcantor: 1, reed: 4, tollbearer: 8, gaunt: 3, chorister: 1, bulwark: 1, acolyte: 1 },
     scaleClass: 'COMPRESSION', tallReason: 'the throat is the episode\'s one named chamber: 9 m to the vault because the Grand Cantor stands 6.2 m',
-    introduces: 'the Grand Cantor: a boss four-legged with a horn the size of a doorway, shielded by four reeds, singing a DOUBLE ring of tone, calling Choristers and fanning toll-shots' },
+    introduces: 'the Grand Cantor: a boss four-legged with a horn the size of a doorway that WALKS and circles, with no shield: a second ring of tone for as long as one of its four reeds sings, calling Choristers and fanning toll-shots' },
 };
 
 // ---- PT-025: the boss map keeps ALL its ammunition boxes on the ground (the reeds, the boss and its called singers never drop; the fight eats rivets); drops add to them ----

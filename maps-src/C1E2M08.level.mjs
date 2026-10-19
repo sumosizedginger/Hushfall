@@ -58,7 +58,7 @@ const MAP = {
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE GRAFTING FLOOR', lines: ['Every pipe in the Works ends in this room.', 'Something has been fed here for a very long time.'] },
   outro: 'Episode three: Landing Scar. Whatever the Mother was feeding, it has landed.',
-  objective: 'The Graft-Mother is at the north end. Her three cradle feeders keep her shielded: west, east and behind the conveyor',
+  objective: 'The Graft-Mother is at the north end. Her three cradle feeders half-shield her and hatch her guards: west, east and behind the conveyor',
   ...layers,
   secrets: [{ id: 'night-stash', panel: [18, 35], cells: [[18, 36], [18, 37], [18, 38]] }],
   groups: [{ name: 'feeders', rect: [30, 14, 30, 14] }, { name: 'feeders', rect: [56, 14, 56, 14] }, { name: 'feeders', rect: [43, 42, 43, 42] }, { name: 'mother', rect: [43, 13, 43, 13] }],
@@ -68,20 +68,20 @@ const MAP = {
     { type: 'enemy', kind: 'graftmother', at: [43, 13], group: 'mother', facing: 'south', summons: [[38, 12], [48, 12], [38, 17], [48, 17]] },
   ],
   messages: [
-    { id: 'start', at: [5, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: it is shielded until they are gone.' },
+    { id: 'start', at: [5, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: they hatch its guards and half-shield it.' },
     { id: 'approach', at: [15, 29], radius: 3, speaker: 'INES', text: 'The line comes in here. Cradles all the way down, and the sound of something large breathing. We are close.' },
-    { id: 'floor', at: [30, 29], radius: 3, speaker: 'INES', text: 'There. Three cradle feeders, one on each wing and one behind the conveyor, feeding it through the floor. Break them and the shield falls.' },
+    { id: 'floor', at: [30, 29], radius: 3, speaker: 'INES', text: 'There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and she is bare.' },
     { id: 'mother', at: [43, 20], radius: 5, speaker: 'INES', text: 'It is a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Do not stand in the open.' },
     { id: 'stash', at: [18, 37], radius: 2.5, speaker: 'NIGHT LOG', text: 'EMERGENCY STORES FOR THE NIGHT CREW, IN CASE THE LINE SHOULD EVER GO BAD. IT HAS GONE BAD.' },
-    { id: 'shield', at: [43, 20], radius: 0.1, speaker: 'INES', text: 'The shield is gone. All of it. Hit it, Calder, hit it with everything.' },
+    { id: 'shield', at: [43, 20], radius: 0.1, speaker: 'INES', text: 'The feeders are gone. All of them. Hit it, Calder, hit it with everything.' },
     { id: 'broken', at: [28, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The line is broken. Calder, whatever the Mother was feeding has landed. Episode three is a crater, and the Choir ships are in it.' },
   ],
   triggers: [
-    { id: 'shield-down', when: 'dead:feeders', do: [{ objective: 'The shield is down. Kill the Graft-Mother, north end' }, { shake: 2 }, { message: 'shield' }] },
+    { id: 'shield-down', when: 'dead:feeders', do: [{ objective: 'The feeders are gone. Kill the Graft-Mother, north end' }, { shake: 2 }, { message: 'shield' }] },
     { id: 'mother-dead', when: 'dead:mother', do: [{ exit: { set: 'unlock' } }, { objective: 'The line is broken. The exit is open: south-west corner' }, { shake: 3 }, { message: 'broken' }] },
   ],
   quality: { enemies: [20, 70], botSeconds: [60, 900], mechanics: ['triggers', 'secret'], skins: 5, enemyKinds: { graftmother: 1, feeder: 3, bellhand: 3 },
-    scaleClass: 'COMPRESSION', introduces: 'the Graft-Mother: a boss that is a pod the size of a room, shielded by three cradle feeders, hatching Drone-Gills and spitting spore fans' },
+    scaleClass: 'COMPRESSION', introduces: 'the Graft-Mother: a boss that is a pod the size of a room, half-shielded by three cradle feeders that also hatch Drone-Gills, spitting spore fans' },
 };
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)

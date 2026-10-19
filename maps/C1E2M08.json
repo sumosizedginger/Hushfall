@@ -210,7 +210,7 @@
    "when": "dead:feeders",
    "do": [
     {
-     "objective": "The shield is down. Kill the Graft-Mother, north end"
+     "objective": "The feeders are gone. Kill the Graft-Mother, north end"
     },
     {
      "shake": 2
@@ -1273,7 +1273,7 @@
    "at": [5, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: it is shielded until they are gone."
+   "text": "Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: they hatch its guards and half-shield it."
   },
   {
    "id": "approach",
@@ -1287,7 +1287,7 @@
    "at": [30, 29],
    "radius": 3,
    "speaker": "INES",
-   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor, feeding it through the floor. Break them and the shield falls."
+   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and she is bare."
   },
   {
    "id": "mother",
@@ -1308,7 +1308,7 @@
    "at": [43, 20],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The shield is gone. All of it. Hit it, Calder, hit it with everything."
+   "text": "The feeders are gone. All of them. Hit it, Calder, hit it with everything."
   },
   {
    "id": "broken",
@@ -1349,7 +1349,7 @@
    "power": 1.4
   }
  ],
- "objective": "The Graft-Mother is at the north end. Her three cradle feeders keep her shielded: west, east and behind the conveyor",
+ "objective": "The Graft-Mother is at the north end. Her three cradle feeders half-shield her and hatch her guards: west, east and behind the conveyor",
  "entryLoadout": {
   "hp": 100,
   "armor": 0,
@@ -1378,7 +1378,7 @@
    "bellhand": 3
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "the Graft-Mother: a boss that is a pod the size of a room, shielded by three cradle feeders, hatching Drone-Gills and spitting spore fans"
+  "introduces": "the Graft-Mother: a boss that is a pod the size of a room, half-shielded by three cradle feeders that also hatch Drone-Gills, spitting spore fans"
  },
  "drops": {
   "scale": 1.3,

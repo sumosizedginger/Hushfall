@@ -53,20 +53,20 @@ test('killing a vat IS the denial: nothing more is born (what was born stays), a
 });
 
 test('the Grand Cantor\'s pulse is a DOUBLE ring: a windup, a ring, and `echo.gap` s later a second ring (a pulse event with echo: true) from where it stands; a stagger cancels the second', () => {
-  assert.ok(G.boss && G.pulse.echo.gap > 0.5 && G.pulse.echo.gap < 1.5 && G.summon.kind === 'chorister' && G.shots.always && G.shield.note.length === 3 && G.hp >= 800);
-  const { w } = field(); const b = at(w, 'grandcantor', 22, 0); b.pulseCd = 0; const rings = []; let tick = 0, windup = null;
+  assert.ok(G.boss && G.pulse.echo.gap > 0.5 && G.pulse.echo.gap < 1.5 && G.summon.kind === 'chorister' && G.shots.always && !G.shield && G.echoReeds && G.speed >= 1.5 && G.strafe && G.hp >= 700);          // PT-062: no shield, a mobile fight, a second ring while a reed sings
+  const { w } = field(); const b = at(w, 'grandcantor', 22, 0); at(w, 'reed', 12, 8); b.pulseCd = 0; const rings = []; let tick = 0, windup = null;
   for (; tick < 60 * 6 && rings.length < 2; tick++) { step(w, idle()); for (const e of drainEvents(w)) { if (e.type === 'enemy_windup' && e.kind === 'grandcantor') windup = windup ?? tick; if (e.type === 'pulse') rings.push({ tick, echo: !!e.echo }); } }
   assert.equal(rings.length, 2, 'two rings'); assert.ok(!rings[0].echo && rings[1].echo, 'the second is the echo'); assert.ok(Math.abs((rings[1].tick - rings[0].tick) * TICK - G.pulse.echo.gap) < 0.1, `${((rings[1].tick - rings[0].tick) * TICK).toFixed(2)} s apart`);
   assert.ok((rings[0].tick - windup) * TICK >= G.pulse.windup - 0.1, 'after its windup');
-  const f = field(); const c = at(f.w, 'grandcantor', 22, 0); c.pulseCd = 0; let first = false; for (let i = 0; i < 60 * 6 && !first; i++) { step(f.w, idle()); first = drainEvents(f.w).some((e) => e.type === 'pulse'); }
+  const f = field(); const c = at(f.w, 'grandcantor', 22, 0); at(f.w, 'reed', 12, 8); c.pulseCd = 0; let first = false; for (let i = 0; i < 60 * 6 && !first; i++) { step(f.w, idle()); first = drainEvents(f.w).some((e) => e.type === 'pulse'); }
   assert.ok(first && c.echoT > 0, 'an echo is pending'); c.stunT = 2; run(f.w, 2); assert.equal(c.echoT, 0, 'a stagger drops it'); const rest = run(f.w, 60 * 2).filter((e) => e.type === 'pulse' && e.echo); assert.equal(rest.length, 0);
 });
 
-test('a reed is a node: it shields the Grand Cantor (5% while one stands), its fall staggers the boss, the last one takes the shield down; a bell node and a reed together both count', () => {
+test('a reed is a node: no shield (the boss takes the whole blow), its fall staggers the boss, and while any reed sings the pulse has its second ring: the last reed to fall ends the echo', () => {
   const R = ENEMIES.reed; assert.ok(R.node && R.hp >= 100 && R.height >= 3);
-  const { w } = field(); const b = at(w, 'grandcantor', 24, 0), r1 = at(w, 'reed', 12, 5), r2 = at(w, 'reed', 12, -5); const before = b.hp; damageEnemy(w, b, 100); assert.ok(Math.abs((before - b.hp) - 100 * G.shield.reduce) < 1e-6, 'shielded');
-  damageEnemy(w, r1, 1e6); assert.ok(b.stunT > 0, 'a reed\'s fall staggers it'); b.stunT = 0; const m = b.hp; damageEnemy(w, b, 100); assert.ok(m - b.hp < 20, 'one reed still stands: shielded');
-  damageEnemy(w, r2, 1e6); b.stunT = 0; const k = b.hp; damageEnemy(w, b, 100); assert.equal(k - b.hp, 100, 'no reed left: the whole blow');
+  const { w } = field(); const b = at(w, 'grandcantor', 24, 0), r1 = at(w, 'reed', 12, 5), r2 = at(w, 'reed', 12, -5); const before = b.hp; damageEnemy(w, b, 100); assert.equal(before - b.hp, 100, 'no shield: the whole blow');
+  damageEnemy(w, r1, 1e6); assert.ok(b.stunT > 0, 'a reed\'s fall staggers it'); b.stunT = 0; const m = b.hp; damageEnemy(w, b, 100); assert.equal(m - b.hp, 100, 'still the whole blow');
+  damageEnemy(w, r2, 1e6); b.stunT = 0; b.pulseCd = 0; const echoes = []; for (let i = 0; i < 60 * 8; i++) { step(w, idle()); for (const e of drainEvents(w)) if (e.type === 'pulse') echoes.push(!!e.echo); } assert.ok(echoes.length >= 1 && echoes.every((x) => !x), 'no reed left: single rings only, no echo');
 });
 
 test('the Grand Cantor calls Choristers from the alcoves it was given (at most `max` alive), and fans toll-shots from the start (always), more once the reeds are gone', () => {

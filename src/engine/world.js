@@ -306,7 +306,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1;
     if (def.peaceful) { w.stats.innocents = (w.stats.innocents ?? 0) + 1; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, folk: true }); emit(w, 'innocent', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }          // PT-037: an innocent is not a kill, and leaves nothing
     w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
-    if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && ENEMIES[c.kind].shield && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
+    if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && (ENEMIES[c.kind].shield || ENEMIES[c.kind].echoReeds) && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
   return false;
@@ -804,7 +804,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   if (def.sweep && sweepStep(w, e, def, diff, dt, sees, dist, { emit, hurtPlayer, damageEnemy, solid: (cx, cz) => cellSolid(w, cx, cz) })) return true;                  // PT-033: the Gate Warden's sweep
   if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
-    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo) e.echoT = P.echo.gap; }
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo && (!def.echoReeds || !enraged)) e.echoT = P.echo.gap; }
     return true;
   }
   if (P && sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
@@ -824,6 +824,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
     emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z }); e.shotCd = Sh.cooldown;
   }
   if (sees && dist < (def.keepAway ?? 6)) { retreatStep(w, e, def, dt); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  if (def.strafe && sees && dist <= (def.keepAway ?? 6) + 5 && strafeStep(w, e, def, dt)) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }          // PT-062: a mobile boss circles at its range
   return false;
 }
 
@@ -862,7 +863,7 @@ function acolyteStep(w, e, def, diff, dt, sees, dist) {
  * and then `count` creatures drop beside it (`vat_birth`), at most `max` of ITS brood alive; when its brood is full it looks again in two seconds. It never fights and is a node: killing it ends the brood (what is already born stays).
  */
 function vatStep(w, e, def, diff, dt) {
-  const S = def.spawner, p = w.player;
+  const S = def.spawner ?? def.feeds, p = w.player;                                                                      // PT-062 (R10): a feeder FEEDS the Graft-Mother's brood with the same machinery a vat uses
   if (e.vatT === undefined) { e.vatT = -1; e.summonCd = S.first; e.brood = []; e.vatN = 0; }
   if (e.state === 'idle') { if (p.hp > 0 && Math.hypot(p.x - e.x, p.z - e.z) < S.range && hasLOS(w, e.x, e.z, p.x, p.z)) wakeEnemy(w, e, false, true); else return; }
   e.summonCd = Math.max(0, e.summonCd - dt);
@@ -1066,7 +1067,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.bell) bellMotion({ w, e, def, dt, groundAt: (x, z, r) => groundAt(w, x, z, r) });          // PT-043: the Root Bell's clapper hangs on a pendulum (rootbell.js): its place is a function of the clock
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
   if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.snipeT !== undefined) { e.snipeT = -1; e.snipeAim = null; } if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
-  if (def.spawner && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
+  if ((def.spawner || def.feeds) && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
   if (def.node) return;
   if (w.map.hasCurrent && e.state !== 'idle' && !def.flying && !e.hold && def.speed > 0) flowPush(w, e, def.radius, dt);          // PT-037: a walker in a current is carried by it (a sleeper is not: it lies where the map put it)
   if (e.burstLeft > 0) { e.burstT -= dt; if (e.burstT <= 0) { fireEnemyShot(w, e, def, diff, true); e.burstLeft--; e.burstT = def.ranged.burst.gap; } }          // the rest of a Chorister's burst (PT-026)

@@ -163,7 +163,7 @@
    "when": "dead:reeds",
    "do": [
     {
-     "objective": "The shield is down. Kill the Grand Cantor, east end of the bell"
+     "objective": "The reeds are cut: one ring now. Kill the Grand Cantor, east end of the bell"
     },
     {
      "shake": 2
@@ -959,7 +959,7 @@
    "at": [47, 24],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "There. Four-legged, a horn the size of a doorway. Shielded while the four reeds sing. Pillars are cover from the rings. It sings two. Wait for the second."
+   "text": "Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second."
   },
   {
    "id": "panel",
@@ -973,7 +973,7 @@
    "at": [57, 28],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The reeds are silent. The shield is gone. Hit it with everything."
+   "text": "The reeds are silent. One ring now, and it is angry. Hit it with everything."
   },
   {
    "id": "broken",
@@ -983,7 +983,7 @@
    "text": "The voice is gone, Calder. The ships are quiet. Whatever they were calling heard that. We should not be here when it answers."
   }
  ],
- "objective": "The Grand Cantor is at the bell, past the ribs. Its four reeds keep it shielded",
+ "objective": "The Grand Cantor is at the bell, past the ribs. It walks. While a reed sings it throws two rings",
  "entryLoadout": {
   "hp": 100,
   "armor": 0,
@@ -1017,7 +1017,7 @@
   },
   "scaleClass": "COMPRESSION",
   "tallReason": "the throat is the episode's one named chamber: 9 m to the vault because the Grand Cantor stands 6.2 m",
-  "introduces": "the Grand Cantor: a boss four-legged with a horn the size of a doorway, shielded by four reeds, singing a DOUBLE ring of tone, calling Choristers and fanning toll-shots"
+  "introduces": "the Grand Cantor: a boss four-legged with a horn the size of a doorway that WALKS and circles, with no shield: a second ring of tone for as long as one of its four reeds sings, calling Choristers and fanning toll-shots"
  },
  "drops": {
   "scale": 1.3,
