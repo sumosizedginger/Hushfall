@@ -299,6 +299,8 @@ export class GameView {
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
       if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
+      // PT-054 (the owner: Glass Steppe stutters): a sleeper that is already frozen into its merged mesh needs nothing: no pose, no grounding (which walks every vertex of the rig), and its invisible rig is out of the scene graph (three.js recomputed the matrices of all fifty nodes of every sleeper on every frame)
+      if (v.frozen && e.state === 'idle' && Math.abs((e.y ?? 0) - v.frozenY) <= 1e-3) continue;
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
@@ -314,8 +316,8 @@ export class GameView {
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
       if (e.state === 'idle' && !v.frozen && steady) {
-        v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false;
-      } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; }
+        v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); f.traverse((o) => { o.matrixAutoUpdate = false; }); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false; this.scene.remove(v.root);
+      } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; this.scene.add(v.root); }
     }
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); freeRig(v.root); if (v.frozen) freeRig(v.frozen); }          // PT-050 H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
     { const discs = []; for (const e of w.enemies) { if (e.state === 'dead') continue; const v = this.enemyViews.get(e.id), def = ENEMIES[e.kind]; if (v) discs.push({ x: v.root.position.x, y: v.root.position.y, z: v.root.position.z, r: def.radius, fade: def.flying ? 0.55 : 1 }); } this.shadows.update(discs); }      // the floor under each creature, its collision radius; a flyer's disc is smaller (it is higher)
@@ -516,7 +518,9 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.exposureK = look.exposure; this.post.setGrade(look.grade); this.post.uniforms.uExposure.value = 2.2 * look.exposure * (this.brightness ?? 1);
   }
   dispose() {
-    for (const s of [this.scene, this.weaponScene]) s.traverse((o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } });
+    const freeMeshes = (o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } };
+    for (const s of [this.scene, this.weaponScene]) s.traverse(freeMeshes);
+    for (const v of this.enemyViews.values()) if (!v.root.parent) v.root.traverse(freeMeshes);          // a sleeping creature's own rig is out of the scene (PT-054), its frozen copy is not: free both
     this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();
     this.wardRingMat.dispose(); this.wardDiscMat.dispose();
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();

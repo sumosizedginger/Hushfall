@@ -50,6 +50,7 @@ export function installTestHook(app) {
     // -- route bot: same InputState as a human --
     startBot(name) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name); return { ops: bot.route.length }; },
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
+    perfStep(withRender = false) { if (!(bot && !bot.done && !bot.failed && g.mode === 'playing')) return g.mode !== 'playing' ? g.mode : bot?.done ? 'done' : bot?.failed ? 'failed' : 'idle'; bot.tick(); app.stepOnce(); if (withRender) render(0.016); return 'ok'; },          // PT-054: one frame of the route bot with NO snapshot (the snapshot hashes the whole world and would drown the numbers of tools/dev/probe-perf.mjs)
     // -- low-level setup (state writers; tests only) --
     setup_teleport(x, z, yaw) { const p = g.world.player; p.x = x; p.z = z; if (yaw != null) p.yaw = yaw; p.y = groundAt(g.world, x, z, PLAYER.radius); g.view.eyeBase = p.y; g.view.beforeStep(g.world); },
     setup_spawnEnemy(kind, x, z, yaw = Math.PI, state = 'idle', variant = null) { const e = spawnEnemy(g.world, kind, x, z, yaw); e.state = state; if (variant) e.variant = variant; return e.id; },
