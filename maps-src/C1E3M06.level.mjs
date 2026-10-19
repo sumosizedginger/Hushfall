@@ -91,6 +91,10 @@ const MAP = {
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, except the niche's cache (the secret) ----
 MAP.drops = { scale: 1, keep: [[36, 24, 40, 24]] };
 
+// ---- PT-057 (R9, weapon mods): the rivet driver spin-up, in a corner of the choir loft off the aisle ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_spinup",14,28]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E3M06', lane: [...(laneOf('C1E3M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);

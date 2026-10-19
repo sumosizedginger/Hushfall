@@ -834,6 +834,11 @@
    "at": [38, 34],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_phosphor",
+   "at": [35, 72]
   }
  ],
  "scenery": [],

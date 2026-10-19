@@ -692,6 +692,11 @@
      "shake": 1.2
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_spinup",
+   "at": [14, 28]
   }
  ],
  "par": {

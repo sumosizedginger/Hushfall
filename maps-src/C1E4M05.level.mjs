@@ -162,6 +162,10 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[CX - 3, 91, CX + 3, 93]] };
 console.log('C1E4M05: enemies', ents.filter((e) => e.type === 'enemy').length, 'vents', VENTS.length);
+// ---- PT-057 (R9, weapon mods): the arc lamp long chain, in a bay of the orchard off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_longchain",43,70]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E4M05', lane: [...(laneOf('C1E4M05') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);

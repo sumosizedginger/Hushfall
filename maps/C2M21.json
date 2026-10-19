@@ -1071,6 +1071,11 @@
    "at": [40, 48],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_airburst",
+   "at": [52, 16]
   }
  ],
  "scenery": [

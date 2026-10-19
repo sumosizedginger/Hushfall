@@ -11,6 +11,8 @@
     "shoot": "node tools/dev/shoot-look.mjs",
     "test": "node --test \"tests/*.test.js\"",
     "build": "vite build",
+    "check-dist": "node tools/dev/check-dist.mjs",
+    "licences": "node tools/dev/license-audit.mjs",
     "verify": "npm run validate && npm test && npm run build",
     "browsercheck": "node tools/dev/browser-check.mjs",
     "verify-map": "node tools/verify-map.mjs",
@@ -30,7 +32,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
     "three": "0.186.1"

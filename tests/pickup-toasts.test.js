@@ -9,6 +9,7 @@ import { loadMap } from './helpers.js';
 test('every non-key, non-weapon pickup toast states exactly the amount PICKUPS grants', () => {
   for (const [kind, def] of Object.entries(PICKUPS)) {
     if (def.type === 'key' || def.type === 'weapon') continue;
+    if (def.type === 'mod') { assert.ok(PICKUP_NAMES[kind], kind + ' has a toast name'); assert.equal(pickupToast(kind), PICKUP_NAMES[kind], 'a mod is named, it has no amount'); continue; }          // PT-057
     assert.ok(PICKUP_NAMES[kind], `${kind} has a toast name`); assert.equal(pickupToast(kind), `${PICKUP_NAMES[kind]} (+${def.amount})`);
   }
 });

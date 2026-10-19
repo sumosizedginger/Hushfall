@@ -123,6 +123,10 @@ MAP.drops = { scale: 1, keep: [] };
 const where = (k) => P.ents.filter((e) => e.kind === k).map((e) => e.at.join(','));
 console.log('C2M09: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind !== 'vaelfolk').length, 'folk', P.ents.filter((e) => e.kind === 'vaelfolk').length, 'houses', houses.length, 'nTop', nTop, 'plaza', PLAZA, 'top', TOP);
 console.log('zealots', where('zealot').join(' | '), '| bulwark', where('bulwark').join(' | '));
+// ---- PT-057 (R9, weapon mods): the harpoon barbed bolt, in a niche of the sounding gate, off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_barbed",61,21]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M09', lane: [...(laneOf('C2M09') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);

@@ -127,6 +127,10 @@ export const waypoints = {
   main: [[38, 72, 0], [38, 68], ...spiral],
   secret: [[38, 72, 0], [38, 68], ...around, [38, 7], { op: 'use', at: [38, 5] }, [38, 3, 0], [38, 8, 0], polar(30.5, 280), polar(30.5, 290), polar(26, 290), polar(20.5, 290), polar(20.5, 270), polar(20.5, 250), polar(16, 245), ...spiral.slice(11)],
 };
+// ---- PT-057 (R9, weapon mods): the flare cannon phosphor, in the far corner of the ossuary, off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_phosphor",35,72]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M13', lane: [...(laneOf('C2M13') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);

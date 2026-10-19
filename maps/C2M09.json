@@ -1188,6 +1188,11 @@
    "type": "exit",
    "at": [58, 49],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_barbed",
+   "at": [61, 21]
   }
  ],
  "scenery": [

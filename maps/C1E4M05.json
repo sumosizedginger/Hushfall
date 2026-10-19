@@ -1060,6 +1060,11 @@
    "at": [48, 9],
    "locked": true,
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_longchain",
+   "at": [43, 70]
   }
  ],
  "par": {

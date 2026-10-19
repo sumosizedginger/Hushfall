@@ -820,6 +820,11 @@
    "type": "exit",
    "at": [88, 28],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "mod_doublebarrel",
+   "at": [59, 37]
   }
  ],
  "scenery": [

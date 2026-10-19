@@ -126,6 +126,10 @@ console.log('C2M21: enemies', P.ents.filter((e) => e.type === 'enemy').length, '
 const Q = (r, a) => at(r, a);
 const route = [[6, 50, 0], Q(44, 190), { op: 'switch', id: 'v1' }, Q(44, 205), Q(44, 215), Q(44, 225), Q(36, 225), Q(27, 225), Q(27, 240), Q(27, 255), Q(27, 270), { op: 'switch', id: 'v2' }, Q(27, 270), Q(20, 270), Q(13.5, 270), Q(10.5, 285), Q(10.5, 300), { op: 'switch', id: 'v3' }, Q(10.5, 270), Q(10.5, 240), Q(10.5, 215), [EXIT[0] + 1, EXIT[1], 0], [EXIT[0], EXIT[1], 0]];
 export const waypoints = { main: route, secret: route.slice(0, 11).concat([[SEC.front[0], SEC.front[1]], { op: 'use', at: SEC.panel }, [CACHE[1][0], CACHE[1][1], 0], [SEC.front[0], SEC.front[1], 0]], route.slice(11)) };
+// ---- PT-057 (R9, weapon mods): the mortar airburst, in an alcove of the foundry, off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_airburst",52,16]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M21', lane: [...(laneOf('C2M21') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1},{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);

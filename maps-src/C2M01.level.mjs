@@ -118,6 +118,10 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M01: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-057 (R9, weapon mods): the scattergun double barrel, in a recess above the beach, off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["mod_doublebarrel",59,37]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M01', lane: [...(laneOf('C2M01') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":2}] };
 ENC.apply(MAP);
