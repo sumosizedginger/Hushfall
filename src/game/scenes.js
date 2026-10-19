@@ -17,9 +17,9 @@ export const SCENES = [
     fade: [{ t: 0, to: 0, dur: 1.2 }, { t: 23.5, to: 1, dur: 2.5 }] },
   { id: 'threshold', map: 'C2M01', length: 20, title: 'Threshold Beach',
     keys: [
-      { t: 0, eye: 'player', offset: [0, 0, -1.3], look: 'ahead:30:9' },
-      { t: 9, eye: 'player', offset: [0, 0, -0.4], look: 'ahead:30:3', ease: 'out' },
-      { t: 20, eye: 'player', look: 'ahead:30:1.6' },
+      { t: 0, eye: 'ahead:14:1.7', look: 'ahead:60:4' },
+      { t: 11, eye: 'ahead:14:1.7', look: 'ahead:60:2.2' },
+      { t: 20, eye: 'player', look: 'ahead:12:1.6' },
     ],
     lines: [
       { t: 2, dur: 5.5, who: '', text: 'Salt on the wind. A lake with no far shore.' },
@@ -29,21 +29,20 @@ export const SCENES = [
     fade: [{ t: 0, to: 0, dur: 2.5 }] },
   { id: 'deep-gate', map: 'C2M09', length: 18, title: 'The Sounding Deep',
     keys: [
-      { t: 0, eye: 'ahead:-4:1.6', look: 'ahead:14:3.2' },
-      { t: 10, eye: 'ahead:-1.5:1.6', look: 'ahead:14:2.4', ease: 'linear' },
+      { t: 0, eye: 'ahead:5:2.4', look: 'ahead:30:0.5' },
+      { t: 10, eye: 'ahead:5:2.4', look: 'ahead:30:-1' },
       { t: 18, eye: 'player', look: 'ahead:14:1.6' },
     ],
     lines: [
       { t: 2.5, dur: 5, who: '', text: 'No light here that the Vael did not light.' },
-      { t: 9.5, dur: 6, who: '', text: 'The stair is wide enough for two carts side by side.' },
     ],
     actions: [{ t: 0.3, cue: 'bell_strike' }],
     fade: [{ t: 0, to: 0, dur: 3 }] },
   { id: 'hive-cantor', map: 'C2M24', length: 28, title: 'Choir of One',
     keys: [
       { t: 0, eye: 'player', look: 'enemy:hivecantor:4' },
-      { t: 12, eye: 'player', offset: [0, 0, 0.8], look: 'enemy:hivecantor:6' },
-      { t: 20, eye: 'player', offset: [0, 0, 1.4], look: 'enemy:hivecantor:7' },
+      { t: 12, eye: 'towards:hivecantor:8:1.8', look: 'enemy:hivecantor:5' },
+      { t: 21, eye: 'towards:hivecantor:10:3.4', look: 'enemy:hivecantor:7' },
       { t: 28, eye: 'player', look: 'ahead:20:1.6' },
     ],
     lines: [

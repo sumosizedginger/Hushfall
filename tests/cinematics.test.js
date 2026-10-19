@@ -115,7 +115,9 @@ test('the camera pose: yaw 0 looks toward -z, the pitch follows the height of th
   const r = resolveScene({ id: 'x', length: 8, keys: [{ t: 0, eye: [5, 5, 1.6], look: [5, 0, 1.6] }, { t: 8, eye: [5, 5, 1.6], look: [5, 0, 6] }] }, w);
   const a = cameraAt(r, 0), b = cameraAt(r, 8); assert.ok(Math.abs(a.yaw) < 1e-9 && Math.abs(a.pitch) < 1e-9); assert.ok(b.pitch > 0.2);
   const east = resolveScene({ id: 'x', length: 8, keys: [{ t: 0, eye: [5, 5], look: [9, 5] }, { t: 8, eye: [5, 5], look: [9, 5] }] }, w); assert.ok(Math.abs(cameraAt(east, 0).yaw + Math.PI / 2) < 1e-9, 'looking east is yaw -pi/2 (the game turns left for positive yaw)');
-  assert.deepEqual(resolvePoint('ahead:5:2', w), { x: 10, z: 5, up: 2 }); assert.deepEqual(resolvePoint('ahead:-5', w), { x: 10, z: 15, up: 1.6 });
+  assert.deepEqual(resolvePoint('ahead:5:2', w), { x: 10, z: 5, up: 2, level: true }); assert.deepEqual(resolvePoint('ahead:-5', w), { x: 10, z: 15, up: 1.6, level: true });
+  const w2 = { ...w, enemies: [{ kind: 'gaunt', x: 10, z: -10 }] }; assert.deepEqual(resolvePoint('towards:gaunt:8:2.5', w2), { x: 10, z: 2, up: 2.5, level: true }); assert.deepEqual(resolvePoint('towards:gaunt:50', w2), { x: 10, z: -8, up: 1.6, level: true }, 'never closer than 2 m to the creature'); assert.equal(resolvePoint('towards:nothing:5', w2), null);
+  const stair = resolveScene({ id: 'x', length: 8, keys: [{ t: 0, eye: [5, 5, 1.6], look: 'ahead:10:3' }, { t: 8, eye: [5, 5, 1.6], look: 'ahead:10:3' }] }, w, (x, z) => (z < 8 ? -6 : 0)); assert.ok(Math.abs(cameraAt(stair, 0).pitch) < 0.3, 'a look point ahead is measured from the floor under the eye, so a stair going down is not stared at');
   assert.equal(resolvePoint('enemy:nothing', w), null); assert.equal(resolvePoint('garbage', w), null);
   const unresolved = resolveScene({ id: 'x', length: 8, keys: [{ t: 0, eye: 'enemy:nothing', look: 'enemy:nothing' }, { t: 8, eye: 'player', look: 'player' }] }, w); assert.ok(Number.isFinite(cameraAt(unresolved, 3).x), 'a scene whose point cannot be found falls back to the player and never throws');
 });
@@ -155,4 +157,17 @@ test('the Record offers the scenes a player has seen, in the order they are writ
   const html = document.getElementById('record-list').innerHTML; assert.ok(html.includes('data-scene="threshold"') && html.includes('data-scene="the-gate"') && html.includes('Watch again'), html.slice(0, 200)); assert.ok(!html.includes('record-empty'), 'scenes alone are not "nothing yet"');
   ui.recordOpen([], { all: 0, docs: 0 }, null, []); assert.ok(document.getElementById('record-list').innerHTML.includes('record-empty'));
   ui.cine({ who: 'INES', text: 'Hello there', k: 0.5, fade: 0.25 }); assert.equal(document.getElementById('cine-text').textContent, 'Hello '); assert.equal(document.getElementById('cine-fade').style.opacity, '0.25'); ui.cine(null); assert.ok(document.getElementById('cine').classList.contains('hidden'));
+});
+
+test('the cold open: four cards over the title picture and the tower plate, plain text, ends in a sequence that has no tally of a campaign', async () => {
+  const { COLD_OPEN, startSequence, stepSequence, viewSequence, skipSequence } = await import('../src/game/ending.js');
+  assert.equal(COLD_OPEN.coldOpen, true); assert.equal(COLD_OPEN.cards.length, 4); assert.equal(COLD_OPEN.art, 'title');
+  for (const c of COLD_OPEN.cards) { assert.deepEqual(lintLine(c.text, { speaker: c.who }), [], c.text); assert.equal(c.who, '', 'the narrator'); assert.ok(!c.art || c.art === 'tower'); }
+  assert.equal(COLD_OPEN.cards[3].art, 'tower', 'the last card is over the plate of the tower');
+  const lamp = COLD_OPEN.cards.map((c) => c.text).join(' '); assert.ok(/lamp at the harbour mouth/.test(lamp) && /fog-bell on the north pier/.test(lamp) && /ninth stroke/.test(lamp), 'it plants the lamp and the fog-bell that the later maps and the ending pick up');
+  let s = startSequence(); for (let i = 0; i < 2000 && !viewSequence(s, COLD_OPEN.cards).tally; i++) s = stepSequence(s, COLD_OPEN.cards, 0.1); assert.ok(viewSequence(s, COLD_OPEN.cards).tally, 'time alone reaches the end');
+  assert.ok(viewSequence(skipSequence(startSequence(), COLD_OPEN.cards), COLD_OPEN.cards).tally, 'Esc reaches the end at once');
+  const { defaultSettings } = await import('../src/game/settings.js'); assert.equal(defaultSettings().coldOpenSeen, false); assert.equal(defaultSettings().cinematics, 'once');
+  const { sanitizeSettings } = await import('../src/game/settings.js').catch(() => ({}));
+  const textures = fs.readFileSync(path.join(ROOT, 'src/render/textures.js'), 'utf8'); assert.match(textures, /coldTowerUrl/); assert.ok(fs.existsSync(path.join(ROOT, 'assets/baked/ui_cold_tower.png')), 'the plate is baked');
 });

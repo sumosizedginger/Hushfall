@@ -22,7 +22,8 @@ export function resolvePoint(spec, w, cell = w.map.cell ?? 1) {
   const [head, arg, up] = spec.split(':');
   if (head === 'player') return { x: w.player.x, z: w.player.z, up: arg != null ? Number(arg) : 1.6 };
   if (head === 'enemy') { const e = w.enemies.find((q) => q.kind === arg); return e ? { x: e.x, z: e.z, up: up != null ? Number(up) : 1.4 } : null; }
-  if (head === 'ahead') { const m = Number(arg), yaw = w.player.yaw ?? 0; return { x: w.player.x - Math.sin(yaw) * m, z: w.player.z - Math.cos(yaw) * m, up: up != null ? Number(up) : 1.6 }; }                  // m metres in front of the player (negative = behind), the way the player's camera faces (yaw 0 looks toward -z)
+  if (head === 'ahead') { const m = Number(arg), yaw = w.player.yaw ?? 0; return { x: w.player.x - Math.sin(yaw) * m, z: w.player.z - Math.cos(yaw) * m, up: up != null ? Number(up) : 1.6, level: true }; }                      // `level`: as a LOOK point its height is measured from the floor under the EYE, so looking down a stair does not look at the steps
+  if (head === 'towards') { const e = w.enemies.find((q) => q.kind === arg), parts = spec.split(':'); if (!e) return null; const dx = e.x - w.player.x, dz = e.z - w.player.z, d = Math.hypot(dx, dz) || 1, m = Math.min(Number(parts[2]), Math.max(0, d - 2)); return { x: w.player.x + dx / d * m, z: w.player.z + dz / d * m, up: parts[3] != null ? Number(parts[3]) : 1.6, level: true }; }          // `towards:<kind>:<metres>:<up>`: that many metres from the player toward the creature (never closer than 2 m to it)                  // m metres in front of the player (negative = behind), the way the player's camera faces (yaw 0 looks toward -z)
   if (head === 'exit') { const x = w.map.exits?.[0]; if (!x) return null; const c = x.at ?? [x.x, x.z]; return { x: (c[0] + 0.5) * cell, z: (c[1] + 0.5) * cell, up: arg != null ? Number(arg) : 1.6 }; }
   return null;
 }
@@ -33,7 +34,7 @@ export function resolveScene(scene, w, floor = () => 0) {
   const keys = scene.keys.map((k) => {
     const e = resolvePoint(k.eye, w, cell) ?? fall, l = resolvePoint(k.look, w, cell) ?? { x: e.x, z: e.z - 1, up: e.up };
     const off = k.offset ?? [0, 0, 0];                                                                                   // a metres offset on the eye, for "a little behind the player" or "above the creature"
-    return { t: k.t, ease: k.ease ?? 'smooth', x: e.x + off[0], z: e.z + off[1], y: floor(e.x, e.z) + e.up + off[2], lx: l.x, lz: l.z, ly: floor(l.x, l.z) + l.up, fov: k.fov ?? null };
+    return { t: k.t, ease: k.ease ?? 'smooth', x: e.x + off[0], z: e.z + off[1], y: floor(e.x, e.z) + e.up + off[2], lx: l.x, lz: l.z, ly: (l.level ? floor(e.x, e.z) : floor(l.x, l.z)) + l.up, fov: k.fov ?? null };
   });
   return { ...scene, keys };
 }

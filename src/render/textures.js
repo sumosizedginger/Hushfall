@@ -64,4 +64,5 @@ export async function loadAll() {
 export const titleArtUrl = () => URL_BY_NAME.ui_title_art;
 /** the picture behind the campaign epilogue (PT-036): its own painting once baked, the Gate's sky until then (the game never depends on the bake) */
 export const endingArtUrl = () => URL_BY_NAME.ui_ending_art ?? URL_BY_NAME.sky_gate;
+export const coldTowerUrl = () => URL_BY_NAME.ui_cold_tower ?? URL_BY_NAME.ui_title_art;                  // PT-063 (R13): the last card of the cold open: the tower burning teal over the quay (falls back to the title picture)
 export const endingArt2Url = () => URL_BY_NAME.ui_ending_art_2 ?? URL_BY_NAME.ui_ending_art ?? URL_BY_NAME.sky_gate;          // PT-043: the Unrung Gate's door, the lamp and the figure (Campaign Two's epilogue)

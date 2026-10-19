@@ -51,6 +51,18 @@ export const ENDINGS = {
   },
 };
 
+/** PT-063 (R13, workstream L): THE COLD OPEN, shown before the first level of a new campaign (once; the Record replays it from the title). Four cards over the title picture, the last over the plate of the tower (`ui_cold_tower`). It plants what the ending pays:
+ *  the harbour lamp and the fog-bell (the Campaign Two beach names its world after the bell, and the last scene hangs the lamp). `coldOpen: true` makes the shell go on to the level (or back to the title) instead of to a tally. Original text, LORE.md section 5. */
+export const COLD_OPEN = {
+  coldOpen: true, kicker: 'Port Marrow', title: 'HUSHFALL', name: '', art: 'title',
+  cards: [
+    { who: '', text: 'The harbour office of Port Marrow keeps a catalogue of lights and bearings.' },
+    { who: '', text: 'The first entry is the lamp at the harbour mouth. The second is the fog-bell on the north pier, rung on the ninth stroke of the tide table.' },
+    { who: '', text: 'Warden Calder kept both. His daughter keeps them now.' },
+    { who: '', text: 'Tonight there is a third light, on the bell tower. It is teal, and nobody lit it.', art: 'tower' },
+  ],
+};
+
 /** the epilogue to show after finishing `id` by its normal exit, or null (not a finale, a secret exit, or a campaign without one) */
 export function endingFor(manifest, id, dest) {
   if (dest === 'secret' || !isFinale(manifest, id)) return null;

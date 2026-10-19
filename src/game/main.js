@@ -1,6 +1,6 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
 import * as THREE from 'three';
-import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url } from '../render/textures.js';
+import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url, coldTowerUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
@@ -24,7 +24,7 @@ import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, app
 import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } from './wheel.js';
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
-import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
+import { ENDINGS, COLD_OPEN, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
@@ -75,7 +75,7 @@ const g = {
 g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintEngaged = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
 
 const ui = new UI({
-  newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
+  newGame: (d) => { g.progress = newProgress(); const go = () => startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); if (!settings.coldOpenSeen && settings.cinematics !== 'off') startColdOpen(go); else go(); },          // PT-063: the cold open plays before the first level of a new game, once
   buyUpgrade: (track) => buyUpgrade(track),
   buyMod: (id) => buyModTier(id),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
@@ -124,7 +124,7 @@ const titleProgress = () => {
 function openRecord(from) {
   g.recordFrom = from === 'title' ? 'title' : 'pause';
   const view = recordView(CAMPAIGN, MAPS, g.recordFrom === 'title' ? titleProgress() : g.progress);
-  ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null, scenes: g.recordFrom === 'title' ? recordScenes(titleProgress(), SCENES) : [] });
+  ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null, scenes: g.recordFrom === 'title' ? [...(settings.coldOpenSeen ? [{ id: 'cold-open', title: 'Port Marrow', map: null }] : []), ...recordScenes(titleProgress(), SCENES)] : [] });
 }
 function closeRecord() {
   if (ui.screen !== 'record') return;
@@ -195,13 +195,14 @@ function buyUpgrade(track) {
  *  The records are already written when it starts (earn + commitProgress ran at the exit), so closing the game here loses nothing. */
 function startEpilogue(ending) {
   g.input.releaseAll(); g.ending = { def: ending, seq: startSequence(), tallied: false }; g.mode = 'epilogue';
-  document.getElementById('ending-art').src = ending.campaign === 2 ? endingArt2Url() : endingArtUrl();          // PT-043: each campaign's own picture
-  ui.show('ending', { ending }); syncEpilogue(); audio.play('gate_chord');
+  g.artKey = null; ui.show('ending', { ending }); syncEpilogue(); audio.play(ending.coldOpen ? 'bell_strike' : 'gate_chord');          // PT-043: each campaign's own picture (syncEpilogue sets it, a card may name its own: PT-063)
 }
 /** show what the sequence says now: the card being typed, or (once the last card has been read) the tally */
 function syncEpilogue() {
   const e = g.ending; if (!e) return;
   const v = viewSequence(e.seq, e.def.cards);
+  { const key = (!v.tally && e.def.cards[v.index]?.art) || e.def.art || (e.def.campaign === 2 ? 'ending2' : 'ending1'); if (key !== g.artKey) { g.artKey = key; document.getElementById('ending-art').src = key === 'tower' ? coldTowerUrl() : key === 'title' ? titleArtUrl() : key === 'ending2' ? endingArt2Url() : endingArtUrl(); } }          // PT-063: the picture behind the card
+  if (v.tally && e.def.coldOpen) { finishColdOpen(); return; }                                                                                   // PT-063: the cold open has no tally: on to the level, or back to the title for a replay
   if (v.tally && e.def.dev) { g.ending = null; quitToTitle(); return; }                              // PT-043: a dev map's draft epilogue ends at the title, with no tally of a campaign nobody finished
   if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def); } } else ui.endingView(v);
 }
@@ -212,6 +213,13 @@ function epiloguePress() {
   e.seq = pressSequence(e.seq, e.def.cards); syncEpilogue();
 }
 const epilogueSkip = () => { const e = g.ending; if (g.mode !== 'epilogue' || !e || e.tallied) return; e.seq = skipSequence(e.seq, e.def.cards); syncEpilogue(); };
+/** PT-063 (R13): the cold open, as the epilogue's machinery (cards typed over a picture) with a different end: `then` runs when the last card has been read or Esc has skipped it */
+function startColdOpen(then) { g.coldThen = then; startEpilogue({ campaign: 1, ...COLD_OPEN }); }
+function finishColdOpen() {
+  const then = g.coldThen; g.coldThen = null; g.ending = null; g.artKey = null;
+  if (!settings.coldOpenSeen) { settings.coldOpenSeen = true; saveSettings(storage, settings); }
+  if (then) then(); else quitToTitle();
+}
 function finishEpilogue() { g.ending = null; g.mode = 'complete'; ui.show('complete', completeData()); }
 /** PT-063 (R13, workstream L): A STORY SCENE. The world stands still (no tick is stepped while one plays), the view's eye is the scene's camera (cinematics.js `cameraAt`), the HUD is gone, and the WALL clock runs the sequencer: the simulation is never slowed or sped for a scene.
  *  A scene plays the first time by default (`settings.cinematics`: once | always | off; `progress.cinematicsSeen`), Esc / Enter / Space / the pad's A or B skips it, and a skip runs the actions that had not run, so a skipped scene and a watched one leave the same world. */
@@ -231,6 +239,7 @@ function stepCinematic(dt) { const c = g.cine; if (!c) return; const r = advance
 function skipCinematic() { const c = g.cine; if (g.mode !== 'cinematic' || !c) return; const r = skipScene(c.scene, c.st); c.st = r.state; runSceneActions(r.run); endCinematic(); }
 /** PT-063: watch a scene again from the Record (the title only: no game is in hand there). It builds a world of the scene's map that nothing writes to, plays the scene on it, and goes back to the title; no save, no record and no setting changes. */
 function replayScene(id) {
+  if (id === 'cold-open') { if (g.mode === 'title' && settings.coldOpenSeen) startColdOpen(() => quitToTitle()); return; }                                       // the cold open is not a world: the epilogue's cards over the title picture, then the title again
   const sc = SCENE[id], map = sc && MAPS[sc.map]; if (g.mode !== 'title' || !sc || !map || !hasSeen(titleProgress(), id)) return;
   const keep = { difficulty: g.difficulty, seed: g.seed, progress: g.progress };
   startLevel({ world: createWorld(map, { seed: 1, difficulty: 'normal', choices: null }) }); startCinematic(id, true, 'title');
@@ -461,7 +470,7 @@ function frameBody(now) {
     }
   }
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
-  else if (g.mode === 'cinematic') stepCinematic(raw > 0.25 ? 0 : dt);                                                       // (a long hitch, a background tab: the scene waits, it does not leap)
+  else if (g.mode === 'cinematic') { if (!g.manual) stepCinematic(raw > 0.25 ? 0 : dt); }                                  // (g.manual: the dev test hook owns the clock)                                                       // (a long hitch, a background tab: the scene waits, it does not leap)
   audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }
   { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap || g.mode === 'cinematic'); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
