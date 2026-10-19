@@ -105,3 +105,10 @@ test('the Locker: tier two of a mod you carry costs its salvage; a mod not found
   assert.deepEqual(sanitizeUpgrades({ ammo: 1, armor: 2, mods2: { doublebarrel: true, nope: true, spinup: 'yes', barbed: 1 } }), { ammo: 1, armor: 2, mods2: { doublebarrel: true } }, 'only known mods, only true');
   const { makeSave, parseSave } = await import('../src/engine/save.js'); const w = arena([], { upgrades: { ammo: 0, armor: 0, mods2: { doublebarrel: true } } }); assert.equal(modTier(w, 'doublebarrel'), 2); assert.equal(parseSave(JSON.stringify(makeSave(w, 'mid-level', { now: 1 }))).ok, true, 'a world with a second tier saves');
 });
+
+test('a double-barrel shot says so in its fire event and is heard as two shots a beat apart; a plain shot is unchanged', async () => {
+  const { soundsForEvent: soundsFor } = await import('../src/audio/events.js');
+  const w = arena([sponge('tollbearer', 18)]); addMod(w.player, 'doublebarrel'); const ev = shoot(w, w.enemies[0]), f = ev.find((e) => e.type === 'fire'); assert.equal(f.mod, 'doublebarrel');
+  const plain = arena([sponge('tollbearer', 18)]); assert.equal(shoot(plain, plain.enemies[0]).find((e) => e.type === 'fire').mod, undefined);
+  { const two = soundsFor(f).filter((s) => s.id === 'scatter_fire'); assert.equal(two.length, 2); assert.ok(two[1].delay > 0 && two[1].delay < 0.2); const one = soundsFor({ type: 'fire', weapon: 'scattergun' }).filter((s) => s.id === 'scatter_fire'); assert.equal(one.length, 1); }
+});

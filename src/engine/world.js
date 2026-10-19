@@ -653,7 +653,7 @@ function fireWeapon(w, charge = 0) {
     const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
     w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4, ...(ldId ? { load: ldId } : {}) });
   }
-  emit(w, 'fire', { weapon: p.weapon, charge: cf, ...(ldId ? { load: ldId } : {}) }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));
+  emit(w, 'fire', { weapon: p.weapon, charge: cf, ...(ldId ? { load: ldId } : {}), ...(def.mod ? { mod: def.mod } : {}) });          // (a modded shot says which mod: the double barrel is heard twice) noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));
 }
 
 

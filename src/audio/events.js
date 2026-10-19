@@ -44,7 +44,8 @@ const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : u
 
 export function soundsForEvent(e) {
   switch (e.type) {
-    case 'fire': return e.weapon === 'arc' && e.charge > 0.04 ? [{ id: 'arc_bolt', gain: 0.7 + 0.3 * e.charge }] : (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s }));      // a charged lamp is a different, bigger sound
+    case 'fire': if (e.mod === 'doublebarrel' && e.weapon === 'scattergun') return [{ id: 'scatter_fire' }, { id: 'scatter_fire', delay: 0.06, gain: 0.85 }, { id: 'pump', delay: 0.55 }];          // PT-057: both barrels, a beat apart
+      return e.weapon === 'arc' && e.charge > 0.04 ? [{ id: 'arc_bolt', gain: 0.7 + 0.3 * e.charge }] : (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s }));      // a charged lamp is a different, bigger sound
     case 'charge_start': return [{ id: e.weapon === 'arc' ? 'arc_charge' : 'fist_charge' }];
     case 'charge_full': return [{ id: e.weapon === 'arc' ? 'charge_full' : 'fist_charge', gain: e.weapon === 'arc' ? 1 : 0.6 }];
     case 'swing': return [{ id: e.heavy || HEAVY_SWING.has(e.kind) ? 'swing_heavy' : 'swing', gain: e.kind === 'bash' ? 0.8 : 1 }];
