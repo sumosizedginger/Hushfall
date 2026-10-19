@@ -5,6 +5,8 @@
 // The way on: two RELAYS, one at the back of the last base of each bank (north, south), each under an amber lamp and named by the objective; the drum gate at the east end opens when both are thrown and says which one is missing.
 // A rib-hollow in the south bank holds a cache. Drop-fed ammunition. SHAPE: a snake of a gorge (an S of seven legs), four floor heights, three lid heights (bank, rib, pocket), rib piers along both banks.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 import { centreline, band } from '../tools/mapkit/hive.mjs';
 
@@ -86,6 +88,11 @@ for (const b of [B3, B5]) PK('armor_vest', ...ats(b, -2, 13)); PK('armor_vest', 
 PK('armor_vest', XS - 1, zs + 2); PK('ammo_rocket', XS + 1, zs + 2); PK('ammo_rocket', XS, zs + 3); PK('health_large', XS, zs + 1); PK('ammo_round', XS - 2, zs + 3);
 
 const gx = 137, gz = 30;
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [68,34], radius: 2, cells: ENC.around([68,34], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M17', name: 'The Hive-Song Approach', version: 1, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'hive', sky: 'hive', beat: true, fog: '#2a1822', fogDensity: 0.012 },
@@ -134,4 +141,8 @@ export const waypoints = {
   main: [[9, 30, 0], ...run1, ...relays],
   secret: [[9, 30, 0], ...lane([14, 22, 34, 44, 58, 70]), [XS, zs - 3, 0], { op: 'use', at: [XS, zs] }, [XS, zs + 2, 0], [XS, zs - 3, 0], ...lane([88, 106, 117, 128]), ...relays],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M17', lane: [...(laneOf('C2M17') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

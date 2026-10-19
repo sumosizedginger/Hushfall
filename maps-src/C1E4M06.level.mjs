@@ -4,10 +4,12 @@
 // R2 the stalls (two Acolytes warding four Choristers); R3 the Mother's rank; R4 the steps (Warden-Grafts and Bellhands); R5 the last (one more shell) and the Gate yard. Scale class MIXED (the court is open; the rest is roofed). Look: approach (grey stone and indigo), sky: the Gate's.
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
 import { FLOOR_SKINS } from '../src/engine/defs.js';
+import { laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 
 const W = 90, H = 118, CX = 45;
 const L = new Level(W, H, { fill: 'A' }); L.usedHeights = true; L.usedCeil = true;
-const hw = (z) => 10 + Math.round((20 * (z - 8)) / 100);                                               // half the funnel's width at row z: 30 at the entrance, 10 at the Gate
+const hw = (z) => 7 + Math.round((12 * (z - 8)) / 100);                                               // PT-052 exemplar: half the funnel's width at row z: 19 at the entrance, 7 at the Gate (it was 30 and 10: the map was 4398 cells with 27 creatures)
 const RANKS = [                                                                                         // [z from (north), z to (south), floor (0.5 m units), lid (absolute 0.5 m units), name]
   { z0: 92, z1: 110, h: 0, ce: 24, id: 'R1' }, { z0: 73, z1: 89, h: 2, ce: 22, id: 'R2' }, { z0: 54, z1: 70, h: 4, ce: 20, id: 'R3' }, { z0: 35, z1: 51, h: 6, ce: 18, id: 'R4' }, { z0: 18, z1: 32, h: 8, ce: 16, id: 'R5' }, { z0: 8, z1: 15, h: 10, ce: 16, id: 'YARD' },
 ];
@@ -63,6 +65,10 @@ for (const [x, z] of [[-4, 48], [5, 49], [-14, 38], [14, 40]]) PR('pillar', x, z
 // R5 and the yard: the last shell, the Gate's lamps
 E('gaunt', 0, 26); E('tollbearer', -8, 22); E('tollbearer', 8, 22); P('health_large', 0, 30); P('armor_vest', -5, 20);
 for (const [x, z] of [[-6, 29], [6, 29]]) PR('pillar', x, z, { skin: 'A' });
+// PT-052 (the exemplar, Director's Plan R3): the funnel is narrower (19 to 7 half-width, it was 30 to 10) and holds more: a second line in every rank, a third of the whole shooting, so the walk between fights is short
+for (const [k, x, z] of [['gaunt', -14, 98], ['bellhand', -16, 105], ['bellhand', -10, 84], ['bellhand', 8, 78], ['gaunt', -4, 86], ['chorister', -12, 74],
+  ['bellhand', 10, 60], ['gaunt', -8, 56], ['bellhand', -6, 38], ['bellhand', 8, 48], ['gaunt', -10, 48], ['bellhand', -5, 28], ['gaunt', 4, 24],
+  ['chorister', 14, 96], ['bellhand', 0, 74], ['chorister', -6, 62], ['chorister', 0, 34], ['bellhand', -3, 24]]) E(k, x, z);
 // the service tunnels: a Warden-Graft in the west one, a Bellhand and a Gaunt in the east one; a cache in each
 { const tz = (z, side) => [CX + side * (hw(z) + 4 + (side > 0 ? 0 : 0)), z]; put('enemy', 'gaunt', tz(90, -1)); put('enemy', 'bulwark', tz(84, 1)); put('enemy', 'gaunt', tz(72, 1)); put('pickup', 'health_large', tz(96, -1)); put('pickup', 'armor_vest', tz(66, 1)); put('pickup', 'ammo_shell', tz(78, -1)); }
 // lamps: the Gate's strip at the far end; a lamp per rank under the lid
@@ -100,6 +106,12 @@ if (secret) { const c = secret.cells; for (const [k, i] of [['armor_vest', 4], [
   for (const [x, z] of [[-26, 86], [26, 86], [-22, 68], [22, 68], [-18, 49], [18, 49], [-14, 30], [14, 30], [-8, 13], [8, 13], [-24, 106], [24, 106]]) put('prop', 'lantern', [CX + x, z]);
 }
 // ---- end PT-035 materials ----
+// ---- PT-052 R3 (exemplar): two scripted ambushes (the kit: tools/mapkit/encounters.mjs): a pack of Gaunts drops in as the player crosses the Mother's rank and the steps ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [54, 70], radius: 2, cells: ENC.around([54, 70], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [45, 48], radius: 2, cells: ENC.around([45, 48], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C1E4M06', name: "Gatekeeper's Approach", version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#34365a', fogDensity: 0.005, sky: 'gate', ambient: 0.9, look: 'approach' },
@@ -130,5 +142,9 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[CX - 4, 104, CX + 4, 108], [CX - 4, 66, CX + 4, 70]] };
 console.log('C1E4M06: enemies', ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R3 (exemplar): what the kit built joins the map, and which kinds stand where is a plan the compiler applies (tools/mapkit/roster.mjs; tools/dev/tune-roster.mjs swaps it) ----
+ENC.apply(MAP);
+MAP.roster = { id: 'C1E4M06', lane: [...(laneOf('C1E4M06') ?? [])], keep: [], plan: [{ from: 'chorister', to: 'tollbearer', n: 3, pick: 'spread' }, { from: 'bellhand', to: 'tollbearer', n: 5, pick: 'spread' }] };          // found with tools/dev/tune-roster.mjs: both fighters finish every route; eleven Bellhands and seven Choristers killed the strafing one on hard
+
 export default MAP;
 export { L, hw, CX, SCREENS, RANKS };

@@ -6,7 +6,31 @@
   "C1E1M04",
   "C1E1M05",
   "C1E1M06",
-  "C1E1M07"
+  "C1E1M07",
+  "C1E2M01",
+  "C1E2M03",
+  "C1E2M05",
+  "C1E2M06",
+  "C1E2M07",
+  "C1E3M01",
+  "C1E3M03",
+  "C1E3M05",
+  "C1E3M06",
+  "C1E4M02",
+  "C1E4M04",
+  "C1E4M05",
+  "C1E4M06",
+  "C2M01",
+  "C2M03",
+  "C2M05",
+  "C2M06",
+  "C2M07",
+  "C2M09",
+  "C2M13",
+  "C2M19",
+  "C2M20",
+  "C2M23",
+  "C2M25"
  ],
  "floor": {
   "C1E1M01": {
@@ -71,11 +95,11 @@
   },
   "C1E1M07": {
    "density": 33,
-   "rangedShare": 16,
+   "rangedShare": 30,
    "ambushes": 2,
    "kinds": 4,
    "loops": 0,
-   "topShare": 51,
+   "topShare": 38,
    "symmetry": 0.64,
    "walk": 1112
   },
@@ -91,11 +115,11 @@
   },
   "C1E2M01": {
    "density": 26,
-   "rangedShare": 7,
+   "rangedShare": 20,
    "ambushes": 2,
    "kinds": 4,
    "loops": 2,
-   "topShare": 60,
+   "topShare": 43,
    "symmetry": 0.65,
    "walk": 1155
   },
@@ -111,51 +135,51 @@
   },
   "C1E2M03": {
    "density": 25,
-   "rangedShare": 8,
+   "rangedShare": 22,
    "ambushes": 4,
    "kinds": 4,
    "loops": 7,
-   "topShare": 68,
+   "topShare": 38,
    "symmetry": 0.61,
    "walk": 1503
   },
   "C1E2M04": {
    "density": 32,
-   "rangedShare": 15,
-   "ambushes": 1,
+   "rangedShare": 18,
+   "ambushes": 2,
    "kinds": 3,
    "loops": 1,
-   "topShare": 52,
+   "topShare": 45,
    "symmetry": 0.78,
    "walk": 1035
   },
   "C1E2M05": {
    "density": 22,
-   "rangedShare": 18,
-   "ambushes": 1,
+   "rangedShare": 24,
+   "ambushes": 2,
    "kinds": 4,
    "loops": 1,
-   "topShare": 47,
+   "topShare": 41,
    "symmetry": 0.81,
    "walk": 766
   },
   "C1E2M06": {
    "density": 27,
-   "rangedShare": 14,
-   "ambushes": 1,
-   "kinds": 3,
+   "rangedShare": 20,
+   "ambushes": 2,
+   "kinds": 4,
    "loops": 3,
-   "topShare": 61,
+   "topShare": 52,
    "symmetry": 0.78,
    "walk": 1634
   },
   "C1E2M07": {
    "density": 38,
-   "rangedShare": 13,
+   "rangedShare": 23,
    "ambushes": 3,
-   "kinds": 3,
+   "kinds": 4,
    "loops": 4,
-   "topShare": 55,
+   "topShare": 42,
    "symmetry": 0.51,
    "walk": 809
   },
@@ -172,7 +196,7 @@
   "C1E3M01": {
    "density": 21,
    "rangedShare": 40,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 5,
    "loops": 0,
    "topShare": 32,
@@ -181,11 +205,11 @@
   },
   "C1E3M02": {
    "density": 25,
-   "rangedShare": 17,
+   "rangedShare": 21,
    "ambushes": 0,
    "kinds": 5,
    "loops": 1,
-   "topShare": 42,
+   "topShare": 38,
    "symmetry": 0.5,
    "walk": 954
   },
@@ -195,7 +219,7 @@
    "ambushes": 2,
    "kinds": 5,
    "loops": 0,
-   "topShare": 50,
+   "topShare": 34,
    "symmetry": 0.68,
    "walk": 1733
   },
@@ -211,11 +235,11 @@
   },
   "C1E3M05": {
    "density": 26,
-   "rangedShare": 14,
-   "ambushes": 1,
+   "rangedShare": 24,
+   "ambushes": 2,
    "kinds": 6,
    "loops": 0,
-   "topShare": 52,
+   "topShare": 43,
    "symmetry": 0.68,
    "walk": 807
   },
@@ -225,7 +249,7 @@
    "ambushes": 2,
    "kinds": 7,
    "loops": 0,
-   "topShare": 41,
+   "topShare": 35,
    "symmetry": 0.81,
    "walk": 1185
   },
@@ -262,27 +286,27 @@
   "C1E4M02": {
    "density": 21,
    "rangedShare": 35,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 6,
    "loops": 2,
-   "topShare": 35,
+   "topShare": 32,
    "symmetry": 0.93,
    "walk": 1602
   },
   "C1E4M03": {
    "density": 15,
    "rangedShare": 21,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 6,
    "loops": 2,
-   "topShare": 42,
+   "topShare": 38,
    "symmetry": 0.76,
    "walk": 1566
   },
   "C1E4M04": {
    "density": 14,
-   "rangedShare": 19,
-   "ambushes": 0,
+   "rangedShare": 25,
+   "ambushes": 2,
    "kinds": 4,
    "loops": 0,
    "topShare": 38,
@@ -292,7 +316,7 @@
   "C1E4M05": {
    "density": 18,
    "rangedShare": 45,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 6,
    "loops": 1,
    "topShare": 34,
@@ -300,14 +324,14 @@
    "walk": 2149
   },
   "C1E4M06": {
-   "density": 6,
-   "rangedShare": 22,
-   "ambushes": 0,
+   "density": 14,
+   "rangedShare": 24,
+   "ambushes": 2,
    "kinds": 8,
    "loops": 5,
    "topShare": 33,
-   "symmetry": 0.8,
-   "walk": 4398
+   "symmetry": 0.72,
+   "walk": 3097
   },
   "C1E4M07": {
    "density": 20,
@@ -335,7 +359,7 @@
    "ambushes": 2,
    "kinds": 4,
    "loops": 1,
-   "topShare": 43,
+   "topShare": 39,
    "symmetry": 0.57,
    "walk": 1483
   },
@@ -355,7 +379,7 @@
    "ambushes": 2,
    "kinds": 7,
    "loops": 2,
-   "topShare": 35,
+   "topShare": 32,
    "symmetry": 0.66,
    "walk": 2161
   },
@@ -375,17 +399,17 @@
    "ambushes": 15,
    "kinds": 6,
    "loops": 0,
-   "topShare": 37,
+   "topShare": 35,
    "symmetry": 0.69,
    "walk": 1671
   },
   "C2M06": {
    "density": 17,
    "rangedShare": 27,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 5,
    "loops": 0,
-   "topShare": 37,
+   "topShare": 33,
    "symmetry": 0.82,
    "walk": 1737
   },
@@ -402,20 +426,20 @@
   "C2M08": {
    "density": 12,
    "rangedShare": 27,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 8,
    "loops": 1,
-   "topShare": 40,
+   "topShare": 33,
    "symmetry": 0.85,
    "walk": 2507
   },
   "C2M09": {
    "density": 16,
    "rangedShare": 20,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 7,
    "loops": 0,
-   "topShare": 39,
+   "topShare": 36,
    "symmetry": 0.56,
    "walk": 2794
   },
@@ -452,7 +476,7 @@
   "C2M13": {
    "density": 26,
    "rangedShare": 24,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 9,
    "loops": 8,
    "topShare": 26,
@@ -492,7 +516,7 @@
   "C2M17": {
    "density": 16,
    "rangedShare": 33,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 9,
    "loops": 0,
    "topShare": 30,
@@ -512,7 +536,7 @@
   "C2M19": {
    "density": 25,
    "rangedShare": 28,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 9,
    "loops": 5,
    "topShare": 34,
@@ -522,7 +546,7 @@
   "C2M20": {
    "density": 20,
    "rangedShare": 38,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 8,
    "loops": 0,
    "topShare": 32,
@@ -552,7 +576,7 @@
   "C2M23": {
    "density": 23,
    "rangedShare": 27,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 10,
    "loops": 13,
    "topShare": 32,
@@ -572,7 +596,7 @@
   "C2M25": {
    "density": 13,
    "rangedShare": 36,
-   "ambushes": 0,
+   "ambushes": 2,
    "kinds": 7,
    "loops": 1,
    "topShare": 21,
@@ -972,5 +996,80 @@
    "longestWalkM": 52
   }
  },
- "updated": "2026-10-18"
+ "updated": "2026-10-19",
+ "waiting": {
+  "C1E4M06": {
+   "skip": [
+    "density"
+   ],
+   "why": "the funnel was cut from 4398 to 3097 cells and holds 42 creatures (it held 27) plus two ambush packs of three; the strafing and the standing fighter both finish every route at this size, and 12 more creatures kill the strafing one on hard: the rest waits for a better bot"
+  },
+  "C1E2M01": {
+   "skip": [
+    "cap"
+   ],
+   "why": "the commonest kind (Tollbearer) is 43% against a cap of 40%: the full roster change fails the robustness runs of the gates (a strafing fighter with aim error); half of it passes"
+  },
+  "C1E2M05": {
+   "skip": [
+    "cap"
+   ],
+   "why": "the commonest kind is 41% against a cap of 40%: one creature over on a small map (17); the rest of the change is not yet tried against the gates"
+  },
+  "C1E2M06": {
+   "skip": [
+    "cap"
+   ],
+   "why": "the commonest kind is 52% against a cap of 40%: a bigger change (more Gaunts) makes a perfect fighter take too little damage on normal, and a plan without the Gill and Bellhands fails the hard seed 2 secret run; the tuner now plays hard on two seeds"
+  },
+  "C1E2M07": {
+   "skip": [
+    "cap"
+   ],
+   "why": "the commonest kind is 42% against a cap of 40%: one creature over; the rest of the change is not yet tried against the gates"
+  },
+  "C1E3M05": {
+   "skip": [
+    "cap"
+   ],
+   "why": "the commonest kind is 43% against a cap of 35%: the dark elites and the Acolytes ward the rest of the roster; only half of the shooter change passes the gates"
+  },
+  "C1E3M06": {
+   "skip": [
+    "density"
+   ],
+   "why": "density is 14 per thousand cells against a floor of 18: the map is longer than its roster; the answer is a smaller map (Level B), not another bot gate"
+  },
+  "C1E4M04": {
+   "skip": [
+    "density"
+   ],
+   "why": "density is 14 per thousand cells against a floor of 18: the map is longer than its roster; the answer is a smaller map (Level B)"
+  },
+  "C2M03": {
+   "skip": [
+    "density"
+   ],
+   "why": "density is 16 per thousand cells against a floor of 18: the map is longer than its roster; the answer is a smaller map (Level B)"
+  },
+  "C2M06": {
+   "skip": [
+    "density"
+   ],
+   "why": "density is 17 per thousand cells against a floor of 18: the map is longer than its roster; the answer is a smaller map (Level B)"
+  },
+  "C2M09": {
+   "skip": [
+    "cap",
+    "density"
+   ],
+   "why": "the commonest kind is 36% against a cap of 35% and density is 16 per thousand cells against 18: a smaller map (Level B) fixes both"
+  },
+  "C2M25": {
+   "skip": [
+    "density"
+   ],
+   "why": "density is 13 per thousand cells against a floor of 18: the descent is six long landings; the answer is a shorter shaft (Level B). The two ambushes cost the lantern twelve seconds, so a tin of oil lies at each"
+  }
+ }
 }

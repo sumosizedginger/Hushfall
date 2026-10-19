@@ -4,6 +4,8 @@
 // brings the car back. The exit is in the spire, so nothing reaches it that has not ridden both lifts. No new engine: the lifts (moving floors) and the elites already built. Look: ascent (high, thin, clear air), sky anselm.
 // SHAPE: four tiers up a cliff face, two stairs and two lifts as the links, a gate hall and a spire (roofed), terraces open; heights 0 / 3 / 6 / 9 / 12 m. Scale class MIXED (the gate hall, the stair houses and the spire are roofed: about 45%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, ellipseCells, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 72, H = 100, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -49,6 +51,11 @@ for (const [x, z] of [[30, 90], [44, 88], [26, 62], [46, 56], [28, 38], [44, 34]
 const SEC = { panel: [32, 81], cells: [[31, 79], [32, 79], [33, 79], [31, 80], [32, 80], [33, 80]] };
 { for (const [x, z] of SEC.cells) setCell(L, x, z, 'f', 0, 12); box(L, [30, 78, 34, 78], '$', 0); box(L, [30, 79, 30, 80], '$', 0); box(L, [34, 79, 34, 80], '$', 0); setCell(L, 32, 81, 'S', 0);
   PK('armor_vest', 31, 79); PK('health_large', 33, 79); PK('ammo_shell', 31, 80); PK('ammo_rivet', 33, 80); PK('ammo_flare', 32, 79); }
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [32,72], radius: 2, cells: ENC.around([32,72], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M08', name: 'Threshold Ascent', version: 1, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { fog: '#d8d0e8', fogDensity: 0.003, sky: 'anselm', look: 'ascent' },
@@ -91,4 +98,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M08: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M08', lane: [...(laneOf('C2M08') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":2}] };
+ENC.apply(MAP);
+
 export default MAP;

@@ -5,6 +5,8 @@
 // beached hull of the MARROW GIRL, a trawler that came through the Gate on its keel: a wooden fore hold, a low galley, an iron engine room, a stair up to the boat deck (open to the sky, 3 m up), and a ramp down the far side to a terrace and the cleft in the cliff that is the exit.
 // SHAPE: a bowl round a lagoon (the big thing in the middle); heights 0 to 3.5 m; three lids (hold 4 m, galley 3.5 m, engine room 6 m); the figure you can name is "the cove". Scale class MIXED (about 45% roofed: the hull, the huts, the cleft).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 90, H = 60, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -75,6 +77,11 @@ const SEC = { panel: [21, 42], cells: [[20, 43], [21, 43], [22, 43], [20, 44], [
 { const fl = dune(21, 40); setCell(L, 21, 42, 'S', fl); for (const [x, z] of SEC.cells) setCell(L, x, z, '.', fl, fl + 7); ring(L, '!', (x, z) => ((x >= 18 && x <= 24 && z >= 42 && z <= 46) ? '$' : null));
   for (const [x, z] of [[23, 43], [23, 44], [23, 45], [20, 45], [21, 45], [22, 45]]) setCell(L, x, z, '$', dune(x, z));     // the dune ran up to the secret's east and south edge: wall it (tests/secrets-sealed.test.js)
   PK('armor_vest', 20, 44); PK('health_large', 22, 44); PK('ammo_shell', 20, 43); PK('ammo_rivet', 22, 43); PK('ammo_flare', 21, 44); }
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M01', name: 'Threshold Beach', version: 1, ceilingHeight: 4.2, par: { time: 360 },
   atmosphere: { fog: '#c88a70', fogDensity: 0.006, sky: 'anselm', look: 'threshold' },
@@ -111,4 +118,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M01: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M01', lane: [...(laneOf('C2M01') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":2}] };
+ENC.apply(MAP);
+
 export default MAP;

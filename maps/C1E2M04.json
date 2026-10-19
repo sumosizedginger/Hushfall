@@ -284,6 +284,47 @@
      "objective": "The kilns are open. Take both handles to the flue lever, east chamber"
     }
    ]
+  },
+  {
+   "id": "amb-cage-1",
+   "when": "enter",
+   "at": [9, 23],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [3, 22],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [4, 26],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [6, 20],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -389,7 +430,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [56, 16],
    "facing": -1.434
   },
@@ -891,7 +932,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [48, 33],
    "facing": -1.799
   },

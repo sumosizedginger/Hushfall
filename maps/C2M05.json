@@ -1392,7 +1392,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "tollbearer",
    "at": [31, 11],
    "group": "guard",
    "facing": -0.019

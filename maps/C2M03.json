@@ -561,7 +561,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "tollbearer",
    "at": [46, 26],
    "facing": 0,
    "group": "court"

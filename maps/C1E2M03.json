@@ -239,6 +239,7 @@
    "start": "high"
   }
  ],
+ "triggers": [],
  "entities": [
   {
    "type": "pickup",
@@ -302,7 +303,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [20, 8],
    "facing": -0.938
   },
@@ -435,7 +436,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [58, 14],
    "facing": -1.477,
    "group": "throat"
@@ -466,7 +467,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [32, 15],
    "facing": -1.424
   },
@@ -546,13 +547,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [69, 17],
    "facing": -1.54
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [53, 18],
    "facing": -1.55,
    "group": "throat"
@@ -578,7 +579,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [16, 19],
    "facing": -1.571
   },
@@ -590,7 +591,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [32, 19],
    "facing": -1.571
   },
@@ -651,7 +652,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [44, 20],
    "facing": -1.596,
    "group": "throat"
@@ -784,7 +785,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [66, 26],
    "facing": -1.685,
    "group": "dock"
@@ -813,7 +814,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [46, 27],
    "facing": -1.763,
    "group": "throat"
@@ -872,7 +873,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [45, 33],
    "facing": -1.907,
    "group": "throat"

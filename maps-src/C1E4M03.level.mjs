@@ -4,6 +4,8 @@
 // Seat both couplings at the spine and the north lock opens: the PANEL (a vacuum bay all the way to a switch on its wall that shuts the hatches and opens the exit).
 // Scale class COMPRESSION (all roofed; the bays are 10 m tall for the docked lighters, the spine and the lighters break the sightlines). Look: dock (sterile cyan-white strip light, hazard yellow, frost). Not built from rooms but from the figure: the plan is a wheel.
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 92, H = 92, CX = 46, CZ = 46;
@@ -128,6 +130,11 @@ const SPINE = [CX, CZ + 3], HULLSW = B('N', 28, -hw(28));
   for (const k of [...BAR, ...POCK, ...EXCH, ...NICHE]) { const [x, z] = k.split(',').map(Number); if (L.g[z][x] === 'x') L.g[z][x] = 'c'; }
 }
 // ---- end PT-035 materials ----
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [47,49], radius: 2, cells: ENC.around([47,49], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C1E4M03', name: 'Cold Dock', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8c4cc', fogDensity: 0.006, sky: 'orbit', ambient: 0.9, look: 'dock' },
@@ -162,5 +169,9 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[CX - 6, CZ + 19, CX + 6, CZ + 25]] };
 console.log('C1E4M03: enemies', ents.filter((e) => e.type === 'enemy').length, 'vacuum strips', VACUUM.length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E4M03', lane: [...(laneOf('C1E4M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;
 export { L, B, hw };

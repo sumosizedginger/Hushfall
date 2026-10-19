@@ -7,6 +7,8 @@
 // tier and the lever -> the conductor's door -> the exit. Secret: the pew-back, a niche of pipes.
 // Scale class MIXED (about half roofed). Look: loft (amber, walnut, bronze pipes), a wall of organ pipes, polished boards.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(80, 48);
 const WALL = 'E';
@@ -44,6 +46,11 @@ L.putAll('a', [[36, CZ], [40, CZ]]); L.putAll('e', [[37, CZ], [39, CZ]]); L.put(
 // the top tier: lanterns, the exit room's lanterns, the niche's cache
 putAt('n', [[60, -6], [60, 6]]); L.putAll('n', [[66, CZ - 2], [66, CZ + 2], [72, CZ - 1], [72, CZ + 3]]);
 L.putAll('H', [[21, 12], [23, 12]]); L.putAll('v', [[20, 14], [24, 14]]); L.putAll('e', [[21, 15], [23, 15]]); L.putAll('r', [[20, 12], [24, 12]]); L.put(22, 11, 'a');
+
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
 
 const layers = L.layers();
 
@@ -83,5 +90,9 @@ const MAP = {
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, except the niche's cache (the secret) ----
 MAP.drops = { scale: 1, keep: [[36, 24, 40, 24]] };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M06', lane: [...(laneOf('C1E3M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

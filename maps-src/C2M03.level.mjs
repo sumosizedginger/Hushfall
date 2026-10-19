@@ -4,6 +4,8 @@
 // for not singing at a burying) and two others who stopped. They have no weapon and they do not fight; a latch outside the cage opens it. Freeing them opens the NORTH GATE, which is the way out. The Songkeepers who hold the fort are Bulwark Shells (two) in the court under an Acolyte's ward, and Choristers on the platforms.
 // SHAPE: a star (five points, the south notch is the gate), a round keep in the middle (the big thing), a ditch, a bridge, two terraces 4 m up; heights 0 / 2 / 3 / 5 / 6 m; lids 6 m / 8 m / 9 m. Scale class MIXED (the court and the keep are roofed: about 50%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 96, H = 100, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -72,6 +74,11 @@ PR('bellnode', 46, 27);
 const SEC = { panel: [46, 24], cells: [[45, 22], [46, 22], [47, 22], [45, 23], [46, 23], [47, 23]] };
 { for (const [x, z] of SEC.cells) setCell(L, x, z, ')', CT, 14); box(L, [44, 21, 48, 21], '%', CT); box(L, [44, 22, 44, 23], '%', CT); box(L, [48, 22, 48, 23], '%', CT); box(L, [44, 24, 48, 24], '%', CT); setCell(L, 46, 24, 'S', CT);
   PK('armor_vest', 45, 22); PK('health_large', 47, 22); PK('ammo_shell', 45, 23); PK('ammo_rivet', 47, 23); PK('ammo_flare', 46, 22); }
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M03', name: 'Cantor Outpost', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8928c', fogDensity: 0.007, sky: 'anselm', look: 'outpost' },
@@ -110,4 +117,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M03: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind !== 'vaelfolk').length, 'folk', P.ents.filter((e) => e.kind === 'vaelfolk').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M03', lane: [...(laneOf('C2M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;

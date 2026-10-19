@@ -5,6 +5,8 @@
 // two corridors of the hall are CONVEYORS (one flips, one runs and rests), and a SHUTTLE (a load) crosses the south weft lane every bar. The WOVEN (pale Tollbearers) drop out of the cradles when the middle crossing is entered.
 // The way on: the IRON KEY lies on the cutting table behind the three gates, lit and named; the exit door at the east end of the top weft lane is locked with it and says so. A hollow behind the loom frame holds a cache.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 100, H = 100, L = new Level(W, H, { fill: 'γ' }); L.usedHeights = true; L.usedCeil = true;
@@ -73,6 +75,11 @@ for (const [x, z, k] of [[22, Z0[2] + 5, 'health_small'], [36, Z0[2] + 6, 'healt
 PK('armor_vest', 48, 15); PK('armor_vest', cx(2) - 3, cz(0) + 1);
 PK('armor_vest', CACHE[0] + 1, CACHE[1] + 1); PK('ammo_rocket', CACHE[0], CACHE[1]); PK('ammo_rocket', CACHE[2], CACHE[1]); PK('health_large', CACHE[0], CACHE[3]); PK('ammo_round', CACHE[2], CACHE[3]);
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [48,81], radius: 2, cells: ENC.around([48,81], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M19', name: 'Bone Loom', version: 1, ceilingHeight: 4.2, par: { time: 660 },
   atmosphere: { look: 'woven', fog: '#2a2214', fogDensity: 0.012, beat: true },
@@ -114,4 +121,8 @@ export const waypoints = {
   main: [[6, Z0[2] + 5, 0], A(X0[0] + 2, Z0[2] + 5), A(X0[0] + 9, Z0[2] + 8), A(X0[1] - 8, Z0[2] + 6), A(X0[1] + 1, Z0[2] + 8), A(X0[1] + 5, Z0[2] + 3), A(50, Z0[1] + 14), A(50, Z0[1] + 10), A(50, cz(1) - 5), A(50, Z0[0] + 16), A(50, Z0[0] + 8), A(50, 26), [50, 24, 0], [49, 23, 0], { op: 'wait', seconds: 1 }, [49, 21, 0], [49, 19, 0], [49, 17, 0], [49, 15, 0], [49, 13, 0], A(50, 7), A(50, 20), A(50, Z0[0] + 8), A(cx(2) - 4, Z0[0] + 6), A(EXD[0] - 3, EXD[1]), [EXD[0] - 1, EXD[1], 0], [EXD[0] + 2, EXD[1], 0], [EXD[0] + 5, EXD[1], 0]],
   secret: [[6, Z0[2] + 5, 0], A(X0[0] + 2, Z0[2] + 5), A(X0[0] + 9, Z0[2] + 8), A(X0[1] - 8, Z0[2] + 6), A(X0[1] + 1, Z0[2] + 8), A(X0[1] + 5, Z0[2] + 3), A(50, Z0[1] + 14), A(50, Z0[1] + 10), A(50, cz(1) - 5), A(58, 57), [62, 57, 0], { op: 'use', at: SEC.panel }, [62, 53, 0], [62, 57, 0], [54, 55, 0], A(50, cz(1) - 5), A(50, Z0[0] + 16), A(50, Z0[0] + 8), A(50, 26), [50, 24, 0], [49, 23, 0], { op: 'wait', seconds: 1 }, [49, 21, 0], [49, 19, 0], [49, 17, 0], [49, 15, 0], [49, 13, 0], A(50, 7), A(50, 20), A(50, Z0[0] + 8), A(cx(2) - 4, Z0[0] + 6), A(EXD[0] - 3, EXD[1]), [EXD[0] - 1, EXD[1], 0], [EXD[0] + 2, EXD[1], 0], [EXD[0] + 5, EXD[1], 0]],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M19', lane: [...(laneOf('C2M19') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

@@ -411,7 +411,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "bellhand",
    "at": [41, 26],
    "facing": -1.598
   },

@@ -7,6 +7,7 @@
 // Route: the plateau (two sleepers in sight of the spawn) -> the ramp -> the basin, rubble to rubble, under both rims -> the breach -> the gullet -> the throat door -> the valve -> the hatch -> the exit.
 // Scale class MIXED (about 45% roofed: the open crater against the roofed hull). Open air vs roof: the crater floors (m s) are open; the hull floors (n g) are roofed.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(84, 44);
@@ -63,6 +64,11 @@ S.chamfer([56, 17, 67, 26], 'nw ne sw se', 2); S.chamfer([69, 20, 74, 24], 'nw n
 console.log('C1E3M01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [24,22], radius: 2, cells: ENC.around([24,22], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -107,5 +113,9 @@ MAP.growth = [{ at: [44, 22], r: 30, power: 1.2 }];                             
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, a few in the niche ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M01', lane: [...(laneOf('C1E3M01') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
 
 export default MAP;

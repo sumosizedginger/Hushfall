@@ -290,6 +290,47 @@
      "objective": "The drain lever is on the south gallery: south terrace, then the stair"
     }
    ]
+  },
+  {
+   "id": "amb-cage-1",
+   "when": "enter",
+   "at": [54, 25],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [54, 19],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [55, 31],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [57, 20],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -339,7 +380,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [34, 9],
    "facing": -1.093
   },
@@ -729,7 +770,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [42, 33],
    "facing": -1.809
   },
@@ -763,7 +804,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [22, 36],
    "facing": -2.185
   },
@@ -817,7 +858,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [34, 41],
    "facing": -2.101
   },

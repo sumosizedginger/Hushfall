@@ -8,6 +8,7 @@
 // Optional: the pump house on the south side holds a cache, two sleepers and a SECRET valve room behind the east wall.
 // Open air vs roof (PT-007/PT-008): a floor skin of kind `floor` (. f) gets a ceiling, the outdoor skins (l s m p) do not. The pan is open; the shed, guardhouse, pump house, gate passage, hall and bay are roofed.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(76, 40);
@@ -91,6 +92,11 @@ S.ledges([46, 14, 64, 29]);
 console.log('C1E2M01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -138,5 +144,9 @@ MAP.entities.push(...[['ammo_round', 23, 14], ['ammo_round', 22, 29], ['ammo_rou
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M01', lane: [...(laneOf('C1E2M01') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":4},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

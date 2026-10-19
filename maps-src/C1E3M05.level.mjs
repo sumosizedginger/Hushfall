@@ -7,6 +7,8 @@
 // Bulwark Shell, a Bellhand and runners: kill the Acolyte first) -> the second lock -> the Heart (the tuned, an Acolyte, a Sexton; the lever) -> the exit. Secret: a loose panel in the hall's south wall and a cellar of strings behind it.
 // Scale class COMPRESSION (all roofed, round rooms). Look: loom (dim violet and gold), lacquered posts and taut strings for walls, a woven floor.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(74, 60);
 const WALL = 'M', FLOOR = 'w';
@@ -40,6 +42,11 @@ L.putAll('m', [[22, 20], [35, 20], [22, 37], [35, 37], [28, 23], [28, 34], [31, 
 L.putAll('5', [[21, 20], [21, 37], [26, 18], [32, 18], [26, 39], [32, 39], [38, 21], [38, 36]]);    // the Loom's string frames (symbol 5: loomstring), standing on the ledges
 // the cellar (the secret): a cache
 L.putAll('H', [[28, 45], [30, 45]]); L.putAll('v', [[28, 47], [30, 47]]); L.putAll('e', [[27, 46], [31, 46]]); L.putAll('r', [[28, 44], [30, 44]]); L.put(29, 47, 'a');
+
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [22,28], radius: 2, cells: ENC.around([22,28], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
 
 const layers = L.layers();
 
@@ -80,5 +87,9 @@ const MAP = {
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, except the cellar's cache (the secret) ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M05', lane: [...(laneOf('C1E3M05') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"chorister","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

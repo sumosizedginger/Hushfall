@@ -6,6 +6,8 @@
 // a line) lie in the niches: eleven became six, three, one. The exit is at the north side of the well room at the bottom. A sealed niche on the outer ring holds the last tins.
 // SHAPE: a web, not a box (rings, spokes, alcoves, a funnel well). Scale class COMPRESSION (all roofed, short sightlines). The new thing: the dark itself, and oil as a resource.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 import { rng } from '../tools/mapkit/cave.mjs';
 
@@ -72,6 +74,12 @@ for (const [r, d] of [[20.5, 205], [20.5, 100], [10.5, 215], [10.5, 280]]) place
 for (const [r, d] of [[20.5, 160], [10.5, 170], [10.5, 340]]) place('gill', r, d);
 for (const [r, d] of [[20.5, 250], [20.5, 330], [10.5, 190]]) place('chorister', r, d);
 place('sexton', 20.5, 135); place('sexton', 10.5, 120); place('acolyte', 10.5, 250); place('bulwark', 20.5, 270); place('bulwark', 30.5, 195);
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [7,43], radius: 2, cells: ENC.around([7,43], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [27,20], radius: 2, cells: ENC.around([27,20], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M13', name: 'Lantern Ossuary', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'ossuary', dark: true, fog: '#050408', fogDensity: 0.02 },
@@ -119,4 +127,8 @@ export const waypoints = {
   main: [[38, 72, 0], [38, 68], ...spiral],
   secret: [[38, 72, 0], [38, 68], ...around, [38, 7], { op: 'use', at: [38, 5] }, [38, 3, 0], [38, 8, 0], polar(30.5, 280), polar(30.5, 290), polar(26, 290), polar(20.5, 290), polar(20.5, 270), polar(20.5, 250), polar(16, 245), ...spiral.slice(11)],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M13', lane: [...(laneOf('C2M13') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

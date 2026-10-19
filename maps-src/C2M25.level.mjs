@@ -5,6 +5,8 @@
 // have a Resonant with company, whose ring a lit lantern cuts (a map field `lampHolds`). Eyes follow light (a lit lamp is seen from 24 m), so the trade is real. The beat is gone (the Hive Cantor is dead): the lights do not swell.
 // The way on: the last landing's door opens on the exit when its lever is thrown (lit, named, restated at the door). A cache behind a seam in the last landing's wall. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 80, H = 80, C = 40, L = new Level(W, H, { fill: 'ι' }); L.usedHeights = true;
@@ -75,6 +77,13 @@ for (let da = 20; da < 58 && !LEVER; da++) for (let rr = 33; rr < 37 && !LEVER; 
 }
 if (!LEVER) throw new Error('no place for the lever');
 PR('lamppost', LEVER.at[0] + (LEVER.wall === 'west' ? 1 : LEVER.wall === 'east' ? -1 : 0), LEVER.at[1] + (LEVER.wall === 'north' ? 1 : LEVER.wall === 'south' ? -1 : 0)); PR('lantern', LEVER.at[0] + 1, LEVER.at[1] + 1);
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+PK('oil', 33, 68); PK('oil', 13, 24);                                      // the two fights cost the lamp about twelve seconds of oil: a tin at each (the route used to end with four seconds left)
+ENC.dropIn({ at: [33,68], radius: 2, cells: ENC.around([33,68], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [13,24], radius: 2, cells: ENC.around([13,24], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M25', name: 'Root Bell Descent', version: 1, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'descent', sky: 'root', dark: true, fog: '#0c1410', fogDensity: 0.012, ambient: 0.5 },
@@ -120,4 +129,8 @@ export const waypoints = {
   secret: [[START[0], START[1], 0], ...landings(0, 4), { op: 'kill' }, Q(5, 31, 22), [SECP.front[0], SECP.front[1], 0], { op: 'use', at: SECP.panel }, [SECP.cells[4][0], SECP.cells[4][1], 0], [SECP.front[0], SECP.front[1], 0], { op: 'switch', id: 'door' }, [CORR[0], CORR[1], 0], [CORR[0], 9, 0], [EX[0], EX[1], 0]],
 };
 void landing;
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M25', lane: [...(laneOf('C2M25') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

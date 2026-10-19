@@ -4,6 +4,8 @@
 // turn it another and the light goes ON along the square. A receiver you light opens the screen door to the next chamber FOR GOOD; then send the light through it. The last corner chooses the exit (light R-exit) or the secret (light R-secret).
 // A small round antechamber teaches it first: one mirror, one turn. Doors latch; the order is the trick; the bot's route turns the mirrors under fire (the singers and the two Acolytes are not impressed). Scale class COMPRESSION. Look: mirror.
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 72, H = 70, CX = 44, CZ = 36, TAU = 360;
@@ -80,6 +82,12 @@ put('prop', 'lantern', 10, 44); put('prop', 'lantern', 16, 48);
 for (const [k, x, z] of [['armor_vest', 11, 23], ['ammo_shell', 13, 23], ['health_large', 12, 22], ['ammo_rivet', 11, 24]]) put('pickup', k, x, z);
 for (const [k, x, z] of [['armor_vest', 36, 60], ['ammo_shell', 40, 60], ['ammo_rivet', 37, 63], ['health_large', 39, 63], ['ammo_flare', 38, 64]]) put('pickup', k, x, z);
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [35,30], radius: 2, cells: ENC.around([35,30], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [52,36], radius: 2, cells: ENC.around([52,36], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C1E4M04', name: 'Mirror Array', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#10081c', fogDensity: 0.009, sky: 'orbit', look: 'mirror' },
@@ -114,5 +122,9 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[14, 32, 17, 36]] };
 console.log('C1E4M04: enemies', ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E4M04', lane: [...(laneOf('C1E4M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;
 export { L };

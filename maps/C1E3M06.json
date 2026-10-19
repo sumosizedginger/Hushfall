@@ -541,7 +541,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [26, 27],
    "facing": -1.706,
    "group": "tuned"

@@ -126,6 +126,47 @@
      "objective": "The pods have hatched: flying Drone-Gills, and Gaunts in the walls. Aim up"
     }
    ]
+  },
+  {
+   "id": "amb-cage-1",
+   "when": "enter",
+   "at": [44, 22],
+   "radius": 1.5,
+   "do": [
+    {
+     "sound": "bell_strike"
+    },
+    {
+     "shake": 1
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [44, 16],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [44, 28],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [38, 22],
+      "group": "amb-cage-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -376,7 +417,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [38, 21],
    "facing": -1.541
   },

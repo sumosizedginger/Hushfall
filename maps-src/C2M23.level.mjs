@@ -5,6 +5,8 @@
 // A player who remembers the Quay is quick; one who does not follows the objective. SIGNAL HOUSE speaks ONCE, from the copied set, in the first-night voice with details that are wrong (the ferry): Ines answers once and dryly. Nothing is explained.
 // The secret is the net-loft nook, as it was on the first night: its panel leads to the warm lamp, and to C2S02. The Acts' quiet dread, not a new mechanic. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 import { reprise, QW } from '../tools/mapkit/reprise.mjs';
 
@@ -62,6 +64,12 @@ R([[40, 74], [34, 78], [28, 82], [22, 86], [30, 90], [26, 76]], 'tollbearer', cr
 for (const [x, z, k] of [[59, 36, 'health_small'], [50, 38, 'health_large'], [42, 46, 'health_small'], [42, 56, 'health_large'], [38, 65, 'health_small'], [33, 66, 'health_large'], [32, 72, 'health_large'], [26, 80, 'health_large'], [20, 85, 'health_small'], [14, 88, 'health_large']]) PK(k, x, z);
 for (const [x, z] of [[42, 40], [34, 74], [18, 88]]) PK('armor_vest', x, z);
 const msg = (id, at, r, speaker, text, extra = {}) => ({ id, at, radius: r, speaker, text, ...extra });
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [56,17], radius: 2, cells: ENC.around([56,17], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [42,45], radius: 2, cells: ENC.around([42,45], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M23', name: 'The Reprise', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'copy', sky: 'dusk', beat: true, fog: '#2a4058', fogDensity: 0.01 },
@@ -110,4 +118,8 @@ const main = [{ op: 'goto', at: START }, ...quayOps, ...cvt(tail), ...finish];
 const huts = main.findIndex((o) => o.op === 'goto' && o.at[0] === Q.at([9, 21])[0] && o.at[1] === 21 + OZ);
 export const waypoints = { main, secret: [{ op: 'goto', at: START }, ...quayOps.slice(0, 5), { op: 'goto', at: Q.at([6, 22]) }, { op: 'use', at: PANEL }, { op: 'goto', at: Q.at([3, 22]) }, { op: 'goto', at: NOOKX }] };
 void huts;
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M23', lane: [...(laneOf('C2M23') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

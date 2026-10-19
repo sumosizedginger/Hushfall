@@ -5,6 +5,8 @@
 // exit gate (behind the north shed) opens by the kiln's lever. Four watchtowers 4 m up on the diagonals hold Bellhands. Route: the south door -> round the south shed to the kiln house -> up to the lever -> the north shed -> its rear door -> the exit.
 // SHAPE: a circle with a round hall in the middle (the big thing), four sheds, four towers; heights 0 / 3 / 4 m. Scale class MIXED (the kiln house and the sheds are roofed: about 50%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, ellipseCells, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 76, H = 76, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -57,6 +59,11 @@ const SEC = { panel: [14, 38], cells: [[11, 37], [12, 37], [13, 37], [11, 38], [
   PK('armor_vest', 11, 37); PK('health_large', 13, 37); PK('ammo_shell', 11, 39); PK('ammo_rivet', 13, 39); PK('ammo_flare', 12, 38); }
 const warn = (i, t) => ({ id: 'warn' + i, when: ['time:' + (t - 20), 'not:dead:seed' + i], do: [{ message: 'ripening' }] });
 const crack = (i, at, t) => ({ id: 'crack' + i, when: ['time:' + t, 'not:dead:seed' + i], do: [{ spawn: { kind: i % 2 ? 'gaunt' : 'tollbearer', at, group: 'born' } }, { message: 'cracked' }] });
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M07', name: 'Bellwright Yard', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#b08060', fogDensity: 0.007, sky: 'anselm', look: 'bellwright' },
@@ -91,4 +98,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1.3, keep: [] };
 console.log('C2M07: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M07', lane: [...(laneOf('C2M07') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

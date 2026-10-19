@@ -6,6 +6,8 @@
 // -> the vats are dead, the north passage unlocks -> the exit. Secret: a loose panel in the hall's south wall, a cellar of caught slag.
 // Scale class COMPRESSION (all roofed, the core breaks every sightline across the hall). Look: foundry (green-black iron, the glow is the light), a floor of cast plates, toxic troughs.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(52, 56);
 const WALL = 'F';
@@ -48,6 +50,11 @@ for (let z = 0; z < 56; z++) for (let x = 0; x < 52; x++) {
   if (L.g[z][x] === WALL && r < 5.2) L.g[z][x] = 'Y'; else if (L.g[z][x] === 'j' && r < 7.6) L.g[z][x] = 'k';
 }
 // ---- end PT-035 materials ----
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const VATS = [[27, 22, ['gaunt']], [41, 22, null], [41, 35, ['gaunt']], [27, 35, ['tollbearer']]];           // (the SW vat is the first: order by id = how a route meets them)
@@ -85,5 +92,9 @@ const MAP = {
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): the supply station at the west mouth keeps its boxes; a vat's brood and the vats never drop, the rest of the hall does ----
 MAP.drops = { scale: 1, keep: [[23, 26, 24, 30]] };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M07', lane: [...(laneOf('C1E3M07') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
 
 export default MAP;

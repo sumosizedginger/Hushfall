@@ -7,6 +7,7 @@
 // Optional: a SECRET panel in the south wall of the gallery hides a tunnel with the secret exit (to C1E2S01, The Rime Vault).
 // Open air vs roof (PT-007/PT-008): every floor here is `k f` (roofed), so there is no sky; nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(82, 46);
@@ -65,6 +66,11 @@ S.ledges([11, 15, 31, 31]); S.ledges([42, 13, 63, 33]); S.ledges([65, 14, 77, 32
 console.log('C1E2M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.cage({ at: [9,23], radius: 1.5, cells: ENC.around([9,23], { n: 3, min: 4, max: 8 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -122,5 +128,9 @@ MAP.quality.introduces += '; also found here: the fire axe, in the gatehouse\'s 
 MAP.drops = { scale: 1 };
 // the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand in the charging hall, appended last so no id shifts
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [26, 19], facing: -0.96 });
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M04', lane: [...(laneOf('C1E2M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

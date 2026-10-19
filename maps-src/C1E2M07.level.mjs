@@ -4,6 +4,7 @@
 // Route: the pump gallery (spawn, three sleepers; breaker 1) -> the vat hall (wading slurry, vats as cover, cross-shaped dry lanes; breaker 2) -> the settling tanks (breaker 3; a SECRET drain room) -> the sump heart (breaker 4 unlocks the exit).
 // Open air vs roof: everything is `v f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(68, 48);
@@ -53,6 +54,11 @@ S.hall([52, 16, 63, 28], { sides: { n: { w: 3, gap: 3, d: 2, heart: true }, s: {
 S.ledges([3, 18, 16, 26]); S.ledges([18, 12, 34, 32]); S.ledges([36, 14, 50, 30]); S.ledges([52, 16, 63, 28]); 
 console.log('C1E2M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
+
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
 
 const layers = L.layers();
 
@@ -108,5 +114,9 @@ MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw again, 
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M07', lane: [...(laneOf('C1E2M07') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"gill","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

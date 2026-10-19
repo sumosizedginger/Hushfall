@@ -6,6 +6,8 @@
 // The way on: the HUB RELAY, a lever on the island that can only be reached by riding (south station -> west -> hub); the exit is the east station (hub -> east), locked until the relay is thrown. The hub is lit and in sight from the first dock;
 // the objective says ride to the hub. A hollow behind the west station holds a cache. Drop-fed ammunition.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 import { makeCar } from '../src/engine/cars.js';
 
@@ -51,6 +53,12 @@ for (const [x, z, k] of [[60, 80, 'health_small'], [64, 74, 'health_small'], [20
 for (const [x, z] of [[62, 82], [28, 48], [96, 48]]) PK('armor_vest', x, z);
 PK('armor_vest', 8, 47); PK('ammo_rocket', 9, 48); PK('ammo_rocket', 10, 49); PK('health_large', 8, 49); PK('ammo_round', 9, 47);
 const EXIT = [114, 48];
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [65,44], radius: 2, cells: ENC.around([65,44], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [64,38], radius: 2, cells: ENC.around([64,38], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M20', name: 'Vein Rail', version: 1, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'veins', sky: 'hive', beat: true, fog: '#2a1418', fogDensity: 0.008 },
@@ -92,4 +100,8 @@ export const waypoints = {
   main: [[64, 86, 0], D(64, 80), { op: 'ride', board: [64, 72], from: 0, to: 4, exit: [63, 29] }, D(64, 34), D(64, 40), D(64, 44), D(63, 49), { op: 'switch', id: 'relay' }, D(64, 40), D(64, 34), D(63, 30), { op: 'ride', board: [63, 28], from: 4, to: 6, exit: [96, 48] }, D(102, 48), D(110, 48), [EXIT[0], EXIT[1], 0]],
   secret: [[64, 86, 0], D(64, 80), { op: 'ride', board: [64, 72], from: 0, to: 2, exit: [31, 48] }, D(26, 48), D(14, 48), { op: 'use', at: SEC.panel }, [8, 48, 0], D(26, 48), { op: 'ride', board: [31, 48], from: 2, to: 4, exit: [63, 29] }, D(64, 34), D(64, 40), D(64, 44), D(63, 49), { op: 'switch', id: 'relay' }, D(64, 40), D(64, 34), D(63, 30), { op: 'ride', board: [63, 28], from: 4, to: 6, exit: [96, 48] }, D(102, 48), D(110, 48), [EXIT[0], EXIT[1], 0]],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M20', lane: [...(laneOf('C2M20') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;

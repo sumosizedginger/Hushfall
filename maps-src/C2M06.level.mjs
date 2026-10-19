@@ -4,6 +4,8 @@
 // of the aqueduct and the siphon hall are roofed; the middle is open to the red sky. At the siphon a lever shuts the sluice above the door and opens it.
 // SHAPE: three bands and two ramps in a serpentine, a roofed east block and a siphon hall, a gap of open sky between; heights 0 / 1.5 / 3 / 6 m. Scale class MIXED (about 50% roofed).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 80, H = 56, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true; L.usedFx = true;
@@ -52,6 +54,12 @@ for (const [x, z] of [[52, 41], [34, 46], [24, 32], [40, 25], [68, 16], [30, 9]]
 const SEC = { panel: [60, 48], cells: [[59, 50], [60, 50], [61, 50], [59, 49], [60, 49], [61, 49]] };
 { for (const [x, z] of SEC.cells) setCell(L, x, z, '/', 0, 14); box(L, [58, 51, 62, 51], '?', 0); box(L, [58, 49, 58, 50], '?', 0); box(L, [62, 49, 62, 50], '?', 0); setCell(L, 60, 48, 'S', 0);
   PK('armor_vest', 59, 50); PK('health_large', 61, 50); PK('ammo_shell', 59, 49); PK('ammo_rivet', 61, 49); PK('ammo_flare', 60, 50); }
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [14,40], radius: 2, cells: ENC.around([14,40], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [59,26], radius: 2, cells: ENC.around([59,26], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M06', name: 'Chitin Aqueduct', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8d0b8', fogDensity: 0.006, sky: 'anselm', look: 'aqueduct' },
@@ -88,4 +96,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1.4, keep: [] };
 console.log('C2M06: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M06', lane: [...(laneOf('C2M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;

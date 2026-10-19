@@ -5,6 +5,8 @@
 // the gimbal's rings and its hub: the FUSE (a Bellhand and a Sexton guard it) -> the vent to the cup -> down the bowl to the keel, where the exit lock wants the fuse. A miss is the sky: 15 damage and back to the last plate, never death.
 // Optional: a long vent from the cup's west rim to a tiny islet with a hut (a loose panel, a cache) and its way back. Scale class MIXED. Look: wreck (torn hulls, cold teal shade, sparks, the world below).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const W = 112, H = 80;
 const L = new Level(W, H, { fill: '_' });
@@ -124,6 +126,12 @@ for (const [x, z] of [[58, 57], [58, 71], [52, 64], [64, 66]]) PR('lamp', x, z);
 for (const [x, z] of [[60, 53], [53, 54], [66, 70], [51, 72], [46, 68]]) PR('pillar', x, z);
 // the islet's cache
 for (const [k, x, z] of [['armor_vest', 25, 47], ['ammo_shell', 27, 47], ['ammo_rivet', 25, 48], ['health_large', 27, 48], ['ammo_flare', 26, 47]]) P(k, x, z);
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [51,13], radius: 2, cells: ENC.around([51,13], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [88,31], radius: 2, cells: ENC.around([88,31], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C1E4M02', name: 'Wreck Belt', version: 1, par: { time: 480 },
   atmosphere: { fog: '#0c1618', fogDensity: 0.005, sky: 'orbit', look: 'wreck' },
@@ -155,5 +163,9 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[44, 10, 47, 18]] };
 console.log('C1E4M02: enemies', ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E4M02', lane: [...(laneOf('C1E4M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;
 export { L, VENTS };

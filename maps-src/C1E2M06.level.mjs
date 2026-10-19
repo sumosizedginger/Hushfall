@@ -6,6 +6,7 @@
 //        -> back down -> the north terrace -> stairs up the north gallery -> the exit.
 // Open air vs roof: the whole nave is roofed (`g f` floors), the sump is wading water. Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(76, 52);
@@ -60,6 +61,11 @@ S.chamfer([3, 21, 11, 28], 'nw ne sw se', 2); S.chamfer([6, 10, 11, 14], 'nw ne 
 S.ledges([13, 7, 57, 43]); 
 console.log('C1E2M06 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
+
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.cage({ at: [54,25], radius: 1.5, cells: ENC.around([54,25], { n: 3, min: 4, max: 8 }), kind: 'g' });
+// ---- end PT-052 ----
 
 const layers = L.layers();
 
@@ -117,5 +123,9 @@ MAP.entities.push(...[['crate', 15, 27], ['barrel', 34, 16], ['crate', 51, 44], 
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M06', lane: [...(laneOf('C1E2M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"gill","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

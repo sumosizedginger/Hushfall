@@ -4,6 +4,8 @@
 // that locks the exit until it is dead. The last chapel on the east side holds a bare slab with a name cut in our letters. No new engine: closets, sextons and the grave prop.
 // SHAPE: a comb (an avenue and eight chapels), a stair between terraces, arches and open stretches; heights 0 / 1 / 2 / 3 m; lids 3.5 m (chapels) and 6 m (arches). Scale class MIXED (the chapels and the arches are roofed: about 55%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
 
 const W = 62, H = 124, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
@@ -76,6 +78,11 @@ const msgs = [
   { id: 'open', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The door at the end of the road is open.' },
   { id: 'hollow', at: [44, 15], radius: 2, speaker: 'HULL', text: 'The east wall of this chapel rings hollow.' },
 ];
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M05', name: 'The Reliquary Road', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#9a9ab4', fogDensity: 0.006, sky: 'anselm', look: 'reliquary' },
@@ -100,4 +107,8 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M05: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'graves', P.ents.filter((e) => e.kind === 'grave').length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M05', lane: [...(laneOf('C2M05') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;

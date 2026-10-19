@@ -6,6 +6,8 @@
 // Optional: a SECRET store behind a panel in the aisle's north wall.
 // Open air vs roof: everything is `g f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(72, 44);
 
@@ -45,6 +47,11 @@ L.putAll('e', [[47, 21], [47, 23], [57, 19], [57, 25]]); L.putAll('r', [[47, 20]
 L.put(17, 13, 'v'); L.put(19, 13, 'H'); L.put(17, 12, 'e'); L.put(19, 12, 'r'); L.put(18, 13, 'a');
 // a cradle with its captive hangs in the heart of every apse
 L.putAll('O', [[13, 14], [37, 14], [42, 14], [13, 30], [18, 30], [25, 30], [29, 30], [37, 30], [42, 30]]);
+
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.cage({ at: [44,22], radius: 1.5, cells: ENC.around([44,22], { n: 3, min: 4, max: 8 }), kind: 'g' });
+// ---- end PT-052 ----
 
 const layers = L.layers();
 
@@ -94,5 +101,9 @@ MAP.quality.introduces += '; also found here: the Vael tuning-fork, on the rail 
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M05', lane: [...(laneOf('C1E2M05') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

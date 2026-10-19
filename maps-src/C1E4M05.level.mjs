@@ -4,6 +4,8 @@
 // Route: the dock -> (a vent) the south island -> (a vent) the tree -> the FRUIT (a key) at the foot of the trunk: taking it wakes the Drone-Gills of the whole bubble (the harvest) -> (a vent) the north island -> the gate. The other four islands are optional: pods to harvest,
 // health, ammunition, a secret. Scale class MIXED. Look: orchard (green-gold, soft, weightless; the north is white where the glass is gone).
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 96, H = 96, CX = 48, CZ = 48, D2R = Math.PI / 180;
@@ -125,6 +127,11 @@ if (secret) { const c = secret.cells; for (const [k, i] of [['armor_vest', 4], [
   }
 }
 // ---- end PT-035 materials ----
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [50,45], radius: 2, cells: ENC.around([50,45], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C1E4M05', name: 'Drift Orchard', version: 1, ceilingHeight: 20, par: { time: 400 },
   atmosphere: { fog: '#cfe4b4', fogDensity: 0.004, sky: 'orbit', ambient: 0.9, look: 'orchard' },
@@ -155,5 +162,9 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[CX - 3, 91, CX + 3, 93]] };
 console.log('C1E4M05: enemies', ents.filter((e) => e.type === 'enemy').length, 'vents', VENTS.length);
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E4M05', lane: [...(laneOf('C1E4M05') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+
 export default MAP;
 export { L, VENTS, byId, TREE, CX, CZ };

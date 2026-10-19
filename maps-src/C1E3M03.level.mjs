@@ -6,6 +6,7 @@
 // Route (main): the arrival hall -> the first garden along the lane: bed A on its off beat, the gap, bed B on its off beat -> the mortar -> the vault (sleepers) -> the second garden: the safe stair, the dais, the lever -> the hatchery door -> the exit.
 // Scale class MIXED (about half roofed: the gardens are open to the sky, the arrival hall, the vault and the exit are roofed). Look: choir, the ash sky, resin walls, silt floors.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(100, 44);
@@ -54,6 +55,11 @@ S.chamfer([3, 19, 13, 27], 'nw ne sw se', 2); S.chamfer([91, 20, 97, 26], 'nw ne
 console.log('C1E3M03 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -96,5 +102,9 @@ MAP.growth = [{ at: [52, 23], r: 30, power: 1.2 }];
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, except the mortar's own rockets on its plinth and the niche's cache ----
 MAP.drops = { scale: 1, keep: [[43, 22], [43, 24]] };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M03', lane: [...(laneOf('C1E3M03') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":5}] };
+ENC.apply(MAP);
 
 export default MAP;

@@ -6,6 +6,7 @@
 // Optional: a SECRET tool locker behind a loose panel in the north wall of the shed.
 // Open air vs roof (PT-007/PT-008): the shed, cabin, signal box, dock and the locker are roofed (floor skins `f q`); the throat is open (`l s b`).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(84, 40);
@@ -75,6 +76,11 @@ S.ledges([62, 11, 76, 29]);
 console.log('C1E2M03 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -132,5 +138,9 @@ MAP.quality.introduces += '; also found here: the Shipwright\'s chainsaw, in the
 MAP.drops = { scale: 1 };
 // the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand in the north bay over the throat, appended last so no id shifts
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [31, 13], facing: 1.101 });
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E2M03', lane: [...(laneOf('C1E2M03') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":5},{"from":"tollbearer","to":"gaunt","pick":"spread","n":6}] };
+ENC.apply(MAP);
 
 export default MAP;

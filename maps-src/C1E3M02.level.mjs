@@ -5,6 +5,7 @@
 // Route (main): the Mouth -> gate 1 (shut when you arrive: wait for it to open) -> the First Chamber (sleepers, a Bellhand at the far gate, a singer in the north-east corner) -> gate 2 -> the south corridor -> the Heart -> the lever -> the hatch -> the exit.
 // Scale class COMPRESSION (100% roofed, every sightline short: corridors and chambers). The gates are the only moving part: a shut gate is a wall, so a creature behind one cannot see or shoot you.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(78, 46);
@@ -59,6 +60,11 @@ S.chamfer([46, 19, 66, 32], 'nw ne sw se', 2); S.chamfer([3, 21, 14, 30], 'nw ne
 console.log('C1E3M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+
+// ---- end PT-052 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -99,5 +105,9 @@ MAP.growth = [{ at: [56, 25], r: 26, power: 1.3 }];                             
 
 // ---- PT-025: fed by the dead (src/engine/drops.js): no ammunition boxes on the road, a few in the niche ----
 MAP.drops = { scale: 1 };
+
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C1E3M02', lane: [...(laneOf('C1E3M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
+ENC.apply(MAP);
 
 export default MAP;

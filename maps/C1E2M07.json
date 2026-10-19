@@ -236,6 +236,7 @@
    ]
   }
  ],
+ "triggers": [],
  "entities": [
   {
    "type": "enemy",
@@ -265,7 +266,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [49, 16],
    "facing": -1.435,
    "group": "z3"
@@ -277,7 +278,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [27, 17],
    "facing": -1.347,
    "group": "z2"
@@ -296,7 +297,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [44, 18],
    "facing": -1.469,
    "group": "z3"
@@ -454,7 +455,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [38, 22],
    "facing": -1.571,
    "group": "z3"
