@@ -27,3 +27,9 @@ export function runRoute(map, route, { seed = 1, difficulty = 'normal', maxTicks
   const result = w.status === 'complete' ? 'complete' : w.status === 'dead' ? 'dead' : bot.failed ? 'bot-failed' : ticks >= maxTicks ? 'timeout' : bot.done ? 'route-ended' : 'unknown';
   return { world: w, bot, events, ticks, result, failure: bot.failed, hash: hashWorld(w) };
 }
+
+/** PT-052 (Bot v2, first half): play a route with the standing fighter and, only if it does not complete, with the strafing one (weave: 2). Returns the run that completed (or the standing one) with `policy`: 'standing' | 'strafing'. */
+export function runRouteEither(map, route, opts = {}) {
+  const a = runRoute(map, route, { ...opts, weave: false }); if (a.result === 'complete') return { ...a, policy: 'standing' };
+  const b = runRoute(map, route, { ...opts, weave: 2 }); return b.result === 'complete' ? { ...b, policy: 'strafing' } : { ...a, policy: 'standing', strafed: b };
+}

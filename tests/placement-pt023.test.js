@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { createWorld, spawnEnemy } from '../src/engine/world.js';
 import { PICKUPS, WEAPONS, ENEMIES } from '../src/engine/defs.js';
 import { shippedSrc, ROOT } from './helpers.js';
@@ -14,7 +14,7 @@ const CAMPAIGN = ['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M0
 const SECRETS = ['C1E1S01', 'C1E2S01'];
 /** where each found weapon is, and the route that walks over it */
 const WHERE = { weapon_boathook: ['C1E1M03', 'main'], weapon_marlinspike: ['C1E1M04', 'main'], weapon_mallet: ['C1E1M05', 'main'], weapon_carbine: ['C1E1M06', 'main'], weapon_linethrower: ['C1E1M07', 'main'], weapon_chainsaw: ['C1E2M03', 'secret'], weapon_axe: ['C1E2M04', 'main'], weapon_fork: ['C1E2M05', 'main'] };
-const play = (id, name = 'main', opts = {}) => runRoute(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed: 1, difficulty: 'normal', ...opts });
+const play = (id, name = 'main', opts = {}) => runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed: 1, difficulty: 'normal', ...opts });
 const kinds = (id) => shippedSrc(id).entities.filter((e) => e.type === 'pickup').map((e) => e.kind);
 
 test('each found weapon is on the map the plan names, once, and the route that walks over it picks it up', () => {
@@ -53,7 +53,7 @@ test('every found weapon is ON the lane: the route of each map picks it up, none
 test('the route bot uses none of the new guns and still finishes every route of every map, with what it picked up in hand', () => {
   for (const id of [...CAMPAIGN, ...SECRETS]) {
     for (const rf of fs.readdirSync(path.join(ROOT, 'routes')).filter((f) => f.startsWith(id + '.') && f.endsWith('.route.json'))) {
-      const r = runRoute(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${rf}`), { seed: 2, difficulty: 'hard' });
+      const r = runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${rf}`), { seed: 2, difficulty: 'hard' });
       assert.equal(r.result, 'complete', `${rf} on hard: ${r.result}`);
     }
   }

@@ -44,6 +44,7 @@ The evidence regeneration stays ONCE, after the last visual and map change (any 
 
 **Revision 9 re-order (2026-10-18, the plan page section R and `design/ROADMAP.md` 0.12):** the level work moves ahead of the weapons and of the floors-and-faces art, and Session C moves after the exemplars. New order of what is left: R1 finish measuring (M) · R2 the roster-and-encounter pass, node only, Episode 1 first (XL) · R3 the four exemplars (L) · R4 Session C (L) · R5 Bot v2 first half (L) · R6 Level B (XL) · R7 Level A on Campaign 2 (XL) · R8 Marksman and Mender (L) · R9 weapons: loads, then mods (XL) · R10 boss changes (M) · R11 sessions D and G, V9, V10 (XL) · R12 session E (M) · R13 story and cinematics (L+L) · R14 sound pass and look sign-off (L) · R15 session F and M1 to M12 (XL) · R16 integration, the one regeneration, T2, RC1, M13 (L). Sessions A, B, H1, H2, H3 are done. The audit and the triage of all 68 maps are in `design/DIRECTOR_AUDIT.md`.
 (Status 2026-10-18, later: R0 and R1 done; R2 done for Episode 1 and waiting for the owner's play before Episode 2.)
+(Status 2026-10-19: Session C is DONE in code (the Journal pages, the Bestiary, the minimap); R2 has run over Episodes 2 to 4 and 13 Campaign 2 maps (31 of 68 maps meet the laws); the exemplar C1E4M06 is rebuilt, C2M02, C2M11 and C2M21 are not; Bot v2 first half is in. Nothing is pushed or seen in a browser.)
 
 
 ## 4. The working protocol for low usage (what I commit to)

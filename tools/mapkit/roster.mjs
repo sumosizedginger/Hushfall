@@ -36,3 +36,23 @@ export function reroster(L, { id = null, lane = null, plan, keep = [], sep = 5 }
   const left = {}; for (let z = 0; z < L.h; z++) for (let x = 0; x < L.w; x++) { const c = L.ob[z][x]; if (c !== '.' && ' tgbxwK'.includes(c)) left[c] = (left[c] ?? 0) + 1; }
   return { changed, left };
 }
+
+// ---- the data-driven form (PT-052): a map source says `MAP.roster = { id, lane, keep, plan: [{ from: 'tollbearer', to: 'bellhand', n: 4, pick: 'spread' }, ...] }` and the COMPILER applies it to every creature of the finished map, wherever its source placed it (the objects layer, a placer, an explicit entity).
+// Kinds are named (ENEMIES keys), `lane` is an array of 'x,z' traffic cells (or empty), `keep` a list of [x, z] cells whose creature never changes. tools/dev/tune-roster.mjs and tools/dev/rebuild-map.mjs swap the plan through ROSTER_ID / ROSTER_PLAN.
+export function applyRoster(entities, geo, spec, mapId) {
+  let plan = spec.plan; if (process.env.ROSTER_ID === mapId && process.env.ROSTER_PLAN) plan = JSON.parse(process.env.ROSTER_PLAN);
+  const open = (x, z) => FLOOR.has(geo[z]?.[x]), kept = new Set((spec.keep ?? []).map(([x, z]) => x + ',' + z)), lane = (spec.lane ?? []).map((k) => k.split(',').map(Number)), taken = new Set(), changed = [];
+  const sight = (a, b) => { const n = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])); for (let i = 1; i < n; i++) if (!open(Math.round(a[0] + (b[0] - a[0]) * i / n), Math.round(a[1] + (b[1] - a[1]) * i / n))) return false; return true; };
+  for (const step of plan) {
+    if (!step.n) continue;
+    const cand = entities.filter((e, i) => e.type === 'enemy' && e.kind === step.from && !e.hold && !kept.has(e.at.join(',')) && !taken.has(i)).map((e) => ({ e, i: entities.indexOf(e) }));
+    if (cand.length < step.n) throw new Error(`roster: wanted ${step.n} ${step.from} to change on ${mapId}, the map has ${cand.length}`);
+    let picked;
+    if (step.pick === 'range') {
+      const sample = lane.filter((_, i) => i % 3 === 0), scored = cand.map((c) => { const [x, z] = c.e.at; let s = 0; for (const [lx, lz] of sample) { const d = Math.hypot(lx - x, lz - z); if (d >= 6 && d <= 18 && sight([x, z], [lx, lz])) s++; } return { ...c, s }; }).sort((p, q) => q.s - p.s || p.e.at[1] - q.e.at[1] || p.e.at[0] - q.e.at[0]);
+      picked = []; for (const c of scored) { if (picked.length >= step.n) break; if (picked.every((q) => Math.hypot(q.e.at[0] - c.e.at[0], q.e.at[1] - c.e.at[1]) >= 5)) picked.push(c); } for (const c of scored) { if (picked.length >= step.n) break; if (!picked.includes(c)) picked.push(c); }
+    } else { const sorted = cand.sort((p, q) => p.e.at[0] - q.e.at[0] || p.e.at[1] - q.e.at[1]); picked = []; for (let i = 0; i < step.n; i++) picked.push(sorted[Math.min(sorted.length - 1, Math.floor((i + 0.5) * sorted.length / step.n))]); }
+    for (const c of picked) { taken.add(c.i); changed.push({ from: step.from, to: step.to, at: c.e.at.slice() }); c.e.kind = step.to; }
+  }
+  return changed;
+}

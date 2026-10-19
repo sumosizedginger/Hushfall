@@ -101,10 +101,10 @@ export function routeStats(id) {
 
 // ---- the laws a REBUILT map must meet (the Director's Plan, section R) --------------------------------------------------------------------------------------------------------------------------
 const FIRST_THREE = new Set(['C1E1M01', 'C1E1M02', 'C1E1M03']);          // the introduction maps: few kinds and one of them common is how the game starts
-// A law that waits for Bot v2 (the Director's Plan, P2): the OLD stand-still bot is still the gate on Easy, Normal and Hard, and on these maps it dies before the law is met. The map keeps the most the old gate allows, the law is skipped here and the reason is on the record.
-export const WAITING_FOR_BOT_V2 = { C1E1M07: { skip: ['cap', 'shooters'], why: 'the Signal House is dark: the old bot dies to eight Bellhands (and to four more Gaunts); six Bellhands is the most it takes on all three difficulties' } };
-export function laws(r) {
-  const v = [], wait = WAITING_FOR_BOT_V2[r.id]?.skip ?? [];
+// A law that waits for Bot v2 (the Director's Plan, P2): the OLD stand-still bot is still the gate on Easy, Normal and Hard, and on some maps it dies before the law is met. The map keeps the most the old gate allows, the law is skipped and the reason is on the record: design/director-floor.json, key `waiting`: { ID: { skip: ['cap', 'shooters'], why } }.
+export const waitingOf = (doc = readFloor()) => doc.waiting ?? {};
+export function laws(r, waiting = waitingOf()) {
+  const v = [], wait = waiting[r.id]?.skip ?? [];
   if (!r.enemies || r.boss) return v;                                  // a boss arena is judged by play, not by these numbers
   const cap = r.kinds >= 5 ? 35 : r.kinds === 4 ? 40 : 45;             // the cap scales with the variety there is: with three kinds a third each is the least possible, with four the two minor ones carry only a few creatures
   if (!FIRST_THREE.has(r.id) && r.topShare > cap && !wait.includes('cap')) v.push(`no kind over ${cap}% of a map (${r.topKind} is ${r.topShare}%)`);
@@ -112,7 +112,7 @@ export function laws(r) {
   const need = FIRST_THREE.has(r.id) ? 0 : r.id === 'C1E1M04' ? 3 : 4;      // the Episode 1 introduction has three kinds until the Sexton arrives on map 5
   if (r.kinds < need) v.push(`at least ${need} kinds (${r.kinds})`);
   const amb = r.id === 'C1E1M01' ? 1 : 2; if (r.ambushes < amb) v.push(`at least ${amb} scripted ambush${amb > 1 ? 'es' : ''} (${r.ambushes})`);
-  if (!r.setpiece && r.density < 18) v.push(`at least 18 creatures per thousand cells (${r.density})`);
+  if (!r.setpiece && r.density < 18 && !wait.includes('density')) v.push(`at least 18 creatures per thousand cells (${r.density})`);
   if (r.secrets < 1 || r.secrets > 3) v.push(`one to three secrets (${r.secrets})`);
   return v;
 }

@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { loadMapFile } from '../../src/engine/harness.js';
+import { loadMapFile, runRouteEither } from '../../src/engine/harness.js';
 import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '../../src/engine/viability.js';
 import { auditMap, laws } from './director-audit.mjs';
 
@@ -21,6 +21,7 @@ for (const [i, planText] of plans.entries()) {
   const file = path.join(dir, id + '.json'), src = JSON.parse(fs.readFileSync(file, 'utf8')), map = loadMapFile(file);
   const v = evaluateViability(map, mainRoute), checks = viabilityChecks(v, src.par?.time, { safe: !!src.quality?.safe }), facts = levelFacts(map);
   for (const c of qualityChecks(map, src.quality, facts, v.normal.fighter.seconds)) checks.push(c);
+  for (const rf of fs.readdirSync(path.join(root, 'routes')).filter((q) => q.startsWith(id + '.') && q.endsWith('.route.json'))) for (const d of ['easy', 'normal', 'hard']) for (const seed of d === 'hard' ? [1, 2] : [1]) { const rr = runRouteEither(map, JSON.parse(fs.readFileSync(path.join(root, 'routes', rf), 'utf8')), { seed, difficulty: d }); checks.push({ name: `route ${rf.replace('.route.json', '')} on ${d}${d === 'hard' ? ' seed ' + seed : ''} reaches the exit`, ok: rr.result === 'complete', detail: rr.failure || rr.result }); }          // hard on two seeds: tests/placement-pt023.test.js plays every route on hard seed 2          // every route of the map, as verify-map plays them
   const bad = checks.filter((c) => !c.ok).map((c) => c.name.replace(/^viability /, '').slice(0, 70) + (c.detail ? ' (' + String(c.detail).slice(0, 30) + ')' : ''));
   const row = auditMap(src), k = {}; for (const e of src.entities) if (e.type === 'enemy') k[e.kind] = (k[e.kind] ?? 0) + 1;
   console.log(`plan ${i + 1}: ${planText}\n   ${JSON.stringify(k)}  top ${row.topShare}%  shoot ${row.rangedShare}%   laws: ${laws(row).join('; ') || 'met'}\n   gates: ${bad.length ? 'FAIL ' + bad.join(' | ') : 'all pass'}   (${Math.round((Date.now() - t0) / 1000)} s)`);

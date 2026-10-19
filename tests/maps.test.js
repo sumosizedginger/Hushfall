@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { validateMap, parseMap } from '../src/engine/mapformat.js';
-import { runRoute } from '../src/engine/harness.js';
+import { runRouteEither as runRoute } from '../src/engine/harness.js';
 import { evaluateViability, viabilityChecks, levelFacts, qualityChecks, analyseReach } from '../src/engine/viability.js';
 import { ROOT } from './helpers.js';
 

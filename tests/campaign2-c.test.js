@@ -8,7 +8,7 @@ import { ROOT, shippedSrc, shippedMap } from './helpers.js';
 import { LOOKS, ENEMIES } from '../src/engine/defs.js';
 import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
-import { runRoute } from '../src/engine/harness.js';
+import { runRouteEither as runRoute } from '../src/engine/harness.js';          // either fighter policy (PT-052, Bot v2 first half)
 
 const BUILT = ['C2M17', 'C2M18', 'C2M19', 'C2M20', 'C2M21', 'C2M22', 'C2M23', 'C2S02', 'C2M24'];
 const ALL = BUILT;

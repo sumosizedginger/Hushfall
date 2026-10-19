@@ -7,7 +7,7 @@ import { textSha, engineSha, routesSha, sourceShas, staleSets, describeStale } f
 import { execSync } from 'node:child_process';
 import { validateMap, parseMap } from '../src/engine/mapformat.js';
 import { analyseReach } from '../src/engine/reach.js';
-import { runRoute } from '../src/engine/harness.js';
+import { runRoute, runRouteEither } from '../src/engine/harness.js';
 import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '../src/engine/viability.js';
 import { mapLintChecks, feelChecks } from './maplint.mjs';
 
@@ -32,9 +32,9 @@ if (v.ok) {
   for (const f of routes) {
     const route = JSON.parse(fs.readFileSync(path.join(root, 'routes', f), 'utf8'));
     for (const difficulty of ['easy', 'normal', 'hard']) {
-      const r = runRoute(map, route, { seed: 1, difficulty });
-      add(`route ${f} on ${difficulty} reaches the exit`, r.result === 'complete', r.failure || `${(r.ticks / 60).toFixed(1)} s`);
-      evidence.routes.push({ file: 'routes/' + f, difficulty, seed: 1, result: r.result, ticks: r.ticks, finalHash: r.hash, kills: r.world.stats.kills, secrets: r.world.stats.secrets, items: r.world.stats.items, damageTaken: r.world.stats.damageTaken });
+      const r = runRouteEither(map, route, { seed: 1, difficulty });                                 // PT-052 (Bot v2, first half): either fighter policy may complete it; the evidence says which
+      add(`route ${f} on ${difficulty} reaches the exit`, r.result === 'complete', r.failure || `${(r.ticks / 60).toFixed(1)} s${r.policy === 'strafing' ? ' (strafing)' : ''}`);
+      evidence.routes.push({ file: 'routes/' + f, difficulty, seed: 1, policy: r.policy, result: r.result, ticks: r.ticks, finalHash: r.hash, kills: r.world.stats.kills, secrets: r.world.stats.secrets, items: r.world.stats.items, damageTaken: r.world.stats.damageTaken });
     }
   }
   const main = evidence.routes.find((r) => r.file.includes('.main.') && r.difficulty === 'normal');

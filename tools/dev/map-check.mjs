@@ -3,7 +3,7 @@
 //   node tools/dev/map-check.mjs <ID> [<ID> ...]            exit code 1 if any check fails
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRouteEither as runRoute } from '../../src/engine/harness.js';          // either fighter policy (PT-052, Bot v2 first half)
 
 const root = path.resolve(import.meta.dirname, '../..');
 let bad = 0;

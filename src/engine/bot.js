@@ -119,9 +119,11 @@ export class Bot {
     // out of ammunition for everything it carries: the bot closes in and bashes (key V) instead of standing there with a dry gun (the old last-resort flare feed is gone, fists never run out)
     const dry = !lastResort && !p.weapons.some((id) => BOT_GUNS.has(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0) && !plated && !ENEMIES[t.e.kind].boss;          // (never walks up to plate or a boss with fists: a player flanks, the bot just waits for the feed's flare)
     if (dry) { this.setHeld('fire', false); this.setHeld('aim', false); this.setHeld('back', false); this.setHeld('forward', t.d > 1.6); if (t.d < 2.3 && w.tick % 30 === 0) { this.in.press('melee'); this.releaseMelee = true; } }
-    const dodge = (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0, shooter = this.weave && !!ENEMIES[t.e.kind].ranged && t.d > 5, weave = shooter && ((w.tick / 36) | 0) % 2 === 0;   // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
+    const dodge = (t.e.lungeT ?? -1) >= 0 || (t.e.chargeT ?? -1) >= 0, shooter = this.weave && (this.weave === 2 ? this.shootersNear() : !!ENEMIES[t.e.kind].ranged && t.d > 5), weave = shooter && ((w.tick / 36) | 0) % 2 === 0;   // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
     this.setHeld('right', dodge || weave); this.setHeld('left', shooter && !weave && !dodge);   // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
+  /** PT-052 (Bot v2, first half): weave: 2 strafes while ANY awake shooter is within range, not only while the creature it is fighting is one (a Bellhand's toll-shot is aimed at where the player IS: a moving player is not hit; with a Tollbearer in front and three Bellhands behind, the old weave stood still) */
+  shootersNear() { const w = this.w, p = w.player; for (const e of w.enemies) { if (e.state === 'dead' || e.state === 'idle') continue; const R = ENEMIES[e.kind].ranged; if (R && Math.hypot(e.x - p.x, e.z - p.z) < Math.min(R.maxRange, 20)) return true; } return false; }
   /**
    * The boss op: cut the bell ring, then the singer. A tone pulse (windup or ring in flight) is answered by getting behind stone: cover is any nearby point the boss has no line to.
    * Otherwise fight the nearest thing in view; with nothing in view, walk toward the next node (or the boss once the ring is broken).

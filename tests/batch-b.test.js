@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { parseMap } from '../src/engine/mapformat.js';
 import { traceBeams } from '../src/engine/beams.js';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRouteEither as runRoute } from '../src/engine/harness.js';          // either fighter policy (PT-052, Bot v2 first half): a route completes if the standing or the strafing bot completes it
 import { ROOT } from './helpers.js';
 import path from 'node:path';
 

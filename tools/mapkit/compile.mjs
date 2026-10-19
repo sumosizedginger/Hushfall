@@ -9,6 +9,7 @@ import { findTraps } from '../../src/engine/traps.js';
 const root = path.resolve(import.meta.dirname, '../..');
 
 import { LEGEND } from './legend.mjs';
+import { applyRoster } from './roster.mjs';
 export { LEGEND };
 const DIRS = { north: 0, south: Math.PI, east: -Math.PI / 2, west: Math.PI / 2 };
 
@@ -33,6 +34,7 @@ export function compile(lv) {
     const o = lv.facing?.[e.at.join(',')]; if (o != null) { e.facing = typeof o === 'string' ? DIRS[o] : o; continue; }
     if (spawn) e.facing = Math.round(Math.atan2(spawn.at[0] - e.at[0], spawn.at[1] - e.at[1]) * 1000) / 1000;
   }
+  if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);                // PT-052: which kinds stand where (tools/mapkit/roster.mjs): applied to every creature of the finished map, wherever its source placed it
   for (const g of lv.groups || []) for (const e of entities) if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;
   for (let z = 0; z < h; z++) for (let x = 0; x < w; x++) {
     if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorInterlock?.[x + ',' + z] ? { interlock: lv.doorInterlock[x + ',' + z] } : {}), ...(lv.doorStartOpen?.includes(x + ',' + z) ? { open: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });

@@ -12,7 +12,9 @@ const chain = (difficulty, seed) => {
     const map = loadMapFile(`maps/${id}.json`), route = loadRouteFile(`routes/${id}.main.route.json`), w = createWorld(map, { seed, difficulty, carry });
     const e = map.entryLoadout; const arrival = { hp: w.player.hp, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons] };
     if (e) { assert.ok(arrival.hp >= e.hp, id + ' starts at full health'); for (const [k, v] of Object.entries(e.ammo)) assert.ok((arrival.ammo[k] ?? 0) >= v, `${id} arrives with at least the authored ${k}`); for (const wp of e.weapons) assert.ok(arrival.weapons.includes(wp), id + ' arrives with ' + wp); }
-    const r = runRoute(map, route, { world: w, seed, difficulty }); log.push(`${id}:${r.result}:${r.world.stats.damageTaken}`);
+    let r = runRoute(map, route, { world: w, seed, difficulty }), policy = 'standing';
+    if (r.result !== 'complete') { const w2 = createWorld(map, { seed, difficulty, carry }); r = runRoute(map, route, { world: w2, seed, difficulty, weave: 2 }); policy = 'strafing'; }          // either fighter policy (PT-052, Bot v2 first half), on a fresh world with the same arrival
+    log.push(`${id}:${r.result}:${policy}:${r.world.stats.damageTaken}`);
     assert.equal(r.result, 'complete', `${difficulty}/seed ${seed}: ${id} ended ${r.result} ${r.failure ?? ''} (chain so far: ${log.join(' ')})`);
     carry = carryOver(r.world);
   }
