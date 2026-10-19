@@ -118,3 +118,15 @@ test('the shell wires it: the pages are built when the Journal opens, left/right
   assert.ok(/g\.world\.tick % 30 === 0[^;]*seenKinds\(/.test(main), 'the Bestiary is checked on a tick count'); assert.ok(main.includes('MINIMAP.every') && main.includes('drawMinimap('), 'the minimap is redrawn on a frame count'); assert.ok(main.includes("e.type === 'objective'") && main.includes('g.objectives'), 'objectives are remembered');
   assert.ok(!/world\.time\s*=/.test(read('src/game/journal.js') + read('src/game/bestiary.js') + read('src/game/minimap.js')), 'no module of the three writes the clock');
 });
+
+// The owner's screenshot, 2026-10-19: the minimap filled the whole window. `canvas{width:100vw;height:100vh}` (index.html, line 8) sizes EVERY canvas, and #minimap had no size of its own, so a 148 px drawing was stretched about twelve times with a dark wash over the picture and the frame round the edge. No node test could see layout, so this one reads the stylesheet: every canvas but the two full-window ones (the picture and the big map) must name a width and a height that are not the viewport's.
+test('every canvas but the picture and the big map has a size of its own in the stylesheet (the global rule makes a canvas full-window)', () => {
+  const html = read('index.html'), ids = [...html.matchAll(/<canvas id="([^"]+)"/g)].map((m) => m[1]);
+  assert.ok(ids.includes('minimap') && ids.includes('c') && ids.includes('automap'), 'the three canvases of the page: ' + ids);
+  assert.ok(/canvas\{[^}]*width:100vw[^}]*height:100vh/.test(html), 'the global rule this guards against is still there: if it goes, so can this test');
+  for (const id of ids.filter((i) => i !== 'c' && i !== 'automap')) {
+    const rule = [...html.matchAll(new RegExp('#' + id + '\{([^}]*)\}', 'g'))].map((m) => m[1]).join(';');
+    const w = /(?:^|[;\s])width:([^;]+)/.exec(rule), h = /(?:^|[;\s])height:([^;]+)/.exec(rule);
+    assert.ok(w && h, `#${id} names its own width and height`); assert.ok(!/100v[wh]|100%/.test(w[1] + h[1]), `#${id} is not full-window: width ${w?.[1]}, height ${h?.[1]}`);
+  }
+});

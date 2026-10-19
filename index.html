@@ -62,7 +62,7 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
 #hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
 #toasts{position:fixed;right:16px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}        /* PT-047 V2: top right (it used to sit in the middle of the picture); the minimap of workstream U will go above it */
-#minimap{position:fixed;right:16px;top:14px;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:180px}body[data-minimap=large] #toasts{top:258px}      /* PT-052 U4: the corner map; the toast column moves under it */
+#minimap{position:fixed;right:16px;top:14px;width:auto;height:auto;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:180px}body[data-minimap=large] #toasts{top:258px}      /* PT-052 U4: the corner map; the toast column moves under it */
 #toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000;max-width:min(360px,44vw)}
 #comms{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);width:min(640px,92vw);background:#0d0f14ec;border:1px solid var(--slate);border-left:3px solid var(--teal);padding:8px 14px;pointer-events:none;z-index:3;text-shadow:1px 1px 0 #000}
 #comms b{display:block;color:var(--teal);letter-spacing:.18em;font-size:11px;margin-bottom:2px}#comms span{color:var(--paper)}
