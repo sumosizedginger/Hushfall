@@ -324,7 +324,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "marksman",
    "at": [31, 17],
    "facing": -1.317,
    "group": "tuned"

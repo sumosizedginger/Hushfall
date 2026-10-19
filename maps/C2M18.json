@@ -900,7 +900,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "mender",
    "at": [41, 56],
    "facing": -1.741
   },
@@ -918,7 +918,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "mender",
    "at": [54, 59],
    "facing": -1.756
   },

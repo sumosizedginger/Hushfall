@@ -2,18 +2,18 @@
   "mapId": "C1E2M02",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "3a3ff26",
+  "codeVersion": "8c178d9",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "ed38b3226fad79d8",
-  "assetVersion": "2a768302f10b0f75",
-  "engineSha": "b53124357ce88e95",
+  "mapSha": "77bfcd54d2c710f6",
+  "assetVersion": "bf82a62145a98119",
+  "engineSha": "131f6a08f0aa9d10",
   "sources": {
-    "engine": "b53124357ce88e95",
-    "render": "513f7ace2ef0b9a8",
-    "game": "814036224475c804",
-    "audio": "50c8b677684b5b60",
-    "assets": "2a768302f10b0f75"
+    "engine": "131f6a08f0aa9d10",
+    "render": "f92421e9caca120f",
+    "game": "916deaa70b210e77",
+    "audio": "340f781bb8fac543",
+    "assets": "bf82a62145a98119"
   },
   "routesSha": "08ece2556b10a96c",
   "loads": true,
@@ -26,7 +26,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3450,
-      "finalHash": "af5a2b5c",
+      "finalHash": "37b0756c",
       "kills": 31,
       "secrets": 0,
       "items": 1,
@@ -39,7 +39,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3664,
-      "finalHash": "5c04b406",
+      "finalHash": "f23218d6",
       "kills": 32,
       "secrets": 0,
       "items": 4,
@@ -52,7 +52,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3786,
-      "finalHash": "ee91b560",
+      "finalHash": "a2593df1",
       "kills": 32,
       "secrets": 0,
       "items": 4,
@@ -65,7 +65,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3809,
-      "finalHash": "3aba1bda",
+      "finalHash": "8ebacfea",
       "kills": 31,
       "secrets": 1,
       "items": 2,
@@ -78,7 +78,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4044,
-      "finalHash": "1610b718",
+      "finalHash": "86a2e940",
       "kills": 32,
       "secrets": 1,
       "items": 4,
@@ -91,7 +91,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4380,
-      "finalHash": "16269051",
+      "finalHash": "236dec64",
       "kills": 33,
       "secrets": 1,
       "items": 4,
@@ -105,7 +105,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 3664,
-    "finalHash": "5c04b406",
+    "finalHash": "f23218d6",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -117,8 +117,9 @@
     "enemies": 54,
     "enemyKinds": {
       "tollbearer": 26,
-      "bellhand": 11,
-      "gaunt": 17
+      "bellhand": 10,
+      "gaunt": 17,
+      "marksman": 1
     },
     "keys": 0,
     "closets": 0,
@@ -513,7 +514,7 @@
       {
         "name": "quality: has at least 4 bellhand",
         "ok": true,
-        "detail": 11
+        "detail": 10
       },
       {
         "name": "placement: every roofed region has walls (a floating ceiling slab over open ground is a map that reads as indoors outside)",
@@ -578,7 +579,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E2M02.json: fe6683b429eebd72 vs ed38b3226fad79d8"
+        "detail": "validation/browser/C1E2M02.json: fe6683b429eebd72 vs 77bfcd54d2c710f6"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

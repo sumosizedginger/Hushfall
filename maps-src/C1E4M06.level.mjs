@@ -144,7 +144,7 @@ MAP.drops = { scale: 1, keep: [[CX - 4, 104, CX + 4, 108], [CX - 4, 66, CX + 4, 
 console.log('C1E4M06: enemies', ents.filter((e) => e.type === 'enemy').length);
 // ---- PT-052 R3 (exemplar): what the kit built joins the map, and which kinds stand where is a plan the compiler applies (tools/mapkit/roster.mjs; tools/dev/tune-roster.mjs swaps it) ----
 ENC.apply(MAP);
-MAP.roster = { id: 'C1E4M06', lane: [...(laneOf('C1E4M06') ?? [])], keep: [], plan: [{ from: 'chorister', to: 'tollbearer', n: 3, pick: 'spread' }, { from: 'bellhand', to: 'tollbearer', n: 5, pick: 'spread' }] };          // found with tools/dev/tune-roster.mjs: both fighters finish every route; eleven Bellhands and seven Choristers killed the strafing one on hard
+MAP.roster = { id: 'C1E4M06', lane: [...(laneOf('C1E4M06') ?? [])], keep: [], plan: [{"from":"chorister","to":"tollbearer","n":3,"pick":"spread"},{"from":"bellhand","to":"tollbearer","n":5,"pick":"spread"},{"pick":"range","from":"gaunt","to":"mender","n":2}] };          // found with tools/dev/tune-roster.mjs: both fighters finish every route; eleven Bellhands and seven Choristers killed the strafing one on hard
 
 export default MAP;
 export { L, hw, CX, SCREENS, RANKS };

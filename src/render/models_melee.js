@@ -99,10 +99,18 @@ export function makeFists(tex) {
     const sleeve = M(new THREE.CylinderGeometry(0.044, 0.056, len, 8), 4, sleeveMat); sleeve.rotation.x = Math.PI / 2; sleeve.position.z = -len / 2; a.add(sleeve);              // the oilskin sleeve
     const wrap = M(new THREE.CylinderGeometry(0.048, 0.048, 0.13, 8), 8); wrap.rotation.x = Math.PI / 2; wrap.position.z = -len - 0.03; a.add(wrap);                               // the linen hand-wrap
     const hand = new THREE.Group(); hand.position.z = -len - 0.13; a.add(hand);
-    const back = M(new THREE.BoxGeometry(0.1, 0.085, 0.14), 8); back.position.set(0, 0, 0.0); hand.add(back);                                                                      // the back of the hand, wrapped
-    const knuckles = M(new THREE.BoxGeometry(0.105, 0.07, 0.06), 8); knuckles.position.set(0, -0.01, -0.085); hand.add(knuckles);
-    for (let i = -1.5; i <= 1.5; i++) { const k = M(sphere(0.023, 6, 4), 9); k.position.set(i * 0.027, 0.002, -0.12); hand.add(k); }                              // the bare ridge of the fist
-    const thumb = M(new THREE.BoxGeometry(0.035, 0.04, 0.09), 9); thumb.position.set(-side * 0.075, -0.012, -0.07); thumb.rotation.y = side * 0.35; hand.add(thumb);
+    // PT-061 V7 (the audit: two flat cream planks with a brick-orange block): a rounded wrapped back of the hand, a row of FOUR knuckles with the fingers curled under, a thumb laid across them, and cord bands on the wrap
+    const back = M(sphere(0.062, 10, 7), 8); back.scale.set(0.95, 0.62, 1.25); back.position.set(0, 0.004, 0.012); hand.add(back);
+    const bridge = M(new THREE.BoxGeometry(0.1, 0.05, 0.05), 8); bridge.position.set(0, -0.004, -0.06); hand.add(bridge);                                                               // the wrap carried over the knuckles
+    const lens = [0.052, 0.064, 0.06, 0.047];
+    for (let i = 0; i < 4; i++) {                                                                                                                                                      // each finger: a knuckle, a segment that runs forward and a tip that curls down under the palm
+      const x = (i - 1.5) * 0.028, kn = M(sphere(0.0185, 6, 5), 9); kn.position.set(x, 0.006, -0.088); hand.add(kn);
+      const fg = new THREE.Group(); fg.position.set(x, 0.0, -0.092); fg.rotation.x = 0.35; const seg = M(new THREE.CylinderGeometry(0.0155, 0.017, lens[i], 6), 9); seg.rotation.x = Math.PI / 2; seg.position.z = -lens[i] / 2; fg.add(seg);
+      const tip = M(sphere(0.0165, 6, 4), 9); tip.position.set(0, -0.012, -lens[i] - 0.004); fg.add(tip); hand.add(fg);
+    }
+    const thumb = new THREE.Group(); thumb.position.set(-side * 0.052, -0.006, -0.06); thumb.rotation.set(0.15, side * 0.9, side * 0.1); const tseg = M(new THREE.CylinderGeometry(0.0165, 0.02, 0.085, 6), 9); tseg.rotation.x = Math.PI / 2; tseg.position.z = -0.04; thumb.add(tseg);
+    const ttip = M(sphere(0.0175, 6, 4), 9); ttip.position.z = -0.085; thumb.add(ttip); hand.add(thumb);
+    for (const z of [-len - 0.075, -len + 0.005]) { const band = M(new THREE.TorusGeometry(0.052, 0.0075, 4, 10), 4); band.position.z = z; a.add(band); }                                // two cord bands on the forearm wrap
     return a;
   };
   const R = fist(1), L = fist(-1); g.add(R, L);

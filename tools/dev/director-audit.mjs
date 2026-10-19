@@ -52,7 +52,7 @@ export function auditMap(src) {
   for (let z = 0; z < map.h; z++) for (let x = 0; x < map.w; x++) if (solidFloor(x, z)) { const h = Math.round((map.floor(x, z) ?? 0) * 20) / 20; heights.set(h, (heights.get(h) ?? 0) + 1); cells++; }
   const commonest = Math.max(0, ...heights.values()), levelsPct = cells ? Math.round(100 * (cells - commonest) / cells) : 0;
   const kinds = {}; for (const e of enemies) kinds[e.kind] = (kinds[e.kind] ?? 0) + 1; const top = Object.entries(kinds).sort((a, b) => b[1] - a[1])[0] ?? ['-', 0];
-  const ranged = enemies.filter((e) => ENEMIES[e.kind]?.ranged).length, boss = Object.keys(kinds).some((k) => BOSSES.has(k));
+  const ranged = enemies.filter((e) => ENEMIES[e.kind]?.ranged || ENEMIES[e.kind]?.snipe).length, boss = Object.keys(kinds).some((k) => BOSSES.has(k));
   const keys = map.entities.filter((e) => e.type === 'pickup' && /^key_/.test(e.kind)).length;
   const triggers = (map.triggers ?? []).length;
   const switches = map.entities.filter((e) => e.type === 'switch');

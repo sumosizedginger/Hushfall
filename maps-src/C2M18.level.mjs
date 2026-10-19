@@ -121,7 +121,7 @@ export const waypoints = {
   secret: [[6, 50, 0], [6, 70, 0], [6, 88, 0], [20, 93, 0], [XS, 93, 0], { op: 'use', at: [XS, ZS] }, [XS, ZS + 2, 0], [XS, 93, 0], [14, 42, 0], ...main.slice(2), { op: 'switch', id: 'cut' }, [44, 46, 0], [42, 38], [42, 30], [42, 22], [42, 14], [44, 9, 0], [C, 8, 0], [C, 7, 0]],
 };
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C2M18', lane: [...(laneOf('C2M18') ?? [])], keep: [], plan: [] };
+MAP.roster = { id: 'C2M18', lane: [...(laneOf('C2M18') ?? [])], keep: [], plan: [{"pick":"range","from":"tollbearer","to":"mender","n":2}] };
 ENC.apply(MAP);
 
 export default MAP;

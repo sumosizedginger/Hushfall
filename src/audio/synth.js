@@ -1,6 +1,7 @@
 // Procedural sound design. Every recipe is (ctx, out, t, o) => duration and runs on any BaseAudioContext (real-time or Offline),
 // so the same code is played in-game and rendered for measurement. No samples, no external audio: oscillators, filtered noise, FM bells.
 // o.r() is a [0,1) random source supplied by the caller (seeded offline, engine-seeded live) for per-play variation.
+import { makeSawVoice } from './sawvoice.js';                                                                    // PT-061 S1: the chainsaw voice's QA excerpt (saw_loop)
 const EPS = 0.0001;
 
 // ------------------------------------------------------------------ toolkit
@@ -633,6 +634,11 @@ export const SFX = {
     bell(c, out, t + 0.02, 988, { decay: 0.5, gain: 0.07, ratio: 3.1, index: 0.5 });
     tone(c, out, t + 0.05, { type: 'sine', f0: 330, f1: 110, a: 0.02, d: 0.5, gain: 0.08 });
     return 0.9;
+  },
+  // --- PT-061 S1: the chainsaw's voice, as a measurable excerpt (the game plays it sustained, from the saw's own state: sawvoice.js) ---
+  saw_loop(c, out, t, o) {                                       // idle putter, revs up, bites into something, kicks back into a stall, coughs: 7 seconds, exactly the voice the game runs
+    const v = makeSawVoice(c, out); for (let i = 0; i <= 56; i++) { const tt = i / 8, spin = tt < 0.6 ? 0.18 : tt < 2 ? 0.18 + 0.82 * Math.min(1, (tt - 0.6) / 1.2) : tt < 5 ? 1 : tt < 5.5 ? 0.5 : 0.2 + 0.1 * Math.sin(tt * 3); v.set({ spin, load: tt >= 3 && tt < 4.6 ? 1 : 0, stall: tt >= 5 && tt < 6.2 ? 1 : 0, t: tt, at: t + tt }, 0.05); }
+    v.stop(t + 7); return 7.4;
   },
   // --- PT-056: ammunition loads ---
   load_click(c, out, t, o) {                                    // the gun turned to another load: two dry ratchet ticks of a brass collar

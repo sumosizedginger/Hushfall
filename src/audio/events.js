@@ -22,6 +22,7 @@ export const SILENT_EVENTS = {
   drop: 'a box a creature dropped appears (PT-025): the view shows it, taking it plays the ordinary pickup sound',
   beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
   mender_stop: 'view-only: the Mender\'s tether lets go; mender_start carries the sound (mender.js, PT-060)',
+  saw_rev: 'the saw engine is a sustained voice now (sawvoice.js), driven from p.saw every frame: the retriggered rev is gone (PT-061 S1)',
   silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this (engine.js, PT-043: the Root Bell hangs still)',
 };
 export const RADIO_SOUND = 'radio';
@@ -79,7 +80,6 @@ export function soundsForEvent(e) {
     case 'phys_hit': return [{ id: 'phys_hit', pos: at(e) }];
     case 'phys_break': return [{ id: 'phys_break', pos: at(e) }];
     case 'saw_start': return [{ id: 'saw_start' }];
-    case 'saw_rev': return [{ id: 'saw_rev', gain: 0.8 }];
     case 'saw_stop': return [{ id: 'saw_stop' }];
     case 'saw_hit': return [{ id: 'saw_hit', pos: at(e), gain: 0.7 }];
     case 'saw_kick': return [{ id: 'saw_kick', pos: at(e) }];

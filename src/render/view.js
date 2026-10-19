@@ -23,6 +23,7 @@ import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
 import { beatGlow, zoneBeat } from '../engine/hive.js';
+import { eyeColor } from './eyes.js';                                                                                    // PT-061 V8: eyes as state
 import { makeCreatureFx } from './creaturefx.js';                                                                  // PT-060: the Marksman's line of light and the Mender's tether
 import { makeHiveView } from './hivefx.js';                                                                       // PT-043: the Hive Cantor's threads, the Root Bell's chain and shadow, the spikes
 import { DecalLayer } from './decals.js';
@@ -66,7 +67,7 @@ export class GameView {
     this.ambient = map.atmosphere.ambient ?? 1;       // dark levels (Signal House) dim the general light: the lamps carry the scene
     this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR); this.setPlace(lookOf(map.atmosphere));       // the place's light and grade (PT-021)
     const lvl = this.lvl = buildLevel(map, tex); scene.add(lvl.group);
-    this.creatureFx = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal)) ? makeCreatureFx(scene) : null;          // PT-060
+    this.creatureFx = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal || ENEMIES[q.kind]?.node || ENEMIES[q.kind]?.boss)) ? makeCreatureFx(scene) : null;          // PT-060
     this.hiveView = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.unison || q.kind === 'rootbell')) ? makeHiveView(scene) : null;       // PT-043: made with the view when the map has a conductor or a clapper (the clapper's light must not change the scene's light count in a fight)
     this.world = world; this.decals = new DecalLayer(tex.decals_atlas); scene.add(this.decals.mesh);       // marks that stay (PT-021): what the map started with, then what the events leave
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
@@ -87,7 +88,8 @@ export class GameView {
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
     // weapon overlay
     const ws = this.weaponScene = new THREE.Scene(); this.weaponCam = new THREE.PerspectiveCamera(58, 16 / 9, NEAR, FAR);
-    ws.add(new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5)); const key = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);
+    const wHemi = this.weaponHemi = new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5); ws.add(wHemi); const key = this.weaponKey = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);          // PT-061 V3: the held gun wears the PLACE's light (setPlace scales these two, with a floor so it is never lost)
+    this.setPlace(this.look);
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     if (map.lantern) { this.handLamp = new THREE.PointLight(0xffc070, 0, 22, 1.5); scene.add(this.handLamp); this.lampK = 0; this.lampModel = makeHandLantern(); this.lampModel.scale.setScalar(0.72); this.lampModel.position.set(-0.4, -0.3, -0.62); ws.add(this.lampModel); }          // PT-038 (E5): the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light count means no shader recompile) and a brass lantern held low at the left of the weapon view
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
@@ -314,6 +316,7 @@ export class GameView {
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / (def.pulse?.windup ?? def.hive?.windup ?? HIVE.beat));
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : def.spawner && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / def.spawner.swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
+      if (v.glow) v.glow.color.setHex(eyeColor(e, attack, lunge));                                                          // PT-061 V8: asleep dim, awake teal, hunting amber-white, striking white
       v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
@@ -349,7 +352,7 @@ export class GameView {
     }
     if (!this.hiveView && w.enemies.some((q) => ENEMIES[q.kind].unison || q.kind === 'rootbell')) this.hiveView = makeHiveView(this.scene);       // PT-043: the Hive Cantor's threads, the clapper's chain and shadow, the spikes
     this.hiveView?.update(w, this.enemyViews, this.time);
-    if (!this.creatureFx && w.enemies.some((q) => ENEMIES[q.kind].snipe || ENEMIES[q.kind].heal)) this.creatureFx = makeCreatureFx(this.scene);          // (a creature spawned by a trigger)
+    if (!this.creatureFx && w.enemies.some((q) => ENEMIES[q.kind].snipe || ENEMIES[q.kind].heal || ENEMIES[q.kind].node || ENEMIES[q.kind].boss)) this.creatureFx = makeCreatureFx(this.scene);          // (a creature spawned by a trigger)
     this.creatureFx?.update(w, this.enemyViews, this.time, dt);
     // pickups
     seen.clear();
@@ -520,10 +523,16 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
 
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
   /** the place's light and grade (LOOKS in defs.js): the hemisphere, the sun, the post tint; also what the dev hook uses to try another look on the same view */
+  mixHex(a, b, t) { const ch = (x, i) => (x >> i) & 255, m = (i) => Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t); return (m(16) << 16) | (m(8) << 8) | m(0); }
   setPlace(look) {
     this.look = look; const { hemi, sun } = this;
     hemi.color.setHex(look.hemi[0]); hemi.groundColor.setHex(look.hemi[1]); hemi.intensity = look.hemi[2] * this.ambient;
     sun.color.setHex(look.sun[0]); sun.position.set(...look.sun[2]); sun.intensity = look.sun[1] * this.ambient;
+    if (this.weaponHemi) {                                                                                                        // PT-061 V3 (the audit: the gun was the same brightness, luma 109 to 116, in every map): the weapon scene's light follows the place's, from 0.35 of the old value in the darkest to the old value at the harbour's level and a little over in the brightest
+      const k = Math.max(0, (look.hemi[2] * this.ambient) / 2.4), g = 0.35 + 0.65 * Math.min(1, k) + 0.12 * Math.min(1, Math.max(0, k - 1));
+      this.weaponHemi.intensity = 1.5 * g; this.weaponHemi.color.setHex(this.mixHex(0x9fb8d0, look.hemi[0], 0.45)); this.weaponHemi.groundColor.setHex(this.mixHex(0x3a2a30, look.hemi[1], 0.45)); this.weaponKey.intensity = 1.6 * g; this.weaponKey.color.setHex(this.mixHex(0xffe0b0, look.sun[0], 0.35));
+    }
+    this.post.uniforms.uShoulder.value = look.post?.shoulder ?? 0.6;                                                              // PT-061 V4: the tone shoulder (a look may name its own)
     this.exposureK = look.exposure; this.post.setGrade(look.grade); this.post.uniforms.uExposure.value = 2.2 * look.exposure * (this.brightness ?? 1);
   }
   dispose() {

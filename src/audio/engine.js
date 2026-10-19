@@ -5,6 +5,7 @@ import { SFX, seededRandom } from './synth.js';
 import { soundsForEvent } from './events.js';
 import { Music } from './music.js';
 import { Ambience } from './ambience.js';
+import { makeSawVoice, sawState } from './sawvoice.js';                                                             // PT-061 S1: the chainsaw's sustained voice
 import { PLAYER } from '../engine/defs.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -94,6 +95,8 @@ export class AudioEngine {
     const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
     if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
     else { L.setPosition(p.x, PLAYER.eye, p.z); L.setOrientation(fx, 0, fz, 0, 1, 0); }
+    { const ss = sawState(p);                                                                                       // the chainsaw's engine: a sustained voice driven by the saw's own state (created when a saw first runs; a context that cannot make one just goes without)
+      if (ss && !this.sawFailed) { try { this.sawVoice ??= makeSawVoice(c, this.sfxBus); this.sawVoice.set({ ...ss, t: this.clock }); } catch { this.sawFailed = true; this.sawVoice = null; } } else if (this.sawVoice) this.sawVoice.set({ spin: 0 }, 0.08); }
     const silent = !!map.atmosphere?.silence || !!world.silenced;                                                  // PT-043: a map's silence, or the one the Root Bell leaves (world.silenced)
     if (this.stepAfterHush && this.clock >= this.hushT) { this.stepAfterHush = false; this.play('step_plank', { gain: 0.9 }); }
     if (silent !== !!this.silent) { this.silent = silent; this.applySettings(this.settings); this._applyMuffle(); }
@@ -120,5 +123,5 @@ export class AudioEngine {
     if (p.hp > 0 && p.hp < 30 && world.status === 'playing' && this.clock > this.nextBeat) { this.play('heartbeat', { gain: 0.9 * (1 - p.hp / 30) + 0.2 }); this.nextBeat = this.clock + 0.55 + p.hp / 60; }
   }
 
-  dispose() { try { this.ctx?.close(); } catch { /* already closed */ } this.ctx = null; }
+  dispose() { try { this.sawVoice?.stop(); } catch { /* ok */ } try { this.ctx?.close(); } catch { /* already closed */ } this.ctx = null; }
 }

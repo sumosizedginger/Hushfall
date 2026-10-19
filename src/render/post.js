@@ -10,6 +10,7 @@ precision highp float;
 uniform sampler2D tColor, tDepth, tPaper;
 uniform vec2 uRes;
 uniform vec3 uShadowTint, uLightTint;
+uniform float uShoulder, uShoulderPre;          // PT-061 V4: the tone shoulder (src/render/tonecurve.js is its node twin: never edit one without the other)
 uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug, uFrost;
 varying vec2 vUv;
 
@@ -20,9 +21,10 @@ float invZ(vec2 uv) {
   return 1.0 / lin;                     // 1/z is linear in screen space on planes -> planes give ~0 second difference
 }
 vec3 toSRGB(vec3 c) { return pow(max(c, vec3(0.0)), vec3(1.0 / 2.2)); }
+vec3 shoulder(vec3 x) { vec3 y = max(x, vec3(0.0)) * uShoulderPre; return y * (1.0 + uShoulder) / (1.0 + uShoulder * y); }
 
 void main() {
-  vec3 col = toSRGB(texture2D(tColor, vUv).rgb * uExposure);
+  vec3 col = toSRGB(shoulder(texture2D(tColor, vUv).rgb * uExposure));
   vec2 fc = gl_FragCoord.xy;
   float p1 = texture2D(tPaper, fc / 128.0).r;
   float p2 = texture2D(tPaper, fc / 96.0 + 0.37).g;
@@ -32,6 +34,7 @@ void main() {
     float lum0 = dot(col, vec3(0.299, 0.587, 0.114));
     float lq = floor((lum0 + (p2 - 0.5) / uLevels) * uLevels + 0.5) / uLevels;   // painted value steps on luminance only: no hue speckle
     col = min(col * (lq / max(lum0, 0.02)), vec3(1.0));
+    col = mix(col, vec3(1.0), smoothstep(0.88, 1.0, lq) * 0.35);                 // PT-061 V4: the last band bleaches toward white instead of the flat clamp
     float lum = lq;
     col *= mix(uShadowTint, uLightTint, smoothstep(0.15, 0.7, lum));   // shadows and lights tinted by the place's look (LOOKS in defs.js; the default is cool shadows, warm lights)
     col = mix(vec3(dot(col, vec3(0.299, 0.587, 0.114))), col, uSat);
@@ -75,7 +78,7 @@ export class PostPass {
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.uniforms = {
       tColor: { value: null }, tDepth: { value: null }, tPaper: { value: paperTex }, uRes: { value: new THREE.Vector2(1, 1) },
-      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
+      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uShoulder: { value: 0.6 }, uShoulderPre: { value: 0.72 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
       uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 }, uFrost: { value: 0 },
       uShadowTint: { value: new THREE.Vector3(0.9, 1.0, 1.08) }, uLightTint: { value: new THREE.Vector3(1.07, 1.0, 0.93) }, uSat: { value: 1 },
     };

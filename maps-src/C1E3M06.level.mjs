@@ -96,7 +96,7 @@ MAP.entities ??= [];
 MAP.entities.push(...[["mod_spinup",14,28]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-057 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C1E3M06', lane: [...(laneOf('C1E3M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+MAP.roster = { id: 'C1E3M06', lane: [...(laneOf('C1E3M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1},{"pick":"range","from":"gaunt","to":"marksman","n":1}] };
 ENC.apply(MAP);
 
 export default MAP;

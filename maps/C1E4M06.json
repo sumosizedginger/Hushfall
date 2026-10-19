@@ -856,7 +856,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [37, 56],
    "facing": 0.153
   },
@@ -874,7 +874,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [35, 48],
    "facing": 0.165
   },

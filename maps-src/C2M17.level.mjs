@@ -143,7 +143,7 @@ export const waypoints = {
   secret: [[9, 30, 0], ...lane([14, 22, 34, 44, 58, 70]), [XS, zs - 3, 0], { op: 'use', at: [XS, zs] }, [XS, zs + 2, 0], [XS, zs - 3, 0], ...lane([88, 106, 117, 128]), ...relays],
 };
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C2M17', lane: [...(laneOf('C2M17') ?? [])], keep: [], plan: [] };
+MAP.roster = { id: 'C2M17', lane: [...(laneOf('C2M17') ?? [])], keep: [], plan: [{"pick":"range","from":"gaunt","to":"mender","n":2}] };
 ENC.apply(MAP);
 
 export default MAP;
