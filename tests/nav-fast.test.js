@@ -76,3 +76,8 @@ test('walkableCell: the same answer as before for every cell of five maps, doors
     for (const open of [0, 1]) { for (const d of w.doors) { d.open = open; d.target = open; } for (let z = -1; z <= w.map.h; z++) for (let x = -1; x <= w.map.w; x++) assert.equal(walkableCell(w, x, z), refWalkable(w, x, z), `${id} ${x},${z} doors ${open}`); }
   }
 });
+
+test('a hundred hunters with a hundred different last-seen cells: asked in the same order again and again, not one field is rebuilt (a cache one place short of the hunters rebuilds them all on every pass)', () => {
+  const w = createWorld(read('maps', 'C2M02'), { seed: 1, difficulty: 'normal' }), ts = targets(w, 100), first = ts.map(([x, z]) => distanceField(w, x, z));
+  for (let pass = 0; pass < 3; pass++) ts.forEach(([x, z], k) => assert.strictEqual(distanceField(w, x, z), first[k], `pass ${pass}, target ${ts[k]} was rebuilt`));
+});

@@ -16,7 +16,7 @@ const q = (h) => Math.round(h / QUANT) * QUANT;
 function navFloor(w, cx, cz) { const m = w.map; if (m.sectors.length) { const si = m.sectorAt(cx, cz); if (si >= 0 && w.sectors?.[si]) return m.sectors[si].cycle ? q(m.sectors[si].high) : q(w.sectors[si].h); } return cellFloor(w, cx, cz); }      // (PT-029: a timing platform counts at its high stop:
 
 const NBX = [1, -1, 0, 0, 1, 1, -1, -1], NBZ = [0, 0, 1, -1, 1, -1, 1, -1];          // orthogonal neighbours first, then the diagonals (the order is part of the result: navWaypoint breaks ties by it)
-const MAX_FIELDS = 48;                                                                // fields kept per world: one per distinct target cell (the player's, and every hunter's last-seen spot); a field is W x H x 4 bytes
+const MAX_FIELDS = 128;                                                               // fields kept per world: one per distinct target cell (the player's, and every hunter's last-seen spot: the biggest stand has 81 creatures); a field is W x H x 4 bytes. Least recently USED goes first: a FIFO that is one short of the number of hunters rebuilds every field on every pass (PT-054, measured: 37 fps instead of 60 with 58 hunters and 48 places)
 /** everything a distance field depends on besides the target: which doors are passable and where each moving floor is. A field is valid exactly while this is unchanged, so it never depends on cache history (audit A07: resume == uninterrupted). */
 function navVersion(w) {
   let v = ''; for (const d of w.doors) v += d.breath || d.open >= DOOR.passableAt ? '1' : '0';
@@ -82,7 +82,7 @@ function buildField(w, tcx, tcz, grid) {
 export function distanceField(w, tcx, tcz) { return fieldFor(w, tcx, tcz); }
 function fieldFor(w, tcx, tcz) {
   const nav = navOf(w), key = tcx + ',' + tcz, f = nav.fields.get(key), ver = navVersion(w);
-  if (f && f.ver === ver) return f.dist;
+  if (f && f.ver === ver) { nav.fields.delete(key); nav.fields.set(key, f); return f.dist; }                // a hit is the newest use
   const dist = buildField(w, tcx, tcz, gridFor(w, ver)); nav.fields.delete(key); nav.fields.set(key, { ver, dist });
   while (nav.fields.size > MAX_FIELDS) nav.fields.delete(nav.fields.keys().next().value);
   return dist;
