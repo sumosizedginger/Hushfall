@@ -1,6 +1,8 @@
 // The dev-only weapons range (PT-016). Pure functions of the world, called from world.js only when a map says `range: true` or an enemy says `hold`; no shipped map does, so nothing here touches the campaign's simulation.
-import { RANGE, WEAPONS, AMMO_MAX, PLAYER } from './defs.js';
+import { RANGE, WEAPONS, AMMO_MAX, AMMO_LOADS, AMMO_LOAD_ORDER, MOD_ORDER, PLAYER } from './defs.js';
 import { ammoCap, armorCap } from './progress.js';
+import { addLoad } from './ammoloads.js';
+import { addMod } from './mods.js';
 
 /** a target on its post: `hold` is 'inert' | 'turn' | 'fixed'; `hp` (optional, absolute) lets a map make a sponge. Called once from createWorld. */
 export function holdTarget(en, e) {
@@ -31,4 +33,7 @@ export function rangePlayer(w, dt) {
   if (w.stats.shots !== r.shots) { r.shots = w.stats.shots; r.fireT = 0; } else r.fireT += dt;
   const kind = WEAPONS[p.weapon]?.ammo;
   if (r.fireT >= RANGE.refillAfter || (kind && (p.ammo[kind] || 0) <= 0)) for (const k of Object.keys(AMMO_MAX)) p.ammo[k] = Math.max(p.ammo[k] || 0, ammoCap(k, w.upgrades));
+  // PT-056: every load for every gun held, kept full (nothing is selected for you: T turns the gun to its next load; `w.range.loadsOff` is the hook a test uses to keep the Range's loads out of its arithmetic)
+  if (!r.loadsOff && !r.modsGiven) { r.modsGiven = true; for (const id of MOD_ORDER) addMod(p, id); }          // PT-057: every mod, tier one (a tester buys nothing: tier two is tried through the dev hook)
+  if (!r.loadsOff && (r.fireT >= RANGE.refillAfter || !r.loads)) { r.loads = true; for (const id of AMMO_LOAD_ORDER) for (const gun of AMMO_LOADS[id].guns) if (p.weapons.includes(gun)) { const cap = Math.floor(ammoCap(WEAPONS[gun].ammo, w.upgrades) * AMMO_LOADS[id].cap), have = p.loads?.[gun]?.[id] ?? 0; if (have < cap) { (p.loadSeen ??= {})[gun] = true; addLoad(p, gun, id, cap - have, cap); } } }
 }

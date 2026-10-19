@@ -12,7 +12,7 @@ import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
 import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
-import { newProgress, sanitizeProgress, earn, buy } from '../engine/progress.js';
+import { newProgress, sanitizeProgress, earn, buy, buyMod } from '../engine/progress.js';
 import { UI } from './ui.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
@@ -74,6 +74,7 @@ g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Whe
 const ui = new UI({
   newGame: (d) => { g.progress = newProgress(); startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) }); },
   buyUpgrade: (track) => buyUpgrade(track),
+  buyMod: (id) => buyModTier(id),
   continueGame: () => { const r = loadFirstSave(); if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' }); },
   crashToTitle: () => { ui.hideCrash(); ui.show('title', { canContinue: canContinue(), note: '' }); },
   journalTab: (tab) => { g.journalTab = JOURNAL_TABS.includes(tab) ? tab : 'map'; ui.journalShowTab(g.journalTab); },
@@ -165,13 +166,20 @@ const nextCarry = () => ({ ...carryOver(g.world), upgrades: { ...g.progress.upgr
 function completeData() {
   const m = MAPS[g.mapId], e = g.lastEarn;
   return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId, campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
-    rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '' };
+    rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '', mods: Object.keys(g.world?.player?.mods ?? {}) };
 }
 /** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
 function commitProgress() {
   if (!g.nextId || !g.world) return;
   try { const w = createWorld(MAPS[g.nextId], { seed: g.seed + 1, difficulty: g.difficulty, carry: nextCarry(), choices: g.progress?.choices ?? null }); store.write('auto', makeSave(w, 'level-start', { now: Date.now(), progress: g.progress })); }
   catch (e) { g.lockerNote = 'Progress could not be saved: ' + e.message; }
+}
+function buyModTier(id) {                                                                                   // PT-057: tier two of a mod you carry, bought with salvage at the Locker
+  if (g.mode !== 'complete' || !g.lastEarn) return;
+  const r = buyMod(g.progress, id, Object.keys(g.world?.player?.mods ?? {}));
+  g.lockerNote = r.ok ? '' : r.reason === 'salvage' ? 'Not enough salvage.' : r.reason === 'bought' ? 'Already bought.' : '';
+  if (r.ok) { g.progress = r.progress; commitProgress(); }
+  ui.show('complete', completeData());
 }
 function buyUpgrade(track) {
   if (g.mode !== 'complete' || !g.lastEarn) return;

@@ -163,6 +163,10 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[44, 10, 47, 18]] };
 console.log('C1E4M02: enemies', ents.filter((e) => e.type === 'enemy').length);
+// ---- PT-056 (R9, ammunition loads): the first penetrators: rivets, bolts and rounds with a hardened tip, off the road in the wreck belt ----
+MAP.entities ??= [];
+MAP.entities.push(...[["ld_pen_rivet",75,37],["ld_pen_harpoon",75,42],["ld_pen_carbine",67,54]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-056 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E4M02', lane: [...(laneOf('C1E4M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
 ENC.apply(MAP);

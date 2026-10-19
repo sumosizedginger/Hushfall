@@ -1,11 +1,13 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
-import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, DIFFICULTY as DIFFS } from '../engine/defs.js';
+import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, AMMO_LOADS, DIFFICULTY as DIFFS } from '../engine/defs.js';
+import { activeLoad, loadsOf } from '../engine/ammoloads.js';
+import { modMarks } from '../engine/mods.js';
 import { gravTarget } from '../engine/gravity.js';
 import { noiseHud } from '../engine/noisetell.js';
 
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
-import { describeNext, TRACKS } from '../engine/progress.js';
+import { describeNext, TRACKS, modRows } from '../engine/progress.js';
 import { RESOLUTIONS } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
@@ -38,7 +40,7 @@ export class UI {
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
     $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
-    $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); };
+    $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); const m = e.target.closest?.('button[data-mod]'); if (m && !m.disabled) this.h.buyMod(m.dataset.mod); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
     $('set-fov').oninput = (e) => this.h.setSetting('fov', Number(e.target.value)); $('set-bright').oninput = (e) => this.h.setSetting('brightness', Number(e.target.value));
     { const xh = (key, conv = (v) => v) => (e) => { this.xh = { ...this.xh, [key]: conv(e.target.value) }; this.h.setSetting('crosshair', this.xh); };      // PT-048 / V2: the crosshair's style, size, colour and opacity (crosshair.js)
@@ -123,7 +125,7 @@ export class UI {
       const s = data.stats, t = s.total;
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ...(s.innocents ? [['Innocents harmed', String(s.innocents)]] : []), ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
       $('rank-line').innerHTML = `<span class="rank r-${data.rank}">${data.rank}</span><span>score ${data.score.toFixed(2)} · ${data.gain > 0 ? '+' + data.gain + ' salvage' : 'no new salvage'}${data.record && data.record.rank !== data.rank ? ' · best ' + data.record.rank : ''}</span>`;
-      this.locker(data.progress, data.lockerNote ?? '');
+      this.locker(data.progress, data.lockerNote ?? '', data.mods ?? []);
       $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : data.campaignEnd ? 'The Gate is open. Campaign Two is not built yet.' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
     }
     if (name === 'ending') this.endingOpen(data.ending);
@@ -163,9 +165,9 @@ export class UI {
     $('tally-next').innerHTML = `<small>${e.next.kicker}</small><strong>${e.next.name}</strong><em>${e.next.line}</em>`;
   }
   /** the Locker on the intermission: one row per upgrade track (the next tier, what it gives, what it costs) and the salvage in hand. Buying is the shell's job (h.buyUpgrade). */
-  locker(p, note = '') {
+  locker(p, note = '', mods = []) {
     $('locker-salvage').textContent = `salvage ${p.salvage}`;
-    $('locker').innerHTML = Object.keys(TRACKS).map((t) => { const d = describeNext(p, t); return `<div><b>${d.name} · tier ${d.tier}/${TRACKS[t].costs.length}</b><span>${d.cost == null ? 'maxed' : `${d.cost} salvage<button class="buy" data-track="${t}"${p.salvage < d.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${d.text}</span></div>`; }).join('');
+    $('locker').innerHTML = Object.keys(TRACKS).map((t) => { const d = describeNext(p, t); return `<div><b>${d.name} · tier ${d.tier}/${TRACKS[t].costs.length}</b><span>${d.cost == null ? 'maxed' : `${d.cost} salvage<button class="buy" data-track="${t}"${p.salvage < d.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${d.text}</span></div>`; }).join('') + modRows(p, mods).map((m) => `<div><b>${m.name} · tier ${m.tier}/2</b><span>${m.cost == null ? 'bought' : `${m.cost} salvage<button class="buy" data-mod="${m.id}"${p.salvage < m.cost ? ' disabled' : ''}>Buy</button>`}</span><span class="what">${m.text}</span></div>`).join('');          // PT-057: tier two of every mod you own
     $('locker-note').textContent = note;
   }
   /** PT-049 U1: a MAJOR pickup (a gun, a key) gets a card at lower centre, not a toast in the column: the icon, the name, one line of what it does (toasts.js pickupCard). -> true when it showed one */
@@ -223,7 +225,10 @@ export class UI {
       if (on) { const n = noiseHud(w); $('hud-noise-v').textContent = n.value; $('hud-noise-label').textContent = n.label; nt.classList.toggle('loud', n.loud); } }
     $('hud-hp').textContent = Math.ceil(p.hp); $('hud-hp').parentElement.classList.toggle('low', p.hp <= 25);
     $('hud-armor').textContent = Math.ceil(p.armor); const wd = WEAPONS[p.weapon], melee = wd.kind === 'melee', noAmmo = melee || wd.kind === 'tool', have = noAmmo ? 0 : p.ammo[wd.ammo] ?? 0, stalled = !!wd.saw && (p.saw?.stall ?? 0) > 0;
-    $('hud-ammo').textContent = wd.saw ? (stalled ? 'STALL' : Math.round((p.saw?.heat ?? 0) * 100) + '%') : noAmmo ? '—' : have; $('hud-ammo-label').textContent = wd.saw ? 'ENGINE HEAT' : noAmmo ? 'NO AMMO NEEDED' : AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase(); $('hud-ammo').parentElement.classList.toggle('low', (!noAmmo && have === 0) || stalled || (!!wd.saw && (p.saw?.heat ?? 0) > 0.75));
+    $('hud-ammo').textContent = wd.saw ? (stalled ? 'STALL' : Math.round((p.saw?.heat ?? 0) * 100) + '%') : noAmmo ? '—' : have; $('hud-ammo-label').textContent = wd.saw ? 'ENGINE HEAT' : noAmmo ? 'NO AMMO NEEDED' : (AMMO_LABEL[wd.ammo] || wd.ammo.toUpperCase()) + (p.mods && modMarks(p, w, p.weapon) ? ' · ' + modMarks(p, w, p.weapon) : ''); $('hud-ammo').parentElement.classList.toggle('low', (!noAmmo && have === 0) || stalled || (!!wd.saw && (p.saw?.heat ?? 0) > 0.75));
+    { const ld = $('hud-load'), gl = !noAmmo && p.loads?.[p.weapon], has = !!gl && Object.values(gl).some((c) => c > 0);                    // PT-056: the load readout: the one in use (its colour, its count), or the standard with the key that changes it
+      ld.classList.toggle('hidden', !has);
+      if (has) { const id = activeLoad(p, p.weapon), L = id ? AMMO_LOADS[id] : null; $('hud-load-n').textContent = id ? gl[id] : loadsOf(p, p.weapon).reduce((n, k) => n + gl[k], 0); $('hud-load-label').textContent = L ? L.name.toUpperCase() : 'LOADS · T'; $('hud-load-n').style.color = $('hud-load-label').style.color = L ? L.color : '#8fa5a2'; } }
     { const C = wd.charge, bar = $('charge'); const lo = melee ? 0.12 : C ? C.min : 0, f = C ? Math.min(1, Math.max(0, ((p.charge || 0) - lo) / (C.max - lo))) : 0, on = !!C && (p.charge || 0) > lo && (melee || have > 0);
       bar.classList.toggle('on', on); bar.classList.toggle('fist', melee); bar.classList.toggle('full', on && f >= 1); bar.firstElementChild.style.width = Math.round(f * 100) + '%'; }
     { const mid = melee ? p.weapon : (MELEE_ORDER.includes(p.meleeWeapon) ? p.meleeWeapon : 'fists');

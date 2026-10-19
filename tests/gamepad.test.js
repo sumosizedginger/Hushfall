@@ -54,11 +54,11 @@ test('glyphs: DualSense (vendor 054c) reads as PlayStation, an Xbox pad as Xbox,
   const ps = padLegend(PAD_DEFAULTS, 'ps'), xb = padLegend(PAD_DEFAULTS, 'xbox'); assert.match(ps, /Fire R2/); assert.match(ps, /Use ✕/); assert.match(xb, /Fire RT/); assert.match(xb, /Use A/); assert.match(ps, /hold: wheel/);
 });
 test('rebinding a pad button: the code is taken from whoever had it, Pause keeps a button, bad input is refused, stored garbage is repaired', () => {
-  const b = defaultPadBindings(); const r = applyPadRebind(b, 'use', 'Pad2'); assert.ok(r.ok && r.bindings.use[0] === 'Pad2' && r.displaced.length === 0);
+  const b = defaultPadBindings(); const r = applyPadRebind(b, 'use', 'Pad16'); assert.ok(r.ok && r.bindings.use[0] === 'Pad16' && r.displaced.length === 0);
   const t = applyPadRebind(b, 'use', 'Pad7'); assert.ok(t.ok && t.displaced[0] === 'fire' && t.bindings.fire.length === 0 && t.bindings.use[0] === 'Pad7');
   assert.equal(applyPadRebind(b, 'pause', 'Pad7').ok, true); const nopause = applyPadRebind(b, 'fire', 'Pad9'); assert.equal(nopause.ok, false, 'taking the only Pause button is refused'); assert.match(nopause.reason, /Pause/);
   assert.equal(applyPadRebind(b, 'jump', 'Pad1').ok, false); assert.equal(applyPadRebind(b, 'use', 'KeyE').ok, false); assert.equal(applyPadRebind(b, 'use', 'Pad99').ok, false); assert.deepEqual(b, defaultPadBindings(), 'never mutates its input');
-  const fixed = sanitizePadBindings({ fire: ['Pad99'], aim: 'x', use: ['Pad2'], melee: ['Pad2'], junk: ['Pad1'] }); assert.deepEqual(fixed.fire, ['Pad7'], 'a bad entry falls back'); assert.deepEqual(fixed.aim, ['Pad6']); assert.equal(fixed.use[0], 'Pad2'); assert.deepEqual(fixed.melee, [], 'one button, one action: the later claim loses'); assert.ok(!('junk' in fixed));
+  const fixed = sanitizePadBindings({ fire: ['Pad99'], aim: 'x', use: ['Pad16'], melee: ['Pad16'], junk: ['Pad1'] }); assert.deepEqual(fixed.fire, ['Pad7'], 'a bad entry falls back'); assert.deepEqual(fixed.aim, ['Pad6']); assert.equal(fixed.use[0], 'Pad16'); assert.deepEqual(fixed.melee, [], 'one button, one action: the later claim loses'); assert.ok(!('junk' in fixed));
   assert.deepEqual(sanitizePadBindings(null), defaultPadBindings());
 });
 test('snapshotOf: a real Gamepad (or null) becomes plain data', () => {

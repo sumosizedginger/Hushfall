@@ -592,6 +592,31 @@ export const SFX = {
     noise(c, out, t + 0.01, { dur: 0.16, a: 0.002, gain: 0.05, type: 'lowpass', f0: 1800, f1: 400, off: o.r() });
     return 0.25;
   },
+  // --- PT-056: ammunition loads ---
+  load_click(c, out, t, o) {                                    // the gun turned to another load: two dry ratchet ticks of a brass collar
+    thump(c, out, t, 1500, 900, 0.025, 0.08);
+    thump(c, out, t + 0.07, 1900, 1100, 0.02, 0.07);
+    noise(c, out, t, { dur: 0.1, a: 0.002, gain: 0.03, type: 'highpass', f0: 3000, f1: 3000, off: o.r() });
+    return 0.2;
+  },
+  ignite_hiss(c, out, t, o) {                                   // a creature catching: a short whoosh and a seethe of crackle
+    noise(c, out, t, { dur: 0.35, a: 0.01, gain: 0.09, type: 'bandpass', f0: 900, f1: 2400, q: 0.9, off: o.r() });
+    noise(c, out, t + 0.08, { dur: 0.4, a: 0.05, gain: 0.05, type: 'highpass', f0: 3500, f1: 2500, off: o.r() });
+    tone(c, out, t, { type: 'sawtooth', f0: 140, f1: 90, a: 0.01, d: 0.25, gain: 0.05, lp: 500 });
+    return 0.6;
+  },
+  chill_crack(c, out, t, o) {                                   // frost taking hold: a glassy crack, a thin falling ring
+    thump(c, out, t, 2600, 700, 0.03, 0.09);
+    tone(c, out, t + 0.01, { type: 'sine', f0: 2400, f1: 1500, a: 0.004, d: 0.3, gain: 0.05 });
+    tone(c, out, t + 0.02, { type: 'triangle', f0: 3300, f1: 2100, a: 0.004, d: 0.18, gain: 0.03 });
+    noise(c, out, t, { dur: 0.12, a: 0.002, gain: 0.05, type: 'highpass', f0: 4500, f1: 4500, off: o.r() });
+    return 0.5;
+  },
+  quench_hiss(c, out, t, o) {                                   // a fire meeting water or frost: a long steam hiss, going down
+    noise(c, out, t, { dur: 0.6, a: 0.02, gain: 0.08, type: 'bandpass', f0: 3200, f1: 900, q: 0.8, off: o.r() });
+    thump(c, out, t, 300, 120, 0.04, 0.05);
+    return 0.7;
+  },
   lamp_out(c, out, t, o) {                                      // the oil gone: the flame gutters, a cough of smoke, a last tick of hot brass
     noise(c, out, t, { dur: 0.5, a: 0.02, gain: 0.1, type: 'bandpass', f0: 500, f1: 180, q: 1.4, off: o.r() });
     tone(c, out, t, { type: 'sawtooth', f0: 190, f1: 90, a: 0.02, d: 0.35, gain: 0.07, lp: 600, vib: 12 });

@@ -305,3 +305,35 @@ Replaces the single "Ammo" pack of 12.4.1 and 13.5.1 (the owner's "we may want" 
 
 ### 14.4 NOT verified
 Nobody has played a drop-fed map. Whether the type feels right (does the box you need appear?), whether the magnet reads, whether a 40-kill map feels generous or mean, whether the boss arenas feel like set pieces: all unplayed. The type shown on the floor is the type chosen when it dropped; the player can have switched guns since. The drops make no sound of their own (the pickup sound plays on taking one).
+
+## 15. PT-056: AMMUNITION LOADS (R9 of the Director's Plan, 2026-10-19; the owner said yes to "fire ammunition, cold ammunition and penetrators that hit for double"; every number a first guess, nothing played)
+
+A load is an alternate type of ammunition for a gun you already hold. It is a consumable choice (mods will be the permanent layer). `src/engine/ammoloads.js` is pure; `AMMO_LOADS`, `AMMO_LOAD_ORDER` and `AMMO_LOAD_AMOUNT` are in `defs.js` (not the falling `LOADS` of `loads.js`).
+
+### 15.1 The three loads
+| load | guns | effect | cap (share of the standard cap) |
+|---|---|---|---|
+| SLAG (fire, orange) | scattergun, rivet driver, carbine | what a loaded shot hits and does not kill burns: 6 hit points a second for 4 s (`e.ignT`, `e.ignDps`); a creature standing in water or a current is not lit (`fizzle`) and a burning one that wades in is put out (`quench`) | 40% |
+| RIME (cold, pale blue) | scattergun, harpoon, flare cannon | 80% of the damage; chills for 3 s (40% of the speed: the same `moveMult` hook the rivets use); the NEXT BLOW (every pellet of one volley) does 1.5 x, once; puts a fire out; a bell node takes it twice; the flare leaves FROST ground (no damage, chills whoever stands in it) | 40% |
+| PEN (the penetrator, pale gold) | rivet driver, harpoon, carbine | x2 to a plated creature (a Warden-Graft's or a Bulwark's front; the harpoon's plate-piercing bolt too); goes through one more body (the harpoon: its pierce 1 -> 2) at 70%; the rivet driver and the carbine spend TWO rounds a shot | 30% |
+
+### 15.2 State (lazy: a world that never meets a load is byte-for-byte what it was)
+`p.loads` = { gun: { load: units } }, `p.loadSel` = { gun: load } (what is selected), `p.loadSeen` = { gun: true } (the first load a gun ever gets is selected for you, so a player who finds one sees it in use), `w.loadFx` (set when a status first lands: the status tick runs only then), `e.ignT / ignDps / chillT / chillK / brittle / brittleTick` on a creature. Nine pickups, `ld_<load>_<gun>` (`PICKUPS`, type 'load'; the toast names them; MEDIUM tier). A load is spent INSTEAD of the standard ammunition; one that cannot pay for another shot is deselected (`load_empty`) and the gun is on its standard again: nobody is ever stuck.
+
+### 15.3 Controls and feedback
+Action `load` (key T, the pad's X/Square, rebindable) turns the gun in hand to its next load (standard -> each load with something in it -> standard); events `load_cycle` / `load_none` / `load_empty` / `load_hit` (`fx`: ignite, chill, quench, fizzle) and four new sounds (`load_click`, `ignite_hiss`, `chill_crack`, `quench_hiss`: NOT yet measured by `npm run audio-qa`, which is a Chrome job). The HUD has a readout next to the ammunition (`#hud-load`: the load in use, its colour and count, or LOADS · T); the muzzle light takes the load's colour; a burning creature throws embers and a chilled one breathes frost (render only, `view.js`); a rime flare's ground is blue.
+
+### 15.4 The Range and the bot
+The Range (a `range: true` map) gives every load for every gun held at once, selects none, and tops them up after the pause in firing like ammunition (`w.range.loadsOff` is the hook a test uses to keep them out of its arithmetic). The route bot reads the pairing table (`Bot.wantLoad`): plate -> penetrator, a bell node or a lunger -> rime, a creature of 40 hit points or more (or one in a pack) not standing in water -> slag, otherwise the standard; it taps the key one press at a time. A bot that never carries a load plays exactly as before.
+
+### 15.5 Proof
+`tests/ammoloads.test.js` (15): tables, laziness (every gun fired, the key pressed, no field made), the pickup and its cap and its refusal for a gun not held, spending, slag (burn, burn-out, water), rime (80%, chill, brittle once, quench, bell node), the chill slowing a walker, plate x2 and the two-round cost, through-a-second-body, frost ground, the cycle, the input, replay determinism, the Range, the bot. `route-fingerprint.mjs check` against a baseline saved before the change proves every shipped route unchanged (see PRODUCTION_LOG).
+
+### 15.6 NOT done / NOT verified
+Where the loads lie on the maps is the next step (the plan's table: slag in Kiln Row's side room, a rime cache in the Rime Vault secret and in Cold Dock, penetrators in the Wreck Belt) and each map's gates must be re-run. Nobody has played any of it: whether slag is worth a shell, whether the chill reads, whether x2 on plate matters against a Bulwark's 7%. The four sounds and the HUD readout have not been heard or seen in a browser.
+
+## 16. PT-057: WEAPON MODS (R9, 2026-10-19; built node only, NOT PLACED ON ANY MAP, nothing played)
+
+A mod is a permanent upgrade to one gun (MODS in defs.js: doublebarrel, spinup, longchain, barbed, phosphor, airburst). src/engine/mods.js (pure: addMod, modDef, modTier, modMarks) turns a gun definition into the modded one at the moment of the shot; world.js: fireWeapon, the projectile explosion, the spin-up clock (p.spinT), the barbed bolt in fireBolt, the bleed in loadFxStep, the pickup type mod (event weapon_pickup, a card), carry and save (p.mods, validated). Tier two is bought with salvage at the Locker (progress.js buyMod / modRows, w.upgrades.mods2, ui.locker rows, main.js buyModTier; costs 8 then 12). The Range gives every mod at tier one. tests/mods.test.js (10).
+
+NOT DONE: placing the mod pickups (tools/dev/place-mods.mjs has the plan, off the lane: spin-up C1E3M06, long chain C1E4M05, double barrel C2M01, barbed C2M09, phosphor C2M13, airburst C2M21; the script had a quoting error that is fixed but it has NOT been run), compiling and verifying those maps, a sound and a HUD look for the mods, the relocation of the arc lamp and the axe, heavy ammunition boxes, generated floors.

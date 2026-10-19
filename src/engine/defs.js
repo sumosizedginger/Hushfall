@@ -28,6 +28,33 @@ export const ECHO = { loud: 16 };
 export const VARIANTS = { drowned: { name: 'Drowned', tint: 0x6f9a8c }, hived: { name: 'Hived', tint: 0xeab464 }, woven: { name: 'Woven', tint: 0xdcd6c4 }, crystal: { name: 'Crystal', tint: 0x94cbe6 } };      // PT-043 (Acts C and D): the Hive's amber-veined, the Loom's pale, the copy-town's glass
 export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, mortar: 32, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
 export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 };
+/** AMMO_LOADS (PT-056, R9 of the Director's Plan; design/WEAPONS_AND_CONTROLS_PLAN.md section 15; not the falling LOADS of loads.js): an alternate type of ammunition for a gun you already hold, chosen with the `load` action (key T, the pad's X). A gun carries its standard ammunition plus up to three
+ *  loads, each with its own count and a cap that is a share (`cap`) of the standard cap; a load never replaces the standard (it runs out and the gun goes back to it) and drops only from caches, secrets and elites. Lazy state: `p.loads` ({ gun: { load: n } }) and
+ *  `p.loadSel` ({ gun: load }) exist only once a load has been picked up, so a world that never meets one is byte-for-byte what it was. `cost` is how many units of the load a shot spends (default 1).
+ *  SLAG sets what it hits alight (`ignite`: dps for t s; it fizzles on a creature standing in water). RIME does `dmg` x the damage, chills for `chill.t` s (`slow` of its speed taken away) and makes the NEXT hit do `chill.brittle` x; it puts a fire out; a bell node takes `nodeMult` x.
+ *  PEN (the penetrator) does `plate` x to a plated creature (a Warden-Graft, a Bulwark, ...) and goes through one more body (`through`) at `throughMult` of the damage; the rivet driver and the carbine spend two rounds a shot. Every number a first guess, none played. */
+export const AMMO_LOADS = {
+  slag: { name: 'Slag', mark: 'S', color: '#ff8a3a', guns: ['scattergun', 'rivet', 'carbine'], cap: 0.4, dmg: 1, ignite: { dps: 6, t: 4 } },
+  rime: { name: 'Rime', mark: 'R', color: '#8fd8ff', guns: ['scattergun', 'harpoon', 'flare'], cap: 0.4, dmg: 0.8, chill: { t: 3, slow: 0.4, brittle: 1.5 }, nodeMult: 2 },
+  pen: { name: 'Penetrator', mark: 'P', color: '#f2e6b8', guns: ['rivet', 'harpoon', 'carbine'], cap: 0.3, dmg: 1, plate: 2, through: 1, throughMult: 0.7, cost: { rivet: 2, carbine: 2 } },
+};
+export const AMMO_LOAD_ORDER = ['slag', 'rime', 'pen'];
+/** MODS (PT-057, R9; design/WEAPONS_AND_CONTROLS_PLAN.md section 16): a permanent upgrade to ONE gun, found on a map (a pickup `mod_<id>`) and carried like a weapon. Tier 2 is bought with salvage at the Locker (`tier2.cost`, progress.js `buyMod`). Lazy state: `p.mods` ({ id: 1 }) exists once a mod is
+ *  found; the tier two a player has bought rides in `w.upgrades.mods2` (only once any is bought). `src/engine/mods.js` turns a gun's definition into the modded one at the moment of the shot. Every number a first guess, nothing played.
+ *  DOUBLE BARREL: both barrels at once (`pellets` x2 for `cost` 2 shells, a cycle of `cooldown` s; tier two `cooldown2`); with one shell left it fires one barrel as before. SPIN-UP: the rate climbs while the trigger is held (`rate` x the cooldown at full speed after `time` s) and the spread tightens (`tighten`);
+ *  tier two stops the heat bloom. LONG CHAIN: the lamp chains `chain` more jumps (tier two one more). BARBED BOLT: the harpoon pins a lunging or charging creature for `pin` s and staggers a Bulwark (tier two: `pin2` s and a bleed of `bleed.dps` for `bleed.t` s). PHOSPHOR: a flare's ground burns `t` x as long and its light reaches
+ *  further (tier two: `r2` x the radius). AIRBURST (optional, the mortar): `r` x the blast radius and no ground effect (tier two: `r2`). */
+export const MODS = {
+  doublebarrel: { name: 'Double barrel', gun: 'scattergun', mark: 'DB', line: 'Both barrels at once: twice the pellets for two shells, and a longer cycle.', pellets: 2, cost: 2, cooldown: 1.3, tier2: { cost: 8, line: 'A shorter cycle.', cooldown: 1.05 } },
+  spinup: { name: 'Spin-up', gun: 'rivet', mark: 'SU', line: 'The rate climbs while you hold the trigger, and the spread tightens at full speed.', time: 1.2, rate: 0.55, tighten: 0.4, tier2: { cost: 12, line: 'The spread no longer grows as you fire.' } },
+  longchain: { name: 'Long chain', gun: 'arc', mark: 'LC', line: 'The arc chains two more jumps.', chain: 2, tier2: { cost: 12, line: 'One more jump.', chain: 1 } },
+  barbed: { name: 'Barbed bolt', gun: 'harpoon', mark: 'BB', line: 'A bolt pins a lunging or charging creature for a moment and staggers a Bulwark.', pin: 1.2, tier2: { cost: 12, line: 'A longer pin, and the wound bleeds.', pin: 1.8, bleed: { dps: 5, t: 3 } } },
+  phosphor: { name: 'Phosphor', gun: 'flare', mark: 'PH', line: 'The burning ground lasts twice as long, and its light reaches further.', t: 2, tier2: { cost: 12, line: 'A wider light.', r: 1.3 } },
+  airburst: { name: 'Airburst', gun: 'mortar', mark: 'AB', line: 'The shell bursts a little wider.', r: 1.2, tier2: { cost: 12, line: 'Wider again.', r: 1.4 } },
+};
+export const MOD_ORDER = ['doublebarrel', 'spinup', 'longchain', 'barbed', 'phosphor', 'airburst'];
+/** how many units of a load one pickup carries, by gun (shells, rivets, rounds, bolts, flares) */
+export const AMMO_LOAD_AMOUNT = { slag: { scattergun: 8, rivet: 60, carbine: 40 }, rime: { scattergun: 8, harpoon: 4, flare: 5 }, pen: { rivet: 40, harpoon: 4, carbine: 30 } };
 /** every GUN in one stable order (save sorting, the HUD's list, the next / previous ring); a weapon occupies its place once owned. */
 export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'mortar'];
 /** the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has been key 6 since PT-013 and stays), 7..9 the guns PT-022 added, 0 the mortar (PT-027) */
@@ -332,6 +359,9 @@ export const PICKUPS = {
   armor_vest: { type: 'armor', amount: 50 },
   key_brass: { type: 'key', key: 'brass' },
 };
+// the load pickups (PT-056): `ld_<load>_<gun>`, one kind for every pairing LOADS allows (the toast names them, the sim adds the units to p.loads)
+for (const id of MOD_ORDER) PICKUPS[`mod_${id}`] = { type: 'mod', mod: id };                                  // PT-057: one pickup kind per mod
+for (const id of AMMO_LOAD_ORDER) for (const gun of AMMO_LOADS[id].guns) PICKUPS[`ld_${id}_${gun}`] = { type: 'load', load: id, gun, amount: AMMO_LOAD_AMOUNT[id][gun] };
 
 // radius > 0 means a solid circular collider; blocksCell marks props that make a whole 2 m cell impassable for pathing.
 export const PROPS = {

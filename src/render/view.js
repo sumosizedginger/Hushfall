@@ -109,7 +109,7 @@ export class GameView {
     this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
     this.stuckGeo = new THREE.CylinderGeometry(0.022, 0.022, 1.0, 6); this.stuckMat = new THREE.MeshLambertMaterial({ color: 0xaab8bc, emissive: 0x1a3a38 }); this.bolts = [];      // the harpoon's streak (a thin teal line, 0.22 s) and the bolt it leaves standing in a wall (12 s, the newest 24)
     this.burnDisc = new THREE.CircleGeometry(1, 24); this.flameGeo = new THREE.ConeGeometry(0.2, 0.75, 6); this.burnViews = new Map(); this.burnLight = new THREE.PointLight(0xff8a30, 0, 14, 2); scene.add(this.burnLight);
-    this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 });       // the Vael's light going out of a body; the spark of a blow
+    this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 }); this.emberMat = new THREE.MeshBasicMaterial({ color: 0xff8a2a }); this.frostMat = new THREE.MeshBasicMaterial({ color: 0xbfeaff });          // PT-056: embers off a creature alight, frost off a chilled one       // the Vael's light going out of a body; the spark of a blow
     // PT-022: the rocket's light and smoke, the gravity tool's beam / shock rings / movable props, and what a boom's size does
     this.rocketLight = new THREE.PointLight(0xff9a40, 0, 16, 2); scene.add(this.rocketLight); this.puffGeo = new THREE.IcosahedronGeometry(0.16, 0); this.puffMat = new THREE.MeshBasicMaterial({ color: 0xa8a29a, transparent: true, opacity: 0.55, depthWrite: false }); this.puffs = [];
     this.woodMat = new THREE.MeshBasicMaterial({ color: 0x8a6a3a }); this.shocks = []; this.shockGeo = new THREE.TorusGeometry(1, 0.03, 4, 28); this.shockMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
@@ -155,7 +155,7 @@ export class GameView {
       if (e.type === 'fire') {
         const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower' || e.weapon === 'mortar', ch = e.charge ?? 0; this.recoil = sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
         this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
-        this.muzzleLight.color.setHex(sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour
+        this.muzzleLight.color.setHex(e.load === 'slag' ? 0xff7a2a : e.load === 'rime' ? 0x9fdcff : e.load === 'pen' ? 0xfff2c8 : sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour (a load its own: PT-056)
       }
       else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; this.vm.start(e.kind, e.tick * TICK); }
       else if (e.type === 'melee_hit') {
@@ -428,7 +428,7 @@ export class GameView {
       for (const b of w.burns || []) {
         live.add(b.id); let v = this.burnViews.get(b.id);
         if (!v) {
-          const g = new THREE.Group(), dm = new THREE.MeshBasicMaterial({ color: 0xff6a1a, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), fm = new THREE.MeshBasicMaterial({ color: 0xff9a2a, transparent: true, opacity: 0.9, depthWrite: false });
+          const g = new THREE.Group(), dm = new THREE.MeshBasicMaterial({ color: b.frost ? 0x8fd0ff : 0xff6a1a, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), fm = new THREE.MeshBasicMaterial({ color: b.frost ? 0xd8f2ff : 0xff9a2a, transparent: true, opacity: 0.9, depthWrite: false });
           const disc = new THREE.Mesh(this.burnDisc, dm); disc.rotation.x = -Math.PI / 2; disc.scale.setScalar(b.r); g.add(disc);
           const flames = []; for (let i = 0; i < 12; i++) { const f = new THREE.Mesh(this.flameGeo, fm), a = this.rnd() * Math.PI * 2, rr = Math.sqrt(this.rnd()) * b.r * 0.85; f.position.set(Math.cos(a) * rr, 0.3, Math.sin(a) * rr); f.userData.seed = this.rnd() * 10; g.add(f); flames.push(f); }
           g.position.set(b.x, b.y + 0.03, b.z); this.scene.add(g); v = { g, disc, flames, dm, fm }; this.burnViews.set(b.id, v);
@@ -439,7 +439,11 @@ export class GameView {
         const d = Math.hypot(b.x - this.cam.position.x, b.z - this.cam.position.z); if (d < nd) { nd = d; near = { b, fade }; }
       }
       for (const [id, v] of this.burnViews) if (!live.has(id)) { this.scene.remove(v.g); v.dm.dispose(); v.fm.dispose(); this.burnViews.delete(id); }
-      this.burnLight.intensity = near && nd < 18 ? 20 * (0.78 + 0.22 * Math.sin(this.time * 14) + 0.06 * Math.sin(this.time * 33)) * near.fade : 0; if (near) this.burnLight.position.set(near.b.x, near.b.y + 0.9, near.b.z);
+      if (near) this.burnLight.color.setHex(near.b.frost ? 0x9fdcff : 0xff8a30); this.burnLight.intensity = near && nd < 18 ? 20 * (0.78 + 0.22 * Math.sin(this.time * 14) + 0.06 * Math.sin(this.time * 33)) * near.fade : 0; if (near) this.burnLight.position.set(near.b.x, near.b.y + 0.9, near.b.z);
+    }
+    if (w.loadFx) {                                                                                                    // PT-056: a creature alight throws embers, a chilled one breathes frost (render only: it reads e.ignT / e.chillT)
+      this.loadMoteT = (this.loadMoteT ?? 0) - dt;
+      if (this.loadMoteT <= 0) { this.loadMoteT = 0.09; for (const e of w.enemies) { if (e.state === 'dead') continue; const hot = (e.ignT || 0) > 0; if (!hot && !((e.chillT || 0) > 0)) continue; const m = new THREE.Mesh(this.moteGeo, hot ? this.emberMat : this.frostMat), top = (ENEMIES[e.kind].height ?? 1.8) * (hot ? 0.8 : 0.5); m.position.set(e.x + (this.rnd() - 0.5) * 0.5, (e.y ?? 0) + 0.3 + this.rnd() * top, e.z + (this.rnd() - 0.5) * 0.5); this.scene.add(m); this.motes.push({ m, v: new THREE.Vector3((this.rnd() - 0.5) * 0.4, hot ? 0.9 + this.rnd() * 0.8 : 0.15, (this.rnd() - 0.5) * 0.4), life: 0.5 + this.rnd() * 0.4, max: 0.9 }); } }
     }
     for (let i = this.motes.length - 1; i >= 0; i--) { const m = this.motes[i]; m.life -= dt; m.m.position.addScaledVector(m.v, dt); m.v.y *= 1 - 0.8 * dt; m.m.scale.setScalar(Math.max(0.01, m.life / m.max)); if (m.life <= 0) { this.scene.remove(m.m); this.motes.splice(i, 1); } }
     // doors
@@ -521,7 +525,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     const freeMeshes = (o) => { if (o.isMesh) { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m?.dispose()); } };
     for (const s of [this.scene, this.weaponScene]) s.traverse(freeMeshes);
     for (const v of this.enemyViews.values()) if (!v.root.parent) v.root.traverse(freeMeshes);          // a sleeping creature's own rig is out of the scene (PT-054), its frozen copy is not: free both
-    this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.sparkMat.dispose();
+    this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.emberMat.dispose(); this.frostMat.dispose(); this.sparkMat.dispose();
     this.wardRingMat.dispose(); this.wardDiscMat.dispose();
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();

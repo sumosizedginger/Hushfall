@@ -1083,6 +1083,16 @@
    "kind": "bellhand",
    "at": [26, 19],
    "facing": -0.96
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_slag_scattergun",
+   "at": [20, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_slag_rivet",
+   "at": [22, 33]
   }
  ],
  "par": {

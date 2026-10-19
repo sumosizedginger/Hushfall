@@ -8,6 +8,9 @@ import { beltPush, beltAtCell } from './belts.js';                              
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
 import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS, CORPSES } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
+import { AMMO_LOADS } from './defs.js';
+import { modDef, modTier, addMod } from './mods.js';                                                                     // PT-057: weapon mods (lazy: only a player who has found one has `p.mods`)
+import { activeLoad, spendLoad, cycleLoad, loadedDef, applyLoadHit, addLoad } from './ammoloads.js';                    // PT-056: ammunition loads (lazy: only a player who has picked one up has `p.loads`)
 import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
@@ -53,7 +56,7 @@ export function arrivalInventory(carry, entry) {
   if (!carry) return entry ?? null; if (!entry) return carry;
   const ammo = { ...(carry.ammo ?? {}) }; for (const [k, v] of Object.entries(entry.ammo ?? {})) ammo[k] = Math.max(ammo[k] ?? 0, v);
   const weapons = [...new Set([...(carry.weapons ?? []), ...(entry.weapons ?? [])])].sort((x, y) => ALL_WEAPONS.indexOf(x) - ALL_WEAPONS.indexOf(y));
-  return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons, ...(carry.upgrades ? { upgrades: carry.upgrades } : {}) };      // the persistent upgrade tiers ride along: they are never part of a map's authored loadout
+  return { hp: Math.max(carry.hp ?? 0, entry.hp ?? 0), armor: Math.max(carry.armor ?? 0, entry.armor ?? 0), ammo, weapons, ...(carry.upgrades ? { upgrades: carry.upgrades } : {}), ...(carry.loads ? { loads: carry.loads, loadSel: carry.loadSel ?? {}, loadSeen: carry.loadSeen ?? {} } : {}), ...(carry.mods ? { mods: carry.mods } : {}) };      // the persistent upgrade tiers ride along: they are never part of a map's authored loadout
 }
 
 export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null, ammoScale = null, choices = null } = {}) {
@@ -75,6 +78,8 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       charge: 0,                                           // seconds the fire key has been held on a charging weapon (the lamp, the fists); the weapon fires on release
       swingT: -1, swingKind: null, swingHit: false,        // a melee swing in progress (-1 = none): seconds since it began, which move, whether its blow has landed
       guard: 0, guarding: false, parryW: 0, parryCd: 0, riposteT: 0, brokenT: 0,   // guard blend 0..1, the parry window left, the whiff cooldown, the riposte bonus left, the broken-guard lockout
+      ...(carry?.mods ? { mods: { ...carry.mods } } : {}),                                                                    // PT-057: found mods ride between maps (lazy)
+      ...(carry?.loads ? { loads: JSON.parse(JSON.stringify(carry.loads)), loadSel: { ...(carry.loadSel ?? {}) }, loadSeen: { ...(carry.loadSeen ?? {}) } } : {}),          // PT-056: ammunition loads ride between maps like ammunition (lazy: only a carry that has some)
       meleeWeapon: [...MELEE_ORDER].reverse().find((id) => (carry?.weapons ?? []).includes(id)) ?? 'fists', lastWeapon: null,              // what key 6 brings up (the heaviest found melee weapon you carry in, else the fists); what Q swaps back to
     },
     enemies: [], projectiles: [], enemyShots: [], pulses: [], pickups: [], doors: [], burns: [],      // burns: the flare cannon's burning ground
@@ -82,7 +87,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
     triggerState: Object.fromEntries(map.triggers.map((t) => [t.id, { fired: false }])), switchState: Object.fromEntries(map.switches.map((s) => [s.id, { used: false, on: false }])),
     exitLocked: Object.fromEntries(map.exits.map((x) => [x.id, !!x.locked])), objective: map.objective ?? null,
     upgrades: sanitizeUpgrades(carry?.upgrades),                         // the campaign's persistent upgrade tiers (progress.js): they set the ammunition and armour CAPS, nothing else; the sim never changes them
-    levelStart: { hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0, ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])], upgrades: sanitizeUpgrades(carry?.upgrades) },      // what Retry restores (never the mid-level inventory)
+    levelStart: { hp: carry?.hp ?? PLAYER.maxHp, armor: carry?.armor ?? 0, ammo: { ...(carry?.ammo ?? PLAYER.startAmmo) }, weapons: [...(carry?.weapons ?? ['flare'])], upgrades: sanitizeUpgrades(carry?.upgrades), ...(carry?.mods ? { mods: { ...carry.mods } } : {}), ...(carry?.loads ? { loads: JSON.parse(JSON.stringify(carry.loads)), loadSel: { ...(carry.loadSel ?? {}) }, loadSeen: { ...(carry.loadSeen ?? {}) } } : {}) },      // what Retry restores (never the mid-level inventory)
     secretsFound: [], messagesSeen: [], explored: new Array(map.w * map.h).fill(0),
     stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
     endStats: null,
@@ -279,15 +284,18 @@ export function noise(w, x, z, radius) {
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
 export function damageEnemy(w, e, dmg, opts = {}) {
   const def = ENEMIES[e.kind];
+  let plated = false;                                                                                                  // PT-056: did the plate turn this blow? (the penetrator load doubles what a plated creature takes)
   if (def.armor && !opts.splash && !opts.pierceArmor && !(def.armor.opens && e.attackT >= 0)) {                             // (a Bulwark Shell's carapace is open while it bashes, PT-028) plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore it
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
-    else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
+    else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; plated = true; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
   }
   if (!def.ward && !def.node && !def.boss) { const A = wardOf(w, e); if (A) { dmg *= ENEMIES.acolyte.ward.reduce; emit(w, 'ward_hit', { id: e.id, x: e.x, z: e.z }); } }          // PT-029: an awake Acolyte's ward
   if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
   else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;                                 // a staggered Cantor with its shield down takes more      // the Cantor sings through its ring
   if (def.unison) { const u = unisonMult(w, def); if (u < 1) { dmg *= u; if (u < 0.5) emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); } }                       // PT-043: the Hive Cantor takes a twentieth until its choir has fallen
-  if (def.bell && e.rb?.last) dmg *= def.bell.exposed;                                     // PT-043: the Root Bell's heart is open in the Last Note
+  if (def.bell && e.rb?.last) dmg *= def.bell.exposed;
+  if (opts.load) { const Q = opts.load; if (Q.plate && def.armor && (plated || opts.pierceArmor)) dmg *= Q.plate; if (Q.nodeMult && def.node) dmg *= Q.nodeMult; }          // PT-056: a load's own effect on the blow
+  if (e.brittle && !opts.burn) { if (e.brittleTick == null) e.brittleTick = w.tick; if (e.brittleTick === w.tick) dmg *= e.brittle; else { e.brittle = 0; e.brittleTick = null; } }          // PT-056: a chilled creature takes the next BLOW harder, once (every pellet of that volley: they land on one tick)                                     // PT-043: the Root Bell's heart is open in the Last Note
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
   e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
   if (def.peaceful && e.hp > 0) frighten(w, e, w.player.x, w.player.z);                                  // PT-037: hurt, it runs (from the one who did it)
@@ -310,7 +318,7 @@ function setSlow(e, k, t) {
 }
 const SLOW_MAX = 1.0, SLOW_IMMUNE = 0.9;
 /** the speed multiplier a flinch or a rivet's slow leaves an enemy with */
-const moveMult = (e) => ((e.slowT || 0) > 0 ? 1 - (e.slowK || 0) : 1);
+const moveMult = (e) => ((e.slowT || 0) > 0 ? 1 - (e.slowK || 0) : 1) * ((e.chillT || 0) > 0 ? 1 - (e.chillK ?? 0.4) : 1);          // (PT-056: a rime load's chill)
 /**
  * `h` is a weapon's `hit` block or a melee move. flinch: a short stumble (`flinchK`, default 50%, slower) that is shorter for the heavy (÷ poise); slow/slowT: the rivets; interrupt: inside that many metres the hit breaks the windup of the blow it lands on;
  * cancelLunge: it breaks a Gaunt's lunge windup; stun: a stagger (the elites take half, the bosses none). Bosses and nodes shrug off interrupts (poise 3 and above).
@@ -326,19 +334,41 @@ export function hitEffects(w, e, h, dist = 99) {
   }
   if (h.stun && !def.node && poise < 8) e.stunT = Math.max(e.stunT || 0, h.stun / (poise >= 3 ? 2 : 1));
 }
+/** PT-056: the statuses a load leaves: a creature alight burns (and is put out by water), a chilled one thaws. Runs only once a load has hit something (`w.loadFx`). */
+function loadFxStep(w, dt) {
+  for (const e of w.enemies) {
+    if (e.state === 'dead') { e.ignT = 0; e.chillT = 0; continue; }
+    if (e.brittleTick != null && e.brittleTick < w.tick) { e.brittle = 0; e.brittleTick = null; }                              // the blow that used the brittleness is over: it is gone
+    if ((e.ignT || 0) > 0) {
+      const c = fxAt(w, e.x, e.z);
+      if (c === 'w' || FX[c]?.water) { e.ignT = 0; emit(w, 'load_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z, fx: 'quench' }); }
+      else { e.ignT -= dt; damageEnemy(w, e, (e.ignDps || 0) * dt, { burn: true }); if (e.ignT <= 0) { e.ignT = 0; e.ignDps = 0; } }
+    }
+    if ((e.bleedT || 0) > 0) { e.bleedT -= dt; damageEnemy(w, e, (e.bleedDps || 0) * dt, { burn: true }); if (e.bleedT <= 0) { e.bleedT = 0; e.bleedDps = 0; } }          // PT-057: the barbed bolt's wound
+    if ((e.chillT || 0) > 0) { e.chillT -= dt; if (e.chillT <= 0) { e.chillT = 0; e.brittle = 0; e.brittleTick = null; } }
+  }
+}
+/** PT-056: a load's mark on a creature that survived the shot (slag lights it unless it stands in water, rime chills it); the event tells the view and the sound which */
+function loadHitEffect(w, e, id) {
+  const c = fxAt(w, e.x, e.z), fx = applyLoadHit(e, id, c === 'w' || !!FX[c]?.water); if (!fx) return;
+  w.loadFx = true; emit(w, 'load_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z, fx });
+}
 /** burning ground (the flare cannon): a patch of fire that burns the enemies standing in it for a few seconds. Plain data in w.burns. */
 function ignite(w, x, y, z, B) {
   const gy = floorAt(w, x, z); if (y - gy > 1.6) return;                                        // a flare that burst high on a wall leaves no fire on the floor far below
-  w.burns.push({ id: 'b' + w.tick + '_' + w.burns.length, x, z, y: gy, r: B.r, t: B.t, max: B.t, dps: B.dps });          // (not w.nextId: the ids of real entities steer their pathing, and a patch of fire must not shift them)
+  w.burns.push({ id: 'b' + w.tick + '_' + w.burns.length, x, z, y: gy, r: B.r, t: B.t, max: B.t, dps: B.dps, ...(B.frost ? { frost: true } : {}) });          // (not w.nextId: the ids of real entities steer their pathing, and a patch of fire must not shift them)
   while (w.burns.length > (B.max ?? 8)) w.burns.shift();
-  emit(w, 'burn', { x, y: gy, z, r: B.r, t: B.t });
+  emit(w, 'burn', { x, y: gy, z, r: B.r, t: B.t, ...(B.frost ? { frost: true } : {}) });
 }
 function updateBurns(w, dt) {
   for (let i = w.burns.length - 1; i >= 0; i--) {
     const b = w.burns[i]; b.t -= dt; if (b.t <= 0) { w.burns.splice(i, 1); continue; }
     for (const e of w.enemies) {
       if (e.state === 'dead') continue; const d = ENEMIES[e.kind]; if (d.node || d.flying) continue;
-      if (Math.hypot(e.x - b.x, e.z - b.z) < b.r + 0.2 && Math.abs((e.y ?? 0) - b.y) < 1.0) damageEnemy(w, e, b.dps * dt, { burn: true });
+      if (Math.hypot(e.x - b.x, e.z - b.z) < b.r + 0.2 && Math.abs((e.y ?? 0) - b.y) < 1.0) {
+        if (b.frost) { e.chillT = Math.max(e.chillT || 0, 0.8); e.chillK = AMMO_LOADS.rime.chill.slow; e.ignT = 0; w.loadFx = true; }          // PT-056: a rime flare's ground chills whoever stands in it and puts their fire out
+        else damageEnemy(w, e, b.dps * dt, { burn: true });
+      }
     }
   }
 }
@@ -372,7 +402,8 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
     const ed = ENEMIES[e.kind], base = e.y + (e.lift ?? (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0))), lo = ed.hover || e.lift != null ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
       let dmg = def.splashDamage * (1 - d / def.splash) + def.direct; if (e === struck && def.directHit) dmg += def.directHit; if (ed.node && def.nodeMult) dmg *= def.nodeMult;       // PT-022: the rocket's direct hit, and a bell node takes the blast twice over
-      const killed = damageEnemy(w, e, dmg, { splash: true });
+      const killed = damageEnemy(w, e, dmg, def.load ? { splash: true, load: AMMO_LOADS[def.load] } : { splash: true });
+      if (def.load && !killed) loadHitEffect(w, e, def.load);
       const k = (def.knock ?? 0.8) * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
       if (!killed) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     }
@@ -389,28 +420,31 @@ function fireHitscan(w, def, cone) {
   for (let i = 0; i < def.pellets; i++) {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone });
     let x = p.x, y = p.y + PLAYER.eye, z = p.z, target = null, stop = false, dist = 0;
-    for (dist = 0.25; dist <= def.range && !target && !stop; dist += 0.25) {
+    const march = (skipE) => { target = null; for (dist += 0.25; dist <= def.range && !target && !stop; dist += 0.25) {
       x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
       if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) { stop = true; if (pr.kind === 'chime' && w.chimes && !struckChimes.has(pr)) struckChimes.add(pr); }
       if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
       if (stop) break;
-      for (const e of w.enemies) if (e.state !== 'dead' && insideHit(e, x, y, z, 0.05)) { target = e; break; }
-    }
-    if (target) {
+      for (const e of w.enemies) if (e.state !== 'dead' && e !== skipE && insideHit(e, x, y, z, 0.05)) { target = e; break; }
+    } };
+    march(null);
+    for (let through = 0, first = true; target && through <= (def.through ?? 0); through++, first = false) {
       const fall = dist <= def.falloffStart ? 1 : 1 - (1 - def.falloffMin) * Math.min(1, (dist - def.falloffStart) / (def.range - def.falloffStart));
-      let mult = 1;
+      let mult = first ? 1 : AMMO_LOADS[def.load].throughMult;
       if (def.head && !ENEMIES[target.kind].node) { const c = hitCylinder(target); if (y >= c.y0 + (c.y1 - c.y0) * def.head.from) mult = def.head.mult; }       // PT-022, the carbine: a round in the top of the body
-      const killed = damageEnemy(w, target, def.damage * fall * mult);
+      const killed = damageEnemy(w, target, def.damage * fall * mult, def.load ? { load: AMMO_LOADS[def.load] } : undefined);
       if (mult > 1) { heads.add(target); emit(w, 'headshot', { id: target.id, x: target.x, y, z: target.z, killed }); }
       if (!killed) hits.set(target.id, target);
       const k = push.get(target.id) || { e: target, x: 0, z: 0 }; k.x += f[0] * def.knock * fall; k.z += f[2] * def.knock * fall; push.set(target.id, k);      // applied after the volley: pellets are simultaneous
-    } else if (stop && impacts < 3 && i % 3 === 0) { emit(w, 'impact', { x, y, z }); impacts++; }
+      if (through < (def.through ?? 0)) { const t0 = target; march(t0); if (!target) break; }          // PT-056: the penetrator goes on through one more body
+    }
+    if (!target && stop && impacts < 3 && i % 3 === 0) { emit(w, 'impact', { x, y, z }); impacts++; }
   }
   for (const pr of struckChimes) strikeChime(w, pr, emit);                                                  // PT-038: a shot that stopped on a chime struck it (once a volley)
   const range0 = new Map([...hits.values()].map((e) => [e, Math.hypot(e.x - p.x, e.z - p.z)]));                    // how far it was when it was hit: before the knockback carries it away
   for (const k of push.values()) tryMove(w, k.e, k.x, k.z, ENEMIES[k.e.kind].radius);
-  for (const e of hits.values()) if (e.state !== 'dead') { hitEffects(w, e, def.hit, range0.get(e)); if (heads.has(e)) hitEffects(w, e, { flinch: def.head.flinch }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+  for (const e of hits.values()) if (e.state !== 'dead') { if (def.load) loadHitEffect(w, e, def.load); hitEffects(w, e, def.hit, range0.get(e)); if (heads.has(e)) hitEffects(w, e, { flinch: def.head.flinch }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
 }
 
 /** The harpoon bolt: one ray from the eye, it stops at walls, closed doors and solid props, and goes THROUGH bodies: up to 1 + def.pierce of them, the later ones for def.pierceDamage of the damage.
@@ -429,15 +463,22 @@ function fireBolt(w, def, cone) {
   const survivors = [];
   hit.forEach((e, i) => {
     const mult = i === 0 ? 1 : def.pierceDamage;
-    if (!damageEnemy(w, e, def.damage * mult, { pierceArmor: def.pierceArmor })) survivors.push(e);
+    if (!damageEnemy(w, e, def.damage * mult, def.load ? { pierceArmor: def.pierceArmor, load: AMMO_LOADS[def.load] } : { pierceArmor: def.pierceArmor })) survivors.push(e);
     tryMove(w, e, f[0] * def.knock * mult, f[2] * def.knock * mult, ENEMIES[e.kind].radius);
   });
   if (stop) emit(w, 'impact', { x, y, z });
   emit(w, 'bolt', { x0, y0, z0, x1: x, y1: y, z1: z, stuck: stop });
   const pin = def.hit?.pin;
   for (const e of survivors) if (e.state !== 'dead') {
+    if (def.load) loadHitEffect(w, e, def.load);
     hitEffects(w, e, def.hit, Math.hypot(e.x - x0, e.z - z0));
     const ed = ENEMIES[e.kind];
+    if (def.barbed) {                                                                                  // PT-057: the barbed bolt pins a lunging or charging creature, staggers a Bulwark, and (tier two) the wound bleeds
+      const B = def.barbed;
+      if (!ed.boss && !ed.node && ((e.lungeT ?? -1) >= 0 || (e.chargeT ?? -1) >= 0)) { e.stunT = Math.max(e.stunT || 0, B.pin); e.attackT = -1; e.lungeT = -1; e.chargeT = -1; emit(w, 'pin', { id: e.id, x: e.x, z: e.z }); }
+      else if (ed.armor?.opens !== undefined && !ed.boss) { e.stunT = Math.max(e.stunT || 0, B.pin); e.attackT = -1; emit(w, 'pin', { id: e.id, x: e.x, z: e.z }); }
+      if (B.bleed) { e.bleedT = Math.max(e.bleedT || 0, B.bleed.t); e.bleedDps = B.bleed.dps; w.loadFx = true; }
+    }
     if (pin && !ed.boss && !ed.node && !ed.armor && (ed.poise ?? 1) < 3) {                      // a wall close behind it: the bolt nails it there
       let walled = false; for (let s = 0.4; s <= pin.wall && !walled; s += 0.25) { const qx = e.x + f[0] * s, qz = e.z + f[2] * s; walled = cellSolid(w, Math.floor(qx / map.cell), Math.floor(qz / map.cell)) || map.props.some((pr) => PROPS[pr.kind].radius > 0 && Math.hypot(qx - pr.x, qz - pr.z) < PROPS[pr.kind].radius); }
       if (walled) { e.stunT = Math.max(e.stunT || 0, pin.t); e.attackT = -1; e.lungeT = -1; e.chargeT = -1; emit(w, 'pin', { id: e.id, x: e.x, z: e.z }); }
@@ -581,22 +622,25 @@ function chargeInput(w, cmd, def, canAct) {
 }
 
 function fireWeapon(w, charge = 0) {
-  const p = w.player, def = WEAPONS[p.weapon];
+  const p = w.player, def0 = WEAPONS[p.weapon], def = p.mods ? modDef(def0, p.weapon, p, { tier: (id) => modTier(w, id), ammo: p.ammo[def0.ammo], spin: p.spinT }) : def0;          // PT-057: the gun as a mod leaves it
   if (def.kind === 'melee') { startSwing(w, p.weapon === 'fists' ? 'jab' : p.weapon); return; }
-  if ((p.ammo[def.ammo] || 0) < (def.cost ?? 1)) { p.cooldown = 0.4; emit(w, 'dry'); return; }
+  const ldId = p.loadSel ? activeLoad(p, p.weapon) : null;                                                       // PT-056: a selected load with enough in it is fired INSTEAD of the standard ammunition
+  if (!ldId && (p.ammo[def.ammo] || 0) < (def.cost ?? 1)) { p.cooldown = 0.4; emit(w, 'dry'); return; }
   // the lamp: 0 = the tap arc (one cell); a charge spends more cells for a bigger bolt, as many as are left
   let cf = 0, cost = def.cost ?? 1;
   if (def.kind === 'arc' && def.charge) {
     const C = def.charge; cf = charge < C.min ? 0 : Math.min(1, (charge - C.min) / (C.max - C.min)); cost = cf === 0 ? 1 : 1 + Math.round(cf * (C.cells - 1));
     const have = p.ammo[def.ammo]; if (cost > have) { cf = cf * (have - 1) / Math.max(1, cost - 1); cost = have; }
   }
-  p.ammo[def.ammo] -= cost; p.cooldown = def.cooldown + cf * (def.charge?.recover ?? 0); p.kick = (def.kick ?? 0.06) * (1 + 6 * cf); w.stats.shots++;
+  if (ldId) { if (spendLoad(p, p.weapon, ldId)) emit(w, 'load_empty', { gun: p.weapon, load: ldId }); } else p.ammo[def.ammo] -= cost;
+  const fdef = ldId ? loadedDef(def, p.weapon, ldId) : def;
+  p.cooldown = def.cooldown + cf * (def.charge?.recover ?? 0); p.kick = (def.kick ?? 0.06) * (1 + 6 * cf); w.stats.shots++;
   // accuracy: hip spread grows with movement; aiming tightens it. RNG draws happen in a fixed order so replays are deterministic.
   const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
   const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0)) * (1 + SUPPRESS.cone * Math.min(1, (p.suppT || 0) / SUPPRESS.time));
   if (def.heatPerShot) p.heat = Math.min(1, heat + def.heatPerShot);                                     // holding the trigger blooms the pattern
   if (def.kind === 'arc') fireArc(w, def, cf);
-  else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, def, cone);
+  else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, fdef, cone);
   else if (def.designate) {                                                                                 // PT-027: the mortar throws the shell TO the point the crosshair rests on (the landing, not the aim, is what the unsteady hand scatters)
     const f = forwardVec(p), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)], mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads), jitter = [(rand(w) * 2 - 1) * cone, (rand(w) * 2 - 1) * cone];
     const from = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight], s = mortarShot(w, p, def, f, from, jitter);
@@ -607,9 +651,9 @@ function fireWeapon(w, charge = 0) {
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
     const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
     const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
-    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4 });
+    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4, ...(ldId ? { load: ldId } : {}) });
   }
-  emit(w, 'fire', { weapon: p.weapon, charge: cf }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));
+  emit(w, 'fire', { weapon: p.weapon, charge: cf, ...(ldId ? { load: ldId } : {}) }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));
 }
 
 
@@ -1106,6 +1150,7 @@ export function step(w, cmd) {
   const p = w.player, diff = DIFFICULTY[w.difficulty], dt = TICK, map = w.map;
   w.tick++; w.time = w.tick * dt; if (w.tick % CORPSES.every === 0) trimCorpses(w);                          // PT-050 H-L4: the born corpses beyond the cap leave (nothing changes for a run that has fewer)
   if (p.suppT > 0) p.suppT = Math.max(0, p.suppT - dt); if (p.graftT > 0) p.graftT = Math.max(0, p.graftT - dt);
+  if (cmd.load && p.hp > 0 && p.switchT <= 0) { const r = cycleLoad(p, p.weapon); emit(w, r ? 'load_cycle' : 'load_none', r ?? { gun: p.weapon }); }          // PT-056: the key that turns the gun to its next load
   if (p.lamp) updateLamp(w, cmd, dt); if (map.dark) w.lit = playerLit(w);                         // PT-038 (E5)
   if (map.cars.length && !p.air) carryRider(w, p, dt);                                     // PT-045 (E8b): a car carries what stands on it, before anything else moves
   updateSectors(w, dt); if (!p.air) p.y = groundAt(w, p.x, p.z, PLAYER.radius);          // moving floors carry whoever stands on them (a body in the air keeps its own height)
@@ -1176,6 +1221,7 @@ export function step(w, cmd) {
   // swings in progress, the quick bash (V), the fire key. A charging weapon (the lamp, the fists) charges while the key is held and fires on release.
   updateSwing(w, dt);
   if (cmd.melee && p.swingT < 0 && p.switchT <= 0 && p.hp > 0) { if (isMelee(p.weapon)) { if (p.cooldown <= 0) startSwing(w, p.weapon === 'fists' ? 'jab' : p.weapon); } else startSwing(w, 'bash'); }
+  if (p.mods?.spinup) p.spinT = cmd.fire && p.weapon === 'rivet' ? Math.min(2, (p.spinT || 0) + dt) : Math.max(0, (p.spinT || 0) - 2.5 * dt);          // PT-057: the rivet driver's spin-up climbs while the trigger is held and runs down when it is let go
   const canAct = p.cooldown <= 0 && p.switchT <= 0 && !p.sprinting && p.recover <= 0 && p.swingT < 0;               // no firing mid-switch, mid-swing or from the sprint pose
   const wdef = WEAPONS[p.weapon];
   if (p.saw && !wdef.saw) { p.saw.spin = 0; p.saw.eng = false; }                                              // a saw put away stops running
@@ -1205,7 +1251,7 @@ export function step(w, cmd) {
   if (map.cars.length) updateCars(w);
 
   // enemies + their shots + the fire on the ground
-  updateBurns(w, dt);
+  updateBurns(w, dt); if (w.loadFx) loadFxStep(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
   updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.spikes) updateSpikes({ w, dt, emit, diff, spikes: ENEMIES.rootbell.bell.spikes, hurt: (d) => hurtPlayer(w, d) }); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
 
@@ -1221,7 +1267,7 @@ export function step(w, cmd) {
       if (w.phys && physAt(w, q.x, q.y, q.z)) hit = true;
       for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { hit = true; struck ??= e; }
     }
-    if (hit) { w.projectiles.splice(i, 1); explode(w, q.x, q.y, q.z, true, def, struck); }
+    if (hit) { w.projectiles.splice(i, 1); const sd = q.load ? loadedDef(def, q.weapon, q.load) : def; explode(w, q.x, q.y, q.z, true, p.mods ? modDef(sd, q.weapon, p, { tier: (id) => modTier(w, id) }) : sd, struck); }
   }
 
   // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing: the flare cannon's feed drops one flare after a few seconds (and again each time it is spent).
@@ -1239,13 +1285,15 @@ export function step(w, cmd) {
     else if (def.type === 'armor' && p.armor < aCap) { p.armor = Math.min(aCap, p.armor + def.amount); took = true; }
     else if (def.type === 'ammo' && (p.ammo[def.ammo] || 0) < mCap) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; took = true; }
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
+    else if (def.type === 'mod') took = addMod(p, def.mod);                                                                     // PT-057: a found mod stays with the gun for good
+    else if (def.type === 'load' && p.weapons.includes(def.gun)) { const got = addLoad(p, def.gun, def.load, Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1)), Math.floor(ammoCap(WEAPONS[def.gun].ammo, w.upgrades) * AMMO_LOADS[def.load].cap)); took = got > 0; }          // PT-056
     else if (def.type === 'oil' && p.lamp && p.lamp.oil < p.lamp.max) { p.lamp.oil = Math.min(p.lamp.max, p.lamp.oil + def.amount); took = true; }          // PT-038: lamp oil (only where there is a lantern, and not past its tank)
     else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (def.ammo && (p.ammo[def.ammo] || 0) < mCap))) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => ALL_WEAPONS.indexOf(a) - ALL_WEAPONS.indexOf(b)); p.lastWeapon = p.weapon; p.weapon = def.weapon; if (isMelee(def.weapon)) p.meleeWeapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; p.charge = 0; p.swingT = -1; }
       if (def.ammo) { const was = p.ammo[def.ammo] || 0; p.ammo[def.ammo] = Math.min(mCap, was + Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1))); (w.stats.gained ??= {})[def.ammo] = (w.stats.gained[def.ammo] || 0) + p.ammo[def.ammo] - was; }
       took = true;
     }
-    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key' && !it.drop) w.stats.items++; emit(w, def.type === 'weapon' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
+    if (took) { w.pickups.splice(i, 1); if (def.type !== 'key' && !it.drop) w.stats.items++; emit(w, def.type === 'weapon' || def.type === 'mod' ? 'weapon_pickup' : 'pickup', def.type === 'key' && map.keyLabels?.[def.key] ? { kind: it.kind, label: map.keyLabels[def.key] } : { kind: it.kind }); }
   }
 
   if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) {
@@ -1279,7 +1327,7 @@ export function step(w, cmd) {
 export const restartWorld = (w) => createWorld(w.map, { seed: w.seed, difficulty: w.difficulty, carry: w.levelStart });
 
 /** Inventory carried into the next map / level-start checkpoint. Keys do not carry. */
-export const carryOver = (w) => ({ hp: Math.max(1, w.player.hp), armor: w.player.armor, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons], upgrades: { ...w.upgrades } });
+export const carryOver = (w) => ({ hp: Math.max(1, w.player.hp), armor: w.player.armor, ammo: { ...w.player.ammo }, weapons: [...w.player.weapons], upgrades: { ...w.upgrades }, ...(w.player.mods ? { mods: { ...w.player.mods } } : {}), ...(w.player.loads ? { loads: JSON.parse(JSON.stringify(w.player.loads)), loadSel: { ...(w.player.loadSel ?? {}) }, loadSeen: { ...(w.player.loadSeen ?? {}) } } : {}) });
 
 export function hashWorld(w) {
   const s = JSON.stringify(w, (k, v) => (typeof v === 'number' ? Math.round(v * 1e5) / 1e5 : v));

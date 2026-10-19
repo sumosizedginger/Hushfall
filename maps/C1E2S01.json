@@ -614,6 +614,21 @@
    "type": "pickup",
    "kind": "ammo_rocket",
    "at": [27, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_rime_scattergun",
+   "at": [33, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_rime_harpoon",
+   "at": [33, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_rime_flare",
+   "at": [44, 17]
   }
  ],
  "par": {

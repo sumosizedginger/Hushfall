@@ -170,6 +170,10 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[CX - 6, CZ + 19, CX + 6, CZ + 25]] };
 console.log('C1E4M03: enemies', ents.filter((e) => e.type === 'enemy').length, 'vacuum strips', VACUUM.length);
+// ---- PT-056 (R9, ammunition loads): rime for the scattergun and the flare, in the hub of the cold dock, on the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["ld_rime_scattergun",46,52],["ld_rime_flare",46,54]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-056 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E4M03', lane: [...(laneOf('C1E4M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1},{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
 ENC.apply(MAP);

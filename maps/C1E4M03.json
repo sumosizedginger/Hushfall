@@ -1032,6 +1032,16 @@
      "message": "air"
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_rime_scattergun",
+   "at": [43, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_rime_flare",
+   "at": [43, 50]
   }
  ],
  "par": {

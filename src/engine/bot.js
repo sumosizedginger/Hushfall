@@ -7,6 +7,7 @@ import { gateRemaining, sporeState } from './breath.js';
 import { platformReady } from './platforms.js';
 import { lockBusy } from './airlock.js';                                                  // PT-033: a lock's second door waits for the air: the bot stands and waits, as it does at a sound-lock
 import { loadState, loadAtCell } from './loads.js';
+import { activeLoad, loadCount, loadCost } from './ammoloads.js';                            // PT-056: the bot reads the pairing table of the ammunition loads (only once it carries one)
 import { conditionMet } from './script.js';                                                // PT-046: the waitfor op asks the same question a trigger does
 import { carState, carCovers } from './cars.js';                                           // PT-046: the ride op
 
@@ -83,6 +84,15 @@ export class Bot {
     if (!best && bossT) return bossT;                                                                         // (the conductor only when nothing else is in reach: its summoned Choristers first, as a human would)
     return best ? { e: best, d: bd } : null;
   }
+  /** PT-056: the pairing table. Plate: the penetrator. A bell node, or something that dashes (a Gaunt): rime. Anything of some substance (a pack, 40 hit points and over) that is not standing in water: slag. Otherwise the standard. */
+  wantLoad(t, gun) {
+    const w = this.w, p = w.player, d = ENEMIES[t.e.kind], has = (id) => loadCount(p, gun, id) >= loadCost(id, gun);
+    if (d.armor && has('pen')) return 'pen';
+    if ((d.node || d.lunge) && has('rime')) return 'rime';
+    const c = fxAt(w, t.e.x, t.e.z), wet = c === 'w' || !!FX[c]?.water;
+    if (!wet && !d.node && !d.boss && (t.e.hp >= 40 || w.enemies.some((e) => e !== t.e && e.state !== 'dead' && e.state !== 'idle' && Math.hypot(e.x - t.e.x, e.z - t.e.z) < 4.5)) && has('slag')) return 'slag';
+    return null;
+  }
   fight(t) {
     const w = this.w, p = w.player;
     // weapon choice: scattergun for Gaunts and anything close (if it has shells), flare cannon for range
@@ -101,6 +111,9 @@ export class Bot {
       if (!has(wantId)) { const alt = ['rivet', 'harpoon', 'scattergun', 'carbine', 'arc', 'flare'].find((id) => has(id) && (id !== 'arc' || t.d < 11) && (id !== 'scattergun' || t.d < 12)); if (alt) wantId = alt; }
     }
     if (p.weapon !== wantId && p.weapons.includes(wantId) && w.tick - (this.lastSwitch ?? -99) > 30) { const key = wantId === 'flare' ? 'weapon1' : wantId === 'scattergun' ? 'weapon2' : wantId === 'rivet' ? 'weapon3' : wantId === 'harpoon' ? 'weapon4' : wantId === 'arc' ? 'weapon5' : 'weapon7'; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }        // a slot key is a tap: released next tick, or the same slot could never be pressed again
+    if (p.loads?.[p.weapon] && p.weapon === wantId && p.switchT <= 0 && w.tick - (this.lastLoadKey ?? -99) > 14) {                                // PT-056: turn the gun to the load the pairing table names for this target (none = the standard); one tap at a time, the sim cycles in order
+      const want = this.wantLoad(t, p.weapon); if (want !== activeLoad(p, p.weapon)) { this.in.press('load'); this.releaseLoad = true; this.lastLoadKey = w.tick; }
+    }
     const def = BOT_GUNS.has(p.weapon) || (lastResort && p.weapon === 'carbine') ? WEAPONS[p.weapon] : WEAPONS[wantId], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
     const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
@@ -378,6 +391,7 @@ export class Bot {
   tick() {
     if (this.pendingRelease) { this.in.release(this.pendingRelease); this.pendingRelease = null; }
     if (this.releaseMelee) { this.in.release('melee'); this.releaseMelee = false; }
+    if (this.releaseLoad) { this.in.release('load'); this.releaseLoad = false; }
     if (this.failed || this.done) return;
     const w = this.w, p = w.player, op = this.route[this.i];
     if (this.usePressed && this.in.down.has('use')) { this.in.release('use'); }   // 1-tick press: released the tick after

@@ -53,7 +53,11 @@ export function soundsForEvent(e) {
     case 'guard_up': return [{ id: 'guard_up' }];
     case 'block': return [{ id: 'block' }];
     case 'guard_break': return [{ id: 'guard_break' }];
-    case 'burn': return [{ id: 'burn_start', pos: at(e) }];
+    case 'burn': return [{ id: e.frost ? 'chill_crack' : 'burn_start', pos: at(e) }];
+    case 'load_cycle': return [{ id: 'load_click', gain: 0.7 }];                                                              // PT-056: ammunition loads: the key that turns the gun to its next load
+    case 'load_none': return [{ id: 'dry_click', gain: 0.5 }];
+    case 'load_empty': return [{ id: 'load_click', gain: 0.45 }];
+    case 'load_hit': return [{ id: e.fx === 'ignite' ? 'ignite_hiss' : e.fx === 'chill' ? 'chill_crack' : 'quench_hiss', pos: at(e), gain: 0.8 }];
     case 'pin': return [{ id: 'pin_thunk', pos: at(e) }];
     case 'dry': return [{ id: 'dry_click' }];
     case 'weapon_switch': return [{ id: 'weapon_switch' }];

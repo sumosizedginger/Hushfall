@@ -1,7 +1,8 @@
 // Versioned save data. Policy: a save is either migrated to the current version or rejected with an explicit reason.
 // Nothing is ever silently coerced. Unknown/newer versions and corrupt files are reported, not loaded.
 import { createWorld, carryOver } from './world.js';
-import { ENEMIES, WEAPONS, KEYS, PICKUPS, DIFFICULTY, PLAYER, AMMO_MAX } from './defs.js';
+import { ENEMIES, WEAPONS, KEYS, PICKUPS, DIFFICULTY, PLAYER, AMMO_MAX, AMMO_LOADS, MODS } from './defs.js';
+import { loadFits } from './ammoloads.js';
 import { newProgress, sanitizeProgress, armorCap, ammoCap } from './progress.js';
 
 export const SAVE_MAGIC = 'HUSHFALL_SAVE';
@@ -87,6 +88,15 @@ const absurd = (v, cap) => !num(v) || v < 0 || v > cap * 2 + 10;
 const SAVE_STATUS = ['playing', 'dead', 'complete'];
 const HIDDEN_OR_DANGEROUS = new Set(['__proto__', 'constructor', 'prototype']);
 
+/** PT-056: the ammunition loads a player carries ({ gun: { load: units } }) and which is selected ({ gun: load }): known guns, known loads that fit the gun, counts the sim could have made (a share of the standard cap) */
+function loadErrors(loads, sel, up, where) {
+  const bad = [];
+  if (loads !== undefined) { if (!loads || typeof loads !== 'object' || Array.isArray(loads)) bad.push(where + ' loads is not an object'); else for (const [g, L] of Object.entries(loads)) { if (!own(WEAPONS, g) || !WEAPONS[g].ammo || !L || typeof L !== 'object' || Array.isArray(L)) { bad.push(where + ' loads.' + g); continue; } for (const [id, n] of Object.entries(L)) if (!own(AMMO_LOADS, id) || !loadFits(id, g) || absurd(n, ammoCap(WEAPONS[g].ammo, up) * AMMO_LOADS[id].cap)) bad.push(where + ' loads.' + g + '.' + id + ' = ' + String(n)); } }
+  if (sel !== undefined) { if (!sel || typeof sel !== 'object' || Array.isArray(sel)) bad.push(where + ' loadSel is not an object'); else for (const [g, id] of Object.entries(sel)) if (!own(WEAPONS, g) || !own(AMMO_LOADS, id) || !loadFits(id, g)) bad.push(where + ' loadSel.' + g + ' = ' + String(id)); }
+  return bad;
+}
+/** PT-057: the mods a player owns ({ id: 1 }): known mods only */
+const modErrors = (mods, where) => (mods === undefined ? [] : !mods || typeof mods !== 'object' || Array.isArray(mods) ? [where + ' mods is not an object'] : Object.entries(mods).filter(([id, v]) => !own(MODS, id) || v !== 1).map(([id, v]) => where + ' mods.' + id + ' = ' + String(v)));
 /** what a level carries in (hit points, armour, ammunition, guns): only the fields that are present are checked, each against what the sim could have produced */
 export function carryErrors(c) {
   if (!c || typeof c !== 'object' || Array.isArray(c)) return ['carry is not an object'];
@@ -95,6 +105,7 @@ export function carryErrors(c) {
   if (c.armor !== undefined && absurd(c.armor, armorCap(up))) bad.push('carry armor ' + String(c.armor));
   if (c.ammo !== undefined) { if (!c.ammo || typeof c.ammo !== 'object' || Array.isArray(c.ammo)) bad.push('carry ammo is not an object'); else for (const [k, v] of Object.entries(c.ammo)) if (!own(AMMO_MAX, k) || absurd(v, ammoCap(k, up))) bad.push('carry ammo ' + k + ' = ' + String(v)); }
   if (c.weapons !== undefined && (!Array.isArray(c.weapons) || !c.weapons.every((id) => own(WEAPONS, id)))) bad.push('carry weapons is not a list of known weapons');
+  bad.push(...loadErrors(c.loads, c.loadSel, up, 'carry'), ...modErrors(c.mods, 'carry'));
   return bad.slice(0, 6);
 }
 /** a finished map's numbers: the rank and the salvage are computed from them, so a "complete" world without them cannot be played on (or paid for) */
@@ -118,6 +129,7 @@ export function worldValueErrors(snap, map = null) {
     if (!Array.isArray(P.keys) || !P.keys.every((k) => own(KEYS, k))) bad.push('player.keys is not a list of known keys');
     if (absurd(P.hp, PLAYER.maxHp)) bad.push('player.hp ' + String(P.hp)); if (absurd(P.armor, armorCap(up))) bad.push('player.armor ' + String(P.armor));
     if (!P.ammo || typeof P.ammo !== 'object' || Array.isArray(P.ammo)) bad.push('player.ammo is not an object'); else for (const [k, v] of Object.entries(P.ammo)) if (!own(AMMO_MAX, k) || absurd(v, ammoCap(k, up))) bad.push('player.ammo.' + k + ' = ' + String(v));
+    bad.push(...loadErrors(P.loads, P.loadSel, up, 'player'), ...modErrors(P.mods, 'player'));
   }
   { const d = snap.drops; if (d != null && (typeof d !== 'object' || Array.isArray(d) || !num(d.dry) || d.rngState == null || !d.seen || typeof d.seen !== 'object' || !d.firedAt || typeof d.firedAt !== 'object')) bad.push('the ammunition-drop state is damaged'); }      // lazy state `{ rngState, dry, seen, firedAt }` (drops.js): the fuzz found it accepted as a string or an empty object
   if (Array.isArray(snap.pickups)) for (const it of snap.pickups) if (!it || typeof it !== 'object' || !own(PICKUPS, it.kind) || !num(it.x) || !num(it.z)) { bad.push('a pickup is not a known pickup with a position'); break; }

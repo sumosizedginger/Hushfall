@@ -129,6 +129,10 @@ MAP.drops = { scale: 1 };
 // the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand in the charging hall, appended last so no id shifts
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [26, 19], facing: -0.96 });
 
+// ---- PT-056 (R9, ammunition loads): slag shells and kiln rivets, in a pocket of the kiln row off the road ----
+MAP.entities ??= [];
+MAP.entities.push(...[["ld_slag_scattergun",20,33],["ld_slag_rivet",22,33]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-056 ----
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E2M04', lane: [...(laneOf('C1E2M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"sexton","pick":"range","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);

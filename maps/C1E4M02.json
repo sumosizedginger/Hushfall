@@ -852,6 +852,21 @@
    "type": "exit",
    "at": [58, 64],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_pen_rivet",
+   "at": [75, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_pen_harpoon",
+   "at": [75, 42]
+  },
+  {
+   "type": "pickup",
+   "kind": "ld_pen_carbine",
+   "at": [67, 54]
   }
  ],
  "par": {

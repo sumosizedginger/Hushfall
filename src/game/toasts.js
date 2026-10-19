@@ -1,12 +1,16 @@
 // Pickup toast text. DOM-free so it can be tested. The NAME is presentation; the AMOUNT is read from PICKUPS (gameplay data), so the toast can never
 // say "+30" while the pickup grants 40 (the rivet toast did exactly that).
-import { PICKUPS, SLOT_KEYS, WEAPONS, KEYS } from '../engine/defs.js';
+import { PICKUPS, SLOT_KEYS, WEAPONS, KEYS, AMMO_LOADS, MODS } from '../engine/defs.js';
 
 export const PICKUP_NAMES = {
   health_small: 'Field dressing', health_large: 'Medical satchel', ammo_flare: 'Flare shells', armor_vest: 'Canvas flak vest', ammo_shell: 'Shotgun shells', ammo_rivet: 'Rivets', ammo_bolt: 'Harpoon bolts', ammo_cell: 'Charge cells', ammo_round: 'Carbine rounds', ammo_rocket: 'Line-thrower rockets',
   oil: 'Lamp oil',
   key_brass: 'Brass key', key_iron: 'Iron key', key_bell: 'Bell key',
 };
+// the load pickups (PT-056): "Slag shells", "Rime bolts", "Penetrator rounds"
+const LOAD_AMMO_NAME = { scattergun: 'shells', rivet: 'rivets', carbine: 'rounds', harpoon: 'bolts', flare: 'flares' };
+for (const [kind, d] of Object.entries(PICKUPS)) if (d.type === 'mod') PICKUP_NAMES[kind] = MODS[d.mod].name;          // (PT-057: a mod is named by the mod)
+for (const [kind, d] of Object.entries(PICKUPS)) if (d.type === 'load') PICKUP_NAMES[kind] = `${AMMO_LOADS[d.load].name} ${LOAD_AMMO_NAME[d.gun]}`;
 /** "Rivets (+40)": ammo, health and armour show what they give; keys and unknown kinds show just the name */
 export function pickupToast(kind) {
   const name = PICKUP_NAMES[kind]; if (!name) return 'Picked up ' + kind;
@@ -46,8 +50,8 @@ export const WEAPON_CARDS = Object.freeze({
 /** 'minor' | 'medium' | 'major', or null for a kind that does not exist */
 export function pickupTier(kind) {
   const d = Object.hasOwn(PICKUPS, kind) ? PICKUPS[kind] : null; if (!d) return null;
-  if (d.type === 'weapon' || d.type === 'key') return 'major';
-  if (d.type === 'armor' || d.type === 'oil' || (d.type === 'health' && d.amount >= 25)) return 'medium';
+  if (d.type === 'weapon' || d.type === 'key' || d.type === 'mod') return 'major';
+  if (d.type === 'armor' || d.type === 'oil' || d.type === 'load' || (d.type === 'health' && d.amount >= 25)) return 'medium';
   return 'minor';
 }
 const slotLabel = (weapon) => { const i = SLOT_KEYS.indexOf(WEAPONS[weapon]?.kind === 'melee' ? 'melee' : weapon); return i < 0 ? '' : String((i + 1) % 10); };
@@ -55,6 +59,7 @@ const slotLabel = (weapon) => { const i = SLOT_KEYS.indexOf(WEAPONS[weapon]?.kin
 export function pickupCard(kind) {
   if (pickupTier(kind) !== 'major') return null; const d = PICKUPS[kind];
   if (d.type === 'key') { const k = KEYS[d.key]; return { tier: 'major', kind, title: k.name, line: `Opens ${d.key} doors and switches.`, color: k.color, icon: 'key' }; }
+  if (d.type === 'mod') { const M = MODS[d.mod]; return { tier: 'major', kind, title: M.name, line: `For the ${WEAPONS[M.gun].name}. ${M.line}`, color: '#ffd488', icon: 'gun' }; }          // PT-057: a mod is a card
   const [title, line] = WEAPON_CARDS[kind] ?? [WEAPONS[d.weapon]?.name ?? 'Weapon', ''], slot = slotLabel(d.weapon), melee = WEAPONS[d.weapon]?.kind === 'melee';
   return { tier: 'major', kind, title, line: (slot ? `Key ${slot}. ` : '') + line, color: melee ? '#d9a04c' : d.weapon === 'fork' ? '#6ffff0' : '#e8e2d0', icon: melee ? 'melee' : d.weapon === 'fork' ? 'tool' : 'gun' };
 }

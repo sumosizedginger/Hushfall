@@ -2,17 +2,17 @@
   "mapId": "C1E2M04",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "63e02f3",
+  "codeVersion": "53feb5f",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "559ae643543f6b4e",
+  "mapSha": "ddeabf055e3148b8",
   "assetVersion": "2a768302f10b0f75",
-  "engineSha": "b53124357ce88e95",
+  "engineSha": "a84b83d6c9fba759",
   "sources": {
-    "engine": "b53124357ce88e95",
-    "render": "513f7ace2ef0b9a8",
-    "game": "814036224475c804",
-    "audio": "50c8b677684b5b60",
+    "engine": "a84b83d6c9fba759",
+    "render": "95407d17a43e6c40",
+    "game": "a5174a0bf141243f",
+    "audio": "d8fac1c785f6c298",
     "assets": "2a768302f10b0f75"
   },
   "routesSha": "a67f276d0df38e8e",
@@ -26,7 +26,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4621,
-      "finalHash": "5e1b5f12",
+      "finalHash": "2afca43a",
       "kills": 32,
       "secrets": 0,
       "items": 5,
@@ -39,7 +39,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5346,
-      "finalHash": "f07cda9b",
+      "finalHash": "b3bc91af",
       "kills": 32,
       "secrets": 0,
       "items": 5,
@@ -52,7 +52,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5468,
-      "finalHash": "1a232238",
+      "finalHash": "23979143",
       "kills": 32,
       "secrets": 0,
       "items": 5,
@@ -65,7 +65,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3964,
-      "finalHash": "2e7571fb",
+      "finalHash": "260f6ab7",
       "kills": 26,
       "secrets": 1,
       "items": 5,
@@ -78,7 +78,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4340,
-      "finalHash": "13316721",
+      "finalHash": "22ff2600",
       "kills": 26,
       "secrets": 1,
       "items": 6,
@@ -91,7 +91,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4487,
-      "finalHash": "98411a42",
+      "finalHash": "ae85ccfd",
       "kills": 26,
       "secrets": 1,
       "items": 6,
@@ -105,12 +105,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 5346,
-    "finalHash": "f07cda9b",
+    "finalHash": "b3bc91af",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 33,
-    "items": 23,
+    "items": 25,
     "secrets": 1
   },
   "facts": {
@@ -572,7 +572,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E2M04.json: 82b77f75334cfd18 vs 559ae643543f6b4e"
+        "detail": "validation/browser/C1E2M04.json: 82b77f75334cfd18 vs ddeabf055e3148b8"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -593,5 +593,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 33 enemies, 23 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 33 enemies, 25 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

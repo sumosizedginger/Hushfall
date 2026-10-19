@@ -1,7 +1,7 @@
 // Campaign progression (owner decision, PT-008, 2026-10-05): a RANK per map (S/A/B/C from time, kills and secrets), SALVAGE earned from ranks and secrets, and persistent UPGRADES bought with it
 // (a bigger ammunition satchel, better plate). Pure data in, data out: the simulation reads only the upgrade tiers (caps, below); the shell owns the salvage, the records and the buying.
 // Every number here is a tunable first guess: nobody has played it. Change them here, not in the callers.
-import { AMMO_MAX, PLAYER, FOLK, ENEMIES, PICKUPS } from './defs.js';
+import { AMMO_MAX, PLAYER, FOLK, ENEMIES, PICKUPS, MODS, MOD_ORDER } from './defs.js';
 
 export const RANK = {
   weights: { withSecrets: { kills: 0.4, time: 0.35, secrets: 0.25 }, noSecrets: { kills: 0.55, time: 0.45 } },
@@ -22,7 +22,9 @@ export const TRACKS = {
 export const ammoCap = (type, up) => Math.round(AMMO_MAX[type] * (1 + TRACKS.ammo.step * clampTier('ammo', up?.ammo)));
 export const armorCap = (up) => PLAYER.maxArmor + TRACKS.armor.step * clampTier('armor', up?.armor);
 function clampTier(track, v) { const n = Math.floor(Number(v)); return Number.isFinite(n) ? Math.max(0, Math.min(TRACKS[track].costs.length, n)) : 0; }
-export const sanitizeUpgrades = (up) => ({ ammo: clampTier('ammo', up?.ammo), armor: clampTier('armor', up?.armor) });
+/** PT-057: the second tiers of mods bought at the Locker ({ id: true }): known mods only; null when there are none, so a progress that never bought one is exactly what it was */
+function sanitizeMods2(m) { const o = {}; if (m && typeof m === 'object' && !Array.isArray(m)) for (const id of MOD_ORDER) if (Object.hasOwn(m, id) && m[id] === true) o[id] = true; return Object.keys(o).length ? o : null; }
+export const sanitizeUpgrades = (up) => { const o = { ammo: clampTier('ammo', up?.ammo), armor: clampTier('armor', up?.armor) }, m = sanitizeMods2(up?.mods2); if (m) o.mods2 = m; return o; };
 
 /** the rank of a finished level. `end` = the world's endStats ({time, kills, secrets, total: {enemies, secrets}}), `par` = seconds or undefined */
 export function rankFor(end, par) {
@@ -95,6 +97,17 @@ export function buy(progress, track) {
   const cost = t.costs[tier]; if (progress.salvage < cost) return { ok: false, progress, cost, reason: 'salvage' };
   return { ok: true, cost, progress: { ...progress, salvage: progress.salvage - cost, upgrades: { ...sanitizeUpgrades(progress.upgrades), [track]: tier + 1 } } };
 }
+
+/** PT-057: buy tier two of a mod the player has FOUND (`owned` = the mod ids the world says they carry). -> { ok, progress, cost, reason } (reason: 'unknown' | 'notfound' | 'bought' | 'salvage') */
+export function buyMod(progress, id, owned) {
+  if (!Object.hasOwn(MODS, id)) return { ok: false, progress, cost: 0, reason: 'unknown' };
+  if (!owned?.includes(id)) return { ok: false, progress, cost: 0, reason: 'notfound' };
+  const up = sanitizeUpgrades(progress.upgrades); if (up.mods2?.[id]) return { ok: false, progress, cost: 0, reason: 'bought' };
+  const cost = MODS[id].tier2.cost; if (progress.salvage < cost) return { ok: false, progress, cost, reason: 'salvage' };
+  return { ok: true, cost, progress: { ...progress, salvage: progress.salvage - cost, upgrades: { ...up, mods2: { ...(up.mods2 ?? {}), [id]: true } } } };
+}
+/** PT-057: the Locker's rows for the mods a player owns: [{ id, name, tier, cost, text }] (cost null once bought) */
+export const modRows = (progress, owned) => MOD_ORDER.filter((id) => owned?.includes(id)).map((id) => { const M = MODS[id], two = !!sanitizeUpgrades(progress.upgrades).mods2?.[id]; return { id, name: M.name, tier: two ? 2 : 1, cost: two ? null : M.tier2.cost, text: two ? M.tier2.line + ' (bought)' : M.tier2.line }; });
 
 /** one line for the Locker: what the next tier of a track gives and costs ('maxed' when there is none) */
 export function describeNext(progress, track) {

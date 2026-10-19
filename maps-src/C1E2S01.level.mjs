@@ -77,4 +77,8 @@ MAP.entities ??= [];
 MAP.entities.push(...[['ammo_round', 30, 13], ['ammo_rocket', 27, 24]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-023 ----
 
+// ---- PT-056 (R9, ammunition loads): the first rime: shells, bolts and flares for the cold, in the vault ----
+MAP.entities ??= [];
+MAP.entities.push(...[["ld_rime_scattergun",33,21],["ld_rime_harpoon",33,11],["ld_rime_flare",44,17]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// ---- end PT-056 ----
 export default MAP;
