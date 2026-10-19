@@ -5,6 +5,8 @@
 //   [MAP_DIR=<dir>] node tools/dev/lane-of.mjs [ID ...]        node only, one core
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { toSource } from '../mapkit/squeeze.mjs';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
 
 const root = path.resolve(import.meta.dirname, '../..'), dir = path.join(root, 'maps-src/lanes'), mapsDir = process.env.MAP_DIR ? path.resolve(process.env.MAP_DIR) : path.join(root, 'maps'); fs.mkdirSync(dir, { recursive: true });
@@ -15,6 +17,9 @@ for (const id of ids) {
     const route = loadRouteFile(path.join(root, 'routes', rf));
     for (const [difficulty, seed] of [['normal', 1], ['easy', 1], ['hard', 2]]) runRoute(map, route, { seed, difficulty, onTick: (w, t) => { cells.add(at(w.player.x, w.player.z)); if (t % 5 === 0) for (const e of w.enemies) if (e.state !== 'dead') cells.add(at(e.x, e.z)); } });
   }
-  fs.writeFileSync(path.join(dir, id + '.json'), JSON.stringify([...cells].sort()));
+  // a SQUEEZED map (tools/mapkit/squeeze.mjs) is drawn in the authoring frame: its lane file is too (the shipped map's cells are converted back; a column that was cut has no traffic)
+  const srcFile = path.join(root, 'maps-src', id + '.level.mjs'); let list = [...cells];
+  if (fs.existsSync(srcFile)) { const sq = (await import(pathToFileURL(srcFile).href)).default.squeeze; if (sq) { const ax = sq.axis === 'z' ? 1 : 0; list = list.map((c) => { const p = c.split(',').map(Number); p[ax] = toSource(p[ax], sq.cuts); return p.join(','); }); console.log(id, 'squeezed: lane written in the authoring frame'); } }
+  fs.writeFileSync(path.join(dir, id + '.json'), JSON.stringify(list.sort()));
   console.log(id, cells.size, 'cells of traffic');
 }

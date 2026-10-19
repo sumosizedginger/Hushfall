@@ -10,6 +10,7 @@ const root = path.resolve(import.meta.dirname, '../..');
 
 import { LEGEND } from './legend.mjs';
 import { applyRoster } from './roster.mjs';
+import { squeezeMap, squeezeKeep } from './squeeze.mjs';
 export { LEGEND };
 const DIRS = { north: 0, south: Math.PI, east: -Math.PI / 2, west: Math.PI / 2 };
 
@@ -40,7 +41,7 @@ export function compile(lv) {
     if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorInterlock?.[x + ',' + z] ? { interlock: lv.doorInterlock[x + ',' + z] } : {}), ...(lv.doorStartOpen?.includes(x + ',' + z) ? { open: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });
     if (geo[z][x] === 'X') closets.push({ at: [x, z] });
   }
-  const out = {
+  let out = {
     format: 1, id: lv.id, version: lv.version ?? 1, name: lv.name, ...(lv.cellSize ? { cellSize: lv.cellSize } : {}), ...(lv.ceilingHeight ? { ceilingHeight: lv.ceilingHeight } : {}),
     ...(lv.atmosphere ? { atmosphere: lv.atmosphere } : {}), ...(lv.keyLabels ? { keyLabels: lv.keyLabels } : {}), grid: geo, ...(heights ? { heights } : {}), ...(ceilings ? { ceilings } : {}), ...(fx ? { fx } : {}),
     doors, secrets: lv.secrets || [], ...(closets.length ? { closets } : {}), ...(lv.sectors ? { sectors: lv.sectors } : {}), ...(lv.triggers ? { triggers: lv.triggers } : {}),
@@ -49,11 +50,14 @@ export function compile(lv) {
     ...(lv.lantern ? { lantern: lv.lantern } : {}), ...(lv.noiseTell ? { noiseTell: true } : {}), ...(lv.lampHolds ? { lampHolds: lv.lampHolds } : {}), ...(lv.lookZones ? { lookZones: lv.lookZones } : {}), ...(lv.dev ? { dev: true } : {}), ...(lv.devEnding ? { devEnding: lv.devEnding } : {}), ...(lv.chimes ? { chimes: lv.chimes } : {}),          // PT-038: the hand lantern and the chime phrases
     ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
   };
+  // PT-052: a squeezed map (tools/mapkit/squeeze.mjs) is narrowed LAST: everything above is in the authoring frame, the shipped JSON is in the squeezed one (SQUEEZE=off compiles it unsqueezed, for the scan)
+  let drops = lv.drops;
+  if (lv.squeeze && process.env.SQUEEZE !== 'off') { const r = squeezeMap(out, lv.squeeze); out = r.map; if (drops?.keep) drops = { ...drops, keep: squeezeKeep(drops.keep, lv.squeeze) }; for (const w of r.warnings) errors.push(`squeeze: a coordinate pair under '${w}' was not moved (add the key to squeeze.mjs or rename it)`); }
   let v = validateMap(out); if (!v.ok) errors.push(...v.errors);
   // PT-025: a map that says `drops` is fed by the dead, not by boxes on the road: its ammunition boxes in the PUBLIC part of the map (reachable from the spawn with every secret panel shut) are not built; the ones in its secrets stay
-  if (v.ok && lv.drops) {
-    const m = parseMap(out), pub = findTraps(m, { secrets: false }), keep = lv.drops.keep ?? [], kept = (e) => keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3])), inPublic = (e) => pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1]))) && !kept(e);          // keep: cells [x, z] and rectangles [x0, z0, x1, z1] whose boxes stay          // `keep`: boxes a boss arena keeps on the ground (its ring and its mother are not fed by the dead: nodes and summons never drop)
-    out.entities = out.entities.filter((e) => !(e.type === 'pickup' && /^ammo_/.test(e.kind) && inPublic(e))); out.drops = lv.drops;
+  if (v.ok && drops) {
+    const m = parseMap(out), pub = findTraps(m, { secrets: false }), keep = drops.keep ?? [], kept = (e) => keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3])), inPublic = (e) => pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1]))) && !kept(e);          // keep: cells [x, z] and rectangles [x0, z0, x1, z1] whose boxes stay          // `keep`: boxes a boss arena keeps on the ground (its ring and its mother are not fed by the dead: nodes and summons never drop)
+    out.entities = out.entities.filter((e) => !(e.type === 'pickup' && /^ammo_/.test(e.kind) && inPublic(e))); out.drops = drops;
     v = validateMap(out); if (!v.ok) errors.push(...v.errors);
   }
   return { map: out, errors };

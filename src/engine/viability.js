@@ -51,9 +51,9 @@ export function evaluateViability(map, mainRoute, { seed = 1 } = {}) {
     meanDamage = Math.round(runs.reduce((a, r) => a + r.world.stats.damageTaken, 0) / seeds.length);      // damage is noisy per seed: ordering is judged on the mean of three
     out[difficulty] = {
       runner: { result: runner.result, damage: runner.world.stats.damageTaken, hpLeft: runner.world.player.hp },
-      ammo: map.drops ? (() => { const by = measuredCapacityBy(map, difficulty, fighter.world); return { capacity: Object.entries(by).filter(([t]) => FOUGHT.has(t)).reduce((a, [, n]) => a + n, 0), fired: fighter.world.stats.shots, capacityBy: by, firedBy: firedBy(fighter.events), drops: true }; })()
-        : { capacity: ammoCapacity(map, difficulty), fired: fighter.world.stats.shots, capacityBy: ammoCapacityBy(map, difficulty), firedBy: firedBy(fighter.events) },
-      fighter: { completedSeeds: runs.filter((r) => r.result === 'complete').length, eitherSeeds, strafedSeeds: strafed.filter((r) => r?.result === 'complete').length, policy: first === runs[0] ? 'standing' : 'strafing', seeds: seeds.length, result: first.result, damage: fighter.world.stats.damageTaken, meanDamage, seconds: +(first.ticks / 60).toFixed(1), kills: first.world.stats.kills, failure: first.failure },
+      ammo: map.drops ? (() => { const by = measuredCapacityBy(map, difficulty, first.world); return { capacity: Object.entries(by).filter(([t]) => FOUGHT.has(t)).reduce((a, [, n]) => a + n, 0), fired: first.world.stats.shots, capacityBy: by, firedBy: firedBy(first.events), drops: true }; })()
+        : { capacity: ammoCapacity(map, difficulty), fired: first.world.stats.shots, capacityBy: ammoCapacityBy(map, difficulty), firedBy: firedBy(first.events) },          // PT-052: the ammunition is judged on the run that COMPLETED (a standing fighter that died at the half-way mark has burnt its shells in a panic)
+      fighter: { completedSeeds: runs.filter((r) => r.result === 'complete').length, eitherSeeds, strafedSeeds: strafed.filter((r) => r?.result === 'complete').length, policy: first === runs[0] ? 'standing' : 'strafing', seeds: seeds.length, result: first.result, damage: first.world.stats.damageTaken, meanDamage, seconds: +(first.ticks / 60).toFixed(1), kills: first.world.stats.kills, failure: first.failure },
     };
   }
   out.threats = threatCount(map); out.gate = gateSkip(map);

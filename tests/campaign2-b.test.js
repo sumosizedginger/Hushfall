@@ -8,7 +8,7 @@ import { ROOT, shippedSrc, shippedMap } from './helpers.js';
 import { LOOKS, ENEMIES, ECHO, VARIANTS } from '../src/engine/defs.js';
 import { createWorld, step, drainEvents, noise } from '../src/engine/world.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
-import { runRoute } from '../src/engine/harness.js';
+import { runRouteEither as runRoute } from '../src/engine/harness.js';          // either fighter policy (PT-052, Bot v2 first half)
 import { sanitizeProgress } from '../src/engine/progress.js';
 import { choiceHolds } from '../src/engine/script.js';
 
