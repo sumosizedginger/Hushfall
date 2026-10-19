@@ -133,6 +133,7 @@ const SPINE = [CX, CZ + 3], HULLSW = B('N', 28, -hw(28));
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
 ENC.dropIn({ at: [47,49], radius: 2, cells: ENC.around([47,49], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [59,46], radius: 2, cells: ENC.around([59,46], { n: 3, min: 4, max: 8 }), kind: 'g' });
 // ---- end PT-052 ----
 
 const MAP = {
@@ -170,8 +171,13 @@ const MAP = {
 MAP.drops = { scale: 1, keep: [[CX - 6, CZ + 19, CX + 6, CZ + 25]] };
 console.log('C1E4M03: enemies', ents.filter((e) => e.type === 'enemy').length, 'vacuum strips', VACUUM.length);
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C1E4M03', lane: [...(laneOf('C1E4M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
+MAP.roster = { id: 'C1E4M03', lane: [...(laneOf('C1E4M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1},{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
 ENC.apply(MAP);
+
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). A squeeze of 8 columns and 8 rows, where nothing stands and no stair runs (tools/dev/squeeze-map.mjs).
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C1E4M03`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = [{axis:'x',cuts:[[3,4], [7,8], [13,14], [69,70], [79,80], [82,83], [84,85], [88,89]]}, {axis:'z',cuts:[[3,4], [7,8], [13,14], [24,25], [78,79], [80,81], [84,85], [88,89]]}];
+// ---- end PT-052 Level B squeeze ----
 
 export default MAP;
 export { L, B, hw };

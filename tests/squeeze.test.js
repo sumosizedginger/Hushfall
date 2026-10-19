@@ -44,6 +44,12 @@ test('a pair of cell-like numbers under a key the tool does not know is reported
   assert.deepEqual(map.entities[1].lair, [8, 2], 'not moved'); assert.ok(warnings.some((w) => /lair/.test(w)), warnings.join('|'));
 });
 
+test('the airlock keys move with the columns: a door that closes another (close), the seals and the and-list of a vacuum region, an interlock cell', () => {
+  const m = tiny(), spec = { axis: 'x', cuts: [[2, 4]] }; m.entities[1].do = [{ close: [8, 2] }]; m.entities[2].interlock = [9, 2]; m.vacuum = [{ rect: [5, 1, 9, 2], seals: [[8, 2], [9, 2]], and: [[6, 2]] }];
+  const { map, warnings } = squeezeMap(m, spec); assert.deepEqual(warnings, [], warnings.join('|'));
+  assert.deepEqual(map.entities[1].do[0].close, [6, 2]); assert.deepEqual(map.entities[2].interlock, [7, 2]); assert.deepEqual(map.vacuum[0].seals, [[6, 2], [7, 2]]); assert.deepEqual(map.vacuum[0].and, [[4, 2]]);
+});
+
 test('a route and a drops list: the same remap', () => {
   const spec = { axis: 'x', cuts: [[5, 7], [15, 17]] };
   assert.deepEqual(squeezeRoute([{ op: 'goto', at: [14, 35] }, { op: 'kill' }, { op: 'goto', at: [22, 35] }, { op: 'switch', id: 'r' }], spec), [{ op: 'goto', at: [12, 35] }, { op: 'kill' }, { op: 'goto', at: [18, 35] }, { op: 'switch', id: 'r' }]);
@@ -72,7 +78,7 @@ test('a list of specs squeezes the columns and then the rows; a cell converts to
 });
 
 test('every squeezed map: the shipped JSON is the squeeze of the drawing, every route completes on all three difficulties, and the scan would not cut a stair or the wall behind a lever there', async () => {
-  for (const id of ['C2M26', 'C2M04']) {
+  for (const id of ['C2M26', 'C2M04', 'C2M08', 'C1E4M03']) {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sqt-'));
     try {
       const run = spawnSync(process.execPath, [path.join(ROOT, 'tools/mapkit/compile.mjs'), id], { cwd: ROOT, env: { ...process.env, SQUEEZE: 'off', MAP_OUT: dir }, encoding: 'utf8' }); assert.equal(run.status, 0, id + ': ' + (run.stderr || run.stdout).slice(0, 300));

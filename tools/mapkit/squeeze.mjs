@@ -23,8 +23,8 @@ export const toSource = (n, cuts) => { let u = n; for (const [a, b] of cuts) if 
 export const checkCuts = (cuts, limit) => { let prev = -1; for (const [a, b] of cuts) { if (!(Number.isInteger(a) && Number.isInteger(b) && a > prev && b > a && b <= limit)) throw new Error(`squeeze: cuts must be ascending, not touching and inside the map: [${a}, ${b}) after ${prev} (limit ${limit})`); prev = b; } };
 
 const NOT_CELLS = new Set(['quality', 'par', 'entryLoadout', 'atmosphere', 'intro', 'outro', 'objective', 'lantern', 'lampHolds', 'keyLabels']);          // top-level fields that hold numbers which are not cells
-const PAIR = new Set(['at', 'to', 'panel', 'front', 'open', 'target', 'spot', 'entry', 'center', 'origin']);
-const LIST = new Set(['cells', 'path', 'stops', 'spots', 'points']);
+const PAIR = new Set(['at', 'to', 'panel', 'front', 'open', 'target', 'spot', 'entry', 'center', 'origin', 'interlock', 'close']);
+const LIST = new Set(['cells', 'path', 'stops', 'spots', 'points', 'seals', 'and']);
 const RECT = new Set(['rect']);
 const isNum = (v) => typeof v === 'number';
 const isPair = (v) => Array.isArray(v) && v.length === 2 && v.every(isNum);

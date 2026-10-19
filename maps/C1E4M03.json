@@ -16,401 +16,377 @@
   "iron": "Coupling B"
  },
  "grid": [
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG___GG___GG___GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG___GG___GG___GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG___GG___GG___GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGDGGGGDGGGGDGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccDxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBGxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGWWWWWWWGGGGGGGGxxxxxxxxxxxGGGGGGGGWWWWWWWGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGWWcccccWWGGGGGGGxxxxxxxxxxxGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGWWcccccccWWGGGGGGxxxxxxxxxxxGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWWcccccccccWWGGGGGxxxxxxxxxxxGGGGGWWcccccccccWWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIDIGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIDIGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGWWWWWcccccccccWWGGGGGGGGGIDIGGGGGGGGGWWcccccccccWWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGWcccWWcccccccWWGGGGGGGxxxxxxxxxGGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGWcccWWWcccccWWGGGGGGGGxxxxxxxxxGGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGWcccWGWWWcWWWWWWWWWGGGxxxxxxxxxGGGWWWWWWWWWcWWWGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxGGWWDWWGGGWcccccccccDxxxxxxxxxxxxxxxDcccccccccWGGGGGGGGGGxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxGGGGWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWWWWWWGGGGxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxD___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxIIIIIxxxxxxxxxGGGGGxxxxxxxxxxxxxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___DxxxxxxxxxxxxxxDxxDxxxxxxxxxxIIIIIxxxxxxxxxxDxxDxxxxxxxxxxxxxxD___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxIIIIIxxxxxxxxxGGGGGxxxxxxxxxxxxxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxD___GGGGGGGGGGG",
-  "GGGGGGGGGGGG___GxxxxxxxxWDWWWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWWWWWWGGGGxxxxxxxxG___GGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGxxWDWWGWcccWWcccccccccDxxxxxxxxxxxxxxxDcccccccccWGGGGGGGGGGxxGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGWcccWGWcccWWcWWWWWWWWWGGGxxxxxxxxxGGGWWWWWWWWWcWWWGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGWcccWGWccccccccWWGGGGGGGGxxxxxxxxxGGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGWcccWGWWWcccccccWWGGGGGGGxxxxxxxxxGGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGWWWWWGWWcccccccccWWGGGGGGxxxxxxxxxGGGGGGWWcccccccccWWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGxxxxxxxxxGGGGGGWcccccccccccWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGWWcccccccccWWGGGGGxxxxxxxxxxxGGGGGWWcccccccccWWGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGWWcccccccWWGGGGGGxxxxxxxxxxxGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGWWcccccWWGGGGGGGxxxxxxxxxxxGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGWWWWWWWGGGGGGGGxxxxxxxxxxxGGGGGGGGWWWWWWWGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGWWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWcccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxScccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWcccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG___GG___GG___GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG___GG___GG___GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGDGGGGDGGGGDGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccDxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBcccccBxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGWWWWWWWGGGGGGGGxxxxxxxxxxxGGGGGGGGWWWWWWWGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGWWcccccWWGGGGGGGxxxxxxxxxxxGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGWWcccccccWWGGGGGGxxxxxxxxxxxGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWWcccccccccWWGGGGGxxxxxxxxxxxGGGGGWWcccccccccWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIDIGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIDIGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGIxIGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGWWWWWcccccccccWWGGGGGGGGGIDIGGGGGGGGGWWcccccccccWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGWcccWWcccccccWWGGGGGGGxxxxxxxxxGGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGWcccWWWcccccWWGGGGGGGGxxxxxxxxxGGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGWcccWGWWWcWWWWWWWWWGGGxxxxxxxxxGGGWWWWWWWWWcWWWGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGxxGGWWDWWGGGWcccccccccDxxxxxxxxxxxxxxxDcccccccccWGGGGGGGGGxxGGGGGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxGGGGWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWWWWWWGGGGxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGG__DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxD__GGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
+  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxIIIIIxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGG__DxxxxxxxxxxxxxxDxxDxxxxxxxxxxIIIIIxxxxxxxxxxDxxDxxxxxxxxxxxxxD__GGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxIIIIIxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
+  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGG__DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxD__GGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxWDWWWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWWWWWWGGGGxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGGGGGxxWDWWGWcccWWcccccccccDxxxxxxxxxxxxxxxDcccccccccWGGGGGGGGGxxGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGWcccWGWcccWWcWWWWWWWWWGGGxxxxxxxxxGGGWWWWWWWWWcWWWGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGWcccWGWccccccccWWGGGGGGGGxxxxxxxxxGGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGWcccWGWWWcccccccWWGGGGGGGxxxxxxxxxGGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGWWWWWGWWcccccccccWWGGGGGGxxxxxxxxxGGGGGGWWcccccccccWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGGGGGxGGGGGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWcccccccccccWGGGGGGxxxxxxxxxGGGGGGWcccccccccccGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGWWcccccccccWWGGGGGxxxxxxxxxxxGGGGGWWcccccccccWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGWWcccccccWWGGGGGGxxxxxxxxxxxGGGGGGWWcccccccWWGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGWWcccccWWGGGGGGGxxxxxxxxxxxGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGWWWWWWWGGGGGGGGxxxxxxxxxxxGGGGGGGGWWWWWWWGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxGWWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWcccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxScccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWcccWGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxWWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
  ],
  "heights": [
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  ".........................................11111111111........................................",
-  "...........................44444.........22222222222.........44444..........................",
-  "..........................4445444........33333333333........4445444.........................",
-  ".........................445555544.......44444444444.......445555544........................",
-  "........................44556665544...........4...........44556665544.......................",
-  "........................44566666544...........4...........44566666544.......................",
-  "........................45566666554...........4...........45566666554.......................",
-  "........................44566666544...........4...........44566666544.......................",
-  "........................44556665544...........4...........44556665544.......................",
-  ".........................445545544............4............445545544........................",
-  "..........................4444444.........444444444.........4444444.........................",
-  "...........................44444..........444444444..........44444..........................",
-  ".............................4............444444444............4............................",
-  ".............................44444444444444444444444444444444444............................",
-  ".......................................444444444444444......................................",
-  "..........................1234.........444444444444444.........4321.........................",
-  "..........................1234.....44444444444444444444444.....4321.........................",
-  "..........................1234.....44444444444444444444444.....4321.........................",
-  "..........................1234.....444444444.....444444444.....4321.........................",
-  "..........................1234.....444444444.....444444444.....4321.........................",
-  "..........................123444444444444444.....444444444444444321.........................",
-  "..........................1234.....444444444.....444444444.....4321.........................",
-  "..........................1234.....444444444.....444444444.....4321.........................",
-  "..........................1234.....44444444444444444444444.....4321.........................",
-  "..........................1234.....44444444444444444444444.....4321.........................",
-  "..........................1234.........444444444444444.........4321.........................",
-  ".......................................444444444444444......................................",
-  ".............................44444444444444444444444444444444444............................",
-  ".............................4............444444444............4............................",
-  "...........................44444..........444444444..........44444..........................",
-  "..........................4444444.........444444444.........4444444.........................",
-  ".........................445545544........444444444........445545544........................",
-  "........................44556665544...........4...........44556665544.......................",
-  "........................44566666544...........4...........44566666544.......................",
-  "........................45566666554...........4...........45566666554.......................",
-  "........................44566666544...........4...........44566666544.......................",
-  "........................44556665544.......444444444.......44556665544.......................",
-  ".........................445555544.......44444444444.......445555544........................",
-  "..........................4445444........33333333333........4445444.........................",
-  "...........................44444.........22222222222.........44444..........................",
-  ".........................................11111111111........................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................"
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "......................................11111111111...................................",
+  "........................44444.........22222222222.........44444.....................",
+  ".......................4445444........33333333333........4445444....................",
+  "......................445555544.......44444444444.......445555544...................",
+  ".....................44556665544...........4...........44556665544..................",
+  ".....................44566666544...........4...........44566666544..................",
+  ".....................45566666554...........4...........45566666554..................",
+  ".....................44566666544...........4...........44566666544..................",
+  ".....................44556665544...........4...........44556665544..................",
+  "......................445545544............4............445545544...................",
+  ".......................4444444.........444444444.........4444444....................",
+  "........................44444..........444444444..........44444.....................",
+  "..........................4............444444444............4.......................",
+  "..........................44444444444444444444444444444444444.......................",
+  "....................................444444444444444.................................",
+  ".......................1234.........444444444444444.........4321....................",
+  ".......................1234.....44444444444444444444444.....4321....................",
+  ".......................1234.....44444444444444444444444.....4321....................",
+  ".......................1234.....444444444.....444444444.....4321....................",
+  ".......................1234.....444444444.....444444444.....4321....................",
+  ".......................123444444444444444.....444444444444444321....................",
+  ".......................1234.....444444444.....444444444.....4321....................",
+  ".......................1234.....444444444.....444444444.....4321....................",
+  ".......................1234.....44444444444444444444444.....4321....................",
+  ".......................1234.....44444444444444444444444.....4321....................",
+  ".......................1234.........444444444444444.........4321....................",
+  "....................................444444444444444.................................",
+  "..........................44444444444444444444444444444444444.......................",
+  "..........................4............444444444............4.......................",
+  "........................44444..........444444444..........44444.....................",
+  ".......................4444444.........444444444.........4444444....................",
+  "......................445545544........444444444........445545544...................",
+  ".....................44556665544...........4...........44556665544..................",
+  ".....................44566666544...........4...........44566666544..................",
+  ".....................45566666554...........4...........45566666554..................",
+  ".....................44566666544...........4...........44566666544..................",
+  ".....................44556665544.......444444444.......44556665544..................",
+  "......................445555544.......44444444444.......445555544...................",
+  ".......................4445444........33333333333........4445444....................",
+  "........................44444.........22222222222.........44444.....................",
+  "......................................11111111111...................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "...................................................................................."
  ],
  "ceilings": [
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  ".......................................kkkkkkkkkkkkkkk......................................",
-  ".......................................kkkkkkkkkkkkkkk......................................",
-  "........................................kkkkkkkkkkkkk.......................................",
-  "..................................aaaaa.kkkkkkkkkkkkk.......................................",
-  "..................................aaaaa.kkkkkkkkkkkkk.......................................",
-  "..................................aaaaa.kkkkkkkkkkkkk.......................................",
-  "..................................aaaaa.kkkkkkkkkkkkk.......................................",
-  "..................................aaaaa.kkkkkkkkkkkkk.......................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  ".....................aaa..................mmmmmmmmm.........................................",
-  ".....................aaa..................mmmmmmmmm.........................................",
-  ".....................aaa..................mmmmmmmmm.........................................",
-  "................kk.....................mmmmmmmmmmmmmmm.....................kk...............",
-  "................kkkkkkkk...............mmmmmmmmmmmmmmm...............kkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.........mmmmmmmmmmmmmmm.........kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkkk...............",
-  "................kkkkkkkkkkkkkk.........mmmmmmmmmmmmmmm.........kkkkkkkkkkkkkk...............",
-  "................kkkkkkkk...............mmmmmmmmmmmmmmm...............kkkkkkkk...............",
-  "................kk......aaa............mmmmmmmmmmmmmmm.....................kk...............",
-  "..................aaa...aaa...............mmmmmmmmm.........................................",
-  "..................aaa...aaa...............mmmmmmmmm.........................................",
-  "..................aaa.....................mmmmmmmmm.........................................",
-  "..........................................mmmmmmmmm.........................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "..........................................kkkkkkkkk.........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  ".........................................kkkkkkkkkkk........................................",
-  "........................................kkkkkkkkkkkkk.aaa...................................",
-  "........................................kkkkkkkkkkkkk.aaa...................................",
-  "........................................kkkkkkkkkkkkk.aaa...................................",
-  "........................................kkkkkkkkkkkkk.......................................",
-  "........................................kkkkkkkkkkkkk.......................................",
-  "........................................kkkkkkkkkkkkk.......................................",
-  ".......................................kkkkkkkkkkkkkkk......................................",
-  ".......................................kkkkkkkkkkkkkkk......................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................",
-  "............................................................................................"
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................kkkkkkkkkkkkkkk.................................",
+  "....................................kkkkkkkkkkkkkkk.................................",
+  ".....................................kkkkkkkkkkkkk..................................",
+  "...............................aaaaa.kkkkkkkkkkkkk..................................",
+  "...............................aaaaa.kkkkkkkkkkkkk..................................",
+  "...............................aaaaa.kkkkkkkkkkkkk..................................",
+  "...............................aaaaa.kkkkkkkkkkkkk..................................",
+  "...............................aaaaa.kkkkkkkkkkkkk..................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "..................aaa..................mmmmmmmmm....................................",
+  "..................aaa..................mmmmmmmmm....................................",
+  "..................aaa..................mmmmmmmmm....................................",
+  ".............kk.....................mmmmmmmmmmmmmmm....................kk...........",
+  ".............kkkkkkkk...............mmmmmmmmmmmmmmm...............kkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.........mmmmmmmmmmmmmmm.........kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmm.....mmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.....mmmmmmmmmmmmmmmmmmmmmmm.....kkkkkkkkkkkkk...........",
+  ".............kkkkkkkkkkkkkk.........mmmmmmmmmmmmmmm.........kkkkkkkkkkkkk...........",
+  ".............kkkkkkkk...............mmmmmmmmmmmmmmm...............kkkkkkk...........",
+  ".............kk......aaa............mmmmmmmmmmmmmmm....................kk...........",
+  "...............aaa...aaa...............mmmmmmmmm....................................",
+  "...............aaa...aaa...............mmmmmmmmm....................................",
+  "...............aaa.....................mmmmmmmmm....................................",
+  ".......................................mmmmmmmmm....................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  ".......................................kkkkkkkkk....................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  "......................................kkkkkkkkkkk...................................",
+  ".....................................kkkkkkkkkkkkk.aaa..............................",
+  ".....................................kkkkkkkkkkkkk.aaa..............................",
+  ".....................................kkkkkkkkkkkkk.aaa..............................",
+  ".....................................kkkkkkkkkkkkk..................................",
+  ".....................................kkkkkkkkkkkkk..................................",
+  ".....................................kkkkkkkkkkkkk..................................",
+  "....................................kkkkkkkkkkkkkkk.................................",
+  "....................................kkkkkkkkkkkkkkk.................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "....................................................................................",
+  "...................................................................................."
  ],
  "doors": [
   {
-   "at": [41, 15],
+   "at": [38, 12],
    "remote": true,
    "open": true
   },
   {
-   "at": [46, 15],
+   "at": [43, 12],
    "remote": true,
    "open": true
   },
   {
-   "at": [51, 15],
+   "at": [48, 12],
    "remote": true,
    "open": true
   },
   {
-   "at": [39, 21],
+   "at": [36, 18],
    "remote": true
   },
   {
-   "at": [46, 30],
-   "interlock": [46, 33]
+   "at": [43, 26],
+   "interlock": [43, 29]
   },
   {
-   "at": [46, 33],
-   "interlock": [46, 30]
+   "at": [43, 29],
+   "interlock": [43, 26]
   },
   {
-   "at": [46, 35],
+   "at": [43, 31],
    "remote": true
   },
   {
-   "at": [22, 39]
+   "at": [19, 35]
   },
   {
-   "at": [38, 39]
+   "at": [35, 35]
   },
   {
-   "at": [54, 39]
+   "at": [51, 35]
   },
   {
-   "at": [15, 41],
+   "at": [12, 37],
    "remote": true,
    "open": true
   },
   {
-   "at": [77, 41],
+   "at": [73, 37],
    "remote": true,
    "open": true
   },
   {
-   "at": [15, 46],
+   "at": [12, 42],
    "remote": true,
    "open": true
   },
   {
-   "at": [30, 46],
-   "interlock": [33, 46]
+   "at": [27, 42],
+   "interlock": [30, 42]
   },
   {
-   "at": [33, 46],
-   "interlock": [30, 46]
+   "at": [30, 42],
+   "interlock": [27, 42]
   },
   {
-   "at": [59, 46],
-   "interlock": [62, 46]
+   "at": [56, 42],
+   "interlock": [59, 42]
   },
   {
-   "at": [62, 46],
-   "interlock": [59, 46]
+   "at": [59, 42],
+   "interlock": [56, 42]
   },
   {
-   "at": [77, 46],
+   "at": [73, 42],
    "remote": true,
    "open": true
   },
   {
-   "at": [15, 51],
+   "at": [12, 47],
    "remote": true,
    "open": true
   },
   {
-   "at": [77, 51],
+   "at": [73, 47],
    "remote": true,
    "open": true
   },
   {
-   "at": [25, 52]
+   "at": [22, 48]
   },
   {
-   "at": [19, 53]
+   "at": [16, 49]
   },
   {
-   "at": [38, 53]
+   "at": [35, 49]
   },
   {
-   "at": [54, 53]
+   "at": [51, 49]
   }
  ],
  "secrets": [
   {
    "id": "niche",
-   "panel": [53, 70],
+   "panel": [50, 66],
    "cells": [
-    [54, 69],
-    [55, 69],
-    [56, 69],
-    [54, 70],
-    [55, 70],
-    [56, 70],
-    [54, 71],
-    [55, 71],
-    [56, 71]
+    [51, 65],
+    [52, 65],
+    [53, 65],
+    [51, 66],
+    [52, 66],
+    [53, 66],
+    [51, 67],
+    [52, 67],
+    [53, 67]
    ]
   }
  ],
@@ -418,7 +394,7 @@
   {
    "id": "east",
    "when": "enter",
-   "at": [60, 46],
+   "at": [57, 42],
    "radius": 2,
    "do": [
     {
@@ -429,7 +405,7 @@
   {
    "id": "west",
    "when": "enter",
-   "at": [32, 46],
+   "at": [29, 42],
    "radius": 2,
    "do": [
     {
@@ -440,7 +416,7 @@
   {
    "id": "amb-dropin-1",
    "when": "enter",
-   "at": [47, 49],
+   "at": [44, 45],
    "radius": 2,
    "do": [
     {
@@ -452,7 +428,7 @@
     {
      "spawn": {
       "kind": "gaunt",
-      "at": [55, 49],
+      "at": [52, 45],
       "group": "amb-dropin-1",
       "facing": "south",
       "hunt": true
@@ -461,7 +437,7 @@
     {
      "spawn": {
       "kind": "gaunt",
-      "at": [47, 57],
+      "at": [44, 53],
       "group": "amb-dropin-1",
       "facing": "south",
       "hunt": true
@@ -470,8 +446,49 @@
     {
      "spawn": {
       "kind": "gaunt",
-      "at": [39, 49],
+      "at": [36, 45],
       "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "amb-dropin-2",
+   "when": "enter",
+   "at": [56, 42],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [50, 42],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [50, 39],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [49, 45],
+      "group": "amb-dropin-2",
       "facing": "south",
       "hunt": true
      }
@@ -482,491 +499,491 @@
  "entities": [
   {
    "type": "player",
-   "at": [46, 74]
+   "at": [43, 70]
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [52, 73],
+   "at": [49, 69],
    "facing": -1.406
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [40, 70],
+   "at": [37, 66],
    "facing": 0.983
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [50, 69],
+   "at": [47, 65],
    "facing": -0.675
   },
   {
    "type": "prop",
    "kind": "lighter",
-   "at": [43, 73],
+   "at": [40, 69],
    "yaw": 3.141592653589793
   },
   {
    "type": "prop",
    "kind": "lighter",
-   "at": [48, 70],
+   "at": [45, 66],
    "yaw": 1.5707963267948966
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [52, 75]
+   "at": [49, 71]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [40, 75]
+   "at": [37, 71]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [51, 71]
+   "at": [48, 67]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [42, 65]
+   "at": [39, 61]
   },
   {
    "type": "pickup",
    "kind": "ammo_flare",
-   "at": [48, 67]
+   "at": [45, 63]
   },
   {
    "type": "pickup",
    "kind": "ammo_shell",
-   "at": [46, 67]
+   "at": [43, 63]
   },
   {
    "type": "pickup",
    "kind": "ammo_rivet",
-   "at": [44, 67]
+   "at": [41, 63]
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [46, 65]
+   "at": [43, 61]
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [43, 75]
+   "at": [40, 71]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [46, 70]
+   "at": [43, 66]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [43, 64]
+   "at": [40, 60]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [41, 41]
+   "at": [38, 37]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [51, 41]
+   "at": [48, 37]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [41, 51]
+   "at": [38, 47]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [51, 51]
+   "at": [48, 47]
   },
   {
    "type": "enemy",
    "kind": "wardengraft",
-   "at": [44, 37],
+   "at": [41, 33],
    "facing": 0.054
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [40, 49]
+   "at": [37, 45]
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [52, 43]
+   "at": [49, 39]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [46, 52]
+   "at": [43, 48]
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [64, 32],
+   "at": [61, 28],
    "facing": -0.405
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [61, 34],
+   "at": [58, 30],
    "facing": -0.359
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [65, 34],
+   "at": [62, 30],
    "facing": -0.443
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [63, 35]
+   "at": [60, 31]
   },
   {
    "type": "prop",
    "kind": "shelf",
-   "at": [66, 31]
+   "at": [63, 27]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [64, 31]
+   "at": [61, 27]
   },
   {
    "type": "enemy",
    "kind": "bellhand",
-   "at": [29, 32],
+   "at": [26, 28],
    "facing": 0.385
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [31, 30],
+   "at": [28, 26],
    "facing": 0.329
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [29, 35]
+   "at": [26, 31]
   },
   {
    "type": "prop",
    "kind": "shelf",
-   "at": [32, 31]
+   "at": [29, 27]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [30, 31]
+   "at": [27, 27]
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [61, 60],
+   "at": [58, 56],
    "facing": -0.82
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [65, 62],
+   "at": [62, 58],
    "facing": -1.007
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [63, 63]
+   "at": [60, 59]
   },
   {
    "type": "prop",
    "kind": "shelf",
-   "at": [66, 59]
+   "at": [63, 55]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [64, 59]
+   "at": [61, 55]
   },
   {
    "type": "enemy",
    "kind": "sexton",
-   "at": [29, 60],
+   "at": [26, 56],
    "facing": 0.882
   },
   {
    "type": "enemy",
    "kind": "tollbearer",
-   "at": [27, 62],
+   "at": [24, 58],
    "facing": 1.007
   },
   {
    "type": "prop",
    "kind": "table",
-   "at": [29, 63]
+   "at": [26, 59]
   },
   {
    "type": "prop",
    "kind": "shelf",
-   "at": [32, 59]
+   "at": [29, 55]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [30, 59]
+   "at": [27, 55]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [66, 35]
+   "at": [63, 31]
   },
   {
    "type": "pickup",
    "kind": "armor_vest",
-   "at": [26, 57]
+   "at": [23, 53]
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [66, 43],
+   "at": [63, 39],
    "facing": -0.573
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [70, 50],
+   "at": [66, 46],
    "facing": -0.785
   },
   {
    "type": "enemy",
    "kind": "chorister",
-   "at": [73, 46],
+   "at": [69, 42],
    "facing": -0.767
   },
   {
    "type": "prop",
    "kind": "lighter",
-   "at": [72, 42],
+   "at": [68, 38],
    "yaw": -1.5707963267948966
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [65, 50]
+   "at": [62, 46]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [68, 41]
+   "at": [65, 37]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [74, 51]
+   "at": [70, 47]
   },
   {
    "type": "pickup",
    "kind": "key_brass",
-   "at": [75, 46]
+   "at": [71, 42]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [67, 46]
+   "at": [64, 42]
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [71, 48]
+   "at": [67, 44]
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [23, 44],
+   "at": [20, 40],
    "facing": 0.654
   },
   {
    "type": "enemy",
    "kind": "chorister",
-   "at": [20, 43],
+   "at": [17, 39],
    "facing": 0.698
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [27, 43],
+   "at": [24, 39],
    "facing": 0.55
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [24, 50],
+   "at": [21, 46],
    "facing": 0.742
   },
   {
    "type": "prop",
    "kind": "lighter",
-   "at": [22, 42],
+   "at": [19, 38],
    "yaw": 1.5707963267948966
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [28, 50]
+   "at": [25, 46]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [21, 52]
+   "at": [18, 48]
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [18, 42]
+   "at": [15, 38]
   },
   {
    "type": "pickup",
    "kind": "key_iron",
-   "at": [17, 46]
+   "at": [14, 42]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [26, 46]
+   "at": [23, 42]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [25, 54]
+   "at": [22, 50]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [24, 55]
+   "at": [21, 51]
   },
   {
    "type": "pickup",
    "kind": "armor_vest",
-   "at": [22, 37]
+   "at": [19, 33]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [21, 36]
+   "at": [18, 32]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [19, 55]
+   "at": [16, 51]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [18, 56]
+   "at": [15, 52]
   },
   {
    "type": "enemy",
    "kind": "bellhand",
-   "at": [49, 21],
+   "at": [46, 18],
    "facing": -0.057
   },
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [42, 26],
+   "at": [39, 22],
    "facing": 0.083
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
-   "at": [49, 23],
+   "kind": "bellhand",
+   "at": [46, 20],
    "facing": -0.059
   },
   {
    "type": "enemy",
    "kind": "chorister",
-   "at": [46, 19],
+   "at": [43, 16],
    "facing": 0
   },
   {
    "type": "prop",
    "kind": "crate2",
-   "at": [49, 27]
+   "at": [46, 23]
   },
   {
    "type": "prop",
    "kind": "lighter",
-   "at": [46, 25],
+   "at": [43, 21],
    "yaw": 0
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [46, 28]
+   "at": [43, 24]
   },
   {
    "type": "pickup",
    "kind": "health_small",
-   "at": [44, 20]
+   "at": [41, 17]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [43, 28]
+   "at": [40, 24]
   },
   {
    "type": "prop",
    "kind": "lamp",
-   "at": [44, 18]
+   "at": [41, 15]
   },
   {
    "type": "pickup",
    "kind": "armor_vest",
-   "at": [54, 69]
+   "at": [51, 65]
   },
   {
    "type": "pickup",
    "kind": "ammo_shell",
-   "at": [55, 69]
+   "at": [52, 65]
   },
   {
    "type": "pickup",
    "kind": "health_large",
-   "at": [55, 70]
+   "at": [52, 66]
   },
   {
    "type": "pickup",
    "kind": "ammo_rivet",
-   "at": [54, 71]
+   "at": [51, 67]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [56, 71]
+   "at": [53, 67]
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [37, 22]
+   "at": [34, 19]
   },
   {
    "type": "exit",
-   "at": [36, 21],
+   "at": [33, 18],
    "dest": "next"
   },
   {
    "type": "switch",
    "id": "seat",
-   "at": [46, 49],
+   "at": [43, 45],
    "wall": "north",
    "needs": [
     "brass",
@@ -974,7 +991,7 @@
    ],
    "do": [
     {
-     "open": [46, 35]
+     "open": [43, 31]
     },
     {
      "objective": "The north lock is open. The panel at the far end of the bay shuts the hatches"
@@ -990,20 +1007,20 @@
   {
    "type": "switch",
    "id": "hull",
-   "at": [40, 18],
+   "at": [37, 15],
    "wall": "west",
    "do": [
     {
-     "close": [41, 15]
+     "close": [38, 12]
     },
     {
-     "close": [46, 15]
+     "close": [43, 12]
     },
     {
-     "close": [51, 15]
+     "close": [48, 12]
     },
     {
-     "open": [39, 21]
+     "open": [36, 18]
     },
     {
      "objective": "The hatches are shut and the air is back. The exit is west of the bay"
@@ -1031,56 +1048,56 @@
  "messages": [
   {
    "id": "start",
-   "at": [46, 74],
+   "at": [43, 70],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "Calder, the Cold Dock: the Vael parked their fleet here. Two bays are open to the dark and the air in them is gone. A lock lets you in and out, but not both doors at once."
   },
   {
    "id": "hub",
-   "at": [46, 51],
+   "at": [43, 47],
    "radius": 3,
    "speaker": "INES",
    "text": "Look at the glass. Ships. Rank on rank of them, hanging. The couplings that start them are in the east and west bays. Seat both at the spine."
   },
   {
    "id": "lock",
-   "at": [57, 46],
+   "at": [54, 42],
    "radius": 2.5,
    "speaker": "HULL",
    "text": "Airlock. Open the near door, step in, wait for it to shut and for the air to settle. The far door will not move until it has."
   },
   {
    "id": "dash",
-   "at": [66, 46],
+   "at": [63, 42],
    "radius": 3,
    "speaker": "INES",
    "text": "No air. You lose it a second at a time. Do not stop to look."
   },
   {
    "id": "pockets",
-   "at": [26, 46],
+   "at": [23, 42],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The walls are doored closets: pressurised, small, there for the crews. Breathe in one. You cannot be followed through a door."
   },
   {
    "id": "seated",
-   "at": [46, 51],
+   "at": [43, 47],
    "radius": 0.1,
    "speaker": "HULL",
    "text": "Both couplings are seated. The north lock is open."
   },
   {
    "id": "panel",
-   "at": [46, 20],
+   "at": [43, 17],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The hatches at the far end are open to the dark. There is a panel on the west wall at the end. It shuts them."
   },
   {
    "id": "air",
-   "at": [40, 18],
+   "at": [37, 15],
    "radius": 0.1,
    "speaker": "INES",
    "text": "And the air comes back. I will not say thank you out loud."
@@ -1089,635 +1106,635 @@
  "vacuum": [
   {
    "rect": [
-    41,
-    29,
-    51,
-    29
-   ],
-   "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
-   ]
-  },
-  {
-   "rect": [
-    41,
-    28,
-    51,
-    28
-   ],
-   "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
-   ]
-  },
-  {
-   "rect": [
-    41,
-    27,
-    51,
-    27
-   ],
-   "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
-   ]
-  },
-  {
-   "rect": [
-    41,
-    26,
-    51,
-    26
-   ],
-   "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
-   ]
-  },
-  {
-   "rect": [
-    41,
+    38,
     25,
-    51,
+    48,
     25
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    41,
+    38,
     24,
-    51,
+    48,
     24
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    38,
     23,
-    52,
+    48,
     23
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    38,
     22,
-    52,
+    48,
     22
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    38,
     21,
-    52,
+    48,
     21
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    38,
+    21,
+    48,
+    21
+   ],
+   "seals": [
+    [38, 12],
+    [43, 12],
+    [48, 12]
+   ]
+  },
+  {
+   "rect": [
+    37,
     20,
-    52,
+    49,
     20
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    37,
     19,
-    52,
+    49,
     19
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    40,
+    37,
     18,
-    52,
+    49,
     18
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    39,
+    37,
     17,
-    53,
+    49,
     17
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    39,
+    37,
     16,
-    53,
+    49,
     16
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    39,
+    37,
     15,
-    53,
+    49,
     15
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ]
   },
   {
    "rect": [
-    46,
-    31,
-    46,
-    32
+    36,
+    14,
+    50,
+    14
    ],
    "seals": [
-    [41, 15],
-    [46, 15],
-    [51, 15]
+    [38, 12],
+    [43, 12],
+    [48, 12]
+   ]
+  },
+  {
+   "rect": [
+    36,
+    13,
+    50,
+    13
+   ],
+   "seals": [
+    [38, 12],
+    [43, 12],
+    [48, 12]
+   ]
+  },
+  {
+   "rect": [
+    36,
+    12,
+    50,
+    12
+   ],
+   "seals": [
+    [38, 12],
+    [43, 12],
+    [48, 12]
+   ]
+  },
+  {
+   "rect": [
+    43,
+    27,
+    43,
+    28
+   ],
+   "seals": [
+    [38, 12],
+    [43, 12],
+    [48, 12]
    ],
    "and": [
-    [46, 30]
-   ]
-  },
-  {
-   "rect": [
-    63,
-    41,
-    63,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    64,
-    41,
-    64,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    65,
-    41,
-    65,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    66,
-    41,
-    66,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    67,
-    41,
-    67,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    68,
-    41,
-    68,
-    51
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    69,
-    40,
-    69,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    70,
-    40,
-    70,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    71,
-    40,
-    71,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    72,
-    40,
-    72,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    73,
-    40,
-    73,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    74,
-    40,
-    74,
-    52
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    75,
-    39,
-    75,
-    53
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    76,
-    39,
-    76,
-    53
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
-   ]
-  },
-  {
-   "rect": [
-    77,
-    39,
-    77,
-    53
-   ],
-   "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
+    [43, 26]
    ]
   },
   {
    "rect": [
     60,
-    46,
+    37,
+    60,
+    47
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
     61,
-    46
+    37,
+    61,
+    47
    ],
    "seals": [
-    [77, 41],
-    [77, 46],
-    [77, 51]
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    62,
+    37,
+    62,
+    47
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    63,
+    37,
+    63,
+    47
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    64,
+    37,
+    64,
+    47
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    65,
+    37,
+    65,
+    47
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    66,
+    36,
+    66,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    66,
+    36,
+    66,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    67,
+    36,
+    67,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    68,
+    36,
+    68,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    69,
+    36,
+    69,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    70,
+    36,
+    70,
+    48
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    71,
+    35,
+    71,
+    49
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    72,
+    35,
+    72,
+    49
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    73,
+    35,
+    73,
+    49
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
+   ]
+  },
+  {
+   "rect": [
+    57,
+    42,
+    58,
+    42
+   ],
+   "seals": [
+    [73, 37],
+    [73, 42],
+    [73, 47]
    ],
    "and": [
-    [62, 46]
-   ]
-  },
-  {
-   "rect": [
-    29,
-    41,
-    29,
-    51
-   ],
-   "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
-   ]
-  },
-  {
-   "rect": [
-    28,
-    41,
-    28,
-    51
-   ],
-   "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
-   ]
-  },
-  {
-   "rect": [
-    27,
-    41,
-    27,
-    51
-   ],
-   "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [59, 42]
    ]
   },
   {
    "rect": [
     26,
-    41,
+    37,
     26,
-    51
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     25,
-    41,
+    37,
     25,
-    51
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     24,
-    41,
+    37,
     24,
-    51
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     23,
-    40,
+    37,
     23,
-    52
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     22,
-    40,
+    37,
     22,
-    52
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     21,
-    40,
+    37,
     21,
-    52
+    47
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     20,
-    40,
+    36,
     20,
-    52
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     19,
-    40,
+    36,
     19,
-    52
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     18,
-    40,
+    36,
     18,
-    52
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     17,
-    39,
+    36,
     17,
-    53
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     16,
-    39,
+    36,
     16,
-    53
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
     15,
-    39,
+    36,
     15,
-    53
+    48
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ]
   },
   {
    "rect": [
-    31,
-    46,
-    32,
-    46
+    14,
+    35,
+    14,
+    49
    ],
    "seals": [
-    [15, 51],
-    [15, 46],
-    [15, 41]
+    [12, 47],
+    [12, 42],
+    [12, 37]
+   ]
+  },
+  {
+   "rect": [
+    13,
+    35,
+    13,
+    49
+   ],
+   "seals": [
+    [12, 47],
+    [12, 42],
+    [12, 37]
+   ]
+  },
+  {
+   "rect": [
+    12,
+    35,
+    12,
+    49
+   ],
+   "seals": [
+    [12, 47],
+    [12, 42],
+    [12, 37]
+   ]
+  },
+  {
+   "rect": [
+    28,
+    42,
+    29,
+    42
+   ],
+   "seals": [
+    [12, 47],
+    [12, 42],
+    [12, 37]
    ],
    "and": [
-    [30, 46]
+    [27, 42]
    ]
   }
  ],
@@ -1762,10 +1779,10 @@
   "scale": 1,
   "keep": [
    [
-    40,
-    65,
-    52,
-    71
+    37,
+    61,
+    49,
+    67
    ]
   ]
  }

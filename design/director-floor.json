@@ -17,6 +17,7 @@
   "C1E3M05",
   "C1E3M06",
   "C1E4M02",
+  "C1E4M03",
   "C1E4M04",
   "C1E4M05",
   "C1E4M06",
@@ -27,6 +28,7 @@
   "C2M05",
   "C2M06",
   "C2M07",
+  "C2M08",
   "C2M09",
   "C2M11",
   "C2M13",
@@ -301,14 +303,14 @@
    "walk": 1602
   },
   "C1E4M03": {
-   "density": 15,
-   "rangedShare": 21,
-   "ambushes": 1,
+   "density": 16,
+   "rangedShare": 25,
+   "ambushes": 2,
    "kinds": 6,
    "loops": 2,
-   "topShare": 38,
-   "symmetry": 0.76,
-   "walk": 1566
+   "topShare": 33,
+   "symmetry": 0.71,
+   "walk": 1542
   },
   "C1E4M04": {
    "density": 14,
@@ -431,14 +433,14 @@
    "walk": 1673
   },
   "C2M08": {
-   "density": 12,
+   "density": 21,
    "rangedShare": 27,
-   "ambushes": 1,
+   "ambushes": 2,
    "kinds": 8,
-   "loops": 1,
+   "loops": 2,
    "topShare": 33,
-   "symmetry": 0.85,
-   "walk": 2507
+   "symmetry": 0.82,
+   "walk": 1431
   },
   "C2M09": {
    "density": 16,
@@ -1107,6 +1109,12 @@
     "density"
    ],
    "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
+  },
+  "C1E4M03": {
+   "skip": [
+    "density"
+   ],
+   "why": "Cold Dock was squeezed by eight columns and eight rows (the four bays and their lock chambers leave little that holds nothing: 1670 to 1542 cells) and holds 24 creatures, 16 per thousand cells against a floor of 18; four more would need a place on the lane the locks do not already use, and the strafing fighter has no margin on hard: the rest waits for a better bot"
   }
  }
 }

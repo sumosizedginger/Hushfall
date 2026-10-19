@@ -54,6 +54,7 @@ const SEC = { panel: [32, 81], cells: [[31, 79], [32, 79], [33, 79], [31, 80], [
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
 ENC.dropIn({ at: [32,72], radius: 2, cells: ENC.around([32,72], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [50,48], radius: 2, cells: ENC.around([50,48], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
 const MAP = {
@@ -101,5 +102,10 @@ console.log('C2M08: enemies', P.ents.filter((e) => e.type === 'enemy').length);
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M08', lane: [...(laneOf('C2M08') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":2}] };
 ENC.apply(MAP);
+
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). A squeeze of 19 columns and 18 rows, where nothing stands and no stair runs (tools/dev/squeeze-map.mjs).
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M08`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = [{axis:'x',cuts:[[3,4], [6,7], [9,10], [12,13], [17,18], [19,20], [23,24], [25,26], [29,30], [41,43], [47,48], [49,50], [51,52], [55,56], [58,59], [60,61], [63,64], [66,67]]}, {axis:'z',cuts:[[3,5], [9,10], [15,16], [17,18], [21,22], [35,36], [39,40], [41,42], [49,50], [51,52], [57,58], [67,68], [73,74], [83,84], [87,88], [93,94], [95,96]]}];
+// ---- end PT-052 Level B squeeze ----
 
 export default MAP;
