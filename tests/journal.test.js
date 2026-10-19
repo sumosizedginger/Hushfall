@@ -24,7 +24,8 @@ test('the Log is this map\'s messages, NEWEST FIRST, the unread ones marked, doc
 });
 test('what is not there is skipped, not invented: an id with no message, a map with no record, no progress at all', () => {
   assert.deepEqual(journalLog({ maps, progress: progressOf(['M1', 'gone'], ['M1', 'a']), mapId: 'M1' }).entries.map((e) => e.id), ['a']);
-  assert.deepEqual(journalLog({ maps, progress: { record: {} }, mapId: 'M1' }), { entries: [], newCount: 0, earlier: 0 }); assert.deepEqual(journalLog({ maps, progress: undefined, mapId: 'nope' }), { entries: [], newCount: 0, earlier: 0 });
+  const none = { entries: [], pins: [], levels: [], newCount: 0, earlier: 0 };          // PT-054: the Log also carries the pins of the Map page and the earlier levels (journal-levels.test.js)
+  assert.deepEqual(journalLog({ maps, progress: { record: {} }, mapId: 'M1' }), none); assert.deepEqual(journalLog({ maps, progress: undefined, mapId: 'nope' }), none);
   assert.doesNotThrow(() => journalLog({ maps: undefined, progress: { record: { M1: 'not a list', M2: ['x'] } }, mapId: 'M1' }));
 });
 test('the Journal opens on the Log when something is unread and on the Map otherwise', () => { assert.equal(openTab(0), 'map'); assert.equal(openTab(1), 'log'); assert.equal(openTab(40), 'log'); });
@@ -39,7 +40,7 @@ test('the Journal screen: entries are drawn, new ones marked, hostile text is es
     assert.ok(html.includes('rec doc new') && html.includes('class="rec"'), 'new and document classes'); assert.ok(html.includes('3 more from earlier maps'), 'earlier count'); assert.equal(el('journal-title').textContent, 'Marrow Quay'); assert.equal(el('journal-new').textContent, '(1 new)');
     assert.equal(el('journal-log').classes.has('hidden'), false, 'the Log tab shows the list'); assert.equal(el('screen-journal').classes.has('map'), false); assert.equal(el('btn-journal-log').classes.has('on'), true);
     ui.journalShowTab('map'); assert.equal(el('journal-log').classes.has('hidden'), true); assert.equal(el('screen-journal').classes.has('map'), true, 'the Map tab lets the automap show through'); assert.equal(el('btn-journal-map').classes.has('on'), true);
-    ui.show('journal', { log: { entries: [], newCount: 0, earlier: 0 }, mapName: 'M', tab: 'map' }); assert.match(el('journal-list').innerHTML, /Nothing received on this map yet/); assert.equal(el('journal-new').textContent, '');
+    ui.show('journal', { log: { entries: [], newCount: 0, earlier: 0 }, mapName: 'M', tab: 'map' }); assert.match(el('journal-list').innerHTML, /Nothing said on this level yet/); assert.equal(el('journal-new').textContent, '');
     ui.setUnread(4); assert.equal(el('hud-log').classes.has('hidden'), false); assert.equal(el('hud-log-n').textContent, '4'); ui.setUnread(0); assert.equal(el('hud-log').classes.has('hidden'), true);
   } finally { dom.restore(); }
 });

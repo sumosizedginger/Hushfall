@@ -1,7 +1,7 @@
 // Campaign progression (owner decision, PT-008, 2026-10-05): a RANK per map (S/A/B/C from time, kills and secrets), SALVAGE earned from ranks and secrets, and persistent UPGRADES bought with it
 // (a bigger ammunition satchel, better plate). Pure data in, data out: the simulation reads only the upgrade tiers (caps, below); the shell owns the salvage, the records and the buying.
 // Every number here is a tunable first guess: nobody has played it. Change them here, not in the callers.
-import { AMMO_MAX, PLAYER, FOLK, ENEMIES } from './defs.js';
+import { AMMO_MAX, PLAYER, FOLK, ENEMIES, PICKUPS } from './defs.js';
 
 export const RANK = {
   weights: { withSecrets: { kills: 0.4, time: 0.35, secrets: 0.25 }, noSecrets: { kills: 0.55, time: 0.45 } },
@@ -54,6 +54,20 @@ export function sanitizeProgress(p) {
     const ch = {};
     for (const [id, v] of Object.entries(p.choices)) if (/^[a-z0-9-]{1,24}$/.test(id) && typeof v === 'string' && /^[a-z0-9-]{1,24}$/.test(v)) ch[id] = v;
     if (Object.keys(ch).length) out.choices = ch;
+  }
+  if (p.recordAt && typeof p.recordAt === 'object') {                                    // PT-054 (the Log): when and where each message was received, [seconds, cell x, cell z], per map. Lazy: absent until the first message.
+    const ra = {}; for (const [mid, byId] of Object.entries(p.recordAt)) if (byId && typeof byId === 'object' && !Array.isArray(byId)) {
+      const m = {}; let n = 0; for (const [id, v] of Object.entries(byId)) { if (n >= 400) break; if (id.length > 0 && id.length <= 48 && Array.isArray(v) && v.length === 3 && v.every((x) => Number.isFinite(x))) { m[id] = [Math.min(1e6, Math.max(0, Math.round(v[0]))), Math.min(2000, Math.max(0, Math.round(v[1]))), Math.min(2000, Math.max(0, Math.round(v[2])))]; n++; } }
+      if (n) ra[String(mid).slice(0, 16)] = m;
+    }
+    if (Object.keys(ra).length) out.recordAt = ra;
+  }
+  if (p.found && typeof p.found === 'object') {                                          // PT-054 (the Items page): the pickups of the attempt being played, [kind, seconds, cell x, cell z], per map, at most 300 each. Lazy: absent until the first pickup.
+    const fo = {}; for (const [mid, list] of Object.entries(p.found)) if (Array.isArray(list)) {
+      const l = list.filter((v) => Array.isArray(v) && v.length === 4 && typeof v[0] === 'string' && Object.hasOwn(PICKUPS, v[0]) && v.slice(1).every((x) => Number.isFinite(x))).slice(-300).map((v) => [v[0], Math.min(1e6, Math.max(0, Math.round(v[1]))), Math.min(2000, Math.max(0, Math.round(v[2]))), Math.min(2000, Math.max(0, Math.round(v[3])))]);
+      if (l.length) fo[String(mid).slice(0, 16)] = l;
+    }
+    if (Object.keys(fo).length) out.found = fo;
   }
   if (Array.isArray(p.bestiary)) {                                                       // PT-052 U3b (the Bestiary): the kinds of creature the player has met, in the order of ENEMIES. Lazy: absent until the first meeting.
     const met = new Set(p.bestiary.filter((k) => typeof k === 'string')), b = Object.keys(ENEMIES).filter((k) => met.has(k));

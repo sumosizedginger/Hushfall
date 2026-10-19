@@ -37,13 +37,18 @@ export function drawAutomap(canvas, model) {
   if (model.noise) {                                                          // the noise tell: how far a shot from the weapon in hand carries (PT-045, E9)
     const x = ox + (model.noise.x / model.cell) * s, z = oy + (model.noise.z / model.cell) * s, r = model.noise.r / model.cell * s; ctx.strokeStyle = PAL.noise; ctx.lineWidth = 2; ctx.setLineDash([7, 7]); ctx.beginPath(); ctx.arc(x, z, r, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
   }
+  if (model.pins?.length) {                                                   // PT-054: where each line of the Journal's Log was said: a numbered disc on the cell the player stood in (the number is the one beside the line)
+    const r = Math.max(8, s * 0.7); ctx.font = `bold ${Math.round(r * 1.2)}px ui-monospace, Consolas, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 2;
+    for (const pin of model.pins) { const x = ox + (pin.cx + 0.5) * s, z = oy + (pin.cz + 0.5) * s; ctx.fillStyle = '#0d0f14e6'; ctx.strokeStyle = PAL.me; ctx.beginPath(); ctx.arc(x, z, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = PAL.me; ctx.fillText(String(pin.n), x, z + 1); }
+    ctx.textBaseline = 'alphabetic';
+  }
   // player arrow: forward in world is (-sin yaw, -cos yaw) on (x, z)
   const px = ox + (model.player.x / model.cell) * s, pz = oy + (model.player.z / model.cell) * s, fx = -Math.sin(model.player.yaw), fz = -Math.cos(model.player.yaw), r = Math.max(6, s * 0.6);
   ctx.fillStyle = PAL.me; ctx.strokeStyle = '#0d0f14'; ctx.lineWidth = 2; ctx.beginPath();
   ctx.moveTo(px + fx * r, pz + fz * r); ctx.lineTo(px - fx * r * 0.6 - fz * r * 0.6, pz - fz * r * 0.6 + fx * r * 0.6); ctx.lineTo(px - fx * r * 0.6 + fz * r * 0.6, pz - fz * r * 0.6 - fx * r * 0.6); ctx.closePath(); ctx.fill(); ctx.stroke();
   ctx.font = '14px ui-monospace, Consolas, monospace'; ctx.fillStyle = PAL.text; ctx.textAlign = 'left';
   ctx.fillText(model.name.toUpperCase(), ox, oy - 18);
-  ctx.fillStyle = PAL.dim; ctx.fillText('LEVER ▪ red / green    EXIT ◆    KEY DOOR ▬ in the key colour' + (model.noise ? '    ○ how far a shot carries' : ''), ox, oy + s * model.h + 22);
+  ctx.fillStyle = PAL.dim; ctx.fillText('LEVER ▪ red / green    EXIT ◆    KEY DOOR ▬ in the key colour' + (model.noise ? '    ○ how far a shot carries' : '') + (model.pins?.length ? '    ① where it was said (the Log)' : ''), ox, oy + s * model.h + 22);
   ctx.fillStyle = PAL.dim; ctx.textAlign = 'right';
   ctx.fillText(`KILLS ${model.kills}/${model.totals.enemies}   SECRETS ${model.secrets}/${model.totals.secrets}   TAB: CLOSE`, ox + s * model.w, oy - 18);
 }

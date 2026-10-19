@@ -25,7 +25,7 @@ import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } fro
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
-import { recordAdd, recordView, recordCounts } from './record.js';
+import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
@@ -127,7 +127,8 @@ function closeRecord() {
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
-function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') { g.progress = recordAdd(g.progress, g.mapId, e.id); g.unread.add(e.id); ui.setUnread(g.unread.size); } else if (e.type === 'objective') { g.objectives.push(e.text); if (g.objectives.length > 60) g.objectives.shift(); } else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
+function recordMessages(ev) { if (g.world?.map.range) return; for (const e of ev) { if (e.type === 'message') { g.progress = recordAdd(g.progress, g.mapId, e.id); { const p = g.world.player, S = g.world.map.cell; g.progress = recordAtAdd(g.progress, g.mapId, e.id, g.world.time, Math.floor(p.x / S), Math.floor(p.z / S)); } g.unread.add(e.id); ui.setUnread(g.unread.size); }
+    else if (e.type === 'pickup' || e.type === 'weapon_pickup') { const p = g.world.player, S = g.world.map.cell; g.progress = foundAdd(g.progress, g.mapId, e.kind, g.world.time, Math.floor(p.x / S), Math.floor(p.z / S)); } else if (e.type === 'objective') { g.objectives.push(e.text); if (g.objectives.length > 60) g.objectives.shift(); } else if (e.type === 'choice') g.progress = { ...g.progress, choices: { ...(g.progress.choices ?? {}), [e.id]: e.value } }; } }        // PT-039: a choice the player made is kept in the progress at once (the next map's world starts with it)
 function applySave(save, slot) {
   let r; try { r = loadWorld(save, (id) => MAPS[id]); } catch (e) { r = { ok: false, reason: 'corrupt', detail: String(e.message ?? e) }; }         // a broken save must never take the shell down (audit A08)
   if (!r.ok) { ui.show(g.mode === 'paused' ? 'pause' : 'title', { canContinue: canContinue(), note: `Could not load ${slot}: ${r.reason} ${r.detail}` }); return false; }
@@ -143,7 +144,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
-  g.mapId = g.world.mapId; g.difficulty = g.world.difficulty; g.seed = g.world.seed; g.objectives = g.world.objective ? [g.world.objective] : []; g.miniModel = null;
+  g.mapId = g.world.mapId; if (!world) g.progress = attemptReset(g.progress, g.mapId); g.difficulty = g.world.difficulty; g.seed = g.world.seed; g.objectives = g.world.objective ? [g.world.objective] : []; g.miniModel = null;
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
@@ -210,8 +211,8 @@ function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuf
 function openJournal() {
   if (g.mode !== 'playing' || !g.world) return;
   cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.();
-  const log = journalLog({ maps: MAPS, progress: g.progress, mapId: g.mapId, unread: g.unread }); g.journalTab = openTab(log.newCount);
-  ui.show('journal', { log, objectives: objectivesPage({ current: g.world.objective, history: g.objectives }), items: itemsPage({ player: g.world.player, upgrades: g.world.upgrades ?? g.progress.upgrades }), bestiary: bestiaryPage(g.progress.bestiary), mapName: MAPS[g.mapId]?.name ?? g.mapId, tab: g.journalTab }); g.unread = new Set(); ui.setUnread(0);
+  const log = journalLog({ maps: MAPS, progress: g.progress, mapId: g.mapId, unread: g.unread, seen: g.world.messagesSeen, manifest: CAMPAIGN }); g.journalTab = openTab(log.newCount); g.journalPins = log.pins;          // PT-054: the Log by level, with a pin on the Map page for every line said on this one
+  ui.show('journal', { log, objectives: objectivesPage({ current: g.world.objective, history: g.objectives }), items: itemsPage({ player: g.world.player, upgrades: g.world.upgrades ?? g.progress.upgrades, found: g.progress.found?.[g.mapId] ?? [], map: MAPS[g.mapId] }), bestiary: bestiaryPage(g.progress.bestiary), mapName: MAPS[g.mapId]?.name ?? g.mapId, tab: g.journalTab }); g.unread = new Set(); ui.setUnread(0);
 }
 function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.mode = 'playing'; ui.show(null); requestLock(); }
 function quickSave() {
@@ -418,7 +419,7 @@ function frameBody(now) {
   }
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
   audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
-  const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) drawAutomap(mapCanvas, automapModel(g.world));
+  const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }
   { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
   if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();

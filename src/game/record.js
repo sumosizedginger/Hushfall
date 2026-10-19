@@ -34,3 +34,26 @@ export function recordCounts(view) {
   for (const g of view) for (const e of g.entries) { all++; if (e.document) docs++; }
   return { all, docs };
 }
+
+// ---- PT-054 (the owner, 2026-10-19: "no way to tell when or where it was said"; the Journal "does not track items or weapons you pick up"): WHEN and WHERE, and what was picked up. Both live in the run's progress, next to the Record, as small arrays of numbers.
+//   progress.recordAt = { mapId: { messageId: [seconds into the level, cell x, cell z] } }          the LATEST receipt of each message (a replayed map overwrites it: the Log of the map being played is about this attempt)
+//   progress.found    = { mapId: [[pickup kind, seconds, cell x, cell z], ...] }                    the ledger of the attempt being played (a fresh start of the map empties it; a save carries it); at most FOUND_MAX entries, the oldest dropped first
+export const FOUND_MAX = 300;
+/** where and when a message arrived: the player's seconds into the level and cell */
+export function recordAtAdd(progress, mapId, id, t, cx, cz) {
+  if (!mapId || typeof id !== 'string' || !id || ![t, cx, cz].every(Number.isFinite)) return progress;
+  const at = progress.recordAt?.[mapId] ?? {}; if (!(id in at) && Object.keys(at).length >= 400) return progress;
+  return { ...progress, recordAt: { ...(progress.recordAt ?? {}), [mapId]: { ...at, [id]: [Math.max(0, Math.round(t)), Math.round(cx), Math.round(cz)] } } };
+}
+/** a pickup: the kind, when, where */
+export function foundAdd(progress, mapId, kind, t, cx, cz) {
+  if (!mapId || typeof kind !== 'string' || !kind || ![t, cx, cz].every(Number.isFinite)) return progress;
+  const list = [...(progress.found?.[mapId] ?? []), [kind, Math.max(0, Math.round(t)), Math.round(cx), Math.round(cz)]]; while (list.length > FOUND_MAX) list.shift();
+  return { ...progress, found: { ...(progress.found ?? {}), [mapId]: list } };
+}
+/** a fresh start of a map: its ledger and the times of its messages belong to the attempt before */
+export function attemptReset(progress, mapId) {
+  if (!progress?.found?.[mapId] && !progress?.recordAt?.[mapId]) return progress;
+  const { [mapId]: _f, ...found } = progress.found ?? {}, { [mapId]: _r, ...recordAt } = progress.recordAt ?? {}, out = { ...progress };
+  if (Object.keys(found).length) out.found = found; else delete out.found; if (Object.keys(recordAt).length) out.recordAt = recordAt; else delete out.recordAt; return out;
+}
