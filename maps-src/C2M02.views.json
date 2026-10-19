@@ -1,74 +1,74 @@
 [
-{
-"name": "01-start",
-"x": 8.5,
-"z": 35.5,
-"yaw": -1.571,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "02-queue",
-"x": 24.5,
-"z": 35.5,
-"yaw": -1.571,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "03-ridge",
-"x": 36.5,
-"z": 35.5,
-"yaw": 0,
-"pitch": 0.1,
-"open": true,
-"ticks": 10
-},
-{
-"name": "04-canal",
-"x": 30.5,
-"z": 23.5,
-"yaw": -1.571,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "05-station1",
-"x": 20.5,
-"z": 17.5,
-"yaw": 0,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "06-weighhouse",
-"x": 58.5,
-"z": 35.5,
-"yaw": -1.571,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "07-court",
-"x": 116.5,
-"z": 35.5,
-"yaw": -1.571,
-"pitch": 0.04,
-"open": true,
-"ticks": 10
-},
-{
-"name": "08-plain",
-"x": 70.5,
-"z": 28.5,
-"yaw": 0,
-"pitch": 0.0,
-"open": true,
-"ticks": 10
-}
+ {
+  "name": "01-start",
+  "x": 6.5,
+  "z": 35.5,
+  "yaw": -1.571,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "02-queue",
+  "x": 19,
+  "z": 35.5,
+  "yaw": -1.571,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "03-ridge",
+  "x": 27.5,
+  "z": 35.5,
+  "yaw": 0,
+  "pitch": 0.1,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "04-canal",
+  "x": 23.5,
+  "z": 23.5,
+  "yaw": -1.571,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "05-station1",
+  "x": 15.5,
+  "z": 17.5,
+  "yaw": 0,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "06-weighhouse",
+  "x": 44,
+  "z": 35.5,
+  "yaw": -1.571,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "07-court",
+  "x": 87,
+  "z": 35.5,
+  "yaw": -1.571,
+  "pitch": 0.04,
+  "open": true,
+  "ticks": 10
+ },
+ {
+  "name": "08-plain",
+  "x": 53.5,
+  "z": 28.5,
+  "yaw": 0,
+  "pitch": 0,
+  "open": true,
+  "ticks": 10
+ }
 ]

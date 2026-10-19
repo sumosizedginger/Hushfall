@@ -385,6 +385,88 @@
      "objective": "The colonnade: west is a fight, east is the quiet way"
     }
    ]
+  },
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [24, 45],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 37],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [32, 45],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 53],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "amb-dropin-2",
+   "when": "enter",
+   "at": [24, 22],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 14],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [24, 30],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [16, 21],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -754,7 +836,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "chorister",
    "at": [40, 55],
    "facing": 0.45
   },
@@ -858,7 +940,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [38, 42],
    "facing": 0.364
   },
@@ -870,7 +952,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gill",
    "at": [38, 30],
    "facing": 0.288
   },

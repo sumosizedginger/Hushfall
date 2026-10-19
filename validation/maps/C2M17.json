@@ -2,16 +2,16 @@
   "mapId": "C2M17",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "06eaa99",
+  "codeVersion": "b7d6776",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "d4ef04ed54b8296f",
   "assetVersion": "2a768302f10b0f75",
-  "engineSha": "bb40e811807b82d3",
+  "engineSha": "ed26e54776c6e5f6",
   "sources": {
-    "engine": "bb40e811807b82d3",
+    "engine": "ed26e54776c6e5f6",
     "render": "0e73592846aa4b5b",
-    "game": "c9e659c001f81bc8",
+    "game": "70110604b1ac26da",
     "audio": "50c8b677684b5b60",
     "assets": "2a768302f10b0f75"
   },
@@ -242,22 +242,23 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 372,
-        "fired": 92,
+        "capacity": 520,
+        "fired": 210,
         "capacityBy": {
           "flare": 20,
-          "shell": 24,
-          "rivet": 260,
-          "bolt": 18,
-          "cell": 50,
+          "shell": 39,
+          "rivet": 292,
+          "bolt": 39,
+          "cell": 130,
           "round": 82,
           "rocket": 10
         },
         "firedBy": {
-          "flare": 1,
-          "rivet": 85,
-          "shell": 2,
-          "bolt": 4
+          "flare": 4,
+          "rivet": 151,
+          "shell": 20,
+          "bolt": 20,
+          "cell": 15
         },
         "drops": true
       },
@@ -268,7 +269,7 @@
         "policy": "strafing",
         "seeds": 3,
         "result": "complete",
-        "damage": 109,
+        "damage": 76,
         "meanDamage": 109,
         "seconds": 150.3,
         "kills": 52,
@@ -418,9 +419,24 @@
         "detail": "x10.00"
       },
       {
-        "name": "ammo hard: rivet rounds available (260) are at least 1.5x what the perfect bot fires (85)",
+        "name": "ammo hard: rivet rounds available (292) are at least 1.5x what the perfect bot fires (151)",
         "ok": true,
-        "detail": "x3.06"
+        "detail": "x1.93"
+      },
+      {
+        "name": "ammo hard: shell rounds available (39) are at least 1.5x what the perfect bot fires (20)",
+        "ok": true,
+        "detail": "x1.95"
+      },
+      {
+        "name": "ammo hard: bolt rounds available (39) are at least 1.5x what the perfect bot fires (20)",
+        "ok": true,
+        "detail": "x1.95"
+      },
+      {
+        "name": "ammo hard: cell rounds available (130) are at least 1.5x what the perfect bot fires (15)",
+        "ok": true,
+        "detail": "x8.67"
       },
       {
         "name": "ammo easy: rounds available (855) are at least 1.5x what the perfect bot fires (169): humans miss",
@@ -433,9 +449,9 @@
         "detail": "x3.14"
       },
       {
-        "name": "ammo hard: rounds available (372) are at least 1.5x what the perfect bot fires (92): humans miss",
+        "name": "ammo hard: rounds available (520) are at least 1.5x what the perfect bot fires (210): humans miss",
         "ok": true,
-        "detail": "x4.04"
+        "detail": "x2.48"
       },
       {
         "name": "viability easy: a perfect fighter completes the level",

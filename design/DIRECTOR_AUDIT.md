@@ -43,7 +43,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C1E4M08 | Gate Warden | 2102 | 20 | 10 | 6 | 35 | 15 | 41 | 0.95 | 3 | 0 | 0 | 1 | 0 | 1.7 | 0 | 50 | KEEP (boss or set piece: judge by play) | sparse, symmetrical, no key, few ambushes, one secret |
 | C1E4S01 | The Quiet Room | 305 | 0 | 0 | 0 | 0 | 0 | 46 | 0.85 | 0 | 0 | 0 | 0 | 0 | 0.4 | - | - | KEEP (no combat) |  |
 | C2M01 | Threshold Beach | 1483 | 46 | 31 | 4 | 39 | 28 | 52 | 0.57 | 1 | 0 | 0 | 1 | 2 | 1.7 | 1 | 55 | A- light pass | no key, one secret |
-| C2M02 | Glass Steppe | 6418 | 58 | 9 | 8 | 31 | 33 | 38 | 0.87 | 7 | 1 | 0 | 1 | 1 | 2 | 0 | 62 | C exemplar | sparse, very long, no key, few ambushes, one secret, 1 empty room |
+| C2M02 | Glass Steppe | 4584 | 58 | 13 | 8 | 31 | 33 | 39 | 0.83 | 10 | 0 | 0 | 1 | 3 | 2.7 | 0 | 62 | C exemplar | thin, very long, no key, one secret |
 | C2M03 | Cantor Outpost | 2161 | 34 | 16 | 7 | 32 | 26 | 70 | 0.66 | 2 | 1 | 0 | 1 | 2 | 1.7 | 0 | 91 | A- light pass | no key, one secret, 1 empty room |
 | C2M04 | Tuning Fork Fields | 2698 | 36 | 13 | 6 | 36 | 19 | 69 | 0.93 | 1 | 0 | 0 | 1 | 0 | 2.1 | 0 | 173 | B structural | thin, long, symmetrical, no key, few ambushes, one secret |
 | C2M05 | The Reliquary Road | 1671 | 43 | 26 | 6 | 35 | 30 | 73 | 0.69 | 0 | 0 | 0 | 1 | 15 | 2.2 | 0 | 53 | A- light pass | no key, one secret, no loop |
@@ -52,7 +52,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2M08 | Threshold Ascent | 2507 | 30 | 12 | 8 | 33 | 27 | 73 | 0.85 | 1 | 0 | 0 | 1 | 1 | 1.8 | 0 | 80 | A encounters and roster | thin, long, no key, few ambushes, one secret |
 | C2M09 | Sounding Deep Gate | 2794 | 44 | 16 | 7 | 36 | 20 | 76 | 0.56 | 0 | 0 | 0 | 1 | 2 | 1.6 | 0 | 28 | A encounters and roster | long, no key, one secret |
 | C2M10 | Echo Markets | 3121 | 29 | 9 | 6 | 34 | 21 | 4 | 0.81 | 19 | 6 | 0 | 1 | 0 | 1.1 | 1 | 23 | B structural | sparse, very long, flat, no key, few ambushes, one secret, 6 empty rooms |
-| C2M11 | Undercantor Halls | 3851 | 32 | 8 | 5 | 34 | 13 | 12 | 0.63 | 2 | 4 | 0 | 1 | 0 | 1.2 | 6 | 52 | C exemplar | sparse, very long, no key, few ambushes, one secret, 4 empty rooms |
+| C2M11 | Undercantor Halls | 3851 | 32 | 8 | 6 | 31 | 22 | 12 | 0.63 | 2 | 4 | 0 | 1 | 2 | 1.4 | 6 | 52 | C exemplar | sparse, very long, no key, one secret, 4 empty rooms |
 | C2M12 | The Drowned Choir | 4319 | 61 | 14 | 6 | 66 | 20 | 51 | 0.77 | 2 | 0 | 0 | 1 | 3 | 1.6 | 2 | 65 | B structural | thin, very long, one-note tollbearer, no key, one secret |
 | C2M13 | Lantern Ossuary | 1614 | 42 | 26 | 9 | 26 | 24 | 59 | 0.75 | 8 | 0 | 0 | 1 | 2 | 1.5 | 0 | 29 | A- light pass | no key, one secret |
 | C2M14 | Harmonic Gardens | 3819 | 31 | 8 | 6 | 32 | 23 | 4 | 0.88 | 0 | 3 | 0 | 1 | 2 | 2.1 | 1 | 190 | B structural | sparse, very long, flat, no key, one secret, 3 empty rooms |
@@ -62,7 +62,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2M18 | Nerve Cathedral | 3772 | 63 | 17 | 9 | 25 | 29 | 58 | 0.97 | 25 | 0 | 0 | 1 | 1 | 3.1 | 0 | 60 | B structural | very long, symmetrical, no key, few ambushes, one secret |
 | C2M19 | Bone Loom | 2135 | 53 | 25 | 9 | 34 | 28 | 57 | 0.89 | 5 | 0 | 1 | 1 | 2 | 2.2 | 1 | 96 | A encounters and roster | symmetrical, one secret |
 | C2M20 | Vein Rail | 1857 | 37 | 20 | 8 | 32 | 38 | 70 | 0.99 | 0 | 0 | 0 | 1 | 2 | 2.2 | 12 | 77 | A encounters and roster | symmetrical, no key, one secret, no loop |
-| C2M21 | Pulse Foundry | 3317 | 42 | 13 | 8 | 40 | 17 | 50 | 0.99 | 9 | 3 | 0 | 1 | 0 | 1.4 | 0 | 124 | C exemplar | thin, very long, symmetrical, no key, few ambushes, one secret, 3 empty rooms |
+| C2M21 | Pulse Foundry | 3317 | 42 | 13 | 8 | 33 | 21 | 50 | 0.99 | 9 | 3 | 0 | 1 | 2 | 1.6 | 0 | 124 | C exemplar | thin, very long, symmetrical, no key, one secret, 3 empty rooms |
 | C2M22 | Mourning Halls | 4325 | 26 | 6 | 7 | 31 | 8 | 22 | 0.93 | 0 | 1 | 0 | 1 | 8 | 3 | 0 | 122 | B structural | sparse, very long, melee-only, symmetrical, no key, one secret, 1 empty room |
 | C2M23 | The Reprise | 2896 | 66 | 23 | 10 | 32 | 27 | 21 | 0.12 | 13 | 0 | 1 | 1 | 2 | 2.9 | 0 | 72 | A encounters and roster | long, one secret |
 | C2M24 | Choir of One | 1466 | 10 | 7 | 3 | 50 | 0 | 47 | 0.87 | 0 | 0 | 0 | 1 | 1 | 1.2 | 5 | 46 | KEEP (boss or set piece: judge by play) | sparse, thin roster, no key, few ambushes, one secret |

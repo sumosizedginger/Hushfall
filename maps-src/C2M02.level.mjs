@@ -35,7 +35,7 @@ box(L, [119, 33, 119, 38], '$', CS); L.door(119, 35, { remote: true }); setCell(
 box(L, [120, 32, 128, 39], 's', CS);
 // ---- the old shore: the plain's corners are cut away and outcrops of fused glass stand on it (cover, and the plain is not a rectangle) ------------------------------------------------------------------------------------------------------------------
 for (const [cx, cz, rx, rz] of [[8, 6, 10, 7], [124, 6, 10, 7], [8, 66, 10, 7], [124, 66, 10, 7], [60, 5, 9, 2.5], [70, 67, 8, 2.5], [100, 5, 6, 2.2], [26, 67, 7, 2.2]]) ellipse(L, cx, cz, rx, rz, '!', PL);
-for (const [cx, cz, rx, rz] of [[28, 17, 2.5, 2], [64, 11, 4, 3], [74, 17, 3, 2], [110, 14, 4, 3], [38, 29, 2, 1.5], [66, 28, 3, 1.5], [98, 29, 2.5, 1.5], [112, 29, 2, 1.5], [28, 43, 2.5, 1.5], [58, 42, 2, 1.5], [66, 44, 3, 1.5], [92, 43, 2.5, 1.5], [112, 42, 2, 1.5], [12, 62, 3, 2.5], [32, 60, 3, 2.5], [72, 60, 4, 3], [86, 56, 2.5, 2], [120, 20, 3, 2.5], [10, 44, 2, 2]]) ellipse(L, cx, cz, rx, rz, '!', PL);
+for (const [cx, cz, rx, rz] of [[28, 17, 2.5, 2], [64, 11, 4, 3], [74, 17, 3, 2], [110, 14, 4, 3], [38, 29, 2, 1.5], [66, 28, 3, 1.5], [98, 29, 2.5, 1.5], [112, 29, 2, 1.5], [28, 43, 2.5, 1.5], [58, 42, 2, 1.5], [66, 44, 3, 1.5], [92, 43, 2.5, 1.5], [112, 42, 2, 1.5], [12, 62, 3, 2.5], [32, 60, 3, 2.5], [72, 60, 4, 3], [86, 56, 2.5, 2], [120, 20, 3, 2.5], [10, 44, 2, 2]]) ellipse(L, cx, cz, rx * 1.4, rz * 1.1, '!', PL);          // PT-052: the squeeze shaves the outcrops; these are a little broader so the plain keeps its blocks to run round
 ring(L, '!', (x, z) => (x >= 13 && x <= 27 && z >= 7 && z <= 17) || (x >= 95 && x <= 107 && z >= 54 && z <= 66) ? '$' : '!');
 const P = placer(L); L.put(8, 35, '@'); P.reserve(8, 35);
 const { E, P: PK, PR } = P;
@@ -72,10 +72,17 @@ S.hall([96, 56, 106, 64], { sides: { s: { w: 3, gap: 3, d: 2, heart: true }, w: 
 S.chamfer([120, 32, 128, 39], 'ne se', 2);
 console.log('C2M02 shape:', S.summary()); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end shaping ----
+// ---- PT-052 exemplar 2 (the Director's Plan, R3): a shorter crossing (the squeeze at the end of this file) and two ambushes on the road: the queue turns at the first stretch of the road, the canal gives up what lay in it on the second. The first try added twelve creatures and killed the bot on Hard, four were still too many for its ammunition gates, so the weight is the ambushes and a few more bolts at the start (the ridges are what the harpoon is for) ----
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+const ENC = new Encounters(L), taken = P.ents.map((e) => e.at);
+ENC.dropIn({ at: [58, 35], radius: 2.5, cells: ENC.around([58, 35], { n: 3, min: 6, max: 10, avoid: taken }), kind: 'tollbearer' });
+ENC.dropIn({ at: [94, 35], radius: 2.5, cells: ENC.around([94, 35], { n: 2, min: 6, max: 10, avoid: taken }), kind: 'gaunt' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M02', name: 'Glass Steppe', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#d8b49a', fogDensity: 0.0035, sky: 'anselm', look: 'steppe' },
-  entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
+  entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 24, rivet: 90, bolt: 18, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'GLASS STEPPE', lines: ['East of the cliff there was a sea. The floor of it is a plain of glass.', 'There is one road across.'] },
   outro: 'Next: the Cantor Outpost. A fort stands in the glass at the far side, with a bell house at its heart.',
   objective: 'Cross the dry sea: three relay stations open the gate at the east end of the road',
@@ -114,4 +121,11 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [] };
 console.log('C2M02: enemies', P.ents.filter((e) => e.type === 'enemy').length);
+MAP.roster = { id: 'C2M02', lane: [...(laneOf('C2M02') ?? [])], keep: [], plan: [] };
+ENC.apply(MAP);
+// ---- PT-052 exemplar 2: THE SQUEEZE (tools/mapkit/squeeze.mjs). The crossing was 132 columns of mostly empty glass for 58 creatures (nine per thousand cells); thirty-four columns are taken out where nothing stands (the crossing is a quarter shorter).
+// Everything above this line is in the AUTHORING frame (the 132-column drawing); the shipped map is narrower and its routes are the same routes with the same cuts (`node tools/mapkit/squeeze.mjs routes C2M02`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = { axis: 'x', cuts: [[5, 7], [15, 17], [19, 20], [24, 25], [26, 27], [31, 32], [35, 36], [37, 38], [39, 40], [43, 44], [51, 52], [55, 56], [58, 60], [65, 66], [71, 72], [73, 74], [77, 78], [79, 80], [82, 83], [85, 86], [90, 91], [99, 100], [103, 104], [106, 107], [109, 110], [112, 113], [116, 117], [118, 119], [122, 123], [126, 127], [128, 129]] };
+// ---- end PT-052 exemplar 2 ----
+
 export default MAP;

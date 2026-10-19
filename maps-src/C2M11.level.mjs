@@ -5,6 +5,8 @@
 // the Silent's gate is on a sound-lock and opens for someone who has been quiet. Going through a gate RECORDS THE CHOICE (`choose` / `choices`, engine PT-039): C2M12 and the Gardens answer it.
 // SHAPE: a vestibule, a stair, an unroofed colonnade, a rectilinear marble gallery (the Songkeepers' wing is the rigid side) and a chain of blobs and fingers (the Silent's wing is the grown side), a seat. Scale class MIXED.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, box, ramp, placer, FLOORS } from '../tools/mapkit/c2.mjs';
 import { blob, finger, smooth, skinWalls } from '../tools/mapkit/cave.mjs';
 
@@ -80,6 +82,12 @@ for (const [x, z, k] of [[84, 36, 'gaunt'], [97, 30, 'gaunt'], [85, 22, 'gaunt']
 for (const [x, z] of [[82, 38], [86, 40], [94, 28], [98, 30], [82, 20], [86, 22], [70, 14], [72, 17], [68, 34], [72, 32]]) E('vaelfolk', x, z);
 // ---- the seat: its two guards, asleep -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 E('zealot', 51, 20, { facing: S }); E('zealot', 57, 20, { facing: S });
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [24,45], radius: 2, cells: ENC.around([24,45], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [24,22], radius: 2, cells: ENC.around([24,22], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M11', name: 'Undercantor Halls', version: 1, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'halls', sky: 'deep', fog: '#10121c', fogDensity: 0.008 },
@@ -126,4 +134,8 @@ export const waypoints = {
   main: [[54, 84, 0], [54, 78, 0], [54, 70], [54, 63, 0], [54, 56], [24, 54], [24, 48], [24, 44], [24, 38], [24, 30], [24, 22], [24, 16], [40, 17], [44, 17, 0], [46, 17, 0], [50, 17], [58, 14], { op: 'switch', id: 'seat' }, [53, 12], [53, 9, 0]],
   secret: [[54, 84, 0], [54, 78, 0], [54, 70], [54, 63, 0], [54, 56], [84, 52], [84, 44], [84, 38], [94, 30], [xs, zn + 2], { op: 'use', at: [xs, zn - 1] }, [xs, zn - 3, 0], [xs, zn + 3, 0], [86, 22], [76, 16], [70, 15], [64, 17, 0], { op: 'use', at: [60, 17] }, [58, 17, 0], [56, 14], { op: 'switch', id: 'seat' }, [53, 12], [53, 9, 0]],
 };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M11', lane: [...(laneOf('C2M11') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"chorister","pick":"spread","n":1},{"from":"tollbearer","to":"gill","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;

@@ -21,14 +21,17 @@
   "C1E4M05",
   "C1E4M06",
   "C2M01",
+  "C2M02",
   "C2M03",
   "C2M05",
   "C2M06",
   "C2M07",
   "C2M09",
+  "C2M11",
   "C2M13",
   "C2M19",
   "C2M20",
+  "C2M21",
   "C2M23",
   "C2M25"
  ],
@@ -364,14 +367,14 @@
    "walk": 1483
   },
   "C2M02": {
-   "density": 9,
+   "density": 13,
    "rangedShare": 33,
-   "ambushes": 1,
+   "ambushes": 3,
    "kinds": 8,
-   "loops": 7,
+   "loops": 10,
    "topShare": 31,
-   "symmetry": 0.87,
-   "walk": 6418
+   "symmetry": 0.83,
+   "walk": 4584
   },
   "C2M03": {
    "density": 16,
@@ -455,11 +458,11 @@
   },
   "C2M11": {
    "density": 8,
-   "rangedShare": 13,
-   "ambushes": 0,
-   "kinds": 5,
+   "rangedShare": 22,
+   "ambushes": 2,
+   "kinds": 6,
    "loops": 2,
-   "topShare": 34,
+   "topShare": 31,
    "symmetry": 0.63,
    "walk": 3851
   },
@@ -555,11 +558,11 @@
   },
   "C2M21": {
    "density": 13,
-   "rangedShare": 17,
-   "ambushes": 0,
+   "rangedShare": 21,
+   "ambushes": 2,
    "kinds": 8,
    "loops": 9,
-   "topShare": 40,
+   "topShare": 33,
    "symmetry": 0.99,
    "walk": 3317
   },
@@ -1070,6 +1073,24 @@
     "density"
    ],
    "why": "density is 13 per thousand cells against a floor of 18: the descent is six long landings; the answer is a shorter shaft (Level B). The two ambushes cost the lantern twelve seconds, so a tin of oil lies at each"
+  },
+  "C2M02": {
+   "skip": [
+    "density"
+   ],
+   "why": "the crossing was squeezed from 132 to 98 columns (6418 to 4755 walkable cells) and holds 58 creatures (density 9 -> 12) plus two ambushes; twelve more creatures killed the bot on hard and four more broke its ammunition gates, so the rest waits for a better bot or for the owner to say the crossing should be busier"
+  },
+  "C2M21": {
+   "skip": [
+    "density"
+   ],
+   "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
+  },
+  "C2M11": {
+   "skip": [
+    "density"
+   ],
+   "why": "the old stand-still bot's gates accept only part of the roster change (shooters x1, others x1 of the plan); the rest waits for Bot v2"
   }
  }
 }

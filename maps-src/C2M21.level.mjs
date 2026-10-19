@@ -5,6 +5,8 @@
 // answered by distance, by a pier, or by being a metre above or below it: the lanes between the rings are what separates them.
 // The way on: three coolant VALVES, one on each ring (a wheel on a steam pipe under a red lamp, beside the Resonants that stand by it); the exit on the top ring opens when all three are turned. Drop-fed ammunition. A hatch under the reactor's rim holds a cache.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 100, H = 100, C = 50, L = new Level(W, H, { fill: 'ε' }); L.usedHeights = true;
@@ -76,6 +78,12 @@ R([[27, 249], [27, 262]], 'tollbearer', { variant: 'hived' }); R([[10.5, 323]], 
 for (const [r, a, k] of [[44, 195, 'health_small'], [44, 215, 'health_large'], [27, 230, 'health_small'], [27, 270, 'health_large'], [27, 310, 'health_small'], [10.5, 280, 'health_large'], [10.5, 320, 'health_small'], [10.5, 355, 'health_large'], [44, 355, 'health_small'], [44, 300, 'health_small']]) PK(k, ...at(r, a));
 for (const [r, a] of [[44, 230], [27, 285], [10.5, 300]]) PK('armor_vest', ...at(r, a));
 CACHE.slice(0, 5).forEach(([x, z], i) => PK(['armor_vest', 'ammo_rocket', 'ammo_rocket', 'health_large', 'ammo_round'][i], x, z));
+// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const ENC = new Encounters(L);
+ENC.dropIn({ at: [47,23], radius: 2, cells: ENC.around([47,23], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [54,41], radius: 2, cells: ENC.around([54,41], { n: 3, min: 6, max: 10 }), kind: 'g' });
+// ---- end PT-052 ----
+
 const MAP = {
   id: 'C2M21', name: 'Pulse Foundry', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'reactor', sky: 'ash', beat: true, fog: '#2a1a10', fogDensity: 0.012 },
@@ -118,4 +126,8 @@ console.log('C2M21: enemies', P.ents.filter((e) => e.type === 'enemy').length, '
 const Q = (r, a) => at(r, a);
 const route = [[6, 50, 0], Q(44, 190), { op: 'switch', id: 'v1' }, Q(44, 205), Q(44, 215), Q(44, 225), Q(36, 225), Q(27, 225), Q(27, 240), Q(27, 255), Q(27, 270), { op: 'switch', id: 'v2' }, Q(27, 270), Q(20, 270), Q(13.5, 270), Q(10.5, 285), Q(10.5, 300), { op: 'switch', id: 'v3' }, Q(10.5, 270), Q(10.5, 240), Q(10.5, 215), [EXIT[0] + 1, EXIT[1], 0], [EXIT[0], EXIT[1], 0]];
 export const waypoints = { main: route, secret: route.slice(0, 11).concat([[SEC.front[0], SEC.front[1]], { op: 'use', at: SEC.panel }, [CACHE[1][0], CACHE[1][1], 0], [SEC.front[0], SEC.front[1], 0]], route.slice(11)) };
+// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
+MAP.roster = { id: 'C2M21', lane: [...(laneOf('C2M21') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1},{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
+ENC.apply(MAP);
+
 export default MAP;

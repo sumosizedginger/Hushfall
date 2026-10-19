@@ -375,6 +375,88 @@
      "objective": "All three valves are turned. The exit on the top ring is open"
     }
    ]
+  },
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [47, 23],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [55, 23],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [39, 23],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [40, 27],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "amb-dropin-2",
+   "when": "enter",
+   "at": [54, 41],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [46, 41],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [47, 37],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [61, 45],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
@@ -641,7 +723,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "chorister",
    "at": [54, 23],
    "facing": -1.058
   },
@@ -689,7 +771,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bellhand",
    "at": [55, 40],
    "variant": "hived",
    "facing": -1.369
@@ -703,7 +785,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "gaunt",
    "at": [50, 60],
    "variant": "hived",
    "facing": -1.794
