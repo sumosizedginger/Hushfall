@@ -38,6 +38,7 @@ export class UI {
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
+    $('record-list').onclick = (e) => { const b = e.target?.closest?.('button[data-scene]'); if (b) this.h.replayScene(b.dataset.scene); };
     $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); const m = e.target.closest?.('button[data-mod]'); if (m && !m.disabled) this.h.buyMod(m.dataset.mod); };
@@ -48,7 +49,7 @@ export class UI {
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
-    $('set-journalpause').onchange = (e) => this.h.setSetting('journalPause', e.target.checked); $('set-minimap').onchange = (e) => this.h.setSetting('minimap', e.target.value);
+    $('set-journalpause').onchange = (e) => this.h.setSetting('journalPause', e.target.checked); $('set-minimap').onchange = (e) => this.h.setSetting('minimap', e.target.value); $('set-cinematics').onchange = (e) => this.h.setSetting('cinematics', e.target.value);
     $('set-pad').onchange = (e) => this.h.setPadSetting('enabled', e.target.checked); $('set-padlook').oninput = (e) => this.h.setPadSetting('lookRate', Number(e.target.value)); $('set-paddz').oninput = (e) => this.h.setPadSetting('deadzone', Number(e.target.value)); $('set-padinvert').onchange = (e) => this.h.setPadSetting('invertY', e.target.checked);
     $('set-padassist').oninput = (e) => this.h.setPadSetting('assist', Number(e.target.value)); $('set-padvib').onchange = (e) => this.h.setPadSetting('vibration', e.target.checked); $('set-padglyph').onchange = (e) => this.h.setPadSetting('glyphs', e.target.value); $('btn-reset-pad').onclick = () => this.h.resetPadBindings();
     $('set-outline').onchange = (e) => this.h.setSetting('outline', e.target.checked); $('set-paint').onchange = (e) => this.h.setSetting('paint', e.target.checked);
@@ -95,7 +96,7 @@ export class UI {
   }
   hideCrash() { $('screen-crash').classList.add('hidden'); }
   copyCrash() { const t = this.crashText ?? ''; try { navigator.clipboard.writeText(t).then(() => { $('btn-crash-copy').textContent = 'Copied'; }, () => { $('crash-detail').textContent = t; }); } catch { $('crash-detail').textContent = t; } }
-  syncSettings(s) { $('set-minimap').value = s.minimap ?? 'small'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
+  syncSettings(s) { $('set-minimap').value = s.minimap ?? 'small'; $('set-cinematics').value = s.cinematics ?? 'once'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */
   syncBindings(b, capturing = null, note = '') {
@@ -129,14 +130,15 @@ export class UI {
       $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : data.campaignEnd ? 'The Gate is open. Campaign Two is not built yet.' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
     }
     if (name === 'ending') this.endingOpen(data.ending);
-    if (name === 'record') this.recordOpen(data.view, data.counts, data.current);
+    if (name === 'record') this.recordOpen(data.view, data.counts, data.current, data.scenes ?? []);
     if (name === 'journal') this.journalOpen(data);
   }
   /** the Record (PT-037, record.js): a heading per map with entries, each message under its speaker; found documents are set apart; the map being played is scrolled into view */
-  recordOpen(view, counts, current) {
+  recordOpen(view, counts, current, scenes = []) {
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
     $('record-sub').textContent = counts.all ? `${counts.all} messages received, ${counts.docs} of them found documents. Each is kept the first time it reaches you.` : '';
-    $('record-list').innerHTML = view.length ? view.map((gr) => `<h3 data-map="${gr.mapId}"${gr.mapId === current ? ' class="cur"' : ''}>${esc(gr.name)}<small>${esc(gr.mapId)}</small></h3>` + gr.entries.map((e) => `<div class="rec${e.document ? ' doc' : ''}"><b>${esc(e.speaker || 'unsigned')}</b><p>${esc(e.text)}</p></div>`).join('')).join('') : '<div id="record-empty">Nothing yet. What you hear and read along the way is kept here.</div>';
+    const sceneRows = scenes.length ? `<h3>Story scenes<small>watch again</small></h3>` + scenes.map((s) => `<div class="rec scene"><b>${esc(s.title)}</b><p><button data-scene="${esc(s.id)}">Watch again</button></p></div>`).join('') : '';          // PT-063 (R13): only offered from the title, where no game is in hand
+    $('record-list').innerHTML = sceneRows + (view.length ? view.map((gr) => `<h3 data-map="${gr.mapId}"${gr.mapId === current ? ' class="cur"' : ''}>${esc(gr.name)}<small>${esc(gr.mapId)}</small></h3>` + gr.entries.map((e) => `<div class="rec${e.document ? ' doc' : ''}"><b>${esc(e.speaker || 'unsigned')}</b><p>${esc(e.text)}</p></div>`).join('')).join('') : (scenes.length ? '' : '<div id="record-empty">Nothing yet. What you hear and read along the way is kept here.</div>'));
     $('record-list').scrollTop = 0; const cur = $('record-list').querySelector('h3.cur'); if (cur) cur.scrollIntoView?.({ block: 'start' });
     $('btn-record-close').focus?.();
   }
@@ -153,6 +155,16 @@ export class UI {
     if (v.index !== this._endingCard) { this._endingCard = v.index; card.className = ''; void card.offsetWidth; card.className = 'in'; card.dataset.who = v.who || 'narrator'; $('ending-who').textContent = v.who; }
     if ($('ending-text').textContent !== v.text) $('ending-text').textContent = v.text;
     card.classList.toggle('typing', !v.full);
+  }
+  /** a story scene (cinematics.js, PT-063): `v` = { who, text, k, fade } (the subtitle being typed, the black over the picture) or null to take the overlay down. main.js feeds it every frame while a scene plays. */
+  cine(v) {
+    const root = $('cine'), on = !!v; if (root.classList.contains('hidden') === on) { root.classList.toggle('hidden', !on); document.body.classList.toggle('in-cine', on); }
+    if (!v) return;
+    const who = v.who || 'narrator', shown = v.text ? v.text.slice(0, Math.max(1, Math.ceil(v.text.length * (v.k ?? 1)))) : '', sub = $('cine-sub');
+    if (sub.dataset.who !== who) sub.dataset.who = who;
+    if ($('cine-who').textContent !== (v.who ?? '')) $('cine-who').textContent = v.who ?? '';
+    if ($('cine-text').textContent !== shown) $('cine-text').textContent = shown;
+    $('cine-fade').style.opacity = String(v.fade ?? 0);
   }
   /** the whole campaign at a glance (ending.js tally): a row per episode with a disc per map, the totals, and what comes next */
   endingTally(t, e) {

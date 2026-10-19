@@ -78,7 +78,7 @@ const MAP = {
     msg('exit', EXIT[0] - 3, EXIT[1], 3, 'INES', 'A corridor, straight, at the height of the top tier. At the far end the air is cold, and nothing in it is keeping time.'),
   ],
   triggers: [
-    { id: 'enter', when: 'enter', at: [CX - 18, CZ], radius: 4, do: [{ wake: 'choir' }, { wake: 'cantor' }, { objective: 'The choir is up and the conductor is awake: silence the singers, then break it' }] },
+    { id: 'enter', when: 'enter', at: [CX - 18, CZ], radius: 4, do: [{ wake: 'choir' }, { wake: 'cantor' }, { objective: 'The choir is up and the conductor is awake: silence the singers, then break it' }, { cinematic: 'hive-cantor' }] },
     { id: 'half', when: 'hp:cantor<0.5', do: [{ objective: 'Phase two: a ring every bar and Choristers from the dome' }, { message: 'half' }, { shake: 1.2 }] },
     { id: 'down', when: 'dead:cantor', do: [{ exit: { set: 'unlock' } }, { beatOff: true }, { objective: 'The conductor is down and the beat has stopped. The way east is open' }, { message: 'dead' }] },
   ],

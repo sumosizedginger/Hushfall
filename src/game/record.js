@@ -28,6 +28,12 @@ export function recordView(manifest, maps, progress) {
   return out;
 }
 
+/** PT-063 (R13): the story scenes a player has seen, in the order the scenes are written (the Record offers to watch them again from the title; scenes.js has the list) */
+export function recordScenes(progress, scenes) {
+  const seen = progress?.cinematicsSeen ?? [];
+  return scenes.filter((s) => seen.includes(s.id)).map((s) => ({ id: s.id, title: s.title, map: s.map }));
+}
+
 /** how many messages the Record holds, and how many of them are found documents */
 export function recordCounts(view) {
   let all = 0, docs = 0;

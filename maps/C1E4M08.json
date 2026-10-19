@@ -259,6 +259,9 @@
     },
     {
      "message": "broken"
+    },
+    {
+     "cinematic": "gate-open"
     }
    ]
   }

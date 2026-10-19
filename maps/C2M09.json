@@ -337,6 +337,17 @@
  ],
  "triggers": [
   {
+   "id": "arrival",
+   "when": "enter",
+   "at": [10, 22],
+   "radius": 3,
+   "do": [
+    {
+     "cinematic": "deep-gate"
+    }
+   ]
+  },
+  {
    "id": "rim",
    "when": "enter",
    "at": [33, 40],

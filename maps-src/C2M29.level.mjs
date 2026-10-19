@@ -94,7 +94,7 @@ const MAP = {
     { id: 'in', when: 'enter', at: [CX - 14, CZ], radius: 4, do: [{ wake: 'rootbell' }, { wake: 'guard1' }, { message: 'guard' }, { objective: 'The clapper swings: shoot the four root anchors from cover' }] },
     { id: 'anchors', when: 'dead:anchors', do: [spawn('zealot', CX - 7, CZ - 7, 0, 'guard2'), spawn('zealot', CX + 7, CZ + 7, N, 'guard2'), { message: 'drop' }, { tremor: 1.6 }, { objective: 'The chain is gone: it falls. Bait its charge into stone, then unload into it' }] },
     { id: 'last', when: 'hp:rootbell<0.3', do: [{ lights: 0.25 }, { tremor: 1.2 }, { message: 'last' }, { objective: 'The Last Note: cover for the ring, then the whole arsenal into the heart' }] },
-    { id: 'down', when: 'dead:rootbell', do: [{ silence: true }, { exit: { set: 'unlock' } }, { lights: 0.6 }, { message: 'hush' }, { objective: 'It hangs still. The stair is lit, north of the bell' }] },
+    { id: 'down', when: 'dead:rootbell', do: [{ silence: true }, { exit: { set: 'unlock' } }, { lights: 0.6 }, { message: 'hush' }, { objective: 'It hangs still. The stair is lit, north of the bell' }, { cinematic: 'bell-stops' }] },
   ],
   quality: { enemies: [5, 30], botSeconds: [30, 900], mechanics: ['heights', 'triggers', 'secret'], skins: 4,
     enemyKinds: { rootbell: 1, rootanchor: 4, zealot: 2, chorister: 2 },

@@ -66,5 +66,5 @@ test('the shell is wired to it: the pause menu and the title open it, a received
   for (const id of ['screen-record', 'record-list', 'record-sub', 'btn-record', 'btn-record-title', 'btn-record-close']) assert.ok(html.includes(`id="${id}"`), id);
   assert.match(main, /recordMessages\(ev\)/); assert.match(main, /function openRecord\(from\)/); assert.match(main, /function closeRecord\(\)/);
   assert.match(main, /if \(ui\.screen === 'record'\)/g); assert.ok((main.match(/ui\.screen === 'record'/g) ?? []).length >= 2, 'the keyboard and the pad both handle it');
-  assert.match(ui, /recordOpen\(view, counts, current\)/); assert.match(ui, /openRecord\('pause'\)/); assert.match(ui, /openRecord\('title'\)/);
+  assert.match(ui, /recordOpen\(view, counts, current(, scenes = \[\])?\)/); assert.match(ui, /openRecord\('pause'\)/); assert.match(ui, /openRecord\('title'\)/);
 });

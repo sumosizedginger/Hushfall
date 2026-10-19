@@ -223,6 +223,17 @@
  ],
  "triggers": [
   {
+   "id": "arrival",
+   "when": "enter",
+   "at": [11, 28],
+   "radius": 3,
+   "do": [
+    {
+     "cinematic": "threshold"
+    }
+   ]
+  },
+  {
    "id": "seal",
    "when": "enter",
    "at": [21, 28],

@@ -284,6 +284,9 @@
     },
     {
      "objective": "The choir is up and the conductor is awake: silence the singers, then break it"
+    },
+    {
+     "cinematic": "hive-cantor"
     }
    ]
   },

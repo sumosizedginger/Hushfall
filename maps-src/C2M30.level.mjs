@@ -61,7 +61,7 @@ const MAP = {
   triggers: [
     { id: 'door', when: ['msg:door', 'lamp:on'], do: [{ exit: { set: 'unlock' } }, { message: 'lit' }, { objective: 'The lamp is lit and the door is quiet. Walk through' }] },
     { id: 'first', when: 'enter', at: [31, CZ], radius: 5, do: [{ objective: 'Up the stair, through the Hive and the Deep, across the steppe to the Gate' }] },
-    { id: 'gate-arrive', when: 'enter', at: [100, CZ], radius: 3, do: [{ objective: 'The Gate: light the lamp (L) and keep it lit' }] },
+    { id: 'gate-arrive', when: 'enter', at: [100, CZ], radius: 3, do: [{ objective: 'The Gate: light the lamp (L) and keep it lit' }, { cinematic: 'the-gate' }] },
   ],
   quality: { safe: true, enemies: [0, 0], botSeconds: [10, 600], mechanics: ['triggers', 'secret'], skins: 8,
     scaleClass: 'MIXED', tallReason: 'six metres under the roofs: a stair up a shaft and a hall for a door that is also a bell', introduces: 'the lamp at the Gate: the one input of the ending, and the lamp that holds a door shut' },

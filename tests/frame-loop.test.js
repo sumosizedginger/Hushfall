@@ -64,3 +64,28 @@ test('THE DARK YARDS in the frame loop: the lantern, the noise tell on the HUD, 
   assert.ok(r.events.some((e) => e.type === 'pulse'), 'the Sub-Cantor rang'); assert.ok(r.events.some((e) => e.type === 'lamp'), 'the lamp'); assert.equal(r.dom.els.get('hud-noise').classes.has('hidden'), false, 'the noise stat is shown'); assert.ok(/NOISE/.test(r.dom.els.get('hud-noise-label').textContent), r.dom.els.get('hud-noise-label').textContent);
   assert.ok(r.dom.els.get('hud-lamp').classes.has('hidden') === false, 'the lantern gauge is shown');
 });
+
+test('THE STORY SCENES in the frame loop (PT-063, R13): every scene plays through the real view, UI and audio of its map as main.js plays it, the world is untouched, and the eye is given back', async () => {
+  const { SCENES } = await import('../src/game/scenes.js');
+  const { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt } = await import('../src/game/cinematics.js');
+  const { floorAt } = await import('../src/engine/terrain.js');
+  const { hashWorld } = await import('../src/engine/world.js');
+  assert.ok(SCENES.length >= 6);
+  for (const sc of SCENES) {
+    const map = parseMap(readMap('maps', sc.map)), played = [], audio = runningAudio(played); globalThis.innerWidth = 1280; globalThis.innerHeight = 720;
+    try {
+      const w = createWorld(map, { seed: 1, difficulty: 'normal' }), view = new GameView(stubRenderer(), texProxy(), map, w); view.setSize(640, 360, 640); view.setLook({ outline: true, paint: true, fov: 70, brightness: 1 });
+      const ui = new UI(new Proxy({}, { get: () => () => {} })), before = hashWorld(w), res = resolveScene(sc, w, (x, z) => floorAt(w, x, z)); let st = startScene(sc), frames = 0, shown = 0, sawBlack = false;
+      const run = (list) => { for (const a of list) { if (a.cue) audio.handleEvents([{ type: 'cue', name: a.cue }]); else if (a.shake) view.handleEvents([{ type: 'shake', amount: a.shake }]); } };
+      while (!st.done && frames < 60 * (sc.length + 5)) {
+        const r = advanceScene(sc, st, 1 / 60); st = r.state; run(r.run); view.setCinematic(cameraAt(res, st.t));
+        const sub = subtitleAt(sc, st.t), fade = fadeAt(sc, st.t); if (sub) shown++; if (fade > 0.99) sawBlack = true;
+        ui.cine({ who: sub?.who ?? '', text: sub?.text ?? '', k: sub?.k ?? 1, fade }); audio.update(w, 1 / 60, map); view.render(w, 1, 1 / 60); ui.hud(w, false); frames++;
+      }
+      assert.ok(st.done, `${sc.id} ended`); assert.ok(Math.abs(frames / 60 - sc.length) < 0.1, `${sc.id}: ${frames} frames`); assert.ok(sc.lines.length === 0 || shown > 0, `${sc.id}: its lines were shown`); assert.ok(sawBlack || sc.fade.length > 0);
+      view.setCinematic(null); ui.cine(null); view.render(w, 1, 1 / 60); assert.equal(view.cine, null, 'the eye is the player\'s again'); assert.equal(hashWorld(w), before, `${sc.id}: the world is what it was`);
+      const skip = skipScene(sc, startScene(sc)); run(skip.run); assert.ok(skip.state.done);
+      ui.clearOverlays(); view.dispose();
+    } finally { delete globalThis.innerWidth; delete globalThis.innerHeight; }
+  }
+});

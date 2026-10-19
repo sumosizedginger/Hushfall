@@ -5,6 +5,7 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
+  cinematic: 'shell-only: a map trigger named a story scene; the shell plays it (cinematics.js) and its own cues carry the sounds (PT-063)',
   choice: 'shell-only: a remembered choice was made (a wing of the Undercantor Halls); the shell keeps it in progress.choices and nothing is heard (script.js, PT-039)',
   chime_played: 'view-only: the tree has finished its phrase; its notes carry the sounds (chimes.js)',
   sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',

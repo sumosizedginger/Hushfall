@@ -94,6 +94,7 @@ export class GameView {
     if (map.lantern) { this.handLamp = new THREE.PointLight(0xffc070, 0, 22, 1.5); scene.add(this.handLamp); this.lampK = 0; this.lampModel = makeHandLantern(); this.lampModel.scale.setScalar(0.72); this.lampModel.position.set(-0.4, -0.3, -0.62); ws.add(this.lampModel); }          // PT-038 (E5): the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light count means no shader recompile) and a brass lantern held low at the left of the weapon view
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
     const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), mortar: makeMortar(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
+    this.cine = null;                                                                                                   // PT-063 (R13): a story scene's camera pose { x, y, z, yaw, pitch, fov } while one plays (setCinematic); render only
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
     this.vm = new SwingClock(); this.lag = { x: 0, y: 0 }; this.lastLook = null;      // PT-020: the swing's own clock (a freeze on contact: view only), the view model trailing a turning view
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(HIP_SCALE); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
@@ -265,6 +266,9 @@ export class GameView {
     this.aimRing.userData.mat.opacity = (s.clamped ? 0.3 : 0.55) + 0.12 * Math.sin(this.time * 6); this.aimRing.userData.mat.color.setHex(s.clamped ? 0xc86a3a : 0xffa040);
   }
 
+  /** PT-063 (R13): a story scene's camera pose { x, y, z, yaw, pitch, fov? } (cinematics.js `cameraAt`), or null to give the eye back to the player. The held weapon is not drawn while it is set. Render only. */
+  setCinematic(pose) { this.cine = pose ?? null; }
+
   render(w, alpha, dt) {
     this.time += dt; const p = w.player, pp = this.prev.player;
     // the swing's own clock: render time since the swing began, minus the time the view model was held at the contact (a view-only hit-stop; the simulation never sees it, and a pause or the wheel's slowed time hold it too)
@@ -283,16 +287,17 @@ export class GameView {
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
     let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
+    if (this.cine) this.cam.position.set(this.cine.x + sx, this.cine.y + sy, this.cine.z);                               // a story scene owns the eye (the hand lantern's light below follows it)
     if (this.handLamp) {                                                                                                // PT-038: the lantern's light follows the eye, fades in and out in a fifth of a second, flickers, and sinks as the oil runs low
       const L = p.lamp, on = L?.on ? 1 : 0, low = L && !L.eternal && L.oil < 10 ? 0.45 + 0.055 * L.oil : 1; this.lampK += (on - this.lampK) * Math.min(1, dt * 9);
       const fl = 1 + 0.07 * Math.sin(this.time * 13.1) + 0.05 * Math.sin(this.time * 7.7 + 1) + 0.03 * Math.sin(this.time * 31);
       this.handLamp.intensity = 17 * this.lampK * fl * low; this.handLamp.position.set(this.cam.position.x, this.cam.position.y - 0.15, this.cam.position.z);
       const m = this.lampModel; m.userData.core.color.setScalar(0.35 + 0.65 * this.lampK * low); m.userData.flame.scale.setScalar(0.5 + 0.55 * this.lampK * fl); m.position.y = -0.3 + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK); m.rotation.z = 0.05 * Math.sin(this.time * 1.3);
     }
-    this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
+    this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll); if (this.cine) this.cam.rotation.set(this.cine.pitch, this.cine.yaw, 0);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
     this.airK += ((w.player.air ? 1 : 0) - this.airK) * Math.min(1, dt * 6);                                                // PT-032: the view opens a little in the air
     const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
-    if (Math.abs(this.cam.fov - fov) > 0.01) { this.cam.fov = fov; this.cam.updateProjectionMatrix(); }
+    const fovNow = this.cine ? (this.cine.fov ?? this.baseFov ?? VIEW.fov) : fov; if (Math.abs(this.cam.fov - fovNow) > 0.01) { this.cam.fov = fovNow; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position); this.skyBelow?.position.copy(this.cam.position);
     if (this.map.lookZones) this.applyZone(this.map.lookZones, w.player);                                      // PT-043: a dev map's rooms are lit by their own look
     this.decals.update(dt);
@@ -518,7 +523,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
     if (w.map.vacuum.length) { this.frost = (this.frost ?? 0) + ((inVacuum(w, p.x, p.z) ? 1 : 0) - (this.frost ?? 0)) * Math.min(1, dt * 3); this.post.uniforms.uFrost.value = this.frost; }          // PT-033: the frost at the edges of the picture while in vacuum
     this.post.uniforms.uDamage.value = this.hurtFlash.step(dt);
-    this.post.render(() => { this.renderer.render(this.scene, this.cam); this.renderer.render(this.weaponScene, this.weaponCam); });
+    this.post.render(() => { this.renderer.render(this.scene, this.cam); if (!this.cine) this.renderer.render(this.weaponScene, this.weaponCam); });
   }
 
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */

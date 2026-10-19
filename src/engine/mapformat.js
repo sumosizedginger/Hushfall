@@ -22,7 +22,7 @@ const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Ob
 // the height alphabet (PT-045, E13): `.` 0, `0-9` 0-9, `a-z` 10-35 (the original 17.5 m), `A-Z` 36-61 (31 m: the Root Bell Descent's shaft); a unit is HEIGHT_UNIT metres. Old maps use no capital, so they parse as they always did.
 export const HEIGHT_MAX_UNITS = 61;
 export const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : /[A-Z]/.test(c) ? c.charCodeAt(0) - 29 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff', 'lamp'];      // PT-043: a sound cue, a rumble, and the end of the score
+export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff', 'lamp', 'cinematic'];      // PT-043: a sound cue, a rumble, and the end of the score
 
 export class MapError extends Error {
   constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
@@ -435,6 +435,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     else if (k === 'tremor') { if (!(v > 0 && v <= 3)) err(`${tag}: tremor must be in (0, 3]`); }                                                       // PT-043: the view shakes and a low sound runs
     else if (k === 'lamp') { if (v !== 'plain' && v !== 'own') err(`${tag}: lamp must be 'plain' or 'own'`); else if (!src.range) err(`${tag}: the lamp action is for the dev range only (the map must say range: true)`); }                                 // PT-045: switch the hand lantern between the plain one and Ines's own
     else if (k === 'silence') { if (v !== true) err(`${tag}: silence must be true`); }
+    else if (k === 'cinematic') { if (typeof v !== 'string' || !/^[a-z0-9-]{2,32}$/.test(v)) err(`${tag}: cinematic must be the id of a scene (a test checks it exists)`); }                        // PT-063 (R13): a story scene; the sim only announces it, the shell plays it
     else if (k === 'beatOff') { if (v !== true) err(`${tag}: beatOff must be true`); }                                                                  // PT-043: the Hive's beat stops (hive.js zoneBeat reads w.beatOff)                                                                 // PT-043: from then on the score and the ambience are cut
     else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
     else if (k === 'objective') { if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`); }

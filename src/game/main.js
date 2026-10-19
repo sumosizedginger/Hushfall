@@ -25,11 +25,14 @@ import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } fro
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
-import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts } from './record.js';
+import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
+import { floorAt } from '../engine/terrain.js';
+import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
+import { SCENE, SCENES } from './scenes.js';
 
 const canvas = document.getElementById('c'), mapCanvas = document.getElementById('automap'), miniCanvas = document.getElementById('minimap');
 const MAPS = {};
@@ -84,7 +87,7 @@ const ui = new UI({
   quitToTitle: () => quitToTitle(),
   nextLevel: () => nextLevel(),
   epiloguePress: () => epiloguePress(),
-  openRecord: (from) => openRecord(from), closeRecord: () => closeRecord(),
+  openRecord: (from) => openRecord(from), closeRecord: () => closeRecord(), replayScene: (id) => replayScene(id),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
@@ -121,7 +124,7 @@ const titleProgress = () => {
 function openRecord(from) {
   g.recordFrom = from === 'title' ? 'title' : 'pause';
   const view = recordView(CAMPAIGN, MAPS, g.recordFrom === 'title' ? titleProgress() : g.progress);
-  ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null });
+  ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null, scenes: g.recordFrom === 'title' ? recordScenes(titleProgress(), SCENES) : [] });
 }
 function closeRecord() {
   if (ui.screen !== 'record') return;
@@ -210,8 +213,37 @@ function epiloguePress() {
 }
 const epilogueSkip = () => { const e = g.ending; if (g.mode !== 'epilogue' || !e || e.tallied) return; e.seq = skipSequence(e.seq, e.def.cards); syncEpilogue(); };
 function finishEpilogue() { g.ending = null; g.mode = 'complete'; ui.show('complete', completeData()); }
+/** PT-063 (R13, workstream L): A STORY SCENE. The world stands still (no tick is stepped while one plays), the view's eye is the scene's camera (cinematics.js `cameraAt`), the HUD is gone, and the WALL clock runs the sequencer: the simulation is never slowed or sped for a scene.
+ *  A scene plays the first time by default (`settings.cinematics`: once | always | off; `progress.cinematicsSeen`), Esc / Enter / Space / the pad's A or B skips it, and a skip runs the actions that had not run, so a skipped scene and a watched one leave the same world. */
+function startCinematic(id, replay = false, after = null) {
+  const scene = SCENE[id], w = g.world; if (!scene || !w || scene.map !== g.mapId || w.map.range) return;
+  const how = settings.cinematics ?? 'once'; if (!replay && (how === 'off' || (how === 'once' && hasSeen(g.progress, id)))) return;
+  cancelWheel(); g.input.releaseAll(); g.mode = 'cinematic'; g.mapOpen = false;
+  g.cine = { scene, resolved: resolveScene(scene, w, (x, z) => floorAt(w, x, z)), st: startScene(scene), replay, after }; syncCinematic();
+}
+/** the camera, the subtitle and the black for the scene's clock now */
+function syncCinematic() {
+  const c = g.cine; if (!c || !g.view) return; g.view.setCinematic(cameraAt(c.resolved, c.st.t));
+  const sub = subtitleAt(c.scene, c.st.t); ui.cine({ who: sub?.who ?? '', text: sub?.text ?? '', k: sub?.k ?? 1, fade: fadeAt(c.scene, c.st.t) });
+}
+function runSceneActions(list) { for (const a of list) { if (a.cue) audio.handleEvents([{ type: 'cue', name: a.cue }]); else if (a.shake) g.view?.handleEvents([{ type: 'shake', amount: a.shake }]); } }
+function stepCinematic(dt) { const c = g.cine; if (!c) return; const r = advanceScene(c.scene, c.st, dt); c.st = r.state; runSceneActions(r.run); if (c.st.done) endCinematic(); else syncCinematic(); }
+function skipCinematic() { const c = g.cine; if (g.mode !== 'cinematic' || !c) return; const r = skipScene(c.scene, c.st); c.st = r.state; runSceneActions(r.run); endCinematic(); }
+/** PT-063: watch a scene again from the Record (the title only: no game is in hand there). It builds a world of the scene's map that nothing writes to, plays the scene on it, and goes back to the title; no save, no record and no setting changes. */
+function replayScene(id) {
+  const sc = SCENE[id], map = sc && MAPS[sc.map]; if (g.mode !== 'title' || !sc || !map || !hasSeen(titleProgress(), id)) return;
+  const keep = { difficulty: g.difficulty, seed: g.seed, progress: g.progress };
+  startLevel({ world: createWorld(map, { seed: 1, difficulty: 'normal', choices: null }) }); startCinematic(id, true, 'title');
+  if (g.cine) g.cine.keep = keep; else { quitToTitle(); Object.assign(g, { difficulty: keep.difficulty, seed: keep.seed, progress: keep.progress }); }
+}
+function endCinematic() {
+  const c = g.cine; g.cine = null; g.view?.setCinematic(null); ui.cine(null); if (!c) return;
+  if (!c.replay) { g.progress = markSeen(g.progress, c.scene.id); commitProgress(); }
+  if (c.after === 'title') { quitToTitle(); if (c.keep) Object.assign(g, { difficulty: c.keep.difficulty, seed: c.keep.seed, progress: c.keep.progress }); return; }
+  g.mode = 'playing'; requestLock();
+}
 function quitToTitle() {
-  cancelWheel(); g.mapOpen = false; g.ending = null; g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
+  cancelWheel(); g.mapOpen = false; g.ending = null; g.cine = null; ui.cine(null); g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
 function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
@@ -262,6 +294,7 @@ function stepOnce() {
   const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
+  else { const sc = ev.find((e) => e.type === 'cinematic'); if (sc) startCinematic(sc.id); }                                                            // PT-063 (R13): a map's trigger named a story scene
 }
 
 // ---- devices ---------------------------------------------------------------
@@ -300,6 +333,7 @@ addEventListener('keydown', (e) => {
   if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
+  if (g.mode === 'cinematic') { e.preventDefault(); if (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space') skipCinematic(); return; }                  // a story scene: any of the three skips it
   if (g.mode === 'epilogue') { if (e.code === 'Escape') { e.preventDefault(); epilogueSkip(); } else if ((e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { e.preventDefault(); epiloguePress(); } return; }
   if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.nextLevel(); return; }
   if (e.code === 'F5' && g.mode === 'playing') { e.preventDefault(); quickSave(); return; }
@@ -338,6 +372,7 @@ const navRepeat = new NavRepeat();
 const menuItems = () => { const scr = document.querySelector('.screen:not(.hidden)'); return scr ? [...scr.querySelectorAll('button, input, select, summary')].filter((el) => !el.disabled && el.offsetParent !== null) : []; };
 /** the pad in a menu: D-pad or left stick moves the focus, A / Cross confirms (fixed, so the menus always work whatever is rebound), B / Circle or the pause button backs out of the pause menu */
 function padMenu(out, dt) {
+  if (g.mode === 'cinematic') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) skipCinematic(); return; }
   if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
   if (ui.screen === 'record') {                                                                       // the Record (PT-037): up and down scroll it, A or B goes back
     const d = navRepeat.update(navDir(g.pad.down, out.move), dt), list = document.getElementById('record-list');
@@ -426,10 +461,11 @@ function frameBody(now) {
     }
   }
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
-  audio.update(g.mode === 'playing' || g.mode === 'dying' ? g.world : null, dt, MAPS[g.mapId]);
+  else if (g.mode === 'cinematic') stepCinematic(raw > 0.25 ? 0 : dt);                                                       // (a long hitch, a background tab: the scene waits, it does not leap)
+  audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }
-  { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
-  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title'); } else ui.hud(null, false);
+  { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap || g.mode === 'cinematic'); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
+  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title' && g.mode !== 'cinematic'); } else ui.hud(null, false);
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
 }
 /** the weapons range's readout (PT-016): shown only while a range map is being played */
@@ -460,4 +496,4 @@ if (import.meta.env.DEV) {                                                 // de
   }
 }
 if (import.meta.env.DEV) addEventListener('keydown', (e) => { if (e.code === 'F8' && g.world?.map.range) { e.preventDefault(); const steps = [1, 0.5, 0.25, 0.1], i = steps.indexOf(g.devScale ?? 1); g.devScale = steps[(i + 1) % steps.length]; } });      // the range's slow motion (PT-020): watch a swing at a tenth of its speed in the real game
-if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue, openRecord, closeRecord }));
+if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue, openRecord, closeRecord, startCinematic, stepCinematic, skipCinematic }));

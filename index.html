@@ -214,11 +214,22 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #record-list h3.cur{color:var(--teal)}
 #record-empty{color:#8fa4a0;font:italic 16px var(--serif);margin:30px 0}
 #screen-record button{margin-top:6px}
+/* PT-063 (R13): the story scenes. Letterbox bars, a subtitle, a fade to black; the HUD, the toasts and the minimap are gone while one plays. */
+#cine{position:fixed;inset:0;z-index:45;pointer-events:none}
+#cine-top,#cine-bottom{position:absolute;left:0;right:0;height:10.5vh;background:#000}
+#cine-top{top:0}#cine-bottom{bottom:0}
+#cine-sub{position:absolute;left:0;right:0;bottom:14vh;margin:0 auto;width:min(860px,88vw);text-align:center;text-shadow:2px 2px 0 #000,0 0 18px #000;font-size:clamp(18px,2.3vw,30px);line-height:1.35;min-height:2.7em}
+#cine-who{display:block;font:12px ui-monospace,Consolas,monospace;letter-spacing:.42em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;min-height:1.2em}
+#cine-sub[data-who="INES"] #cine-who{color:var(--bronze)}
+#cine-fade{position:absolute;inset:0;background:#000;opacity:0}
+#cine-hint{position:absolute;right:2vw;bottom:3vh;font:12px ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.5}
+body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #pickup-card,body.in-cine #cross,body.in-cine #hitmark,body.in-cine #comms,body.in-cine #cross-note{display:none!important}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
 <canvas id="minimap"></canvas><div id="toasts"></div><div id="pickup-card"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
 <div id="range-hud" class="hidden"></div>
+<div id="cine" class="hidden"><div id="cine-top"></div><div id="cine-bottom"></div><div id="cine-sub"><b id="cine-who"></b><span id="cine-text"></span></div><div id="cine-fade"></div><div id="cine-hint">Enter or Esc to skip</div></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
   <div class="stat"><b id="hud-armor">0</b><small>ARMOR</small></div>
@@ -316,6 +327,7 @@ THE SOFTWARE.</pre></div></details>
     <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
     <label>Tab opens the Journal and pauses (off: a live map over the game) <input id="set-journalpause" type="checkbox"></label>
     <label>Minimap (top right) <select id="set-minimap"><option value="off">off</option><option value="small">small</option><option value="large">large</option></select></label>
+    <label>Story scenes <select id="set-cinematics"><option value="once">the first time</option><option value="always">every time</option><option value="off">off</option></select></label>
     <label>Controller <input id="set-pad" type="checkbox"></label>
     <label>Stick look speed <input id="set-padlook" type="range" min="1" max="8" step="0.1"></label>
     <label>Stick dead zone <input id="set-paddz" type="range" min="0.05" max="0.5" step="0.01"></label>

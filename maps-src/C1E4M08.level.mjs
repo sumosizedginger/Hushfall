@@ -142,7 +142,7 @@ const MAP = {
   triggers: [
     { id: 'rim', when: 'enter', at: [CX - 20, CZ - 15], radius: 3, do: [{ objective: 'Break the seals: shoot them, or Use a mirror plinth to turn the beam onto one' }] },
     { id: 'seals-down', when: 'dead:seals', do: [{ objective: 'The shield is down. Hit the Warden with everything: east end of the arena' }, { shake: 2 }, { message: 'shield' }] },
-    { id: 'warden-dead', when: 'dead:warden', do: [{ exit: { set: 'unlock' } }, { objective: 'The Gate is open: the corridor behind the dais' }, { shake: 3 }, { message: 'broken' }] },
+    { id: 'warden-dead', when: 'dead:warden', do: [{ exit: { set: 'unlock' } }, { objective: 'The Gate is open: the corridor behind the dais' }, { shake: 3 }, { message: 'broken' }, { cinematic: 'gate-open' }] },
   ],
   quality: { enemies: [14, 70], botSeconds: [60, 900], mechanics: ['heights', 'triggers', 'secret'], skins: 5, enemyKinds: { gatewarden: 1, seal: 3, tollbearer: 6, gaunt: 5, chorister: 2, bellhand: 1 },
     scaleClass: 'MIXED', tallReason: 'a domed hall: the Gate Warden stands 7.2 m and the dome is the 14 m the ring of light needs',

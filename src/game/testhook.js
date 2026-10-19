@@ -135,6 +135,17 @@ export function installTestHook(app) {
         tallyShown: !el('ending-tally').classList.contains('hidden'), tallyRows: el('tally-eps').children.length, discs: el('tally-eps').querySelectorAll('.disc').length, totals: el('tally-totals').children.length, art: art.src.split('/').pop(), artLoaded: art.complete && art.naturalWidth > 0 };
     },
     press_epilogue() { app.epiloguePress(); return window.__GAME_TEST__.epilogueProbe(); },
+    /** PT-063 (R13): start a story scene on the map in hand as if its trigger had fired (`replay` plays it whatever the setting and the seen list say), run its clock `at` seconds, and say what the shell and the page show */
+    setup_cinematic(id, at = 0, replay = true) { app.startCinematic(id, replay); if (g.cine && at > 0) app.stepCinematic(at); return window.__GAME_TEST__.cinematicProbe(); },
+    step_cinematic(dt = 0.5) { app.stepCinematic(dt); return window.__GAME_TEST__.cinematicProbe(); },
+    skip_cinematic() { app.skipCinematic(); return window.__GAME_TEST__.cinematicProbe(); },
+    /** PT-063: the scene's clock, the camera the view actually has against the pose the scene asked for, and the overlay the page shows (the HUD must be gone, the subtitle typed, the black over it) */
+    cinematicProbe() {
+      const c = g.cine, el = (i) => document.getElementById(i), cam = g.view?.cam, want = g.view?.cine ?? null, hud = el('hud'), seen = g.progress?.cinematicsSeen ?? [];
+      return { mode: g.mode, active: !!c, id: c?.scene.id ?? null, t: c?.st.t ?? null, done: c?.st.done ?? null, cam: cam ? { x: cam.position.x, y: cam.position.y, z: cam.position.z, yaw: cam.rotation.y, pitch: cam.rotation.x } : null, want,
+        overlay: !el('cine').classList.contains('hidden'), bodyClass: document.body.classList.contains('in-cine'), who: el('cine-who').textContent, text: el('cine-text').textContent, fade: Number(el('cine-fade').style.opacity || 0),
+        hudDisplay: hud ? getComputedStyle(hud).display : null, toastsDisplay: getComputedStyle(el('toasts')).display, seen, tick: g.world?.tick ?? null };
+    },
     /** PT-037: open the Record as the pause menu or the title would, and what the page then shows */
     openRecord(from = 'pause') { app.openRecord(from); return window.__GAME_TEST__.recordProbe(); },
     closeRecord() { app.closeRecord(); return { screen: ui.screen }; },

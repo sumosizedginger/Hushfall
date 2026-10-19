@@ -112,6 +112,7 @@ const MAP = {
     { id: 'end', at: [DX, DZ - 1], radius: 2, speaker: 'INES', text: 'A stair down, wide enough for two carts side by side, and a draught coming up it that smells of wet stone and cold oil.' },
   ],
   triggers: [
+    { id: 'arrival', when: 'enter', at: [10, 22], radius: 3, do: [{ cinematic: 'deep-gate' }] },                         // PT-063 (R13): the opening of Act B, played once
     { id: 'rim', when: 'enter', at: [33, 40], radius: 4, do: [{ objective: 'The bowl: the west ramp is the way down. Put the lantern out (L) to save oil' }] },
     { id: 'plaza', when: 'enter', at: [DX, DZ + 8], radius: 8, do: [{ objective: 'The lever is on the pulpit, south-east of the plaza. The gate is the drum' }, { message: 'watch' },
       ...[[62, 55, 'gaunt'], [64, 61, 'tollbearer'], [60, 65, 'gaunt'], [55, 66, 'tollbearer'], [67, 62, 'tollbearer'], [69, 55, 'gaunt'], [52, 64, 'tollbearer'], [70, 60, 'gaunt']].map(([x, z, kind]) => ({ spawn: { kind, at: [x, z], group: 'watch', facing: N } }))] },

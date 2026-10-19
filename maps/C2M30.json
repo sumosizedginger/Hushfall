@@ -151,6 +151,9 @@
    "do": [
     {
      "objective": "The Gate: light the lamp (L) and keep it lit"
+    },
+    {
+     "cinematic": "the-gate"
     }
    ]
   }

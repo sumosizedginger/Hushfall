@@ -338,6 +338,9 @@
     },
     {
      "objective": "It hangs still. The stair is lit, north of the bell"
+    },
+    {
+     "cinematic": "bell-stops"
     }
    ]
   }

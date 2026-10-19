@@ -109,6 +109,7 @@ const MAP = {
     { id: 'hollow', at: [21, 40], radius: 2, speaker: 'HULL', text: 'The back wall of this hut rings hollow.' },
   ],
   triggers: [
+    { id: 'arrival', when: 'enter', at: [11, 28], radius: 3, do: [{ cinematic: 'threshold' }] },                        // PT-063 (R13): the first scene of Campaign Two, played once
     { id: 'seal', when: 'enter', at: [21, 28], radius: 1.5, do: [{ close: [17, 28] }, { seal: [17, 28] }, { message: 'seal' }, { objective: 'Round the lagoon, north or south, to the hull in the east cliff' }] },
     { id: 'breach', when: 'enter', at: [46, 28], radius: 2.5, do: [{ wake: 'hull' }, { objective: 'Inside the Marrow Girl: the stair to the boat deck is in the engine room' }] },
     { id: 'deck', when: 'enter', at: [68, 11], radius: 3, do: [{ objective: 'The gate at the east end of the deck is shut: the winch is in the wheelhouse' }] },

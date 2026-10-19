@@ -57,6 +57,10 @@ export function sanitizeProgress(p) {
     for (const [id, v] of Object.entries(p.choices)) if (/^[a-z0-9-]{1,24}$/.test(id) && typeof v === 'string' && /^[a-z0-9-]{1,24}$/.test(v)) ch[id] = v;
     if (Object.keys(ch).length) out.choices = ch;
   }
+  if (Array.isArray(p.cinematicsSeen)) {                                                 // PT-063 (R13, the story cinematics): the ids of the scenes a player has watched (a scene plays once by default; the Record replays one). Lazy: absent until the first scene.
+    const seen = [...new Set(p.cinematicsSeen.filter((x) => typeof x === 'string' && /^[a-z0-9-]{2,32}$/.test(x)))].slice(0, 40);
+    if (seen.length) out.cinematicsSeen = seen;
+  }
   if (p.recordAt && typeof p.recordAt === 'object') {                                    // PT-054 (the Log): when and where each message was received, [seconds, cell x, cell z], per map. Lazy: absent until the first message.
     const ra = {}; for (const [mid, byId] of Object.entries(p.recordAt)) if (byId && typeof byId === 'object' && !Array.isArray(byId)) {
       const m = {}; let n = 0; for (const [id, v] of Object.entries(byId)) { if (n >= 400) break; if (id.length > 0 && id.length <= 48 && Array.isArray(v) && v.length === 3 && v.every((x) => Number.isFinite(x))) { m[id] = [Math.min(1e6, Math.max(0, Math.round(v[0]))), Math.min(2000, Math.max(0, Math.round(v[1]))), Math.min(2000, Math.max(0, Math.round(v[2])))]; n++; } }
