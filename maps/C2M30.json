@@ -227,7 +227,7 @@
   "title": "THE UNRUNG GATE",
   "lines": [
    "A short walk, in silence.",
-   "At the Gate: light the lamp (L), and keep it lit."
+   "At the Gate: light the lamp, and keep it lit."
   ]
  },
  "outro": "The door is a door again. Behind you the stair is lit all the way down, and in front of you the lamp is steady.",
@@ -251,7 +251,7 @@
    "at": [49, 13],
    "radius": 5,
    "speaker": "INES",
-   "text": "The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. Whatever kept the beat has stopped."
+   "text": "The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. The beat has stopped."
   },
   {
    "id": "deep",

@@ -1112,7 +1112,7 @@
    "at": [5, 23],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, Kiln Row. They fire the shells here. The flue is dampered shut, and the handles were taken out and hidden so nobody could draw it. Brass first: the charging hall."
+   "text": "They fire the shells here, Calder. The flue is dampered shut and the handles are hidden. Brass first: the charging hall."
   },
   {
    "id": "hall",
@@ -1161,13 +1161,13 @@
    "at": [70, 14],
    "radius": 0.1,
    "speaker": "SIGNAL HOUSE",
-   "text": "The flue is drawing. That is the cold coming up the stack. Whatever they hid below the Works, it is much colder than it should be."
+   "text": "The flue is drawing. That is the cold coming up the stack. What they hid below the Works is colder than it should be."
   },
   {
    "id": "tunnel",
    "at": [53, 36],
    "radius": 2.5,
-   "speaker": "WARDEN CALDER",
+   "speaker": "WARDEN CALDER'S NOTE",
    "text": "A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there."
   },
   {

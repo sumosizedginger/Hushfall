@@ -93,7 +93,7 @@ const MAP = {
   atmosphere: { look: 'halls', sky: 'deep', fog: '#10121c', fogDensity: 0.008 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'UNDERCANTOR HALLS', lines: ['A palace in two halves, and one seat between them.', 'The west wing keeps the count. The east wing keeps the ones who will not.'] },
-  outro: 'The seat is empty. The stair behind it goes down, and whichever way she came, someone in this house will tell the next what she did.',
+  outro: 'The seat is empty. The stair behind it goes down, and whichever way you came, someone in this house will tell the next what you did.',
   objective: 'Climb the grand stair to the colonnade. Two wings lead to the seat: the west is the Songkeepers, the east is the Silent',
   ...L.layers(),
   secrets: [{ id: 'cell', panel: SEC.panel, cells: SEC.cells }],

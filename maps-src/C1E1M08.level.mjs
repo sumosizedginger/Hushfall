@@ -69,7 +69,7 @@ const MAP = {
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { B: { type: 'enemy', kind: 'bellnode' } },
   intro: { title: 'BELL TOWER OF ST. ORRIN', lines: ['The bell has rung for three days.', 'Nobody is pulling the rope.'] },
-  outro: 'Port Marrow is quiet. The signal is not: it is going somewhere. Episode one ends here.',
+  outro: 'Port Marrow is quiet. The signal is not: it is going somewhere.',
   objective: 'Enter the tower (south-east door) and climb',
   ...layers,
   groups: [{ name: 'cantor', rect: [28, 25, 28, 25] }],
@@ -78,7 +78,7 @@ const MAP = {
     { type: 'enemy', kind: 'cantor', at: [28, 25], group: 'cantor', facing: 'east', summons: [[19, 20], [37, 20], [19, 30], [37, 30]] },
   ],
   messages: [
-    { id: 'start', at: [30, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Bell Tower. It has rung since the transmission, and the signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top.' },
+    { id: 'start', at: [30, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it.' },
     { id: 'door', at: [44, 42], radius: 3, speaker: 'INES', text: 'The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it.' },
     { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer. Pillars in the corridor: that is your friend, again.' },
     { id: 'sexton', at: [38, 9], radius: 4, speaker: 'INES', text: 'The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first.' },
@@ -109,4 +109,7 @@ MAP.entities.push(...[['ammo_round', 30, 42], ['ammo_round', 33, 10], ['ammo_rou
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // a boss map keeps ALL its ammunition boxes on the ground (the Cantor's six nodes never drop and the fight eats rivets: with ten of them the ammunition gate failed on hard); drops add to them
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "ring": ["msg:quiet"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

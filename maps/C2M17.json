@@ -1061,7 +1061,7 @@
    "Six posts on the banks, a song in every one. The way to the gate is the trench and two levers."
   ]
  },
- "outro": "The drum gate turned on its two bolts and let the red in. The floor beyond it goes down in wide steps, and the light on the ribs is beating a little faster.",
+ "outro": "The drum gate turned on its two bolts and let the red in. Beyond it the ribs are lit a little faster.",
  "messages": [
   {
    "id": "start",
@@ -1117,7 +1117,13 @@
    "at": [131, 30],
    "radius": 5,
    "speaker": "HULL",
-   "text": "The drum gate is shut. It is held by the north relay and the south relay, and it opens only when both are thrown."
+   "text": "The drum gate is shut. It is held by the north relay and the south relay, and it opens only when both are thrown.",
+   "unless": [
+    [
+     "msg:relay-s",
+     "msg:relay-n"
+    ]
+   ]
   },
   {
    "id": "relay-n",

@@ -1072,7 +1072,10 @@
    "at": [118, 8],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The exit is locked. The lever on the north wall of this road, near the far lip, unlocks it."
+   "text": "The exit is locked. The lever on the north wall of this road, near the far lip, unlocks it.",
+   "unless": [
+    "msg:far-lip"
+   ]
   },
   {
    "id": "hollow",

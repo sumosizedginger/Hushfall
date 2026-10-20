@@ -924,14 +924,14 @@
    "Something is about to sing the last one."
   ]
  },
- "outro": "Episode three is done. The Choir ships fall silent. Whatever they were calling, it heard.",
+ "outro": "Next: the Ascent Tether, where the cable goes up from the foot of the world.",
  "messages": [
   {
    "id": "start",
    "at": [5, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Throat. Every ship in the fleet sings through this chamber. Whatever sings it is at the far end, and I read four reeds feeding it. Cut the reeds first."
+   "text": "Calder, every ship in the fleet sings through this chamber. The singer is at the far end, and I read four reeds feeding it. Cut the reeds first."
   },
   {
    "id": "gullet",
@@ -980,7 +980,7 @@
    "at": [57, 8],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The voice is gone, Calder. The ships are quiet. Whatever they were calling heard that. We should not be here when it answers."
+   "text": "The voice is gone, Calder. The ships are quiet. They were calling something, and it heard that. We should not be here when it answers."
   }
  ],
  "objective": "The Grand Cantor is at the bell, past the ribs. It walks. While a reed sings it throws two rings",

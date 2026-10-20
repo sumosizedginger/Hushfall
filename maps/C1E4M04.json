@@ -826,14 +826,14 @@
    "at": [8, 33],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Mirror Array: where the Gate is focused. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops."
+   "text": "This is where the Gate is focused, Calder. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops."
   },
   {
    "id": "lesson",
    "at": [12, 33],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "The light wants somewhere to go."
+   "text": "Mirrors on plinths, a bright face and a dark back to each. Nothing in the array is lit yet."
   },
   {
    "id": "opened",

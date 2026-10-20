@@ -99,7 +99,7 @@ const MAP = {
   atmosphere: { look: 'hive', sky: 'hive', beat: true, fog: '#2a1822', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 12, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE HIVE-SONG APPROACH', lines: ['A gorge nearly three hundred metres long, and a tower at the end of it that keeps time.', 'Six posts on the banks, a song in every one. The way to the gate is the trench and two levers.'] },
-  outro: 'The drum gate turned on its two bolts and let the red in. The floor beyond it goes down in wide steps, and the light on the ribs is beating a little faster.',
+  outro: 'The drum gate turned on its two bolts and let the red in. Beyond it the ribs are lit a little faster.',
   objective: 'Follow the gorge east. The Choristers sing in bursts and draw breath between: move then, and take cover when they start',
   ...L.layers(),
   secrets: [{ id: 'rib-hollow', panel: SEC.panel, cells: SEC.cells }],
@@ -146,4 +146,7 @@ export const waypoints = {
 MAP.roster = { id: 'C2M17', lane: [...(laneOf('C2M17') ?? [])], keep: [], plan: [{"pick":"range","from":"gaunt","to":"mender","n":2}] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "gate": [["msg:relay-s","msg:relay-n"]] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

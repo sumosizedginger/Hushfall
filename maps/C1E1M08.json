@@ -1062,14 +1062,14 @@
    "Nobody is pulling the rope."
   ]
  },
- "outro": "Port Marrow is quiet. The signal is not: it is going somewhere. Episode one ends here.",
+ "outro": "Port Marrow is quiet. The signal is not: it is going somewhere.",
  "messages": [
   {
    "id": "start",
    "at": [30, 55],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Bell Tower. It has rung since the transmission, and the signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top."
+   "text": "Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it."
   },
   {
    "id": "door",
@@ -1104,7 +1104,10 @@
    "at": [28, 18],
    "radius": 2,
    "speaker": "INES",
-   "text": "One bell down. The Cantor staggered when it broke. Keep cutting the ring."
+   "text": "One bell down. The Cantor staggered when it broke. Keep cutting the ring.",
+   "unless": [
+    "msg:quiet"
+   ]
   },
   {
    "id": "quiet",

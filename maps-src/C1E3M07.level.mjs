@@ -76,12 +76,12 @@ const MAP = {
     ...VATS.map(([x, z, spawns]) => ({ type: 'enemy', kind: 'vat', at: [x, z], group: 'vats', facing: 'south', ...(spawns ? { spawns } : {}) })),
   ],
   messages: [
-    { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Foundry. Whatever the Choir wants more of, it grows here. I am reading four vats on a ring round a furnace. Break them and the way out opens.' },
+    { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Choir grows what it wants more of here. I am reading four vats on a ring round a furnace. Break them and the way out opens.' },
     { id: 'hall', at: [20, 28], radius: 2.5, speaker: 'INES', text: 'It is a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Do not stand where they can see you and wait.' },
     { id: 'vat', at: [26, 31], radius: 4, speaker: 'HULL', text: 'The dome swells, then something drops out of the spout. Kill the vat and it stops. What it has already made stays made.' },
     { id: 'troughs', at: [34, 38], radius: 4, speaker: 'INES', text: 'Slag in the troughs. It burns. The pillars are cover from the vats, and the floor between them is yours.' },
     { id: 'panel', at: [34, 40], radius: 2, speaker: 'HULL', text: 'One panel in the south wall rings hollow.' },
-    { id: 'done', at: [34, 13], radius: 2, speaker: 'SIGNAL HOUSE', text: 'All four vats are dead. The north passage is open. Whatever was casting bell-bearers is cold.' },
+    { id: 'done', at: [34, 13], radius: 2, speaker: 'SIGNAL HOUSE', text: 'All four vats are dead. The north passage is open. The furnace is going cold.' },
   ],
   triggers: [
     { id: 'hall', when: 'enter', at: [22, 28], radius: 2.5, do: [{ objective: 'Break the four vats on the ring: the exit is north and opens when they are dead' }] },

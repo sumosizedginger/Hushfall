@@ -889,7 +889,7 @@
  "intro": {
   "title": "CHOIR OF ONE",
   "lines": [
-   "A bowl of seats, sixteen singers, one conductor over the podium.",
+   "A bowl of seats, nine singers, one conductor over the podium.",
    "Everything in the Hive keeps time to it."
   ]
  },
@@ -949,7 +949,7 @@
    "at": [48, 10],
    "radius": 3,
    "speaker": "A SILENT (NOTE)",
-   "text": "A conductor sits down between movements. This was the chair. Whoever it was is not on the podium now, and the baton is on the podium. Draw the line."
+   "text": "A conductor sits down between movements. This was the chair. Whoever it was is not on the podium now, and the baton is on the podium."
   },
   {
    "id": "exit",

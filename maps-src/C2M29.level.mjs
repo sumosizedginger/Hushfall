@@ -80,7 +80,7 @@ const MAP = {
   scenery: [],
   startFacing: 'east',
   messages: [
-    msg('start', 12, CZ, 6, 'HULL', 'Every weapon is on you. The ammunition boxes are here and on the top tier. Oil on the road, a mortar in four places on the rim. A lit lantern (L) cuts a ring to six tenths.'),
+    msg('start', 12, CZ, 6, 'HULL', 'Every weapon is on you. The ammunition boxes are here and on the top tier. Oil on the road, a mortar in four places on the rim. A lit lantern cuts a ring to three-fifths.'),
     msg('gate', CX - 15, CZ, 3, 'HULL', 'A bell with its heart on a chain. It swings: lead it. Four root anchors on the tier below the pillars hold the chain; while one stands it takes three tenths of a hit.'),
     msg('swing', CX - 10, CZ, 3, 'HULL', 'At the end of a swing it strikes a ring across the floor: a metre up, or behind a pillar, it passes. Under the middle it crushes: the orange glow shows where, a second ahead.'),
     msg('guard', 1, 1, 0.1, 'A ZEALOT', 'The bell is for the ones who keep it. Go back.'),

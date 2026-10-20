@@ -58,7 +58,7 @@ const MAP = {
   id: 'C2M24', name: 'Choir of One', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'conductor', fog: '#2a1a2c', fogDensity: 0.005, sky: 'hive', beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 28, shell: 24, rivet: 200, bolt: 24, cell: 70, round: 60, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
-  intro: { title: 'CHOIR OF ONE', lines: ['A bowl of seats, sixteen singers, one conductor over the podium.', 'Everything in the Hive keeps time to it.'] },
+  intro: { title: 'CHOIR OF ONE', lines: ['A bowl of seats, nine singers, one conductor over the podium.', 'Everything in the Hive keeps time to it.'] },
   outro: 'The conductor stopped in the middle of a bar and the lights on the ribs went still. For the first time in this country nothing is keeping time.',
   objective: 'Cross the start hall to the bowl. The conductor takes a twentieth of what you hit it with while the choir sings: break the choir. Its ring is low',
   ...L.layers(),
@@ -74,7 +74,7 @@ const MAP = {
     msg('half', 1, 1, 0.1, 'HULL', 'Half its strength gone, or the choir silent: a ring every bar now, and Choristers from the dome.'),
     msg('dead', 2, 2, 0.1, 'HULL', 'The conductor is down and the beat has stopped. The lights hold still. East of the podium the corridor is open.'),
     msg('hollow', XS, ZS + 3, 3, 'HULL', 'The wall of the top tier rings hollow behind the north pillar. There is a seam in it.'),
-    msg('alcove', XS, ZS - 2, 3, 'A SILENT (NOTE)', 'A conductor sits down between movements. This was the chair. Whoever it was is not on the podium now, and the baton is on the podium. Draw the line.'),
+    msg('alcove', XS, ZS - 2, 3, 'A SILENT (NOTE)', 'A conductor sits down between movements. This was the chair. Whoever it was is not on the podium now, and the baton is on the podium.'),
     msg('exit', EXIT[0] - 3, EXIT[1], 3, 'INES', 'A corridor, straight, at the height of the top tier. At the far end the air is cold, and nothing in it is keeping time.'),
   ],
   triggers: [

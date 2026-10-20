@@ -106,7 +106,7 @@ const MAP = {
     { id: 'folk', at: [CX, 67], radius: 5, speaker: 'INES', text: 'A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I am carrying.' },
     { id: 'ledger', at: polar(27.5, 105), radius: 3, speaker: 'MARKET LEDGER', text: 'Cord, per length: one voice. Lamp oil, per tin: two. A room at the back, for a night: nothing, and ask no one.' },
     { id: 'zealot', at: polar(18.2, 105), radius: 4, speaker: 'INES', text: 'Spears among the stalls. They stand with the butts on the flags and nobody gives them room or takes any. Part of the furniture, like the bollards at home.' },
-    { id: 'well', at: polar(10.5, 160), radius: 5, speaker: 'HULL', text: 'The well is an echo well: a noise made over it comes back from the walls. Whatever you do not want heard, do it somewhere else.' },
+    { id: 'well', at: polar(10.5, 160), radius: 5, speaker: 'HULL', text: 'The well is an echo well: a noise made over it comes back from the walls. Keep anything quiet away from it.' },
     { id: 'north', at: [CX, 13], radius: 4, speaker: 'HULL', text: 'The north gate is on a sound-lock. It will not open while the hall has made a loud noise in the last six seconds. Wait, then use it.' },
     { id: 'hollow', at: [xw + 1, CZ], radius: 2, speaker: 'HULL', text: 'The west wall rings hollow behind the last stall.' },
     { id: 'rack', at: [xw - 3, CZ], radius: 3, speaker: 'A SILENT (NOTE)', text: 'This is the room at the back. Nobody asks. Take what you need and leave the door as it was.' },

@@ -1020,7 +1020,10 @@
    "at": [112, 48],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The exit is locked. The hub relay opens it, on the island in the middle of the ring."
+   "text": "The exit is locked. The hub relay opens it, on the island in the middle of the ring.",
+   "unless": [
+    "msg:relay"
+   ]
   },
   {
    "id": "hollow",

@@ -97,7 +97,7 @@ const MAP = {
   scenery: [],
   messages: [
     { id: 'start', at: [38, 71], radius: 4, speaker: 'INES', text: 'Bone for walls, floor to roof, in niches. Not heaped. Stacked, long bones one way and skulls in a row, the way you stack barrels.' },
-    { id: 'lamp', at: [38, 68], radius: 3, speaker: 'HULL', text: 'The lantern is L, an oil a second, a tin is thirty. Gaunts, Gills and Zealots find you by eye: 6 metres in the dark, 24 with the lantern lit. Tollbearers do not care.' },
+    { id: 'lamp', at: [38, 68], radius: 3, speaker: 'HULL', text: 'The lantern burns an oil a second, and a tin is thirty. Gaunts, Gills and Zealots find you by eye: 6 metres in the dark, 24 with the lantern lit. Tollbearers do not care.' },
     { id: 'log1', at: polar(30.5, 100), radius: 3, speaker: 'PELLEW, MARROW GIRL (LOG)', text: 'Day 9 below. Eleven left the beach, six are left. We burn one lantern at a time and keep the rest dark. Nineteen tins. It is cold.' },
     { id: 'log2', at: polar(30.5, 165), radius: 3, speaker: 'PELLEW, MARROW GIRL (LOG)', text: 'Day 12. Six. The dark here is not empty. Two of ours stood in the corridor and would not come on. Lit, they blink. Nine tins.' },
     { id: 'ring', at: polar(30.5, 200), radius: 4, speaker: 'INES', text: 'The ring goes right round and the spokes are the only way off it. Whoever laid this out wanted the way down to be long.' },
@@ -135,4 +135,7 @@ MAP.entities.push(...[["mod_phosphor",35,72]].map(([kind, x, z]) => ({ type: 'pi
 MAP.roster = { id: 'C2M13', lane: [...(laneOf('C2M13') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "sealedhint": ["msg:winch"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

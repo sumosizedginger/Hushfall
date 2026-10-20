@@ -68,7 +68,7 @@ const MAP = {
   atmosphere: { look: 'gardens', sky: 'deep', fog: '#0c1812', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'HARMONIC GARDENS', lines: ['A garden laid out on a spiral, and a tree in the middle of it.', 'Every plant in it was grown to ring.'] },
-  outro: 'The third wall opens on a stair. Behind her the garden is still ringing, very faintly, in a chord she did not play.',
+  outro: 'The third wall opens on a stair. Behind you the garden is still ringing, very faintly, in a chord you did not play.',
   objective: 'Cross the garden to the plaza. The tree in the middle plays a phrase: answer it on the chimes. Three phrases open the three walls',
   ...L.layers(),
   secrets: [{ id: 'grove', panel: SEC.panel, cells: SEC.cells }],

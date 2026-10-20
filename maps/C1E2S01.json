@@ -647,7 +647,7 @@
    "id": "arrive",
    "at": [5, 16],
    "radius": 3,
-   "speaker": "WARDEN CALDER",
+   "speaker": "WARDEN CALDER'S NOTE",
    "text": "You found it. I hid what the Wardens learned where the Works could not burn it: in the cold. The vault wants three coolant valves. They are in the alcoves."
   },
   {
@@ -655,7 +655,7 @@
    "at": [13, 13],
    "radius": 4,
    "speaker": "INES",
-   "text": "Racks and racks. Look at the dates on the crates: all of them before the firing. They knew, Calder. Someone here knew for years."
+   "text": "Racks and racks. Look at the dates on the crates: all of them from before the kilns were lit. They knew. Someone here knew for years."
   },
   {
    "id": "valve",
@@ -676,14 +676,14 @@
    "at": [31, 16],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "It is rolling up. Cold air is coming out. Whatever they kept, they kept it a long time."
+   "text": "It is rolling up. Cold air is coming out of it. They kept it a long time."
   },
   {
    "id": "research",
    "at": [37, 16],
    "radius": 3,
    "speaker": "WARDEN LOG",
-   "text": "SEVEN YEARS BEFORE THE FIRING. THE HUM IN THE CHALK IS NOT GEOLOGY: IT HAS A RHYTHM. THE PANS ARE A COVER. THE BEDS UNDER THEM ARE A RECEIVER. WE WERE TOLD TO STOP ASKING."
+   "text": "SEVEN YEARS BEFORE THE KILNS WERE LIT. THE HUM IN THE CHALK IS NOT GEOLOGY: IT HAS A RHYTHM. THE PANS ARE A COVER. THE BEDS UNDER THEM ARE A RECEIVER. WE WERE TOLD TO STOP ASKING."
   },
   {
    "id": "cold",

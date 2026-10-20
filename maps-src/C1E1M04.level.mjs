@@ -87,15 +87,15 @@ const MAP = {
   groups: [{ name: 'cistern-closet', rect: [20, 52, 36, 52] }],
   secrets: [{ id: 'lighthouse-tunnel', panel: [55, 39], cells: [[56, 39], [57, 39]] }],
   messages: [
-    { id: 'shop', at: [6, 13], radius: 3, speaker: 'SIGNAL HOUSE', text: "Calder, the chandlery. The cellars run under half the quay. Somewhere down there is the drain gate; it needs the chandler's iron key." },
+    { id: 'shop', at: [6, 13], radius: 3, speaker: 'SIGNAL HOUSE', text: "The cellars run under half the quay, Calder. Somewhere down there is the drain gate; it needs the chandler's iron key." },
     { id: 'stairs', at: [13, 19], radius: 2.5, speaker: 'INES', text: 'Water at the third step. It is warm. Water is never warm in Port Marrow.' },
     { id: 'under', at: [20, 28], radius: 4, speaker: 'CHANDLER\'S LOG', text: 'Ebb tide, no ebb. The wall in the east store weeps a green wet. Told the harbourmaster. He laughed, then he stopped laughing.' },
     { id: 'office', at: [48, 26], radius: 4, speaker: 'INES', text: 'Iron key on the desk. The blotter has one line: "Do not drain the cistern."' },
     { id: 'cistern', at: [27, 38], radius: 4, speaker: 'INES', text: 'Green pool, catwalk across it. Something sings under the surface. Stay on the grating.' },
     { id: 'hatch', at: [48, 29], radius: 2, speaker: "CHANDLER'S LOG", text: "Strongroom hatch, south wall. They say the old lighthouse stair was bricked up behind the vault's east side. Lamplight leaks round the one panel that is not brick." },
     { id: 'vault', at: [48, 38], radius: 4, speaker: 'RESIN LOG', text: 'It grows where the water is loud. It grows toward the tone. It has started to grow toward us.' },
-    { id: 'tunnel', at: [57, 39], radius: 2, speaker: 'LIGHTHOUSE KEEPER', text: 'If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. Come up.' },
-    { id: 'gate', at: [30, 50], radius: 2, speaker: 'SIGNAL HOUSE', text: 'Lamplighter Hill is the way up. The survivors there signal by lamp: green for safe, red for bells.' },
+    { id: 'tunnel', at: [57, 39], radius: 2, speaker: 'LIGHTHOUSE KEEPER', text: 'If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. I kept this light before him. Come up.' },
+    { id: 'gate', at: [30, 50], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The survivors on the hill signal by lamp, Calder. Green is safe. Red is bells.' },
   ],
   triggers: [
     { id: 'cellar', when: 'enter', at: [13, 22], radius: 2, do: [{ objective: "Iron key: the chandler's office, east side of the undercroft" }] },

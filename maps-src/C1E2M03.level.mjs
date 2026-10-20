@@ -105,8 +105,8 @@ const MAP = {
     { type: 'switch', id: 'tower', at: [56, 20], wall: 'east', do: [{ open: [61, 20] }, { wake: 'dock' }, { objective: 'The dock gate is rolling up and the dock is awake: use a pillar' }, { shake: 2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, 19], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Rail Yard. The trains here shipped the grafted inland. A consist is parked across the shed, three wagons wide, and each wagon has its own lever.' },
-    { id: 'shed', at: [12, 19], radius: 3, speaker: 'INES', text: 'Wagons end to end down both sides, and a gang asleep between them. The levers are at the ends of the aisles. Pull one and the way east opens, and so does whatever is waiting there.' },
+    { id: 'start', at: [5, 19], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The trains here shipped the grafted inland, Calder. A consist is parked across the shed, three wagons wide, and each wagon has its own lever.' },
+    { id: 'shed', at: [12, 19], radius: 3, speaker: 'INES', text: 'Wagons end to end down both sides, and a gang asleep between them. The levers are at the ends of the aisles. Pull one and the way east opens, and so does what is waiting there.' },
     { id: 'lever', at: [36, 14], radius: 4, speaker: 'LEVER PLACARD', text: 'SHUNTING LEVER. ONE WAGON AT A TIME. THE LOCOMOTIVE WILL NOT MOVE ON ITS OWN. STAND CLEAR OF THE BED WHEN IT DROPS.' },
     { id: 'locker', at: [26, 3], radius: 2.5, speaker: 'TOOL LOCKER', text: 'FOREMAN: SPARE FUSES, SPARE AMMUNITION, THE GOOD GLOVES. THE PANEL STICKS. KICK IT.' },
     { id: 'throat', at: [44, 20], radius: 4, speaker: 'INES', text: 'A tower on each side and a road between them. Bellhands up there. Put the derelict wagons between you and them and move.' },

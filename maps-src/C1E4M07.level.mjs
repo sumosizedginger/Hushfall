@@ -172,7 +172,7 @@ const MAP = {
   vents: VENTS,
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }, ...LEVERS.map((lv, i) => ({ type: 'switch', id: lv.id, at: lv.at, wall: lv.wall, once: true, do: [{ message: lv.id }, { objective: i < 3 ? `Lever ${i + 1} is thrown. Up the next ramp, to the next landing` : 'All four levers are thrown. The exit is in the wall behind this landing' }, { shake: 0.8 }] }))],
   messages: [
-    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'Calder, the foot of the Hollow Stair. You will hear them long before you see them. There is a lever on every landing; the Gate opens for all four.' },
+    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'You will hear them long before you see them, Calder. There is a lever on every landing; the Gate opens for all four.' },
     { id: 'shaft', at: cellOf(100, 20), radius: 4, speaker: 'INES', text: 'It is open all the way up. The light comes from underneath. Do not look down for long.' },
     { id: 'vents', at: cellOf(138, 21), radius: 4, speaker: 'HULL', text: 'Those plates on the inner edges throw you across the hollow. Across, not up: you still have to come back for the lever.' },
     ...LEVERS.map((lv, i) => ({ id: lv.id, at: lv.at, radius: 0.1, speaker: i === 3 ? 'SIGNAL HOUSE' : 'HULL', text: i === 3 ? 'The last lever. Something in the wall behind the landing has started to move.' : `Lever ${i + 1} of 4.` })),

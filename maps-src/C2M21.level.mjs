@@ -134,4 +134,7 @@ MAP.entities.push(...[["mod_airburst",52,16]].map(([kind, x, z]) => ({ type: 'pi
 MAP.roster = { id: 'C2M21', lane: [...(laneOf('C2M21') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1},{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "exit": ["msg:v3"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

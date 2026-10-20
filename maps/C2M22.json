@@ -1406,7 +1406,7 @@
    "There is not much left to shoot with. There is not much to shoot."
   ]
  },
- "outro": "The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then, and nobody was in the room to hear it.",
+ "outro": "The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then.",
  "messages": [
   {
    "id": "start",
@@ -1497,7 +1497,10 @@
    "at": [60, 82],
    "radius": 5,
    "speaker": "HULL",
-   "text": "The way out is sealed until the lift has gone down. It does not need a key or a lever. It needs the Silent to be gone."
+   "text": "The way out is sealed until the lift has gone down. It does not need a key or a lever. It needs the Silent to be gone.",
+   "unless": [
+    "msg:gone"
+   ]
   },
   {
    "id": "s1",

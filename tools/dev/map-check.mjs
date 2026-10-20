@@ -13,7 +13,7 @@ for (const id of process.argv.slice(2)) {
   const a = runRoute(map, main, { seed: 5 }), b = runRoute(map, main, { seed: 5 });
   out.push(['deterministic', a.hash === b.hash && a.ticks === b.ticks, `${a.result} ${a.ticks} ticks`]);
   const seen = new Set(a.world.messagesSeen); let s = null; if (secret) { s = runRoute(map, secret, { seed: 1 }); for (const m of s.world.messagesSeen) seen.add(m); }
-  const missing = map.messages.filter((m) => !m.choice).map((m) => m.id).filter((m) => !seen.has(m)); out.push(['every message delivered', missing.length === 0, missing.join(',')]);
+  const missing = map.messages.filter((m) => !m.choice && m.unless == null).map((m) => m.id).filter((m) => !seen.has(m)); out.push(['every message delivered', missing.length === 0, missing.join(',')]);
   if (map.secrets.length) { const m1 = runRoute(map, main, { seed: 1 }); out.push(['only the secret route finds the secrets', !!secret && m1.world.stats.secrets === 0 && s?.result === 'complete' && s.world.stats.secrets === map.secrets.length, secret ? `main ${m1.world.stats.secrets}, secret route ${s.result} ${s.world.stats.secrets}/${map.secrets.length}${s.failure ? ' ' + s.failure : ''}` : 'no secret route']); }
   for (const [name, ok, detail] of out) { console.log((ok ? 'PASS ' : 'FAIL ') + id + ' ' + name + (detail ? ' [' + detail + ']' : '')); if (!ok) bad++; }
 }

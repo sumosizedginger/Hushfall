@@ -1266,14 +1266,14 @@
    "Something has been fed here for a very long time."
   ]
  },
- "outro": "Episode three: Landing Scar. Whatever the Mother was feeding, it has landed.",
+ "outro": "Next: the Landing Scar, east of the Works.",
  "messages": [
   {
    "id": "start",
    "at": [5, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: they hatch its guards and half-shield it."
+   "text": "Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it."
   },
   {
    "id": "approach",
@@ -1287,7 +1287,7 @@
    "at": [30, 29],
    "radius": 3,
    "speaker": "INES",
-   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and she is bare."
+   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it is bare."
   },
   {
    "id": "mother",
@@ -1315,7 +1315,7 @@
    "at": [28, 44],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The line is broken. Calder, whatever the Mother was feeding has landed. Episode three is a crater, and the Choir ships are in it."
+   "text": "The line is broken, Calder. The set is reading something large down in a crater east of the Works."
   }
  ],
  "decals": [

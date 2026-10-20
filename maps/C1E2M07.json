@@ -859,7 +859,7 @@
    "at": [5, 22],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Slurry Undercroft. They cut the lights down here so nobody would see what drains in. Four breakers, one in each hall. Each one you throw wakes the hall ahead."
+   "text": "Calder, the lights are cut down here. Four breakers, one in each hall. Each one you throw wakes the hall ahead."
   },
   {
    "id": "dark",
@@ -900,7 +900,7 @@
    "id": "drain",
    "at": [43, 34],
    "radius": 2.5,
-   "speaker": "WARDEN CALDER",
+   "speaker": "WARDEN CALDER'S NOTE",
    "text": "Slurry drains do not drain only slurry. I hid a week of supplies here when I was a younger man, in case the Works went bad."
   },
   {

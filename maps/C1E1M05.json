@@ -955,14 +955,14 @@
    "Follow them to the beacon."
   ]
  },
- "outro": "Next: the Ferry Terminal. Whatever the town could not carry, it left there.",
+ "outro": "Next: the Ferry Terminal. What the town could not carry, it left there.",
  "messages": [
   {
    "id": "start",
    "at": [4, 55],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the hill. There are people at the top: the lamps along the switchbacks are theirs. Get to the summit beacon."
+   "text": "There are people at the top, Calder: the lamps along the switchbacks are theirs. Get to the summit beacon."
   },
   {
    "id": "lamp",
@@ -1004,14 +1004,14 @@
    "at": [50, 10],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there."
+   "text": "I can see the beacon from here, Calder. It is burning green."
   },
   {
    "id": "found-mallet",
    "at": [5, 49],
    "radius": 1.5,
    "speaker": "LAMPLIGHTER",
-   "text": "The lamplighter's mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it. Keep it for the Warden."
+   "text": "The lamplighter's mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it."
   },
   {
    "id": "lamplighter-locker",

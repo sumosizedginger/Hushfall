@@ -132,4 +132,7 @@ export const waypoints = {
   main: [[START[0], START[1], 0], [STAND[0], STAND[1], 0], HOLD(strokeT(1)), HOLD(strokeT(1) + 70), HOLD(strokeT(8)), ...finale],
   secret: [[START[0], START[1], 0], [38, 8, 0], { op: 'use', at: SEC.panel }, [38, 3, 0], [38, 8, 0], [STAND[0], STAND[1], 0], HOLD(strokeT(1)), HOLD(strokeT(1) + 70), HOLD(strokeT(8)), ...finale],
 };
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "exit": ["msg:ninth"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

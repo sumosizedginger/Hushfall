@@ -1291,7 +1291,10 @@
    "at": [50, 11],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The north wall is shut. It opens when the four knots are broken and the root is cut, in either order."
+   "text": "The north wall is shut. It opens when the four knots are broken and the root is cut, in either order.",
+   "unless": [
+    "msg:cut"
+   ]
   },
   {
    "id": "hollow",

@@ -795,7 +795,7 @@
    "at": [5, 22],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Cradle Annex. This is where the grafts are made. Do not run, do not fire. Nothing in here is awake yet."
+   "text": "This is where the grafts are made, Calder. Do not run, do not fire. Nothing in here is awake yet."
   },
   {
    "id": "pods",
@@ -816,7 +816,7 @@
    "at": [28, 22],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "They are hatching! Not people. Not anything I know. Aim UP: they are flying."
+   "text": "They are hatching. Not people, and nothing I know. Aim up: they are flying."
   },
   {
    "id": "store",
@@ -837,7 +837,7 @@
    "at": [62, 22],
    "radius": 0.1,
    "speaker": "SIGNAL HOUSE",
-   "text": "The line is stopped. Calder, those were not drones in the aisle: they were hatchlings. The Vael are growing their own now."
+   "text": "The line is stopped. Calder, those Gills in the aisle were hatchlings. The Vael are growing their own now."
   },
   {
    "id": "found-fork",

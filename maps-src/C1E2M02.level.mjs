@@ -111,15 +111,15 @@ const MAP = {
     { type: 'switch', id: 'pump', at: [40, 21], wall: 'north', do: [{ open: [62, 25] }, { wake: 'cradlehall' }, { exit: { set: 'unlock' } }, { objective: 'The east hall is rolling up and it is awake. The hatch is behind it' }, { shake: 2 }, { message: 'valve' }] },
   ],
   messages: [
-    { id: 'start', at: [3, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Evaporation Pans. White ground to the horizon and one roof in the middle: the pump station. Everything between us and it is working.' },
+    { id: 'start', at: [3, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'White ground to the horizon, Calder, and one roof in the middle: the pump station. Everything between you and it is working.' },
     { id: 'harpoon', at: [38, 25], radius: 2, speaker: 'INES', text: 'The foreman left a harpoon rifle on its hook. Hold aim and it zooms in a long way. The bolt goes through plate, and through the one behind it.' },
     { id: 'cradles', at: [4, 25], radius: 2.5, speaker: 'INES', text: 'Empty cradles, ropes still swinging. They hang their hunting parties here and let them go when somebody walks the pans.' },
     { id: 'pans', at: [12, 25], radius: 3, speaker: 'INES', text: 'Brine channels, five metres across, and they burn. Cross on the planks, or wade and pay for it. Keep the heaps between you and anything that stands up.' },
     { id: 'release', at: [26, 25], radius: 3, speaker: 'INES', text: 'Behind us. The cradles opened. They have your scent. Do not stop on the open ground.' },
     { id: 'station', at: [36, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The pump station. The valve wheel is on the north wall: it feeds the east cradle hall, and the hatch is behind that hall.' },
     { id: 'pumplog', at: [40, 22], radius: 2.5, speaker: 'PUMP LOG', text: 'BRINE LINE B. THE VALVE OPENS THE EAST CRADLE HALL SLUICE AS WELL. KEEP CLEAR OF THE CRADLES WHEN RUNNING.' },
-    { id: 'valve', at: [40, 24], radius: 0.1, speaker: 'INES', text: 'That is the hall rolling up. Whatever it hung up there has been waiting a long time for the pumps.' },
-    { id: 'cistern', at: [47, 22], radius: 2.5, speaker: 'CISTERN LOG', text: 'RESERVE CISTERN. DRY SINCE THE SECOND FIRING. THE FOREMAN KEPT HIS OWN SUPPLIES HERE AND PAINTED THE DOOR OVER.' },
+    { id: 'valve', at: [40, 24], radius: 0.1, speaker: 'INES', text: 'That is the hall rolling up. What it hung up there has waited a long time for the pumps.' },
+    { id: 'cistern', at: [47, 22], radius: 2.5, speaker: 'CISTERN LOG', text: 'RESERVE CISTERN. DRY SINCE THE KILNS WERE LIT. THE FOREMAN KEPT HIS OWN SUPPLIES HERE AND PAINTED THE DOOR OVER.' },
     { id: 'hall', at: [64, 25], radius: 2.5, speaker: 'INES', text: 'Rails of cradles, all the way down. The hatch is under the last one.' },
   ],
   triggers: [

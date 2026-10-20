@@ -87,12 +87,12 @@ const MAP = {
       do: [{ lights: 1 }, { exit: { set: 'unlock' } }, { shake: 1.4 }, { message: 'vael' }, { objective: 'The set is live. The hatch in the radio room is open' }] },
   ],
   messages: [
-    { id: 'start', at: [3, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Signal House. The generator is down. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.' },
-    { id: 'lamp-lit', at: [8, 23], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The lamp on the lighthouse is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.' },
-    { id: 'dark', at: [12, 23], radius: 3, speaker: 'INES', text: 'It is dark on purpose. They cut the lamps so we cannot see them. The lanterns are yours: stay near them.' },
+    { id: 'start', at: [3, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The generator is down, Calder. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.' },
+    { id: 'lamp-lit', at: [8, 23], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The lamp here is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.' },
+    { id: 'dark', at: [12, 23], radius: 3, speaker: 'INES', text: 'It is dark on purpose. They cut the lamps so we cannot see them. Stay near the lanterns.' },
     { id: 'radio-locked', at: [20, 12], radius: 3, speaker: 'RADIO SET', text: 'The set is cold. Three fuse sockets, all empty: brass, iron, bell. The lever on the north wall waits for them.' },
     { id: 'cellar', at: [7, 10], radius: 3.5, speaker: 'INES', text: 'That bell-carrier is feeding the fallen back into the line. Kill it before it finishes.' },
-    { id: 'dorm', at: [18, 33], radius: 4, speaker: 'INES', text: 'Beds. All made. Whatever slept here got up in the night and did not undo them.' },
+    { id: 'dorm', at: [18, 33], radius: 4, speaker: 'INES', text: 'Beds. All made. Whoever slept here got up in the night and did not undo them.' },
     { id: 'attic', at: [50, 30], radius: 4, speaker: 'SIGNAL HOUSE', text: 'The last fuse is on the gantry above the antenna hatch. Two on the rails; take the high ground last.' },
     { id: 'vael', at: [20, 12], radius: 6, speaker: 'UNKNOWN (VAEL)', text: 'TOLL RECEIVED. THE FIRST BELL HAS RUNG. PORT MARROW IS NOT THE END OF THE LINE. IT IS THE MIDDLE OF IT. SING WHEN THE BELL SINGS.' },
     { id: 'hatch', at: [23, 10], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'That was not a station. That was a summons. Go: the tower on the ridge is next, and it is already ringing.' },
@@ -126,4 +126,7 @@ MAP.drops = { scale: 1 };
 // ---- PT-052 R2: what the kit built (the trigger, the secret, its message and its hint) joins the map ----
 E.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "radio-locked": ["msg:vael"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

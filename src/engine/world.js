@@ -19,7 +19,7 @@ import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from 
 import { maybeDrop, updateDrops, trackFired } from './drops.js';
 import { trimCorpses } from './corpses.js';
 import { navWaypoint } from './nav.js';
-import { updateSectors, updateTriggers, activateSwitch, choiceHolds } from './script.js';
+import { updateSectors, updateTriggers, activateSwitch, choiceHolds, messageHeld } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
 import { spawnPhys, physAt, physBlocks, blastProps, updatePhys, updateShoves, gravInput, gravDrop, rangePhys } from './gravity.js';      // PT-022: the gravity tool and the movable props (nothing here runs on a map without movable props unless the fork is in hand)
@@ -1323,7 +1323,7 @@ export function step(w, cmd) {
   if (w.tick === 1 || w.tick % EXPLORE_EVERY_TICKS === 0) {
     updateExplored(w);
     // in-world messages (transmissions, notes): shown once, the first time the player comes within range
-    for (const m of map.messages) if (!w.messagesSeen.includes(m.id) && Math.hypot(p.x - m.x, p.z - m.z) <= m.r && (!m.choice || choiceHolds(w, m.choice))) { w.messagesSeen.push(m.id); emit(w, 'message', { id: m.id, speaker: m.speaker || '', text: m.text }); }
+    for (const m of map.messages) if (!w.messagesSeen.includes(m.id) && Math.hypot(p.x - m.x, p.z - m.z) <= m.r && (!m.choice || choiceHolds(w, m.choice)) && !messageHeld(w, m)) { w.messagesSeen.push(m.id); emit(w, 'message', { id: m.id, speaker: m.speaker || '', text: m.text }); }
   }          // automap: remember what has been seen
 
   // secrets: found when the player stands in one of the secret's cells

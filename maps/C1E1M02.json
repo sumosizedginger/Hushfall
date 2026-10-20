@@ -1273,14 +1273,14 @@
    "at": [3, 44],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the hall's lamps are lit. Nobody lit them. Get inside, find the keys, and come up through the registry."
+   "text": "Calder, I have the hall's plan sheet. Keys upstairs, registry on the way out. I can tell you where things are. I cannot tell you what is standing in them."
   },
   {
    "id": "bond",
    "at": [8, 33],
    "radius": 3,
    "speaker": "BOND STORE LOG",
-   "text": "Riveters for the dock crews, sealed until the Tide Board signs. Nobody signed. Take them; hold the trigger and let them run."
+   "text": "Riveters for the dock crews, sealed until the Tide Board signs. Nobody signed."
   },
   {
    "id": "notice",
@@ -1316,13 +1316,6 @@
    "radius": 3,
    "speaker": "COUNTER-BOOK",
    "text": "Final entry: 'Tone verified.' Then the ink stops, mid-word."
-  },
-  {
-   "id": "exit",
-   "at": [58, 17],
-   "radius": 3,
-   "speaker": "SIGNAL HOUSE",
-   "text": "Fishmarket Rows next. That is where the town tried to run. Mind the lanes."
   }
  ],
  "decals": [

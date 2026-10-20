@@ -71,7 +71,7 @@ const MAP = {
   atmosphere: { look: 'mourning', sky: 'overcast', fog: '#262428', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 30, ammo: { flare: 14, shell: 22, rivet: 150, bolt: 10, cell: 30, round: 30, rocket: 3 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'MOURNING HALLS', lines: ['A cloister with a garden of graves, and a chapel at every corner with somebody in it.', 'There is not much left to shoot with. There is not much to shoot.'] },
-  outro: 'The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then, and nobody was in the room to hear it.',
+  outro: 'The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then.',
   objective: 'Throw the latch in each of the four chapels, one at each corner of the cloister. Ammunition is low: spend it',
   ...L.layers(),
   secrets: [{ id: 'hidden-chapel', panel: SEC.panel, cells: SEC.cells }],
@@ -126,4 +126,7 @@ export const waypoints = {
   main: [[41, 11, 0], Z(30, 12), Z(14, 12), Z(8, 11), { op: 'switch', id: 'c1' }, Z(14, 12), Z(30, 12), Z(52, 12), Z(66, 12), Z(77, 11), { op: 'switch', id: 'c2' }, Z(68, 12), Z(68, 30), Z(68, 48), Z(68, 62), Z(77, 63), { op: 'switch', id: 'c3' }, Z(68, 63), Z(52, 63), Z(41, 64), Z(28, 63), Z(14, 63), Z(8, 63), { op: 'switch', id: 'c4' }, Z(14, 63), Z(28, 64), Z(41, 64), [41, 69, 0], [41, 75, 0], Z(41, 82), { op: 'wait', seconds: 36 }, [50, 83, 0], [58, 83, 0], [64, 83, 0], [EXIT[0], EXIT[1], 0]],
   secret: [[41, 11, 0], [41, 10, 0], { op: 'use', at: SEC.panel }, [41, 5, 0], [41, 10, 0], Z(30, 12), Z(14, 12), Z(8, 11), { op: 'switch', id: 'c1' }, Z(14, 12), Z(30, 12), Z(52, 12), Z(66, 12), Z(77, 11), { op: 'switch', id: 'c2' }, Z(68, 12), Z(68, 30), Z(68, 48), Z(68, 62), Z(77, 63), { op: 'switch', id: 'c3' }, Z(68, 63), Z(52, 63), Z(41, 64), Z(28, 63), Z(14, 63), Z(8, 63), { op: 'switch', id: 'c4' }, Z(14, 63), Z(28, 64), Z(41, 64), [41, 69, 0], [41, 75, 0], Z(41, 82), { op: 'wait', seconds: 36 }, [50, 83, 0], [58, 83, 0], [64, 83, 0], [EXIT[0], EXIT[1], 0]],
 };
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "door": ["msg:gone"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

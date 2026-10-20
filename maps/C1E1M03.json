@@ -1279,7 +1279,7 @@
    "at": [4, 24],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the market road. Everyone who ran ended up here. Keep to cover; the Bellhands will pick at you along the boardwalk."
+   "text": "Calder, the boardwalk will have Bellhands on it. Keep to cover."
   },
   {
    "id": "boardwalk",
@@ -1300,7 +1300,7 @@
    "at": [30, 24],
    "radius": 4,
    "speaker": "INES",
-   "text": "Scales set, stalls open, nobody behind them. They were herded, not slaughtered."
+   "text": "Scales set, stalls open, nobody behind them."
   },
   {
    "id": "smoke",
@@ -1308,13 +1308,6 @@
    "radius": 3,
    "speaker": "LEDGER",
    "text": "Order from the Vael: keep them in the rows till the tone finds them all. Fish keep. People will too."
-  },
-  {
-   "id": "hall",
-   "at": [60, 25],
-   "radius": 2.5,
-   "speaker": "SIGNAL HOUSE",
-   "text": "That is the way out. After it, the Drowned Chandlery: the cellars flood on the ebb. Bring a light, and courage."
   },
   {
    "id": "found-boathook",

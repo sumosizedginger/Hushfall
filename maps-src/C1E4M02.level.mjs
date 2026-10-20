@@ -145,10 +145,10 @@ const MAP = {
   vents: VENTS,
   entities: [...ents, { type: 'exit', at: [CX, CZ], dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Wreck Belt: wrecks of earlier invasions. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.' },
+    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.' },
     { id: 'break', at: [31, 14], radius: 3, speaker: 'INES', text: 'Six cells of nothing. The plate is at the end of the deck. If this is wrong it costs fifteen.' },
     { id: 'bow', at: [58, 14], radius: 3, speaker: 'HULL', text: 'The bow. Singers across the gap, a flyer over it. The plate throws you to the gimbal. You have time to shoot on the way.' },
-    { id: 'gimbal', at: [74, 33], radius: 3, speaker: 'INES', text: 'Rings inside rings. Everything here is a different world. The hub has the fuse, and so does whatever guards it.' },
+    { id: 'gimbal', at: [74, 33], radius: 3, speaker: 'INES', text: 'Rings inside rings. Everything here is from a different world. The hub has the fuse, and so does the thing guarding it.' },
     { id: 'fuse', at: [88, 32], radius: 2, speaker: 'HULL', text: 'The fuse. The exit lock in the cup wants it.' },
     { id: 'cup', at: [69, 56], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The cup. The lock is at the keel, in the middle, inside the dome. Singers on the rim.' },
     { id: 'islet', at: [30, 52], radius: 3, speaker: 'INES', text: 'An islet. A hut. Someone hid this on purpose.' },

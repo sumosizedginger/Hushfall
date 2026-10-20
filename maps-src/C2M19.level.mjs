@@ -125,4 +125,7 @@ export const waypoints = {
 MAP.roster = { id: 'C2M19', lane: [...(laneOf('C2M19') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "door": ["key:iron"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

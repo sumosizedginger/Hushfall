@@ -101,7 +101,7 @@ const MAP = {
     { id: 'bell', at: [26, 28], radius: 3, speaker: 'INES', text: 'A bell, a long way off across the lake, struck slowly. Nine strokes, then nothing. The fog-bell on the north pier at home does that, on the ninth stroke of the tide table.' },
     { id: 'camp', at: [21, 19], radius: 2.5, speaker: 'CAMP LEDGER', text: 'WATER: the lake is salt. FOOD: nine days. Two of ours went out in the night and stood on the sand. Keep moving. Keep the lamp lit.' },
     { id: 'north', at: [31, 19], radius: 4, speaker: 'HULL', text: 'Singers on the north dune. Their rounds shake your aim. Rock to rock, and do not stand in the open.' },
-    { id: 'breach', at: [46, 28], radius: 2.5, speaker: 'MARROW GIRL LOG', text: 'Third night of the Hush. Skipper took her out past the bar to get clear. The Gate opened under the keel. We did not sink. We arrived.' },
+    { id: 'breach', at: [46, 28], radius: 2.5, speaker: 'MARROW GIRL LOG', text: 'Third night of the Hush. Skipper took her out past the bar to get clear. The sea opened under the keel. We did not sink. We arrived.' },
     { id: 'engine', at: [62, 27], radius: 3, speaker: 'INES', text: 'Iron plate, a boiler gone cold, and the stair to the deck is up the north end. The wood is Marrow oak. I know the smell.' },
     { id: 'deck', at: [66, 11], radius: 3, speaker: 'INES', text: 'From the deck you can see the whole cove. And the only other thing standing up out here: needles, three of them, a long way off.' },
     { id: 'winch', at: [60, 10], radius: 2.5, speaker: 'HULL', text: 'A winch lever on the wheelhouse wall. It works the gate at the east end of the deck: nothing else here is that well kept.' },

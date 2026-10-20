@@ -20,7 +20,7 @@ export const ENDINGS = {
     name: 'The Hush',
     cards: [
       { who: '', text: 'Every bell on the coast rings once, together, and stops.' },
-      { who: 'SIGNAL HOUSE', text: 'Calder. Everyone left on the coast is standing still, looking up. I can see them from the tower.' },
+      { who: 'SIGNAL HOUSE', text: 'Calder. Everyone left on the coast is standing still, looking up. I can see them from the lighthouse.' },
       { who: 'INES', text: 'I cannot hear it. I never could. I only ever hear what it does to them.' },
       { who: 'SIGNAL HOUSE', text: 'It is open now, and nothing on this side can close it. If it is going to be shut, it will be shut from the other side.' },
       { who: 'INES', text: 'Then I will go down and find the end of it.' },

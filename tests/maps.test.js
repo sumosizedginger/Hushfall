@@ -34,7 +34,7 @@ for (const id of ids) {
     const a = runRoute(map, main, { seed: 5 }), b = runRoute(map, main, { seed: 5 });
     assert.equal(a.hash, b.hash); assert.equal(a.ticks, b.ticks);
     const seen = new Set(a.world.messagesSeen); if (secret) for (const m of runRoute(map, secret, { seed: 1 }).world.messagesSeen) seen.add(m);
-    assert.deepEqual(map.messages.filter((m) => !m.choice).map((m) => m.id).filter((m) => !seen.has(m)), [], 'every message is delivered by the main or secret route (a message that needs a remembered choice is delivered by a route played with that choice: tests/campaign2-b.test.js)');
+    assert.deepEqual(map.messages.filter((m) => !m.choice && m.unless == null).map((m) => m.id).filter((m) => !seen.has(m)), [], 'every message is delivered by the main or secret route (a reminder with `unless` is held once its gate is open: tests/message-unless.test.js; a message that needs a remembered choice is delivered by a route played with that choice: tests/campaign2-b.test.js)');
   });
 
   if (map.secrets.length) test(`${id}: only the secret route finds the secret`, () => {

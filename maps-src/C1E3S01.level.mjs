@@ -42,7 +42,7 @@ const MAP = {
   ...layers,
   entities: [],
   messages: [
-    { id: 'arrive', at: [5, 14], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have lost the hum. Not faded: gone. There is no signal where you are standing. I do not know whether to be glad.' },
+    { id: 'arrive', at: [5, 14], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have lost the hum. It did not fade; it stopped. There is nothing from the ship where you are standing. I do not know whether to be glad.' },
     { id: 'hall', at: [19, 14], radius: 5, speaker: 'INES', text: 'No ribs. No growth. Plaster and stone, and rows of empty stalls. Someone scrubbed the Song out of these walls and kept it out.' },
     { id: 'quiet', at: [36, 14], radius: 4, speaker: 'THE QUIET ONE', text: 'I was a voice, once. I stopped. The Song is a count of who is left to sing. Go to the Loom and cut the thread. It is how they tune you.' },
     { id: 'bell', at: [34, 14], radius: 2, speaker: 'HULL', text: 'A bell with its tongue cut out. Someone did this on purpose, and cleaned up after.' },

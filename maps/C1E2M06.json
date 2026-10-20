@@ -1121,14 +1121,14 @@
    "It has been drawing something up out of the sea."
   ]
  },
- "outro": "Next: the Slurry Undercroft. Whatever they drained comes out down there.",
+ "outro": "Next: the Slurry Undercroft. What they drained comes out down there.",
  "messages": [
   {
    "id": "start",
    "at": [5, 24],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Pump Cathedral. The pump that drains the pans is in the middle of the nave. The cage on the east side is the only way up to the catwalks. Cross the floor first."
+   "text": "The pump that drains the pans is in the middle of the nave, Calder. The cage on the east side is the only way up to the catwalks. Cross the floor first."
   },
   {
    "id": "nave",

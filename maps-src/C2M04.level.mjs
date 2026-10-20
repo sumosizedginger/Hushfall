@@ -91,7 +91,7 @@ const MAP = {
   messages: [
     { id: 'start', at: [18, 68], radius: 3, speaker: 'INES', text: 'Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming. Not a sound I would put a word to.' },
     { id: 'fork', at: [24, 64], radius: 3, speaker: 'HULL', text: 'A fork rings at a shot, answers its neighbours down the row, and everything asleep near them wakes. The arc lamp and a blow are heard from least far.' },
-    { id: 'plate', at: [30, 65], radius: 2.5, speaker: 'FORK PLATE', text: 'A brass plate hammered onto the foot, in our letters: PELLEW, S. MATE. Somebody here had that courtesy. I count eight more plates in this row.' },
+    { id: 'plate', at: [30, 65], radius: 2.5, speaker: 'FORK PLATE', text: 'A brass plate hammered onto the foot, in our letters: AMBLER, T. BOSUN. Somebody here had that courtesy. I count eight more plates in this row.' },
     { id: 'tend', at: [40, 52], radius: 4, speaker: 'INES', text: 'They are tending the forks. Weeding round them, wiping them down, putting an ear to them. Nobody looks up. I would like to keep it that way.' },
     { id: 'count', at: [40, 46], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: a long number, a longer number, then one short note that rises like a question. Struck and owed, if I had to guess.' },
     { id: 'tower', at: [40, 25], radius: 3.5, speaker: 'INES', text: 'A round tower on the top terrace with a bell inside it the size of a boat. Everything on this hill is tuned to that.' },

@@ -65,7 +65,7 @@ const MAP = {
   atmosphere: { fog: '#30303e', fogDensity: 0.011, sky: 'overcast', look: 'hill' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'LAMPLIGHTER HILL', lines: ['Somebody up there keeps the lamps lit.', 'Follow them to the beacon.'] },
-  outro: 'Next: the Ferry Terminal. Whatever the town could not carry, it left there.',
+  outro: 'Next: the Ferry Terminal. What the town could not carry, it left there.',
   objective: 'Climb the hill. Stairs on the terraces, or take the funicular car',
   ...layers,
   groups: [{ name: 'ambush-t2', rect: [24, 34, 32, 37] }],
@@ -78,13 +78,13 @@ const MAP = {
     { type: 'switch', id: 'beacon', at: [46, 7], wall: 'north', do: [{ exit: { set: 'unlock' } }, { objective: 'The beacon burns green. The gate is open: east end of the summit' }, { shake: 1 }] },
   ],
   messages: [
-    { id: 'start', at: [4, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the hill. There are people at the top: the lamps along the switchbacks are theirs. Get to the summit beacon.' },
+    { id: 'start', at: [4, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'There are people at the top, Calder: the lamps along the switchbacks are theirs. Get to the summit beacon.' },
     { id: 'lamp', at: [6, 49], radius: 3, speaker: 'SURVIVOR (LAMP)', text: 'Lamps all the way up: that is us, showing you the road. Watch the cliff edges: they shoot down.' },
     { id: 'car', at: [26, 44], radius: 3, speaker: 'FUNICULAR PLACARD', text: 'Funicular. The only way up from terrace one to terrace two. Pull the lever on the car. If it is up, the call lever at its foot brings it down.' },
     { id: 'sexton', at: [30, 32], radius: 5, speaker: 'INES', text: 'That one waits for something to fall. Kill it first, and quickly.' },
     { id: 'high', at: [26, 21], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'Bellhands on the cliff edge over the next terrace! Use the houses; go round, not through.' },
     { id: 'summit', at: [40, 12], radius: 5, speaker: 'SURVIVOR (LAMP)', text: 'You made it up! Light the beacon: the lever on the north wall of the summit. We will open the gate.' },
-    { id: 'gate', at: [50, 10], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'Ferry Terminal is over the crest and down. Whatever the town could not carry, it left there.' },
+    { id: 'gate', at: [50, 10], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'I can see the beacon from here, Calder. It is burning green.' },
   ],
   triggers: [
     { id: 'lift-top', when: 'sector:car:high', do: [{ spawn: { kind: 'gaunt', at: [24, 36], group: 'ambush-t2', facing: 'east' } }, { spawn: { kind: 'gaunt', at: [30, 36], group: 'ambush-t2', facing: 'west' } }, { shake: 0.8 }, { objective: 'Climb on: the next stairs are at the west end (terrace three)' }] },
@@ -103,7 +103,7 @@ MAP.decals = [{ kind: 'bloodpool', at: [24, 44], size: 1.2 }, { kind: 'smear', a
 // Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
 MAP.entities ??= [];
 MAP.entities.push(...[['weapon_mallet', 5, 49]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
-(MAP.messages ??= []).push({ id: 'found-mallet', at: [5, 49], radius: 1.5, speaker: 'LAMPLIGHTER', text: 'The lamplighter\'s mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it. Keep it for the Warden.' });
+(MAP.messages ??= []).push({ id: 'found-mallet', at: [5, 49], radius: 1.5, speaker: 'LAMPLIGHTER', text: 'The lamplighter\'s mallet, left at the foot of the hill. A blow staggers what it strikes, and plate does not turn it.' });
 MAP.quality.introduces += '; also found here: the lamplighter\'s mallet, at the foot of the hill (it staggers, and plate does not turn it)';
 // ---- end PT-023 ----
 

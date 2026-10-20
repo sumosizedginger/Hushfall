@@ -886,7 +886,7 @@
    "at": [10, 12],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Wreck Belt: wrecks of earlier invasions. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back."
+   "text": "Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back."
   },
   {
    "id": "break",
@@ -907,7 +907,7 @@
    "at": [74, 33],
    "radius": 3,
    "speaker": "INES",
-   "text": "Rings inside rings. Everything here is a different world. The hub has the fuse, and so does whatever guards it."
+   "text": "Rings inside rings. Everything here is from a different world. The hub has the fuse, and so does the thing guarding it."
   },
   {
    "id": "fuse",

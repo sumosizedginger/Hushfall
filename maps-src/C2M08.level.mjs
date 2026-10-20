@@ -62,7 +62,7 @@ const MAP = {
   atmosphere: { fog: '#d8d0e8', fogDensity: 0.003, sky: 'anselm', look: 'ascent' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THRESHOLD ASCENT', lines: ['A city built up a cliff of glass, one tier above another.', 'The way down is at the top.'] },
-  outro: 'Below the spire is the Deep. The first act of the descent ends here.',
+  outro: 'Below the spire is the Deep.',
   objective: 'Climb the city: stair, lift, stair, lift. The spire on the summit is the way on',
   ...L.layers(),
   secrets: [{ id: 'store', panel: SEC.panel, cells: SEC.cells }],

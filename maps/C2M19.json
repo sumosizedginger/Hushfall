@@ -1491,7 +1491,10 @@
    "at": [86, 32],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The door is shut. It takes an iron key, and the key is in the cutting room at the north end of the hall."
+   "text": "The door is shut. It takes an iron key, and the key is in the cutting room at the north end of the hall.",
+   "unless": [
+    "key:iron"
+   ]
   },
   {
    "id": "woven",

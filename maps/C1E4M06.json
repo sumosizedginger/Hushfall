@@ -400,7 +400,7 @@
      }
     },
     {
-     "objective": "The Mother is down. The way out is open: the Gate yard, straight ahead"
+     "objective": "The Weeping Mother is down. The way out is open: the Gate yard, straight ahead"
     },
     {
      "shake": 2
@@ -425,7 +425,7 @@
    "radius": 5,
    "do": [
     {
-     "objective": "The Mother is in the round room west of this rank: kill her"
+     "objective": "The Weeping Mother is in the round room west of this rank: kill her"
     }
    ]
   },
@@ -1057,7 +1057,7 @@
    "at": [45, 108],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Approach. Five ranks, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two."
+   "text": "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two."
   },
   {
    "id": "court",

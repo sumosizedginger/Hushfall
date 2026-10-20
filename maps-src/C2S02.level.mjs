@@ -21,7 +21,7 @@ const MAP = {
   atmosphere: { look: 'quiet', sky: 'dusk', silence: true, fog: '#3a3028', fogDensity: 0.008 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 8, shell: 12, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: "INES'S LAMP", lines: ['A pier into a sea of glass.', 'At the end of it a lamp that is lit.'] },
-  outro: 'The pier was the same length going back. The lamp behind her was lit, and then it was not behind her any more.',
+  outro: 'The pier was the same length going back. Behind you the post was bare, and the lamp in your hand was lit.',
   objective: 'Walk the pier to the lamp. Take it, or leave it: the exit is behind you',
   ...L.layers(),
   secrets: [], groups: [],

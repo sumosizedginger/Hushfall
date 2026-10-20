@@ -258,7 +258,7 @@
      "wake": "mother"
     },
     {
-     "objective": "Break the Choir: the Mother on the dais. The gate waits for her"
+     "objective": "Break the Choir: the Weeping Mother on the dais. The gate waits"
     }
    ]
   },
@@ -832,7 +832,7 @@
    "at": [6, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the nave. There is no roof left: the ship tore it open to sing at the sky. Whatever sits at the far end is why the gate is sealed."
+   "text": "Calder, there is no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it is why the gate is sealed."
   },
   {
    "id": "nave",

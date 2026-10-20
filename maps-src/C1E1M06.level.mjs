@@ -84,12 +84,11 @@ const MAP = {
     { type: 'switch', id: 'winch', at: [43, 3], wall: 'north', do: [{ sector: { id: 'ramp', to: 'low' } }, { wake: 'hold' }, { wake: 'warden' }, { shake: 2 }, { objective: 'The ramp is down. Something plated is coming out: let it hit a pillar' }] },
   ],
   messages: [
-    { id: 'start', at: [4, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Ferry Terminal. The last boat never left the quay. The bow ramp is winched up: find the winch, the control cabin on the north quay.' },
+    { id: 'start', at: [4, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the bow ramp is winched up. The winch is in the control cabin on the north quay.' },
     { id: 'board', at: [14, 23], radius: 3, speaker: 'TICKET BOARD', text: 'ALL SAILINGS CANCELLED. BOARDING BY WARDEN\'S ORDER ONLY. ALL PERSONS REMAIN IN THE HALL.' },
     { id: 'quay', at: [30, 24], radius: 3, speaker: 'INES', text: 'It is a big open quay. Move between the pillars, and keep the crates between you and the tower.' },
     { id: 'winch', at: [43, 5], radius: 2.5, speaker: 'WINCH PLACARD', text: 'BOW RAMP. RAISED FOR THE NIGHT. TWO HANDS, ONE CRANK. STAND CLEAR OF THE LANE.' },
-    { id: 'warden', at: [46, 24], radius: 6, speaker: 'INES', text: 'That is Tide-Warden plate: the front is nearly armour-proof. Do not stand in front of it. Let it charge, and let it hit something.' },
-    { id: 'aboard', at: [60, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The Signal House is next: the ridge antenna is still answering. Whatever comes down that ramp, it is not the only one.' },
+    { id: 'warden', at: [46, 24], radius: 6, speaker: 'INES', text: 'That is Tide-Warden plate. Somebody on the Board wore that, once. The front is nearly armour-proof: let it charge, and let it hit something.' },
   ],
   triggers: [
     { id: 'ramp-down', when: 'sector:ramp:low', do: [{ spawn: { kind: 'gaunt', at: [59, 23], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'gaunt', at: [59, 25], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'tollbearer', at: [60, 22], group: 'wave1', facing: 'west' } }, { message: 'warden' }] },

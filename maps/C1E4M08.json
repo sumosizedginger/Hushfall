@@ -737,7 +737,7 @@
    "at": [7, 30],
    "radius": 4,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Gate Warden. Three seals hold its shield up: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it."
+   "text": "Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it."
   },
   {
    "id": "rim",
@@ -772,7 +772,7 @@
    "at": [65, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "It is down. The Gate is open, Calder. The way out is the way in. Whatever is on the other side has stopped being quiet."
+   "text": "It is down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet."
   }
  ],
  "objective": "The Warden holds the Gate, at the east end of the arena. Three seals shield it",

@@ -113,7 +113,7 @@ const MAP = {
     { type: 'switch', id: 'sluice', at: [21, 17], wall: 'south', do: [{ open: [44, 22] }, { wake: 'yard' }, { objective: 'The gate is rolling up. The hall is awake: take the road, east end' }, { shake: 2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Salt Works. Past that door is open ground and the Brine Gate at the far end. The road runs straight at it. Do not take the road.' },
+    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have the Works plans out. Past that door is open ground and the Brine Gate at the far end, and the road runs straight at it. Do not take the road.' },
     { id: 'cradles', at: [4, 22], radius: 2.5, speaker: 'INES', text: 'Cradles on a rail. They hang them here to wait.' },
     { id: 'pan', at: [30, 22], radius: 4, speaker: 'INES', text: 'A rank in front of the gate. Bellhands on both towers. Whoever set this up has done it before.' },
     { id: 'ditch', at: [16, 12], radius: 3, speaker: 'INES', text: 'The ditch slows me, and nothing up on the towers can see into it. The guardhouse is ahead, north door.' },

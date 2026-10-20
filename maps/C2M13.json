@@ -866,7 +866,7 @@
    "at": [38, 68],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The lantern is L, an oil a second, a tin is thirty. Gaunts, Gills and Zealots find you by eye: 6 metres in the dark, 24 with the lantern lit. Tollbearers do not care."
+   "text": "The lantern burns an oil a second, and a tin is thirty. Gaunts, Gills and Zealots find you by eye: 6 metres in the dark, 24 with the lantern lit. Tollbearers do not care."
   },
   {
    "id": "log1",
@@ -929,7 +929,10 @@
    "at": [36, 34],
    "radius": 3,
    "speaker": "HULL",
-   "text": "A plain gate at the bottom of the well, and no handle. If it is shut, a counterweight holds it, and the winch for that is on the inner ring, on the wall across from the spoke."
+   "text": "A plain gate at the bottom of the well, and no handle. If it is shut, a counterweight holds it, and the winch for that is on the inner ring, on the wall across from the spoke.",
+   "unless": [
+    "msg:winch"
+   ]
   },
   {
    "id": "winch",

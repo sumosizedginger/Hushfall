@@ -77,7 +77,7 @@ const MAP = {
     { id: 'hollow', at: [xn, zn + 1], radius: 2, speaker: 'HULL', text: 'The guard hall wall rings hollow in the north, in a seam of paler skin.' },
     { id: 'seam', at: [xn, zn - 3], radius: 3, speaker: 'A SILENT (NOTE)', text: 'For whoever is sent to stop it. It never wanted to be a conductor, and nobody asked. Do not make it suffer: it has been afraid for a long time.' },
     { id: 'dead', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'It said nothing the whole time. Its last note went out across the floor and, for once, did not come back.' },
-    { id: 'end', at: [90, 44], radius: 3, speaker: 'INES', text: 'A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. Whatever is below this is not warm.' },
+    { id: 'end', at: [90, 44], radius: 3, speaker: 'INES', text: 'A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. What is below this is not warm.' },
     { id: 'last-call', at: [92, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, this is the last I can hold. The lamp is lit and the tea is cold. I am here until the set goes.' },
   ],
   triggers: [

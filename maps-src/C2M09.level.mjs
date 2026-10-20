@@ -97,7 +97,7 @@ const MAP = {
   scenery: [{ kind: 'cityface', at: [40, 10], y: 8, scale: 1.3 }, { kind: 'cityface', at: [60, 6], y: 8, scale: 1.5 }, { kind: 'cityface', at: [80, 11], y: 8, scale: 1.3 }, { kind: 'cityface', at: [92, 40], y: 7, yaw: -1.57, scale: 1.2 }],
   messages: [
     { id: 'start', at: [11, 22], radius: 4, speaker: 'INES', text: 'Dark. The tin on the floor is a Marrow tin with the label gone. Somebody carried it this far down and put it where it would be found.' },
-    { id: 'lamp', at: [19, 29], radius: 3, speaker: 'HULL', text: 'The lantern is L. Gaunts and Gills find you by eye: from 6 metres with it out, 24 with it lit. Tollbearers follow the Hush and do not care about light.' },
+    { id: 'lamp', at: [19, 29], radius: 3, speaker: 'HULL', text: 'Gaunts and Gills find you by eye: from 6 metres with the lantern out, 24 with it lit. Tollbearers follow the Hush and do not care about light.' },
     { id: 'mouth', at: [31, 39], radius: 3, speaker: 'INES', text: 'The tunnel opens on a bowl lit in rings. The far side is houses stacked up to the roof, a window lit in every one. There are Vael on every terrace, walking.' },
     { id: 'folk', at: [38, 32], radius: 4, speaker: 'INES', text: 'None of them has a bell. They are carrying baskets and cord and they have not looked up. Do not shoot what is walking.' },
     { id: 'zealot', at: [31, 44], radius: 4, speaker: 'INES', text: 'One on the east terraces is standing still with a lance as long as a mast. Armoured, and its feet apart, the way a man stands who means to stay.' },
@@ -132,4 +132,7 @@ MAP.entities.push(...[["mod_barbed",61,21]].map(([kind, x, z]) => ({ type: 'pick
 MAP.roster = { id: 'C2M09', lane: [...(laneOf('C2M09') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "drum": ["msg:open"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

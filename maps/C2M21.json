@@ -1166,7 +1166,10 @@
    "at": [41, 48],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The exit is sealed by three valves, one on each ring. The wheels are under red lamps, on the walls beside the catwalks."
+   "text": "The exit is sealed by three valves, one on each ring. The wheels are under red lamps, on the walls beside the catwalks.",
+   "unless": [
+    "msg:v3"
+   ]
   },
   {
    "id": "hatch",

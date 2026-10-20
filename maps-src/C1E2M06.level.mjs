@@ -74,7 +74,7 @@ const MAP = {
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pump' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60, cell: 30 }, weapons: ['flare', 'scattergun', 'rivet', 'arc'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },
-  outro: 'Next: the Slurry Undercroft. Whatever they drained comes out down there.',
+  outro: 'Next: the Slurry Undercroft. What they drained comes out down there.',
   objective: 'Cross the nave to the cage lift, east side. The catwalks are the only way up',
   ...layers,
   secrets: [{ id: 'engineers-office', panel: [12, 12], cells: [[11, 12], [10, 12], [9, 12]] }],
@@ -86,7 +86,7 @@ const MAP = {
     { type: 'switch', id: 'drain', at: [35, 43], wall: 'south', do: [{ exit: { set: 'unlock' } }, { objective: 'The sump is draining. The exit is on the north gallery, west end' }, { shake: 2 }, { message: 'draining' }] },
   ],
   messages: [
-    { id: 'start', at: [5, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Pump Cathedral. The pump that drains the pans is in the middle of the nave. The cage on the east side is the only way up to the catwalks. Cross the floor first.' },
+    { id: 'start', at: [5, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The pump that drains the pans is in the middle of the nave, Calder. The cage on the east side is the only way up to the catwalks. Cross the floor first.' },
     { id: 'nave', at: [14, 24], radius: 3, speaker: 'INES', text: 'A pump house built as a church. Look at the height of it, and at what is hung from the roof.' },
     { id: 'sump', at: [26, 24], radius: 3, speaker: 'INES', text: 'The water round the pump is up to your knees. It will slow you. Keep to the grate and the aisles.' },
     { id: 'cage', at: [47, 25], radius: 3, speaker: 'CAGE PLACARD', text: 'CAGE LIFT. LEVER ON THE CAGE RISES IT, CALL LEVER ON THE POST BRINGS IT DOWN. FOUR METRES. NO MORE THAN SIX PERSONS.' },

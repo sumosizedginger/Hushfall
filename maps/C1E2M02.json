@@ -1514,7 +1514,7 @@
    "at": [3, 25],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Evaporation Pans. White ground to the horizon and one roof in the middle: the pump station. Everything between us and it is working."
+   "text": "White ground to the horizon, Calder, and one roof in the middle: the pump station. Everything between you and it is working."
   },
   {
    "id": "harpoon",
@@ -1563,14 +1563,14 @@
    "at": [40, 24],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "That is the hall rolling up. Whatever it hung up there has been waiting a long time for the pumps."
+   "text": "That is the hall rolling up. What it hung up there has waited a long time for the pumps."
   },
   {
    "id": "cistern",
    "at": [47, 22],
    "radius": 2.5,
    "speaker": "CISTERN LOG",
-   "text": "RESERVE CISTERN. DRY SINCE THE SECOND FIRING. THE FOREMAN KEPT HIS OWN SUPPLIES HERE AND PAINTED THE DOOR OVER."
+   "text": "RESERVE CISTERN. DRY SINCE THE KILNS WERE LIT. THE FOREMAN KEPT HIS OWN SUPPLIES HERE AND PAINTED THE DOOR OVER."
   },
   {
    "id": "hall",

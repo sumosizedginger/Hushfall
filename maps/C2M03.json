@@ -946,7 +946,10 @@
    "at": [46, 63],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The gate is shut. The lever that works it is in the hut on the east terrace, over the ditch. The terrace ramps are at the south end."
+   "text": "The gate is shut. The lever that works it is in the hut on the east terrace, over the ditch. The terrace ramps are at the south end.",
+   "unless": [
+    "msg:gate"
+   ]
   },
   {
    "id": "gate",
@@ -981,7 +984,7 @@
    "at": [0, 0],
    "radius": 0.1,
    "speaker": "THE TENDER",
-   "text": "You do not sing. Good. I keep the dead, and they shut me in the bell house for not singing at a burying. The north gate answers to me. It is open."
+   "text": "You do not sing. Good. I keep the dead, and they shut me in the bell house for not singing at a burying. The north gate is mine, and it is open. Go on to the Fields."
   },
   {
    "id": "silent",

@@ -734,7 +734,7 @@
    "at": [5, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Foundry. Whatever the Choir wants more of, it grows here. I am reading four vats on a ring round a furnace. Break them and the way out opens."
+   "text": "Calder, the Choir grows what it wants more of here. I am reading four vats on a ring round a furnace. Break them and the way out opens."
   },
   {
    "id": "hall",
@@ -769,7 +769,7 @@
    "at": [34, 13],
    "radius": 2,
    "speaker": "SIGNAL HOUSE",
-   "text": "All four vats are dead. The north passage is open. Whatever was casting bell-bearers is cold."
+   "text": "All four vats are dead. The north passage is open. The furnace is going cold."
   }
  ],
  "objective": "Break the four brood vats: the exit opens when they are dead",

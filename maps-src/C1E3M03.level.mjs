@@ -78,7 +78,7 @@ const MAP = {
     { type: 'switch', id: 'column', at: [74, 25], wall: 'north', do: [{ open: [89, 23] }, { objective: 'The hatchery is open: the exit is at the east end' }, { shake: 1.2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the gardens. Whatever the ship keeps alive it keeps here. The floor is not safe to stand on. Watch it: it swells before it blooms.' },
+    { id: 'start', at: [5, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the ship keeps what it keeps alive here. The floor is not safe to stand on. Watch it: it swells before it blooms.' },
     { id: 'ledges', at: [18, 23], radius: 3, speaker: 'INES', text: 'Singers on the ledges, north and south. Cross the beds when they are asleep and use the rubble in between. The ledges step down at opposite ends.' },
     { id: 'bed', at: [24, 23], radius: 2, speaker: 'INES', text: 'The bed is swelling. When it goes dark, go. Do not stop in the middle: the other one is out of step with it.' },
     { id: 'mortar', at: [42, 23], radius: 3, speaker: 'HULL', text: 'A bell-breaker, left on a plinth with its rockets. The shell goes where the ring on the ground shows, over cover, up onto a ledge. It hurts you too.' },

@@ -77,8 +77,8 @@ const MAP = {
   atmosphere: { look: 'roots', sky: 'root', dark: true, silence: true, fog: '#14120c', fogDensity: 0.014, ambient: 0.5 },
   lantern: { oil: 200, max: 300 }, noiseTell: true,
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 80, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
-  intro: { title: 'SILENT ROOTS', lines: ['A cave of root columns, and what sleeps among them.', 'The HUD says how far a shot will carry. The lantern is seen from far off.'] },
-  outro: 'The refectory was a long table laid for forty, and nobody at it. The corridor beyond the table goes on down into the root, and there is a sound at the end of it that is very slow.',
+  intro: { title: 'SILENT ROOTS', lines: ['A cave of root columns, and what sleeps among them.', 'A shot carries far in here. So does a lit lantern.'] },
+  outro: 'The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and there is a sound at the end of it that is very slow.',
   objective: 'Find the three chambers of the Silent: west, south and east. A latch in each. Gunfire wakes what is in its reach: the arc and a blow are quiet',
   ...L.layers(),
   secrets: [{ id: 'hollow-root', panel: SEC.panel, cells: SEC.cells }],
@@ -89,7 +89,7 @@ const MAP = {
   scenery: [{ kind: 'rootcolumn', at: [50, 50], y: 0, scale: 1.2 }],
   messages: [
     { id: 'start', at: [8, 90], radius: 5, speaker: 'INES', text: 'Columns of root as thick as a house, set at irregular distances, and a floor that gives back every step. Something breathes in the dark a long way off, and it is more than one.' },
-    { id: 'tell', at: [14, 86], radius: 5, speaker: 'HULL', text: 'The mark on the screen says how far the gun in your hand carries. The arc lamp, the fork and a blow carry almost nowhere. A lit lantern is seen from far off by whatever sees.' },
+    { id: 'tell', at: [14, 86], radius: 5, speaker: 'HULL', text: 'Gunfire carries far in here. The arc lamp, the fork and a blow carry almost nowhere. A lit lantern is seen from far off by anything that sees.' },
     { id: 'west', at: [14, 50], radius: 4, speaker: 'A SILENT', text: 'I will not say who sleeps by the south chamber. I will say they sleep by the door, and that a quiet hand goes past them.' },
     { id: 'south', at: [50, 84], radius: 4, speaker: 'A SILENT', text: 'I will not call anyone. I will say the ones in the east keep their eyes on the light. Put the lamp out in the lanes. They hear nothing else.' },
     { id: 'east', at: [84, 50], radius: 4, speaker: 'A SILENT', text: 'I will not sing. The refectory has forty places and nobody in them. They have come in since the bell: eleven, from the north, in armour.' },
@@ -126,4 +126,7 @@ ENC.apply(MAP);
 MAP.squeeze = [{axis:'x',cuts:[[3,4], [6,7], [11,12], [17,18], [21,22], [23,24], [31,32], [42,43], [57,58], [63,64], [68,69], [77,78], [82,83], [89,91], [96,97]]}, {axis:'z',cuts:[[7,8], [9,10], [13,14], [21,22], [23,24], [37,38], [41,42], [45,46], [53,54], [57,58], [59,60], [64,65], [71,73], [77,78], [89,90], [94,95], [96,97]]}];
 // ---- end PT-052 Level B squeeze ----
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "gate": ["msg:r3"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

@@ -1096,7 +1096,7 @@
    "at": [6, 13],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the chandlery. The cellars run under half the quay. Somewhere down there is the drain gate; it needs the chandler's iron key."
+   "text": "The cellars run under half the quay, Calder. Somewhere down there is the drain gate; it needs the chandler's iron key."
   },
   {
    "id": "stairs",
@@ -1145,14 +1145,14 @@
    "at": [57, 39],
    "radius": 2,
    "speaker": "LIGHTHOUSE KEEPER",
-   "text": "If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. Come up."
+   "text": "If you have found this stair, your father was not the only Calder who knew the harbour keeps secrets. I kept this light before him. Come up."
   },
   {
    "id": "gate",
    "at": [30, 50],
    "radius": 2,
    "speaker": "SIGNAL HOUSE",
-   "text": "Lamplighter Hill is the way up. The survivors there signal by lamp: green for safe, red for bells."
+   "text": "The survivors on the hill signal by lamp, Calder. Green is safe. Red is bells."
   },
   {
    "id": "found-marlinspike",

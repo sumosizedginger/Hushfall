@@ -872,7 +872,10 @@
    "at": [66, 10],
    "radius": 4,
    "speaker": "HULL",
-   "text": "The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern."
+   "text": "The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern.",
+   "unless": [
+    "msg:door-open"
+   ]
   },
   {
    "id": "door-open",

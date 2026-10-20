@@ -37,7 +37,7 @@ const MAP = {
   lantern: { oil: 60, max: 60, eternal: true },
   lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 4 }, weapons: ['flare'] },
-  intro: { title: 'THE UNRUNG GATE', lines: ['A short walk, in silence.', 'At the Gate: light the lamp (L), and keep it lit.'] },
+  intro: { title: 'THE UNRUNG GATE', lines: ['A short walk, in silence.', 'At the Gate: light the lamp, and keep it lit.'] },
   outro: 'The door is a door again. Behind you the stair is lit all the way down, and in front of you the lamp is steady.',
   objective: 'Walk to the Gate. The lamp is yours: L',
   ...layers,
@@ -49,7 +49,7 @@ const MAP = {
   messages: [
     msg('floor', 13, CZ, 5, 'INES', 'The floor of the Bell. The roots have drawn back from the walls and left the stone clean, as if it had been waiting for someone to sweep it.'),
     msg('shaft', 31, CZ, 5, 'INES', 'The stair goes up the inside of the shaft. A plate at the first landing says how far down this is. I do not read the number.'),
-    msg('hive', 49, CZ, 5, 'INES', 'The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. Whatever kept the beat has stopped.'),
+    msg('hive', 49, CZ, 5, 'INES', 'The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. The beat has stopped.'),
     msg('deep', 67, CZ, 5, 'INES', 'The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting.'),
     msg('hollow', 67, CZ + 3, 2, 'INES', 'One stretch of the south wall sounds different under my knuckles. Somebody has been here with a hand and a reason.'),
     msg('steppe', 85, CZ, 5, 'INES', 'A road across a plain under a low red sun. It was always going to be here when I got to this end. It is a different road from the one I walked.'),

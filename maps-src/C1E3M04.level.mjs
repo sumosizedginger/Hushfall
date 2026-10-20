@@ -80,7 +80,7 @@ const MAP = {
   groups: [{ name: 'west', rect: [15, 15, 38, 43] }, { name: 'galleries-n', rect: [15, 3, 61, 14] }, { name: 'galleries-s', rect: [15, 44, 61, 54] }, { name: 'centre', rect: [39, 15, 56, 43] }, { name: 'dais', rect: [57, 15, 75, 43] }],
   entities: [],
   messages: [
-    { id: 'start', at: [6, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the nave. There is no roof left: the ship tore it open to sing at the sky. Whatever sits at the far end is why the gate is sealed.' },
+    { id: 'start', at: [6, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, there is no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it is why the gate is sealed.' },
     { id: 'nave', at: [20, 29], radius: 3, speaker: 'INES', text: 'Two galleries, north and south, with singers on both. The pillars stop a round. Do not cross this floor in a straight line.' },
     { id: 'shell', at: [44, 29], radius: 4, speaker: 'HULL', text: 'Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot, or to circle it, or to throw a bell-breaker over it.' },
     { id: 'mother', at: [58, 29], radius: 4, speaker: 'INES', text: 'She is weeping, and where it lands it burns and slows you: walk out of it. Something is swelling on her skirt. Kill her and the gate will open.' },
@@ -90,7 +90,7 @@ const MAP = {
   triggers: [
     { id: 'nave', when: 'enter', at: [17, 29], radius: 2.5, do: [{ wake: 'west' }, { objective: 'Cross the nave: singers on both galleries, the Choir at the east end' }] },
     { id: 'centre', when: 'enter', at: [40, 29], radius: 3.5, do: [{ wake: 'galleries-n' }, { wake: 'galleries-s' }, { wake: 'centre' }] },
-    { id: 'choir', when: 'enter', at: [52, 29], radius: 4, do: [{ wake: 'dais' }, { wake: 'mother' }, { objective: 'Break the Choir: the Mother on the dais. The gate waits for her' }] },
+    { id: 'choir', when: 'enter', at: [52, 29], radius: 4, do: [{ wake: 'dais' }, { wake: 'mother' }, { objective: 'Break the Choir: the Weeping Mother on the dais. The gate waits' }] },
     { id: 'mother-down', when: 'dead:mother', do: [{ open: [76, 29] }, { objective: 'The gate is open: the exit is east' }, { shake: 1.4 }] },
   ],
   quality: { enemies: [14, 60], botSeconds: [60, 700], mechanics: ['heights', 'triggers', 'secret'], skins: 5, enemyKinds: { chorister: 3, bulwark: 2, weeping: 1, bellhand: 1, tollbearer: 8, gaunt: 6 },

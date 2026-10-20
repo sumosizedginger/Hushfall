@@ -306,7 +306,7 @@
  "intro": {
   "title": "THE LIGHTHOUSE CELLAR",
   "lines": [
-   "A warm room under a dark lamp.",
+   "A warm room under a lamp that flashes for no ship.",
    "Nothing here wants you dead. Take a breath."
   ]
  },
@@ -317,7 +317,7 @@
    "at": [4, 22],
    "radius": 3,
    "speaker": "LIGHTHOUSE KEEPER",
-   "text": "Welcome, Calder. Your father kept this cellar for the day the harbour needed one. It does now. Sit a minute."
+   "text": "Welcome, Calder. I kept this cellar, and then your father did, for the day the harbour needed one. It does now. Sit a minute."
   },
   {
    "id": "log1",
@@ -338,7 +338,7 @@
    "at": [6, 11],
    "radius": 2,
    "speaker": "INES",
-   "text": "Every step of this stair was cut by hand. He climbed it every night to keep the lamp lit. Every night for thirty years."
+   "text": "Every step of this stair was cut by hand. He climbed it every night for thirty years to keep the lamp lit."
   },
   {
    "id": "lamp",

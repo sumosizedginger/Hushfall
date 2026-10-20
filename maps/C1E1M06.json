@@ -1190,7 +1190,7 @@
    "at": [4, 22],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Ferry Terminal. The last boat never left the quay. The bow ramp is winched up: find the winch, the control cabin on the north quay."
+   "text": "Calder, the bow ramp is winched up. The winch is in the control cabin on the north quay."
   },
   {
    "id": "board",
@@ -1218,14 +1218,7 @@
    "at": [46, 24],
    "radius": 6,
    "speaker": "INES",
-   "text": "That is Tide-Warden plate: the front is nearly armour-proof. Do not stand in front of it. Let it charge, and let it hit something."
-  },
-  {
-   "id": "aboard",
-   "at": [60, 24],
-   "radius": 3,
-   "speaker": "SIGNAL HOUSE",
-   "text": "The Signal House is next: the ridge antenna is still answering. Whatever comes down that ramp, it is not the only one."
+   "text": "That is Tide-Warden plate. Somebody on the Board wore that, once. The front is nearly armour-proof: let it charge, and let it hit something."
   },
   {
    "id": "found-carbine",

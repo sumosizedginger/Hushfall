@@ -933,7 +933,7 @@
    "at": [5, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Loom. Every door in there listens. Make a noise near one and it will not open for you until it has heard nothing for a while. Kill quietly, or wait."
+   "text": "Every door in there listens, Calder. Make a noise near one and it will not open for you until it has heard nothing for a while. Kill quietly, or wait."
   },
   {
    "id": "lock",
@@ -954,7 +954,7 @@
    "at": [36, 28],
    "radius": 3,
    "speaker": "INES",
-   "text": "Another of the tall ones, a wheel of bells behind it. Whatever stands near it takes half. Kill it first."
+   "text": "Another of the tall ones, a wheel of bells behind it. Anything near it takes half. Kill it first."
   },
   {
    "id": "heart",
@@ -975,7 +975,7 @@
    "at": [62, 28],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "That is the end of the tuning. Whatever was being tuned is still above us, singing."
+   "text": "That is the end of the tuning. What was being tuned is still above us, singing."
   },
   {
    "id": "found-axe",

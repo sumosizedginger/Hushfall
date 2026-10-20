@@ -133,4 +133,7 @@ void landing;
 MAP.roster = { id: 'C2M25', lane: [...(laneOf('C2M25') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "door-shut": ["msg:door-open"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;

@@ -169,7 +169,7 @@ const MAP = {
   loads: LOADS,
   entities: [...ents, { type: 'exit', at: exitCell, locked: true, dest: 'next' }, ...(swAt ? [{ type: 'switch', id: 'car-call', at: swAt, wall: swWall, do: [{ exit: { set: 'unlock' } }, { objective: 'The car is called. Up the last of the road, into the cable' }, { shake: 1 }, { message: 'called' }] }] : [])],
   messages: [
-    { id: 'start', at: start, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Ascent Tether. The Vael freight goes up this cable and so do you. One road, round and round it. Nothing on it moves slowly except the loads.' },
+    { id: 'start', at: start, radius: 3, speaker: 'SIGNAL HOUSE', text: 'The Vael freight goes up this cable, Calder, and so do you. One road, round and round it. Nothing on it moves slowly except the loads.' },
     { id: 'loads', at: at(60), radius: 3, speaker: 'HULL', text: 'Orange on the deck, a shadow growing: that is where the next load lands. Thirty if it catches you. It will not catch anything that stays out of the light.' },
     { id: 'crush', at: at(140), radius: 3, speaker: 'INES', text: 'They crush what they land on. All of it. Stand them under one.' },
     { id: 'bay', at: at(166), radius: 3, speaker: 'SIGNAL HOUSE', text: 'The freight bay. The car-call switch is on the wall. You will have to stand still for a moment to throw it.' },

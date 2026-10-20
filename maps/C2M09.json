@@ -1257,7 +1257,7 @@
    "at": [19, 29],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The lantern is L. Gaunts and Gills find you by eye: from 6 metres with it out, 24 with it lit. Tollbearers follow the Hush and do not care about light."
+   "text": "Gaunts and Gills find you by eye: from 6 metres with the lantern out, 24 with it lit. Tollbearers follow the Hush and do not care about light."
   },
   {
    "id": "mouth",
@@ -1306,7 +1306,10 @@
    "at": [58, 55],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The gate is the drum in the middle of the plaza. Its door is on the pulpit lever, and nothing else opens it."
+   "text": "The gate is the drum in the middle of the plaza. Its door is on the pulpit lever, and nothing else opens it.",
+   "unless": [
+    "msg:open"
+   ]
   },
   {
    "id": "watch",

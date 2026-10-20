@@ -723,7 +723,7 @@
    "at": [19, 24],
    "radius": 3,
    "speaker": "INES",
-   "text": "Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Whatever you do near them, do it from behind a pew."
+   "text": "Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Do what you do near them from behind a pew."
   },
   {
    "id": "ward",
@@ -758,7 +758,7 @@
    "at": [66, 24],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "Past the conductor. Whatever they were rehearsing, they were rehearsing for this."
+   "text": "Past the conductor. They were rehearsing for this."
   }
  ],
  "objective": "Climb the Loft. The conductor's lever is at the top",

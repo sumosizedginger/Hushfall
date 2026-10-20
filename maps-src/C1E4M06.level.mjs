@@ -123,7 +123,7 @@ const MAP = {
   secrets: secret ? [{ id: 'cache', panel: secret.panel, cells: secret.cells }] : [],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Approach. Five ranks, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two.' },
+    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two.' },
     { id: 'court', at: [CX, 103], radius: 4, speaker: 'INES', text: 'Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It is like looking at the sun.' },
     { id: 'stalls', at: [CX, 85], radius: 4, speaker: 'SIGNAL HOUSE', text: 'The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half.' },
     { id: 'mother', at: [CX - 20, 62], radius: 4, speaker: 'INES', text: 'She is in there, in the round room west of the rank. The way out stays locked as long as she weeps. Walk out of what she makes.' },
@@ -132,9 +132,9 @@ const MAP = {
     { id: 'panel', at: secret ? secret.panel : [0, 0], radius: 3, speaker: 'HULL', text: 'The wall of the east tunnel rings hollow.' },
   ],
   triggers: [
-    { id: 'mother-down', when: 'dead:mother', do: [{ exit: { set: 'unlock' } }, { objective: 'The Mother is down. The way out is open: the Gate yard, straight ahead' }, { shake: 2 }] },
+    { id: 'mother-down', when: 'dead:mother', do: [{ exit: { set: 'unlock' } }, { objective: 'The Weeping Mother is down. The way out is open: the Gate yard, straight ahead' }, { shake: 2 }] },
     { id: 'stalls', when: 'enter', at: [CX, 85], radius: 5, do: [{ objective: 'The stalls: kill the Acolytes first, then the singers' }] },
-    { id: 'mother-rank', when: 'enter', at: [CX - 14, 62], radius: 5, do: [{ objective: 'The Mother is in the round room west of this rank: kill her' }] },
+    { id: 'mother-rank', when: 'enter', at: [CX - 14, 62], radius: 5, do: [{ objective: 'The Weeping Mother is in the round room west of this rank: kill her' }] },
   ],
   quality: { enemies: [14, 70], botSeconds: [60, 1200], mechanics: ['heights', 'triggers', 'secret'], skins: 3, enemyKinds: { bulwark: 1, acolyte: 1, chorister: 3, weeping: 1, wardengraft: 1, bellhand: 2, tollbearer: 4, gaunt: 2 },
     scaleClass: 'MIXED', tallReason: 'the outer court of the Approach is 12 m under the Gate\'s sky and the hall closes down rank by rank to 8',

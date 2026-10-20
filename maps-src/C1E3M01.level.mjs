@@ -86,7 +86,7 @@ const MAP = {
     { type: 'switch', id: 'valve', at: [62, 17], wall: 'north', do: [{ open: [68, 22] }, { objective: 'The hatch is open: the exit is at the east end of the last chamber' }, { shake: 1.5 }] },
   ],
   messages: [
-    { id: 'start', at: [4, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Landing Scar. Three nights ago something came down in that bowl. The ship is in the east wall. There is no other way to it.' },
+    { id: 'start', at: [4, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I am reading the ship off its own hum, so you get its shape and not its contents. It came down in that bowl three nights ago, in the east wall.' },
     { id: 'sleepers', at: [7, 20], radius: 3, speaker: 'INES', text: 'People, standing. They have been standing there since it landed. Do not wake them if you can help it.' },
     { id: 'rim', at: [13, 22], radius: 2.5, speaker: 'INES', text: 'Singers on both rims. They sing in fours, and anything that goes past you shakes your aim. Cross rubble to rubble. Do not stand in the open.' },
     { id: 'high', at: [27, 22], radius: 3, speaker: 'INES', text: 'The ledges step down at the east end. If you can get up there they are close enough to hit with anything.' },

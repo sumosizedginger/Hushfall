@@ -1835,7 +1835,10 @@
    "at": [32, 10],
    "radius": 5,
    "speaker": "HULL",
-   "text": "The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole."
+   "text": "The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole.",
+   "unless": [
+    "msg:ninth"
+   ]
   },
   {
    "id": "hollow",

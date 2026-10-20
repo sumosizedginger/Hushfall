@@ -260,6 +260,15 @@ function validateMapChecks(src) {
     if (m.radius != null && !(m.radius > 0 && m.radius <= 8)) err(`${tag}: radius must be in (0, 8] cells`);
     if (m.choice != null && !/^[a-z0-9-]{1,24}(=|!=)[a-z0-9-]{1,24}$/.test(String(m.choice))) err(`${tag}: choice must be '<id>=<value>' or '<id>!=<value>'`);                      // PT-039: shown only when the remembered choice matches (or does not)
   }
+  for (const [i, m] of (src.messages || []).entries()) {                                                                                      // PT-070: `unless` = one condition or a list (msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on), the message is silent once any holds
+    if (m.unless == null) continue; const tag = `message #${i} (${m.id})`;
+    for (const term of Array.isArray(m.unless) ? m.unless : [m.unless]) for (const q of Array.isArray(term) ? term : [term]) {                // a list item that is itself a list is an AND
+      if (typeof q !== 'string') { err(`${tag}: unless must be a condition or a list of conditions`); continue; }
+      if (q.startsWith('msg:')) { if (!msgIds.has(q.slice(4))) err(`${tag}: unless names an unknown message '${q}'`); }
+      else if (q.startsWith('key:') || q.startsWith('dead:') || q.startsWith('lit:') || q.startsWith('sector:') || q === 'lamp:on') { /* the same forms a trigger accepts: checked by the trigger validator's rules at play time */ }
+      else err(`${tag}: unless '${q}' must be msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on`);
+    }
+  }
   if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
   validateKit(src, { w, h, tile, walkable, err, ents, msgIds, keyPickups });

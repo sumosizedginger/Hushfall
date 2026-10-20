@@ -35,7 +35,7 @@ const MAP = {
   entities: [...ents, { type: 'exit', at: [40, 17], dest: 'next' }],
   messages: [
     { id: 'arrive', at: [5, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have lost the hum again. This room is on no plan I have. Stay as long as you like. I will be here.' },
-    { id: 'room', at: [24, 17], radius: 4, speaker: 'A TIDE-WARDEN', text: 'I held the Pier Nine lock the winter the first ships came. A door is held from one side or the other. I chose the side I could see and stayed. You may choose differently.' },
+    { id: 'room', at: [24, 17], radius: 4, speaker: 'A TIDE-WARDEN', text: 'I held Pier Nine\'s lock when the first ships came, and was taken up the cable. A door is held from one side or the other. I chose the side I could see. You may choose differently.' },
     { id: 'ines', at: [24, 10], radius: 3, speaker: 'INES', text: 'That is a great deal of words for someone who is not here to hear the answer.' },
     { id: 'cache', at: [19, 14], radius: 3, speaker: 'HULL', text: 'A cache, left for whoever came after. It is dry. Someone looked after it.' },
   ],

@@ -999,10 +999,10 @@
   "title": "SILENT ROOTS",
   "lines": [
    "A cave of root columns, and what sleeps among them.",
-   "The HUD says how far a shot will carry. The lantern is seen from far off."
+   "A shot carries far in here. So does a lit lantern."
   ]
  },
- "outro": "The refectory was a long table laid for forty, and nobody at it. The corridor beyond the table goes on down into the root, and there is a sound at the end of it that is very slow.",
+ "outro": "The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and there is a sound at the end of it that is very slow.",
  "messages": [
   {
    "id": "start",
@@ -1016,7 +1016,7 @@
    "at": [11, 71],
    "radius": 5,
    "speaker": "HULL",
-   "text": "The mark on the screen says how far the gun in your hand carries. The arc lamp, the fork and a blow carry almost nowhere. A lit lantern is seen from far off by whatever sees."
+   "text": "Gunfire carries far in here. The arc lamp, the fork and a blow carry almost nowhere. A lit lantern is seen from far off by anything that sees."
   },
   {
    "id": "west",
@@ -1065,7 +1065,10 @@
    "at": [42, 30],
    "radius": 5,
    "speaker": "HULL",
-   "text": "The refectory gate is shut. It is held by three bolts, one from the latch in each of the three chambers of the Silent."
+   "text": "The refectory gate is shut. It is held by three bolts, one from the latch in each of the three chambers of the Silent.",
+   "unless": [
+    "msg:r3"
+   ]
   },
   {
    "id": "refectory",

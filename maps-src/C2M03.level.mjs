@@ -102,7 +102,7 @@ const MAP = {
     { id: 'court', at: [46, 48], radius: 3, speaker: 'INES', text: 'A hall with the roof left on and the middle left open to the floor. Five perches, one round keep. This is where they ring things.' },
     { id: 'keep', at: [46, 43], radius: 3, speaker: 'INES', text: 'Something is shut in the middle of that keep and it is not one of them. They do not cage their own. Or they do, and I do not know which.' },
     { id: 'latch', at: [46, 32], radius: 2, speaker: 'HULL', text: 'The latch outside the cage. A cage door has no business with a lever this size.' },
-    { id: 'freed', at: [0, 0], radius: 0.1, speaker: 'THE TENDER', text: 'You do not sing. Good. I keep the dead, and they shut me in the bell house for not singing at a burying. The north gate answers to me. It is open.' },
+    { id: 'freed', at: [0, 0], radius: 0.1, speaker: 'THE TENDER', text: 'You do not sing. Good. I keep the dead, and they shut me in the bell house for not singing at a burying. The north gate is mine, and it is open. Go on to the Fields.' },
     { id: 'silent', at: [0, 0], radius: 0.1, speaker: 'A SILENT', text: 'We stopped. That is the whole of what we did.' },
     { id: 'way', at: [46, 11], radius: 3, speaker: 'INES', text: 'The Fields, she said. I have not seen a field on this world yet. I do not know what they grow in them.' },
     { id: 'hollow', at: [46, 23], radius: 2, speaker: 'HULL', text: 'The north wall of the keep rings hollow behind the pillar.' },
@@ -121,4 +121,7 @@ console.log('C2M03: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind 
 MAP.roster = { id: 'C2M03', lane: [...(laneOf('C2M03') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
+for (const [mid, unless] of Object.entries({ "bridge": ["msg:gate"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
+// ---- end PT-070 unless
 export default MAP;
