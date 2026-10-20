@@ -33,6 +33,7 @@ import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
+import { gunFactor } from './gunlight.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
@@ -59,6 +60,8 @@ const bellPose = (e, yaw) => {
 const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
   : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
+/** PT-065 (V3, measured): the share of the old weapon-scene light the held gun keeps in the darkest place (the rest of the range follows the place's own hemisphere); a probe sets it live (`setup_weaponLight`) */
+export const WEAPON_LIGHT = { floor: 0.35 };
 export class GameView {
   constructor(renderer, tex, map, world) {
     this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash();
@@ -536,10 +539,10 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     hemi.color.setHex(look.hemi[0]); hemi.groundColor.setHex(look.hemi[1]); hemi.intensity = look.hemi[2] * this.ambient;
     sun.color.setHex(look.sun[0]); sun.position.set(...look.sun[2]); sun.intensity = look.sun[1] * this.ambient;
     if (this.weaponHemi) {                                                                                                        // PT-061 V3 (the audit: the gun was the same brightness, luma 109 to 116, in every map): the weapon scene's light follows the place's, from 0.35 of the old value in the darkest to the old value at the harbour's level and a little over in the brightest
-      const k = Math.max(0, (look.hemi[2] * this.ambient) / 2.4), g = 0.35 + 0.65 * Math.min(1, k) + 0.12 * Math.min(1, Math.max(0, k - 1));
+      const k = Math.max(0, (look.hemi[2] * this.ambient) / 2.4), g = gunFactor(look, this.ambient) ?? (WEAPON_LIGHT.floor + (1 - WEAPON_LIGHT.floor) * Math.min(1, k) + 0.12 * Math.min(1, Math.max(0, k - 1)));
       this.weaponHemi.intensity = 1.5 * g; this.weaponHemi.color.setHex(this.mixHex(0x9fb8d0, look.hemi[0], 0.45)); this.weaponHemi.groundColor.setHex(this.mixHex(0x3a2a30, look.hemi[1], 0.45)); this.weaponKey.intensity = 1.6 * g; this.weaponKey.color.setHex(this.mixHex(0xffe0b0, look.sun[0], 0.35));
     }
-    this.post.uniforms.uShoulder.value = look.post?.shoulder ?? 0.6;                                                              // PT-061 V4: the tone shoulder (a look may name its own)
+    this.post.uniforms.uShoulder.value = look.post?.shoulder ?? 1;                                                              // PT-061 V4: the tone shoulder (a look may name its own)
     this.exposureK = look.exposure; this.post.setGrade(look.grade); this.post.uniforms.uExposure.value = 2.2 * look.exposure * (this.brightness ?? 1);
   }
   dispose() {

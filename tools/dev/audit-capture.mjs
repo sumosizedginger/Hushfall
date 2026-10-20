@@ -53,6 +53,7 @@ async function runMap(spec) {
   while (true) {
     const near = Math.min(...s.enemies.filter((e) => e.state !== 'dead' && e.state !== 'idle').map((e) => Math.hypot(e.x - s.player.x, e.z - s.player.z)), 99);
     const r = await T(`t.stepBot(${near < 10 ? 6 : 30})`); s = r;
+    if (r.mode === 'cinematic') { if (!counts.scene) { counts.scene = 1; await shot('scene', { hp: r.player?.hp }, true); } await T('t.skip_cinematic()'); s = await T('t.state()'); continue; }          // PT-063: a story scene stops the sim; the capture takes one frame of it and skips it
     if (r.mode === 'dying' || r.mode === 'dead') { await shot('death', { hp: r.player?.hp }, true); break; }
     if (r.done || r.mode === 'ending' || r.mode === 'complete') { done = true; break; }
     if (r.failed) { await shot('bot_failed', { op: r.op, ops }, true); break; }
@@ -71,8 +72,8 @@ async function runMap(spec) {
     else if (d.prompt && cap('prompt', 1) && !(await shot('prompt', extra))) counts.prompt--;
     else if (d.toast && cap('toast', 1) && !(await shot('pickup_toast', extra))) counts.toast--;
     if (!auto && r.op / ops > 0.55 && r.tick > 600) {
-      auto = true; await T("t.press('map'); t.tick(1); t.release('map')"); await sleep(350);
-      if (await shot('automap', extra, true)) { await T("t.press('map'); t.tick(1); t.release('map')"); await sleep(150); }
+      auto = true; await T("t.press('map'); t.tick(1); t.release('map')"); await sleep(350);          // (the map key opens the Journal and PAUSES since U2: resume afterwards or the run stops here)
+      await shot('automap', extra, true); if ((await T('t.state()')).mode === 'paused') await T('t.resume()'); await sleep(150);
     }
     for (let k = 1; k <= N; k++) if (!progDone.has(k) && r.op / ops >= (k - 0.5) / N) { progDone.add(k); await shot('route_' + k + 'of' + N, extra); }
     prevHp = p.hp;

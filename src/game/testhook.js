@@ -8,6 +8,7 @@ import { PLAYER, ENEMIES, lookOf } from '../engine/defs.js';
 import { sanitizeProgress, earn } from '../engine/progress.js';
 import { ENDINGS, stepSequence, skipSequence } from './ending.js';
 import { enemyBounds, enemyScreenRect, encounterProbe, debrisProbe } from '../render/diagnostics.js';
+import { WEAPON_LIGHT } from '../render/view.js';
 
 const ROUTES = Object.fromEntries(Object.entries(import.meta.glob('../../routes/*.json', { eager: true, import: 'default' })).map(([p, v]) => [p.split('/').pop().replace('.route.json', ''), v]));
 
@@ -46,6 +47,9 @@ export function installTestHook(app) {
     tick(n = 1) { for (let i = 0; i < n; i++) { app.stepOnce(); if (g.mode !== 'playing') break; } render(); return snap(); },
     render, pause: app.pause, resume: app.resume,
     save: () => app.quickSave(), load: () => app.quickLoad(),
+    /** PT-065 (V4/V12): the tone shoulder's two numbers, set live (a probe renders one state under several curves and measures the picture; `shoulder` in post.js and tonecurve.js) */
+    setup_weaponLight(floor) { WEAPON_LIGHT.floor = floor; g.view.setPlace(g.view.look); },
+    setup_tone(k, pre) { const u = g.view.post.uniforms; u.uShoulder.value = k; u.uShoulderPre.value = pre; },
     setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint') g.view?.setLook(g.settings); },
     // -- route bot: same InputState as a human --
     startBot(name) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name); return { ops: bot.route.length }; },

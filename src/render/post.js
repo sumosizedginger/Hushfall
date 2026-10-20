@@ -78,7 +78,7 @@ export class PostPass {
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.uniforms = {
       tColor: { value: null }, tDepth: { value: null }, tPaper: { value: paperTex }, uRes: { value: new THREE.Vector2(1, 1) },
-      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uShoulder: { value: 0.6 }, uShoulderPre: { value: 0.72 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
+      uNear: { value: near }, uFar: { value: far }, uExposure: { value: 2.2 }, uShoulder: { value: 1 }, uShoulderPre: { value: 0.55 }, uLevels: { value: 10 }, uEdgeLo: { value: 0.06 }, uEdgeHi: { value: 0.22 }, uCreaseLo: { value: 0.0007 }, uCreaseHi: { value: 0.0014 }, uClassic: { value: CLASSIC ? 1 : 0 },
       uOutline: { value: 1 }, uPaint: { value: 1 }, uDamage: { value: 0 }, uDebug: { value: 0 }, uFrost: { value: 0 },
       uShadowTint: { value: new THREE.Vector3(0.9, 1.0, 1.08) }, uLightTint: { value: new THREE.Vector3(1.07, 1.0, 0.93) }, uSat: { value: 1 },
     };
