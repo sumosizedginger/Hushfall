@@ -41,7 +41,7 @@ export function installTestHook(app) {
     state: snap,
     drainEvents() { const e = g.events; g.events = []; return e; },
     // -- semantic actions (same path as the keyboard) --
-    newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null } = {}) { g.lockFailed = true; app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.manual = !realtime; return snap(); },
+    newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null, keepProgress = false } = {}) { g.lockFailed = true; if (!keepProgress) g.progress = sanitizeProgress(null); /* PT-065: a new game starts a fresh campaign, as the real button does: a choice made in C2M11 leaked into the next map's world of the same page session and made the browser's state hash differ from the node sim's on every later Campaign Two map */ app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.manual = !realtime; return snap(); },
     realtime(on) { g.manual = !on; },
     press: (a) => g.input.press(a), release: (a) => g.input.release(a), addYaw: (r) => g.input.addYaw(r), addPitch: (r) => g.input.addPitch(r),
     tick(n = 1) { for (let i = 0; i < n; i++) { app.stepOnce(); if (g.mode !== 'playing') break; } render(); return snap(); },

@@ -1,0 +1,157 @@
+{
+  "mapId": "C2M13",
+  "when": "2026-10-20T04:58:38.888Z",
+  "commit": "333169f",
+  "dirtySource": false,
+  "env": {
+    "browser": "headless Chrome",
+    "gl": "SwiftShader (software GL)",
+    "note": "NOT a real-GPU measurement"
+  },
+  "mapSha": "a10302cee2f57d93",
+  "routesSha": "f0581a60e940add7",
+  "sources": {
+    "engine": "ac1c0dc7b5c86aff",
+    "render": "73e56bb6b27ab29e",
+    "game": "8e84a8c5ca1ebc69",
+    "audio": "f8f3d9169ece1cc4",
+    "assets": "df26bcd4e6468f58"
+  },
+  "routes": {
+    "main": {
+      "ok": true,
+      "ticks": 5393,
+      "hash": "6f76f428",
+      "nodeTicks": 5393,
+      "nodeHash": "6f76f428",
+      "agree": true,
+      "kills": 29,
+      "secrets": 0,
+      "wallSeconds": 2
+    },
+    "secret": {
+      "ok": true,
+      "ticks": 6372,
+      "hash": "d139d8d6",
+      "nodeTicks": 6372,
+      "nodeHash": "d139d8d6",
+      "agree": true,
+      "kills": 29,
+      "secrets": 1,
+      "wallSeconds": 4
+    }
+  },
+  "hud": {
+    "objective": true,
+    "boss": false,
+    "shield": false
+  },
+  "census": {
+    "enemies": 42,
+    "asleep": {
+      "rows": 42,
+      "raised": 42,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.043
+    },
+    "awake": {
+      "rows": 84,
+      "raised": 42,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.101
+    },
+    "matrix": {
+      "rows": 219,
+      "raised": 219,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.105
+    },
+    "dying": {
+      "rows": 42,
+      "raised": 42,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0.043
+    },
+    "corpses": {
+      "rows": 42,
+      "raised": 42,
+      "violations": 0,
+      "deepest": 0,
+      "highest": 0
+    },
+    "movingFloors": [],
+    "cantor": null
+  },
+  "checks": [
+    {
+      "name": "real-game route C2M13.main: completes in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=5393 policy=standing wall=2s"
+    },
+    {
+      "name": "real-game route C2M13.main: browser sim == Node sim (ticks + state hash)",
+      "ok": true,
+      "detail": "browser 5393/6f76f428 vs node 5393/6f76f428"
+    },
+    {
+      "name": "real-game route C2M13.secret: completes in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=6372 policy=standing wall=4s"
+    },
+    {
+      "name": "real-game route C2M13.secret: browser sim == Node sim (ticks + state hash)",
+      "ok": true,
+      "detail": "browser 6372/d139d8d6 vs node 6372/d139d8d6"
+    },
+    {
+      "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
+      "ok": true,
+      "detail": "42 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0.043 m; every one of the 42 enemies was measured: true"
+    },
+    {
+      "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
+      "ok": true,
+      "detail": "84 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 42 enemies: true"
+    },
+    {
+      "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
+      "ok": true,
+      "detail": "219 rows (219 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
+    },
+    {
+      "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
+      "ok": true,
+      "detail": "dying: 42 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0.043 m || corpses: 42 rows (42 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+    },
+    {
+      "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
+      "ok": true,
+      "detail": "0 rows (0 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+    },
+    {
+      "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "render truth: the census ran on this map (its enemies were really measured)",
+      "ok": true,
+      "detail": "42 enemies measured of 42 placed"
+    },
+    {
+      "name": "no uncaught exceptions or console errors while this map was played",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "wallSeconds": 18
+}

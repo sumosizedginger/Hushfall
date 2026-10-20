@@ -22,6 +22,7 @@ async function playRoute({ T, root, shot = null }, id, name, { shots = false, on
   let rr, lastOp = -1, shotN = 0; const t0 = Date.now(), want = new Set(shots && name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
   for (let i = 0; i < maxSteps; i++) {
     rr = await T('t.stepBot(90)');
+    if (rr.mode === 'cinematic') { await T('t.skip_cinematic()'); continue; }                                  // PT-063: a story scene stops the sim; a player skips it with a key, so the route does (the scene touches nothing: the sim is not stepped)
     if (shot && rr.op !== lastOp && want.has(rr.op) && shotN < 3) { await shot('g2-' + id.toLowerCase() + '-' + name + '-op' + String(rr.op).padStart(2, '0')); shotN++; }
     lastOp = rr.op;
     if (onStep) await onStep(rr);
