@@ -39,6 +39,7 @@ export function installTestHook(app) {
     ready: true,
     routes: Object.keys(ROUTES),
     state: snap,
+    governorProbe: () => ({ width: g.governor.width, base: g.governor.base, rung: g.governor.rung, p95: g.governor.p95, samples: g.governor.samples.length }),      // PT-071 R21: what the quality governor has decided (tools/dev/probe-quality.mjs)
     drainEvents() { const e = g.events; g.events = []; return e; },
     // -- semantic actions (same path as the keyboard) --
     newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null, keepProgress = false } = {}) { g.lockFailed = true; if (!keepProgress) g.progress = sanitizeProgress(null); /* PT-065: a new game starts a fresh campaign, as the real button does: a choice made in C2M11 leaked into the next map's world of the same page session and made the browser's state hash differ from the node sim's on every later Campaign Two map */ app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) }); g.manual = !realtime; return snap(); },
@@ -50,7 +51,7 @@ export function installTestHook(app) {
     /** PT-065 (V4/V12): the tone shoulder's two numbers, set live (a probe renders one state under several curves and measures the picture; `shoulder` in post.js and tonecurve.js) */
     setup_weaponLight(floor) { WEAPON_LIGHT.floor = floor; g.view.setPlace(g.view.look); },
     setup_tone(k, pre) { const u = g.view.post.uniforms; u.uShoulder.value = k; u.uShoulderPre.value = pre; },
-    setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint') g.view?.setLook(g.settings); },
+    setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint' || k === 'reducedMotion') g.view?.setLook(g.settings); if (k === 'internalWidth') g.governor.reset(v); },
     // -- route bot: same InputState as a human --
     startBot(name, opts = {}) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name, opts); return { ops: bot.route.length }; },
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },

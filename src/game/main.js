@@ -31,6 +31,7 @@ import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS 
 import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor, CaptionFeed } from './captions.js';
 import { firstRunLine } from './firstrun.js';
+import { QualityGovernor } from './quality.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
@@ -67,7 +68,7 @@ document.getElementById('title-art').src = titleArtUrl(); document.getElementByI
 
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
-  captions: new CaptionFeed(), mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
+  governor: new QualityGovernor(settings.internalWidth), captions: new CaptionFeed(), mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
   progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
@@ -95,7 +96,7 @@ const ui = new UI({
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
   resetPadBindings: () => { g.capturePad = null; commitPadBindings(defaultPadBindings(), 'Controller buttons reset to default.'); },
   beginPadRebind: (action) => { g.capture = null; g.capturePad = { action }; ui.syncPadBindings(settings.padBindings, action, g.pad.family, 'Press a button on the pad. Esc cancels.'); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); } if (k === 'autoQuality') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -145,7 +146,8 @@ function applySave(save, slot) {
   startLevel({ world: r.world, note: r.degraded }); g.loadedSlot = slot; g.sinceLoad = 0; return true;
 }
 
-function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings.internalWidth); else renderer.setSize(innerWidth, innerHeight, false); }
+const renderWidth = () => (settings.autoQuality !== false ? g.governor.width : settings.internalWidth);                 // PT-071 R21: the width the quality governor says (the player's own choice until the frames run slow)
+function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, renderWidth()); else renderer.setSize(innerWidth, innerHeight, false); }
 addEventListener('resize', resize);
 
 function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
@@ -459,6 +461,7 @@ function quarantineLoaded() {
 function frameBody(now) {
   const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
   g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
+  if (g.mode === 'playing' && g.view && settings.autoQuality !== false) { if (g.governor.sample(raw * 1000, raw)) resize(); } else g.governor.forget();                    // PT-071 R21: only frames of real play count
   pollPad(dt);
   let alpha = 0;
   if (g.mode === 'playing') {
