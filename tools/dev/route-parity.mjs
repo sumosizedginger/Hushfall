@@ -7,12 +7,18 @@ import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.j
 /**
  * ctx: { T, root, shot? }  (T evaluates in the page; shot(name) saves a screenshot)
  * opts: { shots: take 3 screenshots on a main route, onStep(rr): called after every 90-tick step (HUD observations) }
- * returns { ok, status, failed, ticks, hash, nodeTicks, nodeHash, agree, kills, secrets, wallSeconds, routeOps }
+ * returns { ok, status, failed, ticks, hash, nodeTicks, nodeHash, agree, kills, secrets, wallSeconds, routeOps, policy: 'standing' | 'strafing' }
  */
-export async function runRouteParity({ T, root, shot = null }, id, name, { shots = false, onStep = null, maxSteps = 1500 } = {}) {
+export async function runRouteParity(ctx, id, name, opts = {}) {
+  // PT-065: the maps are judged against EITHER fighter (viability.js `runRouteEither`: a standing bot, then a strafing one), so the real game is too: the standing fighter first, and only if it does not finish the strafing one (`weave: 2`), each against the headless sim played the same way
+  const first = await playRoute(ctx, id, name, opts, false); if (first.ok) return { ...first, policy: 'standing' };
+  const second = await playRoute(ctx, id, name, { ...opts, shots: false }, true);
+  return second.ok ? { ...second, policy: 'strafing', standing: { status: first.status, ticks: first.ticks, agree: first.agree } } : { ...first, policy: 'standing', strafing: { status: second.status, ticks: second.ticks, agree: second.agree } };
+}
+async function playRoute({ T, root, shot = null }, id, name, { shots = false, onStep = null, maxSteps = 1500 } = {}, weave = false) {
   const gm = loadMapFile(path.join(root, 'maps', id + '.json')), gr = loadRouteFile(path.join(root, 'routes', id + '.' + name + '.route.json'));
-  const gn = runRoute(gm, gr, { seed: 1, difficulty: 'normal' });
-  await T(`t.newGame('normal', 1, { mapId: '${id}' })`); await T('t.clearOverlays()'); await T(`t.startBot('${id}.${name}')`);
+  const gn = runRoute(gm, gr, { seed: 1, difficulty: 'normal', ...(weave ? { weave: 2 } : {}) });
+  await T(`t.newGame('normal', 1, { mapId: '${id}' })`); await T('t.clearOverlays()'); await T(`t.startBot('${id}.${name}', ${weave ? '{ weave: 2 }' : '{}'})`);
   let rr, lastOp = -1, shotN = 0; const t0 = Date.now(), want = new Set(shots && name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
   for (let i = 0; i < maxSteps; i++) {
     rr = await T('t.stepBot(90)');

@@ -52,7 +52,7 @@ export function installTestHook(app) {
     setup_tone(k, pre) { const u = g.view.post.uniforms; u.uShoulder.value = k; u.uShoulderPre.value = pre; },
     setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint') g.view?.setLook(g.settings); },
     // -- route bot: same InputState as a human --
-    startBot(name) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name); return { ops: bot.route.length }; },
+    startBot(name, opts = {}) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name, opts); return { ops: bot.route.length }; },
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },
     perfStep(withRender = false) { if (!(bot && !bot.done && !bot.failed && g.mode === 'playing')) return g.mode !== 'playing' ? g.mode : bot?.done ? 'done' : bot?.failed ? 'failed' : 'idle'; bot.tick(); app.stepOnce(); if (withRender) render(0.016); return 'ok'; },          // PT-054: one frame of the route bot with NO snapshot (the snapshot hashes the whole world and would drown the numbers of tools/dev/probe-perf.mjs)
     // -- low-level setup (state writers; tests only) --

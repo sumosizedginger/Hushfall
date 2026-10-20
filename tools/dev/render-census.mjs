@@ -21,7 +21,7 @@ const r3 = (x) => Math.round(x * 1000) / 1000;
 export function judge(rows, tag) {
   const bad = []; let worstBuried = 0, worstFloat = 0, raised = 0;
   for (const r of rows) {
-    const v = groundVerdict(r.min[1], r.ground + hoverLift(CURRENT_ENEMIES[r.kind], r.dead ?? 0)), problems = [];      // a flyer is judged against its own hover (the one kind allowed to float)
+    const v = groundVerdict(r.min[1], r.ground + hoverLift(CURRENT_ENEMIES[r.kind], r.dead ?? 0) + (r.lift ?? 0)), problems = [];      // a flyer is judged against its own hover (the one kind allowed to float)
     if (r.ground > RAISED) raised++;
     if (Math.hypot(r.root.x - r.sim.x, r.root.z - r.sim.z) > EPS || Math.abs(r.root.y - r.sim.y) > EPS) problems.push(`placement: root (${r3(r.root.x)}, ${r3(r.root.y)}, ${r3(r.root.z)}) != sim (${r3(r.sim.x)}, ${r3(r.sim.y)}, ${r3(r.sim.z)})`);
     { const pad = r.hit.radius + 0.1; if (r.sim.x < r.min[0] - pad || r.sim.x > r.max[0] + pad || r.sim.z < r.min[2] - pad || r.sim.z > r.max[2] + pad) problems.push(`footprint: the sim position (${r3(r.sim.x)}, ${r3(r.sim.z)}) is outside the drawn body (x ${r3(r.min[0])}..${r3(r.max[0])}, z ${r3(r.min[2])}..${r3(r.max[2])})`); }

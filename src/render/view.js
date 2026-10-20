@@ -74,7 +74,7 @@ export class GameView {
     this.creatureFx = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal || ENEMIES[q.kind]?.node || ENEMIES[q.kind]?.boss)) ? makeCreatureFx(scene) : null;          // PT-060
     this.hiveView = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.unison || q.kind === 'rootbell')) ? makeHiveView(scene) : null;       // PT-043: made with the view when the map has a conductor or a clapper (the clapper's light must not change the scene's light count in a fight)
     this.world = world; this.decals = new DecalLayer(tex.decals_atlas); scene.add(this.decals.mesh);       // marks that stay (PT-021): what the map started with, then what the events leave
-    if (tex.decals_floor_atlas && !map.noFloorMarks) { this.floorMarks = new DecalLayer(tex.decals_floor_atlas, { rings: { [FLOORMARKS.ring]: FLOORMARKS.cap }, emissive: 0x141414, order: 0.5 }); this.floorMarks.addAll(floorMarks(map)); scene.add(this.floorMarks.mesh); }          // PT-063 (V6b, "floors are flat"): what a floor is made of decides the marks it carries (floorscatter.js), under the blood
+    if (tex.decals_floor_atlas && !map.noFloorMarks) { this.floorMarks = new DecalLayer(tex.decals_floor_atlas, { rings: { [FLOORMARKS.ring]: FLOORMARKS.cap }, emissive: 0x141414, order: 0.5 }); this.floorMarks.addAll(floorMarks(map)); this.floorMarks.trim(); scene.add(this.floorMarks.mesh); }          // PT-063 (V6b, "floors are flat"): what a floor is made of decides the marks it carries (floorscatter.js), under the blood
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);
@@ -344,7 +344,7 @@ export class GameView {
         if (def.support && (e.channelT ?? -1) >= 0) { const c = w.enemies.find((o) => o.id === e.channelTarget); if (c) { this.beam('ch' + e.id, e.x, (e.y ?? 0) + 1.7, e.z, c.x, (c.y ?? 0) + 0.3, c.z, 0.05 + 0.03 * Math.sin(this.time * 22)); live.add('ch' + e.id); } }
         if (def.node && e.state !== 'dead') nodes.push(e); if (def.boss && def.shield && e.state !== 'dead') boss = e;
       }
-      if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + 3.2, n.z, boss.x, (boss.y ?? 0) + (boss.lift ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
+      if (boss && nodes.length) for (const n of nodes) { this.beam('nk' + n.id, n.x, (n.y ?? 0) + Math.min(3.2, (ENEMIES[n.kind]?.height ?? 3.5) * 0.9), n.z, boss.x, (boss.y ?? 0) + (boss.lift ?? 0) + 2.6, boss.z, 0.03 + 0.012 * Math.sin(this.time * 6 + n.id)); live.add('nk' + n.id); }
       for (const [k, m] of this.beams) if (!live.has(k)) { this.scene.remove(m); this.beams.delete(k); }
       this.shieldFlash = Math.max(0, this.shieldFlash - dt * 4);
       if (boss && nodes.length) {

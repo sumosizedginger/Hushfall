@@ -49,7 +49,7 @@ for (const m of maps) {
       if (hasBoss) { hud.boss = hud.boss || (await visible('boss')); hud.shield = hud.shield || (await text('boss-note')).includes('SHIELDED'); }
     } });
     routes[name] = p;
-    check(`real-game route ${id}.${name}: completes in the browser`, p.ok, `status=${p.status} failed=${p.failed} ticks=${p.ticks} wall=${p.wallSeconds}s`);
+    check(`real-game route ${id}.${name}: completes in the browser`, p.ok, `status=${p.status} failed=${p.failed} ticks=${p.ticks} policy=${p.policy} wall=${p.wallSeconds}s`);
     check(`real-game route ${id}.${name}: browser sim == Node sim (ticks + state hash)`, p.agree, `browser ${p.ticks}/${p.hash} vs node ${p.nodeTicks}/${p.nodeHash}`);
   }
   if (!m.routes.length) check(`${id} has a canonical route to play in the real game`, false, `routes/${id}.main.route.json is missing`);

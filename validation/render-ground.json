@@ -1,58 +1,58 @@
 {
-  "when": "2026-10-12T17:04:32.219Z",
-  "commit": "f36e3b4",
+  "when": "2026-10-20T03:51:37.198Z",
+  "commit": "0a8f8eb",
   "sources": {
-    "engine": "8d3a080492f423a0",
-    "render": "594f4d9aaa15bf15",
-    "game": "6b2753c1a380e7b8",
-    "audio": "d2ac93bcf8ca82ff",
-    "assets": "36a05690b34657ef"
+    "engine": "ac1c0dc7b5c86aff",
+    "render": "73e56bb6b27ab29e",
+    "game": "aeba45dafae23c6c",
+    "audio": "f8f3d9169ece1cc4",
+    "assets": "df26bcd4e6468f58"
   },
   "checks": [
     {
-      "name": "render truth coverage: 36 maps, all 10 enemy kinds, 382 enemies on raised floors (a census that saw nothing would pass vacuously)",
+      "name": "render truth coverage: 68 maps, all 10 enemy kinds, 1296 enemies on raised floors (a census that saw nothing would pass vacuously)",
       "ok": true,
-      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,gill,feeder,graftmother,chorister,bulwark,weeping,acolyte,vat,reed,grandcantor,seal,gatewarden; raised 382; pose rows 2949"
+      "detail": "kinds tollbearer,gaunt,bellhand,sexton,wardengraft,bellnode,cantor,marksman,gill,feeder,graftmother,chorister,bulwark,weeping,acolyte,vat,reed,grandcantor,mender,seal,gatewarden,vaelfolk,zealot,subcantor,resonant,hivecantor,rootanchor,rootbell; raised 1296; pose rows 7261"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "979 rows (382 on raised floors), 0 violations, deepest 0 m, highest 0.05 m; every one of the 979 enemies was measured: true"
+      "detail": "2138 rows (1296 on raised floors), 0 violations, deepest -0.012 m, highest 0.05 m; every one of the 2138 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "1958 rows (383 on raised floors), 0 violations, deepest 0 m, highest 0.121 m; two samples of all 979 enemies: true"
+      "detail": "4276 rows (1295 on raised floors), 0 violations, deepest -0.018 m, highest 0.237 m; two samples of all 2138 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "2949 rows (1571 on raised floors), 0 violations, deepest 0 m, highest 0.181 m"
+      "detail": "7261 rows (4768 on raised floors), 0 violations, deepest -0.013 m, highest 0.225 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 982 rows (385 on raised floors), 0 violations, deepest 0 m, highest 0.043 m || corpses: 982 rows (385 on raised floors), 0 violations, deepest 0 m, highest 0.04 m"
+      "detail": "dying: 2143 rows (1301 on raised floors), 0 violations, deepest -0.015 m, highest 0.048 m || corpses: 2143 rows (1301 on raised floors), 0 violations, deepest 0 m, highest 0.048 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
       "ok": true,
-      "detail": "200 rows (145 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
+      "detail": "320 rows (265 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
     },
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.974, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.971, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.164, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.155, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
       "ok": true,
-      "detail": "tollbearer 2.246 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.332 drawn / 2.35 hit; sexton 2.331 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
+      "detail": "tollbearer 2.246 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.332 drawn / 2.35 hit; sexton 2.335 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
     }
   ],
   "report": {
@@ -160,7 +160,7 @@
         },
         "matrix": {
           "n": 55,
-          "raised": 26,
+          "raised": 13,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.125
@@ -280,7 +280,7 @@
         },
         "matrix": {
           "n": 98,
-          "raised": 69,
+          "raised": 56,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.125
@@ -320,7 +320,7 @@
         },
         "matrix": {
           "n": 85,
-          "raised": 42,
+          "raised": 29,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.125
@@ -439,7 +439,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 56,
+          "n": 69,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
@@ -479,7 +479,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 42,
+          "n": 55,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
@@ -559,7 +559,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 42,
+          "n": 56,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
@@ -639,7 +639,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 84,
+          "n": 97,
           "raised": 55,
           "bad": [],
           "worstBuried": 0,
@@ -650,7 +650,7 @@
           "raised": 21,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0
+          "worstFloat": 0.004
         },
         "corpses": {
           "n": 44,
@@ -668,7 +668,7 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0
+          "worstFloat": 0.04
         },
         "frozen": 28,
         "awake": {
@@ -679,7 +679,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 42,
+          "n": 55,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
@@ -690,7 +690,7 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0
+          "worstFloat": 0.042
         },
         "corpses": {
           "n": 31,
@@ -999,8 +999,8 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 137,
-          "raised": 137,
+          "n": 150,
+          "raised": 150,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.105
@@ -1279,7 +1279,7 @@
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 55,
+          "n": 68,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
@@ -1342,44 +1342,44 @@
         "corpseRaised": 31
       },
       "C1E4M06": {
-        "enemies": 27,
+        "enemies": 42,
         "asleep": {
-          "n": 27,
-          "raised": 21,
+          "n": 42,
+          "raised": 35,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0
         },
-        "frozen": 27,
+        "frozen": 42,
         "awake": {
-          "n": 54,
-          "raised": 21,
+          "n": 84,
+          "raised": 35,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.101
         },
         "matrix": {
-          "n": 137,
-          "raised": 108,
+          "n": 189,
+          "raised": 147,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0.105
         },
         "dying": {
-          "n": 27,
-          "raised": 21,
+          "n": 42,
+          "raised": 35,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0
         },
         "corpses": {
-          "n": 27,
-          "raised": 21,
+          "n": 42,
+          "raised": 35,
           "bad": [],
           "worstBuried": 0,
           "worstFloat": 0
         },
-        "corpseRaised": 21
+        "corpseRaised": 35
       },
       "C1E4M07": {
         "enemies": 31,
@@ -1462,6 +1462,1286 @@
         "corpseRaised": 11
       },
       "C1E4S01": {
+        "enemies": 0,
+        "asleep": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "frozen": 0,
+        "awake": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "matrix": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "dying": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpses": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 0
+      },
+      "C2M01": {
+        "enemies": 46,
+        "asleep": {
+          "n": 46,
+          "raised": 24,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "frozen": 46,
+        "awake": {
+          "n": 92,
+          "raised": 24,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "matrix": {
+          "n": 110,
+          "raised": 68,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 46,
+          "raised": 24,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpses": {
+          "n": 46,
+          "raised": 24,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 24
+      },
+      "C2M02": {
+        "enemies": 58,
+        "asleep": {
+          "n": 58,
+          "raised": 49,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.049
+        },
+        "frozen": 56,
+        "awake": {
+          "n": 116,
+          "raised": 49,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 151,
+          "raised": 135,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 58,
+          "raised": 49,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.042
+        },
+        "corpses": {
+          "n": 58,
+          "raised": 49,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 49
+      },
+      "C2M03": {
+        "enemies": 37,
+        "asleep": {
+          "n": 37,
+          "raised": 37,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "frozen": 30,
+        "awake": {
+          "n": 74,
+          "raised": 37,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 136,
+          "raised": 136,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.225
+        },
+        "dying": {
+          "n": 37,
+          "raised": 37,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.029
+        },
+        "corpses": {
+          "n": 37,
+          "raised": 37,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 37
+      },
+      "C2M04": {
+        "enemies": 36,
+        "asleep": {
+          "n": 36,
+          "raised": 27,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.037
+        },
+        "frozen": 33,
+        "awake": {
+          "n": 72,
+          "raised": 27,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 151,
+          "raised": 82,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 36,
+          "raised": 27,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 36,
+          "raised": 27,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 27
+      },
+      "C2M05": {
+        "enemies": 43,
+        "asleep": {
+          "n": 43,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 40,
+        "awake": {
+          "n": 86,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 137,
+          "raised": 81,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 43,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "corpses": {
+          "n": 43,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 33
+      },
+      "C2M06": {
+        "enemies": 30,
+        "asleep": {
+          "n": 30,
+          "raised": 21,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.048
+        },
+        "frozen": 28,
+        "awake": {
+          "n": 60,
+          "raised": 21,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 136,
+          "raised": 81,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 30,
+          "raised": 21,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.035
+        },
+        "corpses": {
+          "n": 30,
+          "raised": 21,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 21
+      },
+      "C2M07": {
+        "enemies": 38,
+        "asleep": {
+          "n": 38,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.031
+        },
+        "frozen": 31,
+        "awake": {
+          "n": 76,
+          "raised": 12,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 123,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 38,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.016
+        },
+        "corpses": {
+          "n": 38,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 9
+      },
+      "C2M08": {
+        "enemies": 30,
+        "asleep": {
+          "n": 30,
+          "raised": 23,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "frozen": 28,
+        "awake": {
+          "n": 60,
+          "raised": 23,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 176,
+          "raised": 134,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 30,
+          "raised": 23,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "corpses": {
+          "n": 30,
+          "raised": 23,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 23
+      },
+      "C2M09": {
+        "enemies": 54,
+        "asleep": {
+          "n": 54,
+          "raised": 54,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.047
+        },
+        "frozen": 42,
+        "awake": {
+          "n": 108,
+          "raised": 54,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.048
+        },
+        "matrix": {
+          "n": 207,
+          "raised": 207,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.225
+        },
+        "dying": {
+          "n": 54,
+          "raised": 54,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.048
+        },
+        "corpses": {
+          "n": 54,
+          "raised": 54,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.048
+        },
+        "corpseRaised": 54
+      },
+      "C2M10": {
+        "enemies": 69,
+        "asleep": {
+          "n": 69,
+          "raised": 69,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 29,
+        "awake": {
+          "n": 138,
+          "raised": 69,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 97,
+          "raised": 97,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.225
+        },
+        "dying": {
+          "n": 69,
+          "raised": 69,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 69,
+          "raised": 69,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 69
+      },
+      "C2M11": {
+        "enemies": 46,
+        "asleep": {
+          "n": 46,
+          "raised": 46,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 32,
+        "awake": {
+          "n": 92,
+          "raised": 46,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 97,
+          "raised": 97,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.225
+        },
+        "dying": {
+          "n": 46,
+          "raised": 46,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.03
+        },
+        "corpses": {
+          "n": 46,
+          "raised": 46,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 46
+      },
+      "C2M12": {
+        "enemies": 61,
+        "asleep": {
+          "n": 61,
+          "raised": 61,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 61,
+        "awake": {
+          "n": 122,
+          "raised": 61,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 121,
+          "raised": 121,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 61,
+          "raised": 61,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 61,
+          "raised": 61,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 61
+      },
+      "C2M13": {
+        "enemies": 42,
+        "asleep": {
+          "n": 42,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "frozen": 42,
+        "awake": {
+          "n": 84,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 219,
+          "raised": 219,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 42,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "corpses": {
+          "n": 42,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 42
+      },
+      "C2M14": {
+        "enemies": 31,
+        "asleep": {
+          "n": 31,
+          "raised": 31,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 31,
+        "awake": {
+          "n": 62,
+          "raised": 31,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 84,
+          "raised": 84,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 31,
+          "raised": 31,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 31,
+          "raised": 31,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 31
+      },
+      "C2M15": {
+        "enemies": 40,
+        "asleep": {
+          "n": 40,
+          "raised": 40,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 38,
+        "awake": {
+          "n": 80,
+          "raised": 40,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 166,
+          "raised": 166,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 40,
+          "raised": 40,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 40,
+          "raised": 40,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 40
+      },
+      "C2M16": {
+        "enemies": 19,
+        "asleep": {
+          "n": 19,
+          "raised": 19,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 19,
+        "awake": {
+          "n": 38,
+          "raised": 19,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 85,
+          "raised": 85,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 19,
+          "raised": 19,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 19,
+          "raised": 19,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 19
+      },
+      "C2M17": {
+        "enemies": 54,
+        "asleep": {
+          "n": 54,
+          "raised": 25,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.045
+        },
+        "frozen": 54,
+        "awake": {
+          "n": 108,
+          "raised": 25,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 181,
+          "raised": 83,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 54,
+          "raised": 25,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.044
+        },
+        "corpses": {
+          "n": 54,
+          "raised": 25,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 25
+      },
+      "C2M18": {
+        "enemies": 63,
+        "asleep": {
+          "n": 63,
+          "raised": 63,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 61,
+        "awake": {
+          "n": 126,
+          "raised": 63,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 248,
+          "raised": 248,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 63,
+          "raised": 63,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 63,
+          "raised": 63,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 63
+      },
+      "C2M19": {
+        "enemies": 53,
+        "asleep": {
+          "n": 53,
+          "raised": 48,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.049
+        },
+        "frozen": 53,
+        "awake": {
+          "n": 106,
+          "raised": 48,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 235,
+          "raised": 180,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 53,
+          "raised": 48,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.043
+        },
+        "corpses": {
+          "n": 53,
+          "raised": 48,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 48
+      },
+      "C2M20": {
+        "enemies": 37,
+        "asleep": {
+          "n": 37,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 37,
+        "awake": {
+          "n": 74,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 182,
+          "raised": 153,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 37,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.041
+        },
+        "corpses": {
+          "n": 37,
+          "raised": 33,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 33
+      },
+      "C2M21": {
+        "enemies": 42,
+        "asleep": {
+          "n": 42,
+          "raised": 29,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 41,
+        "awake": {
+          "n": 84,
+          "raised": 29,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 209,
+          "raised": 125,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 42,
+          "raised": 29,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 42,
+          "raised": 29,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 29
+      },
+      "C2M22": {
+        "enemies": 26,
+        "asleep": {
+          "n": 26,
+          "raised": 4,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 23,
+        "awake": {
+          "n": 52,
+          "raised": 4,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 114,
+          "raised": 16,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 26,
+          "raised": 4,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 26,
+          "raised": 4,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 4
+      },
+      "C2M23": {
+        "enemies": 66,
+        "asleep": {
+          "n": 66,
+          "raised": 3,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.048
+        },
+        "frozen": 66,
+        "awake": {
+          "n": 132,
+          "raised": 2,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 179,
+          "raised": 42,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 66,
+          "raised": 3,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.035
+        },
+        "corpses": {
+          "n": 66,
+          "raised": 3,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 3
+      },
+      "C2M24": {
+        "enemies": 10,
+        "asleep": {
+          "n": 10,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": -0.012,
+          "worstFloat": 0.025
+        },
+        "frozen": 10,
+        "awake": {
+          "n": 20,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": -0.018,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 71,
+          "raised": 58,
+          "bad": [],
+          "worstBuried": -0.013,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 10,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": -0.015,
+          "worstFloat": 0.027
+        },
+        "corpses": {
+          "n": 10,
+          "raised": 9,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 9
+      },
+      "C2M25": {
+        "enemies": 28,
+        "asleep": {
+          "n": 28,
+          "raised": 28,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.049
+        },
+        "frozen": 23,
+        "awake": {
+          "n": 56,
+          "raised": 24,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 181,
+          "raised": 181,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 28,
+          "raised": 28,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 28,
+          "raised": 28,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 28
+      },
+      "C2M26": {
+        "enemies": 39,
+        "asleep": {
+          "n": 39,
+          "raised": 30,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 36,
+        "awake": {
+          "n": 78,
+          "raised": 30,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 179,
+          "raised": 97,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.225
+        },
+        "dying": {
+          "n": 39,
+          "raised": 30,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 39,
+          "raised": 30,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 30
+      },
+      "C2M27": {
+        "enemies": 37,
+        "asleep": {
+          "n": 37,
+          "raised": 35,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.05
+        },
+        "frozen": 36,
+        "awake": {
+          "n": 74,
+          "raised": 35,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.101
+        },
+        "matrix": {
+          "n": 124,
+          "raised": 111,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.105
+        },
+        "dying": {
+          "n": 37,
+          "raised": 35,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.04
+        },
+        "corpses": {
+          "n": 37,
+          "raised": 35,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 35
+      },
+      "C2M28": {
+        "enemies": 0,
+        "asleep": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "frozen": 0,
+        "awake": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "matrix": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "dying": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpses": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 0
+      },
+      "C2M29": {
+        "enemies": 9,
+        "asleep": {
+          "n": 9,
+          "raised": 8,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "frozen": 9,
+        "awake": {
+          "n": 18,
+          "raised": 8,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.237
+        },
+        "matrix": {
+          "n": 69,
+          "raised": 55,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.069
+        },
+        "dying": {
+          "n": 11,
+          "raised": 10,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "corpses": {
+          "n": 11,
+          "raised": 10,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0.025
+        },
+        "corpseRaised": 10
+      },
+      "C2M30": {
+        "enemies": 0,
+        "asleep": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "frozen": 0,
+        "awake": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "matrix": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "dying": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpses": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 0
+      },
+      "C2S01": {
+        "enemies": 0,
+        "asleep": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "frozen": 0,
+        "awake": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "matrix": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "dying": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpses": {
+          "n": 0,
+          "raised": 0,
+          "bad": [],
+          "worstBuried": 0,
+          "worstFloat": 0
+        },
+        "corpseRaised": 0
+      },
+      "C2S02": {
         "enemies": 0,
         "asleep": {
           "n": 0,
@@ -1942,6 +3222,270 @@
           }
         ],
         "moved": true
+      },
+      {
+        "map": "C2M08",
+        "sector": "lift1",
+        "low": 3,
+        "high": 6,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.055
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.105
+          }
+        ],
+        "moved": true
+      },
+      {
+        "map": "C2M08",
+        "sector": "lift3",
+        "low": 9,
+        "high": 12,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.055
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.105
+          }
+        ],
+        "moved": true
+      },
+      {
+        "map": "C2M22",
+        "sector": "lift",
+        "low": 0,
+        "high": 3,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.057
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          }
+        ],
+        "moved": true
+      },
+      {
+        "map": "C2M27",
+        "sector": "bridge1",
+        "low": 0.5,
+        "high": 2,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.057
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.055
+          }
+        ],
+        "moved": true
+      },
+      {
+        "map": "C2M27",
+        "sector": "bridge2",
+        "low": 0.5,
+        "high": 2,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.057
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.055
+          }
+        ],
+        "moved": true
+      },
+      {
+        "map": "C2M27",
+        "sector": "bridge3",
+        "low": 0.5,
+        "high": 2,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.057
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.055
+          }
+        ],
+        "moved": true
       }
     ],
     "cantor": {
@@ -1969,7 +3513,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.974
+        "r": 2.971
       },
       "farthestBodyCornerFromShieldCentre": 2.846,
       "ring": [
@@ -2039,7 +3583,7 @@
         "x": 87,
         "y": 2.2,
         "z": 27,
-        "r": 3.164
+        "r": 3.155
       },
       "farthestBodyCornerFromShieldCentre": 3.188,
       "ring": [
@@ -2080,8 +3624,8 @@
       "C1E1M04-tollbearer-on-2m-corpse.png",
       "C1E1M05-bellhand-on-10m-awake.png",
       "C1E1M05-bellhand-on-10m-corpse.png",
-      "C1E1M06-tollbearer-on-3m-awake.png",
-      "C1E1M06-tollbearer-on-3m-corpse.png",
+      "C1E1M06-gaunt-on-3m-awake.png",
+      "C1E1M06-gaunt-on-3m-corpse.png",
       "C1E1M07-bellhand-on-4.5m-awake.png",
       "C1E1M07-bellhand-on-4.5m-corpse.png",
       "C1E1M08-bellhand-on-12m-awake.png",
@@ -2134,6 +3678,62 @@
       "C1E4M07-chorister-on-16m-corpse.png",
       "C1E4M08-gatewarden-on-3m-awake.png",
       "C1E4M08-gatewarden-on-3m-corpse.png",
+      "C2M01-gaunt-on-3m-awake.png",
+      "C2M01-gaunt-on-3m-corpse.png",
+      "C2M02-chorister-on-5m-awake.png",
+      "C2M02-chorister-on-5m-corpse.png",
+      "C2M03-bellhand-on-6m-awake.png",
+      "C2M03-bellhand-on-6m-corpse.png",
+      "C2M04-gill-on-6m-awake.png",
+      "C2M04-gill-on-6m-corpse.png",
+      "C2M05-tollbearer-on-3m-awake.png",
+      "C2M05-tollbearer-on-3m-corpse.png",
+      "C2M06-tollbearer-on-6m-awake.png",
+      "C2M06-tollbearer-on-6m-corpse.png",
+      "C2M07-bellhand-on-4m-awake.png",
+      "C2M07-bellhand-on-4m-corpse.png",
+      "C2M08-bulwark-on-12m-awake.png",
+      "C2M08-bulwark-on-12m-corpse.png",
+      "C2M09-gaunt-on-9m-awake.png",
+      "C2M09-gaunt-on-9m-corpse.png",
+      "C2M10-zealot-on-3m-awake.png",
+      "C2M10-zealot-on-3m-corpse.png",
+      "C2M11-chorister-on-5m-awake.png",
+      "C2M11-chorister-on-5m-corpse.png",
+      "C2M12-chorister-on-6.5m-awake.png",
+      "C2M12-chorister-on-6.5m-corpse.png",
+      "C2M13-gaunt-on-7m-awake.png",
+      "C2M13-gaunt-on-7m-corpse.png",
+      "C2M14-zealot-on-2m-awake.png",
+      "C2M14-zealot-on-2m-corpse.png",
+      "C2M15-bellhand-on-6m-awake.png",
+      "C2M15-bellhand-on-6m-corpse.png",
+      "C2M16-subcantor-on-4.5m-awake.png",
+      "C2M16-subcantor-on-4.5m-corpse.png",
+      "C2M17-chorister-on-2m-awake.png",
+      "C2M17-chorister-on-2m-corpse.png",
+      "C2M18-bulwark-on-6m-awake.png",
+      "C2M18-bulwark-on-6m-corpse.png",
+      "C2M19-tollbearer-on-3m-awake.png",
+      "C2M19-tollbearer-on-3m-corpse.png",
+      "C2M20-tollbearer-on-6m-awake.png",
+      "C2M20-tollbearer-on-6m-corpse.png",
+      "C2M21-bellhand-on-10m-awake.png",
+      "C2M21-bellhand-on-10m-corpse.png",
+      "C2M22-gaunt-on-0.5m-awake.png",
+      "C2M22-gaunt-on-0.5m-corpse.png",
+      "C2M23-zealot-on-1.5m-awake.png",
+      "C2M23-zealot-on-1.5m-corpse.png",
+      "C2M24-zealot-on-3m-awake.png",
+      "C2M24-zealot-on-3m-corpse.png",
+      "C2M25-tollbearer-on-30m-awake.png",
+      "C2M25-tollbearer-on-30m-corpse.png",
+      "C2M26-vaelfolk-on-3.5m-awake.png",
+      "C2M26-vaelfolk-on-3.5m-corpse.png",
+      "C2M27-tollbearer-on-2m-awake.png",
+      "C2M27-tollbearer-on-2m-corpse.png",
+      "C2M29-chorister-on-3m-awake.png",
+      "C2M29-chorister-on-3m-corpse.png",
       "C1E1M08-cantor-body-shield-ring.png",
       "C1E2M08-graftmother-body-shield-feeders.png"
     ],
@@ -2169,14 +3769,14 @@
         "drawnWidthX": 0.988
       },
       "sexton": {
-        "drawnHeight": 2.331,
+        "drawnHeight": 2.335,
         "hitHeight": 2.35,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
         "hitRadius": 0.38,
         "hitForward": 0,
         "colliderRadius": 0.38,
-        "drawnWidthX": 0.935
+        "drawnWidthX": 0.961
       },
       "wardengraft": {
         "drawnHeight": 3.071,
@@ -2207,6 +3807,16 @@
         "hitForward": 0,
         "colliderRadius": 0.65,
         "drawnWidthX": 2.348
+      },
+      "marksman": {
+        "drawnHeight": 2.478,
+        "hitHeight": 2.5,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 0.6,
+        "hitForward": 0,
+        "colliderRadius": 0.38,
+        "drawnWidthX": 1.392
       },
       "gill": {
         "drawnHeight": 1.167,
@@ -2308,6 +3918,16 @@
         "colliderRadius": 0.9,
         "drawnWidthX": 2.58
       },
+      "mender": {
+        "drawnHeight": 1.402,
+        "hitHeight": 1.4,
+        "drawnAboveHit": 0.002,
+        "hitCoversFractionOfDrawn": 0.999,
+        "hitRadius": 0.3,
+        "hitForward": 0,
+        "colliderRadius": 0.3,
+        "drawnWidthX": 0.739
+      },
       "seal": {
         "drawnHeight": 2.617,
         "hitHeight": 2.6,
@@ -2327,46 +3947,116 @@
         "hitForward": 0,
         "colliderRadius": 1.6,
         "drawnWidthX": 4.8
+      },
+      "vaelfolk": {
+        "drawnHeight": 2.455,
+        "hitHeight": 2.42,
+        "drawnAboveHit": 0.035,
+        "hitCoversFractionOfDrawn": 0.986,
+        "hitRadius": 0.4,
+        "hitForward": 0,
+        "colliderRadius": 0.42,
+        "drawnWidthX": 1.385
+      },
+      "zealot": {
+        "drawnHeight": 2.242,
+        "hitHeight": 2.3,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 0.62,
+        "hitForward": 0,
+        "colliderRadius": 0.42,
+        "drawnWidthX": 1.688
+      },
+      "subcantor": {
+        "drawnHeight": 3.777,
+        "hitHeight": 3.8,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 0.72,
+        "hitForward": 0,
+        "colliderRadius": 0.6,
+        "drawnWidthX": 2.18
+      },
+      "resonant": {
+        "drawnHeight": 2.531,
+        "hitHeight": 2.55,
+        "drawnAboveHit": 0,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 1,
+        "hitForward": 0,
+        "colliderRadius": 0.85,
+        "drawnWidthX": 2.271
+      },
+      "hivecantor": {
+        "drawnHeight": 3.999,
+        "hitHeight": 3.9,
+        "drawnAboveHit": 1.186,
+        "hitCoversFractionOfDrawn": 0.975,
+        "hitRadius": 0.5,
+        "hitForward": 0,
+        "colliderRadius": 0.9,
+        "drawnWidthX": 0.746
+      },
+      "rootanchor": {
+        "drawnHeight": 3.703,
+        "hitHeight": 3.65,
+        "drawnAboveHit": 0.053,
+        "hitCoversFractionOfDrawn": 0.986,
+        "hitRadius": 0.9,
+        "hitForward": 0,
+        "colliderRadius": 0.8,
+        "drawnWidthX": 2.342
+      },
+      "rootbell": {
+        "drawnHeight": 4.702,
+        "hitHeight": 4.7,
+        "drawnAboveHit": 1.452,
+        "hitCoversFractionOfDrawn": 1,
+        "hitRadius": 1.5,
+        "hitForward": 0,
+        "colliderRadius": 1.5,
+        "drawnWidthX": 3.572
       }
     },
     "totals": {
       "asleep": {
-        "rows": 979,
-        "raised": 382,
+        "rows": 2138,
+        "raised": 1296,
         "violations": 0,
-        "deepest": 0,
+        "deepest": -0.012,
         "highest": 0.05
       },
       "awake": {
-        "rows": 1958,
-        "raised": 383,
+        "rows": 4276,
+        "raised": 1295,
         "violations": 0,
-        "deepest": 0,
-        "highest": 0.121
+        "deepest": -0.018,
+        "highest": 0.237
       },
       "matrix": {
-        "rows": 2949,
-        "raised": 1571,
+        "rows": 7261,
+        "raised": 4768,
         "violations": 0,
-        "deepest": 0,
-        "highest": 0.181
+        "deepest": -0.013,
+        "highest": 0.225
       },
       "dying": {
-        "rows": 982,
-        "raised": 385,
+        "rows": 2143,
+        "raised": 1301,
         "violations": 0,
-        "deepest": 0,
-        "highest": 0.043
+        "deepest": -0.015,
+        "highest": 0.048
       },
       "corpses": {
-        "rows": 982,
-        "raised": 385,
+        "rows": 2143,
+        "raised": 1301,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.04
+        "highest": 0.048
       },
       "movingFloors": {
-        "rows": 200,
+        "rows": 320,
         "violations": 0,
         "deepest": 0,
         "highest": 0.125

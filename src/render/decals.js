@@ -30,6 +30,8 @@ export class DecalLayer {
     this.write(slot, spec.grow > 0 ? 0 : 1); return slot;
   }
   addAll(specs) { for (const s of specs) this.add(s); }
+  /** draw only the quads that are in use (a layer written once, like the floor marks: a map with 400 marks does not pay for the ring's 1600 slots) */
+  trim() { let hi = 0; for (let i = 0; i < this.items.length; i++) if (this.items[i]) hi = i + 1; this.geometry.setDrawRange(0, hi * 6); }
 
   /** advance the pools that are still spreading */
   update(dt) {

@@ -44,3 +44,9 @@ test('the UI: a gun or a key shows a card (and no toast); ammunition, armour and
 test('the page has the card and its styling', () => {
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); assert.ok(html.includes('<div id="pickup-card"></div>')); assert.ok(/#pickup-card\{[^}]*bottom:24%/.test(html) && html.includes('#pickup-card.show{animation:pcard') && html.includes('@keyframes pcard'));
 });
+
+test('a map that names its keys differently (the Signal House: fuses) gets a card that says what the place calls them (PT-065: the card said "Brass key" while the HUD and the lock said "brass fuse")', () => {
+  const plain = pickupCard('key_brass'), fuse = pickupCard('key_brass', { brass: 'Brass fuse' });
+  assert.equal(plain.title, KEYS.brass.name); assert.match(plain.line, /brass doors/);
+  assert.equal(fuse.title, 'Brass fuse'); assert.match(fuse.line, /brass fuse/); assert.equal(fuse.color, KEYS.brass.color);
+});

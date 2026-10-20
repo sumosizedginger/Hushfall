@@ -184,7 +184,7 @@ export class UI {
   }
   /** PT-049 U1: a MAJOR pickup (a gun, a key) gets a card at lower centre, not a toast in the column: the icon, the name, one line of what it does (toasts.js pickupCard). -> true when it showed one */
   showPickupCard(kind) {
-    const c = pickupCard(kind), el = c && $('pickup-card'); if (!el) return false;
+    const c = pickupCard(kind, this.keyLabels), el = c && $('pickup-card'); if (!el) return false;
     el.innerHTML = `<i>${cardIcon(c.icon)}</i><div><b>${c.title}</b><span>${c.line}</span></div>`; if (el.style.setProperty) el.style.setProperty('--card', c.color); else el.style['--card'] = c.color;
     el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); return true;
   }

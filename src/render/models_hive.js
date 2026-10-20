@@ -97,7 +97,7 @@ export function hivecantor(tex) {
     J.armA.rotation.x = 0.1 + 0.05 * S(t * 0.8); J.armB.rotation.x = 0.1 + 0.05 * S(t * 0.8 + 2); J.armAM.rotation.z = -0.06 - 0.12 * up; J.armBM.rotation.z = 0.06 + 0.12 * up;
     J.head.rotation.set(0.15 - 0.2 * up + S(t * 0.7) * 0.04, S(t * 0.4) * 0.15, S(t * 0.5) * 0.04); J.crest.scale.setScalar(1 + 0.18 * beat + 0.25 * up);
     J.waist.rotation.x = 0.05; J.rig.rotation.x = -d * 1.5;
-  }, { maxLift: 5, afterGround: (p, J) => { const d = ease(clamp01(p.dead)); J.rig.position.y += (HC_HOVER + 0.05 * S(p.t * 1.7)) * (1 - d); } });
+  }, { maxLift: 5, afterGround: (p, J) => { const d = ease(clamp01(p.dead)); J.rig.position.y += (HC_HOVER + 0.02 * S(p.t * 1.7)) * (1 - d); } });
 }
 
 // ------------------------------------------------------------------------------------------------------------------ ROOT BELL (the clapper)

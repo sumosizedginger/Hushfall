@@ -46,7 +46,12 @@ try {
   await page.click('#btn-normal');
   await sleep(700);
   const audioState = await T('t.state().audio.state');
-  check('a real click unlocks audio (context running)', audioState === 'running', audioState);
+  check('a real click unlocks audio (context running)', audioState === 'running', audioState);
+  // PT-063 (R13): a fresh profile sees the COLD OPEN before the first level (the epilogue's machinery: cards typed over the title picture, the last over the tower plate); Esc skips it and the game starts
+  for (let i = 0; i < 24 && (await T('t.state()')).mode !== 'epilogue'; i++) await sleep(250);
+  { for (let i = 0; i < 24 && (await text('ending-text')).length === 0; i++) await sleep(250); const st = await T('t.state()'), title = await text('ending-title'), art = await page.$eval('#ending-art', (e) => e.src.split('/').pop());
+    check('a new game on a fresh profile shows the cold open first (four cards over the title picture)', st.mode === 'epilogue' && title === 'HUSHFALL' && (await text('ending-text')).length > 0 && /ui_title_art/.test(art), `mode=${st.mode} title=${title} art=${art}`);
+    await shot('00-cold-open'); await page.keyboard.press('Escape'); await sleep(400); }
   let live0 = await T('t.state()'); for (let i = 0; i < 20 && !(live0.mode === 'playing' && live0.tick > 10); i++) { await sleep(250); live0 = await T('t.state()'); }          // a loaded machine draws fewer frames a second: wait for the loop instead of reading once
   check('real click on Normal starts a game and the live loop advances the sim', live0.mode === 'playing' && live0.tick > 10, `mode=${live0.mode} tick=${live0.tick}`);
   await sleep(500);
@@ -126,14 +131,14 @@ try {
 
   // ---- 0d. automap with REAL input -------------------------------------------------------------------------------------
   await T("t.setup_clearEnemies(); t.setup_teleport(8, 34, -Math.PI / 2)"); await sleep(500);
-  await page.keyboard.press('Tab'); await sleep(400);
+  await page.keyboard.press('Tab'); await sleep(400); await page.click('#btn-journal-map').catch(() => {}); await sleep(200); await page.waitForFunction("!document.getElementById('automap').classList.contains('hidden')", { timeout: 8000 }).catch(() => {});          // (software GL draws a frame a second: wait for the Journal's map page to be drawn)
   const mapVisible = await page.$eval('#automap', (e) => !e.classList.contains('hidden'));
   const painted = await page.$eval('#automap', (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++; return n; });
-  const am = await T('t.automap()');
-  check('real Tab opens the automap, it paints, and it shows only what has been explored', mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('outdoor') && am.kinds.includes('water') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
+  const am = await T('t.automap()'), journalOpen = await page.$eval('#screen-journal', (e) => !e.classList.contains('hidden')).catch(() => false), pausedByTab = (await T('t.state().mode')) === 'paused';          // PT-049 U2 / PT-052: Tab opens the JOURNAL (the Map page) and pauses; the automap is its picture
+  check('real Tab opens the Journal on its Map page, pauses the game, the automap paints, and it shows only what has been explored', journalOpen && pausedByTab && mapVisible && painted > 1000 && am.exploredCount > 20 && am.exploredCount < 300 && am.kinds.includes('outdoor') && am.kinds.includes('water') && am.exits === 0, `visible=${mapVisible} painted=${painted} explored=${am.exploredCount} exits=${am.exits}`);
   await T('t.clearOverlays()'); await shot('01c-automap');
   await page.keyboard.press('Tab'); await sleep(300);
-  check('Tab again closes the automap', (await page.$eval('#automap', (e) => e.classList.contains('hidden'))) && (await T('t.mapOpen()')) === false);
+  check('Tab again closes the Journal and the game runs on', (await page.$eval('#automap', (e) => e.classList.contains('hidden'))) && (await T('t.mapOpen()')) === false && (await T('t.state().mode')) === 'playing');
 
   // ---- 0e. key remapping with REAL input -------------------------------------------------------------------------------
   await page.keyboard.press('Escape'); await sleep(300);
@@ -222,9 +227,9 @@ try {
     const p = await runRouteParity({ T, root, shot }, id, name, { shots: true, onStep: async () => {
       if (id === 'C1E1M08') { sawBoss = sawBoss || (await visible('boss')); sawShield = sawShield || (await text('boss-note')).includes('SHIELDED'); }
       sawObjective = sawObjective || (await text('objective')).startsWith('OBJECTIVE');
-      if (id === 'C1E1M07') sawFuse = sawFuse || (await page.$$eval('#toasts div', (els) => els.some((e) => /fuse/i.test(e.textContent))));
+      if (id === 'C1E1M07') sawFuse = sawFuse || (await page.$$eval('#toasts div, #pickup-card', (els) => els.some((e) => /fuse/i.test(e.textContent))));          // (a pickup shows a card, PT-049 U1, or a toast)
     } });
-    check(`Gate 2 real-game route ${id}.${name}: completes in the browser`, p.ok, `status=${p.status} failed=${p.failed} ticks=${p.ticks} wall=${p.wallSeconds}s`);
+    check(`Gate 2 real-game route ${id}.${name}: completes in the browser`, p.ok, `status=${p.status} failed=${p.failed} ticks=${p.ticks} policy=${p.policy} wall=${p.wallSeconds}s`);
     check(`Gate 2 real-game route ${id}.${name}: browser sim == Node sim (ticks + state hash)`, p.agree, `browser ${p.ticks}/${p.hash} vs node ${p.nodeTicks}/${p.nodeHash}`);
     g2report[id + '.' + name] = { ok: p.ok, ticks: p.ticks, hash: p.hash, nodeTicks: p.nodeTicks, nodeHash: p.nodeHash, kills: p.kills, secrets: p.secrets };
   }
@@ -251,13 +256,13 @@ try {
   // the pickup toast states the amount the pickup really grants (it said +30 for the rivet pickup while the sim gave 40)
   await T("t.newGame('normal', 3, { mapId: 'C1E1M05' })"); await T('t.clearOverlays()');
   { const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare', 'scattergun', 'rivet'], ammo: { flare: 8, shell: 6, rivet: 0 } })"); await T(`t.setup_addPickup('ammo_rivet', ${p.x}, ${p.z})`); await T('t.tick(3)');
-    const st = await T('t.state()'), toast = await text('toasts');
+    const st = await T('t.state()'), toast = (await text('toasts')) + ' ' + (await text('pickup-card'));
     check('picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets)', toast.includes('Rivets (+40)') && st.player.ammo.rivet === 40, `toast: "${toast.replace(/\s+/g, ' ').trim()}", rivets ${st.player.ammo.rivet}`); }
   // the harpoon rifle in the live game: the pickup equips it (HUD slot 4, BOLTS, a toast that names it), a shot spends one bolt and the view draws its streak, and the sights zoom much further than the other guns
   await T("t.newGame('normal', 3, { mapId: 'C1E2M02' })"); await T('t.clearOverlays()');                            // the Pans: a 28 m open lane to shoot down (a wall inside a metre leaves no streak)
   { await T("t.setup_clearEnemies(); t.setup_teleport(96, 51, -Math.PI / 2); t.setup_player({ pitch: 0 })"); const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare'], weapon: 'flare', ammo: { flare: 8, bolt: 0 } })"); await T(`t.setup_addPickup('weapon_harpoon', ${p.x}, ${p.z})`); await T('t.tick(3)'); await sleep(700);                                       // the HUD is drawn by the page's own frame loop: let it run a frame
     const st = await T('t.state()'); let hud = await text('hud-weapons'); for (let k = 0; k < 16 && !/4 RIFLE/.test(hud); k++) { await sleep(250); hud = await text('hud-weapons'); }          // the HUD is drawn by the page's own frame loop: wait for it (the same poll as the mortar's)
-    const toast = await text('toasts'), label = await text('hud-ammo-label');
+    const toast = (await text('toasts')) + ' ' + (await text('pickup-card')), label = await text('hud-ammo-label');
     check('picking up the harpoon rifle equips it: slot 4 on the HUD, BOLTS on the ammo label, a toast that names it, 6 bolts in the sim', st.player.weapon === 'harpoon' && st.player.ammo.bolt === 6 && /4 RIFLE/.test(hud) && /BOLTS/.test(label) && toast.includes('Harpoon rifle'), `weapon ${st.player.weapon}, bolts ${st.player.ammo.bolt}, hud "${hud}", label "${label}", toast "${toast.replace(/\s+/g, ' ').trim().slice(0, 80)}"`);
     await T('t.tick(40)'); const hipFov = (await T('t.boltProbe()')).zoom; await T("t.press('aim')"); await T('t.tick(30)'); await T('t.render(0.02)'); const adsFov = (await T('t.boltProbe()')).zoom;
     await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.render(0.02)'); const after = await T('t.state()'), fx = await T('t.boltProbe()'); await T("t.release('aim')");
@@ -266,7 +271,7 @@ try {
   await T("t.newGame('normal', 3, { mapId: 'C1E2M02' })"); await T('t.clearOverlays(); t.setup_arcLife(1.0)');
   { await T("t.setup_clearEnemies(); t.setup_teleport(96, 51, -Math.PI / 2); t.setup_player({ pitch: 0 })"); const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare'], weapon: 'flare', ammo: { flare: 8, cell: 0 } })"); await T(`t.setup_addPickup('weapon_arc', ${p.x}, ${p.z})`); await T('t.tick(3)'); await sleep(700);
     const st = await T('t.state()'); let hud = await text('hud-weapons'); for (let k = 0; k < 16 && !/5 LAMP/.test(hud); k++) { await sleep(250); hud = await text('hud-weapons'); }          // the HUD is drawn by the page's own frame loop: wait for it (the same poll as the mortar's)
-    const toast = await text('toasts'), label = await text('hud-ammo-label');
+    const toast = (await text('toasts')) + ' ' + (await text('pickup-card')), label = await text('hud-ammo-label');
     check('picking up the charge-arc lamp equips it: slot 5 on the HUD, CELLS on the ammo label, a toast that names it, 30 cells in the sim', st.player.weapon === 'arc' && st.player.ammo.cell === 30 && /5 LAMP/.test(hud) && /CELLS/.test(label) && toast.includes('Charge-arc lamp'), `weapon ${st.player.weapon}, cells ${st.player.ammo.cell}, hud "${hud}", label "${label}", toast "${toast.replace(/\s+/g, ' ').trim().slice(0, 80)}"`);
     const ids = []; for (const dx of [8, 11, 14]) ids.push(await T(`t.setup_spawnEnemy('feeder', ${96 + dx}, 51, Math.PI / 2, 'idle')`));
     await T('t.tick(30)'); await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.tick(2)'); await T('t.render(0.02)');                // the lamp fires on RELEASE: tick once the key is up
@@ -277,7 +282,7 @@ try {
   await T("t.newGame('normal', 3, { mapId: 'C1E3M03' })"); await T('t.clearOverlays()');
   { await T("t.setup_clearEnemies(); t.setup_teleport(84, 47, -Math.PI / 2); t.setup_player({ pitch: -0.1 })"); const p = (await T('t.state()')).player; await T("t.setup_player({ weapons: ['flare'], weapon: 'flare', ammo: { flare: 8, rocket: 0 } })"); await T(`t.setup_addPickup('weapon_mortar', ${p.x}, ${p.z})`); await T('t.tick(3)'); await sleep(700);
     const st = await T('t.state()'); let hud = await text('hud-weapons'); for (let k = 0; k < 16 && !/MORTAR/.test(hud); k++) { await sleep(250); hud = await text('hud-weapons'); }          // the HUD is drawn by the page's own frame loop: wait for it
-    const toast = await text('toasts'), label = await text('hud-ammo-label');
+    const toast = (await text('toasts')) + ' ' + (await text('pickup-card')), label = await text('hud-ammo-label');
     check('picking up the mortar equips it: key 0 on the HUD, ROCKETS on the ammo label, a toast that names it, 6 rockets in the sim', st.player.weapon === 'mortar' && st.player.ammo.rocket === 6 && /0 MORTAR/.test(hud) && /ROCKETS/.test(label) && toast.includes('Bell-breaker'), `weapon ${st.player.weapon}, rockets ${st.player.ammo.rocket}, hud "${hud}", label "${label}", toast "${toast.replace(/\s+/g, ' ').trim().slice(0, 80)}"`);
     await T('t.tick(60)'); await T('t.render(0.02)'); const ring = (await T('t.breathProbe()')).ring;
     await T("t.press('fire')"); await T('t.tick(2)'); await T("t.release('fire')"); await T('t.tick(20)'); await T('t.render(0.02)'); const after = await T('t.state()'), fx = await T('t.breathProbe()');
@@ -338,7 +343,7 @@ try {
     await T(`t.setup_enemy(${id}, { pulseT: 1.15 })`); await T('t.render(0.02)'); const rear = (await T('t.foundryProbe()')).grand[0];
     await T(`t.setup_enemy(${id}, { pulseT: -1, pulseCd: 0, shotCd: 99, summonCd: 99 })`); await T('for (let i = 0; i < 600; i++) { t.tick(1); if (t.foundryProbe().pulses > 0) break; }'); await T('for (let i = 0; i < 90; i++) { t.tick(1); if (t.foundryProbe().pulses > 1) break; }'); await T('t.render(0.02)'); const two = await T('t.foundryProbe()');
     await T('t.setup_killNodes()'); await T('t.render(0.02)'); const sh0 = (await T('t.encounterProbe()')).shield;
-    check('the Grand Cantor in the live game: the horn rears for its pulse, the view draws a ring for each of the sim\'s two, and its shield is drawn at 3 m while a reed stands and gone when none does', rear.horn < rest.horn - 0.25 && two.pulses === 2 && two.pulseViews === 2 && !!sh1 && Math.abs(sh1.y - ((bpos.y ?? 0) + 3.0)) < 0.5 && sh0 === null, `horn ${rest.horn?.toFixed(2)} -> ${rear.horn?.toFixed(2)}, sim rings ${two.pulses}, drawn ${two.pulseViews}, shield ${JSON.stringify(sh1)}, then ${JSON.stringify(sh0)}`); }
+    check('the Grand Cantor in the live game: the horn rears for its pulse, the view draws a ring for each of the sim\'s two, and it has NO shield (PT-062, R10: the fight is mobile; a singing reed only adds the second ring)', rear.horn < rest.horn - 0.25 && two.pulses === 2 && two.pulseViews === 2 && sh1 === null && sh0 === null, `horn ${rest.horn?.toFixed(2)} -> ${rear.horn?.toFixed(2)}, sim rings ${two.pulses}, drawn ${two.pulseViews}, shield ${JSON.stringify(sh1)}, then ${JSON.stringify(sh0)}`); }
   // ---- Episode 4, Batch A (PT-032): the air state and the falling loads (the Range's sky yard and loads yard) -----------------------------------------------------------------------------------------------------------
   // a vent: stepping on the plate throws the player (the sim's arc), the camera follows the body up and the field of view opens, a landing puts both back
   await T("t.newGame('normal', 3, { mapId: 'RANGE' })"); await T('t.setup_clearEnemies(); t.clearOverlays()');
