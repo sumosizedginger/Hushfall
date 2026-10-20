@@ -62,3 +62,17 @@ The owner: "stop screenshots from making it grow again, then get rid of any loca
 | `D:\Doom_archive` (outside the repo) | about 360 MB, plus the 946 MB bundle |
 
 Candidates for part two (Session T2, after the evidence regeneration): the baseline once the visual plan is accepted (cut it to the numbers and about 40 frames, about 170 MB), the frozen look demo, the one-off `shoot-ptNN` scripts, the pictures inside `review/gate-N`.
+
+## Part two, Session T2 (PT-067, 2026-10-20): what moved and where it is
+
+Done after the evidence regeneration (shared browser check 146 of 146, the real-game run of every map, `verify-map` for all 68, status AGENT_VERIFIED 68 of 68). Everything moved is in `D:\Doom_archive\2026-10-20\` (59 files) and in git history before the T2 commit; nothing was deleted that cannot be regenerated.
+
+| What | Why it left | Where it is now |
+|---|---|---|
+| `look.html`, `src/look/` (the frozen painted-3D look demo, 2026-09-29), `tools/dev/shoot-look.mjs`, the npm scripts `look` and `shoot` | the demo was proven and approved long ago; the game and its bake do not use it (`tools/baker/recipes3d.js` stays: the game's own wall, prop and water recipes live there) | archive `look.html`, `src/look/`, `tools-dev/shoot-look.mjs` |
+| `tools/dev/shoot-pt21`, `27`, `28`, `29`, `32`, `36`, `37`, `38` (`.mjs`: one-off real-game still jobs of finished tasks) | their features are built and held by tests; the standing tools are `shoot-map`, `shoot-rigs`, `audit-capture`, `shoot-closeup`, `shoot-preview` and the `probe-*` family | archive `tools-dev/` |
+| `review/gate-2/audit/repro/` (28 files) and `review/gate-2/reaudit/repro/` (19 files): the outside auditors' reproduction scripts for code that no longer exists | no tool reads them; the reports (`AUDIT.md`, `REAUDIT.md`, `findings.json`) stay | archive `review/gate-2/audit/repro`, `review/gate-2/reaudit/repro` |
+
+Held by `tests/repo-layout.test.js`: only the allowed names at the root of the tracked tree, no picture or sound tracked outside `assets/baked`, the retired things stay out, every file an npm script runs exists.
+
+Not done on purpose: `review/gate-1` and `review/gate-2` keep their reports and json (about 0.2 MB of text: the bundle tools and `npm run validate` read them); the look baseline `review/self-audit` (195 MB, git-ignored) stays until the owner accepts the visual plan.

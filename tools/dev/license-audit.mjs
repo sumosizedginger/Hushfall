@@ -45,7 +45,7 @@ export function auditLicences(root) {
     const s = read(f); let m; imp.lastIndex = 0;
     while ((m = imp.exec(s))) { const spec = m[1]; if (spec.startsWith('.') || spec.startsWith('/')) continue; const pkgName = spec.startsWith('@') ? spec.split('/').slice(0, 2).join('/') : spec.split('/')[0]; if (DEV_ONLY.includes(pkgName)) problems.push(`${path.relative(root, f)} imports the dev-only package ${pkgName}`); }
   }
-  for (const h of ['index.html', 'look.html', 'pad.html']) { const f = path.join(root, h); if (fs.existsSync(f) && /https?:\/\/[^"')\s]*(googleapis|gstatic|cdn|unpkg|jsdelivr|cloudflare)/i.test(read(f))) problems.push(`${h} loads something from a CDN or a font host`); }
+  for (const h of ['index.html', 'pad.html']) { const f = path.join(root, h); if (fs.existsSync(f) && /https?:\/\/[^"')\s]*(googleapis|gstatic|cdn|unpkg|jsdelivr|cloudflare)/i.test(read(f))) problems.push(`${h} loads something from a CDN or a font host`); }
   return { production: prod, problems };
 }
 if (import.meta.url === new URL(`file:///${process.argv[1].replace(/\\/g, '/')}`).href || process.argv[1]?.endsWith('license-audit.mjs')) {

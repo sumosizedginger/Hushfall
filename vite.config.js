@@ -1,3 +1,3 @@
 import { defineConfig } from 'vite';
-// Game is index.html; look.html is the frozen painted-3D look demo (dev only, not part of the build).
+// Game is index.html (pad.html is the controller test page, dev only).
 export default defineConfig({ base: './', build: { target: 'es2022', chunkSizeWarningLimit: 1200 } });
