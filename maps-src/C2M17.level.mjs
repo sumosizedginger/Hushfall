@@ -140,7 +140,7 @@ const run1 = lane(LANE_S);
 const relays = [[...spot(131, 0)], [...ats(B5, 0, 8)], { op: 'switch', id: 'relay-s' }, [...spot(138, 0)], [...ats(B6, 0, 8)], { op: 'switch', id: 'relay-n' }, [...spot(138, 0), 0], [gx - 3, gz, 0], [gx, gz, 0]];
 export const waypoints = {
   main: [[9, 30, 0], ...run1, ...relays],
-  secret: [[9, 30, 0], ...lane([14, 22, 34, 44, 58, 70]), [XS, zs - 3, 0], { op: 'use', at: [XS, zs] }, [XS, zs + 2, 0], [XS, zs - 3, 0], ...lane([88, 106, 117, 128]), ...relays],
+  secret: [[9, 30, 0], ...lane([14, 22, 34, 44, 58, 70]), [75, 31], [XS, zs - 3, 0], { op: 'use', at: [XS, zs] }, [XS, zs + 2, 0], [XS, zs - 3, 0], ...lane([88, 106, 117, 128]), ...relays],
 };
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C2M17', lane: [...(laneOf('C2M17') ?? [])], keep: [], plan: [{"pick":"range","from":"gaunt","to":"mender","n":2}] };
