@@ -76,20 +76,23 @@ export function hivecantor(tex) {
     R.joint('head', 'neck', [0, 0.14, 0]); R.lump('head', 0.24, 1, 0.07, 41, C.skin, { pos: [0, 0.18, 0], scale: [0.66, 1.25, 0.82] });
     R.box('head', 0.085, 0.3, 0.03, C.mouth, { pos: [0, 0.1, 0.16] });                                                                                                   // the open throat: one vertical slit
     for (const y of [0.16, 0.28, 0.4]) R.sph('head', 0.032, 5, 4, 'glow', { pos: [0, y, 0.165 - (y - 0.16) * 0.1] });                                                 // three eyes in a column
-    R.joint('crest', 'head', [0, 0.22, -0.1]);
-    for (let i = 0; i < 15; i++) { const a = (i - 7) * 0.2; R.cone('crest', 0.034, 0.5 + 0.1 * (7 - Math.abs(i - 7)) / 7, 4, i % 2 ? C.nerve : C.nerveDk, { pos: [S(a) * 0.12, 0.06, -0.04 - Math.abs(a) * 0.05], rot: [-1.15, 0, -a * 1.1] }); }          // a hood of nerves spread behind the head like a cobra's
-    R.sph('crest', 0.04, 5, 4, 'amber', { pos: [0, 0.34, -0.3] });
+    // PT-065 (V10, the climax creatures read as props: a pale cross "reads as a scarecrow"): the crest is a HALO. A ring of bone behind the head, twelve spokes of nerve from the skull to it and an amber bead on every spoke's end; the ring is the tell the eye finds at 30 m, and it swells with the beat.
+    R.joint('crest', 'head', [0, 0.2, -0.16]);
+    R.tor('crest', 0.46, 0.032, 5, 28, C.bone);
+    for (let i = 0; i < 12; i++) { const a = (i / 12) * PI * 2, c = i % 2 ? C.nerve : C.nerveDk; R.cone('crest', 0.026, 0.42, 4, c, { pos: [S(a) * 0.23, K(a) * 0.23, 0], rot: [0, 0, -a] }); R.sph('crest', 0.042, 5, 4, 'amber', { pos: [S(a) * 0.47, K(a) * 0.47, 0] }); }
+    R.sph('crest', 0.06, 5, 4, 'amber', { pos: [0, 0, -0.04] });
     // the cross: two long thin arms, ten long fingers
     for (const [n, s] of [['armA', -1], ['armB', 1]]) {
       R.limb('waist', n, [s * 0.34, 1.3, 0], { a: 0.88, b: 0.88, r0: 0.1, r1: 0.075, r2: 0.06, cellA: C.skin, cellB: C.skinDk, seg: 4 });
       R.lump(n + 'M', 0.1, 0, 0.1, 9, C.skin, { pos: [0, -0.9, 0], scale: [0.9, 1.3, 0.7] });
+      R.rag(n, 0.6, 1.62, 0.2, 0.18, C.nerveDk, { pos: [0, -0.12, 0.02] });                                                           // the sleeve of a coat hangs below the arm and falls to a point
       for (let f = 0; f < 5; f++) { const sp = (f - 2) * 0.06, L = 0.55 + 0.1 * (2 - Math.abs(f - 2)), end = [sp * 1.4, -0.94 - L, 0.07 * (f - 2) - 0.02]; R.tube(n + 'M', [[sp * 0.4, -0.94, 0], end], [0.024, 0.008], 3, C.bone); R.joint('tip' + (s < 0 ? 'A' : 'B') + f, n + 'M', end); }          // (the tips are joints, not meshes: the choir's threads are drawn from them by the view, and a mesh each would make the arms most of the vertices)
     }
   }, (p, J, R) => {
     const t = p.t, d = ease(clamp01(p.dead)), a = p.attack, beat = p.beat ?? 0, up = a > 0 ? (a < 0.55 ? ease(a / 0.55) : 1) : 0;
     J.body.position.y = S(t * 0.9) * 0.03 * (1 - d);
     for (let i = 0; i < 11; i++) J['st' + i].rotation.set(S(t * 1.3 + i * 1.7) * 0.1 + 0.05 * S(t * 4 + i), 0, K(t * 1.1 + i) * 0.1);
-    const lift = 1.28 + 0.1 * up + 0.12 * S(t * 7) * up;                                                                                                                   // the cross rises to a V as it draws a ring and trembles
+    const lift = 1.08 + 1.05 * up + 0.12 * S(t * 7) * up;                                                                                                                   // the cross rises to a V as it draws a ring and trembles
     J.armA.rotation.z = -lift - 0.04 * S(t * 1.2); J.armB.rotation.z = lift + 0.04 * S(t * 1.2 + 1);
     J.armA.rotation.x = 0.1 + 0.05 * S(t * 0.8); J.armB.rotation.x = 0.1 + 0.05 * S(t * 0.8 + 2); J.armAM.rotation.z = -0.06 - 0.12 * up; J.armBM.rotation.z = 0.06 + 0.12 * up;
     J.head.rotation.set(0.15 - 0.2 * up + S(t * 0.7) * 0.04, S(t * 0.4) * 0.15, S(t * 0.5) * 0.04); J.crest.scale.setScalar(1 + 0.18 * beat + 0.25 * up);
