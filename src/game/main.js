@@ -144,6 +144,7 @@ function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, settings
 addEventListener('resize', resize);
 
 function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
+  g.cine = null; ui.cine(null);                                                                                        // PT-063: a level never starts under the overlay of a story scene that was playing
   g.loadedSlot = null; g.sinceLoad = 0; g.unread = new Set(); ui.setUnread(0);                                           // (applySave sets them again after this: a save that breaks the game in its first three seconds is set aside, PT-050 H1)
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
