@@ -17,15 +17,17 @@ const port = 5400 + (process.pid % 90);
 const server = await createServer({ root, logLevel: 'error', server: { port, strictPort: false } });
 await server.listen();
 const realPort = server.config.server.port;
-const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+// GPU=1 uses the machine's own graphics card (the store pictures: PT-071 R23); VW / VH set the page size, WIDTH the game's render width (320..800)
+const browser = await puppeteer.launch({ headless: true, args: process.env.GPU ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
 await page.evaluateOnNewDocument(() => { navigator.getGamepads = () => [null, null, null, null]; Element.prototype.requestPointerLock = function () { return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError')); }; });          // the owner's mouse: no page script of a driven browser may take the pointer lock
-await page.setViewport({ width: 1280, height: 720 });
+await page.setViewport({ width: Number(process.env.VW) || 1280, height: Number(process.env.VH) || 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push('pageerror: ' + e)); page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 300)); });
 await page.goto(`http://localhost:${realPort}/`, { waitUntil: 'domcontentloaded', timeout: 0 });
 await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 180000 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+if (process.env.WIDTH) await page.evaluate(`window.__GAME_TEST__.setSetting('autoQuality', false); window.__GAME_TEST__.setSetting('internalWidth', ${Number(process.env.WIDTH)})`);
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; ${code.includes(';') ? code + ';' : 'return ' + code + ';'} })()`);
 const log = (o) => fs.appendFileSync(path.join(out, 'index.jsonl'), JSON.stringify(o) + '\n');
 const dom = () => page.evaluate(() => {

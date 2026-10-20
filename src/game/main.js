@@ -32,6 +32,8 @@ import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor, CaptionFeed } from './captions.js';
 import { firstRunLine } from './firstrun.js';
 import { QualityGovernor } from './quality.js';
+import { creditsLines, creditsHeight, creditsState } from './credits.js';
+import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe, FrameHistogram } from './playlog.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
@@ -68,7 +70,7 @@ document.getElementById('title-art').src = titleArtUrl(); document.getElementByI
 
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
-  governor: new QualityGovernor(settings.internalWidth), captions: new CaptionFeed(), mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
+  playlog: loadLog(storage), hist: new FrameHistogram(), attempt: 0, attemptLogged: true, survey: null, governor: new QualityGovernor(settings.internalWidth), captions: new CaptionFeed(), mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
   progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
@@ -86,17 +88,23 @@ const ui = new UI({
   journalTab: (tab) => { g.journalTab = JOURNAL_TABS.includes(tab) ? tab : 'map'; ui.journalShowTab(g.journalTab); },
   resume: () => resume(), quickSave: () => quickSave(), quickLoad: () => quickLoad(),
   playRadio: () => audio.play(RADIO_SOUND),
-  restartLevel: () => startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }),      // the world remembers what the level began with (also after a load)
+  restartLevel: () => { if (g.mode === 'playing' || g.mode === 'paused') logAttempt('restart'); startLevel({ mapId: g.mapId, difficulty: g.difficulty, seed: g.seed, carry: g.world?.levelStart ?? null }); },      // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
   nextLevel: () => nextLevel(),
   epiloguePress: () => epiloguePress(),
+  openCredits: () => openCredits(), closeCredits: () => closeCredits(),
   openRecord: (from) => openRecord(from), closeRecord: () => closeRecord(), replayScene: (id) => replayScene(id),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
   resetPadBindings: () => { g.capturePad = null; commitPadBindings(defaultPadBindings(), 'Controller buttons reset to default.'); },
   beginPadRebind: (action) => { g.capture = null; g.capturePad = { action }; ui.syncPadBindings(settings.padBindings, action, g.pad.family, 'Press a button on the pad. Esc cancels.'); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); } if (k === 'autoQuality') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
+  playlogExport: () => { const blob = new Blob([exportText(g.playlog)], { type: 'application/json' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hushfall-playlog.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); },
+  playlogCopy: () => { navigator.clipboard?.writeText(exportText(g.playlog)).then(() => ui.playlogNote('Copied. ' + describe(g.playlog)), () => ui.playlogNote('Could not copy: use Export instead.')); },
+  playlogClear: () => { clearLog(storage); g.playlog = loadLog(storage); logMeta(); ui.playlogNote('Cleared. ' + describe(g.playlog)); },
+  surveyAnswer: (k, v) => { g.survey ??= { answers: {}, note: '' }; g.survey.answers[k] = v; commitSurvey(); ui.survey(true, g.survey.answers, g.survey.note); },
+  surveyNote: (t) => { g.survey ??= { answers: {}, note: '' }; g.survey.note = t; commitSurvey(); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); } if (k === 'autoQuality') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'playLog') { if (v) logMeta(); ui.playlogNote(describe(g.playlog)); } if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -112,6 +120,17 @@ applyComfort(); ui.syncSettings(settings); ui.syncCrosshair(settings.crosshair);
 
 /** PT-071 R20: the text size and the reduced-motion class of the page (the view reads reducedMotion through setLook) */
 function applyComfort() { const c = document.body?.classList; if (!c?.toggle) return; c.toggle('ui-large', settings.textSize === 'large'); c.toggle('ui-larger', settings.textSize === 'larger'); c.toggle('reduced-motion', !!settings.reducedMotion); }
+
+/** PT-071 R24: one finished attempt at a map goes into the play log, if the player turned the log on (never twice for one attempt) */
+function logAttempt(outcome) {
+  if (!settings.playLog || !g.world || g.attemptLogged) return; g.attemptLogged = true; const w = g.world, p = w.player, st = w.stats ?? {};
+  g.playlog = addLevel(g.playlog, { map: g.mapId, difficulty: g.difficulty, outcome, seconds: w.time, kills: st.kills, damageTaken: st.damageTaken, secrets: st.secrets, items: st.items, deathAt: outcome === 'dead' ? [Math.floor(p.x / w.map.cell), Math.floor(p.z / w.map.cell)] : null, frames: g.hist.stats(renderWidth()), attempt: g.attempt });
+  saveLog(storage, g.playlog); ui.playlogNote(describe(g.playlog));
+}
+function logMeta() { try { const gl = renderer.getContext?.(), x = gl?.getExtension?.('WEBGL_debug_renderer_info'); const ua = (navigator.userAgent || '').match(/(Edg|Chrome|Firefox|Version)\/(\d+)/); g.playlog.renderer = String((x && gl.getParameter(x.UNMASKED_RENDERER_WEBGL)) || '').slice(0, 80); g.playlog.browser = ua ? (ua[1] === 'Version' ? 'Safari' : ua[1] === 'Edg' ? 'Edge' : ua[1]) + ' ' + ua[2] : ''; g.playlog.day = new Date().toISOString().slice(0, 10); } catch { /* the log works without it */ } }
+function commitSurvey() { if (!g.survey) return; g.playlog = addSurvey(g.playlog, g.mapId, g.attempt, g.survey.answers, g.survey.note); saveLog(storage, g.playlog); ui.playlogNote(describe(g.playlog)); }
+logMeta(); ui.playlogNote(describe(g.playlog));
+addEventListener('pagehide', () => { if (g.mode === 'playing' || g.mode === 'paused') logAttempt('quit'); });      // closing the tab in the middle of a map is the commonest way to stop: it is an attempt too
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
@@ -132,6 +151,10 @@ function openRecord(from) {
   const view = recordView(CAMPAIGN, MAPS, g.recordFrom === 'title' ? titleProgress() : g.progress);
   ui.show('record', { view, counts: recordCounts(view), current: g.recordFrom === 'pause' ? g.mapId : null, scenes: g.recordFrom === 'title' ? [...(settings.coldOpenSeen ? [{ id: 'cold-open', title: 'Port Marrow', map: null }] : []), ...recordScenes(titleProgress(), SCENES)] : [] });
 }
+/** PT-071 R25: the credits roll, from the title: a screen on the wall clock (the roll's own pace), nothing in the world moves */
+function openCredits() { if (g.mode !== 'title') return; g.credits = { t: 0, h: creditsHeight(creditsLines()) }; ui.show('credits'); }
+function closeCredits() { if (ui.screen !== 'credits') return; g.credits = null; ui.show('title', { canContinue: canContinue() }); }
+function stepCredits(dt) { const c = g.credits; if (!c) return; c.t += dt; const st = creditsState(c.t, globalThis.innerHeight || 600, c.h); ui.creditsFrame(st.offset); if (st.done) closeCredits(); }
 function closeRecord() {
   if (ui.screen !== 'record') return;
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() });
@@ -161,6 +184,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
   if (!world && !map.range) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));      // (the range never overwrites the campaign's Continue)
+  g.attempt++; g.attemptLogged = false; g.hist.reset(); g.survey = null;                                         // PT-071 R24: a new attempt for the play log
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
   if (!world) {
     ui.card(map.intro); const first = !settings.firstRunSeen, legend = g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings);        // PT-071 R20: a new profile also gets one line about the objective and the Journal
@@ -181,7 +205,7 @@ const nextCarry = () => ({ ...carryOver(g.world), upgrades: { ...g.progress.upgr
 function completeData() {
   const m = MAPS[g.mapId], e = g.lastEarn;
   return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId, campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
-    rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '', mods: Object.keys(g.world?.player?.mods ?? {}) };
+    survey: settings.playLog ? { answers: g.survey?.answers ?? {}, note: g.survey?.note ?? '' } : null, rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '', mods: Object.keys(g.world?.player?.mods ?? {}) };
 }
 /** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
 function commitProgress() {
@@ -264,6 +288,7 @@ function endCinematic() {
   g.mode = 'playing'; requestLock();
 }
 function quitToTitle() {
+  if (g.mode === 'playing' || g.mode === 'paused') logAttempt('quit');
   cancelWheel(); g.mapOpen = false; g.ending = null; g.cine = null; ui.cine(null); g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
@@ -349,6 +374,7 @@ addEventListener('keydown', (e) => {
   if (g.capturePad) { e.preventDefault(); e.stopPropagation(); if (e.code === 'Escape') cancelPadCapture('Cancelled.'); return; }
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
+  if (ui.screen === 'credits') { if (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space') { e.preventDefault(); closeCredits(); } return; }
   if (ui.screen === 'record') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeRecord(); } return; }          // the Record is read, not played: Esc (or the pause key) goes back to where it was opened from
   if (ui.screen === 'journal' && g.mode === 'paused' && (e.code === 'ArrowRight' || e.code === 'ArrowLeft')) { e.preventDefault(); ui.h.journalTab(tabAfter(g.journalTab, e.code === 'ArrowRight' ? 1 : -1)); return; }          // PT-052 U3: left and right turn the Journal's pages
   if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
@@ -395,6 +421,7 @@ const menuItems = () => { const scr = document.querySelector('.screen:not(.hidde
 function padMenu(out, dt) {
   if (g.mode === 'cinematic') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) skipCinematic(); return; }
   if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
+  if (ui.screen === 'credits') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) closeCredits(); return; }
   if (ui.screen === 'record') {                                                                       // the Record (PT-037): up and down scroll it, A or B goes back
     const d = navRepeat.update(navDir(g.pad.down, out.move), dt), list = document.getElementById('record-list');
     if (list && d === 'up') list.scrollTop -= 90; else if (list && d === 'down') list.scrollTop += 90;
@@ -460,7 +487,7 @@ function quarantineLoaded() {
 }
 function frameBody(now) {
   const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
-  g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift();
+  g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift(); if (g.mode === 'playing') g.hist.add(raw * 1000);
   if (g.mode === 'playing' && g.view && settings.autoQuality !== false) { if (g.governor.sample(raw * 1000, raw)) resize(); } else g.governor.forget();                    // PT-071 R21: only frames of real play count
   pollPad(dt);
   let alpha = 0;
@@ -470,19 +497,20 @@ function frameBody(now) {
     if (open !== g.wheelMuffled) { g.wheelMuffled = open; audio.setMuffled(open); }
     alpha = g.manual ? 1 : g.loop.advance(dt * g.timeScale * (g.devScale ?? 1)).alpha;                     // (g.devScale: the range's slow motion, F8: the real game, the real renderer, slowed, to watch a swing)
   }            // g.manual: the dev test hook owns the clock
-  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
+  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { logAttempt('dead'); g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
   else if (g.mode === 'ending') {
     g.timer -= dt;
     if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) { const de = MAPS[g.mapId].devEnding; if (de && ENDINGS[de.ending] && g.world.endStats?.dest === de.dest) startEpilogue({ campaign: de.ending, ...ENDINGS[de.ending], dev: true }); else quitToTitle(); }      // the dev range has no scoring, salvage or next map: its exit just goes back to the title (PT-043: a dev map may show a draft epilogue first)
     else if (g.timer <= 0) {
       g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record
-      commitProgress();
+      commitProgress(); logAttempt('complete');
       const ending = endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest);                // a campaign's last map: the epilogue first (PT-036)
       if (ending) startEpilogue(ending); else { g.mode = 'complete'; ui.show('complete', completeData()); }
     }
   }
   else if (g.mode === 'epilogue' && g.ending) { g.ending.seq = stepSequence(g.ending.seq, g.ending.def.cards, dt); syncEpilogue(); }
+  else if (g.mode === 'title' && ui.screen === 'credits') stepCredits(raw > 0.25 ? 0 : dt);
   else if (g.mode === 'cinematic') { if (!g.manual) stepCinematic(raw > 0.25 ? 0 : dt); }                                  // (g.manual: the dev test hook owns the clock)                                                       // (a long hitch, a background tab: the scene waits, it does not leap)
   audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }

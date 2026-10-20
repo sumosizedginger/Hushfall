@@ -231,6 +231,8 @@ body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
 #captions{position:fixed;left:50%;bottom:196px;transform:translateX(-50%);pointer-events:none;display:flex;flex-direction:column;gap:3px;align-items:center;max-width:92vw}
 #captions div{background:#0d0f14e6;border:1px solid var(--slate);padding:3px 12px;font-size:14px;color:#e8efed;text-align:center}#captions div.danger{border-color:#e8a23a;color:#fff}
 #hud-keys i::after{content:attr(data-k);display:block;text-align:center;font:700 9px/18px sans-serif;font-style:normal;color:#000;letter-spacing:-.02em}
+#survey{margin-top:12px;text-align:left}#survey h3{margin:0 0 6px}#survey .q{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:3px 0;font-size:13px;color:#c4d4d0}#survey .q span{flex:1}#survey .q button{padding:2px 9px;font-size:12px;margin:0 0 0 4px}#survey .q button.on{background:var(--brass);color:#07080c}#survey-note{width:100%;margin-top:6px;box-sizing:border-box;background:#0d0f14;color:#c4d4d0;border:1px solid var(--slate);padding:5px 8px;font:inherit;font-size:12px}#testers-box{max-width:430px;margin-top:8px;font-size:12px;color:#9fb4b0}#testers-box p{margin:6px 0}
+#screen-credits{background:#05060a;overflow:hidden;cursor:pointer}#credits-roll{position:absolute;left:0;right:0;top:0;text-align:center;padding:0 16px;will-change:transform}#credits-roll div{overflow:hidden;white-space:nowrap}#credits-roll .c-title{font-size:48px;letter-spacing:.24em;color:var(--brass);font-weight:700}#credits-roll .c-role{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass)}#credits-roll .c-name{font-size:19px;color:#e6efec}#credits-roll .c-text{font-size:15px;color:#c4d4d0}#credits-roll .c-small{font-size:13px;color:#8fa6a2;white-space:normal}#credits-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12px;color:#5c716d}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
@@ -264,6 +266,8 @@ body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
     <div id="difficulty-note" class="sub" aria-live="polite"></div>
     <button id="btn-record-title">The Record</button>
+    <button id="btn-credits-title">Credits</button>
+    <details id="testers-box"><summary>For testers</summary><p>This is a release candidate, and nobody outside its maker has played it end to end: the numbers are first guesses and you are the first real test of them. Play a few maps on a difficulty you are comfortable with; why you stopped is the most useful thing you can tell us.</p><p>Settings has an opt-in <b>play log</b> kept on this device only (which maps, how each ended, how long, damage taken, how smoothly it ran, and five optional answers after each map). Nothing is sent: when you are done press <b>Export play log</b> and send the file to whoever gave you this link. A crash shows a Copy button: paste what it copies.</p></details>
     <details id="credits-box"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>It draws its 3D with three.js, the one piece of outside software inside it:</p><pre>The MIT License
 
 Copyright © 2010-2026 three.js authors
@@ -334,6 +338,8 @@ THE SOFTWARE.</pre></div></details>
     <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>
     <label>Render width <select id="set-res"></select></label>
     <label>Lower the render width by itself when the game runs slowly <input id="set-autoquality" type="checkbox"></label>
+    <label>Keep a play log on this device (nothing is sent: you export it and send it yourself) <input id="set-playlog" type="checkbox"></label>
+    <div class="row" id="playlog-row"><button id="btn-playlog-export">Export play log</button><button id="btn-playlog-copy">Copy</button><button id="btn-playlog-clear">Clear play log</button></div><div class="sub" id="playlog-note"></div>
     <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
     <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
     <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
@@ -374,7 +380,7 @@ THE SOFTWARE.</pre></div></details>
 </div>
 
 <div id="screen-complete" class="screen hidden">
-  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
+  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><div id="survey" class="hidden"><h3>FIVE QUICK QUESTIONS (optional)</h3><div id="survey-rows"></div><input id="survey-note" maxlength="200" placeholder="Anything else about this map? (optional)"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
 </div>
 
 <div id="screen-ending" class="screen hidden">
@@ -384,5 +390,6 @@ THE SOFTWARE.</pre></div></details>
   <div id="ending-tally" class="hidden"><h2 id="tally-title"></h2><div class="sub" id="tally-sub"></div><div id="tally-eps"></div><div id="tally-totals" class="rows"></div><div id="tally-note"></div><div id="tally-next"></div><button id="btn-ending">Continue</button></div>
   <div id="ending-hint">Enter to go on · Esc to skip</div>
 </div>
+<div id="screen-credits" class="screen hidden"><div id="credits-roll"></div><div id="credits-hint">Esc, Enter or a click goes back</div></div>
 <script type="module" src="/src/game/main.js"></script>
 </body></html>

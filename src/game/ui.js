@@ -14,6 +14,8 @@ import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
 import { difficultyNote } from './difficulty.js';
+import { SURVEY } from './playlog.js';
+import { creditsLines, lineHeightOf } from './credits.js';
 import { pickupToast, pickupCard, cardIcon, pushToast, toastLabel, TOAST } from './toasts.js';
 import { crosshairCss } from './crosshair.js';
 
@@ -42,7 +44,7 @@ export class UI {
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
     $('record-list').onclick = (e) => { const b = e.target?.closest?.('button[data-scene]'); if (b) this.h.replayScene(b.dataset.scene); };
-    $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-record-close').onclick = () => this.h.closeRecord();
+    $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-credits-title').onclick = () => this.h.openCredits(); $('screen-credits').onclick = () => this.h.closeCredits(); $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); const m = e.target.closest?.('button[data-mod]'); if (m && !m.disabled) this.h.buyMod(m.dataset.mod); };
     $('set-sens').oninput = (e) => this.h.setSetting('sensitivity', Number(e.target.value)); $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value)); $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value)); $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
@@ -52,6 +54,8 @@ export class UI {
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
+    $('set-playlog').onchange = (e) => this.h.setSetting('playLog', e.target.checked); $('btn-playlog-export').onclick = () => this.h.playlogExport(); $('btn-playlog-copy').onclick = () => this.h.playlogCopy(); $('btn-playlog-clear').onclick = () => this.h.playlogClear();
+    this.buildSurvey();
     $('set-autoquality').onchange = (e) => this.h.setSetting('autoQuality', e.target.checked);
     $('set-textsize').onchange = (e) => this.h.setSetting('textSize', e.target.value); $('set-reducedmotion').onchange = (e) => this.h.setSetting('reducedMotion', e.target.checked); $('set-captions').onchange = (e) => this.h.setSetting('captions', e.target.checked);
     $('set-journalpause').onchange = (e) => this.h.setSetting('journalPause', e.target.checked); $('set-minimap').onchange = (e) => this.h.setSetting('minimap', e.target.value); $('set-cinematics').onchange = (e) => this.h.setSetting('cinematics', e.target.value);
@@ -101,7 +105,7 @@ export class UI {
   }
   hideCrash() { $('screen-crash').classList.add('hidden'); }
   copyCrash() { const t = this.crashText ?? ''; try { navigator.clipboard.writeText(t).then(() => { $('btn-crash-copy').textContent = 'Copied'; }, () => { $('crash-detail').textContent = t; }); } catch { $('crash-detail').textContent = t; } }
-  syncSettings(s) { $('set-autoquality').checked = s.autoQuality !== false; $('set-textsize').value = s.textSize ?? 'normal'; $('set-reducedmotion').checked = !!s.reducedMotion; $('set-captions').checked = !!s.captions; $('set-minimap').value = s.minimap ?? 'small'; $('set-cinematics').value = s.cinematics ?? 'once'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
+  syncSettings(s) { $('set-playlog').checked = !!s.playLog; $('set-autoquality').checked = s.autoQuality !== false; $('set-textsize').value = s.textSize ?? 'normal'; $('set-reducedmotion').checked = !!s.reducedMotion; $('set-captions').checked = !!s.captions; $('set-minimap').value = s.minimap ?? 'small'; $('set-cinematics').value = s.cinematics ?? 'once'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */
   syncBindings(b, capturing = null, note = '') {
@@ -127,7 +131,7 @@ export class UI {
     if (name === 'title') { $('btn-continue').style.display = data.canContinue ? '' : 'none'; $('title-note').textContent = data.note || ''; }
     if (name === 'pause') { $('pause-note').textContent = data.note || ''; $('btn-load').style.display = data.canLoad ? '' : 'none'; }
     if (name === 'dead') $('btn-dead-load').style.display = data.canLoad ? '' : 'none';
-    if (name === 'complete') {
+    if (name === 'complete') { this.survey(!!data.survey, data.survey?.answers, data.survey?.note);
       const s = data.stats, t = s.total;
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ...(s.innocents ? [['Innocents harmed', String(s.innocents)]] : []), ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
       $('rank-line').innerHTML = `<span class="rank r-${data.rank}">${data.rank}</span><span>score ${data.score.toFixed(2)} · ${data.gain > 0 ? '+' + data.gain + ' salvage' : 'no new salvage'}${data.record && data.record.rank !== data.rank ? ' · best ' + data.record.rank : ''}</span>`;
@@ -137,7 +141,15 @@ export class UI {
     if (name === 'ending') this.endingOpen(data.ending);
     if (name === 'record') this.recordOpen(data.view, data.counts, data.current, data.scenes ?? []);
     if (name === 'journal') this.journalOpen(data);
+    if (name === 'credits') this.creditsOpen();
   }
+  /** PT-071 R25: the credits roll (credits.js): every line is given its height here, so the roll's height is the sum credits.js computes and no measuring is needed */
+  creditsOpen() {
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    $('credits-roll').innerHTML = creditsLines().map((l) => { const h = lineHeightOf(l.kind); return `<div class="c-${l.kind === 'gap' ? 'gap' : l.kind}" style="height:${h}px;line-height:${h}px">${l.text ? esc(l.text) : ''}</div>`; }).join('');
+    this.creditsFrame(globalThis.innerHeight || 600);
+  }
+  creditsFrame(offset) { $('credits-roll').style.transform = `translateY(${Math.round(offset)}px)`; }
   /** the Record (PT-037, record.js): a heading per map with entries, each message under its speaker; found documents are set apart; the map being played is scrolled into view */
   recordOpen(view, counts, current, scenes = []) {
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -235,6 +247,17 @@ export class UI {
     const sig = lines.map((l) => (l.danger ? '!' : '') + l.text).join('|'); if (sig === this._capSig) return; this._capSig = sig; const el = $('captions');
     el.classList.toggle('hidden', !lines.length); el.innerHTML = lines.map((l) => `<div class="${l.danger ? 'danger' : ''}">${l.text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</div>`).join('');
   }
+  /** PT-071 R24: the five questions after a map (playlog.js SURVEY); each answer is saved at once by the shell, the note too */
+  buildSurvey() {
+    $('survey-rows').innerHTML = SURVEY.map(([k, q]) => `<div class="q" data-k="${k}"><span>${q}</span>${[['yes', 'Yes'], ['some', 'Somewhat'], ['no', 'No']].map(([v, t]) => `<button data-v="${v}">${t}</button>`).join('')}</div>`).join('');
+    for (const row of $('survey-rows').children ?? []) for (const b of row.children ?? []) if (b.dataset?.v) b.onclick = () => this.h.surveyAnswer(row.dataset.k, b.dataset.v);
+    $('survey-note').oninput = (e) => this.h.surveyNote(e.target.value);
+  }
+  survey(show, answers = {}, note = '') {
+    $('survey').classList.toggle('hidden', !show); if (!show) return; $('survey-note').value = note;
+    for (const row of $('survey-rows').children ?? []) for (const b of row.children ?? []) if (b.dataset?.v) b.classList.toggle('on', answers[row.dataset.k] === b.dataset.v);
+  }
+  playlogNote(t) { $('playlog-note').textContent = t; }
   tip(text, delay, dur) { clearTimeout(this._tipT); this._tipT = setTimeout(() => { const el = $('tips'); el.textContent = text; el.classList.remove('hidden'); this._tipT = setTimeout(() => el.classList.add('hidden'), dur); }, delay); }
   hud(w, visible) {
     this.keyLabels = w?.map?.keyLabels || {};
