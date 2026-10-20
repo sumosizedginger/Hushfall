@@ -9,3 +9,7 @@ These are the words of OTHER agents (and the prompts they were given), kept as e
 | `../GEMINI_PLAYTHROUGH_PROMPT.md` | the prompt of the outside playthrough (its output is in the archive, see `design/ARCHIVE_INDEX.md`) |
 
 Their results of the attack: `attack/gemini/` and `attack/groks/`; the merged and rated list is `design/HARDENING.md`.
+
+## Planned (PT-068, 2026-10-20; design/ROADMAP.md 0.13): outside round 0 and round 1 by Gemini and Grok
+
+Not written yet: `STORY_READ_PROMPT.md` (a text-only read of the Record in play order: machine-made lines, contradictions, who-knows-what errors), `CODE_REVIEW_PROMPT.md` and a refreshed play prompt. The owner carries each pack to the agent and brings its report back here; reports are data, rated and merged like `design/HARDENING.md`.
