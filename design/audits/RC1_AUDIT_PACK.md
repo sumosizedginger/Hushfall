@@ -4,7 +4,7 @@ PT-066 (R16 of the Director's Plan). Hand this file, the repository (or a zip of
 
 ## 1. What this is
 
-HUSHFALL is an original browser first-person shooter in the old-school tradition: Campaign One (the harbour town of Port Marrow, four episodes, 36 maps) and Campaign Two (the descent, four acts, 32 maps). 68 maps, about 27 weapons and tools, about 40 kinds of creature. It is built with Three.js and Vite; every picture is baked from p5.js recipes and every sound is synthesised in the browser. It is a RELEASE CANDIDATE for the builder's own purposes, not a shipped product: the commercial list (name search, licence holder, store assets, an outside playtest) is still open.
+HUSHFALL is an original browser first-person shooter in the old-school tradition: Campaign One (the harbour town of Port Marrow, four episodes, 36 maps) and Campaign Two (the descent, four acts, 32 maps). 68 maps, 15 weapons (nine guns and six melee), three ammunition loads and six weapon mods, 21 kinds of creature (seven of them bosses) plus six kinds of shield node and one peaceful people (counted by `node tools/dev/store-facts.mjs`). It is built with Three.js and Vite; every picture is baked from p5.js recipes and every sound is synthesised in the browser. It is a RELEASE CANDIDATE for the builder's own purposes, not a shipped product: the commercial list (name search, licence holder, store assets, an outside playtest) is still open.
 
 ## 2. A clean copy
 

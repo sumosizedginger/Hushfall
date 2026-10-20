@@ -20,7 +20,8 @@ test('the audit does fail when it should: an unknown licence, a missing notice a
 });
 
 test('the credits box on the title and the pause screen carries three.js\'s MIT notice word for word (the licence asks for the notice to travel with the game)', async () => {
-  const fs = await import('node:fs'), path = await import('node:path'), html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'), notices = fs.readFileSync(path.join(ROOT, 'THIRD_PARTY_NOTICES.md'), 'utf8');
+  const fs = await import('node:fs'), path = await import('node:path'), lf = (t) => t.replace(/\r\n/g, '\n');   // a Windows checkout turns line endings into CRLF: the words are what is compared
+  const html = lf(fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8')), notices = lf(fs.readFileSync(path.join(ROOT, 'THIRD_PARTY_NOTICES.md'), 'utf8'));
   const mit = notices.slice(notices.indexOf('The MIT License')).trim(), esc = mit.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   for (const id of ['credits-box', 'credits-box-pause']) assert.ok(html.includes(`id="${id}"`), id);
   assert.equal(html.split(esc).length - 1, 2, 'the whole notice, once in each box'); assert.match(html, /three\.js, the one piece of outside software/);

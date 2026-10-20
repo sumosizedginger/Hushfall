@@ -10,6 +10,8 @@
     "test": "node --test \"tests/*.test.js\"",
     "build": "vite build",
     "check-dist": "node tools/dev/check-dist.mjs",
+    "package": "node tools/dev/package-web.mjs",
+    "play": "node tools/dev/serve-dist.mjs",
     "licences": "node tools/dev/license-audit.mjs",
     "verify": "npm run validate && npm test && npm run build",
     "browsercheck": "node tools/dev/browser-check.mjs",
