@@ -83,6 +83,7 @@ test('the pointer-lock policy: a script-driven browser never asks for the lock, 
   assert.equal(automated({ webdriver: true }), true); assert.equal(automated({ webdriver: false }), false); assert.equal(automated({}), false); assert.equal(automated(undefined), false);
   const main = fs.readFileSync(path.join(ROOT, 'src/game/main.js'), 'utf8'), hook = fs.readFileSync(path.join(ROOT, 'src/game/testhook.js'), 'utf8');
   assert.match(main, /function requestLock\(fromClick = false\) \{\s*if \(g\.lockFailed\) return;\s*if \(automated\(\)\) \{ g\.lockFailed = true; return; \}/, 'requestLock refuses in an automated browser before it touches the canvas');
-  assert.ok(hook.indexOf('g.lockFailed = true; app.startLevel') > 0, 'the hook switches the lock off before startLevel (it used to switch it off after, so every automated level start asked once)');
+  const newGame = hook.slice(hook.indexOf('newGame('), hook.indexOf('app.startLevel('));
+  assert.ok(newGame.includes('g.lockFailed = true;') && hook.indexOf('app.startLevel(') > hook.indexOf('g.lockFailed = true;'), 'the hook switches the lock off before startLevel (it used to switch it off after, so every automated level start asked once)');
   mock.reset();
 });
