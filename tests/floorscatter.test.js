@@ -16,7 +16,7 @@ test('every floor texture the game has belongs to a family (nothing falls throug
   for (const t of texes) assert.ok(FLOOR_FAMILY[t], `${t} has no family`);
   for (const t of Object.keys(FLOOR_FAMILY)) assert.ok(texes.includes(t), `${t} is in the family table but is no floor`);
   for (const [fam, def] of Object.entries(FAMILY_MARKS)) { assert.ok(Object.keys(def.w).length >= 4, fam); for (const [k, v] of Object.entries(def.w)) { assert.ok(k in MARK, `${fam}: ${k}`); assert.ok(v > 0); } assert.equal(def.tint.length, 3); }
-  assert.equal(new Set(Object.values(MARK)).size, 16, 'sixteen cells, all different'); for (const [k, i] of Object.entries(MARK)) { assert.ok(i >= 0 && i < 16); assert.ok(MARK_LOOK[k], k); const L = MARK_LOOK[k]; assert.ok(L.size[0] > 0.5 && L.size[1] <= 3.2 && L.a[1] <= 1); }
+  assert.equal(new Set(Object.values(MARK)).size, 16, 'sixteen cells, all different'); for (const [k, i] of Object.entries(MARK)) { assert.ok(i >= 0 && i < 16); assert.ok(MARK_LOOK[k], k); const L = MARK_LOOK[k]; assert.ok(L.size[0] > 0.5 && L.size[1] <= 3.8 && L.a[1] <= 1); }
   assert.equal(familyOf('floor_planks_a'), 'wood'); assert.equal(familyOf('floor_grate_a'), 'metal'); assert.equal(familyOf('nonsense'), 'stone');
 });
 

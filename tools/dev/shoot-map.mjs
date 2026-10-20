@@ -18,6 +18,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port, str
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await page.evaluateOnNewDocument(() => { Element.prototype.requestPointerLock = function () { return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError')); }; });          // the owner's mouse: no page script of a driven browser may take the pointer lock
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e))); page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });

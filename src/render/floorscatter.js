@@ -4,15 +4,15 @@
 // sparser out in the open, never in water, on a moving floor or on a current, and capped (`FLOORMARKS.cap`), so a load is the same picture every time and the draw cost is one more mesh of at most that many quads.
 import { FLOOR_SKINS, FX } from '../engine/defs.js';
 
-export const FLOORMARKS = { cap: 960, base: 0.2, wall: 1.9, open: 0.6, ring: 'floor', atlas: 'decals_floor_atlas' };
+export const FLOORMARKS = { cap: 1600, base: 0.3, wall: 1.8, open: 0.65, ring: 'floor', atlas: 'decals_floor_atlas' };
 /** the atlas's cells by name */
 export const MARK = { seams: 0, grate: 1, crack: 2, web: 3, puddle: 4, puddleLong: 5, rubble: 6, rope: 7, drain: 8, tiles: 9, dust: 10, rust: 11, chalk: 12, prints: 13, soot: 14, litter: 15 };
 /** size (m, [min, max]), alpha, whether it is turned to the room's axes (a seam, a grate) or any way, and whether it wants open sky over it (a puddle is rain: an outdoor floor only) */
 export const MARK_LOOK = {
-  seams: { size: [1.7, 2.3], a: [0.55, 0.8], axes: true }, grate: { size: [1.0, 1.25], a: [0.85, 0.95], axes: true }, crack: { size: [1.4, 2.4], a: [0.7, 0.9] }, web: { size: [1.1, 1.7], a: [0.7, 0.9] },
-  puddle: { size: [0.9, 1.7], a: [0.7, 0.88], sky: true }, puddleLong: { size: [1.4, 2.3], a: [0.7, 0.88], sky: true }, rubble: { size: [0.9, 1.6], a: [0.7, 0.9] }, rope: { size: [0.95, 1.25], a: [0.85, 0.95] },
-  drain: { size: [0.85, 1.05], a: [0.85, 0.95], axes: true }, tiles: { size: [1.7, 2.3], a: [0.5, 0.75], axes: true }, dust: { size: [1.8, 3.0], a: [0.5, 0.85] }, rust: { size: [1.0, 1.7], a: [0.55, 0.8] },
-  chalk: { size: [1.0, 1.4], a: [0.55, 0.8] }, prints: { size: [1.2, 1.6], a: [0.45, 0.7] }, soot: { size: [1.2, 2.1], a: [0.5, 0.8] }, litter: { size: [1.0, 1.9], a: [0.6, 0.85] },
+  seams: { size: [1.9, 2.6], a: [0.6, 0.85], axes: true }, grate: { size: [1.1, 1.4], a: [0.85, 0.95], axes: true }, crack: { size: [1.8, 3.0], a: [0.75, 0.92] }, web: { size: [1.4, 2.2], a: [0.75, 0.92] },
+  puddle: { size: [1.2, 2.2], a: [0.75, 0.92], sky: true }, puddleLong: { size: [1.8, 3.0], a: [0.75, 0.92], sky: true }, rubble: { size: [1.2, 2.0], a: [0.75, 0.92] }, rope: { size: [1.0, 1.35], a: [0.88, 0.97] },
+  drain: { size: [0.95, 1.2], a: [0.88, 0.97], axes: true }, tiles: { size: [1.9, 2.6], a: [0.55, 0.8], axes: true }, dust: { size: [2.2, 3.6], a: [0.6, 0.92] }, rust: { size: [1.3, 2.1], a: [0.65, 0.9] },
+  chalk: { size: [1.2, 1.7], a: [0.65, 0.9] }, prints: { size: [1.4, 1.9], a: [0.55, 0.8] }, soot: { size: [1.6, 2.8], a: [0.65, 0.92] }, litter: { size: [1.4, 2.4], a: [0.7, 0.92] },
 };
 /** the family of every floor texture the game has (a test fails for a texture that has none) */
 export const FLOOR_FAMILY = {
@@ -26,12 +26,12 @@ export const FLOOR_FAMILY = {
 };
 /** each family's weights over the marks, and a tint (multiplied into the atlas colours, so a puddle in a gill garden is slime and a seam in a loft is old wood) */
 export const FAMILY_MARKS = {
-  wood: { w: { seams: 5, rubble: 1, rope: 0.8, chalk: 0.8, prints: 2, soot: 1, puddle: 1, dust: 1, litter: 1 }, tint: [0.95, 0.9, 0.84] },
-  stone: { w: { crack: 3, web: 1, tiles: 3, rubble: 3, puddle: 1.5, puddleLong: 1, dust: 2, chalk: 0.7, prints: 1, soot: 1, drain: 0.4, litter: 0.5 }, tint: [1, 1, 1] },
-  metal: { w: { grate: 0.8, drain: 1, rust: 3, soot: 2, tiles: 1, rubble: 0.5, puddle: 1, prints: 1, crack: 0.5 }, tint: [1, 0.98, 0.96] },
-  earth: { w: { dust: 4, prints: 3, rubble: 2, litter: 2, crack: 1, puddle: 1, soot: 0.5, chalk: 0.3 }, tint: [1, 0.95, 0.85] },
-  soft: { w: { prints: 2, soot: 1, litter: 2, dust: 1 }, tint: [0.9, 0.85, 0.8] },
-  organic: { w: { litter: 2, puddle: 2, puddleLong: 1, crack: 0.5, dust: 0.3, prints: 0.5, soot: 0.5 }, tint: [0.75, 0.9, 0.72] },
+  wood: { w: { seams: 4, rubble: 1, rope: 0.8, chalk: 0.8, prints: 2, soot: 2.2, puddle: 1.5, dust: 2.2, litter: 1.8 }, tint: [0.95, 0.9, 0.84] },
+  stone: { w: { crack: 2.5, web: 1, tiles: 2.5, rubble: 2.5, puddle: 2, puddleLong: 1.5, dust: 3.5, chalk: 0.7, prints: 1, soot: 2, drain: 0.4, litter: 1 }, tint: [1, 1, 1] },
+  metal: { w: { grate: 0.8, drain: 1, rust: 4.5, soot: 3.5, tiles: 1, rubble: 0.5, puddle: 1.5, prints: 1, crack: 0.5 }, tint: [1, 0.98, 0.96] },
+  earth: { w: { dust: 6, prints: 3, rubble: 2, litter: 3, crack: 1, puddle: 1.5, soot: 1, chalk: 0.3 }, tint: [1, 0.95, 0.85] },
+  soft: { w: { prints: 2, soot: 2, litter: 3, dust: 2 }, tint: [0.9, 0.85, 0.8] },
+  organic: { w: { litter: 3, puddle: 3, puddleLong: 1.5, crack: 0.5, dust: 0.6, prints: 0.5, soot: 1 }, tint: [0.75, 0.9, 0.72] },
 };
 export const familyOf = (tex) => FLOOR_FAMILY[tex] ?? 'stone';
 
