@@ -22,7 +22,8 @@ export function makeSawVoice(c, out) {
     lfo.frequency.setTargetAtTime(lerp(8, 24, spin), now, k); lfoDepth.gain.setTargetAtTime(live ? lerp(0.55, 0.12, spin) * rough : 0.3, now, k);
     ng.gain.setTargetAtTime(live ? (0.02 + 0.07 * spin + 0.06 * load) : 0, now, k); bp.frequency.setTargetAtTime(900 + 900 * spin + 500 * load, now, k);
   }
-  function stop(at) { const now = at ?? c.currentTime; master.gain.setTargetAtTime(0, now, 0.05); for (const n of [a.o, b.o, sub.o, lfo, nz]) { try { n.stop(now + 0.4); } catch { /* already stopped */ } } try { master.disconnect(); } catch { /* ok */ } }
+  /** fade out and stop. `at` (a scheduled stop, as the offline QA render makes) leaves the graph in place until then; a live stop (no `at`) lets it go after the fade (PT-064: the first version disconnected the master at once, which silenced a scheduled stop in an offline render) */
+  function stop(at) { const now = at ?? c.currentTime; master.gain.setTargetAtTime(0, now, 0.05); for (const n of [a.o, b.o, sub.o, lfo, nz]) { try { n.stop(now + 0.4); } catch { /* already stopped */ } } if (at === undefined) setTimeout(() => { try { master.disconnect(); } catch { /* ok */ } }, 600); }
   return { set, stop, master };
 }
 /** the voice's state from the saw record and the weapon in hand (null = nothing is running) */
