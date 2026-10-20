@@ -162,3 +162,21 @@ The plan that follows from all of this is design/VISUAL_DIRECTION.md. The number
 - BLACK IS NOT THE FLAW: 26% of the 3D picture is luma 25 or under on average (C2M26 45%, C1E2M05 43%, C2M13 43%, C2M29 42%). The Cradle Annex, the best frame in the set, is 43% black. A dark picture with a lit core is the look.
 - THE COUNT: the capture covers 29 maps, not 34 as an earlier line of this note said: C1E1M01, C1E1M02, C1E1M08, C1E2M05, C2M02, C2M09 to C2M30, C2S01, C2S02.
 - THE HURT FLASH AND THE HUD: an earlier line said the flash washes the HUD; it does not (corrected above). The 3D picture goes red; the HUD text keeps its colours.
+
+## V12 SIGN-OFF, 2026-10-20 (PT-065): what the work since the audit changed, in numbers, and what it did not
+The same capture as the baseline (`tools/dev/audit-capture.mjs`: the real game, each map played by its canonical route bot to the exit, frames chosen by game state; 29 maps, 581 frames; plus the weapons and UI jobs), run through `tools/dev/low.ps1`, one job at a time, the pointer lock refused. All 29 maps COMPLETE in the real page with no page error and no throw (the three arrival and boss scenes of Campaign Two are skipped by the tool and one frame of each kept). Measured by `tools/dev/lumstats.mjs` and `tools/dev/clipstats.mjs` against `review/self-audit` (the baseline, 581 frames):
+
+| acceptance (design/VISUAL_DIRECTION.md) | baseline | now | verdict |
+|---|---|---|---|
+| V1 a small hit no longer flashes the screen (flash for hits of 2 to 8 hit points) | 0.52 to 1.00, 45 of 45 | 0.06 to 0.27, median 0.14, 43 frames | met |
+| V3 the held gun follows the place's light: core against scene correlation | 0.22 (core 109 to 116, flat) | 0.83 (core 71 to 135, scene 27 to 164) | met (0.8 asked); the first build scaled the HEMISPHERE and reached 0.44 because a look's hemisphere is a poor guide to how bright it looks; `gunlight.js` fits a factor per look |
+| V4 the exit chambers' top band (luma 230 or more) | 14.6% (29 exit frames) | 3.0% | met (6% asked); the first shoulder (k 0.6) left it at 16.1%, i.e. changed nothing: `tools/dev/probe-tone.mjs` rendered seven maps' exits under five curves and k 1.0 / pre 0.55 was chosen |
+| V4 frames over 20% / over 35% in the top band | 12 / 2 | 4 / 1 | met on 20%; one frame (C2M28 plinth, 41%) is still over 35% |
+| V4 mean top share of all frames within one point | 2.1% | 0.9% | met |
+| V4 non-exit frames' mean luma within 5% | 74.3 | 71.8 (-3.4%) | met |
+| V4 black share within 3 points (the dark pictures stay dark) | 23.9% | 27.2% (+3.3) | JUST OVER: the shoulder takes about 3% off the mids; the knobs are `SHOULDER` in `tonecurve.js` |
+| V11 the sky between frames | (the flecks) | still: nothing shimmers, nothing drifts | nothing to remove |
+
+WHAT DID NOT CHANGE, said plainly. The floors are still mostly the floor textures with a scatter of marks that read as dirt at 480 px (V6b): a modest change, not a new look. The faces (V8) are geometry (a brow, a nose, teeth) that reads in a close-up and not at 8 m. The three climax creatures: the Hive Cantor was redesigned, the Sub-Cantor and the Root Bell's clapper were left. The painted look of every place is what it was; no map was re-lit; the sixteen darkest frames are the arrival and boss SCENES (a fade from black, by design) and the arrival cards. Nothing was PLAYED: these are the frames a route bot walks past, judged by numbers and by twelve pictures read by eye (a contact sheet of Marrow Quay, the Steppe, the Drowned nave, the ossuary, Kiln-like rails, the bright halls, the Bone Loom, the cloister, the Hive Cantor's bowl, the Root Bell's cage and two exits: the toast column no longer covers the centre, the held gun is in the place's colour, the node markers ring the bell's cage).
+
+THE WORST FRAMES LEFT (top band, then dark), by the numbers: C2M28 plinth prompt 41%; C2S02 route 5 of 8 33% (the lamp room); C2M22 route 3 of 8 26% (the cloister: white stone); C2M10 exit 21%; C2M10 hurt 20%; C2S02 pickup 19%; C2M09 route 7 of 8 15%; C2M02 route 8 of 8 15%; C2M22 pickup 13%; C2M02 exit 13%. These are white chambers by design (the Reliquary cloister, the lamp room, the plinth); they keep their detail (the highlights now have 30 grey levels) but they are the brightest pictures in the game and the owner's eye should be the judge of whether they are too bright.
