@@ -1348,6 +1348,14 @@
       "transparent": false,
       "sha256": "55212ec3aae9a5edec0c09288f45696836371f8bbc4ad4e1ecf62a81656ebbb2",
       "bytes": 53670
+    },
+    "decals_floor_atlas": {
+      "seed": 6302,
+      "width": 256,
+      "height": 256,
+      "transparent": true,
+      "sha256": "e6214b81a83d9cf6dd9470ab837373b8eec6aa83bb34ea76d6a9d5e5c429397d",
+      "bytes": 39579
     }
   }
 }

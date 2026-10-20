@@ -32,6 +32,7 @@ import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
+import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
@@ -70,6 +71,7 @@ export class GameView {
     this.creatureFx = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal || ENEMIES[q.kind]?.node || ENEMIES[q.kind]?.boss)) ? makeCreatureFx(scene) : null;          // PT-060
     this.hiveView = map.entities.some((q) => q.type === 'enemy' && (ENEMIES[q.kind]?.unison || q.kind === 'rootbell')) ? makeHiveView(scene) : null;       // PT-043: made with the view when the map has a conductor or a clapper (the clapper's light must not change the scene's light count in a fight)
     this.world = world; this.decals = new DecalLayer(tex.decals_atlas); scene.add(this.decals.mesh);       // marks that stay (PT-021): what the map started with, then what the events leave
+    if (tex.decals_floor_atlas && !map.noFloorMarks) { this.floorMarks = new DecalLayer(tex.decals_floor_atlas, { rings: { [FLOORMARKS.ring]: FLOORMARKS.cap }, emissive: 0x141414, order: 0.5 }); this.floorMarks.addAll(floorMarks(map)); scene.add(this.floorMarks.mesh); }          // PT-063 (V6b, "floors are flat"): what a floor is made of decides the marks it carries (floorscatter.js), under the blood
     { let s = 12345; this.decals.addAll(decalsAtLoad(map, () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; })); }
     this.sky = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex['sky_' + (map.atmosphere.sky ?? 'dusk')] ?? tex.sky_dusk, side: THREE.BackSide, fog: false, depthWrite: false }));
     this.sky.renderOrder = -1; scene.add(this.sky);

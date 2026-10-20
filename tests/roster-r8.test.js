@@ -37,7 +37,16 @@ test('a player who MOVES after the line freezes is not hit; one who stays is', (
 });
 test('cover stops it: a wall between them and there is no tell; and it backs away from a player who closes in', () => {
   const behind = world([['marksman', 25]], 12), m1 = of(behind, 'marksman'); wake(behind, m1); const ev = run(behind, 60 * 4); assert.equal(ev.filter((e) => e.type === 'snipe_tell').length, 0, 'it cannot see through a wall');
-  const w = world([['marksman', 8]]), m = of(w, 'marksman'); wake(w, m); const x0 = m.x; run(w, 60 * 2); assert.ok(m.x > x0 + 2, 'too close (10 m): it backs off, ' + (m.x - x0).toFixed(1) + ' m');
+  const w = world([['marksman', 7]]), m = of(w, 'marksman'); wake(w, m); const x0 = m.x; run(w, 60 * 3); assert.ok(m.x > x0 + 1.5, 'too close (8 m, inside its minimum): it opens the range, ' + (m.x - x0).toFixed(1) + ' m');
+});
+test('PT-064 (the owner: "sniper moves clunky"): it TURNS and runs to open the range, it does not walk backwards facing you; it settles, and a walled-in one stands and shoots instead of rushing you', () => {
+  const w = world([['marksman', 7]]), m = of(w, 'marksman'); wake(w, m); let px = m.x, pz = m.z, backward = 0, moving = 0, runTicks = 0;
+  for (let i = 0; i < 60 * 4; i++) { run(w, 1); const vx = m.x - px, vz = m.z - pz, sp = Math.hypot(vx, vz) * 60; px = m.x; pz = m.z; if (m.snipeRun) runTicks++; if (sp > 0.3) { moving++; const head = Math.atan2(vx, vz); if (Math.abs(Math.atan2(Math.sin(head - m.yaw), Math.cos(head - m.yaw))) > 2.2) backward++; } }
+  assert.ok(runTicks > 30, 'it ran: ' + runTicks); assert.ok(moving > 30 && backward === 0, 'it never moved against its own facing: ' + backward + ' of ' + moving);
+  assert.ok(Math.hypot(w.player.x - m.x, w.player.z - m.z) >= ENEMIES.marksman.snipe.min, 'it opened the range to where it can shoot');
+  // walled in: a wall right behind it blocks every heading, so it stands its ground and takes a point-blank shot (a tell you can dodge); it does not walk up to you
+  const c = world([['marksman', 7]], 8), cm = of(c, 'marksman'); wake(c, cm); const evs = run(c, 60 * 5); const d0 = Math.hypot(c.player.x - cm.x, c.player.z - cm.z);
+  assert.ok(evs.some((e) => e.type === 'snipe_tell'), 'it tells even inside its minimum, because it cannot get away'); assert.ok(d0 > 3, 'and it never walked up to melee: ' + d0.toFixed(1) + ' m');
 });
 test('a world with no Marksman never has the lazy fields', () => { const w = world([['tollbearer', 25], ['bellhand', 30]]); run(w, 60 * 5); for (const e of w.enemies) { assert.equal('snipeT' in e, false); assert.equal('healTarget' in e, false); } });
 

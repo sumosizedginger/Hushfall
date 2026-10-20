@@ -2,18 +2,18 @@
   "mapId": "C2M17",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "8c178d9",
+  "codeVersion": "0626ee6",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "8bcb1d156c10ca18",
-  "assetVersion": "bf82a62145a98119",
-  "engineSha": "131f6a08f0aa9d10",
+  "assetVersion": "df26bcd4e6468f58",
+  "engineSha": "ac1c0dc7b5c86aff",
   "sources": {
-    "engine": "131f6a08f0aa9d10",
-    "render": "f92421e9caca120f",
-    "game": "916deaa70b210e77",
-    "audio": "340f781bb8fac543",
-    "assets": "bf82a62145a98119"
+    "engine": "ac1c0dc7b5c86aff",
+    "render": "121e8451667df0e4",
+    "game": "ccd87423b605a31a",
+    "audio": "42c8d2620df85bc2",
+    "assets": "df26bcd4e6468f58"
   },
   "routesSha": "61a66aec420c960e",
   "loads": true,
@@ -52,7 +52,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 9000,
-      "finalHash": "fface2f4",
+      "finalHash": "c779c86b",
       "kills": 55,
       "secrets": 0,
       "items": 5,
@@ -88,14 +88,14 @@
       "file": "routes/C2M17.secret.route.json",
       "difficulty": "hard",
       "seed": 1,
-      "policy": "strafing",
-      "result": "complete",
-      "ticks": 9836,
-      "finalHash": "784dd8fb",
-      "kills": 56,
-      "secrets": 1,
-      "items": 4,
-      "damageTaken": 133
+      "policy": "standing",
+      "result": "dead",
+      "ticks": 2828,
+      "finalHash": "365f5f4a",
+      "kills": 19,
+      "secrets": 0,
+      "items": 0,
+      "damageTaken": 109
     }
   ],
   "canonicalRoute": {
@@ -283,12 +283,12 @@
         "exit": "exit0",
         "result": "route-ended",
         "failure": null,
-        "ticks": 4564,
+        "ticks": 4411,
         "seeds": [
           "1:route-ended",
-          "2:bot-failed",
-          "3:route-ended",
-          "4:bot-failed"
+          "2:route-ended",
+          "3:bot-failed",
+          "4:route-ended"
         ]
       }
     ],
@@ -351,8 +351,8 @@
       },
       {
         "name": "route C2M17.secret.route.json on hard reaches the exit",
-        "ok": true,
-        "detail": "163.9 s (strafing)"
+        "ok": false,
+        "detail": "47.1 s"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 117 damage)",

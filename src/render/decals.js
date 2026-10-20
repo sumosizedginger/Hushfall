@@ -8,17 +8,18 @@ const INSET = 0.5 / 256;                                                        
 const smooth = (t) => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
 
 export class DecalLayer {
-  constructor(atlas) {
+  /** `opts.rings` the name -> capacity of each ring (the event marks' three by default; the floor marks of floorscatter.js have one), `opts.emissive` how much of the atlas shows in the dark, `opts.order` the draw order (the floor marks go under the blood) */
+  constructor(atlas, opts = {}) {
     this.rings = {}; let base = 0;
-    for (const [name, cap] of Object.entries(DECALS.rings)) { this.rings[name] = { base, cap, next: 0 }; base += cap; }
+    for (const [name, cap] of Object.entries(opts.rings ?? DECALS.rings)) { this.rings[name] = { base, cap, next: 0 }; base += cap; }
     this.total = base; this.time = 0; this.items = new Array(base).fill(null); this.growing = new Set();
     this.pos = new Float32Array(base * 12); this.nor = new Float32Array(base * 12); this.uv = new Float32Array(base * 8); this.col = new Float32Array(base * 16);
     const idx = new Uint16Array(base * 6); for (let i = 0; i < base; i++) idx.set([i * 4, i * 4 + 1, i * 4 + 2, i * 4, i * 4 + 2, i * 4 + 3], i * 6);
     const g = this.geometry = new THREE.BufferGeometry();
     for (const [name, arr, n] of [['position', this.pos, 3], ['normal', this.nor, 3], ['uv', this.uv, 2], ['color', this.col, 4]]) { const a = new THREE.BufferAttribute(arr, n); a.setUsage(THREE.DynamicDrawUsage); g.setAttribute(name, a); }
     g.setIndex(new THREE.BufferAttribute(idx, 1));
-    this.material = new THREE.MeshLambertMaterial({ map: atlas, emissive: 0x303030, emissiveMap: atlas, vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });       // emissive: a stain keeps some of its own colour in a dark room
-    this.mesh = new THREE.Mesh(g, this.material); this.mesh.renderOrder = 1; this.mesh.frustumCulled = false;
+    this.material = new THREE.MeshLambertMaterial({ map: atlas, emissive: opts.emissive ?? 0x303030, emissiveMap: atlas, vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });       // emissive: a stain keeps some of its own colour in a dark room
+    this.mesh = new THREE.Mesh(g, this.material); this.mesh.renderOrder = opts.order ?? 1; this.mesh.frustumCulled = false;
   }
 
   /** put one mark down (a spec from decalplace.js); the ring's oldest is overwritten when it is full. Returns the slot. */

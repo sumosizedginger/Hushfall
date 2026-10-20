@@ -59,4 +59,74 @@ export const recipesPT63 = {
       for (let i = 0; i < 70; i++) dot(g.rnd(0, w), g.rnd(0, h), g.rnd(0.7, 1.5), pick(g, ['#fff0d8', '#ffd890', '#9ffff0']), g.rnd(24, 80));                          // the grain of the air
     }),
   },
+
+  // PT-063 (V6b of the visual plan: "floors are flat"): THE FLOOR MARKS. A second 4 x 4 atlas of 64 px cells, transparent, painted as plain ink and chips (like `decals_atlas`, which keeps the marks that EVENTS leave): what the floors of a place carry before anyone
+  // fights on them. Scattered at load by src/render/floorscatter.js, family by family (wood, stone, metal, earth, soft, organic: FLOOR_FAMILY in that file), tinted at run time. Cells: 0 plank seams, 1 an iron grate, 2 a crack, 3 a cracked web, 4 a puddle, 5 a long puddle,
+  // 6 rubble, 7 a coil of rope, 8 a drain, 9 tile seams crossing, 10 a drift of dust, 11 a rust stain, 12 a chalk tally (the count: four bars and a stroke), 13 boot prints, 14 a patch of soot and ash, 15 straw and litter.
+  decals_floor_atlas: {
+    seed: 6302, width: 256, height: 256, transparent: true,
+    draw: R((g) => {
+      const W2 = g.p.width / 2, H2 = g.p.height / 2;
+      const dot = (x, y, d, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, d, d); g.p.pop(); };
+      const oval = (x, y, ww, hh, c, a) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const seg = (x1, y1, x2, y2, c, wt, a = 255) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 - W2, y1 - H2, x2 - W2, y2 - H2); g.p.pop(); };
+      const ringO = (x, y, ww, hh, c, a, wt) => { g.p.push(); g.p.noFill(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.ellipse(x - W2, y - H2, ww, hh); g.p.pop(); };
+      const tri = (x1, y1, x2, y2, x3, y3, c, a = 255) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.triangle(x1 - W2, y1 - H2, x2 - W2, y2 - H2, x3 - W2, y3 - H2); g.p.pop(); };
+      const box = (x, y, ww, hh, c, a = 255) => { tri(x, y, x + ww, y, x + ww, y + hh, c, a); tri(x, y, x + ww, y + hh, x, y + hh, c, a); };
+      const cellAt = (i) => [(i % 4) * 64 + 32, Math.floor(i / 4) * 64 + 32];
+      const wobble = (x1, y1, x2, y2, n, amp) => { const pts = [[x1, y1]]; for (let k = 1; k < n; k++) { const t = k / n; pts.push([x1 + (x2 - x1) * t + g.rnd(-amp, amp), y1 + (y2 - y1) * t + g.rnd(-amp, amp)]); } pts.push([x2, y2]); return pts; };
+      const crack = (pts, wt, a) => { for (let k = 0; k < pts.length - 1; k++) { seg(pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1], '#0a0908', wt, a); seg(pts[k][0] + 1, pts[k][1] + 1, pts[k + 1][0] + 1, pts[k + 1][1] + 1, '#c4bca8', Math.max(0.6, wt * 0.45), a * 0.4); } };
+      { const [cx, cy] = cellAt(0);                                                                           // plank seams: two long dark joints with a pale lip and the heads of nails
+        for (const dy of [-10, 9]) { seg(cx - 31, cy + dy, cx + 31, cy + dy + g.rnd(-1, 1), '#0b0907', 2.8, 235); seg(cx - 31, cy + dy + 1.8, cx + 31, cy + dy + 1.8, '#a89478', 1.1, 110); }
+        for (const [nx, ny] of [[-23, -10], [3, -9], [24, -10], [-18, 9], [11, 10], [27, 9]]) { dot(cx + nx, cy + ny, 3.2, '#16110d', 235); dot(cx + nx - 0.6, cy + ny - 0.6, 1.2, '#b8a888', 180); }
+        for (let k = 0; k < 7; k++) { const x = cx - 28 + k * 9 + g.rnd(-2, 2); seg(x, cy - 7 + g.rnd(-1, 1), x + g.rnd(4, 9), cy - 6 + g.rnd(-1, 1), '#2a2018', 0.9, 90); } }
+      { const [cx, cy] = cellAt(1);                                                                           // a grate: a dark frame, six bars of dull metal, a lip of light on two edges
+        box(cx - 27, cy - 27, 54, 54, '#08090b', 240); box(cx - 24, cy - 24, 48, 48, '#13161a', 245);
+        for (let k = 0; k < 6; k++) { const x = cx - 21 + k * 8.4; box(x, cy - 24, 4.6, 48, '#4a4f56', 240); box(x, cy - 24, 1.4, 48, '#8a9098', 190); }
+        seg(cx - 27, cy - 27, cx + 27, cy - 27, '#7a8088', 1.6, 200); seg(cx - 27, cy - 27, cx - 27, cy + 27, '#7a8088', 1.6, 200); for (let k = 0; k < 4; k++) dot(cx + (k % 2 ? 24 : -24), cy + (k < 2 ? -24 : 24), 2.8, '#1a1c20', 240); }
+      { const [cx, cy] = cellAt(2); crack(wobble(cx - 31, cy + 4, cx + 31, cy - 5, 9, 4.5), 2.2, 235);       // a crack: one meandering line, two short branches
+        crack(wobble(cx - 4, cy + 1, cx + 6, cy + 24, 4, 3), 1.5, 215); crack(wobble(cx + 12, cy - 2, cx + 26, cy - 22, 4, 3), 1.3, 200); for (let k = 0; k < 6; k++) dot(cx + g.rnd(-26, 26), cy + g.rnd(-8, 10), g.rnd(1.2, 2.6), '#cfc8b4', 160); }
+      { const [cx, cy] = cellAt(3);                                                                           // a cracked web: arms from where something struck, each forking once, pale chips round the middle
+        for (let k = 0; k < 6; k++) { const a = k / 6 * 6.28 + g.rnd(-0.3, 0.3), l = g.rnd(18, 30), ex = cx + Math.cos(a) * l, ey = cy + Math.sin(a) * l; crack(wobble(cx, cy, ex, ey, 4, 2.4), 1.9, 235); const b = a + g.rnd(-0.7, 0.7); crack(wobble(cx + Math.cos(a) * l * 0.5, cy + Math.sin(a) * l * 0.5, cx + Math.cos(b) * l * 0.95, cy + Math.sin(b) * l * 0.95, 3, 2), 1.2, 200); }
+        dot(cx, cy, 9, '#0a0908', 235); for (let k = 0; k < 9; k++) { const a = g.rnd(0, 6.28), l = g.rnd(6, 15); dot(cx + Math.cos(a) * l, cy + Math.sin(a) * l, g.rnd(1.6, 3.6), '#cfc8b4', 190); } }
+      { const [cx, cy] = cellAt(4);                                                                           // a puddle: lobed, dark water with a cooler middle and a bright arc where the light sits
+        const lobes = []; for (let k = 0; k < 12; k++) { const a = k / 12 * 6.28, r = 17 + g.rnd(-4, 6); lobes.push([cx + Math.cos(a) * r * 0.85, cy + Math.sin(a) * r * 0.7, g.rnd(13, 20)]); }
+        for (const [x, y, d] of lobes) dot(x, y, d, '#070d12', 215); dot(cx, cy, 34, '#070d12', 215); for (const [x, y, d] of lobes) dot(x * 0.8 + cx * 0.2, y * 0.8 + cy * 0.2, d * 0.8, '#13242f', 190); dot(cx, cy, 26, '#1c3442', 175);
+        for (let k = 0; k < 7; k++) { const a = 3.5 + k * 0.2; dot(cx + Math.cos(a) * 15, cy + Math.sin(a) * 12, g.rnd(2.2, 4.4), '#d4ecf4', 150); } }
+      { const [cx, cy] = cellAt(5);                                                                           // a long puddle: a flat string of lobes with a thin bright line along the top
+        for (let k = 0; k < 9; k++) { const t = k / 8, x = cx - 27 + t * 54, d = 9 + 13 * Math.sin(Math.PI * Math.min(1, t * 1.05)); dot(x, cy + g.rnd(-2, 2), d, '#070d12', 210); dot(x, cy + g.rnd(-1, 1), d * 0.72, '#16293a', 185); }
+        seg(cx - 20, cy - 6, cx + 12, cy - 7, '#d4ecf4', 1.4, 150); dot(cx + 14, cy - 5, 3, '#ecfaff', 160); }
+      { const [cx, cy] = cellAt(6);                                                                           // rubble: angular chips and a few stones, each with a shadow
+        const chip = (x, y, d, c, a) => { const pts = []; for (let k = 0; k < 4; k++) { const an = k / 4 * 6.28 + g.rnd(-0.5, 0.5), r = d * g.rnd(0.55, 1); pts.push([x + Math.cos(an) * r, y + Math.sin(an) * r * 0.85]); } tri(pts[0][0], pts[0][1], pts[1][0], pts[1][1], pts[2][0], pts[2][1], c, a); tri(pts[0][0], pts[0][1], pts[2][0], pts[2][1], pts[3][0], pts[3][1], c, a); };
+        for (let k = 0; k < 17; k++) { const x = cx + g.rnd(-26, 26), y = cy + g.rnd(-24, 24), d = g.rnd(2.6, 8.5) * (k < 4 ? 1.4 : 1); chip(x + 1.3, y + 1.5, d, '#0a0908', 150); chip(x, y, d, k % 3 ? '#8d8574' : '#b1a88f', 240); chip(x - d * 0.2, y - d * 0.22, d * 0.5, '#d8d0bc', 170); } }
+      { const [cx, cy] = cellAt(7);                                                                           // a coil of rope: three turns of a thick strand, a dark twist across each, one tail
+        for (let k = 0; k < 3; k++) { const r = 24 - k * 7; ringO(cx, cy, r * 2, r * 1.5, '#0a0806', 255, 6.4); ringO(cx, cy, r * 2, r * 1.5, '#a8895a', 255, 4.6); ringO(cx, cy - 1, r * 2 - 2, r * 1.5 - 2, '#d0b480', 150, 1.4); for (let j = 0; j < 14; j++) { const a = j / 14 * 6.28; seg(cx + Math.cos(a) * r - 1, cy + Math.sin(a) * r * 0.75 - 1.2, cx + Math.cos(a) * r + 1.4, cy + Math.sin(a) * r * 0.75 + 1.2, '#3a2c1a', 1, 200); } }
+        seg(cx + 18, cy + 8, cx + 29, cy + 21, '#0a0806', 6, 255); seg(cx + 18, cy + 8, cx + 29, cy + 21, '#a8895a', 4.2, 255); seg(cx + 28, cy + 21, cx + 31, cy + 25, '#d0b480', 3, 255); }
+      { const [cx, cy] = cellAt(8);                                                                           // a drain: an iron disc, a rim, eight slots
+        dot(cx, cy, 50, '#08090b', 240); dot(cx, cy, 44, '#161a1f', 245); ringO(cx, cy, 46, 46, '#555b63', 230, 3); for (let k = 0; k < 8; k++) { const a = k / 8 * 6.28 + 0.2; seg(cx + Math.cos(a) * 6, cy + Math.sin(a) * 6, cx + Math.cos(a) * 17, cy + Math.sin(a) * 17, '#030405', 4, 245); }
+        dot(cx, cy, 8, '#5c626a', 235); dot(cx - 1, cy - 1, 3, '#aab0b8', 200); for (let k = 0; k < 6; k++) { const a = 3.6 + k * 0.18; dot(cx + Math.cos(a) * 21, cy + Math.sin(a) * 21, 2.2, '#9aa0a8', 170); } }
+      { const [cx, cy] = cellAt(9);                                                                           // tile seams: a cross of joints that do not quite meet, a pale lip, one chipped corner
+        for (const [x1, y1, x2, y2] of [[-31, -1, 29, 1], [-1, -31, 2, 29]]) { seg(cx + x1, cy + y1, cx + x2, cy + y2, '#0b0907', 2.4, 215); seg(cx + x1 + 1.4, cy + y1 + 1.4, cx + x2 + 1.4, cy + y2 + 1.4, '#a8a08c', 1, 100); }
+        for (let k = 0; k < 5; k++) dot(cx + 3 + g.rnd(0, 8), cy + 3 + g.rnd(0, 8), g.rnd(1.4, 3), '#d0c8b4', 170); }
+      { const [cx, cy] = cellAt(10);                                                                          // a drift of dust: a soft lens of pale grain with a few clean ridges
+        for (let k = 0; k < 28; k++) { const t = g.rnd(-1, 1), x = cx + t * 29, y = cy + g.rnd(-1, 1) * 11 * (1 - Math.abs(t) * 0.6); dot(x, y, g.rnd(7, 16), '#dccfae', 36); }
+        for (let k = 0; k < 5; k++) { const y = cy - 8 + k * 4 + g.rnd(-1, 1); seg(cx - 20 + g.rnd(0, 8), y, cx + 8 + g.rnd(0, 14), y + g.rnd(-1, 1), '#efe4c4', 1.1, 80); } }
+      { const [cx, cy] = cellAt(11);                                                                          // a rust stain: a bloom at the foot of a streak that ran down from a joint
+        for (let k = 0; k < 7; k++) { const x = cx - 8 + k * 2.6 + g.rnd(-1, 1); seg(x, cy - 28, x + g.rnd(-1.4, 1.4), cy - 28 + g.rnd(26, 50), '#6a2e14', g.rnd(1.6, 3.4), g.rnd(70, 130)); }
+        for (let k = 0; k < 16; k++) { const a = g.rnd(0, 6.28), r = 16 * Math.sqrt(g.rnd(0, 1)); dot(cx + Math.cos(a) * r, cy + 12 + Math.sin(a) * r * 0.6, g.rnd(8, 18), k % 3 ? '#7a3a1c' : '#4a200e', 62); } }
+      { const [cx, cy] = cellAt(12);                                                                          // a chalk tally: two sets of five (four bars and the stroke across), the strokes a little uneven
+        for (let grp = 0; grp < 2; grp++) { const ox = cx - 22 + grp * 24, oy = cy - 14 + grp * 10; for (let k = 0; k < 4; k++) { const x = ox + k * 4.8 + g.rnd(-0.6, 0.6); seg(x, oy + g.rnd(-1, 1), x + g.rnd(-0.8, 0.8), oy + 22 + g.rnd(-1, 1), '#f2eee2', g.rnd(1.7, 2.4), g.rnd(190, 235)); }
+          seg(ox - 3, oy + 19 + g.rnd(-1, 1), ox + 19, oy + 3 + g.rnd(-1, 1), '#f2eee2', 2, 225); }
+        for (let k = 0; k < 12; k++) dot(cx + g.rnd(-30, 30), cy + g.rnd(-26, 26), g.rnd(0.9, 2), '#e6e2d4', 120); }
+      { const [cx, cy] = cellAt(13);                                                                          // boot prints: two soles walking away, a heel and a sole each, a little dirt thrown off
+        for (const [dx, dy, rot] of [[-9, 10, -0.18], [10, -9, 0.14]]) { const co = Math.cos(rot), si = Math.sin(rot), at = (u, v) => [cx + dx + u * co - v * si, cy + dy + u * si + v * co]; const [sx, sy] = at(0, -6), [hx, hy] = at(0, 12); oval(sx, sy, 13, 21, '#0c0b0a', 175); oval(hx, hy, 11, 9, '#0c0b0a', 175); oval(sx, sy - 2, 7, 11, '#2a2622', 110); }
+        for (let k = 0; k < 8; k++) dot(cx + g.rnd(-24, 24), cy + g.rnd(-24, 24), g.rnd(1, 2.6), '#1a1612', 150); }
+      { const [cx, cy] = cellAt(14);                                                                          // soot and ash: a dark smudge made of many faint dots, grey flecks round the edge
+        for (let k = 0; k < 26; k++) { const a = g.rnd(0, 6.28), r = 22 * Math.sqrt(g.rnd(0, 1)); dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.8, g.rnd(9, 20), '#0a0908', 52); }
+        for (let k = 0; k < 18; k++) { const a = g.rnd(0, 6.28), r = g.rnd(8, 28); dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.85, g.rnd(1, 3.4), k % 2 ? '#8a847a' : '#bcb6aa', 120); } }
+      { const [cx, cy] = cellAt(15);                                                                          // straw and litter: short pale strands lying every way, a few darker flecks
+        for (let k = 0; k < 20; k++) { const a = g.rnd(0, 6.28), l = g.rnd(6, 15), x = cx + g.rnd(-22, 22), y = cy + g.rnd(-22, 22); seg(x, y, x + Math.cos(a) * l, y + Math.sin(a) * l, k % 4 ? '#b89c5a' : '#8a7440', g.rnd(1.2, 2), 225); }
+        for (let k = 0; k < 7; k++) dot(cx + g.rnd(-24, 24), cy + g.rnd(-24, 24), g.rnd(2, 4), '#5a6a30', 190); }
+    }),
+  },
 };

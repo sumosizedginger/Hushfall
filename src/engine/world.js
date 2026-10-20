@@ -745,6 +745,19 @@ function retreatStep(w, e, def, dt) {
   return false;
 }
 
+/** PT-064 (reposition.js): a heading away from the player that is open for a metre and a half, tried nearest the straight line away first (or round `prefer`); null when the creature is walled in */
+function openHeading(w, e, def, prefer) {
+  const base = prefer ?? Math.atan2(e.x - w.player.x, e.z - w.player.z);
+  for (const off of [0, 0.4, -0.4, 0.8, -0.8, 1.1, -1.1]) { const a = base + off; if (!blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e)) return a; }
+  return null;
+}
+function moveAlong(w, e, def, dt, a, k) {
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e) * k, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+  if (blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) return false;
+  e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); return true;
+}
+const runCtx = (w, e, def, dt) => ({ freeHeading: (prefer) => (e.hold ? null : openHeading(w, e, def, prefer)), headingOpen: (a) => !blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e), moveAt: (a, k) => moveAlong(w, e, def, dt, a, k) });
+
 /** Warden-Graft: windup -> straight-line charge -> (hit the player | crash into geometry and stagger | give way to another body) */
 function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
   const C = e.chargeC ?? def.charge, p = w.player; e.chargeCd = Math.max(0, (e.chargeCd || 0) - dt);
@@ -1066,7 +1079,7 @@ function updateEnemy(w, e, diff, dt) {
   e.y = groundAt(w, e.x, e.z, def.radius);                                         // every state rides a moving floor: a corpse, a staggered Warden or a ring node on the funicular car keep standing on it
   if (def.bell) bellMotion({ w, e, def, dt, groundAt: (x, z, r) => groundAt(w, x, z, r) });          // PT-043: the Root Bell's clapper hangs on a pendulum (rootbell.js): its place is a function of the clock
   if (e.state === 'dead') { e.dead = Math.min(1, e.dead + dt / 0.9); e.walk *= 0.9; return; }
-  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.snipeT !== undefined) { e.snipeT = -1; e.snipeAim = null; } if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
+  if ((e.stunT || 0) > 0) { e.stunT -= dt; e.walk *= 0.9; e.attackT = -1; e.chargeT = -1; e.pulseT = -1; e.lungeT = -1; e.lungeHit = false; e.burstLeft = 0; if (e.snipeT !== undefined) { e.snipeT = -1; e.snipeAim = null; } e.snipeRun = false; if (e.broodT !== undefined) e.broodT = -1; if (e.echoT > 0) e.echoT = 0; return; }          // staggered: it does nothing
   if ((def.spawner || def.feeds) && e.hold !== 'inert') vatStep(w, e, def, diff, dt);                                   // PT-030: a Brood Vat swells and births while it is awake; it never fights
   if (def.node) return;
   if (w.map.hasCurrent && e.state !== 'idle' && !def.flying && !e.hold && def.speed > 0) flowPush(w, e, def.radius, dt);          // PT-037: a walker in a current is carried by it (a sleeper is not: it lies where the map put it)
@@ -1089,14 +1102,14 @@ function updateEnemy(w, e, diff, dt) {
   if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
   const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
-  if (e.attackT < 0 && !dashing && e.hold !== 'fixed') e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);
+  if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js)
   e.cd = Math.max(0, e.cd - dt);
   if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
   if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
-  if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)) })) return;          // PT-060: the Marksman's shot
-  if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
+  if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), ...runCtx(w, e, def, dt) })) return;          // PT-060: the Marksman's shot
+  if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, ...runCtx(w, e, def, dt), retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
   if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, Math.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;

@@ -2,12 +2,13 @@
 // FREEZES for `lock` s, then the shot goes down the frozen line: it hits only if you are still within `width` m of it and nothing solid is between. So a player who moves after the line freezes is not hit (the enemy design rule: every ranged attack can be dodged by
 // moving and hits a stationary target), and cover blocks it. It keeps its distance (`keep`), walks back from you, and fights with its hands only if it is cornered. Pure: the world's own functions come in through `ctx`. Lazy fields on the creature: `snipeT` (-1 none, else seconds into a shot),
 // `snipeCd`, `snipeAim` ([x, y, z]: where the line points), `snipeLost`.
+import { runAway } from './reposition.js';
 export function snipeStep(ctx) {
   const { w, e, def, diff, dt, sees, dist, emit, hurt, rayClear, retreat } = ctx, S = def.snipe, p = w.player;
   e.snipeCd = Math.max(0, (e.snipeCd ?? 1.2) - dt);
   const muzzle = () => [e.x + Math.sin(e.yaw) * 0.5, e.y + (S.muzzleY ?? 1.7), e.z + Math.cos(e.yaw) * 0.5];
   if ((e.snipeT ?? -1) >= 0) {
-    e.snipeT += dt; e.walk *= 0.85;
+    e.snipeT += dt; e.walk = Math.max(0, e.walk - dt * 6); e.snipeRun = false;
     if (!sees) { e.snipeLost = (e.snipeLost ?? 0) + dt; if (e.snipeLost > 0.5) { e.snipeT = -1; e.snipeAim = null; e.snipeCd = 1; return true; } } else e.snipeLost = 0;
     if (e.snipeT < S.track && sees) e.snipeAim = [p.x, p.y + S.aimHeight, p.z];          // the line follows you...
     if (e.snipeT >= S.track + S.lock) {                                                      // ...and then it goes down the line it froze on
@@ -22,8 +23,14 @@ export function snipeStep(ctx) {
     }
     return true;
   }
-  if (sees && e.snipeCd <= 0 && dist >= S.min && dist <= S.max) { e.snipeT = 0; e.snipeLost = 0; e.snipeAim = [p.x, p.y + S.aimHeight, p.z]; emit(w, 'snipe_tell', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
-  if (sees && dist < S.keep && retreat()) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }       // too close: it backs off (cornered, it fights with its hands: the caller falls through)
-  if (sees && dist <= S.max * 0.85 && dist >= S.keep) { e.walk = Math.max(0, e.walk - dt * 3); return true; }                          // at its range: it stands and waits for the shot
+  const begin = () => { e.snipeT = 0; e.snipeLost = 0; e.snipeAim = [p.x, p.y + S.aimHeight, p.z]; emit(w, 'snipe_tell', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; };
+  if (sees && e.snipeCd <= 0 && dist >= S.min && dist <= S.max) return begin();
+  if (runAway(ctx, S.keep, 2.5, 4)) return true;                                                                                          // too close: it turns and RUNS to open the range (PT-064: it no longer walks backwards facing you); walled in, it fights with its hands: the caller falls through
+  if (sees && dist < S.keep) {                                                                                                             // walled in, or catching its breath after a run that got nowhere: it stands its ground and a point-blank shot is allowed; in reach of its hands it fights with them
+    if (e.snipeCd <= 0 && dist >= 3) return begin();
+    if (dist <= def.attack.range + 0.3) return false;
+    e.walk = Math.max(0, e.walk - dt * 4); return true;
+  }
+  if (sees && dist <= S.max * 0.85 && dist >= S.keep) { e.walk = Math.max(0, e.walk - dt * 4); return true; }                          // at its range: it stands and waits for the shot
   return false;                                                                                                                          // too far, or out of sight: the ordinary chase
 }

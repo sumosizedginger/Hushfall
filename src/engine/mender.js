@@ -2,6 +2,7 @@
 // a second to the most hurt creature within `range` (one at a time, a visible tether), until that creature is whole. It keeps `keepAway` from you, stands behind the ones it tends and has nothing else to do: cornered it fights with its hands. It never mends a node, a boss, a spawner,
 // a peaceful creature, another Mender or a corpse. Pure: the world's own functions come in through `ctx`. Lazy fields on the creature: `healTarget` (an enemy id or null).
 import { ENEMIES } from './defs.js';
+import { runAway } from './reposition.js';
 
 const mendable = (o) => { const d = ENEMIES[o.kind]; return o.state !== 'dead' && o.state !== 'idle' && o.state !== 'calm' && o.state !== 'flee' && !d.node && !d.boss && !d.spawner && !d.peaceful && !d.heal; };
 export function healStep(ctx) {
@@ -15,7 +16,7 @@ export function healStep(ctx) {
     if (best) { t = best; e.healTarget = best.id; emit(w, 'mender_start', { id: e.id, x: e.x, z: e.z, tx: best.x, tz: best.z }); }
   }
   if (t) { t.hp = Math.min(full(t), t.hp + H.rate * dt); e.walk *= 0.85; }
-  if (sees && dist < H.keepAway && retreat()) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
+  if (runAway(ctx, H.keepAway, 1.5, 3)) return true;                                          // too close: it turns and runs (PT-064), it does not moonwalk; walled in, it fights with its hands
   if (t) return true;                                                                         // tending: it stands where it is
   // nothing to mend: it stays among the others, never walks up to you
   let ally = null; for (const o of w.enemies) if (o !== e && mendable(o) && (!ally || Math.hypot(o.x - e.x, o.z - e.z) < Math.hypot(ally.x - e.x, ally.z - e.z))) ally = o;

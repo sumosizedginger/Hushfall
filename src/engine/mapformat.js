@@ -76,6 +76,7 @@ export class MapData {
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
     this.growth = src.growth || [];                                                      // where the Vael's growth started (PT-021): view data, the simulation never reads it
+    this.noFloorMarks = src.floorMarks === false;                                         // PT-063 (V6b): a map may say `floorMarks: false` and keep its floors clean (view data)
     this.decals = src.decals || [];                                                     // marks the map starts with (PT-021): view data, the simulation never reads it
     this.messages = (src.messages || []).map((m) => ({ ...m, x: (m.at[0] + 0.5) * this.cell, z: (m.at[1] + 0.5) * this.cell, r: (m.radius ?? 2) * this.cell }));
     this.intro = src.intro ?? null; this.outro = src.outro ?? null;
