@@ -1,7 +1,7 @@
 {
   "mapId": "C2M17",
-  "when": "2026-10-20T05:00:28.564Z",
-  "commit": "333169f",
+  "when": "2026-10-20T15:01:31.631Z",
+  "commit": "ed241a9",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -9,7 +9,7 @@
     "note": "NOT a real-GPU measurement"
   },
   "mapSha": "8bcb1d156c10ca18",
-  "routesSha": "61a66aec420c960e",
+  "routesSha": "76a35bbd37f84662",
   "sources": {
     "engine": "ac1c0dc7b5c86aff",
     "render": "73e56bb6b27ab29e",
@@ -27,18 +27,18 @@
       "agree": true,
       "kills": 56,
       "secrets": 0,
-      "wallSeconds": 4
+      "wallSeconds": 5
     },
     "secret": {
       "ok": true,
-      "ticks": 9424,
-      "hash": "06ebd89a",
-      "nodeTicks": 9424,
-      "nodeHash": "06ebd89a",
+      "ticks": 9979,
+      "hash": "c9e0d20d",
+      "nodeTicks": 9979,
+      "nodeHash": "c9e0d20d",
       "agree": true,
-      "kills": 56,
+      "kills": 57,
       "secrets": 1,
-      "wallSeconds": 4
+      "wallSeconds": 5
     }
   },
   "hud": {
@@ -90,7 +90,7 @@
     {
       "name": "real-game route C2M17.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9038 policy=strafing wall=4s"
+      "detail": "status=complete failed=null ticks=9038 policy=strafing wall=5s"
     },
     {
       "name": "real-game route C2M17.main: browser sim == Node sim (ticks + state hash)",
@@ -100,12 +100,12 @@
     {
       "name": "real-game route C2M17.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9424 policy=strafing wall=4s"
+      "detail": "status=complete failed=null ticks=9979 policy=strafing wall=5s"
     },
     {
       "name": "real-game route C2M17.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9424/06ebd89a vs node 9424/06ebd89a"
+      "detail": "browser 9979/c9e0d20d vs node 9979/c9e0d20d"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -153,5 +153,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 44
+  "wallSeconds": 56
 }
