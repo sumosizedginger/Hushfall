@@ -15,12 +15,18 @@ const legs = (R, hipsName, x, spec, footCell) => {
   for (const [n, s] of [['legA', -1], ['legB', 1]]) { R.limb(hipsName, n, [s * x, 0, 0], spec); R.box(n + 'M', spec.fw ?? 0.13, spec.fh ?? 0.08, spec.fl ?? 0.3, footCell, { pos: [0, -spec.b + 0.01, 0.06] }); }
 };
 /** a head on a neck: lumpy skull, hanging jaw with a dark mouth, sockets, teal light in the eye(s). eyes: 'one' (the screen-left socket lit), 'both' */
-const head = (R, C, { neckAt, r = 0.15, tall = 1.3, neck = 0.2, cell = C.skin, eyes = 'both', eyeX = 0.06, seed = 3 }) => {
+const head = (R, C, { neckAt, r = 0.15, tall = 1.3, neck = 0.2, cell = C.skin, eyes = 'both', eyeX = 0.06, seed = 3, brow = 0.3, teeth = true, nose = true }) => {
   R.joint('neck', 'spine', neckAt); R.cyl('neck', 0.055, 0.065, neck, 6, cell, { pos: [0, neck / 2 - 0.03, 0] });
   R.joint('head', 'neck', [0, neck - 0.04, 0]); R.lump('head', r, 1, 0.1, seed, cell, { pos: [0, r * 0.55, 0], scale: [0.85, tall, 1] });
   R.joint('jaw', 'head', [0, -0.05, r * 0.2]); R.box('jaw', r * 0.72, r * 0.9, r * 0.8, cell, { pos: [0, -r * 0.45, r * 0.3] }); R.box('jaw', r * 0.62, r * 0.62, 0.02, C.mouth, { pos: [0, r * 0.1, r * 0.64] });
   R.sph('head', r * 0.28, 5, 3, C.iron, { pos: [-eyeX, r * 0.72, r * 0.76] }); R.sph('head', r * 0.28, 5, 3, C.iron, { pos: [eyeX, r * 0.72, r * 0.76] });
   R.sph('head', r * 0.14, 4, 3, 'glow', { pos: [-eyeX, r * 0.72, r * 0.93] }); if (eyes === 'both') R.sph('head', r * 0.14, 4, 3, 'glow', { pos: [eyeX, r * 0.72, r * 0.93] });
+  // PT-065 (V8, "faceless teal-eyed heads"): a FACE and not a skull with two lit holes. A dark brow ridge over each socket, slanting down toward the nose (`brow` = the tilt in radians: positive is a scowl, negative worried, 0 flat), a wedge of nose, and teeth: four short fangs hanging from the lip and three rising from the jaw (`teeth: false` for a mild creature).
+  // Small static parts of the head and jaw joints: they merge into the head's meshes, add no hit volume and stay inside the head's silhouette.
+  { const f = r * 0.12, mouthTop = r * 0.41 - 0.05, mouthZ = r * 0.86;
+    for (const sx of [-1, 1]) R.box('head', r * 0.54, r * 0.11, r * 0.2, C.mouth, { pos: [sx * eyeX, r * 1.04, r * 0.84], rot: [0, 0, sx * brow] });
+    if (nose) R.cone('head', r * 0.1, r * 0.24, 4, cell, { pos: [0, r * 0.5, r * 0.88], rot: [PI / 2, 0, 0] });
+    if (teeth) { for (const x of [-0.3, -0.1, 0.1, 0.3]) R.cone('head', r * 0.036, f, 3, C.bone, { pos: [x * r, mouthTop - f / 2, mouthZ], rot: [PI, 0, 0] }); for (const x of [-0.2, 0, 0.2]) R.cone('jaw', r * 0.032, f * 0.8, 3, C.bone, { pos: [x * r, -r * 0.21 + f * 0.4, r * 0.66] }); } }
 };
 /** a hand: a lumpy palm and three bone fingers */
 const hand = (R, C, arm, { len, r = 0.075, finger = 0.2, cell = C.skin }) => { R.lump(arm + 'M', r, 0, 0.12, 5, cell, { pos: [0, -len, 0], scale: [0.95, 1.5, 0.78] }); for (const d of [-1, 0, 1]) R.cone(arm + 'M', 0.018, finger, 4, C.bone, { pos: [d * r * 0.5, -len - r * 1.4 - finger / 2 + 0.03, 0.01], rot: [PI, 0, 0] }); };
@@ -163,7 +169,7 @@ export function sexton(tex) {
     head(R, C, { neckAt: [0, 0.68, 0.04], r: 0.15, tall: 1.2, neck: 0.16, eyes: 'both' });
     R.cone('head', 0.21, 0.42, 7, C.robe, { pos: [0, 0.2, -0.06], rot: [0.25, 0, 0] });                                                                      // the hood
   }, (p, J, R) => {
-    const t = p.t, h = humanoidPose(p, J, { stoop: 0.38, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.35, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
     J.legA.rotation.x *= 0.5; J.legB.rotation.x *= 0.5;
     for (let i = 0; i < 5; i++) { const seq = p.attack > 0 ? 0.5 + 0.5 * S(t * 7 - i * 1.1) : 0.15 + 0.1 * S(t * 2 + i); J['mouth' + i].scale.setScalar(0.4 + 1.3 * seq); J['pipe' + i].rotation.z = -[0.3, 0.15, 0, -0.15, -0.3][i] + S(t * 1.2 + i) * 0.015; }
     J.censer.rotation.z = S(t * 1.5) * 0.15;
@@ -922,7 +928,7 @@ export function mender(tex) {
     R.tor('spine', 0.19, 0.03, 4, 12, C.cord, { pos: [0, 0.18, 0], rot: [PI / 2, 0, 0] }); R.tor('spine', 0.28, 0.03, 4, 12, C.cord, { pos: [0, -0.2, 0], rot: [PI / 2, 0, 0] });
     R.rag('spine', 0.1, 0.5, 0.04, 0.3, C.amber, { pos: [0, 0.44, 0.13] });                                                                                              // one amber stripe down the front
     for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.17, 0.46, 0], { a: 0.22, b: 0.24, r0: 0.04, r1: 0.035, r2: 0.03, cellA: C.robe, cellB: C.skin, seg: 6 }); hand(R, C, n, { len: 0.27, finger: 0.1, r: 0.045 }); }
-    head(R, C, { neckAt: [0, 0.5, 0.02], r: 0.17, tall: 1.05, neck: 0.1, eyes: 'both', eyeX: 0.07 });
+    head(R, C, { neckAt: [0, 0.5, 0.02], r: 0.17, tall: 1.05, neck: 0.1, eyes: 'both', eyeX: 0.07, brow: -0.18, teeth: false });
     R.cone('head', 0.2, 0.3, 8, C.robe, { pos: [0, 0.2, -0.05], rot: [0.3, 0, 0] });
     R.tor('head', 0.2, 0.02, 4, 12, C.amber, { pos: [0, 0.12, 0], rot: [PI / 2, 0, 0] });
     // THE STAFF AND ITS LANTERN: a thin pole in the free (right) hand, hooked at the top, an amber glass lantern hanging from the hook
