@@ -1287,14 +1287,14 @@
    "at": [30, 29],
    "radius": 3,
    "speaker": "INES",
-   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it is bare."
+   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it's bare."
   },
   {
    "id": "mother",
    "at": [43, 20],
    "radius": 5,
    "speaker": "INES",
-   "text": "It is a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Do not stand in the open."
+   "text": "It's a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Don't stand in the open."
   },
   {
    "id": "stash",
@@ -1308,7 +1308,7 @@
    "at": [43, 20],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The feeders are gone. All of them. Hit it, Calder, hit it with everything."
+   "text": "The feeders are gone. All of them. Now hit it with everything."
   },
   {
    "id": "broken",

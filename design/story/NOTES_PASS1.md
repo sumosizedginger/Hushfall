@@ -1,28 +1,46 @@
-# Story coherence pass, reading notes (R17, 2026-10-20). Working file: defects found while reading `RECORD.md` in play order, by kind. Becomes `CONTINUITY.md` and the edit table.
+# Story coherence pass, reading notes and what was done (R17, 2026-10-20)
 
-## Systemic (the same fault in many maps; fix by rule, not line by line)
-S1. **Next-map teaser said twice**: the last SIGNAL HOUSE line of a map names the next place and its feature, and the map's Outro says it again (C1E1M02, M04, M06 ...). Say it once: keep the Outro (it is the card between levels), make the last SIGNAL HOUSE line a different, local, procedural fact (or cut it).
-S2. **Intro card + opener + INES say the same thing** (C1E1M02 "The lamps are lit. Nobody lit them." in the card AND the opener; C1E1M06 "never left the quay" card + opener; C1E1M03 tried to run / herded x4; C1E2M08 every pipe / the whole Works feeds / the line comes in). Rule 6.
-S3. **Tic: "Whatever ..."** (Whatever runs it / they hid / slept here / comes down that ramp / the Mother was feeding / they kept). A mysterious unspecified referent, over and over. Count, then cut to a few.
-S4. **Tic: "Nobody ... / No one ..."** (Nobody lit them, Nobody rings the bells at night, Nobody signed, Nobody banked them, Nobody is pulling the rope, Signed for by no one). Some are the point (the bureaucratic horror); too many are the same shape.
-S5. **Meta words in the fiction**: "Episode three is a crater" (C1E2M08), "Episode one ends here" (C1E1M08 Outro), "Episode three: Landing Scar" (C1E2M08 Outro). Nobody in the world says "episode".
-S6. **Opener template**: nearly every SIGNAL HOUSE opener is "Calder, the <Map name>. <description>." A radio operator can open like that, but not 40 times with the same cadence.
-S7. **Pronoun for the Graft-Mother**: "it" (SIGNAL), "she" (INES, "break them and she is bare"), "the Mother", "her feeders" (objective). Pick one.
-S8. **Item pickup lines** have ad hoc speakers (BOAT HOOK, RIGGER'S HOOK, LAMPLIGHTER, HARBOUR GUARD, ROCKET APPARATUS, VAEL INSTRUMENT, TOOL LOCKER, HULL for the arc lamp) and carry control advice ("hold the trigger and let them run"). The Journal's Items page now carries how-to-use (itemhelp.js); keep one fact about what the thing is, drop the instruction.
-S9. **Speaker labels for Warden Calder**: WARDEN CALDER (a live voice: "You found it", "Go on") vs WARDEN CALDER'S LOG vs WARDEN LOG. A man who is not there speaks as if present.
+Working file. The first full read of `RECORD.md` (653 messages, 14,700 words, both campaigns, the cards and the cinematics) found the defects below, by kind. Each line says what was done and where. The edits are tables: `tools/dev/story-pass-2.mjs` (rewrites, deletions, reminders), `tools/dev/story-voice.mjs` (contractions); the engine feature is the message field `unless`; the ceilings that keep it fixed are `tests/story-coherence.test.js` and `tests/message-unless.test.js`; the facts are in `CONTINUITY.md`.
+
+## Systemic (the same fault in many maps; fixed by rule)
+| # | fault | measured | done |
+|---|---|---|---|
+| S1 | the next-map teaser said twice (the last operator line and the Outro) | 7 maps | the operator line cut or made local and distinct; `story-stats` `dupOutroMessage` = 0, held by a test |
+| S2 | the intro card, the opener and INES saying the same thing | 3 maps (and the Outro of C2M17, C2M18's opener) | one of each pair rewritten; `dupIntroMessage` = 0, held |
+| S3 | the "Whatever ..." tic | 30 lines | 0 (ceiling 2) |
+| S4 | "Nobody / No one" | 39 lines | 34; the rest are the point (the manifest, the cold open, the ending, the echoed opener); ceiling 36 |
+| S5 | "Episode three", "the first act" in the fiction | 5 lines | 0, held |
+| S6 | the opener template "Calder, the <Map>." | 21 lines | 1 ("Calder, the Choir grows ..."), ceiling 1 |
+| S7 | the Graft-Mother as it / she / the Mother | 4 lines | "it", and objectives name the Weeping Mother in full (held) |
+| S8 | item pickup lines with advice | 9 lines | read and kept: each says what the thing is and one fact about it; the Journal's Items page carries the how-to-use |
+| S9 | Warden Calder speaking as if present | 3 lines | speaker "WARDEN CALDER'S NOTE" (the Record sets notes apart); held |
+| S10 | **no contractions in 600 spoken lines** (one in the game), so INES and the operator read as written, and the Tender's own mark (no contractions) meant nothing | 1 in 600 | `story-voice.mjs`: 105 lines of INES, SIGNAL HOUSE and the lamp-hill survivors loosened by rule and a stable hash (not all: some stay formal, vows and dry lines are protected); HULL, the Silent, the Tender, plates, logs and cards stay formal |
+| S11 | a voice naming a key or a screen mark ("The lantern is L", "The mark on the screen") | 4 | 0, held; the objective line carries the key |
 
 ## Contradictions and unexplained terms
-C1. The lighthouse lamp: S01 intro says "a dark lamp"; SIGNAL HOUSE (M01) "I'll keep the lamp lit"; M07 "The lamp on the lighthouse is lit, Calder ... I keep it lit." From the Signal House, how? One line (a switch on the set, or a keeper) or change the verb.
-C2. LIGHTHOUSE KEEPER: in M04's secret "your father was not the only Calder who knew" (a different Calder), in S01 "Your father kept this cellar" (speaks of him in third person). Who is the Keeper?
-C3. "the firing" (SEVEN YEARS BEFORE THE FIRING; all of them before the firing; DRY SINCE THE SECOND FIRING): never defined. Define it once (the first lighting of the Works' kilns).
-C4. How SIGNAL HOUSE knows the inside of the Works (valve wheels on north walls): never said. One anchoring line in C1E2M01 (the Works plans are open on the table).
-C5. "They knew, Calder." (INES, C1E2S01): Ines addressing herself by her surname; reads as an error unless it is her father. Fix to "They knew."
-C6. Drone / hatchling / Drone-Gill / Gill: SIGNAL says "those were not drones, they were hatchlings", the objective says "flying Drone-Gills". Pick the names used on screen.
-C7. Warden: Ines is a Tide-Warden, her father Warden Calder, the plated enemy a Warden-Graft (a grafted Tide-Warden). The enemy is a person she knew; nobody says so, not once. Either one line (INES: a name on the plate) or leave and record as intentional.
+| # | fault | done |
+|---|---|---|
+| C1 | the lighthouse lamp "dark" (S01 intro) against the operator keeping it lit | S01 intro: "a lamp that flashes for no ship"; the operator is at the lighthouse on a battery set, so she keeps it lit by being there (C1E1M01, C1E1M07) |
+| C2 | who the Lighthouse Keeper is | Ines's grandmother, who kept the light before her son (C1E1M04 secret "I kept this light before him", C1E1S01 "I kept this cellar, and then your father did") |
+| C3 | "the firing", never defined | retired; "the kilns were lit" (C1E2S01, C1E2M02); held by a test |
+| C4 | how the operator knows the insides of places | she has the plan sheets (C1E1M02, C1E2M01) and from the ship on reads the Vael hum (C1E3M01); consistent with "on no plan I have" (C1E4S01) |
+| C5 | INES calling herself "Calder" (C1E2S01) | removed |
+| C6 | drones / hatchlings / Gills | "Gills" |
+| C7 | the plated enemy is a Tide-Warden and nobody says so | one line at the first (C1E1M06: "Somebody on the Board wore that, once.") |
+| C8 | "the Mother" for two creatures | objectives name the Weeping Mother / Graft-Mother in full; the note in CONTINUITY section 3 |
+| C9 | a Tide-Warden's message in orbit | "They took me up the cable." |
+| C10 | the Marrow Girl taken "through the Gate" before Ines opens it | "the sea opened under the keel"; held by a test |
+| C11 | INES says "the Fields, she said"; the Tender never said it | the Tender now says "Go on to the Fields" |
+| C12 | PELLEW's name on a fork plate (C2M04) while she writes logs to day 16 | AMBLER, T. BOSUN; held by a test |
+| C13 | the outros shift from "you" to "her" | C2M11, C2M14, C2S02 rewritten in the second person |
+| C14 | the Drowned wear Marrow boots long before Marrow's taking | read: they are the first night's people (LORE 2b); no change |
+| C15 | "sixteen singers" against "nine singers in three tiers" (C2M24) | nine; held |
+| C16 | **the call sign SIGNAL HOUSE and the map "Signal House"** | the operator is at the lighthouse; the Signal House is the ridge station with no mains (CONTINUITY section 1) |
+| C17 | **the goal of Campaign Two is not on the main path until Act D** (the Tender's account is in a secret) | C2M08 INES at the spire: "I think that is what holds the Gate open. I am going down." |
+| C18 | why Ines goes from the Bell Tower to the Salt Works, and from the Choir ships up the cable | C1E1M08 "I have its bearing: the Salt Works"; C1E4M01 "the call went up with it" |
 
-## Order and logic (a message fires at the wrong time; check the map source)
-L1. C1E1M07: RADIO SET "The set is cold. Three fuse sockets, all empty ... The lever waits" is delivered AFTER the set is live (route time 2:49, the set is live at 2:51). `radio-locked` must be suppressed once the fuses are in.
-L2. C1E1M08: INES "One bell down. The Cantor staggered when it broke. Keep cutting the ring." arrives at 2:52, after "The tower is silent" at 2:50. Check the trigger (the stagger event outlives the fight?).
-L3. Exporter: objectives are duplicated when the standing policy fails and the strafing one is played (two runs fill one list). Fixed in the tool.
+## Order and logic (a reminder said after the thing it reminds of)
+Fifteen reminders, one pattern: a position message about a locked gate that fired after the gate was open (C1E1M07 the cold radio, C1E1M08 "one bell down", C2M03, C2M09, C2M13, C2M17, C2M18, C2M19, C2M20, C2M21, C2M22, C2M25, C2M26, C2M27, C2M28). Fixed by the new message field `unless` (engine, validation, and `tests/message-unless.test.js`: each reminder is said to a player who comes early and held once its gate is open); the delivered-message checks do not require a reminder.
 
-(continues below as the reading goes on)
+## Left for the readers (R18) and the director
+Taste: the share of INES lines that open with a noun-phrase fragment ("A hall of cold marble ...") is about half, which is her voice and also a habit: the outside readers are asked to say where it tires. The Silent in the Mourning Halls: the plate says 6 (written again as 4), the text shows 3 or 6. The Tender's S01 account repeats a little of what the plates say. None of these is changed without a second opinion.

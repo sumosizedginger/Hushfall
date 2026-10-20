@@ -1273,7 +1273,7 @@
    "at": [3, 44],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, I have the hall's plan sheet. Keys upstairs, registry on the way out. I can tell you where things are. I cannot tell you what is standing in them."
+   "text": "Calder, I have the hall's plan sheet. Keys upstairs, registry on the way out. I can tell you where things are. I can't tell you what is standing in them."
   },
   {
    "id": "bond",
@@ -1294,7 +1294,7 @@
    "at": [26, 44],
    "radius": 4,
    "speaker": "INES",
-   "text": "Bells. Dozens of them, and every one in tune with the next. That is what wrong sounds like."
+   "text": "Bells. Dozens of them, and every one in tune with the next. That's what wrong sounds like."
   },
   {
    "id": "gallery",

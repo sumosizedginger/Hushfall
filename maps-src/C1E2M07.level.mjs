@@ -81,10 +81,10 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the lights are cut down here. Four breakers, one in each hall. Each one you throw wakes the hall ahead.' },
-    { id: 'dark', at: [12, 22], radius: 3, speaker: 'INES', text: 'The lanterns are ours, and they will not carry far. Count your ammunition before you throw the breaker. You cannot turn the light back off.' },
+    { id: 'dark', at: [12, 22], radius: 3, speaker: 'INES', text: 'The lanterns are ours, and they won\'t carry far. Count your ammunition before you throw the breaker. You can\'t turn the light back off.' },
     { id: 'vats', at: [26, 22], radius: 4, speaker: 'INES', text: 'Vats, and slurry up to the knee round them. Keep to the dry lanes: the cross in the middle.' },
     { id: 'tanks', at: [44, 22], radius: 4, speaker: 'INES', text: 'Bellhands behind the iron tanks. They hear you before they see you.' },
-    { id: 'heart', at: [57, 22], radius: 4, speaker: 'SIGNAL HOUSE', text: 'The sump heart. Every pipe in the Works ends in that wall. The cradles are warm, Calder: this is where the line starts.' },
+    { id: 'heart', at: [57, 22], radius: 4, speaker: 'SIGNAL HOUSE', text: 'The sump heart. The cradles are warm, Calder: this is where the line starts.' },
     { id: 'lit', at: [57, 18], radius: 0.1, speaker: 'INES', text: 'It is as bright as it gets. And that is the end of the dark: the hatch is open.' },
     { id: 'drain', at: [43, 34], radius: 2.5, speaker: "WARDEN CALDER'S NOTE", text: 'Slurry drains do not drain only slurry. I hid a week of supplies here when I was a younger man, in case the Works went bad.' },
   ],

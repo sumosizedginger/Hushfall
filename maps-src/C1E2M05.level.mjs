@@ -71,10 +71,10 @@ const MAP = {
     { type: 'switch', id: 'release', at: [62, 22], wall: 'east', do: [{ exit: { set: 'unlock' } }, { objective: 'The line is stopped. The exit is in the south-east corner of the table room' }, { shake: 1.5 }, { message: 'stopped' }] },
   ],
   messages: [
-    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'This is where the grafts are made, Calder. Do not run, do not fire. Nothing in here is awake yet.' },
+    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'This is where the grafts are made, Calder. Don\'t run, don\'t fire. Nothing in here is awake yet.' },
     { id: 'pods', at: [8, 22], radius: 3, speaker: 'INES', text: 'Pods. Hanging, like fruit. Something is moving in the nearest. Walk slowly.' },
     { id: 'aisle', at: [18, 22], radius: 3, speaker: 'INES', text: 'Rows of them. This is the line. They hang the shells here, and they put something else in the shells.' },
-    { id: 'hatch', at: [28, 22], radius: 0.1, speaker: 'INES', text: 'They are hatching. Not people, and nothing I know. Aim up: they are flying.' },
+    { id: 'hatch', at: [28, 22], radius: 0.1, speaker: 'INES', text: 'They are hatching. Not people, and nothing I know. Aim up: they\'re flying.' },
     { id: 'store', at: [18, 13], radius: 2.5, speaker: 'STORE LOG', text: 'SPARE SHELLS AND BELTS FOR THE NIGHT CREW. KEEP THE PANEL CLOSED: THE HATCHERY SMELLS.' },
     { id: 'table', at: [49, 22], radius: 4, speaker: 'INES', text: 'The graft table. This is where the shell is joined to what grows in the pod. The lever on the east wall stops the line.' },
     { id: 'stopped', at: [62, 22], radius: 0.1, speaker: 'SIGNAL HOUSE', text: 'The line is stopped. Calder, those Gills in the aisle were hatchlings. The Vael are growing their own now.' },

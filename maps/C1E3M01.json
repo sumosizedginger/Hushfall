@@ -687,14 +687,14 @@
    "at": [4, 22],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, I am reading the ship off its own hum, so you get its shape and not its contents. It came down in that bowl three nights ago, in the east wall."
+   "text": "Calder, I'm reading the ship off its own hum, so you get its shape and not its contents. It came down in that bowl three nights ago, in the east wall."
   },
   {
    "id": "sleepers",
    "at": [7, 20],
    "radius": 3,
    "speaker": "INES",
-   "text": "People, standing. They have been standing there since it landed. Do not wake them if you can help it."
+   "text": "People, standing. They have been standing there since it landed. Don't wake them if you can help it."
   },
   {
    "id": "rim",
@@ -708,7 +708,7 @@
    "at": [27, 22],
    "radius": 3,
    "speaker": "INES",
-   "text": "The ledges step down at the east end. If you can get up there they are close enough to hit with anything."
+   "text": "The ledges step down at the east end. If you can get up there they're close enough to hit with anything."
   },
   {
    "id": "breach",
@@ -743,7 +743,7 @@
    "at": [71, 22],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "Past that is the ship proper. Listen. It is breathing."
+   "text": "Past that is the ship proper. Listen. It's breathing."
   }
  ],
  "decals": [

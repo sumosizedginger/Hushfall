@@ -1724,7 +1724,7 @@
    "at": [20, 14],
    "radius": 4,
    "speaker": "INES",
-   "text": "Rows of bare slabs, the bronze polished, nothing laid on them yet. A great many. These are new. There is a lever on the west wall."
+   "text": "Rows of bare slabs, the bronze polished, nothing laid on them yet. A great many. These are new. There's a lever on the west wall."
   },
   {
    "id": "name",
@@ -1738,7 +1738,7 @@
    "at": [29, 22],
    "radius": 4,
    "speaker": "INES",
-   "text": "The road ends at a wall with a door in it and a shell-back in front. Two sextons with it. Everything here that can be raised, they will raise."
+   "text": "The road ends at a wall with a door in it and a shell-back in front. Two sextons with it. Everything here that can be raised, they'll raise."
   },
   {
    "id": "lever",

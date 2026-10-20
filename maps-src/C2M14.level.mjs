@@ -77,7 +77,7 @@ const MAP = {
   entities: [...P.ents, { type: 'exit', at: [48, 9], dest: 'next' }],
   scenery: [],
   messages: [
-    { id: 'start', at: [48, 92], radius: 4, speaker: 'INES', text: 'Stone beds on a spiral, each one a little further round than the last. Whoever laid it out did not use a line or a plumb. They used a count.' },
+    { id: 'start', at: [48, 92], radius: 4, speaker: 'INES', text: 'Stone beds on a spiral, each one a little further round than the last. Whoever laid it out didn\'t use a line or a plumb. They used a count.' },
     { id: 'harvest', at: [48, 78], radius: 5, speaker: 'INES', text: 'Spearmen in green walking the beds with long hooks, picking.' },
     { id: 'plate', at: [48, 70], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: five plants, five notes. A gardener grows one for each, and lays the bed so that a tone from one strikes the next.' },
     { id: 'tree', at: [48, 60], radius: 5, speaker: 'HULL', text: 'The tree in the middle plays a phrase when you use it: the fruit light in order, a note each. Answer on the chimes, in order, each within eight seconds of the last.' },

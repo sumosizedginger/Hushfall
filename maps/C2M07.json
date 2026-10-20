@@ -1109,7 +1109,7 @@
    "at": [24, 50],
    "radius": 4,
    "speaker": "INES",
-   "text": "Bells on stands in the shed, green with new bronze, ringing very faintly. They were not cast. Each is for somebody who has not been brought here yet."
+   "text": "Bells on stands in the shed, green with new bronze, ringing very faintly. They weren't cast. Each is for somebody who hasn't been brought here yet."
   },
   {
    "id": "forks",
@@ -1144,7 +1144,7 @@
    "at": [38, 46],
    "radius": 3,
    "speaker": "INES",
-   "text": "The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that is not hot."
+   "text": "The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that isn't hot."
   },
   {
    "id": "quench",

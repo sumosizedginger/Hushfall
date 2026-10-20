@@ -101,9 +101,9 @@ const MAP = {
   entities: [...P.ents, { type: 'exit', at: [CX, 3], dest: 'next' }],
   scenery: [],
   messages: [
-    { id: 'start', at: [CX, 81], radius: 4, speaker: 'INES', text: 'A hall with a roof I cannot see. Stalls, strings of lamps, and a crowd that is doing its buying in a murmur. Nobody here has a bell.' },
+    { id: 'start', at: [CX, 81], radius: 4, speaker: 'INES', text: 'A hall with a roof I can\'t see. Stalls, strings of lamps, and a crowd that\'s doing its buying in a murmur. Nobody here has a bell.' },
     { id: 'echo', at: [CX, 74], radius: 4, speaker: 'HULL', text: 'The hall has an echo: a shot carries twice as far as it does outside, and wakes what sleeps that far off. A blow, the arc lamp uncharged and the fork are quiet.' },
-    { id: 'folk', at: [CX, 67], radius: 5, speaker: 'INES', text: 'A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I am carrying.' },
+    { id: 'folk', at: [CX, 67], radius: 5, speaker: 'INES', text: 'A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I\'m carrying.' },
     { id: 'ledger', at: polar(27.5, 105), radius: 3, speaker: 'MARKET LEDGER', text: 'Cord, per length: one voice. Lamp oil, per tin: two. A room at the back, for a night: nothing, and ask no one.' },
     { id: 'zealot', at: polar(18.2, 105), radius: 4, speaker: 'INES', text: 'Spears among the stalls. They stand with the butts on the flags and nobody gives them room or takes any. Part of the furniture, like the bollards at home.' },
     { id: 'well', at: polar(10.5, 160), radius: 5, speaker: 'HULL', text: 'The well is an echo well: a noise made over it comes back from the walls. Keep anything quiet away from it.' },

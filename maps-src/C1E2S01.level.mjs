@@ -56,7 +56,7 @@ const MAP = {
     { id: 'hall', at: [13, 13], radius: 4, speaker: 'INES', text: 'Racks and racks. Look at the dates on the crates: all of them from before the kilns were lit. They knew. Someone here knew for years.' },
     { id: 'valve', at: [15, 5], radius: 2, speaker: 'VALVE LOG', text: 'COOLANT VALVE A. IF THE VAULT WARMS, THE DOOR WILL NOT OPEN FROM OUTSIDE. KEEP IT COLD. KEEP IT QUIET.' },
     { id: 'lever', at: [30, 14], radius: 3, speaker: 'VAULT LEVER', text: 'THREE VALVES: A, B, C. THE LEVER SPENDS THEM. THE DOOR RISES ON ITS OWN COUNTERWEIGHT.' },
-    { id: 'rolling', at: [31, 16], radius: 0.1, speaker: 'INES', text: 'It is rolling up. Cold air is coming out of it. They kept it a long time.' },
+    { id: 'rolling', at: [31, 16], radius: 0.1, speaker: 'INES', text: 'It\'s rolling up. Cold air is coming out of it. They kept it a long time.' },
     { id: 'research', at: [37, 16], radius: 3, speaker: 'WARDEN LOG', text: 'SEVEN YEARS BEFORE THE KILNS WERE LIT. THE HUM IN THE CHALK IS NOT GEOLOGY: IT HAS A RHYTHM. THE PANS ARE A COVER. THE BEDS UNDER THEM ARE A RECEIVER. WE WERE TOLD TO STOP ASKING.' },
     { id: 'cold', at: [41, 16], radius: 3, speaker: 'WARDEN LOG', text: 'THEY DO NOT LIKE COLD. IT SLOWS THE HUSH. IF YOU ARE READING THIS, KEEP IT COLD, AND KEEP THE BELLS COLDER.' },
   ],

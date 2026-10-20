@@ -759,21 +759,21 @@
    "at": [5, 23],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the ship keeps what it keeps alive here. The floor is not safe to stand on. Watch it: it swells before it blooms."
+   "text": "Calder, the ship keeps what it keeps alive here. The floor isn't safe to stand on. Watch it: it swells before it blooms."
   },
   {
    "id": "ledges",
    "at": [18, 23],
    "radius": 3,
    "speaker": "INES",
-   "text": "Singers on the ledges, north and south. Cross the beds when they are asleep and use the rubble in between. The ledges step down at opposite ends."
+   "text": "Singers on the ledges, north and south. Cross the beds when they're asleep and use the rubble in between. The ledges step down at opposite ends."
   },
   {
    "id": "bed",
    "at": [24, 23],
    "radius": 2,
    "speaker": "INES",
-   "text": "The bed is swelling. When it goes dark, go. Do not stop in the middle: the other one is out of step with it."
+   "text": "The bed is swelling. When it goes dark, go. Don't stop in the middle: the other one is out of step with it."
   },
   {
    "id": "mortar",
@@ -787,7 +787,7 @@
    "at": [52, 23],
    "radius": 4,
    "speaker": "INES",
-   "text": "People, standing. They are not dead and they are not awake. Walk past them, please."
+   "text": "People, standing. They aren't dead and they aren't awake. Walk past them, please."
   },
   {
    "id": "hollow",

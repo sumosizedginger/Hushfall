@@ -69,7 +69,7 @@ const MAP = {
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { B: { type: 'enemy', kind: 'bellnode' } },
   intro: { title: 'BELL TOWER OF ST. ORRIN', lines: ['The bell has rung for three days.', 'Nobody is pulling the rope.'] },
-  outro: 'Port Marrow is quiet. The signal is not: it is going somewhere.',
+  outro: 'Port Marrow is quiet. The signal is not.',
   objective: 'Enter the tower (south-east door) and climb',
   ...layers,
   groups: [{ name: 'cantor', rect: [28, 25, 28, 25] }],
@@ -80,11 +80,11 @@ const MAP = {
   messages: [
     { id: 'start', at: [30, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it.' },
     { id: 'door', at: [44, 42], radius: 3, speaker: 'INES', text: 'The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it.' },
-    { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer. Pillars in the corridor: that is your friend, again.' },
+    { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer. Pillars in the corridor: that\'s your friend, again.' },
     { id: 'sexton', at: [38, 9], radius: 4, speaker: 'INES', text: 'The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first.' },
-    { id: 'chamber', at: [38, 35], radius: 3, speaker: 'SIGNAL HOUSE', text: 'That is it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone will not go through stone.' },
+    { id: 'chamber', at: [38, 35], radius: 3, speaker: 'SIGNAL HOUSE', text: 'That\'s it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone won\'t go through stone.' },
     { id: 'ring', at: [28, 18], radius: 2, speaker: 'INES', text: 'One bell down. The Cantor staggered when it broke. Keep cutting the ring.' },
-    { id: 'quiet', at: [28, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The tower is silent. The signal did not stop: it went somewhere else. The hatch is open.' },
+    { id: 'quiet', at: [28, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The tower is silent, Calder, and the signal didn\'t stop. I have its bearing: the Salt Works. The hatch is open.' },
   ],
   triggers: [
     { id: 'sealed', when: 'enter', at: [37, 33], radius: 3, do: [{ seal: [40, 35] }, { message: 'chamber' }, { objective: 'Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone' }, { shake: 1.2 }] },

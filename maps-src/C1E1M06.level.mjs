@@ -88,7 +88,7 @@ const MAP = {
     { id: 'board', at: [14, 23], radius: 3, speaker: 'TICKET BOARD', text: 'ALL SAILINGS CANCELLED. BOARDING BY WARDEN\'S ORDER ONLY. ALL PERSONS REMAIN IN THE HALL.' },
     { id: 'quay', at: [30, 24], radius: 3, speaker: 'INES', text: 'It is a big open quay. Move between the pillars, and keep the crates between you and the tower.' },
     { id: 'winch', at: [43, 5], radius: 2.5, speaker: 'WINCH PLACARD', text: 'BOW RAMP. RAISED FOR THE NIGHT. TWO HANDS, ONE CRANK. STAND CLEAR OF THE LANE.' },
-    { id: 'warden', at: [46, 24], radius: 6, speaker: 'INES', text: 'That is Tide-Warden plate. Somebody on the Board wore that, once. The front is nearly armour-proof: let it charge, and let it hit something.' },
+    { id: 'warden', at: [46, 24], radius: 6, speaker: 'INES', text: 'That\'s Tide-Warden plate. Somebody on the Board wore that, once. The front is nearly armour-proof: let it charge, and let it hit something.' },
   ],
   triggers: [
     { id: 'ramp-down', when: 'sector:ramp:low', do: [{ spawn: { kind: 'gaunt', at: [59, 23], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'gaunt', at: [59, 25], group: 'wave1', facing: 'west' } }, { spawn: { kind: 'tollbearer', at: [60, 22], group: 'wave1', facing: 'west' } }, { message: 'warden' }] },

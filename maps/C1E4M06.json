@@ -1050,21 +1050,21 @@
    "The Gate is at the far end, and it is very bright."
   ]
  },
- "outro": "The hall opens. Above the last steps the light stops being a rumour and becomes a thing you can look at.",
+ "outro": "The hall opens. Above the last steps the glare gathers into a shape.",
  "messages": [
   {
    "id": "start",
    "at": [45, 108],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two."
+   "text": "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens don't line up. The tunnels in the flanks go round the first two."
   },
   {
    "id": "court",
    "at": [45, 103],
    "radius": 4,
    "speaker": "INES",
-   "text": "Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It is like looking at the sun."
+   "text": "Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It's like looking at the sun."
   },
   {
    "id": "stalls",

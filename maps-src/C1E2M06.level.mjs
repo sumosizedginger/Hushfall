@@ -93,7 +93,7 @@ const MAP = {
     { id: 'top', at: [54, 25], radius: 4, speaker: 'INES', text: 'Bellhands on both galleries. Stay off the edge of the catwalk, and use the pillars. The drain lever is on the south gallery.' },
     { id: 'drain', at: [35, 42], radius: 3, speaker: 'DRAIN LEVER', text: 'SUMP DRAIN. PULL AND THE PUMP RUNS DRY, AND THE HATCH ON THE NORTH GALLERY OPENS. DO NOT PULL WITH PERSONS IN THE SUMP.' },
     { id: 'draining', at: [35, 41], radius: 0.1, speaker: 'SIGNAL HOUSE', text: 'The pump has stopped. What was in the sump is on the grate now. Get to the north gallery.' },
-    { id: 'exit', at: [30, 8], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'The hatch leads under the Works: the Slurry Undercroft. It is dark down there, and it is where everything drains to.' },
+    { id: 'exit', at: [30, 8], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'The hatch leads under the Works: the Slurry Undercroft. It\'s dark down there, and it\'s where everything drains to.' },
   ],
   triggers: [
     { id: 'cage-top', when: 'sector:cage:high', do: [{ spawn: { kind: 'gaunt', at: [55, 17], group: 'catwalk', facing: 'south' } }, { spawn: { kind: 'gaunt', at: [55, 33], group: 'catwalk', facing: 'north' } }, { shake: 0.8 }, { objective: 'The drain lever is on the south gallery: south terrace, then the stair' }] },

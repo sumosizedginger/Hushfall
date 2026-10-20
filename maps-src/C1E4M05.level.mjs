@@ -145,9 +145,9 @@ const MAP = {
   vents: VENTS,
   entities: [...ents, { type: 'exit', at: [CX, 9], locked: true, dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'The moss has no grip, Calder: you will slide where you push, and the plates throw you across. Landing is the whole art.' },
-    { id: 'drift', at: [CX, 80], radius: 3, speaker: 'INES', text: 'It is ice with leaves on. Let go of the stick before you reach the edge, and let it carry you.' },
-    { id: 'tree', at: [CX, CZ + 10], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The great tree. The fruit is at its foot, in the grove, where there is grip. Take it and the whole bubble will know. The gate will not open for anything else.' },
+    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'The moss has no grip, Calder: you\'ll slide where you push, and the plates throw you across. Landing is the whole art.' },
+    { id: 'drift', at: [CX, 80], radius: 3, speaker: 'INES', text: 'It\'s ice with leaves on. Let go of the stick before you reach the edge, and let it carry you.' },
+    { id: 'tree', at: [CX, CZ + 10], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The great tree. The fruit is at its foot, in the grove, where there is grip. Take it and the whole bubble will know. The gate won\'t open for anything else.' },
     { id: 'fruit', at: [CX, CZ + 5], radius: 1.5, speaker: 'INES', text: 'It is warm. They are all awake, now, and the flyers will come.' },
     { id: 'north', at: [CX, 30], radius: 3, speaker: 'HULL', text: 'The glass is gone in the north. White light. The gate is on the far side of the north island.' },
     { id: 'panel', at: secret ? secret.panel : [0, 0], radius: 3, speaker: 'HULL', text: 'The panel in the greenhouse wall rings hollow.' },

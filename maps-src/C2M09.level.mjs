@@ -99,7 +99,7 @@ const MAP = {
     { id: 'start', at: [11, 22], radius: 4, speaker: 'INES', text: 'Dark. The tin on the floor is a Marrow tin with the label gone. Somebody carried it this far down and put it where it would be found.' },
     { id: 'lamp', at: [19, 29], radius: 3, speaker: 'HULL', text: 'Gaunts and Gills find you by eye: from 6 metres with the lantern out, 24 with it lit. Tollbearers follow the Hush and do not care about light.' },
     { id: 'mouth', at: [31, 39], radius: 3, speaker: 'INES', text: 'The tunnel opens on a bowl lit in rings. The far side is houses stacked up to the roof, a window lit in every one. There are Vael on every terrace, walking.' },
-    { id: 'folk', at: [38, 32], radius: 4, speaker: 'INES', text: 'None of them has a bell. They are carrying baskets and cord and they have not looked up. Do not shoot what is walking.' },
+    { id: 'folk', at: [38, 32], radius: 4, speaker: 'INES', text: 'None of them has a bell. They are carrying baskets and cord and they haven\'t looked up. Don\'t shoot what is walking.' },
     { id: 'zealot', at: [31, 44], radius: 4, speaker: 'INES', text: 'One on the east terraces is standing still with a lance as long as a mast. Armoured, and its feet apart, the way a man stands who means to stay.' },
     { id: 'ramp', at: [36, 50], radius: 3, speaker: 'HULL', text: 'The west ramp is the only way down. A Bulwark Shell is on it: the plate on its front stops a shot. Hit it from the side, or when it opens to strike.' },
     { id: 'plate', at: [46, 57], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: nine hundred and four voices owed by this district. The count beside it is two hundred short, and it was the same last year.' },

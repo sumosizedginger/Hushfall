@@ -81,7 +81,7 @@ const MAP = {
     { id: 'start', at: [6, 8], radius: 5, speaker: 'INES', text: 'The stone is cold, and from the crack comes a light the colour of a forge. The whole country has cracked along one line, and the crack is as wide as a harbour mouth.' },
     { id: 'front', at: [14, 8], radius: 5, speaker: 'HULL', text: 'Forty-five seconds after you arrive the road starts to fall from the west end, a strip at a time, a metre a second. A strip falls three times; the view shakes first. Stay ahead.' },
     { id: 'bridge', at: [38, 10], radius: 5, speaker: 'HULL', text: 'The north road is broken in the middle. The first bridge is the way across: it sinks half a metre after you cross, and a stair on the far side climbs out of the pit.' },
-    { id: 'south', at: [50, 31], radius: 5, speaker: 'INES', text: 'The south road goes on in the same grey and the same cold. Somebody has laid lamps along it. The stone that is going has not reached this far yet.' },
+    { id: 'south', at: [50, 31], radius: 5, speaker: 'INES', text: 'The south road goes on in the same grey and the same cold. Somebody has laid lamps along it. The stone that\'s going hasn\'t reached this far yet.' },
     { id: 'lip', at: [96, 9], radius: 5, speaker: 'HULL', text: 'The lever on the far lip is on the north wall of the road, under two lamps and a lantern. It holds the lip. The exit is locked until it is thrown.' },
     { id: 'far-lip', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The lip is held. The exit has come unlocked at the east end of the road.' },
     { id: 'exit', at: [118, 8], radius: 4, speaker: 'HULL', text: 'The exit is locked. The lever on the north wall of this road, near the far lip, unlocks it.' },

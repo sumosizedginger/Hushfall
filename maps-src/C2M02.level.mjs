@@ -105,7 +105,7 @@ const MAP = {
     { id: 'relay1', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'One of three. A hum comes up through the floor, once, and stops.' },
     { id: 'relay2', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'Two of three. The road is lit from underneath for a moment, east to west.' },
     { id: 'relay3', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'Three of three. Far to the east, a gate opens that nobody here could have heard.' },
-    { id: 'needles', at: [66, 40], radius: 5, speaker: 'INES', text: 'The needles are nearer from here. At the foot of the nearest there is something taller than the rest, standing very still.' },
+    { id: 'needles', at: [66, 40], radius: 5, speaker: 'INES', text: 'The needles are nearer from here. At the foot of the nearest there\'s something taller than the rest, standing very still.' },
     { id: 'log', at: [101, 60], radius: 2.5, speaker: 'PELLEW, MATE (LOG)', text: 'Eleven left the beach. Nine at the first station. The queue does not look at you; we walked past it. Eight. East is the only road. Do not count.' },
     { id: 'hollow', at: [95, 60], radius: 2, speaker: 'HULL', text: 'The east wall of this recess rings hollow.' },
     { id: 'gate', at: [0, 0], radius: 0.1, speaker: 'INES', text: 'Three levers, one gate. Somebody built this road to be crossed one station at a time, and counted.' },

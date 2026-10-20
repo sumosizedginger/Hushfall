@@ -113,14 +113,14 @@ const MAP = {
     { type: 'switch', id: 'sluice', at: [21, 17], wall: 'south', do: [{ open: [44, 22] }, { wake: 'yard' }, { objective: 'The gate is rolling up. The hall is awake: take the road, east end' }, { shake: 2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have the Works plans out. Past that door is open ground and the Brine Gate at the far end, and the road runs straight at it. Do not take the road.' },
+    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, I have the Works plans out. Past that door is open ground and the Brine Gate at the far end, and the road runs straight at it. Don\'t take the road.' },
     { id: 'cradles', at: [4, 22], radius: 2.5, speaker: 'INES', text: 'Cradles on a rail. They hang them here to wait.' },
     { id: 'pan', at: [30, 22], radius: 4, speaker: 'INES', text: 'A rank in front of the gate. Bellhands on both towers. Whoever set this up has done it before.' },
     { id: 'ditch', at: [16, 12], radius: 3, speaker: 'INES', text: 'The ditch slows me, and nothing up on the towers can see into it. The guardhouse is ahead, north door.' },
     { id: 'guard', at: [23, 15], radius: 3, speaker: 'GUARD LOG', text: 'GATE OPENS BY THE SLUICE WHEEL ONLY. NIGHT SHIFT KEEPS THE KENNEL KEYS. ALL PERSONS REMAIN ON THE ROAD.' },
     { id: 'pump', at: [21, 29], radius: 2.5, speaker: 'PUMP LOG', text: 'VALVE ROOM KEPT SHUT. THE EAST WALL SOUNDS HOLLOW. SALT DUST ON THE SILL IS FRESH.' },
     { id: 'yard', at: [47, 22], radius: 3, speaker: 'INES', text: 'Plate. That is the Warden-Graft again, and rails of cradles over the floor. Let it run into a pillar.' },
-    { id: 'exit', at: [70, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'That is the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties.' },
+    { id: 'exit', at: [70, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'That\'s the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties.' },
   ],
   triggers: [
     { id: 'kennels', when: 'enter', at: [23, 15], radius: 2.5, do: [{ open: [20, 15] }, { open: [20, 17] }, { wake: 'kennel' }, { objective: 'The kennels are open. The sluice wheel is on the south wall' }] },

@@ -1039,7 +1039,7 @@
    "at": [27, 45],
    "radius": 4,
    "speaker": "INES",
-   "text": "A shell-back at the foot of the second stair and a singer behind it. They have had a long time to get used to this view. Do not hurry."
+   "text": "A shell-back at the foot of the second stair and a singer behind it. They have had a long time to get used to this view. Don't hurry."
   },
   {
    "id": "mother",
@@ -1067,7 +1067,7 @@
    "at": [27, 10],
    "radius": 3,
    "speaker": "INES",
-   "text": "A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. That is where the sound comes from."
+   "text": "A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that's what holds the Gate open. I am going down."
   },
   {
    "id": "hollow",

@@ -188,7 +188,7 @@
    "at": [19, 38],
    "radius": 4,
    "speaker": "INES",
-   "text": "The lamp from the quay, on its post at the end of a pier. The water under the pier is glass, and the lamp is the only thing here that is not."
+   "text": "The lamp from the quay, on its post at the end of a pier. The water under the pier is glass, and the lamp is the only thing here that isn't."
   },
   {
    "id": "weight",
@@ -209,7 +209,7 @@
    "at": [1, 1],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The Tide-Warden lights it when a boat is out. There is no boat out. I will carry it anyway."
+   "text": "The Tide-Warden lights it when a boat is out. There's no boat out. I will carry it anyway."
   }
  ],
  "objective": "Walk the pier to the lamp. Take it, or leave it: the exit is behind you",

@@ -1082,14 +1082,14 @@
    "at": [63, 42],
    "radius": 3,
    "speaker": "INES",
-   "text": "No air. You lose it a second at a time. Do not stop to look."
+   "text": "No air. You lose it a second at a time. Don't stop to look."
   },
   {
    "id": "pockets",
    "at": [23, 42],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The walls are doored closets: pressurised, small, there for the crews. Breathe in one. You cannot be followed through a door."
+   "text": "The walls are doored closets: pressurised, small, there for the crews. Breathe in one. You can't be followed through a door."
   },
   {
    "id": "seated",
@@ -1103,14 +1103,14 @@
    "at": [43, 17],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The hatches at the far end are open to the dark. There is a panel on the west wall at the end. It shuts them."
+   "text": "The hatches at the far end are open to the dark. There's a panel on the west wall at the end. It shuts them."
   },
   {
    "id": "air",
    "at": [37, 15],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "And the air comes back. I will not say thank you out loud."
+   "text": "And the air comes back. I won't say thank you out loud."
   }
  ],
  "vacuum": [

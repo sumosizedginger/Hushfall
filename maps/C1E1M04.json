@@ -1103,7 +1103,7 @@
    "at": [13, 19],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "Water at the third step. It is warm. Water is never warm in Port Marrow."
+   "text": "Water at the third step. It's warm. Water is never warm in Port Marrow."
   },
   {
    "id": "under",
@@ -1117,7 +1117,7 @@
    "at": [48, 26],
    "radius": 4,
    "speaker": "INES",
-   "text": "Iron key on the desk. The blotter has one line: \"Do not drain the cistern.\""
+   "text": "Iron key on the desk. The blotter has one line: \"Don't drain the cistern.\""
   },
   {
    "id": "cistern",

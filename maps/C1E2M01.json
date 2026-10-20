@@ -1076,7 +1076,7 @@
    "at": [5, 22],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, I have the Works plans out. Past that door is open ground and the Brine Gate at the far end, and the road runs straight at it. Do not take the road."
+   "text": "Calder, I have the Works plans out. Past that door is open ground and the Brine Gate at the far end, and the road runs straight at it. Don't take the road."
   },
   {
    "id": "cradles",
@@ -1125,7 +1125,7 @@
    "at": [70, 22],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "That is the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties."
+   "text": "That's the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties."
   }
  ],
  "decals": [

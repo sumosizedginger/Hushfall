@@ -80,12 +80,12 @@ const MAP = {
   groups: [{ name: 'west', rect: [15, 15, 38, 43] }, { name: 'galleries-n', rect: [15, 3, 61, 14] }, { name: 'galleries-s', rect: [15, 44, 61, 54] }, { name: 'centre', rect: [39, 15, 56, 43] }, { name: 'dais', rect: [57, 15, 75, 43] }],
   entities: [],
   messages: [
-    { id: 'start', at: [6, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, there is no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it is why the gate is sealed.' },
-    { id: 'nave', at: [20, 29], radius: 3, speaker: 'INES', text: 'Two galleries, north and south, with singers on both. The pillars stop a round. Do not cross this floor in a straight line.' },
+    { id: 'start', at: [6, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, there\'s no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it\'s why the gate is sealed.' },
+    { id: 'nave', at: [20, 29], radius: 3, speaker: 'INES', text: 'Two galleries, north and south, with singers on both. The pillars stop a round. Don\'t cross this floor in a straight line.' },
     { id: 'shell', at: [44, 29], radius: 4, speaker: 'HULL', text: 'Shells on legs. A round does almost nothing to the front of one. It opens its shell to hit you: that is when to shoot, or to circle it, or to throw a bell-breaker over it.' },
     { id: 'mother', at: [58, 29], radius: 4, speaker: 'INES', text: 'She is weeping, and where it lands it burns and slows you: walk out of it. Something is swelling on her skirt. Kill her and the gate will open.' },
     { id: 'hollow', at: [30, 10], radius: 2.5, speaker: 'HULL', text: 'One rib of this wall is thin. A held breath, behind it.' },
-    { id: 'gate', at: [79, 29], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'The gate is open. Past it the ship goes on singing, but it is quieter.' },
+    { id: 'gate', at: [79, 29], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'The gate is open. Past it the ship goes on singing, but it\'s quieter.' },
   ],
   triggers: [
     { id: 'nave', when: 'enter', at: [17, 29], radius: 2.5, do: [{ wake: 'west' }, { objective: 'Cross the nave: singers on both galleries, the Choir at the east end' }] },

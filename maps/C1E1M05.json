@@ -969,7 +969,7 @@
    "at": [6, 49],
    "radius": 3,
    "speaker": "SURVIVOR (LAMP)",
-   "text": "Lamps all the way up: that is us, showing you the road. Watch the cliff edges: they shoot down."
+   "text": "Lamps all the way up: that's us, showing you the road. Watch the cliff edges: they shoot down."
   },
   {
    "id": "car",
@@ -1004,7 +1004,7 @@
    "at": [50, 10],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "I can see the beacon from here, Calder. It is burning green."
+   "text": "I can see the beacon from here, Calder. It's burning green."
   },
   {
    "id": "found-mallet",

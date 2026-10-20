@@ -847,21 +847,21 @@
    "Everything that is awake is awake above you."
   ]
  },
- "outro": "The last door is behind you. The Gate is the colour of the inside of a bell, and it is not quiet.",
+ "outro": "The last door is behind you. The Gate is near enough to feel in the floor, and it is not quiet.",
  "messages": [
   {
    "id": "start",
    "at": [37, 54],
    "radius": 4,
    "speaker": "SIGNAL HOUSE",
-   "text": "You will hear them long before you see them, Calder. There is a lever on every landing; the Gate opens for all four."
+   "text": "You will hear them long before you see them, Calder. There's a lever on every landing; the Gate opens for all four."
   },
   {
    "id": "shaft",
    "at": [29, 52],
    "radius": 4,
    "speaker": "INES",
-   "text": "It is open all the way up. The light comes from underneath. Do not look down for long."
+   "text": "It is open all the way up. The light comes from underneath. Don't look down for long."
   },
   {
    "id": "vents",

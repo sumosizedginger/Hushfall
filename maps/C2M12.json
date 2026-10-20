@@ -1826,7 +1826,7 @@
    "at": [48, 40],
    "radius": 6,
    "speaker": "INES",
-   "text": "The ones in the low halls said these were the first. They did not say they were ours. I think they did not know.",
+   "text": "The ones in the low halls said these were the first. They did not say they were ours. I think they didn't know.",
    "choice": "halls=silent"
   },
   {
@@ -1834,7 +1834,7 @@
    "at": [48, 40],
    "radius": 6,
    "speaker": "INES",
-   "text": "The ranks in the long gallery said the choir was theirs to keep. I did not ask who sang in it before.",
+   "text": "The ranks in the long gallery said the choir was theirs to keep. I didn't ask who sang in it before.",
    "choice": "halls=songkeepers"
   },
   {

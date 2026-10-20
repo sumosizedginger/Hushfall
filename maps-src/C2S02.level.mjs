@@ -30,10 +30,10 @@ const MAP = {
     { type: 'exit', at: [19, 41], dest: 'next' }],
   scenery: [],
   messages: [
-    { id: 'start', at: [19, 38], radius: 4, speaker: 'INES', text: 'The lamp from the quay, on its post at the end of a pier. The water under the pier is glass, and the lamp is the only thing here that is not.' },
+    { id: 'start', at: [19, 38], radius: 4, speaker: 'INES', text: 'The lamp from the quay, on its post at the end of a pier. The water under the pier is glass, and the lamp is the only thing here that isn\'t.' },
     { id: 'weight', at: [19, 14], radius: 4, speaker: 'INES', text: 'It is heavier than I remembered. The brass is the same. I filled it that night at the second bell, from the can behind the door.' },
     { id: 'use', at: [19, 11], radius: 3, speaker: 'HULL', text: 'The lamp hangs on the south face of the post. Taken, it burns without oil, and a ring that reaches whoever carries it lit is cut to two-fifths.' },
-    { id: 'taken', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'The Tide-Warden lights it when a boat is out. There is no boat out. I will carry it anyway.' },
+    { id: 'taken', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'The Tide-Warden lights it when a boat is out. There\'s no boat out. I will carry it anyway.' },
   ],
   triggers: [{ id: 'ring', when: 'enter', at: [19, 15], radius: 4, do: [{ objective: 'The ring of stone: the lamp is on the post inside it' }] }],
   quality: { safe: true, enemies: [0, 0], botSeconds: [5, 300], mechanics: [], skins: 3,

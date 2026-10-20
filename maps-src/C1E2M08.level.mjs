@@ -70,10 +70,10 @@ const MAP = {
   messages: [
     { id: 'start', at: [5, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it.' },
     { id: 'approach', at: [15, 29], radius: 3, speaker: 'INES', text: 'The line comes in here. Cradles all the way down, and the sound of something large breathing. We are close.' },
-    { id: 'floor', at: [30, 29], radius: 3, speaker: 'INES', text: 'There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it is bare.' },
-    { id: 'mother', at: [43, 20], radius: 5, speaker: 'INES', text: 'It is a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Do not stand in the open.' },
+    { id: 'floor', at: [30, 29], radius: 3, speaker: 'INES', text: 'There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it\'s bare.' },
+    { id: 'mother', at: [43, 20], radius: 5, speaker: 'INES', text: 'It\'s a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Don\'t stand in the open.' },
     { id: 'stash', at: [18, 37], radius: 2.5, speaker: 'NIGHT LOG', text: 'EMERGENCY STORES FOR THE NIGHT CREW, IN CASE THE LINE SHOULD EVER GO BAD. IT HAS GONE BAD.' },
-    { id: 'shield', at: [43, 20], radius: 0.1, speaker: 'INES', text: 'The feeders are gone. All of them. Hit it, Calder, hit it with everything.' },
+    { id: 'shield', at: [43, 20], radius: 0.1, speaker: 'INES', text: 'The feeders are gone. All of them. Now hit it with everything.' },
     { id: 'broken', at: [28, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The line is broken, Calder. The set is reading something large down in a crater east of the Works.' },
   ],
   triggers: [

@@ -91,13 +91,13 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [5, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'They fire the shells here, Calder. The flue is dampered shut and the handles are hidden. Brass first: the charging hall.' },
-    { id: 'hall', at: [13, 23], radius: 3, speaker: 'INES', text: 'That trench is embers. It burns, and it slows you. There is a bridge in the middle, and a handle on the island.' },
+    { id: 'hall', at: [13, 23], radius: 3, speaker: 'INES', text: 'That trench is embers. It burns, and it slows you. There\'s a bridge in the middle, and a handle on the island.' },
     { id: 'brass', at: [21, 23], radius: 2, speaker: 'DAMPER LOG', text: 'BRASS DAMPER HANDLE, KEPT ON THE ISLAND SO NO ONE CAN REACH IT WITHOUT CROSSING THE TRENCH. SIGNED, THE KILN MASTER.' },
-    { id: 'gallery', at: [43, 19], radius: 3, speaker: 'INES', text: 'A ring round the kilns, and an ember strip down each side of it. Stay on the lane by the wall. Do not stand near the kiln mouths.' },
+    { id: 'gallery', at: [43, 19], radius: 3, speaker: 'INES', text: 'A ring round the kilns, and an ember strip down each side of it. Stay on the lane by the wall. Don\'t stand near the kiln mouths.' },
     { id: 'iron', at: [63, 23], radius: 2, speaker: 'DAMPER LOG', text: 'IRON DAMPER HANDLE. TAKE IT AND THE KILN MOUTHS OPEN: THE SHELLS COME OUT TO MEET WHOEVER TOOK IT.' },
     { id: 'kilns', at: [53, 23], radius: 0.1, speaker: 'INES', text: 'The kiln mouths are opening. Move off the lane, now.' },
     { id: 'flue', at: [70, 16], radius: 3, speaker: 'FLUE LEVER', text: 'FLUE. NEEDS BOTH DAMPER HANDLES, BRASS AND IRON, IN THE SOCKETS BELOW THE LEVER. DO NOT FIRE WITH THE DOOR OPEN.' },
-    { id: 'flue-open', at: [70, 14], radius: 0.1, speaker: 'SIGNAL HOUSE', text: 'The flue is drawing. That is the cold coming up the stack. What they hid below the Works is colder than it should be.' },
+    { id: 'flue-open', at: [70, 14], radius: 0.1, speaker: 'SIGNAL HOUSE', text: 'The flue is drawing. That\'s the cold coming up the stack. What they hid below the Works is colder than it should be.' },
     { id: 'tunnel', at: [53, 36], radius: 2.5, speaker: "WARDEN CALDER'S NOTE", text: 'A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there.' },
   ],
   triggers: [

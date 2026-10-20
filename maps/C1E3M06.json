@@ -716,14 +716,14 @@
    "at": [5, 24],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, a hall that climbs. I count rows of them standing before the first pews, and more above. Use the pews. Do not walk up the middle."
+   "text": "Calder, a hall that climbs. I count rows of them standing before the first pews, and more above. Use the pews. Don't walk up the middle."
   },
   {
    "id": "tuned",
    "at": [19, 24],
    "radius": 3,
    "speaker": "INES",
-   "text": "Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Do what you do near them from behind a pew."
+   "text": "Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Fight from behind a pew."
   },
   {
    "id": "ward",

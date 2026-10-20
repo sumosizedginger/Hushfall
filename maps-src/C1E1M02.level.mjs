@@ -92,10 +92,10 @@ const MAP = {
   ],
   secrets: [{ id: 'lost-property', panel: [19, 39], cells: [[19, 38], [19, 37]] }],
   messages: [
-    { id: 'yard', at: [3, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: "Calder, I have the hall's plan sheet. Keys upstairs, registry on the way out. I can tell you where things are. I cannot tell you what is standing in them." },
+    { id: 'yard', at: [3, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: "Calder, I have the hall's plan sheet. Keys upstairs, registry on the way out. I can tell you where things are. I can't tell you what is standing in them." },
     { id: 'bond', at: [8, 33], radius: 3, speaker: 'BOND STORE LOG', text: 'Riveters for the dock crews, sealed until the Tide Board signs. Nobody signed.' },
     { id: 'notice', at: [19, 43], radius: 2.5, speaker: 'CUSTOMS NOTICE', text: 'All persons received will be counted. All persons counted will be processed. Please do not ring the bells.' },
-    { id: 'hall', at: [26, 44], radius: 4, speaker: 'INES', text: 'Bells. Dozens of them, and every one in tune with the next. That is what wrong sounds like.' },
+    { id: 'hall', at: [26, 44], radius: 4, speaker: 'INES', text: 'Bells. Dozens of them, and every one in tune with the next. That\'s what wrong sounds like.' },
     { id: 'gallery', at: [46, 31], radius: 3, speaker: 'REGISTER', text: 'Last page. 212 received, 424 processed. The second count is the Graft.' },
     { id: 'registry', at: [35, 26], radius: 3, speaker: 'INES', text: "They take people. Then they file them." },
     { id: 'ironkey', at: [44, 12], radius: 3, speaker: 'COUNTER-BOOK', text: "Final entry: 'Tone verified.' Then the ink stops, mid-word." },

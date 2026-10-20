@@ -88,9 +88,9 @@ const MAP = {
   secrets: [{ id: 'lighthouse-tunnel', panel: [55, 39], cells: [[56, 39], [57, 39]] }],
   messages: [
     { id: 'shop', at: [6, 13], radius: 3, speaker: 'SIGNAL HOUSE', text: "The cellars run under half the quay, Calder. Somewhere down there is the drain gate; it needs the chandler's iron key." },
-    { id: 'stairs', at: [13, 19], radius: 2.5, speaker: 'INES', text: 'Water at the third step. It is warm. Water is never warm in Port Marrow.' },
+    { id: 'stairs', at: [13, 19], radius: 2.5, speaker: 'INES', text: 'Water at the third step. It\'s warm. Water is never warm in Port Marrow.' },
     { id: 'under', at: [20, 28], radius: 4, speaker: 'CHANDLER\'S LOG', text: 'Ebb tide, no ebb. The wall in the east store weeps a green wet. Told the harbourmaster. He laughed, then he stopped laughing.' },
-    { id: 'office', at: [48, 26], radius: 4, speaker: 'INES', text: 'Iron key on the desk. The blotter has one line: "Do not drain the cistern."' },
+    { id: 'office', at: [48, 26], radius: 4, speaker: 'INES', text: 'Iron key on the desk. The blotter has one line: "Don\'t drain the cistern."' },
     { id: 'cistern', at: [27, 38], radius: 4, speaker: 'INES', text: 'Green pool, catwalk across it. Something sings under the surface. Stay on the grating.' },
     { id: 'hatch', at: [48, 29], radius: 2, speaker: "CHANDLER'S LOG", text: "Strongroom hatch, south wall. They say the old lighthouse stair was bricked up behind the vault's east side. Lamplight leaks round the one panel that is not brick." },
     { id: 'vault', at: [48, 38], radius: 4, speaker: 'RESIN LOG', text: 'It grows where the water is loud. It grows toward the tone. It has started to grow toward us.' },

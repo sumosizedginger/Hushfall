@@ -834,7 +834,7 @@
    "at": [7, 44],
    "radius": 4,
    "speaker": "INES",
-   "text": "The floor is warm. Not heated: warm, like a hand. The wall has a grain, the way a muscle does, and it is moving very slowly in and out."
+   "text": "The floor is warm. Not heated: warm, like a hand. The wall has a grain, the way a muscle does, and it's moving very slowly in and out."
   },
   {
    "id": "hall",
@@ -855,14 +855,14 @@
    "at": [47, 44],
    "radius": 5,
    "speaker": "INES",
-   "text": "It hangs from the roof on cords as thick as a mast, and it is the size of a house. It is beating, once in about as long as it takes to say so."
+   "text": "It hangs from the roof on cords as thick as a mast, and it's the size of a house. It's beating, once in about as long as it takes to say so."
   },
   {
    "id": "boss",
    "at": [60, 44],
    "radius": 5,
    "speaker": "INES",
-   "text": "One Vael on a round dais with a rod in one hand and the other up in front of its face. It is looking at the forks."
+   "text": "One Vael on a round dais with a rod in one hand and the other up in front of its face. It's looking at the forks."
   },
   {
    "id": "ring",
@@ -904,14 +904,14 @@
    "at": [90, 44],
    "radius": 3,
    "speaker": "INES",
-   "text": "A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. What is below this is not warm."
+   "text": "A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. What is below this isn't warm."
   },
   {
    "id": "last-call",
    "at": [92, 44],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, this is the last I can hold. The lamp is lit and the tea is cold. I am here until the set goes."
+   "text": "Calder, this is the last I can hold. The lamp is lit and the tea is cold. I'm here until the set goes."
   }
  ],
  "objective": "Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe: break its four forks to drop its shield, then break it. Its ring comes back",

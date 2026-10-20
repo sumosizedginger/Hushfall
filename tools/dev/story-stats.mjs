@@ -37,7 +37,7 @@ export function stats() {
   S.meta = count(/\b(episode|act) (one|two|three|four|1|2|3|4)\b|\bthe (first|second|third|last) act\b/i);
   S.openers = rows.filter((r) => r.ch === 'message' && r.speaker === 'SIGNAL HOUSE' && /^Calder, the [A-Z]/.test(r.text)).length;
   S.nextOutros = rows.filter((r) => r.ch === 'outro' && /^Next:/.test(r.text)).length;
-  S.hullControl = rows.filter((r) => r.speaker === 'HULL' && /\b(press|click|key [A-Z]\b|the lantern is L|the mark on the screen|\(L\)|\(E\))/i.test(r.text)).length;
+  S.hullControl = rows.filter((r) => r.speaker === 'HULL' && /\b(press|click)\b|\bkey [A-Z]\b|the lantern is L|the mark on the screen|\(L\)|\(E\)/i.test(r.text)).length;
   S.exclaim = count(/!/);
   S.questionEnd = count(/\?\s*$/);
   // the same fact said twice inside one map, across channels: an outro or an intro line that overlaps a message

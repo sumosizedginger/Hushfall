@@ -103,9 +103,9 @@ const MAP = {
     { id: 'lesson', at: [12, 33], radius: 2.5, speaker: 'INES', text: 'Mirrors on plinths, a bright face and a dark back to each. Nothing in the array is lit yet.' },
     { id: 'opened', at: [28, 32], radius: 2, speaker: 'HULL', text: 'The way into the array is open.' },
     { id: 'nw', at: [34, 31], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it.' },
-    { id: 'acolyte', at: [50, 30], radius: 3, speaker: 'INES', text: 'Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they are not going anywhere.' },
+    { id: 'acolyte', at: [50, 30], radius: 3, speaker: 'INES', text: 'Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they aren\'t going anywhere.' },
     { id: 'se', at: [50, 42], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other.' },
-    { id: 'sw', at: [38, 44], radius: 3, speaker: 'INES', text: 'Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that was not meant to be found.' },
+    { id: 'sw', at: [38, 44], radius: 3, speaker: 'INES', text: 'Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that wasn\'t meant to be found.' },
     { id: 'secret', at: [38, 52], radius: 3, speaker: 'HULL', text: 'The wall at the end of the niche is not a wall.' },
   ],
   triggers: [

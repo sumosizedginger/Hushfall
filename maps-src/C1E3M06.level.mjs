@@ -69,8 +69,8 @@ const MAP = {
     { type: 'switch', id: 'conductor', at: [61, 18], wall: 'east', do: [{ open: [62, 24] }, { objective: 'The conductor\'s door is open: the exit is east' }, { shake: 1.2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, CZ], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, a hall that climbs. I count rows of them standing before the first pews, and more above. Use the pews. Do not walk up the middle.' },
-    { id: 'tuned', at: [19, CZ], radius: 3, speaker: 'INES', text: 'Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Do what you do near them from behind a pew.' },
+    { id: 'start', at: [5, CZ], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, a hall that climbs. I count rows of them standing before the first pews, and more above. Use the pews. Don\'t walk up the middle.' },
+    { id: 'tuned', at: [19, CZ], radius: 3, speaker: 'INES', text: 'Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Fight from behind a pew.' },
     { id: 'ward', at: [32, CZ], radius: 3, speaker: 'HULL', text: 'The tall one with the wheel of bells again. Everything near it takes half. It is behind the rows: go round the end of a pew and put it down.' },
     { id: 'singers', at: [42, CZ], radius: 3, speaker: 'INES', text: 'The rake is open sky from here, and the singers are up on the top tiers. A round that goes past you spoils your aim. Pew to pew. Do not stop in the aisle.' },
     { id: 'top', at: [58, CZ], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The conductor\'s lever, north end of the top tier, on the east wall. The door is at the head of the aisle.' },

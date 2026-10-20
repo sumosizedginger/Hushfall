@@ -854,7 +854,7 @@
    "at": [50, 30],
    "radius": 3,
    "speaker": "INES",
-   "text": "Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they are not going anywhere."
+   "text": "Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they aren't going anywhere."
   },
   {
    "id": "se",
@@ -868,7 +868,7 @@
    "at": [38, 44],
    "radius": 3,
    "speaker": "INES",
-   "text": "Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that was not meant to be found."
+   "text": "Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that wasn't meant to be found."
   },
   {
    "id": "secret",

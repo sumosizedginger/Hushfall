@@ -88,7 +88,7 @@ const MAP = {
     { type: 'exit', at: EXIT, dest: 'next' }],
   scenery: [{ kind: 'rootcolumn', at: [50, 50], y: 0, scale: 1.2 }],
   messages: [
-    { id: 'start', at: [8, 90], radius: 5, speaker: 'INES', text: 'Columns of root as thick as a house, set at irregular distances, and a floor that gives back every step. Something breathes in the dark a long way off, and it is more than one.' },
+    { id: 'start', at: [8, 90], radius: 5, speaker: 'INES', text: 'Columns of root as thick as a house, set at irregular distances, and a floor that gives back every step. Something breathes in the dark a long way off, and it\'s more than one.' },
     { id: 'tell', at: [14, 86], radius: 5, speaker: 'HULL', text: 'Gunfire carries far in here. The arc lamp, the fork and a blow carry almost nowhere. A lit lantern is seen from far off by anything that sees.' },
     { id: 'west', at: [14, 50], radius: 4, speaker: 'A SILENT', text: 'I will not say who sleeps by the south chamber. I will say they sleep by the door, and that a quiet hand goes past them.' },
     { id: 'south', at: [50, 84], radius: 4, speaker: 'A SILENT', text: 'I will not call anyone. I will say the ones in the east keep their eyes on the light. Put the lamp out in the lanes. They hear nothing else.' },

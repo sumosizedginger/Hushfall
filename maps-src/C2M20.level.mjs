@@ -74,7 +74,7 @@ const MAP = {
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
   scenery: [{ kind: 'rails', at: [64, 6], y: 0, scale: 1.4 }],
   messages: [
-    { id: 'start', at: [64, 84], radius: 6, speaker: 'INES', text: 'A rail goes round a drop and the cars go round the rail. In the middle of it there is an island with a copper stack on it and a lamp, and no bridge.' },
+    { id: 'start', at: [64, 84], radius: 6, speaker: 'INES', text: 'A rail goes round a drop and the cars go round the rail. In the middle of it there\'s an island with a copper stack on it and a lamp, and no bridge.' },
     { id: 'manifest', at: [64, 80], radius: 5, speaker: 'MANIFEST PLATE', text: 'CARS: 2. VOICES BORNE PER RUN: 31. RUNS TO THE HUB: 1 IN 4. The last line is a tally of runs, one stroke each. It does not stop at the edge of the plate.' },
     { id: 'rim', at: [64, 74], radius: 5, speaker: 'HULL', text: 'A car stops at each station for eight seconds. The rim of the deck blinks for the last two. The car stops where the rail stops.' },
     { id: 'hub', at: [64, 72], radius: 6, speaker: 'HULL', text: 'The hub is the third stop after this one. The relay is a lever on the south face of the copper stack, under two lamps.' },

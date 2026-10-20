@@ -744,7 +744,7 @@
    "at": [16, 15],
    "radius": 4,
    "speaker": "INES",
-   "text": "The wall has gaps: steps down to the arena. The rim goes all the way round. It is a place to run."
+   "text": "The wall has gaps: steps down to the arena. The rim goes all the way round. It's a place to run."
   },
   {
    "id": "mirrors",
@@ -758,7 +758,7 @@
    "at": [36, 30],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The last seal is gone. The shield is gone. Hit it with everything."
+   "text": "The last seal is gone, and the shield with it. Now it can be hurt."
   },
   {
    "id": "panel",
@@ -772,7 +772,7 @@
    "at": [65, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "It is down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet."
+   "text": "It's down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet."
   }
  ],
  "objective": "The Warden holds the Gate, at the east end of the arena. Three seals shield it",

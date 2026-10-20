@@ -78,12 +78,12 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, every ship in the fleet sings through this chamber. The singer is at the far end, and I read four reeds feeding it. Cut the reeds first.' },
-    { id: 'gullet', at: [17, 28], radius: 3, speaker: 'INES', text: 'It is wet. The walls are wet. Do not think about what the walls are.' },
+    { id: 'gullet', at: [17, 28], radius: 3, speaker: 'INES', text: 'It\'s wet. The walls are wet. Don\'t think about what the walls are.' },
     { id: 'ribs', at: [28, 28], radius: 3, speaker: 'HULL', text: 'Ribs, four of them, one wall to the other with a gap on alternate sides. It is a bend in a throat. They will be waiting at every gap.' },
     { id: 'singers', at: [38, 28], radius: 3, speaker: 'INES', text: 'Singers in the curve. A shell-back in front of them. Kill the tall one with the wheel first: everything near it takes half.' },
     { id: 'bell', at: [47, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second.' },
     { id: 'panel', at: [17, 27], radius: 2, speaker: 'HULL', text: 'The panel in the gullet\'s south wall rings hollow.' },
-    { id: 'shield', at: [57, 28], radius: 0.1, speaker: 'INES', text: 'The reeds are silent. One ring now, and it is angry. Hit it with everything.' },
+    { id: 'shield', at: [57, 28], radius: 0.1, speaker: 'INES', text: 'The reeds are silent. One ring now, and it\'s angry. Stay behind a pillar for the ring, then hit it.' },
     { id: 'broken', at: [57, 8], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The voice is gone, Calder. The ships are quiet. They were calling something, and it heard that. We should not be here when it answers.' },
   ],
   triggers: [

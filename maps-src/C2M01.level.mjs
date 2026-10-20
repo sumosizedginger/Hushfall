@@ -95,7 +95,7 @@ const MAP = {
   entities: [...P.ents, { type: 'switch', id: 'winch', at: [60, 8], wall: 'north', once: true, do: [{ open: [78, 14] }, { message: 'winch' }, { objective: 'The gate at the east end of the deck is open: down to the arcade' }, { shake: 1 }] }, { type: 'exit', at: [88, 28], dest: 'next' }],
   scenery: [{ kind: 'arch', at: [2, 28], yaw: 1.5708 }, { kind: 'spire', at: [30, -26] }, { kind: 'spire', at: [60, -34] }, { kind: 'spire', at: [78, -22] }, { kind: 'boat', at: [4, 50], yaw: 0.6 }, { kind: 'boat', at: [6, 6], yaw: 2.4 }],
   messages: [
-    { id: 'start', at: [11, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you are through. I have you for as long as the Gate holds behind you. After that it is just the set and the dark.' },
+    { id: 'start', at: [11, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you\'re through. I have you for as long as the Gate holds behind you. After that it\'s just the set and the dark.' },
     { id: 'seal', at: [16, 28], radius: 0.1, speaker: 'INES', text: 'Door is shut. Signal House, no answer. Logging it anyway: day one, a beach, the Gate dark behind me.' },
     { id: 'rows', at: [21, 28], radius: 5, speaker: 'INES', text: 'Oilskins. Marrow boat crews in two rows, facing the water. They were put here and told to wait.' },
     { id: 'bell', at: [26, 28], radius: 3, speaker: 'INES', text: 'A bell, a long way off across the lake, struck slowly. Nine strokes, then nothing. The fog-bell on the north pier at home does that, on the ninth stroke of the tide table.' },

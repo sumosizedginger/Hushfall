@@ -10,6 +10,6 @@ These are the words of OTHER agents (and the prompts they were given), kept as e
 
 Their results of the attack: `attack/gemini/` and `attack/groks/`; the merged and rated list is `design/HARDENING.md`.
 
-## Planned (PT-068, 2026-10-20; design/ROADMAP.md 0.13): outside round 0 and round 1 by Gemini and Grok
+## Outside round 0 and round 1 by Gemini and Grok (PT-068 and PT-070; design/ROADMAP.md 0.13)
 
-Not written yet: `STORY_READ_PROMPT.md` (a text-only read of the Record in play order: machine-made lines, contradictions, who-knows-what errors), `CODE_REVIEW_PROMPT.md` and a refreshed play prompt. The owner carries each pack to the agent and brings its report back here; reports are data, rated and merged like `design/HARDENING.md`.
+Written: `STORY_READ_PROMPT.md` (round 0: a text-only read of `design/story/RECORD.md` with `design/story/CONTINUITY.md` and `design/LORE.md`: contradictions, unexplained terms, knowledge, voice, repeats, machine-made lines, gaps) and `CODE_REVIEW_PROMPT.md` (round 1: a hostile read of the code against the rules the project says it keeps). The attack prompt is `ATTACK_PROMPT.md`. Still to refresh at the freeze (R26): the play prompt (`../GEMINI_PLAYTHROUGH_PROMPT.md`) and the capture pack. The owner carries each pack to the agent and brings its report back here; reports are data, rated and merged like `design/HARDENING.md`.

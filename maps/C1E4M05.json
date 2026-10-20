@@ -1084,21 +1084,21 @@
    "at": [48, 90],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The moss has no grip, Calder: you will slide where you push, and the plates throw you across. Landing is the whole art."
+   "text": "The moss has no grip, Calder: you'll slide where you push, and the plates throw you across. Landing is the whole art."
   },
   {
    "id": "drift",
    "at": [48, 80],
    "radius": 3,
    "speaker": "INES",
-   "text": "It is ice with leaves on. Let go of the stick before you reach the edge, and let it carry you."
+   "text": "It's ice with leaves on. Let go of the stick before you reach the edge, and let it carry you."
   },
   {
    "id": "tree",
    "at": [48, 58],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "The great tree. The fruit is at its foot, in the grove, where there is grip. Take it and the whole bubble will know. The gate will not open for anything else."
+   "text": "The great tree. The fruit is at its foot, in the grove, where there is grip. Take it and the whole bubble will know. The gate won't open for anything else."
   },
   {
    "id": "fruit",

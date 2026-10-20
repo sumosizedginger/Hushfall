@@ -866,7 +866,7 @@
    "at": [12, 22],
    "radius": 3,
    "speaker": "INES",
-   "text": "The lanterns are ours, and they will not carry far. Count your ammunition before you throw the breaker. You cannot turn the light back off."
+   "text": "The lanterns are ours, and they won't carry far. Count your ammunition before you throw the breaker. You can't turn the light back off."
   },
   {
    "id": "vats",
@@ -887,7 +887,7 @@
    "at": [57, 22],
    "radius": 4,
    "speaker": "SIGNAL HOUSE",
-   "text": "The sump heart. Every pipe in the Works ends in that wall. The cradles are warm, Calder: this is where the line starts."
+   "text": "The sump heart. The cradles are warm, Calder: this is where the line starts."
   },
   {
    "id": "lit",

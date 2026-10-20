@@ -832,14 +832,14 @@
    "at": [6, 29],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, there is no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it is why the gate is sealed."
+   "text": "Calder, there's no roof left: the ship tore it open to sing at the sky. Something sits at the far end, and it's why the gate is sealed."
   },
   {
    "id": "nave",
    "at": [20, 29],
    "radius": 3,
    "speaker": "INES",
-   "text": "Two galleries, north and south, with singers on both. The pillars stop a round. Do not cross this floor in a straight line."
+   "text": "Two galleries, north and south, with singers on both. The pillars stop a round. Don't cross this floor in a straight line."
   },
   {
    "id": "shell",
@@ -867,7 +867,7 @@
    "at": [79, 29],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "The gate is open. Past it the ship goes on singing, but it is quieter."
+   "text": "The gate is open. Past it the ship goes on singing, but it's quieter."
   }
  ],
  "decals": [

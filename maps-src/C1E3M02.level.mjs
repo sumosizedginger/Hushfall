@@ -84,13 +84,13 @@ const MAP = {
     { type: 'switch', id: 'bellows', at: [66, 25], wall: 'east', do: [{ open: [67, 26] }, { objective: 'The hatch is open: the exit is at the east end of the last corridor' }, { shake: 1.2 }] },
   ],
   messages: [
-    { id: 'start', at: [5, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you are in. Those are not corridors, they are ribs. Keep to the floor and listen. The ship is breathing and you are in its lungs.' },
-    { id: 'gate1', at: [21, 25], radius: 2.5, speaker: 'INES', text: 'That door is breathing. It opens, it shuts, and it does not care what you want. It will not shut on you if you are standing in it. Wait for it.' },
+    { id: 'start', at: [5, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, you are in. Those aren\'t corridors, they\'re ribs. Keep to the floor and listen. The ship is breathing and you\'re in its lungs.' },
+    { id: 'gate1', at: [21, 25], radius: 2.5, speaker: 'INES', text: 'That door is breathing. It opens, it shuts, and it doesn\'t care what you want. It won\'t shut on you if you\'re standing in it. Wait for it.' },
     { id: 'chamber', at: [26, 25], radius: 3, speaker: 'INES', text: 'People, standing, asleep. And something singing in the corner. Gate on the far side, a way north on this one. Stay out of the middle of the room.' },
-    { id: 'north', at: [30, 22], radius: 3.6, speaker: 'INES', text: 'The air moves up that corridor. It is longer and there is no gate at the mouth. I do not think it is quieter.' },
-    { id: 'heart', at: [50, 25], radius: 4, speaker: 'SIGNAL HOUSE', text: 'This is the heart room. Everything you have passed was a valve. There is a lever on the east wall: that is the way out.' },
+    { id: 'north', at: [30, 22], radius: 3.6, speaker: 'INES', text: 'The air moves up that corridor. It is longer and there\'s no gate at the mouth. I don\'t think it is quieter.' },
+    { id: 'heart', at: [50, 25], radius: 4, speaker: 'SIGNAL HOUSE', text: 'This is the heart room. Everything you have passed was a valve. There\'s a lever on the east wall: that is the way out.' },
     { id: 'hollow', at: [56, 31], radius: 2, speaker: 'HULL', text: 'This rib is thinner than the others. It sounds hollow, like a held breath.' },
-    { id: 'exit', at: [70, 26], radius: 2.5, speaker: 'INES', text: 'It is open. It let you through. I would like to know why.' },
+    { id: 'exit', at: [70, 26], radius: 2.5, speaker: 'INES', text: 'It\'s open. It let you through. I would like to know why.' },
   ],
   triggers: [
     { id: 'chamber', when: 'enter', at: [28, 25], radius: 3, do: [{ objective: 'Cross the chamber. Gate 2 is on the east wall; a corridor leads north' }] },

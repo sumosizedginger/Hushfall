@@ -72,7 +72,7 @@ const MAP = {
     { id: 'start', at: [30, 124], radius: 4, speaker: 'INES', text: 'Ash on the flags, soot to the roof and a long nave of five bays in a row. Everything that can burn has. The stone is still warm at the foot of the walls.' },
     { id: 'raised', at: [30, 117], radius: 4, speaker: 'HULL', text: 'The aisles are two metres up, and the ramps through the pillars are the only ways onto them. High ground costs a flight of steps and gives the nave in front of you.' },
     { id: 'haul', at: [30, 106], radius: 4, speaker: 'RINGING PLATE', text: 'First station, THE HAUL. Run a nail down it: the line is drawn in, hand over hand, by all of the ones who are able. It is owed.' },
-    { id: 'slip', at: [30, 100], radius: 3, speaker: 'INES', text: 'Haul, hold, chock, fit, float. That is a launch. Five stages, in that order, on every slip I ever stood beside. They are launching something here.' },
+    { id: 'slip', at: [30, 100], radius: 3, speaker: 'INES', text: 'Haul, hold, chock, fit, float. That\'s a launch. Five stages, in that order, on every slip I ever stood beside. They are launching something here.' },
     { id: 'hold', at: [30, 84], radius: 4, speaker: 'RINGING PLATE', text: 'Second station, THE HOLD. The line is made fast. It is not lost if it is held: the Mother holds it, and weeps, and does not let go.' },
     { id: 'chock', at: [30, 62], radius: 4, speaker: 'RINGING PLATE', text: 'Third station, THE CHOCK. A wedge is set and the wheel is stopped. The wheel is a person who has been asked to stand still.' },
     { id: 'fit', at: [30, 40], radius: 4, speaker: 'RINGING PLATE', text: 'Fourth station, THE FIT. The bell is fitted. A rank of the willing holds the one who is being fitted, so that it is done without fear.' },

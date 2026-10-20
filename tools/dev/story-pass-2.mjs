@@ -2,8 +2,7 @@
 // is the table itself. Idempotent (a line already changed is left alone). Three kinds of edit:
 //   CHANGES  [old, new]            a line rewritten (any string in a map source: a message, an intro line, an outro, an objective); Marrow Quay has no source, so its JSON is edited
 //   DELETE   [text]                the message whose text is exactly this is removed (its line leaves the source)
-//   UNLESS   [target, condition]   the message `target` gets `unless` (a message that reminds of a locked gate must be silent once it is open); a condition is a string or a list (ANY holds), a list inside
-//                                  the list is an AND; {msg:"exact text"} stands for msg:<id of the message with that text>
+//   UNLESS   [id, condition]       the message with this id gets `unless` (a message that reminds of a locked gate must be silent once it is open); a condition is a string or a list (ANY holds), a list inside the list is an AND
 // then the touched maps are compiled. The rules: design/LORE.md section 5. `node tools/dev/story-pass-2.mjs [--check]`
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,14 +44,16 @@ export const CHANGES = {
     ["That is Tide-Warden plate: the front is nearly armour-proof. Do not stand in front of it. Let it charge, and let it hit something.", "That is Tide-Warden plate. Somebody on the Board wore that, once. The front is nearly armour-proof: let it charge, and let it hit something."],
   ],
   C1E1M07: [
+    ["Next: the Bell Tower of St. Orrin. The transmission gave the hour.", "Next: the Bell Tower of St. Orrin, on the ridge."],
     ["Calder, the Signal House. The generator is down. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.", "The generator is down, Calder. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short."],
     ["The lamp on the lighthouse is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.", "The lamp here is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit."],
     ["It is dark on purpose. They cut the lamps so we cannot see them. The lanterns are yours: stay near them.", "It is dark on purpose. They cut the lamps so we cannot see them. Stay near the lanterns."],
     ["Beds. All made. Whatever slept here got up in the night and did not undo them.", "Beds. All made. Whoever slept here got up in the night and did not undo them."],
   ],
   C1E1M08: [
+    ["The tower is silent. The signal did not stop: it went somewhere else. The hatch is open.", "The tower is silent, Calder, and the signal did not stop. I have its bearing: the Salt Works. The hatch is open."],
     ["Calder, the Bell Tower. It has rung since the transmission, and the signal goes up through it. Climb: the tower is a spiral, a long stair. Whatever rings it is at the top.", "Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it."],
-    ["Port Marrow is quiet. The signal is not: it is going somewhere. Episode one ends here.", "Port Marrow is quiet. The signal is not: it is going somewhere."],
+    ["Port Marrow is quiet. The signal is not: it is going somewhere. Episode one ends here.", "Port Marrow is quiet. The signal is not."],
   ],
   // ---------------------------------------------------------------- Episode 2
   C1E2M01: [
@@ -87,9 +88,11 @@ export const CHANGES = {
     ["Next: the Slurry Undercroft. Whatever they drained comes out down there.", "Next: the Slurry Undercroft. What they drained comes out down there."],
   ],
   C1E2M07: [
+    ["The sump heart. Every pipe in the Works ends in that wall. The cradles are warm, Calder: this is where the line starts.", "The sump heart. The cradles are warm, Calder: this is where the line starts."],
     ["Calder, the Slurry Undercroft. They cut the lights down here so nobody would see what drains in. Four breakers, one in each hall. Each one you throw wakes the hall ahead.", "Calder, the lights are cut down here. Four breakers, one in each hall. Each one you throw wakes the hall ahead."],
   ],
   C1E2M08: [
+    ["The feeders are gone. All of them. Hit it, Calder, hit it with everything.", "The feeders are gone. All of them. Now hit it with everything."],
     ["Calder, the Grafting Floor. The whole Works feeds this room. Whatever runs it is at the north end. Break its feeders first: they hatch its guards and half-shield it.", "Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it."],
     ["There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and she is bare.", "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it is bare."],
     ["The line is broken. Calder, whatever the Mother was feeding has landed. Episode three is a crater, and the Choir ships are in it.", "The line is broken, Calder. The set is reading something large down in a crater east of the Works."],
@@ -115,6 +118,7 @@ export const CHANGES = {
     ["That is the end of the tuning. Whatever was being tuned is still above us, singing.", "That is the end of the tuning. What was being tuned is still above us, singing."],
   ],
   C1E3M06: [
+    ["Do what you do near them from behind a pew.", "Fight from behind a pew."],
     ["Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Whatever you do near them, do it from behind a pew.", "Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Do what you do near them from behind a pew."],
     ["Past the conductor. Whatever they were rehearsing, they were rehearsing for this.", "Past the conductor. They were rehearsing for this."],
   ],
@@ -123,13 +127,14 @@ export const CHANGES = {
     ["All four vats are dead. The north passage is open. Whatever was casting bell-bearers is cold.", "All four vats are dead. The north passage is open. The furnace is going cold."],
   ],
   C1E3M08: [
+    ["The reeds are silent. One ring now, and it is angry. Hit it with everything.", "The reeds are silent. One ring now, and it is angry. Stay behind a pillar for the ring, then hit it."],
     ["Calder, the Throat. Every ship in the fleet sings through this chamber. Whatever sings it is at the far end, and I read four reeds feeding it. Cut the reeds first.", "Calder, every ship in the fleet sings through this chamber. The singer is at the far end, and I read four reeds feeding it. Cut the reeds first."],
     ["The voice is gone, Calder. The ships are quiet. Whatever they were calling heard that. We should not be here when it answers.", "The voice is gone, Calder. The ships are quiet. They were calling something, and it heard that. We should not be here when it answers."],
     ["Episode three is done. The Choir ships fall silent. Whatever they were calling, it heard.", "Next: the Ascent Tether, where the cable goes up from the foot of the world."],
   ],
   // ---------------------------------------------------------------- Episode 4
   C1E4M01: [
-    ["Calder, the Ascent Tether. The Vael freight goes up this cable and so do you. One road, round and round it. Nothing on it moves slowly except the loads.", "The Vael freight goes up this cable, Calder, and so do you. One road, round and round it. Nothing on it moves slowly except the loads."],
+    ["Calder, the Ascent Tether. The Vael freight goes up this cable and so do you. One road, round and round it. Nothing on it moves slowly except the loads.", "The Vael freight goes up this cable, Calder, and the call went up with it. One road, round and round it. Nothing on it moves slowly except the loads."],
   ],
   C1E4M02: [
     ["Calder, the Wreck Belt: wrecks of earlier invasions. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.", "Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back."],
@@ -150,14 +155,17 @@ export const CHANGES = {
     ["Calder, the Drift Orchard. The Vael grow Tollbearers in orbit. The moss has no grip: you will slide where you push, and the plates throw you across. Landing is the whole art.", "The moss has no grip, Calder: you will slide where you push, and the plates throw you across. Landing is the whole art."],
   ],
   C1E4M06: [
+    ["The hall opens. Above the last steps the light stops being a rumour and becomes a thing you can look at.", "The hall opens. Above the last steps the glare gathers into a shape."],
     ["Calder, the Approach. Five ranks, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two.", "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens do not line up. The tunnels in the flanks go round the first two."],
     ["The Mother is in the round room west of this rank: kill her", "The Weeping Mother is in the round room west of this rank: kill her"],
     ["The Mother is down. The way out is open: the Gate yard, straight ahead", "The Weeping Mother is down. The way out is open: the Gate yard, straight ahead"],
   ],
   C1E4M07: [
+    ["The last door is behind you. The Gate is the colour of the inside of a bell, and it is not quiet.", "The last door is behind you. The Gate is near enough to feel in the floor, and it is not quiet."],
     ["Calder, the foot of the Hollow Stair. You will hear them long before you see them. There is a lever on every landing; the Gate opens for all four.", "You will hear them long before you see them, Calder. There is a lever on every landing; the Gate opens for all four."],
   ],
   C1E4M08: [
+    ["The last seal is gone. The shield is gone. Hit it with everything.", "The last seal is gone, and the shield with it. Now it can be hurt."],
     ["Calder, the Gate Warden. Three seals hold its shield up: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it.", "Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it."],
     ["It is down. The Gate is open, Calder. The way out is the way in. Whatever is on the other side has stopped being quiet.", "It is down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet."],
   ],
@@ -173,6 +181,7 @@ export const CHANGES = {
     ["Third night of the Hush. Skipper took her out past the bar to get clear. The Gate opened under the keel. We did not sink. We arrived.", "Third night of the Hush. Skipper took her out past the bar to get clear. The sea opened under the keel. We did not sink. We arrived."],
   ],
   C2M08: [
+    ["A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. That is where the sound comes from.", "A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that is what holds the Gate open. I am going down."],
     ["Below the spire is the Deep. The first act of the descent ends here.", "Below the spire is the Deep."],
   ],
   C2M09: [
@@ -195,6 +204,9 @@ export const CHANGES = {
   ],
   C2M17: [
     ["The drum gate turned on its two bolts and let the red in. The floor beyond it goes down in wide steps, and the light on the ribs is beating a little faster.", "The drum gate turned on its two bolts and let the red in. Beyond it the ribs are lit a little faster."],
+  ],
+  C2M18: [
+    ["A cathedral with no floor. An island in the middle, two rings round it, and eight bridges over a drop I cannot see the bottom of. Every bridge lights one segment at a time.", "A cathedral with no floor, and a drop I cannot see the bottom of. Every bridge lights one segment at a time."],
   ],
   C2M22: [
     ["The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then, and nobody was in the room to hear it.", "The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then."],
@@ -238,23 +250,23 @@ export const SPEAKERS = {
   C1E2S01: [['arrive', "WARDEN CALDER'S NOTE"]],
 };
 
-const T = (s) => ({ msg: s });
+/** which reminder is held by what, by message id (the text of a line is rewritten by later passes; the id is not). A condition is a string or a list (ANY holds); a list inside the list is an AND. */
 export const UNLESS = {
-  C1E1M08: [["One bell down. The Cantor staggered when it broke. Keep cutting the ring.", [T('The tower is silent. The signal did not stop: it went somewhere else. The hatch is open.')]]],
-  C1E1M07: [["The set is cold. Three fuse sockets, all empty: brass, iron, bell. The lever on the north wall waits for them.", [T('TOLL RECEIVED. THE FIRST BELL HAS RUNG. PORT MARROW IS NOT THE END OF THE LINE. IT IS THE MIDDLE OF IT. SING WHEN THE BELL SINGS.')]]],
-  C2M03: [["The gate is shut. The lever that works it is in the hut on the east terrace, over the ditch. The terrace ramps are at the south end.", [T('The gate grinds open, a hand at a time. Something in the court hears it.')]]],
-  C2M09: [["The gate is the drum in the middle of the plaza. Its door is on the pulpit lever, and nothing else opens it.", [T('The door has opened. It was shut with a counterweight, not a lock.')]]],
-  C2M13: [["A plain gate at the bottom of the well, and no handle. If it is shut, a counterweight holds it, and the winch for that is on the inner ring, on the wall across from the spoke.", [T('The winch turns a counterweight somewhere under the floor. Below, a stair has come up out of the well.')]]],
-  C2M17: [["The drum gate is shut. It is held by the north relay and the south relay, and it opens only when both are thrown.", [[T('South relay. The same jump in the cable, one beat late.'), T('North relay. The cable under my feet jumps once, like a line with a fish on it.')]]]],
-  C2M18: [["The north wall is shut. It opens when the four knots are broken and the root is cut, in either order.", [T('The root has let go of the strands. Every bridge has stopped lighting.')]]],
-  C2M19: [["The door is shut. It takes an iron key, and the key is in the cutting room at the north end of the hall.", ['key:iron']]],
-  C2M20: [["The exit is locked. The hub relay opens it, on the island in the middle of the ring.", [T('The relay is thrown. The east station is the last stop before this one: the exit there has come unlocked.')]]],
-  C2M21: [["The exit is sealed by three valves, one on each ring. The wheels are under red lamps, on the walls beside the catwalks.", [T('The third wheel is turned. The seal on the top ring has let go.')]]],
-  C2M22: [["The way out is sealed until the lift has gone down. It does not need a key or a lever. It needs the Silent to be gone.", [T('They did not look at me, and they did not look back. Forty feet down the shaft the light of the lift went out, one lamp at a time.')]]],
-  C2M25: [["The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern.", [T('The door has gone back into the wall. The corridor beyond it slopes down.')]]],
-  C2M26: [["The refectory gate is shut. It is held by three bolts, one from the latch in each of the three chambers of the Silent.", [T('The east latch is thrown. The bolts all hang free: the refectory gate is open.')]]],
-  C2M27: [["The exit is locked. The lever on the north wall of this road, near the far lip, unlocks it.", [T('The lip is held. The exit has come unlocked at the east end of the road.')]]],
-  C2M28: [["The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole.", [T('Nine. It sounds the same as the north pier\'s, to the half-second. Somebody listened to it for a very long time.')]]],
+  C1E1M07: [["radio-locked", ["msg:vael"]]],
+  C1E1M08: [["ring", ["msg:quiet"]]],
+  C2M03: [["bridge", ["msg:gate"]]],
+  C2M09: [["drum", ["msg:open"]]],
+  C2M13: [["sealedhint", ["msg:winch"]]],
+  C2M17: [["gate", [["msg:relay-s", "msg:relay-n"]]]],
+  C2M18: [["door", ["msg:cut"]]],
+  C2M19: [["door", ["key:iron"]]],
+  C2M20: [["exit", ["msg:relay"]]],
+  C2M21: [["exit", ["msg:v3"]]],
+  C2M22: [["door", ["msg:gone"]]],
+  C2M25: [["door-shut", ["msg:door-open"]]],
+  C2M26: [["gate", ["msg:r3"]]],
+  C2M27: [["exit", ["msg:far-lip"]]],
+  C2M28: [["exit", ["msg:ninth"]]],
 };
 
 // ------------------------------------------------------------------------------------------------ the machinery
@@ -266,7 +278,10 @@ const escFor = (q, t) => (q === "'" ? t.split("'").join(BS + "'") : q === '"' ? 
 const fileOf = (id) => { const src = path.join(root, 'maps-src', id + '.level.mjs'); return fs.existsSync(src) ? { file: src, src: true } : { file: path.join(root, 'maps', id + '.json'), src: false }; };
 const formsOf = (a, b, useSrc) => (useSrc ? [[a, b], [a.replace(/'/g, "\\'"), b.replace(/'/g, "\\'")]] : [[esc(a), esc(b)]]);
 const mapJson = (id) => JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8'));
-const idOf = (id, text) => { const m = mapJson(id).messages.find((x) => x.text === text); if (!m) throw new Error(`${id}: no message with the text "${text.slice(0, 60)}"`); return m.id; };
+const idOf = (id, text) => {                      // an anchor may be named by the text it had before or after this table rewrote it
+  const alts = [text]; for (const [a, b] of CHANGES[id] ?? []) { if (a === text) alts.push(b); if (b === text) alts.push(a); }
+  const m = mapJson(id).messages.find((x) => alts.includes(x.text)); if (!m) throw new Error(`${id}: no message with the text "${text.slice(0, 60)}"`); return m.id;
+};
 
 const touched = new Set(), missing = [], problems = []; let changed = 0;
 const MARK_A = '// ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened', MARK_B = '// ---- end PT-070 unless';
@@ -305,8 +320,7 @@ for (const [id, texts] of Object.entries(DELETE)) {
 
 for (const [id, list] of Object.entries(UNLESS)) {
   const { file, src } = fileOf(id); if (!src) { problems.push(`${id}: unless needs a source`); continue; }
-  const resolve = (c) => (Array.isArray(c) ? c.map(resolve) : (typeof c === 'object' ? 'msg:' + idOf(id, c.msg) : c));
-  const entries = list.map(([text, conds]) => `${JSON.stringify(idOf(id, text))}: ${JSON.stringify(conds.map(resolve))}`);
+  const entries = list.map(([mid, conds]) => { if (!mapJson(id).messages.some((x) => x.id === mid)) problems.push(`${id}: unless names a message that does not exist: ${mid}`); return `${JSON.stringify(mid)}: ${JSON.stringify(conds)}`; });
   const block = `${MARK_A}\nfor (const [mid, unless] of Object.entries({ ${entries.join(', ')} })) MAP.messages.find((m) => m.id === mid).unless = unless;\n${MARK_B}\n`;
   let s = fs.readFileSync(file, 'utf8');
   const a = s.indexOf(MARK_A), b = s.indexOf(MARK_B);
@@ -334,5 +348,5 @@ for (const [file, a, b] of CARD_CHANGES) {
 
 console.log(`${changed} edit(s) ${check ? 'would be made' : 'made'} in ${touched.size} map(s)${missing.length ? '\nNOT FOUND:\n  ' + missing.join('\n  ') : ''}${problems.length ? '\nPROBLEMS:\n  ' + problems.join('\n  ') : ''}`);
 if (!check && touched.size) for (const id of touched) { if (!fileOf(id).src) continue; const r = spawnSync(process.execPath, [path.join(root, 'tools/mapkit/compile.mjs'), id], { cwd: root, encoding: 'utf8' }); console.log(`compile ${id}: ${r.status === 0 ? 'ok' : 'FAILED ' + (r.stderr || r.stdout).slice(0, 300)}`); }
-if (check && (changed || missing.length || problems.length)) process.exit(1);
-if (missing.length || problems.length) process.exit(1);
+if (check && (changed || problems.length)) process.exit(1);
+if (problems.length) process.exit(1);         // NOT FOUND is only a note: the table is a record, and a line a later pass (tools/dev/story-voice.mjs) or the author changed again is no longer there

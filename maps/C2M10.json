@@ -2295,7 +2295,7 @@
    "at": [44, 81],
    "radius": 4,
    "speaker": "INES",
-   "text": "A hall with a roof I cannot see. Stalls, strings of lamps, and a crowd that is doing its buying in a murmur. Nobody here has a bell."
+   "text": "A hall with a roof I can't see. Stalls, strings of lamps, and a crowd that's doing its buying in a murmur. Nobody here has a bell."
   },
   {
    "id": "echo",
@@ -2309,7 +2309,7 @@
    "at": [44, 67],
    "radius": 5,
    "speaker": "INES",
-   "text": "A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I am carrying."
+   "text": "A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I'm carrying."
   },
   {
    "id": "ledger",

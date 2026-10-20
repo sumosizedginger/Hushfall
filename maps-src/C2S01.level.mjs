@@ -51,7 +51,7 @@ const MAP = {
     { id: 't6', at: beds[8], radius: 3.5, speaker: 'THE TENDER', text: 'At the bottom is the Root Bell. It is the last voice the stone has. They ring it by hand, and the hands are tired. I will not tell you to stop it. I will tell you that it is tired.' },
     { id: 't7', at: beds[9], radius: 3.5, speaker: 'THE TENDER', text: 'Take what is in the beds. It is oil, pressed from the seed of the chimes. It will light you. Go back up by the stair. I will be here.' },
     { id: 'oil', at: [35, 31], radius: 3, speaker: 'HULL', text: 'The oil in the tins is pressed from the seed of the chime plants. A tin burns as long as a Marrow tin, and smells of cut grass.' },
-    { id: 'exit', at: [35, 8], radius: 3, speaker: 'INES', text: 'The stair is narrow and goes up in the dark. She did not come to the foot of it to say goodbye. She did not need to.' },
+    { id: 'exit', at: [35, 8], radius: 3, speaker: 'INES', text: 'The stair is narrow and goes up in the dark. She did not come to the foot of it to say goodbye. She didn\'t need to.' },
   ],
   triggers: [
     { id: 'beds', when: 'enter', at: [35, 40], radius: 6, do: [{ objective: 'Walk the ring of beds: the keeper has left a word at several of them' }] },

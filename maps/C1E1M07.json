@@ -1042,7 +1042,7 @@
    "Somebody is still keying the set."
   ]
  },
- "outro": "Next: the Bell Tower of St. Orrin. The transmission gave the hour.",
+ "outro": "Next: the Bell Tower of St. Orrin, on the ridge.",
  "messages": [
   {
    "id": "start",
@@ -1063,7 +1063,7 @@
    "at": [12, 23],
    "radius": 3,
    "speaker": "INES",
-   "text": "It is dark on purpose. They cut the lamps so we cannot see them. Stay near the lanterns."
+   "text": "It's dark on purpose. They cut the lamps so we can't see them. Stay near the lanterns."
   },
   {
    "id": "radio-locked",
@@ -1087,7 +1087,7 @@
    "at": [18, 33],
    "radius": 4,
    "speaker": "INES",
-   "text": "Beds. All made. Whoever slept here got up in the night and did not undo them."
+   "text": "Beds. All made. Whoever slept here got up in the night and didn't undo them."
   },
   {
    "id": "attic",
@@ -1108,7 +1108,7 @@
    "at": [23, 10],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "That was not a station. That was a summons. Go: the tower on the ridge is next, and it is already ringing."
+   "text": "That wasn't a station. That was a summons. Go: the tower on the ridge is next, and it's already ringing."
   },
   {
    "id": "found-linethrower",

@@ -83,11 +83,11 @@ const MAP = {
     { id: 'stair', at: [21, 80], radius: 3, speaker: 'HULL', text: 'The first stair is under a roof. At the top the terrace is open, and a Warden-Graft with its plate to you will charge down the whole length of it.' },
     { id: 'plate', at: [32, 71], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: the long number is shorter than it was at the Fields. By about a thousand. I do not know whether that is good news.' },
     { id: 'lift', at: [36, 65], radius: 2.5, speaker: 'HULL', text: 'The lift. A lever on the car sends it up; a call lever on each landing brings it down. Nothing on the next tier can reach you until it is up.' },
-    { id: 'second', at: [36, 56], radius: 4, speaker: 'INES', text: 'A shell-back at the foot of the second stair and a singer behind it. They have had a long time to get used to this view. Do not hurry.' },
+    { id: 'second', at: [36, 56], radius: 4, speaker: 'INES', text: 'A shell-back at the foot of the second stair and a singer behind it. They have had a long time to get used to this view. Don\'t hurry.' },
     { id: 'mother', at: [36, 40], radius: 4, speaker: 'INES', text: 'The third terrace has a mother on it, weeping, and the stone round her is wet. Walk out of what she makes. The lift is on the far side.' },
     { id: 'summit', at: [36, 26], radius: 4, speaker: 'INES', text: 'The top. The whole sea bed behind me, flat to the edge, and the road across it like a scratch. The needles are much nearer from here.' },
     { id: 'note', at: [36, 20], radius: 2.5, speaker: 'A SILENT (NOTE)', text: 'Below this is where the count is kept. We go down only to be counted. If you go, you are the first who has not come to be counted.' },
-    { id: 'spire', at: [36, 13], radius: 3, speaker: 'INES', text: 'A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. That is where the sound comes from.' },
+    { id: 'spire', at: [36, 13], radius: 3, speaker: 'INES', text: 'A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that\'s what holds the Gate open. I am going down.' },
     { id: 'hollow', at: [32, 80], radius: 2, speaker: 'HULL', text: 'The north wall of the gate hall rings hollow beside the stair.' },
   ],
   triggers: [

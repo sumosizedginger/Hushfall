@@ -1413,7 +1413,7 @@
    "at": [41, 11],
    "radius": 5,
    "speaker": "INES",
-   "text": "A cloister. The arcade is low and the garden in the middle is full of stones with names cut in them in a hand I cannot read. There is a candle lit at every corner of the building."
+   "text": "A cloister. The arcade is low and the garden in the middle is full of stones with names cut in them in a hand I can't read. There's a candle lit at every corner of the building."
   },
   {
    "id": "count",
@@ -1561,7 +1561,7 @@
    "at": [1, 1],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "They did not look at me, and they did not look back. Forty feet down the shaft the light of the lift went out, one lamp at a time."
+   "text": "They didn't look at me, and they didn't look back. Forty feet down the shaft the light of the lift went out, one lamp at a time."
   },
   {
    "id": "hollow",

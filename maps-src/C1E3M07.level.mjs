@@ -76,8 +76,8 @@ const MAP = {
     ...VATS.map(([x, z, spawns]) => ({ type: 'enemy', kind: 'vat', at: [x, z], group: 'vats', facing: 'south', ...(spawns ? { spawns } : {}) })),
   ],
   messages: [
-    { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Choir grows what it wants more of here. I am reading four vats on a ring round a furnace. Break them and the way out opens.' },
-    { id: 'hall', at: [20, 28], radius: 2.5, speaker: 'INES', text: 'It is a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Do not stand where they can see you and wait.' },
+    { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the Choir grows what it wants more of here. I\'m reading four vats on a ring round a furnace. Break them and the way out opens.' },
+    { id: 'hall', at: [20, 28], radius: 2.5, speaker: 'INES', text: 'It\'s a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Don\'t stand where they can see you and wait.' },
     { id: 'vat', at: [26, 31], radius: 4, speaker: 'HULL', text: 'The dome swells, then something drops out of the spout. Kill the vat and it stops. What it has already made stays made.' },
     { id: 'troughs', at: [34, 38], radius: 4, speaker: 'INES', text: 'Slag in the troughs. It burns. The pillars are cover from the vats, and the floor between them is yours.' },
     { id: 'panel', at: [34, 40], radius: 2, speaker: 'HULL', text: 'One panel in the south wall rings hollow.' },

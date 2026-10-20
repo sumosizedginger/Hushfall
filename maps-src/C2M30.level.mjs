@@ -48,7 +48,7 @@ const MAP = {
   startFacing: 'east',
   messages: [
     msg('floor', 13, CZ, 5, 'INES', 'The floor of the Bell. The roots have drawn back from the walls and left the stone clean, as if it had been waiting for someone to sweep it.'),
-    msg('shaft', 31, CZ, 5, 'INES', 'The stair goes up the inside of the shaft. A plate at the first landing says how far down this is. I do not read the number.'),
+    msg('shaft', 31, CZ, 5, 'INES', 'The stair goes up the inside of the shaft. A plate at the first landing says how far down this is. I don\'t read the number.'),
     msg('hive', 49, CZ, 5, 'INES', 'The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. The beat has stopped.'),
     msg('deep', 67, CZ, 5, 'INES', 'The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting.'),
     msg('hollow', 67, CZ + 3, 2, 'INES', 'One stretch of the south wall sounds different under my knuckles. Somebody has been here with a hand and a reason.'),

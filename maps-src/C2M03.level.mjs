@@ -100,11 +100,11 @@ const MAP = {
     { id: 'bridge', at: [46, 63], radius: 3, speaker: 'HULL', text: 'The gate is shut. The lever that works it is in the hut on the east terrace, over the ditch. The terrace ramps are at the south end.' },
     { id: 'gate', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The gate grinds open, a hand at a time. Something in the court hears it.' },
     { id: 'court', at: [46, 48], radius: 3, speaker: 'INES', text: 'A hall with the roof left on and the middle left open to the floor. Five perches, one round keep. This is where they ring things.' },
-    { id: 'keep', at: [46, 43], radius: 3, speaker: 'INES', text: 'Something is shut in the middle of that keep and it is not one of them. They do not cage their own. Or they do, and I do not know which.' },
+    { id: 'keep', at: [46, 43], radius: 3, speaker: 'INES', text: 'Something is shut in the middle of that keep and it isn\'t one of them. They do not cage their own. Or they do, and I don\'t know which.' },
     { id: 'latch', at: [46, 32], radius: 2, speaker: 'HULL', text: 'The latch outside the cage. A cage door has no business with a lever this size.' },
     { id: 'freed', at: [0, 0], radius: 0.1, speaker: 'THE TENDER', text: 'You do not sing. Good. I keep the dead, and they shut me in the bell house for not singing at a burying. The north gate is mine, and it is open. Go on to the Fields.' },
     { id: 'silent', at: [0, 0], radius: 0.1, speaker: 'A SILENT', text: 'We stopped. That is the whole of what we did.' },
-    { id: 'way', at: [46, 11], radius: 3, speaker: 'INES', text: 'The Fields, she said. I have not seen a field on this world yet. I do not know what they grow in them.' },
+    { id: 'way', at: [46, 11], radius: 3, speaker: 'INES', text: 'The Fields, she said. I have not seen a field on this world yet. I don\'t know what they grow in them.' },
     { id: 'hollow', at: [46, 23], radius: 2, speaker: 'HULL', text: 'The north wall of the keep rings hollow behind the pillar.' },
   ],
   triggers: [

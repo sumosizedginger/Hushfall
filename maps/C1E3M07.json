@@ -734,14 +734,14 @@
    "at": [5, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Calder, the Choir grows what it wants more of here. I am reading four vats on a ring round a furnace. Break them and the way out opens."
+   "text": "Calder, the Choir grows what it wants more of here. I'm reading four vats on a ring round a furnace. Break them and the way out opens."
   },
   {
    "id": "hall",
    "at": [20, 28],
    "radius": 2.5,
    "speaker": "INES",
-   "text": "It is a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Do not stand where they can see you and wait."
+   "text": "It's a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Don't stand where they can see you and wait."
   },
   {
    "id": "vat",

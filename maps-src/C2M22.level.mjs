@@ -81,7 +81,7 @@ const MAP = {
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
   scenery: [],
   messages: [
-    { id: 'start', at: [41, 11], radius: 5, speaker: 'INES', text: 'A cloister. The arcade is low and the garden in the middle is full of stones with names cut in them in a hand I cannot read. There is a candle lit at every corner of the building.' },
+    { id: 'start', at: [41, 11], radius: 5, speaker: 'INES', text: 'A cloister. The arcade is low and the garden in the middle is full of stones with names cut in them in a hand I can\'t read. There\'s a candle lit at every corner of the building.' },
     { id: 'count', at: [41, 14], radius: 4, speaker: 'TALLY PLATE', text: 'THE SILENT IN THIS HOUSE: 6. TO THE LIFT, ON THE CALL. A number is crossed out and written again in the margin: 4.' },
     { id: 'plan', at: [16, 12], radius: 6, speaker: 'HULL', text: 'The four chapels are at the corners. Each has a latch on the far wall, beside the candles. When all four are thrown the call goes out.' },
     { id: 'hunt', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'A bell has gone in the south arm, three strokes. The Songkeepers on the rounds have stopped walking and turned to face the north-west chapel.' },
@@ -101,7 +101,7 @@ const MAP = {
     { id: 's4', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'I will not forget the ones who sang. I have kept them in order. Carry a light, low. They follow it, and they do not ring it.' },
     { id: 's5', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Thank you for the quiet.' },
     { id: 's6', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Go down. Do not wait for us.' },
-    { id: 'gone', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'They did not look at me, and they did not look back. Forty feet down the shaft the light of the lift went out, one lamp at a time.' },
+    { id: 'gone', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'They didn\'t look at me, and they didn\'t look back. Forty feet down the shaft the light of the lift went out, one lamp at a time.' },
     { id: 'hollow', at: [41, 9], radius: 3, speaker: 'HULL', text: 'The north wall of the arcade rings hollow in one run of cells. There is a door in it, painted over.' },
     { id: 'g1', at: [41, 4], radius: 4, speaker: 'A SILENT (NOTE)', text: 'My sister is under the third stone. She sang the count at the Gate for twenty years and stopped on the day it asked her to sing me. They put her here. I took the next house along.' },
     { id: 'g2', at: [39, 4], radius: 4, speaker: 'A SILENT (NOTE)', text: 'I tend the stones. Nobody comes. The ones who sang are kept in order by size, and the Silent in order by the day they stopped. She is first. I am not on the list yet.' },

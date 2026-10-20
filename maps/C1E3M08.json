@@ -938,7 +938,7 @@
    "at": [17, 28],
    "radius": 3,
    "speaker": "INES",
-   "text": "It is wet. The walls are wet. Do not think about what the walls are."
+   "text": "It's wet. The walls are wet. Don't think about what the walls are."
   },
   {
    "id": "ribs",
@@ -973,7 +973,7 @@
    "at": [57, 28],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The reeds are silent. One ring now, and it is angry. Hit it with everything."
+   "text": "The reeds are silent. One ring now, and it's angry. Stay behind a pillar for the ring, then hit it."
   },
   {
    "id": "broken",
