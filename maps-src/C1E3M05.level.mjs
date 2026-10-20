@@ -92,4 +92,11 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E3M05', lane: [...(laneOf('C1E3M05') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1},{"from":"tollbearer","to":"chorister","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- PT-065 (R9: the axe moves from Kiln Row to map 21, so a new weapon still turns up in the second half): a fire axe on a hook by the first platform, ON the lane (tools/dev/place-near.mjs), appended after every other entity so no id shifts ----
+MAP.entities ??= [];
+MAP.entities.push({ type: 'pickup', kind: 'weapon_axe', at: [18, 28] });
+(MAP.messages ??= []).push({ id: 'found-axe', at: [18, 28], radius: 1.5, speaker: 'HULL', text: 'A fire axe on a hook by the first platform, the handle worn smooth. Slow, and it takes everything in front of you.' });
+MAP.quality.introduces += '; also found here: the fire axe, on a hook by the first platform';
+// ---- end PT-065 ----
+
 export default MAP;

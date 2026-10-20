@@ -13,7 +13,7 @@ import { shippedSrc, ROOT } from './helpers.js';
 const CAMPAIGN = ['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E2M01', 'C1E2M02', 'C1E2M03', 'C1E2M04', 'C1E2M05', 'C1E2M06', 'C1E2M07', 'C1E2M08'];
 const SECRETS = ['C1E1S01', 'C1E2S01'];
 /** where each found weapon is, and the route that walks over it */
-const WHERE = { weapon_boathook: ['C1E1M03', 'main'], weapon_marlinspike: ['C1E1M04', 'main'], weapon_mallet: ['C1E1M05', 'main'], weapon_carbine: ['C1E1M06', 'main'], weapon_linethrower: ['C1E1M07', 'main'], weapon_chainsaw: ['C1E2M03', 'secret'], weapon_axe: ['C1E2M04', 'main'], weapon_fork: ['C1E2M05', 'main'] };
+const WHERE = { weapon_boathook: ['C1E1M03', 'main'], weapon_marlinspike: ['C1E1M04', 'main'], weapon_mallet: ['C1E1M05', 'main'], weapon_carbine: ['C1E1M06', 'main'], weapon_linethrower: ['C1E1M07', 'main'], weapon_chainsaw: ['C1E2M03', 'secret'], weapon_axe: ['C1E3M05', 'main'], weapon_arc: ['C1E2M04', 'main'], weapon_fork: ['C1E2M05', 'main'] };          // PT-065 (R9): the arc lamp moved from map 14 to map 12 and the axe from map 12 to map 21
 const play = (id, name = 'main', opts = {}) => runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed: 1, difficulty: 'normal', ...opts });
 const kinds = (id) => shippedSrc(id).entities.filter((e) => e.type === 'pickup').map((e) => e.kind);
 

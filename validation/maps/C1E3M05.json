@@ -2,18 +2,18 @@
   "mapId": "C1E3M05",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "06eaa99",
+  "codeVersion": "d23dd3b",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0050d94501b39f1f",
-  "assetVersion": "2a768302f10b0f75",
-  "engineSha": "bb40e811807b82d3",
+  "mapSha": "fee17d914cc07508",
+  "assetVersion": "df26bcd4e6468f58",
+  "engineSha": "ac1c0dc7b5c86aff",
   "sources": {
-    "engine": "bb40e811807b82d3",
-    "render": "0e73592846aa4b5b",
-    "game": "c9e659c001f81bc8",
-    "audio": "50c8b677684b5b60",
-    "assets": "2a768302f10b0f75"
+    "engine": "ac1c0dc7b5c86aff",
+    "render": "169d0b5fbeb2e58b",
+    "game": "35c330e6c33ff48c",
+    "audio": "f8f3d9169ece1cc4",
+    "assets": "df26bcd4e6468f58"
   },
   "routesSha": "a174f5f2532a5914",
   "loads": true,
@@ -25,11 +25,11 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 4025,
-      "finalHash": "be936d0c",
+      "ticks": 4023,
+      "finalHash": "f22bb586",
       "kills": 23,
       "secrets": 0,
-      "items": 6,
+      "items": 7,
       "damageTaken": 22
     },
     {
@@ -38,11 +38,11 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 4305,
-      "finalHash": "410900f6",
+      "ticks": 4304,
+      "finalHash": "10b8193d",
       "kills": 24,
       "secrets": 0,
-      "items": 10,
+      "items": 11,
       "damageTaken": 105
     },
     {
@@ -51,8 +51,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 4408,
-      "finalHash": "318bc9ee",
+      "ticks": 4433,
+      "finalHash": "5ee177d9",
       "kills": 24,
       "secrets": 0,
       "items": 10,
@@ -65,11 +65,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4432,
-      "finalHash": "322ddd61",
+      "finalHash": "623ce10d",
       "kills": 23,
       "secrets": 1,
-      "items": 5,
-      "damageTaken": 22
+      "items": 6,
+      "damageTaken": 24
     },
     {
       "file": "routes/C1E3M05.secret.route.json",
@@ -78,10 +78,10 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4529,
-      "finalHash": "a5788775",
+      "finalHash": "9af66cab",
       "kills": 23,
       "secrets": 1,
-      "items": 7,
+      "items": 8,
       "damageTaken": 53
     },
     {
@@ -91,10 +91,10 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5151,
-      "finalHash": "8098d184",
+      "finalHash": "10894f60",
       "kills": 24,
       "secrets": 1,
-      "items": 10,
+      "items": 11,
       "damageTaken": 128
     }
   ],
@@ -104,13 +104,13 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 4305,
-    "finalHash": "410900f6",
+    "ticks": 4304,
+    "finalHash": "10b8193d",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 21,
-    "items": 21,
+    "items": 22,
     "secrets": 1
   },
   "facts": {
@@ -177,8 +177,8 @@
         "seeds": 3,
         "result": "complete",
         "damage": 22,
-        "meanDamage": 21,
-        "seconds": 67.1,
+        "meanDamage": 20,
+        "seconds": 67,
         "kills": 23,
         "failure": null
       }
@@ -213,7 +213,7 @@
         "result": "complete",
         "damage": 105,
         "meanDamage": 132,
-        "seconds": 71.8,
+        "seconds": 71.7,
         "kills": 24,
         "failure": null
       }
@@ -248,7 +248,7 @@
         "result": "complete",
         "damage": 144,
         "meanDamage": 125,
-        "seconds": 73.5,
+        "seconds": 73.9,
         "kills": 24,
         "failure": null
       }
@@ -271,12 +271,12 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 104,
+        "damage": 122,
         "failure": null
       },
       "ammo pickups worth 25% less": {
         "result": "complete",
-        "damage": 107,
+        "damage": 113,
         "failure": null
       }
     }
@@ -319,17 +319,17 @@
       {
         "name": "route C1E3M05.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "67.1 s"
+        "detail": "67.0 s"
       },
       {
         "name": "route C1E3M05.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "71.8 s"
+        "detail": "71.7 s"
       },
       {
         "name": "route C1E3M05.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "73.5 s"
+        "detail": "73.9 s"
       },
       {
         "name": "route C1E3M05.secret.route.json on easy reaches the exit",
@@ -347,12 +347,12 @@
         "detail": "85.8 s"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 104 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 122 damage)",
         "ok": true,
         "detail": "complete"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 107 damage)",
+        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 113 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -469,10 +469,10 @@
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "21 / 132 / 125 (mean of 3 seeds)"
+        "detail": "20 / 132 / 125 (mean of 3 seeds)"
       },
       {
-        "name": "par time is 2x-8x the bot's time (5.8x; placeholder until a human plays it)",
+        "name": "par time is 2x-8x the bot's time (5.9x; placeholder until a human plays it)",
         "ok": true,
         "detail": ""
       },
@@ -484,7 +484,7 @@
       {
         "name": "quality: perfect-bot time in [50,700] s",
         "ok": true,
-        "detail": "71.8 s"
+        "detail": "71.7 s"
       },
       {
         "name": "quality: uses at least 4 distinct wall/floor skins",
@@ -564,7 +564,7 @@
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
         "ok": true,
-        "detail": "TIMING PLATFORMS (floors on a pure clock, each two seconds behind the last) and SOUND-LOCK DOORS (they open only after a quiet), and the CANTOR ACOLYTE (a ward: everything within nine metres takes half); met as a pit to cross and a lock to wait at"
+        "detail": "TIMING PLATFORMS (floors on a pure clock, each two seconds behind the last) and SOUND-LOCK DOORS (they open only after a quiet), and the CANTOR ACOLYTE (a ward: everything within nine metres takes half); met as a pit to cross and a lock to wait at; also found here: the fire axe, on a hook by the first platform"
       },
       {
         "name": "feel: walls and ceilings are 4.2 m or less (or quality.tallReason names the hall)",
@@ -594,7 +594,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E3M05.json: 903009419675ecfb vs 0050d94501b39f1f"
+        "detail": "validation/browser/C1E3M05.json: 903009419675ecfb vs fee17d914cc07508"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -615,5 +615,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 21 enemies, 21 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 21 enemies, 22 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

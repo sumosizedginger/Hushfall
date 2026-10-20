@@ -1075,8 +1075,8 @@
   },
   {
    "type": "pickup",
-   "kind": "weapon_axe",
-   "at": [9, 23]
+   "kind": "weapon_arc",
+   "at": [31, 18]
   },
   {
    "type": "enemy",
@@ -1171,11 +1171,11 @@
    "text": "A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there."
   },
   {
-   "id": "found-axe",
-   "at": [9, 23],
+   "id": "found-arc",
+   "at": [31, 18],
    "radius": 1.5,
-   "speaker": "FIRE CABINET",
-   "text": "A fire axe behind the glass, the glass already broken. Slow, and it takes everything in front of you."
+   "speaker": "HULL",
+   "text": "A charge-arc lamp in a clinker bin, still warm. It jumps from one body to the next: stand where they are packed."
   }
  ],
  "decals": [
@@ -1237,7 +1237,7 @@
    "bellhand": 4
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs; also found here: the fire axe, in the gatehouse's fire cabinet"
+  "introduces": "the ember bed: a hazard strip (slows and burns) that cuts rooms into a safe lane and a hot one, and the damper handles (two keys) that the flue lever needs; also found here: the Charge-arc lamp, in a clinker bin on the road past the first furnace"
  },
  "drops": {
   "scale": 1

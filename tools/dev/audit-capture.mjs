@@ -19,6 +19,7 @@ await server.listen();
 const realPort = server.config.server.port;
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await page.evaluateOnNewDocument(() => { navigator.getGamepads = () => [null, null, null, null]; Element.prototype.requestPointerLock = function () { return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError')); }; });          // the owner's mouse: no page script of a driven browser may take the pointer lock
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push('pageerror: ' + e)); page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 300)); });
@@ -61,7 +62,7 @@ async function runMap(spec) {
     const seen = r.enemies.filter((e) => e.state !== 'dead').map((e) => { const dx = e.x - p.x, dz = e.z - p.z, dist = Math.hypot(dx, dz); return { e, dist, ang: Math.acos(Math.max(-1, Math.min(1, (dx * fwd[0] + dz * fwd[1]) / (dist || 1)))) }; }).filter((o) => o.ang < 0.6).sort((a, b) => a.dist - b.dist);
     const view = seen[0];
     const extra = { hp: p.hp, weapon: p.weapon, op: r.op, ops, near: view ? +view.dist.toFixed(1) : null, kills: r.stats?.kills };
-    if (p.hp < prevHp - 1 && hurts < 2 && d.hurt > 0.05) {      // PT-047 V1: the flash now follows the size of the hit (0.12 for a scratch), so fire on hit points lost and record the flash value if (await shot('hurt', { ...extra, flash: +d.hurt.toFixed(2), lost: prevHp - p.hp }, true)) hurts++; }
+    if (p.hp < prevHp - 1 && hurts < 2 && d.hurt > 0.05) { if (await shot('hurt', { ...extra, flash: +d.hurt.toFixed(2), lost: prevHp - p.hp }, true)) hurts++; }      // PT-047 V1: the flash now follows the size of the hit (0.12 for a scratch), so fire on hit points lost and record the flash value
     else if (view && !firstSight && view.dist < 40) { if (await shot('first_sight', extra)) firstSight = true; }
     else if (view && !close && view.dist < 4) { if (await shot('close_enemy', extra)) close = true; }
     else if (view && p.cooldown > 0 && view.dist < 16 && fights < (lite ? 1 : 3) && (await shot('fight', extra))) fights++;

@@ -116,12 +116,12 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'scorch', at: [68, 14], wall: 'north', y: 1.5, size: 1.6 }, { kind: 'soot', at: [44, 13], wall: 'north', y: 1.7, size: 1.8 }, { kind: 'bloodpool', at: [26, 23], size: 1.3 }, { kind: 'smear', at: [37, 18], rot: 0, size: 2.4, h: 0.9 }];
 // ---- end PT-021 marks and growth ----
 
-// ---- PT-023 (owner, 2026-10-08: "update all the maps"): found here: the fire axe, in the gatehouse's fire cabinet; ammunition for the carbine (rounds) and the line-thrower (rockets) ----
+// ---- PT-023 (owner, 2026-10-08: "update all the maps"): ammunition for the carbine (rounds) and the line-thrower (rockets); PT-065 (R9, plan page 0.11: "the arc lamp (map 14 to 12) and axe (map 12 to 21) moves stay"): the Charge-arc lamp is found HERE now, on the road past the first furnace (cell [31, 18]: at [22, 22] and [57, 16] the strafing robustness run failed, at [31, 18] and [43, 18] every gate passes); the axe moved to the Resonance Loom ----
 // Every pickup is ON the lane the routes walk (tools/dev/place-near.mjs) and every movable prop OFF the traffic of every route, all appended after every other entity so no id shifts and no route moves.
 MAP.entities ??= [];
-MAP.entities.push(...[['weapon_axe', 9, 23], ['ammo_round', 21, 19], ['ammo_round', 40, 18], ['ammo_round', 63, 17], ['ammo_round', 66, 16], ['ammo_rocket', 30, 25], ['ammo_rocket', 63, 16]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
-(MAP.messages ??= []).push({ id: 'found-axe', at: [9, 23], radius: 1.5, speaker: 'FIRE CABINET', text: 'A fire axe behind the glass, the glass already broken. Slow, and it takes everything in front of you.' });
-MAP.quality.introduces += '; also found here: the fire axe, in the gatehouse\'s fire cabinet';
+MAP.entities.push(...[['weapon_arc', 31, 18], ['ammo_round', 21, 19], ['ammo_round', 40, 18], ['ammo_round', 63, 17], ['ammo_round', 66, 16], ['ammo_rocket', 30, 25], ['ammo_rocket', 63, 16]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'found-arc', at: [31, 18], radius: 1.5, speaker: 'HULL', text: 'A charge-arc lamp in a clinker bin, still warm. It jumps from one body to the next: stand where they are packed.' });
+MAP.quality.introduces += '; also found here: the Charge-arc lamp, in a clinker bin on the road past the first furnace';
 // ---- end PT-023 ----
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----

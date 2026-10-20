@@ -1,0 +1,1102 @@
+[
+ {
+  "id": "C1E1M01",
+  "entry": [
+   "flare"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [
+   "scattergun"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M01",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [],
+  "extra": [
+   "rivet"
+  ],
+  "found": [],
+  "result": "bot-failed"
+ },
+ {
+  "id": "C1E3M01",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M01",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M02",
+  "entry": [
+   "flare",
+   "scattergun"
+  ],
+  "missing": [
+   "rivet"
+  ],
+  "extra": [],
+  "found": [
+   "rivet"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M02",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [
+   "harpoon"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M02",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M02",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M03",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon"
+  ],
+  "extra": [],
+  "found": [
+   "boathook"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M03",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M03",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook"
+  ],
+  "extra": [],
+  "found": [
+   "mortar"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M03",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M04",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar"
+  ],
+  "extra": [],
+  "found": [
+   "marlinspike"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M04",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike"
+  ],
+  "extra": [],
+  "found": [
+   "arc"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M04",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M04",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M05",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc"
+  ],
+  "extra": [],
+  "found": [
+   "mallet"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M05",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet"
+  ],
+  "extra": [],
+  "found": [
+   "fork"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M05",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork"
+  ],
+  "extra": [],
+  "found": [
+   "axe"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M05",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M06",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe"
+  ],
+  "extra": [],
+  "found": [
+   "carbine"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M06",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "arc"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M06",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M06",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "dead"
+ },
+ {
+  "id": "C1E1M07",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine"
+  ],
+  "extra": [],
+  "found": [
+   "linethrower"
+  ],
+  "result": "dead"
+ },
+ {
+  "id": "C1E2M07",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower"
+  ],
+  "extra": [],
+  "found": [
+   "chainsaw"
+  ],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M07",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M07",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E1M08",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E2M08",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E3M08",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C1E4M08",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet"
+  ],
+  "missing": [
+   "harpoon",
+   "boathook",
+   "mortar",
+   "marlinspike",
+   "arc",
+   "mallet",
+   "fork",
+   "axe",
+   "carbine",
+   "linethrower",
+   "chainsaw"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M01",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M02",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M03",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M04",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M05",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M06",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M07",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M08",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M09",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M10",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M11",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M12",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M13",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M14",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M15",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M16",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M17",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "dead"
+ },
+ {
+  "id": "C2M18",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M19",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M20",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M21",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M22",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M23",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M24",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M25",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine",
+   "linethrower"
+  ],
+  "missing": [],
+  "extra": [
+   "linethrower"
+  ],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M26",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [
+   "linethrower"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M27",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [
+   "linethrower"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M28",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine"
+  ],
+  "missing": [
+   "linethrower"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M29",
+  "entry": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine",
+   "linethrower",
+   "mortar",
+   "fork",
+   "chainsaw",
+   "boathook",
+   "marlinspike",
+   "mallet",
+   "axe"
+  ],
+  "missing": [],
+  "extra": [
+   "mortar",
+   "fork",
+   "chainsaw",
+   "boathook",
+   "marlinspike",
+   "mallet",
+   "axe"
+  ],
+  "found": [],
+  "result": "complete"
+ },
+ {
+  "id": "C2M30",
+  "entry": [
+   "flare"
+  ],
+  "missing": [
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "carbine",
+   "linethrower",
+   "mortar",
+   "fork",
+   "chainsaw",
+   "boathook",
+   "marlinspike",
+   "mallet",
+   "axe"
+  ],
+  "extra": [],
+  "found": [],
+  "result": "complete"
+ }
+]

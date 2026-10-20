@@ -72,7 +72,7 @@ const layers = L.layers();
 const MAP = {
   id: 'C1E2M06', name: 'Pump Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pump' },
-  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
+  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60, cell: 30 }, weapons: ['flare', 'scattergun', 'rivet', 'arc'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },
   outro: 'Next: the Slurry Undercroft. Whatever they drained comes out down there.',
   objective: 'Cross the nave to the cage lift, east side. The catwalks are the only way up',
@@ -100,13 +100,13 @@ const MAP = {
   ],
   quality: { enemies: [38, 64], botSeconds: [60, 600], mechanics: ['heights', 'switches', 'sectors', 'triggers', 'hazards'], skins: 5, enemyKinds: { bellhand: 6 },
     scaleClass: 'COMPRESSION', tallReason: 'the nave is the episode\'s one named cathedral hall: 13 m to the roof so the catwalks and galleries have air above them',
-    introduces: 'the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries; and the Charge-arc lamp, waiting on the landing where the cage stops' },
+    introduces: 'the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries' },
 };
 
 // bolt boxes for the Harpoon rifle (PT-010): ON the lane the route walks. They are appended AFTER every other entity so no other entity's id shifts (an id shift changes what the chaotic bot does)
 MAP.entities ??= []; MAP.entities.push(...[[46,23],[54,24],[55,29]].map(([x, z]) => ({ type: 'pickup', kind: 'ammo_bolt', at: [x, z] })));
-// the Charge-arc lamp and its cells (owner go 2026-10-06), ON the lane, appended last so no other entity's id shifts
-MAP.entities.push(...[["weapon_arc",54,25],["ammo_cell",54,28],["ammo_cell",54,39],["ammo_cell",42,41]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+// the Charge-arc lamp's cells (owner go 2026-10-06; PT-065: the lamp itself is found in Kiln Row now and this map's entry loadout holds it), ON the lane, appended last so no other entity's id shifts
+MAP.entities.push(...[["ammo_cell",54,28],["ammo_cell",54,39],["ammo_cell",42,41]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // PT-021: the props set down in the new bays (after every other entity: no id shifts)
 MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 // ---- PT-021 marks and growth (render-only data, validated by mapformat: what the place has been through, and where the Vael's growth started) ----

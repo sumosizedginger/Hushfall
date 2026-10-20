@@ -909,6 +909,11 @@
      "shake": 1.2
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "weapon_axe",
+   "at": [18, 28]
   }
  ],
  "par": {
@@ -971,6 +976,13 @@
    "radius": 2.5,
    "speaker": "INES",
    "text": "That is the end of the tuning. Whatever was being tuned is still above us, singing."
+  },
+  {
+   "id": "found-axe",
+   "at": [18, 28],
+   "radius": 1.5,
+   "speaker": "HULL",
+   "text": "A fire axe on a hook by the first platform, the handle worn smooth. Slow, and it takes everything in front of you."
   }
  ],
  "objective": "Cross the Loom. The doors listen: no noise near them",
@@ -1007,7 +1019,7 @@
   },
   "scaleClass": "COMPRESSION",
   "tallReason": "the Warp Hall is the episode's one named loom: 7 m to the vault so the platforms have 5 m of air above their top",
-  "introduces": "TIMING PLATFORMS (floors on a pure clock, each two seconds behind the last) and SOUND-LOCK DOORS (they open only after a quiet), and the CANTOR ACOLYTE (a ward: everything within nine metres takes half); met as a pit to cross and a lock to wait at"
+  "introduces": "TIMING PLATFORMS (floors on a pure clock, each two seconds behind the last) and SOUND-LOCK DOORS (they open only after a quiet), and the CANTOR ACOLYTE (a ward: everything within nine metres takes half); met as a pit to cross and a lock to wait at; also found here: the fire axe, on a hook by the first platform"
  },
  "drops": {
   "scale": 1
