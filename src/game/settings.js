@@ -15,6 +15,10 @@ export const defaultSettings = () => ({
   coldOpenSeen: false,                                                        // PT-063 (R13): the cold open has been shown (it plays before the first level of a new game, once)
   cinematics: 'once',                                                         // PT-063 (R13): the story scenes (cinematics.js): once (the first time) | always | off
   gamepad: { ...PAD_SETTINGS }, padBindings: defaultPadBindings(),            // the controller (gamepad.js)
+  textSize: 'normal',                                                         // PT-071 R20: the HUD's text: normal | large | larger
+  reducedMotion: false,                                                       // PT-071 R20: no camera shake, a gentler hurt flash and muzzle light
+  captions: false,                                                            // PT-071 R20: the sounds that matter as words on the screen (captions.js)
+  firstRunSeen: false,                                                        // PT-071 R20: the first-run line has been shown (it comes once, with the first level of a new game)
   crosshair: defaultCrosshair(),                                              // PT-048 / V2: style, size, colour, opacity of the crosshair (crosshair.js)
 });
 const clamp = (x, a, b, d) => (Number.isFinite(x) ? Math.min(b, Math.max(a, x)) : d);
@@ -43,6 +47,7 @@ export function sanitizeSettings(raw) {
   s.wheelSlow = raw.wheelSlow !== false; s.journalPause = raw.journalPause !== false; s.wheelToggle = raw.wheelToggle === true; s.minimap = sanitizeMinimap(raw.minimap); s.cinematics = ['once', 'always', 'off'].includes(raw.cinematics) ? raw.cinematics : 'once'; s.coldOpenSeen = raw.coldOpenSeen === true;
   { const g = raw.gamepad && typeof raw.gamepad === 'object' ? raw.gamepad : {}, P = PAD_SETTINGS; s.gamepad = { enabled: g.enabled !== false, lookRate: clamp(g.lookRate, 1, 8, P.lookRate), deadzone: clamp(g.deadzone, 0.05, 0.5, P.deadzone), curve: clamp(g.curve, 1, 3, P.curve), invertY: g.invertY === true, assist: clamp(g.assist, 0, 1, P.assist), vibration: g.vibration !== false, glyphs: ['auto', 'ps', 'xbox'].includes(g.glyphs) ? g.glyphs : 'auto' }; }
   s.padBindings = sanitizePadBindings(raw.padBindings);
+  s.textSize = ['normal', 'large', 'larger'].includes(raw.textSize) ? raw.textSize : d.textSize; s.reducedMotion = raw.reducedMotion === true; s.captions = raw.captions === true; s.firstRunSeen = raw.firstRunSeen === true;
   s.crosshair = sanitizeCrosshair(raw.crosshair);                                 // an older save has none: the new default
   return { settings: s, notes };
 }

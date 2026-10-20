@@ -13,6 +13,7 @@ import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
+import { difficultyNote } from './difficulty.js';
 import { pickupToast, pickupCard, cardIcon, pushToast, toastLabel, TOAST } from './toasts.js';
 import { crosshairCss } from './crosshair.js';
 
@@ -31,6 +32,8 @@ export class UI {
   constructor(handlers) {
     this.h = handlers; this.screen = null; this.toastQueue = []; this.comq = new CommsQueue(); this.shownAt = 0; this._useHint = null; this.keyLabels = {};
     $('btn-easy').onclick = () => this.h.newGame('easy'); $('btn-normal').onclick = () => this.h.newGame('normal'); $('btn-hard').onclick = () => this.h.newGame('hard');
+    { const note = $('difficulty-note'); const say = (k) => { note.innerHTML = difficultyNote(k); }; say(null);                    // PT-071 R20: what a difficulty changes, in the game's own numbers
+      for (const k of ['easy', 'normal', 'hard']) { const b = $('btn-' + k); b.onmouseenter = () => say(k); b.onfocus = () => say(k); b.onmouseleave = () => say(null); b.onblur = () => say(null); } }
     $('btn-continue').onclick = () => this.h.continueGame();
     $('btn-crash-title').onclick = () => this.h.crashToTitle(); $('btn-crash-copy').onclick = () => this.copyCrash();
     for (const k of ['map', 'objectives', 'log', 'items', 'bestiary']) $('btn-journal-' + k).onclick = () => this.h.journalTab(k); $('btn-journal-close').onclick = () => this.h.resume(); $('btn-journal-record').onclick = () => this.h.openRecord('pause');
@@ -49,6 +52,7 @@ export class UI {
     $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
+    $('set-textsize').onchange = (e) => this.h.setSetting('textSize', e.target.value); $('set-reducedmotion').onchange = (e) => this.h.setSetting('reducedMotion', e.target.checked); $('set-captions').onchange = (e) => this.h.setSetting('captions', e.target.checked);
     $('set-journalpause').onchange = (e) => this.h.setSetting('journalPause', e.target.checked); $('set-minimap').onchange = (e) => this.h.setSetting('minimap', e.target.value); $('set-cinematics').onchange = (e) => this.h.setSetting('cinematics', e.target.value);
     $('set-pad').onchange = (e) => this.h.setPadSetting('enabled', e.target.checked); $('set-padlook').oninput = (e) => this.h.setPadSetting('lookRate', Number(e.target.value)); $('set-paddz').oninput = (e) => this.h.setPadSetting('deadzone', Number(e.target.value)); $('set-padinvert').onchange = (e) => this.h.setPadSetting('invertY', e.target.checked);
     $('set-padassist').oninput = (e) => this.h.setPadSetting('assist', Number(e.target.value)); $('set-padvib').onchange = (e) => this.h.setPadSetting('vibration', e.target.checked); $('set-padglyph').onchange = (e) => this.h.setPadSetting('glyphs', e.target.value); $('btn-reset-pad').onclick = () => this.h.resetPadBindings();
@@ -96,7 +100,7 @@ export class UI {
   }
   hideCrash() { $('screen-crash').classList.add('hidden'); }
   copyCrash() { const t = this.crashText ?? ''; try { navigator.clipboard.writeText(t).then(() => { $('btn-crash-copy').textContent = 'Copied'; }, () => { $('crash-detail').textContent = t; }); } catch { $('crash-detail').textContent = t; } }
-  syncSettings(s) { $('set-minimap').value = s.minimap ?? 'small'; $('set-cinematics').value = s.cinematics ?? 'once'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
+  syncSettings(s) { $('set-textsize').value = s.textSize ?? 'normal'; $('set-reducedmotion').checked = !!s.reducedMotion; $('set-captions').checked = !!s.captions; $('set-minimap').value = s.minimap ?? 'small'; $('set-cinematics').value = s.cinematics ?? 'once'; this.setMinimap(s.minimap); $('set-sens').value = s.sensitivity; $('set-fov').value = s.fov; $('set-bright').value = s.brightness; $('set-vol').value = s.masterVolume; $('set-sfx').value = s.sfxVolume; $('set-music').value = s.musicVolume; $('set-res').value = s.internalWidth; $('set-aimtoggle').checked = s.aimToggle; $('set-sprinttoggle').checked = s.sprintToggle; $('set-outline').checked = s.outline; $('set-paint').checked = s.paint; $('set-wheelslow').checked = s.wheelSlow; $('set-wheeltoggle').checked = s.wheelToggle; $('set-journalpause').checked = s.journalPause;
     const G = s.gamepad; $('set-pad').checked = G.enabled; $('set-padlook').value = G.lookRate; $('set-paddz').value = G.deadzone; $('set-padinvert').checked = G.invertY; $('set-padassist').value = G.assist; $('set-padvib').checked = G.vibration; $('set-padglyph').value = G.glyphs; }
   /** interactive remap list: one row per action, two clickable slots each. `capturing` = {action, slot} highlights the slot awaiting a key. */
   syncBindings(b, capturing = null, note = '') {
@@ -225,6 +229,11 @@ export class UI {
   /** the contextual prompt under the crosshair ('' hides it) */
   useHint(text) { if (text === this._useHint) return; this._useHint = text; const el = $('use-hint'); el.textContent = text; el.classList.toggle('hidden', !text); }
   /** a controls reminder that appears after `delay` ms and stays `dur` ms (cancelled by clearOverlays) */
+  /** PT-071 R20: the sound captions (captions.js): up to three lines above the controls tip; redrawn only when the words change */
+  captions(lines) {
+    const sig = lines.map((l) => (l.danger ? '!' : '') + l.text).join('|'); if (sig === this._capSig) return; this._capSig = sig; const el = $('captions');
+    el.classList.toggle('hidden', !lines.length); el.innerHTML = lines.map((l) => `<div class="${l.danger ? 'danger' : ''}">${l.text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</div>`).join('');
+  }
   tip(text, delay, dur) { clearTimeout(this._tipT); this._tipT = setTimeout(() => { const el = $('tips'); el.textContent = text; el.classList.remove('hidden'); this._tipT = setTimeout(() => el.classList.add('hidden'), dur); }, delay); }
   hud(w, visible) {
     this.keyLabels = w?.map?.keyLabels || {};
@@ -245,7 +254,7 @@ export class UI {
       bar.classList.toggle('on', on); bar.classList.toggle('fist', melee); bar.classList.toggle('full', on && f >= 1); bar.firstElementChild.style.width = Math.round(f * 100) + '%'; }
     { const mid = melee ? p.weapon : (MELEE_ORDER.includes(p.meleeWeapon) ? p.meleeWeapon : 'fists');
       $('hud-weapons').innerHTML = SLOT_KEYS.map((id, i) => (id === 'melee' ? `<span class="${melee ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>` : p.weapons.includes(id) ? `<span class="${id === p.weapon ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>` : '')).join(''); }
-    $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
+    $('hud-keys').innerHTML = p.keys.map((k) => `<i style="background:${KEYS[k].color}" data-k="${String(this.keyLabels[k] ?? KEYS[k].name).slice(0, 2).replace(/[^A-Za-z0-9]/g, '')}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`).join('');
     $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle' && !e.hold), bossEl = $('boss');
     bossEl.classList.toggle('hidden', !boss); $('objective').style.top = boss ? '64px' : '';        // the objective panel must not sit on the boss bar (audit A15)

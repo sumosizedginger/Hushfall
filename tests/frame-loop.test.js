@@ -11,6 +11,7 @@ import { createWorld, step, drainEvents } from '../src/engine/world.js';
 import { automapModel } from '../src/engine/automap.js';
 import { GameView } from '../src/render/view.js';
 import { UI } from '../src/game/ui.js';
+import { captionFor, CaptionFeed } from '../src/game/captions.js';
 import { drawAutomap } from '../src/game/automap.js';
 import { TICK } from '../src/engine/defs.js';
 import { texProxy, stubRenderer, standInDom, canvasContext, runningAudio } from './stubs.js';
@@ -24,14 +25,14 @@ function play(map, { n = 120, difficulty = 'normal', setup = null, input = null,
   const played = [], audio = runningAudio(played);
   try {
     const w = createWorld(map, { seed: 1, difficulty }), view = new GameView(stubRenderer(), textureProxy, map, w); view.setSize(640, 360, 640); view.setLook({ outline: true, paint: true, fov: 70, brightness: 1 });
-    const ui = new UI(new Proxy({}, { get: () => () => {} })); if (setup) setup(w, view); const canvas = { width: 0, height: 0, getContext: () => canvasContext() }; globalThis.innerWidth = 1280; globalThis.innerHeight = 720;
+    const ui = new UI(new Proxy({}, { get: () => () => {} })), feed = new CaptionFeed(); if (setup) setup(w, view); const canvas = { width: 0, height: 0, getContext: () => canvasContext() }; globalThis.innerWidth = 1280; globalThis.innerHeight = 720;
     const events = [];
     for (let i = 0; i < n; i++) {
       const cmd = { move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...(input ? input(i, w) : { move: [Math.sin(i / 37) * 0.6, 1], yaw: 0.012 * Math.sin(i / 23), fire: i % 24 < 3, use: i % 45 === 0, lamp: i === 20 }) };
-      view.beforeStep(w); step(w, cmd); const ev = drainEvents(w); if (ev.length) { view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); events.push(...ev); }
+      view.beforeStep(w); step(w, cmd); const ev = drainEvents(w); if (ev.length) { view.handleEvents(ev); ui.events(ev); audio.handleEvents(ev); for (const e of ev) feed.push(captionFor(e, w.player), w.time); events.push(...ev); }
       if (mid) mid(i, w, view);
       audio.update(w, TICK, map); if (i % 20 === 0) { drawAutomap(canvas, automapModel(w)); }
-      view.render(w, (i % 4) / 4, TICK); ui.hud(w, true); ui.useHint('');
+      view.render(w, (i % 4) / 4, TICK); ui.hud(w, true); ui.captions(feed.lines(w.time)); ui.useHint('');
       if (w.status !== 'playing') break;
     }
     ui.clearOverlays(); view.dispose(); return { events, played, view, w, dom };

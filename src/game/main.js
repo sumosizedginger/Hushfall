@@ -29,6 +29,8 @@ import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCount
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
+import { captionFor, CaptionFeed } from './captions.js';
+import { firstRunLine } from './firstrun.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
@@ -65,7 +67,7 @@ document.getElementById('title-art').src = titleArtUrl(); document.getElementByI
 
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
-  mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
+  captions: new CaptionFeed(), mode: 'title', world: null, view: null, loop: null, mapId: FIRST_MAP, difficulty: 'normal', seed: 1, timer: 0,
   progress: newProgress(),          // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
   input: new InputState(settings.bindings), settings, locked: false, lockFailed: false,
   events: [],                       // every event this session (dev/test hook reads and clears it)
@@ -93,7 +95,7 @@ const ui = new UI({
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
   resetPadBindings: () => { g.capturePad = null; commitPadBindings(defaultPadBindings(), 'Controller buttons reset to default.'); },
   beginPadRebind: (action) => { g.capture = null; g.capturePad = { action }; ui.syncPadBindings(settings.padBindings, action, g.pad.family, 'Press a button on the pad. Esc cancels.'); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -105,7 +107,10 @@ function captureCode(code) {
   if (!r.ok) return ui.syncBindings(g.input.bindings, null, r.reason + '.');
   commitBindings(r.bindings, r.displaced.length ? `${prettyCode(code)} taken from: ${r.displaced.join(', ')}.` : `${prettyCode(code)} assigned.`);
 }
-ui.syncSettings(settings); ui.syncCrosshair(settings.crosshair); ui.syncBindings(settings.bindings); ui.syncPadBindings(settings.padBindings, null, g.pad.family);
+applyComfort(); ui.syncSettings(settings); ui.syncCrosshair(settings.crosshair); ui.syncBindings(settings.bindings); ui.syncPadBindings(settings.padBindings, null, g.pad.family);
+
+/** PT-071 R20: the text size and the reduced-motion class of the page (the view reads reducedMotion through setLook) */
+function applyComfort() { const c = document.body?.classList; if (!c?.toggle) return; c.toggle('ui-large', settings.textSize === 'large'); c.toggle('ui-larger', settings.textSize === 'larger'); c.toggle('reduced-motion', !!settings.reducedMotion); }
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
@@ -155,7 +160,11 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   rangeMeter.reset(); g.devScale = 1;
   if (!world && !map.range) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));      // (the range never overwrites the campaign's Continue)
   g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
-  if (!world) { ui.card(map.intro); ui.tip(g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings), 6800, 11000); }      // title card and controls reminder only on a fresh run, not when resuming a save
+  if (!world) {
+    ui.card(map.intro); const first = !settings.firstRunSeen, legend = g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings);        // PT-071 R20: a new profile also gets one line about the objective and the Journal
+    ui.tip(first ? legend + '\n' + firstRunLine({ bindings: g.input.bindings, padBindings: settings.padBindings, family: g.pad.family, pad: g.padActive }) : legend, 6800, first ? 17000 : 11000);
+    if (first) { settings.firstRunSeen = true; saveSettings(storage, settings); }
+  }      // title card and controls reminder only on a fresh run, not when resuming a save
   audio.newLevel();
   requestLock();
 }
@@ -301,7 +310,7 @@ function stepOnce() {
   }
   g.sinceLoad = (g.sinceLoad ?? 0) + 1;
   if (g.world.tick % 30 === 0 && !g.world.map.range) { const met = seenKinds(g.progress.bestiary, g.world.enemies); if (met.length && met !== g.progress.bestiary) g.progress = { ...g.progress, bestiary: met }; }          // PT-052 U3b: the Bestiary fills when a creature is first met
-  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
+  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (settings.captions) for (const e of ev) g.captions.push(captionFor(e, g.world.player), g.world.time); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
   else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
   else { const sc = ev.find((e) => e.type === 'cinematic'); if (sc) startCinematic(sc.id); }                                                            // PT-063 (R13): a map's trigger named a story scene
@@ -475,7 +484,7 @@ function frameBody(now) {
   audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }
   { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap || g.mode === 'cinematic'); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
-  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title' && g.mode !== 'cinematic'); } else ui.hud(null, false);
+  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title' && g.mode !== 'cinematic'); ui.captions(settings.captions && g.mode === 'playing' ? g.captions.lines(g.world.time) : []); } else { ui.hud(null, false); ui.captions([]); }
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
 }
 /** the weapons range's readout (PT-016): shown only while a range map is being played */

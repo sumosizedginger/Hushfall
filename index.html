@@ -224,11 +224,19 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #cine-fade{position:absolute;inset:0;background:#000;opacity:0}
 #cine-hint{position:absolute;right:2vw;bottom:3vh;font:12px ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.5}
 body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #pickup-card,body.in-cine #cross,body.in-cine #hitmark,body.in-cine #comms,body.in-cine #cross-note{display:none!important}
+/* PT-071 R20: text size, captions, the first-run line, key letters */
+body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
+#comms,#toasts,#objective,#tips,#captions,#pickup-card,#hud .side,#hud-weapons{zoom:var(--ui-scale)}
+#tips{white-space:pre-line}
+#captions{position:fixed;left:50%;bottom:196px;transform:translateX(-50%);pointer-events:none;display:flex;flex-direction:column;gap:3px;align-items:center;max-width:92vw}
+#captions div{background:#0d0f14e6;border:1px solid var(--slate);padding:3px 12px;font-size:14px;color:#e8efed;text-align:center}#captions div.danger{border-color:#e8a23a;color:#fff}
+#hud-keys i::after{content:attr(data-k);display:block;text-align:center;font:700 9px/18px sans-serif;font-style:normal;color:#000;letter-spacing:-.02em}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
 <canvas id="minimap"></canvas><div id="toasts"></div><div id="pickup-card"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
 <div id="range-hud" class="hidden"></div>
+<div id="captions" class="hidden"></div>
 <div id="cine" class="hidden"><div id="cine-top"></div><div id="cine-bottom"></div><div id="cine-sub"><b id="cine-who"></b><span id="cine-text"></span></div><div id="cine-fade"></div><div id="cine-hint">Enter or Esc to skip</div></div>
 <div id="hud" class="hidden">
   <div class="stat"><b id="hud-hp">100</b><small>HEALTH</small></div>
@@ -254,6 +262,7 @@ body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #picku
     <h1>HUSHFALL</h1><div class="sub">Port Marrow · the first night</div>
     <button id="btn-continue">Continue</button>
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
+    <div id="difficulty-note" class="sub" aria-live="polite"></div>
     <button id="btn-record-title">The Record</button>
     <details id="credits-box"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>It draws its 3D with three.js, the one piece of outside software inside it:</p><pre>The MIT License
 
@@ -320,6 +329,9 @@ THE SOFTWARE.</pre></div></details>
     <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
     <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
     <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
+    <label>Text size <select id="set-textsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
+    <label>Reduce flashing and shaking <input id="set-reducedmotion" type="checkbox"></label>
+    <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>
     <label>Render width <select id="set-res"></select></label>
     <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
     <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>

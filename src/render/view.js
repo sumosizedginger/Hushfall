@@ -64,7 +64,7 @@ const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon
 export const WEAPON_LIGHT = { floor: 0.35 };
 export class GameView {
   constructor(renderer, tex, map, world) {
-    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash();
+    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash(); this.comfort = { shake: 1, hurt: 1, muzzle: 1 };
     const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
     const hemi = this.hemi = new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4); scene.add(hemi);
     const sun = this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
@@ -130,7 +130,8 @@ export class GameView {
   }
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
   setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w))); }
-  setLook({ outline, paint, fov = VIEW.fov, brightness = 1 }) {
+  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false }) {
+    this.comfort = reducedMotion ? { shake: 0, hurt: 0.35, muzzle: 0.4 } : { shake: 1, hurt: 1, muzzle: 1 };                      // PT-071 R20: no camera shake, a gentler hurt flash and muzzle light (render only: the sim is untouched)
     this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.brightness = brightness; this.post.uniforms.uExposure.value = 2.2 * brightness * (this.exposureK ?? 1);       // the player's brightness setting times the place's exposure
     this.baseFov = fov; this.adsFov = fov * (VIEW.adsFov / VIEW.fov);                                                      // aiming keeps the same zoom ratio at any field of view
   }
@@ -290,7 +291,7 @@ export class GameView {
     let eye = PLAYER.eye + bob, roll = 0;
     if (w.status === 'dead') { this.deadT = Math.min(1, this.deadT + dt / 0.8); eye = lerp(PLAYER.eye, 0.35, this.deadT); roll = this.deadT * 0.5; } else this.deadT = 0;
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
-    let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5); sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
+    let sx = 0, sy = 0; if (this.shakeT > 0) { this.shakeT = Math.max(0, this.shakeT - dt); const k = this.shakeAmp * (this.shakeT / 0.5) * this.comfort.shake; sx = (this.rnd() - 0.5) * 0.12 * k; sy = (this.rnd() - 0.5) * 0.09 * k; }
     this.cam.position.set(lerp(pp.x, p.x, alpha) + sx, this.eyeBase + eye + sy, lerp(pp.z, p.z, alpha));
     if (this.cine) this.cam.position.set(this.cine.x + sx, this.cine.y + sy, this.cine.z);                               // a story scene owns the eye (the hand lantern's light below follows it)
     if (this.handLamp) {                                                                                                // PT-038: the lantern's light follows the eye, fades in and out in a fifth of a second, flickers, and sinks as the oil runs low
@@ -525,9 +526,9 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     if (rig.core) rig.core.scale.setScalar(1 + 0.12 * Math.sin(this.time * 9) + (this.flashT > 0 ? 0.4 + 0.5 * this.lastCharge : 0) + 0.45 * chg);                   // the bulb breathes and flares; held in a charge it swells
     { const lamp = shown === 'arc' && w.status !== 'dead'; this.lampLight.intensity = lamp ? (this.flashT > 0 ? 24 + this.rnd() * 10 + 30 * this.lastCharge : 6 + 0.8 * Math.sin(this.time * 7) + 22 * chg) : 0; if (lamp) { const fy = this.cam.rotation.y; this.lampLight.position.set(this.cam.position.x - Math.sin(fy) * 0.7, this.cam.position.y - 0.1, this.cam.position.z - Math.cos(fy) * 0.7); } }      // the lamp lights the dark around you
     if (rig.bolt) rig.bolt.visible = p.cooldown < 0.45 && p.ads < 0.4;                                                      // the harpoon leaves the muzzle; the next one seats as the action closes
-    this.muzzleLight.intensity = this.flashT > 0 ? 6 : 0;
+    this.muzzleLight.intensity = this.flashT > 0 ? 6 * this.comfort.muzzle : 0;
     if (w.map.vacuum.length) { this.frost = (this.frost ?? 0) + ((inVacuum(w, p.x, p.z) ? 1 : 0) - (this.frost ?? 0)) * Math.min(1, dt * 3); this.post.uniforms.uFrost.value = this.frost; }          // PT-033: the frost at the edges of the picture while in vacuum
-    this.post.uniforms.uDamage.value = this.hurtFlash.step(dt);
+    this.post.uniforms.uDamage.value = this.hurtFlash.step(dt) * this.comfort.hurt;
     this.post.render(() => { this.renderer.render(this.scene, this.cam); if (!this.cine) this.renderer.render(this.weaponScene, this.weaponCam); });
   }
 
