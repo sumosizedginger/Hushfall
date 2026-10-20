@@ -16,7 +16,7 @@ npm run dev            # development server, the game at http://localhost:5173/ 
 
 Use a desktop Chrome or Edge window with hardware graphics, at least 1280 x 720. A headless or software-rendered browser changes the look and the speed. Controls are in the pause menu; Esc or P pauses; Tab opens the Journal; L lights the hand lantern in dark maps; T turns the gun to its next ammunition load; the weapon wheel is the last-weapon key held. A controller (PS5 or Xbox) works; `http://localhost:5173/pad.html` is the controller test page.
 
-Checks the builder ran, so you do not repeat them: `npm test` (about 1,050 tests; `tests/maps.test.js` plays the gates of every map), `npm run licences`, `npm run check-dist`, `npm run audio-qa` (203 sounds and the music pass objective checks). Evidence under `validation/` is regenerated for RC1.
+Checks the builder ran, so you do not repeat them: `npm test` (about 1,300 tests; `tests/maps.test.js` plays the gates of every map), `npm run licences`, `npm run check-dist`, `npm run audio-qa` (203 sounds and the music pass objective checks). Evidence under `validation/` is regenerated for RC1.
 
 ## 3. What is NOT done on purpose (do not report these as findings)
 
