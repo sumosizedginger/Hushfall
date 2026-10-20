@@ -76,3 +76,5 @@ Done after the evidence regeneration (shared browser check 146 of 146, the real-
 Held by `tests/repo-layout.test.js`: only the allowed names at the root of the tracked tree, no picture or sound tracked outside `assets/baked`, the retired things stay out, every file an npm script runs exists.
 
 Not done on purpose: `review/gate-1` and `review/gate-2` keep their reports and json (about 0.2 MB of text: the bundle tools and `npm run validate` read them); the look baseline `review/self-audit` (195 MB, git-ignored) stays until the owner accepts the visual plan.
+
+Note (T2): the comment in `vite.config.js` still calls `look.html` "the frozen look demo". It is left as it was on purpose: `vite.config.js` is part of the game source set that the real-game evidence is stamped with (`tools/textsha.mjs`), so editing it, even a comment, stales the evidence of every map.
