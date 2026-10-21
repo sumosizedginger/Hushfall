@@ -41,6 +41,12 @@ for (const [x, z] of [[31, 80], [52, 80], [31, 88], [52, 88], [41, 83]]) for (le
 const SEC = { panel: [41, 7], cells: [] };
 for (let z = 2; z <= 6; z++) for (let x = 38; x <= 45; x++) { setCell(L, x, z, CHAPEL, 1, 12); SEC.cells.push([x, z]); }
 setCell(L, 41, 7, 'S', 0);
+// ---- PT-071 R19 (a mechanic returns, combined with another): the chime tree of Harmonic Gardens stands in the garden, three chimes among the graves, and the west wall of the arcade has a door with no handle: a remote door, opened by answering the tree.
+// Behind it a closet with a lamp and a little of what the cloister has not got. Optional: the secret route takes it, the main route does not ----
+const NICHE = { door: [11, 37], cells: [] };
+for (let z = 36; z <= 38; z++) for (let x = 8; x <= 10; x++) { setCell(L, x, z, CHAPEL, 0, 8); NICHE.cells.push([x, z]); }
+L.door(NICHE.door[0], NICHE.door[1], { remote: true });
+// ---- end PT-071 R19 ----
 // ---- objects -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const P = placer(L); const { E, P: PK, PR } = P; L.put(41, 11, '@'); P.reserve(41, 11);
 for (const [x, z] of [[16, 12], [28, 12], [41, 12], [54, 12], [67, 12], [16, 63], [28, 63], [54, 63], [67, 63], [16, 30], [16, 45], [67, 30], [67, 45]]) PR('lamp', x, z);
@@ -50,6 +56,9 @@ for (const r of Object.values(CH)) { PR('lamp', r[0] + 4, r[1] + 3); PR('lamp', 
 for (const x of [38, 39, 40, 41, 42, 43, 44, 45]) PR('pew', x, 92);                                                                                                // the rail of the lift shaft: a row of pews
 for (const [x, z] of [[30, 80], [30, 88], [53, 80], [53, 88], [34, 78], [49, 78], [41, 86], [60, 82]]) PR('lamp', x, z);
 for (const [x, z] of [[39, 91], [44, 91]]) PR('lantern', x, z);
+PR('chimetree', 24, 32, { id: 'tree', plays: ['bells'] });
+[[21, 30, 0], [22, 34, 1], [26, 35, 2]].forEach(([x, z, n]) => PR('chime', x, z, { id: 'c' + n, note: n }));
+PR('lamp', 9, 37); PK('health_large', 8, 36); PK('armor_vest', 8, 38);
 // latches: one in each chapel, beside a candle
 const LATCH = { c1: { at: [2, 11], wall: 'west' }, c2: { at: [81, 11], wall: 'east' }, c3: { at: [81, 63], wall: 'east' }, c4: { at: [2, 63], wall: 'west' } };
 for (const [id, v] of Object.entries(LATCH)) { PR('lantern', v.at[0] + (v.wall === 'west' ? 1 : -1), v.at[1] - 1); PR('lantern', v.at[0] + (v.wall === 'west' ? 1 : -1), v.at[1] + 1); }
@@ -75,7 +84,7 @@ const MAP = {
   objective: 'Throw the latch in each of the four chapels, one at each corner of the cloister. Ammunition is low: spend it',
   ...L.layers(),
   secrets: [{ id: 'hidden-chapel', panel: SEC.panel, cells: SEC.cells }],
-  groups: [], sectors: [{ id: 'lift', cells: LIFT, low: 0, high: 3, speed: 0.12, start: 'high' }],
+  groups: [], chimes: [{ id: 'bells', phrase: [1, 0, 2], window: 8 }], sectors: [{ id: 'lift', cells: LIFT, low: 0, high: 3, speed: 0.12, start: 'high' }],
   entities: [...P.ents,
     ...Object.entries(LATCH).map(([id, v], i) => ({ type: 'switch', id, at: v.at, wall: v.wall, once: true, do: [{ message: id }, ...AMBUSH[id], { objective: ['The north-west latch is thrown. Three chapels more', 'The north-east latch is thrown. The others are south', 'The south-east latch is thrown. One chapel more, the south-west', 'The south-west latch is thrown'][i] }] })),
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
@@ -102,6 +111,9 @@ const MAP = {
     { id: 's5', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Thank you for the quiet.' },
     { id: 's6', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Go down. Do not wait for us.' },
     { id: 'gone', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'They didn\'t look at me, and they didn\'t look back. Forty feet down the shaft the light of the lift went out, one lamp at a time.' },
+    { id: 'bells', at: [24, 32], radius: 5, speaker: 'HULL', text: 'In the garden a tree of glass, and three chimes among the graves. Use the tree and it plays three notes; answer on the chimes in order, each within eight seconds of the last.' },
+    { id: 'niche-open', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'A door has opened in the west wall of the arcade, and behind it a closet with a lamp left burning.' },
+    { id: 'niche', at: [9, 37], radius: 3, speaker: 'A SILENT (NOTE)', text: 'The bells were for the ones who went down in the lift, and nobody has rung them. I left the tin for whoever did. It is not much.' },
     { id: 'hollow', at: [41, 9], radius: 3, speaker: 'HULL', text: 'The north wall of the arcade rings hollow in one run of cells. There is a door in it, painted over.' },
     { id: 'g1', at: [41, 4], radius: 4, speaker: 'A SILENT (NOTE)', text: 'My sister is under the third stone. She sang the count at the Gate for twenty years and stopped on the day it asked her to sing me. They put her here. I took the next house along.' },
     { id: 'g2', at: [39, 4], radius: 4, speaker: 'A SILENT (NOTE)', text: 'I tend the stones. Nobody comes. The ones who sang are kept in order by size, and the Silent in order by the day they stopped. She is first. I am not on the list yet.' },
@@ -109,6 +121,7 @@ const MAP = {
   ],
   triggers: [
     { id: 'garden', when: 'msg:c3', do: [{ wake: 'garden' }] },
+    { id: 'niche', when: 'seq:bells', do: [{ open: [11, 37] }, { message: 'niche-open' }] },
     { id: 'hunt', when: 'msg:c1', do: [{ wake: 'hunters' }, { message: 'hunt' }] },
     { id: 'call-six', when: ['msg:c1', 'msg:c2', 'msg:c3', 'msg:c4', 'choice:halls=silent'], do: [{ sound: 'toll' }, { tremor: 0.4 }, { message: 'call' }, { open: [41, 68] }, { objective: 'The call has gone out. The gate hall is south, down the stair from the south arm' }, ...[[39, 95], [41, 94], [43, 95], [40, 97], [42, 96], [44, 97]].map(([x, z]) => ({ spawn: { kind: 'vaelfolk', at: [x, z], group: 'silent' } }))] },
     { id: 'call-three', when: ['msg:c1', 'msg:c2', 'msg:c3', 'msg:c4', 'not:choice:halls=silent'], do: [{ sound: 'toll' }, { tremor: 0.4 }, { message: 'call' }, { open: [41, 68] }, { objective: 'The call has gone out. The gate hall is south, down the stair from the south arm' }, ...[[40, 95], [42, 96], [44, 95]].map(([x, z]) => ({ spawn: { kind: 'vaelfolk', at: [x, z], group: 'silent' } }))] },
@@ -124,7 +137,7 @@ console.log('C2M22: enemies', P.ents.filter((e) => e.type === 'enemy').length, '
 const Z = (x, z) => [x, z];
 export const waypoints = {
   main: [[41, 11, 0], Z(30, 12), Z(14, 12), Z(8, 11), { op: 'switch', id: 'c1' }, Z(14, 12), Z(30, 12), Z(52, 12), Z(66, 12), Z(77, 11), { op: 'switch', id: 'c2' }, Z(68, 12), Z(68, 30), Z(68, 48), Z(68, 62), Z(77, 63), { op: 'switch', id: 'c3' }, Z(68, 63), Z(52, 63), Z(41, 64), Z(28, 63), Z(14, 63), Z(8, 63), { op: 'switch', id: 'c4' }, Z(14, 63), Z(28, 64), Z(41, 64), [41, 69, 0], [41, 75, 0], Z(41, 82), { op: 'wait', seconds: 36 }, [50, 83, 0], [58, 83, 0], [64, 83, 0], [EXIT[0], EXIT[1], 0]],
-  secret: [[41, 11, 0], [41, 10, 0], { op: 'use', at: SEC.panel }, [41, 5, 0], [41, 10, 0], Z(30, 12), Z(14, 12), Z(8, 11), { op: 'switch', id: 'c1' }, Z(14, 12), Z(30, 12), Z(52, 12), Z(66, 12), Z(77, 11), { op: 'switch', id: 'c2' }, Z(68, 12), Z(68, 30), Z(68, 48), Z(68, 62), Z(77, 63), { op: 'switch', id: 'c3' }, Z(68, 63), Z(52, 63), Z(41, 64), Z(28, 63), Z(14, 63), Z(8, 63), { op: 'switch', id: 'c4' }, Z(14, 63), Z(28, 64), Z(41, 64), [41, 69, 0], [41, 75, 0], Z(41, 82), { op: 'wait', seconds: 36 }, [50, 83, 0], [58, 83, 0], [64, 83, 0], [EXIT[0], EXIT[1], 0]],
+  secret: [[41, 11, 0], [41, 10, 0], { op: 'use', at: SEC.panel }, [41, 5, 0], [41, 10, 0], Z(36, 17), Z(26, 29), { op: 'chime', id: 'tree' }, { op: 'chime', id: 'c1' }, { op: 'chime', id: 'c0' }, { op: 'chime', id: 'c2' }, { op: 'kill' }, Z(15, 36), [12, 37, 0], [9, 37, 0], Z(14, 36), Z(14, 24), Z(14, 12), Z(8, 11), { op: 'switch', id: 'c1' }, Z(14, 12), Z(30, 12), Z(52, 12), Z(66, 12), Z(77, 11), { op: 'switch', id: 'c2' }, Z(68, 12), Z(68, 30), Z(68, 48), Z(68, 62), Z(77, 63), { op: 'switch', id: 'c3' }, Z(68, 63), Z(52, 63), Z(41, 64), Z(28, 63), Z(14, 63), Z(8, 63), { op: 'switch', id: 'c4' }, Z(14, 63), Z(28, 64), Z(41, 64), [41, 69, 0], [41, 75, 0], Z(41, 82), { op: 'wait', seconds: 36 }, [50, 83, 0], [58, 83, 0], [64, 83, 0], [EXIT[0], EXIT[1], 0]],
 };
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "door": ["msg:gone"] })) MAP.messages.find((m) => m.id === mid).unless = unless;

@@ -66,6 +66,7 @@ ENC.dropIn({ at: [59,31], radius: 2, cells: ENC.around([59,31], { n: 3, min: 6, 
 const MAP = {
   id: 'C2M27', name: 'Fault Line', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'fault', sky: 'root', fog: '#20100a', fogDensity: 0.008 },
+  noiseTell: true,                                                                                                                   // PT-071 R19: the noise readout of Silent Roots returns, combined with the falling front: everything on both roads is asleep, and the front is behind you
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'FAULT LINE', lines: ['The stone has cracked from end to end, and the crack is lit from below.', 'Three-quarters of a minute from now the road begins to fall, from the west.'] },
   outro: 'The last lip held. Behind it the front went on along the road to the end of the world and fell into the glow without a sound, and the glow went on.',
@@ -80,6 +81,7 @@ const MAP = {
   messages: [
     { id: 'start', at: [6, 8], radius: 5, speaker: 'INES', text: 'The stone is cold, and from the crack comes a light the colour of a forge. The whole country has cracked along one line, and the crack is as wide as a harbour mouth.' },
     { id: 'front', at: [14, 8], radius: 5, speaker: 'HULL', text: 'Forty-five seconds after you arrive the road starts to fall from the west end, a strip at a time, a metre a second. A strip falls three times; the view shakes first. Stay ahead.' },
+    { id: 'noise', at: [26, 8], radius: 5, speaker: 'HULL', text: 'Everything on these roads is asleep. A loud gun wakes whatever stands inside the ring on the readout, and the front is behind you. A quiet one passes.' },
     { id: 'bridge', at: [38, 10], radius: 5, speaker: 'HULL', text: 'The north road is broken in the middle. The first bridge is the way across: it sinks half a metre after you cross, and a stair on the far side climbs out of the pit.' },
     { id: 'south', at: [50, 31], radius: 5, speaker: 'INES', text: 'The south road goes on in the same grey and the same cold. Somebody has laid lamps along it. The stone that\'s going hasn\'t reached this far yet.' },
     { id: 'lip', at: [96, 9], radius: 5, speaker: 'HULL', text: 'The lever on the far lip is on the north wall of the road, under two lamps and a lantern. It holds the lip. The exit is locked until it is thrown.' },

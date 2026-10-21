@@ -41,6 +41,12 @@ for (const [r, step, a0, wid] of [[44, 45, 20, 1], [27, 60, 30, 1], [10.5, 90, 4
   const rect = [cx - 1, cz - 1, cx + 1, cz + 1]; let okc = true; for (let z = rect[1]; z <= rect[3]; z++) for (let x = rect[0]; x <= rect[2]; x++) if (!'ΑΗΒ'.includes(L.g[z]?.[x] ?? '')) okc = false; if (!okc) continue; L.fx(rect, 's'); pulses.push({ rect, period: 6, on: 1.5, phase: (6 - 1.5 * (sj++ % 4)) % 6 });
 }
 void steam;
+// ---- PT-071 R19 (a mechanic returns, combined with another): the conveyor of Bone Loom comes back on the outer ring's north-west run. It carries north on a flip clock (north, a stop, south, a stop) and its south foot ends at the steam jet that already stands there:
+// the half of the clock that carries you back is the half that carries you into the jet ----
+const belts = [], BELT = [8, 24, 15, 32];
+for (let z = BELT[1]; z <= BELT[3]; z++) for (let x = BELT[0]; x <= BELT[2]; x++) if (L.g[z][x] === OUT) L.fx([x, z, x, z], '^');
+belts.push({ rect: BELT, period: 16, mode: 'flip', phase: 0 });
+// ---- end PT-071 R19 ----
 // ---- the secret: a hatch in the face of the middle ring's retaining wall, between two ramps, with a cache inside the wall -----------------------------------------------------------------------------------------------------------------------
 const SEC = { panel: null, cells: [] };
 find: for (let a = 272; a < 290; a += 1) {
@@ -93,7 +99,7 @@ const MAP = {
   objective: 'Climb the rings: three coolant valves, one on each ring, beside the Resonants. The exit on the top ring opens when all three are turned',
   ...L.layers(),
   secrets: [{ id: 'hatch', panel: SEC.panel, cells: SEC.cells }],
-  groups: [], pulses,
+  groups: [], pulses, belts,
   entities: [...P.ents,
     valve('v1', V1, 'Valve 1 turned. The middle ring is up the ramps at the corners'), valve('v2', V2, 'Valve 2 turned. The top ring is up the ramps at the compass points'), valve('v3', V3, 'Valve 3 turned. The exit on the top ring is open'),
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
@@ -101,6 +107,7 @@ const MAP = {
   messages: [
     { id: 'start', at: [7, C], radius: 5, speaker: 'INES', text: 'A pit of white light with three catwalks round it, one above another, and a wall between each. The light goes up and down about once every second and a half.' },
     { id: 'steam', at: [12, C - 8], radius: 6, speaker: 'HULL', text: 'A steam jet is lit for a beat before it fires. A segment that is dark has just fired and will not again for four seconds.' },
+    { id: 'belt', at: [8, 38], radius: 5, speaker: 'HULL', text: 'The floor of this stretch is a belt. It carries north, stops, carries south, stops. The steam jet at its foot is where south ends.' },
     { id: 'resonant', at: [30, 30], radius: 7, speaker: 'INES', text: 'Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it\'s slow.' },
     { id: 'ring', at: [C - 20, C - 25], radius: 6, speaker: 'HULL', text: 'Its ring comes out of the waist on the beat. A pier of stone stops it, and so does a catwalk above or below it. Keep it away from the others.' },
     { id: 'log', at: [41, 48], radius: 5, speaker: 'FOREMAN LOG', text: 'FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.' },

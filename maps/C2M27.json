@@ -1040,6 +1040,13 @@
    "text": "Forty-five seconds after you arrive the road starts to fall from the west end, a strip at a time, a metre a second. A strip falls three times; the view shakes first. Stay ahead."
   },
   {
+   "id": "noise",
+   "at": [26, 8],
+   "radius": 5,
+   "speaker": "HULL",
+   "text": "Everything on these roads is asleep. A loud gun wakes whatever stands inside the ring on the readout, and the front is behind you. A quiet one passes."
+  },
+  {
    "id": "bridge",
    "at": [38, 10],
    "radius": 5,
@@ -1578,6 +1585,7 @@
   "reason": "the place is a crack in the world seen under an open sky: a long run along two roads and over bridges, ahead of a front of stones",
   "introduces": "the falling front: a strip of the road falls every twelve seconds from the west end, a metre a second, and what it has passed is a kill zone"
  },
+ "noiseTell": true,
  "drops": {
   "scale": 1,
   "keep": []
