@@ -62,6 +62,8 @@ export class AudioEngine {
     const fn = SFX[id]; if (!fn) return false;
     if (!this.ctx || this.ctx.state !== 'running') { this.stats.dropped++; return false; }
     if (this.hushT > this.clock && id !== 'step_plank') return false;                                         // PT-043: the held second of nothing after the Root Bell stops
+    if (!Number.isFinite(gain)) gain = 1; if (!Number.isFinite(delay)) delay = 0;                              // round 1 (Gemini 4): a browser throws a TypeError for a non-finite AudioParam value, and a sound's position must never end a session
+    if (pos && !(Number.isFinite(pos[0]) && Number.isFinite(pos[1]))) pos = null;                                // (a position nobody can place plays plain, centred)
     const c = this.ctx, t = c.currentTime + 0.005 + delay;
     const g = c.createGain(); g.gain.value = gain; let head = g;
     if (pos) {
