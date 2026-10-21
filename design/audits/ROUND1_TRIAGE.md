@@ -55,6 +55,8 @@ The reports are `gemini writeup.md`, `grok writeup.md` (job 2, the code), `grok 
 
 ## Regeneration
 
+**The current evidence is the second regeneration**, from the clean commit 39a8892 (after the cinematic overlay rule and the lockfile fix, which are under `index.html` and `tools/textsha.mjs` and so staled the first): the shared browser check **146 of 146** with no page errors, the real-game run of **68 of 68** maps, `verify-map` for all 68 with none failed, `validate` OK, **AGENT_VERIFIED 68 of 68**, COMPLETE 0 of 68, the whole suite **1427 of 1427**, the driver exit 0, `dirtySource false`. The paragraph below describes the first run, from 3232a61, which it supersedes.
+
 Every fix above is under `src`, `index.html` or `tools`, so the evidence was regenerated once, from the clean commit 3232a61 (`npm run regen`, the driver Codex made fail-closed, about 97 minutes, idle priority, two cores, one job at a time, the pointer lock refused): the shared browser check **146 of 146** with no page errors; the real-game run of **68 of 68** maps with every check passing; `verify-map` for all 68 with none failed; `validate` OK, derived status **AGENT_VERIFIED 68 of 68** and COMPLETE 0 of 68 (secret maps 6 of 6); the whole suite **1423 of 1423**, and the driver exited 0. The evidence files say `dirtySource false`. A machine reading the game, not a person playing it.
 
 What this does not show: the flow-texture leak and its fix are shown by a node reproduction and test, and I did not measure whether a browser's GPU counter moves for them; the strip hiding and the finale hold are held by node tests, and C2M30's real-game run passes (13 of 13) but I did not verify that it exercises the hold. **How any of it looks and feels is for the owner's eyes.**
