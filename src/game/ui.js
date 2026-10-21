@@ -175,7 +175,9 @@ export class UI {
   }
   /** a story scene (cinematics.js, PT-063): `v` = { who, text, k, fade } (the subtitle being typed, the black over the picture) or null to take the overlay down. main.js feeds it every frame while a scene plays. */
   cine(v) {
-    const root = $('cine'), on = !!v; if (root.classList.contains('hidden') === on) { root.classList.toggle('hidden', !on); document.body.classList.toggle('in-cine', on); }
+    const root = $('cine'), on = !!v; if (root.classList.contains('hidden') === on) { root.classList.toggle('hidden', !on); document.body.classList.toggle('in-cine', on);
+      if (on) { this._cineAt = performance.now(); clearTimeout(this._pumpT); }                                     // a scene hides the strip: the queue's clock stands still so no line is read to nobody (round 1, Codex 4)
+      else { const d = this._cineAt == null ? 0 : performance.now() - this._cineAt; this._cineAt = null; this.comq.shift(d); this.pumpComms(); } }
     if (!v) return;
     const who = v.who || 'narrator', shown = v.text ? v.text.slice(0, Math.max(1, Math.ceil(v.text.length * (v.k ?? 1)))) : '', sub = $('cine-sub');
     if (sub.dataset.who !== who) sub.dataset.who = who;
@@ -228,7 +230,8 @@ export class UI {
   comms(e) { this.comq.push(e); this.pumpComms(); }
   /** drive the (pure, unit-tested) queue from the wall clock: show/hide when it says so, and wake up again for its next deadline */
   pumpComms() {
-    clearTimeout(this._pumpT); const r = this.comq.update(performance.now()), box = $('comms');
+    clearTimeout(this._pumpT); if (this._cineAt != null) return;                                               // (a story scene is playing: cine() starts it again with the scene's time added back)
+    const r = this.comq.update(performance.now()), box = $('comms');
     if (r.hide) box.classList.add('hidden');
     if (r.show) { const e = r.show; box.classList.remove('hidden'); box.classList.toggle('note', /NOTE|LOG|MANIFEST/.test(e.speaker)); $('comms-who').textContent = e.speaker; $('comms-text').textContent = e.text; this.h.playRadio?.(); }
     if (this.comq.current || this.comq.pending) this._pumpT = setTimeout(() => this.pumpComms(), Math.max(30, Math.min(500, Math.max(this.comq.until, this.comq.current ? 0 : this.comq.blockedUntil) - performance.now() + 20)));

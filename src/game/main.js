@@ -14,6 +14,7 @@ import { makeSave, loadWorld, SaveStore, storeSave } from '../engine/save.js';
 import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy, buyMod } from '../engine/progress.js';
 import { UI } from './ui.js';
+import { holdForComms } from './commsqueue.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
 import { drawAutomap } from './automap.js';
@@ -233,6 +234,11 @@ function buyUpgrade(track) {
 }
 /** PT-036, the end of a campaign: the finale's exit shows the epilogue (cards typed over the Gate's picture, then the tally of the whole campaign), THEN the intermission (rank, Locker, next map) as for any map.
  *  The records are already written when it starts (earn + commitProgress ran at the exit), so closing the game here loses nothing. */
+/** the exit of a campaign's last map waits (at most FINALE_HOLD_S) while the strip is still saying something; any other map's exit never waits. Enter, Space, Esc, A or B ends the wait (g.holdSkip). */
+function finaleHolds(dt) {
+  const r = holdForComms({ finale: !!endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest), busy: ui.comq.busy, held: g.commsHold, dt, skip: g.holdSkip });
+  g.commsHold = r.held; if (!r.hold) g.holdSkip = false; return r.hold;
+}
 function startEpilogue(ending) {
   g.input.releaseAll(); g.ending = { def: ending, seq: startSequence(), tallied: false }; g.mode = 'epilogue';
   g.artKey = null; ui.show('ending', { ending }); syncEpilogue(); audio.play(ending.coldOpen ? 'bell_strike' : 'gate_chord');          // PT-043: each campaign's own picture (syncEpilogue sets it, a card may name its own: PT-063)
@@ -343,7 +349,7 @@ function stepOnce() {
   if (g.world.tick % 30 === 0 && !g.world.map.range) { const met = seenKinds(g.progress.bestiary, g.world.enemies); if (met.length && met !== g.progress.bestiary) g.progress = { ...g.progress, bestiary: met }; }          // PT-052 U3b: the Bestiary fills when a creature is first met
   const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (settings.captions) for (const e of ev) g.captions.push(captionFor(e, g.world.player), g.world.time); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
   if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
-  else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.input.releaseAll(); document.exitPointerLock?.(); }
+  else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.commsHold = 0; g.holdSkip = false; g.input.releaseAll(); document.exitPointerLock?.(); }
   else { const sc = ev.find((e) => e.type === 'cinematic'); if (sc) startCinematic(sc.id); }                                                            // PT-063 (R13): a map's trigger named a story scene
 }
 
@@ -384,6 +390,7 @@ addEventListener('keydown', (e) => {
   if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
   if (g.mode === 'paused' && (e.code === 'Escape' || (g.input.bindings.pause || []).includes(e.code))) { resume(); return; }         // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.restartLevel(); return; }
+  if (g.mode === 'ending' && (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space')) g.holdSkip = true;                  // ends the finale's wait for the last transmission (finaleHolds)
   if (g.mode === 'cinematic') { e.preventDefault(); if (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space') skipCinematic(); return; }                  // a story scene: any of the three skips it
   if (g.mode === 'epilogue') { if (e.code === 'Escape') { e.preventDefault(); epilogueSkip(); } else if ((e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { e.preventDefault(); epiloguePress(); } return; }
   if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) { ui.h.nextLevel(); return; }
@@ -423,6 +430,7 @@ const navRepeat = new NavRepeat();
 const menuItems = () => { const scr = document.querySelector('.screen:not(.hidden)'); return scr ? [...scr.querySelectorAll('button, input, select, summary')].filter((el) => !el.disabled && el.offsetParent !== null) : []; };
 /** the pad in a menu: D-pad or left stick moves the focus, A / Cross confirms (fixed, so the menus always work whatever is rebound), B / Circle or the pause button backs out of the pause menu */
 function padMenu(out, dt) {
+  if (g.mode === 'ending' && (out.pressed.includes('Pad0') || out.pressed.includes('Pad1'))) g.holdSkip = true;                      // A or B ends the finale's wait for the last transmission (finaleHolds)
   if (g.mode === 'cinematic') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) skipCinematic(); return; }
   if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
   if (ui.screen === 'credits') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) closeCredits(); return; }
@@ -505,6 +513,7 @@ function frameBody(now) {
   else if (g.mode === 'ending') {
     g.timer -= dt;
     if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) { const de = MAPS[g.mapId].devEnding; if (de && ENDINGS[de.ending] && g.world.endStats?.dest === de.dest) startEpilogue({ campaign: de.ending, ...ENDINGS[de.ending], dev: true }); else quitToTitle(); }      // the dev range has no scoring, salvage or next map: its exit just goes back to the title (PT-043: a dev map may show a draft epilogue first)
+    else if (g.timer <= 0 && finaleHolds(dt)) { /* a campaign's last transmission is still being said: it finishes before the epilogue (round 1, Codex 4) */ }
     else if (g.timer <= 0) {
       g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time); g.progress = g.lastEarn.progress; g.lockerNote = '';       // the rank, the salvage it pays (only the improvement over this map's best), the record
