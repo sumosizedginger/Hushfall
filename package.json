@@ -28,7 +28,8 @@
     "render-ground": "node tools/dev/render-ground.mjs",
     "map": "node tools/map.mjs",
     "map:new": "node tools/map.mjs new",
-    "browser-maps": "node tools/dev/browser-map.mjs --all"
+    "browser-maps": "node tools/dev/browser-map.mjs --all",
+    "regen": "node tools/dev/regen-all.mjs"
   },
   "keywords": [],
   "author": "",
