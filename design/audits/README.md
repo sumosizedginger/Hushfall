@@ -14,6 +14,17 @@ Their results of the attack: `attack/gemini/` and `attack/groks/`; the merged an
 
 Written: `STORY_READ_PROMPT.md` (round 0: a text-only read of `design/story/RECORD.md` with `design/story/CONTINUITY.md` and `design/LORE.md`: contradictions, unexplained terms, knowledge, voice, repeats, machine-made lines, gaps) and `CODE_REVIEW_PROMPT.md` (round 1: a hostile read of the code against the rules the project says it keeps). The attack prompt is `ATTACK_PROMPT.md`. Still to refresh at the freeze (R26): the play prompt (`../GEMINI_PLAYTHROUGH_PROMPT.md`) and the capture pack. The owner carries each pack to the agent and brings its report back here; reports are data, rated and merged like `design/HARDENING.md`.
 
+## Round 1 by Gemini, Grok and Codex (2026-10-21; the audit pack of PT-071 carried to them by the owner)
+
+| File | What it is |
+|---|---|
+| `gemini writeup.md` | Gemini, job 2 and job 3: ten ranked weaknesses (the first is a cloned-texture leak on current maps), the pictures, the three frames it would keep |
+| `grok writeup.md` | Grok, job 2 (code, node only): ten findings; one repair, the level-start autosave (commit 986c2a9) |
+| `grok job 3.md` | Grok, job 3 (the pictures): eleven findings on the 24 frames |
+| `codex writeup.md` | Codex: ten ranked weaknesses, one tooling repair (the regeneration driver), the story and the pictures |
+
+What was verified, what was fixed and what was left, finding by finding: `ROUND1_TRIAGE.md`. Codex's scripts are in `attack/codex/`; its logs (`review/codex-audit/`) and the copy of the frames (`review/visual/`) stay out of git.
+
 ## The ready-to-hand-over pack (PT-071)
 
 `node tools/dev/audit-pack.mjs <outDir> --frames=<manifest.json>` builds one folder for Gemini and Grok from the repository as it stands (`README-FIRST.md` says what to give which agent: the story reader pack, the source in parts of about 260 KB with the prompt and the architecture, the real-GPU frames with a visual prompt and an index). Rebuild it after the last source change. The first one was made on 2026-10-20 into `D:\Doom_release\audit-pack`.

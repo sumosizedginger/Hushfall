@@ -16,3 +16,5 @@ review/**/*.jpg
 review/**/*.jpeg
 review/**/*.gif
 review/**/*.webp
+review/codex-audit/
+review/visual/
