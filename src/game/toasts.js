@@ -59,7 +59,7 @@ const slotLabel = (weapon) => { const i = SLOT_KEYS.indexOf(WEAPONS[weapon]?.kin
 /** `labels`: the map's own names for its keys (`keyLabels`: the Signal House's keys are FUSES; the card must say what the place calls them) */
 export function pickupCard(kind, labels = {}) {
   if (pickupTier(kind) !== 'major') return null; const d = PICKUPS[kind];
-  if (d.type === 'key') { const k = KEYS[d.key], own = labels[d.key]; return { tier: 'major', kind, title: own ?? k.name, line: own ? `A ${own.toLowerCase()}: the ${d.key} lock takes it.` : `Opens ${d.key} doors and switches.`, color: k.color, icon: 'key' }; }
+  if (d.type === 'key') { const k = KEYS[d.key], own = labels[d.key]; return { tier: 'major', kind, title: own ?? k.name, line: own ? `${/^[aeiou]/i.test(own) ? 'An' : 'A'} ${own.toLowerCase()}: the ${d.key} lock takes it.` : `Opens ${d.key} doors and switches.`, color: k.color, icon: 'key' }; }
   if (d.type === 'mod') { const M = MODS[d.mod]; return { tier: 'major', kind, title: M.name, line: `For the ${WEAPONS[M.gun].name}. ${M.line}`, color: '#ffd488', icon: 'gun' }; }          // PT-057: a mod is a card
   const [title, line] = WEAPON_CARDS[kind] ?? [WEAPONS[d.weapon]?.name ?? 'Weapon', ''], slot = slotLabel(d.weapon), melee = WEAPONS[d.weapon]?.kind === 'melee';
   return { tier: 'major', kind, title, line: (slot ? `Key ${slot}. ` : '') + line, color: melee ? '#d9a04c' : d.weapon === 'fork' ? '#6ffff0' : '#e8e2d0', icon: melee ? 'melee' : d.weapon === 'fork' ? 'tool' : 'gun' };

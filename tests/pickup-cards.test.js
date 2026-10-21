@@ -50,3 +50,14 @@ test('a map that names its keys differently (the Signal House: fuses) gets a car
   assert.equal(plain.title, KEYS.brass.name); assert.match(plain.line, /brass doors/);
   assert.equal(fuse.title, 'Brass fuse'); assert.match(fuse.line, /brass fuse/); assert.equal(fuse.color, KEYS.brass.color);
 });
+
+test('PT-071 (found by the real-GPU capture): a key named "iron damper handle" is "An iron ...", and a finished or cleared card leaves no animation to replay when the HUD comes back after a cinematic', async () => {
+  assert.match(pickupCard('key_iron', { iron: 'Iron damper handle' }).line, /^An iron damper handle: the iron lock takes it\.$/); assert.match(pickupCard('key_brass', { brass: 'Brass fuse' }).line, /^A brass fuse: /);
+  const { standInDom } = await import('./stubs.js'), { UI } = await import('../src/game/ui.js'), dom = standInDom();
+  try {
+    globalThis.innerWidth = 1280; globalThis.innerHeight = 720; const ui = new UI(new Proxy({}, { get: () => () => {} })), el = dom.els.get('pickup-card') ?? document.getElementById('pickup-card');
+    assert.equal(ui.showPickupCard('key_brass'), true); assert.ok(el.classes.has('show') && el.innerHTML.includes('Brass key'));
+    assert.equal(typeof el.onanimationend, 'function'); el.onanimationend(); assert.ok(!el.classes.has('show') && el.innerHTML === '', 'when the animation ends the card is empty and not running');
+    ui.showPickupCard('key_brass'); ui.clearOverlays(); assert.ok(!el.classes.has('show') && el.innerHTML === '', 'a level start or a cinematic clears it');
+  } finally { dom.restore(); }
+});

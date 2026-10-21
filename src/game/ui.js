@@ -203,7 +203,8 @@ export class UI {
   showPickupCard(kind) {
     const c = pickupCard(kind, this.keyLabels), el = c && $('pickup-card'); if (!el) return false;
     el.innerHTML = `<i>${cardIcon(c.icon)}</i><div><b>${c.title}</b><span>${c.line}</span></div>`; if (el.style.setProperty) el.style.setProperty('--card', c.color); else el.style['--card'] = c.color;
-    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); return true;
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); el.onanimationend = () => { el.classList.remove('show'); el.innerHTML = ''; };        // PT-071: a finished card leaves no animation behind (the HUD going away for a cinematic and coming back replayed the last card of the session)
+    return true;
   }
   /** PT-047 V2: a toast joins the model (toasts.js): equal consecutive ones merge, three at most; the DOM below only draws it */
   toast(text) { this.toasts = pushToast(this.toasts, text, performance.now() / 1000); this.renderToasts(); setTimeout(() => this.renderToasts(), TOAST.life * 1000 + 60); }
@@ -238,7 +239,7 @@ export class UI {
     $('card-title').textContent = intro.title; $('card-lines').innerHTML = intro.lines.map((l) => `<div>${l}</div>`).join('');
     c.classList.remove('hidden'); c.style.animation = 'none'; void c.offsetWidth; c.style.animation = ''; this.comq.blockUntil(performance.now() + 6300); this.pumpComms();
   }
-  clearOverlays() { clearTimeout(this._pumpT); clearTimeout(this._tipT); this.comq.clear(); $('toasts').replaceChildren(); $('comms').classList.add('hidden'); $('card').classList.add('hidden'); $('tips').classList.add('hidden'); }
+  clearOverlays() { clearTimeout(this._pumpT); clearTimeout(this._tipT); this.comq.clear(); $('toasts').replaceChildren(); $('comms').classList.add('hidden'); $('card').classList.add('hidden'); $('tips').classList.add('hidden'); const pc = $('pickup-card'); if (pc) { pc.classList.remove('show'); pc.innerHTML = ''; } }
   /** the contextual prompt under the crosshair ('' hides it) */
   useHint(text) { if (text === this._useHint) return; this._useHint = text; const el = $('use-hint'); el.textContent = text; el.classList.toggle('hidden', !text); }
   /** a controls reminder that appears after `delay` ms and stays `dur` ms (cancelled by clearOverlays) */
