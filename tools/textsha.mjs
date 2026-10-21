@@ -15,7 +15,7 @@ export const textSha = (file) => crypto.createHash('sha256').update(fold(fs.read
 /** named source sets: directories (recursive, filtered by extension) and single files. `.png` is hashed as raw bytes, everything else as folded text */
 export const SOURCE_SETS = {
   engine: { dirs: ['src/engine'], ext: ['.js'] },                                   // the deterministic simulation
-  render: { dirs: ['src/render'], ext: ['.js'] },                                   // Three.js view, models, level mesh, post pass, the grounding contract
+  render: { dirs: ['src/render'], files: ['package-lock.json'], ext: ['.js'] },     // Three.js view, models, level mesh, post pass, the grounding contract; and the lockfile: a three.js bump changes what every real-game run drew (outside round 1, Codex 6)
   game: { dirs: ['src/game'], files: ['index.html', 'vite.config.js'], ext: ['.js'] },   // runtime shell: state machine, UI, input glue, the dev test hook
   audio: { dirs: ['src/audio'], ext: ['.js'] },                                     // procedural synthesis
   assets: { dirs: ['assets/baked'], ext: ['.png', '.json'] },                       // p5/p5.brush baked atlases and skies + their manifest
