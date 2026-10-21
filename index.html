@@ -14,6 +14,8 @@ canvas{display:block;width:100vw;height:100vh}
 #cross[data-style=dot]{--tick:0px;--dot:calc(var(--th)*2.4)}
 #cross[data-style=circle]{--tick:0px;--sp:max(3.5px,calc(.5vh*var(--k)));background:none;border:max(1px,calc(.14vh*var(--k))) solid var(--c);border-radius:50%}
 body:not([data-screen=""]) #cross{display:none}
+/* round 1 (Gemini, Grok, Codex: the Journal and the end-of-map panel showed the live message strip, pickup lines and the last pickup card through their dim): a full-panel screen owns the picture; what was said is in the Journal's Log, what was picked up is in its Items. Pause keeps them (a menu over the game). */
+body:is([data-screen=journal],[data-screen=complete],[data-screen=dead],[data-screen=record],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
 body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,calc(.3vh*var(--k)));--dot:calc(var(--th)*1.3)}
 body[data-stance=sprint] #cross{opacity:0}
 body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
