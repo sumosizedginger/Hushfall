@@ -69,7 +69,7 @@ FILE: 2 of 4, THE CANON (design/LORE.md)
 The owner, 2026-10-11: "ALL DECISIONS ARE YOURS, KNOW PLAYERS ARE GOING TO WANT TO KNOW THE LORE AND STORY, AND YOU NEED TO AVOID AI SLOP, BUT WE WILL WORRY ABOUT THAT AFTER THE GAME IS BUILT WITH OUR BASIC LORE." This is the basic lore: the facts the game's text hangs off, so that every message, log, intro and ending says the same true thing. It extends what Campaign 1 already established (section 1) and does not contradict it. The prose is plain on purpose; a dedicated polish pass comes after the game is built (section 6).
 
 ## 1. What Campaign 1 has already said (kept; every line below is in a shipped map)
-- **The Hush** is a low tone. Those who hear it stop running and stand. Ines Calder, Tide-Warden of Port Marrow, cannot hear it: her father damaged one of her ears when she was a child ("the ear I damaged by accident may be the best thing I ever did", C1E1S01), and the other is no use against it. She hears what it does.
+- **The Hush** is a low tone. Those who hear it stop running and stand. Ines Calder, Tide-Warden of Port Marrow, cannot hear it. **Ines hears ordinary sound** (bells, voices, impacts, the forks, water) **and cannot perceive the Hush itself**; she sees what it does to people. Her father damaged one of her ears when she was a child, and his log (C1E1S01) says what he saw (she hears the bells and not the hum) and, separately, that he has wondered since the accident whether the ear is why; he cannot know, and nobody does. The game never states a mechanism (PT-071: design/story/CONTINUITY.md section 1b is the rule for any line about sound).
 - **Her father**, Warden Calder, kept the harbour's secrets: a cellar under the lighthouse, a vault in the cold under the Salt Works, supplies hidden in the slurry drains. His logs: the hum in the chalk "is not geology: it has a rhythm"; the salt pans are a cover and the beds under them are a receiver; "they do not like cold. It slows the Hush. Keep it cold, and keep the bells colder." He was told to stop asking.
 - **The Vael** broadcast the Hush, hang the people it stills in **cradles**, and **graft** them with bronze bell-chitin: they become **Tollbearers**, who carry a bell and hunt the rest. Bells ring together; silencing a Bell staggers the pack. A Vael message at the Signal House: "TOLL RECEIVED. THE FIRST BELL HAS RUNG. PORT MARROW IS NOT THE END OF THE LINE. IT IS THE MIDDLE OF IT. SING WHEN THE BELL SINGS."
 - **The Quiet One** (a Vael on the Choir ship, C1E3S01): "I was a voice, once. I stopped. The Song is a count of who is left to sing. Go to the Loom and cut the thread. It is how they tune you."
@@ -92,7 +92,7 @@ The owner, 2026-10-11: "ALL DECISIONS ARE YOURS, KNOW PLAYERS ARE GOING TO WANT 
 
 ## 2b. The facts of Act B, the Sounding Deep (added with design/ACTB.md; the text of C2M09 to C2M16 may say only these)
 - **The Deep is where the Vael actually live.** The surface of Anselm-Nine is a graveyard and a gate; the cities are inside the old stone, in caves that still carry sound. A Vael city is built round a cave the way a Marrow street is built round a harbour: for what the water, or the sound, does there.
-- **The ranks.** A **Cantor** conducts a whole Deep. A **Sub-Cantor** keeps the count for one district (C2M16). **Undercantors** run the halls (C2M11). **Zealots** are Songkeepers under arms, the ones who carry the Grafting out (C2M09 on). **Gardeners** tend the plants that ring (C2M14), **bellwrights** cast the bells (Act A, C2M07). A Zealot is a person who chose this and says so once.
+- **The ranks.** A **Cantor** conducts a whole Deep. A **Sub-Cantor** keeps the count for one district (C2M16). **Undercantors** run the halls (C2M11). **Zealots** are Songkeepers under arms, the ones who carry the Grafting out (C2M09 on). **Gardeners** tend the plants that ring (C2M14), **bellwrights** grow the bells (Act A, C2M07: the Vael do not cast them). A Zealot is a person who chose this and says so once.
 - **The Silent are few and they are in the low halls.** Not an army: a few hundred, kept in the lower wing of the Undercantor Halls and tending the dead. They are not allies you command; they are people who will not stop you. What the player does in C2M11 (fight the Songkeepers' wing, or go through the Silent's) is remembered by the text of C2M12 and later.
 - **The markets are quiet on purpose.** In the Echo Markets a shot carries twice as far (the well), so everyone there speaks softly and sells bells, cord, oil and dried fruit. The peaceful Vael are the ones who sing under their breath and nobody counts them. Zealots walk among them. A shot calls the whole market.
 - **The Drowned are the first conversions.** Tollbearers from a flood that took a Vael cathedral (C2M12): they were grafted standing in water and have never been taken out of it. They are Marrow people too: a harbour pilot's eye can tell the boots.
@@ -103,7 +103,7 @@ The owner, 2026-10-11: "ALL DECISIONS ARE YOURS, KNOW PLAYERS ARE GOING TO WANT 
 
 ## 2c. The facts of Act C, the Hive-Song (built in PT-046; the text of C2M17 to C2M24 and C2S02 may say only these)
 - **The Hive is where the count is kept and sung.** One district grown as an organ, with a throat (the gorge of C2M17), nerves (C2M18), a loom (C2M19), a vein (C2M20), a foundry (C2M21) and a heart. Everything in it keeps time to one beat, about every second and a half. The ribs swell on it and the tower at the end of the gorge goes red on it.
-- **The count is never full.** A plate at the first fire-base says OWED 52,310, SUNG 49,715; the plate on the conductor's podium in C2M24 says the same numbers and SHORT 2,595. Nothing has moved. A short count means more are grafted.
+- **The count is never full.** A plate in the Hive-Song gorge (C2M17) says OWED 52,310, SUNG 49,715; the plate on the conductor's podium in C2M24 is a different plate with the same figures and SHORT 2,595, and Ines says they match. Nothing has moved. A short count means more are grafted.
 - **The lattice is made of the grafted** (C2M18): a strand as thick as a hawser with a Port Marrow harbour badge (number 118) fused in it; a tally plate counts the voices held (1,218). **The loom** (C2M19) cuts a thread to a length and lays it in the weave, one voice to a cradle (406 cradles in a night); the Quiet One's "go to the Loom" is answered by it. **The rail** (C2M20) carries voices by car to the hub (a manifest: 31 voices a run).
 - **A Resonant** (C2M21) is three grafted singers fused at the hip into one body with a skirt of small bells; the bells ring when something else is near it. A foreman's log: nine fused in a week, counted as three each, because a ring of nine bells is cheaper than twenty-seven voices.
 - **The Silent are taken** (C2M22): in the four chapels of a cloister, called to a lift in the gate hall at the count-call, and sunk down a shaft while each says the one thing it refuses (to sing, to count, to answer, to forget). Six of them if Ines came by the Silent's low halls in C2M11 and they know her; three if she went through the Songkeepers' wing. They are not fought and not protected.
@@ -176,7 +176,47 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | **PELLEW** (mate of the Marrow Girl, a woman) | the crew's logs in C2M02, C2M13 (days 9 to 16), C2M30 (the last page) | paper | eleven left the beach; the counts below |
 | **THE TENDER** | a Silent grave-keeper (C2M03 cage, C2S01 garden) | speaks plainly, no contractions | the count is short; the Root Bell is tired; "the ones who sang" |
 | **THE SILENT** | each refuses one thing (sing, count, answer, forget) | notes and a few words | where they hid supplies; what the Songkeepers did to them |
-| **HULL** | the place | one practical sentence | how a thing works; never a key or a button |
+| **HULL** | the place | the interface channel: one primary purpose per message, concise, in the player's immediate situation | how a thing works: distances, timings, damage reductions, what a prompt will do. It may say a number and the name of the interaction ("a quarter step", "use it"); a key or a button is the PROMPT's and the objective's, never a voice's (`tests/story-coherence.test.js` holds this) |
+
+## 1b. What Ines can hear (PT-071, the outside reader's PRIORITY 2)
+
+The observation, not the explanation. **Ines hears ordinary sound: bells, voices, impacts, the forks, water, a bell struck far off. She cannot perceive the Hush itself.** Her father's log (C1E1S01) says what he saw (she hears the bells and not the hum) and, in a separate line, what he wonders (whether the ear he damaged is why; he cannot know). Nobody in the game knows the cause, and no text may say a mechanism (no binaural story, no diagnosis, no alien reason).
+
+How the text classifies what it says about sound (the rule for any new line):
+
+| kind | example | may Ines hear it |
+|---|---|---|
+| ordinary sound | a bell, the fog-bell's nine strokes, the Silent speaking, a shot, the chimes | yes |
+| physical vibration | a hum in a rail or a wall, the channel when she puts a hand in, a hum "up through the floor", "in my teeth" | she feels it; she does not hear it as the Hush |
+| the Song | the chimes' phrases, the notes on the ringing plates | yes: it is notes (C2M14: "the first time the Song has been one I could repeat") |
+| the Hush | the low tone that stops everyone who hears it | NO: she sees only what it does to them |
+
+Checked in this pass: C2M04 (the forks hum: a vibration she feels before she hears it), C2M06 (the channel hums under her hand), C2M02 (a hum up through the floor), C2M08 (the shaft: the rail hums in her hand; it was "a sound"), C2M25 and C2M26 outros (a bell felt in the floor before it is heard; a bell struck slowly), C2M29 (the Bell stops ringing: an ordinary sound ends; the Hush she cannot hear, and the text never says she hears it stop).
+
+The test a player passes: they can say what Ines cannot hear (the Hush) without knowing why.
+
+## 1c. The operator: her sources, and what she may say (PT-071, PRIORITY 4)
+
+Her rule is the sheet's first line: she can say where things ARE, never what stands in them. **Her sources, and nothing else:** (a) the plan sheets of the harbour and the Works (Customs Hall, the Works, the stations on the Board's plans): places, doors, what a building is for; (b) from the Choir ship on, the Vael's own hum (C1E3M01): shapes, counts, reeds, rhythms, never contents; (c) what Ines tells her over the set (every INES line that is a report: a line of the operator's that names a creature or a mechanism comes AFTER Ines has said it); (d) the signal itself (its bearing). A line that needs a fifth source is Ines's, or HULL's.
+
+## 1d. The radio, by map (PT-071, PRIORITY 3)
+
+| where | what happens | why |
+|---|---|---|
+| Campaign One | the set works: she is on the battery set at the lighthouse | the harbour's own line |
+| C2M01 | "I have you for as long as the Gate holds behind you" | the Gate carries the line |
+| C2M08 | static: "you are breaking up" | the stair down the spire leaves the Gate's reach |
+| C2M09 to C2M15 | nothing | no carrier |
+| C2M16 | the genuine operator, once: "the conductor was the hum I was riding, and it has stopped. This is the last I can hold" | in the Deep the set rides the Vael hum; the Sub-Cantor's floor was the last strong carrier; its death ends the line |
+| C2M17 to C2M22 | nothing | the Hive's beat is not the Deep's hum and does not carry her |
+| C2M23 | the false operator: first-night words ("Calder, come in", "the ferry is alongside, engines running") and a wrong detail; she asks nothing | the Hive copies what the grafted remember (C2M23): it has the voice right and the ferry wrong |
+| C2M30 | the genuine operator: INES says the set has woken and that the door is the only thing down there that carries it; the operator calls her "Ines" (never "Calder", which is the first night's word and the copy's) and ASKS what is in front of her | the Gate carries it; the copy cannot ask |
+
+The genuine voice answers and asks; the copy only repeats. That is the whole difference, and it is observable.
+
+## 1e. The lamp (PT-071, PRIORITY 5)
+
+The main route supplies the lamp: the hand lantern from C2M09, and the walk of C2M30 gives it an eternal wick for everybody (`map.lantern.eternal`), said once in plain words by HULL ("does not draw on its oil in this place"). C2S02, Ines's own lamp, is a reward and never a need: it adds the history (the lamp from the quay) and a stronger hold on rings (two-fifths) in Act D. A player who never finds it finishes the game; the epilogue says "the lamp" either way. WHY SHE STAYS is one observable sentence in the epilogue: anyone else who stood at the door would hear it ask; she cannot, so she is the one who can stand there. It is a responsibility she accepts ("I said I would keep it lit"), not a lock.
 
 ## 2. The calendar
 
@@ -190,7 +230,8 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 
 - **the Hush** = the low tone. **the Song** = the count of voices the Vael keep. **the count** = the same, as a number (OWED / SUNG / SHORT). **the Gate** = the door that is also a bell; **a gate** = a map door.
 - **the Mother** is two creatures: **the Graft-Mother** (Evaporation/Grafting Floor, C1E2M08) and **the Weeping Mother** (C1E3M04, C1E4M06, C2M08, C2M15). Objectives name them in full; a Vael plate may say "the Mother" (C2M15, the station of THE HOLD).
-- **Warden**: Ines is a Tide-Warden; her father Warden Calder; the plated enemy is a **Warden-Graft**, a Tide-Warden taken. INES says so once, at the first (C1E1M06: "Somebody on the Board wore that, once"). The Pump Cathedral and the Rail Yard repeat "the Warden-Graft again".
+- **Warden**: Ines is a Tide-Warden; her father Warden Calder; the plated enemy is a **Warden-Graft**, a Tide-Warden taken. INES says so once, at the first (C1E1M06: "Somebody on the Board wore that, once"). The Brine Gate and the Rail Yard repeat it (C1E2M01 "That is the Warden-Graft again"; C1E2M03 "Plate again"); the Pump Cathedral does not. A Warden-Graft is met again at C2M08 (HULL says so) and C2M15 (an objective names it): no further lesson.
+- **the Cantor Acolyte** is the tall one with the wheel of bells behind it (`ENEMIES.acolyte`, bestiary "Cantor Acolyte"; first met at C1E3M05, then C1E3M06, C1E3M08, C1E4M04, C1E4M06 and C2M15): while it is awake and not staggered everything within nine metres takes half. It is NOT the Resonant (three fused singers, C2M21 on). INES names the lesson once, at the first (C1E3M05: "Kill it first"); at the others the text only names it.
 - **Gill** is the flying hatchling's name on screen (Drone-Gill in the bestiary): SIGNAL says "Gills", not "drones".
 - **the firing** is retired. The kilns of the Salt Works were **lit** once; the pre-invasion records predate that (C1E2S01).
 - **the Signal House** = the ridge relay station (C1E1M07). **SIGNAL HOUSE** (capitals) = the operator, who is not there.
@@ -202,11 +243,11 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | persons received / processed at Customs | 212 / 424 (the second count is the Graft) | C1E1M01, C1E1M02; copies 213 in C2M23 |
 | Marrow Girl crew | eleven left the beach; nine at the first station; eight; day 9 six; day 15 three; day 16 one | C2M02, C2M13 |
 | plates on the forks | nine in one row, other boats' crews (AMBLER, T. BOSUN is one) | C2M04 |
-| the Marrow order of bells | 311 cast, 311 hung, four spare | C2M07 |
+| the Marrow order of bells | 311 grown (the Vael grow their bells, they never cast them), 311 hung, four spare | C2M07 |
 | the Drowned choir's stalls | 312 | C2M12 |
 | the district's count (Deep Gate) | 904 voices owed, 200 short | C2M09 |
 | the ossuary | 4,060 stacked in the outer ring | C2M13 |
-| the Hive's count | OWED 52,310, SUNG 49,715, SHORT 2,595 (the sum checks) | C2M17, C2M24 |
+| the Hive's count | OWED 52,310, SUNG 49,715, SHORT 2,595 (the sum checks). Two plates carry the same figures: the one in the Hive-Song gorge (C2M17) and the one on the conductor's podium (C2M24, where INES notes that they match); they are different plates, not the same object | C2M17, C2M24 |
 | the lattice | 1,218 held, harbour badge 118 | C2M18 |
 | the loom | 406 cradles a night | C2M19 |
 | the rail | 2 cars, 31 voices a run, 1 run in 4 to the hub | C2M20 |
@@ -223,7 +264,7 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | "I keep the lamp lit" (C1E1M01), the cellar's counter-tone (C1E1S01), the operator's line (C1E1M07) | the lamp on the quay (C2S02), the hook at the Gate (C2M30 and the epilogue) |
 | the fog-bell on the north pier, rung on the ninth stroke of the tide table (cold open) | the bell across the lake (C2M01), the copy that tolls eight and is rung the ninth by hand (C2M28) |
 | "A door is held from one side or the other" (C1E4S01, then the Campaign One epilogue) | the Campaign Two epilogue: "I am on this side of it" |
-| the Quiet One: "go to the Loom and cut the thread" (C1E3S01) | the Loom's plate: "The Quiet One was right about the loom" (C2M19) |
+| the Quiet One: "go to the Loom and cut the thread" (C1E3S01; the scene records the choice `quiet=heard`) | the Loom's plate: "The Quiet One was right about the loom" (C2M19) for a player who met them; the other version of the plate says only the count of cradles (so no main-route line names a secret's character) |
 | the Calder slab (C2M05, "no bronze on it yet") | the lamp and the Gate: she does not come home |
 | the operator's last lines (C2M01 through the Gate; C2M08 static; C2M16 the tea is cold; C2M23 wrong; C2M30 at the Gate) | the epilogue: "Somebody should be listening" |
 | Pellew's broken sentence ("There is something at the bottom of it that is", C2M13) | the last page (C2M30): it is not the water |
@@ -232,7 +273,9 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 
 ## 6. Threads left open on purpose
 
-What the Hush is made of; who the Vael were before the stone cooled; what answers the lamp on the far side of the Gate (the last card: "one note. It is not the Hush"); whether the Warden-Grafts remember. The game says what it saw and stops.
+What the Hush is made of; who the Vael were before the stone cooled; what answers the lamp on the far side of the Gate (the last card: "one note. It is not the Hush"); whether the Warden-Grafts remember; **the Tide Board** (its records imply it knew: "sealed until the Tide Board signs. Nobody signed", "Somebody on the Board wore that, once", the Wardens "told to stop asking"; no text says it conspired and none will: the Board is a thing the harbour trusted and that did not answer); **the Marrow Girl's sea-door** (the sea opened under her keel on the third night: a way between the worlds that was not Ines's Gate, and the game does not say whether it is another face of the same system; it never says the Gate is the only way through); **the lamp's other owner** (the lamp in C2S02 is hers, and a Silent says the Hive copied the lamps and could not copy the light). The game says what it saw and stops.
+
+Checked and found consistent (no change): Pellew's tins and survivors (day 9: six left, nineteen tins; day 10: eight tins and a pistol sealed in the wall, which leaves eleven; day 12: six, nine tins; day 15: three, four tins; day 16: one, the oil out), the Day 10 cache against the Day 12 count, and the two of hers who stand in the corridor (still counted among the six). The Silent's six or three (by the choice at C2M11) and the Mourning Halls' tally plate (6, crossed out, 4 in the margin) are told by the plate, not by Ines.
 
 ## 7. Checks to run after any change of text
 
@@ -303,7 +346,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "FISHMARKET ROWS": The town tried to run. It ran here. / Every lane is a queue that never moved.
 
-- [0:00 main] **SIGNAL HOUSE**: Calder, the boardwalk will have Bellhands on it. Keep to cover.
+- [0:00 main] **SIGNAL HOUSE**: Calder, the boardwalk runs the length of the market. Keep to cover.
 - [0:19 main] **INES**: Bells overhead. Three of them, patient as gulls.
 - [0:19 main] **BOAT HOOK**: A gaff left on a stall post, the point still wet. It reaches further than a fist, and what it hooks comes to you.
 - [0:42 main] **FISH HOIST LOG**: Auction shutters run on two hoists, north and south. Somebody wanted that hall shut, and set both to fail closed.
@@ -351,7 +394,8 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 - [0:00 main] **LIGHTHOUSE KEEPER**: Welcome, Calder. I kept this cellar, and then your father did, for the day the harbour needed one. It does now. Sit a minute.
 - [0:01 main] **A CHILD'S DRAWING**: A bell tower ringed in red crayon. In the corner, in your own hand at six years old: "the loud one".
-- [0:04 main] **WARDEN CALDER'S LOG**: First entry. The hum in the chalk. I knew it for what it was. Ines hears none of it: the ear I damaged by accident may be the best thing I ever did.
+- [0:04 main] **WARDEN CALDER'S LOG**: First entry. The hum in the chalk. I knew it for what it was. Ines hears the bells, and she does not hear this.
+- [0:04 main] **WARDEN CALDER'S LOG**: I have wondered since the accident whether the ear I damaged is why. I cannot know. If it is, it may be the best thing I ever did.
 - [0:22 main] **INES**: Every step of this stair was cut by hand. He climbed it every night for thirty years to keep the lamp lit.
 - [0:24 main] **BEACON NOTES**: The lamp flashes once a minute, for no ship. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour.
 - [0:43 main] **INES**: Thank you, Dad. I will keep it lit.
@@ -414,7 +458,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 **Intro card** "SIGNAL HOUSE": The lamps went out at dusk. / Somebody is still keying the set.
 
 - [0:00 main] **SIGNAL HOUSE**: The generator is down, Calder. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.
-- [0:04 main] **SIGNAL HOUSE**: The lamp here is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.
+- [0:04 main] **SIGNAL HOUSE**: The lighthouse lamp is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.
 - [0:12 main] **INES**: It's dark on purpose. They cut the lamps so we can't see them. Stay near the lanterns.
 - [0:41 main] **INES**: That bell-carrier is feeding the fallen back into the line. Kill it before it finishes.
 - [0:43 main] **ROCKET APPARATUS**: The station's life-saving rocket, with a few rockets. It throws a line to a wreck; it throws this at a wall as well. Stand clear of it.
@@ -441,11 +485,12 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 **Intro card** "BELL TOWER OF ST. ORRIN": The bell has rung for three days. / Nobody is pulling the rope.
 
 - [0:00 main] **SIGNAL HOUSE**: Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it.
-- [0:21 main] **INES**: The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it.
+- [0:21 main] **INES**: The stairs keep turning. I can't see the top.
 - [1:32 main] **INES**: The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first.
-- [1:34 main] **INES**: Another plate-bearer. Pillars in the corridor: that's your friend, again.
-- [2:04 main] **SIGNAL HOUSE**: That's it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone won't go through stone.
-- [2:50 main] **SIGNAL HOUSE**: The tower is silent, Calder, and the signal didn't stop. I have its bearing: the Salt Works. The hatch is open.
+- [1:34 main] **INES**: Another plate-bearer, and the pillars are in the corridor again.
+- [2:04 main] **INES**: Six bells in a ring, and the Cantor in the middle of them. The whole tower is ringing off it.
+- [2:04 main] **HULL**: The Cantor's tone does not pass stone: the pillars are cover. Cut the six bells, then the Cantor.
+- [2:50 main] **SIGNAL HOUSE**: The tower is silent, Calder, and the signal didn't stop. It was only a machine. I have its bearing: the Salt Works. The hatch is open.
 - [never] **INES**: One bell down. The Cantor staggered when it broke. Keep cutting the ring.  `ring`
 
 *Objectives on the main route:*
@@ -470,7 +515,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:35 main] **PUMP LOG**: VALVE ROOM KEPT SHUT. THE EAST WALL SOUNDS HOLLOW. SALT DUST ON THE SILL IS FRESH.
 - [0:45 main] **INES**: A rank in front of the gate. Bellhands on both towers. Whoever set this up has done it before.
 - [1:05 main] **INES**: Plate. That is the Warden-Graft again, and rails of cradles over the floor. Let it run into a pillar.
-- [1:18 main] **SIGNAL HOUSE**: That's the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties.
+- [1:18 main] **SIGNAL HOUSE**: That's the way into the Works. After it, the Evaporation Pans: open flats and channels, and not a roof for a kilometre.
 
 *Objectives on the main route:*
 - [0:00] Cross the pan. The gate only answers to the sluice wheel in the guardhouse: take the north ditch
@@ -485,7 +530,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "EVAPORATION PANS": White ground to the horizon, and the horizon is working. / Nothing out here is hiding. That is the point.
 
-- [0:00 main] **SIGNAL HOUSE**: White ground to the horizon, Calder, and one roof in the middle: the pump station. Everything between you and it is working.
+- [0:00 main] **SIGNAL HOUSE**: White ground to the horizon, Calder, and one roof in the middle: the pump station. Nothing else stands for a kilometre.
 - [0:00 main] **INES**: Empty cradles, ropes still swinging. They hang their hunting parties here and let them go when somebody walks the pans.
 - [0:05 main] **INES**: Brine channels, five metres across, and they burn. Cross on the planks, or wade and pay for it. Keep the heaps between you and anything that stands up.
 - [0:22 main] **INES**: Behind us. The cradles opened. They have your scent. Don't stop on the open ground.
@@ -515,8 +560,8 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:18 main] **LEVER PLACARD**: SHUNTING LEVER. ONE WAGON AT A TIME. THE LOCOMOTIVE WILL NOT MOVE ON ITS OWN. STAND CLEAR OF THE BED WHEN IT DROPS.
 - [0:30 main] **INES**: A tower on each side and a road between them. Bellhands up there. Put the derelict wagons between you and them and move.
 - [0:36 main] **SIGNAL BOX**: DOCK GATE: BY THE LEVER ON THE EAST WALL ONLY. NO TRAIN LEAVES THE DOCK UNTIL THE GATE IS RAISED.
-- [0:50 main] **INES**: Plate. The Warden-Graft again, and cradles all the way down the rail. Let it run into a pillar.
-- [1:11 main] **SIGNAL HOUSE**: The rail ends in Kiln Row. After this, the heat. Everything past that door is cooking something.
+- [0:50 main] **INES**: Plate again, at the end of the dock. A pillar on its charge lane will do.
+- [1:11 main] **SIGNAL HOUSE**: The rail ends in Kiln Row, Calder. After this, the heat.
 - [0:23 secret route] **TOOL LOCKER**: FOREMAN: SPARE FUSES, SPARE AMMUNITION, THE GOOD GLOVES. THE PANEL STICKS. KICK IT.
 - [0:24 secret route] **TOOL LOCKER**: A shipwright's chainsaw, oiled and wrapped. It runs and runs, and it is loud; hold it on plate or bell and it stalls.
 
@@ -533,7 +578,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "KILN ROW": They fire them here, like pots. / The kilns are still warm. Nobody banked them.
 
-- [0:00 main] **SIGNAL HOUSE**: They fire the shells here, Calder. The flue is dampered shut and the handles are hidden. Brass first: the charging hall.
+- [0:00 main] **SIGNAL HOUSE**: The kiln row is on the Works plan, Calder: a ring of kilns and a flue at the east end, dampered shut. The handles that work it are somewhere along the way.
 - [0:05 main] **INES**: That trench is embers. It burns, and it slows you. There's a bridge in the middle, and a handle on the island.
 - [0:24 main] **DAMPER LOG**: BRASS DAMPER HANDLE, KEPT ON THE ISLAND SO NO ONE CAN REACH IT WITHOUT CROSSING THE TRENCH. SIGNED, THE KILN MASTER.
 - [0:32 main] **HULL**: A charge-arc lamp in a clinker bin, still warm. It jumps from one body to the next: stand where they are packed.
@@ -541,7 +586,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:59 main] **DAMPER LOG**: IRON DAMPER HANDLE. TAKE IT AND THE KILN MOUTHS OPEN: THE SHELLS COME OUT TO MEET WHOEVER TOOK IT.
 - [1:00 main] **INES**: The kiln mouths are opening. Move off the lane, now.
 - [1:22 main] **FLUE LEVER**: FLUE. NEEDS BOTH DAMPER HANDLES, BRASS AND IRON, IN THE SOCKETS BELOW THE LEVER. DO NOT FIRE WITH THE DOOR OPEN.
-- [1:24 main] **SIGNAL HOUSE**: The flue is drawing. That's the cold coming up the stack. What they hid below the Works is colder than it should be.
+- [1:24 main] **INES**: The flue is drawing, and it is drawing cold. What they put below the Works is colder than it should be.
 - [1:12 secret route] **WARDEN CALDER'S NOTE**: A cold draught in a kiln. I hid one thing the Works could not burn. Go on: the vault is down there.
 
 *Objectives on the main route:*
@@ -581,7 +626,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "THE CRADLE ANNEX": They do not make them here. They grow them. / Do not touch anything that hangs.
 
-- [0:00 main] **SIGNAL HOUSE**: This is where the grafts are made, Calder. Don't run, don't fire. Nothing in here is awake yet.
+- [0:00 main] **SIGNAL HOUSE**: The Works plan calls this the Cradle Annex, Calder. Walk; do not run.
 - [0:00 main] **INES**: Pods. Hanging, like fruit. Something is moving in the nearest. Walk slowly.
 - [0:06 main] **INES**: Rows of them. This is the line. They hang the shells here, and they put something else in the shells.
 - [0:09 main] **INES**: They are hatching. Not people, and nothing I know. Aim up: they're flying.
@@ -650,7 +695,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "THE GRAFTING FLOOR": Every pipe in the Works ends in this room. / Something has been fed here for a very long time.
 
-- [0:00 main] **SIGNAL HOUSE**: Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it.
+- [0:00 main] **SIGNAL HOUSE**: Calder, the head of the line is at the north end, on the Works plan.
 - [0:04 main] **INES**: The line comes in here. Cradles all the way down, and the sound of something large breathing. We are close.
 - [0:11 main] **INES**: There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it's bare.
 - [0:23 main] **INES**: It's a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Don't stand in the open.
@@ -781,12 +826,12 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "RESONANCE LOOM": The ship tunes the Hush here. / The doors are listening.
 
-- [0:00 main] **SIGNAL HOUSE**: Every door in there listens, Calder. Make a noise near one and it won't open for you until it has heard nothing for a while. Kill quietly, or wait.
+- [0:00 main] **SIGNAL HOUSE**: The doors in there answer to the hum, Calder, and I can read them listening. Be quiet near one.
 - [0:03 main] **INES**: It is listening, and your own gun is what it hears. Stand still and count to four. It will let you through.
 - [0:07 main] **HULL**: A pit, and four floors that rise and fall on a beat, each two seconds behind the last. Step on the first when it is up, the next when it comes up. Or go round, past the singers.
 - [0:10 main] **HULL**: A fire axe on a hook by the first platform, the handle worn smooth. Slow, and it takes everything in front of you.
 - [0:46 main] **INES**: Another of the tall ones, a wheel of bells behind it. Anything near it takes half. Kill it first.
-- [0:52 main] **SIGNAL HOUSE**: Rows of them, standing, asleep: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall.
+- [0:52 main] **SIGNAL HOUSE**: Rows of them, standing: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall.
 - [1:10 main] **INES**: That's the end of the tuning. What was being tuned is still above us, singing.
 - [0:27 secret route] **HULL**: One panel in this wall rings wrong. Hollow, like the others were once.
 
@@ -807,7 +852,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 - [0:00 main] **SIGNAL HOUSE**: Calder, a hall that climbs. I count rows of them standing before the first pews, and more above. Use the pews. Don't walk up the middle.
 - [0:06 main] **INES**: Standing in rows like the stops of an organ. Asleep, or what the ship calls asleep. Fight from behind a pew.
-- [0:21 main] **HULL**: The tall one with the wheel of bells again. Everything near it takes half. It is behind the rows: go round the end of a pew and put it down.
+- [0:21 main] **HULL**: The tall one with the wheel again. Go round the end of a pew and put it down.
 - [0:37 main] **INES**: The rake is open sky from here, and the singers are up on the top tiers. A round that goes past you spoils your aim. Pew to pew. Do not stop in the aisle.
 - [0:47 main] **SIGNAL HOUSE**: The conductor's lever, north end of the top tier, on the east wall. The door is at the head of the aisle.
 - [0:56 main] **INES**: Past the conductor. They were rehearsing for this.
@@ -826,7 +871,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 *Purpose, from the manifest:* Mass production of the next wave
 
-**Intro card** "THE SPORE FOUNDRY": The ship casts its bell-bearers here. / Do not wait for the vats to run dry.
+**Intro card** "THE SPORE FOUNDRY": The ship grows its bell-bearers here. / Do not wait for the vats to run dry.
 
 - [0:00 main] **SIGNAL HOUSE**: Calder, the Choir grows what it wants more of here. I'm reading four vats on a ring round a furnace. Break them and the way out opens.
 - [0:06 main] **INES**: It's a ring of floor round a furnace. The vats are on stilts at the four corners, and every one of them is breathing. Don't stand where they can see you and wait.
@@ -852,8 +897,9 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:03 main] **INES**: It's wet. The walls are wet. Don't think about what the walls are.
 - [0:04 main] **HULL**: The panel in the gullet's south wall rings hollow.
 - [0:14 main] **HULL**: Ribs, four of them, one wall to the other with a gap on alternate sides. It is a bend in a throat. They will be waiting at every gap.
-- [0:32 main] **INES**: Singers in the curve. A shell-back in front of them. Kill the tall one with the wheel first: everything near it takes half.
-- [1:03 main] **SIGNAL HOUSE**: Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second.
+- [0:32 main] **INES**: Singers in the curve, a shell-back in front of them, and the tall one with the wheel behind.
+- [1:03 main] **SIGNAL HOUSE**: Four-legged, a horn the size of a doorway, and it walks.
+- [1:03 main] **HULL**: Pillars are cover from its rings. While a reed sings it throws two: wait for the second.
 - [1:22 main] **INES**: The reeds are silent. One ring now, and it's angry. Stay behind a pillar for the ring, then hit it.
 - [1:45 main] **SIGNAL HOUSE**: The voice is gone, Calder. The ships are quiet. They were calling something, and it heard that. We should not be here when it answers.
 
@@ -895,7 +941,8 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "WRECK BELT": Other worlds had ships. Here they are. / The only roads are the vents.
 
-- [0:00 main] **SIGNAL HOUSE**: Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.
+- [0:00 main] **SIGNAL HOUSE**: Wrecks, Calder, three of them, with sky between. There is no road across that I can read.
+- [0:00 main] **HULL**: A lit plate in a deck throws you across the gap. Steer a little, shoot as you go. A miss costs fifteen, and the sky puts you back.
 - [0:12 main] **INES**: Six cells of nothing. The plate is at the end of the deck. If this is wrong it costs fifteen.
 - [0:28 main] **HULL**: The bow. Singers across the gap, a flyer over it. The plate throws you to the gimbal. You have time to shoot on the way.
 - [0:34 main] **INES**: Rings inside rings. Everything here is from a different world. The hub has the fuse, and so does the thing guarding it.
@@ -941,12 +988,12 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "MIRROR ARRAY": The Gate is focused here, through glass. / A beam wants somewhere to go.
 
-- [0:00 main] **SIGNAL HOUSE**: This is where the Gate is focused, Calder. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops.
+- [0:00 main] **SIGNAL HOUSE**: This is where the Gate is focused, Calder. Light does the work here. The mirrors turn a quarter at a time: the bright face carries the beam, the dark face stops it.
 - [0:02 main] **INES**: Mirrors on plinths, a bright face and a dark back to each. Nothing in the array is lit yet.
 - [0:03 main] **HULL**: The way into the array is open.
-- [0:12 main] **SIGNAL HOUSE**: Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it.
-- [0:32 main] **INES**: Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they aren't going anywhere.
-- [0:45 main] **SIGNAL HOUSE**: The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other.
+- [0:12 main] **HULL**: Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it.
+- [0:32 main] **INES**: The tall one with the wheel. The mirrors can wait; they aren't going anywhere.
+- [0:45 main] **HULL**: The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other.
 - [0:57 main] **INES**: Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that wasn't meant to be found.
 - [1:07 secret route] **HULL**: The wall at the end of the niche is not a wall.
 
@@ -1004,9 +1051,9 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "GATEKEEPER'S APPROACH": Everything the Vael had left is standing in this hall. / The Gate is at the far end, and it is very bright.
 
-- [0:00 main] **SIGNAL HOUSE**: Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens don't line up. The tunnels in the flanks go round the first two.
+- [0:00 main] **SIGNAL HOUSE**: Five ranks, Calder, each a step higher. The gaps in the screens don't line up. The tunnels in the flanks go round the first two.
 - [0:02 main] **INES**: Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It's like looking at the sun.
-- [0:18 main] **SIGNAL HOUSE**: The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half.
+- [0:18 main] **INES**: The stalls. The tall one with the wheel is behind the singers.
 - [0:44 main] **INES**: She is in there, in the round room west of the rank. The way out stays locked as long as she weeps. Walk out of what she makes.
 - [1:17 main] **HULL**: The steps. Two grafts with plates on their fronts, and bellhands behind them. Pillars are cover from the bells.
 - [1:38 main] **INES**: One more shell. Then the yard, and the Gate beyond it. I can feel it in my teeth.
@@ -1050,8 +1097,9 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "GATE WARDEN": The Gate is behind it. It is the colour of the inside of a bell. / It has been here since before there was anything to keep out.
 
-- [0:00 main] **SIGNAL HOUSE**: Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it.
-- [0:43 main] **HULL**: Mirror plinths, one-sided: a back stops the light. Use turns one a quarter step. Light off the face runs straight on, and there are seals on those lines.
+- [0:00 main] **SIGNAL HOUSE**: Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths.
+- [0:00 main] **HULL**: Its eye opens before the beam fires. Stone stops the beam.
+- [0:43 main] **HULL**: Mirror plinths, one-sided: a back stops the light. Light off the face runs straight on, and there are seals on those lines.
 - [1:02 main] **INES**: The last seal is gone, and the shield with it. Now it can be hurt.
 - [1:37 main] **SIGNAL HOUSE**: It's down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet.
 - [0:09 secret route] **INES**: The wall has gaps: steps down to the arena. The rim goes all the way round. It's a place to run.
@@ -1174,7 +1222,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "TUNING FORK FIELDS": Every row on this hill is a fork, and every fork has been tuned. / What gets struck here is paid for somewhere else.
 
-- [0:00 main] **INES**: Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming. Not a sound I would put a word to.
+- [0:00 main] **INES**: Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming, so low I feel it in my hands before I hear it.
 - [0:03 main] **HULL**: A fork rings at a shot, answers its neighbours down the row, and everything asleep near them wakes. The arc lamp and a blow are heard from least far.
 - [0:07 main] **FORK PLATE**: A brass plate hammered onto the foot, in our letters: AMBLER, T. BOSUN. Somebody here had that courtesy. I count eight more plates in this row.
 - [0:37 main] **INES**: They are tending the forks. Weeding round them, wiping them down, putting an ear to them. Nobody looks up. I would like to keep it that way.
@@ -1261,7 +1309,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:25 main] **HULL**: A bell in one of the sheds has begun to ring louder. When it cracks, a bell-bearer steps out of it. Break it first.
 - [0:35 main] **INES**: The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that isn't hot.
 - [0:44 main] **HULL**: The lever drops. Somewhere behind the north shed a bar falls out of a door.
-- [0:16 secret route] **BELLWRIGHT'S TALLY**: THE MARROW ORDER. 311 BELLS CAST. 311 HUNG. FOUR SPARE.
+- [0:16 secret route] **BELLWRIGHT'S TALLY**: THE MARROW ORDER. 311 BELLS GROWN. 311 HUNG. FOUR SPARE.
 - [0:18 secret route] **HULL**: The back wall of the west shed rings hollow.
 - [0:45 secret route] **HULL**: A bell cracks, and something steps out of it.
 
@@ -1287,7 +1335,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [1:09 main] **INES**: The third terrace has a mother on it, weeping, and the stone round her is wet. Walk out of what she makes. The lift is on the far side.
 - [1:32 main] **INES**: The top. The whole sea bed behind me, flat to the edge, and the road across it like a scratch. The needles are much nearer from here.
 - [1:37 main] **A SILENT (NOTE)**: Below this is where the count is kept. We go down only to be counted. If you go, you are the first who has not come to be counted.
-- [1:50 main] **INES**: A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that's what holds the Gate open. I am going down.
+- [1:50 main] **INES**: A hollow spire with a well in the middle and a stair down the wall. Cold air comes up it, and the rail hums in my hand. I think that's what holds the Gate open. I am going down.
 - [0:09 secret route] **HULL**: The north wall of the gate hall rings hollow beside the stair.
 
 *Objectives on the main route:*
@@ -1400,6 +1448,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:04 main] **HULL**: The causeway is dry. The rest is wading water, and water carries the arc lamp: a charged bolt jumps between bodies standing in it, eight metres, up to eight of them.
 - [0:04 main] **INES**: The water has moved. Something has stood up in it, and something else after that.
 - [0:10 main] **RINGING PLATE**: Run a nail down it: the stalls of this choir hold three hundred and twelve. The count says they are all present.
+- [0:10 main] **INES**: Owed and short. That is all the plates have said since the Fields. This is where the difference came from: my side of the sea.
 - [0:17 main] **INES**: The transept has dry chapels at both ends, a long way off across the water. A singer stands in each, small at this distance. Neither of them is a Drowned.
 - [1:11 main] **INES**: Four singers on a loft behind the altar, and the exit behind them. The Drowned stand because they are told to. These four are doing the telling.
 - [1:22 main] **HULL**: The four on the loft are down. The Drowned are still standing, and nobody is telling them to do anything now.
@@ -1544,7 +1593,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:35 main] **INES**: One Vael on a round dais with a rod in one hand and the other up in front of its face. It's looking at the forks.
 - [1:15 main] **INES**: It said nothing the whole time. Its last note went out across the floor and, for once, did not come back.
 - [1:22 main] **INES**: A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. What is below this isn't warm.
-- [1:23 main] **SIGNAL HOUSE**: Calder, this is the last I can hold. The lamp is lit and the tea is cold. I'm here until the set goes.
+- [1:23 main] **SIGNAL HOUSE**: Calder, the conductor was the hum I was riding, and it has stopped. This is the last I can hold. The lamp is lit and the tea is cold. I'm here until the set goes.
 - [0:25 secret route] **HULL**: The guard hall wall rings hollow in the north, in a seam of paler skin.
 - [0:26 secret route] **A SILENT (NOTE)**: For whoever is sent to stop it. It never wanted to be a conductor, and nobody asked. Do not make it suffer: it has been afraid for a long time.
 
@@ -1602,7 +1651,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [2:34 main] **HULL**: The cut lever is on the south face of the root, under the lamps. It does nothing while a knot still ties the lattice.
 - [2:36 main] **HULL**: The root has let go of the strands. Every bridge has stopped lighting.
 - [2:40 main] **INES**: The organ is rooted in the island like a tooth. Every strand in the cathedral comes back to it. There's a lever low on the root, under two lamps.
-- [0:16 secret route] **HULL**: The rim wall rings hollow here. There is a seam in the bone.
+- [0:16 secret route] **HULL**: The rim wall rings hollow here, and the bone is thinner than it ought to be.
 - [0:17 secret route] **A SILENT (NOTE)**: For whoever walks the bridges. I kept this under the rim. The bridges are cooler at the edges; it is the middle they keep hot.
 - [never] **HULL**: The north wall is shut. It opens when the four knots are broken and the root is cut, in either order.  `door`
 
@@ -1621,13 +1670,14 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 **Intro card** "BONE LOOM": Nine crossings under a roof of rails, and a cradle hung over every one. / The doors breathe on the beat. The way to the key is three of them.
 
 - [0:00 main] **INES**: A loom the size of a church, and nobody at it. Every crossing in the hall has two cradles on rails over it, and the people in them are not awake.
-- [0:06 main] **PLATE**: A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.
+- [0:06 main] **PLATE**: A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six.
 - [0:16 main] **HULL**: The floor of this corridor runs west for ten seconds and stands for eight. When the chevrons turn amber it is about to change.
 - [0:34 main] **HULL**: The shuttle comes down on this corridor once a bar. Its shadow comes first, and the floor glows orange before it lands.
 - [0:45 main] **INES**: The pale ones are woven, not grafted: they come out of the cradles already walking. Somebody has been spinning them all night.
 - [1:12 main] **HULL**: These doors breathe. Each is open three seconds in six, and each opens a second after the one in front. Go when the first opens and you are through all three.
 - [1:27 main] **PLATE**: CUTTING ROOM. The length of a thread is the length of a life: it is measured here and cut. The tally on the table is not finished.
 - [1:31 main] **HULL**: The iron key lies on the cutting table, under the lamps. It opens the door at the east end of the north lane.
+- [0:06 main, quiet=heard] **PLATE**: A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.
 - [0:59 secret route] **HULL**: The north wall of this corridor rings hollow in one place. The weave is thinner there.
 - [1:01 secret route] **A SILENT (NOTE)**: I hid these under the frame the night they began the new loom. If you are reading this the old one has stopped.
 - [never] **HULL**: The door is shut. It takes an iron key, and the key is in the cutting room at the north end of the hall.  `door`
@@ -1652,7 +1702,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:47 main] **HULL**: The pier is the only way off the car at the hub. The island has its own guard. The relay is on the south face of the copper stack.
 - [1:25 main] **HULL**: The relay is thrown. The east station is the last stop before this one: the exit there has come unlocked.
 - [0:28 secret route] **INES**: The west station is a cutting with a ledge on each side. There are singers on the ledges. They are facing the rail.
-- [0:35 secret route] **HULL**: The west wall of the west station rings hollow in one place. There is a seam.
+- [0:35 secret route] **HULL**: The west wall of the west station rings hollow in one place. A line in the paint where a door has been.
 - [0:37 secret route] **A SILENT (NOTE)**: I rode this rail for a year with my hands over my ears. If you can read this, take the cases and do not wait for the second car.
 - [never] **HULL**: The exit is locked. The hub relay opens it, on the island in the middle of the ring.  `exit`
 
@@ -1670,24 +1720,25 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 - [0:00 main] **INES**: A pit of white light with three catwalks round it, one above another, and a wall between each. The light goes up and down about once every second and a half.
 - [0:01 main] **HULL**: A steam jet is lit for a beat before it fires. A segment that is dark has just fired and will not again for four seconds.
+- [0:02 main] **HULL**: The floor of this stretch is a belt. It carries north, stops, carries south, stops. The steam jet at its foot is where south ends.
 - [0:05 main] **HULL**: The first wheel is turned. The pipe beside it goes quiet and the steam on this ring is a shade lower.
 - [0:06 main] **HULL**: The ramps to the middle ring are at the corners, the ramps to the top at the points of the compass. You cannot go straight up.
-- [0:17 main] **HULL**: Its ring comes out of the waist on the beat. A pier of stone stops it, and so does a catwalk above or below it. Keep it away from the others.
-- [0:17 main] **INES**: Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it's slow.
-- [0:45 main] **HULL**: The second wheel is turned. The pit is a little less white.
-- [1:22 main] **HULL**: The third wheel is turned. The seal on the top ring has let go.
-- [1:30 main] **FOREMAN LOG**: FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.
-- [0:43 secret route] **HULL**: A short run of the retaining wall above the pit rings hollow. There is a hatch in it.
-- [0:44 secret route] **A SILENT (NOTE)**: I stoked the pit for a year. Nobody counts what goes into it, and nobody counts what is left out. Take it.
+- [0:20 main] **HULL**: Its ring comes out of the waist on the beat. A pier of stone stops it, and so does a catwalk above or below it. Keep it away from the others.
+- [0:21 main] **INES**: Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it's slow.
+- [0:49 main] **HULL**: The second wheel is turned. The pit is a little less white.
+- [1:25 main] **HULL**: The third wheel is turned. The seal on the top ring has let go.
+- [1:33 main] **FOREMAN LOG**: FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.
+- [0:47 secret route] **HULL**: A short run of the retaining wall above the pit rings hollow. There is a hatch in it.
+- [0:47 secret route] **A SILENT (NOTE)**: I stoked the pit for a year. Nobody counts what goes into it, and nobody counts what is left out. Take it.
 - [never] **HULL**: The exit is sealed by three valves, one on each ring. The wheels are under red lamps, on the walls beside the catwalks.  `exit`
 
 *Objectives on the main route:*
 - [0:00] Climb the rings: three coolant valves, one on each ring, beside the Resonants. The exit on the top ring opens when all three are turned
 - [0:05] Valve 1 turned. The middle ring is up the ramps at the corners
-- [0:22] Middle ring: valve 2 is on a wall by the catwalk. Up at the compass points
-- [0:45] Valve 2 turned. The top ring is up the ramps at the compass points
-- [1:01] The top ring: valve 3, then the exit
-- [1:22] All three valves are turned. The exit on the top ring is open
+- [0:26] Middle ring: valve 2 is on a wall by the catwalk. Up at the compass points
+- [0:49] Valve 2 turned. The top ring is up the ramps at the compass points
+- [1:04] The top ring: valve 3, then the exit
+- [1:25] All three valves are turned. The exit on the top ring is open
 
 **Outro:** The last wheel stopped and the pit went from white to red, and the red went slowly down. On the top ring a door that had been a wall stood open on a stair, and the stair was cold.
 
@@ -1721,6 +1772,9 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:05 secret route] **A SILENT (NOTE)**: My sister is under the third stone. She sang the count at the Gate for twenty years and stopped on the day it asked her to sing me. They put her here. I took the next house along.
 - [0:05 secret route] **A SILENT (NOTE)**: I tend the stones. Nobody comes. The ones who sang are kept in order by size, and the Silent in order by the day they stopped. She is first. I am not on the list yet.
 - [0:05 secret route] **A SILENT (NOTE)**: If you are the one with the lamp, put it here for the length of one candle. Then take it with you. She was afraid of the dark at the end, and I never got it right.
+- [0:18 secret route] **HULL**: In the garden a tree of glass, and three chimes among the graves. The tree plays three notes when you use it: answer on the chimes, in order, each within eight seconds of the last.
+- [0:29 secret route] **HULL**: A door has opened in the west wall of the arcade, and behind it a closet with a lamp left burning.
+- [0:34 secret route] **A SILENT (NOTE)**: The bells were for the ones who went down in the lift, and nobody has rung them. I left the tin for whoever did. It is not much.
 - [never] **HULL**: The way out is sealed until the lift has gone down. It does not need a key or a lever. It needs the Silent to be gone.  `door`
 
 *Objectives on the main route:*
@@ -1787,14 +1841,15 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 **Intro card** "CHOIR OF ONE": A bowl of seats, nine singers, one conductor over the podium. / Everything in the Hive keeps time to it.
 
-- [0:00 main] **INES**: A long hall with every box I could want in it, laid out in two rows, as if somebody expected a person to come and take them. Somebody has.
-- [0:05 main] **COUNT PLATE**: OWED 52,310. SUNG 49,715. SHORT 2,595. It is the same plate as the one at the first fire-base, and the sum has not moved.
+- [0:00 main] **INES**: A long hall with a row of harpoon bolts and a row of armour laid out down the middle, as if somebody expected a person to come and take them. Somebody has.
+- [0:05 main] **COUNT PLATE**: OWED 52,310. SUNG 49,715. SHORT 2,595.
+- [0:05 main] **INES**: The figures match the plate in the Hive-Song gorge. None of them has moved.
 - [0:06 main] **HULL**: Nine singers in three tiers. The conductor takes a twentieth of a hit while they sing, and more with every one that falls. A tier lights before it blooms.
 - [0:10 main] **HULL**: The baton rises a beat before the ring. It goes out, turns, and comes home. Stand a metre up on a tier, or behind a block or a pillar. A half-step is too low.
 - [0:47 main] **HULL**: Half its strength gone, or the choir silent: a ring every bar now, and Choristers from the dome.
 - [1:01 main] **HULL**: The conductor is down and the beat has stopped. The lights hold still. East of the podium the corridor is open.
 - [1:11 main] **INES**: A corridor, straight, at the height of the top tier. At the far end the air is cold, and nothing in it is keeping time.
-- [1:04 secret route] **HULL**: The wall of the top tier rings hollow behind the north pillar. There is a seam in it.
+- [1:04 secret route] **HULL**: The wall of the top tier rings hollow behind the north pillar. The plaster there has a crack the width of a nail.
 - [1:07 secret route] **A SILENT (NOTE)**: A conductor sits down between movements. This was the chair. Whoever it was is not on the podium now, and the baton is on the podium.
 
 *Objectives on the main route:*
@@ -1823,7 +1878,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [1:03 main] **HULL**: The Resonant on this ledge rings on nothing now: the beat is gone, and it rings when something stands near it. A lit lantern cuts what reaches you to three-fifths.
 - [2:01 main] **HULL**: The lever on the wall by the last ledge opens the door to the north. Its lamp is lit.
 - [2:03 main] **HULL**: The door has gone back into the wall. The corridor beyond it slopes down.
-- [2:04 secret route] **HULL**: The outer wall of the last ledge rings hollow in one short run. There is a seam in the root.
+- [2:04 secret route] **HULL**: The outer wall of the last ledge rings hollow in one short run. The root there grows the other way.
 - [2:05 secret route] **A SILENT (NOTE)**: This is what I could carry down. I counted the ledges on the way: six, and I stopped counting after that.
 - [2:09 secret route] **HULL**: The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern.
 
@@ -1833,7 +1888,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [1:52] The last landing: the lever on the outer wall opens the door to the north
 - [2:03] The door in the wall of the last landing is open: the exit is beyond it
 
-**Outro:** The last landing is a root floor with an open door in the wall. The corridor beyond goes on down at the slope of the rest of the country, towards a sound that is not a sound yet.
+**Outro:** The last landing is a root floor with an open door in the wall. The corridor beyond goes on down, towards a bell you can feel in the floor before you hear it.
 
 ### C2M26 Silent Roots
 
@@ -1860,7 +1915,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:58] The south latch is thrown. Two chambers more
 - [1:25] The refectory gate is open: down the stair at the north end of the clearing
 
-**Outro:** The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and there is a sound at the end of it that is very slow.
+**Outro:** The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and at the end of it a bell is being struck very slowly.
 
 ### C2M27 Fault Line
 
@@ -1870,7 +1925,8 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 - [0:00 main] **INES**: The stone is cold, and from the crack comes a light the colour of a forge. The whole country has cracked along one line, and the crack is as wide as a harbour mouth.
 - [0:01 main] **HULL**: Forty-five seconds after you arrive the road starts to fall from the west end, a strip at a time, a metre a second. A strip falls three times; the view shakes first. Stay ahead.
-- [0:05 main] **HULL**: The wall of the north road rings hollow in one short run, in the first stretch. There is a seam.
+- [0:05 main] **HULL**: The wall of the north road rings hollow in one short run, in the first stretch. A hand wide, no more, and dry.
+- [0:05 main] **HULL**: Everything on these roads is asleep. A loud gun wakes whatever stands inside the ring on the readout, and the front is behind you. A quiet one passes.
 - [0:14 main] **HULL**: The north road is broken in the middle. The first bridge is the way across: it sinks half a metre after you cross, and a stair on the far side climbs out of the pit.
 - [0:35 main] **INES**: The south road goes on in the same grey and the same cold. Somebody has laid lamps along it. The stone that's going hasn't reached this far yet.
 - [1:09 main] **HULL**: The lever on the far lip is on the north wall of the road, under two lamps and a lantern. It holds the lip. The exit is locked until it is thrown.
@@ -1908,7 +1964,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [3:50 main] **HULL**: The causeway gate is open. The rope is on the plinth in the middle of the mole, under the lamps.
 - [4:06 main] **INES**: Nine. It sounds the same as the north pier's, to the half-second. Somebody listened to it for a very long time.
 - [0:00 secret route] **HULL**: The four bays in the outer wall are gates. What comes in comes from them, a few seconds apart. The first stroke is thirty seconds after you land.
-- [0:12 secret route] **HULL**: The outer wall of the highest step rings hollow in one short run, east of the exit. There is a seam.
+- [0:12 secret route] **HULL**: The outer wall of the highest step rings hollow in one short run, east of the exit. The mortar there is newer.
 - [0:13 secret route] **A SILENT (NOTE)**: I kept the dock's tally on this wall, a mark a night for a year. The water took the first step of the quay. It never got as far as the wall.
 - [never] **HULL**: The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole.  `exit`
 
@@ -1932,11 +1988,11 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - [0:04 main] **A ZEALOT**: The bell is for the ones who keep it. Go back.
 - [0:04 main] **HULL**: A bell with its heart on a chain. It swings: lead it. Four root anchors on the tier below the pillars hold the chain; while one stands it takes three tenths of a hit.
 - [0:17 main] **HULL**: At the end of a swing it strikes a ring across the floor: a metre up, or behind a pillar, it passes. Under the middle it crushes: the orange glow shows where, a second ahead.
-- [0:46 main] **HULL**: The wall of the top tier rings hollow in one short run, south of the middle. There is a seam.
+- [0:46 main] **HULL**: The wall of the top tier rings hollow in one short run, south of the middle. The seats are cut away round it.
 - [0:47 main] **A SILENT (NOTE)**: I put what I could carry in the wall, under the seats, where the bell is not listening. It has never listened to anything I did.
 - [0:58 main] **HULL**: The chain is gone: it falls. Bait its charge into a pillar or the tier wall and it stands stunned three seconds. Rooted spikes come up where you stand: move.
 - [1:36 main] **HULL**: Under a third: the lights fall, the note rolls the whole floor every three seconds, the tiers too, and the heart is open to everything. Cover, then the mortar and the rockets.
-- [1:45 main] **INES**: It doesn't break. It hangs there, and the sound has gone out of the place as though the room had been unscrewed from the air.
+- [1:45 main] **HULL**: The heart has stopped on its chain. The stair north of the bell is lit.
 
 *Objectives on the main route:*
 - [0:00] Cross the hall into the bell. Shoot the four root anchors from cover; the clapper takes 30% while one stands
@@ -1949,7 +2005,7 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 - It hangs whole. Every sound has gone out of the place.
 - INES: Signal House, the Bell has stopped. I am going up to the Gate.
 
-**Outro:** It hangs whole and it does not ring. In the quiet it left, somewhere above you, a stair has lit.
+**Outro:** Above the bell the shaft goes up into a dark that the stair lights, one flight at a time.
 
 ### C2M30 The Unrung Gate
 
@@ -1958,13 +2014,14 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 **Intro card** "THE UNRUNG GATE": A short walk, in silence. / At the Gate: light the lamp, and keep it lit.
 
 - [0:00 main] **INES**: The floor of the Bell. The roots have drawn back from the walls and left the stone clean, as if it had been waiting for someone to sweep it.
+- [0:00 main] **HULL**: The lantern does not draw on its oil in this place.
 - [0:04 main] **INES**: The stair goes up the inside of the shaft. A plate at the first landing says how far down this is. I don't read the number.
 - [0:08 main] **INES**: The Hive, and nothing moving in it. The organs hang where they hung and none of them swells. The beat has stopped.
-- [0:12 main] **INES**: The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting.
+- [0:12 main] **INES**: The city under the stone. Every lamp out but one: a lantern low on a ledge, a wick in it, lit by hand. And one bell, high up, that nobody is ringing. I count three swings and stop.
 - [0:16 main] **INES**: A road across a plain under a low red sun. It was always going to be here when I got to this end. It is a different road from the one I walked.
+- [0:20 main] **INES**: The set has woken in my pocket. The door is the only thing down here that carries.
 - [0:20 main] **SIGNAL HOUSE**: Ines. I have you on the set. There is no line down there, and I have you. Tell me what is in front of you.
-- [0:21 main] **INES**: A door that is also a bell. A hook beside it, the kind a lamp hangs from. My father said what a lamp is for. Light it, and keep it lit.
-- [0:21 main] **SIGNAL HOUSE**: The bell on the door has gone quiet. It is holding.
+- [0:21 main] **INES**: A door that is also a bell. It has stopped ringing and it has not stopped shaking.
 - [0:13 secret route] **INES**: One stretch of the south wall sounds different under my knuckles. Somebody has been here with a hand and a reason.
 - [0:14 secret route] **PELLEW, MARROW GIRL (LOG)**: Day 16, later. ringing, once in a very long while. I have timed it against my pulse, and my pulse is slower than it was. It is not the water. Whoever finds this: not the water.
 
@@ -1980,16 +2037,15 @@ Generated by `node tools/dev/story-export.mjs`. Do not edit this file: edit the 
 
 ### EPILOGUE of Campaign Two: THE UNRUNG GATE (End of Campaign Two)
 
-- The stair ends at a door that is also a bell. It is not ringing.
-- SIGNAL HOUSE: Ines. I have you on the set. There is no line down there, and I have you.
+- The stair ends at the door.
 - INES: There is a hook beside the door, the kind a lamp hangs from. My father told me what a lamp is for. I did not understand him.
 - INES: You keep it lit, and it holds the tone back from the harbour.
 - INES: A door is held from one side or the other. I am on this side of it.
 - She hangs the lamp on the hook and lights it. The bell on the door goes quiet, and stays quiet.
 - SIGNAL HOUSE: It is holding. Come back up, Ines. Somebody else can see to it.
-- INES: There is nobody else. I said I would keep it lit.
+- INES: Anyone else who stood here would hear it ask. There is nobody else. I said I would keep it lit.
 - SIGNAL HOUSE: Then I will stay on the air. Somebody should be listening.
 - On the far side of the door, a long way down, something answers the light with one note. It is not the Hush.
 
 
-<!-- 650 messages, 14445 words in the messages -->
+<!-- 664 messages, 14637 words in the messages -->
