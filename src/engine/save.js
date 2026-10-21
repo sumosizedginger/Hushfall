@@ -63,6 +63,9 @@ export function parseSave(text, migrations = MIGRATIONS, current = SAVE_VERSION)
 }
 
 const kindOf = (v) => (v === null ? 'null' : Array.isArray(v) ? 'array' : typeof v);
+/** the world's lists of objects: an honest world holds nothing else in them (a survey of eight shipped routes found no null and no scalar), and `step` walks them every tick (round 1, Codex 2) */
+const OBJECT_LISTS = ['burns', 'doors', 'enemies', 'enemyShots', 'patches', 'pickups', 'projectiles', 'pulses', 'sectors', 'spikes', 'spores', 'tears'];
+const isObject = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
 /** structural problems of a saved world relative to a fresh world of the same map: missing or mistyped fields, non-finite numbers, unknown enemy kinds, wrong door/sector counts (audit A08) */
 export function worldShapeErrors(fresh, snap) {
   const bad = [];
@@ -76,6 +79,7 @@ export function worldShapeErrors(fresh, snap) {
   if (P && typeof P === 'object') for (const [k, v] of Object.entries(fresh.player)) { const a = kindOf(v); if (k in P && a !== 'null' && a !== kindOf(P[k])) bad.push(`player.${k} is a ${kindOf(P[k])}, expected ${a}`); }       // PT-050 H1: a list stored as a string, an object as a number
   if (Array.isArray(snap.enemies)) for (const e of snap.enemies) { if (!ENEMIES[e?.kind]) bad.push('unknown enemy kind ' + e?.kind); else if (!Number.isFinite(e.x) || !Number.isFinite(e.z) || !Number.isFinite(e.hp)) bad.push('enemy ' + e.id + ' has a non-finite position or hp'); }
   for (const k of ['doors', 'sectors']) if (Array.isArray(snap[k]) && Array.isArray(fresh[k]) && snap[k].length !== fresh[k].length) bad.push(`${k} count ${snap[k].length} differs from the map's ${fresh[k].length}`);
+  for (const k of OBJECT_LISTS) if (Array.isArray(snap[k]) && !snap[k].every(isObject)) bad.push(`${k} holds an entry that is not an object`);          // a null door or shot passed every check above and threw on the first tick
   return bad.slice(0, 8);
 }
 
@@ -132,6 +136,8 @@ export function worldValueErrors(snap, map = null) {
     bad.push(...loadErrors(P.loads, P.loadSel, up, 'player'), ...modErrors(P.mods, 'player'));
   }
   { const d = snap.drops; if (d != null && (typeof d !== 'object' || Array.isArray(d) || !num(d.dry) || d.rngState == null || !d.seen || typeof d.seen !== 'object' || !d.firedAt || typeof d.firedAt !== 'object')) bad.push('the ammunition-drop state is damaged'); }      // lazy state `{ rngState, dry, seen, firedAt }` (drops.js): the fuzz found it accepted as a string or an empty object
+  for (const k of ['projectiles', 'enemyShots']) if (Array.isArray(snap[k]) && snap[k].some((q) => !isObject(q) || !['x', 'y', 'z', 'vx', 'vy', 'vz', 'life'].every((f) => num(q[f])))) bad.push(`a saved ${k === 'projectiles' ? 'projectile' : 'enemy shot'} has no finite position, speed or life`);          // world.js reads all seven every tick
+  if (Array.isArray(snap.projectiles) && snap.projectiles.some((q) => isObject(q) && q.weapon != null && !own(WEAPONS, q.weapon))) bad.push('a saved projectile names an unknown weapon');
   if (Array.isArray(snap.pickups)) for (const it of snap.pickups) if (!it || typeof it !== 'object' || !own(PICKUPS, it.kind) || !num(it.x) || !num(it.z)) { bad.push('a pickup is not a known pickup with a position'); break; }
   if (Array.isArray(snap.enemies)) for (const e of snap.enemies) if (typeof e.state !== 'string') { bad.push('enemy ' + e.id + ' has no state'); break; }
   return bad.slice(0, 8);

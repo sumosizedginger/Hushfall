@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorld, step, hashWorld, carryOver } from '../src/engine/world.js';
 import { makeSave, parseSave, loadWorld, SaveStore, storeSave, SAVE_VERSION, SAVE_MAGIC } from '../src/engine/save.js';
-import { loadMap, mapLoader } from './helpers.js';
+import { runRoute } from '../src/engine/harness.js';
+import { loadMap, mapLoader, shippedMap, shippedRoute } from './helpers.js';
 
 function scriptedCmd(tick) {
   const phase = Math.floor(tick / 45) % 6;
@@ -100,6 +101,39 @@ test('storeSave writes one save, and a throw from building it or from the store 
   mode = 'playing';
   assert.equal(mode, 'playing');
   assert.equal(saveNote, 'Progress could not be saved: The quota has been exceeded.');
+});
+
+test('a save whose lists hold a null, or a shot with no position, is refused at load and never reaches the frame loop (round 1, Codex 2: all three of its saves were accepted and threw on the next tick)', () => {
+  const bad = (edit) => { const s = makeSave(createWorld(loadMap(), { seed: 1 }), 'mid-level'); edit(s.world); const p = parseSave(JSON.stringify(s)); return p.ok ? loadWorld(p.save, mapLoader) : p; };
+  for (const key of ['projectiles', 'enemyShots', 'doors', 'pickups', 'enemies', 'spores']) { const r = bad((w) => { w[key] = [null, ...(w[key] ?? [])]; }); assert.equal(r.ok, false, key + ' with a null entry is refused'); assert.equal(r.reason, 'corrupt', key); }
+  assert.equal(bad((w) => { w.enemies = [...w.enemies, 7]; }).ok, false, 'a number among the enemies');
+  const shot = { id: 9, x: 5, y: 1, z: 5, vx: 1, vy: 0, vz: 0, life: 2, dmg: 5 };
+  assert.equal(bad((w) => { w.enemyShots = [{ ...shot, life: undefined }]; }).ok, false, 'a shot with no life');
+  assert.equal(bad((w) => { w.enemyShots = [{ ...shot, x: null }]; }).ok, false, 'a shot with no position');
+  assert.equal(bad((w) => { w.projectiles = [{ ...shot, weapon: 'flare', vz: null }]; }).ok, false, 'a projectile with no speed');
+  assert.equal(bad((w) => { w.projectiles = [{ ...shot, weapon: 'no-such-gun' }]; }).ok, false, 'a projectile of an unknown gun');
+  const honest = bad((w) => { w.enemyShots = [shot]; w.projectiles = [{ ...shot, weapon: 'flare' }]; }); assert.equal(honest.ok, true, 'the same lists, well formed, load');
+  assert.doesNotThrow(() => step(honest.world, idle()), 'and the loaded world plays');
+});
+
+test('every save an honest run makes is still accepted by the stricter loader: a scripted run saved every 60 ticks, with and without shots in the air', () => {
+  const map = loadMap(), w = createWorld(map, { seed: 5, difficulty: 'hard' }); let shots = 0, bolts = 0, saves = 0;
+  for (let t = 0; t < 1500; t++) {
+    step(w, scriptedCmd(t)); shots += w.enemyShots.length ? 1 : 0; bolts += w.projectiles.length ? 1 : 0;
+    if (t % 60 === 59) { const p = parseSave(JSON.stringify(makeSave(w, 'mid-level', { now: t }))); assert.equal(p.ok, true); const l = loadWorld(p.save, mapLoader); assert.equal(l.ok, true, 'tick ' + t + ': ' + (l.detail ?? '')); saves++; }
+  }
+  assert.equal(saves, 25); assert.ok(shots + bolts > 0, 'the run had something in the air at some tick (' + shots + ' + ' + bolts + ')');
+});
+
+test('honest saves from real routes on the maps with the unusual lists (tears and patches, pulses, spikes, spores, sectors) are all accepted: 985 of 985 on fourteen maps when this rule was written', () => {
+  let saves = 0;
+  for (const id of ['C1E3M04', 'C2M24', 'C2M29', 'C1E4M08']) {
+    runRoute(shippedMap(id), shippedRoute(id + '.main'), { seed: 1, difficulty: 'normal', onTick: (w, t) => {
+      if (t % 150 !== 0) return; const p = parseSave(JSON.stringify(makeSave(w, 'mid-level', { now: t }))), l = p.ok ? loadWorld(p.save, (m) => shippedMap(m)) : p; saves++;
+      assert.equal(l.ok, true, id + ' tick ' + t + ': ' + (l.detail ?? l.reason));
+    } });
+  }
+  assert.ok(saves >= 30, 'a real number of saves was checked: ' + saves);
 });
 
 test('SaveStore: slots, empty slot, and corrupt slot handled without throwing', () => {
