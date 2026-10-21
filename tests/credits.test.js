@@ -9,7 +9,9 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 
 test('a role with no names is not shown, a name is trimmed and listed once, and what the game is made with is always there', () => {
   const none = creditsLines(); assert.ok(!none.some((l) => l.kind === 'role' && PEOPLE.some(([r, n]) => r === l.text && !n.length)), 'no empty role');
-  assert.deepEqual(none.filter((l) => l.kind === 'role').map((l) => l.text), ['Made with']);
+  assert.deepEqual(none.filter((l) => l.kind === 'role').map((l) => l.text), ['Design and direction', 'Made with'], 'the owner filled in one role (Joseph R Long); the others stay hidden until they have names');
+  assert.deepEqual(none.filter((l) => l.kind === 'name').slice(0, 1).map((l) => l.text), ['Joseph R Long']);
+  assert.ok(MADE_WITH.some(([n, what]) => /Claude/.test(n) && /code/.test(what) && /Joseph R Long/.test(what)), 'the roll says plainly that an AI agent wrote the code, the text and the painting and sound programs');
   const some = creditsLines([['Design', ['  Ada   Quill ', 'Ada Quill', '']], ['Code', []], ['Sound', null]], MADE_WITH, 'X');
   assert.deepEqual(some.filter((l) => l.kind === 'name').slice(0, 1).map((l) => l.text), ['Ada Quill']); assert.equal(some.filter((l) => l.text === 'Ada Quill').length, 1);
   assert.deepEqual(some.filter((l) => l.kind === 'role').map((l) => l.text), ['Design', 'Made with']); assert.equal(some[0].text, 'X');

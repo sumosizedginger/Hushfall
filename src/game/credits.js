@@ -4,7 +4,7 @@
 
 /** [role, names]: the owner's own list. An empty `names` hides the role. */
 export const PEOPLE = [
-  ['Design and direction', []],
+  ['Design and direction', ['Joseph R Long']],
   ['Programming', []],
   ['Story and text', []],
   ['Painting, by code', []],
@@ -15,6 +15,7 @@ export const PEOPLE = [
 
 /** what the game is made with: [name, what it does here]. three.js is the only outside software that ships inside the build (THIRD_PARTY_NOTICES.md). */
 export const MADE_WITH = [
+  ['Claude, an AI agent by Anthropic', 'wrote the code, the story text and the programs that paint and synthesise the pictures and the sound, under the direction of Joseph R Long'],
   ['three.js', 'draws the 3D world (MIT licence; the notice is in Credits and licences)'],
   ['p5.js and p5.brush', 'painted every picture at build time; they are not in the game'],
   ['Vite', 'builds the game'],
