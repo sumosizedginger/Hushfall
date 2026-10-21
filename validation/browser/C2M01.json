@@ -1,7 +1,7 @@
 {
   "mapId": "C2M01",
-  "when": "2026-10-21T18:03:00.316Z",
-  "commit": "3232a61",
+  "when": "2026-10-21T19:56:27.065Z",
+  "commit": "39a8892",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -12,8 +12,8 @@
   "routesSha": "d297c68697138fb3",
   "sources": {
     "engine": "447075b4d81aa0d5",
-    "render": "b25ea4366411711f",
-    "game": "046c930e5a11460b",
+    "render": "890fcceff508900a",
+    "game": "b38831c64707d86a",
     "audio": "feeb615d3ade1eab",
     "assets": "df26bcd4e6468f58"
   },
@@ -27,7 +27,7 @@
       "agree": true,
       "kills": 43,
       "secrets": 0,
-      "wallSeconds": 3
+      "wallSeconds": 2
     },
     "secret": {
       "ok": true,
@@ -90,7 +90,7 @@
     {
       "name": "real-game route C2M01.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=5968 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=5968 policy=standing wall=2s"
     },
     {
       "name": "real-game route C2M01.main: browser sim == Node sim (ticks + state hash)",
@@ -153,5 +153,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 21
+  "wallSeconds": 17
 }
