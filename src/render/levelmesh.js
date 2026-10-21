@@ -140,13 +140,13 @@ export function buildLevel(map, tex) {
   const water = new THREE.Mesh(new THREE.PlaneGeometry(wsize, wsize), new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xa8b4c4 }));
   tex.water_dusk.repeat.set(wsize / 8, wsize / 8); water.rotation.x = -Math.PI / 2; water.position.set(map.w * S / 2, WATER_Y, map.h * S / 2); if (!map.hasVoid) group.add(water);          // (a map with open sky has no sea under it: PT-032)
   // wading water and toxic residue: translucent overlays just above the floor (they share the sea texture; the view pulses the toxic one)
-  const fxMats = {};
+  const fxMats = {}, ownTex = [];                                                                                  // ownTex: the textures this level CLONED (a material's dispose never frees its map); `dispose` below frees exactly those, never the shared sea texture
   if (!fxQuads.w.empty) { fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false }); const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w); m.renderOrder = 2; group.add(m); }
   for (const c of ['>', '<', '^', 'v']) if (!fxQuads[c].empty) {                                                 // PT-037: a current is wading water that flows: its own copy of the sea texture, scrolled along its direction by the view (view.js), tinted greener than still water
-    const t = tex.water_dusk.clone(); t.needsUpdate = true; t.repeat.copy(tex.water_dusk.repeat); fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });
+    const t = tex.water_dusk.clone(); ownTex.push(t); t.needsUpdate = true; t.repeat.copy(tex.water_dusk.repeat); fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });
     const m = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c]); m.renderOrder = 2; group.add(m);
     // a second, finer and paler skin of ripples that slides faster (view.js): two layers at two speeds read as water moving, one layer on a green floor read as a green floor (the real-game still of the aqueduct, PT-037)
-    const t2 = tex.water_dusk.clone(); t2.needsUpdate = true; t2.repeat.set(tex.water_dusk.repeat.x * 2.6, tex.water_dusk.repeat.y * 2.6); fxMats[c + '2'] = new THREE.MeshBasicMaterial({ map: t2, color: 0xd8fff0, transparent: true, opacity: 0.3, depthWrite: false });
+    const t2 = tex.water_dusk.clone(); ownTex.push(t2); t2.needsUpdate = true; t2.repeat.set(tex.water_dusk.repeat.x * 2.6, tex.water_dusk.repeat.y * 2.6); fxMats[c + '2'] = new THREE.MeshBasicMaterial({ map: t2, color: 0xd8fff0, transparent: true, opacity: 0.3, depthWrite: false });
     const m2 = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c + '2']); m2.position.y = 0.012; m2.renderOrder = 3; group.add(m2);
   }
   if (!fxQuads.x.empty) { fxMats.x = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x3fffc0, transparent: true, opacity: 0.62, depthWrite: false }); const m = new THREE.Mesh(fxQuads.x.geometry(), fxMats.x); m.renderOrder = 2; group.add(m); }
@@ -274,5 +274,6 @@ export function buildLevel(map, tex) {
     return { bed, mist, tint: p.tint != null ? new THREE.Color(p.tint) : null };
   });
   { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
-  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews };
+  const dispose = () => { for (const t of ownTex) t.dispose(); ownTex.length = 0; };                               // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
+  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose };
 }

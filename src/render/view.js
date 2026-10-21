@@ -557,7 +557,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose(); this.hiveView?.dispose(); this.creatureFx?.dispose();
-    for (const v of [this.tideView, this.chimeView, this.beamView, this.sweepView]) v?.dispose?.();                // PT-050 H-L1..L3: the textures a view owns (the scene sweep above frees only geometry and materials)
+    for (const v of [this.tideView, this.chimeView, this.beamView, this.sweepView, this.lvl]) v?.dispose?.();      // PT-050 H-L1..L3: the textures a view owns (the scene sweep above frees only geometry and materials); the level's own flow clones too (round 1, Gemini 1)
     this.scene.clear(); this.weaponScene.clear();
   }
 }

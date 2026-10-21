@@ -78,6 +78,21 @@ test('GameView.dispose() frees the textures the chime view and the tide view own
   } finally { globalThis.document = prevDoc; }
 });
 
+test('GameView.dispose() frees the flow textures the level mesh cloned for a map with currents, and only those (round 1, Gemini finding 1: C2M06 made six and freed none)', () => {
+  canvasDoc(); try {
+    const count = (id) => {
+      const map = shipped(id), w = createWorld(map, { seed: 1, difficulty: 'normal' }), tex = texProxy(), base = tex.water_dusk, clone = base.clone.bind(base);
+      let made = 0, freed = 0, shared = 0; base.dispose = () => { shared++; };
+      base.clone = () => { const c = clone(); made++; const d = c.dispose.bind(c); c.dispose = () => { freed++; d(); }; return c; };
+      const v = new GameView(stubRenderer(), tex, map, w); v.setSize(640, 360, 640); const atBuild = made; v.dispose(); return { atBuild, freed, shared, tide: !!v.tideView };
+    };
+    const aq = count('C2M06'); assert.ok(aq.atBuild >= 2 && aq.atBuild % 2 === 0, 'the aqueduct has currents: two skins per direction (' + aq.atBuild + ')');
+    assert.equal(aq.freed, aq.atBuild, 'every clone the level mesh made is freed'); assert.equal(aq.shared, 0, 'the shared sea texture is never freed');
+    const quay = count('C1E1M01'); assert.deepEqual([quay.atBuild, quay.freed, quay.shared], [0, 0, 0], 'a map with no currents clones nothing and frees nothing');
+    const tide = count('C2M28'); assert.equal(tide.freed, tide.atBuild, 'the tide map still frees its own clone (H-L2) and nothing is freed twice'); assert.equal(tide.shared, 0);
+  } finally { globalThis.document = prevDoc; }
+});
+
 test('the pointer-lock policy: a script-driven browser never asks for the lock, a person\'s does, and the hook sets it off BEFORE a level starts', async () => {
   const { automated } = await import('../src/game/lockpolicy.js'); const fs = await import('node:fs');
   assert.equal(automated({ webdriver: true }), true); assert.equal(automated({ webdriver: false }), false); assert.equal(automated({}), false); assert.equal(automated(undefined), false);
