@@ -106,3 +106,19 @@ test('PRIORITY 5: a player who never found Ines\'s lamp (C2S02) still reaches th
   const r = runRoute(map, route, { seed: 1 }); assert.equal(r.result, 'complete', 'the main route of the last map completes with no secret found');
   const s02 = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps/C2S02.json'), 'utf8')); assert.ok(s02.messages.some((m) => /burns without oil/.test(m.text)), 'the secret says what its lamp adds');
 });
+
+test('ACCEPTANCE: what each kind of player reads: no secrets, every secret, and both choices at the Undercantor Halls (C2M11)', async () => {
+  const { choiceHolds } = await import('../src/engine/script.js');
+  const maps = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => ({ id: f.replace('.json', ''), j: JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', f), 'utf8')) }));
+  const visible = (choices) => maps.flatMap(({ id, j }) => j.messages.filter((m) => !m.choice || choiceHolds({ choices }, m.choice)).map((m) => ({ map: id, id: m.id, speaker: m.speaker, text: m.text })));
+  const cases = { 'no secrets, silent halls': { halls: 'silent' }, 'no secrets, songkeepers': { halls: 'songkeepers' }, 'the Quiet One met, silent halls': { halls: 'silent', quiet: 'heard' }, 'the Quiet One met, songkeepers': { halls: 'songkeepers', quiet: 'heard' } };
+  for (const [name, choices] of Object.entries(cases)) {
+    const v = visible(choices);
+    assert.equal(v.filter((r) => r.map === 'C2M12' && /^(silent|songkeeper)-w$/.test(r.id)).length, 1, name + ': C2M12 answers exactly one wing');
+    assert.equal(v.filter((r) => r.map === 'C2M22' && /^s2b?$/.test(r.id)).length, 1, name + ': C2M22 has exactly one second Silent line');
+    assert.equal(v.filter((r) => /Quiet One/.test(r.text) && r.map !== 'C1E3S01').length, choices.quiet ? 1 : 0, name + ': the Quiet One is named by the Loom only for a player who met them');
+    for (const r of v) if (r.map !== 'C1E3S01') assert.ok(!/\bthe Tender\b/.test(r.text) || r.map === 'C2S01' || r.map >= 'C2M03', `${r.map}/${r.id}: the Tender is named before she is met`);
+    assert.ok(v.some((r) => r.map === 'C2M12' && r.id === 'short'), name + ': the main route says where the difference came from');
+    assert.ok(v.some((r) => r.map === 'C2M16' && r.id === 'last-call') && v.some((r) => r.map === 'C2M30' && r.id === 'gate'), name + ': the operator is heard where the radio rule says');
+  }
+});
