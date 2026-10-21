@@ -1,19 +1,19 @@
 {
   "mapId": "C2M25",
-  "when": "2026-10-20T05:03:59.897Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:57:39.304Z",
+  "commit": "d88f325",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "6d4562968ea5f354",
+  "mapSha": "cf53d9a6bfa6bed2",
   "routesSha": "9537618213c4fced",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 7703,
-      "hash": "890c1fa8",
+      "hash": "821c83b3",
       "nodeTicks": 7703,
-      "nodeHash": "890c1fa8",
+      "nodeHash": "821c83b3",
       "agree": true,
       "kills": 34,
       "secrets": 0,
@@ -95,7 +95,7 @@
     {
       "name": "real-game route C2M25.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7703/890c1fa8 vs node 7703/890c1fa8"
+      "detail": "browser 7703/821c83b3 vs node 7703/821c83b3"
     },
     {
       "name": "real-game route C2M25.secret: completes in the browser",

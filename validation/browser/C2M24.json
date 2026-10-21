@@ -1,19 +1,19 @@
 {
   "mapId": "C2M24",
-  "when": "2026-10-20T05:03:42.140Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:57:21.466Z",
+  "commit": "d88f325",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "56dc42c5a3a01199",
+  "mapSha": "cbcdd40d0a1702b5",
   "routesSha": "ca36679598fa2a56",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 4370,
-      "hash": "afc3b811",
+      "hash": "5984ac11",
       "nodeTicks": 4370,
-      "nodeHash": "afc3b811",
+      "nodeHash": "5984ac11",
       "agree": true,
       "kills": 12,
       "secrets": 0,
@@ -32,9 +32,9 @@
     "secret": {
       "ok": true,
       "ticks": 5098,
-      "hash": "a069d7dd",
+      "hash": "d3b839bd",
       "nodeTicks": 5098,
-      "nodeHash": "a069d7dd",
+      "nodeHash": "d3b839bd",
       "agree": true,
       "kills": 12,
       "secrets": 1,
@@ -52,7 +52,7 @@
       "rows": 10,
       "raised": 9,
       "violations": 0,
-      "deepest": -0.013,
+      "deepest": -0.012,
       "highest": 0.025
     },
     "awake": {
@@ -95,7 +95,7 @@
     {
       "name": "real-game route C2M24.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4370/afc3b811 vs node 4370/afc3b811"
+      "detail": "browser 4370/5984ac11 vs node 4370/5984ac11"
     },
     {
       "name": "real-game route C2M24.secret: completes in the browser",
@@ -105,7 +105,7 @@
     {
       "name": "real-game route C2M24.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5098/a069d7dd vs node 5098/a069d7dd"
+      "detail": "browser 5098/d3b839bd vs node 5098/d3b839bd"
     },
     {
       "name": "C2M24: the boss bar appeared during the route",
@@ -115,7 +115,7 @@
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "10 rows (9 on raised floors), 0 violations, deepest -0.013 m, highest 0.025 m; every one of the 10 enemies was measured: true"
+      "detail": "10 rows (9 on raised floors), 0 violations, deepest -0.012 m, highest 0.025 m; every one of the 10 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",

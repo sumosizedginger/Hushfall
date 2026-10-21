@@ -1,19 +1,19 @@
 {
   "mapId": "C1E4M08",
-  "when": "2026-10-20T04:55:42.665Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:45:33.418Z",
+  "commit": "ed3306b",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "5eaf6e6ddc3eda05",
+  "mapSha": "70469a660f6eb00e",
   "routesSha": "a535259ad4b40efe",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -21,24 +21,24 @@
     "main": {
       "ok": true,
       "ticks": 6292,
-      "hash": "3d5b2ca5",
+      "hash": "77e0bf96",
       "nodeTicks": 6292,
-      "nodeHash": "3d5b2ca5",
+      "nodeHash": "77e0bf96",
       "agree": true,
       "kills": 18,
       "secrets": 0,
-      "wallSeconds": 3
+      "wallSeconds": 6
     },
     "secret": {
       "ok": true,
       "ticks": 9549,
-      "hash": "78eab4d3",
+      "hash": "200f8d56",
       "nodeTicks": 9549,
-      "nodeHash": "78eab4d3",
+      "nodeHash": "200f8d56",
       "agree": true,
       "kills": 21,
       "secrets": 1,
-      "wallSeconds": 4
+      "wallSeconds": 7
     }
   },
   "hud": {
@@ -90,22 +90,22 @@
     {
       "name": "real-game route C1E4M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6292 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=6292 policy=standing wall=6s"
     },
     {
       "name": "real-game route C1E4M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6292/3d5b2ca5 vs node 6292/3d5b2ca5"
+      "detail": "browser 6292/77e0bf96 vs node 6292/77e0bf96"
     },
     {
       "name": "real-game route C1E4M08.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9549 policy=standing wall=4s"
+      "detail": "status=complete failed=null ticks=9549 policy=standing wall=7s"
     },
     {
       "name": "real-game route C1E4M08.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9549/78eab4d3 vs node 9549/78eab4d3"
+      "detail": "browser 9549/200f8d56 vs node 9549/200f8d56"
     },
     {
       "name": "C1E4M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -158,5 +158,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 20
+  "wallSeconds": 58
 }

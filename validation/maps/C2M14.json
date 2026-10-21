@@ -2,16 +2,16 @@
   "mapId": "C2M14",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "ed241a9",
+  "codeVersion": "d88f325",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "feee15f9232f6ed6",
+  "mapSha": "b9fff9c015e45345",
   "assetVersion": "df26bcd4e6468f58",
-  "engineSha": "ac1c0dc7b5c86aff",
+  "engineSha": "ce0a0d2dd1efd48a",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -298,17 +298,17 @@
   },
   "browser": {
     "file": "validation/browser/C2M14.json",
-    "when": "2026-10-20T04:58:57.516Z",
-    "commit": "333169f",
-    "mapSha": "feee15f9232f6ed6",
+    "when": "2026-10-21T02:52:15.673Z",
+    "commit": "d88f325",
+    "mapSha": "b9fff9c015e45345",
     "routesSha": "54333a4accb2f829",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-20T14:45:42.800Z",
-      "commit": "ed241a9",
+      "when": "2026-10-21T02:31:37.513Z",
+      "commit": "ed3306b",
       "passed": 146,
       "total": 146
     }
@@ -619,7 +619,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C2M14.json: feee15f9232f6ed6 vs feee15f9232f6ed6"
+        "detail": "validation/browser/C2M14.json: b9fff9c015e45345 vs b9fff9c015e45345"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

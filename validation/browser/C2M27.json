@@ -1,19 +1,19 @@
 {
   "mapId": "C2M27",
-  "when": "2026-10-20T05:04:45.190Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:58:23.075Z",
+  "commit": "d88f325",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "241d2b519ffbeb2f",
+  "mapSha": "921d755a91d0e212",
   "routesSha": "4f76513a74213ff5",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 5679,
-      "hash": "77eb60cb",
+      "hash": "3460c63d",
       "nodeTicks": 5679,
-      "nodeHash": "77eb60cb",
+      "nodeHash": "3460c63d",
       "agree": true,
       "kills": 34,
       "secrets": 0,
@@ -32,9 +32,9 @@
     "secret": {
       "ok": true,
       "ticks": 5957,
-      "hash": "65a5745d",
+      "hash": "b20a8dfb",
       "nodeTicks": 5957,
-      "nodeHash": "65a5745d",
+      "nodeHash": "b20a8dfb",
       "agree": true,
       "kills": 34,
       "secrets": 1,
@@ -222,7 +222,7 @@
     {
       "name": "real-game route C2M27.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5679/77eb60cb vs node 5679/77eb60cb"
+      "detail": "browser 5679/3460c63d vs node 5679/3460c63d"
     },
     {
       "name": "real-game route C2M27.secret: completes in the browser",
@@ -232,7 +232,7 @@
     {
       "name": "real-game route C2M27.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5957/65a5745d vs node 5957/65a5745d"
+      "detail": "browser 5957/b20a8dfb vs node 5957/b20a8dfb"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",

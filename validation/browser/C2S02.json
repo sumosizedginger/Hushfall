@@ -1,19 +1,19 @@
 {
   "mapId": "C2S02",
-  "when": "2026-10-20T05:05:52.167Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:59:34.201Z",
+  "commit": "d88f325",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "574159c7afa7ada8",
+  "mapSha": "93c6c9f8af55b2d8",
   "routesSha": "115d25ace5726591",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -27,7 +27,7 @@
       "agree": true,
       "kills": 0,
       "secrets": 0,
-      "wallSeconds": 1
+      "wallSeconds": 0
     }
   },
   "hud": {
@@ -79,7 +79,7 @@
     {
       "name": "real-game route C2S02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=1002 policy=standing wall=1s"
+      "detail": "status=complete failed=null ticks=1002 policy=standing wall=0s"
     },
     {
       "name": "real-game route C2S02.main: browser sim == Node sim (ticks + state hash)",
@@ -132,5 +132,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 3
+  "wallSeconds": 2
 }

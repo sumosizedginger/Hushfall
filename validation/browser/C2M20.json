@@ -1,19 +1,19 @@
 {
   "mapId": "C2M20",
-  "when": "2026-10-20T05:02:14.302Z",
-  "commit": "333169f",
+  "when": "2026-10-21T02:55:47.628Z",
+  "commit": "d88f325",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "35056915f3bb5826",
+  "mapSha": "fb7dee2c1273d348",
   "routesSha": "50e78e5a0bdcdd66",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -21,9 +21,9 @@
     "main": {
       "ok": true,
       "ticks": 7801,
-      "hash": "60d56398",
+      "hash": "d8d9b122",
       "nodeTicks": 7801,
-      "nodeHash": "60d56398",
+      "nodeHash": "d8d9b122",
       "agree": true,
       "kills": 37,
       "secrets": 0,
@@ -32,9 +32,9 @@
     "secret": {
       "ok": true,
       "ticks": 10624,
-      "hash": "01ec0fdd",
+      "hash": "5566a679",
       "nodeTicks": 10624,
-      "nodeHash": "01ec0fdd",
+      "nodeHash": "5566a679",
       "agree": true,
       "kills": 39,
       "secrets": 1,
@@ -95,7 +95,7 @@
     {
       "name": "real-game route C2M20.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7801/60d56398 vs node 7801/60d56398"
+      "detail": "browser 7801/d8d9b122 vs node 7801/d8d9b122"
     },
     {
       "name": "real-game route C2M20.secret: completes in the browser",
@@ -105,7 +105,7 @@
     {
       "name": "real-game route C2M20.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10624/01ec0fdd vs node 10624/01ec0fdd"
+      "detail": "browser 10624/5566a679 vs node 10624/5566a679"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -153,5 +153,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 23
+  "wallSeconds": 24
 }

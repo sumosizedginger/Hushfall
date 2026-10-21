@@ -1,19 +1,19 @@
 {
   "mapId": "C1E3M03",
-  "when": "2026-10-20T14:53:58.171Z",
-  "commit": "ed241a9",
+  "when": "2026-10-21T02:40:41.621Z",
+  "commit": "ed3306b",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "d16f41827eaa58dc",
+  "mapSha": "f098b06b4b3022d6",
   "routesSha": "9fd83345732c361b",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -38,7 +38,7 @@
       "agree": true,
       "kills": 31,
       "secrets": 1,
-      "wallSeconds": 2
+      "wallSeconds": 1
     }
   },
   "hud": {
@@ -100,7 +100,7 @@
     {
       "name": "real-game route C1E3M03.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4729 policy=standing wall=2s"
+      "detail": "status=complete failed=null ticks=4729 policy=standing wall=1s"
     },
     {
       "name": "real-game route C1E3M03.secret: browser sim == Node sim (ticks + state hash)",

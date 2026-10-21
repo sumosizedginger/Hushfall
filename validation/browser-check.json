@@ -1,10 +1,10 @@
 {
-  "when": "2026-10-20T14:45:42.800Z",
-  "commit": "ed241a9",
+  "when": "2026-10-21T02:31:37.513Z",
+  "commit": "ed3306b",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "73e56bb6b27ab29e",
-    "game": "8e84a8c5ca1ebc69",
+    "engine": "ce0a0d2dd1efd48a",
+    "render": "ef2d0b3ff0ca0a52",
+    "game": "e1a76e430eac1013",
     "audio": "f8f3d9169ece1cc4",
     "assets": "df26bcd4e6468f58"
   },
@@ -367,43 +367,43 @@
     }
   },
   "dirtySource": false,
-  "mapSha": "6270e4e514f09f90",
+  "mapSha": "60f0bd0b3ceadf48",
   "mapShas": {
-    "C1E1M01": "6270e4e514f09f90",
-    "C1E1M02": "b7f158a183491cd3",
-    "C1E1M03": "15abf5cc5ea4adc6",
-    "C1E1M04": "749903fc029c9d1c",
-    "C1E1M05": "2ef6aebd05a88eac",
-    "C1E1M06": "62c5227bdaac7b2b",
-    "C1E1M07": "9f0c679e7dfecab0",
-    "C1E1M08": "f4400d38fc0d5c9d",
-    "C1E1S01": "a967566a57fc3c20"
+    "C1E1M01": "60f0bd0b3ceadf48",
+    "C1E1M02": "c94557e9f4370c4b",
+    "C1E1M03": "c96f1c9bbc752d58",
+    "C1E1M04": "b1965b90df9f9a5e",
+    "C1E1M05": "2d611af537640883",
+    "C1E1M06": "234db4b109965820",
+    "C1E1M07": "d6ef2a6c4f74e66d",
+    "C1E1M08": "f75fd509ae054929",
+    "C1E1S01": "3b117ac92e73dd20"
   },
   "gate2Routes": {
     "C1E1M02.main": {
       "ok": true,
       "ticks": 7380,
-      "hash": "bb159d6b",
+      "hash": "47d61187",
       "nodeTicks": 7380,
-      "nodeHash": "bb159d6b",
+      "nodeHash": "47d61187",
       "kills": 30,
       "secrets": 0
     },
     "C1E1M02.secret": {
       "ok": true,
       "ticks": 8162,
-      "hash": "aa94b694",
+      "hash": "5b42ac2c",
       "nodeTicks": 8162,
-      "nodeHash": "aa94b694",
+      "nodeHash": "5b42ac2c",
       "kills": 30,
       "secrets": 1
     },
     "C1E1M03.main": {
       "ok": true,
       "ticks": 9168,
-      "hash": "f3e7cd9f",
+      "hash": "00819cf2",
       "nodeTicks": 9168,
-      "nodeHash": "f3e7cd9f",
+      "nodeHash": "00819cf2",
       "kills": 44,
       "secrets": 0
     },
@@ -437,36 +437,36 @@
     "C1E1M06.main": {
       "ok": true,
       "ticks": 6258,
-      "hash": "f1e40e6d",
+      "hash": "156300bc",
       "nodeTicks": 6258,
-      "nodeHash": "f1e40e6d",
+      "nodeHash": "156300bc",
       "kills": 44,
       "secrets": 0
     },
     "C1E1M07.main": {
       "ok": true,
       "ticks": 10367,
-      "hash": "fba24da7",
+      "hash": "1e091b1f",
       "nodeTicks": 10367,
-      "nodeHash": "fba24da7",
+      "nodeHash": "1e091b1f",
       "kills": 40,
       "secrets": 0
     },
     "C1E1M08.main": {
       "ok": true,
       "ticks": 10411,
-      "hash": "081ca359",
+      "hash": "a1493c83",
       "nodeTicks": 10411,
-      "nodeHash": "081ca359",
+      "nodeHash": "a1493c83",
       "kills": 44,
       "secrets": 0
     },
     "C1E1S01.main": {
       "ok": true,
       "ticks": 2677,
-      "hash": "02ab4d76",
+      "hash": "c7d4e41f",
       "nodeTicks": 2677,
-      "nodeHash": "02ab4d76",
+      "nodeHash": "c7d4e41f",
       "kills": 0,
       "secrets": 0
     }
@@ -497,7 +497,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=12"
+      "detail": "mode=playing tick=22"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -532,7 +532,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.26 m"
+      "detail": "moved 6.16 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -557,7 +557,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.77 m, ratio 1.60"
+      "detail": "walk 4.02 m, sprint 6.76 m, ratio 1.68"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -592,7 +592,7 @@
     {
       "name": "real Tab opens the Journal on its Map page, pauses the game, the automap paints, and it shows only what has been explored",
       "ok": true,
-      "detail": "visible=true painted=230400 explored=146 exits=0"
+      "detail": "visible=true painted=230400 explored=148 exits=0"
     },
     {
       "name": "Tab again closes the Journal and the game runs on",
@@ -662,7 +662,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=155 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,radio,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
+      "detail": "played=165 distinct(last40)=ui_click,toll_alert,step_outdoor,flare_fire,flare_boom,burn_start,enemy_die,door_open,step_plank,toll_soft,bell_alert,gaunt_screech,pickup_ammo,door_close,bell_charge,toll_shot,shot_impact,creak,radio,pump,weapon_switch,hurt,impact,scatter_fire,pickup_key,enemy_hit,pickup_health,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -717,37 +717,37 @@
     {
       "name": "Gate 2 real-game route C1E1M02.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7380 policy=standing wall=7s"
+      "detail": "status=complete failed=null ticks=7380 policy=standing wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7380/bb159d6b vs node 7380/bb159d6b"
+      "detail": "browser 7380/47d61187 vs node 7380/47d61187"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8162 policy=standing wall=6s"
+      "detail": "status=complete failed=null ticks=8162 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8162/aa94b694 vs node 8162/aa94b694"
+      "detail": "browser 8162/5b42ac2c vs node 8162/5b42ac2c"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9168 policy=standing wall=9s"
+      "detail": "status=complete failed=null ticks=9168 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9168/f3e7cd9f vs node 9168/f3e7cd9f"
+      "detail": "browser 9168/00819cf2 vs node 9168/00819cf2"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7990 policy=standing wall=8s"
+      "detail": "status=complete failed=null ticks=7990 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
@@ -757,7 +757,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6305 policy=standing wall=5s"
+      "detail": "status=complete failed=null ticks=6305 policy=standing wall=7s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
@@ -767,7 +767,7 @@
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8008 policy=standing wall=11s"
+      "detail": "status=complete failed=null ticks=8008 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -777,32 +777,32 @@
     {
       "name": "Gate 2 real-game route C1E1M06.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6258 policy=standing wall=10s"
+      "detail": "status=complete failed=null ticks=6258 policy=standing wall=12s"
     },
     {
       "name": "Gate 2 real-game route C1E1M06.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6258/f1e40e6d vs node 6258/f1e40e6d"
+      "detail": "browser 6258/156300bc vs node 6258/156300bc"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10367 policy=strafing wall=7s"
+      "detail": "status=complete failed=null ticks=10367 policy=strafing wall=11s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10367/fba24da7 vs node 10367/fba24da7"
+      "detail": "browser 10367/1e091b1f vs node 10367/1e091b1f"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10411 policy=standing wall=11s"
+      "detail": "status=complete failed=null ticks=10411 policy=standing wall=17s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10411/081ca359 vs node 10411/081ca359"
+      "detail": "browser 10411/a1493c83 vs node 10411/a1493c83"
     },
     {
       "name": "Gate 2 real-game route C1E1S01.main: completes in the browser",
@@ -812,7 +812,7 @@
     {
       "name": "Gate 2 real-game route C1E1S01.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 2677/02ab4d76 vs node 2677/02ab4d76"
+      "detail": "browser 2677/c7d4e41f vs node 2677/c7d4e41f"
     },
     {
       "name": "Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse",
@@ -877,7 +877,7 @@
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.159, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.171, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -887,7 +887,7 @@
     {
       "name": "picking up rivets shows the amount really granted (+40) and the sim agrees (40 rivets)",
       "ok": true,
-      "detail": "toast: \"New objectiveRivets (+40) Bell fuseA bell fuse: the bell lock takes it.\", rivets 40"
+      "detail": "toast: \"New objectiveRivets (+40)\", rivets 40"
     },
     {
       "name": "picking up the harpoon rifle equips it: slot 4 on the HUD, BOLTS on the ammo label, a toast that names it, 6 bolts in the sim",
@@ -927,12 +927,12 @@
     {
       "name": "spore beds in the live game: blooming = bright with mist and it burns, dormant = dim, no mist, no damage",
       "ok": true,
-      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4765940964576938,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
+      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.47655902893681285,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
     },
     {
       "name": "the Weeping Mother weeps in the live game: a tear is drawn in the air while the sim has one, then a pool, flat on the floor, at the place the sim put it",
       "ok": true,
-      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5600635381988773,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
+      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.5605916581050819,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
     },
     {
       "name": "the Weeping Mother broods in the live game: her sacs swell on the view while the sim swells, then two Gaunts stand beside her",
@@ -982,12 +982,12 @@
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "469 samples, lowest chip 0.003 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "465 samples, lowest chip 0.020 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
       "ok": true,
-      "detail": "[{\"kind\":\"tollbearer\",\"n\":24034,\"normal\":0.228,\"classic\":0.225},{\"kind\":\"bellhand\",\"n\":6313,\"normal\":0.168,\"classic\":0.167}]"
+      "detail": "[{\"kind\":\"tollbearer\",\"n\":24034,\"normal\":0.308,\"classic\":0.305},{\"kind\":\"bellhand\",\"n\":6313,\"normal\":0.232,\"classic\":0.229}]"
     },
     {
       "name": "quick load restores the saved state (hp back, tick back)",
@@ -1082,7 +1082,7 @@
     {
       "name": "pause menu fits a 1280x720 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2576,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":720,\"sh\":2887,\"ch\":720,\"ov\":\"auto\",\"ih\":720,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x720: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
@@ -1092,7 +1092,7 @@
     {
       "name": "pause menu fits a 1280x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2576,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2887,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1280x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
@@ -1102,7 +1102,7 @@
     {
       "name": "pause menu fits a 800x600 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2576,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":600,\"sh\":2887,\"ch\":600,\"ov\":\"auto\",\"ih\":600,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 800x600: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
@@ -1112,7 +1112,7 @@
     {
       "name": "pause menu fits a 1024x480 window (panel inside the viewport, scrolls, Resume/Restart/Quit reachable)",
       "ok": true,
-      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2576,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
+      "detail": "{\"top\":0,\"bottom\":480,\"sh\":2887,\"ch\":480,\"ov\":\"auto\",\"ih\":480,\"resume\":true,\"restart\":true,\"quit\":true}"
     },
     {
       "name": "pause menu 1024x480: every control row is visible (no nested scroller), none touches the Reset button, and there is a gap above it",
@@ -1162,7 +1162,7 @@
     {
       "name": "the hand lantern in the live game: out, its light is off and the gauge shows the oil; lit, the light is on, the gauge says LIT and the oil burns",
       "ok": true,
-      "detail": "out {\"lamp\":{\"on\":false,\"oil\":45},\"light\":{\"intensity\":0,\"k\":0},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"45\",\"label\":\"OIL · L\"}}; lit {\"lamp\":{\"on\":true,\"oil\":43.966666666666725},\"light\":{\"intensity\":16.048897648404793,\"k\":0.9999785252394701},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"44\",\"label\":\"OIL · LIT\"}}"
+      "detail": "out {\"lamp\":{\"on\":false,\"oil\":45},\"light\":{\"intensity\":0,\"k\":0},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"45\",\"label\":\"OIL · L\"}}; lit {\"lamp\":{\"on\":true,\"oil\":43.966666666666725},\"light\":{\"intensity\":16.12239581930093,\"k\":0.9999705258973712},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"44\",\"label\":\"OIL · LIT\"}}"
     },
     {
       "name": "chimes in the live game: a struck chime flares (drawn bigger than a quiet one), and the tree playing lights one of its fruit and its light",
@@ -1192,12 +1192,12 @@
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=136.3ms"
+      "detail": "frames=900 avg=106.5ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 1950 ms, p95 717 ms"
+      "detail": "worst 1683 ms, p95 683 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -1208,9 +1208,9 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 136.25733333333332,
-    "p95Ms": 716.6999999999534,
-    "worstMs": 1949.9000000000233
+    "avgMs": 106.51699999999992,
+    "p95Ms": 683.2999999999302,
+    "worstMs": 1683.3999999999069
   },
   "gl": {
     "geometries": 1398,
