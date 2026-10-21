@@ -69,7 +69,7 @@ const MAP = {
     { id: 'start', at: [5, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The doors in there answer to the hum, Calder, and I can read them listening. Be quiet near one.' },
     { id: 'lock', at: [11, 28], radius: 2, speaker: 'INES', text: 'It is listening, and your own gun is what it hears. Stand still and count to four. It will let you through.' },
     { id: 'hall', at: [17, 28], radius: 3, speaker: 'HULL', text: 'A pit, and four floors that rise and fall on a beat, each two seconds behind the last. Step on the first when it is up, the next when it comes up. Or go round, past the singers.' },
-    { id: 'east', at: [36, 28], radius: 3, speaker: 'INES', text: 'Another of the tall ones, a wheel of bells behind it. Anything near it takes half. Kill it first.' },
+    { id: 'east', at: [36, 28], radius: 3, speaker: 'INES', text: 'A tall one, a wheel of bells behind it. Anything near it takes half. Kill it first.' },
     { id: 'heart', at: [47, 28], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Rows of them, standing: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall.' },
     { id: 'panel', at: [29, 40], radius: 2, speaker: 'HULL', text: 'One panel in this wall rings wrong. Hollow, like the others were once.' },
     { id: 'exit', at: [62, 28], radius: 2.5, speaker: 'INES', text: 'That\'s the end of the tuning. What was being tuned is still above us, singing.' },

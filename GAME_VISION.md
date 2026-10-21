@@ -2,7 +2,7 @@
 
 ## Premise
 A low, patient tone begins over the fog-bound harbour town of Port Marrow: **the Hush**. Those who hear it stop running. The **Vael** — a fungal-crystalline choir-civilisation whose dying world can no longer sing — harvest human nervous systems as living tuning forks. Captured humans are hung in **cradles** and **grafted** with bronze bell-chitin, becoming **Tollbearers**: docile, hollow-eyed servitors who carry the Song and hunt the rest.
-Protagonist: **Ines Calder**, Tide-Warden (harbour pilot), immune to the Hush because of a childhood ear injury — she cannot hear the tone, only its consequences.
+Protagonist: **Ines Calder**, Tide-Warden (harbour pilot), immune to the Hush: she hears ordinary sound but cannot perceive the tone, only its consequences. WHY is not known and the game never says. Her father suspected a childhood ear injury he blamed himself for, and wrote that he could not know (`design/LORE.md` "Why she can", `design/story/CONTINUITY.md` 1b). [CORRECTED 2026-10-21, outside audit round 1: this line used to state the ear injury as the cause, which the shipped text does not.]
 
 ## Motive and strategy
 The Vael need a Song loud enough to open a permanent **Gate** to a living world. Every human mind is a note. Strategy: seed the Hush, herd survivors, graft them, then use the grafted as both army and instrument.

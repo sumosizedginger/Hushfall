@@ -1,0 +1,14 @@
+{
+ "C2M29|hush": {
+  "text": "The heart has stopped on its chain. The stair north of the bell is lit.",
+  "speaker": "HULL"
+ },
+ "C2M28|caches": {
+  "text": "Health and armour lie along the highest step. Pick them up before the first stroke; after it there is no time.",
+  "speaker": "HULL"
+ },
+ "C1E3M05|east": {
+  "text": "Another of the tall ones, a wheel of bells behind it. Anything near it takes half. Kill it first.",
+  "speaker": "INES"
+ }
+}

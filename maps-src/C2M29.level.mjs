@@ -86,7 +86,7 @@ const MAP = {
     msg('guard', 1, 1, 0.1, 'A ZEALOT', 'The bell is for the ones who keep it. Go back.'),
     msg('drop', 2, 2, 0.1, 'HULL', 'The chain is gone: it falls. Bait its charge into a pillar or the tier wall and it stands stunned three seconds. Rooted spikes come up where you stand: move.'),
     msg('last', 3, 3, 0.1, 'HULL', 'Under a third: the lights fall, the note rolls the whole floor every three seconds, the tiers too, and the heart is open to everything. Cover, then the mortar and the rockets.'),
-    msg('hush', 4, 4, 0.1, 'HULL', 'The heart has stopped on its chain. The stair north of the bell is lit.'),
+    msg('hush', 4, 4, 0.1, 'HULL', 'The heart has stopped. The stair north of the bell is lit.'),
     msg('hollow', 47, 51, 3, 'HULL', 'The wall of the top tier rings hollow in one short run, south of the middle. The seats are cut away round it.'),
     msg('cache', SEC.cells[1][0], SEC.cells[1][1], 3, 'A SILENT (NOTE)', 'I put what I could carry in the wall, under the seats, where the bell is not listening. It has never listened to anything I did.'),
   ],

@@ -108,7 +108,7 @@ const MAP = {
     { id: 'start', at: START, radius: 6, speaker: 'INES', text: 'Three steps of stone down to the water, and a bell on a mole. Marrow\'s north pier had a fog-bell that rang nine times at the turn of the tide. Somebody has copied it from memory.' },
     { id: 'plate', at: START, radius: 8, speaker: 'TIDE PLATE', text: 'NINE STROKES. THE DOCK RINGS THE FIRST EIGHT. THE NINTH IS RUNG BY HAND, ON THE MOLE.' },
     { id: 'gates', at: pol(25, 70), radius: 6, speaker: 'HULL', text: 'The four bays in the outer wall are gates. What comes in comes from them, a few seconds apart. The first stroke is thirty seconds after you land.' },
-    { id: 'caches', at: pol(25, 120), radius: 6, speaker: 'HULL', text: 'Health and armour lie along the highest step. Pick them up before the first stroke; after it there is no time.' },
+    { id: 'caches', at: pol(25, 120), radius: 6, speaker: 'HULL', text: 'Health and armour lie along the highest step. Fetch them between squads.' },
     { id: 'tide', at: pol(18, 90), radius: 6, speaker: 'HULL', text: 'The water will come over the lowest step at the third stroke and the middle step at the sixth. Wading slows you to under two thirds. The highest step stays dry.' },
     { id: 'last', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The gates have opened once more, and this is the last squad. When it falls, and the eighth wave with it, the gate on the causeway opens.' },
     { id: 'mole', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The causeway gate is open. The rope is on the plinth in the middle of the mole, under the lamps.' },
