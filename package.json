@@ -32,7 +32,7 @@
     "regen": "node tools/dev/regen-all.mjs"
   },
   "keywords": [],
-  "author": "",
+  "author": "Joseph R Long",
   "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
