@@ -25,13 +25,15 @@ for (const [w, h] of SIZES) {
   const rows = {};
   for (const name of SCREENS) {
     const r = await page.evaluate(async (screen) => {
-      try { window.__GAME_TEST__.showScreen(screen, screen === 'title' ? { canContinue: true } : screen === 'pause' ? { canLoad: true } : screen === 'dead' ? { canLoad: true } : screen === 'crash' ? { text: 'x' } : {}); } catch (e) { return { error: String(e).slice(0, 120) }; }
+      try { window.__GAME_TEST__.showScreen(screen, screen === 'title' ? { canContinue: true } : screen === 'pause' ? { canLoad: true } : screen === 'dead' ? { canLoad: true } : screen === 'crash' ? { text: 'x' } : screen === 'record' ? { view: [], counts: { all: 0, docs: 0 }, current: null, scenes: [] } : {}); } catch (e) { return { error: String(e).slice(0, 120) }; }
       await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
       const el = document.getElementById('screen-' + screen); if (!el || el.classList.contains('hidden')) return { hidden: true };
+      for (const d of el.querySelectorAll('details')) d.open = true;                                             // the worst case: every fold open
+      await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
       const W = innerWidth, H = innerHeight, bad = [];
       const scrollable = (n) => { for (let p = n; p && p !== document.body; p = p.parentElement) { const oy = getComputedStyle(p).overflowY; if ((oy === 'auto' || oy === 'scroll') && p.scrollHeight > p.clientHeight) return true; } return false; };
       for (const n of el.querySelectorAll('button, input, select, h1, h2, .panel')) {
-        const s = getComputedStyle(n); if (s.display === 'none' || s.visibility === 'hidden' || n.closest('.hidden')) continue;
+        const s = getComputedStyle(n); if (s.display === 'none' || s.visibility === 'hidden' || n.closest('.hidden') || (n.id || '').startsWith('dev-') || n.closest('#dev-levels')) continue;                 // (the level picker is a dev-build feature)
         const b = n.getBoundingClientRect(); if (b.width === 0 || b.height === 0) continue;
         if (b.left < -1 || b.right > W + 1) bad.push(`${n.tagName.toLowerCase()}#${n.id || n.className || ''} runs past the side (${Math.round(b.left)}..${Math.round(b.right)} of ${W})`);
         else if ((b.top < -1 || b.bottom > H + 1) && !scrollable(n)) bad.push(`${n.tagName.toLowerCase()}#${n.id || n.className || ''} is off the bottom or top and nothing scrolls (${Math.round(b.top)}..${Math.round(b.bottom)} of ${H})`);

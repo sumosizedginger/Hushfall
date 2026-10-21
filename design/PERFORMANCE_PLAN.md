@@ -25,3 +25,6 @@ Limits, said plainly: the governor cures only a slow PICTURE (fill rate, draw ca
 
 ## What would change the plan
 A real integrated-GPU number that is bad would move the work to draw-call merging (`src/render/merge.js`) and the creature rigs (a rig is many meshes: the kit merges the static parts of a joint, not the animated ones). A real number that is good means this file is done and the fallback stays a design.
+
+## Window sizes (R21, PT-071, 2026-10-20)
+`node tools/dev/probe-viewports.mjs <out.json>` (one headless-Chrome job) opens the title, pause, game-over, Record, credits and crash screens in the real page at 800x600, 1024x768, 1280x720, 1366x768, 1600x900, 1920x1080, 2560x1440, 3440x1440 and a portrait 768x1024, with every fold (settings, testers, credits and licences) open, and checks that nothing runs past a side, nothing sits off the top or bottom of a screen that cannot scroll, the page does not scroll sideways and the canvas covers the window. Result: 54 screens, 0 problems, 0 pointer-lock requests, 0 page errors. The dev-build level picker is skipped (it is not in the shipped game). Chrome only: Firefox and Safari are not installed here and have not been run.
