@@ -830,7 +830,7 @@
    "The way down is across the dark."
   ]
  },
- "outro": "The last landing is a root floor with an open door in the wall. The corridor beyond goes on down at the slope of the rest of the country, towards a sound that is not a sound yet.",
+ "outro": "The last landing is a root floor with an open door in the wall. The corridor beyond goes on down, towards a bell you can feel in the floor before you hear it.",
  "messages": [
   {
    "id": "start",
@@ -889,7 +889,7 @@
    "at": [60, 9],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The outer wall of the last ledge rings hollow in one short run. There is a seam in the root."
+   "text": "The outer wall of the last ledge rings hollow in one short run. The root there grows the other way."
   },
   {
    "id": "cache",

@@ -145,7 +145,8 @@ const MAP = {
   vents: VENTS,
   entities: [...ents, { type: 'exit', at: [CX, CZ], dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.' },
+    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Wrecks, Calder, three of them, with sky between. There is no road across that I can read.' },
+    { id: 'vents', at: START, radius: 3, speaker: 'HULL', text: 'A lit plate in a deck throws you across the gap. Steer a little, shoot as you go. A miss costs fifteen, and the sky puts you back.' },
     { id: 'break', at: [31, 14], radius: 3, speaker: 'INES', text: 'Six cells of nothing. The plate is at the end of the deck. If this is wrong it costs fifteen.' },
     { id: 'bow', at: [58, 14], radius: 3, speaker: 'HULL', text: 'The bow. Singers across the gap, a flyer over it. The plate throws you to the gimbal. You have time to shoot on the way.' },
     { id: 'gimbal', at: [74, 33], radius: 3, speaker: 'INES', text: 'Rings inside rings. Everything here is from a different world. The hub has the fuse, and so does the thing guarding it.' },

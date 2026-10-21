@@ -1112,7 +1112,7 @@
    "at": [5, 23],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "They fire the shells here, Calder. The flue is dampered shut and the handles are hidden. Brass first: the charging hall."
+   "text": "The kiln row is on the Works plan, Calder: a ring of kilns and a flue at the east end, dampered shut. The handles that work it are somewhere along the way."
   },
   {
    "id": "hall",
@@ -1160,8 +1160,8 @@
    "id": "flue-open",
    "at": [70, 14],
    "radius": 0.1,
-   "speaker": "SIGNAL HOUSE",
-   "text": "The flue is drawing. That's the cold coming up the stack. What they hid below the Works is colder than it should be."
+   "speaker": "INES",
+   "text": "The flue is drawing, and it is drawing cold. What they put below the Works is colder than it should be."
   },
   {
    "id": "tunnel",

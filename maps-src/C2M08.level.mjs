@@ -87,7 +87,7 @@ const MAP = {
     { id: 'mother', at: [36, 40], radius: 4, speaker: 'INES', text: 'The third terrace has a mother on it, weeping, and the stone round her is wet. Walk out of what she makes. The lift is on the far side.' },
     { id: 'summit', at: [36, 26], radius: 4, speaker: 'INES', text: 'The top. The whole sea bed behind me, flat to the edge, and the road across it like a scratch. The needles are much nearer from here.' },
     { id: 'note', at: [36, 20], radius: 2.5, speaker: 'A SILENT (NOTE)', text: 'Below this is where the count is kept. We go down only to be counted. If you go, you are the first who has not come to be counted.' },
-    { id: 'spire', at: [36, 13], radius: 3, speaker: 'INES', text: 'A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that\'s what holds the Gate open. I am going down.' },
+    { id: 'spire', at: [36, 13], radius: 3, speaker: 'INES', text: 'A hollow spire with a well in the middle and a stair down the wall. Cold air comes up it, and the rail hums in my hand. I think that\'s what holds the Gate open. I am going down.' },
     { id: 'hollow', at: [32, 80], radius: 2, speaker: 'HULL', text: 'The north wall of the gate hall rings hollow beside the stair.' },
   ],
   triggers: [

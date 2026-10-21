@@ -88,7 +88,7 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [3, 23], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The generator is down, Calder. Three fuses will bring it up: the cellar, the dormitory, the attic. Ammunition is short.' },
-    { id: 'lamp-lit', at: [8, 23], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The lamp here is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.' },
+    { id: 'lamp-lit', at: [8, 23], radius: 2, speaker: 'SIGNAL HOUSE', text: 'The lighthouse lamp is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.' },
     { id: 'dark', at: [12, 23], radius: 3, speaker: 'INES', text: 'It\'s dark on purpose. They cut the lamps so we can\'t see them. Stay near the lanterns.' },
     { id: 'radio-locked', at: [20, 12], radius: 3, speaker: 'RADIO SET', text: 'The set is cold. Three fuse sockets, all empty: brass, iron, bell. The lever on the north wall waits for them.' },
     { id: 'cellar', at: [7, 10], radius: 3.5, speaker: 'INES', text: 'That bell-carrier is feeding the fallen back into the line. Kill it before it finishes.' },

@@ -82,7 +82,7 @@ const MAP = {
     { id: 'pier', at: [63, 30], radius: 4, speaker: 'HULL', text: 'The pier is the only way off the car at the hub. The island has its own guard. The relay is on the south face of the copper stack.' },
     { id: 'relay', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The relay is thrown. The east station is the last stop before this one: the exit there has come unlocked.' },
     { id: 'exit', at: [112, 48], radius: 4, speaker: 'HULL', text: 'The exit is locked. The hub relay opens it, on the island in the middle of the ring.' },
-    { id: 'hollow', at: [14, 48], radius: 3, speaker: 'HULL', text: 'The west wall of the west station rings hollow in one place. There is a seam.' },
+    { id: 'hollow', at: [14, 48], radius: 3, speaker: 'HULL', text: 'The west wall of the west station rings hollow in one place. A line in the paint where a door has been.' },
     { id: 'cache', at: [8, 48], radius: 3, speaker: 'A SILENT (NOTE)', text: 'I rode this rail for a year with my hands over my ears. If you can read this, take the cases and do not wait for the second car.' },
   ],
   triggers: [

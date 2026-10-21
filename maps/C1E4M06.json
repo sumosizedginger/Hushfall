@@ -1057,7 +1057,7 @@
    "at": [45, 108],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens don't line up. The tunnels in the flanks go round the first two."
+   "text": "Five ranks, Calder, each a step higher. The gaps in the screens don't line up. The tunnels in the flanks go round the first two."
   },
   {
    "id": "court",
@@ -1070,8 +1070,8 @@
    "id": "stalls",
    "at": [45, 85],
    "radius": 4,
-   "speaker": "SIGNAL HOUSE",
-   "text": "The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half."
+   "speaker": "INES",
+   "text": "The stalls. The tall one with the wheel is behind the singers."
   },
   {
    "id": "mother",

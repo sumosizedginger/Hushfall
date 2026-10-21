@@ -89,6 +89,7 @@ const MAP = {
     { id: 'boots', at: [48, 86], radius: 5, speaker: 'INES', text: 'Oilskin boots, the heel stamped with a yard number. Pender yard. Every one of them was on a boat.' },
     { id: 'arc', at: [48, 78], radius: 5, speaker: 'HULL', text: 'The causeway is dry. The rest is wading water, and water carries the arc lamp: a charged bolt jumps between bodies standing in it, eight metres, up to eight of them.' },
     { id: 'plate', at: [48, 68], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: the stalls of this choir hold three hundred and twelve. The count says they are all present.' },
+    { id: 'short', at: [48, 68], radius: 3, speaker: 'INES', text: 'Owed and short. That is all the plates have said since the Fields. This is where the difference came from: my side of the sea.' },
     { id: 'rise1', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'The water has moved. Something has stood up in it, and something else after that.' },
     { id: 'wing', at: [48, 52], radius: 5, speaker: 'INES', text: 'The transept has dry chapels at both ends, a long way off across the water. A singer stands in each, small at this distance. Neither of them is a Drowned.' },
     { id: 'choir', at: [48, 30], radius: 5, speaker: 'INES', text: 'Four singers on a loft behind the altar, and the exit behind them. The Drowned stand because they are told to. These four are doing the telling.' },

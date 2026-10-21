@@ -68,7 +68,7 @@ const MAP = {
     { type: 'enemy', kind: 'graftmother', at: [43, 13], group: 'mother', facing: 'south', summons: [[38, 12], [48, 12], [38, 17], [48, 17]] },
   ],
   messages: [
-    { id: 'start', at: [5, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it.' },
+    { id: 'start', at: [5, 29], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the head of the line is at the north end, on the Works plan.' },
     { id: 'approach', at: [15, 29], radius: 3, speaker: 'INES', text: 'The line comes in here. Cradles all the way down, and the sound of something large breathing. We are close.' },
     { id: 'floor', at: [30, 29], radius: 3, speaker: 'INES', text: 'There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it\'s bare.' },
     { id: 'mother', at: [43, 20], radius: 5, speaker: 'INES', text: 'It\'s a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Don\'t stand in the open.' },

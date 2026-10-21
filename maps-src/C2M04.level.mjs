@@ -89,7 +89,7 @@ const MAP = {
     { type: 'exit', at: [40, 2], dest: 'next' }],
   scenery: [{ kind: 'spire', at: [12, -6] }, { kind: 'spire', at: [66, -10] }, { kind: 'spire', at: [40, -22] }],
   messages: [
-    { id: 'start', at: [18, 68], radius: 3, speaker: 'INES', text: 'Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming. Not a sound I would put a word to.' },
+    { id: 'start', at: [18, 68], radius: 3, speaker: 'INES', text: 'Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming, so low I feel it in my hands before I hear it.' },
     { id: 'fork', at: [24, 64], radius: 3, speaker: 'HULL', text: 'A fork rings at a shot, answers its neighbours down the row, and everything asleep near them wakes. The arc lamp and a blow are heard from least far.' },
     { id: 'plate', at: [30, 65], radius: 2.5, speaker: 'FORK PLATE', text: 'A brass plate hammered onto the foot, in our letters: AMBLER, T. BOSUN. Somebody here had that courtesy. I count eight more plates in this row.' },
     { id: 'tend', at: [40, 52], radius: 4, speaker: 'INES', text: 'They are tending the forks. Weeding round them, wiping them down, putting an ear to them. Nobody looks up. I would like to keep it that way.' },

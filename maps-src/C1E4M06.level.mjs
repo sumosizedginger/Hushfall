@@ -123,9 +123,9 @@ const MAP = {
   secrets: secret ? [{ id: 'cache', panel: secret.panel, cells: secret.cells }] : [],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens don\'t line up. The tunnels in the flanks go round the first two.' },
+    { id: 'start', at: START, radius: 3, speaker: 'SIGNAL HOUSE', text: 'Five ranks, Calder, each a step higher. The gaps in the screens don\'t line up. The tunnels in the flanks go round the first two.' },
     { id: 'court', at: [CX, 103], radius: 4, speaker: 'INES', text: 'Shell-backs at the gaps. Walk round them or use something that goes through. The sky is the Gate. It\'s like looking at the sun.' },
-    { id: 'stalls', at: [CX, 85], radius: 4, speaker: 'SIGNAL HOUSE', text: 'The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half.' },
+    { id: 'stalls', at: [CX, 85], radius: 4, speaker: "INES", text: 'The stalls. The tall one with the wheel is behind the singers.' },
     { id: 'mother', at: [CX - 20, 62], radius: 4, speaker: 'INES', text: 'She is in there, in the round room west of the rank. The way out stays locked as long as she weeps. Walk out of what she makes.' },
     { id: 'steps', at: [CX, 50], radius: 4, speaker: 'HULL', text: 'The steps. Two grafts with plates on their fronts, and bellhands behind them. Pillars are cover from the bells.' },
     { id: 'last', at: [CX, 30], radius: 4, speaker: 'INES', text: 'One more shell. Then the yard, and the Gate beyond it. I can feel it in my teeth.' },

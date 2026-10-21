@@ -120,7 +120,7 @@ const MAP = {
     { id: 'guard', at: [23, 15], radius: 3, speaker: 'GUARD LOG', text: 'GATE OPENS BY THE SLUICE WHEEL ONLY. NIGHT SHIFT KEEPS THE KENNEL KEYS. ALL PERSONS REMAIN ON THE ROAD.' },
     { id: 'pump', at: [21, 29], radius: 2.5, speaker: 'PUMP LOG', text: 'VALVE ROOM KEPT SHUT. THE EAST WALL SOUNDS HOLLOW. SALT DUST ON THE SILL IS FRESH.' },
     { id: 'yard', at: [47, 22], radius: 3, speaker: 'INES', text: 'Plate. That is the Warden-Graft again, and rails of cradles over the floor. Let it run into a pillar.' },
-    { id: 'exit', at: [70, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'That\'s the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties.' },
+    { id: 'exit', at: [70, 22], radius: 2.5, speaker: 'SIGNAL HOUSE', text: 'That\'s the way into the Works. After it, the Evaporation Pans: open flats and channels, and not a roof for a kilometre.' },
   ],
   triggers: [
     { id: 'kennels', when: 'enter', at: [23, 15], radius: 2.5, do: [{ open: [20, 15] }, { open: [20, 17] }, { wake: 'kennel' }, { objective: 'The kennels are open. The sluice wheel is on the south wall' }] },

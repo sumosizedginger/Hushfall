@@ -933,7 +933,7 @@
    "at": [5, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Every door in there listens, Calder. Make a noise near one and it won't open for you until it has heard nothing for a while. Kill quietly, or wait."
+   "text": "The doors in there answer to the hum, Calder, and I can read them listening. Be quiet near one."
   },
   {
    "id": "lock",
@@ -961,7 +961,7 @@
    "at": [47, 28],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Rows of them, standing, asleep: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall."
+   "text": "Rows of them, standing: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall."
   },
   {
    "id": "panel",

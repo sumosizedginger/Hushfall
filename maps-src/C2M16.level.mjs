@@ -78,7 +78,7 @@ const MAP = {
     { id: 'seam', at: [xn, zn - 3], radius: 3, speaker: 'A SILENT (NOTE)', text: 'For whoever is sent to stop it. It never wanted to be a conductor, and nobody asked. Do not make it suffer: it has been afraid for a long time.' },
     { id: 'dead', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'It said nothing the whole time. Its last note went out across the floor and, for once, did not come back.' },
     { id: 'end', at: [90, 44], radius: 3, speaker: 'INES', text: 'A corridor, straight, the first straight thing in the whole Deep. Cold air at the far end. What is below this isn\'t warm.' },
-    { id: 'last-call', at: [92, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, this is the last I can hold. The lamp is lit and the tea is cold. I\'m here until the set goes.' },
+    { id: 'last-call', at: [92, 44], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the conductor was the hum I was riding, and it has stopped. This is the last I can hold. The lamp is lit and the tea is cold. I\'m here until the set goes.' },
   ],
   triggers: [
     { id: 'hall', when: 'enter', at: [22, 44], radius: 6, do: [{ objective: 'The guard hall: spears in ranks. The waist is east, past the heart' }] },

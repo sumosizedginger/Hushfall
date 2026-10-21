@@ -94,7 +94,8 @@ const MAP = {
   scenery: [],
   messages: [
     { id: 'start', at: [7, Z0[2] + 5], radius: 5, speaker: 'INES', text: 'A loom the size of a church, and nobody at it. Every crossing in the hall has two cradles on rails over it, and the people in them are not awake.' },
-    { id: 'thread', at: [24, Z0[2] + 5], radius: 5, speaker: 'PLATE', text: 'A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.' },
+    { id: 'thread', at: [24, Z0[2] + 5], radius: 5, speaker: 'PLATE', text: 'A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six.', choice: 'quiet!=heard' },
+    { id: 'thread-q', at: [24, Z0[2] + 5], radius: 5, speaker: 'PLATE', text: 'A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.', choice: 'quiet=heard' },
     { id: 'belt', at: [34, Z0[2] + 3], radius: 5, speaker: 'HULL', text: 'The floor of this corridor runs west for ten seconds and stands for eight. When the chevrons turn amber it is about to change.' },
     { id: 'breath', at: [49, 27], radius: 5, speaker: 'HULL', text: 'These doors breathe. Each is open three seconds in six, and each opens a second after the one in front. Go when the first opens and you are through all three.' },
     { id: 'shuttle', at: [50, 81], radius: 5, speaker: 'HULL', text: 'The shuttle comes down on this corridor once a bar. Its shadow comes first, and the floor glows orange before it lands.' },

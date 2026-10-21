@@ -1449,7 +1449,16 @@
    "at": [24, 83],
    "radius": 5,
    "speaker": "PLATE",
-   "text": "A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom."
+   "text": "A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six.",
+   "choice": "quiet!=heard"
+  },
+  {
+   "id": "thread-q",
+   "at": [24, 83],
+   "radius": 5,
+   "speaker": "PLATE",
+   "text": "A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.",
+   "choice": "quiet=heard"
   },
   {
    "id": "belt",

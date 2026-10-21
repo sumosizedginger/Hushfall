@@ -82,7 +82,7 @@ const MAP = {
     { id: 'start', at: [26, 54], radius: 3, speaker: 'INES', text: 'A yard round a kiln. Four long sheds, a tower on each diagonal, and in the middle a furnace the size of a house. The air tastes of hot metal.' },
     { id: 'seeds', at: [24, 50], radius: 4, speaker: 'INES', text: 'Bells on stands in the shed, green with new bronze, ringing very faintly. They weren\'t cast. Each is for somebody who hasn\'t been brought here yet.' },
     { id: 'forks', at: [CX, 52], radius: 3, speaker: 'HULL', text: 'Forks stand at every shed door. A bell broken with a rifle rings them, and the yard hears. A blow, the arc lamp and the tuning-fork gun are quieter.' },
-    { id: 'tally', at: [17, 38], radius: 2.5, speaker: "BELLWRIGHT'S TALLY", text: 'THE MARROW ORDER. 311 BELLS CAST. 311 HUNG. FOUR SPARE.' },
+    { id: 'tally', at: [17, 38], radius: 2.5, speaker: "BELLWRIGHT'S TALLY", text: 'THE MARROW ORDER. 311 BELLS GROWN. 311 HUNG. FOUR SPARE.' },
     { id: 'ripening', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'A bell in one of the sheds has begun to ring louder. When it cracks, a bell-bearer steps out of it. Break it first.' },
     { id: 'cracked', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'A bell cracks, and something steps out of it.' },
     { id: 'kiln', at: [CX, 46], radius: 3, speaker: 'INES', text: 'The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that isn\'t hot.' },

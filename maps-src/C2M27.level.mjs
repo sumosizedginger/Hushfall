@@ -87,7 +87,7 @@ const MAP = {
     { id: 'lip', at: [96, 9], radius: 5, speaker: 'HULL', text: 'The lever on the far lip is on the north wall of the road, under two lamps and a lantern. It holds the lip. The exit is locked until it is thrown.' },
     { id: 'far-lip', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The lip is held. The exit has come unlocked at the east end of the road.' },
     { id: 'exit', at: [118, 8], radius: 4, speaker: 'HULL', text: 'The exit is locked. The lever on the north wall of this road, near the far lip, unlocks it.' },
-    { id: 'hollow', at: [20, 7], radius: 3, speaker: 'HULL', text: 'The wall of the north road rings hollow in one short run, in the first stretch. There is a seam.' },
+    { id: 'hollow', at: [20, 7], radius: 3, speaker: 'HULL', text: 'The wall of the north road rings hollow in one short run, in the first stretch. A hand wide, no more, and dry.' },
     { id: 'cache', at: SEC.cells[4], radius: 3, speaker: 'A SILENT (NOTE)', text: 'I put this in the wall the winter the crack began. It was a hand wide then. It was a hand wide for a very long time.' },
   ],
   triggers: [...triggers,

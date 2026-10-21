@@ -111,7 +111,7 @@ const MAP = {
     { type: 'switch', id: 'pump', at: [40, 21], wall: 'north', do: [{ open: [62, 25] }, { wake: 'cradlehall' }, { exit: { set: 'unlock' } }, { objective: 'The east hall is rolling up and it is awake. The hatch is behind it' }, { shake: 2 }, { message: 'valve' }] },
   ],
   messages: [
-    { id: 'start', at: [3, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'White ground to the horizon, Calder, and one roof in the middle: the pump station. Everything between you and it is working.' },
+    { id: 'start', at: [3, 25], radius: 3, speaker: 'SIGNAL HOUSE', text: 'White ground to the horizon, Calder, and one roof in the middle: the pump station. Nothing else stands for a kilometre.' },
     { id: 'harpoon', at: [38, 25], radius: 2, speaker: 'INES', text: 'The foreman left a harpoon rifle on its hook. Hold aim and it zooms in a long way. The bolt goes through plate, and through the one behind it.' },
     { id: 'cradles', at: [4, 25], radius: 2.5, speaker: 'INES', text: 'Empty cradles, ropes still swinging. They hang their hunting parties here and let them go when somebody walks the pans.' },
     { id: 'pans', at: [12, 25], radius: 3, speaker: 'INES', text: 'Brine channels, five metres across, and they burn. Cross on the planks, or wade and pay for it. Keep the heaps between you and anything that stands up.' },

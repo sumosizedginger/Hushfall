@@ -79,12 +79,13 @@ const MAP = {
   ],
   messages: [
     { id: 'start', at: [30, 55], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the bell has rung since the transmission, and the signal goes up through it. The tower is one long spiral stair. Something at the top is ringing it.' },
-    { id: 'door', at: [44, 42], radius: 3, speaker: 'INES', text: 'The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it.' },
-    { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer. Pillars in the corridor: that\'s your friend, again.' },
+    { id: 'door', at: [44, 42], radius: 3, speaker: 'INES', text: 'The stairs keep turning. I can\'t see the top.' },
+    { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer, and the pillars are in the corridor again.' },
     { id: 'sexton', at: [38, 9], radius: 4, speaker: 'INES', text: 'The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first.' },
-    { id: 'chamber', at: [38, 35], radius: 3, speaker: 'SIGNAL HOUSE', text: 'That\'s it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone won\'t go through stone.' },
+    { id: 'chamber', at: [38, 35], radius: 3, speaker: "INES", text: 'Six bells in a ring, and the Cantor in the middle of them. The whole tower is ringing off it.' },
+    { id: 'cantor-rule', at: [38, 35], radius: 3, speaker: 'HULL', text: 'The Cantor\'s tone does not pass stone: the pillars are cover. Cut the six bells, then the Cantor.' },
     { id: 'ring', at: [28, 18], radius: 2, speaker: 'INES', text: 'One bell down. The Cantor staggered when it broke. Keep cutting the ring.' },
-    { id: 'quiet', at: [28, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The tower is silent, Calder, and the signal didn\'t stop. I have its bearing: the Salt Works. The hatch is open.' },
+    { id: 'quiet', at: [28, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The tower is silent, Calder, and the signal didn\'t stop. It was only a machine. I have its bearing: the Salt Works. The hatch is open.' },
   ],
   triggers: [
     { id: 'sealed', when: 'enter', at: [37, 33], radius: 3, do: [{ seal: [40, 35] }, { message: 'chamber' }, { objective: 'Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone' }, { shake: 1.2 }] },

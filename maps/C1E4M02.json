@@ -886,7 +886,14 @@
    "at": [10, 12],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back."
+   "text": "Wrecks, Calder, three of them, with sky between. There is no road across that I can read."
+  },
+  {
+   "id": "vents",
+   "at": [10, 12],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "A lit plate in a deck throws you across the gap. Steer a little, shoot as you go. A miss costs fifteen, and the sky puts you back."
   },
   {
    "id": "break",

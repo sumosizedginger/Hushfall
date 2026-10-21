@@ -90,7 +90,7 @@ const MAP = {
   lantern: { oil: 120, max: 240 }, lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 36, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower'] },
   intro: { title: 'ROOT BELL DESCENT', lines: ['A well thirty metres deep, in six landings.', 'The way down is across the dark.'] },
-  outro: 'The last landing is a root floor with an open door in the wall. The corridor beyond goes on down at the slope of the rest of the country, towards a sound that is not a sound yet.',
+  outro: 'The last landing is a root floor with an open door in the wall. The corridor beyond goes on down, towards a bell you can feel in the floor before you hear it.',
   objective: 'Go down: at the end of each landing a lit plate throws you across the well to the next. A lit lantern holds sound back; it is seen from far off',
   ...L.layers(),
   secrets: [{ id: 'seam', panel: SECP.panel, cells: SECP.cells }],
@@ -107,7 +107,7 @@ const MAP = {
     { id: 'door-lever', at: LEVER.at, radius: 5, speaker: 'HULL', text: 'The lever on the wall by the last ledge opens the door to the north. Its lamp is lit.' },
     { id: 'door-shut', at: [66, 10], radius: 4, speaker: 'HULL', text: 'The door to the north is shut. It opens to the lever on the wall of this ledge, beside the lantern.' },
     { id: 'door-open', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The door has gone back into the wall. The corridor beyond it slopes down.' },
-    { id: 'seam', at: SECP.front, radius: 3, speaker: 'HULL', text: 'The outer wall of the last ledge rings hollow in one short run. There is a seam in the root.' },
+    { id: 'seam', at: SECP.front, radius: 3, speaker: 'HULL', text: 'The outer wall of the last ledge rings hollow in one short run. The root there grows the other way.' },
     { id: 'cache', at: SECP.cells[4], radius: 3, speaker: 'A SILENT (NOTE)', text: 'This is what I could carry down. I counted the ledges on the way: six, and I stopped counting after that.' },
   ],
   triggers: [

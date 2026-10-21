@@ -1801,6 +1801,13 @@
    "text": "Run a nail down it: the stalls of this choir hold three hundred and twelve. The count says they are all present."
   },
   {
+   "id": "short",
+   "at": [48, 68],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Owed and short. That is all the plates have said since the Fields. This is where the difference came from: my side of the sea."
+  },
+  {
    "id": "rise1",
    "at": [1, 1],
    "radius": 0.1,

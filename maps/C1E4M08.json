@@ -737,7 +737,14 @@
    "at": [7, 30],
    "radius": 4,
    "speaker": "SIGNAL HOUSE",
-   "text": "Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it."
+   "text": "Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths."
+  },
+  {
+   "id": "eye",
+   "at": [7, 30],
+   "radius": 4,
+   "speaker": "HULL",
+   "text": "Its eye opens before the beam fires. Stone stops the beam."
   },
   {
    "id": "rim",
@@ -751,7 +758,7 @@
    "at": [41, 33],
    "radius": 4,
    "speaker": "HULL",
-   "text": "Mirror plinths, one-sided: a back stops the light. Use turns one a quarter step. Light off the face runs straight on, and there are seals on those lines."
+   "text": "Mirror plinths, one-sided: a back stops the light. Light off the face runs straight on, and there are seals on those lines."
   },
   {
    "id": "shield",

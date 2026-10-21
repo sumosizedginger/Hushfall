@@ -324,7 +324,14 @@
    "at": [9, 16],
    "radius": 2.5,
    "speaker": "WARDEN CALDER'S LOG",
-   "text": "First entry. The hum in the chalk. I knew it for what it was. Ines hears none of it: the ear I damaged by accident may be the best thing I ever did."
+   "text": "First entry. The hum in the chalk. I knew it for what it was. Ines hears the bells, and she does not hear this."
+  },
+  {
+   "id": "log1b",
+   "at": [9, 16],
+   "radius": 2.5,
+   "speaker": "WARDEN CALDER'S LOG",
+   "text": "I have wondered since the accident whether the ear I damaged is why. I cannot know. If it is, it may be the best thing I ever did."
   },
   {
    "id": "drawing",

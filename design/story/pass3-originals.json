@@ -1,0 +1,194 @@
+{
+ "C1E1M07|lamp-lit": {
+  "text": "The lamp here is lit, Calder. Your father wrote that a lit lamp holds the tone back. I cannot say it does. I keep it lit.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E1M03|start": {
+  "text": "Calder, the boardwalk will have Bellhands on it. Keep to cover.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E1M08|door": {
+  "text": "The whole stair is one corridor, going round and up. Nothing to find: just the way, and what is on it.",
+  "speaker": "INES"
+ },
+ "C1E1M08|warden": {
+  "text": "Another plate-bearer. Pillars in the corridor: that's your friend, again.",
+  "speaker": "INES"
+ },
+ "C1E1M08|chamber": {
+  "text": "That's it: the ring of six bells, and the Cantor in the middle. The Bell is a machine, Calder. Cut the ring, then the singer. Use the pillars: the tone won't go through stone.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E1M08|quiet": {
+  "text": "The tower is silent, Calder, and the signal didn't stop. I have its bearing: the Salt Works. The hatch is open.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M01|exit": {
+  "text": "That's the way into the Works. After it, the Evaporation Pans: open flats and channels, and hunting parties.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M02|start": {
+  "text": "White ground to the horizon, Calder, and one roof in the middle: the pump station. Everything between you and it is working.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M03|dock": {
+  "text": "Plate. The Warden-Graft again, and cradles all the way down the rail. Let it run into a pillar.",
+  "speaker": "INES"
+ },
+ "C1E2M03|exit": {
+  "text": "The rail ends in Kiln Row. After this, the heat. Everything past that door is cooking something.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M04|start": {
+  "text": "They fire the shells here, Calder. The flue is dampered shut and the handles are hidden. Brass first: the charging hall.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M04|flue-open": {
+  "text": "The flue is drawing. That's the cold coming up the stack. What they hid below the Works is colder than it should be.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M05|start": {
+  "text": "This is where the grafts are made, Calder. Don't run, don't fire. Nothing in here is awake yet.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E2M08|start": {
+  "text": "Calder, the thing that runs the line is at the north end. Break its feeders first: they hatch its guards and half-shield it.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E3M05|start": {
+  "text": "Every door in there listens, Calder. Make a noise near one and it won't open for you until it has heard nothing for a while. Kill quietly, or wait.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E3M05|heart": {
+  "text": "Rows of them, standing, asleep: the ones the ship has tuned. If you can cross without a sound, cross. The lever is on the east wall.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E3M06|ward": {
+  "text": "The tall one with the wheel of bells again. Everything near it takes half. It is behind the rows: go round the end of a pew and put it down.",
+  "speaker": "HULL"
+ },
+ "C1E3M08|singers": {
+  "text": "Singers in the curve. A shell-back in front of them. Kill the tall one with the wheel first: everything near it takes half.",
+  "speaker": "INES"
+ },
+ "C1E3M08|bell": {
+  "text": "Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M02|start": {
+  "text": "Those are wrecks of earlier invasions, Calder. Step on a lit plate and it throws you across the gap. Steer a little, shoot as you go. If you miss, the sky puts you back.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M04|start": {
+  "text": "This is where the Gate is focused, Calder. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M04|nw": {
+  "text": "Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M04|se": {
+  "text": "The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M04|acolyte": {
+  "text": "Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they aren't going anywhere.",
+  "speaker": "INES"
+ },
+ "C1E4M06|start": {
+  "text": "Five ranks, Calder, each a step higher, each with its own guard. The gaps in the screens don't line up. The tunnels in the flanks go round the first two.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M06|stalls": {
+  "text": "The stalls. A tall one with the wheel, and singers behind. Kill the wheel first. Everything near it takes half.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M08|start": {
+  "text": "Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C1E4M08|mirrors": {
+  "text": "Mirror plinths, one-sided: a back stops the light. Use turns one a quarter step. Light off the face runs straight on, and there are seals on those lines.",
+  "speaker": "HULL"
+ },
+ "C1E1S01|log1": {
+  "text": "First entry. The hum in the chalk. I knew it for what it was. Ines hears none of it: the ear I damaged by accident may be the best thing I ever did.",
+  "speaker": "WARDEN CALDER'S LOG"
+ },
+ "C2M04|start": {
+  "text": "Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming. Not a sound I would put a word to.",
+  "speaker": "INES"
+ },
+ "C2M08|spire": {
+  "text": "A hollow spire, a round well in the middle of it and a stair going down the wall. Cold air comes up it, and a sound. I think that's what holds the Gate open. I am going down.",
+  "speaker": "INES"
+ },
+ "C2M07|tally": {
+  "text": "THE MARROW ORDER. 311 BELLS CAST. 311 HUNG. FOUR SPARE.",
+  "speaker": "BELLWRIGHT'S TALLY"
+ },
+ "C2M24|start": {
+  "text": "A long hall with every box I could want in it, laid out in two rows, as if somebody expected a person to come and take them. Somebody has.",
+  "speaker": "INES"
+ },
+ "C2M24|plate": {
+  "text": "OWED 52,310. SUNG 49,715. SHORT 2,595. It is the same plate as the one at the first fire-base, and the sum has not moved.",
+  "speaker": "COUNT PLATE"
+ },
+ "C2M24|hollow": {
+  "text": "The wall of the top tier rings hollow behind the north pillar. There is a seam in it.",
+  "speaker": "HULL"
+ },
+ "C2M16|last-call": {
+  "text": "Calder, this is the last I can hold. The lamp is lit and the tea is cold. I'm here until the set goes.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C2M29|hush": {
+  "text": "It doesn't break. It hangs there, and the sound has gone out of the place as though the room had been unscrewed from the air.",
+  "speaker": "INES"
+ },
+ "C2M30|deep": {
+  "text": "The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting.",
+  "speaker": "INES"
+ },
+ "C2M30|door": {
+  "text": "A door that is also a bell. A hook beside it, the kind a lamp hangs from. My father said what a lamp is for. Light it, and keep it lit.",
+  "speaker": "INES"
+ },
+ "C2M19|thread": {
+  "text": "A thread, one voice to a cradle, cut to a length and laid in the weave. The plate counts the cradles in a night: four hundred and six. The Quiet One was right about the loom.",
+  "speaker": "PLATE"
+ },
+ "C2M18|hollow": {
+  "text": "The rim wall rings hollow here. There is a seam in the bone.",
+  "speaker": "HULL"
+ },
+ "C2M20|hollow": {
+  "text": "The west wall of the west station rings hollow in one place. There is a seam.",
+  "speaker": "HULL"
+ },
+ "C2M25|seam": {
+  "text": "The outer wall of the last ledge rings hollow in one short run. There is a seam in the root.",
+  "speaker": "HULL"
+ },
+ "C2M27|hollow": {
+  "text": "The wall of the north road rings hollow in one short run, in the first stretch. There is a seam.",
+  "speaker": "HULL"
+ },
+ "C2M28|hollow": {
+  "text": "The outer wall of the highest step rings hollow in one short run, east of the exit. There is a seam.",
+  "speaker": "HULL"
+ },
+ "C2M29|hollow": {
+  "text": "The wall of the top tier rings hollow in one short run, south of the middle. There is a seam.",
+  "speaker": "HULL"
+ },
+ "C2M30|lit": {
+  "text": "The bell on the door has gone quiet. It is holding.",
+  "speaker": "SIGNAL HOUSE"
+ },
+ "C2M22|bells": {
+  "text": "In the garden a tree of glass, and three chimes among the graves. Use the tree and it plays three notes; answer on the chimes in order, each within eight seconds of the last.",
+  "speaker": "HULL"
+ }
+}

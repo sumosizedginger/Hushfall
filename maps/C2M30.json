@@ -125,9 +125,6 @@
      }
     },
     {
-     "message": "lit"
-    },
-    {
      "objective": "The lamp is lit and the door is quiet. Walk through"
     }
    ]
@@ -240,6 +237,13 @@
    "text": "The floor of the Bell. The roots have drawn back from the walls and left the stone clean, as if it had been waiting for someone to sweep it."
   },
   {
+   "id": "lantern",
+   "at": [13, 13],
+   "radius": 5,
+   "speaker": "HULL",
+   "text": "The lantern does not draw on its oil in this place."
+  },
+  {
    "id": "shaft",
    "at": [31, 13],
    "radius": 5,
@@ -258,7 +262,7 @@
    "at": [67, 13],
    "radius": 5,
    "speaker": "INES",
-   "text": "The city under the stone. Every lamp out, and one bell, high up, that nobody is ringing. It sways a little. I count three swings and then I stop counting."
+   "text": "The city under the stone. Every lamp out but one: a lantern low on a ledge, a wick in it, lit by hand. And one bell, high up, that nobody is ringing. I count three swings and stop."
   },
   {
    "id": "hollow",
@@ -275,6 +279,13 @@
    "text": "A road across a plain under a low red sun. It was always going to be here when I got to this end. It is a different road from the one I walked."
   },
   {
+   "id": "set",
+   "at": [103, 13],
+   "radius": 4,
+   "speaker": "INES",
+   "text": "The set has woken in my pocket. The door is the only thing down here that carries."
+  },
+  {
    "id": "gate",
    "at": [103, 13],
    "radius": 4,
@@ -286,14 +297,7 @@
    "at": [106, 13],
    "radius": 3,
    "speaker": "INES",
-   "text": "A door that is also a bell. A hook beside it, the kind a lamp hangs from. My father said what a lamp is for. Light it, and keep it lit."
-  },
-  {
-   "id": "lit",
-   "at": [1, 1],
-   "radius": 0.1,
-   "speaker": "SIGNAL HOUSE",
-   "text": "The bell on the door has gone quiet. It is holding."
+   "text": "A door that is also a bell. It has stopped ringing and it has not stopped shaking."
   },
   {
    "id": "page",

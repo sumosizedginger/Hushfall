@@ -80,7 +80,7 @@ const MAP = {
     { type: 'switch', id: 'south', at: [14, 45], wall: 'south', do: [{ open: [57, 25] }, { open: [21, 42] }, { open: [21, 44] }, { wake: 'smoke-closet' }, { objective: 'Both hoists are up. Auction hall, east end: the way out' }, { shake: 1 }] },
   ],
   messages: [
-    { id: 'start', at: [4, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the boardwalk will have Bellhands on it. Keep to cover.' },
+    { id: 'start', at: [4, 24], radius: 3, speaker: 'SIGNAL HOUSE', text: 'Calder, the boardwalk runs the length of the market. Keep to cover.' },
     { id: 'boardwalk', at: [14, 9], radius: 3, speaker: 'INES', text: 'Bells overhead. Three of them, patient as gulls.' },
     { id: 'north', at: [52, 9], radius: 2, speaker: 'FISH HOIST LOG', text: 'Auction shutters run on two hoists, north and south. Somebody wanted that hall shut, and set both to fail closed.' },
     { id: 'mid', at: [30, 24], radius: 4, speaker: 'INES', text: 'Scales set, stalls open, nobody behind them.' },

@@ -132,9 +132,10 @@ const MAP = {
   groups: [{ name: 'warden', rect: [WARDEN[0], WARDEN[1], WARDEN[0], WARDEN[1]] }, ...SEALS.map((s) => ({ name: 'seals', rect: [s[0], s[1], s[0], s[1]] }))],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],
   messages: [
-    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths. Its eye opens before the beam. Stone stops it.' },
+    { id: 'start', at: START, radius: 4, speaker: 'SIGNAL HOUSE', text: 'Three seals hold its shield up, Calder: shoot them, or turn its own beam onto one with the plinths.' },
+    { id: 'eye', at: START, radius: 4, speaker: 'HULL', text: 'Its eye opens before the beam fires. Stone stops the beam.' },
     { id: 'rim', at: [CX - 20, CZ - 15], radius: 4, speaker: 'INES', text: 'The wall has gaps: steps down to the arena. The rim goes all the way round. It\'s a place to run.' },
-    { id: 'mirrors', at: [CX + 5, CZ + 3], radius: 4, speaker: 'HULL', text: 'Mirror plinths, one-sided: a back stops the light. Use turns one a quarter step. Light off the face runs straight on, and there are seals on those lines.' },
+    { id: 'mirrors', at: [CX + 5, CZ + 3], radius: 4, speaker: 'HULL', text: 'Mirror plinths, one-sided: a back stops the light. Light off the face runs straight on, and there are seals on those lines.' },
     { id: 'shield', at: [CX, CZ], radius: 0.1, speaker: 'INES', text: 'The last seal is gone, and the shield with it. Now it can be hurt.' },
     ...(SECRET ? [{ id: 'panel', at: SECRET.panel, radius: 3, speaker: 'HULL', text: 'The panel in the rim wall rings hollow.' }] : []),
     { id: 'broken', at: [EXIT[0] - 4, EXIT[1]], radius: 3, speaker: 'SIGNAL HOUSE', text: 'It\'s down. The Gate is open, Calder. The way out is the way in, and the far side has stopped being quiet.' },

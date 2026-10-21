@@ -99,7 +99,7 @@ const MAP = {
     { id: 'lever', at: [C, C + 3], radius: 3, speaker: 'HULL', text: 'The cut lever is on the south face of the root, under the lamps. It does nothing while a knot still ties the lattice.' },
     { id: 'cut', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The root has let go of the strands. Every bridge has stopped lighting.' },
     { id: 'door', at: [C, 11], radius: 4, speaker: 'HULL', text: 'The north wall is shut. It opens when the four knots are broken and the root is cut, in either order.' },
-    { id: 'hollow', at: [XS, 92], radius: 3, speaker: 'HULL', text: 'The rim wall rings hollow here. There is a seam in the bone.' },
+    { id: 'hollow', at: [XS, 92], radius: 3, speaker: 'HULL', text: 'The rim wall rings hollow here, and the bone is thinner than it ought to be.' },
     { id: 'cache', at: [XS, ZS + 2], radius: 3, speaker: 'A SILENT (NOTE)', text: 'For whoever walks the bridges. I kept this under the rim. The bridges are cooler at the edges; it is the middle they keep hot.' },
   ],
   triggers: [

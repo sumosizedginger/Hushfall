@@ -114,7 +114,7 @@ const MAP = {
     { id: 'mole', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The causeway gate is open. The rope is on the plinth in the middle of the mole, under the lamps.' },
     { id: 'ninth', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'Nine. It sounds the same as the north pier\'s, to the half-second. Somebody listened to it for a very long time.' },
     { id: 'exit', at: [32, 10], radius: 5, speaker: 'HULL', text: 'The exit is locked. The ninth stroke unlocks it, and the rope for the ninth is on the mole.' },
-    { id: 'hollow', at: [38, 7], radius: 3, speaker: 'HULL', text: 'The outer wall of the highest step rings hollow in one short run, east of the exit. There is a seam.' },
+    { id: 'hollow', at: [38, 7], radius: 3, speaker: 'HULL', text: 'The outer wall of the highest step rings hollow in one short run, east of the exit. The mortar there is newer.' },
     { id: 'cache', at: SEC.cells[1], radius: 3, speaker: 'A SILENT (NOTE)', text: 'I kept the dock\'s tally on this wall, a mark a night for a year. The water took the first step of the quay. It never got as far as the wall.' },
     ...messages,
   ],

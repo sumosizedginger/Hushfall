@@ -111,7 +111,7 @@ const MAP = {
     { id: 's5', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Thank you for the quiet.' },
     { id: 's6', at: [1, 1], radius: 0.1, speaker: 'A SILENT', choice: 'halls=silent', text: 'Go down. Do not wait for us.' },
     { id: 'gone', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'They didn\'t look at me, and they didn\'t look back. Forty feet down the shaft the light of the lift went out, one lamp at a time.' },
-    { id: 'bells', at: [24, 32], radius: 5, speaker: 'HULL', text: 'In the garden a tree of glass, and three chimes among the graves. Use the tree and it plays three notes; answer on the chimes in order, each within eight seconds of the last.' },
+    { id: 'bells', at: [24, 32], radius: 5, speaker: 'HULL', text: 'In the garden a tree of glass, and three chimes among the graves. The tree plays three notes when you use it: answer on the chimes, in order, each within eight seconds of the last.' },
     { id: 'niche-open', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'A door has opened in the west wall of the arcade, and behind it a closet with a lamp left burning.' },
     { id: 'niche', at: [9, 37], radius: 3, speaker: 'A SILENT (NOTE)', text: 'The bells were for the ones who went down in the lift, and nobody has rung them. I left the tin for whoever did. It is not much.' },
     { id: 'hollow', at: [41, 9], radius: 3, speaker: 'HULL', text: 'The north wall of the arcade rings hollow in one run of cells. There is a door in it, painted over.' },

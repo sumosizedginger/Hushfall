@@ -48,6 +48,18 @@
  "secrets": [],
  "triggers": [
   {
+   "id": "heard",
+   "when": "msg:quiet",
+   "do": [
+    {
+     "choose": {
+      "id": "quiet",
+      "value": "heard"
+     }
+    }
+   ]
+  },
+  {
    "id": "hall",
    "when": "enter",
    "at": [14, 14],

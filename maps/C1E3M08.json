@@ -952,14 +952,21 @@
    "at": [38, 28],
    "radius": 3,
    "speaker": "INES",
-   "text": "Singers in the curve. A shell-back in front of them. Kill the tall one with the wheel first: everything near it takes half."
+   "text": "Singers in the curve, a shell-back in front of them, and the tall one with the wheel behind."
   },
   {
    "id": "bell",
    "at": [47, 24],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "Four-legged, a horn the size of a doorway, and it walks. Pillars are cover from the rings. While a reed sings it throws two: wait for the second."
+   "text": "Four-legged, a horn the size of a doorway, and it walks."
+  },
+  {
+   "id": "rings",
+   "at": [47, 24],
+   "radius": 3,
+   "speaker": "HULL",
+   "text": "Pillars are cover from its rings. While a reed sings it throws two: wait for the second."
   },
   {
    "id": "panel",

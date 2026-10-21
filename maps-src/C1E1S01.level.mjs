@@ -41,7 +41,8 @@ const MAP = {
   ...layers,
   messages: [
     { id: 'arrive', at: [4, 22], radius: 3, speaker: 'LIGHTHOUSE KEEPER', text: 'Welcome, Calder. I kept this cellar, and then your father did, for the day the harbour needed one. It does now. Sit a minute.' },
-    { id: 'log1', at: [9, 16], radius: 2.5, speaker: "WARDEN CALDER'S LOG", text: 'First entry. The hum in the chalk. I knew it for what it was. Ines hears none of it: the ear I damaged by accident may be the best thing I ever did.' },
+    { id: 'log1', at: [9, 16], radius: 2.5, speaker: "WARDEN CALDER'S LOG", text: 'First entry. The hum in the chalk. I knew it for what it was. Ines hears the bells, and she does not hear this.' },
+    { id: 'log1b', at: [9, 16], radius: 2.5, speaker: 'WARDEN CALDER\'S LOG', text: 'I have wondered since the accident whether the ear I damaged is why. I cannot know. If it is, it may be the best thing I ever did.' },
     { id: 'drawing', at: [4, 18], radius: 2, speaker: "A CHILD'S DRAWING", text: 'A bell tower ringed in red crayon. In the corner, in your own hand at six years old: "the loud one".' },
     { id: 'stair', at: [6, 11], radius: 2, speaker: 'INES', text: 'Every step of this stair was cut by hand. He climbed it every night for thirty years to keep the lamp lit.' },
     { id: 'lamp', at: [7, 4], radius: 3, speaker: 'BEACON NOTES', text: 'The lamp flashes once a minute, for no ship. It is a counter-tone: a sound turned into light. Keep it lit, and it holds the tone back from the harbour.' },

@@ -78,7 +78,7 @@ const MAP = {
   lantern: { oil: 200, max: 300 }, noiseTell: true,
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 80, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'SILENT ROOTS', lines: ['A cave of root columns, and what sleeps among them.', 'A shot carries far in here. So does a lit lantern.'] },
-  outro: 'The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and there is a sound at the end of it that is very slow.',
+  outro: 'The refectory was a long table laid for forty. The corridor beyond it goes down into the root, and at the end of it a bell is being struck very slowly.',
   objective: 'Find the three chambers of the Silent: west, south and east. A latch in each. Gunfire wakes what is in its reach: the arc and a blow are quiet',
   ...L.layers(),
   secrets: [{ id: 'hollow-root', panel: SEC.panel, cells: SEC.cells }],

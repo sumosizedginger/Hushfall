@@ -65,7 +65,7 @@ const MAP = {
   atmosphere: { fog: '#101c14', fogDensity: 0.013, sky: 'night', look: 'foundry' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { V: { type: 'prop', kind: 'vat' } },
-  intro: { title: 'THE SPORE FOUNDRY', lines: ['The ship casts its bell-bearers here.', 'Do not wait for the vats to run dry.'] },
+  intro: { title: 'THE SPORE FOUNDRY', lines: ['The ship grows its bell-bearers here.', 'Do not wait for the vats to run dry.'] },
   outro: 'Next: the Cantor\'s Throat. What the Foundry makes, the Throat sings to.',
   objective: 'Break the four brood vats: the exit opens when they are dead',
   ...layers,

@@ -16,7 +16,47 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | **PELLEW** (mate of the Marrow Girl, a woman) | the crew's logs in C2M02, C2M13 (days 9 to 16), C2M30 (the last page) | paper | eleven left the beach; the counts below |
 | **THE TENDER** | a Silent grave-keeper (C2M03 cage, C2S01 garden) | speaks plainly, no contractions | the count is short; the Root Bell is tired; "the ones who sang" |
 | **THE SILENT** | each refuses one thing (sing, count, answer, forget) | notes and a few words | where they hid supplies; what the Songkeepers did to them |
-| **HULL** | the place | one practical sentence | how a thing works; never a key or a button |
+| **HULL** | the place | the interface channel: one primary purpose per message, concise, in the player's immediate situation | how a thing works: distances, timings, damage reductions, what a prompt will do. It may say a number and the name of the interaction ("a quarter step", "use it"); a key or a button is the PROMPT's and the objective's, never a voice's (`tests/story-coherence.test.js` holds this) |
+
+## 1b. What Ines can hear (PT-071, the outside reader's PRIORITY 2)
+
+The observation, not the explanation. **Ines hears ordinary sound: bells, voices, impacts, the forks, water, a bell struck far off. She cannot perceive the Hush itself.** Her father's log (C1E1S01) says what he saw (she hears the bells and not the hum) and, in a separate line, what he wonders (whether the ear he damaged is why; he cannot know). Nobody in the game knows the cause, and no text may say a mechanism (no binaural story, no diagnosis, no alien reason).
+
+How the text classifies what it says about sound (the rule for any new line):
+
+| kind | example | may Ines hear it |
+|---|---|---|
+| ordinary sound | a bell, the fog-bell's nine strokes, the Silent speaking, a shot, the chimes | yes |
+| physical vibration | a hum in a rail or a wall, the channel when she puts a hand in, a hum "up through the floor", "in my teeth" | she feels it; she does not hear it as the Hush |
+| the Song | the chimes' phrases, the notes on the ringing plates | yes: it is notes (C2M14: "the first time the Song has been one I could repeat") |
+| the Hush | the low tone that stops everyone who hears it | NO: she sees only what it does to them |
+
+Checked in this pass: C2M04 (the forks hum: a vibration she feels before she hears it), C2M06 (the channel hums under her hand), C2M02 (a hum up through the floor), C2M08 (the shaft: the rail hums in her hand; it was "a sound"), C2M25 and C2M26 outros (a bell felt in the floor before it is heard; a bell struck slowly), C2M29 (the Bell stops ringing: an ordinary sound ends; the Hush she cannot hear, and the text never says she hears it stop).
+
+The test a player passes: they can say what Ines cannot hear (the Hush) without knowing why.
+
+## 1c. The operator: her sources, and what she may say (PT-071, PRIORITY 4)
+
+Her rule is the sheet's first line: she can say where things ARE, never what stands in them. **Her sources, and nothing else:** (a) the plan sheets of the harbour and the Works (Customs Hall, the Works, the stations on the Board's plans): places, doors, what a building is for; (b) from the Choir ship on, the Vael's own hum (C1E3M01): shapes, counts, reeds, rhythms, never contents; (c) what Ines tells her over the set (every INES line that is a report: a line of the operator's that names a creature or a mechanism comes AFTER Ines has said it); (d) the signal itself (its bearing). A line that needs a fifth source is Ines's, or HULL's.
+
+## 1d. The radio, by map (PT-071, PRIORITY 3)
+
+| where | what happens | why |
+|---|---|---|
+| Campaign One | the set works: she is on the battery set at the lighthouse | the harbour's own line |
+| C2M01 | "I have you for as long as the Gate holds behind you" | the Gate carries the line |
+| C2M08 | static: "you are breaking up" | the stair down the spire leaves the Gate's reach |
+| C2M09 to C2M15 | nothing | no carrier |
+| C2M16 | the genuine operator, once: "the conductor was the hum I was riding, and it has stopped. This is the last I can hold" | in the Deep the set rides the Vael hum; the Sub-Cantor's floor was the last strong carrier; its death ends the line |
+| C2M17 to C2M22 | nothing | the Hive's beat is not the Deep's hum and does not carry her |
+| C2M23 | the false operator: first-night words ("Calder, come in", "the ferry is alongside, engines running") and a wrong detail; she asks nothing | the Hive copies what the grafted remember (C2M23): it has the voice right and the ferry wrong |
+| C2M30 | the genuine operator: INES says the set has woken and that the door is the only thing down there that carries it; the operator calls her "Ines" (never "Calder", which is the first night's word and the copy's) and ASKS what is in front of her | the Gate carries it; the copy cannot ask |
+
+The genuine voice answers and asks; the copy only repeats. That is the whole difference, and it is observable.
+
+## 1e. The lamp (PT-071, PRIORITY 5)
+
+The main route supplies the lamp: the hand lantern from C2M09, and the walk of C2M30 gives it an eternal wick for everybody (`map.lantern.eternal`), said once in plain words by HULL ("does not draw on its oil in this place"). C2S02, Ines's own lamp, is a reward and never a need: it adds the history (the lamp from the quay) and a stronger hold on rings (two-fifths) in Act D. A player who never finds it finishes the game; the epilogue says "the lamp" either way. WHY SHE STAYS is one observable sentence in the epilogue: anyone else who stood at the door would hear it ask; she cannot, so she is the one who can stand there. It is a responsibility she accepts ("I said I would keep it lit"), not a lock.
 
 ## 2. The calendar
 
@@ -30,7 +70,8 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 
 - **the Hush** = the low tone. **the Song** = the count of voices the Vael keep. **the count** = the same, as a number (OWED / SUNG / SHORT). **the Gate** = the door that is also a bell; **a gate** = a map door.
 - **the Mother** is two creatures: **the Graft-Mother** (Evaporation/Grafting Floor, C1E2M08) and **the Weeping Mother** (C1E3M04, C1E4M06, C2M08, C2M15). Objectives name them in full; a Vael plate may say "the Mother" (C2M15, the station of THE HOLD).
-- **Warden**: Ines is a Tide-Warden; her father Warden Calder; the plated enemy is a **Warden-Graft**, a Tide-Warden taken. INES says so once, at the first (C1E1M06: "Somebody on the Board wore that, once"). The Pump Cathedral and the Rail Yard repeat "the Warden-Graft again".
+- **Warden**: Ines is a Tide-Warden; her father Warden Calder; the plated enemy is a **Warden-Graft**, a Tide-Warden taken. INES says so once, at the first (C1E1M06: "Somebody on the Board wore that, once"). The Brine Gate and the Rail Yard repeat it (C1E2M01 "That is the Warden-Graft again"; C1E2M03 "Plate again"); the Pump Cathedral does not. A Warden-Graft is met again at C2M08 (HULL says so) and C2M15 (an objective names it): no further lesson.
+- **the Cantor Acolyte** is the tall one with the wheel of bells behind it (`ENEMIES.acolyte`, bestiary "Cantor Acolyte"; first met at C1E3M05, then C1E3M06, C1E3M08, C1E4M04, C1E4M06 and C2M15): while it is awake and not staggered everything within nine metres takes half. It is NOT the Resonant (three fused singers, C2M21 on). INES names the lesson once, at the first (C1E3M05: "Kill it first"); at the others the text only names it.
 - **Gill** is the flying hatchling's name on screen (Drone-Gill in the bestiary): SIGNAL says "Gills", not "drones".
 - **the firing** is retired. The kilns of the Salt Works were **lit** once; the pre-invasion records predate that (C1E2S01).
 - **the Signal House** = the ridge relay station (C1E1M07). **SIGNAL HOUSE** (capitals) = the operator, who is not there.
@@ -42,11 +83,11 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | persons received / processed at Customs | 212 / 424 (the second count is the Graft) | C1E1M01, C1E1M02; copies 213 in C2M23 |
 | Marrow Girl crew | eleven left the beach; nine at the first station; eight; day 9 six; day 15 three; day 16 one | C2M02, C2M13 |
 | plates on the forks | nine in one row, other boats' crews (AMBLER, T. BOSUN is one) | C2M04 |
-| the Marrow order of bells | 311 cast, 311 hung, four spare | C2M07 |
+| the Marrow order of bells | 311 grown (the Vael grow their bells, they never cast them), 311 hung, four spare | C2M07 |
 | the Drowned choir's stalls | 312 | C2M12 |
 | the district's count (Deep Gate) | 904 voices owed, 200 short | C2M09 |
 | the ossuary | 4,060 stacked in the outer ring | C2M13 |
-| the Hive's count | OWED 52,310, SUNG 49,715, SHORT 2,595 (the sum checks) | C2M17, C2M24 |
+| the Hive's count | OWED 52,310, SUNG 49,715, SHORT 2,595 (the sum checks). Two plates carry the same figures: the one in the Hive-Song gorge (C2M17) and the one on the conductor's podium (C2M24, where INES notes that they match); they are different plates, not the same object | C2M17, C2M24 |
 | the lattice | 1,218 held, harbour badge 118 | C2M18 |
 | the loom | 406 cradles a night | C2M19 |
 | the rail | 2 cars, 31 voices a run, 1 run in 4 to the hub | C2M20 |
@@ -63,7 +104,7 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 | "I keep the lamp lit" (C1E1M01), the cellar's counter-tone (C1E1S01), the operator's line (C1E1M07) | the lamp on the quay (C2S02), the hook at the Gate (C2M30 and the epilogue) |
 | the fog-bell on the north pier, rung on the ninth stroke of the tide table (cold open) | the bell across the lake (C2M01), the copy that tolls eight and is rung the ninth by hand (C2M28) |
 | "A door is held from one side or the other" (C1E4S01, then the Campaign One epilogue) | the Campaign Two epilogue: "I am on this side of it" |
-| the Quiet One: "go to the Loom and cut the thread" (C1E3S01) | the Loom's plate: "The Quiet One was right about the loom" (C2M19) |
+| the Quiet One: "go to the Loom and cut the thread" (C1E3S01; the scene records the choice `quiet=heard`) | the Loom's plate: "The Quiet One was right about the loom" (C2M19) for a player who met them; the other version of the plate says only the count of cradles (so no main-route line names a secret's character) |
 | the Calder slab (C2M05, "no bronze on it yet") | the lamp and the Gate: she does not come home |
 | the operator's last lines (C2M01 through the Gate; C2M08 static; C2M16 the tea is cold; C2M23 wrong; C2M30 at the Gate) | the epilogue: "Somebody should be listening" |
 | Pellew's broken sentence ("There is something at the bottom of it that is", C2M13) | the last page (C2M30): it is not the water |
@@ -72,7 +113,9 @@ What the text may say, who knows it, and the numbers it must keep. `design/LORE.
 
 ## 6. Threads left open on purpose
 
-What the Hush is made of; who the Vael were before the stone cooled; what answers the lamp on the far side of the Gate (the last card: "one note. It is not the Hush"); whether the Warden-Grafts remember. The game says what it saw and stops.
+What the Hush is made of; who the Vael were before the stone cooled; what answers the lamp on the far side of the Gate (the last card: "one note. It is not the Hush"); whether the Warden-Grafts remember; **the Tide Board** (its records imply it knew: "sealed until the Tide Board signs. Nobody signed", "Somebody on the Board wore that, once", the Wardens "told to stop asking"; no text says it conspired and none will: the Board is a thing the harbour trusted and that did not answer); **the Marrow Girl's sea-door** (the sea opened under her keel on the third night: a way between the worlds that was not Ines's Gate, and the game does not say whether it is another face of the same system; it never says the Gate is the only way through); **the lamp's other owner** (the lamp in C2S02 is hers, and a Silent says the Hive copied the lamps and could not copy the light). The game says what it saw and stops.
+
+Checked and found consistent (no change): Pellew's tins and survivors (day 9: six left, nineteen tins; day 10: eight tins and a pistol sealed in the wall, which leaves eleven; day 12: six, nine tins; day 15: three, four tins; day 16: one, the oil out), the Day 10 cache against the Day 12 count, and the two of hers who stand in the corridor (still counted among the six). The Silent's six or three (by the choice at C2M11) and the Mourning Halls' tally plate (6, crossed out, 4 in the margin) are told by the plate, not by Ines.
 
 ## 7. Checks to run after any change of text
 

@@ -782,7 +782,7 @@
    "The Songkeepers ring it by hand to keep the Gate open. It cannot be broken. It can be made to stop."
   ]
  },
- "outro": "It hangs whole and it does not ring. In the quiet it left, somewhere above you, a stair has lit.",
+ "outro": "Above the bell the shaft goes up into a dark that the stair lights, one flight at a time.",
  "messages": [
   {
    "id": "start",
@@ -830,15 +830,15 @@
    "id": "hush",
    "at": [4, 4],
    "radius": 0.1,
-   "speaker": "INES",
-   "text": "It doesn't break. It hangs there, and the sound has gone out of the place as though the room had been unscrewed from the air."
+   "speaker": "HULL",
+   "text": "The heart has stopped on its chain. The stair north of the bell is lit."
   },
   {
    "id": "hollow",
    "at": [47, 51],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The wall of the top tier rings hollow in one short run, south of the middle. There is a seam."
+   "text": "The wall of the top tier rings hollow in one short run, south of the middle. The seats are cut away round it."
   },
   {
    "id": "cache",

@@ -826,7 +826,7 @@
    "at": [8, 33],
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
-   "text": "This is where the Gate is focused, Calder. Light does the work here. Use turns a mirror a quarter step. A mirror has a face and a back: light that meets the back stops."
+   "text": "This is where the Gate is focused, Calder. Light does the work here. The mirrors turn a quarter at a time: the bright face carries the beam, the dark face stops it."
   },
   {
    "id": "lesson",
@@ -846,7 +846,7 @@
    "id": "nw",
    "at": [34, 31],
    "radius": 3,
-   "speaker": "SIGNAL HOUSE",
+   "speaker": "HULL",
    "text": "Four chambers, screens between them. Light stops at a shut screen door. Light a receiver and the next door opens, for good. Then send the light on through it."
   },
   {
@@ -854,13 +854,13 @@
    "at": [50, 30],
    "radius": 3,
    "speaker": "INES",
-   "text": "Tall one with the wheel. Everything near it takes half. Kill it first. The mirrors can wait; they aren't going anywhere."
+   "text": "The tall one with the wheel. The mirrors can wait; they aren't going anywhere."
   },
   {
    "id": "se",
    "at": [50, 42],
    "radius": 3,
-   "speaker": "SIGNAL HOUSE",
+   "speaker": "HULL",
    "text": "The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other."
   },
   {

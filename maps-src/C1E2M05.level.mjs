@@ -71,7 +71,7 @@ const MAP = {
     { type: 'switch', id: 'release', at: [62, 22], wall: 'east', do: [{ exit: { set: 'unlock' } }, { objective: 'The line is stopped. The exit is in the south-east corner of the table room' }, { shake: 1.5 }, { message: 'stopped' }] },
   ],
   messages: [
-    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'This is where the grafts are made, Calder. Don\'t run, don\'t fire. Nothing in here is awake yet.' },
+    { id: 'start', at: [5, 22], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The Works plan calls this the Cradle Annex, Calder. Walk; do not run.' },
     { id: 'pods', at: [8, 22], radius: 3, speaker: 'INES', text: 'Pods. Hanging, like fruit. Something is moving in the nearest. Walk slowly.' },
     { id: 'aisle', at: [18, 22], radius: 3, speaker: 'INES', text: 'Rows of them. This is the line. They hang the shells here, and they put something else in the shells.' },
     { id: 'hatch', at: [28, 22], radius: 0.1, speaker: 'INES', text: 'They are hatching. Not people, and nothing I know. Aim up: they\'re flying.' },

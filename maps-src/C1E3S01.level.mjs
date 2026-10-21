@@ -48,6 +48,7 @@ const MAP = {
     { id: 'bell', at: [34, 14], radius: 2, speaker: 'HULL', text: 'A bell with its tongue cut out. Someone did this on purpose, and cleaned up after.' },
   ],
   triggers: [
+    { id: 'heard', when: 'msg:quiet', do: [{ choose: { id: 'quiet', value: 'heard' } }] },                       // PT-071: the Bone Loom's plate answers a player who met the Quiet One (a choice, so no main-route text depends on this secret)
     { id: 'hall', when: 'enter', at: [14, 14], radius: 3, do: [{ objective: 'The alcove is at the east end of the hall' }] },
     { id: 'alcove', when: 'enter', at: [31, 14], radius: 2.5, do: [{ objective: 'Take what was left for you. The way out is behind the bell' }] },
   ],

@@ -1070,14 +1070,14 @@
    "at": [63, 20],
    "radius": 3,
    "speaker": "INES",
-   "text": "Plate. The Warden-Graft again, and cradles all the way down the rail. Let it run into a pillar."
+   "text": "Plate again, at the end of the dock. A pillar on its charge lane will do."
   },
   {
    "id": "exit",
    "at": [73, 20],
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
-   "text": "The rail ends in Kiln Row. After this, the heat. Everything past that door is cooking something."
+   "text": "The rail ends in Kiln Row, Calder. After this, the heat."
   },
   {
    "id": "found-chainsaw",
