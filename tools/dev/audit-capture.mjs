@@ -55,7 +55,8 @@ async function runMap(spec) {
   while (true) {
     const near = Math.min(...s.enemies.filter((e) => e.state !== 'dead' && e.state !== 'idle').map((e) => Math.hypot(e.x - s.player.x, e.z - s.player.z)), 99);
     const r = await T(`t.stepBot(${near < 10 ? 6 : 30})`); s = r;
-    if (r.mode === 'cinematic') { if (!counts.scene) { counts.scene = 1; await shot('scene', { hp: r.player?.hp }, true); } await T('t.skip_cinematic()'); s = await T('t.state()'); continue; }          // PT-063: a story scene stops the sim; the capture takes one frame of it and skips it
+    if (r.mode === 'cinematic') { if (!counts.scene) { counts.scene = 1; for (let i = 0; i < 24; i++) { const p = await T('t.step_cinematic(0.5)'); if (!p?.active || (p.fade < 0.1 && (p.text ?? '').length >= 12)) break; }       // round 1 (Gemini, Grok, Codex: the C2M24 frame was black): the first frame of a scene is its fade-in; step on until the black has cleared and a subtitle is up (at most 12 s of scene), then take the picture
+      await shot('scene', { hp: r.player?.hp }, true); } await T('t.skip_cinematic()'); s = await T('t.state()'); continue; }          // PT-063: a story scene stops the sim; the capture takes one frame of it and skips it
     if (r.mode === 'dying' || r.mode === 'dead') { await shot('death', { hp: r.player?.hp }, true); break; }
     if (r.done || r.mode === 'ending' || r.mode === 'complete') { done = true; break; }
     if (r.failed) { await shot('bot_failed', { op: r.op, ops }, true); break; }
