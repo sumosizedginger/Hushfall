@@ -172,3 +172,10 @@ export class SaveStore {
   /** PT-050 H1: a slot that broke the game is set aside as `<slot>.bad` (the text is kept for a bug report) and cleared, so Continue falls through to the next slot instead of loading it again. -> true if there was something to set aside */
   quarantine(slot) { const k = this.p + slot, t = this.s.getItem(k); if (t == null) return false; try { this.s.setItem(k + '.bad', t); } catch { /* storage full: it is still taken out of the way */ } this.s.removeItem(k); return true; }
 }
+
+/** Build a save and write it. Returns null, or the error message if building or storing it throws.
+ *  Never throws: a full store must not abort the caller. The level-start autosave uses this (quick save and the intermission already catch their own writes). */
+export function storeSave(store, slot, build) {
+  try { store.write(slot, build()); return null; }
+  catch (e) { return (e && e.message) || String(e); }
+}

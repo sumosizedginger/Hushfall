@@ -10,7 +10,7 @@ import { nextMapId, mapName } from './campaign.js';
 import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
-import { makeSave, loadWorld, SaveStore } from '../engine/save.js';
+import { makeSave, loadWorld, SaveStore, storeSave } from '../engine/save.js';
 import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy, buyMod } from '../engine/progress.js';
 import { UI } from './ui.js';
@@ -183,9 +183,13 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
-  if (!world && !map.range) store.write('auto', makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));      // (the range never overwrites the campaign's Continue)
+  let saveNote = '';
+  if (!world && !map.range) {                                                                                     // (the range never overwrites the campaign's Continue; a loaded world is already on disk)
+    const err = storeSave(store, 'auto', () => makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));
+    if (err) saveNote = 'Progress could not be saved: ' + err;                                                    // a full store used to throw here, after the old view was disposed and before play began
+  }
   g.attempt++; g.attemptLogged = false; g.hist.reset(); g.survey = null;                                         // PT-071 R24: a new attempt for the play log
-  g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note);
+  g.mode = 'playing'; ui.show(null); ui.clearOverlays(); if (note) ui.toast(note); if (saveNote) ui.toast(saveNote);
   if (!world) {
     ui.card(map.intro); const first = !settings.firstRunSeen, legend = g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings);        // PT-071 R20: a new profile also gets one line about the objective and the Journal
     ui.tip(first ? legend + '\n' + firstRunLine({ bindings: g.input.bindings, padBindings: settings.padBindings, family: g.pad.family, pad: g.padActive }) : legend, 6800, first ? 17000 : 11000);

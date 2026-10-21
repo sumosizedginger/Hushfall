@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorld, step, hashWorld, carryOver } from '../src/engine/world.js';
-import { makeSave, parseSave, loadWorld, SaveStore, SAVE_VERSION, SAVE_MAGIC } from '../src/engine/save.js';
+import { makeSave, parseSave, loadWorld, SaveStore, storeSave, SAVE_VERSION, SAVE_MAGIC } from '../src/engine/save.js';
 import { loadMap, mapLoader } from './helpers.js';
 
 function scriptedCmd(tick) {
@@ -83,6 +83,23 @@ test('a mid-level save from an older map version degrades to level start with a 
   const r = loadWorld(save, mapLoader);
   assert.equal(r.ok, true); assert.match(r.degraded, /map-changed/); assert.equal(r.world.tick, 0);
   assert.equal(loadWorld({ ...save, campaign: { ...save.campaign, mapId: 'C9E9M99' } }, mapLoader).reason, 'unknown-map');
+});
+
+test('storeSave writes one save, and a throw from building it or from the store becomes a message', () => {
+  const mem = [];
+  const store = { write(slot, save) { if (save && save.boom) throw new Error('The quota has been exceeded.'); mem.push([slot, save]); } };
+  assert.equal(storeSave(store, 'auto', () => ({ ok: 1 })), null);
+  assert.deepEqual(mem, [['auto', { ok: 1 }]]);
+  assert.equal(storeSave(store, 'auto', () => { throw new Error('map missing'); }), 'map missing');
+  assert.equal(mem.length, 1, 'a build that throws does not write');
+  assert.equal(storeSave(store, 'auto', () => ({ boom: true })), 'The quota has been exceeded.');
+  assert.equal(mem.length, 1, 'a store that throws does not record a partial save');
+  let mode = 'title', saveNote = '';
+  const err = storeSave(store, 'auto', () => ({ boom: true }));
+  if (err) saveNote = 'Progress could not be saved: ' + err;
+  mode = 'playing';
+  assert.equal(mode, 'playing');
+  assert.equal(saveNote, 'Progress could not be saved: The quota has been exceeded.');
 });
 
 test('SaveStore: slots, empty slot, and corrupt slot handled without throwing', () => {

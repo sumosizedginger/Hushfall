@@ -72,3 +72,13 @@ test('main.js: the frame is the guarded one and no longer ends with its own requ
   assert.ok(main.includes('quarantineLoaded()') && main.includes('store.quarantine(slot)') && main.includes('g.loadedSlot = slot'), 'a loaded slot that breaks the game within three seconds is set aside');
   assert.ok(main.includes('crashToTitle'), 'the crash screen can go back'); for (const id of ['screen-crash', 'crash-text', 'crash-detail', 'btn-crash-title', 'btn-crash-copy']) assert.ok(html.includes('id="' + id + '"'), id);
 });
+test('starting a fresh level still enters play when the autosave write throws', () => {
+  const main = read('src/game/main.js');
+  const body = main.slice(main.indexOf('function startLevel('), main.indexOf('function nextLevel('));
+  assert.ok(body.includes("g.mode = 'playing'"), 'startLevel enters play');
+  const guarded = /try\s*\{[\s\S]*?store\.write\('auto'[\s\S]*?\}\s*catch/.test(body) || /storeSave\(\s*store,\s*'auto'/.test(body);
+  assert.equal(guarded, true, 'the level-start autosave can throw out of startLevel and skip play');
+  const clearAt = body.indexOf('ui.clearOverlays()');
+  const noteAt = body.indexOf('if (saveNote) ui.toast(saveNote)');
+  assert.ok(clearAt >= 0 && noteAt > clearAt, 'the failure toast is raised after overlays are cleared, so the level start does not wipe it');
+});
