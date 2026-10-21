@@ -1,20 +1,20 @@
 {
   "mapId": "C2M28",
-  "when": "2026-10-21T02:59:09.904Z",
-  "commit": "d88f325",
+  "when": "2026-10-21T18:16:06.970Z",
+  "commit": "3232a61",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "41746eee8fc84aa3",
+  "mapSha": "251fea1d305bb04b",
   "routesSha": "d8388f3e24d4a9d6",
   "sources": {
-    "engine": "ce0a0d2dd1efd48a",
-    "render": "ef2d0b3ff0ca0a52",
-    "game": "e1a76e430eac1013",
-    "audio": "f8f3d9169ece1cc4",
+    "engine": "447075b4d81aa0d5",
+    "render": "b25ea4366411711f",
+    "game": "046c930e5a11460b",
+    "audio": "feeb615d3ade1eab",
     "assets": "df26bcd4e6468f58"
   },
   "routes": {
@@ -27,7 +27,7 @@
       "agree": true,
       "kills": 81,
       "secrets": 0,
-      "wallSeconds": 11
+      "wallSeconds": 12
     },
     "secret": {
       "ok": true,
@@ -38,7 +38,7 @@
       "agree": true,
       "kills": 81,
       "secrets": 1,
-      "wallSeconds": 11
+      "wallSeconds": 12
     }
   },
   "hud": {
@@ -90,7 +90,7 @@
     {
       "name": "real-game route C2M28.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=15497 policy=standing wall=11s"
+      "detail": "status=complete failed=null ticks=15497 policy=standing wall=12s"
     },
     {
       "name": "real-game route C2M28.main: browser sim == Node sim (ticks + state hash)",
@@ -100,7 +100,7 @@
     {
       "name": "real-game route C2M28.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=16461 policy=standing wall=11s"
+      "detail": "status=complete failed=null ticks=16461 policy=standing wall=12s"
     },
     {
       "name": "real-game route C2M28.secret: browser sim == Node sim (ticks + state hash)",

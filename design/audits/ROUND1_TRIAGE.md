@@ -46,6 +46,14 @@ The reports are `gemini writeup.md`, `grok writeup.md` (job 2, the code), `grok 
 | Grok job 3, 5-8, 10: the minimap's look, a white slab on the Hollow Stair, a crate through the bottom of the view on C2M14, the gun hiding the aimed-at enemy, distant fighters reading as one red coat | Look and taste, or a capture artefact; the crate and the slab are worth a look when someone plays those maps |
 | The store set: no action frames, no boss close-ups, no Map tab (the "automap" frames are the Log tab) | Gemini, Grok and Codex agree. A capture job after the owner has picked what the page needs |
 
+## Found while re-taking the scene frame (not fixed: it needs another regeneration)
+
+| What | Evidence | The fix and what it costs |
+|---|---|---|
+| The objective box shows during a story scene: its bronze left edge and the bottom of its text peek out under the top letterbox bar | The new `C2M24` scene frame at 1920 x 1080 (a crop of its top-left corner shows an orange bar and descenders just under the black). `body.in-cine` in `index.html` hides `#hud`, `#toasts`, `#minimap`, `#pickup-card`, `#cross`, `#hitmark`, `#comms` and `#cross-note`, not `#objective`, `#captions` or `#tips` | Add the three ids to that one rule. `index.html` is in the `game` source set, so it stales the real-game evidence of all 68 maps (about 97 minutes to regenerate): the owner's word, ideally batched with the next round of fixes |
+
 ## Regeneration
 
-See the end of this file once it has run.
+Every fix above is under `src`, `index.html` or `tools`, so the evidence was regenerated once, from the clean commit 3232a61 (`npm run regen`, the driver Codex made fail-closed, about 97 minutes, idle priority, two cores, one job at a time, the pointer lock refused): the shared browser check **146 of 146** with no page errors; the real-game run of **68 of 68** maps with every check passing; `verify-map` for all 68 with none failed; `validate` OK, derived status **AGENT_VERIFIED 68 of 68** and COMPLETE 0 of 68 (secret maps 6 of 6); the whole suite **1423 of 1423**, and the driver exited 0. The evidence files say `dirtySource false`. A machine reading the game, not a person playing it.
+
+What this does not show: the flow-texture leak and its fix are shown by a node reproduction and test, and I did not measure whether a browser's GPU counter moves for them; the strip hiding and the finale hold are held by node tests, and C2M30's real-game run passes (13 of 13) but I did not verify that it exercises the hold. **How any of it looks and feels is for the owner's eyes.**

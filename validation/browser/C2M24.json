@@ -1,7 +1,7 @@
 {
   "mapId": "C2M24",
-  "when": "2026-10-21T02:57:21.466Z",
-  "commit": "d88f325",
+  "when": "2026-10-21T18:14:08.802Z",
+  "commit": "3232a61",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,10 +11,10 @@
   "mapSha": "cbcdd40d0a1702b5",
   "routesSha": "ca36679598fa2a56",
   "sources": {
-    "engine": "ce0a0d2dd1efd48a",
-    "render": "ef2d0b3ff0ca0a52",
-    "game": "e1a76e430eac1013",
-    "audio": "f8f3d9169ece1cc4",
+    "engine": "447075b4d81aa0d5",
+    "render": "b25ea4366411711f",
+    "game": "046c930e5a11460b",
+    "audio": "feeb615d3ade1eab",
     "assets": "df26bcd4e6468f58"
   },
   "routes": {
@@ -52,7 +52,7 @@
       "rows": 10,
       "raised": 9,
       "violations": 0,
-      "deepest": -0.012,
+      "deepest": -0.013,
       "highest": 0.025
     },
     "awake": {
@@ -115,7 +115,7 @@
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "10 rows (9 on raised floors), 0 violations, deepest -0.012 m, highest 0.025 m; every one of the 10 enemies was measured: true"
+      "detail": "10 rows (9 on raised floors), 0 violations, deepest -0.013 m, highest 0.025 m; every one of the 10 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
@@ -158,5 +158,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 13
+  "wallSeconds": 16
 }
