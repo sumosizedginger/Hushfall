@@ -1035,9 +1035,25 @@ function groundAir(w, p, dt) {
     p.lastSafe = { x: p.x, z: p.z };
   }
 }
-/** open sky took the player: hurt, back on the last solid ground, not killed */
+/** the nearest place the player can stand to `s` (FREEZE F5, round 1, Gemini 7): the cell they last stood on can have a door, a prop or a creature in it by the time the void sets them back. `s` itself when it is free, so a landing nobody blocks is exactly what it was; otherwise the first free spot on rings of 0.5 m up to 4 m, on ground within a step of the old one and not over the void; `s` again when there is none (the old behaviour) */
+function landingNear(w, s) {
+  const r = PLAYER.radius, m = w.map, y0 = groundAt(w, s.x, s.z, r);
+  const free = (x, z) => {
+    if (m.hasVoid && m.kind(Math.floor(x / m.cell), Math.floor(z / m.cell)) === 'void') return false;
+    if (blockedCircle(w, x, z, r)) return false;
+    for (const e of w.enemies) if (e.state !== 'dead' && (x - e.x) ** 2 + (z - e.z) ** 2 < (r + ENEMIES[e.kind].radius) ** 2) return false;
+    return true;
+  };
+  if (free(s.x, s.z)) return s;
+  for (let ring = 1; ring <= 8; ring++) for (let k = 0; k < 16; k++) {
+    const a = (k / 16) * Math.PI * 2, x = s.x + Math.cos(a) * ring * 0.5, z = s.z + Math.sin(a) * ring * 0.5;
+    if (free(x, z) && Math.abs(groundAt(w, x, z, r) - y0) <= 0.6) return { x, z };
+  }
+  return s;
+}
+/** open sky took the player: hurt, back on the last solid ground (or the nearest free spot to it), not killed */
 function voidFall(w, p) {
-  const s = p.lastSafe ?? { x: w.map.spawn.x, z: w.map.spawn.z };
+  const s = landingNear(w, p.lastSafe ?? { x: w.map.spawn.x, z: w.map.spawn.z });
   delete p.air; p.x = s.x; p.z = s.z; p.vx = 0; p.vz = 0; p.y = groundAt(w, p.x, p.z, PLAYER.radius); p.ventCd = LOWG.setBackCooldown;
   emit(w, 'void_fall', { x: p.x, z: p.z }); hurtPlayer(w, LOWG.voidDamage);
 }
