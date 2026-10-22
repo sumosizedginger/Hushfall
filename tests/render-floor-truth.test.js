@@ -14,8 +14,10 @@ import { floorAt, groundAt } from '../src/engine/terrain.js';
 import { PROPS } from '../src/engine/defs.js';
 import { ROOT } from './helpers.js';
 
+// FREEZE F15 (round 1, Gemini 8): `npm test` used to cast about 1.2 million rays over all 68 maps (6 to 9 minutes) and so was skipped. The default is now a sample that covers a moving floor (C1E1M06, C1E2M06), tall heights and open sky (C1E4M07, C2M21), cars (C2M20) and the tide (C2M28).
+const FULL = !!process.env.FULL_AUDIT, SMOKE = ['C1E1M06', 'C1E2M06', 'C1E4M07', 'C2M20', 'C2M21', 'C2M28'];
 const TOL = 0.02;                                                              // metres: flat quads at a cell's floor height; nothing else is expected between the sim and the mesh
-const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).sort().filter((id) => !process.env.FLOOR_MAPS || process.env.FLOOR_MAPS.split(',').includes(id));      // FLOOR_MAPS=C2M05,C2M01 checks just those (the whole set takes about 8 minutes)
+const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).sort().filter((id) => (process.env.FLOOR_MAPS ? process.env.FLOOR_MAPS.split(',').includes(id) : FULL || SMOKE.includes(id)));      // FLOOR_MAPS=C2M05,C2M01 checks just those; FULL_AUDIT=1 checks all 68 (about 8 minutes: `npm run verify` and the regeneration set it); the default is the six-map smoke sample
 const load = (id) => parseMap(JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', id + '.json'), 'utf8')));
 const stubTex = () => new Proxy({}, { get: () => new THREE.Texture() });
 const OFFSETS = [[0, 0], [0.6, 0.6], [-0.6, 0.6], [0.6, -0.6], [-0.6, -0.6]];  // metres from a cell centre (a cell is 2 m)
@@ -86,7 +88,7 @@ test('pickups stand on the sim ground, and a pickup on a moving floor rides it (
     const map = load(id), w = createWorld(map, { seed: 1 });
     for (const it of w.pickups) { n++; const g = groundAt(w, it.x, it.z, 0.3); if (Math.abs((it.y ?? 0) - g) > TOL) bad.push(`${id} pickup ${it.id} (${it.kind}): y ${(it.y ?? 0).toFixed(2)}, ground ${g.toFixed(2)}`); }
   }
-  assert.ok(n > 300, `pickups were checked (${n})`);
+  assert.ok(n > (process.env.FLOOR_MAPS ? 0 : FULL ? 300 : 100), `pickups were checked (${n})`);
   assert.equal(bad.length, 0, bad.slice(0, 4).join(' | '));
   // M05's funicular car with a pickup added on it: it must follow the car up
   const src = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', 'C1E1M05.json'), 'utf8')), car = src.sectors[0], [cx, cz] = car.cells[0];
