@@ -13,6 +13,8 @@ import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
 import { ACTIONS } from '../engine/input.js';
 import { CommsQueue } from './commsqueue.js';
+/** text that is written into the page as HTML goes through this (FREEZE F6, round 1, Grok 6: the arrival card, the tally and the pickup card interpolated map text raw; no shipped line has markup, so nothing changes today, and a future one cannot break a card) */
+export const escHtml = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 import { difficultyNote } from './difficulty.js';
 import { SURVEY } from './playlog.js';
 import { creditsLines, lineHeightOf } from './credits.js';
@@ -189,11 +191,11 @@ export class UI {
   endingTally(t, e) {
     $('screen-ending').classList.add('is-tally'); $('ending-tally').classList.remove('hidden'); this.shownAt = performance.now();        // (a held key cannot skip it)
     $('tally-title').textContent = `${e.kicker.replace(/^End of /, '')} · ${e.name}`; $('tally-sub').textContent = `${t.cleared} of ${t.total} maps finished`;
-    $('tally-eps').innerHTML = t.episodes.map((ep) => `<div class="ep"><b>${ep.title}</b><span class="discs">${ep.maps.map((m) => `<i class="disc${m.rank ? ' r-' + m.rank : ''}" title="${m.name}">${m.rank ?? '·'}</i>`).join('')}</span><span class="sec${ep.secretMapsFound ? ' found' : ''}">${ep.secretMaps ? (ep.secretMapsFound ? 'secret found' : 'secret unfound') : ''}</span></div>`).join('');
+    $('tally-eps').innerHTML = t.episodes.map((ep) => `<div class="ep"><b>${escHtml(ep.title)}</b><span class="discs">${ep.maps.map((m) => `<i class="disc${m.rank ? ' r-' + escHtml(m.rank) : ''}" title="${escHtml(m.name)}">${escHtml(m.rank ?? '·')}</i>`).join('')}</span><span class="sec${ep.secretMapsFound ? ' found' : ''}">${ep.secretMaps ? (ep.secretMapsFound ? 'secret found' : 'secret unfound') : ''}</span></div>`).join('');
     const ranks = ['S', 'A', 'B', 'C'].map((r) => `${r} ${t.ranks[r]}`).join(' · ');
-    $('tally-totals').innerHTML = [['Ranks', ranks], ['Kills', String(t.kills)], ['Secrets found', String(t.secrets)], ['Secret maps', `${t.secretMapsFound} / ${t.secretMaps}`], ['Time', fmtLong(t.time)], ['Salvage in hand', String(t.salvage)]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
+    $('tally-totals').innerHTML = [['Ranks', ranks], ['Kills', String(t.kills)], ['Secrets found', String(t.secrets)], ['Secret maps', `${t.secretMapsFound} / ${t.secretMaps}`], ['Time', fmtLong(t.time)], ['Salvage in hand', String(t.salvage)]].map(([k, v]) => `<div><b>${escHtml(k)}</b><span>${escHtml(v)}</span></div>`).join('');
     $('tally-note').textContent = 'The best you have done on each map. The time is the sum of each map\'s fastest finish, not one sitting.';
-    $('tally-next').innerHTML = `<small>${e.next.kicker}</small><strong>${e.next.name}</strong><em>${e.next.line}</em>`;
+    $('tally-next').innerHTML = `<small>${escHtml(e.next.kicker)}</small><strong>${escHtml(e.next.name)}</strong><em>${escHtml(e.next.line)}</em>`;
   }
   /** the Locker on the intermission: one row per upgrade track (the next tier, what it gives, what it costs) and the salvage in hand. Buying is the shell's job (h.buyUpgrade). */
   locker(p, note = '', mods = []) {
@@ -204,7 +206,7 @@ export class UI {
   /** PT-049 U1: a MAJOR pickup (a gun, a key) gets a card at lower centre, not a toast in the column: the icon, the name, one line of what it does (toasts.js pickupCard). -> true when it showed one */
   showPickupCard(kind) {
     const c = pickupCard(kind, this.keyLabels), el = c && $('pickup-card'); if (!el) return false;
-    el.innerHTML = `<i>${cardIcon(c.icon)}</i><div><b>${c.title}</b><span>${c.line}</span></div>`; if (el.style.setProperty) el.style.setProperty('--card', c.color); else el.style['--card'] = c.color;
+    el.innerHTML = `<i>${cardIcon(c.icon)}</i><div><b>${escHtml(c.title)}</b><span>${escHtml(c.line)}</span></div>`; if (el.style.setProperty) el.style.setProperty('--card', c.color); else el.style['--card'] = c.color;
     el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); el.onanimationend = () => { el.classList.remove('show'); el.innerHTML = ''; };        // PT-071: a finished card leaves no animation behind (the HUD going away for a cinematic and coming back replayed the last card of the session)
     return true;
   }
@@ -239,7 +241,7 @@ export class UI {
   /** level title card at the start of a fresh run */
   card(intro) {
     const c = $('card'); if (!intro) return c.classList.add('hidden');
-    $('card-title').textContent = intro.title; $('card-lines').innerHTML = intro.lines.map((l) => `<div>${l}</div>`).join('');
+    $('card-title').textContent = intro.title; $('card-lines').innerHTML = intro.lines.map((l) => `<div>${escHtml(l)}</div>`).join('');
     c.classList.remove('hidden'); c.style.animation = 'none'; void c.offsetWidth; c.style.animation = ''; this.comq.blockUntil(performance.now() + 6300); this.pumpComms();
   }
   clearOverlays() { clearTimeout(this._pumpT); clearTimeout(this._tipT); this.comq.clear(); $('toasts').replaceChildren(); $('comms').classList.add('hidden'); $('card').classList.add('hidden'); $('tips').classList.add('hidden'); const pc = $('pickup-card'); if (pc) { pc.classList.remove('show'); pc.innerHTML = ''; } }
