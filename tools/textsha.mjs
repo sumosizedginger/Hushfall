@@ -19,13 +19,15 @@ export const SOURCE_SETS = {
   game: { dirs: ['src/game'], files: ['index.html', 'vite.config.js'], ext: ['.js'] },   // runtime shell: state machine, UI, input glue, the dev test hook
   audio: { dirs: ['src/audio'], ext: ['.js'] },                                     // procedural synthesis
   assets: { dirs: ['assets/baked'], ext: ['.png', '.json'] },                       // p5/p5.brush baked atlases and skies + their manifest
+  verifier: { files: ['tools/verify-map.mjs', 'tools/maplint.mjs', 'tools/mapset.mjs', 'tools/textsha.mjs'], ext: ['.mjs'] },   // the procedure that produced the simulation evidence (FREEZE F14, round 1, Codex 6: evidence is only as fresh as the way it was measured)
+  probes: { files: ['tools/dev/browser-check.mjs', 'tools/dev/browser-map.mjs', 'tools/dev/render-census.mjs', 'tools/dev/route-parity.mjs'], ext: ['.mjs'] },   // the procedure that produced the real-game evidence
 };
 /** which evidence depends on which sets. Map evidence additionally depends on its own map file and its route files (validate.mjs). */
 export const DEPENDS = {
-  mapSim: ['engine'],                                                               // validation/maps/<ID>.json (bots, viability, reachability run the sim)
-  browser: ['engine', 'render', 'game', 'audio', 'assets'],                         // validation/browser-check.json: drives the real game, incl. the render-truth census
-  browserMap: ['engine', 'render', 'game', 'audio', 'assets'],                       // validation/browser/<ID>.json: ONE map played in the real game + its census (also depends on that map's file and routes)
-  renderGround: ['engine', 'render', 'game', 'assets'],                             // validation/render-ground.json
+  mapSim: ['engine', 'verifier'],                                                               // validation/maps/<ID>.json (bots, viability, reachability run the sim)
+  browser: ['engine', 'render', 'game', 'audio', 'assets', 'probes'],                         // validation/browser-check.json: drives the real game, incl. the render-truth census
+  browserMap: ['engine', 'render', 'game', 'audio', 'assets', 'probes'],                       // validation/browser/<ID>.json: ONE map played in the real game + its census (also depends on that map's file and routes)
+  renderGround: ['engine', 'render', 'game', 'assets', 'probes'],                             // validation/render-ground.json
   audio: ['audio'],                                                                 // validation/audio.json
 };
 
