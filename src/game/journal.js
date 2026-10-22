@@ -40,6 +40,11 @@ import { WEAPON_USE, pickupUse } from './itemhelp.js';
 
 const STARTER_LINES = { flare: 'The starting gun: splash and burning ground.' };            // the guns found on a map have their line in WEAPON_CARDS (toasts.js); the one you start with has none there
 export const JOURNAL_TABS = Object.freeze(['map', 'objectives', 'log', 'items', 'bestiary']);
+/** the shoulder buttons turn the Journal's pages as the arrow keys do: the buttons bound to previous and next weapon (Pad4 and Pad5, the bumpers, by default) step -1 and +1; 0 when neither was pressed (round 1, Gemini 2: the tabs were reachable by D-pad focus but had no shortcut) */
+export function journalPadStep(pressed = [], bindings = {}) {
+  const has = (codes, dflt) => (codes?.length ? codes : dflt).some((c) => pressed.includes(c));
+  return has(bindings.weaponPrev, ['Pad4']) ? -1 : has(bindings.weaponNext, ['Pad5']) ? 1 : 0;
+}
 export const tabAfter = (tab, step = 1) => JOURNAL_TABS[(Math.max(0, JOURNAL_TABS.indexOf(tab)) + step + JOURNAL_TABS.length) % JOURNAL_TABS.length];
 
 /** the Objectives page: the goal the map names NOW, and the goals it named earlier on this map, newest first, each once. `history` = the objective texts in the order they arrived. Never the steps: the objective line says what the goal is, not how. */

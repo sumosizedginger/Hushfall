@@ -28,7 +28,7 @@ import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, COLD_OPEN, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
-import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, JOURNAL_TABS } from './journal.js';
+import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS } from './journal.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor, CaptionFeed } from './captions.js';
 import { firstRunLine } from './firstrun.js';
@@ -440,6 +440,7 @@ function padMenu(out, dt) {
     if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) closeRecord();
     return;
   }
+  if (ui.screen === 'journal' && g.mode === 'paused') { const step = journalPadStep(out.pressed, settings.padBindings); if (step) { ui.h.journalTab(tabAfter(g.journalTab, step)); return; } }          // the bumpers turn the Journal's pages
   const d = navRepeat.update(navDir(g.pad.down, out.move), dt), items = menuItems(); if (!items.length) return;
   const cur = items.indexOf(document.activeElement);
   if (cur < 0) { if (d || out.pressed.length) items[0].focus(); return; }

@@ -58,3 +58,17 @@ test('the wiring: Tab opens the Journal and pauses (the sim is not stepped), the
   assert.ok(!/timeScale[^;\n]*message|message[^;\n]*timeScale|timeScale[^;\n]*comms|comq[^;\n]*timeScale/i.test(main), 'no message ever scales the clock');
   for (const id of ['screen-journal', 'journal-bar', 'btn-journal-map', 'btn-journal-log', 'btn-journal-close', 'btn-journal-record', 'journal-list', 'journal-log', 'journal-title', 'journal-new', 'hud-log', 'hud-log-n', 'set-journalpause']) assert.ok(html.includes('id="' + id + '"'), id + ' in the page');
 });
+
+// FREEZE F1 (round 1, Gemini 2): the shoulder buttons turn the Journal's pages. The buttons are whatever is bound to previous and next weapon, so a rebinding is respected.
+test('the bumpers turn the Journal page: Pad4 back, Pad5 on, the bound buttons if rebound, nothing for anything else, and the shell asks before the generic menu code', async () => {
+  const { journalPadStep, tabAfter, JOURNAL_TABS } = await import('../src/game/journal.js');
+  assert.equal(journalPadStep(['Pad4']), -1); assert.equal(journalPadStep(['Pad5']), 1); assert.equal(journalPadStep(['Pad0', 'Pad7']), 0); assert.equal(journalPadStep(), 0);
+  assert.equal(journalPadStep(['Pad6'], { weaponPrev: ['Pad6'], weaponNext: ['Pad7'] }), -1, 'rebound previous'); assert.equal(journalPadStep(['Pad7'], { weaponPrev: ['Pad6'], weaponNext: ['Pad7'] }), 1, 'rebound next');
+  assert.equal(journalPadStep(['Pad4'], { weaponPrev: ['Pad6'], weaponNext: ['Pad7'] }), 0, 'a rebound bumper is no longer the shortcut');
+  assert.equal(journalPadStep(['Pad4'], { weaponPrev: [], weaponNext: [] }), -1, 'an empty binding falls back to the default');
+  let t = 'map'; for (const _ of JOURNAL_TABS) t = tabAfter(t, 1); assert.equal(t, 'map', 'five steps on come round');
+  assert.equal(tabAfter('map', -1), 'bestiary', 'and back from the first page wraps to the last');
+  const main = fs.readFileSync(path.join(ROOT, 'src/game/main.js'), 'utf8'), at = main.indexOf("journalPadStep(out.pressed, settings.padBindings)");
+  assert.ok(at > 0 && at < main.indexOf('const d = navRepeat.update(navDir(g.pad.down, out.move), dt), items = menuItems()'), 'the shoulder check runs before the menu focus code');
+  assert.match(main, /ui\.screen === 'journal' && g\.mode === 'paused'\) \{ const step = journalPadStep/);
+});
