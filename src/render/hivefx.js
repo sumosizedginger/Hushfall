@@ -12,6 +12,7 @@ export function makeHiveView(scene) {
   const lineGeo = new THREE.CylinderGeometry(1, 1, 1, 4, 1, true), threadMat = new THREE.MeshBasicMaterial({ color: 0xffb050, transparent: true, opacity: 0.55, depthWrite: false }), chainMat = new THREE.MeshLambertMaterial({ color: 0x1c1c22 });
   const discGeo = new THREE.CircleGeometry(1, 28), discMat = (c, o) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o, depthWrite: false, side: THREE.DoubleSide }), ringGeo = new THREE.RingGeometry(0.82, 1, 32), spikeGeo = new THREE.ConeGeometry(1, 1, 6);
   const threads = new Map(), spikes = new Map(), tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3(), tmp3 = new THREE.Vector3();
+  const tipV = Array.from({ length: 10 }, () => new THREE.Vector3()), tips = [], conductors = [];          // FREEZE F12 (Grok 5): the ten fingertips of a conductor and the list of conductors are reused every frame (they were new vectors and arrays)
   let chain = null, shadow = null, shadowMat = null;
   const glow = new THREE.PointLight(0xff9a40, 0, 34, 2); group.add(glow);                                // the clapper's own light (a copper glow on the roots and the tiers): made with the view so the scene's light count never changes mid-fight
   const line = (m, a, b, r) => { const d = tmp2.copy(b).sub(a), len = d.length() || 1; m.position.copy(a).addScaledVector(d, 0.5); m.scale.set(r, len, r); m.quaternion.setFromUnitVectors(UP, d.multiplyScalar(1 / len)); };
@@ -19,14 +20,15 @@ export function makeHiveView(scene) {
   function update(w, enemyViews, time) {
     // ---- the Hive Cantor's threads
     const live = new Set();
+    conductors.length = 0; for (const c of w.enemies) if (c.state !== 'dead' && ENEMIES[c.kind].unison) conductors.push(c);
     for (const e of w.enemies) {
       const def = ENEMIES[e.kind]; if (!def.unison || e.state === 'dead') continue;
       const v = enemyViews.get(e.id); if (!v || !v.J) continue; v.root.updateMatrixWorld(true);
-      const tips = []; for (const s of ['A', 'B']) for (let f = 0; f < 5; f++) { const j = v.J['tip' + s + f]; if (j) tips.push(j.getWorldPosition(new THREE.Vector3())); }
+      tips.length = 0; let ti = 0; for (const s of ['A', 'B']) for (let f = 0; f < 5; f++) { const j = v.J['tip' + s + f]; if (j) { tips.push(j.getWorldPosition(tipV[ti++])); } }
       if (!tips.length) continue;
       let i = 0; for (const o of w.enemies) {
         if (o.group !== def.unison.group || o.state === 'dead') continue;
-        let near = e, nd = Math.hypot(o.x - e.x, o.z - e.z); for (const b of w.enemies) if (b !== e && b.state !== 'dead' && ENEMIES[b.kind].unison?.group === def.unison.group) { const d = Math.hypot(o.x - b.x, o.z - b.z); if (d < nd) { nd = d; near = b; } }
+        let near = e, nd = Math.hypot(o.x - e.x, o.z - e.z); for (const b of conductors) if (b !== e && b.state !== 'dead' && ENEMIES[b.kind].unison.group === def.unison.group) { const d = Math.hypot(o.x - b.x, o.z - b.z); if (d < nd) { nd = d; near = b; } }
         if (near !== e) continue;                                                                      // a singer is tied to the nearest conductor only (the Preview has several in one map)
         const key = e.id + ':' + o.id; live.add(key); let m = threads.get(key); if (!m) { m = new THREE.Mesh(lineGeo, threadMat); group.add(m); threads.set(key, m); }
         const tip = tips[i++ % tips.length], awake = o.state !== 'idle';

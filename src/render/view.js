@@ -122,7 +122,7 @@ export class GameView {
     this.moteGeo = new THREE.IcosahedronGeometry(0.05, 0); this.moteMat = new THREE.MeshBasicMaterial({ color: 0x7ffff0 }); this.sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff0b0 }); this.emberMat = new THREE.MeshBasicMaterial({ color: 0xff8a2a }); this.frostMat = new THREE.MeshBasicMaterial({ color: 0xbfeaff });          // PT-056: embers off a creature alight, frost off a chilled one       // the Vael's light going out of a body; the spark of a blow
     // PT-022: the rocket's light and smoke, the gravity tool's beam / shock rings / movable props, and what a boom's size does
     this.rocketLight = new THREE.PointLight(0xff9a40, 0, 16, 2); scene.add(this.rocketLight); this.puffGeo = new THREE.IcosahedronGeometry(0.16, 0); this.puffMat = new THREE.MeshBasicMaterial({ color: 0xa8a29a, transparent: true, opacity: 0.55, depthWrite: false }); this.puffs = [];
-    this.woodMat = new THREE.MeshBasicMaterial({ color: 0x8a6a3a }); this.shocks = []; this.shockGeo = new THREE.TorusGeometry(1, 0.03, 4, 28); this.shockMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
+    this.woodMat = new THREE.MeshBasicMaterial({ color: 0x8a6a3a }); this.shocks = []; this.shockFree = []; this.shockGeo =new THREE.TorusGeometry(1, 0.03, 4, 28); this.shockMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
     this.physViews = new Map(); this.tractor = null; this.puntT = 9; this.boomK = 1;
     this.shadows = makeShadows(); this.scene.add(this.shadows.mesh);                                // PT-035: a soft contact shadow under every live creature (shadows.js: one instanced mesh)
     this.shield = null; this.shieldFlash = 0; this.ripples = [];       // the boss's shield is bands of plates (shield.js), and a hit it absorbs sends a ring of sound out
@@ -218,8 +218,8 @@ export class GameView {
 
   /** the punt's shock: a teal ring a little ahead of the eye that opens out and fades (view only) */
   addShock(r0) {
-    const m = new THREE.Mesh(this.shockGeo, this.shockMat.clone()), yaw = this.cam.rotation.y, pitch = this.cam.rotation.x, f = [-Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)];
-    m.position.set(this.cam.position.x + f[0] * 1.6, this.cam.position.y + f[1] * 1.6 - 0.1, this.cam.position.z + f[2] * 1.6); m.rotation.set(pitch, yaw, 0); m.scale.setScalar(r0 * 0.3); this.scene.add(m); this.shocks.push({ m, t: 0 });
+    const m = this.shockFree.pop() ?? new THREE.Mesh(this.shockGeo, this.shockMat.clone()), yaw = this.cam.rotation.y, pitch = this.cam.rotation.x, f = [-Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)];
+    m.position.set(this.cam.position.x + f[0] * 1.6, this.cam.position.y + f[1] * 1.6 - 0.1, this.cam.position.z + f[2] * 1.6); m.rotation.set(pitch, yaw, 0); m.scale.setScalar(r0 * 0.3); m.material.opacity = 0.8; this.scene.add(m); this.shocks.push({ m, t: 0 });          // (FREEZE F12, Gemini 5: a finished shockwave goes back to the pool with its material; a punt used to clone and dispose a material each time)
   }
 
   /** the harpoon's line: a streak from the muzzle (low and to the right, as the gun is held) to where the bolt stopped, and, when it stopped in something solid, the bolt left standing there */
@@ -422,7 +422,7 @@ export class GameView {
     this.updateMortarRing(w);
     this.rocketLight.intensity = rocketLead ? 50 * (0.85 + 0.15 * Math.sin(this.time * 50)) : 0; if (rocketLead) this.rocketLight.position.copy(rocketLead.position);
     for (let i = this.puffs.length - 1; i >= 0; i--) { const pf = this.puffs[i]; pf.t += dt; const k = pf.t / pf.max; if (k >= 1) { this.scene.remove(pf.m); this.puffs.splice(i, 1); } else { pf.m.scale.setScalar(0.5 + 1.8 * k); pf.m.position.y += dt * 0.35; if (k > 0.55) pf.m.scale.multiplyScalar(1 - (k - 0.55) / 0.45); } }
-    for (let i = this.shocks.length - 1; i >= 0; i--) { const sh = this.shocks[i]; sh.t += dt; const k = sh.t / 0.28; if (k >= 1) { this.scene.remove(sh.m); sh.m.material.dispose(); this.shocks.splice(i, 1); } else { sh.m.scale.setScalar(0.3 + 3.2 * k); sh.m.material.opacity = 0.8 * (1 - k); } }
+    for (let i = this.shocks.length - 1; i >= 0; i--) { const sh = this.shocks[i]; sh.t += dt; const k = sh.t / 0.28; if (k >= 1) { this.scene.remove(sh.m); this.shockFree.push(sh.m); this.shocks.splice(i, 1); } else { sh.m.scale.setScalar(0.3 + 3.2 * k); sh.m.material.opacity = 0.8 * (1 - k); } }
     // PT-022: the movable props (drawn one by one: they move) and the tractor beam from the fork to what it holds or drags
     { const live = new Set();
       for (const q of w.phys || []) {
@@ -489,14 +489,15 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     }
     this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
-    const cp = this.cam.position, wp = new THREE.Vector3();
+    const cp = this.cam.position, wp = (this._wp ??= new THREE.Vector3());                                   // (a scratch vector and scratch arrays: nothing is allocated per frame here)
     const lampK = this.look.lamp, hiveBeat = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time) : 0;
     for (const l of this.lvl.lights) {
       const b = l.userData.base * lampK, f = l.userData.flicker; l.getWorldPosition(wp);
       l.intensity = (f === 'pod' ? b * (0.8 + 0.2 * Math.sin(this.time * 2 + wp.x)) : b * (0.93 + 0.05 * Math.sin(this.time * 13 + wp.z) + 0.03 * Math.sin(this.time * 31))) * (1 + 0.45 * hiveBeat);
       l.userData.d = wp.distanceToSquared(cp);
     }
-    const lw = lightWeights(this.lvl.lights.map((l) => l.userData.d), LIGHT_BUDGET, LIGHT_FADE);       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
+    const lamps = this.lvl.lights, d2s = (this._d2s ??= []); d2s.length = lamps.length; for (let i = 0; i < lamps.length; i++) d2s[i] = lamps[i].userData.d;
+    const lw = lightWeights(d2s, LIGHT_BUDGET, LIGHT_FADE, (this._lw ??= {}));       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
     this.lvl.lights.forEach((l, i) => { l.visible = lw.on[i]; l.intensity *= lw.w[i]; });
     // weapon overlay
     this.recoil = Math.max(0, this.recoil - dt * 4.5); this.flashT = Math.max(0, this.flashT - dt);
@@ -553,7 +554,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.burnDisc.dispose(); this.flameGeo.dispose(); this.moteGeo.dispose(); this.moteMat.dispose(); this.emberMat.dispose(); this.frostMat.dispose(); this.sparkMat.dispose();
     this.wardRingMat.dispose(); this.wardDiscMat.dispose();
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
-    this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); this.tractor?.material.dispose();
+    this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); for (const m of this.shockFree) m.material.dispose(); this.tractor?.material.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose(); this.hiveView?.dispose(); this.creatureFx?.dispose();

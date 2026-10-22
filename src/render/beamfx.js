@@ -70,7 +70,7 @@ export function makeBeamView(map, tex = {}) {
 /** The Warden's beam, drawn from `e.sweepLine` (the sim's own traced polyline, so the picture cannot disagree with the hurt): in the tell a thin dim line along the angle it will start from, in the sweep a hot bar with a halo, from the eye
  *  down to the beam's height over the first few metres and then level, through every bounce a mirror gave it. Pooled unit boxes, nothing allocated per frame. */
 export function makeSweepView() {
-  const group = new THREE.Group(), pool = [], unit = new THREE.BoxGeometry(1, 1, 1), V0 = new THREE.Vector3(), V1 = new THREE.Vector3();
+  const group = new THREE.Group(), pool = [], unit = new THREE.BoxGeometry(1, 1, 1), V0 = new THREE.Vector3(), V1 = new THREE.Vector3(), SA = new THREE.Vector3(), SB = new THREE.Vector3(), SM = new THREE.Vector3(), SE = new THREE.Vector3();          // SA..SE: scratch points for a segment (FREEZE F12, Grok 4: the comment above said nothing is allocated per frame, and four vectors a segment were)
   const mats = { core: bas({ color: 0xfff6d8 }), halo: add({ color: 0xffc860, opacity: 0.4 }), outer: add({ color: 0x9ad8ff, opacity: 0.16 }), warn: add({ color: 0xffe9a8, opacity: 0.3 }) };
   const take = (i, mat) => { let m = pool[i]; if (!m) { m = new THREE.Mesh(unit, mat); m.frustumCulled = false; group.add(m); pool[i] = m; } m.material = mat; m.visible = true; return m; };
   const seg = (i, a, b, wd, mat) => { const m = take(i, mat), len = V0.copy(b).sub(a).length(); if (len < 0.01) { m.visible = false; return i + 1; } m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(wd, wd, len); m.lookAt(b); return i + 1; };
@@ -80,11 +80,11 @@ export function makeSweepView() {
       const S = ENEMIES[e.kind]?.sweep; if (!S || (e.sweepT ?? -1) < 0 || !e.sweepLine || e.dead >= 1) continue;
       const pts = e.sweepLine.pts, beam = e.sweepLine.beam, flick = 1 + 0.15 * Math.sin(time * 40), eyeY = (e.y ?? 0) + 3.8;
       for (let i = 0; i + 1 < pts.length; i++) {
-        let a = new THREE.Vector3(pts[i][0], S.beamY, pts[i][1]), b = new THREE.Vector3(pts[i + 1][0], S.beamY, pts[i + 1][1]);
+        let a = SA.set(pts[i][0], S.beamY, pts[i][1]); const b = SB.set(pts[i + 1][0], S.beamY, pts[i + 1][1]);
         if (i === 0) {                                                                                       // out of the eye, then down to the beam's height
-          const dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz) || 1, k = Math.min(1, 6 / L), m = new THREE.Vector3(a.x + dx * k, S.beamY, a.z + dz * k); a = new THREE.Vector3(a.x, eyeY, a.z);
-          if (beam) { n = seg(n, a, m, 0.08 * flick, mats.core); n = seg(n, a, m, 0.28 * flick, mats.halo); }
-          else n = seg(n, a, m, 0.05, mats.warn);
+          const dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz) || 1, k = Math.min(1, 6 / L), m = SM.set(a.x + dx * k, S.beamY, a.z + dz * k), eye = SE.set(a.x, eyeY, a.z);
+          if (beam) { n = seg(n, eye, m, 0.08 * flick, mats.core); n = seg(n, eye, m, 0.28 * flick, mats.halo); }
+          else n = seg(n, eye, m, 0.05, mats.warn);
           a = m;
         }
         if (beam) { n = seg(n, a, b, 0.1 * flick, mats.core); n = seg(n, a, b, S.width * 0.9 * flick, mats.halo); n = seg(n, a, b, S.width * 2.2, mats.outer); }
