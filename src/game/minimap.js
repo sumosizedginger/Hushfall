@@ -4,7 +4,7 @@
 export const MINIMAP = Object.freeze({ every: 6, sizes: { small: { s: 4, r: 18 }, large: { s: 6, r: 18 } } });
 export const MINIMAP_MODES = Object.freeze(['off', 'small', 'large']);
 export const sanitizeMinimap = (v) => (MINIMAP_MODES.includes(v) ? v : 'small');
-const PAL = { bg: 'rgba(9,11,16,0.72)', floor: '#3d5359', outdoor: '#37496f', wall: '#161c21', edge: '#a8bdb8', brass: '#c9a44c', wood: '#8a6a4a', exit: '#ffc070', exitLocked: '#a84030', lever: '#ff5a44', leverDone: '#58ff8a', me: '#3fffe0', ink: '#0d0f14', frame: '#7d6a3c' };
+const PAL = { bg: 'rgba(9,11,16,0.78)', floor: '#587a82', outdoor: '#4a68a6', wall: '#0e1317', edge: '#d4e4df', dots: 'rgba(150,185,180,0.16)', brass: '#c9a44c', wood: '#8a6a4a', exit: '#ffc070', exitLocked: '#a84030', lever: '#ff5a44', leverDone: '#58ff8a', me: '#3fffe0', ink: '#0d0f14', frame: '#7d6a3c' };
 
 /** the part of the model the minimap shows: the explored cells within `r` cells of the player (offsets from the player's cell), the doors, the exits and the levers in the same window, and the player's yaw */
 export function minimapView(model, r) {
@@ -25,6 +25,7 @@ export function drawMinimap(canvas, model, mode = 'small') {
   if (canvas.width !== size || canvas.height !== size) { canvas.width = size; canvas.height = size; }
   const ctx = canvas.getContext('2d'), v = minimapView(model, r), at = new Map(v.cells.map((c) => [c.dx + ',' + c.dz, c.kind]));
   ctx.clearRect(0, 0, size, size); ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = PAL.dots; for (let dz = -r; dz <= r; dz++) for (let dx = -r; dx <= r; dx++) if ((dx + dz * 2) % 4 === 0 && !at.has(dx + ',' + dz)) ctx.fillRect(((dx + r) * s) + (s >> 1), ((dz + r) * s) + (s >> 1), 1, 1);          // FREEZE F3: unexplored ground is a faint dot grid, so a map you have barely seen does not read as a hole
   const X = (dx) => (dx + r) * s, walkable = (k) => k === 'floor' || k === 'outdoor' || k === 'door' || k === 'secret-revealed';
   for (const c of v.cells) { ctx.fillStyle = c.kind === 'wall' ? PAL.wall : c.kind === 'outdoor' ? PAL.outdoor : PAL.floor; ctx.fillRect(X(c.dx), X(c.dz), s, s); }
   ctx.strokeStyle = PAL.edge; ctx.lineWidth = 1; ctx.beginPath();                                       // an edge where explored floor meets a wall: the room's outline

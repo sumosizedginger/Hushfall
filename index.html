@@ -53,18 +53,18 @@ body.wheel-open #cross,body.wheel-open #use-hint{opacity:0}
 #legend-title,#legend-pause{white-space:pre-line}
 button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:var(--teal);color:var(--teal)}
 #charge.on{opacity:1}#charge.fist i{background:var(--bronze)}#charge.full i{background:#fff4c0;box-shadow:0 0 8px #fff4c0}
-#hud{position:fixed;left:0;right:0;bottom:0;display:flex;gap:18px;align-items:flex-end;padding:10px 18px;pointer-events:none;background:linear-gradient(0deg,#07080ccc,transparent)}
+#hud{position:fixed;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:flex-end;padding:10px 18px;pointer-events:none;background:linear-gradient(0deg,#07080ccc,transparent)}          /* FREEZE F2: with everything on (lantern, noise tell, a load, ten guns, three keys, the log badge) the HUD ran off the right edge of a 1280 or 1366 wide window; it wraps now (tools/dev/probe-hud.mjs) */
 #hud .stat{display:flex;flex-direction:column;align-items:flex-start;min-width:76px}
-#hud .stat b{font-size:30px;line-height:1;color:var(--paper);text-shadow:2px 2px 0 var(--ink)}
-#hud .stat small{letter-spacing:.18em;font-size:10px;color:var(--bronze)}
+#hud .stat b{font-size:clamp(30px,3.2vh,40px);line-height:1;color:var(--paper);text-shadow:2px 2px 0 var(--ink)}
+#hud .stat small{letter-spacing:.18em;font-size:clamp(10px,1.2vh,14px);color:var(--bronze);text-shadow:1px 0 0 var(--ink),-1px 0 0 var(--ink),0 1px 0 var(--ink),0 -1px 0 var(--ink)}          /* the small print grows with the window's height (10 px at 720 p, 13 px at 1080 p) and has a dark outline: the held lantern's bright body sits behind the labels in the dark maps (the HUD probe's 1920 frame) */
 #hud .stat.low b{color:var(--red)}
 #hud .stat.loud b{color:#ff9a5a}#hud #hud-noise b{font-size:20px;letter-spacing:.06em;line-height:1.5}
 #hud .stat.lit b{color:#ffd488;text-shadow:0 0 10px #d98a2a,2px 2px 0 var(--ink)}
-#hud-weapons{display:flex;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:2px 7px;font-size:11px;letter-spacing:.08em;color:#9fb4b0;background:#0d0f14b0}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}
+#hud-weapons{display:flex;flex-wrap:wrap;max-width:100%;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:2px 7px;font-size:clamp(11px,1.3vh,15px);letter-spacing:.08em;color:#9fb4b0;background:#0d0f14b0}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}
 #hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
-#hud .grow{flex:1}#hud .side{font-size:11px;color:#9fb4b0;text-align:right}
+#hud .grow{flex:1}#hud .side{font-size:clamp(11px,1.25vh,15px);color:#9fb4b0;text-align:right;text-shadow:1px 1px 0 var(--ink)}
 #toasts{position:fixed;right:16px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}        /* PT-047 V2: top right (it used to sit in the middle of the picture); the minimap of workstream U will go above it */
-#minimap{position:fixed;right:16px;top:14px;width:auto;height:auto;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:180px}body[data-minimap=large] #toasts{top:258px}      /* PT-052 U4: the corner map; the toast column moves under it */
+#minimap{position:fixed;right:16px;top:14px;width:clamp(148px,16.5vh,240px);height:auto;aspect-ratio:1;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=large] #minimap{width:clamp(222px,24vh,340px)}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:calc(clamp(148px,16.5vh,240px) + 32px)}body[data-minimap=large] #toasts{top:calc(clamp(222px,24vh,340px) + 36px)}          /* FREEZE F3: the corner map grows with the window's height (it was 148 px in every window) and the toast column keeps clear of it */      /* PT-052 U4: the corner map; the toast column moves under it */
 #toasts div{background:#0d0f14e0;border:1px solid var(--slate);padding:4px 14px;text-shadow:1px 1px 0 #000;max-width:min(360px,44vw)}
 #comms{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);width:min(640px,92vw);background:#0d0f14ec;border:1px solid var(--slate);border-left:3px solid var(--teal);padding:8px 14px;pointer-events:none;z-index:3;text-shadow:1px 1px 0 #000}
 #comms b{display:block;color:var(--teal);letter-spacing:.18em;font-size:11px;margin-bottom:2px}#comms span{color:var(--paper)}
