@@ -28,6 +28,14 @@ for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
 }
 // a ramp strip must meet the ring at its foot at the right height: clamp
 for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) { if ('ΑΗΒ'.includes(L.g[z][x])) L.ht[z][x] = Math.max(0, Math.min(20, L.ht[z][x])); }
+// ---- FREEZE F7 (design/MECHANICS_RETURNING.md: the cars return, combined with the ring that is a wall): a flat car, the SKIFF, crosses the pit at the top ring's height between a gap in the rim wall on the east and one on the west, ten seconds at each end.
+// The exit is on the west of the top ring and the last valve on the east of it: the skiff is the short way over, past the ring's creatures, with the pit (fifteen to fall) under it. Optional: the main and secret routes do not use it; a third route (`car`) does.
+// A dock is every rim-wall cell inside the skiff's footprint at its stop, made top-ring floor (the rim is stair-stepped, so by rule and not by cell) ----
+// the dock row is the south side of the pit, away from the Resonant that stands by the last valve (a dock on the north side moved a Hard seed)
+const SKZ = 52;
+for (const [x0, x1] of [[42, 46], [53, 57]]) for (let z = SKZ - 1; z <= SKZ + 1; z++) for (let x = x0; x <= x1; x++) if (L.g[z][x] === INNER) setCell(L, x, z, TOP, 20);
+const SKIFF = { id: 'skiff', size: [3, 3], path: [[44.5, SKZ + 0.5, 10], [55.5, SKZ + 0.5, 10]], stops: [0, 1], speed: 6, dwell: 10, phase: 0 };
+// ---- end F7 docks ----
 const polar = (r, a) => [Math.floor(C + r * Math.cos(a * Math.PI / 180)), Math.floor(C + r * Math.sin(a * Math.PI / 180))];
 // ---- piers of stone on the rings: cover -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const piers = [];
@@ -99,7 +107,7 @@ const MAP = {
   objective: 'Climb the rings: three coolant valves, one on each ring, beside the Resonants. The exit on the top ring opens when all three are turned',
   ...L.layers(),
   secrets: [{ id: 'hatch', panel: SEC.panel, cells: SEC.cells }],
-  groups: [], pulses, belts,
+  groups: [], pulses, belts, cars: [SKIFF],
   entities: [...P.ents,
     valve('v1', V1, 'Valve 1 turned. The middle ring is up the ramps at the corners'), valve('v2', V2, 'Valve 2 turned. The top ring is up the ramps at the compass points'), valve('v3', V3, 'Valve 3 turned. The exit on the top ring is open'),
     { type: 'exit', at: EXIT, dest: 'next', locked: true }],
@@ -110,6 +118,7 @@ const MAP = {
     { id: 'belt', at: [8, 38], radius: 5, speaker: 'HULL', text: 'The floor of this stretch is a belt. It carries north, stops, carries south, stops. The steam jet at its foot is where south ends.' },
     { id: 'resonant', at: [30, 30], radius: 7, speaker: 'INES', text: 'Three of them fused at the hip and grown into one body with a skirt of small bells round the waist. The bells ring when something else is near it. Alone, it\'s slow.' },
     { id: 'ring', at: [C - 20, C - 25], radius: 6, speaker: 'HULL', text: 'Its ring comes out of the waist on the beat. A pier of stone stops it, and so does a catwalk above or below it. Keep it away from the others.' },
+    { id: 'skiff', at: [58, 48], radius: 6, speaker: 'INES', text: 'A flat car stands at a gap in the top ring\'s wall and crosses the pit to the gap on the far side. It waits ten seconds at each end.' },
     { id: 'log', at: [41, 48], radius: 5, speaker: 'FOREMAN LOG', text: 'FUSED THIS WEEK: 9. Each of the nine was three singers, and the Hive counts them as three. A ring of nine bells is cheaper than twenty-seven voices.' },
     { id: 'ramps', at: [12, 31], radius: 6, speaker: 'HULL', text: 'The ramps to the middle ring are at the corners, the ramps to the top at the points of the compass. You cannot go straight up.' },
     { id: 'v1', at: [1, 1], radius: 0.1, speaker: 'HULL', text: 'The first wheel is turned. The pipe beside it goes quiet and the steam on this ring is a shade lower.' },
@@ -132,7 +141,9 @@ MAP.drops = { scale: 1, keep: [] };
 console.log('C2M21: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'valves', V1, V2, V3, 'exit', EXIT, 'panel', SEC.panel, 'cache', CACHE.length, 'pulses', pulses.length, 'piers', piers.length);
 const Q = (r, a) => at(r, a);
 const route = [[6, 50, 0], Q(44, 190), { op: 'switch', id: 'v1' }, Q(44, 205), Q(44, 215), Q(44, 225), Q(36, 225), Q(27, 225), Q(27, 240), Q(27, 255), Q(27, 270), { op: 'switch', id: 'v2' }, Q(27, 270), Q(20, 270), Q(13.5, 270), Q(10.5, 285), Q(10.5, 300), { op: 'switch', id: 'v3' }, Q(10.5, 270), Q(10.5, 240), Q(10.5, 215), [EXIT[0] + 1, EXIT[1], 0], [EXIT[0], EXIT[1], 0]];
-export const waypoints = { main: route, secret: route.slice(0, 11).concat([[SEC.front[0], SEC.front[1]], { op: 'use', at: SEC.panel }, [CACHE[1][0], CACHE[1][1], 0], [SEC.front[0], SEC.front[1], 0]], route.slice(11)) };
+const iv3 = route.findIndex((o) => o && o.op === 'switch' && o.id === 'v3');          // the car route: the main route to the third valve, then the skiff from the east gap to the west gap, then the exit
+const carRoute = route.slice(0, iv3 + 1).concat([[58, SKZ, 0], { op: 'ride', id: 'skiff', board: [57, SKZ], from: 1, to: 0, exit: [42, SKZ] }, [EXIT[0] + 1, EXIT[1], 0], [EXIT[0], EXIT[1], 0]]);
+export const waypoints = { car: carRoute, main: route, secret: route.slice(0, 11).concat([[SEC.front[0], SEC.front[1]], { op: 'use', at: SEC.panel }, [CACHE[1][0], CACHE[1][1], 0], [SEC.front[0], SEC.front[1], 0]], route.slice(11)) };
 // ---- PT-057 (R9, weapon mods): the mortar airburst, in an alcove of the foundry, off the road ----
 MAP.entities ??= [];
 MAP.entities.push(...[["mod_airburst",52,16]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
