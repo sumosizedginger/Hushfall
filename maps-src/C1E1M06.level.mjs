@@ -114,6 +114,14 @@ MAP.quality.introduces += "; also found here: the Harbour carbine, on a harbour 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
 
+// ---- FREEZE F7 (design/MECHANICS_RETURNING.md: the tide returns, combined with the quay): the south strip of the quay is under the harbour's own tide. Dry for 40 s, the water comes up over 12 s to the knee, stays for 20 s and drains over 12 s
+// (a loop of 90 s, a pure function of the clock: tide.js). Anyone in the strip wades while it is wet (a creature too), so the cache there is cheap at low tide and a slow, exposed fetch at high tide. The loading lane (z 22 to 26, where the Warden
+// charges) and every route are well north of it: no route, no sight line and no fight is touched. A pickup is a minor reward, appended after every other entity so no id shifts ----
+MAP.tide = { levels: [[0, -2], [40, -2], [52, 0.5], [72, 0.5], [84, -2]], loop: 90, rect: [28, 37, 53, 39] };
+MAP.entities.push(...[['health_large', 41, 38], ['armor_vest', 47, 38]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
+(MAP.messages ??= []).push({ id: 'tide', at: [41, 28], radius: 6, speaker: 'INES', text: 'Past the pillars the south quay is dry, and under water in a minute: the tide here still turns. Somebody chalked the hours on the shed.' });
+// ---- end F7 tide ----
+
 // ---- PT-052 R2: what the kit built (the secret, its message and its hint) joins the map ----
 E.apply(MAP);
 

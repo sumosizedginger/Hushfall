@@ -1171,6 +1171,16 @@
    "type": "pickup",
    "kind": "weapon_carbine",
    "at": [28, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [41, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [47, 38]
   }
  ],
  "par": {
@@ -1228,6 +1238,13 @@
    "text": "A harbour guard's carbine on the rack, a clip in it. No spread to it: put the round where the head is."
   },
   {
+   "id": "tide",
+   "at": [41, 28],
+   "radius": 6,
+   "speaker": "INES",
+   "text": "Past the pillars the south quay is dry, and under water in a minute: the tide here still turns. Somebody chalked the hours on the shed."
+  },
+  {
    "id": "porters-cage",
    "at": [25, 36],
    "radius": 2,
@@ -1273,6 +1290,22 @@
    "size": 1
   }
  ],
+ "tide": {
+  "levels": [
+   [0, -2],
+   [40, -2],
+   [52, 0.5],
+   [72, 0.5],
+   [84, -2]
+  ],
+  "loop": 90,
+  "rect": [
+   28,
+   37,
+   53,
+   39
+  ]
+ },
  "objective": "Cross the terminal. The winch is in the cabin on the north quay",
  "entryLoadout": {
   "hp": 100,
