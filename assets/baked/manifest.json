@@ -1356,6 +1356,22 @@
       "transparent": true,
       "sha256": "e6214b81a83d9cf6dd9470ab837373b8eec6aa83bb34ea76d6a9d5e5c429397d",
       "bytes": 39579
+    },
+    "ui_ending_coast": {
+      "seed": 9101,
+      "width": 320,
+      "height": 200,
+      "transparent": false,
+      "sha256": "7b910491f3fbc6f35e88bff593a1e97d1895ce6cb1d0f42078891a3a3995c531",
+      "bytes": 58837
+    },
+    "ui_ending_lamp_dark": {
+      "seed": 9102,
+      "width": 320,
+      "height": 200,
+      "transparent": false,
+      "sha256": "cb0529aeb56e7a6c995e25685a9aa9827ac150da4f7ed575b9c1fb810b7ef827",
+      "bytes": 35508
     }
   }
 }

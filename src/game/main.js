@@ -1,6 +1,6 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
 import * as THREE from 'three';
-import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url, coldTowerUrl } from '../render/textures.js';
+import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url, coldTowerUrl, endingCoastUrl, endingLampDarkUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
@@ -68,6 +68,7 @@ renderer.setPixelRatio(1); renderer.autoClear = false;
 canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode = 'title'; document.exitPointerLock?.(); fatal('The graphics context was lost (a GPU reset or driver hiccup). Reload the page to continue: a quick save is not affected.'); });
 const tex = await loadAll().catch((err) => { fatal('Could not load the painted textures: ' + err.message); throw err; });
 document.getElementById('title-art').src = titleArtUrl(); document.getElementById('ending-art').src = endingArtUrl();
+for (const u of [endingCoastUrl(), endingLampDarkUrl(), endingArt2Url(), coldTowerUrl()]) if (u) new Image().src = u;          // FREEZE F9: the plates an epilogue changes to are fetched now, so a card never waits for its picture
 
 const FIRST_MAP = 'C1E1M01';                                    // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = {
@@ -247,7 +248,7 @@ function startEpilogue(ending) {
 function syncEpilogue() {
   const e = g.ending; if (!e) return;
   const v = viewSequence(e.seq, e.def.cards);
-  { const key = (!v.tally && e.def.cards[v.index]?.art) || e.def.art || (e.def.campaign === 2 ? 'ending2' : 'ending1'); if (key !== g.artKey) { g.artKey = key; document.getElementById('ending-art').src = key === 'tower' ? coldTowerUrl() : key === 'title' ? titleArtUrl() : key === 'ending2' ? endingArt2Url() : endingArtUrl(); } }          // PT-063: the picture behind the card
+  { const key = (!v.tally && e.def.cards[v.index]?.art) || e.def.art || (e.def.campaign === 2 ? 'ending2' : 'ending1'); if (key !== g.artKey) { g.artKey = key; document.getElementById('ending-art').src = key === 'tower' ? coldTowerUrl() : key === 'title' ? titleArtUrl() : key === 'ending2' ? endingArt2Url() : key === 'coast' ? endingCoastUrl() : key === 'lampdark' ? endingLampDarkUrl() : endingArtUrl(); } }          // PT-063: the picture behind the card
   if (v.tally && e.def.coldOpen) { finishColdOpen(); return; }                                                                                   // PT-063: the cold open has no tally: on to the level, or back to the title for a replay
   if (v.tally && e.def.dev) { g.ending = null; quitToTitle(); return; }                              // PT-043: a dev map's draft epilogue ends at the title, with no tally of a campaign nobody finished
   if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def); } } else ui.endingView(v);
