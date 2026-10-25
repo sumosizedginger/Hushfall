@@ -8,12 +8,12 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 
 ## Tier 1: what a player sees or plays
 
-- [ ] F1 The Journal's tabs turn with the shoulder buttons on a pad
-- [ ] F2 The HUD at narrow widths: the lantern's oil count and the ten-weapon strip; the small labels at 1080p
-- [ ] F3 The corner map reads at a glance (it is a dark box in every frame)
-- [ ] F4 Two things in frames: a white slab on the Hollow Stair, a crate through the bottom of the view on C2M14 (find the cause, fix it or say why not)
-- [ ] F5 A void-fall recovery re-checks the landing cell
-- [ ] F6 The arrival card and the tally escape what they write as HTML
+- [x] F1 The Journal's tabs turn with the shoulder buttons on a pad (eb3f6ef)
+- [x] F2 The HUD at narrow widths: the lantern's oil count and the ten-weapon strip; the small labels at 1080p (b5bda73: found and fixed with tools/dev/probe-hud.mjs, clean at seven window sizes)
+- [x] F3 The corner map reads at a glance (it is a dark box in every frame) (b5bda73)
+- [x] F4 Two things in frames: a white slab on the Hollow Stair, a crate through the bottom of the view on C2M14 (find the cause, fix it or say why not) (b5bda73: both are by design, said so with the cause)
+- [x] F5 A void-fall recovery re-checks the landing cell (83bdeeb)
+- [x] F6 The arrival card and the tally escape what they write as HTML (0ff5ac6)
 - [x] F7 The five mechanics that appear in one map return once: tide, cars, timing platforms, airlocks, vacuum
 - [ ] F8 The heavy ammunition box (specified, placed in caches and secrets)
 - [ ] F9 Painted plates for the story scenes and the epilogues, and scene stings
@@ -22,10 +22,10 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 
 ## Tier 2: robustness (invisible to a player; each behaviour-identical and proved)
 
-- [ ] F12 Per-frame allocations (lamp budget, the Warden's beam, the Hive Cantor's threads), the per-punt material clone, the oscillator's upper frequency bound
-- [ ] F13 The collision broadphase (the 81-creature stand's worst step), proved identical by the route fingerprints
-- [ ] F14 The evidence hash covers the verification tools
-- [ ] F15 `npm test` runs a smoke sample of the floor-truth test; the full sweep is in `npm run verify`
+- [x] F12 Per-frame allocations (lamp budget, the Warden's beam, the Hive Cantor's threads), the per-punt material clone, the oscillator's upper frequency bound (9b3bb47; the oscillator bound needed nothing: the saw tops out at 3.1 kHz)
+- [x] F13 The collision broadphase (the 81-creature stand's worst step), proved identical by the route fingerprints (measured 2026-10-25 and declined: the 81-creature stand costs a mean of 0.165 ms, a 99th percentile of 0.64 ms and a worst step of 5.0 ms against 16.7 ms a tick (tools/dev/sim-cost.mjs --difficulty=hard C2M28), the bot's own thinking included; a broadphase would be a change to collision that buys nothing a player can feel)
+- [x] F14 The evidence hash covers the verification tools (d077378)
+- [x] F15 `npm test` runs a smoke sample of the floor-truth test; the full sweep is in `npm run verify` (cc883f0)
 
 ## Tier 3: for the store
 
