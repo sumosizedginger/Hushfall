@@ -48,9 +48,9 @@
   "JJJJJJ4444444444444JJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
   "JJJJJJ4444444444444JJJJJJJJJJ4444444444JJJJJJJJJJ4444444444JJJJJJJJJJJJJ",
   "JJJJJJJ44444444444JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJDJJJJJJJJJJJJJJJJJJJ",
-  "JJJJJJJJJ4444444JJJJJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
-  "JJJJJJJJJJJJ4JJJJJJJJJJJJJJJJ4444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
-  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ44444444444JJJJJJJJ44444444444444JJJJJJJJJJ",
+  "JJJJJJJJJ4444444JJJJJJJJJJJ444444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJ4JJJJJJJJJJJJJJ444444444444JJJJJJJJJJ4444444444444JJJJJJJJJJ",
+  "JJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444444444JJJJJJJJ44444444444444JJJJJJJJJJ",
   "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444444444444JJJJJJ444444444444444JJJJJJJJJJ",
   "JJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
   "JJJJJJJJJ444444444JJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
@@ -120,9 +120,9 @@
   "....................................122..........221.......444..........",
   "....................................122..........221....................",
   "....................................122..........221....................",
-  "....................................122..........221.......444..........",
-  "....................................122..........221.......444..........",
-  ".....................................122........221........444..........",
+  "...........................44.......122..........221.......444..........",
+  "...........................44.......122..........221.......444..........",
+  "...........................44........122........221........444..........",
   ".....................................1222......2221........444..........",
   "......................................122222222221........444...........",
   ".......................................1122222211.........444...........",
@@ -192,9 +192,9 @@
   ".............................ghijkklmno..........onmlkkjihggfe..........",
   ".............................hhijkllmno..........onmllkjihh.............",
   ".............................hhijkllmno..........onmllkjihh.............",
-  ".............................ghijkklmno..........onmlkkjihggfe..........",
-  ".............................ghijkklmnn..........nnmlkkjihggfe..........",
-  ".............................ghijjklmmno........onmmlkjjihgffe..........",
+  "...........................ggghijkklmno..........onmlkkjihggfe..........",
+  "...........................ggghijkklmnn..........nnmlkkjihggfe..........",
+  "...........................ggghijjklmmno........onmmlkjjihgffe..........",
   ".............................ghiijkklmmno......onmmlkkjiihgfee..........",
   "..............................ghijjkllmmnnoooonnmmllkjjihggfe...........",
   "..............................ghiijkkllmmnnnnnnmmllkkjiihgffe...........",
@@ -268,6 +268,30 @@
  "closets": [
   {
    "at": [38, 54]
+  }
+ ],
+ "sectors": [
+  {
+   "id": "lift",
+   "cells": [
+    [29, 37],
+    [30, 37],
+    [31, 37],
+    [29, 38],
+    [30, 38],
+    [31, 38],
+    [29, 39],
+    [30, 39],
+    [31, 39]
+   ],
+   "low": 0,
+   "high": 2,
+   "speed": 2,
+   "cycle": {
+    "period": 14,
+    "hold": 8,
+    "phase": 0
+   }
   }
  ],
  "triggers": [
@@ -807,6 +831,16 @@
    "at": [38, 62],
    "dest": "secret",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [27, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [27, 39]
   }
  ],
  "par": {
@@ -876,6 +910,13 @@
    "radius": 3,
    "speaker": "HULL",
    "text": "The wall at the end of the niche is not a wall."
+  },
+  {
+   "id": "lift",
+   "at": [32, 41],
+   "radius": 4.5,
+   "speaker": "HULL",
+   "text": "A plinth in the west wall rises to a ledge, holds, and sinks again on a count of fourteen. Something is kept on the ledge."
   }
  ],
  "objective": "The antechamber: turn the mirror so the light reaches the receiver. It opens the way into the array",

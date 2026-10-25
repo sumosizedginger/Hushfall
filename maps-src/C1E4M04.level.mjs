@@ -88,6 +88,13 @@ ENC.dropIn({ at: [35,30], radius: 2, cells: ENC.around([35,30], { n: 3, min: 6, 
 ENC.dropIn({ at: [52,36], radius: 2, cells: ENC.around([52,36], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- FREEZE F7 (design/MECHANICS_RETURNING.md: the timing platform returns, combined with a cache): a hoist plinth in the south-west chamber's west wall rises to a ledge two metres up, holds for eight seconds and sinks, on a clock of fourteen.
+// The ledge is a pocket cut into the solid wall of the drum (a ring of wall round it, so it opens onto nothing else) and the plinth is nine cells of the chamber's floor, none of them on the traffic of the routes. Optional: the main and secret routes do not use it, a third route (`plat`) does ----
+const LEDGE = [[27, 37], [28, 37], [27, 38], [28, 38], [27, 39], [28, 39]], LIFT_CELLS = []; for (let z = 37; z <= 39; z++) for (let x = 29; x <= 31; x++) LIFT_CELLS.push([x, z]);
+for (const [x, z] of LEDGE) { L.g[z][x] = '4'; L.ht[z][x] = 4; L.ce[z][x] = L.ce[z][29]; }
+const LIFT = { id: 'lift', cells: LIFT_CELLS, low: 0, high: 2, speed: 2, cycle: { period: 14, hold: 8, phase: 0 } };
+// ---- end F7 ----
+
 const MAP = {
   id: 'C1E4M04', name: 'Mirror Array', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#10081c', fogDensity: 0.009, sky: 'orbit', look: 'mirror' },
@@ -96,6 +103,7 @@ const MAP = {
   outro: 'The array lets the light through. Somewhere ahead a ring is being made ready.',
   objective: 'The antechamber: turn the mirror so the light reaches the receiver. It opens the way into the array',
   ...L.layers(),
+  sectors: [LIFT],
   secrets: [{ id: 'niche', panel: [12, 25], cells: [[11, 24], [12, 24], [13, 24], [11, 23], [12, 23], [13, 23], [11, 22], [12, 22], [13, 22]] }],
   entities: [...ents, { type: 'exit', at: [11, 46], dest: 'next' }, { type: 'exit', id: 'secret', at: [38, 62], dest: 'secret', locked: true }],
   messages: [
@@ -107,6 +115,7 @@ const MAP = {
     { id: 'se', at: [50, 42], radius: 3, speaker: "HULL", text: 'The corner mirror throws the light two ways: into a receiver, or on along the square. You will want both, one after the other.' },
     { id: 'sw', at: [38, 44], radius: 3, speaker: 'INES', text: 'Two receivers on the last mirror. One opens the exit. The other, on the far side, opens something that wasn\'t meant to be found.' },
     { id: 'secret', at: [38, 52], radius: 3, speaker: 'HULL', text: 'The wall at the end of the niche is not a wall.' },
+    { id: 'lift', at: [32, 41], radius: 4.5, speaker: 'HULL', text: 'A plinth in the west wall rises to a ledge, holds, and sinks again on a count of fourteen. Something is kept on the ledge.' },
   ],
   triggers: [
     { id: 'door-in', when: 'lit:r0', do: [{ open: [25, 32] }, { objective: 'The array: light each receiver in turn, then send the light on' }, { message: 'opened' }] },
@@ -121,6 +130,7 @@ const MAP = {
     introduces: 'the beam tracer: one-sided mirrors you turn with Use, an emitter, receivers that open the screen doors for good: the first real puzzle of the game' },
 };
 MAP.drops = { scale: 1, keep: [[14, 32, 17, 36]] };
+MAP.entities.push(...[['health_large', 27, 37], ['armor_vest', 27, 39]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));          // F7: the ledge's cache, appended after every other entity (no id shifts)
 console.log('C1E4M04: enemies', ents.filter((e) => e.type === 'enemy').length);
 // ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
 MAP.roster = { id: 'C1E4M04', lane: [...(laneOf('C1E4M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1}] };
