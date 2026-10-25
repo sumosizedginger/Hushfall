@@ -48,7 +48,7 @@ import { inVacuum } from '../engine/airlock.js';
 // The ten creatures (look redesign L1, design/LOOK_BIBLE.md): models_choir.js, each in its own baked atlas `choir_<kind>`. The Tollbearer's graft GROWS with the episode: an early graft (a small bell) in Episode 1, the great bell from Episode 2 on (render only; the hit volume is the same at both stages, tests/hit-volume-fair.test.js checks both).
 const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, (tex, map) => CHOIR[kind](tex[choirAtlasName(kind)], { stage: graftStage(map) })]));
 
-const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
+const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3, FX_LIGHTS = 4;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
 const freeRig = (root) => root.traverse((o) => { if (o.isMesh) o.geometry?.dispose(); });         // (geometry only: a rig's materials are cached and shared by its kind)
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
@@ -130,6 +130,14 @@ export class GameView {
   }
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
   setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w))); }
+  /** FREEZE F11 (the quality governor's second rung, game/quality.js): 0 = everything; 1 hides the creatures' contact shadows and the marks on the floors; 2 also lights only the nearest FX_LIGHTS lamps (a one-time shader recompile, then a shorter light loop).
+   *  Render only: nothing here is read by the simulation. */
+  setEffects(level = 0) {
+    this.fxLevel = level;
+    if (this.shadows) this.shadows.mesh.visible = level < 1;
+    if (this.floorMarks) this.floorMarks.mesh.visible = level < 1;
+    this.lightBudget = level >= 2 ? FX_LIGHTS : LIGHT_BUDGET;
+  }
   setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false }) {
     this.comfort = reducedMotion ? { shake: 0, hurt: 0.35, muzzle: 0.4 } : { shake: 1, hurt: 1, muzzle: 1 };                      // PT-071 R20: no camera shake, a gentler hurt flash and muzzle light (render only: the sim is untouched)
     this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.brightness = brightness; this.post.uniforms.uExposure.value = 2.2 * brightness * (this.exposureK ?? 1);       // the player's brightness setting times the place's exposure
@@ -497,7 +505,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
       l.userData.d = wp.distanceToSquared(cp);
     }
     const lamps = this.lvl.lights, d2s = (this._d2s ??= []); d2s.length = lamps.length; for (let i = 0; i < lamps.length; i++) d2s[i] = lamps[i].userData.d;
-    const lw = lightWeights(d2s, LIGHT_BUDGET, LIGHT_FADE, (this._lw ??= {}));       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
+    const lw = lightWeights(d2s, this.lightBudget ?? LIGHT_BUDGET, LIGHT_FADE, (this._lw ??= {}));       // the nearest LIGHT_BUDGET are on; the last of them fades out as the first one left out comes level with it (lightbudget.js)
     this.lvl.lights.forEach((l, i) => { l.visible = lw.on[i]; l.intensity *= lw.w[i]; });
     // weapon overlay
     this.recoil = Math.max(0, this.recoil - dt * 4.5); this.flashT = Math.max(0, this.flashT - dt);

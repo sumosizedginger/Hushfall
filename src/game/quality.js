@@ -6,12 +6,18 @@
 // bursts of 33 ms from the simulation (a creature wave waking); the first version, with the 95th, stepped down twice for bursts that a smaller picture does not cure and, because `fastMs` was 14 ms (below one 60 Hz frame), never stepped back up.
 import { RESOLUTIONS } from './settings.js';
 
-export const QUALITY = { pct: 0.6, slowMs: 22, fastMs: 18.5, window: 240, minSamples: 150, every: 30, downCooldown: 3, upAfter: 30, maxBackoff: 8, maxRungsBelow: 2, ignoreOverMs: 250 };
+export const QUALITY = { pct: 0.6, slowMs: 22, fastMs: 18.5, window: 240, minSamples: 150, every: 30, downCooldown: 3, upAfter: 30, maxBackoff: 8, maxRungsBelow: 2, ignoreOverMs: 250, maxFx: 2 };
+// FREEZE F11, the second rung: when the width is already as low as the governor lets it go and the typical frame is still slow, the EFFECTS step down instead, one level at a time (the view's `setEffects`): 1 hides the creatures' contact shadows and the marks on the floors,
+// 2 also lights fewer lamps (the nearest FX_LIGHTS: the shader loops over fewer lights). They come back before the width does, each after the same quiet wait and with the same backoff when a level fails again. Nothing here touches the simulation.
 
 export class QualityGovernor {
   constructor(base = 480, opts = {}) { this.o = { ...QUALITY, ...opts }; this.reset(base); }
   /** the player's chosen width (or a new one): start again from it */
-  reset(base) { const i = RESOLUTIONS.indexOf(base); this.base = i >= 0 ? i : RESOLUTIONS.indexOf(480); this.rung = this.base; this.fails = {}; this.samples = []; this.since = 0; this.quiet = 0; this.n = 0; this.level = 0; }
+  reset(base) { const i = RESOLUTIONS.indexOf(base); this.base = i >= 0 ? i : RESOLUTIONS.indexOf(480); this.rung = this.base; this.fails = {}; this.samples = []; this.since = 0; this.quiet = 0; this.n = 0; this.level = 0; this.fx = 0; this.fxFails = {}; this.fxEvent = null; }
+  /** the effects level the view should wear now (0 = everything) */
+  get effects() { return this.fx; }
+  /** the effects level if it changed since the last call, else null (the shell hands it to the view) */
+  takeFx() { const f = this.fxEvent; this.fxEvent = null; return f; }
   get width() { return RESOLUTIONS[this.rung]; }
   /** after a map change or a long pause the old samples say nothing about the new picture */
   forget() { this.samples = []; this.n = 0; this.quiet = 0; }
@@ -24,9 +30,17 @@ export class QualityGovernor {
     if (this.level >= o.fastMs) this.quiet = 0;                                       // the stretch of frames at the display's own rate is broken
     const floor = Math.max(0, this.base - o.maxRungsBelow);
     if (this.level > o.slowMs && this.rung > floor && this.since >= o.downCooldown) { this.fails[this.rung] = (this.fails[this.rung] ?? 0) + 1; return this.move(-1); }
+    if (this.level > o.slowMs && this.rung <= floor && this.fx < o.maxFx && this.since >= o.downCooldown) { this.fx++; this.fxFails[this.fx] = (this.fxFails[this.fx] ?? 0) + 1; return this.moveFx(); }
+    if (this.fx > 0) {                                                                    // the effects come back before the width does
+      const fwait = o.upAfter * Math.min(o.maxBackoff, 2 ** (this.fxFails[this.fx] ?? 0) / 2);
+      if (this.level < o.fastMs && this.quiet >= fwait && this.since >= fwait) { this.fx--; return this.moveFx(); }
+      return null;
+    }
     const wait = o.upAfter * Math.min(o.maxBackoff, 2 ** (this.fails[this.rung + 1] ?? 0) / 2);        // the first failure of the rung above asks for upAfter, the next for twice that, and so on
     if (this.level < o.fastMs && this.quiet >= wait && this.rung < this.base && this.since >= wait) return this.move(1);
     return null;
   }
   move(d) { this.rung += d; this.since = 0; this.quiet = 0; this.samples = []; this.n = 0; return this.width; }
+  /** the effects level changed: note it for the shell and start the samples again; returns null (the width did not change) */
+  moveFx() { this.fxEvent = this.fx; this.since = 0; this.quiet = 0; this.samples = []; this.n = 0; return null; }
 }

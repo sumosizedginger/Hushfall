@@ -105,7 +105,7 @@ const ui = new UI({
   playlogClear: () => { clearLog(storage); g.playlog = loadLog(storage); logMeta(); ui.playlogNote('Cleared. ' + describe(g.playlog)); },
   surveyAnswer: (k, v) => { g.survey ??= { answers: {}, note: '' }; g.survey.answers[k] = v; commitSurvey(); ui.survey(true, g.survey.answers, g.survey.note); },
   surveyNote: (t) => { g.survey ??= { answers: {}, note: '' }; g.survey.note = t; commitSurvey(); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); } if (k === 'autoQuality') resize(); if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'playLog') { if (v) logMeta(); ui.playlogNote(describe(g.playlog)); } if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); g.view?.setEffects(0); } if (k === 'autoQuality') { resize(); g.view?.setEffects(v !== false ? g.governor.effects : 0); } if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'playLog') { if (v) logMeta(); ui.playlogNote(describe(g.playlog)); } if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -181,7 +181,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
   g.mapId = g.world.mapId; if (!world) g.progress = attemptReset(g.progress, g.mapId); g.difficulty = g.world.difficulty; g.seed = g.world.seed; g.objectives = g.world.objective ? [g.world.objective] : []; g.miniModel = null;
-  g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings);
+  g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings); g.view.setEffects(settings.autoQuality !== false ? g.governor.effects : 0);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
   let saveNote = '';
@@ -501,7 +501,7 @@ function quarantineLoaded() {
 function frameBody(now) {
   const raw = (now - g.last) / 1000, dt = Math.min(0.1, raw); g.last = now;                  // dt is clamped for the simulation's sake; the RECORDED frame time is not (a hitch must be visible in the stats)
   g.frameTimes.push(raw * 1000); if (g.frameTimes.length > 900) g.frameTimes.shift(); if (g.mode === 'playing') g.hist.add(raw * 1000);
-  if (g.mode === 'playing' && g.view && settings.autoQuality !== false) { if (g.governor.sample(raw * 1000, raw)) resize(); } else g.governor.forget();                    // PT-071 R21: only frames of real play count
+  if (g.mode === 'playing' && g.view && settings.autoQuality !== false) { if (g.governor.sample(raw * 1000, raw)) resize(); const fx = g.governor.takeFx(); if (fx != null) g.view.setEffects(fx); } else g.governor.forget();                    // PT-071 R21: only frames of real play count
   pollPad(dt);
   let alpha = 0;
   if (g.mode === 'playing') {
