@@ -15,10 +15,10 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 - [x] F5 A void-fall recovery re-checks the landing cell (83bdeeb)
 - [x] F6 The arrival card and the tally escape what they write as HTML (0ff5ac6)
 - [x] F7 The five mechanics that appear in one map return once: tide, cars, timing platforms, airlocks, vacuum
-- [ ] F8 The heavy ammunition box (specified, placed in caches and secrets)
-- [ ] F9 Painted plates for the story scenes and the epilogues, and scene stings
-- [ ] F10 Faces painted into the creature atlases (the heads are geometry today)
-- [ ] F11 The quality fallback's second rung (cheaper effects when a smaller picture is not enough)
+- [x] F8 The heavy ammunition box (specified, placed in caches and secrets) (9bfbe97: `ammo_crate`, every carried gun to 60%; thirteen placed (the secret room of the densest fight of each episode and act, the cache of each secret map); design/WEAPONS_AND_CONTROLS_PLAN.md section 17)
+- [x] F9 Painted plates for the story scenes and the epilogues, and scene stings (967498a: two new plates baked (the coast behind the first three cards of Campaign One, the door with the lamp still dark behind the first four of Campaign Two); the scene stings need nothing: the four scenes with a sound have one at their start, the Bell stopping and the silent walk are silent on purpose)
+- [x] F10 Faces painted into the creature atlases (the heads are geometry today) (DECLINED, with numbers: at the game's 480 px width and 70 degree view a head 0.26 m wide is 4 px at 12 m, 8 px at 6 m, 17 px at 3 m and 34 px at the 1.5 m of a melee; the geometric face (brow ridge, nose, teeth, eye sockets and the eye states of V8) is already the most a head can show at those sizes, and a painted layer would need a face cell in every humanoid atlas and a rebake of each, to change pixels a player cannot resolve; if the owner judges the V8 faces in play and asks for more, it is one atlas recipe and one bake away)
+- [x] F11 The quality fallback's second rung (cheaper effects when a smaller picture is not enough) (c5b674f: the effects rung (shadows and floor marks off, then four lamps))
 
 ## Tier 2: robustness (invisible to a player; each behaviour-identical and proved)
 
