@@ -15,23 +15,25 @@ const KEYART = 'D:/Doom_release/store/title/key-art-1920x1080.png', FONT = 'C\\:
 const ORDER = [['quay', 'MARROW QUAY'], ['nave', 'THE MARROW NAVE'], ['foundry', 'THE PULSE FOUNDRY'], ['stair', 'THE HOLLOW STAIR'], ['warden', 'THE GATE WARDEN']].filter(([c]) => fs.existsSync(path.join(work, c, 'events.json')));
 if (!ORDER.length) { console.error('no clips in', work); process.exit(1); }
 fs.mkdirSync(path.join(work, 'build'), { recursive: true });
+const REUSE = process.argv.includes('--reuse') && fs.existsSync(path.join(work, 'build', 'video.mp4'));          // --reuse: the video segments are already built; only the sound is made again
+const vff = (args) => { if (!REUSE) ff(args); };
 const ff = (args) => { const r = spawnSync('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] }); if (r.status !== 0) { console.error('ffmpeg failed:', args.slice(0, 12).join(' ')); process.exit(1); } };
-const dt = (n, text, extra = '') => `drawtext=fontfile=${FONT}:text='${text}':fontcolor=0xe8e2d0:${extra}`;
+const dt = (n, text, extra = '') => `drawtext=fontfile='${FONT}':text='${text}':fontcolor=0xe8e2d0:${extra}`;
 
 // ---- video segments ----
 const segs = [];
-ff(['-loop', '1', '-framerate', '30', '-t', '4', '-i', KEYART, '-vf', `zoompan=z='1+0.0007*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=120:s=1920x1080:fps=30,fade=t=in:st=0:d=1,format=yuv420p`, '-c:v', 'libx264', '-crf', '17', path.join(work, 'build', 'intro.mp4')]); segs.push({ file: 'intro.mp4', d: 4, kind: 'intro' });
+vff(['-loop', '1', '-framerate', '30', '-t', '4', '-i', KEYART, '-vf', `zoompan=z='1+0.0007*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=120:s=1920x1080:fps=30,fade=t=in:st=0:d=1,format=yuv420p`, '-c:v', 'libx264', '-crf', '17', path.join(work, 'build', 'intro.mp4')]); segs.push({ file: 'intro.mp4', d: 4, kind: 'intro' });
 for (const [clip, caption] of ORDER) {
   const meta = JSON.parse(fs.readFileSync(path.join(work, clip, 'events.json'), 'utf8')), n = meta.frames.length, d = n / FPS;
   const alpha = `alpha='if(lt(t,0.7),t/0.7,if(gt(t,${(d - 0.9).toFixed(2)}),(${d.toFixed(2)}-t)/0.9,1))'`;
-  ff(['-framerate', String(FPS), '-i', path.join(work, clip, '%05d.png'), '-vf', `scale=1920:1080,${dt(0, caption, `fontsize=30:x=(w-text_w)/2:y=h-96:box=1:boxcolor=0x05060a@0.55:boxborderw=14:${alpha}`)},format=yuv420p`, '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-r', String(FPS), path.join(work, 'build', clip + '.mp4')]);
+  vff(['-framerate', String(FPS), '-i', path.join(work, clip, '%05d.png'), '-vf', `scale=1920:1080,${dt(0, caption, `fontsize=30:x=(w-text_w)/2:y=h-96:box=1:boxcolor=0x05060a@0.55:boxborderw=14:${alpha}`)},format=yuv420p`, '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-r', String(FPS), path.join(work, 'build', clip + '.mp4')]);
   segs.push({ file: clip + '.mp4', d, kind: 'clip', clip, meta });
 }
 const END = [['HUSHFALL', 'fontsize=110:y=(h/2)-150'], ['68 maps in two campaigns. 15 weapons. 21 kinds of creature.', 'fontsize=34:y=(h/2)-10'], ['Every picture painted by code, every sound synthesised.', 'fontsize=34:y=(h/2)+50'], ['Plays in the browser.', 'fontsize=34:y=(h/2)+110']];
-ff(['-f', 'lavfi', '-i', 'color=c=0x05060a:s=1920x1080:d=6:r=30', '-vf', END.map(([t, e], i) => dt(0, t, `${e}:x=(w-text_w)/2:alpha='min(1,max(0,(t-${(0.4 + i * 0.5).toFixed(1)})/0.6))'`)).join(',') + ',fade=t=out:st=5:d=1,format=yuv420p', '-c:v', 'libx264', '-crf', '17', path.join(work, 'build', 'outro.mp4')]); segs.push({ file: 'outro.mp4', d: 6, kind: 'outro' });
+vff(['-f', 'lavfi', '-i', 'color=c=0x05060a:s=1920x1080:d=6:r=30', '-vf', END.map(([t, e], i) => dt(0, t, `${e}:x=(w-text_w)/2:alpha='min(1,max(0,(t-${(0.4 + i * 0.5).toFixed(1)})/0.6))'`)).join(',') + ',fade=t=out:st=5:d=1,format=yuv420p', '-c:v', 'libx264', '-crf', '17', path.join(work, 'build', 'outro.mp4')]); segs.push({ file: 'outro.mp4', d: 6, kind: 'outro' });
 const S = []; segs.forEach((s, i) => { S[i] = i === 0 ? 0 : S[i - 1] + segs[i - 1].d - X; }); const total = S.at(-1) + segs.at(-1).d;
 let chain = '', last = '[0:v]'; for (let i = 1; i < segs.length; i++) { const out = i === segs.length - 1 ? '[v]' : `[v${i}]`; chain += `${last}[${i}:v]xfade=transition=fade:duration=${X}:offset=${S[i].toFixed(3)}${out};`; last = out; }
-ff([...segs.flatMap((s) => ['-i', path.join(work, 'build', s.file)]), '-filter_complex', chain.replace(/;$/, ''), '-map', '[v]', '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-pix_fmt', 'yuv420p', path.join(work, 'build', 'video.mp4')]);
+vff([...segs.flatMap((s) => ['-i', path.join(work, 'build', s.file)]), '-filter_complex', chain.replace(/;$/, ''), '-map', '[v]', '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-pix_fmt', 'yuv420p', path.join(work, 'build', 'video.mp4')]);
 
 // ---- sound: the game's own, mixed in node ----
 function readWav(file) {                                                                                                        // 16-bit PCM or 32-bit float, mono or stereo -> { l, r } Float32Array at SR (linear resampling)
@@ -60,11 +62,12 @@ for (const s of segs) if (s.kind === 'clip') for (const fr of s.meta.frames) for
   const th = (pan + 1) * Math.PI / 4;                                                                                                 // equal-power pan
   mixIn(w, S[segs.indexOf(s)] + fr.f / FPS + (snd.delay ?? 0), 0.85 * g * Math.cos(th) * 1.4142, 0.85 * g * Math.sin(th) * 1.4142); placed++;
 }
-let peak = 0; for (let i = 0; i < N; i++) peak = Math.max(peak, Math.abs(L[i]), Math.abs(R[i])); const norm = peak > 0 ? 0.89 / peak : 1;      // peak at about -1 dBFS
-const pcm = Buffer.alloc(N * 4); for (let i = 0; i < N; i++) { pcm.writeInt16LE(Math.max(-32768, Math.min(32767, Math.round(L[i] * norm * 32767))), i * 4); pcm.writeInt16LE(Math.max(-32768, Math.min(32767, Math.round(R[i] * norm * 32767))), i * 4 + 2); }
-const hdr = Buffer.alloc(44); hdr.write('RIFF', 0); hdr.writeUInt32LE(36 + pcm.length, 4); hdr.write('WAVEfmt ', 8); hdr.writeUInt32LE(16, 16); hdr.writeUInt16LE(1, 20); hdr.writeUInt16LE(2, 22); hdr.writeUInt32LE(SR, 24); hdr.writeUInt32LE(SR * 4, 28); hdr.writeUInt16LE(4, 32); hdr.writeUInt16LE(16, 34); hdr.write('data', 36); hdr.writeUInt32LE(pcm.length, 40);
+let peak = 0; for (let i = 0; i < N; i++) peak = Math.max(peak, Math.abs(L[i]), Math.abs(R[i]));
+// a 32-bit float wav, NOT scaled to its peak: forty bursts of rivets pile up to several times full scale and the score is far under that, so a peak scale would bury the score. ffmpeg's compressor and loudness normaliser (below) bring the whole to a level.
+const pcm = Buffer.alloc(N * 8); for (let i = 0; i < N; i++) { pcm.writeFloatLE(L[i], i * 8); pcm.writeFloatLE(R[i], i * 8 + 4); }
+const hdr = Buffer.alloc(44); hdr.write('RIFF', 0); hdr.writeUInt32LE(36 + pcm.length, 4); hdr.write('WAVEfmt ', 8); hdr.writeUInt32LE(16, 16); hdr.writeUInt16LE(3, 20); hdr.writeUInt16LE(2, 22); hdr.writeUInt32LE(SR, 24); hdr.writeUInt32LE(SR * 8, 28); hdr.writeUInt16LE(8, 32); hdr.writeUInt16LE(32, 34); hdr.write('data', 36); hdr.writeUInt32LE(pcm.length, 40);
 fs.writeFileSync(path.join(work, 'build', 'mix.wav'), Buffer.concat([hdr, pcm]));
-console.log(`sound: ${placed} sim sounds placed, peak ${peak.toFixed(2)} (scaled by ${norm.toFixed(2)}), no file for: ${[...missing].join(', ') || 'none'}`);
+console.log(`sound: ${placed} sim sounds placed, raw peak ${peak.toFixed(2)}, no file for: ${[...missing].join(', ') || 'none'}`);
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
-ff(['-i', path.join(work, 'build', 'video.mp4'), '-i', path.join(work, 'build', 'mix.wav'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-af', `afade=t=out:st=${(total - 1.2).toFixed(2)}:d=1.2`, '-t', total.toFixed(2), '-movflags', '+faststart', outFile]);
+ff(['-i', path.join(work, 'build', 'video.mp4'), '-i', path.join(work, 'build', 'mix.wav'), '-c:v', 'libx264', '-crf', '21', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-af', `acompressor=threshold=0.1:ratio=8:attack=3:release=120:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=11,alimiter=limit=0.8:level=disabled,afade=t=out:st=${(total - 1.2).toFixed(2)}:d=1.2`, '-t', total.toFixed(2), '-movflags', '+faststart', outFile]);
 console.log(`trailer: ${outFile} (${total.toFixed(1)} s, ${segs.length} segments)`);
