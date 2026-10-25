@@ -4,7 +4,7 @@ import { PICKUPS, SLOT_KEYS, WEAPONS, KEYS, AMMO_LOADS, MODS } from '../engine/d
 
 export const PICKUP_NAMES = {
   health_small: 'Field dressing', health_large: 'Medical satchel', ammo_flare: 'Flare shells', armor_vest: 'Canvas flak vest', ammo_shell: 'Shotgun shells', ammo_rivet: 'Rivets', ammo_bolt: 'Harpoon bolts', ammo_cell: 'Charge cells', ammo_round: 'Carbine rounds', ammo_rocket: 'Line-thrower rockets',
-  oil: 'Lamp oil',
+  oil: 'Lamp oil', ammo_crate: 'Heavy ammunition crate',
   key_brass: 'Brass key', key_iron: 'Iron key', key_bell: 'Bell key',
 };
 // the load pickups (PT-056): "Slag shells", "Rime bolts", "Penetrator rounds"
@@ -14,7 +14,8 @@ for (const [kind, d] of Object.entries(PICKUPS)) if (d.type === 'load') PICKUP_N
 /** "Rivets (+40)": ammo, health and armour show what they give; keys and unknown kinds show just the name */
 export function pickupToast(kind) {
   const name = PICKUP_NAMES[kind]; if (!name) return 'Picked up ' + kind;
-  const def = PICKUPS[kind]; return def && def.type !== 'key' && def.amount ? `${name} (+${def.amount})` : name;
+  const def = PICKUPS[kind]; if (def?.type === 'crate') return `${name} (every gun to ${Math.round(def.fill * 100)}%)`;
+  return def && def.type !== 'key' && def.amount ? `${name} (+${def.amount})` : name;
 }
 
 /** PT-047 V2: the toast column as a MODEL (the DOM only draws it). A toast equal to the newest one still showing is MERGED into it (a count, a renewed life: "Rivets (+40) x2") instead of stacking a copy; at most `max` show at once, the oldest goes first.
@@ -51,7 +52,7 @@ export const WEAPON_CARDS = Object.freeze({
 export function pickupTier(kind) {
   const d = Object.hasOwn(PICKUPS, kind) ? PICKUPS[kind] : null; if (!d) return null;
   if (d.type === 'weapon' || d.type === 'key' || d.type === 'mod') return 'major';
-  if (d.type === 'armor' || d.type === 'oil' || d.type === 'load' || (d.type === 'health' && d.amount >= 25)) return 'medium';
+  if (d.type === 'armor' || d.type === 'oil' || d.type === 'load' || d.type === 'crate' || (d.type === 'health' && d.amount >= 25)) return 'medium';
   return 'minor';
 }
 const slotLabel = (weapon) => { const i = SLOT_KEYS.indexOf(WEAPONS[weapon]?.kind === 'melee' ? 'melee' : weapon); return i < 0 ? '' : String((i + 1) % 10); };

@@ -1003,6 +1003,11 @@
    "at": [122, 8],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [21, 2]
   }
  ],
  "scenery": [

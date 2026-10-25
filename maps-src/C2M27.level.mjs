@@ -114,4 +114,8 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "exit": ["msg:far-lip"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [21, 2] });
+// ---- end F8 ----
+
 export default MAP;

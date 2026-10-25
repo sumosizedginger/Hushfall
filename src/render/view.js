@@ -1,7 +1,7 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
 import * as THREE from 'three';
-import { makeHandLantern, makePickupOil } from './models_c2.js';
+import { makeHandLantern, makePickupOil, makePickupCrate } from './models_c2.js';
 import { makeFlareCannon, makeScattergun, makePickup, makeCrate, makeBarrel } from './models.js';
 import { makeSack } from './models_g2.js';
 import { makeCarbine, makePickupCarbine } from './models_carbine.js';
@@ -57,7 +57,7 @@ const bellPose = (e, yaw) => {
   const rb = e.rb, hung = rb.mode === 'hung' && rb.t0 != null, phi = hung ? rb.phi ?? 0 : 0, dx = Math.cos(rb.theta ?? 0), dz = Math.sin(rb.theta ?? 0), c = Math.cos(yaw), s = Math.sin(yaw);
   return { tiltX: (c * dx - s * dz) * phi, tiltZ: (s * dx + c * dz) * phi, last: rb.last ? 1 : 0 };
 };
-const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
+const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : kind === 'ammo_crate' ? () => makePickupCrate() : /^weapon_(boathook|marlinspike|mallet|axe|chainsaw)$/.test(kind) ? (k, pt, wt) => makePickupMelee(k, wt) : kind === 'ammo_rivet' || kind === 'weapon_rivet' ? makePickupRivet : kind === 'ammo_bolt' || kind === 'weapon_harpoon' ? makePickupHarpoon : kind === 'ammo_cell' || kind === 'weapon_arc' ? makePickupArc
   : kind === 'ammo_round' || kind === 'weapon_carbine' ? makePickupCarbine : kind === 'ammo_rocket' || kind === 'weapon_linethrower' ? makePickupRocket : kind === 'weapon_fork' ? makePickupFork : kind === 'weapon_mortar' ? makePickupMortar : makePickup);
 
 /** PT-065 (V3, measured): the share of the old weapon-scene light the held gun keeps in the darkest place (the rest of the range follows the place's own hemisphere); a probe sets it live (`setup_weaponLight`) */

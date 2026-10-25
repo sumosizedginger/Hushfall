@@ -1614,6 +1614,16 @@
    "at": [29, 5],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [48, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [47, 16]
   }
  ],
  "scenery": [

@@ -943,6 +943,11 @@
    "type": "pickup",
    "kind": "weapon_mallet",
    "at": [5, 49]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [20, 9]
   }
  ],
  "par": {

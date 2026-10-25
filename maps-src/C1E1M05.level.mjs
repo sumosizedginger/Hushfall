@@ -113,4 +113,8 @@ MAP.drops = { scale: 1 };
 // ---- PT-052 R2: what the kit built (groups, triggers, messages, the secret and its hint) joins the map ----
 E.apply(MAP);
 
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [20, 9] });
+// ---- end F8 ----
+
 export default MAP;

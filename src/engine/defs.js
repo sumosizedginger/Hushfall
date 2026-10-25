@@ -366,6 +366,7 @@ export const PICKUPS = {
   weapon_fork: { type: 'weapon', weapon: 'fork' },
   weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },
   armor_vest: { type: 'armor', amount: 50 },
+  ammo_crate: { type: 'crate', fill: 0.6 },                                                                            // FREEZE F8 (src/engine/crate.js): a heavy ammunition crate, found behind secrets: every gun you carry to 60% of what it can hold
   key_brass: { type: 'key', key: 'brass' },
 };
 // the load pickups (PT-056): `ld_<load>_<gun>`, one kind for every pairing LOADS allows (the toast names them, the sim adds the units to p.loads)

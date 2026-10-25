@@ -62,4 +62,8 @@ const MAP = {
 };
 console.log('C2S01: beds', beds.length, 'pickups', P.ents.filter((e) => e.type === 'pickup').length);
 export const waypoints = { main: [[35, 56, 0], [35, 48, 0], ...beds.map(([x, z]) => [x, z, 0]), [35, 31, 0], [35, 14, 0], [35, 8, 0], [35, 5, 0]] };
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [35, 28] });
+// ---- end F8 ----
+
 export default MAP;

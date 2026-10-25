@@ -629,6 +629,11 @@
    "type": "pickup",
    "kind": "ld_rime_flare",
    "at": [44, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [14, 16]
   }
  ],
  "par": {

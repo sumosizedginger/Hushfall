@@ -159,5 +159,9 @@ console.log('C1E4M06: enemies', ents.filter((e) => e.type === 'enemy').length);
 ENC.apply(MAP);
 MAP.roster = { id: 'C1E4M06', lane: [...(laneOf('C1E4M06') ?? [])], keep: [], plan: [{"from":"chorister","to":"tollbearer","n":3,"pick":"spread"},{"from":"bellhand","to":"tollbearer","n":5,"pick":"spread"},{"pick":"range","from":"gaunt","to":"mender","n":2}] };          // found with tools/dev/tune-roster.mjs: both fighters finish every route; eleven Bellhands and seven Choristers killed the strafing one on hard
 
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts), with a dressing beside it where the room has a second cell (an even count of new entities keeps the id parity); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [70, 99] }, { type: 'pickup', kind: 'health_small', at: [71, 99] });
+// ---- end F8 ----
+
 export default MAP;
 export { L, hw, CX, SCREENS, RANKS };

@@ -46,4 +46,8 @@ const MAP = {
   quality: { safe: true, enemies: [0, 0], botSeconds: [5, 300], mechanics: ['heights', 'triggers'], skins: 2,
     scaleClass: 'COMPRESSION', introduces: 'the Quiet Room: a round room stepped down to a stone, no creatures, no sound of the ship, and the voice of a Tide-Warden who held a door and stayed with it (Ines\'s choice, foreshadowed)' },
 };
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [19, 15] });
+// ---- end F8 ----
+
 export default MAP;

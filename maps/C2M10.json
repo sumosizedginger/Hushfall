@@ -2275,6 +2275,16 @@
    "type": "exit",
    "at": [44, 3],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [4, 41]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [5, 41]
   }
  ],
  "scenery": [],

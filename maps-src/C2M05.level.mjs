@@ -111,4 +111,8 @@ console.log('C2M05: enemies', P.ents.filter((e) => e.type === 'enemy').length, '
 MAP.roster = { id: 'C2M05', lane: [...(laneOf('C2M05') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts), with a dressing beside it where the room has a second cell (an even count of new entities keeps the id parity); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [48, 15] }, { type: 'pickup', kind: 'health_small', at: [47, 16] });
+// ---- end F8 ----
+
 export default MAP;

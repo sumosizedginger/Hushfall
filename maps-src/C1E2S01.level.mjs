@@ -81,4 +81,8 @@ MAP.entities.push(...[['ammo_round', 30, 13], ['ammo_rocket', 27, 24]].map(([kin
 MAP.entities ??= [];
 MAP.entities.push(...[["ld_rime_scattergun",33,21],["ld_rime_harpoon",33,11],["ld_rime_flare",44,17]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })));
 // ---- end PT-056 ----
+// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts); off the traffic of the routes (tools/dev/place-crates.mjs) ----
+MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [14, 16] });
+// ---- end F8 ----
+
 export default MAP;

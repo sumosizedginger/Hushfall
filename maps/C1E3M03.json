@@ -740,6 +740,16 @@
    "type": "prop",
    "kind": "cradle",
    "at": [55, 17]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [52, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [52, 28]
   }
  ],
  "par": {

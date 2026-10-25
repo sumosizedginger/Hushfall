@@ -1495,6 +1495,16 @@
    "kind": "bellhand",
    "at": [43, 28],
    "facing": -2.555
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [48, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [46, 22]
   }
  ],
  "par": {

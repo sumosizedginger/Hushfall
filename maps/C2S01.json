@@ -389,6 +389,11 @@
    "type": "exit",
    "at": [35, 5],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [35, 28]
   }
  ],
  "scenery": [],

@@ -1081,6 +1081,16 @@
    "type": "prop",
    "kind": "lantern",
    "at": [61, 48]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [70, 99]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [71, 99]
   }
  ],
  "par": {

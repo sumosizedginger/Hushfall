@@ -298,6 +298,11 @@
    "type": "pickup",
    "kind": "ammo_rocket",
    "at": [5, 4]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [4, 2]
   }
  ],
  "par": {

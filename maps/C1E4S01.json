@@ -260,6 +260,11 @@
    "type": "exit",
    "at": [40, 17],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_crate",
+   "at": [19, 15]
   }
  ],
  "par": {

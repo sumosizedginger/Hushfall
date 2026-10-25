@@ -17,6 +17,7 @@ import { nextRandom, initialRngState } from './rng.js';
 import { updateExplored, EXPLORE_EVERY_TICKS } from './automap.js';
 import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from './terrain.js';
 import { maybeDrop, updateDrops, trackFired } from './drops.js';
+import { takeCrate } from './crate.js';                                                                                // FREEZE F8: the heavy ammunition crate (a pure top-up of every carried gun)
 import { trimCorpses } from './corpses.js';
 import { navWaypoint } from './nav.js';
 import { updateSectors, updateTriggers, activateSwitch, choiceHolds, messageHeld } from './script.js';
@@ -1327,6 +1328,7 @@ export function step(w, cmd) {
     else if (def.type === 'key' && !p.keys.includes(def.key)) { p.keys.push(def.key); took = true; }
     else if (def.type === 'mod') took = addMod(p, def.mod);                                                                     // PT-057: a found mod stays with the gun for good
     else if (def.type === 'load' && p.weapons.includes(def.gun)) { const got = addLoad(p, def.gun, def.load, Math.round(def.amount * diff.ammoPickup * (w.ammoScale ?? 1)), Math.floor(ammoCap(WEAPONS[def.gun].ammo, w.upgrades) * AMMO_LOADS[def.load].cap)); took = got > 0; }          // PT-056
+    else if (def.type === 'crate') took = takeCrate(w, p, def, (t) => ammoCap(t, w.upgrades), diff.ammoPickup * (w.ammoScale ?? 1));          // FREEZE F8
     else if (def.type === 'oil' && p.lamp && p.lamp.oil < p.lamp.max) { p.lamp.oil = Math.min(p.lamp.max, p.lamp.oil + def.amount); took = true; }          // PT-038: lamp oil (only where there is a lantern, and not past its tank)
     else if (def.type === 'weapon' && (!p.weapons.includes(def.weapon) || (def.ammo && (p.ammo[def.ammo] || 0) < mCap))) {
       if (!p.weapons.includes(def.weapon)) { p.weapons.push(def.weapon); p.weapons.sort((a, b) => ALL_WEAPONS.indexOf(a) - ALL_WEAPONS.indexOf(b)); p.lastWeapon = p.weapon; p.weapon = def.weapon; if (isMelee(def.weapon)) p.meleeWeapon = def.weapon; p.switchT = WEAPONS[def.weapon].switchTime; p.charge = 0; p.swingT = -1; }

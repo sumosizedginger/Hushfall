@@ -71,6 +71,15 @@ export function makePickupOil() {
   return g;
 }
 
+/** a heavy ammunition crate (FREEZE F8): a timber box with two brass straps and a hazard-orange band round its middle, a marker of warm light above it so it reads from across a hall; bigger than any single box, so it looks like what it is */
+export function makePickupCrate() {
+  const g = new THREE.Group(), wood = lam({ color: 0x6a4a2c, emissive: 0x140c06 }), lid = lam({ color: 0x4e3620, emissive: 0x0e0804 }), brass = lam({ color: 0xb08a3c, emissive: 0x1c1408 }), band = lam({ color: 0xd2641e, emissive: 0x30140a });
+  g.add(box(0.56, 0.3, 0.34, wood, 0, 0.15, 0), box(0.6, 0.05, 0.38, lid, 0, 0.325, 0), box(0.565, 0.055, 0.345, band, 0, 0.2, 0));
+  for (const x of [-0.18, 0.18]) g.add(box(0.05, 0.34, 0.36, brass, x, 0.17, 0));
+  const glint = new THREE.Mesh(new THREE.IcosahedronGeometry(0.035, 0), new THREE.MeshBasicMaterial({ color: 0xffb060 })); glint.position.y = 0.5; g.add(glint);
+  return g;
+}
+
 /** a Vael city built into the wall of a cavern (scenery, PT-039, Act B): five terraces of pale stone houses stepped up a cliff 26 m wide and 20 m tall, a window or two lit amber in every house, a bridge of gold lamps between the terraces, a dark mouth of a stair in the middle. Faces +z. The windows are a deterministic pattern (no random stream). */
 export function makeCityFace() {
   const g = new THREE.Group(), stone = lam({ color: 0x9a927e, emissive: 0x0e0c08 }), dark = lam({ color: 0x241e1c }), win = bas({ color: 0xffc060 }), lamp = bas({ color: 0xffe0a0 }), cliff = lam({ color: 0x1c2234 });
