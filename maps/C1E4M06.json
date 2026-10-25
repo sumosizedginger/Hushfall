@@ -60,9 +60,9 @@
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTtTTTtttttttttttttttttttTTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAA88A__AAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttD8D88D__AAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttttttttttttttttttttttTAA88A__AAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTTtttttttttttttttttttttttttTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttTTTTTTTTTTTTtttttTTTTTTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATtttttTTTTTTTTTTTTtttttTTTTTTTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -180,9 +180,9 @@
   "..................................66666666666666666666666.................................",
   ".................................6666666666666666666666666................................",
   ".................................6666666666666666666666666................................",
-  ".................................6666666666666666666666666................................",
-  ".................................6666666666666666666666666................................",
-  ".................................6666666666666666666666666................................",
+  ".................................6666666666666666666666666...66...........................",
+  ".................................6666666666666666666666666666666..........................",
+  ".................................6666666666666666666666666...66...........................",
   ".................................6666666666666666666666666................................",
   "...............................66666............66666.....................................",
   "...............................55555............55555.....................................",
@@ -300,9 +300,9 @@
   "..................................iiiiiiiiiiiiiiiiiiiiiii.................................",
   ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
   ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
-  ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
-  ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
-  ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
+  ".................................iiiiiiiiiiiiiiiiiiiiiiiii...cc...........................",
+  ".................................iiiiiiiiiiiiiiiiiiiiiiiiicccccc..........................",
+  ".................................iiiiiiiiiiiiiiiiiiiiiiiii...cc...........................",
   ".................................iiiiiiiiiiiiiiiiiiiiiiiii................................",
   "...............................kkkkk............kkkkk.....................................",
   "...............................kkkkk............kkkkk.....................................",
@@ -371,7 +371,21 @@
   "..........................................................................................",
   ".........................................................................................."
  ],
- "doors": [],
+ "doors": [
+  {
+   "at": [58, 49],
+   "interlock": [60, 49]
+  },
+  {
+   "at": [60, 49],
+   "interlock": [58, 49]
+  },
+  {
+   "at": [63, 49],
+   "remote": true,
+   "open": true
+  }
+ ],
  "secrets": [
   {
    "id": "cache",
@@ -1038,6 +1052,35 @@
    "at": [45, 9],
    "locked": true,
    "dest": "next"
+  },
+  {
+   "type": "switch",
+   "id": "hatch",
+   "at": [62, 48],
+   "wall": "north",
+   "do": [
+    {
+     "close": [63, 49]
+    },
+    {
+     "shake": 1
+    }
+   ]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [61, 50]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [62, 50]
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [61, 48]
   }
  ],
  "par": {
@@ -1100,6 +1143,40 @@
    "radius": 3,
    "speaker": "HULL",
    "text": "The wall of the east tunnel rings hollow."
+  },
+  {
+   "id": "lock",
+   "at": [50, 49],
+   "radius": 5.5,
+   "speaker": "HULL",
+   "text": "A service lock in the east wall. Its inner door and its outer door will not stand open together. The hatch at the far end of it is open to the dark."
+  }
+ ],
+ "vacuum": [
+  {
+   "rect": [
+    61,
+    48,
+    62,
+    50
+   ],
+   "seals": [
+    [63, 49]
+   ]
+  },
+  {
+   "rect": [
+    59,
+    49,
+    59,
+    49
+   ],
+   "seals": [
+    [63, 49]
+   ],
+   "and": [
+    [60, 49]
+   ]
   }
  ],
  "objective": "Cross the court and the five ranks of the Approach. The way out is locked while the Weeping Mother stands",

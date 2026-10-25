@@ -112,6 +112,16 @@ ENC.dropIn({ at: [54, 70], radius: 2, cells: ENC.around([54, 70], { n: 3, min: 6
 ENC.dropIn({ at: [45, 48], radius: 2, cells: ENC.around([45, 48], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- FREEZE F7 (design/MECHANICS_RETURNING.md: the airlock and the vacuum return, combined with a cache): a service lock in the east wall of the steps (the fourth rank): a door, a chamber, a second door (never both open at once), a closet with its hull hatch standing open to the dark,
+// so the closet is in vacuum until a switch on its wall shuts the hatch. A satchel and a vest lie in it. The closet, the chamber and the doors are cut into the solid wall (a ring of wall round them), so nothing else opens; optional: the main and secret routes do not use it, a third route (`lock`) does ----
+const LOCK1 = [58, 49], LOCK2 = [60, 49], HATCH = [63, 49], CHAMBER = [59, 49], LH = 6, LCE = 12;                                  // the rank's floor is 3 m (6 half-metre units); the annex has a 3 m lid over it
+for (const [x, z] of [CHAMBER, [61, 48], [62, 48], [61, 49], [62, 49], [61, 50], [62, 50]]) set(x, z, '8', LH, LCE);
+L.door(LOCK1[0], LOCK1[1], { interlock: LOCK2 }); L.door(LOCK2[0], LOCK2[1], { interlock: LOCK1 }); L.door(HATCH[0], HATCH[1], { remote: true, open: true });
+for (const [x, z] of [LOCK1, LOCK2, HATCH]) { L.ht[z][x] = LH; L.ce[z][x] = hchar(LCE); }
+for (let x = 64; x <= 65; x++) for (let z = 48; z <= 50; z++) L.g[z][x] = '_';                                                    // the dark beyond the hatch
+const VAC = [{ rect: [61, 48, 62, 50], seals: [HATCH] }, { rect: [CHAMBER[0], CHAMBER[1], CHAMBER[0], CHAMBER[1]], seals: [HATCH], and: [LOCK2] }];
+// ---- end F7 ----
+
 const MAP = {
   id: 'C1E4M06', name: "Gatekeeper's Approach", version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#34365a', fogDensity: 0.005, sky: 'gate', ambient: 0.9, look: 'approach' },
@@ -120,6 +130,7 @@ const MAP = {
   outro: 'The hall opens. Above the last steps the glare gathers into a shape.',
   objective: 'Cross the court and the five ranks of the Approach. The way out is locked while the Weeping Mother stands',
   ...L.layers(),
+  vacuum: VAC,
   secrets: secret ? [{ id: 'cache', panel: secret.panel, cells: secret.cells }] : [],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],
   messages: [
@@ -130,6 +141,7 @@ const MAP = {
     { id: 'steps', at: [CX, 50], radius: 4, speaker: 'HULL', text: 'The steps. Two grafts with plates on their fronts, and bellhands behind them. Pillars are cover from the bells.' },
     { id: 'last', at: [CX, 30], radius: 4, speaker: 'INES', text: 'One more shell. Then the yard, and the Gate beyond it. I can feel it in my teeth.' },
     { id: 'panel', at: secret ? secret.panel : [0, 0], radius: 3, speaker: 'HULL', text: 'The wall of the east tunnel rings hollow.' },
+    { id: 'lock', at: [50, 49], radius: 5.5, speaker: 'HULL', text: 'A service lock in the east wall. Its inner door and its outer door will not stand open together. The hatch at the far end of it is open to the dark.' },
   ],
   triggers: [
     { id: 'mother-down', when: 'dead:mother', do: [{ exit: { set: 'unlock' } }, { objective: 'The Weeping Mother is down. The way out is open: the Gate yard, straight ahead' }, { shake: 2 }] },
@@ -141,6 +153,7 @@ const MAP = {
     introduces: 'the gauntlet: every elite the Vael have, used together in five ranks of a funnel, with two flank tunnels that go round the first two and a Mother in the middle who keeps the way out locked' },
 };
 MAP.drops = { scale: 1, keep: [[CX - 4, 104, CX + 4, 108], [CX - 4, 66, CX + 4, 70]] };
+MAP.entities.push({ type: 'switch', id: 'hatch', at: [62, 48], wall: 'north', do: [{ close: HATCH }, { shake: 1 }] }, ...[['health_large', 61, 50], ['armor_vest', 62, 50]].map(([kind, x, z]) => ({ type: 'pickup', kind, at: [x, z] })), { type: 'prop', kind: 'lantern', at: [61, 48] });          // F7: the switch that shuts the hatch, the closet's cache and its lantern, appended after every other entity (no id shifts)
 console.log('C1E4M06: enemies', ents.filter((e) => e.type === 'enemy').length);
 // ---- PT-052 R3 (exemplar): what the kit built joins the map, and which kinds stand where is a plan the compiler applies (tools/mapkit/roster.mjs; tools/dev/tune-roster.mjs swaps it) ----
 ENC.apply(MAP);
