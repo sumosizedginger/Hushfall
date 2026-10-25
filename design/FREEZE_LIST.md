@@ -14,7 +14,7 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 - [ ] F4 Two things in frames: a white slab on the Hollow Stair, a crate through the bottom of the view on C2M14 (find the cause, fix it or say why not)
 - [ ] F5 A void-fall recovery re-checks the landing cell
 - [ ] F6 The arrival card and the tally escape what they write as HTML
-- [ ] F7 The five mechanics that appear in one map return once: tide, cars, timing platforms, airlocks, vacuum
+- [x] F7 The five mechanics that appear in one map return once: tide, cars, timing platforms, airlocks, vacuum
 - [ ] F8 The heavy ammunition box (specified, placed in caches and secrets)
 - [ ] F9 Painted plates for the story scenes and the epilogues, and scene stings
 - [ ] F10 Faces painted into the creature atlases (the heads are geometry today)
