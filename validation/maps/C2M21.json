@@ -2,23 +2,64 @@
   "mapId": "C2M21",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "39a8892",
+  "codeVersion": "e59a47e",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "b7bbe15775b2f98f",
-  "assetVersion": "df26bcd4e6468f58",
-  "engineSha": "447075b4d81aa0d5",
+  "mapSha": "c5b8812427e1ae99",
+  "assetVersion": "ce9ae541649b606a",
+  "engineSha": "4907fb404549f334",
   "sources": {
-    "engine": "447075b4d81aa0d5",
-    "render": "890fcceff508900a",
-    "game": "b38831c64707d86a",
+    "engine": "4907fb404549f334",
+    "render": "004cfe2cbfa6b3f4",
+    "game": "459845811fdcae63",
     "audio": "feeb615d3ade1eab",
-    "assets": "df26bcd4e6468f58"
+    "assets": "ce9ae541649b606a",
+    "verifier": "178a732ec21abcbf",
+    "probes": "f7cd7f4693478b86"
   },
-  "routesSha": "b915813d745c3b3d",
+  "routesSha": "bf3bdd84502a3fb6",
   "loads": true,
   "validationErrors": [],
   "routes": [
+    {
+      "file": "routes/C2M21.car.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "policy": "standing",
+      "result": "complete",
+      "ticks": 7612,
+      "finalHash": "3e2ec74e",
+      "kills": 23,
+      "secrets": 0,
+      "items": 4,
+      "damageTaken": 32
+    },
+    {
+      "file": "routes/C2M21.car.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "policy": "standing",
+      "result": "complete",
+      "ticks": 7612,
+      "finalHash": "fb1bbc24",
+      "kills": 23,
+      "secrets": 0,
+      "items": 4,
+      "damageTaken": 97
+    },
+    {
+      "file": "routes/C2M21.car.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "policy": "strafing",
+      "result": "complete",
+      "ticks": 7664,
+      "finalHash": "6c347097",
+      "kills": 23,
+      "secrets": 0,
+      "items": 3,
+      "damageTaken": 87
+    },
     {
       "file": "routes/C2M21.main.route.json",
       "difficulty": "easy",
@@ -26,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5308,
-      "finalHash": "49da45ed",
+      "finalHash": "e3616e51",
       "kills": 22,
       "secrets": 0,
       "items": 3,
@@ -39,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5800,
-      "finalHash": "3b293ca8",
+      "finalHash": "5f823f31",
       "kills": 22,
       "secrets": 0,
       "items": 3,
@@ -52,7 +93,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 5733,
-      "finalHash": "503a0e63",
+      "finalHash": "c0fd31de",
       "kills": 22,
       "secrets": 0,
       "items": 2,
@@ -65,7 +106,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5598,
-      "finalHash": "774cf7c5",
+      "finalHash": "a2ad37b0",
       "kills": 22,
       "secrets": 1,
       "items": 4,
@@ -78,7 +119,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5809,
-      "finalHash": "167c97f8",
+      "finalHash": "420e6783",
       "kills": 22,
       "secrets": 1,
       "items": 4,
@@ -91,7 +132,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 6030,
-      "finalHash": "591e4ca7",
+      "finalHash": "70d8f7b6",
       "kills": 22,
       "secrets": 1,
       "items": 3,
@@ -105,7 +146,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 5800,
-    "finalHash": "3b293ca8",
+    "finalHash": "5f823f31",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -304,17 +345,17 @@
   },
   "browser": {
     "file": "validation/browser/C2M21.json",
-    "when": "2026-10-21T20:07:06.097Z",
-    "commit": "39a8892",
-    "mapSha": "b7bbe15775b2f98f",
-    "routesSha": "b915813d745c3b3d",
-    "passed": 13,
-    "total": 13,
+    "when": "2026-10-26T01:23:49.636Z",
+    "commit": "e59a47e",
+    "mapSha": "c5b8812427e1ae99",
+    "routesSha": "bf3bdd84502a3fb6",
+    "passed": 15,
+    "total": 15,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-21T19:43:35.731Z",
-      "commit": "39a8892",
+      "when": "2026-10-26T01:03:02.862Z",
+      "commit": "e59a47e",
       "passed": 146,
       "total": 146
     }
@@ -336,6 +377,21 @@
         "name": "all secrets reachable",
         "ok": true,
         "detail": "[{\"id\":\"hatch\",\"reachable\":true}]"
+      },
+      {
+        "name": "route C2M21.car.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "126.9 s"
+      },
+      {
+        "name": "route C2M21.car.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "126.9 s"
+      },
+      {
+        "name": "route C2M21.car.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "127.7 s (strafing)"
       },
       {
         "name": "route C2M21.main.route.json on easy reaches the exit",
@@ -655,12 +711,12 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C2M21.json: b7bbe15775b2f98f vs b7bbe15775b2f98f"
+        "detail": "validation/browser/C2M21.json: c5b8812427e1ae99 vs c5b8812427e1ae99"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
         "ok": true,
-        "detail": "b915813d745c3b3d vs b915813d745c3b3d"
+        "detail": "bf3bdd84502a3fb6 vs bf3bdd84502a3fb6"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
@@ -670,7 +726,7 @@
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
         "ok": true,
-        "detail": "13/13 checks, routes: main, secret"
+        "detail": "15/15 checks, routes: car, main, secret"
       }
     ]
   },

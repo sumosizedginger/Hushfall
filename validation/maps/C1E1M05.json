@@ -2,18 +2,20 @@
   "mapId": "C1E1M05",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "39a8892",
+  "codeVersion": "e59a47e",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "2d611af537640883",
-  "assetVersion": "df26bcd4e6468f58",
-  "engineSha": "447075b4d81aa0d5",
+  "mapSha": "473b0cab98fa9c04",
+  "assetVersion": "ce9ae541649b606a",
+  "engineSha": "4907fb404549f334",
   "sources": {
-    "engine": "447075b4d81aa0d5",
-    "render": "890fcceff508900a",
-    "game": "b38831c64707d86a",
+    "engine": "4907fb404549f334",
+    "render": "004cfe2cbfa6b3f4",
+    "game": "459845811fdcae63",
     "audio": "feeb615d3ade1eab",
-    "assets": "df26bcd4e6468f58"
+    "assets": "ce9ae541649b606a",
+    "verifier": "178a732ec21abcbf",
+    "probes": "f7cd7f4693478b86"
   },
   "routesSha": "047991b85a6e97bd",
   "loads": true,
@@ -26,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7645,
-      "finalHash": "2423708f",
+      "finalHash": "9964b86c",
       "kills": 41,
       "secrets": 0,
       "items": 4,
@@ -39,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8008,
-      "finalHash": "aa23049e",
+      "finalHash": "a126efda",
       "kills": 42,
       "secrets": 0,
       "items": 6,
@@ -52,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8187,
-      "finalHash": "18d8a5f2",
+      "finalHash": "477a4ce0",
       "kills": 39,
       "secrets": 0,
       "items": 6,
@@ -65,10 +67,10 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7945,
-      "finalHash": "7e24fee9",
+      "finalHash": "38a83485",
       "kills": 41,
       "secrets": 1,
-      "items": 4,
+      "items": 5,
       "damageTaken": 8
     },
     {
@@ -78,10 +80,10 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8307,
-      "finalHash": "b188f954",
+      "finalHash": "a71b4a8f",
       "kills": 42,
       "secrets": 1,
-      "items": 6,
+      "items": 7,
       "damageTaken": 35
     },
     {
@@ -91,10 +93,10 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8486,
-      "finalHash": "0b71584d",
+      "finalHash": "10b319fb",
       "kills": 39,
       "secrets": 1,
-      "items": 6,
+      "items": 7,
       "damageTaken": 54
     }
   ],
@@ -105,12 +107,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 8008,
-    "finalHash": "aa23049e",
+    "finalHash": "a126efda",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 45,
-    "items": 26,
+    "items": 27,
     "secrets": 1
   },
   "facts": {
@@ -284,17 +286,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E1M05.json",
-    "when": "2026-10-21T19:46:02.696Z",
-    "commit": "39a8892",
-    "mapSha": "2d611af537640883",
+    "when": "2026-10-26T01:05:12.053Z",
+    "commit": "e59a47e",
+    "mapSha": "473b0cab98fa9c04",
     "routesSha": "047991b85a6e97bd",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-21T19:43:35.731Z",
-      "commit": "39a8892",
+      "when": "2026-10-26T01:03:02.862Z",
+      "commit": "e59a47e",
       "passed": 146,
       "total": 146
     }
@@ -545,7 +547,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E1M05.json: 2d611af537640883 vs 2d611af537640883"
+        "detail": "validation/browser/C1E1M05.json: 473b0cab98fa9c04 vs 473b0cab98fa9c04"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -566,5 +568,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v2, 45 enemies, 26 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 45 enemies, 27 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

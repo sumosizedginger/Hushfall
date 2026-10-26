@@ -2,18 +2,20 @@
   "mapId": "C1E2M02",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "39a8892",
+  "codeVersion": "e59a47e",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "b08ee030cd18a53a",
-  "assetVersion": "df26bcd4e6468f58",
-  "engineSha": "447075b4d81aa0d5",
+  "mapSha": "43822eabd93a554c",
+  "assetVersion": "ce9ae541649b606a",
+  "engineSha": "4907fb404549f334",
   "sources": {
-    "engine": "447075b4d81aa0d5",
-    "render": "890fcceff508900a",
-    "game": "b38831c64707d86a",
+    "engine": "4907fb404549f334",
+    "render": "004cfe2cbfa6b3f4",
+    "game": "459845811fdcae63",
     "audio": "feeb615d3ade1eab",
-    "assets": "df26bcd4e6468f58"
+    "assets": "ce9ae541649b606a",
+    "verifier": "178a732ec21abcbf",
+    "probes": "f7cd7f4693478b86"
   },
   "routesSha": "08ece2556b10a96c",
   "loads": true,
@@ -26,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3450,
-      "finalHash": "37b0756c",
+      "finalHash": "9bbb5b8a",
       "kills": 31,
       "secrets": 0,
       "items": 1,
@@ -39,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3664,
-      "finalHash": "f23218d6",
+      "finalHash": "d390da78",
       "kills": 32,
       "secrets": 0,
       "items": 4,
@@ -52,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3786,
-      "finalHash": "a2593df1",
+      "finalHash": "7651d233",
       "kills": 32,
       "secrets": 0,
       "items": 4,
@@ -65,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3809,
-      "finalHash": "8ebacfea",
+      "finalHash": "248d8c5e",
       "kills": 31,
       "secrets": 1,
       "items": 2,
@@ -78,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4044,
-      "finalHash": "86a2e940",
+      "finalHash": "5f3e3614",
       "kills": 32,
       "secrets": 1,
       "items": 4,
@@ -91,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4380,
-      "finalHash": "236dec64",
+      "finalHash": "5777aa9a",
       "kills": 33,
       "secrets": 1,
       "items": 4,
@@ -105,12 +107,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 3664,
-    "finalHash": "f23218d6",
+    "finalHash": "d390da78",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 54,
-    "items": 30,
+    "items": 32,
     "secrets": 1
   },
   "facts": {
@@ -288,17 +290,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E2M02.json",
-    "when": "2026-10-21T19:48:59.423Z",
-    "commit": "39a8892",
-    "mapSha": "b08ee030cd18a53a",
+    "when": "2026-10-26T01:07:47.758Z",
+    "commit": "e59a47e",
+    "mapSha": "43822eabd93a554c",
     "routesSha": "08ece2556b10a96c",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-21T19:43:35.731Z",
-      "commit": "39a8892",
+      "when": "2026-10-26T01:03:02.862Z",
+      "commit": "e59a47e",
       "passed": 146,
       "total": 146
     }
@@ -579,7 +581,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2M02.json: b08ee030cd18a53a vs b08ee030cd18a53a"
+        "detail": "validation/browser/C1E2M02.json: 43822eabd93a554c vs 43822eabd93a554c"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -600,5 +602,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 54 enemies, 30 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 54 enemies, 32 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

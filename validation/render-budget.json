@@ -1,103 +1,103 @@
 {
-  "when": "2026-10-21T19:42:39.135Z",
+  "when": "2026-10-26T01:02:12.902Z",
   "map": "C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)",
   "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
   "budget": {
     "pier": {
-      "calls": 198,
-      "triangles": 39066,
-      "geometries": 1358,
+      "calls": 194,
+      "triangles": 36830,
+      "geometries": 1356,
       "textures": 159,
       "programs": 25
     },
     "plaza": {
-      "calls": 179,
-      "triangles": 36280,
-      "geometries": 1358,
+      "calls": 175,
+      "triangles": 34044,
+      "geometries": 1356,
       "textures": 159,
       "programs": 25
     },
     "warehouse": {
-      "calls": 100,
-      "triangles": 21546,
-      "geometries": 1358,
+      "calls": 96,
+      "triangles": 19310,
+      "geometries": 1356,
       "textures": 159,
       "programs": 25
     },
     "plaza-all-awake": {
-      "calls": 397,
-      "triangles": 36280,
-      "geometries": 1569,
+      "calls": 393,
+      "triangles": 34044,
+      "geometries": 1567,
       "textures": 159,
       "programs": 25
     },
     "warehouse-all-awake": {
-      "calls": 147,
-      "triangles": 21594,
-      "geometries": 1569,
+      "calls": 143,
+      "triangles": 19358,
+      "geometries": 1567,
       "textures": 159,
       "programs": 25
     },
     "m03-market": {
-      "calls": 191,
-      "triangles": 59460,
-      "geometries": 1402,
+      "calls": 187,
+      "triangles": 54912,
+      "geometries": 1400,
       "textures": 159,
       "programs": 26
     },
     "m03-market-all-awake": {
-      "calls": 549,
-      "triangles": 59508,
-      "geometries": 1723,
+      "calls": 545,
+      "triangles": 54960,
+      "geometries": 1721,
       "textures": 159,
       "programs": 26
     },
     "m05-terrace": {
-      "calls": 115,
-      "triangles": 40820,
-      "geometries": 1355,
+      "calls": 111,
+      "triangles": 34536,
+      "geometries": 1353,
       "textures": 159,
       "programs": 23
     },
     "m05-terrace-all-awake": {
-      "calls": 300,
-      "triangles": 40820,
-      "geometries": 1498,
+      "calls": 296,
+      "triangles": 34536,
+      "geometries": 1496,
       "textures": 159,
       "programs": 23
     },
     "m06-quay": {
-      "calls": 166,
-      "triangles": 55876,
-      "geometries": 1436,
+      "calls": 165,
+      "triangles": 50692,
+      "geometries": 1439,
       "textures": 159,
       "programs": 24
     },
     "m06-quay-all-awake": {
-      "calls": 555,
-      "triangles": 55876,
-      "geometries": 1790,
+      "calls": 554,
+      "triangles": 50692,
+      "geometries": 1793,
       "textures": 159,
       "programs": 24
     },
     "m07-atrium": {
-      "calls": 200,
-      "triangles": 53154,
-      "geometries": 1401,
+      "calls": 196,
+      "triangles": 48670,
+      "geometries": 1399,
       "textures": 159,
       "programs": 24
     },
     "m08-chamber": {
-      "calls": 284,
-      "triangles": 52878,
-      "geometries": 1464,
+      "calls": 280,
+      "triangles": 47590,
+      "geometries": 1462,
       "textures": 159,
       "programs": 21
     },
     "m08-chamber-all-awake": {
-      "calls": 514,
-      "triangles": 52906,
-      "geometries": 1686,
+      "calls": 510,
+      "triangles": 47618,
+      "geometries": 1684,
       "textures": 159,
       "programs": 21
     }

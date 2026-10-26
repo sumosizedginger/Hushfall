@@ -2,20 +2,22 @@
   "mapId": "C1E4M04",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "39a8892",
+  "codeVersion": "e59a47e",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "b986d7efbcb96685",
-  "assetVersion": "df26bcd4e6468f58",
-  "engineSha": "447075b4d81aa0d5",
+  "mapSha": "d4273f12638f81e3",
+  "assetVersion": "ce9ae541649b606a",
+  "engineSha": "4907fb404549f334",
   "sources": {
-    "engine": "447075b4d81aa0d5",
-    "render": "890fcceff508900a",
-    "game": "b38831c64707d86a",
+    "engine": "4907fb404549f334",
+    "render": "004cfe2cbfa6b3f4",
+    "game": "459845811fdcae63",
     "audio": "feeb615d3ade1eab",
-    "assets": "df26bcd4e6468f58"
+    "assets": "ce9ae541649b606a",
+    "verifier": "178a732ec21abcbf",
+    "probes": "f7cd7f4693478b86"
   },
-  "routesSha": "fa70f53da379618d",
+  "routesSha": "c33351511ff49d11",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -26,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3879,
-      "finalHash": "9fbaff01",
+      "finalHash": "aea8e229",
       "kills": 22,
       "secrets": 0,
       "items": 0,
@@ -39,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4129,
-      "finalHash": "b18dbf32",
+      "finalHash": "ab2689b4",
       "kills": 22,
       "secrets": 0,
       "items": 0,
@@ -52,10 +54,49 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4472,
-      "finalHash": "fc6bb0ed",
+      "finalHash": "e7454b64",
       "kills": 22,
       "secrets": 0,
       "items": 0,
+      "damageTaken": 93
+    },
+    {
+      "file": "routes/C1E4M04.plat.route.json",
+      "difficulty": "easy",
+      "seed": 1,
+      "policy": "standing",
+      "result": "complete",
+      "ticks": 4843,
+      "finalHash": "4e548aea",
+      "kills": 22,
+      "secrets": 0,
+      "items": 2,
+      "damageTaken": 28
+    },
+    {
+      "file": "routes/C1E4M04.plat.route.json",
+      "difficulty": "normal",
+      "seed": 1,
+      "policy": "standing",
+      "result": "complete",
+      "ticks": 4843,
+      "finalHash": "70cc5dfa",
+      "kills": 22,
+      "secrets": 0,
+      "items": 2,
+      "damageTaken": 44
+    },
+    {
+      "file": "routes/C1E4M04.plat.route.json",
+      "difficulty": "hard",
+      "seed": 1,
+      "policy": "standing",
+      "result": "complete",
+      "ticks": 5683,
+      "finalHash": "bd3c6f63",
+      "kills": 22,
+      "secrets": 0,
+      "items": 2,
       "damageTaken": 93
     },
     {
@@ -65,7 +106,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4118,
-      "finalHash": "6133a50e",
+      "finalHash": "54c59fe6",
       "kills": 22,
       "secrets": 1,
       "items": 0,
@@ -78,7 +119,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4290,
-      "finalHash": "0258f744",
+      "finalHash": "8430d23f",
       "kills": 22,
       "secrets": 1,
       "items": 0,
@@ -91,7 +132,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 4571,
-      "finalHash": "3a8b689f",
+      "finalHash": "2c2fa3f4",
       "kills": 22,
       "secrets": 1,
       "items": 0,
@@ -105,12 +146,12 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4129,
-    "finalHash": "b18dbf32",
+    "finalHash": "ab2689b4",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 16,
-    "items": 18,
+    "items": 20,
     "secrets": 1
   },
   "facts": {
@@ -125,7 +166,7 @@
     "closets": 1,
     "triggers": 8,
     "switches": 0,
-    "sectors": 0,
+    "sectors": 1,
     "heights": true,
     "maxFloor": 2,
     "fxCells": 0,
@@ -278,17 +319,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E4M04.json",
-    "when": "2026-10-21T19:54:43.141Z",
-    "commit": "39a8892",
-    "mapSha": "b986d7efbcb96685",
-    "routesSha": "fa70f53da379618d",
-    "passed": 13,
-    "total": 13,
+    "when": "2026-10-26T01:12:53.581Z",
+    "commit": "e59a47e",
+    "mapSha": "d4273f12638f81e3",
+    "routesSha": "c33351511ff49d11",
+    "passed": 15,
+    "total": 15,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-21T19:43:35.731Z",
-      "commit": "39a8892",
+      "when": "2026-10-26T01:03:02.862Z",
+      "commit": "e59a47e",
       "passed": 146,
       "total": 146
     }
@@ -325,6 +366,21 @@
         "name": "route C1E4M04.main.route.json on hard reaches the exit",
         "ok": true,
         "detail": "74.5 s"
+      },
+      {
+        "name": "route C1E4M04.plat.route.json on easy reaches the exit",
+        "ok": true,
+        "detail": "80.7 s"
+      },
+      {
+        "name": "route C1E4M04.plat.route.json on normal reaches the exit",
+        "ok": true,
+        "detail": "80.7 s"
+      },
+      {
+        "name": "route C1E4M04.plat.route.json on hard reaches the exit",
+        "ok": true,
+        "detail": "94.7 s"
       },
       {
         "name": "route C1E4M04.secret.route.json on easy reaches the exit",
@@ -534,7 +590,7 @@
       {
         "name": "feel: the measured map is COMPRESSION",
         "ok": true,
-        "detail": "100% roofed, p90 sightline 13 m (COMPRESSION: >= 80% roofed, sightline <= 20 m)"
+        "detail": "100% roofed, p90 sightline 13.5 m (COMPRESSION: >= 80% roofed, sightline <= 20 m)"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -569,12 +625,12 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E4M04.json: b986d7efbcb96685 vs b986d7efbcb96685"
+        "detail": "validation/browser/C1E4M04.json: d4273f12638f81e3 vs d4273f12638f81e3"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
         "ok": true,
-        "detail": "fa70f53da379618d vs fa70f53da379618d"
+        "detail": "c33351511ff49d11 vs c33351511ff49d11"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
@@ -584,11 +640,11 @@
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
         "ok": true,
-        "detail": "13/13 checks, routes: main, secret"
+        "detail": "15/15 checks, routes: main, plat, secret"
       }
     ]
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 16 enemies, 18 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v1, 16 enemies, 20 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

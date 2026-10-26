@@ -1,12 +1,14 @@
 {
-  "when": "2026-10-21T19:43:35.345Z",
-  "commit": "39a8892",
+  "when": "2026-10-26T01:03:02.670Z",
+  "commit": "e59a47e",
   "sources": {
-    "engine": "447075b4d81aa0d5",
-    "render": "890fcceff508900a",
-    "game": "b38831c64707d86a",
+    "engine": "4907fb404549f334",
+    "render": "004cfe2cbfa6b3f4",
+    "game": "459845811fdcae63",
     "audio": "feeb615d3ade1eab",
-    "assets": "df26bcd4e6468f58"
+    "assets": "ce9ae541649b606a",
+    "verifier": "178a732ec21abcbf",
+    "probes": "f7cd7f4693478b86"
   },
   "checks": [
     {
@@ -37,17 +39,17 @@
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
       "ok": true,
-      "detail": "320 rows (265 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
+      "detail": "340 rows (282 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
     },
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.974, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.971, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.163, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.155, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
@@ -3224,6 +3226,50 @@
         "moved": true
       },
       {
+        "map": "C1E4M04",
+        "sector": "lift",
+        "low": 0,
+        "high": 2,
+        "phases": [
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.044
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0.057
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 1,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
+          }
+        ],
+        "moved": true
+      },
+      {
         "map": "C2M08",
         "sector": "lift1",
         "low": 3,
@@ -3513,7 +3559,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.974
+        "r": 2.971
       },
       "farthestBodyCornerFromShieldCentre": 2.846,
       "ring": [
@@ -3583,7 +3629,7 @@
         "x": 87,
         "y": 2.2,
         "z": 27,
-        "r": 3.163
+        "r": 3.155
       },
       "farthestBodyCornerFromShieldCentre": 3.188,
       "ring": [
@@ -4056,7 +4102,7 @@
         "highest": 0.048
       },
       "movingFloors": {
-        "rows": 320,
+        "rows": 340,
         "violations": 0,
         "deepest": 0,
         "highest": 0.125
