@@ -35,11 +35,11 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 
 ## The freeze
 
-- [ ] Z1 The whole suite
-- [ ] Z2 The one regeneration, from a clean commit
-- [ ] Z3 The audit pack, the web zip and the store set rebuilt from it
-- [ ] Z4 The plan pages, the log, AGENTS.md and the memory say so
-- [ ] Z5 Tagged `rc2`, and nothing changes after it
+- [x] Z1 The whole suite (1488 of 1488 with FULL_AUDIT=1, step 5 of the regeneration, from the clean commit e59a47e; one test (the pickup toast test) had to learn the crate before that and was fixed first)
+- [x] Z2 The one regeneration, from a clean commit (`npm run regen`, 89.5 minutes: browser check 146 of 146, real-game run 68 of 68, verify-map x68 none failed, validate OK, AGENT_VERIFIED 68 of 68; evidence commit ef120ca, `dirtySource false`, every source set matches)
+- [x] Z3 The audit pack, the web zip and the store set rebuilt from it (D:/Doom_release: audit-pack rebuilt from the tagged source with the final-code frames, hushfall-web-1.0.0-<commit>.zip by `npm run package`, store/ (frames 01 to 20, the trailer, the title art); the previous ones are in D:/Doom_release/old)
+- [x] Z4 The plan pages, the log, AGENTS.md and the memory say so (AGENTS.md (PT-073), PRODUCTION_LOG.md, design/ROADMAP.md, design/audits/RC1_AUDIT_PACK.md, ARCHITECTURE.md, design/store/SHOTS.md, the memory, and the two plan pages (revision 23))
+- [x] Z5 Tagged `rc2`, and nothing changes after it (the tag `rc2` on the commit that ticks this line; from here only documents, tests, the store tools and the desktop wrapper may change)
 
 ## Decided, not built (with the reason)
 
