@@ -69,5 +69,5 @@ const hdr = Buffer.alloc(44); hdr.write('RIFF', 0); hdr.writeUInt32LE(36 + pcm.l
 fs.writeFileSync(path.join(work, 'build', 'mix.wav'), Buffer.concat([hdr, pcm]));
 console.log(`sound: ${placed} sim sounds placed, raw peak ${peak.toFixed(2)}, no file for: ${[...missing].join(', ') || 'none'}`);
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
-ff(['-i', path.join(work, 'build', 'video.mp4'), '-i', path.join(work, 'build', 'mix.wav'), '-c:v', 'libx264', '-crf', '21', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-af', `acompressor=threshold=0.1:ratio=8:attack=3:release=120:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=11,alimiter=limit=0.8:level=disabled,afade=t=out:st=${(total - 1.2).toFixed(2)}:d=1.2`, '-t', total.toFixed(2), '-movflags', '+faststart', outFile]);
+ff(['-i', path.join(work, 'build', 'video.mp4'), '-i', path.join(work, 'build', 'mix.wav'), '-c:v', 'libx264', '-crf', '25', '-preset', 'medium', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-af', `acompressor=threshold=0.1:ratio=8:attack=3:release=120:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=11,alimiter=limit=0.8:level=disabled,afade=t=out:st=${(total - 1.2).toFixed(2)}:d=1.2`, '-t', total.toFixed(2), '-movflags', '+faststart', outFile]);
 console.log(`trailer: ${outFile} (${total.toFixed(1)} s, ${segs.length} segments)`);

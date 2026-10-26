@@ -29,9 +29,9 @@ Rule while working: no regeneration between items (every `src`, `index.html` or 
 
 ## Tier 3: for the store
 
-- [ ] F16 Store frames: weapons firing, boss close-ups, the Map tab
-- [ ] F17 A trailer
-- [ ] F18 A desktop wrapper (prototype, outside the web build)
+- [x] F16 Store frames: weapons firing, boss close-ups, the Map tab (D:/Doom_release/store/shots 07 to 20: five bosses, six guns firing, the Map tab twice and the Items page, on the real GPU at 1920 x 1080, width 800, with a whole loadout in the HUD; tools/dev/store-bosses.mjs and store-map.mjs; design/store/SHOTS.md)
+- [x] F17 A trailer (D:/Doom_release/store/trailer/hushfall-trailer-1080p.mp4: 52 s, 1080p, 30 fps, H.264 + AAC, 46 MB; footage by tools/dev/store-trailer.mjs, the sound made from the game's own event-to-sound mapping and rendered score by store-trailer-mix.mjs; a first cut, said so in SHOTS.md)
+- [x] F18 A desktop wrapper (prototype, outside the web build) (tools/desktop: an Electron wrapper; `npm run smoke` in it (a hidden window on the built game) printed "SMOKE OK: screen title" on 2026-10-25; the path resolver and the window posture are held by tests/desktop.test.js; installers, signing, Steam and auto-update are named in its README as not done)
 
 ## The freeze
 

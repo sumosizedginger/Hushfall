@@ -36,7 +36,7 @@ async function smoke(win) {
   const fail = (m) => { console.error('SMOKE FAIL: ' + m); app.exit(1); };
   const timer = setTimeout(() => fail('no title screen within 60 s'), 60000);
   win.webContents.on('render-process-gone', (_e, d) => fail('renderer gone: ' + d.reason));
-  win.webContents.on('console-message', (_e, level, msg) => { if (level >= 3) console.error('page error: ' + msg); });
+  win.webContents.on('console-message', (e) => { if (e.level === 'error') console.error('page error: ' + e.message); });
   win.webContents.once('did-finish-load', async () => {
     try {
       for (let i = 0; i < 120; i++) {
