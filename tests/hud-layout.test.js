@@ -14,11 +14,18 @@ const rule = (sel) => { const i = html.indexOf('\n' + sel + '{'); assert.ok(i >=
 test('the HUD wraps instead of running off the window, the weapon strip wraps inside its own width, and the small print grows with the window\'s height', () => {
   assert.match(rule('#hud'), /flex-wrap:wrap/); assert.match(rule('#hud'), /gap:6px 18px/);
   assert.match(rule('#hud-weapons'), /flex-wrap:wrap/); assert.match(rule('#hud-weapons'), /max-width:100%/);
-  assert.match(html, /#hud-weapons span\{[^}]*font-size:clamp\(11px,1\.3vh,15px\)/);
-  assert.match(rule('#hud .stat small'), /font-size:clamp\(10px,1\.2vh,14px\)/); assert.match(rule('#hud .stat small'), /text-shadow:[^}]*var\(--ink\)/, 'a dark outline: the held lantern sits behind the labels');
+  assert.match(html, /#hud-weapons span\{[^}]*font-size:clamp\(12px,1\.5vh,17px\)/);
+  assert.match(rule('#hud .stat small'), /font-size:clamp\(11px,1\.45vh,16px\)/); assert.match(rule('#hud .stat small'), /text-shadow:[^}]*var\(--ink\)/, 'a dark outline: the held lantern sits behind the labels');
   assert.match(rule('#hud .stat b'), /font-size:clamp\(30px,3\.2vh,40px\)/);
-  // the floors of those clamps are the old sizes: a small window looks exactly as it did
-  assert.ok(/clamp\(10px,/.test(rule('#hud .stat small')) && /clamp\(11px,/.test(html.match(/#hud-weapons span\{[^}]*\}/)[0]));
+  // look polish 8: one size up at every height, a condensed sans the system already has (no font file ships), each reading on its own dark plate
+  assert.ok(/clamp\(11px,/.test(rule('#hud .stat small')) && /clamp\(12px,/.test(html.match(/#hud-weapons span\{[^}]*\}/)[0]));
+  assert.match(html, /--ui:"Bahnschrift"/); assert.match(rule('#hud .stat'), /background:#0b0d12c8/);
+});
+
+test('the message box sits top left under the objective, never over the gun, and its text grows with the window', () => {
+  assert.match(rule('#comms'), /left:16px;top:calc\(var\(--obj-b,0px\) \+ 14px\)/); assert.ok(!/bottom:/.test(rule('#comms')), 'not anchored to the bottom of the picture any more');
+  assert.match(rule('#comms'), /font-size:clamp\(15px,1\.85vh,21px\)/); assert.match(rule('#objective'), /font-size:clamp\(13px,1\.55vh,18px\)/);
+  const ui = fs.readFileSync(path.join(ROOT, 'src/game/ui.js'), 'utf8'); assert.match(ui, /setProperty\?\.\('--obj-b'/);
 });
 
 test('the corner map grows with the window and the toast column keeps clear of it, in both sizes', () => {

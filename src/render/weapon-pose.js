@@ -7,8 +7,8 @@
 // 0.5 m ahead of the eye, seen from directly behind: its receiver was a 160 px slab and its barrel was hidden behind it).
 import { WEAPONS, BASH } from '../engine/defs.js';
 
-export const HIP = { x: 0.2, y: -0.2, z: -0.5 };
-export const HIP_SCALE = 0.74;                                          // PT-021: the guns were 0.62 and sat small in the corner of the frame ("bigger in the frame"); the aimed gun's own scale is unchanged
+export const HIP = { x: 0.235, y: -0.225, z: -0.5 };
+export const HIP_SCALE = 0.66;                                          // look polish 1 (2026-10-26): smaller and lower right, so the gun frames the fight instead of covering it (PT-021 had made it 0.74 for "bigger in the frame"; now it is drawn crisp, it needs less size to read); the aimed gun's own scale is unchanged
 export const SPRINT_POSE = { x: 0.13, y: -0.235, z: -0.42, rx: -0.3, ry: 0.65, rz: -0.28 };           // gun carried low and across the body
 const LEGACY_ADS = { x: 0, y: -0.067, z: -0.6 };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -32,7 +32,8 @@ export function weaponPose(rig, st) {
     return { scale: gs, pos: [px + sway, py + Math.abs(sway) * 0.6 - r * 0.02 - dead * 0.6 + dip, pz + r * 0.13], rot: [-r * 0.12 + SPRINT_POSE.rx * sp, lerp(lerp(0.1, 0, a), SPRINT_POSE.ry, sp), SPRINT_POSE.rz * sp] };
   }
   const t = adsTarget(rig), gs = lerp(HIP_SCALE, t.scale, a);
-  const px = lerp(lerp(HIP.x, t.pos[0], a), SPRINT_POSE.x, sp), py = lerp(lerp(HIP.y, t.pos[1], a), SPRINT_POSE.y, sp), pz = lerp(lerp(HIP.z, t.pos[2], a), SPRINT_POSE.z, sp);
+  const idle = Number.isFinite(st.t) ? (1 - a) * (1 - sp) : 0, bx = idle ? idle * Math.sin(st.t * 0.9) * 0.0024 : 0, by = idle ? idle * Math.sin(st.t * 1.8) * 0.003 : 0;          // look polish 1: a slow breath at the hip (none in the sights or a sprint; none without a clock, so the stills are exact)
+  const px = lerp(lerp(HIP.x, t.pos[0], a), SPRINT_POSE.x, sp) + bx, py = lerp(lerp(HIP.y, t.pos[1], a), SPRINT_POSE.y, sp) + by, pz = lerp(lerp(HIP.z, t.pos[2], a), SPRINT_POSE.z, sp);
   const bash = st.bash ? bashOffset(st.bash) : null;                                                   // the quick melee (key V): the gun is swung butt-first
   return {
     scale: lerp(gs, HIP_SCALE, sp),

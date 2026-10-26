@@ -35,7 +35,7 @@ test('the guns carry hands: eight finger rings (two fists of four), a forearm sl
 });
 
 test('the guns are bigger at the hip and the aimed gun is not (the sight picture was calibrated and stays)', () => {
-  assert.ok(HIP_SCALE >= 0.7 && HIP_SCALE <= 0.85, 'hip scale ' + HIP_SCALE);
+  assert.ok(HIP_SCALE >= 0.6 && HIP_SCALE <= 0.72, 'hip scale ' + HIP_SCALE + ' (look polish 1: smaller and lower right, drawn crisp)');
   for (const [k, make] of Object.entries(MAKERS)) assert.ok(adsTarget(make(null, null)).scale <= 0.5 + 1e-9, k + ': aimed scale unchanged');
 });
 

@@ -206,11 +206,12 @@ function vacuumStep(w, dt, diff) {
   if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; p.vacAcc = (p.vacAcc || 0) + VACUUM.dps * VACUUM.tick * diff.enemyDamage; const whole = Math.floor(p.vacAcc); p.vacAcc -= whole; hurtPlayer(w, whole); } } else p.vacT = 0;          // fractions carry over: Easy and Hard feel it too
   if (on !== !!p.vac) { p.vac = on; emit(w, on ? 'vacuum_enter' : 'vacuum_leave', {}); }
 }
-function hurtPlayer(w, dmg) {
+/** `from` (optional) = where the blow came from, { x, z } in metres: it rides on the `hurt` event as fx / fz so the view can point at it (look polish 10). Event payload only: the sim's state is the same. */
+function hurtPlayer(w, dmg, from = null) {
   const p = w.player; if (p.hp <= 0 || dmg <= 0) return;
   const absorbed = Math.min(p.armor, Math.floor(dmg * PLAYER.armorAbsorb));
   p.armor -= absorbed; const real = dmg - absorbed; p.hp -= real; p.hurt = 1; w.stats.damageTaken += real;
-  emit(w, 'hurt', { amount: real });
+  emit(w, 'hurt', from ? { amount: real, fx: from.x, fz: from.z } : { amount: real });
 }
 
 /** how far a creature notices the player (PT-038, E5): its own range, except in a dark place, where it is `sightDark` unless the player is lit; the Hush-driven kinds ignore the light */
@@ -252,11 +253,11 @@ function strikePlayer(w, e, dmg, heavy = false) {
         e.stunT = Math.max(e.stunT || 0, def.boss ? 0.5 : GUARD.parryStun / (poise >= 3 ? 2 : 1)); e.attackT = -1; e.chargeT = -1; e.lungeT = -1; e.lungeHit = false; e.struck = false; e.cd = Math.max(e.cd || 0, 0.4);
         p.riposteT = GUARD.riposteT; p.parryCd = 0; emit(w, 'parry', { x: e.x, z: e.z, id: e.id }); return 'parry';
       }
-      if (heavy) { p.brokenT = GUARD.brokenT; p.guarding = false; p.guard = 0; emit(w, 'guard_break', { x: e.x, z: e.z }); hurtPlayer(w, dmg); return 'broken'; }
-      emit(w, 'block', { x: e.x, z: e.z }); hurtPlayer(w, Math.max(1, Math.round(dmg * GUARD.block))); return 'block';
+      if (heavy) { p.brokenT = GUARD.brokenT; p.guarding = false; p.guard = 0; emit(w, 'guard_break', { x: e.x, z: e.z }); hurtPlayer(w, dmg, e); return 'broken'; }
+      emit(w, 'block', { x: e.x, z: e.z }); hurtPlayer(w, Math.max(1, Math.round(dmg * GUARD.block)), e); return 'block';
     }
   }
-  hurtPlayer(w, dmg); graftPlayer(w, e); return 'hit';
+  hurtPlayer(w, dmg, e); graftPlayer(w, e); return 'hit';
 }
 
 /** a Zealot's lance that lands GRAFTS (PT-038): `p.graftT` is lazy state, set only here; it slows the walk (the speed line in updatePlayer) and counts down with the clock */
@@ -413,7 +414,7 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
   }
   if (w.phys) blastProps(w, x, y, z, def);
   const p = w.player, d = Math.hypot(x - p.x, y - (p.y + PLAYER.eye), z - p.z);
-  if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))));
+  if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))), { x, z });
 }
 
 // ---------------------------------------------------------------- weapons
@@ -719,7 +720,7 @@ function updateEnemyShots(w, diff, dt) {
       for (const pr of map.props) if (!gone && PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < floorAt(w, pr.x, pr.z) + 1.3) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && w.phys && physAt(w, q.x, q.y, q.z)) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && q.reflected) { for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { gone = true; if (!damageEnemy(w, e, q.dmg)) { hitEffects(w, e, { flinch: 0.5 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }); } emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); break; } }
-      else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg, { x: q.x - q.vx, z: q.z - q.vz }); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && q.sup && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < q.sup && q.y > p.y && q.y < p.y + 2.1) { if ((p.suppT || 0) < SUPPRESS.time * 0.5) emit(w, 'suppress', { x: q.x, z: q.z }); p.suppT = SUPPRESS.time; }          // whizzing past: the player is suppressed (their guns open up)
     }
     if (gone) w.enemyShots.splice(i, 1);
@@ -988,7 +989,7 @@ function updatePulses(w, dt) {
     if (q.reflectAt && !q.back && q.r >= q.reflectAt) { q.back = true; q.speed = -Math.abs(q.speed); q.hit = false; emit(w, 'pulse_back', { x: q.x, z: q.z, r: q.r }); }      // PT-039: the Sub-Cantor's ring turns at the wall and comes home: it can hurt a second time
     if (!q.hit && p.hp > 0) {
       const d = Math.hypot(p.x - q.x, p.z - q.z);
-      if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < (q.h ?? 1.0) && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, lampHold(w, q.dmg)); emit(w, 'pulse_hit', { held: w.map.lampHolds && p.lamp?.on ? 1 : 0 }); }      // cover breaks the line; standing a metre above the floor clears the ring
+      if (Math.abs(d - q.r) < q.width / 2 + PLAYER.radius && Math.abs(p.y - q.y) < (q.h ?? 1.0) && hasLOS(w, q.x, q.z, p.x, p.z)) { q.hit = true; hurtPlayer(w, lampHold(w, q.dmg), q); emit(w, 'pulse_hit', { held: w.map.lampHolds && p.lamp?.on ? 1 : 0 }); }      // cover breaks the line; standing a metre above the floor clears the ring
     }
     if (q.back ? q.r <= 0.6 : q.r > q.maxR) w.pulses.splice(i, 1);
   }
@@ -1122,10 +1123,10 @@ function updateEnemy(w, e, diff, dt) {
   if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js)
   e.cd = Math.max(0, e.cd - dt);
   if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
-  if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
+  if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d, e), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
-  if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), ...runCtx(w, e, def, dt) })) return;          // PT-060: the Marksman's shot
+  if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d, e), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), ...runCtx(w, e, def, dt) })) return;          // PT-060: the Marksman's shot
   if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, ...runCtx(w, e, def, dt), retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
   if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, Math.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;

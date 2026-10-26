@@ -16,6 +16,6 @@ export function decayFor(amount) { return FLASH.decaySmall + (FLASH.decayLarge -
 export class HurtFlash {
   constructor() { this.value = 0; this.rate = FLASH.decaySmall; }
   /** a smaller hit never cuts short or lowers a larger flash that is still showing; a larger one replaces it */
-  hit(amount) { const peak = flashFor(amount); if (peak > 0 && peak >= this.value) { this.value = peak; this.rate = decayFor(amount); } }
+  hit(amount, scale = 1) { const peak = flashFor(amount) * scale; if (peak > 0 && peak >= this.value) { this.value = peak; this.rate = decayFor(amount); } }          // scale < 1: a blow whose direction is shown (hitdir.js) flushes the edges less
   step(dt) { if (this.value > 0) this.value = Math.max(0, this.value - this.rate * (dt > 0 ? dt : 0)); return this.value; }
 }

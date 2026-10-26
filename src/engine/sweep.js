@@ -45,7 +45,7 @@ export function sweepStep(w, e, def, diff, dt, sees, dist, H) {
     const sweeping = e.sweepT >= S.tell, u = sweeping ? (e.sweepT - S.tell) / S.duration : 0, ang = e.sweepA0 + e.sweepDir * S.arc * u;
     const tr = traceSweep(w, ox, oz, ang, H.solid, S.range); e.sweepLine = { pts: tr.pts, beam: sweeping, ang };
     if (sweeping) {
-      if (w.time - (e.sweepHitT ?? -9) >= S.hitCd && p.hp > 0) for (let i = 0; i + 1 < tr.pts.length; i++) if (distToSegment(tr.pts, i, p.x, p.z) < S.width + 0.3 && Math.abs((p.y + 0.9) - S.beamY) < 1.6) { e.sweepHitT = w.time; H.hurtPlayer(w, Math.round(S.damage * diff.enemyDamage)); H.emit(w, 'sweep_hit', { x: p.x, z: p.z }); break; }
+      if (w.time - (e.sweepHitT ?? -9) >= S.hitCd && p.hp > 0) for (let i = 0; i + 1 < tr.pts.length; i++) if (distToSegment(tr.pts, i, p.x, p.z) < S.width + 0.3 && Math.abs((p.y + 0.9) - S.beamY) < 1.6) { e.sweepHitT = w.time; H.hurtPlayer(w, Math.round(S.damage * diff.enemyDamage), { x: ox, z: oz }); H.emit(w, 'sweep_hit', { x: p.x, z: p.z }); break; }
       for (const s of w.enemies) if (s.kind === 'seal' && s.state !== 'dead') for (let i = 1; i + 1 < tr.pts.length; i++) if (distToSegment(tr.pts, i, s.x, s.z) < 0.7 + S.width) { H.damageEnemy(w, s, 9999, {}); H.emit(w, 'seal_shatter', { id: s.id, x: s.x, z: s.z }); break; }
     }
     return true;

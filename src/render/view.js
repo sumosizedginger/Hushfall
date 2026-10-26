@@ -16,7 +16,7 @@ import { MELEE_MAKERS, makePickupMelee } from './models_melee.js';
 import { weaponPose, meleePose, swingPhase, swingCamera, SwingClock, HIP_SCALE } from './weapon-pose.js';
 import { FACTORIES as CHOIR } from './models_choir.js';
 import { choirAtlasName } from './choir_cells.js';
-import { markEntity, patchEntityFragment } from './entityflag.js';
+import { markEntity } from './entityflag.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
@@ -31,6 +31,7 @@ import { makeShield } from './shield.js';
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
+import { HitMarkers } from './hitdir.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { gunFactor } from './gunlight.js';
@@ -64,7 +65,7 @@ const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : kind ===
 export const WEAPON_LIGHT = { floor: 0.35 };
 export class GameView {
   constructor(renderer, tex, map, world) {
-    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash(); this.comfort = { shake: 1, hurt: 1, muzzle: 1 };
+    this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash(); this.hitMarks = new HitMarkers(); this.comfort = { shake: 1, hurt: 1, muzzle: 1 };
     const scene = this.scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(new THREE.Color(map.atmosphere.fog), map.atmosphere.fogDensity);
     const hemi = this.hemi = new THREE.HemisphereLight(0x9fb4d0, 0x3a2a40, 2.4); scene.add(hemi);
     const sun = this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3); sun.position.set(-8, 14, -6); scene.add(sun);
@@ -105,7 +106,7 @@ export class GameView {
     for (const rig of Object.values(this.rigs)) { rig.group.scale.setScalar(HIP_SCALE); rig.group.position.copy(this.WPOS); rig.group.visible = false; ws.add(rig.group); }
     this.targetWeapon = world.player.weapon; this.prevWeapon = world.player.weapon; this.pumpT = 0;
     const nearDepth = '#include <project_vertex>\n gl_Position.z = gl_Position.z * 0.05 - gl_Position.w * 0.95;';   // weapon stays in the near depth range so world depth survives for the outline pass
-    for (const rig of Object.values(this.rigs)) rig.group.traverse((o) => { if (!o.isMesh) return; const m = o.material; m.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace('#include <project_vertex>', nearDepth); if (!m.transparent) patchEntityFragment(s); }; m.customProgramCacheKey = () => 'weapon-depth'; });       // the weapon keeps the classic ink too (entityflag.js)
+    for (const rig of Object.values(this.rigs)) rig.group.traverse((o) => { if (!o.isMesh) return; const m = o.material; m.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace('#include <project_vertex>', nearDepth); }; m.customProgramCacheKey = () => 'weapon-depth'; });       // (look polish 1: the weapon has its own screen-resolution target and its own ink in post.js, so it writes a real alpha)
     this.enemyViews = new Map(); this.pickupViews = new Map(); this.projViews = new Map(); this.debris = [];
     this.prev = { player: { x: 0, z: 0, yaw: 0, pitch: 0 }, enemies: new Map() };
     this.seed = 99; this.debGeo = new THREE.TetrahedronGeometry(0.09); this.debMat = new THREE.MeshBasicMaterial({ color: 0xff8a30 }); this.dustMat = new THREE.MeshBasicMaterial({ color: 0x9a8a72 });
@@ -129,7 +130,7 @@ export class GameView {
     this.beforeStep(world);
   }
   rnd() { this.seed = (this.seed * 1664525 + 1013904223) >>> 0; return this.seed / 4294967296; }
-  setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w))); }
+  setSize(w, h, internalW) { this.renderer.setSize(w, h, false); this.cam.aspect = this.weaponCam.aspect = w / h; this.cam.updateProjectionMatrix(); this.weaponCam.updateProjectionMatrix(); this.post.resize(internalW, Math.max(90, Math.round(internalW * h / w)), w, h); }
   /** FREEZE F11 (the quality governor's second rung, game/quality.js): 0 = everything; 1 hides the creatures' contact shadows and the marks on the floors; 2 also lights only the nearest FX_LIGHTS lamps (a one-time shader recompile, then a shorter light loop).
    *  Render only: nothing here is read by the simulation. */
   setEffects(level = 0) {
@@ -169,7 +170,7 @@ export class GameView {
   handleEvents(events) {
     const dctx = { map: this.map, ex: this.cam.position.x, ez: this.cam.position.z, rnd: () => this.rnd(), kindAt: (x, z) => { let best = null, bd = 2.5; for (const en of this.world?.enemies ?? []) { const d = Math.hypot(en.x - x, en.z - z); if (d < bd) { bd = d; best = en.kind; } } return best; } };
     for (const e of events) {
-      if (e.type === 'hurt') this.hurtFlash.hit(e.amount);                                                          // PT-047 V1: the screen flash follows the size of the hit (hurtflash.js); p.hurt stays sim state
+      if (e.type === 'hurt') { const dir = Number.isFinite(e.fx) && Number.isFinite(e.fz), p = this.world?.player; this.hurtFlash.hit(e.amount, dir ? 0.45 : 1); if (dir && p) this.hitMarks.hit(e.fx, e.fz, e.amount, p.x, p.z, p.yaw); }          // look polish 10: a blow with a source points at it (hitdir.js) and flushes the edges less                                                          // PT-047 V1: the screen flash follows the size of the hit (hurtflash.js); p.hurt stays sim state
       for (const spec of decalsForEvent(e, dctx)) this.decals.add(spec);                                          // a hit, a death, a blast, a bullet: the room keeps it
       if (e.type === 'fire') {
         const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower' || e.weapon === 'mortar', ch = e.charge ?? 0; this.recoil = sg && e.mod === 'doublebarrel' ? 2.6 : sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
@@ -522,7 +523,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     if (rig.melee) {                                                                                                  // fists and the found weapons: the rig animates itself from the swing phase, the guard and the charge (models_melee.js)
       const fc = WEAPONS.fists.charge; rig.anim({ ...ph, kind: sk, charge: shown === 'fists' ? Math.min(1, Math.max(0, ((p.charge || 0) - 0.12) / (fc.max - 0.12))) : 0, guard: p.guard || 0, alt: this.swingAlt ? 1 : 0, t: this.time, saw: shown === 'chainsaw' ? p.saw : null });
       wpose = meleePose(rig, { sprint: sp, sway, dead: this.deadT, dip, kick: this.hitKick, lagX: this.lag.x, lagY: this.lag.y });
-    } else wpose = weaponPose(rig, { ads: a, sprint: sp, sway: sway + (chg > 0 ? (this.rnd() - 0.5) * 0.012 * chg : 0), recoil: this.recoil, dead: this.deadT, dip, bash: ph.on && sk === 'bash' ? ph : null });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js), the sprint carry, the quick bash; a charging lamp trembles
+    } else wpose = weaponPose(rig, { ads: a, sprint: sp, sway: sway + (chg > 0 ? (this.rnd() - 0.5) * 0.012 * chg : 0), recoil: this.recoil, dead: this.deadT, dip, bash: ph.on && sk === 'bash' ? ph : null, t: this.time });      // hip, the sight line (the eye on rear sight -> front blade, weapon-pose.js), the sprint carry, the quick bash; a charging lamp trembles
     if (rig.tick) rig.tick({ t: this.time, beam: this.tractor?.visible && !p.grav?.prop ? 1 : this.tractor?.visible ? 0.5 : 0, hold: p.grav?.prop != null ? 1 : 0, punt: Math.max(0, 1 - this.puntT / 0.3) });
     this.puntT += dt;
     rig.group.scale.setScalar(wpose.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
@@ -538,7 +539,8 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.muzzleLight.intensity = this.flashT > 0 ? 6 * this.comfort.muzzle : 0;
     if (w.map.vacuum.length) { this.frost = (this.frost ?? 0) + ((inVacuum(w, p.x, p.z) ? 1 : 0) - (this.frost ?? 0)) * Math.min(1, dt * 3); this.post.uniforms.uFrost.value = this.frost; }          // PT-033: the frost at the edges of the picture while in vacuum
     this.post.uniforms.uDamage.value = this.hurtFlash.step(dt) * this.comfort.hurt;
-    this.post.render(() => { this.renderer.render(this.scene, this.cam); if (!this.cine) this.renderer.render(this.weaponScene, this.weaponCam); });
+    this.hitMarks.step(dt); this.hitMarks.write(this.cam.position.x, this.cam.position.z, w.player.yaw, this.post.uniforms.uHit.value);          // the direction stays at full strength under reduced motion: it is information, not an effect
+    this.post.render(() => this.renderer.render(this.scene, this.cam), this.cine ? null : () => this.renderer.render(this.weaponScene, this.weaponCam));          // look polish 1: the weapon into its own crisp target
   }
 
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
