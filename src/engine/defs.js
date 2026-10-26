@@ -297,7 +297,7 @@ export const WEAPONS = {
 export const ENEMIES = {
   tollbearer: { hush: true, name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
-  gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4 } },
+  gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4, back: 0.55 } },          // (back: ENEMY ACTIONS, it hops back that long after a lunge)
   // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
   bellhand: { hush: true, name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
 };

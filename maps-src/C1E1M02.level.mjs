@@ -85,7 +85,7 @@ const MAP = {
   intro: { title: 'CUSTOMS HALL', lines: ['Every ship that ever came to Port Marrow was counted here.', 'The lamps are lit. Nobody lit them.'] },
   outro: 'Next: Fishmarket Rows. That is where the town tried to run.',
   objective: 'Find a way into the hall',
-  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12 }, weapons: ['flare', 'scattergun'] },        // arriving from Marrow Quay with the scattergun
+  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 16 }, weapons: ['flare', 'scattergun'] },        // arriving from Marrow Quay with the scattergun
   ...layers,
   groups: [
     { name: 'hall-closet', rect: [28, 50, 43, 50] }, { name: 'reg-closet', rect: [26, 6, 44, 6] }, { name: 'stair', rect: [52, 15, 56, 20] }, { name: 'bond-closet', rect: [15, 31, 15, 31] },

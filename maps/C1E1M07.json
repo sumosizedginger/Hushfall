@@ -1030,6 +1030,16 @@
    "type": "pickup",
    "kind": "weapon_linethrower",
    "at": [5, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [18, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [18, 32]
   }
  ],
  "par": {

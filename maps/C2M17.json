@@ -1029,6 +1029,26 @@
    "at": [137, 30],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [91, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [115, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [120, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [124, 26]
   }
  ],
  "scenery": [

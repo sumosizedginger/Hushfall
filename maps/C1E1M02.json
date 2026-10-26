@@ -1364,7 +1364,7 @@
   "armor": 0,
   "ammo": {
    "flare": 8,
-   "shell": 12
+   "shell": 16
   },
   "weapons": [
    "flare",

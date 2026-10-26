@@ -23,14 +23,14 @@ test('runRouteEither returns the standing run when it completes, and says so', (
   assert.equal(r.result, 'complete'); assert.equal(r.policy, 'standing'); assert.equal(r.strafed, undefined, 'the strafing run is not even played when the standing one completes');
 });
 
-test('eleven Bellhands in the dark Signal House kill the standing fighter and the strafing one completes it: runRouteEither says "strafing"', () => {
+test('a crowd of Bellhands in the dark Signal House on Hard kills the standing fighter and the strafing one completes it: runRouteEither says "strafing"', () => {          // (ENEMY ACTIONS, 2026-10-26: the shots now come in turns and the cellar has a vest and a mend, so it takes twelve Tollbearers turned Bellhands on Hard, not nine on Normal)
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bv2-'));
   try {
-    const c = spawnSync(process.execPath, [path.join(ROOT, 'tools/mapkit/compile.mjs'), 'C1E1M07'], { cwd: ROOT, env: { ...process.env, MAP_OUT: dir, ROSTER_ID: 'C1E1M07', ROSTER_PLAN: JSON.stringify([{ from: 't', to: 'b', n: 9, pick: 'range' }]) }, encoding: 'utf8' });
+    const c = spawnSync(process.execPath, [path.join(ROOT, 'tools/mapkit/compile.mjs'), 'C1E1M07'], { cwd: ROOT, env: { ...process.env, MAP_OUT: dir, ROSTER_ID: 'C1E1M07', ROSTER_PLAN: JSON.stringify([{ from: 't', to: 'b', n: 12, pick: 'range' }]) }, encoding: 'utf8' });
     assert.equal(c.status, 0, (c.stderr || c.stdout).slice(0, 300));
-    const m = loadMapFile(path.join(dir, 'C1E1M07.json')), r = route('C1E1M07'), stand = runRoute(m, r, { seed: 1, difficulty: 'normal' });
-    assert.notEqual(stand.result, 'complete', 'the standing fighter does not get through eleven Bellhands in the dark');
-    const either = runRouteEither(m, r, { seed: 1, difficulty: 'normal' }); assert.equal(either.result, 'complete'); assert.equal(either.policy, 'strafing'); assert.ok(either.world.stats.damageTaken < stand.world.stats.damageTaken + 100, 'it still bleeds (the pickups heal it), it is not a free walk');
+    const m = loadMapFile(path.join(dir, 'C1E1M07.json')), r = route('C1E1M07'), stand = runRoute(m, r, { seed: 1, difficulty: 'hard' });
+    assert.notEqual(stand.result, 'complete', 'the standing fighter does not get through a crowd of Bellhands in the dark');
+    const either = runRouteEither(m, r, { seed: 1, difficulty: 'hard' }); assert.equal(either.result, 'complete'); assert.equal(either.policy, 'strafing'); assert.ok(either.world.stats.damageTaken < stand.world.stats.damageTaken + 100, 'it still bleeds (the pickups heal it), it is not a free walk');
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 

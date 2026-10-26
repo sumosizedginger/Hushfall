@@ -32,6 +32,7 @@ import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
 import { HitMarkers } from './hitdir.js';
+import { Tells, tellOf } from './tells.js';                                                                            // ENEMY ACTIONS: the glint of a windup
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { gunFactor } from './gunlight.js';
@@ -96,6 +97,7 @@ export class GameView {
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
     this.fireLight = new THREE.PointLight(0xffa040, 0, POLISH_LIGHT.fireRange, 2); scene.add(this.fireLight);          // look polish 7: your shot lights the room (a constant light count: it is always there, at 0 between shots)
+    this.tells = new Tells(scene);
     this.popGeo = new THREE.IcosahedronGeometry(POLISH_LIGHT.pop.r, 1); this.popMat = new THREE.MeshBasicMaterial({ color: POLISH_LIGHT.pop.color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }); this.pops = [];
     // weapon overlay
     const ws = this.weaponScene = new THREE.Scene(); this.weaponCam = new THREE.PerspectiveCamera(58, 16 / 9, NEAR, FAR);
@@ -328,6 +330,7 @@ export class GameView {
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
     if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies
+    this.tells.begin();
     const seen = new Set(), beatK = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time + alpha * TICK) : 0;          // the Hive's light curve (hive.js): the creatures' rigs and the static lights swell on the beat (render only)
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
@@ -344,7 +347,8 @@ export class GameView {
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / (def.pulse?.windup ?? def.hive?.windup ?? HIVE.beat));
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : (def.spawner ?? def.feeds) && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / (def.spawner ?? def.feeds).swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
-      if (v.glow) v.glow.color.setHex(eyeColor(e, attack, lunge));                                                          // PT-061 V8: asleep dim, awake teal, hunting amber-white, striking white
+      if (v.glow) v.glow.color.setHex(eyeColor(e, attack, lunge));
+      this.tells.add(v.root.position.x, v.root.position.y, v.root.position.z, v.root.rotation.y, def.height ?? 1.8, tellOf(e, Math.hypot(w.player.x - e.x, w.player.z - e.z)), this.cam);          // ENEMY ACTIONS: the windup's glint (tells.js)                                                          // PT-061 V8: asleep dim, awake teal, hunting amber-white, striking white
       v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
@@ -353,6 +357,7 @@ export class GameView {
         v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); f.traverse((o) => { o.matrixAutoUpdate = false; }); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false; this.scene.remove(v.root);
       } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; this.scene.add(v.root); }
     }
+    this.tells.end();
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); freeRig(v.root); if (v.frozen) freeRig(v.frozen); }          // PT-050 H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
     { const discs = []; for (const e of w.enemies) { if (e.state === 'dead') continue; const v = this.enemyViews.get(e.id), def = ENEMIES[e.kind]; if (v) discs.push({ x: v.root.position.x, y: v.root.position.y, z: v.root.position.z, r: def.radius, fade: def.flying ? 0.55 : 1 }); } this.shadows.update(discs); }      // the floor under each creature, its collision radius; a flyer's disc is smaller (it is higher)
     // channel beams (Sexton -> corpse), node links (ring -> Cantor), the shield, tone pulses
@@ -583,7 +588,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.wardRingMat.dispose(); this.wardDiscMat.dispose();
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); for (const m of this.shockFree) m.material.dispose(); this.tractor?.material.dispose();
-    this.popGeo?.dispose(); this.popMat?.dispose();
+    this.popGeo?.dispose(); this.popMat?.dispose(); this.tells?.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose(); this.hiveView?.dispose(); this.creatureFx?.dispose();

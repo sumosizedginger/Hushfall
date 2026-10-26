@@ -149,4 +149,9 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "gate": [["msg:relay-s","msg:relay-n"]] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+// ---- PT-075 (enemy actions, 2026-10-26): two armour vests and two large mends ON the lane before the two hardest fights, the open stretch at 96,37 and the gallery at 124,32 (the route bot died there once the creatures
+// fanned and took turns; this map already needed the strafing fighter on Normal and Hard). Added as a PAIR so the parity of every later id (the steering side of what spawns) is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [91, 43] }, { type: 'pickup', kind: 'armor_vest', at: [115, 30] });
+MAP.entities.push({ type: 'pickup', kind: 'health_large', at: [120, 32] }, { type: 'pickup', kind: 'health_large', at: [124, 26] });          // and a mend each side of the gallery fight (the secret route's lane, the main route's): a second pair
+// ---- end PT-075
 export default MAP;

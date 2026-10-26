@@ -20,6 +20,7 @@ import { maybeDrop, updateDrops, trackFired } from './drops.js';
 import { takeCrate } from './crate.js';                                                                                // FREEZE F8: the heavy ammunition crate (a pure top-up of every carried gun)
 import { trimCorpses } from './corpses.js';
 import { navWaypoint } from './nav.js';
+import { TACTICS, ordinary, takeTurn, fanPoint } from './tactics.js';                                                   // ENEMY ACTIONS (2026-10-26): the fan, the turns, the movement between acts
 import { updateSectors, updateTriggers, activateSwitch, choiceHolds, messageHeld } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
@@ -781,7 +782,7 @@ function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
     }
     e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return false;
   }
-  if (sees && e.attackT < 0 && e.chargeCd <= 0 && dist >= C.min && dist <= C.max && dyv < 1.2 && beatOk(w, e) && moveClear(w, e.x, e.z, p.x, p.z, def.radius)) {
+  if (sees && e.attackT < 0 && e.chargeCd <= 0 && dist >= C.min && dist <= C.max && dyv < 1.2 && beatOk(w, e) && moveClear(w, e.x, e.z, p.x, p.z, def.radius) && takeTurn(w, e, 'melee')) {
     e.chargeT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true;
   }
   return false;
@@ -1107,17 +1108,26 @@ function updateEnemy(w, e, diff, dt) {
   if (def.ring && e.state !== 'idle' && isBeatTick(w.tick)) resonantRing(w, e, def, diff);          // PT-043: the Resonant rings on the beat
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz), dyv = Math.abs(p.y - e.y);          // dyv: an enemy cannot hit someone standing on a ledge two metres above it
   const sees = dist < (e.sightR ?? sightIn(w, def)) && p.hp > 0 && hasLOS(w, e.x, e.z, p.x, p.z);
-  if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; }
+  if (sees) { e.lastX = p.x; e.lastZ = p.z; e.lost = 0; if (e.searchT !== undefined) { delete e.searchT; delete e.searchYaw; } }
   if (e.rings && def.pulse) ringStep(w, e, def, diff, dt, sees);                         // PT-045 (dev range only): a target that only RINGS (the lamp yard's Sub-Cantor): its pulse, and nothing else of a boss
   if (e.hold && !sees && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0) { homeStep(w, e, def, dt, true); return; }      // a range target that cannot see you goes back to its post and its heading
   if (e.state === 'idle') { if (sees) wakeEnemy(w, e, true); else return; }
   else if (!sees) e.lost = (e.lost || 0) + dt;
   // hunt: head for the last place the player was seen; give up after a while (or on arrival) and go back to sleep
   const tx = (sees || e.hunt) ? p.x : (e.lastX ?? p.x), tz = (sees || e.hunt) ? p.z : (e.lastZ ?? p.z), tdist = Math.hypot(tx - e.x, tz - e.z);          // PT-046 (C2M28): a `hunt` creature (a wave out of the dock's gates) always knows where you stand and never goes back to sleep
-  if (!sees && !e.hunt && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { e.state = 'idle'; e.walk = 0; return; }
+  if (!sees && !e.hunt && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) {
+    if (e.lost <= 8 && ordinary(e)) {                                                                                          // ENEMY ACTIONS: it looks round where it lost you before it gives up (tactics.js `search`)
+      const Sr = TACTICS.search; if (e.searchT === undefined) { e.searchT = Sr.t; e.searchYaw = e.yaw; }
+      e.searchT -= dt; e.yaw = e.searchYaw + Math.sin((Sr.t - e.searchT) * Sr.rate) * Sr.sweep; e.walk *= 0.9; if (e.searchT > 0) return;
+    }
+    if (e.searchT !== undefined) { delete e.searchT; delete e.searchYaw; }
+    e.state = 'idle'; e.walk = 0; return;
+  }
   // steering: straight at the target when it is in view and the ground allows it; otherwise follow the distance field around walls, doors and ledges
   let ax = tx, az = tz;
-  if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
+  const fp = sees && !def.ranged && ordinary(e) ? fanPoint(w, e) : null;                                                     // ENEMY ACTIONS: its slot in the fan across the player's front (tactics.js), when the way there is clear
+  if (fp && stepClear(w, e.x, e.z, fp.x, fp.z) && moveClear(w, e.x, e.z, fp.x, fp.z, def.radius)) { ax = fp.x; az = fp.z; }
+  else if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
   const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
   if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js)
@@ -1141,10 +1151,11 @@ function updateEnemy(w, e, diff, dt) {
         const hit = () => { if (!e.lungeHit) { e.lungeHit = true; strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } };
         tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
         if (dist < def.attack.reach * 0.7 && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.dashCos)) hit();
-      } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; }
+      } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; if (L.back && ordinary(e) && (-Math.sin(p.yaw) * (e.x - p.x) - Math.cos(p.yaw) * (e.z - p.z)) / (dist || 1) > 0.5) e.backT = L.back; }          // (ENEMY ACTIONS: a Gaunt hops back after its lunge, `lunge.back` s, but only from a player who FACES it: turn your back or run and it keeps coming)
       return;
     }
-    if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max && beatOk(w, e)) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return; }
+    if (e.backT > 0) { e.backT = Math.max(0, e.backT - dt); if (e.backT === 0) delete e.backT; if (retreatStep(w, e, def, dt)) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return; } }
+    if (sees && e.attackT < 0 && e.lungeCd <= 0 && dist >= L.min && dist <= L.max && beatOk(w, e) && takeTurn(w, e, 'melee')) { e.lungeT = 0; e.lungeHit = false; emit(w, 'enemy_lunge', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return; }
   }
   const R = def.ranged, engage = R ? R.hold : def.attack.range;
   if (e.attackT >= 0) {
@@ -1154,8 +1165,8 @@ function updateEnemy(w, e, diff, dt) {
       if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
       else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, Math.sin(e.yaw) * def.attack.knock, Math.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
-    if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; }
-  } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange && beatOk(w, e)) {
+    if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; if (R && !def.strafe && ordinary(e)) { const Sh = TACTICS.shuffle; if (rand(w) < Sh.chance) { e.shufT = Sh.t[0] + rand(w) * (Sh.t[1] - Sh.t[0]); e.shufDir = rand(w) < 0.5 ? -1 : 1; } } }          // (ENEMY ACTIONS: a walking shooter side-steps after a shot)
+  } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange && beatOk(w, e) && takeTurn(w, e, 'ranged')) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
   } else if (!e.hold && (def.flying || def.retreat) && R && sees && dist < (R.keep ?? R.minRange) && retreatStep(w, e, def, dt)) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait;
@@ -1163,8 +1174,12 @@ function updateEnemy(w, e, diff, dt) {
     chaseStep(w, e, def, dt);
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
   } else {
-    if (e.hold) e.walk = Math.max(0, e.walk - dt * 3); else if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
-    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0 && beatOk(w, e) && (e.hold !== 'turn' || inFront(e, p, ENEMY_STRIKE.cos))) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }      // (a range 'turn' target swings once it faces you, as a creature that walked up to you would; a 'fixed' one swings regardless)
+    if (e.shufT > 0) {                                                                                                         // ENEMY ACTIONS: the side-step after a shot, square to the line to the player
+      e.shufT = Math.max(0, e.shufT - dt); const a = Math.atan2(p.x - e.x, p.z - e.z) + e.shufDir * Math.PI / 2;
+      if (moveAlong(w, e, def, dt, a, TACTICS.shuffle.speed)) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2); } else e.shufDir = -e.shufDir;
+      if (e.shufT === 0) { delete e.shufT; delete e.shufDir; }
+    } else if (e.hold) e.walk = Math.max(0, e.walk - dt * 3); else if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
+    if (sees && dist <= def.attack.range + 0.1 && dyv < 1.6 && e.cd <= 0 && beatOk(w, e) && (e.hold !== 'turn' || inFront(e, p, ENEMY_STRIKE.cos)) && takeTurn(w, e, 'melee')) { e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }      // (a range 'turn' target swings once it faces you, as a creature that walked up to you would; a 'fixed' one swings regardless)
   }
 }
 

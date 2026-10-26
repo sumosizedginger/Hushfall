@@ -129,4 +129,8 @@ E.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "radio-locked": ["msg:vael"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+// ---- PT-075 (enemy actions, 2026-10-26): an armour vest at the cellar door and a large mend just inside it, ON the lane before the Bellhands' room at 18,32 (a Bellhand that side-steps after its shots
+// takes longer to kill, and on Normal the route bot died there on one seed of three). A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [18, 29] }, { type: 'pickup', kind: 'health_large', at: [18, 32] });
+// ---- end PT-075
 export default MAP;
