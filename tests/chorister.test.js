@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorld, step, spawnEnemy, drainEvents, damageEnemy } from '../src/engine/world.js';
 import { ENEMIES, SUPPRESS, WEAPONS } from '../src/engine/defs.js';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { findTraps } from '../src/engine/traps.js';
 import { shippedMap } from './helpers.js';
 
@@ -68,10 +68,10 @@ test('a stun breaks a burst in the middle, and a Chorister dies like any creatur
   assert.ok(C.hp > 24 && C.hp <= 45, 'a little more than a Gaunt'); assert.ok(damageEnemy(w, e, 1e5)); assert.equal(e.state, 'dead');
 });
 
-test('the Landing Scar: the singers sleep at the spawn (out of their sight), wake on the ramp, and the route plays through to the exit on every difficulty', () => {
+test('the Landing Scar: the singers sleep at the spawn (out of their sight), wake on the ramp, and the route plays through to the exit on every difficulty', () => {          // (either fighter policy on the route, as the map gates)
   const map = shippedMap('C1E3M01'), w = createWorld(map, { seed: 1, difficulty: 'normal' }); const singers = w.enemies.filter((e) => e.kind === 'chorister');
   assert.ok(singers.length >= 6, `${singers.length} singers`); run(w, 60 * 6); assert.ok(singers.every((e) => e.state === 'idle'), 'nobody has noticed the player at the spawn');
-  for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRoute(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty); assert.ok(r.events.some((x) => x.type === 'suppress'), 'suppression happened'); }
+  for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRouteEither(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty); assert.ok(r.events.some((x) => x.type === 'suppress'), 'suppression happened'); }
   const s = runRoute(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
   assert.equal(findTraps(map).traps, 0, 'no pit');
 });

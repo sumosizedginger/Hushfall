@@ -25,8 +25,9 @@ fs.mkdirSync(path.join(root, 'validation/browser'), { recursive: true });
 
 const server = await createServer({ root, logLevel: 'error', server: { port: port || 5340 + (process.pid % 40), strictPort: !!port } });
 await server.listen();
-const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await puppeteer.launch({ headless: true, args: process.env.GPU ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });          // GPU=1: the machine's own graphics card (software GL starves under any other load: a 6 s stall failed the frame check once while a video played)
 const page = await browser.newPage();
+await page.evaluateOnNewDocument(() => { window.__lockAsks = 0; Element.prototype.requestPointerLock = function () { window.__lockAsks++; return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError')); }; });          // the pointer lock is refused before any page script runs (the owner's mouse is never taken)
 await page.setViewport({ width: 1280, height: 720 });
 let errors = [];
 page.on('pageerror', (e) => errors.push('pageerror: ' + e)); page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
@@ -70,5 +71,6 @@ for (const m of maps) {
   const failed = checks.filter((c) => !c.ok); if (failed.length) anyFailed = true;
   console.log(`${id}: ${checks.length - failed.length}/${checks.length} real-game checks passed (${evidence.wallSeconds}s) -> validation/browser/${id}.json`);
 }
+console.log('pointer lock asked ' + (await page.evaluate('window.__lockAsks').catch(() => 'n/a')) + ' times (must be 0)');
 await browser.close(); await server.close();
 process.exit(anyFailed ? 1 : 0);

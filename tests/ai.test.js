@@ -69,7 +69,7 @@ test('hunting: an enemy that lost you walks to where it last saw you (not to whe
   const w = quiet(hall({ wall: full })); at(w, 4, 4); const e = put(w, 'tollbearer', 14, 5, Math.PI); e.state = 'chase'; e.hp = 999; e.lastX = cell(19); e.lastZ = cell(5);
   const x0 = e.x; run(w, 90);
   assert.ok(e.x > x0 + 1 && e.state === 'chase', 'it headed EAST to the remembered spot, away from the player standing west');
-  run(w, 60 * 6); assert.equal(e.state, 'idle', 'arrived, saw nothing: back to sleep'); assert.ok(Math.abs(e.x - cell(19)) < 1.6);
+  run(w, 60 * 9); assert.equal(e.state, 'idle', 'arrived, looked round (ENEMY ACTIONS: 2.6 s), saw nothing: back to sleep'); assert.ok(Math.abs(e.x - cell(19)) < 1.6);
 });
 
 test('an enemy that cannot reach its last-known spot still gives up after its patience runs out', () => {

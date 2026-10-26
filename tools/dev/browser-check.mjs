@@ -23,9 +23,9 @@ const check = (name, ok, detail = '') => { checks.push({ name, ok: !!ok, detail:
 
 const server = await createServer({ root, logLevel: 'error', server: { port: 5210, strictPort: true } });
 await server.listen();
-const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await puppeteer.launch({ headless: true, args: process.env.GPU ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });          // GPU=1: the machine's own graphics card (software GL starves under any other load: a 6 s stall failed the frame check once while a video played)
 const page = await browser.newPage();
-await page.evaluateOnNewDocument(() => { navigator.getGamepads = () => [null, null, null, null]; });          // a controller plugged into the machine (a DualSense with a stick at rest) steers the page in its real-time sections: this check is about the keyboard and the mouse (tools/dev/probe-pad.mjs installs its own fake pad)
+await page.evaluateOnNewDocument(() => { navigator.getGamepads = () => [null, null, null, null]; window.__lockAsks = 0; Element.prototype.requestPointerLock = function () { window.__lockAsks++; return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError')); }; });          // (the pointer lock is refused before any page script runs: the owner's mouse is never taken)          // a controller plugged into the machine (a DualSense with a stick at rest) steers the page in its real-time sections: this check is about the keyboard and the mouse (tools/dev/probe-pad.mjs installs its own fake pad)
 await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e));
 page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
@@ -551,6 +551,7 @@ const sh = (c) => { try { return execSync(c, { cwd: root, stdio: ['ignore', 'pip
 if (renderGround) fs.writeFileSync(path.join(root, 'validation/render-ground.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), sources: sourceShas(root), checks: checks.filter((c) => c.name.startsWith('render truth')), report: renderGround }, null, 2));
 fs.writeFileSync(path.join(root, 'validation/browser-check.json'), JSON.stringify({ when: new Date().toISOString(), commit: sh('git rev-parse --short HEAD'), sources: sourceShas(root), renderGround: renderGround && { band: renderGround.band, totals: renderGround.totals, violationCount: renderGround.violationCount, hitVolume: renderGround.hitVolume, cantor: renderGround.cantor && { problems: renderGround.cantor.problems, body: renderGround.cantor.body, shield: renderGround.cantor.shield, nodes: renderGround.cantor.nodes } }, dirtySource: !!sh("git status --porcelain -- . ':!review' ':!validation'"), mapSha: sha16('maps/C1E1M01.json'), mapShas: Object.fromEntries(['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08', 'C1E1S01'].map((id) => [id, sha16('maps/' + id + '.json')])), gate2Routes: g2, mapVersion: JSON.parse(fs.readFileSync(path.join(root, 'maps/C1E1M01.json'), 'utf8')).version, env: 'headless Chrome 154, SwiftShader software GL, 1280x720', checks, errors, perf, gl, note: 'perf numbers are software-GL and are NOT a performance claim' }, null, 2));
 }
+console.log('pointer lock asked ' + (await page.evaluate('window.__lockAsks').catch(() => 'n/a')) + ' times (must be 0)');
 await browser.close(); await server.close();
 const failed = checks.filter((c) => !c.ok);
 console.log(`\n${checks.length - failed.length}/${checks.length} checks passed`);
