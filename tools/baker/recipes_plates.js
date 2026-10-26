@@ -1,5 +1,5 @@
-// LOOK POLISH 9 (2026-10-26): the two plates that make the first impression, painted at 1280 x 720 in the hand of the polish pass (recipes_polish.js says what that is). The four epilogue plates of F9
-// stay as they are: a set made together, flat and graphic on purpose. The page shows a plate this size smoothed, not pixelated (index.html `.hires`, set by main.js from the image's own width).
+// LOOK POLISH 9 (2026-10-26): the two plates that make the first impression, painted at 1280 x 720 in the hand of the polish pass (recipes_polish.js says what that is). The four epilogue plates
+// followed in the same hand (recipes_endplates.js). The page shows a plate this size smoothed, not pixelated (index.html `.hires`, set by main.js from the image's own width).
 import { R } from './recipes.js';
 import { paint2d } from './paint2d.js';
 

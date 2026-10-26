@@ -878,20 +878,20 @@
       "bytes": 34517
     },
     "ui_ending_art": {
-      "seed": 3601,
-      "width": 320,
-      "height": 200,
+      "seed": 23601,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "f7f64fd9c6e95e72f70311b9f005f5bde6eb88d122456f086a953014f195813b",
-      "bytes": 67651
+      "sha256": "ff40da27a993f219eee920da1aa03362a0788dc0a59131544a193f2e80e24137",
+      "bytes": 651362
     },
     "ui_ending_art_2": {
-      "seed": 3602,
-      "width": 320,
-      "height": 200,
+      "seed": 23603,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "2cd380ed39152c6bfb6c21214368afc6c4d8296c2f759aa7fedae597e84f7270",
-      "bytes": 44103
+      "sha256": "cfb6b88a9ba5ea14bc3f3d314a00de40fc7eb45add9ce67685c4f2cc0633a3b8",
+      "bytes": 621149
     },
     "wall_glasscrust_a": {
       "seed": 9501,
@@ -1358,20 +1358,20 @@
       "bytes": 39579
     },
     "ui_ending_coast": {
-      "seed": 9101,
-      "width": 320,
-      "height": 200,
+      "seed": 23602,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "7b910491f3fbc6f35e88bff593a1e97d1895ce6cb1d0f42078891a3a3995c531",
-      "bytes": 58837
+      "sha256": "6c5530d0f2671b659e7e917aec43822a58051e0b9436514d826b0f682fb07692",
+      "bytes": 466263
     },
     "ui_ending_lamp_dark": {
-      "seed": 9102,
-      "width": 320,
-      "height": 200,
+      "seed": 23604,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "cb0529aeb56e7a6c995e25685a9aa9827ac150da4f7ed575b9c1fb810b7ef827",
-      "bytes": 35508
+      "sha256": "a716f1c540c284a7a77bf972f53437354ae4fff6db0ba043276b69dec1344e3b",
+      "bytes": 299658
     },
     "ceiling_a": {
       "seed": 29901,

@@ -89,11 +89,11 @@ test('light and colour: the view scales the place\'s general light down and its 
 });
 
 test('the paint: the polish recipes supersede the old ones of the same id, every world tile is a 256 square, the plates are 1280 x 720 and are shown smoothed', async () => {
-  const { recipes } = await import('../tools/baker/all.js'), { recipesPolish2 } = await import('../tools/baker/recipes_polish2.js'), { recipesPlates } = await import('../tools/baker/recipes_plates.js');
+  const { recipes } = await import('../tools/baker/all.js'), { recipesPolish2 } = await import('../tools/baker/recipes_polish2.js'), { recipesPlates } = await import('../tools/baker/recipes_plates.js'), { recipesEndplates } = await import('../tools/baker/recipes_endplates.js');
   for (const [id, r] of Object.entries(recipesPolish2)) { assert.equal(recipes[id], r, id + ' is the polish recipe'); assert.equal(r.width, 256); assert.equal(r.height, 256); }
-  for (const [id, r] of Object.entries(recipesPlates)) { assert.equal(recipes[id], r); assert.equal(r.width, 1280); assert.equal(r.height, 720); }
+  for (const [id, r] of Object.entries({ ...recipesPlates, ...recipesEndplates })) { assert.equal(recipes[id], r); assert.equal(r.width, 1280); assert.equal(r.height, 720); }
   const man = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/baked/manifest.json'), 'utf8')), entry = (id) => (Array.isArray(man.assets) ? man.assets.find((x) => x.id === id) : (man.assets ?? man)[id]);
-  for (const id of [...Object.keys(recipesPolish2), ...Object.keys(recipesPlates)]) { const e = entry(id); assert.ok(e, id + ' is baked'); assert.equal(e.seed, recipes[id].seed, id + ' was baked from the polish recipe'); }
+  for (const id of [...Object.keys(recipesPolish2), ...Object.keys(recipesPlates), ...Object.keys(recipesEndplates)]) { const e = entry(id); assert.ok(e, id + ' is baked'); assert.equal(e.seed, recipes[id].seed, id + ' was baked from the polish recipe'); }
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'), main = fs.readFileSync(path.join(ROOT, 'src/game/main.js'), 'utf8');
   assert.match(html, /#title-art\.hires,#ending-art\.hires\{image-rendering:auto\}/); assert.match(main, /classList\.toggle\('hires', im\.naturalWidth >= 640\)/);
 });
