@@ -5,7 +5,7 @@
 import * as THREE from 'three';
 import { atlas } from './atlasuv.js';
 import { ironSights, tang } from './weapon-sights.js';
-import { gunKit, lathe, fist } from './gunkit.js';
+import { gunKit, lathe, fist, muzzleFlash } from './gunkit.js';
 
 const PI = Math.PI;
 /** a grip: a swell, a waist, a flare at the heel (cell = its material), tilted back like a pistol grip */
@@ -33,8 +33,7 @@ export function makeFlareCannon(tex, gunTex, o = {}) {
     fist(K, g, { at: [0.0, -0.105, -0.24], rot: [PI / 2, 0, 0], shoulder: [-0.38, -0.8, 0.5], pole: [-0.5, -1, 0.1] });
   }
   const flash = new THREE.Group(); flash.position.z = -0.86; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.07, 0), new THREE.MeshBasicMaterial({ color: 0xfff4d0 })));
+  flash.add(muzzleFlash(0.13, 0xffb040, 0xfff4d0));          // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, adsY: -0.067, sleeveMat: K.sleeveMat, sights };
 }
 
@@ -57,7 +56,6 @@ export function makeScattergun(tex, gunTex, o = {}) {
     fist(K, pump, { at: [0.0, -0.058, -0.26], rot: [PI / 2, 0, 0], shoulder: [-0.38, -0.8, 0.45], pole: [-0.5, -1, 0.1] });
   }
   const flash = new THREE.Group(); flash.position.z = -0.78; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0xffa030 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
+  flash.add(muzzleFlash(0.16, 0xffa030, 0xfff0c0));          // look polish 7 (gunkit.js)
   return { group: g, flash, pump, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }

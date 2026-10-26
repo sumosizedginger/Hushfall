@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { atlas } from './atlasuv.js';
 import { ironSights } from './weapon-sights.js';
-import { gunKit, lathe, fist } from './gunkit.js';
+import { gunKit, lathe, fist, muzzleFlash } from './gunkit.js';
 
 const PI = Math.PI;
 
@@ -34,8 +34,7 @@ export function makeCarbine(tex, gunTex, o = {}) {
     fist(K, g, { at: [0.0, -0.035, -0.32], rot: [PI / 2, 0, 0], shoulder: [-0.4, -0.8, 0.4], pole: [-0.5, -1, 0.1] });                                                       // the left hand under the hand-guard
   }
   const flash = new THREE.Group(); flash.position.z = -0.92; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshBasicMaterial({ color: 0xffb040 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.032, 0), new THREE.MeshBasicMaterial({ color: 0xfff4c8 })));
+  flash.add(muzzleFlash(0.06, 0xffb040, 0xfff4c8));          // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

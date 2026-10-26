@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { atlas } from './atlasuv.js';
 import { ironSights } from './weapon-sights.js';
-import { gunKit, lathe, fist } from './gunkit.js';
+import { gunKit, lathe, fist, muzzleFlash } from './gunkit.js';
 
 const PI = Math.PI, gripProfile = [[0.034, -0.09], [0.047, -0.055], [0.05, -0.005], [0.047, 0.045], [0.04, 0.09]];
 
@@ -31,8 +31,7 @@ export function makeArcLamp(tex, gunTex, o = {}) {
     fist(K, g, { at: [0.0, -0.12, -0.16], rot: [0, -PI / 2, 0], shoulder: [-0.4, -0.8, 0.5], pole: [-0.5, -1, 0.1] });
   }
   const flash = new THREE.Group(); flash.position.z = -0.7; flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.09, 0), new THREE.MeshBasicMaterial({ color: 0x6ffff0 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.05, 0), new THREE.MeshBasicMaterial({ color: 0xf0fffc })));
+  flash.add(muzzleFlash(0.09, 0x6ffff0, 0xf0fffc));          // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, core, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

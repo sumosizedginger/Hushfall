@@ -17,7 +17,7 @@ test('markEntity flags every opaque material of every enemy rig and patches its 
       assert.equal(m.userData.entity, true, `${kind}: a material is not flagged`);
       const shader = { fragmentShader: 'void main() {\n#include <opaque_fragment>\n}' }; m.onBeforeCompile(shader, null);
       assert.ok(shader.fragmentShader.includes('gl_FragColor.a = 0.0'), `${kind}: the fragment shader does not write alpha 0`);
-      assert.equal(m.customProgramCacheKey(), 'entity', `${kind}: flagged materials need their own program`);
+      assert.match(m.customProgramCacheKey(), /^entity/, `${kind}: flagged materials need their own program`);          // (look polish 6: 'entity-rim', 'entity-peace-rim')
     }
   }
 });

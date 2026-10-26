@@ -6,6 +6,8 @@ import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, FX, lookOf } from '../engine/defs
 import { beltAtCell } from '../engine/belts.js';
 import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
+import { patchSurface } from './surface.js';
+import { buildTrims } from './trims.js';
 import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
@@ -123,16 +125,17 @@ export function buildLevel(map, tex) {
     if (fx && fx in fxQuads && !(map.belts.length && FX[fx]?.flow && beltAtCell(map, cx, cz))) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
   const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
-  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group) => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true })); parent.add(mesh); return mesh; };
+  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group, surf = 'wall') => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), patchSurface(new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true }), surf, S)); parent.add(mesh); return mesh; };          // look polish 2: every level surface varies in world space (surface.js)
   for (const [c, q] of walls) mk(q, T(WALL_SKINS[c]));
-  for (const [c, q] of floors) { const [t, tint] = skinTex(c); const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor'; mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000); }
-  for (const [c, q] of risers) { const [t] = skinTex(c); mk(q, t, 0x9aa0a8, 0x080a0c); }
-  mk(ceil, T('floor_planks_a'), 0x8a7a6a); mk(ceilSteps, T('floor_planks_a'), 0x6a5e52); mk(fascia, T('floor_planks_a'), 0x5a6068);
+  for (const [c, q] of floors) { const [t, tint] = skinTex(c); const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor'; mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000, group, 'floor'); }
+  for (const [c, q] of risers) { const [t] = skinTex(c); mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser'); }
+  const ceilTex = tex.ceiling_a ?? T('floor_planks_a');                                                                // look polish 2: ceilings have their own boards (they wore the floor's planks)
+  mk(ceil, ceilTex, tex.ceiling_a ? 0xa89888 : 0x8a7a6a, 0x000000, group, 'ceil'); mk(ceilSteps, ceilTex, tex.ceiling_a ? 0x887a6e : 0x6a5e52, 0x000000, group, 'riser'); mk(fascia, T('floor_planks_a'), 0x5a6068, 0x000000, group, 'riser');
   // sector meshes (lifts, ramps): a group per sector, moved along y by the view
   map.sectors.forEach((sd, i) => {
     const g = new THREE.Group(); group.add(g); sectorViews[i] = g;
-    for (const [c, q] of sectorQ[i].top) { const [t, tint] = skinTex(c); mk(q, t, tint, 0x0a0c10, g); }
-    for (const [c, q] of sectorQ[i].skirt) { const [t] = skinTex(c); mk(q, t, 0x7a8088, 0x050607, g); }
+    for (const [c, q] of sectorQ[i].top) { const [t, tint] = skinTex(c); mk(q, t, tint, 0x0a0c10, g, 'floor'); }
+    for (const [c, q] of sectorQ[i].skirt) { const [t] = skinTex(c); mk(q, t, 0x7a8088, 0x050607, g, 'riser'); }
     g.position.y = sd.start === 'high' ? sd.high : sd.low;
   });
 
@@ -152,7 +155,7 @@ export function buildLevel(map, tex) {
   if (!fxQuads.x.empty) { fxMats.x = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x3fffc0, transparent: true, opacity: 0.62, depthWrite: false }); const m = new THREE.Mesh(fxQuads.x.geometry(), fxMats.x); m.renderOrder = 2; group.add(m); }
 
   // ceiling beams along x through each interior row run (only where the ceiling height is constant along the run)
-  const beamMat = new THREE.MeshLambertMaterial({ map: tex.crate_wood_a, color: 0x8a7a6a });
+  const beamMat = patchSurface(new THREE.MeshLambertMaterial({ map: tex.crate_wood_a, color: 0x8a7a6a }), 'trim', S);
   for (let cz = 1; cz < map.h - 1; cz += 2) {
     let start = null, startCe = 0;
     for (let cx = 0; cx <= map.w; cx++) {
@@ -161,6 +164,9 @@ export function buildLevel(map, tex) {
       if (!inside && start !== null) { const len = (cx - start) * S; if (len >= 2 * S) { const b = new THREE.Mesh(new THREE.BoxGeometry(len, 0.34, 0.34), beamMat); b.position.set(start * S + len / 2, startCe - 0.17, (cz + 0.5) * S); group.add(b); } start = null; if (cx < map.w && map.kind(cx, cz) === 'floor') { start = cx; startCe = ce(cx, cz); } }
     }
   }
+
+  // look polish 2 and 3: skirting, cornices, plinths and copings, pilasters on long walls, door frames with their lamps, lever halos and lamp pools (trims.js: drawn only, the sim never sees them)
+  const trims = buildTrims(map, { tex: T, wallTex: (c) => T(WALL_SKINS[c]), patch: (m, k) => patchSurface(m, k, S) }); for (const m of trims.meshes) group.add(m);
 
   // doors, closets and secret panels (dynamic meshes; the sim owns their open state)
   for (const d of map.doors.values()) {
@@ -275,5 +281,5 @@ export function buildLevel(map, tex) {
   });
   { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
   const dispose = () => { for (const t of ownTex) t.dispose(); ownTex.length = 0; };                               // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
-  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose };
+  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose, trims: trims.stats };
 }

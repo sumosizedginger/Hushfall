@@ -10,12 +10,36 @@ import { kit as meleeKit, arm, glove } from './models_melee.js';
 /** every gun's materials: G(geometry, gunCell[, material]) a part of the gun, H(geometry, handCell) a part of a hand, sleeveMat the forearms' (faded in the sights) */
 export function gunKit(tex, gunTex) {
   const hand = meleeKit(tex), gmat = new THREE.MeshLambertMaterial({ map: gunTex ?? tex, emissive: 0x1a1410 }); gmat.userData.atlas = 'guns';
-  const G = (geom, cell, m = gmat) => new THREE.Mesh(atlas(geom, cell), m);
+  hand.sleeveMat.color.setHex(0x4a5650); hand.mat.color.setHex(0x9a8670);                               // look polish 1: Ines's oilskin sleeves are dark and her wrapped hands weathered leather, not a white mass at the edge of the picture
+  const G = (geom, cell, m = gmat) => new THREE.Mesh(atlas(smooth(geom), cell), m);
   return { G, gmat, H: hand.M, handMat: hand.mat, sleeveMat: hand.sleeveMat };
 }
 
+/** look polish 1: the held gun is drawn at the screen's resolution now, so a 10-sided barrel shows its facets: round parts get at least 20 sides (cylinders, tori and lathes; everything else as it was) */
+export function smooth(geom) {
+  const p = geom.parameters ?? {};
+  if (geom.type === 'CylinderGeometry' && p.radialSegments < 20) { geom.dispose(); return new THREE.CylinderGeometry(p.radiusTop, p.radiusBottom, p.height, 20, p.heightSegments, p.openEnded, p.thetaStart, p.thetaLength); }
+  if (geom.type === 'TorusGeometry' && p.tubularSegments < 24) { geom.dispose(); return new THREE.TorusGeometry(p.radius, p.tube, Math.max(p.radialSegments, 8), 24, p.arc); }
+  if (geom.type === 'LatheGeometry' && p.segments < 20) { geom.dispose(); return new THREE.LatheGeometry(p.points, 20, p.phiStart, p.phiLength); }
+  return geom;
+}
+
+/**
+ * LOOK POLISH 7: a muzzle flash that reads as fire, not two opaque balls (drawn crisp at the screen's resolution they showed every facet): a soft glow, a flame cone thrown forward, five petals of fire
+ * round the muzzle (the view turns the whole flash a random amount each shot, so no two are alike) and a white-hot core. All additive, none writes depth. r = the old outer ball's radius.
+ */
+export function muzzleFlash(r, color, hot = 0xfff4d0) {
+  const g = new THREE.Group(), add = (geom, c, op) => { const m = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.renderOrder = 5; g.add(m); return m; };
+  for (const [k, op] of [[1.5, 0.09], [1.1, 0.12], [0.78, 0.18]]) add(new THREE.SphereGeometry(r * k, 16, 10), color, op);          // the glow in three soft bands (one sphere showed a hard rim)
+  const cone = add(new THREE.ConeGeometry(r * 0.62, r * 3.2, 14, 1, true), color, 0.4); cone.rotation.x = -Math.PI / 2; cone.position.z = -r * 1.5;          // the flame thrown down the line of fire
+  const blade = new THREE.BufferGeometry(); blade.setAttribute('position', new THREE.Float32BufferAttribute([-r * 0.26, 0, 0, r * 0.26, 0, 0, 0, r * 2.1, 0], 3));
+  for (let i = 0; i < 5; i++) { const m = add(blade, i % 2 ? hot : color, 0.62); m.rotation.z = i * (Math.PI * 2 / 5) + (i % 2) * 0.35; m.scale.y = i % 2 ? 0.66 : 1; }
+  add(new THREE.SphereGeometry(r * 0.5, 12, 8), hot, 1);
+  g.userData.muzzle = true; return g;
+}
+
 /** a turned part along +y: `prof` = [radius, y] pairs up the axis (a grip's swell, a fore-end's belly), spun into a lathe */
-export function lathe(K, cell, prof, sides = 10, m) { return K.G(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), sides), cell, m); }
+export function lathe(K, cell, prof, sides = 20, m) { return K.G(new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), sides), cell, m); }
 
 /**
  * A fist closed round a grip, and the forearm that comes up from below the screen to it. `at` = the hand's centre in the gun's space, `rot` = [rx, ry, rz] of the closed hand (the grip runs along the hand's y axis; its back is

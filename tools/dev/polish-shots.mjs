@@ -22,6 +22,7 @@ for (const id of ['C1E3M04', 'C1E4M07', 'C2M21', 'C2M18']) SET.push({ map: id, v
 const hall = views('C1E1M02')[4];
 const ONLY = process.env.ONLY ? new RegExp(process.env.ONLY) : null;          // ONLY=<regex> takes only the shots whose name matches (a quick look at one change)
 for (const gun of ['flare', 'scattergun', 'rivet', 'harpoon']) SET.push({ map: 'C1E1M02', view: hall, gun, name: 'gun-' + gun });
+SET.push({ map: 'C1E1M02', view: hall, gun: 'scattergun', fx: true, name: 'fx-fire-hit' });          // look polish 7: the shot lights the room and bursts on the nearest body
 // look polish 10: blows from a side (right, 0.0 = ahead), [side, ahead, hit points] relative to the player's facing; the view's own handler is fed the event
 for (const [name, hits] of [['hit-right-heavy', [[1, 0, 28]]], ['hit-left-scratch', [[-1, 0.2, 4]]], ['hit-behind', [[0, -1, 16]]], ['hit-crowd', [[1, 0.4, 10], [-1, 0.3, 8], [0.2, -1, 14]]]]) SET.push({ map: 'C1E1M02', view: hall, hits, name });
 
@@ -52,8 +53,10 @@ try {
       if (v.ticks) { await T(`t.setup_player({ hp: 100000 }); t.tick(${v.ticks})`); await T('t.setup_player({ hp: 100, hurt: 0 })'); }
     } else if (s.turn) { await T(`(() => { const p = t.state().player; t.setup_teleport(p.x, p.z, p.yaw + ${s.turn}); })()`); }
     if (s.gun) await T(`t.setup_player({ weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'fists'], ammo: { flare: 20, shell: 30, rivet: 150, bolt: 12, cell: 60 }, weapon: '${s.gun}', switchT: 0 }); t.tick(40)`);
+    if (s.fx) { const url = await T(`return (() => { const st = t.state(), p = st.player, e = st.enemies.filter((q) => { const dx = q.x - p.x, dz = q.z - p.z, d = Math.hypot(dx, dz) || 1; return q.state !== 'dead' && (-Math.sin(p.yaw) * dx - Math.cos(p.yaw) * dz) / d > 0.75; }).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0]; t.emitView([{ type: 'fire', weapon: 'scattergun' }, ...(e ? [{ type: 'enemy_hit', id: e.id, kind: e.kind, x: e.x, z: e.z }] : [])]); t.render(0.01); return document.querySelector('canvas').toDataURL('image/png'); })()`); fs.writeFileSync(path.join(out, fname), Buffer.from(url.split(',')[1], 'base64')); n++; console.log('shot', fname); continue; }          // the 3D canvas read in the SAME call that drew it: the page runs its own frames in real time and a flash lives a tenth of a second
     if (s.hits) await T(`(() => { const p = t.state().player, r = [Math.cos(p.yaw), -Math.sin(p.yaw)], f = [-Math.sin(p.yaw), -Math.cos(p.yaw)]; t.emitView(${JSON.stringify(s.hits)}.map(([sx, sf, amt]) => ({ type: 'hurt', amount: amt, fx: p.x + (r[0] * sx + f[0] * sf) * 8, fz: p.z + (r[1] * sx + f[1] * sf) * 8 }))); })()`);
-    await T(`t.setup_player({ hp: 100, hurt: 0 }); ${s.hits ? '' : 't.clearOverlays(); '}t.render(${s.hits ? 0.12 : 0.02})`); await sleep(120);
+    await T(`t.setup_player({ hp: 100, hurt: 0 }); ${s.hits || s.fx ? '' : 't.clearOverlays(); '}t.render(${s.hits ? 0.12 : 0.02})`); await sleep(120);
     n++; await savePng(page, path.join(out, fname)); console.log('shot', fname);
   }
+  if (!ONLY || ONLY.test('title')) { await T("t.showScreen('title')"); await sleep(1200); await savePng(page, path.join(out, '99-title.png')); console.log('shot 99-title.png'); }
 } finally { const asks = await page.evaluate('window.__lockAsks'); console.log(JSON.stringify({ errors, pointerLockAsks: asks })); await browser.close(); await server.close(); }

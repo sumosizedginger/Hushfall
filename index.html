@@ -126,7 +126,7 @@ select,input[type=number]{background:#10161a;color:var(--paper);border:1px solid
 .rows div{display:flex;justify-content:space-between;gap:24px;border-bottom:1px solid #1d272b;padding:5px 0}
 .rows b{color:var(--bronze);font-weight:400;letter-spacing:.06em}
 #screen-title{justify-content:flex-start;background:#07080c;padding-left:min(9vw,150px)}
-#title-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.95;image-rendering:pixelated;filter:saturate(1.08) contrast(1.06)}
+#title-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.95;image-rendering:pixelated;filter:saturate(1.08) contrast(1.06)}#title-art.hires,#ending-art.hires{image-rendering:auto}
 #screen-title::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#07080cf6 0,#07080ceb 32%,#07080c8c 58%,#07080c14 100%),linear-gradient(0deg,#07080c 0,transparent 38%)}
 #screen-title .rings{position:absolute;right:-12vh;bottom:-24vh;width:92vh;height:92vh;border-radius:50%;z-index:0;pointer-events:none;background:repeating-radial-gradient(circle,transparent 0 26px,#3fffe026 26px 27px);-webkit-mask-image:radial-gradient(circle,#000 8%,transparent 66%);mask-image:radial-gradient(circle,#000 8%,transparent 66%)}
 #screen-title .panel{z-index:1;background:none;border:0;box-shadow:none;min-width:0;width:auto;max-width:94vw;padding:0;max-height:100vh;overflow:visible}

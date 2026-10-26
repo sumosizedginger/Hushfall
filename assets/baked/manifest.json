@@ -6,12 +6,12 @@
   },
   "assets": {
     "wall_bulkhead_a": {
-      "seed": 1101,
+      "seed": 21101,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "2b2f538be01fdbbd9eeff6302089368ae9c0876418e39ae99e1e9db185443e89",
-      "bytes": 33915
+      "sha256": "53bf2aa8360453cf506ace4ffa9efe12cfcd882dbdc2e1a2078c2e608aa9166a",
+      "bytes": 35296
     },
     "enemy_tollbearer_idle": {
       "seed": 2201,
@@ -30,12 +30,12 @@
       "bytes": 37892
     },
     "ui_title_art": {
-      "seed": 4401,
-      "width": 320,
-      "height": 200,
+      "seed": 24401,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "ab38d1d18e0713f0ff79452250d55e6efd9f616ccc39a206c27bd165b569caf9",
-      "bytes": 75467
+      "sha256": "01eb305bd7a0ccb0eaeaf3bcf272bba65826e7046af368fc015679574dc0c39a",
+      "bytes": 1001022
     },
     "tollbearer_atlas": {
       "seed": 5101,
@@ -54,12 +54,12 @@
       "bytes": 87013
     },
     "floor_planks_a": {
-      "seed": 5301,
+      "seed": 25301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "162aeeaa1036089fe9eb142d7375558a8daf7cf75e07f9909f6bdbc39bd655fc",
-      "bytes": 109422
+      "sha256": "181b6c5a531bb70b921f038b421693a8fb2c423c87316bf0b9fe2fd7e16580a1",
+      "bytes": 43802
     },
     "crate_wood_a": {
       "seed": 5401,
@@ -118,20 +118,20 @@
       "bytes": 86560
     },
     "cobble_wet_a": {
-      "seed": 6201,
+      "seed": 26201,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "b58e413c522b69bde5e6e4b8c48a6aacbf905cfe8fd8009951d250c9cfac723e",
-      "bytes": 123081
+      "sha256": "548952c5b5433f699c95d6a49c828ac68fc9599b852f5d04bda857660cb3dd22",
+      "bytes": 100208
     },
     "brick_warm_a": {
-      "seed": 6301,
+      "seed": 26301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "6eda321a24f32f3468b99a6db7764938f07d2574812ae275db5dfdfaac0c9dc0",
-      "bytes": 128224
+      "sha256": "91f55883c40434f36cab8747b66259519f43bd3114162ff2dfbeca7aa9297987",
+      "bytes": 35090
     },
     "awning_stripe_a": {
       "seed": 6401,
@@ -158,20 +158,20 @@
       "bytes": 98925
     },
     "wall_timber_a": {
-      "seed": 7101,
+      "seed": 27101,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "5568103671c4c9d373eb8e941a55a6457323fa1d2b848e8bc9e72a992cb7a53e",
-      "bytes": 25336
+      "sha256": "37c625a565d7032da80bf382221360d0f5e36b3561e51fc70f8fb288434e7b5c",
+      "bytes": 71802
     },
     "wall_plaster_a": {
-      "seed": 7201,
+      "seed": 27201,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "9f9e6716164ea2d7131a389fbd3f36183b93adf5f0e3f12f368155deb2388bf6",
-      "bytes": 31071
+      "sha256": "3b2ec5736f265e570511136bd2a9d901b1892e8c51198a229e218d93bb0c35d5",
+      "bytes": 66839
     },
     "wall_concrete_a": {
       "seed": 7301,
@@ -182,12 +182,12 @@
       "bytes": 23227
     },
     "wall_iron_a": {
-      "seed": 7401,
+      "seed": 27401,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "0670828bd214a53b515d6125be69c3dbb5bd4274a9b6edc764f1726db252d495",
-      "bytes": 26079
+      "sha256": "92a188199b96550e2cc9efea17c67ec48d8103bd306b4bde6b616d1e37d066cf",
+      "bytes": 23758
     },
     "wall_resin_a": {
       "seed": 7501,
@@ -198,12 +198,12 @@
       "bytes": 53566
     },
     "floor_tile_a": {
-      "seed": 7601,
+      "seed": 27601,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "844d244cac49387089ea08d7a2c4e8ef469a64a8855c96cad4f40534ed4d1927",
-      "bytes": 102356
+      "sha256": "dee50af07798ba22f82801ed870815755b653ed194dcad53af7fda792739f86f",
+      "bytes": 38950
     },
     "floor_grate_a": {
       "seed": 7701,
@@ -214,20 +214,20 @@
       "bytes": 90179
     },
     "floor_carpet_a": {
-      "seed": 7801,
+      "seed": 27801,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "addc15e229a540cb4a7e0500401bcd82696fa4ebc1bfadef9fc8f0f3ecce5cb7",
-      "bytes": 49237
+      "sha256": "31bc79a186e33e70648303389a8916f44074a4ed3653cdf180e4d91396df84e2",
+      "bytes": 34014
     },
     "floor_flag_a": {
-      "seed": 7901,
+      "seed": 27901,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "92d683589d81dafe5ba1f7e8d3f2274bdb4c54851da43c229aae3dfa81b90114",
-      "bytes": 93844
+      "sha256": "8ed891b4ad2bb8286cfc978e8e2f2c7ca9af241b5ca6276ef9b04a0e2d5b29cd",
+      "bytes": 38287
     },
     "floor_silt_a": {
       "seed": 8001,
@@ -238,12 +238,12 @@
       "bytes": 75115
     },
     "floor_slate_a": {
-      "seed": 8101,
+      "seed": 28101,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "a7de0770b1af84c25debf26139f3f192b8f26a8200a1cfd9c14f2a2c678ed3af",
-      "bytes": 105289
+      "sha256": "f28a20f8beafbabe35f4e7cb05e4b848121c14a2976782442f29377ff67035d4",
+      "bytes": 33149
     },
     "sky_night": {
       "seed": 8201,
@@ -590,12 +590,12 @@
       "bytes": 37187
     },
     "guns_atlas": {
-      "seed": 9801,
-      "width": 256,
-      "height": 256,
+      "seed": 9811,
+      "width": 512,
+      "height": 512,
       "transparent": false,
-      "sha256": "13419fcad9edb6566beb5f320c229baea4d3877670360b9b7ae9775594563968",
-      "bytes": 31573
+      "sha256": "49c005625af538f21ef90ccb334e89888465a4803fa682b813dc4943f63920df",
+      "bytes": 142889
     },
     "wall_rib_a": {
       "seed": 9301,
@@ -1342,12 +1342,12 @@
       "bytes": 17177
     },
     "ui_cold_tower": {
-      "seed": 6301,
-      "width": 320,
-      "height": 200,
+      "seed": 26302,
+      "width": 1280,
+      "height": 720,
       "transparent": false,
-      "sha256": "55212ec3aae9a5edec0c09288f45696836371f8bbc4ad4e1ecf62a81656ebbb2",
-      "bytes": 53670
+      "sha256": "4e686a7c03371cff8fb6114e663eec254db004c6ac227f37f43418700df46edf",
+      "bytes": 891078
     },
     "decals_floor_atlas": {
       "seed": 6302,
@@ -1372,6 +1372,14 @@
       "transparent": false,
       "sha256": "cb0529aeb56e7a6c995e25685a9aa9827ac150da4f7ed575b9c1fb810b7ef827",
       "bytes": 35508
+    },
+    "ceiling_a": {
+      "seed": 29901,
+      "width": 256,
+      "height": 256,
+      "transparent": false,
+      "sha256": "66f864dca703bdb333a78e0b2d038bb990c7b5c5c2b14915f08f6972adbc2a79",
+      "bytes": 69949
     }
   }
 }

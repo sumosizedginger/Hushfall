@@ -52,6 +52,7 @@ void main() {
     // rig): the original thresholds, the original break, no corner lines. Only the level and its props get the new corner ink. ?outline=classic (uClassic) gives everything the original pass.
     float aMin = min(min(texture2D(tColor, vUv).a, texture2D(tColor, vUv - vec2(px.x, 0.0)).a), min(min(texture2D(tColor, vUv + vec2(px.x, 0.0)).a, texture2D(tColor, vUv + vec2(0.0, px.y)).a), texture2D(tColor, vUv - vec2(0.0, px.y)).a));
     float ent = max(step(aMin, 0.5), uClassic);
+    float hostile = (1.0 - step(0.15, aMin)) * (1.0 - uClassic);                                    // look polish 6: a hostile creature writes alpha 0, a peaceful one 0.3 (entityflag.js): the hostile outline is inked blood red
     float e = (abs(l + r - 2.0 * c) + abs(u + d - 2.0 * c)) / max(c, 1e-4);
     float edge = smoothstep(mix(uEdgeLo, 0.10, ent), mix(uEdgeHi, 0.30, ent), e);      // silhouettes: a step in depth, relative to how far away it is
     // creases: where two planes meet (floor and wall, wall and ceiling, a prop's foot on the floor) 1/z is continuous and only its SLOPE changes, so the step test above never sees them.
@@ -59,7 +60,7 @@ void main() {
     float d2 = max(abs(l + r - 2.0 * c), abs(u + d - 2.0 * c));
     edge = max(edge, smoothstep(uCreaseLo, uCreaseHi, d2) * (1.0 - ent));
     edge *= clamp(mix(0.6 + p1 * 0.9, 0.45 + p1 * 1.1, ent), 0.0, 1.0);   // hand-inked, slightly broken line (the level: less broken, so a line is read, not lost in the paper tooth; entities: as they always were)
-    col = mix(col, vec3(0.035, 0.04, 0.06), edge * 0.94);
+    col = mix(col, mix(vec3(0.035, 0.04, 0.06), vec3(0.22, 0.025, 0.03), hostile), edge * 0.94);
     if (uDebug > 0.5) { gl_FragColor = vec4(vec3(edge), 1.0); return; }          // dev measurement only: the ink mask (tools/dev/shoot-outlines.mjs)
   }
 
@@ -93,7 +94,9 @@ void main() {
 }`;
 
 const CLASSIC = typeof location !== 'undefined' && new URLSearchParams(location.search).get('outline') === 'classic';      // ?outline=classic: the whole picture gets the original ink (to compare)
-const CREASE_LO = 0.0007, CREASE_HI = 0.0014;       // 1/z units per pixel at 480 px wide: about 40% / 80% of a floor-wall corner seen from eye height
+const CREASE_LO = 0.0007, CREASE_HI = 0.0014;
+/** look polish 4 (colour): every place's shadow and light tints pushed this much further from neutral, so a place's light has a temperature (cool shadows, warm lamps, or its own pair) */
+export const GRADE_K = 1.5;       // 1/z units per pixel at 480 px wide: about 40% / 80% of a floor-wall corner seen from eye height
 
 export class PostPass {
   constructor(renderer, paperTex, near, far) {
@@ -111,7 +114,7 @@ export class PostPass {
     this.rt = null;
   }
   /** the place's grade: { shadow: [r,g,b], light: [r,g,b], sat } (LOOKS in defs.js; the exposure is the view's: the player's brightness times the place's) */
-  setGrade(g) { this.uniforms.uShadowTint.value.set(...g.shadow); this.uniforms.uLightTint.value.set(...g.light); this.uniforms.uSat.value = g.sat; }
+  setGrade(g) { const k = GRADE_K, x = (v) => 1 + (v - 1) * k; this.uniforms.uShadowTint.value.set(...g.shadow.map(x)); this.uniforms.uLightTint.value.set(...g.light.map(x)); this.uniforms.uSat.value = g.sat; }
   /** w x h = the internal (chunky) resolution of the world; dw x dh = the screen's, for the held weapon's own target (capped at 1920 wide: a crisp gun, not a costly one) */
   resize(w, h, dw = w, dh = h) {
     this.rt?.dispose(); this.rt?.depthTexture?.dispose(); this.wrt?.dispose();

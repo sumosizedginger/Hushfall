@@ -16,7 +16,7 @@ import { MELEE_MAKERS, makePickupMelee } from './models_melee.js';
 import { weaponPose, meleePose, swingPhase, swingCamera, SwingClock, HIP_SCALE } from './weapon-pose.js';
 import { FACTORIES as CHOIR } from './models_choir.js';
 import { choirAtlasName } from './choir_cells.js';
-import { markEntity } from './entityflag.js';
+import { markEntity, RIM } from './entityflag.js';
 import { buildLevel } from './levelmesh.js';
 import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
@@ -63,6 +63,9 @@ const pickupMaker = (kind) => (kind === 'oil' ? () => makePickupOil() : kind ===
 
 /** PT-065 (V3, measured): the share of the old weapon-scene light the held gun keeps in the darkest place (the rest of the range follows the place's own hemisphere); a probe sets it live (`setup_weaponLight`) */
 export const WEAPON_LIGHT = { floor: 0.35 };
+/** LOOK POLISH 5 (light) and 7 (hits): stronger pools of lamplight and darker between them (every place's general light, the hemisphere and the sun, a little lower; its lamps a little brighter); the room lit by your
+ *  own muzzle for a moment (fire, a light in the WORLD, not only on the gun); a burst of light where a shot lands on a body; a cold rim of the place's sky round every creature (entityflag.js RIM), weaker where the place is dark */
+export const POLISH_LIGHT = { hemi: 0.84, sun: 0.88, lamp: 1.32, fire: 22, fireRange: 11, pop: { r: 0.17, life: 0.11, color: 0xffe2b0 }, rim: [0.035, 0.07] };
 export class GameView {
   constructor(renderer, tex, map, world) {
     this.renderer = renderer; this.tex = tex; this.map = map; this.time = 0; this.deadT = 0; this.recoil = 0; this.flashT = 0; this.boomT = 9; this.hurtFlash = new HurtFlash(); this.hitMarks = new HitMarkers(); this.comfort = { shake: 1, hurt: 1, muzzle: 1 };
@@ -92,6 +95,8 @@ export class GameView {
       this.airK = 0; }
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR); this.cam.rotation.order = 'YXZ';
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2); this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2); scene.add(this.flareLight, this.boomLight);
+    this.fireLight = new THREE.PointLight(0xffa040, 0, POLISH_LIGHT.fireRange, 2); scene.add(this.fireLight);          // look polish 7: your shot lights the room (a constant light count: it is always there, at 0 between shots)
+    this.popGeo = new THREE.IcosahedronGeometry(POLISH_LIGHT.pop.r, 1); this.popMat = new THREE.MeshBasicMaterial({ color: POLISH_LIGHT.pop.color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }); this.pops = [];
     // weapon overlay
     const ws = this.weaponScene = new THREE.Scene(); this.weaponCam = new THREE.PerspectiveCamera(58, 16 / 9, NEAR, FAR);
     const wHemi = this.weaponHemi = new THREE.HemisphereLight(0x9fb8d0, 0x3a2a30, 1.5); ws.add(wHemi); const key = this.weaponKey = new THREE.DirectionalLight(0xffe0b0, 1.6); key.position.set(-1, 1.5, 1); ws.add(key);          // PT-061 V3: the held gun wears the PLACE's light (setPlace scales these two, with a floor so it is never lost)
@@ -99,6 +104,7 @@ export class GameView {
     this.muzzleLight = new THREE.PointLight(0xffa040, 0, 4, 2); this.muzzleLight.position.set(0.1, 0, -0.9); ws.add(this.muzzleLight);
     if (map.lantern) { this.handLamp = new THREE.PointLight(0xffc070, 0, 22, 1.5); scene.add(this.handLamp); this.lampK = 0; this.lampModel = makeHandLantern(); this.lampModel.scale.setScalar(0.72); this.lampModel.position.set(-0.4, -0.3, -0.62); ws.add(this.lampModel); }          // PT-038 (E5): the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light count means no shader recompile) and a brass lantern held low at the left of the weapon view
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
+    for (const gtex of [tex.guns_atlas, tex.flarecannon_atlas]) if (gtex && gtex.magFilter !== THREE.LinearFilter) { gtex.magFilter = THREE.LinearFilter; gtex.needsUpdate = true; }          // look polish 1: the held gun is drawn at the screen's resolution, so its paint is filtered, not blown up into squares
     const gt = tex.guns_atlas; this.rigs = { flare: makeFlareCannon(tex.flarecannon_atlas, gt), scattergun: makeScattergun(tex.flarecannon_atlas, gt), rivet: makeRivetDriver(tex.flarecannon_atlas, gt), harpoon: makeHarpoonRifle(tex.flarecannon_atlas, gt), arc: makeArcLamp(tex.flarecannon_atlas, gt), carbine: makeCarbine(tex.flarecannon_atlas, gt), linethrower: makeLineThrower(tex.flarecannon_atlas, gt), fork: makeFork(tex.flarecannon_atlas, gt), mortar: makeMortar(tex.flarecannon_atlas, gt), ...Object.fromEntries(Object.entries(MELEE_MAKERS).map(([id, make]) => [id, make(tex.flarecannon_atlas)])) };      // + fists and the found melee weapons (models_melee.js)
     this.cine = null;                                                                                                   // PT-063 (R13): a story scene's camera pose { x, y, z, yaw, pitch, fov } while one plays (setCinematic); render only
     this.swingAlt = false; this.hitKick = 0; this.parryT = 9; this.motes = []; this.lastCharge = 0;
@@ -175,8 +181,10 @@ export class GameView {
       if (e.type === 'fire') {
         const sg = e.weapon === 'scattergun', rv = e.weapon === 'rivet', hp = e.weapon === 'harpoon', ar = e.weapon === 'arc', cb = e.weapon === 'carbine', lt = e.weapon === 'linethrower' || e.weapon === 'mortar', ch = e.charge ?? 0; this.recoil = sg && e.mod === 'doublebarrel' ? 2.6 : sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1; this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07; if (sg || hp) this.pumpT = 0.9; if (rv || hp || lt) this.spinKick = 1;
         this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2); this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);                // the kick: heavy guns shake the view, the rivets barely
+        this.fireLight.color.setHex(e.load === 'slag' ? 0xff7a2a : e.load === 'rime' ? 0x9fdcff : sg ? 0xffb060 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xffa848); this.fireK = sg || lt ? 1.25 : hp ? 0.9 : rv || cb ? 0.6 : ar ? 0.5 + ch : 1;
         this.muzzleLight.color.setHex(e.load === 'slag' ? 0xff7a2a : e.load === 'rime' ? 0x9fdcff : e.load === 'pen' ? 0xfff2c8 : sg ? 0xffc070 : rv ? 0xffe090 : cb ? 0xffd090 : lt ? 0xff9030 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xff9040);                      // each gun lights the room its own colour (a load its own: PT-056)
       }
+      else if (e.type === 'enemy_hit') this.addPop(e);                                                                // look polish 7: a burst of light where the shot met the body
       else if (e.type === 'snipe_shot') this.creatureFx?.shot(e);                                                      // PT-060: the line that was fired stays bright for a tenth of a second
       else if (e.type === 'swing') { this.swingAlt = e.kind === 'jab' ? !this.swingAlt : this.swingAlt; this.vm.start(e.kind, e.tick * TICK); }
       else if (e.type === 'melee_hit') {
@@ -316,14 +324,14 @@ export class GameView {
     this.sky.position.copy(this.cam.position); this.skyBelow?.position.copy(this.cam.position);
     if (this.map.lookZones) this.applyZone(this.map.lookZones, w.player);                                      // PT-043: a dev map's rooms are lit by their own look
     this.decals.update(dt);
-    { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = this.look.hemi[2] * this.ambient; this.sun.intensity = this.look.sun[1] * this.ambient; }
+    { const want = w.ambient ?? this.map.atmosphere.ambient ?? 1; this.ambient += (want - this.ambient) * Math.min(1, dt * 1.6); this.hemi.intensity = this.look.hemi[2] * this.ambient * POLISH_LIGHT.hemi; this.sun.intensity = this.look.sun[1] * this.ambient * POLISH_LIGHT.sun; }
     this.tex.water_dusk.offset.x += dt * 0.0035; this.tex.water_dusk.offset.y += dt * 0.0022;                       // slow drift of the painted water
     if (this.lvl.towerGlow) this.lvl.towerGlow.scale.setScalar(1 + 0.18 * Math.sin(this.time * 1.7) + 0.08 * Math.sin(this.time * 4.1));   // the Bell breathes
     // enemies
     const seen = new Set(), beatK = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time + alpha * TICK) : 0;          // the Hive's light curve (hive.js): the creatures' rigs and the static lights swell on the beat (render only)
     for (const e of w.enemies) {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
-      if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
+      if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root, { hostile: !ENEMIES[e.kind].peaceful }); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
       // PT-054 (the owner: Glass Steppe stutters): a sleeper that is already frozen into its merged mesh needs nothing: no pose, no grounding (which walks every vertex of the rig), and its invisible rig is out of the scene graph (three.js recomputed the matrices of all fifty nodes of every sleeper on every frame)
       if (v.frozen && e.state === 'idle' && Math.abs((e.y ?? 0) - v.frozenY) <= 1e-3) continue;
       const s = this.prev.enemies.get(e.id) || e;
@@ -499,7 +507,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.boomT += dt; this.boomLight.intensity = this.boomT < 0.5 ? 140 * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
     const cp = this.cam.position, wp = (this._wp ??= new THREE.Vector3());                                   // (a scratch vector and scratch arrays: nothing is allocated per frame here)
-    const lampK = this.look.lamp, hiveBeat = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time) : 0;
+    const lampK = this.look.lamp * POLISH_LIGHT.lamp, hiveBeat = zoneBeat(this.map, w.player.x, w.player.z, w) ? beatGlow(w.time) : 0;
     for (const l of this.lvl.lights) {
       const b = l.userData.base * lampK, f = l.userData.flicker; l.getWorldPosition(wp);
       l.intensity = (f === 'pod' ? b * (0.8 + 0.2 * Math.sin(this.time * 2 + wp.x)) : b * (0.93 + 0.05 * Math.sin(this.time * 13 + wp.z) + 0.03 * Math.sin(this.time * 31))) * (1 + 0.45 * hiveBeat);
@@ -510,6 +518,8 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.lvl.lights.forEach((l, i) => { l.visible = lw.on[i]; l.intensity *= lw.w[i]; });
     // weapon overlay
     this.recoil = Math.max(0, this.recoil - dt * 4.5); this.flashT = Math.max(0, this.flashT - dt);
+    { const on = this.flashT > 0 && !this.cine, yaw = this.cam.rotation.y; this.fireLight.intensity = on ? POLISH_LIGHT.fire * (this.fireK ?? 1) * this.comfort.muzzle * Math.min(1, this.flashT / 0.05) : 0; if (on) this.fireLight.position.set(this.cam.position.x - Math.sin(yaw) * 1.1, this.cam.position.y - 0.2, this.cam.position.z - Math.cos(yaw) * 1.1); }
+    for (let i = this.pops.length - 1; i >= 0; i--) { const q = this.pops[i]; q.t += dt; const u = q.t / POLISH_LIGHT.pop.life; if (u >= 1) { this.scene.remove(q.m); this.pops.splice(i, 1); } else q.m.scale.setScalar(q.k * (1.5 - 1.3 * u)); }
     // which weapon is on screen: during a switch the old one dips out for the first half, the new one rises for the second
     if (p.weapon !== this.targetWeapon) { this.prevWeapon = this.targetWeapon; this.targetWeapon = p.weapon; }
     const u = p.switchT > 0 ? 1 - p.switchT / WEAPONS[p.weapon].switchTime : 1, shown = (p.switchT > 0 && u < 0.5) ? this.prevWeapon : p.weapon, dip = p.switchT > 0 ? -0.45 * Math.sin(Math.PI * u) : 0;
@@ -528,7 +538,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.puntT += dt;
     rig.group.scale.setScalar(wpose.scale); const fade = Math.max(0, 1 - a / 0.6) ** 2; rig.sleeveMat.opacity = fade; rig.sleeveMat.visible = fade > 0.02;
     rig.group.position.set(wpose.pos[0], wpose.pos[1], wpose.pos[2]); rig.group.rotation.set(wpose.rot[0], wpose.rot[1], wpose.rot[2]);
-    if (rig.flash) { rig.flash.visible = this.flashT > 0; if (rig.flash.visible) rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.55 * a)); }      // small in the sights: it must not hide the target
+    if (rig.flash) { rig.flash.visible = this.flashT > 0; if (rig.flash.visible) { rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.6 * a)); if (rig.flash.children[0]?.userData.muzzle) rig.flash.rotation.z = this.rnd() * 6.283; } }          // look polish 7: a painted flash (gunkit.js muzzleFlash), turned at random every frame it shows; smaller in the sights      // small in the sights: it must not hide the target
     if (rig.spin) { this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6); rig.spin.rotation[rig.spinAxis || 'z'] += dt * (rig.spinAxis ? 16 * this.spinKick : 6 + 40 * this.spinKick); }                    // the barrel cluster winds up while it fires
     if (rig.pump) { const ph = 0.9 - this.pumpT; rig.pump.position.z = ph > 0.3 && ph < 0.7 ? Math.sin(Math.PI * (ph - 0.3) / 0.4) * 0.09 : 0; }      // fore-end slides back and forward after a shot
     this.pumpT = Math.max(0, this.pumpT - dt);
@@ -545,11 +555,19 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
 
   /** Release GPU resources owned by this view (textures are shared and owned by the app). */
   /** the place's light and grade (LOOKS in defs.js): the hemisphere, the sun, the post tint; also what the dev hook uses to try another look on the same view */
+  /** look polish 7: a burst of light on the body a shot hit, on the side toward the eye, about two thirds of the way up (render only) */
+  addPop(e) {
+    const def = ENEMIES[e.kind ?? this.world?.enemies.find((q) => q.id === e.id)?.kind]; if (!def || !this.popGeo) return;
+    const dx = this.cam.position.x - e.x, dz = this.cam.position.z - e.z, d = Math.hypot(dx, dz) || 1, r = (def.hitRadius ?? def.radius ?? 0.4) + 0.06, v = this.enemyViews.get(e.id);
+    const y = (v ? v.root.position.y : e.y ?? 0) + (def.height ?? 1.8) * 0.62, m = new THREE.Mesh(this.popGeo, this.popMat); m.position.set(e.x + (dx / d) * r, y, e.z + (dz / d) * r); m.renderOrder = 4;
+    const k = Math.min(1.6, 0.8 + (def.height ?? 1.8) / 4); m.scale.setScalar(1.5 * k); this.scene.add(m); this.pops.push({ m, t: 0, k }); if (this.pops.length > 24) { const q = this.pops.shift(); this.scene.remove(q.m); }
+  }
   mixHex(a, b, t) { const ch = (x, i) => (x >> i) & 255, m = (i) => Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t); return (m(16) << 16) | (m(8) << 8) | m(0); }
   setPlace(look) {
     this.look = look; const { hemi, sun } = this;
-    hemi.color.setHex(look.hemi[0]); hemi.groundColor.setHex(look.hemi[1]); hemi.intensity = look.hemi[2] * this.ambient;
-    sun.color.setHex(look.sun[0]); sun.position.set(...look.sun[2]); sun.intensity = look.sun[1] * this.ambient;
+    hemi.color.setHex(look.hemi[0]); hemi.groundColor.setHex(look.hemi[1]); hemi.intensity = look.hemi[2] * this.ambient * POLISH_LIGHT.hemi;
+    sun.color.setHex(look.sun[0]); sun.position.set(...look.sun[2]); sun.intensity = look.sun[1] * this.ambient * POLISH_LIGHT.sun;
+    RIM.color.value.setHex(this.mixHex(look.hemi[0], 0xffffff, 0.35)); RIM.k.value = POLISH_LIGHT.rim[0] + (POLISH_LIGHT.rim[1] - POLISH_LIGHT.rim[0]) * Math.min(1, (look.hemi[2] * this.ambient) / 2.4);          // look polish 6: the rim round every creature, the place's sky colour, weaker where the place is dark
     if (this.weaponHemi) {                                                                                                        // PT-061 V3 (the audit: the gun was the same brightness, luma 109 to 116, in every map): the weapon scene's light follows the place's, from 0.35 of the old value in the darkest to the old value at the harbour's level and a little over in the brightest
       const k = Math.max(0, (look.hemi[2] * this.ambient) / 2.4), g = gunFactor(look, this.ambient) ?? (WEAPON_LIGHT.floor + (1 - WEAPON_LIGHT.floor) * Math.min(1, k) + 0.12 * Math.min(1, Math.max(0, k - 1)));
       this.weaponHemi.intensity = 1.5 * g; this.weaponHemi.color.setHex(this.mixHex(0x9fb8d0, look.hemi[0], 0.45)); this.weaponHemi.groundColor.setHex(this.mixHex(0x3a2a30, look.hemi[1], 0.45)); this.weaponKey.intensity = 1.6 * g; this.weaponKey.color.setHex(this.mixHex(0xffe0b0, look.sun[0], 0.35));
@@ -565,6 +583,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     this.wardRingMat.dispose(); this.wardDiscMat.dispose();
     this.tearGeo.dispose(); this.tearMat.dispose(); this.tearCoreGeo.dispose(); this.tearCoreMat.dispose(); this.poolGeo.dispose(); for (const m of this.poolViews.values()) m.material.dispose();
     this.puffGeo.dispose(); this.puffMat.dispose(); this.woodMat.dispose(); this.shockGeo.dispose(); this.shockMat.dispose(); for (const m of this.shockFree) m.material.dispose(); this.tractor?.material.dispose();
+    this.popGeo?.dispose(); this.popMat?.dispose();
     this.debGeo.dispose(); this.debMat.dispose(); this.dustMat.dispose(); this.projGeo.dispose(); this.projMat.dispose(); this.shotGeo.dispose(); this.shotRing.dispose(); this.shotMat.dispose(); this.beamGeo.dispose(); this.beamMat.dispose(); this.ringGeo.dispose(); for (const m of this.pulseViews.values()) m.material.dispose(); for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose(); this.hiveView?.dispose(); this.creatureFx?.dispose();

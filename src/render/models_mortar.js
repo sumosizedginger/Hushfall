@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { atlas } from './atlasuv.js';
 import { ironSights } from './weapon-sights.js';
-import { gunKit, lathe, fist } from './gunkit.js';
+import { gunKit, lathe, fist, muzzleFlash } from './gunkit.js';
 
 const PI = Math.PI;
 
@@ -37,8 +37,7 @@ export function makeMortar(tex, gunTex, o = {}) {
     fist(K, g, { at: [0.0, -0.13, -0.3], rot: [0, -PI / 2, 0], shoulder: [-0.4, -0.8, 0.5], pole: [-0.5, -1, 0.1] });
   }
   const flash = new THREE.Group(); flash.position.set(0, 0.17, -0.62); flash.visible = false; g.add(flash);
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 0), new THREE.MeshBasicMaterial({ color: 0xff8a28 })));
-  flash.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.085, 0), new THREE.MeshBasicMaterial({ color: 0xfff0c0 })));
+  flash.add(muzzleFlash(0.15, 0xff8a28, 0xfff0c0));          // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, bolt, spin: null, spinAxis: 'x', adsY: -0.05, sleeveMat: K.sleeveMat, sights };
 }
 

@@ -67,6 +67,7 @@ try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false }); } catch 
 renderer.setPixelRatio(1); renderer.autoClear = false;
 canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); g.mode = 'title'; document.exitPointerLock?.(); fatal('The graphics context was lost (a GPU reset or driver hiccup). Reload the page to continue: a quick save is not affected.'); });
 const tex = await loadAll().catch((err) => { fatal('Could not load the painted textures: ' + err.message); throw err; });
+for (const id of ['title-art', 'ending-art']) { const im = document.getElementById(id); im?.addEventListener?.('load', () => im.classList.toggle('hires', im.naturalWidth >= 640)); }          // look polish 9: a plate painted large is shown smoothed, the small pixel plates stay pixelated
 document.getElementById('title-art').src = titleArtUrl(); document.getElementById('ending-art').src = endingArtUrl();
 for (const u of [endingCoastUrl(), endingLampDarkUrl(), endingArt2Url(), coldTowerUrl()]) if (u) new Image().src = u;          // FREEZE F9: the plates an epilogue changes to are fetched now, so a card never waits for its picture
 
