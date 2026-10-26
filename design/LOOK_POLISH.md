@@ -18,7 +18,7 @@ Every change is **drawn only**: the simulation, its routes, its collisions, sigh
 | 6 | Creatures | A hostile creature's outline is inked blood red, a peaceful one (the Vael folk) keeps black; every lit creature has a cold rim of the place's sky colour where its body turns from the eye, weaker in dark places. | `entityflag.js` (`PEACE_ALPHA`, `RIM`), `post.js` |
 | 7 | Hit feel | Your shot lights the room for a moment (a light in the world, not only on the gun), the muzzle flash is painted fire (a banded glow, a flame cone, petals turned at random each shot, a white core) instead of two opaque balls, and a burst of light shows where a shot lands on a body. | `view.js` (`fireLight`, `addPop`), `gunkit.js` (`muzzleFlash`) |
 | 8 | Reading | (commit 503b186) The reading text is a condensed sans one size up, every HUD reading sits on a dark plate, messages sit top left under the objective. | `index.html`, `ui.js` |
-| 9 | Plates | The title and the cold open's last plate are painted at 1280 x 720 and shown smoothed (the four epilogue plates of F9 stay: a set made together, flat and graphic on purpose). The title keeps the menu's left two fifths calm. | `tools/baker/recipes_plates.js`, `index.html` `.hires`, `main.js` |
+| 9 | Plates | The title and the cold open's last plate are painted at 1280 x 720 and shown smoothed; the title keeps the menu's left two fifths calm. The four epilogue plates followed the same day, the same stories in the same hand (the Gate's doorway, the coast from the lighthouse, the Unrung Gate with the lamp dark and lit). | `tools/baker/recipes_plates.js`, `recipes_endplates.js`, `index.html` `.hires`, `main.js` |
 | 10 | Hit direction | (commit 503b186) A blow shows a red glow on the edge of the picture on the attacker's side, sized by the hit, never in the middle; the all-round flush is weaker when the direction shows. Before this, the flash was a uniform ring with no direction (the `hurt` event carried only the amount). | `hitdir.js`, `post.js`, `world.js` (payload only) |
 
 **Episode One first, then everywhere.** The materials, the surface pass, the trims, the light, the colour and the creature ink are shared, so they reach all 68 maps at once; the frames below check four later places as well.
@@ -37,10 +37,9 @@ The light balance moved: the office of the Lantern Office (C1E1M04) is brighter 
 
 ## What is NOT done, on purpose
 
-- **Layered fog** in the post pass was in the plan; it is not built. A height fog needs the world position of every pixel, and drawing it on the level but not on the creatures would make them glow in it. Each place's own distance fog is unchanged.
-- **Stronger attack tells.** The eyes already go white when a creature strikes (PT-061 V8) and the bosses have their staging (V10); no new tell was added.
+- **Layered fog** in the post pass was in the plan; it is not built, and after the owner's verdict on the first four levels ("the visuals look fuckin' amazing") it stays out: a height fog changes the light of every map and every additive glow at once, the riskiest way to disturb a look that has just been approved. Each place's own distance fog is unchanged.
+- **Stronger attack tells** came with the enemy actions (`design/ENEMY_ACTIONS.md`): a glint grows at a creature's head through every windup.
 - **Painted faces** stay as decided in F10.
-- **The four epilogue plates** were not repainted (see item 9).
 - **How it plays.** Nothing here has been played by a person; the stills show appearance, not feel. The muzzle light, the impact burst and the breath are judged in motion only by playing.
 
 ## How to see it again
