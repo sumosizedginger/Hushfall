@@ -2,20 +2,20 @@
   "mapId": "C2M28",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "e59a47e",
+  "codeVersion": "55f9520",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "251fea1d305bb04b",
-  "assetVersion": "ce9ae541649b606a",
-  "engineSha": "4907fb404549f334",
+  "assetVersion": "50e27e20f7559732",
+  "engineSha": "31c000a8740b2ec8",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routesSha": "d8388f3e24d4a9d6",
   "loads": true,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 19458,
-      "finalHash": "e73d4702",
+      "finalHash": "c466eb8c",
       "kills": 81,
       "secrets": 0,
       "items": 1,
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 15984,
-      "finalHash": "e158a78c",
+      "finalHash": "0d175cee",
       "kills": 81,
       "secrets": 1,
       "items": 7,
@@ -249,14 +249,14 @@
         "drops": true
       },
       "fighter": {
-        "completedSeeds": 3,
-        "eitherSeeds": 3,
+        "completedSeeds": 2,
+        "eitherSeeds": 2,
         "strafedSeeds": 0,
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
         "damage": 28,
-        "meanDamage": 33,
+        "meanDamage": 59,
         "seconds": 324.3,
         "kills": 81,
         "failure": null
@@ -280,7 +280,7 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 13,
+        "damage": 8,
         "failure": null
       },
       "ammo pickups worth 25% less": {
@@ -292,8 +292,8 @@
   },
   "browser": {
     "file": "validation/browser/C2M28.json",
-    "when": "2026-10-26T01:26:40.149Z",
-    "commit": "e59a47e",
+    "when": "2026-10-27T01:19:16.522Z",
+    "commit": "55f9520",
     "mapSha": "251fea1d305bb04b",
     "routesSha": "d8388f3e24d4a9d6",
     "passed": 13,
@@ -301,8 +301,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-26T01:03:02.862Z",
-      "commit": "e59a47e",
+      "when": "2026-10-27T00:57:45.855Z",
+      "commit": "55f9520",
       "passed": 146,
       "total": 146
     }
@@ -356,7 +356,7 @@
         "detail": "266.4 s"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 13 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 8 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -481,19 +481,19 @@
         "detail": ""
       },
       {
-        "name": "viability hard: the perfect fighter completes on 2 of 3 seeds (3 did)",
+        "name": "viability hard: the perfect fighter completes on 2 of 3 seeds (2 did)",
         "ok": true,
         "detail": ""
       },
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":13,\"hard\":33}"
+        "detail": "{\"normal\":13,\"hard\":59}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "3 / 13 / 33 (mean of 3 seeds)"
+        "detail": "3 / 13 / 59 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (2.3x; placeholder until a human plays it)",

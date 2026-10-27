@@ -1,7 +1,7 @@
 {
   "mapId": "C2M25",
-  "when": "2026-10-26T01:25:15.630Z",
-  "commit": "e59a47e",
+  "when": "2026-10-27T01:18:01.562Z",
+  "commit": "55f9520",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,21 +11,21 @@
   "mapSha": "cf53d9a6bfa6bed2",
   "routesSha": "9537618213c4fced",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routes": {
     "main": {
       "ok": true,
       "ticks": 7703,
-      "hash": "821c83b3",
+      "hash": "4c571848",
       "nodeTicks": 7703,
-      "nodeHash": "821c83b3",
+      "nodeHash": "4c571848",
       "agree": true,
       "kills": 34,
       "secrets": 0,
@@ -34,9 +34,9 @@
     "secret": {
       "ok": true,
       "ticks": 8256,
-      "hash": "a10a679e",
+      "hash": "693c1d9b",
       "nodeTicks": 8256,
-      "nodeHash": "a10a679e",
+      "nodeHash": "693c1d9b",
       "agree": true,
       "kills": 34,
       "secrets": 1,
@@ -97,7 +97,7 @@
     {
       "name": "real-game route C2M25.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7703/821c83b3 vs node 7703/821c83b3"
+      "detail": "browser 7703/4c571848 vs node 7703/4c571848"
     },
     {
       "name": "real-game route C2M25.secret: completes in the browser",
@@ -107,7 +107,7 @@
     {
       "name": "real-game route C2M25.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 8256/a10a679e vs node 8256/a10a679e"
+      "detail": "browser 8256/693c1d9b vs node 8256/693c1d9b"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 17
+  "wallSeconds": 16
 }

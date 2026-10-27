@@ -1,105 +1,105 @@
 {
-  "when": "2026-10-26T01:02:12.902Z",
+  "when": "2026-10-27T00:57:01.622Z",
   "map": "C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)",
   "note": "counts from renderer.info at fixed vantage points; NOT frame timings",
   "budget": {
     "pier": {
-      "calls": 194,
-      "triangles": 36830,
-      "geometries": 1356,
-      "textures": 159,
-      "programs": 25
+      "calls": 207,
+      "triangles": 43692,
+      "geometries": 1265,
+      "textures": 161,
+      "programs": 33
     },
     "plaza": {
-      "calls": 175,
-      "triangles": 34044,
-      "geometries": 1356,
-      "textures": 159,
-      "programs": 25
+      "calls": 188,
+      "triangles": 40906,
+      "geometries": 1265,
+      "textures": 161,
+      "programs": 33
     },
     "warehouse": {
-      "calls": 96,
-      "triangles": 19310,
-      "geometries": 1356,
-      "textures": 159,
-      "programs": 25
+      "calls": 104,
+      "triangles": 25392,
+      "geometries": 1265,
+      "textures": 161,
+      "programs": 33
     },
     "plaza-all-awake": {
-      "calls": 393,
-      "triangles": 34044,
-      "geometries": 1567,
-      "textures": 159,
-      "programs": 25
+      "calls": 406,
+      "triangles": 40906,
+      "geometries": 1476,
+      "textures": 161,
+      "programs": 33
     },
     "warehouse-all-awake": {
-      "calls": 143,
-      "triangles": 19358,
-      "geometries": 1567,
-      "textures": 159,
-      "programs": 25
+      "calls": 151,
+      "triangles": 25440,
+      "geometries": 1476,
+      "textures": 161,
+      "programs": 33
     },
     "m03-market": {
-      "calls": 187,
-      "triangles": 54912,
-      "geometries": 1400,
-      "textures": 159,
-      "programs": 26
+      "calls": 202,
+      "triangles": 63544,
+      "geometries": 1314,
+      "textures": 161,
+      "programs": 34
     },
     "m03-market-all-awake": {
-      "calls": 545,
-      "triangles": 54960,
-      "geometries": 1721,
-      "textures": 159,
-      "programs": 26
+      "calls": 572,
+      "triangles": 64008,
+      "geometries": 1637,
+      "textures": 161,
+      "programs": 34
     },
     "m05-terrace": {
-      "calls": 111,
-      "triangles": 34536,
-      "geometries": 1353,
-      "textures": 159,
-      "programs": 23
+      "calls": 123,
+      "triangles": 46016,
+      "geometries": 1263,
+      "textures": 161,
+      "programs": 30
     },
     "m05-terrace-all-awake": {
-      "calls": 296,
-      "triangles": 34536,
-      "geometries": 1496,
-      "textures": 159,
-      "programs": 23
+      "calls": 326,
+      "triangles": 46640,
+      "geometries": 1408,
+      "textures": 161,
+      "programs": 30
     },
     "m06-quay": {
-      "calls": 165,
-      "triangles": 50692,
-      "geometries": 1439,
-      "textures": 159,
-      "programs": 24
+      "calls": 178,
+      "triangles": 60836,
+      "geometries": 1352,
+      "textures": 161,
+      "programs": 32
     },
     "m06-quay-all-awake": {
-      "calls": 554,
-      "triangles": 50692,
-      "geometries": 1793,
-      "textures": 159,
-      "programs": 24
+      "calls": 579,
+      "triangles": 61252,
+      "geometries": 1708,
+      "textures": 161,
+      "programs": 32
     },
     "m07-atrium": {
-      "calls": 196,
-      "triangles": 48670,
-      "geometries": 1399,
-      "textures": 159,
-      "programs": 24
+      "calls": 221,
+      "triangles": 59890,
+      "geometries": 1322,
+      "textures": 161,
+      "programs": 32
     },
     "m08-chamber": {
-      "calls": 280,
-      "triangles": 47590,
-      "geometries": 1462,
-      "textures": 159,
-      "programs": 21
+      "calls": 291,
+      "triangles": 59240,
+      "geometries": 1369,
+      "textures": 161,
+      "programs": 31
     },
     "m08-chamber-all-awake": {
-      "calls": 510,
-      "triangles": 47618,
-      "geometries": 1684,
-      "textures": 159,
-      "programs": 21
+      "calls": 527,
+      "triangles": 59476,
+      "geometries": 1593,
+      "textures": 161,
+      "programs": 31
     }
   }
 }

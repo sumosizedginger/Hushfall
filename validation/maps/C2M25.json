@@ -2,20 +2,20 @@
   "mapId": "C2M25",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "e59a47e",
+  "codeVersion": "55f9520",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "cf53d9a6bfa6bed2",
-  "assetVersion": "ce9ae541649b606a",
-  "engineSha": "4907fb404549f334",
+  "assetVersion": "50e27e20f7559732",
+  "engineSha": "31c000a8740b2ec8",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routesSha": "9537618213c4fced",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7283,
-      "finalHash": "9ff8573c",
+      "finalHash": "58db8315",
       "kills": 34,
       "secrets": 0,
       "items": 5,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7703,
-      "finalHash": "821c83b3",
+      "finalHash": "4c571848",
       "kills": 34,
       "secrets": 0,
       "items": 5,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7985,
-      "finalHash": "58b1c8ad",
+      "finalHash": "d2f312c9",
       "kills": 34,
       "secrets": 0,
       "items": 5,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7835,
-      "finalHash": "06647ba2",
+      "finalHash": "b7f00c35",
       "kills": 34,
       "secrets": 1,
       "items": 7,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8256,
-      "finalHash": "a10a679e",
+      "finalHash": "693c1d9b",
       "kills": 34,
       "secrets": 1,
       "items": 7,
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8514,
-      "finalHash": "a7765949",
+      "finalHash": "97e969e3",
       "kills": 34,
       "secrets": 1,
       "items": 7,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 7703,
-    "finalHash": "821c83b3",
+    "finalHash": "4c571848",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -154,7 +154,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 100,
+        "damage": 101,
         "hpLeft": 0
       },
       "ammo": {
@@ -195,7 +195,7 @@
     "normal": {
       "runner": {
         "result": "dead",
-        "damage": 112,
+        "damage": 103,
         "hpLeft": 0
       },
       "ammo": {
@@ -304,8 +304,8 @@
   },
   "browser": {
     "file": "validation/browser/C2M25.json",
-    "when": "2026-10-26T01:25:15.630Z",
-    "commit": "e59a47e",
+    "when": "2026-10-27T01:18:01.562Z",
+    "commit": "55f9520",
     "mapSha": "cf53d9a6bfa6bed2",
     "routesSha": "9537618213c4fced",
     "passed": 13,
@@ -313,8 +313,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-26T01:03:02.862Z",
-      "commit": "e59a47e",
+      "when": "2026-10-27T00:57:45.855Z",
+      "commit": "55f9520",
       "passed": 146,
       "total": 146
     }
@@ -383,12 +383,12 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 100 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 101 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability normal: a passive runner does not walk through (dead, 112 damage)",
+        "name": "viability normal: a passive runner does not walk through (dead, 103 damage)",
         "ok": true,
         "detail": ""
       },

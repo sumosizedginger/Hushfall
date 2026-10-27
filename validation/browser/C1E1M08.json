@@ -1,7 +1,7 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-10-26T01:06:45.106Z",
-  "commit": "e59a47e",
+  "when": "2026-10-27T01:01:38.521Z",
+  "commit": "55f9520",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,25 +11,25 @@
   "mapSha": "f75fd509ae054929",
   "routesSha": "b039924e1ede9608",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 10411,
-      "hash": "a1493c83",
-      "nodeTicks": 10411,
-      "nodeHash": "a1493c83",
+      "ticks": 10801,
+      "hash": "0302772c",
+      "nodeTicks": 10801,
+      "nodeHash": "0302772c",
       "agree": true,
-      "kills": 44,
+      "kills": 47,
       "secrets": 0,
-      "wallSeconds": 6
+      "wallSeconds": 8
     }
   },
   "hud": {
@@ -83,12 +83,12 @@
     {
       "name": "real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10411 policy=standing wall=6s"
+      "detail": "status=complete failed=null ticks=10801 policy=standing wall=8s"
     },
     {
       "name": "real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10411/a1493c83 vs node 10411/a1493c83"
+      "detail": "browser 10801/0302772c vs node 10801/0302772c"
     },
     {
       "name": "C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -123,7 +123,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.971, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.955, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -141,5 +141,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 18
+  "wallSeconds": 21
 }

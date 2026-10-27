@@ -1,7 +1,7 @@
 {
   "mapId": "C2M23",
-  "when": "2026-10-26T01:24:46.100Z",
-  "commit": "e59a47e",
+  "when": "2026-10-27T01:17:33.842Z",
+  "commit": "55f9520",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,23 +11,23 @@
   "mapSha": "b017eca13d58c3c0",
   "routesSha": "15f958d99dbca198",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 10567,
-      "hash": "5f3318a0",
-      "nodeTicks": 10567,
-      "nodeHash": "5f3318a0",
+      "ticks": 9891,
+      "hash": "99e3f042",
+      "nodeTicks": 9891,
+      "nodeHash": "99e3f042",
       "agree": true,
-      "kills": 59,
+      "kills": 56,
       "secrets": 0,
       "wallSeconds": 8
     },
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 1,
       "secrets": 1,
-      "wallSeconds": 1
+      "wallSeconds": 0
     }
   },
   "hud": {
@@ -92,17 +92,17 @@
     {
       "name": "real-game route C2M23.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10567 policy=standing wall=8s"
+      "detail": "status=complete failed=null ticks=9891 policy=standing wall=8s"
     },
     {
       "name": "real-game route C2M23.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10567/5f3318a0 vs node 10567/5f3318a0"
+      "detail": "browser 9891/99e3f042 vs node 9891/99e3f042"
     },
     {
       "name": "real-game route C2M23.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=561 policy=standing wall=1s"
+      "detail": "status=complete failed=null ticks=561 policy=standing wall=0s"
     },
     {
       "name": "real-game route C2M23.secret: browser sim == Node sim (ticks + state hash)",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 26
+  "wallSeconds": 22
 }

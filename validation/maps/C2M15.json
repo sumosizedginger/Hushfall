@@ -2,20 +2,20 @@
   "mapId": "C2M15",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "e59a47e",
+  "codeVersion": "55f9520",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "9fa1a44f074d4295",
-  "assetVersion": "ce9ae541649b606a",
-  "engineSha": "4907fb404549f334",
+  "assetVersion": "50e27e20f7559732",
+  "engineSha": "31c000a8740b2ec8",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routesSha": "17b8057f4136066e",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 6649,
-      "finalHash": "32528a77",
+      "finalHash": "013c216e",
       "kills": 40,
       "secrets": 0,
       "items": 3,
@@ -41,11 +41,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 10910,
-      "finalHash": "780fd3be",
+      "finalHash": "7034b755",
       "kills": 48,
       "secrets": 0,
       "items": 4,
-      "damageTaken": 31
+      "damageTaken": 39
     },
     {
       "file": "routes/C2M15.main.route.json",
@@ -54,11 +54,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7990,
-      "finalHash": "8ffba7e1",
+      "finalHash": "cbd1a996",
       "kills": 40,
       "secrets": 0,
-      "items": 6,
-      "damageTaken": 125
+      "items": 5,
+      "damageTaken": 111
     },
     {
       "file": "routes/C2M15.secret.route.json",
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7735,
-      "finalHash": "e7451347",
+      "finalHash": "ffe9e273",
       "kills": 40,
       "secrets": 1,
       "items": 4,
@@ -79,12 +79,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 11437,
-      "finalHash": "e281186b",
+      "ticks": 11457,
+      "finalHash": "400f6b93",
       "kills": 46,
       "secrets": 1,
       "items": 5,
-      "damageTaken": 56
+      "damageTaken": 44
     },
     {
       "file": "routes/C2M15.secret.route.json",
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8799,
-      "finalHash": "1a418a84",
+      "finalHash": "152062b3",
       "kills": 40,
       "secrets": 1,
       "items": 5,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 10910,
-    "finalHash": "780fd3be",
+    "finalHash": "7034b755",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -157,7 +157,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 101,
+        "damage": 108,
         "hpLeft": 0
       },
       "ammo": {
@@ -227,8 +227,8 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 31,
-        "meanDamage": 34,
+        "damage": 39,
+        "meanDamage": 38,
         "seconds": 181.8,
         "kills": 48,
         "failure": null
@@ -237,7 +237,7 @@
     "hard": {
       "runner": {
         "result": "dead",
-        "damage": 118,
+        "damage": 108,
         "hpLeft": 0
       },
       "ammo": {
@@ -268,8 +268,8 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 125,
-        "meanDamage": 138,
+        "damage": 111,
+        "meanDamage": 119,
         "seconds": 133.2,
         "kills": 40,
         "failure": null
@@ -305,8 +305,8 @@
   },
   "browser": {
     "file": "validation/browser/C2M15.json",
-    "when": "2026-10-26T01:20:39.109Z",
-    "commit": "e59a47e",
+    "when": "2026-10-27T01:14:00.465Z",
+    "commit": "55f9520",
     "mapSha": "9fa1a44f074d4295",
     "routesSha": "17b8057f4136066e",
     "passed": 13,
@@ -314,8 +314,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-26T01:03:02.862Z",
-      "commit": "e59a47e",
+      "when": "2026-10-27T00:57:45.855Z",
+      "commit": "55f9520",
       "passed": 146,
       "total": 146
     }
@@ -361,7 +361,7 @@
       {
         "name": "route C2M15.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "190.6 s"
+        "detail": "190.9 s"
       },
       {
         "name": "route C2M15.secret.route.json on hard reaches the exit",
@@ -384,7 +384,7 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 101 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 108 damage)",
         "ok": true,
         "detail": ""
       },
@@ -394,7 +394,7 @@
         "detail": ""
       },
       {
-        "name": "viability hard: a passive runner does not walk through (dead, 118 damage)",
+        "name": "viability hard: a passive runner does not walk through (dead, 108 damage)",
         "ok": true,
         "detail": ""
       },
@@ -511,12 +511,12 @@
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":34,\"hard\":138}"
+        "detail": "{\"normal\":38,\"hard\":119}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "12 / 34 / 138 (mean of 3 seeds)"
+        "detail": "12 / 38 / 119 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (3.6x; placeholder until a human plays it)",

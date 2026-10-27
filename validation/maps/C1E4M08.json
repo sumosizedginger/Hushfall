@@ -2,20 +2,20 @@
   "mapId": "C1E4M08",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "e59a47e",
+  "codeVersion": "55f9520",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "70469a660f6eb00e",
-  "assetVersion": "ce9ae541649b606a",
-  "engineSha": "4907fb404549f334",
+  "assetVersion": "50e27e20f7559732",
+  "engineSha": "31c000a8740b2ec8",
   "sources": {
-    "engine": "4907fb404549f334",
-    "render": "004cfe2cbfa6b3f4",
-    "game": "459845811fdcae63",
+    "engine": "31c000a8740b2ec8",
+    "render": "84cc7426c8013533",
+    "game": "719bae460371b95c",
     "audio": "feeb615d3ade1eab",
-    "assets": "ce9ae541649b606a",
+    "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
-    "probes": "f7cd7f4693478b86"
+    "probes": "01942c6dec4649e1"
   },
   "routesSha": "a535259ad4b40efe",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5333,
-      "finalHash": "c81c6e0c",
+      "finalHash": "769f3595",
       "kills": 18,
       "secrets": 0,
       "items": 3,
@@ -41,11 +41,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 6292,
-      "finalHash": "77e0bf96",
+      "finalHash": "a7136fb9",
       "kills": 18,
       "secrets": 0,
       "items": 6,
-      "damageTaken": 95
+      "damageTaken": 99
     },
     {
       "file": "routes/C1E4M08.main.route.json",
@@ -54,11 +54,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7988,
-      "finalHash": "4476fea1",
+      "finalHash": "9311eed0",
       "kills": 19,
       "secrets": 0,
       "items": 10,
-      "damageTaken": 156
+      "damageTaken": 160
     },
     {
       "file": "routes/C1E4M08.secret.route.json",
@@ -93,11 +93,11 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 12269,
-      "finalHash": "8859f8ac",
+      "finalHash": "cf891296",
       "kills": 21,
       "secrets": 1,
       "items": 10,
-      "damageTaken": 169
+      "damageTaken": 173
     }
   ],
   "canonicalRoute": {
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 6292,
-    "finalHash": "77e0bf96",
+    "finalHash": "a7136fb9",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -153,7 +153,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 104,
+        "damage": 148,
         "hpLeft": 0
       },
       "ammo": {
@@ -177,7 +177,7 @@
         "seeds": 3,
         "result": "complete",
         "damage": 42,
-        "meanDamage": 41,
+        "meanDamage": 39,
         "seconds": 88.9,
         "kills": 18,
         "failure": null
@@ -186,7 +186,7 @@
     "normal": {
       "runner": {
         "result": "dead",
-        "damage": 108,
+        "damage": 154,
         "hpLeft": 0
       },
       "ammo": {
@@ -209,8 +209,8 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 95,
-        "meanDamage": 112,
+        "damage": 99,
+        "meanDamage": 90,
         "seconds": 104.9,
         "kills": 18,
         "failure": null
@@ -219,7 +219,7 @@
     "hard": {
       "runner": {
         "result": "dead",
-        "damage": 100,
+        "damage": 170,
         "hpLeft": 0
       },
       "ammo": {
@@ -243,8 +243,8 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 156,
-        "meanDamage": 167,
+        "damage": 160,
+        "meanDamage": 168,
         "seconds": 133.1,
         "kills": 19,
         "failure": null
@@ -268,20 +268,20 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 95,
+        "damage": 90,
         "failure": null
       },
       "ammo pickups worth 25% less": {
         "result": "complete",
-        "damage": 134,
+        "damage": 131,
         "failure": null
       }
     }
   },
   "browser": {
     "file": "validation/browser/C1E4M08.json",
-    "when": "2026-10-26T01:14:19.515Z",
-    "commit": "e59a47e",
+    "when": "2026-10-27T01:08:29.785Z",
+    "commit": "55f9520",
     "mapSha": "70469a660f6eb00e",
     "routesSha": "a535259ad4b40efe",
     "passed": 14,
@@ -289,8 +289,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-10-26T01:03:02.862Z",
-      "commit": "e59a47e",
+      "when": "2026-10-27T00:57:45.855Z",
+      "commit": "55f9520",
       "passed": 146,
       "total": 146
     }
@@ -344,12 +344,12 @@
         "detail": "204.5 s"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 95 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 90 damage)",
         "ok": true,
         "detail": "complete"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 134 damage)",
+        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 131 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -359,17 +359,17 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 104 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 148 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability normal: a passive runner does not walk through (dead, 108 damage)",
+        "name": "viability normal: a passive runner does not walk through (dead, 154 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability hard: a passive runner does not walk through (dead, 100 damage)",
+        "name": "viability hard: a passive runner does not walk through (dead, 170 damage)",
         "ok": true,
         "detail": ""
       },
@@ -436,12 +436,12 @@
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":112,\"hard\":167}"
+        "detail": "{\"normal\":90,\"hard\":168}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "41 / 112 / 167 (mean of 3 seeds)"
+        "detail": "39 / 90 / 168 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (6.9x; placeholder until a human plays it)",
