@@ -46,7 +46,7 @@ try {
   await page.click('#btn-normal');
   await sleep(700);
   const audioState = await T('t.state().audio.state');
-  check('a real click unlocks audio (context running)', audioState === 'running', audioState);
+  check('a real click unlocks audio (context running)', audioState === 'running', audioState);
   // PT-063 (R13): a fresh profile sees the COLD OPEN before the first level (the epilogue's machinery: cards typed over the title picture, the last over the tower plate); Esc skips it and the game starts
   for (let i = 0; i < 24 && (await T('t.state()')).mode !== 'epilogue'; i++) await sleep(250);
   { for (let i = 0; i < 24 && (await text('ending-text')).length === 0; i++) await sleep(250); const st = await T('t.state()'), title = await text('ending-title'), art = await page.$eval('#ending-art', (e) => e.src.split('/').pop());
@@ -418,7 +418,8 @@ try {
   if (updateBaseline || !fs.existsSync(baseFile)) fs.writeFileSync(baseFile, JSON.stringify({ note: 'reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline', when: new Date().toISOString(), budget: Object.fromEntries(Object.entries(budget).map(([k, v]) => [k, { calls: v.calls, triangles: v.triangles }])) }, null, 2));
   const base = JSON.parse(fs.readFileSync(baseFile, 'utf8')).budget;
   check('render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles', Object.entries(budget).every(([k, b]) => base[k] && b.calls <= base[k].calls * 1.25 && b.triangles <= base[k].triangles * 1.25), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, [b.calls, base[k]?.calls, b.triangles, base[k]?.triangles]]))));
-  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.triangles > 1000 && b.triangles < 60000), JSON.stringify(budget));
+  // the triangle ceiling was 60000 until the look polish (PT-074): the trims and lamps, measured on the graphics card (GPU=1: 4 more draw calls and 2 to 6 thousand more triangles at every vantage than under software GL), put the market at 64008; 80000 keeps the same headroom over it and is still small for any card
+  check('render budget: draw calls and triangles stay modest at the heaviest vantage points', Object.values(budget).every((b) => b.calls > 20 && b.triangles > 1000 && b.triangles < 80000), JSON.stringify(budget));
   // hard ceilings are engineering budgets, not measurements: 350 calls for sleeping enemies, 900 with the whole level awake (every awake rig is ~30 draw calls; the Gate 2 crowds reach ~830 at the market and the quay); UNVERIFIED on a real GPU
   check('render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)', Object.entries(budget).every(([k, b]) => b.calls <= (k.includes('awake') ? 900 : 350)), JSON.stringify(Object.fromEntries(Object.entries(budget).map(([k, b]) => [k, b.calls]))));
   fs.writeFileSync(path.join(root, 'validation/render-budget.json'), JSON.stringify({ when: new Date().toISOString(), map: 'C1E1M01 + Gate 2 vantages (m03/m05/m06/m07/m08)', note: 'counts from renderer.info at fixed vantage points; NOT frame timings', budget }, null, 2));
