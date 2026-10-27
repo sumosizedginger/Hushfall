@@ -37,6 +37,7 @@ import { unisonMult, phaseOf } from './phases.js';                              
 import { hiveStep } from './hivecantor.js';                                                                       // PT-043: the Hive Cantor's beat
 import { bellInit, bellMotion, bellStep, updateSpikes } from './rootbell.js';                                              // PT-043: the Root Bell's clapper
 import { makeResonators, resonatorsHear, updateResonators } from './resonator.js';                                   // PT-037: the standing forks (lazy: only a map with a resonator prop has `w.resonators`)                                                            // PT-037: the Vael civilians (peaceful: states 'calm' and 'flee', never 'idle' or 'chase')
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const rand = (w) => nextRandom(w);
@@ -162,7 +163,7 @@ export function blockedCircle(w, x, z, r, self = null) {
 function chaseStep(w, e, def, dt) {
   const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), s = e.steer || (e.id % 2 ? 0.7 : -0.7);
   for (const off of [0, s, -s, 2 * s, -2 * s, 2.4 * s, -2.4 * s]) {                       // wide angles last: head-on against a round collider only a near-tangential step is free
-    const a = e.yaw + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+    const a = e.yaw + off, sx = DM.sin(a) * spd, sz = DM.cos(a) * spd;
     if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); if (off !== 0) e.steer = off; else if (e.steer) e.steer = 0; return true; }
   }
   return false;
@@ -198,8 +199,8 @@ export function hasLOS(w, x0, z0, x1, z1) {
   return true;
 }
 /** is the player inside the arc in front of enemy `e` (cos of the half-angle)? The enemy's facing is its yaw: forward = (sin yaw, cos yaw) */
-function inFront(e, p, cos) { const dx = p.x - e.x, dz = p.z - e.z, d = Math.hypot(dx, dz); return d < 1e-6 || (Math.sin(e.yaw) * dx + Math.cos(e.yaw) * dz) / d >= cos; }
-export const forwardVec = (p) => [-Math.sin(p.yaw) * Math.cos(p.pitch), Math.sin(p.pitch), -Math.cos(p.yaw) * Math.cos(p.pitch)];
+function inFront(e, p, cos) { const dx = p.x - e.x, dz = p.z - e.z, d = Math.hypot(dx, dz); return d < 1e-6 || (DM.sin(e.yaw) * dx + DM.cos(e.yaw) * dz) / d >= cos; }
+export const forwardVec = (p) => [-DM.sin(p.yaw) * DM.cos(p.pitch), DM.sin(p.pitch), -DM.cos(p.yaw) * DM.cos(p.pitch)];
 
 // ---------------------------------------------------------------- damage
 /** PT-033: a body in a region of vacuum takes VACUUM.dps a second (the difficulty scales it, as a toxic bed's); `p.vac` is lazy state that only a map with vacuum has */
@@ -249,7 +250,7 @@ function strikePlayer(w, e, dmg, heavy = false) {
   const p = w.player;
   if (p.guarding && p.hp > 0 && dmg > 0) {
     const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz) || 1;
-    if ((dx * -Math.sin(p.yaw) + dz * -Math.cos(p.yaw)) / d > GUARD.cos) {
+    if ((dx * -DM.sin(p.yaw) + dz * -DM.cos(p.yaw)) / d > GUARD.cos) {
       if (p.parryW > 0) {
         const def = ENEMIES[e.kind], poise = def.poise ?? 1;
         e.stunT = Math.max(e.stunT || 0, def.boss ? 0.5 : GUARD.parryStun / (poise >= 3 ? 2 : 1)); e.attackT = -1; e.chargeT = -1; e.lungeT = -1; e.lungeHit = false; e.struck = false; e.cd = Math.max(e.cd || 0, 0.4);
@@ -293,7 +294,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   let plated = false;                                                                                                  // PT-056: did the plate turn this blow? (the penetrator load doubles what a plated creature takes)
   if (def.armor && !opts.splash && !opts.pierceArmor && !(def.armor.opens && e.attackT >= 0)) {                             // (a Bulwark Shell's carapace is open while it bashes, PT-028) plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore it
     if ((e.stunT || 0) > 0) dmg *= def.armor.stunMult ?? 1;
-    else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; plated = true; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
+    else { const tx = w.player.x - e.x, tz = w.player.z - e.z, tl = Math.hypot(tx, tz) || 1; if ((DM.sin(e.yaw) * tx + DM.cos(e.yaw) * tz) / tl > def.armor.cos) { dmg *= def.armor.front; plated = true; emit(w, 'armor_hit', { id: e.id, x: e.x, z: e.z }); } }
   }
   if (!def.ward && !def.node && !def.boss) { const A = wardOf(w, e); if (A) { dmg *= ENEMIES.acolyte.ward.reduce; emit(w, 'ward_hit', { id: e.id, x: e.x, z: e.z }); } }          // PT-029: an awake Acolyte's ward
   if (def.shield && w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead')) { dmg *= def.shield.reduce; emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z }); }
@@ -520,7 +521,7 @@ function fireArc(w, def, f = 0) {
   for (const e of w.enemies) {
     if (e.state === 'dead' || ENEMIES[e.kind].peaceful) continue;                                         // (PT-037: the lamp never locks onto a peaceful Vael)
     const [tx, ty, tz] = arcPoint(e), dx = tx - ex, dy = ty - ey, dz = tz - ez, d = Math.hypot(dx, dy, dz); if (d > range || d < 0.3) continue;
-    const ang = Math.acos(Math.min(1, Math.max(-1, (dx * dir[0] + dy * dir[1] + dz * dir[2]) / d))), slack = Math.atan2(hitCylinder(e).r, d);          // a wide body is easier to lock than a thin one at the same distance
+    const ang = DM.acos(Math.min(1, Math.max(-1, (dx * dir[0] + dy * dir[1] + dz * dir[2]) / d))), slack = DM.atan2(hitCylinder(e).r, d);          // a wide body is easier to lock than a thin one at the same distance
     if (ang - slack > cone || !rayClear(w, ex, ey, ez, tx, ty, tz)) continue;
     cands.push({ e, pt: [tx, ty, tz], score: ang + d * 0.004 });
   }
@@ -529,7 +530,7 @@ function fireArc(w, def, f = 0) {
   const starts = cands.slice(0, 1);
   if (forks > 1 && cands.length > 1) {
     const dirTo = (c) => { const dx = c.pt[0] - ex, dy = c.pt[1] - ey, dz = c.pt[2] - ez, l = Math.hypot(dx, dy, dz) || 1; return [dx / l, dy / l, dz / l]; }, d0 = dirTo(cands[0]);
-    const second = cands.slice(1).find((c) => { const d = dirTo(c); return Math.acos(Math.min(1, Math.max(-1, d0[0] * d[0] + d0[1] * d[1] + d0[2] * d[2]))) > 0.06; }); if (second) starts.push(second);
+    const second = cands.slice(1).find((c) => { const d = dirTo(c); return DM.acos(Math.min(1, Math.max(-1, d0[0] * d[0] + d0[1] * d[1] + d0[2] * d[2]))) > 0.06; }); if (second) starts.push(second);
   }
   const paths = [], hit = new Set(starts.map((s) => s.e)), struck = [];
   for (const start of starts) {
@@ -583,12 +584,12 @@ function updateSwing(w, dt) {
 }
 /** the blow lands: every body (the best-aligned one, or all of them for a cleave) inside reach and arc, with a clear line, takes it */
 function resolveSwing(w, S) {
-  const p = w.player, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), ey = p.y + PLAYER.eye, found = [];
+  const p = w.player, fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw), ey = p.y + PLAYER.eye, found = [];
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
     const c = hitCylinder(e), dx = c.x - p.x, dz = c.z - p.z, d = Math.hypot(dx, dz);
     if (d - c.r > S.reach || c.y1 < p.y + 0.15 || c.y0 > ey + 0.4) continue;
-    const ang = Math.acos(clamp((dx * fx + dz * fz) / (d || 1), -1, 1)), slack = Math.atan2(c.r, Math.max(d, 0.01));
+    const ang = DM.acos(clamp((dx * fx + dz * fz) / (d || 1), -1, 1)), slack = DM.atan2(c.r, Math.max(d, 0.01));
     if (d > 0.05 && ang - slack > S.arc / 2) continue;
     if (!rayClear(w, p.x, ey - 0.3, p.z, c.x, clamp(ey - 0.4, c.y0 + 0.2, c.y1 - 0.2), c.z)) continue;
     found.push({ e, d, ux: dx / (d || 1), uz: dz / (d || 1), rank: ang * 2 + d * 0.05 });
@@ -598,7 +599,7 @@ function resolveSwing(w, S) {
   for (const { e, d, ux, uz } of S.cleave ? found : found.slice(0, 1)) {
     const def = ENEMIES[e.kind], poise = Math.max(1, def.poise ?? 1); let dmg = S.damage;
     if (ripo) dmg *= GUARD.riposteMult;
-    if (S.backstab) { const tx = p.x - e.x, tz = p.z - e.z, tl = Math.hypot(tx, tz) || 1; if (e.state === 'idle' || (Math.sin(e.yaw) * tx + Math.cos(e.yaw) * tz) / tl < -0.2) dmg *= S.backstab; }      // asleep, or turned away
+    if (S.backstab) { const tx = p.x - e.x, tz = p.z - e.z, tl = Math.hypot(tx, tz) || 1; if (e.state === 'idle' || (DM.sin(e.yaw) * tx + DM.cos(e.yaw) * tz) / tl < -0.2) dmg *= S.backstab; }      // asleep, or turned away
     landed = true;
     const killed = damageEnemy(w, e, dmg, { melee: true, pierceArmor: !!S.ignorePlate });
     if (!killed) {
@@ -648,12 +649,12 @@ function fireWeapon(w, charge = 0) {
   if (def.kind === 'arc') fireArc(w, def, cf);
   else if (def.kind === 'hitscan') (def.pierce != null ? fireBolt : fireHitscan)(w, fdef, cone);
   else if (def.designate) {                                                                                 // PT-027: the mortar throws the shell TO the point the crosshair rests on (the landing, not the aim, is what the unsteady hand scatters)
-    const f = forwardVec(p), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)], mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads), jitter = [(rand(w) * 2 - 1) * cone, (rand(w) * 2 - 1) * cone];
+    const f = forwardVec(p), r = [DM.cos(p.yaw), 0, -DM.sin(p.yaw)], mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads), jitter = [(rand(w) * 2 - 1) * cone, (rand(w) * 2 - 1) * cone];
     const from = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight], s = mortarShot(w, p, def, f, from, jitter);
     w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: from[0], y: from[1], z: from[2], vx: s.vx, vy: s.vy, vz: s.vz, g: s.g, life: s.T + 1.5 });
   }
   else {
-    const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [Math.cos(p.yaw), 0, -Math.sin(p.yaw)];
+    const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [DM.cos(p.yaw), 0, -DM.sin(p.yaw)];
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
     const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
     const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
@@ -677,14 +678,14 @@ function bellCall(w, e, r, wake, most = Infinity) {
 /** PT-076: what the brain may use of the world (brain.js) */
 function brainCtx(w, e, def, diff, dt, sees, dist) {
   return { w, e, def, dt, sees, dist, p: w.player, rand: () => rand(w), fired: w._fireTick === w.tick, hpMax: def.hp * diff.enemyHp, emit,
-    moveAt: (a, k) => moveAlong(w, e, def, dt, a, k), headingOpen: (a) => !blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e), freeHeading: (prefer) => openHeading(w, e, def, prefer),
+    moveAt: (a, k) => moveAlong(w, e, def, dt, a, k), headingOpen: (a) => !blockedCircle(w, e.x + DM.sin(a) * 1.6, e.z + DM.cos(a) * 1.6, def.radius, e), freeHeading: (prefer) => openHeading(w, e, def, prefer),
     clearTo: (x, z) => stepClear(w, e.x, e.z, x, z) && moveClear(w, e.x, e.z, x, z, def.radius), callable: (r) => bellCall(w, e, r, false) > 0, call: (r, most) => bellCall(w, e, r, true, most), takeTurn: (kind) => takeTurn(w, e, kind) };
 }
 
 
 /** The door or secret panel that Use would act on right now (first one along the view ray within reach), or null. The UI reads this for its prompt. */
 export function useTarget(w) {
-  const p = w.player, map = w.map, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
+  const p = w.player, map = w.map, fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw);
   for (let s = 0.3; s <= PLAYER.useReach; s += 0.25) {
     const cx = Math.floor((p.x + fx * s) / map.cell), cz = Math.floor((p.z + fz * s) / map.cell), k = map.kind(cx, cz);
     if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); if (d?.closet) break; return d; }         // a closet panel is a wall to the player
@@ -721,10 +722,10 @@ function stepClear(w, x0, z0, x1, z1) {
 
 // ---------------------------------------------------------------- enemies
 function fireEnemyShot(w, e, def, diff, inBurst = false) {
-  const R = def.ranged, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.6, oy = e.y + (R.muzzleY ?? 1.5), oz = e.z + Math.cos(e.yaw) * 0.6;
+  const R = def.ranged, p = w.player, ox = e.x + DM.sin(e.yaw) * 0.6, oy = e.y + (R.muzzleY ?? 1.5), oz = e.z + DM.cos(e.yaw) * 0.6;
   let dx = p.x - ox, dy = p.y + R.aimHeight - oy, dz = p.z - oz; const len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
   let vx = dx / len * R.speed, vy = dy / len * R.speed, vz = dz / len * R.speed;
-  if (R.burst) { const j = R.burst.spread, a = (rand(w) * 2 - 1) * j, b = (rand(w) * 2 - 1) * j, c = Math.cos(a), sn = Math.sin(a); [vx, vz] = [vx * c - vz * sn, vx * sn + vz * c]; vy += b * R.speed; }          // a burst is a little off the line, shot by shot (the seeded RNG: deterministic)
+  if (R.burst) { const j = R.burst.spread, a = (rand(w) * 2 - 1) * j, b = (rand(w) * 2 - 1) * j, c = DM.cos(a), sn = DM.sin(a); [vx, vz] = [vx * c - vz * sn, vx * sn + vz * c]; vy += b * R.speed; }          // a burst is a little off the line, shot by shot (the seeded RNG: deterministic)
   w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx, vy, vz, life: 4, dmg: Math.round(R.damage * diff.enemyDamage), ...(R.suppress ? { sup: R.suppress.r } : {}) });
   emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z, burst: inBurst });
   if (R.burst && !inBurst) { e.burstLeft = R.burst.count - 1; e.burstT = R.burst.gap; }
@@ -755,14 +756,14 @@ const nodesAlive = (w) => w.enemies.filter(isNode).length;
 /** step away from the player (Sextons and the Cantor keep their distance) */
 /** PT-060: one step toward a point (the Mender goes to the ones it tends), round whatever is in the way as the others do; false if it could not move */
 function stepToward(w, e, def, dt, x, z) {
-  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), to = Math.atan2(x - e.x, z - e.z);
-  for (const off of [0, 0.7, -0.7, 1.4, -1.4]) { const a = to + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd; if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); e.yaw = a; return true; } }
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), to = DM.atan2(x - e.x, z - e.z);
+  for (const off of [0, 0.7, -0.7, 1.4, -1.4]) { const a = to + off, sx = DM.sin(a) * spd, sz = DM.cos(a) * spd; if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); e.yaw = a; return true; } }
   return false;
 }
 function retreatStep(w, e, def, dt) {
-  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), away = Math.atan2(e.x - w.player.x, e.z - w.player.z);
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e), away = DM.atan2(e.x - w.player.x, e.z - w.player.z);
   for (const off of [0, 0.7, -0.7, 1.4, -1.4]) {
-    const a = away + off, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+    const a = away + off, sx = DM.sin(a) * spd, sz = DM.cos(a) * spd;
     if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); return true; }
   }
   return false;
@@ -770,16 +771,16 @@ function retreatStep(w, e, def, dt) {
 
 /** PT-064 (reposition.js): a heading away from the player that is open for a metre and a half, tried nearest the straight line away first (or round `prefer`); null when the creature is walled in */
 function openHeading(w, e, def, prefer) {
-  const base = prefer ?? Math.atan2(e.x - w.player.x, e.z - w.player.z);
-  for (const off of [0, 0.4, -0.4, 0.8, -0.8, 1.1, -1.1]) { const a = base + off; if (!blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e)) return a; }
+  const base = prefer ?? DM.atan2(e.x - w.player.x, e.z - w.player.z);
+  for (const off of [0, 0.4, -0.4, 0.8, -0.8, 1.1, -1.1]) { const a = base + off; if (!blockedCircle(w, e.x + DM.sin(a) * 1.6, e.z + DM.cos(a) * 1.6, def.radius, e)) return a; }
   return null;
 }
 function moveAlong(w, e, def, dt, a, k) {
-  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e) * k, sx = Math.sin(a) * spd, sz = Math.cos(a) * spd;
+  const spd = def.speed * dt * fxSpeed(fxAt(w, e.x, e.z)) * moveMult(e) * k, sx = DM.sin(a) * spd, sz = DM.cos(a) * spd;
   if (blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) return false;
   e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); return true;
 }
-const runCtx = (w, e, def, dt) => ({ freeHeading: (prefer) => (e.hold ? null : openHeading(w, e, def, prefer)), headingOpen: (a) => !blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e), moveAt: (a, k) => moveAlong(w, e, def, dt, a, k) });
+const runCtx = (w, e, def, dt) => ({ freeHeading: (prefer) => (e.hold ? null : openHeading(w, e, def, prefer)), headingOpen: (a) => !blockedCircle(w, e.x + DM.sin(a) * 1.6, e.z + DM.cos(a) * 1.6, def.radius, e), moveAt: (a, k) => moveAlong(w, e, def, dt, a, k) });
 
 /** Warden-Graft: windup -> straight-line charge -> (hit the player | crash into geometry and stagger | give way to another body) */
 function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
@@ -788,10 +789,10 @@ function chargeStep(w, e, def, diff, dt, sees, dist, dyv) {
     e.chargeT += dt;
     if (e.chargeT < C.windup) { e.walk *= 0.85; return true; }                                       // the tell: it stops and lowers its shoulder
     if (e.chargeT < C.windup + C.duration) {
-      const step = C.speed * dt, nx = Math.sin(e.yaw) * step, nz = Math.cos(e.yaw) * step; e.walk = 1; e.phase += dt * def.gait * 2;
+      const step = C.speed * dt, nx = DM.sin(e.yaw) * step, nz = DM.cos(e.yaw) * step; e.walk = 1; e.phase += dt * def.gait * 2;
       if (!e.chargeHit && Math.hypot(p.x - e.x, p.z - e.z) < def.radius + PLAYER.radius + 0.45 && Math.abs(p.y - e.y) < 1.4 && p.hp > 0 && inFront(e, p, ENEMY_STRIKE.dashCos)) {
         const res = strikePlayer(w, e, Math.round(C.damage * diff.enemyDamage), true); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z });
-        if (res === 'hit' || res === 'broken') tryMove(w, p, Math.sin(e.yaw) * C.knock, Math.cos(e.yaw) * C.knock, PLAYER.radius);
+        if (res === 'hit' || res === 'broken') tryMove(w, p, DM.sin(e.yaw) * C.knock, DM.cos(e.yaw) * C.knock, PLAYER.radius);
         e.chargeT = -1; e.chargeCd = C.cooldown * diff.reaction; return true;
       }
       if (blockedCircle(w, e.x + nx, e.z + nz, def.radius) || tooHigh(w, e, e.x + nx, e.z + nz, def.radius)) {          // walls, doors, props, ledges: it crashes and is stunned
@@ -847,15 +848,15 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   if (def.summon && e.summons?.length && sees && e.summonCd <= 0) {
     const S = def.summon;
     if (w.enemies.filter((o) => o.kind === S.kind && o.state !== 'dead').length < S.max) for (let i = 0; i < S.count; i++) {
-      e.summonN = (e.summonN ?? -1) + 1; const [sx, sz] = e.summons[e.summonN % e.summons.length], g = spawnEnemy(w, S.kind, sx, sz, Math.atan2(p.x - sx, p.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z });
+      e.summonN = (e.summonN ?? -1) + 1; const [sx, sz] = e.summons[e.summonN % e.summons.length], g = spawnEnemy(w, S.kind, sx, sz, DM.atan2(p.x - sx, p.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z });
     }
     e.summonCd = S.every * (enraged ? 0.7 : 1);
   }
   if ((enraged || def.shots?.always) && def.shots && sees && e.shotCd <= 0 && dist > 4) {
-    const Sh = def.shots, ox = e.x + Math.sin(e.yaw) * 0.8, oz = e.z + Math.cos(e.yaw) * 0.8, oy = e.y + (Sh.muzzleY ?? 1.9), base = Math.atan2(p.x - ox, p.z - oz);
+    const Sh = def.shots, ox = e.x + DM.sin(e.yaw) * 0.8, oz = e.z + DM.cos(e.yaw) * 0.8, oy = e.y + (Sh.muzzleY ?? 1.9), base = DM.atan2(p.x - ox, p.z - oz);
     for (let i = -Math.floor(Sh.count / 2); i <= Math.floor(Sh.count / 2); i++) {
       const a = base + i * Sh.spread, dy = p.y + Sh.aimHeight - oy, hz = Math.hypot(p.x - ox, p.z - oz) || 1, len = Math.hypot(hz, dy);
-      w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: Math.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: Math.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage) });
+      w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: DM.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: DM.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage) });
     }
     emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z }); e.shotCd = Sh.cooldown;
   }
@@ -868,7 +869,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
 function strafeStep(w, e, def, dt) {
   const S = def.strafe, p = w.player; e.strafeT = (e.strafeT ?? 0) - dt;
   if (e.strafeT <= 0) { e.strafeDir = rand(w) < 0.5 ? -1 : 1; e.strafeT = S.every * (0.6 + rand(w) * 0.8); }
-  const a = Math.atan2(p.x - e.x, p.z - e.z) + e.strafeDir * Math.PI / 2, sx = Math.sin(a) * S.speed * dt * moveMult(e), sz = Math.cos(a) * S.speed * dt * moveMult(e);
+  const a = DM.atan2(p.x - e.x, p.z - e.z) + e.strafeDir * Math.PI / 2, sx = DM.sin(a) * S.speed * dt * moveMult(e), sz = DM.cos(a) * S.speed * dt * moveMult(e);
   if (!blockedCircle(w, e.x + sx, e.z + sz, def.radius, e)) { e.x += sx; e.z += sz; e.y = groundAt(w, e.x, e.z, def.radius); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return true; }
   e.strafeDir = -e.strafeDir; return false;
 }
@@ -909,7 +910,7 @@ function vatStep(w, e, def, diff, dt) {
       e.vatT = -1; e.summonCd = S.every * diff.reaction; e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead')); const taken = [], kinds = e.spawns ?? S.kinds;
       for (let i = 0; i < S.count && e.brood.length < S.max; i++) {
         const kind = kinds[e.vatN++ % kinds.length], spot = broodSpot(w, e, kind, taken); if (!spot) break; taken.push(spot);
-        const g = spawnEnemy(w, kind, spot[0], spot[1], Math.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true, vat: true });
+        const g = spawnEnemy(w, kind, spot[0], spot[1], DM.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true, vat: true });
       }
       emit(w, 'vat_birth', { id: e.id, x: e.x, z: e.z });
     }
@@ -926,9 +927,9 @@ function vatStep(w, e, def, diff, dt) {
 function patchAt(w, x, z) { for (const q of w.patches) if (Math.hypot(x - q.x, z - q.z) < q.r) return 'p'; return null; }
 /** a free spot on a ring round the mother for a creature of `kind` (toward the player first, then round the ring), or null */
 function broodSpot(w, e, kind, taken) {
-  const r = ENEMIES[kind].radius, toward = Math.atan2(w.player.x - e.x, w.player.z - e.z);
+  const r = ENEMIES[kind].radius, toward = DM.atan2(w.player.x - e.x, w.player.z - e.z);
   for (const off of [0.5, -0.5, 1.1, -1.1, 1.7, -1.7, 2.4, -2.4, 3.0]) for (const d of [2.3, 3.0]) {
-    const a = toward + off, x = e.x + Math.sin(a) * d, z = e.z + Math.cos(a) * d;
+    const a = toward + off, x = e.x + DM.sin(a) * d, z = e.z + DM.cos(a) * d;
     if (!blockedCircle(w, x, z, r + 0.05) && !tooHigh(w, e, x, z, r) && moveClear(w, e.x, e.z, x, z, r) && !taken.some(([tx, tz]) => Math.hypot(tx - x, tz - z) < r * 2.2)) return [x, z];
   }
   return null;
@@ -949,7 +950,7 @@ function motherStep(w, e, def, diff, dt, sees, dist) {
       e.broodT = -1; e.summonCd = B.every; e.brood = e.brood.filter((id) => w.enemies.some((o) => o.id === id && o.state !== 'dead')); const taken = [];
       for (let i = 0; i < B.count && e.brood.length < B.max; i++) {
         const spot = broodSpot(w, e, B.kind, taken); if (!spot) break; taken.push(spot);
-        const g = spawnEnemy(w, B.kind, spot[0], spot[1], Math.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true });
+        const g = spawnEnemy(w, B.kind, spot[0], spot[1], DM.atan2(p.x - spot[0], p.z - spot[1])); g.summoned = true; e.brood.push(g.id); w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z, brood: true });
       }
       emit(w, 'brood_birth', { id: e.id, x: e.x, z: e.z });
     }
@@ -973,7 +974,7 @@ function motherStep(w, e, def, diff, dt, sees, dist) {
 }
 /** throw a tear to where the player stands: a flight of `speedPerM` s a metre between `minFlight` and `maxFlight`, the arc exact for this integrator (vy from the gravity and the height difference) */
 function lobTear(w, e, def) {
-  const T = def.tears, p = w.player, ox = e.x + Math.sin(e.yaw) * 0.5, oz = e.z + Math.cos(e.yaw) * 0.5, oy = e.y + def.height * 0.8, tx = p.x, tz = p.z, ty = floorAt(w, tx, tz) + 0.05;
+  const T = def.tears, p = w.player, ox = e.x + DM.sin(e.yaw) * 0.5, oz = e.z + DM.cos(e.yaw) * 0.5, oy = e.y + def.height * 0.8, tx = p.x, tz = p.z, ty = floorAt(w, tx, tz) + 0.05;
   const d = Math.hypot(tx - ox, tz - oz), flight = clamp(d * T.speedPerM, T.minFlight, T.maxFlight), n = Math.max(1, Math.round(flight / TICK)), g = T.gravity, tt = n * TICK;
   const vy = (ty - oy) / tt + 0.5 * g * (tt + TICK);                                                         // the per-tick integrator (vy -= g dt; y += vy dt) lands exactly on ty after n ticks
   (w.tears ?? (w.tears = [])).push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: (tx - ox) / tt, vy, vz: (tz - oz) / tt, g, left: n, r: T.r, life: T.life });
@@ -1069,7 +1070,7 @@ function landingNear(w, s) {
   };
   if (free(s.x, s.z)) return s;
   for (let ring = 1; ring <= 8; ring++) for (let k = 0; k < 16; k++) {
-    const a = (k / 16) * Math.PI * 2, x = s.x + Math.cos(a) * ring * 0.5, z = s.z + Math.sin(a) * ring * 0.5;
+    const a = (k / 16) * Math.PI * 2, x = s.x + DM.cos(a) * ring * 0.5, z = s.z + DM.sin(a) * ring * 0.5;
     if (free(x, z) && Math.abs(groundAt(w, x, z, r) - y0) <= 0.6) return { x, z };
   }
   return s;
@@ -1101,8 +1102,8 @@ function airMove(w, p, sx, sf, fx, fz, rx, rz, dt) {
 
 /** a range target's way back to its post: walk there, then (a 'fixed' one, or one that cannot see you) turn back to its heading. Returns true while it is still moving or turning. */
 function homeStep(w, e, def, dt, turnHome) {
-  const dx = e.post.x - e.x, dz = e.post.z - e.z, d = Math.hypot(dx, dz), turn = def.turnRate * dt, face = (to) => { const a = Math.atan2(Math.sin(to - e.yaw), Math.cos(to - e.yaw)); e.yaw += clamp(a, -turn, turn); return Math.abs(a) > turn; };
-  if (d > 0.15) { const a = Math.atan2(dx, dz); face(a); const s = Math.min(d, def.speed * dt * moveMult(e)); tryMove(w, e, Math.sin(a) * s, Math.cos(a) * s, def.radius); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2); return true; }
+  const dx = e.post.x - e.x, dz = e.post.z - e.z, d = Math.hypot(dx, dz), turn = def.turnRate * dt, face = (to) => { const a = DM.atan2(DM.sin(to - e.yaw), DM.cos(to - e.yaw)); e.yaw += clamp(a, -turn, turn); return Math.abs(a) > turn; };
+  if (d > 0.15) { const a = DM.atan2(dx, dz); face(a); const s = Math.min(d, def.speed * dt * moveMult(e)); tryMove(w, e, DM.sin(a) * s, DM.cos(a) * s, def.radius); e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2); return true; }
   e.walk = Math.max(0, e.walk - dt * 3);
   return (turnHome || e.hold === 'fixed') && face(e.post.yaw);
 }
@@ -1138,7 +1139,7 @@ function updateEnemy(w, e, diff, dt) {
   if (!sees && !e.hunt && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) {
     if (e.lost <= 8 && ordinary(e)) {                                                                                          // ENEMY ACTIONS: it looks round where it lost you before it gives up (tactics.js `search`)
       const Sr = TACTICS.search; if (e.searchT === undefined) { e.searchT = Sr.t; e.searchYaw = e.yaw; }
-      e.searchT -= dt; e.yaw = e.searchYaw + Math.sin((Sr.t - e.searchT) * Sr.rate) * Sr.sweep; e.walk *= 0.9; if (e.searchT > 0) return;
+      e.searchT -= dt; e.yaw = e.searchYaw + DM.sin((Sr.t - e.searchT) * Sr.rate) * Sr.sweep; e.walk *= 0.9; if (e.searchT > 0) return;
     }
     if (e.searchT !== undefined) { delete e.searchT; delete e.searchYaw; }
     e.state = 'idle'; e.walk = 0; return;
@@ -1148,7 +1149,7 @@ function updateEnemy(w, e, diff, dt) {
   const fp = sees && !def.ranged && ordinary(e) ? fanPoint(w, e) : null;                                                     // ENEMY ACTIONS: its slot in the fan across the player's front (tactics.js), when the way there is clear
   if (fp && stepClear(w, e.x, e.z, fp.x, fp.z) && moveClear(w, e.x, e.z, fp.x, fp.z, def.radius)) { ax = fp.x; az = fp.z; }
   else if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
-  let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+  let dy = DM.atan2(ax - e.x, az - e.z) - e.yaw; dy = DM.atan2(DM.sin(dy), DM.cos(dy));
   const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
   if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun && !(e.actK && e.actK !== 'dodge')) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js; one in the middle of an act of the brain turns its own way, brain.js)
   e.cd = Math.max(0, e.cd - dt);
@@ -1158,7 +1159,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
   if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d, e), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), ...runCtx(w, e, def, dt) })) return;          // PT-060: the Marksman's shot
   if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, ...runCtx(w, e, def, dt), retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
-  if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, Math.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
+  if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, DM.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.ward && !e.hold && acolyteStep(w, e, def, diff, dt, sees, dist)) return;
@@ -1170,9 +1171,9 @@ function updateEnemy(w, e, diff, dt) {
       if (e.lungeT < L.windup) e.walk *= 0.8;                                        // crouch: the readable tell
       else if (e.lungeT < L.windup + L.duration) {
         const hit = () => { if (!e.lungeHit) { e.lungeHit = true; strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage)); emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); } };
-        tryMove(w, e, Math.sin(e.yaw) * L.speed * dt, Math.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
+        tryMove(w, e, DM.sin(e.yaw) * L.speed * dt, DM.cos(e.yaw) * L.speed * dt, def.radius); e.walk = 1; e.phase += dt * def.gait;
         if (dist < def.attack.reach * 0.7 && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.dashCos)) hit();
-      } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; if (L.back && ordinary(e) && (-Math.sin(p.yaw) * (e.x - p.x) - Math.cos(p.yaw) * (e.z - p.z)) / (dist || 1) > 0.5) e.backT = L.back; }          // (ENEMY ACTIONS: a Gaunt hops back after its lunge, `lunge.back` s, but only from a player who FACES it: turn your back or run and it keeps coming)
+      } else { e.lungeT = -1; e.lungeCd = L.cooldown * diff.reaction; e.lungeHit = false; if (L.back && ordinary(e) && (-DM.sin(p.yaw) * (e.x - p.x) - DM.cos(p.yaw) * (e.z - p.z)) / (dist || 1) > 0.5) e.backT = L.back; }          // (ENEMY ACTIONS: a Gaunt hops back after its lunge, `lunge.back` s, but only from a player who FACES it: turn your back or run and it keeps coming)
       return;
     }
     if (e.backT > 0) { e.backT = Math.max(0, e.backT - dt); if (e.backT === 0) delete e.backT; if (retreatStep(w, e, def, dt)) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * def.gait; return; } }
@@ -1184,7 +1185,7 @@ function updateEnemy(w, e, diff, dt) {
     if (!e.struck && e.attackT >= def.attack.duration * def.attack.windup) {
       e.struck = true;
       if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
-      else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, Math.sin(e.yaw) * def.attack.knock, Math.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+      else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, DM.sin(e.yaw) * def.attack.knock, DM.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
     if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; if (R && !def.strafe && ordinary(e)) { if (def.brain?.strafe) { if (!e.hold) startStrafe(brainCtx(w, e, def, diff, dt, true, dist)); } else { const Sh = TACTICS.shuffle; if (rand(w) < Sh.chance) { e.shufT = Sh.t[0] + rand(w) * (Sh.t[1] - Sh.t[0]); e.shufDir = rand(w) < 0.5 ? -1 : 1; } } } }          // (ENEMY ACTIONS: a walking shooter side-steps after a shot; PT-076: one with a brain RUNS across, brain.js)
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange && beatOk(w, e) && takeTurn(w, e, 'ranged')) {
@@ -1196,7 +1197,7 @@ function updateEnemy(w, e, diff, dt) {
     e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2);
   } else {
     if (e.shufT > 0) {                                                                                                         // ENEMY ACTIONS: the side-step after a shot, square to the line to the player
-      e.shufT = Math.max(0, e.shufT - dt); const a = Math.atan2(p.x - e.x, p.z - e.z) + e.shufDir * Math.PI / 2;
+      e.shufT = Math.max(0, e.shufT - dt); const a = DM.atan2(p.x - e.x, p.z - e.z) + e.shufDir * Math.PI / 2;
       if (moveAlong(w, e, def, dt, a, TACTICS.shuffle.speed)) { e.walk = Math.min(1, e.walk + dt * 3); e.phase += dt * (def.gait ?? 5.2); } else e.shufDir = -e.shufDir;
       if (e.shufT === 0) { delete e.shufT; delete e.shufDir; }
     } else if (e.hold) e.walk = Math.max(0, e.walk - dt * 3); else if (def.strafe && sees && !strafeStep(w, e, def, dt)) e.walk = Math.max(0, e.walk - dt * 3); else if (!def.strafe || !sees) e.walk = Math.max(0, e.walk - dt * 3);
@@ -1238,7 +1239,7 @@ export function step(w, cmd) {
   p.yaw += Number.isFinite(cmd.yaw) ? cmd.yaw : 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -1.3, 1.3);      // PT-050 H-I2: an infinite look value (a broken device) would make the view vector NaN for good
   let sx = clamp(cmd.move?.[0] || 0, -1, 1), sf = clamp(cmd.move?.[1] || 0, -1, 1);
   const len = Math.hypot(sx, sf); if (len > 1) { sx /= len; sf /= len; }
-  const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
+  const fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw), rx = DM.cos(p.yaw), rz = -DM.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
   // stance: aim wins over sprint; sprint needs forward input; a dead-on-arrival sprint (no forward) is not a sprint
   const melee = isMelee(p.weapon), tool = WEAPONS[p.weapon]?.kind === 'tool', aimHeld = !!cmd.aim && !melee && !tool && p.swingT < 0, wasSprinting = p.sprinting;       // with a melee weapon in hand the Aim key is the GUARD (below), not the sights; a swing drops the sights
   p.brokenT = Math.max(0, p.brokenT - dt); p.riposteT = Math.max(0, p.riposteT - dt); p.parryCd = Math.max(0, p.parryCd - dt);

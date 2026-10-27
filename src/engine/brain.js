@@ -12,6 +12,7 @@
 // A creature with no `brain` never gets any of them, so a world without one is byte-for-byte what it was.
 import { ENEMIES } from './defs.js';
 import { ordinary } from './tactics.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 export const BRAIN = Object.freeze({
   diff: { easy: { chance: 0.6, cd: 1.4 }, normal: { chance: 1, cd: 1 }, hard: { chance: 1, cd: 0.95 } },          // per difficulty: the chances are multiplied by `chance`, the cooldowns by `cd` (Hard is harder by its creatures' hit points and blows; a brain sharper than Normal's killed the route bot on eight maps)
@@ -23,7 +24,7 @@ export const BRAIN = Object.freeze({
   call: { windup: 0.85, radius: 16, most: 3 },                                                                        // a Bellhand's ring for help: the windup (hurt it and it fails), how far it is heard along the floor, how many come (the nearest; waking a whole room was the biggest single cause of the route bot's deaths)
 });
 
-const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+const wrap = (a) => DM.atan2(DM.sin(a), DM.cos(a)), clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
 const span = (r, [a, b]) => a + r() * (b - a);
 /** does creature `e` have this part of the brain, and is it one of the ordinary roster (bosses, nodes, range targets keep their own code) */
 export const has = (e, part) => !!ENEMIES[e.kind].brain?.[part] && ordinary(e);
@@ -34,22 +35,22 @@ const end = (e) => { delete e.actK; delete e.actT; delete e.actYaw; delete e.act
 function arcRun(ctx, a, k, rate) {
   const { e, def, dt, moveAt } = ctx, off = wrap(a - e.yaw);
   e.yaw = wrap(e.yaw + clamp(off, -rate * dt, rate * dt));
-  const c = Math.max(0, Math.cos(wrap(a - e.yaw))), go = c > 0.2 && moveAt(e.yaw, k * c);
+  const c = Math.max(0, DM.cos(wrap(a - e.yaw))), go = c > 0.2 && moveAt(e.yaw, k * c);
   e.walk = go ? Math.min(1, e.walk + dt * 5) : Math.max(0, e.walk - dt * 4); if (go) e.phase += dt * def.gait * (0.6 + 0.4 * c * Math.min(1.6, k));
   return go;
 }
 /** face the player at `rate` x the creature's turn rate */
-function facePlayer(ctx, rate = 1) { const { e, def, dt, p } = ctx, to = Math.atan2(p.x - e.x, p.z - e.z), off = wrap(to - e.yaw), r = def.turnRate * rate * dt; e.yaw = wrap(e.yaw + clamp(off, -r, r)); }
+function facePlayer(ctx, rate = 1) { const { e, def, dt, p } = ctx, to = DM.atan2(p.x - e.x, p.z - e.z), off = wrap(to - e.yaw), r = def.turnRate * rate * dt; e.yaw = wrap(e.yaw + clamp(off, -r, r)); }
 /** a side of the line to the player that is open for a metre and a half, the random one first; null if both are walled */
 function openSide(ctx) {
-  const { e, p, rand, headingOpen } = ctx, b = Math.atan2(p.x - e.x, p.z - e.z), first = rand() < 0.5 ? 1 : -1;
+  const { e, p, rand, headingOpen } = ctx, b = DM.atan2(p.x - e.x, p.z - e.z), first = rand() < 0.5 ? 1 : -1;
   for (const s of [first, -first]) { const a = b + s * Math.PI / 2; if (headingOpen(a)) return { a, s }; }
   return null;
 }
 
 /** is the creature in the player's sights: in front of the eye and within its hit radius plus `cone` m of the line of the crosshair (on the ground plan) */
 export function inSights(p, e, cone) {
-  const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), dx = e.x - p.x, dz = e.z - p.z, along = fx * dx + fz * dz;
+  const fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw), dx = e.x - p.x, dz = e.z - p.z, along = fx * dx + fz * dz;
   if (along <= 0) return false;
   const d = ENEMIES[e.kind]; return Math.abs(fx * dz - fz * dx) < (d.hitRadius ?? d.radius) + cone;
 }
@@ -105,7 +106,7 @@ export function brainStep(ctx) {
     if (e.actK === 'circle') {
       const C = BRAIN.circle;
       if (!sees || e.actT <= 0 || dist > C.max + 2 || Math.hypot(p.vx || 0, p.vz || 0) > C.still + 1) { end(e); e.circCd = span(rand, C.cd) * D.cd; return false; }
-      const b = Math.atan2(e.x - p.x, e.z - p.z), h = b + e.actDir * (Math.PI / 2 + clamp((dist - C.r) * 0.3, -0.5, 0.5));          // round the player, leaning in or out toward the radius
+      const b = DM.atan2(e.x - p.x, e.z - p.z), h = b + e.actDir * (Math.PI / 2 + clamp((dist - C.r) * 0.3, -0.5, 0.5));          // round the player, leaning in or out toward the radius
       if (!ctx.headingOpen(h)) { e.actDir = -e.actDir; if (!ctx.headingOpen(b + e.actDir * Math.PI / 2)) { end(e); e.circCd = span(rand, C.cd) * D.cd; return false; } return true; }
       arcRun(ctx, h, C.k, def.turnRate); return true;
     }

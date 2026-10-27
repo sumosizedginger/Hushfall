@@ -3,10 +3,11 @@
 // moving and hits a stationary target), and cover blocks it. It keeps its distance (`keep`), walks back from you, and fights with its hands only if it is cornered. Pure: the world's own functions come in through `ctx`. Lazy fields on the creature: `snipeT` (-1 none, else seconds into a shot),
 // `snipeCd`, `snipeAim` ([x, y, z]: where the line points), `snipeLost`.
 import { runAway } from './reposition.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 export function snipeStep(ctx) {
   const { w, e, def, diff, dt, sees, dist, emit, hurt, rayClear, retreat } = ctx, S = def.snipe, p = w.player;
   e.snipeCd = Math.max(0, (e.snipeCd ?? 1.2) - dt);
-  const muzzle = () => [e.x + Math.sin(e.yaw) * 0.5, e.y + (S.muzzleY ?? 1.7), e.z + Math.cos(e.yaw) * 0.5];
+  const muzzle = () => [e.x + DM.sin(e.yaw) * 0.5, e.y + (S.muzzleY ?? 1.7), e.z + DM.cos(e.yaw) * 0.5];
   if ((e.snipeT ?? -1) >= 0) {
     e.snipeT += dt; e.walk = Math.max(0, e.walk - dt * 6); e.snipeRun = false;
     if (!sees) { e.snipeLost = (e.snipeLost ?? 0) + dt; if (e.snipeLost > 0.5) { e.snipeT = -1; e.snipeAim = null; e.snipeCd = 1; return true; } } else e.snipeLost = 0;

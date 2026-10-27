@@ -7,10 +7,11 @@ import { PLAYER, ENEMIES, PHYS, PHYS_RULES as R, PROPS, NOISE, GRAV } from './de
 import { floorAt, ceilingAt } from './terrain.js';
 import { hitCylinder } from './hitvolume.js';
 import { emit, damageEnemy, tryMove, cellSolid, rayClear, hitEffects, noise, wakeEnemy, forwardVec } from './world.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const eyeOf = (p) => [p.x, p.y + PLAYER.eye, p.z];
-const angleBetween = (a, b) => Math.acos(clamp(a[0] * b[0] + a[1] * b[1] + a[2] * b[2], -1, 1));
+const angleBetween = (a, b) => DM.acos(clamp(a[0] * b[0] + a[1] * b[1] + a[2] * b[2], -1, 1));
 
 /** the world's movable props: made once, from the map's `movable` props (an empty list, or none, on a map without any) */
 export function spawnPhys(w, map) {
@@ -82,7 +83,7 @@ export function updatePhys(w, dt) {
       if (hitBodies(w, q, def)) break;
     }
     if (q.gone) continue;
-    if (q.y <= floorAt(w, q.x, q.z) + 1e-3) { const f = Math.exp(-R.friction * dt); q.vx *= f; q.vz *= f; }                       // sliding on the floor
+    if (q.y <= floorAt(w, q.x, q.z) + 1e-3) { const f = DM.exp(-R.friction * dt); q.vx *= f; q.vz *= f; }                       // sliding on the floor
     if (wall >= R.breakSpeed) breakProp(w, q);                                                                                  // thrown hard into a wall: it comes apart
   }
 }
@@ -125,7 +126,7 @@ function pickProp(w, G, p) {
   if (!w.phys) return null; const e = eyeOf(p), f = forwardVec(p); let best = null, ba = 9;
   for (const q of w.phys) {
     if (q.gone || q.held) continue; const def = PHYS[q.kind], c = [q.x, q.y + def.h / 2, q.z], v = [c[0] - e[0], c[1] - e[1], c[2] - e[2]], d = Math.hypot(...v); if (d > G.reach || d < 0.4) continue;
-    const ang = angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - Math.atan2(def.r, d); if (ang > G.cone || ang >= ba || !rayClear(w, e[0], e[1], e[2], c[0], c[1], c[2], true)) continue;
+    const ang = angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - DM.atan2(def.r, d); if (ang > G.cone || ang >= ba || !rayClear(w, e[0], e[1], e[2], c[0], c[1], c[2], true)) continue;
     best = q; ba = ang;
   }
   return best;
@@ -135,7 +136,7 @@ function pickCreature(w, G, p) {
   for (const en of w.enemies) {
     const ed = ENEMIES[en.kind]; if (en.state === 'dead' || ed.node || ed.boss || (ed.poise ?? 1) >= G.pull.maxPoise) continue;
     const c = hitCylinder(en), mid = [c.x, (c.y0 + c.y1) / 2, c.z], v = [mid[0] - e[0], mid[1] - e[1], mid[2] - e[2]], d = Math.hypot(...v); if (d > G.reach || d < 0.4) continue;
-    const ang = angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - Math.atan2(c.r, d); if (ang > G.cone || ang >= ba || !rayClear(w, e[0], e[1], e[2], mid[0], mid[1], mid[2])) continue;
+    const ang = angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - DM.atan2(c.r, d); if (ang > G.cone || ang >= ba || !rayClear(w, e[0], e[1], e[2], mid[0], mid[1], mid[2])) continue;
     best = en; ba = ang;
   }
   return best;
@@ -197,14 +198,14 @@ function punt(w, G) {
   }
   for (const q of w.phys ?? []) {                                                                       // 2. a prop in the cone is launched
     if (q.gone || q.held) continue; const def = PHYS[q.kind], c = [q.x, q.y + def.h / 2, q.z], v = [c[0] - e[0], c[1] - e[1], c[2] - e[2]], d = Math.hypot(...v); if (d > P.reach || d < 0.3) continue;
-    if (angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - Math.atan2(def.r, d) > P.cone || !rayClear(w, e[0], e[1], e[2], c[0], c[1], c[2], true)) continue;
+    if (angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - DM.atan2(def.r, d) > P.cone || !rayClear(w, e[0], e[1], e[2], c[0], c[1], c[2], true)) continue;
     q.vx = f[0] * P.props; q.vz = f[2] * P.props; q.vy = f[1] * P.props + P.lift; q.hits = 0; q.hitIds = []; did = true; emit(w, 'grav_punt_prop', { id: q.id, kind: q.kind, x: q.x, y: c[1], z: q.z });
   }
   const shoves = (w.shoves ??= []);
   for (const en of w.enemies) {                                                                         // 3. a creature in the cone is carried
     const ed = ENEMIES[en.kind]; if (en.state === 'dead' || ed.node || ed.boss) continue;
     const c = hitCylinder(en), mid = [c.x, (c.y0 + c.y1) / 2, c.z], v = [mid[0] - e[0], mid[1] - e[1], mid[2] - e[2]], d = Math.hypot(...v); if (d > P.reach || d < 0.2) continue;
-    if (angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - Math.atan2(c.r, d) > P.cone || !rayClear(w, e[0], e[1], e[2], mid[0], mid[1], mid[2])) continue;
+    if (angleBetween(f, [v[0] / d, v[1] / d, v[2] / d]) - DM.atan2(c.r, d) > P.cone || !rayClear(w, e[0], e[1], e[2], mid[0], mid[1], mid[2])) continue;
     const elite = (ed.poise ?? 1) >= 3, k = (1 - P.falloff * d / P.reach) * (elite ? P.elite : 1), h = Math.hypot(f[0], f[2]) || 1;
     if (en.state === 'idle') wakeEnemy(w, en, true);
     en.attackT = -1; en.lungeT = -1; en.chargeT = -1; en.stunT = Math.max(en.stunT || 0, elite ? P.stun * 0.4 : P.stun);

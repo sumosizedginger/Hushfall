@@ -83,6 +83,7 @@ SIM TRUTH: `npm test` (the node suite, headless, about 1,050 tests; `tests/maps.
 - Bot gates are chaotic near their edges: a one-creature or one-pickup change can flip a hard seed (the arc lamp at one lane cell failed the strafing robustness run and at two others passed). Always re-run `verify-map` after the LAST compile.
 - ENTITY IDS HAVE A PARITY EFFECT: a creature takes its steering side when blocked from `e.id % 2` (`world.js`), and a creature a map SPAWNS gets its id from the shared counter, so ONE new entity (a pickup counts) in a map that spawns flips the parity of everything spawned later and can move a main route (found on C2M18, three Normal runs). Add entities in pairs, or run `route-fingerprint.mjs check` before trusting it.
 - Windows: the repo files are CRLF; edit with a tool that preserves line endings, and do not write regexes or backslashes through a shell string.
+- **`Math.sin`, `cos`, `atan2`, `acos` and `exp` are NOT the same on every JavaScript engine** (headless Chrome 154 and Node's V8 13.6 differ in the last bit for about one argument in twenty). The simulation uses `src/engine/dmath.js` (fdlibm ports, Node's bits on every engine) for all five; `tests/dmath.test.js` fails on a Math trig call in `src/engine`. `hypot`, `pow`, `sqrt` and the rounding functions agree and are fine. A browser-vs-Node hash that differs on the same tick count is the symptom: `parity-tick` style probing (step both one tick at a time, compare `hashWorld`) finds the first tick.
 
 ## 8. Releasing
 

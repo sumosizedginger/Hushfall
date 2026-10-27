@@ -4,6 +4,7 @@
 // player answers on the chimes. State is LAZY (`w.chimes` exists only in a map that has a chime or a tree): { recent: [{ note, t, id }], matched: { id: time }, struck: { chimeId: n }, play: { seq, i, t } | null,
 // played: { treeId: n } }. Pure functions of that state and `w.time`: saves, replays and the bot need nothing else; nothing here reads the random stream.
 import { CHIME, PLAYER } from './defs.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 /** the state of a world whose map has chimes (or null: a world without them has no chime state at all) */
 export function makeChimes(map) {
@@ -50,7 +51,7 @@ export function updateChimes(w, dt, emit) {
 /** what Use would act on among the chimes: the nearest chime or tree within reach that the player is facing, or null. `pr` is the prop. */
 export function chimeTarget(w) {
   if (!w.chimes) return null;
-  const p = w.player, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw); let best = null, bd = 1e9;
+  const p = w.player, fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw); let best = null, bd = 1e9;
   for (const pr of w.map.props) {
     if (pr.kind !== 'chime' && pr.kind !== 'chimetree') continue;
     const dx = pr.x - p.x, dz = pr.z - p.z, d = Math.hypot(dx, dz);

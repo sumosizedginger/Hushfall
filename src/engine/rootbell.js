@@ -6,6 +6,7 @@
 //   THE LAST NOTE (under `bell.last` of its hit points, any phase on the ground): the note rolls the whole floor every few seconds, the charge is faster, the heart is open (`bell.exposed` times the damage).
 //   DEAD: it does not break: it is drawn back up on its chain and hangs, and the map's trigger cuts the sound.
 // Lazy: `e.rb` exists only on a Root Bell, `w.spikes` only once one has struck.
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const TAU = Math.PI * 2;
 const ease = (x, target, k) => x + (target - x) * k;
@@ -15,8 +16,8 @@ export function anchorsOf(w) { let dead = 0, alive = 0; for (const n of w.enemie
 
 /** the pendulum: centre of mass at `tt` s since it woke (a pure function of the state) */
 export function swingAt(B, rb, tt) {
-  const half = Math.floor(2 * tt / B.period + 1e-9), theta = rb.theta0 + half * B.turn, phi = rb.amp * Math.sin(TAU * tt / B.period), reach = rb.len * Math.sin(phi);
-  return { x: rb.cx + Math.cos(theta) * reach, z: rb.cz + Math.sin(theta) * reach, cy: B.top - rb.len * Math.cos(phi), phi, theta, vphi: rb.amp * Math.cos(TAU * tt / B.period) * TAU / B.period };
+  const half = Math.floor(2 * tt / B.period + 1e-9), theta = rb.theta0 + half * B.turn, phi = rb.amp * DM.sin(TAU * tt / B.period), reach = rb.len * DM.sin(phi);
+  return { x: rb.cx + DM.cos(theta) * reach, z: rb.cz + DM.sin(theta) * reach, cy: B.top - rb.len * DM.cos(phi), phi, theta, vphi: rb.amp * DM.cos(TAU * tt / B.period) * TAU / B.period };
 }
 
 /** the chain's length and swing for `cut` anchors cut */
@@ -27,7 +28,7 @@ export function bellInit(e, def, groundY) {
 }
 
 /** it starts to swing from the middle, along the line toward the player, the moment it is awake */
-function wakeBell(w, rb) { if (rb.t0 != null) return; rb.t0 = w.time; const p = w.player; rb.theta0 = Math.atan2(p.z - rb.cz, p.x - rb.cx); }
+function wakeBell(w, rb) { if (rb.t0 != null) return; rb.t0 = w.time; const p = w.player; rb.theta0 = DM.atan2(p.z - rb.cz, p.x - rb.cx); }
 
 /**
  * Where the clapper is this tick (called at the top of its update, before anything can stun it). Writes e.x, e.z, e.lift. Returns nothing. ctx: { w, e, def, dt, groundAt }
@@ -37,7 +38,7 @@ export function bellMotion(ctx) {
   const { dead } = anchorsOf(w);
   const swings = e.state !== 'idle' && (!e.hold || e.swing);                                   // a range sponge hangs still unless its map says `swing`
   if (swings) wakeBell(w, rb);
-  const t = targetOf(B, dead), k = 1 - Math.exp(-dt / (B.ease / 3)); rb.len = ease(rb.len, t.len, k); rb.amp = ease(rb.amp, t.amp, k); rb.cut = dead;
+  const t = targetOf(B, dead), k = 1 - DM.exp(-dt / (B.ease / 3)); rb.len = ease(rb.len, t.len, k); rb.amp = ease(rb.amp, t.amp, k); rb.cut = dead;
   if (e.state !== 'dead' && rb.mode === 'rise') { rb.mode = 'hung'; rb.t0 = null; rb.ringN = -1; rb.lift = 0; }          // a range target that stood up again hangs and swings anew
   if (e.state === 'dead') {                                                                    // it does not break: it is drawn back up and hangs, still
     if (rb.mode !== 'rise') { rb.mode = 'rise'; rb.rx = e.x; rb.rz = e.z; rb.rlift = e.lift ?? 0; rb.rt = 0; }
@@ -79,7 +80,7 @@ export function bellStep(ctx) {
     rb.v += B.fall.g * dt; rb.lift = Math.max(0, rb.lift - rb.v * dt); e.lift = rb.lift;
     if (rb.lift <= 0) {
       rb.mode = 'ground'; e.lift = 0;
-      for (let r = 0; r <= 14; r += 0.5) { const a = Math.atan2(rb.cz - e.z, rb.cx - e.x); const nx = e.x + Math.cos(a) * r, nz = e.z + Math.sin(a) * r; if (r === 0 ? ctx.free(e.x, e.z, def.radius) : ctx.free(nx, nz, def.radius)) { if (r > 0) { e.x = nx; e.z = nz; } break; } }
+      for (let r = 0; r <= 14; r += 0.5) { const a = DM.atan2(rb.cz - e.z, rb.cx - e.x); const nx = e.x + DM.cos(a) * r, nz = e.z + DM.sin(a) * r; if (r === 0 ? ctx.free(e.x, e.z, def.radius) : ctx.free(nx, nz, def.radius)) { if (r > 0) { e.x = nx; e.z = nz; } break; } }
       ctx.pulse(e.x, e.z, rb.fy, { ...B.fall.slam, hitHeight: 1.0, h: 1.6 }); emit(w, 'bell_slam', { x: e.x, z: e.z, id: e.id }); emit(w, 'shake', { amount: 0.9 });
       const dd = Math.hypot(p.x - e.x, p.z - e.z); if (dd < def.hitRadius + 1.6 && p.hp > 0) { ctx.hurt(Math.round(B.crush.damage * diff.enemyDamage)); const d = dd || 1; ctx.tryMove(p, (p.x - e.x) / d * B.crush.knock, (p.z - e.z) / d * B.crush.knock, 0.4); }
       e.chargeCd = 1.5; e.stunT = 1.0;

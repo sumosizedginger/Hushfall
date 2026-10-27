@@ -2,6 +2,7 @@
 // or a prop that fills its cell (a pillar), and is turned by the Mirror Array's mirrors (the same one-sided mirrors as beams.js, `w.mirrors` for their rotation): the ray reflects about the mirror's diagonal if it arrives on its face and ends there if it
 // arrives on its back. A reflected stretch that passes through a SEAL (a node on the Warden's arch) shatters it: the Mirror Array's lesson used as a weapon. The beam also hurts the player it crosses (once a second at most). PURE tracing + the step.
 import { PROPS } from './defs.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const R2 = Math.SQRT1_2;
 /** the face normals of a mirror by rotation 0..3 (NW, NE, SE, SW): the side the beam must arrive on is the one the normal points to */
@@ -10,7 +11,7 @@ const FACE = [[-R2, -R2], [R2, -R2], [R2, R2], [-R2, R2]];
 export function traceSweep(w, ox, oz, ang, solid, range = 64, step = 0.25) {
   const m = w.map, S = m.cell, mirrorAt = new Map((m.mirrors ?? []).map((q) => [q.at.join(','), q]));
   const blockers = m._sweepBlock ?? (m._sweepBlock = new Set(m.props.filter((p) => PROPS[p.kind]?.blocksCell && !['mirror', 'emitter', 'receiver'].includes(p.kind)).map((p) => Math.floor(p.at[0]) + ',' + Math.floor(p.at[1]))));
-  const pts = [[ox, oz]]; let x = ox, z = oz, dx = Math.sin(ang), dz = Math.cos(ang), travelled = 0, bounces = 0, last = null;
+  const pts = [[ox, oz]]; let x = ox, z = oz, dx = DM.sin(ang), dz = DM.cos(ang), travelled = 0, bounces = 0, last = null;
   while (travelled < range) {
     const nx = x + dx * step, nz = z + dz * step, cx = Math.floor(nx / S), cz = Math.floor(nz / S);
     if (cx < 0 || cz < 0 || cx >= m.w || cz >= m.h || solid(cx, cz) || blockers.has(cx + ',' + cz)) break;
@@ -52,7 +53,7 @@ export function sweepStep(w, e, def, diff, dt, sees, dist, H) {
   }
   if (sees && e.sweepCd <= 0 && dist > 4 && (e.pulseT ?? -1) < 0) {
     e.sweepN = (e.sweepN ?? 0) + 1; e.sweepDir = e.sweepN % 2 ? 1 : -1; e.sweepT = 0;
-    e.sweepA0 = Math.atan2(p.x - e.x, p.z - e.z) - e.sweepDir * S.arc / 2; H.emit(w, 'sweep_tell', { id: e.id, x: e.x, z: e.z }); return true;
+    e.sweepA0 = DM.atan2(p.x - e.x, p.z - e.z) - e.sweepDir * S.arc / 2; H.emit(w, 'sweep_tell', { id: e.id, x: e.x, z: e.z }); return true;
   }
   return false;
 }

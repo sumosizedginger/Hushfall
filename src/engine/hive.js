@@ -1,6 +1,7 @@
 // THE HIVE BEAT (PT-043; design/ACTC.md section 2): the one clock of Act C. A pure function of the tick, like breath.js / platforms.js / loads.js, so a save, a replay and a bot need nothing stored and a world that never asks
 // is byte for byte what it was. A beat is HIVE.beat seconds (90 ticks), a bar is HIVE.bar beats.
 import { HIVE, TICK } from './defs.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 /** ticks in one beat (90 at the shipped numbers) */
 export const BEAT_TICKS = Math.round(HIVE.beat / TICK);
@@ -13,7 +14,7 @@ export const beatPhase = (time) => { const x = time / HIVE.beat; return x - Math
 /** which beat of its bar (0..HIVE.bar - 1) a beat number is */
 export const barBeat = (n) => ((n % HIVE.bar) + HIVE.bar) % HIVE.bar;
 /** the swell of a Hive light: it rises quickly on the beat and falls away (render only; below 1 Hz) */
-export const beatGlow = (time) => { const p = beatPhase(time); return p < 0.12 ? p / 0.12 : Math.exp(-(p - 0.12) * 3.2); };
+export const beatGlow = (time) => { const p = beatPhase(time); return p < 0.12 ? p / 0.12 : DM.exp(-(p - 0.12) * 3.2); };
 /** may a creature start an attack this tick? Only an `onBeat` creature is held to the beat. */
 export const beatOk = (w, e) => !e.onBeat || isBeatTick(w.tick);
 /** is a beat number one on which a clocked thing happens: `at` of every `every`? */

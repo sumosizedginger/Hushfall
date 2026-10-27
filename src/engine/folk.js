@@ -5,10 +5,11 @@
 // is deterministic. The damage side (an innocent is not a kill) lives in world.js `damageEnemy`.
 import { ENEMIES, FOLK, NOISE } from './defs.js';
 import { tryMove, moveClear, hasLOS, emit } from './world.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const TAU = Math.PI * 2;
-const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
-const hash01 = (a, b) => { const s = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return s - Math.floor(s); };
+const wrap = (a) => DM.atan2(DM.sin(a), DM.cos(a));
+const hash01 = (a, b) => { const s = DM.sin(a * 12.9898 + b * 78.233) * 43758.5453; return s - Math.floor(s); };
 
 /** a shot, a blast or a blow was noticed at (fx, fz): run from it, for FOLK.fearT s from now */
 export function frighten(w, e, fx, fz) {
@@ -31,29 +32,29 @@ export function folkStep(w, e, def, dt) {
     e.fearX ??= e.x; e.fearZ ??= e.z - 1; e.fearT ??= FOLK.fearT;                                                  // (a creature put to flee by hand, with no sound to flee from, once got a yaw of NaN and was not drawn at all)
     e.fearT -= dt;
     if (e.fearT <= 0) { e.state = 'calm'; e.homeX = e.x; e.homeZ = e.z; e.goX = undefined; return; }          // it settles where it ended up
-    const away = Math.atan2(e.x - e.fearX, e.z - e.fearZ), clear = (a) => moveClear(w, e.x, e.z, e.x + Math.sin(a) * 1.4, e.z + Math.cos(a) * 1.4, def.radius);
+    const away = DM.atan2(e.x - e.fearX, e.z - e.fearZ), clear = (a) => moveClear(w, e.x, e.z, e.x + DM.sin(a) * 1.4, e.z + DM.cos(a) * 1.4, def.radius);
     let best = null;
     if (e.fleeA !== undefined && Math.abs(wrap(e.fleeA - away)) < 1.7 && clear(e.fleeA)) best = e.fleeA;           // keep a heading that still works (no dithering at a wall)
     else for (const off of [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6, 2.3, -2.3]) if (clear(away + off)) { best = away + off; break; }       // straight away first, then round the obstacle, last of all back past it
     if (best === null) { e.walk = Math.max(0, e.walk - dt * 3); return; }                                          // cornered: it crouches where it is
     e.fleeA = best;
     const off = turnTo(best, def.turnRate * 1.6);
-    if (off < 0.8) tryMove(w, e, Math.sin(e.yaw) * def.speed * dt, Math.cos(e.yaw) * def.speed * dt, def.radius);
+    if (off < 0.8) tryMove(w, e, DM.sin(e.yaw) * def.speed * dt, DM.cos(e.yaw) * def.speed * dt, def.radius);
     e.walk = Math.min(1, e.walk + dt * 4); e.phase += dt * def.gait * 1.3;
     return;
   }
   const p = w.player, bucket = Math.floor((w.time + e.id * 0.37) / FOLK.wanderEvery);
   if (e.wanderB !== bucket) {                                                                                    // every few seconds: stay, or pick a place a few metres from the post
     e.wanderB = bucket;
-    if (hash01(e.id, bucket) > 0.35) { const a = hash01(bucket, e.id + 5) * TAU, r = FOLK.wanderR * (0.3 + 0.7 * hash01(e.id + 9, bucket)); e.goX = e.homeX + Math.sin(a) * r; e.goZ = e.homeZ + Math.cos(a) * r; }
+    if (hash01(e.id, bucket) > 0.35) { const a = hash01(bucket, e.id + 5) * TAU, r = FOLK.wanderR * (0.3 + 0.7 * hash01(e.id + 9, bucket)); e.goX = e.homeX + DM.sin(a) * r; e.goZ = e.homeZ + DM.cos(a) * r; }
     else e.goX = undefined;
   }
   if (e.goX !== undefined) {
-    const dx = e.goX - e.x, dz = e.goZ - e.z, d = Math.hypot(dx, dz), a = Math.atan2(dx, dz);
-    if (d < 0.2 || !moveClear(w, e.x, e.z, e.x + Math.sin(a) * Math.min(d, 0.9), e.z + Math.cos(a) * Math.min(d, 0.9), def.radius)) e.goX = undefined;
-    else { const off = turnTo(a, def.turnRate); if (off < 0.6) tryMove(w, e, Math.sin(e.yaw) * FOLK.calmSpeed * dt, Math.cos(e.yaw) * FOLK.calmSpeed * dt, def.radius); e.walk = Math.min(0.4, e.walk + dt * 2); e.phase += dt * def.gait * 0.45; return; }
+    const dx = e.goX - e.x, dz = e.goZ - e.z, d = Math.hypot(dx, dz), a = DM.atan2(dx, dz);
+    if (d < 0.2 || !moveClear(w, e.x, e.z, e.x + DM.sin(a) * Math.min(d, 0.9), e.z + DM.cos(a) * Math.min(d, 0.9), def.radius)) e.goX = undefined;
+    else { const off = turnTo(a, def.turnRate); if (off < 0.6) tryMove(w, e, DM.sin(e.yaw) * FOLK.calmSpeed * dt, DM.cos(e.yaw) * FOLK.calmSpeed * dt, def.radius); e.walk = Math.min(0.4, e.walk + dt * 2); e.phase += dt * def.gait * 0.45; return; }
   }
   e.walk = Math.max(0, e.walk - dt * 3);
   const dp = Math.hypot(p.x - e.x, p.z - e.z);
-  if (p.hp > 0 && dp < FOLK.look && hasLOS(w, e.x, e.z, p.x, p.z)) turnTo(Math.atan2(p.x - e.x, p.z - e.z), def.turnRate * 0.5);          // it watches you
+  if (p.hp > 0 && dp < FOLK.look && hasLOS(w, e.x, e.z, p.x, p.z)) turnTo(DM.atan2(p.x - e.x, p.z - e.z), def.turnRate * 0.5);          // it watches you
 }

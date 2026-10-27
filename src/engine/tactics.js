@@ -10,6 +10,7 @@
 // Pure helpers over plain data; the per-tick frame lives on a NON-enumerable property of the world (`w._tac`), so it is never saved or hashed. New per-creature fields are lazy: a creature that
 // never fanned, waited, shuffled, backed off or searched has none of them.
 import { ENEMIES } from './defs.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 export const TACTICS = Object.freeze({
   tokens: { easy: { melee: 2, ranged: 2 }, normal: { melee: 2, ranged: 3 }, hard: { melee: 3, ranged: 3 } },        // (the first numbers, 2 / 3 / 4 of each, killed the perfect bot on Hard on six maps: a fan lets more blows land than a queue did; PT-076: four shots at once on Hard, from shooters that now run across between shots and ring for help, was a volley of seventy hit points in a second)
@@ -39,12 +40,12 @@ export function tacticsFrame(w) {
     if (attacking(e)) { used[isRanged(e) && e.attackT >= 0 ? 'ranged' : 'melee']++; continue; }
     if (isRanged(e) || e.lost !== 0 || ENEMIES[e.kind].lunge) continue;                                                         // only a melee creature that saw the player last tick closes in a fan (a pouncer, the Gaunt, the Zealot, comes straight)
     const d = Math.hypot(e.x - p.x, e.z - p.z); if (d > F.reach || d < (ENEMIES[e.kind].attack.range + F.near)) continue;
-    closing.push({ e, a: Math.atan2(e.x - p.x, e.z - p.z) });
+    closing.push({ e, a: DM.atan2(e.x - p.x, e.z - p.z) });
   }
   if (closing.length > 1) {
-    let sx = 0, sz = 0; for (const c of closing) { sx += Math.sin(c.a); sz += Math.cos(c.a); }
-    const mid = Math.atan2(sx, sz), rel = (a) => Math.atan2(Math.sin(a - mid), Math.cos(a - mid));
-    const away = -((p.vx || 0) * Math.sin(mid) + (p.vz || 0) * Math.cos(mid));                                                // a player running from the group is chased, not fanned round (strafing across it is not running)
+    let sx = 0, sz = 0; for (const c of closing) { sx += DM.sin(c.a); sz += DM.cos(c.a); }
+    const mid = DM.atan2(sx, sz), rel = (a) => DM.atan2(DM.sin(a - mid), DM.cos(a - mid));
+    const away = -((p.vx || 0) * DM.sin(mid) + (p.vz || 0) * DM.cos(mid));                                                // a player running from the group is chased, not fanned round (strafing across it is not running)
     if (away > F.flee) { const tac = { tick: w.tick, used, slots }; Object.defineProperty(w, '_tac', { value: tac, enumerable: false, writable: true, configurable: true }); return tac; }
     closing.sort((m, n) => rel(m.a) - rel(n.a) || m.e.id - n.e.id);
     const n = closing.length, gap = Math.min(F.gap, (2 * F.arc) / Math.max(1, n - 1));
@@ -67,7 +68,7 @@ export function takeTurn(w, e, kind) {
  *  slot: the first version aimed AT the slot and a creature walking round a player who keeps moving never caught them); null = straight at the player (alone, too near, too far, or not closing) */
 export function fanPoint(w, e) {
   const s = tacticsFrame(w).slots.get(e.id); if (s == null) return null;
-  const F = TACTICS.fan, p = w.player, b = Math.atan2(e.x - p.x, e.z - p.z), diff = Math.atan2(Math.sin(s - b), Math.cos(s - b));
+  const F = TACTICS.fan, p = w.player, b = DM.atan2(e.x - p.x, e.z - p.z), diff = DM.atan2(DM.sin(s - b), DM.cos(s - b));
   const h = b + Math.PI - Math.max(-F.lean, Math.min(F.lean, diff * F.k)), L = Math.min(Math.hypot(e.x - p.x, e.z - p.z), F.look);          // heading b + pi is straight at the player; turning it by -x moves the bearing up
-  return { x: e.x + Math.sin(h) * L, z: e.z + Math.cos(h) * L };
+  return { x: e.x + DM.sin(h) * L, z: e.z + DM.cos(h) * L };
 }

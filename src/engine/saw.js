@@ -4,6 +4,7 @@
 import { PLAYER, ENEMIES, NOISE } from './defs.js';
 import { emit, damageEnemy, tryMove, rayClear, hitEffects, noise } from './world.js';
 import { hitCylinder } from './hitvolume.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
@@ -22,7 +23,7 @@ export function sawStep(w, cmd, def, dt) {
   if (want && st.spin >= 1) {
     st.t -= dt;
     if (st.t <= 0) { st.t += S.every; const n = cutTick(w, S, st, p); st.eng = n > 0; }                        // a cut tick: whoever is in front is struck; `eng` says the saw is in something, and stays so until the next cut finds nothing
-    if (st.eng && st.near > 0.9) tryMove(w, p, -Math.sin(p.yaw) * S.drag * dt, -Math.cos(p.yaw) * S.drag * dt, PLAYER.radius);      // it bites and pulls you in (never into the body)
+    if (st.eng && st.near > 0.9) tryMove(w, p, -DM.sin(p.yaw) * S.drag * dt, -DM.cos(p.yaw) * S.drag * dt, PLAYER.radius);      // it bites and pulls you in (never into the body)
   }
   st.heat = st.eng ? Math.min(1.2, st.heat + dt / S.heatTime) : Math.max(0, st.heat - dt * S.cool);
   if (st.heat >= 1) { st.stall = S.stall; st.heat = 1; st.spin = Math.min(st.spin, 0.5); emit(w, 'saw_stall', { x: p.x, z: p.z }); }
@@ -30,17 +31,17 @@ export function sawStep(w, cmd, def, dt) {
 
 /** one cut: every body inside the reach and the arc in front, with a clear line, is struck; the saw drags the player into what it is cutting. Returns how many bodies it struck. */
 function cutTick(w, S, st, p) {
-  const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw), ey = p.y + PLAYER.eye; let n = 0, near = 99;
+  const fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw), ey = p.y + PLAYER.eye; let n = 0, near = 99;
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
     const c = hitCylinder(e), dx = c.x - p.x, dz = c.z - p.z, d = Math.hypot(dx, dz);
     if (d - c.r > S.reach || c.y1 < p.y + 0.15 || c.y0 > ey + 0.4) continue;
-    const ang = Math.acos(clamp((dx * fx + dz * fz) / (d || 1), -1, 1)), slack = Math.atan2(c.r, Math.max(d, 0.01));
+    const ang = DM.acos(clamp((dx * fx + dz * fz) / (d || 1), -1, 1)), slack = DM.atan2(c.r, Math.max(d, 0.01));
     if (d > 0.05 && ang - slack > S.arc / 2) continue;
     if (!rayClear(w, p.x, ey - 0.3, p.z, c.x, clamp(ey - 0.4, c.y0 + 0.2, c.y1 - 0.2), c.z)) continue;
     const ed = ENEMIES[e.kind];
     let hard = 0;                                                                                       // plate (the front of a Warden) and bells kick the saw back
-    if (ed.armor && (e.stunT || 0) <= 0 && (Math.sin(e.yaw) * (p.x - e.x) + Math.cos(e.yaw) * (p.z - e.z)) / (Math.hypot(p.x - e.x, p.z - e.z) || 1) > ed.armor.cos) hard = S.plateHeat; else if (ed.node) hard = S.nodeHeat;
+    if (ed.armor && (e.stunT || 0) <= 0 && (DM.sin(e.yaw) * (p.x - e.x) + DM.cos(e.yaw) * (p.z - e.z)) / (Math.hypot(p.x - e.x, p.z - e.z) || 1) > ed.armor.cos) hard = S.plateHeat; else if (ed.node) hard = S.nodeHeat;
     n++; near = Math.min(near, d - c.r);
     const killed = damageEnemy(w, e, S.damage);
     if (hard) { st.heat = Math.min(1.2, st.heat + hard); emit(w, 'saw_kick', { x: e.x, z: e.z }); }

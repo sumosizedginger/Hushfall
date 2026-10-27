@@ -8,11 +8,12 @@
 // tests/enemy-hit-volume.test.js: the height is the drawn height (+-0.10 m), the cylinder covers >= 85% of the standing rig's vertices, and it is no
 // more than 0.15 m wider than needed for that. Arms, weapons and trailing cloth that stick out past the torso are not hittable; the torso and head are.
 import { ENEMIES } from './defs.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 /** the cylinder as plain numbers: centre x/z in the world, radius, base y, top y */
 export function hitCylinder(e) {
   const d = ENEMIES[e.kind], fwd = d.hitForward ?? 0, lift = e.lift ?? (d.hover ? d.hover * (1 - Math.min(1, e.dead ?? 0)) : 0);      // a flyer's body starts `hover` above its floor, and comes down as it dies
-  return { x: e.x + Math.sin(e.yaw) * fwd, z: e.z + Math.cos(e.yaw) * fwd, r: d.hitRadius ?? d.radius, y0: e.y + lift, y1: e.y + lift + d.height };
+  return { x: e.x + DM.sin(e.yaw) * fwd, z: e.z + DM.cos(e.yaw) * fwd, r: d.hitRadius ?? d.radius, y0: e.y + lift, y1: e.y + lift + d.height };
 }
 
 /** is the world point (x, y, z) inside enemy `e`'s hit volume? `pad` is the thickness of whatever is testing (a pellet: 0.05, a flare: 0.1) */

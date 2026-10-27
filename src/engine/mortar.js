@@ -6,6 +6,7 @@ import { PLAYER, PROPS, TICK } from './defs.js';
 import { floorAt, ceilingAt } from './terrain.js';
 import { cellSolid, forwardVec } from './world.js';
 import { insideFuse } from './hitvolume.js';
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 const eyeOf = (p) => [p.x, p.y + PLAYER.eye, p.z];
 
@@ -30,7 +31,7 @@ export function aimPoint(w, p, D, f = forwardVec(p)) {
 /** the landing point the crosshair means (min range applied) and the shot that gets there. `from` is where the shell leaves; `f` the view direction; `jitter` = [jx, jz] fractions of the distance the landing is knocked off the mark by (the unsteady crosshair:
  * scatter is applied to the LANDING POINT, never to the aim ray, because a ray at a shallow angle meets the floor a very different distance away for a tiny change of pitch and the ring would lie). */
 export function designate(w, p, def, f = forwardVec(p), from = eyeOf(p), jitter = null) {
-  const D = def.designate, a = aimPoint(w, p, D, f), hx = Math.hypot(f[0], f[2]) || 1, ux = hx > 0.05 ? f[0] / hx : -Math.sin(p.yaw), uz = hx > 0.05 ? f[2] / hx : -Math.cos(p.yaw);
+  const D = def.designate, a = aimPoint(w, p, D, f), hx = Math.hypot(f[0], f[2]) || 1, ux = hx > 0.05 ? f[0] / hx : -DM.sin(p.yaw), uz = hx > 0.05 ? f[2] / hx : -DM.cos(p.yaw);
   let lx = a.x, lz = a.z, d = Math.hypot(lx - p.x, lz - p.z), clamped = false;
   if (d < D.minRange) { lx = p.x + ux * D.minRange; lz = p.z + uz * D.minRange; d = D.minRange; clamped = true; }
   { const m = w.map; let guard = 0; while (guard++ < 64 && cellSolid(w, Math.floor(lx / m.cell), Math.floor(lz / m.cell))) { lx -= ux * 0.25; lz -= uz * 0.25; d = Math.hypot(lx - p.x, lz - p.z); clamped = true; } }      // PT-050 H-W1 (Gemini-04): the push-out to minRange must not land INSIDE a wall (4 of 4 aims at a near wall did, and the ring lied): walk it back to the wall's foot

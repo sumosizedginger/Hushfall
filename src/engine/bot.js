@@ -10,10 +10,11 @@ import { loadState, loadAtCell } from './loads.js';
 import { activeLoad, loadCount, loadCost } from './ammoloads.js';                            // PT-056: the bot reads the pairing table of the ammunition loads (only once it carries one)
 import { conditionMet } from './script.js';                                                // PT-046: the waitfor op asks the same question a trigger does
 import { carState, carCovers } from './cars.js';                                           // PT-046: the ride op
+import * as DM from './dmath.js';                                                                            // PT-076: the same bits on every engine (sin, cos, atan2, acos, exp)
 
 /** the guns the route bot fights with; a weapon it does not use (a found melee weapon, the carbine, the line-thrower, the fork: PT-023) is switched away from in a fight and its ammunition is not foraged */
 export const BOT_GUNS = new Set(['flare', 'scattergun', 'rivet', 'harpoon', 'arc']);
-const norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+const norm = (a) => DM.atan2(DM.sin(a), DM.cos(a));
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
 export class Bot {
@@ -115,13 +116,13 @@ export class Bot {
       const want = this.wantLoad(t, p.weapon); if (want !== activeLoad(p, p.weapon)) { this.in.press('load'); this.releaseLoad = true; this.lastLoadKey = w.tick; }
     }
     const def = BOT_GUNS.has(p.weapon) || (lastResort && p.weapon === 'carbine') ? WEAPONS[p.weapon] : WEAPONS[wantId], hitscan = def.kind === 'hitscan' || def.kind === 'arc';          // a melee weapon in hand (a found one was just picked up) is switched away from within half a second: aim for the gun it is about to raise
-    const yawWant = Math.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
+    const yawWant = DM.atan2(-(t.e.x - p.x), -(t.e.z - p.z)), yawErr = norm(yawWant - p.yaw);
     this.in.addYaw(clamp(yawErr, -0.15, 0.15));
     let pitchWant;
     const dyE = t.e.y - p.y;                                                                                // target and player may stand at different heights
     const hv = ENEMIES[t.e.kind].hover ?? 0;                                                               // a flyer's body starts above its floor
-    if (hitscan) pitchWant = Math.atan2(dyE + hv + Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
-    else { const flight = t.d / def.speed, aimY = 1.0 + hv + 0.5 * def.gravity * flight * flight; pitchWant = Math.atan2(dyE + aimY - PLAYER.eye, t.d); }
+    if (hitscan) pitchWant = DM.atan2(dyE + hv + Math.min(1.0, ENEMIES[t.e.kind].height * 0.6) - PLAYER.eye, t.d);
+    else { const flight = t.d / def.speed, aimY = 1.0 + hv + 0.5 * def.gravity * flight * flight; pitchWant = DM.atan2(dyE + aimY - PLAYER.eye, t.d); }
     this.in.addPitch(clamp(pitchWant - p.pitch, -0.1, 0.1));
     this.setHeld('aim', true); this.setHeld('sprint', false);          // fight from the sights; wait for the weapon to come up before firing
     const inRange = def.kind === 'arc' ? t.d < def.range * 0.9 : hitscan ? t.d < def.range * (ENEMIES[t.e.kind].hive ? 0.9 : 0.5) : t.d > 2.8;          // (a gun is good for most of its range against the Hive Cantor, which the bot shoots from a far tier)
@@ -165,9 +166,9 @@ export class Bot {
     const nodes = (singers.length ? singers : w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead')).slice().sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
     const goal = nodes[0] ?? boss, m = w.map;
     if (boss.rb && goal !== boss) {                                                                                         // PT-046 (C2M29): an anchor with a pillar in front of it is shot from the next place on the SAME tier where it shows, not from the middle of the floor under the clapper
-      const cx = boss.rb.cx, cz = boss.rb.cz, r = Math.hypot(p.x - cx, p.z - cz), a0 = Math.atan2(p.z - cz, p.x - cx);
+      const cx = boss.rb.cx, cz = boss.rb.cz, r = Math.hypot(p.x - cx, p.z - cz), a0 = DM.atan2(p.z - cz, p.x - cx);
       if (r > 8 && !hasLOS(w, p.x, p.z, goal.x, goal.z)) for (let k = 1; k <= 24; k++) for (const sgn of [1, -1]) {
-        const a = a0 + sgn * k * (Math.PI / 24), gx = Math.floor((cx + Math.cos(a) * r) / m.cell), gz = Math.floor((cz + Math.sin(a) * r) / m.cell), x = (gx + 0.5) * m.cell, z = (gz + 0.5) * m.cell;          // (PT-076: the line is judged from the middle of the cell the bot will stand in: judged from the ring point, a cell that does NOT show the anchor was "arrived at" and the bot stood there for good)
+        const a = a0 + sgn * k * (Math.PI / 24), gx = Math.floor((cx + DM.cos(a) * r) / m.cell), gz = Math.floor((cz + DM.sin(a) * r) / m.cell), x = (gx + 0.5) * m.cell, z = (gz + 0.5) * m.cell;          // (PT-076: the line is judged from the middle of the cell the bot will stand in: judged from the ring point, a cell that does NOT show the anchor was "arrived at" and the bot stood there for good)
         if ((gx === Math.floor(p.x / m.cell) && gz === Math.floor(p.z / m.cell)) || this.anchorSkip?.has(gx + ',' + gz) || !hasLOS(w, x, z, goal.x, goal.z) || !this.plainWalk(x, z, x, z)) continue;
         const key = gx + ',' + gz, st = this.anchorStuck?.key === key ? this.anchorStuck : (this.anchorStuck = { key, x: p.x, z: p.z, n: 0 });          // (PT-076: a spot it has not got a step nearer in two seconds, a tier edge it cannot step down, is given up for the next one)
         if (Math.hypot(p.x - st.x, p.z - st.z) > 0.5) { st.x = p.x; st.z = p.z; st.n = 0; } else if (++st.n > 120) (this.anchorSkip ??= new Set()).add(key);
@@ -192,9 +193,9 @@ export class Bot {
     const w = this.w, p = w.player, S = ENEMIES.rootbell.bell.spikes; if (!w.spikes?.length) return false;
     for (const q of w.spikes) {
       if (q.struck) continue; const d = Math.hypot(p.x - q.x, p.z - q.z); if (d >= S.r + 0.9) continue;
-      const base = d > 0.2 ? Math.atan2(p.x - q.x, p.z - q.z) : 0; let best = null;
+      const base = d > 0.2 ? DM.atan2(p.x - q.x, p.z - q.z) : 0; let best = null;
       for (const off of [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6, 2.2, -2.2, Math.PI]) {
-        const a = base + off, x = q.x + Math.sin(a) * (S.r + 1.6), z = q.z + Math.cos(a) * (S.r + 1.6);
+        const a = base + off, x = q.x + DM.sin(a) * (S.r + 1.6), z = q.z + DM.cos(a) * (S.r + 1.6);
         if (moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) && this.plainWalk(p.x, p.z, x, z) && Math.abs(cellFloor(w, Math.floor(x / w.map.cell), Math.floor(z / w.map.cell)) - p.y) < 0.9) { best = [x, z]; break; }
       }
       if (best) { this.setHeld('fire', false); this.setHeld('aim', false); this.steerTo(best[0], best[1], 0.3); this.setHeld('sprint', true); return true; }
@@ -204,7 +205,7 @@ export class Bot {
   /** PT-046 (C2M29): the clapper's charge is a straight dash after a second's tell: leave its line (a body's width and more on either side), whichever creature is nearer */
   dodgeCharge(boss) {
     const w = this.w, p = w.player; if ((boss.chargeT ?? -1) < 0) return false;
-    const fx = Math.sin(boss.yaw), fz = Math.cos(boss.yaw), rx = p.x - boss.x, rz = p.z - boss.z, along = rx * fx + rz * fz, lat = rx * fz - rz * fx;
+    const fx = DM.sin(boss.yaw), fz = DM.cos(boss.yaw), rx = p.x - boss.x, rz = p.z - boss.z, along = rx * fx + rz * fz, lat = rx * fz - rz * fx;
     if (along < -3 || along > 40 || Math.abs(lat) > 3.6) return false;
     const sgn = lat >= 0 ? 1 : -1;
     for (const s2 of [sgn, -sgn]) {
@@ -244,14 +245,14 @@ export class Bot {
     const rh = this.ringH(boss);
     if (rh != null) {                                                                                                         // PT-046: against the Hive Cantor's low ring a human climbs a tier: the nearest floor a metre and more above the conductor's, within 14 m, with a clear walk (and a line to the boss: from there it can be shot)
       for (const r of [2, 3, 4, 5.5, 7, 9, 11, 14]) for (let k = 0; k < 24 && !best; k++) {
-        const a = k / 24 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r, cs = w.map.cell;
+        const a = k / 24 * Math.PI * 2, x = p.x + DM.sin(a) * r, z = p.z + DM.cos(a) * r, cs = w.map.cell;
         if (cellFloor(w, Math.floor(x / cs), Math.floor(z / cs)) - boss.y <= rh + 0.6 || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !this.plainWalk(p.x, p.z, x, z) || !hasLOS(w, boss.x, boss.z, x, z)) continue;
         best = [x, z];
       }
       if (best) return best;
     }
     for (const r of [2, 3, 4, 5.5, 7, 9]) for (let k = 0; k < 16; k++) {
-      const a = k / 16 * Math.PI * 2, x = p.x + Math.sin(a) * r, z = p.z + Math.cos(a) * r;
+      const a = k / 16 * Math.PI * 2, x = p.x + DM.sin(a) * r, z = p.z + DM.cos(a) * r;
       if (this.exposedTo(boss, x, z) || !moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1) || !this.plainWalk(p.x, p.z, x, z)) continue;
       const d = r + 0.3 * Math.hypot(x - boss.x, z - boss.z); if (d < bd) { bd = d; best = [x, z]; }
     }
@@ -298,7 +299,7 @@ export class Bot {
   steerTo(x, z, arrive) {
     const p = this.w.player, dx = x - p.x, dz = z - p.z, d = Math.hypot(dx, dz);
     if (d < arrive) { this.setHeld('forward', false); return true; }
-    const err = norm(Math.atan2(-dx, -dz) - p.yaw);
+    const err = norm(DM.atan2(-dx, -dz) - p.yaw);
     this.in.addYaw(clamp(err, -0.1, 0.1));
     this.setHeld('forward', Math.abs(err) < 0.5);
     return false;
@@ -370,7 +371,7 @@ export class Bot {
     if (!c) { this.poolExit = null; return false; }
     if (!this.poolExit || Math.hypot(this.poolExit[0] - c.x, this.poolExit[1] - c.z) < c.r + 0.2) {
       let best = null, bd = -1;
-      for (let k = 0; k < 16; k++) { const a = k / 16 * Math.PI * 2, d = c.r + 1.4, x = c.x + Math.sin(a) * d, z = c.z + Math.cos(a) * d; if (!moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue; const score = -Math.hypot(x - p.x, z - p.z); if (bd < 0 || score > bd) { bd = score; best = [x, z]; } }
+      for (let k = 0; k < 16; k++) { const a = k / 16 * Math.PI * 2, d = c.r + 1.4, x = c.x + DM.sin(a) * d, z = c.z + DM.cos(a) * d; if (!moveClear(w, p.x, p.z, x, z, PLAYER.radius + 0.1)) continue; const score = -Math.hypot(x - p.x, z - p.z); if (bd < 0 || score > bd) { bd = score; best = [x, z]; } }
       this.poolExit = best;
     }
     if (!this.poolExit) return false;
@@ -386,7 +387,7 @@ export class Bot {
     if (op.op === 'mirror') { const m = w.map.mirrors.find((q) => q.id === op.id); return !!m && Math.hypot((m.at[0] + 0.5) * w.map.cell - p.x, (m.at[1] + 0.5) * w.map.cell - p.z) < 3.0 && w.mirrors[op.id] !== op.rot; }          // PT-033: a human turns a mirror under fire
     return false;
   }
-  aimAt(x, z) { const p = this.w.player; this.in.addYaw(clamp(norm(Math.atan2(-(x - p.x), -(z - p.z)) - p.yaw), -0.15, 0.15)); }
+  aimAt(x, z) { const p = this.w.player; this.in.addYaw(clamp(norm(DM.atan2(-(x - p.x), -(z - p.z)) - p.yaw), -0.15, 0.15)); }
   pressUse() { if (!this.usePressed) { this.in.press('use'); this.usePressed = true; } }
   // -- tick ------------------------------------------------------------
   /** Decide inputs for the next sim tick. */
