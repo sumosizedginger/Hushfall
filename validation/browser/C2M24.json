@@ -1,7 +1,7 @@
 {
   "mapId": "C2M24",
-  "when": "2026-10-27T01:17:45.360Z",
-  "commit": "55f9520",
+  "when": "2026-10-27T13:11:33.336Z",
+  "commit": "cf91e55",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,10 +11,10 @@
   "mapSha": "cbcdd40d0a1702b5",
   "routesSha": "ca36679598fa2a56",
   "sources": {
-    "engine": "31c000a8740b2ec8",
-    "render": "84cc7426c8013533",
-    "game": "719bae460371b95c",
-    "audio": "feeb615d3ade1eab",
+    "engine": "cdefcf5dd7d3a7c6",
+    "render": "8da2144bcf22e3b4",
+    "game": "050ca4b156e40bc4",
+    "audio": "27aea5dcf7cfbb88",
     "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -23,9 +23,9 @@
     "main": {
       "ok": true,
       "ticks": 4370,
-      "hash": "5984ac11",
+      "hash": "6735f67c",
       "nodeTicks": 4370,
-      "nodeHash": "5984ac11",
+      "nodeHash": "6735f67c",
       "agree": true,
       "kills": 12,
       "secrets": 0,
@@ -34,9 +34,9 @@
     "secret": {
       "ok": true,
       "ticks": 5098,
-      "hash": "d3b839bd",
+      "hash": "bb289ced",
       "nodeTicks": 5098,
-      "nodeHash": "d3b839bd",
+      "nodeHash": "bb289ced",
       "agree": true,
       "kills": 12,
       "secrets": 1,
@@ -97,7 +97,7 @@
     {
       "name": "real-game route C2M24.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4370/5984ac11 vs node 4370/5984ac11"
+      "detail": "browser 4370/6735f67c vs node 4370/6735f67c"
     },
     {
       "name": "real-game route C2M24.secret: completes in the browser",
@@ -107,7 +107,7 @@
     {
       "name": "real-game route C2M24.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5098/d3b839bd vs node 5098/d3b839bd"
+      "detail": "browser 5098/bb289ced vs node 5098/bb289ced"
     },
     {
       "name": "C2M24: the boss bar appeared during the route",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 12
+  "wallSeconds": 11
 }

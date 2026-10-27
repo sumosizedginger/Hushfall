@@ -1,7 +1,7 @@
 {
   "mapId": "C2M29",
-  "when": "2026-10-27T01:19:27.860Z",
-  "commit": "55f9520",
+  "when": "2026-10-27T13:13:16.354Z",
+  "commit": "cf91e55",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,10 +11,10 @@
   "mapSha": "c2f1e59d3ba9520e",
   "routesSha": "4ae40f02818d21c4",
   "sources": {
-    "engine": "31c000a8740b2ec8",
-    "render": "84cc7426c8013533",
-    "game": "719bae460371b95c",
-    "audio": "feeb615d3ade1eab",
+    "engine": "cdefcf5dd7d3a7c6",
+    "render": "8da2144bcf22e3b4",
+    "game": "050ca4b156e40bc4",
+    "audio": "27aea5dcf7cfbb88",
     "assets": "50e27e20f7559732",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -22,21 +22,21 @@
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 6740,
-      "hash": "0142e36c",
-      "nodeTicks": 6740,
-      "nodeHash": "0142e36c",
+      "ticks": 7239,
+      "hash": "322ffaa8",
+      "nodeTicks": 7239,
+      "nodeHash": "322ffaa8",
       "agree": true,
       "kills": 11,
       "secrets": 0,
-      "wallSeconds": 3
+      "wallSeconds": 2
     },
     "secret": {
       "ok": true,
-      "ticks": 7030,
-      "hash": "f072673e",
-      "nodeTicks": 7030,
-      "nodeHash": "f072673e",
+      "ticks": 7441,
+      "hash": "be1d41f3",
+      "nodeTicks": 7441,
+      "nodeHash": "be1d41f3",
       "agree": true,
       "kills": 11,
       "secrets": 1,
@@ -92,22 +92,22 @@
     {
       "name": "real-game route C2M29.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6740 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=7239 policy=standing wall=2s"
     },
     {
       "name": "real-game route C2M29.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6740/0142e36c vs node 6740/0142e36c"
+      "detail": "browser 7239/322ffaa8 vs node 7239/322ffaa8"
     },
     {
       "name": "real-game route C2M29.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7030 policy=standing wall=2s"
+      "detail": "status=complete failed=null ticks=7441 policy=standing wall=2s"
     },
     {
       "name": "real-game route C2M29.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7030/f072673e vs node 7030/f072673e"
+      "detail": "browser 7441/be1d41f3 vs node 7441/be1d41f3"
     },
     {
       "name": "C2M29: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
