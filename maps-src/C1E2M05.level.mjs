@@ -106,4 +106,7 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E2M05', lane: [...(laneOf('C1E2M05') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the clumsy strafing bot died on Normal once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [22, 22] }, { type: 'pickup', kind: 'health_large', at: [34, 22] });
+// ---- end PT-076
 export default MAP;

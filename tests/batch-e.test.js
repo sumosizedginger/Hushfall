@@ -2,14 +2,14 @@
 // (viability, lint, traps, the space contract) already hold every shipped map to what it says (tests/shipped.test.js, maps.test.js, maplint.test.js, traps.test.js). The creatures' own rules are in tests/batch-e-creatures.test.js.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { createWorld, step, drainEvents, damageEnemy } from '../src/engine/world.js';
 import { ENEMIES } from '../src/engine/defs.js';
 import { findTraps } from '../src/engine/traps.js';
 import { shippedMap, shippedSrc } from './helpers.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, ...o });
-const complete = (id, name, difficulty = 'normal', seed = 1) => runRoute(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed, difficulty });
+const complete = (id, name, difficulty = 'normal', seed = 1) => runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed, difficulty });          // (PT-076: either fighter policy, as verify-map judges a route: with the brain one fixed policy on one seed swings on the dice)
 
 test('Spore Foundry: four brood vats stand on a ring round a solid furnace, each at the end of a toxic trough; the exit is locked and the map says what to do about it', () => {
   const src = shippedSrc('C1E3M07'), map = shippedMap('C1E3M07'), vats = src.entities.filter((e) => e.type === 'enemy' && e.kind === 'vat');

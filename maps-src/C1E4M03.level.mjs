@@ -139,7 +139,7 @@ ENC.dropIn({ at: [59,46], radius: 2, cells: ENC.around([59,46], { n: 3, min: 4, 
 const MAP = {
   id: 'C1E4M03', name: 'Cold Dock', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8c4cc', fogDensity: 0.006, sky: 'orbit', ambient: 0.9, look: 'dock' },
-  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
+  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 13, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coupling A', iron: 'Coupling B' },
   intro: { title: 'COLD DOCK', lines: ['The fleet is parked here, with its doors open to the dark.', 'Everything you want is on the other side of some air.'] },
   outro: 'The hatches close. Behind the glass the rest of the fleet hangs in the dark, forty ships and a Gate.',
@@ -183,5 +183,8 @@ ENC.apply(MAP);
 MAP.squeeze = [{axis:'x',cuts:[[3,4], [7,8], [13,14], [69,70], [79,80], [82,83], [84,85], [88,89]]}, {axis:'z',cuts:[[3,4], [7,8], [13,14], [24,25], [78,79], [80,81], [84,85], [88,89]]}];
 // ---- end PT-052 Level B squeeze ----
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane (AUTHORING cells: the map is squeezed; shipped 33,43 and 43,38), before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [36, 47] }, { type: 'pickup', kind: 'health_large', at: [46, 42] });
+// ---- end PT-076
 export default MAP;
 export { L, B, hw };

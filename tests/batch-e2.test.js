@@ -3,7 +3,7 @@
 // (viability, lint, traps, the space contract) already hold every shipped map to what it says. The Warden's own rules are in tests/gatewarden.test.js, the list-of-conditions trigger is covered here (and in a synthetic map).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { parseMap, validateMap } from '../src/engine/mapformat.js';
 import { createWorld, step, drainEvents, cellSolid, damageEnemy } from '../src/engine/world.js';
 import { runAction } from '../src/engine/script.js';
@@ -14,7 +14,7 @@ import { shippedMap, shippedSrc } from './helpers.js';
 
 const idle = (o = {}) => ({ move: [0, 0], yaw: 0, pitch: 0, fire: false, aim: false, sprint: false, use: false, weapon: null, weaponStep: 0, map: false, ...o });
 const run = (w, n) => { const ev = []; for (let i = 0; i < n; i++) { step(w, idle()); ev.push(...drainEvents(w)); } return ev; };
-const complete = (id, name, difficulty = 'normal', seed = 1) => runRoute(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed, difficulty });
+const complete = (id, name, difficulty = 'normal', seed = 1) => runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${id}.${name}.route.json`), { seed, difficulty });          // (PT-076: either fighter policy, as verify-map judges a route: with the brain one fixed policy on one seed swings on the dice)
 const C = (c) => (c + 0.5) * 2;
 
 test('Hollow Stair: four levers, four vents, a climb of sixteen metres in the open, a locked exit, and the map says what to do', () => {

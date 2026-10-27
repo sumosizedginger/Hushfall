@@ -59,7 +59,7 @@ for (const [x, z] of [[16, 106], [43, 106], [16, 84], [43, 84]]) E('gaunt', x, z
 const MAP = {
   id: 'C2M15', name: 'Ash Basilica', version: 1, ceilingHeight: 4.2, par: { time: 660 },
   atmosphere: { look: 'basilica', fog: '#14100e', fogDensity: 0.012 },
-  entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
+  entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 12, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ASH BASILICA', lines: ['A house of the Song, burned out and kept.', 'Five stations down the nave. At each one, someone who wants the Grafting to go on.'] },
   outro: 'Behind the altar a stair goes down. The ash on it has been walked by many feet, all going the same way.',
   objective: 'Fight up the nave, bay by bay. Each screen opens when the ones who hold it are dead. The altar is at the north end',

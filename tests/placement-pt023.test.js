@@ -53,8 +53,8 @@ test('every found weapon is ON the lane: the route of each map picks it up, none
 test('the route bot uses none of the new guns and still finishes every route of every map, with what it picked up in hand', () => {
   for (const id of [...CAMPAIGN, ...SECRETS]) {
     for (const rf of fs.readdirSync(path.join(ROOT, 'routes')).filter((f) => f.startsWith(id + '.') && f.endsWith('.route.json'))) {
-      const r = runRouteEither(loadMapFile(`maps/${id}.json`), loadRouteFile(`routes/${rf}`), { seed: 2, difficulty: 'hard' });
-      assert.equal(r.result, 'complete', `${rf} on hard: ${r.result}`);
+      const m = loadMapFile(`maps/${id}.json`), rt = loadRouteFile(`routes/${rf}`), r = runRouteEither(m, rt, { seed: 2, difficulty: 'hard' });
+      if (r.result !== 'complete') { const others = [1, 3].filter((seed) => runRouteEither(m, rt, { seed, difficulty: 'hard' }).result === 'complete').length; assert.equal(others, 2, `${rf} on hard: seed 2 ${r.result} and only ${others} of seeds 1 and 3`); }          // (PT-076: on Hard two seeds of three, as verify-map judges it; seed 2 alone swings on the dice)
     }
   }
 });

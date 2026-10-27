@@ -1042,6 +1042,16 @@
    "type": "pickup",
    "kind": "ld_rime_flare",
    "at": [43, 50]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [33, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [43, 38]
   }
  ],
  "par": {
@@ -1753,7 +1763,7 @@
   "hp": 100,
   "armor": 0,
   "ammo": {
-   "flare": 10,
+   "flare": 13,
    "shell": 14,
    "rivet": 60
   },

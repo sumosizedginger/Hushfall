@@ -122,4 +122,7 @@ void huts;
 MAP.roster = { id: 'C2M23', lane: [...(laneOf('C2M23') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [42, 50] }, { type: 'pickup', kind: 'health_large', at: [42, 54] });
+// ---- end PT-076
 export default MAP;

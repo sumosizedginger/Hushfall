@@ -122,7 +122,7 @@ const MAP = {
   quality: { enemies: [0, 200], botSeconds: [60, 900], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 5,
     scaleClass: 'SET-PIECE', reason: 'the place is one round dock under an open sky: a stand on three steps round a basin, with a tide that climbs them', introduces: 'the stand: the dock tolls eight strokes and a wave comes through four gates with each, the tide climbs the lower steps, and the ninth stroke is rung by hand' },
 };
-MAP.drops = { scale: 1, keep: [[START[0] - 8, START[1] - 6, START[0] + 8, START[1] + 3]] };                                   // the landing's own ammunition stays (a stand has supplies as well as kills)
+MAP.drops = { scale: 1.3, keep: [[START[0] - 8, START[1] - 6, START[0] + 8, START[1] + 3]] };                                 // the landing's own ammunition stays (a stand has supplies as well as kills); PT-076: the kills give 30% more (creatures that dodge and lurch cost more rounds: the route bot ran dry on Hard)
 console.log('C2M28: spawn actions', triggers.reduce((n, t) => n + t.do.filter((a) => a.spawn).length, 0), 'start', START, 'gates', JSON.stringify(GATES));
 const Z = (x, z) => [x, z];
 const HOLD = (t) => ({ op: 'waitfor', when: 'time:' + t });

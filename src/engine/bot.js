@@ -167,9 +167,11 @@ export class Bot {
     if (boss.rb && goal !== boss) {                                                                                         // PT-046 (C2M29): an anchor with a pillar in front of it is shot from the next place on the SAME tier where it shows, not from the middle of the floor under the clapper
       const cx = boss.rb.cx, cz = boss.rb.cz, r = Math.hypot(p.x - cx, p.z - cz), a0 = Math.atan2(p.z - cz, p.x - cx);
       if (r > 8 && !hasLOS(w, p.x, p.z, goal.x, goal.z)) for (let k = 1; k <= 24; k++) for (const sgn of [1, -1]) {
-        const a = a0 + sgn * k * (Math.PI / 24), x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
-        if (!hasLOS(w, x, z, goal.x, goal.z) || !this.plainWalk(x, z, x, z)) continue;
-        this.follow([Math.floor(x / m.cell), Math.floor(z / m.cell)], 0.6, 0.8); return false;
+        const a = a0 + sgn * k * (Math.PI / 24), gx = Math.floor((cx + Math.cos(a) * r) / m.cell), gz = Math.floor((cz + Math.sin(a) * r) / m.cell), x = (gx + 0.5) * m.cell, z = (gz + 0.5) * m.cell;          // (PT-076: the line is judged from the middle of the cell the bot will stand in: judged from the ring point, a cell that does NOT show the anchor was "arrived at" and the bot stood there for good)
+        if ((gx === Math.floor(p.x / m.cell) && gz === Math.floor(p.z / m.cell)) || this.anchorSkip?.has(gx + ',' + gz) || !hasLOS(w, x, z, goal.x, goal.z) || !this.plainWalk(x, z, x, z)) continue;
+        const key = gx + ',' + gz, st = this.anchorStuck?.key === key ? this.anchorStuck : (this.anchorStuck = { key, x: p.x, z: p.z, n: 0 });          // (PT-076: a spot it has not got a step nearer in two seconds, a tier edge it cannot step down, is given up for the next one)
+        if (Math.hypot(p.x - st.x, p.z - st.z) > 0.5) { st.x = p.x; st.z = p.z; st.n = 0; } else if (++st.n > 120) (this.anchorSkip ??= new Set()).add(key);
+        this.follow([gx, gz], 0.6, 0.8); return false;
       }
     }
     this.follow([Math.floor(goal.x / m.cell), Math.floor(goal.z / m.cell)], 0.6, boss.rb && !hasLOS(w, p.x, p.z, goal.x, goal.z) ? 1.5 : 7);          // (PT-046, C2M29: within seven metres but behind a pillar is not arrived: walk round it)
@@ -410,8 +412,9 @@ export class Bot {
     const t = op.op === 'killboss' || this.atUsePoint(op) || (op.op === 'ride' && (this.rideState?.i === this.i ? this.rideState.phase >= 2 : false)) ? null : this.combatTarget();
     if (t) {
       this.calm = 0; this.wasFighting = true; this.fight(t); if (t.d <= 4 && w.tick - (this.lastAir ?? -99999) < 900) this.stillFor = 0;          // (PT-046: landing from a vent among them and fighting them in your face is not being stuck)
+      { let hp = 0; for (const e of w.enemies) if (e.state !== 'dead') hp += e.hp; if (this.foeHp != null && hp < this.foeHp - 1e-6) this.stillFor = 0; this.foeHp = hp; }          // (PT-076: damage dealt is progress: a Bellhand that runs across between shots and dodges takes longer than four seconds at range, and a brawl in its face that ends with the nearest target far off was both called "stuck in combat")
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat for 2.5 s
-      if ((op.op === 'goto' || op.op === 'use' || op.op === 'chime') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; } }          // never walk away from something that is in your face
+      if ((op.op === 'goto' || op.op === 'use' || op.op === 'chime') && t.d > 4) { if (++this.fightTicks > 200) { this.fightTicks = 0; this.noFightUntil = w.tick + 150; this.stillFor = 0; } }          // never walk away from something that is in your face (PT-076: and the walk on gets its own time: the stuck clock had run through the fight and failed the bot first)
       if (op.op === 'kill' || op.op === 'ride') { this.stillFor = 0; return; } if (op.op !== 'wait' && op.op !== 'waitfor' && op.op !== 'waitsector' && op.op !== 'waitplatform') { if (this.stillFor > this.stuckTicks && t.d > 6) this.failed = 'stuck in combat'; return; } }          // (ENEMY ACTIONS, 2026-10-26: a fight within 6 m is a fight, not being stuck: the bot's own shots kept knocking a Bulwark back from 2.7 to 5 m on the Hollow Stair, and the old 4 m called that stuck)
     else { if (this.wasFighting) { this.stillFor = 0; this.wasFighting = false; } this.fightTicks = 0; this.setHeld('fire', false); this.setHeld('back', false); this.setHeld('right', false); this.setHeld('left', false); this.setHeld('aim', false); this.calm++; }
     let done = false;

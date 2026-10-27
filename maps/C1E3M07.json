@@ -715,6 +715,16 @@
    "spawns": [
     "tollbearer"
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [29, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [35, 40]
   }
  ],
  "par": {
@@ -778,8 +788,8 @@
   "armor": 0,
   "ammo": {
    "flare": 10,
-   "shell": 14,
-   "rivet": 60
+   "shell": 22,
+   "rivet": 100
   },
   "weapons": [
    "flare",

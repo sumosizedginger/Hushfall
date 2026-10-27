@@ -50,7 +50,7 @@ test('the lock route plays the whole sequence (door, chamber, door, switch, cach
   assert.ok(lock.some((o) => o.op === 'switch' && o.id === 'hatch') && lock.filter((o) => o.op === 'use').length >= 3);
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRouteEither(m, lock, { seed: 2, difficulty }); assert.equal(r.result, 'complete', `${difficulty}: ${r.result} ${r.failure ?? ''}`); }
   const a = runRouteEither(m, lock, { seed: 2, difficulty: 'normal' }), b = runRouteEither(m, main, { seed: 2, difficulty: 'normal' });
-  assert.equal(a.world.stats.items - b.world.stats.items, 2, 'the satchel and the vest'); assert.ok(a.world.player.armor >= 50, 'the vest'); assert.ok(a.ticks > b.ticks + 600, 'the lock\'s cycles cost time: ' + a.ticks + ' against ' + b.ticks);
+  assert.equal(a.world.stats.items - b.world.stats.items, 2, 'the satchel and the vest'); assert.ok(a.events.filter((e) => e.type === 'pickup' && e.kind === 'armor_vest').length > b.events.filter((e) => e.type === 'pickup' && e.kind === 'armor_vest').length, 'the vest');          // (PT-076: taken, not still worn at the exit: with the brain the fights after the cache wear it down) assert.ok(a.ticks > b.ticks + 600, 'the lock\'s cycles cost time: ' + a.ticks + ' against ' + b.ticks);
   for (const name of ['main', 'secret']) { let seen = 0; runRoute(m, route(name), { seed: 2, difficulty: 'easy', onTick: (w) => { const cx = Math.floor(w.player.x / w.map.cell), cz = Math.floor(w.player.z / w.map.cell); if (cx >= 58 && cx <= 65 && cz >= 48 && cz <= 50) seen++; } }); assert.equal(seen, 0, `${name} never enters the annex`); }
 });
 

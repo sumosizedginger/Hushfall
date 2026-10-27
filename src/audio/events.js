@@ -105,6 +105,11 @@ export function soundsForEvent(e) {
     case 'enemy_alert': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e) }];
     case 'enemy_windup': return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
     case 'enemy_lunge': return [{ id: 'gaunt_lunge', pos: at(e) }];
+    case 'enemy_dodge': return [{ id: 'step_outdoor', pos: at(e), gain: 1.3 }, { id: 'step_outdoor', pos: at(e), delay: 0.12 }];          // PT-076 (brain.js): the scuff of a dash out of your sights
+    case 'enemy_lurch': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 1.2 }];                                        // the groan before a Tollbearer surges
+    case 'enemy_cower': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.7 }];                                        // a hurt creature's cry as it turns and runs
+    case 'enemy_call_windup': return [{ id: 'bell_charge', pos: at(e) }];                                                                   // a Bellhand lifts its bell to ring for help...
+    case 'enemy_call': return [{ id: 'bell_alert', pos: at(e), gain: 1.4 }, { id: 'bell_alert', pos: at(e), gain: 0.9, delay: 0.35 }];      // ...and rings it, twice
     case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
     case 'armor_hit': return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
     case 'shield_hit': return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];

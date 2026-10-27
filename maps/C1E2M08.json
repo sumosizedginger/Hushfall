@@ -1254,6 +1254,16 @@
    "kind": "barrel",
    "at": [60, 28],
    "movable": true
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [46, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [46, 40]
   }
  ],
  "par": {

@@ -19,8 +19,9 @@ import { cellFloor, floorAt, groundAt, tooHigh, ceilingAt, fxAt, fxSpeed } from 
 import { maybeDrop, updateDrops, trackFired } from './drops.js';
 import { takeCrate } from './crate.js';                                                                                // FREEZE F8: the heavy ammunition crate (a pure top-up of every carried gun)
 import { trimCorpses } from './corpses.js';
-import { navWaypoint } from './nav.js';
+import { navWaypoint, distanceField } from './nav.js';
 import { TACTICS, ordinary, takeTurn, fanPoint } from './tactics.js';                                                   // ENEMY ACTIONS (2026-10-26): the fan, the turns, the movement between acts
+import { brainStep, startStrafe } from './brain.js';                                                                     // PT-076: the brain (dodge, strafe, lurch, circle, cower, call)
 import { updateSectors, updateTriggers, activateSwitch, choiceHolds, messageHeld } from './script.js';
 import { insideHit, insideFuse, hitCylinder } from './hitvolume.js';
 import { holdTarget, holdUpkeep, rangePlayer } from './range.js';
@@ -659,6 +660,25 @@ function fireWeapon(w, charge = 0) {
     w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4, ...(ldId ? { load: ldId } : {}) });
   }
   emit(w, 'fire', { weapon: p.weapon, charge: cf, ...(ldId ? { load: ldId } : {}), ...(def.mod ? { mod: def.mod } : {}) }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));          // (a modded shot says which mod: the double barrel is heard twice)
+  hidden(w, '_fireTick', w.tick);                                                                                          // PT-076: the creatures read it later in this same tick (a dodge); never saved, never hashed
+}
+/** PT-076: a Bellhand's call along the floor: the sleeping ordinary creatures within `r` m whose walk to it is at most 1.3 r (a shut door is not walked through), the nearest `most` of them; `wake` = wake them, else only count */
+function bellCall(w, e, r, wake, most = Infinity) {
+  const S = w.map.cell, f = distanceField(w, Math.floor(e.x / S), Math.floor(e.z / S)), heard = [];
+  for (const o of w.enemies) {
+    if (o === e || o.state !== 'idle' || !ordinary(o) || Math.hypot(o.x - e.x, o.z - e.z) > r) continue;
+    const d = f[Math.floor(o.z / S) * w.map.w + Math.floor(o.x / S)]; if (d < 0 || d * S > r * 1.3) continue;
+    heard.push({ o, d });
+  }
+  heard.sort((a, b) => a.d - b.d || a.o.id - b.o.id); const come = heard.slice(0, most);
+  if (wake) for (const { o } of come) wakeEnemy(w, o, false, true);
+  return come.length;
+}
+/** PT-076: what the brain may use of the world (brain.js) */
+function brainCtx(w, e, def, diff, dt, sees, dist) {
+  return { w, e, def, dt, sees, dist, p: w.player, rand: () => rand(w), fired: w._fireTick === w.tick, hpMax: def.hp * diff.enemyHp, emit,
+    moveAt: (a, k) => moveAlong(w, e, def, dt, a, k), headingOpen: (a) => !blockedCircle(w, e.x + Math.sin(a) * 1.6, e.z + Math.cos(a) * 1.6, def.radius, e), freeHeading: (prefer) => openHeading(w, e, def, prefer),
+    clearTo: (x, z) => stepClear(w, e.x, e.z, x, z) && moveClear(w, e.x, e.z, x, z, def.radius), callable: (r) => bellCall(w, e, r, false) > 0, call: (r, most) => bellCall(w, e, r, true, most), takeTurn: (kind) => takeTurn(w, e, kind) };
 }
 
 
@@ -1130,7 +1150,7 @@ function updateEnemy(w, e, diff, dt) {
   else if (!e.hold && (!sees || !stepClear(w, e.x, e.z, tx, tz) || !moveClear(w, e.x, e.z, tx, tz, def.radius))) { const wp = navWaypoint(w, e.x, e.z, tx, tz); if (wp && wp.dist > 0) { ax = wp.x; az = wp.z; } }
   let dy = Math.atan2(ax - e.x, az - e.z) - e.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
   const dashing = (def.lunge && (e.lungeT ?? -1) >= def.lunge.windup) || (def.charge && (e.chargeT ?? -1) >= def.charge.windup);                 // a dash keeps its heading: that is what makes it dodgeable
-  if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js)
+  if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun && !(e.actK && e.actK !== 'dodge')) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js; one in the middle of an act of the brain turns its own way, brain.js)
   e.cd = Math.max(0, e.cd - dt);
   if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
   if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d, e), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
@@ -1142,6 +1162,7 @@ function updateEnemy(w, e, diff, dt) {
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.ward && !e.hold && acolyteStep(w, e, def, diff, dt, sees, dist)) return;
+  if (def.brain && !e.hold && brainStep(brainCtx(w, e, def, diff, dt, sees, dist))) return;                                // PT-076: the brain (brain.js): a dodge, a run across, a lurch, a circle, a cower, a call
   if (def.lunge) {
     const L = def.lunge; e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
     if ((e.lungeT ?? -1) >= 0) {
@@ -1165,7 +1186,7 @@ function updateEnemy(w, e, diff, dt) {
       if (R && dist >= R.minRange) fireEnemyShot(w, e, def, diff);                      // ranged: toll a shot
       else { if (dist < def.attack.reach && dyv < 1.6 && inFront(e, p, ENEMY_STRIKE.cos)) { const res = strikePlayer(w, e, Math.round(def.attack.damage * diff.enemyDamage), !!def.boss || def.attack.damage >= 28 || !!def.attack.heavy); if (def.attack.knock && (res === 'hit' || res === 'broken')) tryMove(w, p, Math.sin(e.yaw) * def.attack.knock, Math.cos(e.yaw) * def.attack.knock, PLAYER.radius); } emit(w, 'enemy_strike', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     }
-    if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; if (R && !def.strafe && ordinary(e)) { const Sh = TACTICS.shuffle; if (rand(w) < Sh.chance) { e.shufT = Sh.t[0] + rand(w) * (Sh.t[1] - Sh.t[0]); e.shufDir = rand(w) < 0.5 ? -1 : 1; } } }          // (ENEMY ACTIONS: a walking shooter side-steps after a shot)
+    if (e.attackT >= def.attack.duration) { e.attackT = -1; e.cd = def.attack.cooldown * diff.reaction; e.struck = false; if (R && !def.strafe && ordinary(e)) { if (def.brain?.strafe) { if (!e.hold) startStrafe(brainCtx(w, e, def, diff, dt, true, dist)); } else { const Sh = TACTICS.shuffle; if (rand(w) < Sh.chance) { e.shufT = Sh.t[0] + rand(w) * (Sh.t[1] - Sh.t[0]); e.shufDir = rand(w) < 0.5 ? -1 : 1; } } } }          // (ENEMY ACTIONS: a walking shooter side-steps after a shot; PT-076: one with a brain RUNS across, brain.js)
   } else if (R && sees && e.cd <= 0 && dist <= R.maxRange && dist >= R.minRange && beatOk(w, e) && takeTurn(w, e, 'ranged')) {
     e.attackT = 0; e.struck = false; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
   } else if (!e.hold && (def.flying || def.retreat) && R && sees && dist < (R.keep ?? R.minRange) && retreatStep(w, e, def, dt)) {

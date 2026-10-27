@@ -133,4 +133,7 @@ for (const [mid, unless] of Object.entries({ "radio-locked": ["msg:vael"] })) MA
 // takes longer to kill, and on Normal the route bot died there on one seed of three). A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [18, 29] }, { type: 'pickup', kind: 'health_large', at: [18, 32] });
 // ---- end PT-075
+// ---- PT-076 (the brain, 2026-10-26): two armour vests in the entry hall, before the first room of Bellhands (they now run across between shots, dodge and ring for help: on Hard the route bot died there at 15 s). A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [5, 23] }, { type: 'pickup', kind: 'armor_vest', at: [7, 23] });
+// ---- end PT-076
 export default MAP;

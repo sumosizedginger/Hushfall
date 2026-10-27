@@ -154,4 +154,7 @@ for (const [mid, unless] of Object.entries({ "gate": [["msg:relay-s","msg:relay-
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [91, 43] }, { type: 'pickup', kind: 'armor_vest', at: [115, 30] });
 MAP.entities.push({ type: 'pickup', kind: 'health_large', at: [120, 32] }, { type: 'pickup', kind: 'health_large', at: [124, 26] });          // and a mend each side of the gallery fight (the secret route's lane, the main route's): a second pair
 // ---- end PT-075
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [60, 26] }, { type: 'pickup', kind: 'health_large', at: [65, 33] });
+// ---- end PT-076
 export default MAP;

@@ -52,16 +52,10 @@ test('THE TURNS: six Bellhands ready at once start at most the difficulty\'s num
   }
 });
 
-test('BETWEEN ACTS: a Bellhand side-steps after a shot (the same distance, a new place); a Gaunt hops back after its lunge from a player who faces it, and presses one who does not; both leave no fields behind', () => {
-  const { w, es: [b] } = room([['bellhand', 0, 8]]); b.cd = 0; b.yaw = Math.PI;
-  let shot = -1; run(w, 300, (ev, i) => { if (shot < 0 && ev.some((x) => x.type === 'enemy_shot')) shot = i; });
-  assert.ok(shot >= 0, 'it shot');
-  let w2, b2; for (let seed = 1; seed < 40; seed++) { ({ w: w2, es: [b2] } = room([['bellhand', 0, 8]], 'normal', seed)); b2.yaw = Math.PI; b2.attackT = ENEMIES.bellhand.attack.duration - 0.01; b2.struck = true; run(w2, 2); if (b2.shufT > 0) break; }          // (it steps after half its shots: find a seed where this one does)
-  const p0 = { x: b2.x, z: b2.z }, d0 = Math.hypot(b2.x - 22, b2.z - 22);
-  assert.ok(b2.shufT > 0 && (b2.shufDir === 1 || b2.shufDir === -1), 'a side-step begins as the shot ends');
-  run(w2, 18); const moved = Math.hypot(b2.x - p0.x, b2.z - p0.z), d1 = Math.hypot(b2.x - 22, b2.z - 22);
-  assert.ok(moved > 0.25, `it moved ${moved.toFixed(2)} m`); assert.ok(Math.abs(d1 - d0) < 0.6, 'sideways, not in or out');
-  run(w2, 60); assert.equal(b2.shufT, undefined, 'the field is gone when the step is done');
+test('BETWEEN ACTS: a Bellhand runs across after a shot (PT-076: the brain\'s strafe replaced the half-metre side-step, tests/brain.test.js); a Gaunt hops back after its lunge from a player who faces it, and presses one who does not; both leave no fields behind', () => {
+  const { w: w2, es: [b2] } = room([['bellhand', 0, 8]]); b2.yaw = Math.PI; b2.called = true; b2.attackT = ENEMIES.bellhand.attack.duration - 0.01; b2.struck = true; run(w2, 2);
+  assert.equal(b2.actK, 'strafe', 'a run across begins as the shot ends'); assert.equal(b2.shufT, undefined, 'no half-metre shuffle any more');
+  let n = 0; while (b2.actK && n < 200) { run(w2, 1); n++; } assert.ok(n < 200 && b2.actK === undefined && b2.actT === undefined, 'the fields are gone when the run is done');
   const { w: w3, es: [g] } = room([['gaunt', 2.2, 0]]); g.yaw = -Math.PI / 2; g.lungeT = ENEMIES.gaunt.lunge.windup + ENEMIES.gaunt.lunge.duration - 0.005; w3.player.yaw = -Math.PI / 2;          // the player faces it (east)
   run(w3, 1); assert.equal(g.backT, ENEMIES.gaunt.lunge.back, 'the hop back begins');
   const { w: w4, es: [g4] } = room([['gaunt', 2.2, 0]]); g4.yaw = -Math.PI / 2; g4.lungeT = ENEMIES.gaunt.lunge.windup + ENEMIES.gaunt.lunge.duration - 0.005; w4.player.yaw = Math.PI / 2;          // the player has its back to it

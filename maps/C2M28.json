@@ -1957,7 +1957,7 @@
   "introduces": "the stand: the dock tolls eight strokes and a wave comes through four gates with each, the tide climbs the lower steps, and the ninth stroke is rung by hand"
  },
  "drops": {
-  "scale": 1,
+  "scale": 1.3,
   "keep": [
    [
     24,

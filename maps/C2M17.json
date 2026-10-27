@@ -1049,6 +1049,16 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [124, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [60, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [65, 33]
   }
  ],
  "scenery": [

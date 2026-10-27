@@ -1504,6 +1504,16 @@
    "type": "exit",
    "at": [96, 24],
    "dest": "secret"
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [42, 50]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [42, 54]
   }
  ],
  "scenery": [

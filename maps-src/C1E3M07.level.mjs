@@ -63,7 +63,7 @@ const VATS = [[27, 22, ['gaunt']], [41, 22, null], [41, 35, ['gaunt']], [27, 35,
 const MAP = {
   id: 'C1E3M07', name: 'The Spore Foundry', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#101c14', fogDensity: 0.013, sky: 'night', look: 'foundry' },
-  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
+  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 22, rivet: 100 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { V: { type: 'prop', kind: 'vat' } },
   intro: { title: 'THE SPORE FOUNDRY', lines: ['The ship grows its bell-bearers here.', 'Do not wait for the vats to run dry.'] },
   outro: 'Next: the Cantor\'s Throat. What the Foundry makes, the Throat sings to.',
@@ -99,4 +99,7 @@ MAP.drops = { scale: 1.35, keep: [[23, 26, 24, 30]] };
 MAP.roster = { id: 'C1E3M07', lane: [...(laneOf('C1E3M07') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2}] };
 ENC.apply(MAP);
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [29, 37] }, { type: 'pickup', kind: 'health_large', at: [35, 40] });
+// ---- end PT-076
 export default MAP;

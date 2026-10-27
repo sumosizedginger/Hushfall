@@ -1505,6 +1505,16 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [46, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [46, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [50, 25]
   }
  ],
  "par": {

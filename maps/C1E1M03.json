@@ -1373,7 +1373,7 @@
   "armor": 0,
   "ammo": {
    "flare": 8,
-   "shell": 12,
+   "shell": 18,
    "rivet": 60
   },
   "weapons": [

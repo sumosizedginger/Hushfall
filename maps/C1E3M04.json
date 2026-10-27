@@ -919,7 +919,7 @@
   "hp": 100,
   "armor": 0,
   "ammo": {
-   "flare": 14,
+   "flare": 18,
    "shell": 14,
    "rivet": 60
   },

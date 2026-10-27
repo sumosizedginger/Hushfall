@@ -1057,6 +1057,16 @@
    "type": "prop",
    "kind": "cradle",
    "at": [61, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [24, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [30, 25]
   }
  ],
  "par": {

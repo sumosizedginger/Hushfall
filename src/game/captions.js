@@ -10,6 +10,11 @@ export const CAPTIONS = {
   // threats
   enemy_windup: T((e) => `${name(e.kind)} winds up`, { danger: true, where: true }),
   enemy_lunge: T((e) => `${name(e.kind)} lunges`, { danger: true, where: true }),
+  enemy_lurch: T((e) => `${name(e.kind)} groans and surges`, { danger: true, where: true }),          // PT-076 (brain.js)
+  enemy_call_windup: T((e) => `${name(e.kind)} lifts its bell`, { danger: true, where: true }),
+  enemy_call: T((e) => `${name(e.kind)} rings for help`, { where: true }),
+  enemy_dodge: T((e) => `${name(e.kind)} dodges`, { where: true }),
+  enemy_cower: T((e) => `${name(e.kind)} cries out and runs`, { where: true }),
   enemy_strike: T((e) => `${name(e.kind)} strikes`, { danger: true, where: true }),
   enemy_shot: T((e) => `${name(e.kind)} fires`, { danger: true, where: true }),
   suppress: T('A round goes past you', { danger: true, where: true }),

@@ -914,6 +914,16 @@
    "type": "pickup",
    "kind": "weapon_axe",
    "at": [18, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [19, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [22, 28]
   }
  ],
  "par": {

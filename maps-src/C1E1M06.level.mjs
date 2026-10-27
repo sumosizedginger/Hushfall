@@ -125,4 +125,9 @@ MAP.entities.push(...[['health_large', 41, 38], ['armor_vest', 47, 38]].map(([ki
 // ---- PT-052 R2: what the kit built (the secret, its message and its hint) joins the map ----
 E.apply(MAP);
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [24, 27] }, { type: 'pickup', kind: 'health_large', at: [25, 28] });
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [6, 23] }, { type: 'pickup', kind: 'armor_vest', at: [8, 24] });          // two more vests by the start: on Hard the first Bellhands' volley killed the bot at 17 s
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [44, 9] }, { type: 'pickup', kind: 'health_large', at: [36, 23] });          // and a vest and a mend before the Warden-Graft's yard, where the secret route died on Hard
+// ---- end PT-076
 export default MAP;

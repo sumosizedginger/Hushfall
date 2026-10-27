@@ -143,4 +143,7 @@ MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [31, 13], facing: 1.101
 MAP.roster = { id: 'C1E2M03', lane: [...(laneOf('C1E2M03') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":5},{"from":"tollbearer","to":"gaunt","pick":"spread","n":6}] };
 ENC.apply(MAP);
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane out of the start, before the first fight (the route bot died there at 18 s on Hard once the creatures had a brain). A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [9, 19] }, { type: 'pickup', kind: 'health_large', at: [13, 19] });
+// ---- end PT-076
 export default MAP;

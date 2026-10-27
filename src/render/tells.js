@@ -3,6 +3,7 @@
 // soft core, additive, from a small pool (a frame rarely has more than a few). Render only.
 import * as THREE from 'three';
 import { ENEMIES } from '../engine/defs.js';
+import { BRAIN } from '../engine/brain.js';
 
 export const TELL = Object.freeze({ melee: 0xffb070, ranged: 0x9ffff0, size: [0.35, 1.25], up: 0.82, fwd: 0.22, max: 24 });
 
@@ -12,6 +13,8 @@ export function tellOf(e, distToPlayer = 99) {
   if (e.attackT >= 0 && d.attack) { const wu = d.attack.duration * d.attack.windup; if (wu > 0 && e.attackT < wu) return { k: e.attackT / wu, ranged: !!d.ranged && distToPlayer >= d.ranged.minRange }; }
   if (d.lunge && (e.lungeT ?? -1) >= 0 && e.lungeT < d.lunge.windup) return { k: e.lungeT / d.lunge.windup, ranged: false };
   const C = e.chargeC ?? d.charge; if (C && (e.chargeT ?? -1) >= 0 && e.chargeT < C.windup) return { k: e.chargeT / C.windup, ranged: false };
+  if (e.actK === 'lurch' && e.actT > BRAIN.lurch.t) return { k: 1 - (e.actT - BRAIN.lurch.t) / BRAIN.lurch.windup, ranged: false };          // PT-076 (brain.js): the groan before a Tollbearer's surge
+  if (e.actK === 'call') return { k: 1 - e.actT / BRAIN.call.windup, ranged: true };                                                          // a Bellhand lifting its bell to call for help
   return null;
 }
 

@@ -1181,6 +1181,36 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [47, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [24, 27]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [25, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [6, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [8, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [44, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [36, 23]
   }
  ],
  "par": {

@@ -65,7 +65,7 @@ const ENC = new Encounters(L);
 // ---- end PT-052 ----
 
 const MAP = {
-  id: 'C2M07', name: 'Bellwright Yard', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M07', name: 'Bellwright Yard', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#b08060', fogDensity: 0.007, sky: 'anselm', look: 'bellwright' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BELLWRIGHT YARD', lines: ['The Vael do not cast their bells. They grow them.', 'Every one of these is waiting for someone.'] },

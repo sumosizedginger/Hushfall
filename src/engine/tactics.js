@@ -12,7 +12,7 @@
 import { ENEMIES } from './defs.js';
 
 export const TACTICS = Object.freeze({
-  tokens: { easy: { melee: 2, ranged: 2 }, normal: { melee: 2, ranged: 3 }, hard: { melee: 3, ranged: 4 } },        // (the first numbers, 2 / 3 / 4 of each, killed the perfect bot on Hard on six maps: a fan lets more blows land than a queue did)
+  tokens: { easy: { melee: 2, ranged: 2 }, normal: { melee: 2, ranged: 3 }, hard: { melee: 3, ranged: 3 } },        // (the first numbers, 2 / 3 / 4 of each, killed the perfect bot on Hard on six maps: a fan lets more blows land than a queue did; PT-076: four shots at once on Hard, from shooters that now run across between shots and ring for help, was a volley of seventy hit points in a second)
   fan: { reach: 10, gap: 0.55, arc: 1.0, near: 1.6, lean: 0.6, k: 1.5, look: 4, flee: 2 },  // within `reach` m; slots `gap` rad apart within `arc` rad of the group's bearing; within `near` m of its attack range a creature goes straight in; it LEANS at most `lean` rad off the line to the player (so it keeps 82% of its closing speed); a player moving away from the group faster than `flee` m/s is chased straight (a fan is for someone who stands and fights)
   shuffle: { t: [0.3, 0.6], speed: 0.6, chance: 0.5 },                     // a walking shooter's side-step after a shot (on `chance` of them): seconds (range), share of its speed (a longer, faster step made the flares miss and the ammunition gates fail)
   search: { t: 2.6, sweep: 1.0, rate: 2.4 },                                 // seconds of looking round at the last place it saw the player, how far it turns each way (rad), how fast
@@ -25,7 +25,7 @@ export function ordinary(e) {
 }
 const isRanged = (e) => !!ENEMIES[e.kind].ranged;
 /** an attack in progress, of either sort: a swing or a shot's windup, a lunge, a charge */
-const attacking = (e) => e.attackT >= 0 || (e.lungeT ?? -1) >= 0 || (e.chargeT ?? -1) >= 0;
+const attacking = (e) => e.attackT >= 0 || (e.lungeT ?? -1) >= 0 || (e.chargeT ?? -1) >= 0 || e.actK === 'lurch';          // (PT-076: a Tollbearer's lurch is an attack and holds a turn: in a wave, four surging at once was a wall)
 
 /**
  * The frame for this tick, made once (the first creature that asks): who is attacking now (the tokens in use), and the fan's slot bearing for every melee creature that is closing in.

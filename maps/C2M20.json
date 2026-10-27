@@ -944,6 +944,16 @@
    "at": [114, 48],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [64, 36]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [64, 40]
   }
  ],
  "scenery": [

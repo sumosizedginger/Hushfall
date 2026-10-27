@@ -562,5 +562,16 @@ ENEMIES.rootbell = { name: 'Root Bell', poise: 9, hp: 2400, speed: 1.2, gait: 3,
     spikes: { every: 3.2, warn: 1.0, r: 1.15, damage: 20, life: 1.6 },
     last: 0.3, exposed: 1.5, lastRing: { every: 3, h: 3.2, damage: 15, speed: 10, maxR: 44 }, lastCharge: { cooldown: 2.0, speed: 14 } } };
 ENEMIES.rootanchor = { name: 'Root anchor', hp: 350, speed: 0, gait: 0, radius: 0.8, height: 3.65, hitRadius: 0.9, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
+// PT-076 THE BRAIN (brain.js, the numbers in BRAIN there): what each ordinary creature does besides walk and strike. `dodge` is its chance to dash out of your sights when you fire at it or hold it
+// there; `strafe` a shooter's run across after each shot; `lurch` the Tollbearer's surge; `circle` the Gaunt's run round you; `cower` a run for a moment when it is badly hurt; `call` the Bellhand's ring for help.
+// The elites (Warden-Graft, Bulwark, Acolyte, Weeping Mother, Resonant) stand their ground: no brain.
+for (const [kind, brain] of Object.entries({
+  tollbearer: { lurch: true },
+  gaunt: { dodge: 0.5, circle: true, cower: true },
+  bellhand: { strafe: true, dodge: 0.35, cower: true, call: true },
+  gill: { dodge: 0.45, cower: true },
+  chorister: { dodge: 0.3 },
+  zealot: { dodge: 0.3 },
+})) ENEMIES[kind].brain = brain;
 /** the lamp holds sound back (design/ACTD.md section 1; Campaign 1's first secret says the lamp is a counter-tone): a map that says `lampHolds: { plain, own }` cuts the damage of a pulse ring that reaches a player with a LIT lantern to `plain`, or to `own` with Ines's own lamp (an eternal lantern) */
 export const LAMP_HOLDS = { plain: 0.6, own: 0.4 };

@@ -106,7 +106,7 @@ for (const [name, a0, a1] of [['l1', 112, 158], ['l2', 202, 248], ['l3', 292, 33
 for (const [deg, r] of [[124, 22], [138, 25], [150, 21], [214, 21], [226, 24], [240, 20], [304, 20], [316, 22], [330, 18], [392, 18], [405, 21], [418, 17]]) put('prop', (deg * 7) % 3 === 0 ? 'crate2' : 'crate', deg % 360, r);
 
 // the enemies, landing by landing
-E('tollbearer', 90, 22); E('tollbearer', 98, 26); E('gaunt', 102, 19);                                                                                   // the foot and the first ramp
+E('tollbearer', 90, 22); E('tollbearer', 98, 26); E('bellhand', 102, 19);                                                                                  // the foot and the first ramp
 E('gaunt', 116, 18); E('gaunt', 124, 26); E('gaunt', 134, 20); E('gaunt', 146, 27); E('gaunt', 156, 23);                                                    // L1: the swarm
 E('tollbearer', 120, 22); E('tollbearer', 129, 23); E('tollbearer', 141, 24); E('tollbearer', 152, 19); E('tollbearer', 158, 26);
 E('bellhand', 178, 20);                                                                                                                                  // ramp 1

@@ -33,6 +33,7 @@ import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
 import { HitMarkers } from './hitdir.js';
 import { Tells, tellOf } from './tells.js';                                                                            // ENEMY ACTIONS: the glint of a windup
+import { BRAIN } from '../engine/brain.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { gunFactor } from './gunlight.js';
@@ -336,14 +337,14 @@ export class GameView {
       seen.add(e.id); let v = this.enemyViews.get(e.id);
       if (!v) { v = ENEMY_MODELS[e.kind](this.tex, this.map); if (e.variant && VARIANTS[e.variant]) this.tintRig(v.root, e.variant); markEntity(v.root, { hostile: !ENEMIES[e.kind].peaceful }); this.scene.add(v.root); this.enemyViews.set(e.id, v); }          // markEntity: enemies keep the classic ink (entityflag.js, PT-006)
       // PT-054 (the owner: Glass Steppe stutters): a sleeper that is already frozen into its merged mesh needs nothing: no pose, no grounding (which walks every vertex of the rig), and its invisible rig is out of the scene graph (three.js recomputed the matrices of all fifty nodes of every sleeper on every frame)
-      if (v.frozen && e.state === 'idle' && Math.abs((e.y ?? 0) - v.frozenY) <= 1e-3) continue;
+      if (v.frozen && (e.state === 'idle' || (e.state === 'dead' && e.dead >= 1)) && Math.abs((e.y ?? 0) - v.frozenY) <= 1e-3) continue;          // (PT-076: so does a body that has finished falling)
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
       v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
       // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
-      let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : 0;
+      let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : e.actK === 'call' ? 0.4 * Math.min(1, 1 - e.actT / BRAIN.call.windup) : 0;          // (PT-076: a Bellhand calling for help lifts its bell as for a shot, brain.js)
       if (def.charge && (e.chargeT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.chargeT / def.charge.windup); else if (def.support && (e.channelT ?? -1) >= 0) attack = 0.5; else if ((def.boss || def.ward) && (e.pulseT ?? -1) >= 0) attack = 0.55 * Math.min(1, e.pulseT / (def.pulse?.windup ?? def.hive?.windup ?? HIVE.beat));
       const swell = def.brood && (e.broodT ?? -1) >= 0 ? Math.min(1, e.broodT / def.brood.swell) : (def.spawner ?? def.feeds) && (e.vatT ?? -1) >= 0 ? Math.min(1, e.vatT / (def.spawner ?? def.feeds).swell) : 0, weep = def.brood && (e.pulseT ?? -1) >= 0 ? Math.min(1, e.pulseT / def.tears.windup) : 0;          // PT-028: the Weeping Mother's swelling sacs and the tear she draws up
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
@@ -352,10 +353,11 @@ export class GameView {
       v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
-      const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4;
-      if (e.state === 'idle' && !v.frozen && steady) {
+      // PT-076 (the owner: "should we have old bodies disappear to help with performance?"): a body that has finished falling is as still as a sleeper, so it is frozen the same way (it stays; a Sexton that raises it thaws it)
+      const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4, still = e.state === 'idle' || (e.state === 'dead' && e.dead >= 1);
+      if (still && !v.frozen && steady) {
         v.root.updateMatrixWorld(true); const f = v.root.clone(true); this.scene.add(f); f.updateMatrixWorld(true); mergeStatic(f, { disposeSources: false, cull: true }); f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.updateMatrixWorld(true); f.traverse((o) => { o.matrixAutoUpdate = false; }); v.frozen = f; v.frozenY = e.y ?? 0; v.root.visible = false; this.scene.remove(v.root);
-      } else if (v.frozen && (e.state !== 'idle' || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; this.scene.add(v.root); }
+      } else if (v.frozen && (!still || Math.abs((e.y ?? 0) - v.frozenY) > 1e-3)) { this.scene.remove(v.frozen); v.frozen.traverse((o) => o.isMesh && o.geometry.dispose()); v.frozen = null; v.root.visible = true; this.scene.add(v.root); }
     }
     this.tells.end();
     for (const [id, v] of this.enemyViews) if (!seen.has(id)) { this.scene.remove(v.root); if (v.frozen) this.scene.remove(v.frozen); this.enemyViews.delete(id); freeRig(v.root); if (v.frozen) freeRig(v.frozen); }          // PT-050 H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay

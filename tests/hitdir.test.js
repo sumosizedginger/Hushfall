@@ -49,7 +49,7 @@ test('the post pass draws the glow only in a band along the edge, red, capped, a
 });
 
 test('in the sim: blows from creatures carry where they came from, near the creature or the shot; the sim is otherwise unchanged (the route fingerprints)', () => {
-  const m = loadMapFile(path.join(ROOT, 'maps/C1E1M02.json')), r = runRoute(m, loadRouteFile(path.join(ROOT, 'routes/C1E1M02.main.route.json')), { seed: 1, difficulty: 'hard' });
+  const m = loadMapFile(path.join(ROOT, 'maps/C1E1M07.json')), r = runRoute(m, loadRouteFile(path.join(ROOT, 'routes/C1E1M07.main.route.json')), { seed: 1, difficulty: 'hard' });          // (Signal House: a hard fight on every seed; PT-076's brain left the bot only two blows in Customs Hall on this seed)
   const hurts = r.events.filter((e) => e.type === 'hurt'); assert.ok(hurts.length > 5, hurts.length + ' blows');
   const dir = hurts.filter((e) => Number.isFinite(e.fx) && Number.isFinite(e.fz)); assert.ok(dir.length >= hurts.length * 0.8, `${dir.length} of ${hurts.length} carry a source`);
 });

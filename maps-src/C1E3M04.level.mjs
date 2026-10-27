@@ -70,7 +70,7 @@ const layers = L.layers();
 const MAP = {
   id: 'C1E3M04', name: 'Marrow Nave', version: 1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#2c3830', fogDensity: 0.006, sky: 'ash', look: 'choir' },
-  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 14, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
+  entryLoadout: { hp: 100, armor: 0, ammo: { flare: 18, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 4: { type: 'enemy', kind: 'weeping', group: 'mother' } },
   intro: { title: 'MARROW NAVE', lines: ['The ship opened its back to sing.', 'Something is enthroned at the far end.'] },
   outro: 'Next: the Resonance Loom. The ship has stopped rehearsing.',

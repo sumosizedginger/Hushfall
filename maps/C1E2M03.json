@@ -1009,6 +1009,16 @@
    "kind": "bellhand",
    "at": [31, 13],
    "facing": 1.101
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [9, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [13, 19]
   }
  ],
  "par": {

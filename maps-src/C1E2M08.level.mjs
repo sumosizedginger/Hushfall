@@ -105,4 +105,7 @@ MAP.entities.push(...[['crate', 34, 11], ['barrel', 34, 44], ['sack', 44, 10], [
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // the boss map keeps ALL its ammunition boxes on the ground (its ring of nodes and the mother's hatchlings never drop, only 20 creatures stand on it and the fight eats rivets: with every box of the hall the bot still died on hard, without the airlock's it died more); drops add to them
 
+// ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the places the clumsy strafing bot (Normal) and the route bot (Hard) died once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [46, 20] }, { type: 'pickup', kind: 'health_large', at: [46, 40] });
+// ---- end PT-076
 export default MAP;

@@ -776,6 +776,16 @@
    "kind": "crate",
    "at": [60, 19],
    "movable": true
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [22, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [34, 22]
   }
  ],
  "par": {
