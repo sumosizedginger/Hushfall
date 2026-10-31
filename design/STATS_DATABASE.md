@@ -1,219 +1,315 @@
 # Your Run, in Numbers: a stats database for Hushfall
 
-A plan, written for someone learning SQL. Nothing here is built yet. (Planned 2026-10-31; the owner: "give me your ideas, explain them like I'm an ijit, ignorant but competent and lacking vocab". It is not graded: the point is to learn the ideas on a project you know.)
+A plan, written for someone learning SQL. Nothing here is built yet.
+- Version 1 (2026-10-31): the first plan.
+- **Version 2 (2026-10-31): revised after an outside review** (the owner's SQL tutor read version 1 against the GitHub copy of the game). Section 9 lists what the review changed and the one place this plan answers it differently. Every query in this file was run against a small sample database in Node's built-in SQLite before it was written here.
 
 ## 1. What we are making
 
-While you play, the game quietly writes down what happens: every kill, every hit you take, every death, how many shots each gun fired, how long each level took. When you beat a campaign, a screen shows you **your run in numbers**: how many times you died and where, your favourite gun, the creature that hurt you most, your closest call. A short version (three lines) appears on the end-of-level screen after every level, and the whole thing can be opened any time from the title screen.
+While you play, the game quietly writes down what happens: every kill, every hit you take, every death and where it happened, how often each gun fired and connected, how long each level took. When you beat a campaign, a screen shows **your run in numbers**, and closes with a short story told from the facts ("The Bellhands hurt you more than anything else. Fishmarket Rows claimed you six times. And eventually, you made it through."). A short version appears after every level, and a **Stats** page on the title screen shows everything you have ever played (your *lifetime*).
 
-All of it is kept in a small **SQL database** inside the game, and every line on the stats screen is one **SQL question** asked of that database. You can export the database file and ask it your own questions with a free program (DB Browser for SQLite).
+It is all kept in a small **SQL database** inside the game, and every line on those screens is one **SQL question** asked of it. You can export the database file and ask it your own questions with a free program (DB Browser for SQLite).
 
-## 2. The words you need (the vocabulary, in plain English)
+## 2. The words you need
 
 | Word | What it means | In this project |
 |--|--|--|
-| **Database** | One file that holds a set of tables. | `hushfall-stats.sqlite`, kept in your browser. |
-| **SQL** ("sequel" or "S-Q-L") | The language you use to ask a database questions and to put things in it. | Every stat on the screen is one SQL question. |
-| **SQLite** | A small, free database that lives in a single file (no server). It is the most used database in the world: it is in every phone. | We run it inside the game with a library called **sql.js**. |
-| **Table** | Like one tab of a spreadsheet. | `kills`, `deaths`, `hits_taken`, ... |
-| **Row** (also "record") | One line of a table: ONE thing. | One kill. One death. One hit. |
-| **Column** (also "field") | One kind of fact every row has. | A kill's columns: which creature, which gun, when. |
-| **Schema** | The blueprint: every table, its columns, what type each column holds. | Section 4 below. |
-| **Primary key** | A column whose value is different on every row, so you can point at one row. Like a receipt number. | `run_id` in `level_runs`. |
-| **Foreign key** | A column that holds ANOTHER table's primary key: "this row belongs to that one". | A kill's `run_id` says which play of which level it happened in. |
-| **Query** | A question asked in SQL. | "Which gun did I fire most?" |
-| **Insert** | Putting a new row into a table. | The game inserts a row into `kills` every time something dies. |
-| **Join** | A query that lines up two tables using a foreign key, so you can use columns from both. | `deaths` only knows the run; joining `level_runs` and `levels` gives you the level's NAME. |
-| **Aggregate** | A question that squashes many rows into one number: `COUNT` (how many), `SUM` (add up), `AVG` (average), `MIN`, `MAX`. | "How many deaths?" is `COUNT`. |
-| **GROUP BY** | "Do the aggregate once per group." | "Damage taken, per creature." |
-| **Normalisation** | Store each fact ONCE and point to it, instead of copying it everywhere. | A level's name lives only in `levels`; everything else refers to it by its id. |
-| **Index** | Like the index at the back of a book: a lookup that makes finding rows fast. | On `run_id`, because nearly every question uses it. |
-| **Transaction** | A bundle of changes that either ALL happen or NONE do. | When a level ends, its rows are saved as one bundle, so a crash never leaves half a level written. |
+| **Database** | One file that holds a set of tables. | `hushfall-stats.sqlite` |
+| **SQL** | The language you use to put things in a database and ask it questions. | Every stat is one SQL question. |
+| **SQLite** | A small free database that lives in one file, no server. It is in every phone. | Run inside the game by a library, **sql.js**. |
+| **Table / row / column** | A spreadsheet tab / one line (ONE thing) / one kind of fact every line has. | `kills` / one kill / which gun did it. |
+| **Schema** | The blueprint: every table and column. | Section 4. |
+| **Primary key** | A value that is different on every row, so you can point at one row. A receipt number. | `run_id` |
+| **Foreign key** | A column that holds ANOTHER table's primary key: "this belongs to that". | A kill's `run_id` says which attempt it happened in. |
+| **Constraint** | A rule the database itself enforces, so impossible data cannot get in. `CHECK`, `NOT NULL`, `UNIQUE`. | "Damage taken is more than zero." |
+| **Query** | A question in SQL. | "Which gun did I fire most?" |
+| **Join** | Lining two tables up by a foreign key so you can use columns from both. | A death plus its attempt plus its level's NAME. |
+| **Aggregate** + **GROUP BY** | Squash many rows into one number (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`), once per group. | "Damage taken, per creature." |
+| **View** | A named, saved QUESTION (not saved answers): every time you use it, it is asked again. | `kills_by_weapon` |
+| **Normalisation** | Store each fact once and point to it. | A level's name lives only in `levels`. |
+| **Index** | A lookup, like a book's index, that makes finding rows fast. | On `run_id`. |
+| **Transaction** | A bundle of changes that ALL happen or NONE do. | A level's rows go in as one bundle. |
+| **Migration** | A small script that upgrades an old database to the newest blueprint. | When version 2 of the game adds a column, your old stats are kept. |
+| **Persistence** | Making data survive closing the game. | Saving the database's bytes to the browser's storage (IndexedDB). |
 
-## 3. The big design decisions (and why)
+## 3. The design decisions (and why)
 
-These are the choices a teacher will ask you to defend. Each has a short "why".
+**1. Important things get a row each; frequent things get running counts.** A kill, a hit you take, a death and an attempt at a level each get their own row: a whole campaign has a few thousand, and keeping each lets us ask questions we have not thought of yet. Gunfire is tens of thousands of trigger pulls we never care about one by one, so each attempt keeps ONE row per gun with three counts (section 3.2). This is the trade-off between **raw events** (flexible, big) and **tallies** (small, but only the questions you planned for).
 
-**1. One row per IMPORTANT event, a running count for FREQUENT ones.** A kill, a hit taken, a death and a level played each get their own row: there are a few thousand of them in a whole campaign, and keeping each one lets us ask questions we have not thought of yet ("what killed me most in Episode 3?"). Shots are different: a playthrough fires tens of thousands of shots, and we never care about one shot on its own, so each level keeps ONE row per gun with two numbers (`fired`, `hit`). This is the classic trade-off between **raw events** (flexible, big) and **tallies** (small, but you can only ask the questions you planned for). Footsteps and pickups that do not matter are not stored at all.
+**2. What "accuracy" means, exactly.** One scattergun blast can hit four creatures. If "hits divided by shots" counted all four, you could have 400% accuracy. So each gun keeps:
+- `attacks_fired`: trigger pulls that actually fired (or melee swings),
+- `attacks_connected`: attacks that hit AT LEAST ONE creature,
+- `targets_hit`: how many creatures were struck in total.
 
-**2. Reference data in its own tables.** The names of the levels, creatures and guns already exist in the game. We copy them into `levels`, `creatures` and `weapons` once, so the event tables only hold short ids (`gaunt`, `rivet`) and the stats screen can JOIN to get the proper names. That is normalisation.
+**Accuracy = attacks connected / attacks fired.** Damage over time (a creature on fire) never counts as a connection. This needs the game to give every attack a number and carry it to wherever it lands, including a flare or a bolt that lands later and a blast that hits several things (section 7).
 
-**3. The stats never touch the game.** The part of the game that decides what happens (the "simulation") only announces events ("a Gaunt died", "you took 9 damage from a Bellhand"); the stats recorder LISTENS and writes rows. It can never change a fight. This rule already holds for the sound and the pictures, and it is why the stats need no new testing of the levels themselves.
+**3. "Who hurt me" points at a SOURCES table.** A hit can come from a creature, from the world (a fall, a toxic floor, a falling container) or from yourself (your own rocket). One table lists them all, each with a `type`:
 
-**4. If the database breaks, the game keeps going.** Any error in the stats part is caught and the stats switch themselves off for that session; the game never stops because of them.
+| source_id | type | name |
+|--|--|--|
+| `enemy:gaunt` | creature | Gaunt Runner |
+| `enemy:bellhand` | creature | Bellhand |
+| `hazard:toxic` | environment | Toxic residue |
+| `hazard:fall` | environment | A fall into the void |
+| `self:own_blast` | self | Your own blast |
 
-**5. It stays on your computer.** Nothing is sent anywhere. The player can EXPORT the file if they want to.
+Every hit, kill and death points at one row here, so a typo cannot get in, and "are hazards more dangerous than creatures?" is one `GROUP BY type`. (Version 1 used a plain text column; the review was right that this is better.)
 
-**6. Saved at the end of each level, as one transaction.** During a level the rows go into the database in memory; when the level ends (won, died, quit) the database is saved to the browser's storage in one go.
+**4. The stats never touch the game.** The part of the game that decides what happens (the simulation) only ANNOUNCES events; the stats recorder LISTENS and writes rows. It cannot change a fight. A test will prove it: the same inputs give exactly the same game with the stats on and off.
+
+**5. If the database breaks, the game keeps going.** Any error in the stats is caught; the stats switch off for that session and say so; the game never stops.
+
+**6. Two scopes: this playthrough and lifetime.** Every screen asks its questions either for ONE playthrough (one New Game to the end) or for everything ever recorded. A query for a playthrough must follow the chain death -> attempt -> playthrough; counting every row in `deaths` is the LIFETIME answer.
+
+**7. Reloading has a rule.** The game has quicksave and quickload. When you load, what you did since the save still HAPPENED: you fired those shots and took those hits. So a load closes the current attempt with the outcome `reloaded` and opens a new attempt from the save point (marked `from_save`). Nothing is deleted and nothing is counted twice: the game does not replay events when it loads, it just puts the world back. "Levels finished" counts levels with a COMPLETE attempt, so a reloaded attempt never counts as a finish. (Section 9 says why this differs a little from the review's suggestion.)
+
+**8. Saving is two separate steps, and both must succeed.** sql.js keeps the database IN MEMORY. A transaction protects the database in memory, but the copy that survives closing the game is a separate thing:
+1. put the attempt's rows in, inside one SQLite transaction;
+2. export the whole database as bytes;
+3. write the bytes to the browser's IndexedDB, inside one IndexedDB transaction;
+4. only when that write says "done" are the stats marked as saved;
+5. if the write fails, the last saved copy stays as it was, and the screen says the newest stats were not saved.
+
+This happens when a level ends, on a quicksave and when you pause, so a crash or a closed tab loses at most what happened since the last of those. The game also asks the browser to keep its storage permanently (`navigator.storage.persist()`), and the Stats page has **Export** and **Import** so a player can keep a copy.
+
+**9. The database knows its own version.** `PRAGMA user_version` holds the blueprint's version number. When a later version of the game changes the blueprint, a **migration** upgrades the old file inside a transaction. A database from a NEWER game than this one is left untouched and the stats switch off.
+
+**10. Integrity rules are switched ON.** `PRAGMA foreign_keys = ON` every time the database is opened (SQLite does not enforce foreign keys unless you ask), and `CHECK` constraints for every rule that must always hold.
 
 ## 4. The schema (the blueprint)
 
-Reference tables (filled from the game's own data the first time):
-
 ```sql
+PRAGMA foreign_keys = ON;   -- every time the database is opened
+PRAGMA user_version = 1;    -- the blueprint's version (for migrations)
+
+-- reference tables: filled from the game's own data
 CREATE TABLE levels (
-  level_id    TEXT PRIMARY KEY,      -- 'C1E1M03'
-  name        TEXT NOT NULL,         -- 'Fishmarket Rows'
-  campaign    INTEGER NOT NULL,      -- 1 or 2
-  episode     INTEGER,               -- 1..4 (Campaign 2 uses acts)
-  kind        TEXT NOT NULL,         -- 'main' or 'secret'
-  par_seconds INTEGER                -- the target time
-);
-CREATE TABLE creatures (
-  kind    TEXT PRIMARY KEY,          -- 'gaunt'
-  name    TEXT NOT NULL,             -- 'Gaunt Runner'
-  hp      INTEGER,
-  is_boss INTEGER NOT NULL DEFAULT 0 -- SQLite has no true/false: 0 or 1
+  level_id    TEXT PRIMARY KEY,                          -- 'C1E1M03'
+  name        TEXT NOT NULL,                             -- 'Fishmarket Rows'
+  campaign    INTEGER NOT NULL CHECK (campaign IN (1, 2)),
+  episode     INTEGER,                                   -- 1..4 (Campaign 2: the act)
+  kind        TEXT NOT NULL CHECK (kind IN ('main', 'secret')),
+  par_seconds INTEGER CHECK (par_seconds > 0)
 );
 CREATE TABLE weapons (
-  weapon TEXT PRIMARY KEY,           -- 'rivet'
-  name   TEXT NOT NULL               -- 'Rivet driver'
+  weapon TEXT PRIMARY KEY,                               -- 'rivet'
+  name   TEXT NOT NULL                                   -- 'Rivet driver'
 );
-```
+CREATE TABLE sources (                                   -- everything that can hurt you, or that you can kill
+  source_id TEXT PRIMARY KEY,                            -- 'enemy:gaunt', 'hazard:toxic', 'self:own_blast'
+  type      TEXT NOT NULL CHECK (type IN ('creature', 'environment', 'self')),
+  name      TEXT NOT NULL,
+  is_boss   INTEGER NOT NULL DEFAULT 0 CHECK (is_boss IN (0, 1))
+);
 
-What happened (the event tables):
-
-```sql
-CREATE TABLE playthroughs (                      -- one per New Game
+-- what happened
+CREATE TABLE playthroughs (                              -- one per New Game
   playthrough_id INTEGER PRIMARY KEY,
-  started_at     TEXT NOT NULL,                  -- the date and time
-  difficulty     TEXT NOT NULL                   -- 'easy' | 'normal' | 'hard'
+  started_at     TEXT NOT NULL,
+  difficulty     TEXT NOT NULL CHECK (difficulty IN ('easy', 'normal', 'hard'))
 );
-CREATE TABLE level_runs (                        -- one per attempt at a level
+CREATE TABLE level_runs (                                -- one per attempt at a level
   run_id         INTEGER PRIMARY KEY,
-  playthrough_id INTEGER NOT NULL REFERENCES playthroughs(playthrough_id),
-  level_id       TEXT    NOT NULL REFERENCES levels(level_id),
-  difficulty     TEXT    NOT NULL,
-  seconds        REAL,                           -- how long it lasted
-  outcome        TEXT                            -- 'complete' | 'dead' | 'quit' | 'restart'
+  playthrough_id INTEGER REFERENCES playthroughs(playthrough_id),   -- may be empty: a level started on its own
+  level_id       TEXT NOT NULL REFERENCES levels(level_id),
+  difficulty     TEXT NOT NULL CHECK (difficulty IN ('easy', 'normal', 'hard')),
+  started_at     TEXT NOT NULL,
+  from_save      INTEGER NOT NULL DEFAULT 0 CHECK (from_save IN (0, 1)),
+  seconds        REAL CHECK (seconds >= 0),
+  outcome        TEXT CHECK (outcome IN ('complete', 'dead', 'quit', 'restart', 'reloaded'))   -- empty while it is being played
 );
-CREATE TABLE shots (                             -- a TALLY: one row per gun per run
-  run_id INTEGER NOT NULL REFERENCES level_runs(run_id),
-  weapon TEXT    NOT NULL REFERENCES weapons(weapon),
-  fired  INTEGER NOT NULL DEFAULT 0,
-  hit    INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY (run_id, weapon)                   -- a key made of TWO columns
+CREATE TABLE weapon_use (                                -- TALLIES: one row per gun per attempt
+  run_id            INTEGER NOT NULL REFERENCES level_runs(run_id),
+  weapon            TEXT    NOT NULL REFERENCES weapons(weapon),
+  attacks_fired     INTEGER NOT NULL DEFAULT 0 CHECK (attacks_fired >= 0),
+  attacks_connected INTEGER NOT NULL DEFAULT 0 CHECK (attacks_connected BETWEEN 0 AND attacks_fired),
+  targets_hit       INTEGER NOT NULL DEFAULT 0 CHECK (targets_hit >= attacks_connected),
+  PRIMARY KEY (run_id, weapon)                           -- a key made of TWO columns
 );
 CREATE TABLE kills (
   kill_id   INTEGER PRIMARY KEY,
   run_id    INTEGER NOT NULL REFERENCES level_runs(run_id),
-  creature  TEXT    NOT NULL REFERENCES creatures(kind),
-  weapon    TEXT,                                -- NULL when nothing you hold did it (a creature in a toxic pool)
-  at_second REAL
+  victim    TEXT    NOT NULL REFERENCES sources(source_id),
+  weapon    TEXT    REFERENCES weapons(weapon),          -- empty when no gun did it
+  at_second REAL    NOT NULL CHECK (at_second >= 0)
 );
 CREATE TABLE hits_taken (
   hit_id    INTEGER PRIMARY KEY,
   run_id    INTEGER NOT NULL REFERENCES level_runs(run_id),
-  source    TEXT    NOT NULL,                    -- a creature kind ('bellhand') or a hazard ('toxic', 'fall', 'own_blast')
-  amount    INTEGER NOT NULL,
-  hp_after  INTEGER NOT NULL,
-  at_second REAL
+  source    TEXT    NOT NULL REFERENCES sources(source_id),
+  amount    INTEGER NOT NULL CHECK (amount > 0),
+  hp_after  INTEGER NOT NULL CHECK (hp_after >= 0),
+  at_second REAL    NOT NULL CHECK (at_second >= 0)
 );
 CREATE TABLE deaths (
   death_id  INTEGER PRIMARY KEY,
-  run_id    INTEGER NOT NULL REFERENCES level_runs(run_id),
-  killer    TEXT    NOT NULL,                    -- the source of the last hit
-  at_second REAL
+  run_id    INTEGER NOT NULL UNIQUE REFERENCES level_runs(run_id),  -- UNIQUE: a death ends the attempt, so one at most
+  killer    TEXT    NOT NULL REFERENCES sources(source_id),
+  x         REAL    NOT NULL,                            -- WHERE it happened (for a map of deaths)
+  z         REAL    NOT NULL,
+  at_second REAL    NOT NULL CHECK (at_second >= 0)
 );
-CREATE INDEX kills_by_run  ON kills(run_id);
-CREATE INDEX hits_by_run   ON hits_taken(run_id);
-CREATE INDEX deaths_by_run ON deaths(run_id);
+CREATE INDEX runs_by_playthrough ON level_runs(playthrough_id);
+CREATE INDEX kills_by_run        ON kills(run_id);
+CREATE INDEX hits_by_run         ON hits_taken(run_id);
+
+-- a VIEW: a saved question (asked again each time it is used)
+CREATE VIEW kills_by_weapon AS
+  SELECT r.playthrough_id, k.weapon, COUNT(*) AS kills
+  FROM kills k JOIN level_runs r ON r.run_id = k.run_id
+  GROUP BY r.playthrough_id, k.weapon;
 ```
 
-Why `source` in `hits_taken` is TEXT and not a foreign key to `creatures`: a hit can come from a creature OR from the world (a fall, a toxic floor, your own rocket). That is a real modelling question; the simple answer here is one text column. The tidier answer (a `sources` table that lists creatures AND hazards) is a good thing to ask your tutor about.
+## 5. The questions
 
-## 5. The questions (each line of the stats screen is one query)
+`:pt` is a **parameter**: the playthrough being shown, filled in by the game when it asks. Parameters are also how you keep data out of the SQL text itself, which is what stops "SQL injection".
 
-**How many times did I die?**
+**Deaths this playthrough** (and the lifetime version underneath)
 ```sql
-SELECT COUNT(*) AS deaths FROM deaths;
+SELECT COUNT(*) AS deaths
+FROM deaths d JOIN level_runs r ON r.run_id = d.run_id
+WHERE r.playthrough_id = :pt;
+```
+```sql
+SELECT COUNT(*) AS deaths FROM deaths;   -- LIFETIME: every death ever recorded
 ```
 
-**Which level killed me most?** (a JOIN through two tables, then GROUP BY)
+**The level that claimed me most**
 ```sql
 SELECT l.name, COUNT(*) AS deaths
 FROM deaths d
 JOIN level_runs r ON r.run_id = d.run_id
 JOIN levels l     ON l.level_id = r.level_id
+WHERE r.playthrough_id = :pt
 GROUP BY l.level_id
 ORDER BY deaths DESC
 LIMIT 1;
 ```
 
-**My most used gun, and my accuracy with each** (SUM of a tally; `* 100.0` makes the division a decimal)
+**Each gun: attacks, accuracy, kills** (a LEFT JOIN to the view keeps a gun that fired but never killed)
 ```sql
-SELECT w.name, SUM(s.fired) AS shots, ROUND(SUM(s.hit) * 100.0 / SUM(s.fired)) AS accuracy_pct
-FROM shots s
-JOIN weapons w ON w.weapon = s.weapon
-GROUP BY s.weapon
-HAVING SUM(s.fired) > 0          -- HAVING is WHERE, but for groups
-ORDER BY shots DESC;
+SELECT w.name,
+       SUM(u.attacks_fired) AS attacks,
+       ROUND(SUM(u.attacks_connected) * 100.0 / SUM(u.attacks_fired)) AS accuracy_pct,
+       COALESCE(k.kills, 0) AS kills
+FROM weapon_use u
+JOIN level_runs r ON r.run_id = u.run_id
+JOIN weapons w    ON w.weapon = u.weapon
+LEFT JOIN kills_by_weapon k ON k.playthrough_id = r.playthrough_id AND k.weapon = u.weapon
+WHERE r.playthrough_id = :pt
+GROUP BY u.weapon
+HAVING SUM(u.attacks_fired) > 0
+ORDER BY attacks DESC;
 ```
 
-**My deadliest gun** (kills per gun)
+**What hurt me most**
 ```sql
-SELECT w.name, COUNT(*) AS kills
-FROM kills k JOIN weapons w ON w.weapon = k.weapon
-GROUP BY k.weapon ORDER BY kills DESC LIMIT 1;
-```
-
-**What hurt me most?** (a LEFT JOIN keeps hazards, which have no row in `creatures`)
-```sql
-SELECT COALESCE(c.name, h.source) AS what, SUM(h.amount) AS damage
+SELECT s.name, SUM(h.amount) AS damage
 FROM hits_taken h
-LEFT JOIN creatures c ON c.kind = h.source
-GROUP BY h.source ORDER BY damage DESC LIMIT 3;
+JOIN level_runs r ON r.run_id = h.run_id
+JOIN sources s    ON s.source_id = h.source
+WHERE r.playthrough_id = :pt
+GROUP BY h.source
+ORDER BY damage DESC
+LIMIT 3;
 ```
 
-**My closest call** (the lowest health I survived)
+**Creatures, the world, or myself?**
 ```sql
-SELECT MIN(hp_after) FROM hits_taken WHERE hp_after > 0;
+SELECT s.type, SUM(h.amount) AS damage
+FROM hits_taken h
+JOIN level_runs r ON r.run_id = h.run_id
+JOIN sources s    ON s.source_id = h.source
+WHERE r.playthrough_id = :pt
+GROUP BY s.type;
 ```
 
-**Time against par, per episode** (only finished levels)
+**My closest call.** Defined as: *the lowest health I reached in a level I went on to finish.* (A low point in an attempt that ended in death was not survived.)
+```sql
+SELECT MIN(h.hp_after) AS closest_call
+FROM hits_taken h JOIN level_runs r ON r.run_id = h.run_id
+WHERE r.playthrough_id = :pt AND r.outcome = 'complete' AND h.hp_after > 0;
+```
+
+**Time against par, per episode** (finished attempts only)
 ```sql
 SELECT l.campaign, l.episode,
-       ROUND(AVG(r.seconds))       AS my_average,
-       ROUND(AVG(l.par_seconds))   AS par
+       ROUND(AVG(r.seconds))     AS my_average,
+       ROUND(AVG(l.par_seconds)) AS par
 FROM level_runs r JOIN levels l ON l.level_id = r.level_id
-WHERE r.outcome = 'complete'
+WHERE r.playthrough_id = :pt AND r.outcome = 'complete'
 GROUP BY l.campaign, l.episode;
 ```
 
-**My favourite gun in each episode** (harder: a "window function", worth learning later)
+**My longest streak of levels without dying.** A classic puzzle called "gaps and islands": a running count of deaths gives every stretch between two deaths its own number, then we count the finished levels in each stretch. It uses a **CTE** (`WITH`: a temporary named result) and a **window function** (`SUM(...) OVER (...)`: a running total).
 ```sql
-SELECT campaign, episode, weapon, shots FROM (
-  SELECT l.campaign, l.episode, s.weapon, SUM(s.fired) AS shots,
-         RANK() OVER (PARTITION BY l.campaign, l.episode ORDER BY SUM(s.fired) DESC) AS place
-  FROM shots s
-  JOIN level_runs r ON r.run_id = s.run_id
-  JOIN levels l     ON l.level_id = r.level_id
-  GROUP BY l.campaign, l.episode, s.weapon
-) WHERE place = 1;
+WITH ordered AS (
+  SELECT run_id, outcome,
+         SUM(CASE WHEN outcome = 'dead' THEN 1 ELSE 0 END) OVER (ORDER BY run_id) AS stretch
+  FROM level_runs
+  WHERE playthrough_id = :pt AND outcome IN ('complete', 'dead')
+)
+SELECT MAX(levels) AS longest_streak
+FROM (SELECT stretch, COUNT(*) AS levels FROM ordered WHERE outcome = 'complete' GROUP BY stretch);
 ```
 
-## 6. How the data flows (the pipeline)
+**Where I die on a level** (for a map of deaths; rounding to 4 metres groups nearby deaths)
+```sql
+SELECT ROUND(d.x / 4) * 4 AS x, ROUND(d.z / 4) * 4 AS z, COUNT(*) AS deaths
+FROM deaths d JOIN level_runs r ON r.run_id = d.run_id
+WHERE r.level_id = :level
+GROUP BY 1, 2
+ORDER BY deaths DESC;
+```
 
-1. Something happens in a level. The simulation announces it as an EVENT (it already does: "enemy died", "player hurt", "weapon fired").
-2. The **stats recorder** (a new, small part of the game shell) listens to those events and turns them into `INSERT` statements.
-3. The rows sit in the database in memory while you play.
-4. When the level ends, the recorder fills in the level's time and outcome and saves the whole database to the browser's storage, inside one transaction.
-5. The end-of-level screen runs three short queries for that run. The end of a campaign runs the full set (section 5) for that playthrough. The title screen's **Stats** page runs them over everything.
-6. **Export** saves the database file to your computer.
+## 6. How the data flows
 
-## 7. What has to change in the game
+1. Something happens in a level. The simulation announces it as an EVENT ("enemy died", "player hurt", "weapon fired").
+2. The **stats recorder** (new, in the game shell) listens and turns events into rows: kills, hits taken and deaths go in as they happen; gun tallies are counted in memory and written once at the end of the attempt.
+3. When an attempt ends (finished, died, quit, restarted, reloaded), its time and outcome are filled in and the database is saved (section 3.8). Also on a quicksave and when you pause.
+4. The end-of-level screen asks three questions about that attempt; the end of a campaign asks the full set for that playthrough and builds the short story from the answers; the title's **Stats** page asks them for everything (lifetime).
+5. **Export** saves the file to your computer; **Import** loads one back.
 
-- **The hit event names its source.** Today a "you were hurt" event says HOW MUCH and FROM WHERE (a spot on the map, for the red glow at the screen's edge), but not WHO. It needs a creature kind or a hazard name. That is a small change to the simulation's announcements only; nothing about a fight changes.
-- **The kill event names the gun.** Same kind of small change.
-- **A library: sql.js** (SQLite compiled to run in a web page; MIT licence, about 1 MB), added to the licence notices.
-- **The recorder, the three screens and the export button**, in the game shell.
-- **Tests**: the recorder fed a made-up set of events, then every query in section 5 checked against numbers worked out by hand.
-- **One full overnight re-check** of all 68 levels, because the game itself changed (the levels play exactly the same).
+## 7. What has to change in the game (checked against the current code, 2026-10-31)
 
-## 8. Questions worth asking your tutor (to compare notes)
+- **"You were hurt" must say WHO or WHAT.** Today the event says how much and from which spot on the map (for the red glow at the screen's edge). There are fifteen places in the simulation that hurt the player: a creature's blow or bite, its shots, its rings and beams, your own blast, a fall into the void, a toxic floor, vacuum, a falling container, spikes. Each must name a source. A creature's shot is a separate object that can land after its shooter has died, so the shot must carry its shooter's kind. That adds a field to things the simulation keeps, so the game's state fingerprint changes once (identically on every computer); the fights do not.
+- **Attacks get numbers.** Every trigger pull and every swing gets a number; a flare, a bolt or a rocket carries it to where it lands; "an enemy was hit" says which attack hit it and with which gun; "an enemy died" says which gun killed it. Burning does not count as a hit.
+- **A library: sql.js** (MIT licence, about 1 MB), added to the licence notices and the licence test.
+- **The recorder, the screens, Export / Import**, all in the game shell.
+- **Tests**: the recorder fed made-up events (including a quicksave, a quickload and a death) with every query checked against numbers worked out by hand; every constraint shown to refuse bad data; a failed IndexedDB write shown to keep the old copy; and the same game played with the stats ON and OFF ending in exactly the same state.
+- **One full overnight re-check** of all 68 levels, because the game changed.
 
-1. Raw events or tallies: was it right to keep one row per kill but only a count of shots? Where would you draw the line?
-2. `hits_taken.source` holds either a creature or a hazard. One TEXT column, two nullable foreign-key columns, or a `sources` table: which is the "proper" design, and what does each cost?
-3. Is `level_runs.difficulty` a duplicate of `playthroughs.difficulty` (a normalisation smell)? (Answer here: it is copied on purpose, so each run says by itself how hard it was: a level started from the level picker can be played on a different difficulty from the rest of the playthrough. Is that a good enough reason, or should the playthrough's difficulty be the only one?)
-4. Should the stats screen run queries every time it opens, or should the game store the answers? (That is the question of **views** and **caching**.)
-5. What happens if the save at the end of a level fails half-way? (That is why it is one **transaction**.)
+## 8. In three steps (milestones)
+
+| Milestone | What you get |
+|--|--|
+| **STATS-001** | The engine announcements of section 7, the schema, the recorder, saving with its failure rules, migrations, and the tests. No screens yet: you can EXPORT the file and open it in DB Browser for SQLite. |
+| **STATS-002** | The three screens: after each level, at the end of each campaign, and the lifetime Stats page. |
+| **STATS-003** | Import, personal records, the death map, and the short story at the end of a campaign. |
+
+## 9. Review round 1 (the owner's tutor, 2026-10-31)
+
+The review read version 1 against the GitHub copy of the game (older than the working copy), approved the idea, and asked for changes before building. Every claim about the code was checked against the current working copy first (section 7 lists what that check found).
+
+| The review said | This plan now |
+|--|--|
+| Define accuracy: one blast that hits four creatures must not count as 400%. | Adopted: attacks fired / attacks connected / targets hit (3.2). It needs attack numbers carried through the simulation (7). |
+| Use a `sources` table instead of a text column. | Adopted (3.3, 4). |
+| Keep difficulty on each attempt; allow an attempt with no playthrough. | Adopted (4). In the game you buy, every level is played inside a playthrough (the level picker exists only in the developer build), so an empty `playthrough_id` is rare; it costs nothing to allow. |
+| Ask the database each time a screen opens; no cached answers; learn VIEWs. | Adopted, with one view (4). |
+| A SQLite transaction does not make the saved copy safe; sql.js lives in memory; save to IndexedDB and only call it saved when that finishes; keep the old copy if it fails. | Adopted (3.8). Also saved on quicksave and pause, so a crash loses little. |
+| Record WHERE deaths happen. | Adopted (`deaths.x`, `deaths.z`; the death-map query). |
+| Separate campaign statistics from lifetime statistics. | Adopted: every screen query takes `:pt` (5). |
+| Define "closest call". | Adopted: the lowest health in a level you went on to finish (5). |
+| `CHECK` constraints and `PRAGMA foreign_keys = ON`. | Adopted (3.10, 4). |
+| A schema version, migrations, persistent storage, export and import. | Adopted (3.8, 3.9). |
+| Tell the run as a story built only from facts. | Adopted for STATS-003. |
+| Three milestones; prove stats on and off play the same game. | Adopted (7, 8). |
+| **Quicksave / quickload: avoid replayed events becoming duplicate statistics; preserve recorder checkpoints across saves.** | **Answered a little differently.** The game does not replay events when it loads a save: it puts the world back silently, so nothing can be counted twice. The real question is what to do with what happened AFTER the save. This plan keeps it (you did take those hits) and closes that attempt as `reloaded` (3.7). Rolling the statistics back to the save point would need the recorder's state inside every save file, and would hide deaths and fights that really happened. Worth asking the tutor which they would choose for a player-facing screen. |
+
+## 10. Questions still worth asking
+
+1. The reload rule (the last row of section 9): keep what happened after a save, or roll it back?
+2. `sources` holds creatures AND hazards AND "yourself", and `kills.victim` points at it too. Is one table for "things that hurt you" and "things you killed" a good idea, or should creatures have their own table?
+3. Gun tallies are written once at the end of an attempt. If the game crashes mid-level, those counts are lost but the kills (written as they happen) are not. Is that inconsistency acceptable, or should tallies be flushed on every save too?
+4. When would you move from sql.js (the whole database exported on every save) to SQLite's own browser build with the Origin Private File System (only the changed parts written)? What would you measure first?
