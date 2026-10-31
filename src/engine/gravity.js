@@ -95,7 +95,7 @@ function hitBodies(w, q, def) {
     const c = hitCylinder(e); if (!(q.y < c.y1 && q.y + def.h > c.y0) || (q.x - c.x) ** 2 + (q.z - c.z) ** 2 >= (def.r + c.r) ** 2) continue;
     q.hitIds.push(e.id); q.hits++;
     const dmg = def.dmg * Math.min(1.4, sp / R.throwRef), dx = c.x - q.x, dz = c.z - q.z, d = Math.hypot(dx, dz) || 1, ed = ENEMIES[e.kind];
-    const killed = damageEnemy(w, e, dmg, { pierceArmor: true });
+    const killed = damageEnemy(w, e, dmg, { pierceArmor: true, by: { weapon: 'fork' } });
     if (!killed) { tryMove(w, e, dx / d * 0.9, dz / d * 0.9, ed.radius); hitEffects(w, e, { flinch: 0.5, stun: 0.8 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     emit(w, 'phys_hit', { id: q.id, kind: q.kind, x: q.x, y: q.y + def.h / 2, z: q.z, killed, speed: sp }); noise(w, q.x, q.z, 12);
     q.vx *= 0.3; q.vz *= 0.3; q.vy = Math.max(q.vy, 2);
@@ -233,11 +233,11 @@ export function updateShoves(w, dt) {
     if (want > 1e-4 && hit >= P.glance) {
       if (s.k > 0) {
         let other = null, od = 1e9; for (const o of w.enemies) { if (o === e || o.state === 'dead') continue; const d = Math.hypot(o.x - e.x, o.z - e.z) - ENEMIES[o.kind].radius - ed.radius; if (d < 0.35 && d < od && ((o.x - e.x) * dx + (o.z - e.z) * dz) > 0) { other = o; od = d; } }
-        const dmg = P.impact * Math.max(0.35, f) * Math.max(0.35, hit), killed = damageEnemy(w, e, dmg, { pierceArmor: true });
+        const dmg = P.impact * Math.max(0.35, f) * Math.max(0.35, hit), killed = damageEnemy(w, e, dmg, { pierceArmor: true, by: { weapon: 'fork' } });
         emit(w, 'shove_impact', { id: e.id, kind: e.kind, x: e.x, y: e.y + ed.height * 0.5, z: e.z, killed, body: !!other });
         if (!killed) { e.stunT = Math.max(e.stunT || 0, P.stun); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
         if (other && !ENEMIES[other.kind].boss && !ENEMIES[other.kind].node) {
-          const k2 = damageEnemy(w, other, dmg * 0.5, { pierceArmor: true }); if (!k2) { other.stunT = Math.max(other.stunT || 0, P.stun * 0.7); emit(w, 'enemy_hit', { id: other.id, kind: other.kind, x: other.x, z: other.z }); if (!list.some((o) => o.id === other.id)) list.push({ id: other.id, vx: s.vx * f * 0.5, vz: s.vz * f * 0.5, t: P.time * 0.6, k: 0 }); }
+          const k2 = damageEnemy(w, other, dmg * 0.5, { pierceArmor: true, by: { weapon: 'fork' } }); if (!k2) { other.stunT = Math.max(other.stunT || 0, P.stun * 0.7); emit(w, 'enemy_hit', { id: other.id, kind: other.kind, x: other.x, z: other.z }); if (!list.some((o) => o.id === other.id)) list.push({ id: other.id, vx: s.vx * f * 0.5, vz: s.vz * f * 0.5, t: P.time * 0.6, k: 0 }); }
         }
       }
       list.splice(i--, 1);

@@ -13,10 +13,11 @@ export const PEOPLE = [
   ['With thanks to', []],
 ];
 
-/** what the game is made with: [name, what it does here]. three.js is the only outside software that ships inside the build (THIRD_PARTY_NOTICES.md). */
+/** what the game is made with: [name, what it does here]. three.js and sql.js are the outside software that ships inside the build (THIRD_PARTY_NOTICES.md). */
 export const MADE_WITH = [
   ['Claude, an AI agent by Anthropic', 'wrote the code, the story text and the programs that paint and synthesise the pictures and the sound, under the direction of Joseph R Long'],
   ['three.js', 'draws the 3D world (MIT licence; the notice is in Credits and licences)'],
+  ['sql.js and SQLite', 'keep your stats (MIT licence and the public domain; the notice is in Credits and licences)'],
   ['p5.js and p5.brush', 'painted every picture at build time; they are not in the game'],
   ['Vite', 'builds the game'],
   ['Node.js', 'runs the tests and tools'],

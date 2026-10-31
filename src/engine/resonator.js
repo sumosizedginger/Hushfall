@@ -26,7 +26,7 @@ function ring(w, r) {
   const P = RESONATOR.pulse, diff = DIFFICULTY[w.difficulty];
   r.at = null; r.cdUntil = w.time + RESONATOR.cooldown; r.ringT = w.time;
   emit(w, 'resonator_ring', { id: r.id, x: r.x, z: r.z });
-  w.pulses.push({ id: w.nextId++, x: r.x, z: r.z, y: groundAt(w, r.x, r.z, 0.3), r: 0.6, speed: P.speed, dmg: Math.max(1, Math.round(P.damage * diff.enemyDamage)), width: P.width, maxR: P.maxR, hit: false });
+  w.pulses.push({ id: w.nextId++, x: r.x, z: r.z, y: groundAt(w, r.x, r.z, 0.3), r: 0.6, speed: P.speed, dmg: Math.max(1, Math.round(P.damage * diff.enemyDamage)), width: P.width, maxR: P.maxR, hit: false, src: 'hazard:resonator' });
   for (const e of w.enemies) {
     if (Math.hypot(e.x - r.x, e.z - r.z) > RESONATOR.lure) continue;
     if (e.state === 'idle' && !ENEMIES[e.kind].node) wakeEnemy(w, e, false);                             // the call goes out: it wakes without seeing a thing

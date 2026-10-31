@@ -499,6 +499,20 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
+## PT-077 · the stats database · built, awaiting the owner's check · FIXED-IN-CODE (awaiting the owner)
+**The owner's go (2026-10-31):** "go, so when we finish I can start from the beginning and make sure everything tracks. Make sure the UI shows the things we're tracking as well." The plan and what was built: `design/STATS_DATABASE.md` (section 0). A checklist, in the order you will meet it:
+1. On the title, **Your stats** (under The Record). On a browser that has never played this build it says nothing is recorded yet.
+2. Start a **new game**. Pause (Esc) and open **Your stats**: This playthrough shows 1 attempt, 0 finished. Fire five flares at a wall and look again: the flare cannon's Attacks goes up by 5 and Connected does not move.
+3. Hit one creature with a scattergun blast that also catches a second: one attack, connected, two creatures hit.
+4. Finish the level. The level-end screen has **This level, from your stats**: your time, kills (the same number as the Kills row above it, unless a creature was raised and killed again), your most used weapon and how often it connected, what hurt you most, your lowest health, and how many attempts this level has taken.
+5. **Die on purpose.** The death screen says "Killed by (the creature or hazard) after m:ss. Your first death on this level (attempt N)." Retry: in Your stats, Deaths is 1, the Deaths table names the level, Killed by names the killer, The last deaths says where (in metres from the start) and when.
+6. **Quick save (F5), take a hit, quick load (F9).** The hit stays in the stats (it happened), and Attempts goes up (the one you left and the one from the save).
+7. **Reload the browser tab** and open Your stats: everything is still there. The line under it says "Saved on this device at hh:mm".
+8. **Export stats file** gives you a `.sqlite` file. Open it in DB Browser for SQLite: the tables of section 4 of the plan are there, and every query of section 5 runs on it.
+9. **Lifetime** shows every playthrough together; This playthrough only the one you are playing (on the title, the one Continue would load).
+10. At the end of a campaign, under the tally: your playthrough told as a short story.
+Not recorded: the dev Range and the dev maps. The level picker in the dev build starts a new playthrough each time. The chainsaw's cut and the fork's throws count damage and kills, not attacks.
+
 ## PT-076 · enemy actions are invisible in play · MAJOR · FIXED-IN-CODE (the brain; awaiting the owner's play)
 **The owner's go (2026-10-26):** "In truth, even on easy this is not hard. I have not tried the other levels, I just want to give our enemies a better 'brain'." Built: `src/engine/brain.js`, `design/ENEMY_ACTIONS.md` (PT-076 section). What to watch for, in play:
 1. Shoot at a Gaunt, a Gill or a Bellhand (or hold one in your sights while aiming down them): it should DASH sideways about two metres, with a scuff. Not every time (Gaunts most often), never in the middle of its own blow.

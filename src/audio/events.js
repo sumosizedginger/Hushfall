@@ -24,6 +24,7 @@ export const SILENT_EVENTS = {
   beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
   mender_stop: 'view-only: the Mender\'s tether lets go; mender_start carries the sound (mender.js, PT-060)',
   saw_rev: 'the saw engine is a sustained voice now (sawvoice.js), driven from p.saw every frame: the retriggered rev is gone (PT-061 S1)',
+  dmg: 'bookkeeping for the stats database (PT-077): which gun and which attack dealt a blow; the hit itself sounds through enemy_hit / enemy_died',
   silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this (engine.js, PT-043: the Root Bell hangs still)',
 };
 export const RADIO_SOUND = 'radio';

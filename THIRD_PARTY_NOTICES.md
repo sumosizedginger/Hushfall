@@ -6,11 +6,39 @@ Hushfall is a proprietary game (see LICENSE). This file lists the third-party so
 
 | package | version | licence | where |
 |---|---|---|---|
-| three | 0.186.1 | MIT | the 3D renderer, bundled into the game by Vite (the only production dependency) |
+| three | 0.186.1 | MIT | the 3D renderer, bundled into the game by Vite |
+| sql.js | 1.14.2 | MIT | the stats database (PT-077): SQLite compiled to WebAssembly, loaded by the game in the background; SQLite itself is in the public domain |
 
 Vite (MIT) writes the build and may place a few lines of its own helper code in it. The tools that make the game and are NOT part of a build: p5.js and p5.brush (the art baker), pngjs (image files for the tools), puppeteer (the headless-browser checks) and vite itself. The baked art in assets/baked is the baker's own output, original to the project.
 
 The audit that keeps this file honest is node tools/dev/license-audit.mjs (and tests/licences.test.js): it fails if a production dependency is not on the permissive list, if one is missing from this file, if the shipped source imports a dev-only package, or if a page loads anything from a CDN or a font host.
+
+## sql.js
+
+MIT license
+===========
+
+Copyright (c) 2017 sql.js authors (see AUTHORS)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+sql.js contains SQLite, which its authors have dedicated to the public domain (https://sqlite.org/copyright.html): it needs no notice.
 
 ## three
 

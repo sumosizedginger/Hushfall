@@ -11,9 +11,9 @@ import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore, storeSave } from '../engine/save.js';
-import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
+import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER, ENEMIES } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy, buyMod } from '../engine/progress.js';
-import { UI } from './ui.js';
+import { UI, escHtml } from './ui.js';
 import { holdForComms } from './commsqueue.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
@@ -28,7 +28,9 @@ import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, COLD_OPEN, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
 import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
-import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS } from './journal.js';
+import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS, placeOf } from './journal.js';
+import { referenceRows } from './stats/schema.js';
+import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor, CaptionFeed } from './captions.js';
 import { firstRunLine } from './firstrun.js';
@@ -80,6 +82,12 @@ const g = {
   capture: null, mapOpen: false, unread: new Set(), journalTab: 'map', objectives: [], miniN: 0, miniModel: null, manual: false, frameTimes: [], last: performance.now(),
 };
 
+// PT-077, THE STATS DATABASE (src/game/stats, design/STATS_DATABASE.md): sql.js starts in the background. The game never waits for it; if it cannot start, the stats are off this session and the stats screen says why.
+g.stats = null; g.statsOff = false; g.statsNote = 'The stats are still starting.'; g.statsScope = 'pt'; g.statsLastRun = null;
+import('./stats/boot.js').then((m) => m.bootStats(referenceRows({ manifest: CAMPAIGN, maps: MAPS, weapons: WEAPONS, enemies: ENEMIES })))
+  .then((S) => { g.stats = S; g.statsNote = ''; if (g.world && ['playing', 'paused', 'cinematic'].includes(g.mode)) statsBegin(g.world.time > 0); },          // (a level started before the stats were ready is recorded from now on)
+    (e) => { console.warn('stats off:', e); g.statsNote = 'The stats are off this session (' + String(e?.message ?? e).slice(0, 100) + ').'; });
+
 g.pad = new PadDevice(settings.padBindings, settings.gamepad); g.wheel = new Wheel(); g.timeScale = 1; g.padActive = false; g.gp = null; g.padWasConnected = false; g.padSprint = false; g.padSprintEngaged = false; g.padSprintHeld = false; g.capturePad = null; g.wheelMuffled = false;       // the controller and the weapon wheel (gamepad.js, wheel.js)
 
 const ui = new UI({
@@ -97,6 +105,7 @@ const ui = new UI({
   epiloguePress: () => epiloguePress(),
   openCredits: () => openCredits(), closeCredits: () => closeCredits(),
   openRecord: (from) => openRecord(from), closeRecord: () => closeRecord(), replayScene: (id) => replayScene(id),
+  openStats: (from) => openStats(from), closeStats: () => closeStats(), statsScope: (sc) => { g.statsScope = sc === 'pt' ? 'pt' : 'life'; syncStats(); }, statsExport: () => statsExport(), statsImport: (f) => statsImport(f),
   beginRebind: (action, slot) => { g.capture = { action, slot }; ui.syncBindings(g.input.bindings, g.capture, 'Press a key, mouse button or wheel. Esc cancels.'); },
   resetBindings: () => { g.capture = null; commitBindings(defaultBindings(), 'Controls reset to default.'); },
   setPadSetting: (k, v) => { settings.gamepad[k] = v; saveSettings(storage, settings); g.pad.setSettings(settings.gamepad); if (k === 'glyphs') refreshLegends(); },
@@ -133,7 +142,46 @@ function logAttempt(outcome) {
 function logMeta() { try { const gl = renderer.getContext?.(), x = gl?.getExtension?.('WEBGL_debug_renderer_info'); const ua = (navigator.userAgent || '').match(/(Edg|Chrome|Firefox|Version)\/(\d+)/); g.playlog.renderer = String((x && gl.getParameter(x.UNMASKED_RENDERER_WEBGL)) || '').slice(0, 80); g.playlog.browser = ua ? (ua[1] === 'Version' ? 'Safari' : ua[1] === 'Edg' ? 'Edge' : ua[1]) + ' ' + ua[2] : ''; g.playlog.day = new Date().toISOString().slice(0, 10); } catch { /* the log works without it */ } }
 function commitSurvey() { if (!g.survey) return; g.playlog = addSurvey(g.playlog, g.mapId, g.attempt, g.survey.answers, g.survey.note); saveLog(storage, g.playlog); ui.playlogNote(describe(g.playlog)); }
 logMeta(); ui.playlogNote(describe(g.playlog));
-addEventListener('pagehide', () => { if (g.mode === 'playing' || g.mode === 'paused') logAttempt('quit'); });      // closing the tab in the middle of a map is the commonest way to stop: it is an attempt too
+addEventListener('pagehide', () => { if (g.mode === 'playing' || g.mode === 'paused') { logAttempt('quit'); statsEnd('quit'); } });      // closing the tab in the middle of a map is the commonest way to stop: it is an attempt too
+
+// ---- PT-077, the stats: what the shell tells the recorder, and the stats screen ----
+/** a stats call never breaks the game: an error switches the recording off for this session and the stats screen says so */
+function statsTry(fn) { if (!g.stats || g.statsOff) return null; try { return fn(g.stats); } catch (e) { console.warn('stats error:', e); g.statsOff = true; g.statsNote = 'The stats stopped recording this session after an error (' + String(e?.message ?? e).slice(0, 100) + ').'; return null; } }
+/** a level begins (fresh, restarted or loaded): its run in the stats. The range and the dev maps are not recorded. The playthrough's number goes into the progress, and so into every save. */
+function statsBegin(fromSave) {
+  statsTry((S) => {
+    const w = g.world; if (!w || w.map.range || w.map.dev || !S.rec.levels.has(g.mapId)) return;
+    const pt = g.progress.statsPt == null ? S.newPlaythrough(g.difficulty) : S.ensurePlaythrough(g.progress.statsPt, g.difficulty);
+    if (pt !== g.progress.statsPt) g.progress = { ...g.progress, statsPt: pt };
+    S.startRun({ levelId: g.mapId, difficulty: g.difficulty, pt, fromSave, time: w.time });
+  });
+}
+/** the run in progress ends ('complete' | 'dead' | 'quit' | 'restart' | 'reloaded'); the stats are then saved */
+function statsEnd(outcome) { const id = statsTry((S) => { const run = S.runId; return S.endRun(outcome, g.world) ? run : null; }); if (id != null) { g.statsLastRun = id; statsSave(); } }
+function statsSave() { statsTry((S) => { S.save().then(() => { if (ui.screen === 'stats') ui.statsStatus(g.statsOff ? g.statsNote : S.status); }); }); }
+const statsCard = () => statsTry((S) => S.runCard(g.statsLastRun, g.progress.statsPt ?? null));
+/** YOUR STATS, from the title (the playthrough of the save Continue would load) or the pause menu (the one being played) */
+function openStats(from) { g.statsFrom = from === 'title' ? 'title' : 'pause'; syncStats(); }
+function closeStats() { if (ui.screen !== 'stats') return; if (g.statsFrom === 'title') ui.show('title', { canContinue: canContinue() }); else ui.show('pause', { canLoad: hasQuick() }); }
+const statsWhere = (id, x, z) => { const m = MAPS[id], c = m?.cell ?? 2; return m ? placeOf(m, Math.floor(x / c), Math.floor(z / c)) : ''; };
+function syncStats(note = '') {
+  const S = g.stats, pt = (g.statsFrom === 'title' ? titleProgress() : g.progress).statsPt ?? null, scope = pt == null ? 'life' : g.statsScope;
+  let m = null; if (S) { try { m = S.rundown(scope === 'pt' ? pt : null); } catch (e) { console.warn('stats read error:', e); } }          // (reading still works when recording has stopped)
+  const html = m ? statsHtml(m, S.story(m), { where: statsWhere, lifetime: scope !== 'pt' }) : `<p class="st-none">${escHtml(g.statsNote || 'The stats are not available.')}</p>`;
+  ui.show('stats', { html, scope, hasPt: pt != null, status: S ? (g.statsOff ? g.statsNote : S.status) : '', note, canImport: g.statsFrom === 'title' && !!S && !g.statsOff });
+}
+/** the stats as a file (a SQLite database: any SQLite tool opens it), and back */
+function statsExport() {
+  let bytes = null; try { bytes = g.stats?.exportBytes() ?? null; } catch { bytes = null; }
+  if (!bytes) { ui.statsStatus(null, 'Nothing to export: the stats are not running.'); return; }
+  const blob = new Blob([bytes], { type: 'application/x-sqlite3' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `hushfall-stats-${new Date().toISOString().slice(0, 10)}.sqlite`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  ui.statsStatus(null, 'Exported. The file is a SQLite database: DB Browser for SQLite, or any SQLite tool, opens it.');
+}
+async function statsImport(file) {
+  if (g.statsFrom !== 'title' || !g.stats || g.statsOff) return;
+  let r; try { r = await g.stats.importBytes(new Uint8Array(await file.arrayBuffer())); } catch (e) { r = { ok: false, reason: String(e?.message ?? e) }; }
+  syncStats(r.ok ? `Imported: ${r.runs} recorded attempts replace the stats that were here.${r.saved ? '' : ' They could not be saved on this device yet.'}` : `Not imported: ${r.reason}. Your stats are unchanged.`);
+}
 
 const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
@@ -176,13 +224,15 @@ const renderWidth = () => (settings.autoQuality !== false ? g.governor.width : s
 function resize() { if (g.view) g.view.setSize(innerWidth, innerHeight, renderWidth()); else renderer.setSize(innerWidth, innerHeight, false); }
 addEventListener('resize', resize);
 
-function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '' } = {}) {
+function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '', noStats = false } = {}) {
+  statsEnd(world ? 'reloaded' : 'restart'); g.statsLastRun = null;                                               // PT-077: an attempt still open ends here (a load closes it as 'reloaded': what happened after the save still happened)
   g.cine = null; ui.cine(null);                                                                                        // PT-063: a level never starts under the overlay of a story scene that was playing
   g.loadedSlot = null; g.sinceLoad = 0; g.unread = new Set(); ui.setUnread(0);                                           // (applySave sets them again after this: a save that breaks the game in its first three seconds is set aside, PT-050 H1)
   g.view?.dispose();
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
   g.mapId = g.world.mapId; if (!world) g.progress = attemptReset(g.progress, g.mapId); g.difficulty = g.world.difficulty; g.seed = g.world.seed; g.objectives = g.world.objective ? [g.world.objective] : []; g.miniModel = null;
+  if (!noStats) statsBegin(!!world);                                                                                 // (before the auto-save below, so the save carries the playthrough's number)
   g.view = new GameView(renderer, tex, map, g.world); resize(); g.view.setLook(settings); g.view.setEffects(settings.autoQuality !== false ? g.governor.effects : 0);
   g.loop = new FixedLoop(stepOnce); g.input.releaseAll(); g.timer = 0; g.mapOpen = false; g.padSprint = g.padSprintHeld = false; cancelWheel();
   rangeMeter.reset(); g.devScale = 1;
@@ -211,7 +261,7 @@ const nextCarry = () => ({ ...carryOver(g.world), upgrades: { ...g.progress.upgr
 /** the intermission screen's data: the stats, the rank this run earned, the salvage it paid, the Locker */
 function completeData() {
   const m = MAPS[g.mapId], e = g.lastEarn;
-  return { nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId, campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
+  return { runCard: runCardHtml(statsCard()), nextName: g.nextId ? mapName(CAMPAIGN, g.nextId) : null, stats: g.world.endStats, par: m.par?.time, difficulty: g.difficulty, mapName: m.name, outro: m.outro, hasNext: !!g.nextId, campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
     survey: settings.playLog ? { answers: g.survey?.answers ?? {}, note: g.survey?.note ?? '' } : null, rank: e.result.rank, score: e.result.score, gain: e.gain, record: e.record, progress: g.progress, lockerNote: g.lockerNote || '', mods: Object.keys(g.world?.player?.mods ?? {}) };
 }
 /** write the NEXT level's start as the auto-save, with the progress as it stands: closing the game on the intermission loses neither the salvage nor a purchase (Continue enters the next level) */
@@ -252,7 +302,7 @@ function syncEpilogue() {
   { const key = (!v.tally && e.def.cards[v.index]?.art) || e.def.art || (e.def.campaign === 2 ? 'ending2' : 'ending1'); if (key !== g.artKey) { g.artKey = key; document.getElementById('ending-art').src = key === 'tower' ? coldTowerUrl() : key === 'title' ? titleArtUrl() : key === 'ending2' ? endingArt2Url() : key === 'coast' ? endingCoastUrl() : key === 'lampdark' ? endingLampDarkUrl() : endingArtUrl(); } }          // PT-063: the picture behind the card
   if (v.tally && e.def.coldOpen) { finishColdOpen(); return; }                                                                                   // PT-063: the cold open has no tally: on to the level, or back to the title for a replay
   if (v.tally && e.def.dev) { g.ending = null; quitToTitle(); return; }                              // PT-043: a dev map's draft epilogue ends at the title, with no tally of a campaign nobody finished
-  if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def); } } else ui.endingView(v);
+  if (v.tally) { if (!e.tallied) { e.tallied = true; ui.endingTally(tally(CAMPAIGN, g.progress, e.def.campaign), e.def, statsTry((S) => S.story(S.rundown(g.progress.statsPt ?? null))) ?? []); } } else ui.endingView(v);          // PT-077: the playthrough told from the stats
 }
 /** Enter, Space, a click or the pad's A: finish the card, go on, or (in the tally) leave for the intermission */
 function epiloguePress() {
@@ -290,7 +340,7 @@ function replayScene(id) {
   if (id === 'cold-open') { if (g.mode === 'title' && settings.coldOpenSeen) startColdOpen(() => quitToTitle()); return; }                                       // the cold open is not a world: the epilogue's cards over the title picture, then the title again
   const sc = SCENE[id], map = sc && MAPS[sc.map]; if (g.mode !== 'title' || !sc || !map || !hasSeen(titleProgress(), id)) return;
   const keep = { difficulty: g.difficulty, seed: g.seed, progress: g.progress };
-  startLevel({ world: createWorld(map, { seed: 1, difficulty: 'normal', choices: null }) }); startCinematic(id, true, 'title');
+  startLevel({ world: createWorld(map, { seed: 1, difficulty: 'normal', choices: null }), noStats: true }); startCinematic(id, true, 'title');
   if (g.cine) g.cine.keep = keep; else { quitToTitle(); Object.assign(g, { difficulty: keep.difficulty, seed: keep.seed, progress: keep.progress }); }
 }
 function endCinematic() {
@@ -301,10 +351,11 @@ function endCinematic() {
 }
 function quitToTitle() {
   if (g.mode === 'playing' || g.mode === 'paused') logAttempt('quit');
+  statsEnd('quit');
   cancelWheel(); g.mapOpen = false; g.ending = null; g.cine = null; ui.cine(null); g.view?.dispose(); g.view = null; g.world = null; g.mode = 'title'; document.exitPointerLock?.();
   renderer.setRenderTarget(null); renderer.clear(); audio.newLevel(); ui.show('title', { canContinue: canContinue() });
 }
-function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); }
+function pause() { if (g.mode !== 'playing') return; cancelWheel(); audio.setMuffled(true); g.mode = 'paused'; g.input.releaseAll(); document.exitPointerLock?.(); ui.show('pause', { canLoad: hasQuick() }); statsSave(); }
 /** PT-049 U2: Tab opens the Journal and PAUSES (no clock change for text, decided 2026-10-15): it opens on the Log when a message has not been read, otherwise on the Map; what was unread has now been put in front of the player */
 function openJournal() {
   if (g.mode !== 'playing' || !g.world) return;
@@ -316,6 +367,7 @@ function resume() { if (g.mode !== 'paused') return; audio.setMuffled(false); g.
 function quickSave() {
   if (!g.world) return;
   const playing = g.mode === 'playing';                                     // F5 during play: save and keep playing, tell the player with a toast
+  statsSave();
   try { store.write('quick', makeSave(g.world, 'mid-level', { now: Date.now(), progress: g.progress })); if (playing) ui.toast('Quick saved'); else ui.show('pause', { note: 'Saved.', canLoad: true }); }
   catch (e) { if (playing) ui.toast('Save failed: ' + e.message); else ui.show('pause', { note: 'Save failed: ' + e.message, canLoad: hasQuick() }); }
 }
@@ -345,13 +397,14 @@ function stepOnce() {
   if (cmd.map) { if (settings.journalPause !== false) { openJournal(); return; } g.mapOpen = !g.mapOpen; }                                            // UI-only toggle: the sim keeps running under the map
   try { g.view.beforeStep(g.world); step(g.world, cmd); }
   catch (e) {                                                                      // a corrupt world must end the session with a reason, not freeze the loop (audit R13)
-    console.error(e); const aside = quarantineLoaded(); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' + (aside ? ' The "' + aside + '" save was set aside; Continue will use the next one.' : '') }); return;
+    console.error(e); statsEnd('quit'); const aside = quarantineLoaded(); g.input.releaseAll(); document.exitPointerLock?.(); g.mode = 'title'; g.world = null; g.view?.dispose(); g.view = null; ui.show('title', { canContinue: canContinue(), note: 'The simulation stopped (' + String(e.message ?? e).slice(0, 80) + '). The save or level state was damaged.' + (aside ? ' The "' + aside + '" save was set aside; Continue will use the next one.' : '') }); return;
   }
   g.sinceLoad = (g.sinceLoad ?? 0) + 1;
   if (g.world.tick % 30 === 0 && !g.world.map.range) { const met = seenKinds(g.progress.bestiary, g.world.enemies); if (met.length && met !== g.progress.bestiary) g.progress = { ...g.progress, bestiary: met }; }          // PT-052 U3b: the Bestiary fills when a creature is first met
-  const ev = drainEvents(g.world); if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (settings.captions) for (const e of ev) g.captions.push(captionFor(e, g.world.player), g.world.time); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
-  if (g.world.status === 'dead') { cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
-  else if (g.world.status === 'complete') { cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.commsHold = 0; g.holdSkip = false; g.input.releaseAll(); document.exitPointerLock?.(); }
+  const ev = drainEvents(g.world); if (ev.length) statsTry((S) => S.events(ev, g.world)); if (g.world.tick % 7200 === 0) statsSave();          // PT-077: the stats hear every event; saved every two minutes of play as well
+  if (ev.length) { if (g.world.map.range) rangeMeter.events(ev); g.view.handleEvents(ev); ui.events(ev); recordMessages(ev); audio.handleEvents(ev); rumbleEvents(ev); if (settings.captions) for (const e of ev) g.captions.push(captionFor(e, g.world.player), g.world.time); if (import.meta.env.DEV) { g.events.push(...ev); if (g.events.length > 4000) g.events.splice(0, g.events.length - 4000); } }
+  if (g.world.status === 'dead') { statsEnd('dead'); cancelWheel(); g.mode = 'dying'; g.timer = 1.4; g.input.releaseAll(); document.exitPointerLock?.(); }
+  else if (g.world.status === 'complete') { statsEnd('complete'); cancelWheel(); g.mode = 'ending'; g.timer = 0.9; g.commsHold = 0; g.holdSkip = false; g.input.releaseAll(); document.exitPointerLock?.(); }
   else { const sc = ev.find((e) => e.type === 'cinematic'); if (sc) startCinematic(sc.id); }                                                            // PT-063 (R13): a map's trigger named a story scene
 }
 
@@ -387,6 +440,7 @@ addEventListener('keydown', (e) => {
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
   if (e.repeat) return;
   if (ui.screen === 'credits') { if (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space') { e.preventDefault(); closeCredits(); } return; }
+  if (ui.screen === 'stats') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeStats(); } return; }          // PT-077: the stats screen, like the Record
   if (ui.screen === 'record') { if (e.code === 'Escape' || (g.mode === 'paused' && (g.input.bindings.pause || []).includes(e.code))) { e.preventDefault(); closeRecord(); } return; }          // the Record is read, not played: Esc (or the pause key) goes back to where it was opened from
   if (ui.screen === 'journal' && g.mode === 'paused' && (e.code === 'ArrowRight' || e.code === 'ArrowLeft')) { e.preventDefault(); ui.h.journalTab(tabAfter(g.journalTab, e.code === 'ArrowRight' ? 1 : -1)); return; }          // PT-052 U3: left and right turn the Journal's pages
   if (ui.screen === 'journal' && g.mode === 'paused' && (g.input.bindings.map || []).includes(e.code)) { e.preventDefault(); resume(); return; }          // the map key (Tab) that opened the Journal closes it; Esc and the pause key already do (next line)
@@ -436,6 +490,14 @@ function padMenu(out, dt) {
   if (g.mode === 'cinematic') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) skipCinematic(); return; }
   if (g.mode === 'epilogue') { if (out.pressed.includes('Pad0') && ui.canAct()) epiloguePress(); else if (out.pressed.includes('Pad1')) epilogueSkip(); return; }        // the epilogue is one screen with one answer: A goes on, B skips
   if (ui.screen === 'credits') { if (out.pressed.includes('Pad0') || out.pressed.includes('Pad1')) closeCredits(); return; }
+  if (ui.screen === 'stats') {                                                                        // PT-077: up and down scroll the stats, left and right move between the buttons, A presses one, B goes back
+    const d = navRepeat.update(navDir(g.pad.down, out.move), dt), body = document.getElementById('stats-body'), items = menuItems();
+    if (body && d === 'up') body.scrollTop -= 90; else if (body && d === 'down') body.scrollTop += 90;
+    else if ((d === 'left' || d === 'right') && items.length) { const cur = items.indexOf(document.activeElement); items[cur < 0 ? 0 : (cur + (d === 'right' ? 1 : -1) + items.length) % items.length].focus(); }
+    if (out.pressed.includes('Pad0') && items.includes(document.activeElement)) document.activeElement.click();
+    if (out.pressed.includes('Pad1')) closeStats();
+    return;
+  }
   if (ui.screen === 'record') {                                                                       // the Record (PT-037): up and down scroll it, A or B goes back
     const d = navRepeat.update(navDir(g.pad.down, out.move), dt), list = document.getElementById('record-list');
     if (list && d === 'up') list.scrollTop -= 90; else if (list && d === 'down') list.scrollTop += 90;
@@ -512,7 +574,7 @@ function frameBody(now) {
     if (open !== g.wheelMuffled) { g.wheelMuffled = open; audio.setMuffled(open); }
     alpha = g.manual ? 1 : g.loop.advance(dt * g.timeScale * (g.devScale ?? 1)).alpha;                     // (g.devScale: the range's slow motion, F8: the real game, the real renderer, slowed, to watch a swing)
   }            // g.manual: the dev test hook owns the clock
-  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { logAttempt('dead'); g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick() }); } }
+  else if (g.mode === 'dying') { g.timer -= dt; if (g.timer <= 0) { logAttempt('dead'); g.mode = 'dead'; ui.show('dead', { canLoad: hasQuick(), deathLine: deathLine(statsCard()) }); } }
   else if (g.mode === 'ending') {
     g.timer -= dt;
     if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) { const de = MAPS[g.mapId].devEnding; if (de && ENDINGS[de.ending] && g.world.endStats?.dest === de.dest) startEpilogue({ campaign: de.ending, ...ENDINGS[de.ending], dev: true }); else quitToTitle(); }      // the dev range has no scoring, salvage or next map: its exit just goes back to the title (PT-043: a dev map may show a draft epilogue first)
@@ -562,4 +624,4 @@ if (import.meta.env.DEV) {                                                 // de
   }
 }
 if (import.meta.env.DEV) addEventListener('keydown', (e) => { if (e.code === 'F8' && g.world?.map.range) { e.preventDefault(); const steps = [1, 0.5, 0.25, 0.1], i = steps.indexOf(g.devScale ?? 1); g.devScale = steps[(i + 1) % steps.length]; } });      // the range's slow motion (PT-020): watch a swing at a tenth of its speed in the real game
-if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue, openRecord, closeRecord, startCinematic, stepCinematic, skipCinematic }));
+if (import.meta.env.DEV) import('./testhook.js').then((m) => m.installTestHook({ g, MAPS, audio, store, startLevel, stepOnce, pause, resume, quickSave, quickLoad, renderer, ui, TICK, startEpilogue, epiloguePress, epilogueSkip, syncEpilogue, finishEpilogue, openRecord, closeRecord, startCinematic, stepCinematic, skipCinematic, openStats, closeStats, quitToTitle }));

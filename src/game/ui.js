@@ -46,6 +46,9 @@ export class UI {
     $('btn-restart').onclick = () => this.h.restartLevel(); $('btn-quit').onclick = () => this.h.quitToTitle();
     $('btn-retry').onclick = () => this.h.restartLevel(); $('btn-dead-load').onclick = () => this.h.quickLoad(); $('btn-next').onclick = () => this.h.nextLevel(); $('btn-title').onclick = () => this.h.quitToTitle();
     $('record-list').onclick = (e) => { const b = e.target?.closest?.('button[data-scene]'); if (b) this.h.replayScene(b.dataset.scene); };
+    $('btn-stats').onclick = () => this.h.openStats('pause'); $('btn-stats-title').onclick = () => this.h.openStats('title'); $('btn-stats-close').onclick = () => this.h.closeStats();          // PT-077: the stats database's screen
+    $('btn-stats-pt').onclick = () => this.h.statsScope('pt'); $('btn-stats-life').onclick = () => this.h.statsScope('life'); $('btn-stats-export').onclick = () => this.h.statsExport(); $('btn-stats-import').onclick = () => $('stats-file').click();
+    $('stats-file').onchange = (e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) this.h.statsImport(f); };
     $('btn-record').onclick = () => this.h.openRecord('pause'); $('btn-record-title').onclick = () => this.h.openRecord('title'); $('btn-credits-title').onclick = () => this.h.openCredits(); $('screen-credits').onclick = () => this.h.closeCredits(); $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress(); $('btn-ending').onmousedown = (e) => e.preventDefault();       // a click anywhere goes on (the button is only a label for it); the mouse must not focus it, or Enter would press it twice (PT-036)
     $('locker').onclick = (e) => { const b = e.target.closest?.('button[data-track]'); if (b && !b.disabled) this.h.buyUpgrade(b.dataset.track); const m = e.target.closest?.('button[data-mod]'); if (m && !m.disabled) this.h.buyMod(m.dataset.mod); };
@@ -132,10 +135,11 @@ export class UI {
     $('screen-' + name).classList.remove('hidden');
     if (name === 'title') { $('btn-continue').style.display = data.canContinue ? '' : 'none'; $('title-note').textContent = data.note || ''; }
     if (name === 'pause') { $('pause-note').textContent = data.note || ''; $('btn-load').style.display = data.canLoad ? '' : 'none'; }
-    if (name === 'dead') $('btn-dead-load').style.display = data.canLoad ? '' : 'none';
+    if (name === 'dead') { $('btn-dead-load').style.display = data.canLoad ? '' : 'none'; if ('deathLine' in data) $('dead-stats').textContent = data.deathLine ?? ''; }
     if (name === 'complete') { this.survey(!!data.survey, data.survey?.answers, data.survey?.note);
       const s = data.stats, t = s.total;
       $('stat-rows').innerHTML = [['Kills', `${s.kills} / ${t.enemies}`], ['Items', `${s.items} / ${t.items}`], ['Secrets', `${s.secrets} / ${t.secrets}`], ...(s.innocents ? [['Innocents harmed', String(s.innocents)]] : []), ['Time', `${fmtTime(s.time)}${data.par ? '  (par ' + fmtTime(data.par) + ')' : ''}`], ['Damage taken', String(s.damageTaken)], ['Difficulty', DIFFICULTY[data.difficulty].name]].map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
+      $('run-card').innerHTML = data.runCard ?? '';                                                            // PT-077: this attempt from the stats database (stats/page.js builds and escapes it)
       $('rank-line').innerHTML = `<span class="rank r-${data.rank}">${data.rank}</span><span>score ${data.score.toFixed(2)} · ${data.gain > 0 ? '+' + data.gain + ' salvage' : 'no new salvage'}${data.record && data.record.rank !== data.rank ? ' · best ' + data.record.rank : ''}</span>`;
       this.locker(data.progress, data.lockerNote ?? '', data.mods ?? []);
       $('complete-title').textContent = data.mapName + ' cleared'; $('complete-outro').textContent = data.outro || ''; $('complete-end').textContent = data.hasNext ? '' : data.campaignEnd ? 'The Gate is open. Campaign Two is not built yet.' : 'This is the end of the levels built so far.'; $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title'; $('btn-title').style.display = data.hasNext ? '' : 'none';
@@ -144,7 +148,15 @@ export class UI {
     if (name === 'record') this.recordOpen(data.view, data.counts, data.current, data.scenes ?? []);
     if (name === 'journal') this.journalOpen(data);
     if (name === 'credits') this.creditsOpen();
+    if (name === 'stats') this.statsOpen(data);
   }
+  /** PT-077, YOUR STATS: `html` is stats/page.js statsHtml (escaped there); `scope` 'pt' | 'life'; `hasPt` = there is a playthrough to show; `canImport` only on the title (no level in hand) */
+  statsOpen({ html, scope, hasPt, status, note = '', canImport }) {
+    $('btn-stats-pt').classList.toggle('on', scope === 'pt'); $('btn-stats-life').classList.toggle('on', scope !== 'pt'); $('btn-stats-pt').disabled = !hasPt;
+    $('stats-body').innerHTML = html; $('stats-body').scrollTop = 0; $('btn-stats-import').style.display = canImport ? '' : 'none';
+    this.statsStatus(status, note); $('btn-stats-close').focus?.();
+  }
+  statsStatus(status, note) { $('stats-status').textContent = status ?? ''; if (note != null) $('stats-note').textContent = note; }
   /** PT-071 R25: the credits roll (credits.js): every line is given its height here, so the roll's height is the sum credits.js computes and no measuring is needed */
   creditsOpen() {
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -188,13 +200,14 @@ export class UI {
     $('cine-fade').style.opacity = String(v.fade ?? 0);
   }
   /** the whole campaign at a glance (ending.js tally): a row per episode with a disc per map, the totals, and what comes next */
-  endingTally(t, e) {
+  endingTally(t, e, story = []) {
     $('screen-ending').classList.add('is-tally'); $('ending-tally').classList.remove('hidden'); this.shownAt = performance.now();        // (a held key cannot skip it)
     $('tally-title').textContent = `${e.kicker.replace(/^End of /, '')} · ${e.name}`; $('tally-sub').textContent = `${t.cleared} of ${t.total} maps finished`;
     $('tally-eps').innerHTML = t.episodes.map((ep) => `<div class="ep"><b>${escHtml(ep.title)}</b><span class="discs">${ep.maps.map((m) => `<i class="disc${m.rank ? ' r-' + escHtml(m.rank) : ''}" title="${escHtml(m.name)}">${escHtml(m.rank ?? '·')}</i>`).join('')}</span><span class="sec${ep.secretMapsFound ? ' found' : ''}">${ep.secretMaps ? (ep.secretMapsFound ? 'secret found' : 'secret unfound') : ''}</span></div>`).join('');
     const ranks = ['S', 'A', 'B', 'C'].map((r) => `${r} ${t.ranks[r]}`).join(' · ');
     $('tally-totals').innerHTML = [['Ranks', ranks], ['Kills', String(t.kills)], ['Secrets found', String(t.secrets)], ['Secret maps', `${t.secretMapsFound} / ${t.secretMaps}`], ['Time', fmtLong(t.time)], ['Salvage in hand', String(t.salvage)]].map(([k, v]) => `<div><b>${escHtml(k)}</b><span>${escHtml(v)}</span></div>`).join('');
     $('tally-note').textContent = 'The best you have done on each map. The time is the sum of each map\'s fastest finish, not one sitting.';
+    $('tally-story').innerHTML = story.length ? `<small>YOUR PLAYTHROUGH, FROM YOUR STATS</small>${story.map((l) => `<p>${escHtml(l)}</p>`).join('')}` : '';          // PT-077: report.js story(), every line a fact from the stats database
     $('tally-next').innerHTML = `<small>${escHtml(e.next.kicker)}</small><strong>${escHtml(e.next.name)}</strong><em>${escHtml(e.next.line)}</em>`;
   }
   /** the Locker on the intermission: one row per upgrade track (the next tier, what it gives, what it costs) and the salvage in hand. Buying is the shell's job (h.buyUpgrade). */

@@ -39,6 +39,9 @@ export function installTestHook(app) {
     ready: true,
     routes: Object.keys(ROUTES),
     state: snap,
+    /** PT-077: what the stats database has recorded (tools/dev/probe-stats.mjs): ready, saved, the open run, and the overview for this playthrough (or 'life') */
+    statsProbe(scope = 'pt') { const S = g.stats; if (!S) return { ready: false, note: g.statsNote }; const pt = g.progress.statsPt ?? null, m = S.rundown(scope === 'life' ? null : pt); return { ready: true, off: g.statsOff, note: g.statsNote, status: S.status, saved: S.saved, persistent: !!S.store, runId: S.runId, lastRun: g.statsLastRun, pt, overview: m.overview, guns: m.guns, hurt: m.hurt, kills: m.killsByCreature }; },
+    statsSave: () => g.stats?.save() ?? false, openStats: (from) => app.openStats(from), closeStats: () => app.closeStats(), statsScope: (s) => ui.h.statsScope(s), quitToTitle: () => app.quitToTitle(),
     governorProbe: () => ({ width: g.governor.width, base: g.governor.base, rung: g.governor.rung, p95: g.governor.p95, samples: g.governor.samples.length }),      // PT-071 R21: what the quality governor has decided (tools/dev/probe-quality.mjs)
     drainEvents() { const e = g.events; g.events = []; return e; },
     // -- semantic actions (same path as the keyboard) --

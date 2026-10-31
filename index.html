@@ -15,7 +15,7 @@ canvas{display:block;width:100vw;height:100vh}
 #cross[data-style=circle]{--tick:0px;--sp:max(3.5px,calc(.5vh*var(--k)));background:none;border:max(1px,calc(.14vh*var(--k))) solid var(--c);border-radius:50%}
 body:not([data-screen=""]) #cross{display:none}
 /* round 1 (Gemini, Grok, Codex: the Journal and the end-of-map panel showed the live message strip, pickup lines and the last pickup card through their dim): a full-panel screen owns the picture; what was said is in the Journal's Log, what was picked up is in its Items. Pause keeps them (a menu over the game). */
-body:is([data-screen=journal],[data-screen=complete],[data-screen=dead],[data-screen=record],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
+body:is([data-screen=journal],[data-screen=complete],[data-screen=dead],[data-screen=record],[data-screen=stats],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
 body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,calc(.3vh*var(--k)));--dot:calc(var(--th)*1.3)}
 body[data-stance=sprint] #cross{opacity:0}
 body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
@@ -163,7 +163,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 button.buy{display:inline-block;width:auto;margin:0 0 0 8px;padding:3px 14px;font:12px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-align:center;border:1px solid var(--bronze);color:var(--bronze)}
 button.buy:hover,button.buy:focus-visible{padding-left:14px;border-color:var(--teal)}
 button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:var(--paper);background:none}
-@media (max-width:860px){#screen-complete .panel{grid-template-columns:1fr}#rank-line,#screen-complete #stat-rows,#locker-box{grid-column:1;grid-row:auto}}
+@media (max-width:860px){#screen-complete .panel{grid-template-columns:1fr}#rank-line,#screen-complete #stat-rows,#locker-box,#run-card{grid-column:1;grid-row:auto}}
 @media (max-width:760px){#locker{grid-template-columns:1fr}#screen-title{padding-left:6vw}}
 /* ---- the end of a campaign (PT-036: "we need a real ending beat"). The Gate's picture, one line of the epilogue at a time typed over it, then the tally of the whole campaign. */
 #screen-ending{background:#05060a;align-items:flex-end;overflow:hidden;cursor:pointer}
@@ -198,6 +198,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #tally-eps .sec{font:11px ui-monospace,Consolas,monospace;letter-spacing:.14em;color:#8fa4a0;text-align:right;text-transform:uppercase}#tally-eps .sec.found{color:var(--teal)}
 #tally-totals{width:min(780px,92vw);margin-top:16px;display:grid;grid-template-columns:1fr 1fr;column-gap:36px}
 #tally-note{color:#7f9490;font-size:11px;letter-spacing:.08em;margin:6px 0 0;width:min(780px,92vw)}
+#tally-story{width:min(780px,92vw);margin:14px 0 0;border-left:3px solid var(--teal);padding-left:12px}#tally-story:empty{display:none}#tally-story small{display:block;letter-spacing:.3em;font-size:10px;color:var(--teal);margin-bottom:4px}#tally-story p{margin:3px 0;font:15px/1.4 var(--serif);color:#e4dfcd}
 #tally-next{margin:22px 0 6px;text-align:center}#tally-next small{display:block;letter-spacing:.5em;font-size:11px;text-transform:uppercase;color:var(--teal)}
 #tally-next strong{display:block;font:400 clamp(22px,2.8vw,34px) var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--paper);margin:6px 0 2px}#tally-next em{color:#c4d0cc;font:italic 15px var(--serif)}
 #ending-tally button{width:auto;min-width:260px;text-align:center;border:1px solid var(--brass);margin-top:10px}
@@ -216,6 +217,18 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #record-list h3.cur{color:var(--teal)}
 #record-empty{color:#8fa4a0;font:italic 16px var(--serif);margin:30px 0}
 #screen-record button{margin-top:6px}
+/* PT-077: YOUR STATS (src/game/stats): what the stats database has recorded, This playthrough or Lifetime. Tables scroll inside their own box, never the page. */
+#screen-stats .panel{width:min(880px,94vw);height:min(90vh,920px);display:flex;flex-direction:column;overflow:hidden}
+#stats-bar{display:flex;gap:8px;margin:-4px 0 10px}#stats-bar button{width:auto;flex:none;margin:0;padding:6px 14px}#stats-bar button.on{background:var(--brass);color:#07080c}
+#stats-body{flex:1;overflow-y:auto;padding-right:10px;min-height:0}
+.st-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin:0 0 14px}.st-tiles div{border:1px solid #2b3a3f;background:#10161a;padding:8px 10px}.st-tiles b{display:block;font:400 24px/1.1 var(--serif);color:var(--paper);font-variant-numeric:tabular-nums}.st-tiles small{color:#8fa4a0;font-size:11px;letter-spacing:.08em}
+.st-story{border-left:3px solid var(--teal);padding:2px 0 2px 12px;margin:0 0 8px}.st-story p{margin:4px 0;font:16px/1.45 var(--serif);color:#e4dfcd}
+.st-sec h3{margin:20px 0 6px;font:400 15px var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid #26333a;padding-bottom:4px}.st-sec h4{margin:12px 0 4px;font-weight:400;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal)}
+.st-help{color:#8fa4a0;font-size:12px;line-height:1.45;margin:0 0 6px}.st-none{color:#8fa4a0;font:italic 15px var(--serif);margin:8px 0}
+.st-wrap{overflow-x:auto}table.st{border-collapse:collapse;width:100%;font-size:13px;color:#c4d4d0}table.st th{text-align:left;font-weight:400;color:#7f9490;font-size:11px;letter-spacing:.1em;border-bottom:1px solid #26333a;padding:4px 8px 4px 0}table.st td{border-bottom:1px solid #1d272b;padding:4px 8px 4px 0}table.st .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+#stats-status{font-size:12px;margin:8px 0 0}#screen-stats .row button{margin:6px 0 0}#screen-stats #btn-stats-close{margin-top:6px}
+#run-card{grid-column:1;grid-row:4;margin-top:12px}#run-card h3{margin:0 0 4px;font:400 13px var(--serif);letter-spacing:.24em;color:var(--bronze)}#run-card .rows div{font-size:13px}
+#dead-stats{font-size:13px;color:#c4b4ac;margin:-14px 0 22px}
 /* PT-063 (R13): the story scenes. Letterbox bars, a subtitle, a fade to black; the HUD, the toasts and the minimap are gone while one plays. */
 #cine{position:fixed;inset:0;z-index:45;pointer-events:none}
 #cine-top,#cine-bottom{position:absolute;left:0;right:0;height:10.5vh;background:#000}
@@ -268,9 +281,10 @@ body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
     <div class="row"><button id="btn-easy">Easy</button><button id="btn-normal">Normal</button><button id="btn-hard">Hard</button></div>
     <div id="difficulty-note" class="sub" aria-live="polite"></div>
     <button id="btn-record-title">The Record</button>
+    <button id="btn-stats-title">Your stats</button>
     <button id="btn-credits-title">Credits</button>
     <details id="testers-box"><summary>For testers</summary><p>This is a release candidate, and nobody outside its maker has played it end to end: the numbers are first guesses and you are the first real test of them. Play a few maps on a difficulty you are comfortable with; why you stopped is the most useful thing you can tell us.</p><p>Settings has an opt-in <b>play log</b> kept on this device only (which maps, how each ended, how long, damage taken, how smoothly it ran, and five optional answers after each map). Nothing is sent: when you are done press <b>Export play log</b> and send the file to whoever gave you this link. A crash shows a Copy button: paste what it copies.</p></details>
-    <details id="credits-box"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>It draws its 3D with three.js, the one piece of outside software inside it:</p><pre>The MIT License
+    <details id="credits-box"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>Two pieces of outside software are inside it. It draws its 3D with three.js:</p><pre>The MIT License
 
 Copyright © 2010-2026 three.js authors
 
@@ -290,7 +304,28 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</pre></div></details>
+THE SOFTWARE.</pre><p>It keeps your stats with sql.js (SQLite, which is in the public domain, compiled for the browser):</p><pre>MIT license
+===========
+
+Copyright (c) 2017 sql.js authors (see AUTHORS)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre></div></details>
     <div class="legend" id="legend-title"></div>
     <div class="note" id="title-note"></div>
     <div id="dev-levels" class="hidden" style="margin-top:12px;font-size:12px;opacity:.85">DEV level picker (not in the shipped game): <select id="dev-map"></select> <select id="dev-diff"><option>easy</option><option selected>normal</option><option>hard</option></select> salvage <input id="dev-salvage" type="number" min="0" max="999" value="0" style="width:56px"> <button id="dev-go" style="width:auto;min-width:72px">Play</button></div>
@@ -303,7 +338,8 @@ THE SOFTWARE.</pre></div></details>
     <button id="btn-resume">Resume</button>
     <div class="row"><button id="btn-save">Quick save</button><button id="btn-load">Quick load</button></div>
     <button id="btn-record">The Record</button>
-    <details id="credits-box-pause"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>It draws its 3D with three.js, the one piece of outside software inside it:</p><pre>The MIT License
+    <button id="btn-stats">Your stats</button>
+    <details id="credits-box-pause"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>Two pieces of outside software are inside it. It draws its 3D with three.js:</p><pre>The MIT License
 
 Copyright © 2010-2026 three.js authors
 
@@ -323,7 +359,28 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</pre></div></details>
+THE SOFTWARE.</pre><p>It keeps your stats with sql.js (SQLite, which is in the public domain, compiled for the browser):</p><pre>MIT license
+===========
+
+Copyright (c) 2017 sql.js authors (see AUTHORS)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre></div></details>
     <details id="settings-box"><summary>Settings</summary>
     <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"></label>
     <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
@@ -376,20 +433,32 @@ THE SOFTWARE.</pre></div></details>
   </div>
 </div>
 
+<div id="screen-stats" class="screen hidden">
+  <div class="panel">
+    <h2>YOUR STATS</h2>
+    <div id="stats-bar"><button id="btn-stats-pt" class="on">This playthrough</button><button id="btn-stats-life">Lifetime</button></div>
+    <div id="stats-body"></div>
+    <div class="sub" id="stats-status"></div>
+    <div class="row"><button id="btn-stats-export">Export stats file</button><button id="btn-stats-import">Import a stats file (replaces these)</button></div><input id="stats-file" type="file" accept=".sqlite,.db" class="hidden">
+    <div class="note" id="stats-note"></div>
+    <button id="btn-stats-close">Back</button>
+  </div>
+</div>
+
 <div id="screen-dead" class="screen hidden">
-  <div class="panel"><h2>YOU DIED</h2><div class="sub">The Hush takes another note.</div>
+  <div class="panel"><h2>YOU DIED</h2><div class="sub">The Hush takes another note.</div><div id="dead-stats"></div>
     <button id="btn-retry">Retry level (Enter)</button><button id="btn-dead-load">Load quick save</button></div>
 </div>
 
 <div id="screen-complete" class="screen hidden">
-  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><div id="survey" class="hidden"><h3>FIVE QUICK QUESTIONS (optional)</h3><div id="survey-rows"></div><input id="survey-note" maxlength="200" placeholder="Anything else about this map? (optional)"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
+  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="run-card"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><div id="survey" class="hidden"><h3>FIVE QUICK QUESTIONS (optional)</h3><div id="survey-rows"></div><input id="survey-note" maxlength="200" placeholder="Anything else about this map? (optional)"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
 </div>
 
 <div id="screen-ending" class="screen hidden">
   <img id="ending-art" alt="">
   <div id="ending-head"><small id="ending-kicker"></small><h1 id="ending-title"></h1></div>
   <div id="ending-card"><b id="ending-who"></b><p id="ending-text"></p></div>
-  <div id="ending-tally" class="hidden"><h2 id="tally-title"></h2><div class="sub" id="tally-sub"></div><div id="tally-eps"></div><div id="tally-totals" class="rows"></div><div id="tally-note"></div><div id="tally-next"></div><button id="btn-ending">Continue</button></div>
+  <div id="ending-tally" class="hidden"><h2 id="tally-title"></h2><div class="sub" id="tally-sub"></div><div id="tally-eps"></div><div id="tally-totals" class="rows"></div><div id="tally-note"></div><div id="tally-story"></div><div id="tally-next"></div><button id="btn-ending">Continue</button></div>
   <div id="ending-hint">Enter to go on · Esc to skip</div>
 </div>
 <div id="screen-credits" class="screen hidden"><div id="credits-roll"></div><div id="credits-hint">Esc, Enter or a click goes back</div></div>

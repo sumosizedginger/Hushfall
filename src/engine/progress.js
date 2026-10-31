@@ -57,6 +57,7 @@ export function sanitizeProgress(p) {
     for (const [id, v] of Object.entries(p.choices)) if (/^[a-z0-9-]{1,24}$/.test(id) && typeof v === 'string' && /^[a-z0-9-]{1,24}$/.test(v)) ch[id] = v;
     if (Object.keys(ch).length) out.choices = ch;
   }
+  if (Number.isSafeInteger(p.statsPt) && p.statsPt > 0) out.statsPt = p.statsPt;          // PT-077: which playthrough of the stats database this run belongs to (a row id there). Lazy: absent in a save made before the stats.
   if (Array.isArray(p.cinematicsSeen)) {                                                 // PT-063 (R13, the story cinematics): the ids of the scenes a player has watched (a scene plays once by default; the Record replays one). Lazy: absent until the first scene.
     const seen = [...new Set(p.cinematicsSeen.filter((x) => typeof x === 'string' && /^[a-z0-9-]{2,32}$/.test(x)))].slice(0, 40);
     if (seen.length) out.cinematicsSeen = seen;

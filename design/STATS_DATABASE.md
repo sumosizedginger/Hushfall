@@ -1,8 +1,41 @@
 # Your Run, in Numbers: a stats database for Hushfall
 
-A plan, written for someone learning SQL. Nothing here is built yet.
+A plan, written for someone learning SQL. **BUILT on 2026-10-31 (PT-077): section 0 says what was built and where it differs from the plan.**
 - Version 1 (2026-10-31): the first plan.
 - **Version 2 (2026-10-31): revised after an outside review** (the owner's SQL tutor read version 1 against the GitHub copy of the game). Section 9 lists what the review changed and the one place this plan answers it differently. Every query in this file was run against a small sample database in Node's built-in SQLite before it was written here.
+
+## 0. AS BUILT (PT-077, 2026-10-31)
+
+All three milestones are built: the recording (STATS-001), the screens (STATS-002) and the export, import, records and story (STATS-003). Nobody has played it yet.
+
+**Where it lives** (`src/game/stats/`, all plain JavaScript, no game code inside):
+
+| File | What it does |
+|--|--|
+| `schema.js` | the blueprint as SQL (`MIGRATIONS[1]`), the list of hazards, and the reference rows built from the game's own data (every level, weapon, creature and hazard) |
+| `statsdb.js` | a thin wrapper round one sql.js database: foreign keys on, migrations, transactions, the writes, export, and `check()` for Import |
+| `recorder.js` | listens to the simulation's events and writes rows (it never touches the game) |
+| `report.js` | every question the screens ask, as SQL (`Q`), and the story built from the answers |
+| `service.js` | what the game holds: the database, the recorder, saving (two steps), Export and Import |
+| `boot.js` | the browser half: loads sql.js and its WebAssembly file, and the IndexedDB store |
+| `page.js` | the answers as the stats screen, the card after a level and the line on the death screen |
+
+The game shell (`src/game/main.js`) tells the recorder when a level starts, hands it every tick's events, and ends the attempt on a finish, a death, a restart, a load, a quit or a closed tab. The engine changes are the ones section 7 asked for (a source on every hurt, attack numbers, a `dmg` event); 132 recorded route runs played identically before and after them.
+
+**Where the screens are:** the title and the pause menu have **Your stats** (two tabs: This playthrough, Lifetime; Export and, on the title, Import). The level-end screen has **This level, from your stats**. The death screen says who killed you, after how long, and which death on that level it was. The end of a campaign tells your playthrough as a short story.
+
+**Where it differs from version 2 of the plan, and why:**
+1. `weapon_use.damage` was added (a column) so the weapons table can show damage per gun. `hits_taken.amount` is REAL, not INTEGER: Hard multiplies damage, so a hit can be 8.75.
+2. `sources` has a `peaceful` column (the Vael civilians: killing one is counted as harming an innocent, never as a kill) and a fourth type, `unknown`, with one row `other:unknown` ("Something unseen"). A test reads the engine's code for every source name it can use and fails if one is missing from this table, so nothing lands there by accident.
+3. A creature the Sexton raises and you kill again is TWO kills in the stats (you did kill it twice); the level's own tally takes one back. The screen says so.
+4. The chainsaw's cut and the tuning-fork's throws are not counted as attacks (they are not one shot or one swing); their damage and kills are.
+5. Gun tallies are written on every save as well as at the end of an attempt (this answers question 3 of section 10). The stats are saved when an attempt ends, when you pause, on a quick save, every two minutes of play, and when the tab closes.
+6. If the saved stats cannot be read at start (damaged, or made by a newer version), that session keeps its stats in memory only and never writes over the file.
+7. Import REPLACES the stats (it does not merge), only from the title, and refuses a file that fails `integrity_check` or `foreign_key_check`, an empty SQLite file, or anything that is not a Hushfall stats file.
+8. "Where you died" is shown in words ("35 m north-east of the start"), not as a drawn map.
+9. The level picker of the developer build starts a new playthrough each time; the dev ranges are not recorded.
+
+**How it was checked:** `tests/stats.test.js` (12 tests: the rules refuse bad rows; three real levels played by the bot agree with the game's own kills, damage taken and shots; a death names its killer; the reload rule; a pellet spread is one attack; every engine source is known; recording changes nothing in the game; saving keeps the last good copy; a newer or damaged file is never overwritten; Import refuses junk; the pages show every table). `tools/dev/probe-stats.mjs` does the same in a real browser page (sql.js's WebAssembly and IndexedDB, including a reload). The licence test now expects sql.js (MIT) as the second thing that ships, and its notice is in Credits and licences.
 
 ## 1. What we are making
 

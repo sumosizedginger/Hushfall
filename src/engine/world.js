@@ -206,15 +206,18 @@ export const forwardVec = (p) => [-DM.sin(p.yaw) * DM.cos(p.pitch), DM.sin(p.pit
 /** PT-033: a body in a region of vacuum takes VACUUM.dps a second (the difficulty scales it, as a toxic bed's); `p.vac` is lazy state that only a map with vacuum has */
 function vacuumStep(w, dt, diff) {
   const p = w.player, on = inVacuum(w, p.x, p.z);
-  if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; p.vacAcc = (p.vacAcc || 0) + VACUUM.dps * VACUUM.tick * diff.enemyDamage; const whole = Math.floor(p.vacAcc); p.vacAcc -= whole; hurtPlayer(w, whole); } } else p.vacT = 0;          // fractions carry over: Easy and Hard feel it too
+  if (on) { p.vacT = (p.vacT || 0) + dt; if (p.vacT >= VACUUM.tick) { p.vacT -= VACUUM.tick; p.vacAcc = (p.vacAcc || 0) + VACUUM.dps * VACUUM.tick * diff.enemyDamage; const whole = Math.floor(p.vacAcc); p.vacAcc -= whole; hurtPlayer(w, whole, null, 'hazard:vacuum'); } } else p.vacT = 0;          // fractions carry over: Easy and Hard feel it too
   if (on !== !!p.vac) { p.vac = on; emit(w, on ? 'vacuum_enter' : 'vacuum_leave', {}); }
 }
-/** `from` (optional) = where the blow came from, { x, z } in metres: it rides on the `hurt` event as fx / fz so the view can point at it (look polish 10). Event payload only: the sim's state is the same. */
-function hurtPlayer(w, dmg, from = null) {
+/** `from` (optional) = where the blow came from, { x, z } in metres: it rides on the `hurt` event as fx / fz so the view can point at it (look polish 10). Event payload only: the sim's state is the same.
+ *  `src` (PT-077, the stats database) = WHO or WHAT did it, a `sources` id: 'enemy:<kind>', 'hazard:<name>', 'self:own_blast'; when it is not given it comes from `from` (a creature, or a shot or ring that carries its shooter's `src`). Also payload only, with the hit points left. */
+const FX_SRC = { x: 'hazard:toxic', h: 'hazard:embers', s: 'hazard:spores', p: 'enemy:weeping' };          // PT-077: a floor that hurts, as a source of the stats (the pool is the Weeping Mother's tear)
+const srcOf = (from) => (from?.kind && ENEMIES[from.kind] ? 'enemy:' + from.kind : typeof from?.src === 'string' ? from.src : 'other:unknown');
+function hurtPlayer(w, dmg, from = null, src = null) {
   const p = w.player; if (p.hp <= 0 || dmg <= 0) return;
   const absorbed = Math.min(p.armor, Math.floor(dmg * PLAYER.armorAbsorb));
   p.armor -= absorbed; const real = dmg - absorbed; p.hp -= real; p.hurt = 1; w.stats.damageTaken += real;
-  emit(w, 'hurt', from ? { amount: real, fx: from.x, fz: from.z } : { amount: real });
+  emit(w, 'hurt', from ? { amount: real, fx: from.x, fz: from.z, src: src ?? srcOf(from), hp: p.hp } : { amount: real, src: src ?? 'other:unknown', hp: p.hp });
 }
 
 /** how far a creature notices the player (PT-038, E5): its own range, except in a dark place, where it is `sightDark` unless the player is lit; the Hush-driven kinds ignore the light */
@@ -304,16 +307,19 @@ export function damageEnemy(w, e, dmg, opts = {}) {
   if (opts.load) { const Q = opts.load; if (Q.plate && def.armor && (plated || opts.pierceArmor)) dmg *= Q.plate; if (Q.nodeMult && def.node) dmg *= Q.nodeMult; }          // PT-056: a load's own effect on the blow
   if (e.brittle && !opts.burn) { if (e.brittleTick == null) e.brittleTick = w.tick; if (e.brittleTick === w.tick) dmg *= e.brittle; else { e.brittle = 0; e.brittleTick = null; } }          // PT-056: a chilled creature takes the next BLOW harder, once (every pellet of that volley: they land on one tick)                                     // PT-043: the Root Bell's heart is open in the Last Note
   if ((e.channelT ?? -1) >= 0 && dmg > 0 && !opts.burn) { e.channelT = -1; e.supCd = Math.max(e.supCd || 0, 1.8); }      // hurting a channelling Sexton breaks the rite, and it needs a moment to start again
+  const wasAlive = e.state !== 'dead';
   e.hp -= dmg; e.flash = 1; if (e.hold) e.hurtT = 0;
+  const by = opts.by, dealt = by && wasAlive && dmg > 0 ? { id: e.id, kind: e.kind, weapon: by.weapon ?? null, atk: by.atk ?? null, amount: Math.round(dmg * 100) / 100 } : null;          // PT-077 (the stats database): the player's blow, by gun and by attack number (event payload only)
   if (def.peaceful && e.hp > 0) frighten(w, e, w.player.x, w.player.z);                                  // PT-037: hurt, it runs (from the one who did it)
   if (e.state === 'idle' && e.hp > 0 && !def.node) wakeEnemy(w, e, !opts.burn, !!opts.burn);                    // being shot wakes you, whether or not you can see the shooter (a creature set alight wakes alone: it does not call its neighbours, the burst that lit it already made its noise)
   if (e.hp <= 0 && e.state !== 'dead') {
     e.state = 'dead'; e.attackT = -1; e.lungeT = -1; e.chargeT = -1; e.channelT = -1;
-    if (def.peaceful) { w.stats.innocents = (w.stats.innocents ?? 0) + 1; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, folk: true }); emit(w, 'innocent', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }          // PT-037: an innocent is not a kill, and leaves nothing
-    w.stats.kills++; emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z }); maybeDrop(w, e);
+    if (def.peaceful) { w.stats.innocents = (w.stats.innocents ?? 0) + 1; if (dealt) emit(w, 'dmg', { ...dealt, killed: true }); emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, folk: true, weapon: by?.weapon ?? null }); emit(w, 'innocent', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }          // PT-037: an innocent is not a kill, and leaves nothing
+    w.stats.kills++; if (dealt) emit(w, 'dmg', { ...dealt, killed: true }); emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, weapon: by?.weapon ?? null }); maybeDrop(w, e);
     if (def.node) { emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z }); for (const c of w.enemies) if (!def.spawner && ENEMIES[c.kind].boss && (ENEMIES[c.kind].shield || ENEMIES[c.kind].echoReeds) && c.state !== 'dead') { c.stunT = ENEMIES[c.kind].stagger ?? 2; c.pulseT = -1; c.pulseCd = Math.max(c.pulseCd, 2.5); } }
     return true;
   }
+  if (dealt) emit(w, 'dmg', { ...dealt, killed: false });
   return false;
 }
 
@@ -401,7 +407,7 @@ function updateSpores(w) {
   });
 }
 
-function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
+function explode(w, x, y, z, ownerIsPlayer, def, struck = null, by = null) {
   emit(w, 'explode', { x, y, z, r: def.splash }); noise(w, x, z, NOISE.explosion);
   if (def.burn) ignite(w, x, y, z, def.burn);
   for (const e of w.enemies) {
@@ -409,7 +415,7 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
     const ed = ENEMIES[e.kind], base = e.y + (e.lift ?? (ed.hover ?? 0) * (1 - Math.min(1, e.dead ?? 0))), lo = ed.hover || e.lift != null ? 0.3 : 1.0, body = ed.height, d = Math.hypot(x - e.x, y - (base + Math.min(Math.max(y - base, lo), Math.max(lo, body - 1.0))), z - e.z);      // measured from the blast's own height on the body (1 m up, or higher on a tall one): a flare on the Cantor's head is not 3 m from it
     if (d < def.splash) {
       let dmg = def.splashDamage * (1 - d / def.splash) + def.direct; if (e === struck && def.directHit) dmg += def.directHit; if (ed.node && def.nodeMult) dmg *= def.nodeMult;       // PT-022: the rocket's direct hit, and a bell node takes the blast twice over
-      const killed = damageEnemy(w, e, dmg, def.load ? { splash: true, load: AMMO_LOADS[def.load] } : { splash: true });
+      const killed = damageEnemy(w, e, dmg, def.load ? { splash: true, load: AMMO_LOADS[def.load], by } : { splash: true, by });
       if (def.load && !killed) loadHitEffect(w, e, def.load);
       const k = (def.knock ?? 0.8) * (1 - d / def.splash), nx = (e.x - x) / (d || 1), nz = (e.z - z) / (d || 1); tryMove(w, e, nx * k, nz * k, ENEMIES[e.kind].radius);
       if (!killed) emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z });
@@ -417,7 +423,7 @@ function explode(w, x, y, z, ownerIsPlayer, def, struck = null) {
   }
   if (w.phys) blastProps(w, x, y, z, def);
   const p = w.player, d = Math.hypot(x - p.x, y - (p.y + PLAYER.eye), z - p.z);
-  if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))), { x, z });
+  if (ownerIsPlayer && d < def.splash * 0.65) hurtPlayer(w, Math.round(def.splashDamage * def.selfDamage * (1 - d / (def.splash * 0.65))), { x, z }, 'self:own_blast');
 }
 
 // ---------------------------------------------------------------- weapons
@@ -440,7 +446,7 @@ function fireHitscan(w, def, cone) {
       const fall = dist <= def.falloffStart ? 1 : 1 - (1 - def.falloffMin) * Math.min(1, (dist - def.falloffStart) / (def.range - def.falloffStart));
       let mult = first ? 1 : AMMO_LOADS[def.load].throughMult;
       if (def.head && !ENEMIES[target.kind].node) { const c = hitCylinder(target); if (y >= c.y0 + (c.y1 - c.y0) * def.head.from) mult = def.head.mult; }       // PT-022, the carbine: a round in the top of the body
-      const killed = damageEnemy(w, target, def.damage * fall * mult, def.load ? { load: AMMO_LOADS[def.load] } : undefined);
+      const killed = damageEnemy(w, target, def.damage * fall * mult, def.load ? { load: AMMO_LOADS[def.load], by: { weapon: p.weapon, atk: p.atk } } : { by: { weapon: p.weapon, atk: p.atk } });
       if (mult > 1) { heads.add(target); emit(w, 'headshot', { id: target.id, x: target.x, y, z: target.z, killed }); }
       if (!killed) hits.set(target.id, target);
       const k = push.get(target.id) || { e: target, x: 0, z: 0 }; k.x += f[0] * def.knock * fall; k.z += f[2] * def.knock * fall; push.set(target.id, k);      // applied after the volley: pellets are simultaneous
@@ -470,7 +476,7 @@ function fireBolt(w, def, cone) {
   const survivors = [];
   hit.forEach((e, i) => {
     const mult = i === 0 ? 1 : def.pierceDamage;
-    if (!damageEnemy(w, e, def.damage * mult, def.load ? { pierceArmor: def.pierceArmor, load: AMMO_LOADS[def.load] } : { pierceArmor: def.pierceArmor })) survivors.push(e);
+    if (!damageEnemy(w, e, def.damage * mult, def.load ? { pierceArmor: def.pierceArmor, load: AMMO_LOADS[def.load], by: { weapon: p.weapon, atk: p.atk } } : { pierceArmor: def.pierceArmor, by: { weapon: p.weapon, atk: p.atk } })) survivors.push(e);
     tryMove(w, e, f[0] * def.knock * mult, f[2] * def.knock * mult, ENEMIES[e.kind].radius);
   });
   if (stop) emit(w, 'impact', { x, y, z });
@@ -563,17 +569,20 @@ function fireArc(w, def, f = 0) {
     const ed = ENEMIES[e.kind]; let dmg = dmg0;
     if (ed.node) dmg *= V.nodeMult;
     if (V.kinds.includes(e.kind)) e.stunT = Math.max(e.stunT || 0, V.stun);
-    if (!damageEnemy(w, e, dmg)) { hitEffects(w, e, def.hit); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
+    if (!damageEnemy(w, e, dmg, { by: { weapon: p.weapon, atk: p.atk } })) { hitEffects(w, e, def.hit); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
   }
 }
 
 // ---- melee (PT-013) ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /** the numbers of a swing by its name: 'bash' (key V), 'jab' / 'heavy' (the fists) or a found weapon's id */
+/** PT-077: the weapon a swing is made with, for the stats (the fists' jab and heavy are the fists, the quick bash is the bash) */
+export const swingWeapon = (k) => (k === 'jab' || k === 'heavy' ? 'fists' : k);
 const swingDef = (k) => (k === 'bash' ? BASH : k === 'jab' ? WEAPONS.fists.swing : k === 'heavy' ? WEAPONS.fists.charge.heavy : WEAPONS[k]?.swing);
 function startSwing(w, kind) {
   const p = w.player, S = swingDef(kind); if (!S || p.swingT >= 0) return false;
+  p.atk = (p.atk ?? 0) + 1; p.swingAtk = p.atk;          // PT-077: every swing is an attack with a number, like a shot
   p.swingT = 0; p.swingKind = kind; p.swingHit = false; p.cooldown = Math.max(p.cooldown, S.windup + S.recover); p.charge = 0; p.sprinting = false; p.recover = 0;      // a swing drops the sights and the sprint
-  emit(w, 'swing', { kind, heavy: kind === 'heavy' }); return true;
+  emit(w, 'swing', { kind, heavy: kind === 'heavy', atk: p.atk, weapon: swingWeapon(kind) }); return true;
 }
 function updateSwing(w, dt) {
   const p = w.player; if (p.swingT < 0) return;
@@ -601,7 +610,7 @@ function resolveSwing(w, S) {
     if (ripo) dmg *= GUARD.riposteMult;
     if (S.backstab) { const tx = p.x - e.x, tz = p.z - e.z, tl = Math.hypot(tx, tz) || 1; if (e.state === 'idle' || (DM.sin(e.yaw) * tx + DM.cos(e.yaw) * tz) / tl < -0.2) dmg *= S.backstab; }      // asleep, or turned away
     landed = true;
-    const killed = damageEnemy(w, e, dmg, { melee: true, pierceArmor: !!S.ignorePlate });
+    const killed = damageEnemy(w, e, dmg, { melee: true, pierceArmor: !!S.ignorePlate, by: { weapon: swingWeapon(p.swingKind), atk: p.swingAtk ?? null } });
     if (!killed) {
       if (S.knock) tryMove(w, e, ux * S.knock / poise, uz * S.knock / poise, def.radius);
       if (S.pull && poise < 3) { const pl = Math.min(S.pull, Math.max(0, d - (def.hitRadius ?? def.radius) - PLAYER.radius - 0.4)); if (pl > 0) tryMove(w, e, -ux * pl, -uz * pl, def.radius); }
@@ -641,7 +650,7 @@ function fireWeapon(w, charge = 0) {
   }
   if (ldId) { if (spendLoad(p, p.weapon, ldId)) emit(w, 'load_empty', { gun: p.weapon, load: ldId }); } else p.ammo[def.ammo] -= cost;
   const fdef = ldId ? loadedDef(def, p.weapon, ldId) : def;
-  p.cooldown = def.cooldown + cf * (def.charge?.recover ?? 0); p.kick = (def.kick ?? 0.06) * (1 + 6 * cf); w.stats.shots++;
+  p.cooldown = def.cooldown + cf * (def.charge?.recover ?? 0); p.kick = (def.kick ?? 0.06) * (1 + 6 * cf); w.stats.shots++; p.atk = (p.atk ?? 0) + 1;          // (PT-077: every shot has a number, carried by a flare or a rocket to where it lands)
   // accuracy: hip spread grows with movement; aiming tightens it. RNG draws happen in a fixed order so replays are deterministic.
   const moveFrac = Math.min(1, Math.hypot(p.vx, p.vz) / PLAYER.speed), sp = def.spread;
   const heat = p.heat || 0, cone = ((sp.hip * (1 + sp.moveFactor * moveFrac)) * (1 - p.ads) + sp.ads * p.ads) * (1 + heat * (def.heatCone || 0)) * (1 + SUPPRESS.cone * Math.min(1, (p.suppT || 0) / SUPPRESS.time));
@@ -651,16 +660,16 @@ function fireWeapon(w, charge = 0) {
   else if (def.designate) {                                                                                 // PT-027: the mortar throws the shell TO the point the crosshair rests on (the landing, not the aim, is what the unsteady hand scatters)
     const f = forwardVec(p), r = [DM.cos(p.yaw), 0, -DM.sin(p.yaw)], mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads), jitter = [(rand(w) * 2 - 1) * cone, (rand(w) * 2 - 1) * cone];
     const from = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight], s = mortarShot(w, p, def, f, from, jitter);
-    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: from[0], y: from[1], z: from[2], vx: s.vx, vy: s.vy, vz: s.vz, g: s.g, life: s.T + 1.5 });
+    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: from[0], y: from[1], z: from[2], vx: s.vx, vy: s.vy, vz: s.vz, g: s.g, life: s.T + 1.5, atk: p.atk });
   }
   else {
     const f = forwardVec({ yaw: p.yaw + (rand(w) * 2 - 1) * cone, pitch: p.pitch + (rand(w) * 2 - 1) * cone }), r = [DM.cos(p.yaw), 0, -DM.sin(p.yaw)];
     // the weapon is held right and low at the hip; at the sights it is centred, so the shot leaves along the crosshair
     const mRight = def.muzzle.right * (1 - p.ads), mDown = def.muzzle.down * (1 - 0.7 * p.ads);
     const pos = [p.x + f[0] * def.muzzle.fwd + r[0] * mRight, p.y + PLAYER.eye + f[1] * def.muzzle.fwd - mDown, p.z + f[2] * def.muzzle.fwd + r[2] * mRight];
-    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4, ...(ldId ? { load: ldId } : {}) });
+    w.projectiles.push({ id: w.nextId++, weapon: p.weapon, x: pos[0], y: pos[1], z: pos[2], vx: f[0] * def.speed, vy: f[1] * def.speed, vz: f[2] * def.speed, life: 4, atk: p.atk, ...(ldId ? { load: ldId } : {}) });
   }
-  emit(w, 'fire', { weapon: p.weapon, charge: cf, ...(ldId ? { load: ldId } : {}), ...(def.mod ? { mod: def.mod } : {}) }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));          // (a modded shot says which mod: the double barrel is heard twice)
+  emit(w, 'fire', { weapon: p.weapon, atk: p.atk, charge: cf, ...(ldId ? { load: ldId } : {}), ...(def.mod ? { mod: def.mod } : {}) }); noise(w, p.x, p.z, (NOISE[p.weapon] ?? 22) * (1 + 0.6 * cf));          // (a modded shot says which mod: the double barrel is heard twice)
   hidden(w, '_fireTick', w.tick);                                                                                          // PT-076: the creatures read it later in this same tick (a dodge); never saved, never hashed
 }
 /** PT-076: a Bellhand's call along the floor: the sleeping ordinary creatures within `r` m whose walk to it is at most 1.3 r (a shut door is not walked through), the nearest `most` of them; `wake` = wake them, else only count */
@@ -726,7 +735,7 @@ function fireEnemyShot(w, e, def, diff, inBurst = false) {
   let dx = p.x - ox, dy = p.y + R.aimHeight - oy, dz = p.z - oz; const len = Math.hypot(dx, dy, dz) || 1;       // aimed at where the player IS: a strafing player is not hit
   let vx = dx / len * R.speed, vy = dy / len * R.speed, vz = dz / len * R.speed;
   if (R.burst) { const j = R.burst.spread, a = (rand(w) * 2 - 1) * j, b = (rand(w) * 2 - 1) * j, c = DM.cos(a), sn = DM.sin(a); [vx, vz] = [vx * c - vz * sn, vx * sn + vz * c]; vy += b * R.speed; }          // a burst is a little off the line, shot by shot (the seeded RNG: deterministic)
-  w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx, vy, vz, life: 4, dmg: Math.round(R.damage * diff.enemyDamage), ...(R.suppress ? { sup: R.suppress.r } : {}) });
+  w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx, vy, vz, life: 4, dmg: Math.round(R.damage * diff.enemyDamage), src: 'enemy:' + e.kind, ...(R.suppress ? { sup: R.suppress.r } : {}) });
   emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z, burst: inBurst });
   if (R.burst && !inBurst) { e.burstLeft = R.burst.count - 1; e.burstT = R.burst.gap; }
 }
@@ -741,8 +750,8 @@ function updateEnemyShots(w, diff, dt) {
       if (q.y < floorAt(w, q.x, q.z) + 0.05 || q.y > ceilingAt(w, q.x, q.z) || cellSolid(w, Math.floor(q.x / map.cell), Math.floor(q.z / map.cell))) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       for (const pr of map.props) if (!gone && PROPS[pr.kind].radius > 0 && Math.hypot(q.x - pr.x, q.z - pr.z) < PROPS[pr.kind].radius && q.y < floorAt(w, pr.x, pr.z) + 1.3) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && w.phys && physAt(w, q.x, q.y, q.z)) { gone = true; emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
-      if (!gone && q.reflected) { for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { gone = true; if (!damageEnemy(w, e, q.dmg)) { hitEffects(w, e, { flinch: 0.5 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }); } emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); break; } }
-      else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg, { x: q.x - q.vx, z: q.z - q.vz }); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
+      if (!gone && q.reflected) { for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { gone = true; if (!damageEnemy(w, e, q.dmg, { by: { weapon: 'fork' } })) { hitEffects(w, e, { flinch: 0.5 }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, y: e.y, z: e.z }); } emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); break; } }
+      else if (!gone && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < 0.55 && q.y > p.y + 0.1 && q.y < p.y + 1.9) { gone = true; hurtPlayer(w, q.dmg, { x: q.x - q.vx, z: q.z - q.vz }, q.src); emit(w, 'shot_impact', { x: q.x, y: q.y, z: q.z }); }
       if (!gone && q.sup && p.hp > 0 && Math.hypot(q.x - p.x, q.z - p.z) < q.sup && q.y > p.y && q.y < p.y + 2.1) { if ((p.suppT || 0) < SUPPRESS.time * 0.5) emit(w, 'suppress', { x: q.x, z: q.z }); p.suppT = SUPPRESS.time; }          // whizzing past: the player is suppressed (their guns open up)
     }
     if (gone) w.enemyShots.splice(i, 1);
@@ -837,11 +846,11 @@ function supportStep(w, e, def, dt, sees, dist) {
 function bossStep(w, e, def, diff, dt, sees, dist) {
   const p = w.player, enraged = nodesAlive(w) === 0, P = def.pulse;
   e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt); e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt); e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
-  if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }       // PT-030: the second ring of a double pulse (the Grand Cantor)
+  if (e.echoT > 0) { e.echoT -= dt; if (e.echoT <= 0) { e.echoT = 0; w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, src: 'enemy:' + e.kind }); emit(w, 'pulse', { x: e.x, z: e.z, echo: true }); } }       // PT-030: the second ring of a double pulse (the Grand Cantor)
   if (def.sweep && sweepStep(w, e, def, diff, dt, sees, dist, { emit, hurtPlayer, damageEnemy, solid: (cx, cz) => cellSolid(w, cx, cz) })) return true;                  // PT-033: the Gate Warden's sweep
   if (P && (e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
-    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo && (!def.echoReeds || !enraged)) e.echoT = P.echo.gap; }
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, src: 'enemy:' + e.kind, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = enraged ? def.enragedPulseCooldown : P.cooldown; if (P.echo && (!def.echoReeds || !enraged)) e.echoT = P.echo.gap; }
     return true;
   }
   if (P && sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); return true; }
@@ -856,7 +865,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
     const Sh = def.shots, ox = e.x + DM.sin(e.yaw) * 0.8, oz = e.z + DM.cos(e.yaw) * 0.8, oy = e.y + (Sh.muzzleY ?? 1.9), base = DM.atan2(p.x - ox, p.z - oz);
     for (let i = -Math.floor(Sh.count / 2); i <= Math.floor(Sh.count / 2); i++) {
       const a = base + i * Sh.spread, dy = p.y + Sh.aimHeight - oy, hz = Math.hypot(p.x - ox, p.z - oz) || 1, len = Math.hypot(hz, dy);
-      w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: DM.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: DM.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage) });
+      w.enemyShots.push({ id: w.nextId++, x: ox, y: oy, z: oz, vx: DM.sin(a) * hz / len * Sh.speed, vy: dy / len * Sh.speed, vz: DM.cos(a) * hz / len * Sh.speed, life: 4, dmg: Math.round(Sh.damage * diff.enemyDamage), src: 'enemy:' + e.kind });
     }
     emit(w, 'enemy_shot', { id: e.id, kind: e.kind, x: e.x, z: e.z }); e.shotCd = Sh.cooldown;
   }
@@ -885,7 +894,7 @@ function acolyteStep(w, e, def, diff, dt, sees, dist) {
   const P = def.pulse; e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt);
   if ((e.pulseT ?? -1) >= 0) {
     e.pulseT += dt; e.walk *= 0.85;
-    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; }
+    if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, src: 'enemy:' + e.kind }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; }
     return true;
   }
   if (e.attackT >= 0) return false;
@@ -995,13 +1004,13 @@ function updateTears(w, dt) {
 /** PT-043 (design/ACTD.md section 1): a map that says `lampHolds` has a lit lantern cut a ring's damage to `plain` (or to `own` with Ines's eternal lamp): the lamp is the counter-tone (Campaign 1's first secret) */
 function lampHold(w, dmg) { const H = w.map.lampHolds, L = w.player.lamp; return H && L?.on ? Math.round(dmg * (L.eternal ? (H.own ?? LAMP_HOLDS.own) : (H.plain ?? LAMP_HOLDS.plain))) : dmg; }
 /** a ring on the floor from a spec { speed, width, maxR, damage (before the difficulty), reflectAt?, h? } */
-function pushPulse(w, diff, x, z, y, S) { w.pulses.push({ id: w.nextId++, x, z, y, r: 0.6, speed: S.speed, dmg: Math.round(S.damage * diff.enemyDamage), width: S.width, maxR: S.maxR, hit: false, ...(S.reflectAt ? { reflectAt: S.reflectAt } : {}), ...(S.h ? { h: S.h } : {}) }); }
+function pushPulse(w, diff, x, z, y, S, src = 'other:unknown') { w.pulses.push({ id: w.nextId++, x, z, y, r: 0.6, speed: S.speed, dmg: Math.round(S.damage * diff.enemyDamage), width: S.width, maxR: S.maxR, hit: false, src, ...(S.reflectAt ? { reflectAt: S.reflectAt } : {}), ...(S.h ? { h: S.h } : {}) }); }
 /** PT-043, the Resonant: on every beat, a ring whose damage grows with the company it keeps (awake, living, hostile creatures within `ring.near` m); alone it is only a slow brute */
 function resonantRing(w, e, def, diff) {
   const R = def.ring, p = w.player; if (Math.hypot(p.x - e.x, p.z - e.z) > R.maxR + 6) return;
   let n = 0; for (const o of w.enemies) { if (o === e || o.state === 'dead' || o.state === 'idle' || o.state === 'calm' || o.state === 'flee') continue; const od = ENEMIES[o.kind]; if (od.node || od.peaceful) continue; if (Math.hypot(o.x - e.x, o.z - e.z) < R.near) n++; }
   if (n === 0) return;
-  pushPulse(w, diff, e.x, e.z, e.y, { speed: R.speed, width: R.width, maxR: R.maxR, damage: Math.min(R.cap, R.base * (1 + n)) });
+  pushPulse(w, diff, e.x, e.z, e.y, { speed: R.speed, width: R.width, maxR: R.maxR, damage: Math.min(R.cap, R.base * (1 + n)) }, 'enemy:' + e.kind);
   emit(w, 'resonant_ring', { id: e.id, x: e.x, z: e.z, n });
 }
 function updatePulses(w, dt) {
@@ -1026,7 +1035,7 @@ function updateLoads(w) {
     const o = st[i], idx = loadIndex(L, w.time), x = (L.rect[0] + L.rect[2] + 1) / 2 * S, z = (L.rect[1] + L.rect[3] + 1) / 2 * S;
     if (idx > o.idx) {
       o.idx = idx; o.warned = false; emit(w, 'load_land', { i, x, y: floorAt(w, x, z), z });
-      if (p.hp > 0 && !p.air && inLoad(L, p.x, p.z, S, PLAYER.radius)) { emit(w, 'load_hit', { x: p.x, z: p.z }); hurtPlayer(w, Math.round(LOADS.damage * diff.enemyDamage)); }
+      if (p.hp > 0 && !p.air && inLoad(L, p.x, p.z, S, PLAYER.radius)) { emit(w, 'load_hit', { x: p.x, z: p.z }); hurtPlayer(w, Math.round(LOADS.damage * diff.enemyDamage), null, 'hazard:load'); }
       for (const e of w.enemies) { const d = ENEMIES[e.kind]; if (e.state !== 'dead' && !d.flying && !d.node && !d.boss && inLoad(L, e.x, e.z, S, 0)) damageEnemy(w, e, LOADS.enemyDamage); }
     } else if (!o.warned && loadState(L, w.time).warn > 0) { o.warned = true; emit(w, 'load_warn', { i, x, z }); if (L.tremor) { emit(w, 'shake', { amount: L.tremor }); emit(w, 'tremor', { amount: L.tremor }); } }          // (PT-045: a strip of a collapse front that says `tremor` shakes the view as it begins to fall)
   });
@@ -1079,7 +1088,7 @@ function landingNear(w, s) {
 function voidFall(w, p) {
   const s = landingNear(w, p.lastSafe ?? { x: w.map.spawn.x, z: w.map.spawn.z });
   delete p.air; p.x = s.x; p.z = s.z; p.vx = 0; p.vz = 0; p.y = groundAt(w, p.x, p.z, PLAYER.radius); p.ventCd = LOWG.setBackCooldown;
-  emit(w, 'void_fall', { x: p.x, z: p.z }); hurtPlayer(w, LOWG.voidDamage);
+  emit(w, 'void_fall', { x: p.x, z: p.z }); hurtPlayer(w, LOWG.voidDamage, null, 'hazard:fall');
 }
 /** one tick of a body in low gravity: the launch velocity plus steering, the arc, a ceiling, the landing (or the void) */
 function airMove(w, p, sx, sf, fx, fz, rx, rz, dt) {
@@ -1110,7 +1119,7 @@ function homeStep(w, e, def, dt, turnHome) {
 /** PT-045 (the lamp yard): the pulse of a boss on its own, for a range target that says `rings: true`: after its cooldown, when it sees you, a windup, then one ring (`reflect` as the boss's own); nothing else of bossStep. Only a range map can say it. */
 function ringStep(w, e, def, diff, dt, sees) {
   const P = def.pulse; e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt);
-  if ((e.pulseT ?? -1) >= 0) { e.pulseT += dt; if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; } }
+  if ((e.pulseT ?? -1) >= 0) { e.pulseT += dt; if (e.pulseT >= P.windup) { w.pulses.push({ id: w.nextId++, x: e.x, z: e.z, y: e.y, r: 0.6, speed: P.speed, dmg: Math.round(P.damage * diff.enemyDamage), width: P.width, maxR: P.maxR, hit: false, src: 'enemy:' + e.kind, ...(P.reflect ? { reflectAt: P.reflect } : {}) }); emit(w, 'pulse', { x: e.x, z: e.z }); e.pulseT = -1; e.pulseCd = P.cooldown; } }
   else if (sees && e.pulseCd <= 0) { e.pulseT = 0; emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
 }
 function updateEnemy(w, e, diff, dt) {
@@ -1154,12 +1163,12 @@ function updateEnemy(w, e, diff, dt) {
   if (e.attackT < 0 && !dashing && e.hold !== 'fixed' && !e.snipeRun && !(e.actK && e.actK !== 'dodge')) e.yaw += clamp(dy, -def.turnRate * dt, def.turnRate * dt);          // (a creature running to open the range turns toward its heading, reposition.js; one in the middle of an act of the brain turns its own way, brain.js)
   e.cd = Math.max(0, e.cd - dt);
   if (e.hold && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (e.chargeT ?? -1) < 0 && homeStep(w, e, def, dt, false)) return;      // pushed off its post (by its own lunge or charge): back first
-  if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d, e), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
+  if (def.bell && !e.hold && bellStep({ w, e, def, diff, dt, emit, hpScale: diff.enemyHp, hurt: (d) => hurtPlayer(w, d, e), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S, 'enemy:' + e.kind), tryMove: (o, dx, dz, r) => tryMove(w, o, dx, dz, r), free: (x, z, r) => !blockedCircle(w, x, z, r, e), hitCyl: hitCylinder })) return;          // PT-043: the clapper (rootbell.js): hung and falling take the tick, on the ground the ordinary code below runs
   if (def.charge && chargeStep(w, e, def, diff, dt, sees, dist, dyv)) return;
   if (def.support && !e.hold && supportStep(w, e, def, dt, sees, dist)) return;
   if (def.snipe && (!e.hold || e.hold === 'turn') && snipeStep({ w, e, def, diff, dt, sees, dist, emit, hurt: (d) => hurtPlayer(w, d, e), rayClear, retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), ...runCtx(w, e, def, dt) })) return;          // PT-060: the Marksman's shot
   if (def.heal && (!e.hold || e.hold === 'turn') && healStep({ w, e, def, diff, dt, sees, dist, emit, ...runCtx(w, e, def, dt), retreat: () => (e.hold ? false : retreatStep(w, e, def, dt)), toward: (x, z) => (e.hold ? false : stepToward(w, e, def, dt, x, z)) })) return;          // PT-060: the Mender's tether
-  if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, DM.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
+  if (def.hive && !e.hold) { hiveStep({ w, e, def, diff, dt, emit, phase: phaseOf(w, e, def), pulse: (x, z, y, S) => pushPulse(w, diff, x, z, y, S, 'enemy:' + e.kind), spawn: (kind, sx, sz) => { const p2 = w.player, g = spawnEnemy(w, kind, sx, sz, DM.atan2(p2.x - sx, p2.z - sz)); g.summoned = true; w.stats.total.enemies++; wakeEnemy(w, g, false, true); emit(w, 'enemy_spawn', { id: g.id, kind: g.kind, x: g.x, z: g.z }); return g; } }); return; }          // PT-043: the Hive Cantor works on the beat (hivecantor.js)
   if (def.boss && !e.hold && !def.bell && bossStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.brood && !e.hold && motherStep(w, e, def, diff, dt, sees, dist)) return;
   if (def.ward && !e.hold && acolyteStep(w, e, def, diff, dt, sees, dist)) return;
@@ -1262,7 +1271,7 @@ export function step(w, cmd) {
     if (w.map.vents.length || w.map.hasVoid) groundAir(w, p, dt);
   }
   if (fxc !== p.fx) { if (fxc) emit(w, 'wade', { kind: fxc }); p.fx = fxc; }
-  if (fxc && FX[fxc].dps) { p.hazardT = (p.hazardT || 0) + dt; if (p.hazardT >= 0.5) { p.hazardT -= 0.5; hurtPlayer(w, Math.round(FX[fxc].dps * 0.5 * diff.enemyDamage)); } } else p.hazardT = 0;
+  if (fxc && FX[fxc].dps) { p.hazardT = (p.hazardT || 0) + dt; if (p.hazardT >= 0.5) { p.hazardT -= 0.5; hurtPlayer(w, Math.round(FX[fxc].dps * 0.5 * diff.enemyDamage), null, FX_SRC[fxc] ?? 'hazard:floor'); } } else p.hazardT = 0;
   if (map.vacuum.length) vacuumStep(w, dt, diff);                                                                 // PT-033: vacuum (airlock.js)
   if (!p.air) p.bob += Math.hypot(p.vx, p.vz) * dt * 1.9;
   if (p.heat > 0) p.heat = Math.max(0, p.heat - dt * (WEAPONS[p.weapon].heatDecay || 1.4));
@@ -1332,7 +1341,7 @@ export function step(w, cmd) {
   // enemies + their shots + the fire on the ground
   updateBurns(w, dt); if (w.loadFx) loadFxStep(w, dt);
   for (const e of w.enemies) updateEnemy(w, e, diff, dt);
-  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.spikes) updateSpikes({ w, dt, emit, diff, spikes: ENEMIES.rootbell.bell.spikes, hurt: (d) => hurtPlayer(w, d) }); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
+  updateEnemyShots(w, diff, dt); updatePulses(w, dt); if (w.spikes) updateSpikes({ w, dt, emit, diff, spikes: ENEMIES.rootbell.bell.spikes, hurt: (d) => hurtPlayer(w, d, null, 'enemy:rootbell') }); if (w.tears) updateTears(w, dt); if (w.resonators) updateResonators(w);
 
   // projectiles (substepped so fast flares cannot tunnel through walls)
   for (let i = w.projectiles.length - 1; i >= 0; i--) {
@@ -1346,7 +1355,7 @@ export function step(w, cmd) {
       if (w.phys && physAt(w, q.x, q.y, q.z)) hit = true;
       for (const e of w.enemies) if (e.state !== 'dead' && insideFuse(e, q.x, q.y, q.z)) { hit = true; struck ??= e; }
     }
-    if (hit) { w.projectiles.splice(i, 1); const sd = q.load ? loadedDef(def, q.weapon, q.load) : def; explode(w, q.x, q.y, q.z, true, p.mods ? modDef(sd, q.weapon, p, { tier: (id) => modTier(w, id) }) : sd, struck); }
+    if (hit) { w.projectiles.splice(i, 1); const sd = q.load ? loadedDef(def, q.weapon, q.load) : def; explode(w, q.x, q.y, q.z, true, p.mods ? modDef(sd, q.weapon, p, { tier: (id) => modTier(w, id) }) : sd, struck, { weapon: q.weapon ?? 'flare', atk: q.atk ?? null }); }
   }
 
   // last-resort feed: a player with no ammunition of ANY kind (for a gun they carry: bolts picked up before the rifle do not count) is never left with nothing: the flare cannon's feed drops one flare after a few seconds (and again each time it is spent).

@@ -43,7 +43,7 @@ function cutTick(w, S, st, p) {
     let hard = 0;                                                                                       // plate (the front of a Warden) and bells kick the saw back
     if (ed.armor && (e.stunT || 0) <= 0 && (DM.sin(e.yaw) * (p.x - e.x) + DM.cos(e.yaw) * (p.z - e.z)) / (Math.hypot(p.x - e.x, p.z - e.z) || 1) > ed.armor.cos) hard = S.plateHeat; else if (ed.node) hard = S.nodeHeat;
     n++; near = Math.min(near, d - c.r);
-    const killed = damageEnemy(w, e, S.damage);
+    const killed = damageEnemy(w, e, S.damage, { by: { weapon: 'chainsaw' } });
     if (hard) { st.heat = Math.min(1.2, st.heat + hard); emit(w, 'saw_kick', { x: e.x, z: e.z }); }
     if (!killed) { hitEffects(w, e, { flinch: S.flinch }); emit(w, 'enemy_hit', { id: e.id, kind: e.kind, x: e.x, z: e.z }); }
     emit(w, 'saw_hit', { x: e.x, y: e.y + ed.height * 0.55, z: e.z, killed, hard: !!hard });
