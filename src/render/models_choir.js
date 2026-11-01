@@ -66,7 +66,7 @@ export function tollbearer(tex, o = {}) {
     J.armA.rotation.z = -0.16;                                                                                                                      // PT-035: it slumps toward the weight of the bell and the other arm trails out: no other creature's outline leans or trails
     const ring = h.raise * (1 - h.rec);
     J.bellPivot.rotation.z = S(t * 1.7) * 0.05 + S(p.phase - 0.9) * 0.3 * p.walk + 0.5 * h.raise * (1 - h.slam) - 0.4 * h.slam * (1 - h.rec);       // the pendulum: it lags the stride and is thrown out by the raised arm
-    J.bell.rotation.x = S(t * 1.3) * 0.04 + 0.2 * h.slam;
+    J.bell.rotation.x = S(t * 1.3) * 0.04 + 0.2 * h.slam * (1 - h.rec);
     J.clapper.scale.setScalar(1 + 0.25 * S(t * 3) + 1.4 * ring); R.ring(J.bellEchoes, p.attack > 0 ? ring : 0);
     for (let i = 0; J['tat' + i]; i++) J['tat' + i].rotation.x = S(t * 1.6 + i * 1.3) * 0.12 + 0.35 * p.walk * S(p.phase + i);
   });
@@ -238,7 +238,7 @@ export function cantor(tex) {
     R.tor('halo', 0.68, 0.025, 4, 24, 'glow', { rot: [PI / 2, 0, 0], name: 'haloRing' });
   }, (p, J, R) => {
     const t = p.t, h = humanoidPose(p, J, { stoop: 0.05, headX: 0.12, hipY: 1.0, stride: 0.35, jawOpen: 0.2 });
-    const open = p.attack > 0 ? h.raise : 0;
+    const open = p.attack > 0 ? h.raise * (1 - h.rec) : 0;          // (PT-078: and closes again with the recovery)
     J.armA.rotation.z = -0.3 - 0.6 * open; J.armB.rotation.z = 0.3 + 0.6 * open; J.armA.rotation.x = -0.1 - 0.5 * open; J.armB.rotation.x = -0.1 - 0.5 * open; J.armAM.rotation.x = J.armBM.rotation.x = -0.35;
     J.halo.rotation.y = t * 0.7 + open * 2; J.halo.scale.setScalar(1 + 0.6 * open); J.haloRing.scale.setScalar(1 + 0.05 * S(t * 4));
     for (let i = 0; i < 6; i++) J['hb' + i].rotation.z = S(t * 2.1 + i) * 0.12;
@@ -270,7 +270,7 @@ export function subcantor(tex) {
     R.sph('head', 0.035, 6, 4, 'glow', { pos: [-0.07, 0.18, 0.17] }); R.sph('head', 0.035, 6, 4, 'glow', { pos: [0.07, 0.18, 0.17] }); R.box('head', 0.1, 0.05, 0.02, C.mouth, { pos: [0, 0.04, 0.17] });
   }, (p, J, R) => {
     const t = p.t, h = humanoidPose(p, J, { stoop: 0.22, headX: 0.4, hipY: 1.0, stride: 0.3, jawOpen: 0 });
-    const open = p.attack > 0 ? h.raise : 0;
+    const open = p.attack > 0 ? h.raise * (1 - h.rec) : 0;          // (PT-078: and closes again with the recovery)
     J.armA.rotation.z = -2.5 - 0.2 * open; J.armA.rotation.x = -0.2; J.armB.rotation.z = 0.7 + 0.3 * open; J.armB.rotation.x = -0.6 - 0.5 * open;                            // one arm flung up before the face, the baton arm out: an afraid man conducting
     J.spine.rotation.z += 0.36; J.head.rotation.z = -0.2 + S(t * 8) * 0.025; J.batonTip.scale.setScalar(1 + 0.3 * S(t * 3) + 1.5 * open);
   }, { maxLift: 5 });
@@ -572,10 +572,11 @@ export function acolyte(tex) {
     for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2; R.joint('hb' + i, 'halo', [K(a) * 0.9, S(a) * 0.9, 0]); R.bell('hb' + i, 0.2, 0.09, C.bronze, C.bronzeDk, { pos: [0, -0.16, 0], seg: 6 }); }
     R.J.ringEchoes = R.echo(R.J.ring, 1, 0.18);
   }, (p, J, R) => {
-    const t = p.t, h = humanoidPose(p, J, { stoop: 0.03, headX: 0.1, jawOpen: 0.1, hipY: 1.16, stride: 0.5 }), up = p.attack > 0 ? h.raise : 0, d = ease(clamp01(p.dead));
+    const t = p.t, h = humanoidPose(p, J, { stoop: 0.03, headX: 0.1, jawOpen: 0.1, hipY: 1.16, stride: 0.5 }), up = p.attack > 0 ? h.raise * (1 - h.rec) : 0, d = ease(clamp01(p.dead));
     J.legA.rotation.x *= 0.7; J.legB.rotation.x *= 0.7;
     J.armA.rotation.x = -2.3 - 0.4 * up + 0.05 * S(t * 1.1); J.armB.rotation.x = -2.3 - 0.4 * up - 0.05 * S(t * 1.1); J.armA.rotation.z = -0.5 - 0.25 * up; J.armB.rotation.z = 0.5 + 0.25 * up; J.armAM.rotation.x = J.armBM.rotation.x = -0.3;
-    J.halo.rotation.z = t * (0.5 + 2.4 * up) * (1 - d); J.halo.rotation.y = 0.12 * S(t * 0.7);
+    { const dt = J.haloT == null ? 0 : Math.min(0.1, Math.max(0, t - J.haloT)); J.haloT = t; J.haloA = ((J.haloA ?? (t * 0.5) % (PI * 2)) + dt * (0.5 + 2.4 * up) * (1 - d)) % (PI * 2); }          // PT-078: the wheel's ANGLE is integrated (it was time x speed, so a change of speed threw the whole wheel round in one frame)
+    J.halo.rotation.z = J.haloA; J.halo.rotation.y = 0.12 * S(t * 0.7);
     J.ringGlow.scale.setScalar(d > 0.1 ? 0.001 : 1 + 0.06 * S(t * 3) + 0.4 * up); J.hub.scale.setScalar(d > 0.1 ? 0.001 : 0.8 + 0.3 * S(t * 4) + 1.4 * up);
     for (let i = 0; i < 6; i++) J['hb' + i].rotation.z = -J.halo.rotation.z + S(t * 2.1 + i) * 0.12;                            // the bells hang true as the wheel turns
     R.ring(J.ringEchoes, up * (1 - h.rec));

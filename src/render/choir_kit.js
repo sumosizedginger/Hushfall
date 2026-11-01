@@ -40,6 +40,34 @@ export const KIT = { merge: true };
 
 export const ease = (t) => t * t * (3 - 2 * t);
 export const clamp01 = (x) => Math.min(1, Math.max(0, x));
+const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+
+/** SMOOTHED MOTION (PT-078; the owner, 2026-10-31: "is there a way to smooth out the enemy actions? ... the bell monster in red that swings ... seems stiff"; `tools/dev/pose-pops.mjs` measured it: the end of every
+ *  Tollbearer swing turned its arm 141 degrees in ONE frame, a Gaunt's arms snapped 126 at the lunge, a Bellhand's jaw shut in a frame). INERTIALIZATION: a pose that would make a joint jump more than `rot` radians
+ *  (or `pos` metres) in one frame keeps the jump as an offset that fades to nothing over `blend` seconds (a smoothstep), so the joint ARRIVES instead of teleporting; motion slower than that is untouched (a blow's
+ *  slam is under it, so blows keep their speed). Render only: the sim, the hit volumes and the tells' clocks never see it. A pose that is not a small step forward in time (the same instant twice, a rig posed for a
+ *  still, a gap of more than `maxDt`, or `p.cut`) is a CUT: no blending. `rig.position` belongs to the grounder and is never touched. */
+export const MOTION = { rot: 0.45, pos: 0.05, blend: 0.16, maxDt: 0.1 };
+export function inertializer(J) {
+  const chans = [];
+  for (const [name, o] of Object.entries(J)) {
+    if (!o?.isObject3D) continue;
+    for (const ax of ['x', 'y', 'z']) { chans.push({ v: o.rotation, ax, rot: true, T: null, off: 0, o0: 0, age: 0, shown: null }); if (name !== 'rig' && !o.isMesh) chans.push({ v: o.position, ax, rot: false, T: null, off: 0, o0: 0, age: 0, shown: null }); }
+  }
+  let lastT = null;
+  return (t) => {
+    const dt = lastT == null || !Number.isFinite(t) ? NaN : t - lastT; lastT = Number.isFinite(t) ? t : null; const cut = !(dt > 0 && dt <= MOTION.maxDt);
+    for (const c of chans) {
+      const raw = c.v[c.ax], T = c.shown !== null && raw === c.shown ? c.T : raw;                        // a channel the pose did not write this frame still holds what was shown: its target has not moved
+      if (cut || c.T === null) { c.T = T; c.off = c.o0 = 0; if (c.shown !== null) c.v[c.ax] = T; c.shown = null; continue; }
+      const d = c.rot ? wrapA(T - c.T) : T - c.T;
+      if (Math.abs(d) > (c.rot ? MOTION.rot : MOTION.pos)) { const was = c.T + c.off; c.o0 = c.off = c.rot ? wrapA(was - T) : was - T; c.age = 0; }          // a jump: what is shown stays where it was
+      else if (c.o0 !== 0) { c.age += dt; const k = c.age / MOTION.blend; if (k >= 1) c.off = c.o0 = 0; else c.off = c.o0 * (1 - k * k * (3 - 2 * k)); }
+      c.T = T;
+      if (c.off !== 0) { c.v[c.ax] = T + c.off; c.shown = c.v[c.ax]; } else { if (c.shown !== null) c.v[c.ax] = T; c.shown = null; }
+    }
+  };
+}
 
 /** an old trumpet-like bell profile (kept for the flared horns): crown (top) to lip, `flare` > 1 flares the lower half harder. */
 export function bellProfile(h, rTop, rLip, flare = 1.6, n = 9) {
@@ -153,12 +181,26 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
   build(R);
   const merged = KIT.merge ? mergeParts(rig, J, echoes) : null;
   root.traverse((o) => { if (o.isMesh) o.frustumCulled = true; });
-  const ground = makeRigGrounder(root, rig, opts.maxLift ?? 3);
+  const ground = makeRigGrounder(root, rig, opts.maxLift ?? 3), smooth = inertializer(J);
+  let lean = null;
   function posed(p) {
-    pose(p, J, R); ground(); opts.afterGround?.(p, J, R);
+    if (lean) { rig.rotation.x = lean[0]; rig.rotation.z = lean[1]; lean = null; }                          // (the lean of the last frame comes off first: a pose that does not write the rig's rotation must not collect it)
+    pose(p, J, R); smooth(p.cut ? NaN : p.t);
+    if (p.leanF || p.leanS) { lean = [rig.rotation.x, rig.rotation.z]; rig.rotation.x += p.leanF ?? 0; rig.rotation.z += p.leanS ?? 0; }          // PT-078: into a dash, across a side-step (the view measures it, render only)
+    ground(); opts.afterGround?.(p, J, R);
     const f = p.flash || 0; mat.emissive.setRGB(0.7 * f, 0.55 * f, 0.4 * f);
   }
   return { root, rig, pose: posed, mat, glow, amber, echoes, J, merged };
+}
+
+/** PT-078: the phases of a blow from the view's inputs (`p.attack` 0..1, `p.strike` the share of it at which the sim deals the damage, `p.dur` its seconds): raise (the tell) 0..1, slam 0..1 centred on the strike,
+ *  rec 0..1 the way back to the walk, w the weight of the whole blow (in over the first instants, out with the recovery), coil = raised but not yet fallen, follow a short swing past the blow. Every rig that lifts
+ *  something to strike uses these, so the drawn blow lands when the damage does and every part goes back to rest. */
+export function blowPhases(p) {
+  const a = p.attack ?? 0; if (!(a > 0)) return { raise: 0, slam: 0, rec: 0, w: 0, coil: 0, follow: 0 };
+  const sw = Math.max(0.12, 0.17 / (p.dur ?? 1.5)), at = Math.min(0.9, Math.max(0.25, p.strike ?? 0.55 + 0.75 * sw)), s0 = Math.max(0.05, at - 0.75 * sw), after = s0 + sw;
+  const raise = ease(clamp01(a / s0)), slam = ease(clamp01((a - s0) / sw)), rec = ease(clamp01((a - after - 0.05) / Math.max(0.12, 0.95 - after)));
+  return { raise, slam, rec, w: ease(clamp01(a / 0.06)) * (1 - rec), coil: raise * (1 - slam), follow: a > after ? Math.sin(Math.PI * clamp01((a - after) / 0.16)) : 0 };
 }
 
 /** walking, breathing and the arm-raise attack for any two-legged build (joints legA/legB (+M), armA/armB (+M), spine, head, jaw, hips), the same maths as the shipped Tollbearer: tells keep their timing */
@@ -172,15 +214,23 @@ export function humanoidPose(p, J, k = {}) {
   J.armA.rotation.x = -Math.sin(ph) * 0.4 * w + Math.sin(t * 1.1) * 0.05; J.armA.rotation.z = -0.08;
   J.armB.rotation.x = Math.sin(ph) * 0.4 * w + Math.sin(t * 1.3 + 1) * 0.05; J.armB.rotation.z = 0.08;
   J.armAM.rotation.x = -0.12 - 0.1 * w; J.armBM.rotation.x = -0.2;
-  const a = p.attack;
-  let raise = 0, slam = 0, rec = 0;
+  // THE BLOW (PT-078). The raise is the tell; the slam LANDS on the tick the sim deals the damage (`p.strike` = the attack's windup as a share of its duration, `p.dur` its seconds; a held pose such as a charge or a
+  // pulse gives neither and keeps the old timing: raised by 0.55, no slam); the body coils (the torso turns the striking shoulder back, the other arm swings back) and follows through (the arm carries on a little
+  // past the blow); the recovery carries every part back to where the walk would have it. It used to lift the arm overhead again and the next frame dropped it: a 141-degree jump at the end of every swing.
+  const a = p.attack, { raise, slam, rec, w: bw, coil, follow } = blowPhases(p);
   if (a > 0) {
-    raise = a < 0.55 ? ease(a / 0.55) : 1; slam = a < 0.55 ? 0 : ease(clamp01((a - 0.55) / 0.12)); rec = a < 0.7 ? 0 : ease(clamp01((a - 0.7) / 0.3));
-    J.armB.rotation.x = -2.5 * raise + (2.6 * slam) * (1 - rec); J.armBM.rotation.x = -0.6 * raise * (1 - slam);
-    J.spine.rotation.x += 0.35 * slam * (1 - rec) - 0.15 * raise * (1 - slam);
+    const B = J.armB.rotation.x, BM = J.armBM.rotation.x;                                                      // what the walk had: the blow starts from it and returns to it
+    J.armB.rotation.x = B + (-2.5 * raise + 2.6 * slam + 0.3 * follow - B) * bw; J.armBM.rotation.x = BM + (-0.6 * coil - BM) * bw;
+    J.armA.rotation.x += (0.35 * coil - 0.25 * slam) * bw;
+    J.spine.rotation.x += (0.35 * slam - 0.15 * coil) * bw; J.spine.rotation.y += (0.28 * coil - 0.18 * slam) * bw;
+    J.hips.position.y -= 0.05 * slam * bw;
   }
-  if (J.jaw) J.jaw.rotation.x = (k.jawOpen ?? 0.15) + (a > 0 ? 0.55 * raise : 0.1 * Math.sin(t * 2));
-  if (J.head) { J.head.rotation.x = (k.headX ?? 0.35) + Math.sin(t * 0.8) * 0.04; J.head.rotation.z = (k.headZ ?? 0) + Math.sin(t * 0.6) * 0.05; }
+  if (J.jaw) { const wj = a > 0 ? ease(clamp01(a / 0.06)) * (1 - rec) : 0; J.jaw.rotation.x = (k.jawOpen ?? 0.15) + 0.1 * Math.sin(t * 2) * (1 - wj) + 0.55 * raise * wj; }
+  if (J.head) {
+    J.head.rotation.x = (k.headX ?? 0.35) + Math.sin(t * 0.8) * 0.04; J.head.rotation.z = (k.headZ ?? 0) + Math.sin(t * 0.6) * 0.05;
+    const L = p.look ?? 0, gain = p.awake === false ? 0 : Math.abs(L) < 1.2 ? 1 : Math.max(0, 1 - (Math.abs(L) - 1.2) / 0.6);          // PT-078: the head follows you a little before the body turns (and lets go when you are behind it)
+    J.head.rotation.y = Math.max(-0.6, Math.min(0.6, 0.7 * L)) * gain * (1 - clamp01(p.dead ?? 0));
+  }
   // death: topple backwards about the feet (the grounder rests it ON the floor)
   const d = ease(clamp01(p.dead)); J.rig.rotation.x = -d * 1.5 + (p.dead > 0.85 ? Math.sin((p.dead - 0.85) * 40) * 0.02 : 0);
   return { raise, slam, rec, d };

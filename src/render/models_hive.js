@@ -3,7 +3,7 @@
 // is lifted onto the contact plane by the grounder, a FLYER adds its hover after grounding, each wears its OWN baked atlas (`choir_<kind>`, cells by name in choir_cells.js).
 // Front is +z. Pose inputs beyond the shipped ones: `beat` (0..1, the Hive light), `lift` (metres a hung body is above its floor), `tiltX` / `tiltZ` (a pendulum's lean in the rig's own axes), `last` (the Last Note), `charge` (the tell of a charge).
 import * as THREE from 'three';
-import { makeCreature, ease, clamp01 } from './choir_kit.js';
+import { makeCreature, ease, clamp01, blowPhases } from './choir_kit.js';
 import { cellsOf } from './choir_cells.js';
 
 const S = Math.sin, K = Math.cos, PI = Math.PI, V2 = (pts) => pts.map(([r, y]) => new THREE.Vector2(r, y));
@@ -43,11 +43,9 @@ export function resonant(tex) {
     J.hips.position.y = 0.7 + Math.abs(S(ph)) * 0.035 * w - beat * 0.015; J.hips.rotation.z = S(ph) * 0.05 * w;
     J.spine.rotation.z = S(t * 0.8) * 0.03 + S(ph) * 0.04 * w; J.spine.rotation.x = 0.1 + 0.05 * w;
     J.headL.rotation.set(0.35 + S(t * 1.1) * 0.05, 0.25 * S(t * 0.7), 0.1); J.headM.rotation.set(0.3 + S(t * 0.9 + 1) * 0.05, -0.15 * S(t * 0.6), 0); J.headR.rotation.set(0.4 + S(t * 1.3 + 2) * 0.05, 0.2 * S(t * 0.8 + 1), -0.12);
-    let raise = 0, slam = 0, rec = 0;
-    if (a > 0) { raise = a < 0.55 ? ease(a / 0.55) : 1; slam = a < 0.55 ? 0 : ease(clamp01((a - 0.55) / 0.12)); rec = a < 0.7 ? 0 : ease(clamp01((a - 0.7) / 0.3)); }
-    const hit = slam * (1 - rec);
+    const B = blowPhases(p), up = B.raise * (1 - B.rec), hit = B.slam * (1 - B.rec);          // PT-078: the blow lands with the damage and every arm goes back to rest (the inner arms used to rise again and drop in one frame)
     for (const [n, side, inner] of [['armA', -1, 0], ['armB', -1, 1], ['armC', 1, 1], ['armD', 1, 0]]) {
-      J[n].rotation.x = -S(ph + side) * 0.4 * w + S(t * 1.1 + side) * 0.05 - (inner ? (2.45 * raise - 2.4 * hit) : 0.9 * raise); J[n].rotation.z = side * (0.1 + (inner ? 0.05 : 0.35) * raise); J[n + 'M'].rotation.x = -0.25 - 0.5 * raise * (1 - hit);
+      J[n].rotation.x = -S(ph + side) * 0.4 * w + S(t * 1.1 + side) * 0.05 - (inner ? (2.45 * up - 2.4 * hit - 0.25 * B.follow * (1 - B.rec)) : 0.9 * up); J[n].rotation.z = side * (0.1 + (inner ? 0.05 : 0.35) * up); J[n + 'M'].rotation.x = -0.25 - 0.5 * up * (1 - hit);
     }
     J.bells.rotation.z = S(t * 2.1) * 0.06 + beat * 0.08 * S(t * 11); J.bells.rotation.y = beat * 0.12;
     J.hemA.rotation.x = S(t * 1.6) * 0.12 + 0.3 * w * S(ph); J.hemB.rotation.x = S(t * 1.6 + 2) * 0.12 + 0.3 * w * S(ph + 2);

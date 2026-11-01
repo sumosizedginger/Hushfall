@@ -53,6 +53,7 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3, FX_LIGHTS = 4;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
+const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const freeRig = (root) => root.traverse((o) => { if (o.isMesh) o.geometry?.dispose(); });         // (geometry only: a rig's materials are cached and shared by its kind)
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
 /** the Root Bell's clapper hangs on a pendulum: its lean in the rig's own axes (the top of the bell tilts toward the pivot, away from the side it is displaced to), and whether the Last Note has opened its heart */
@@ -340,8 +341,16 @@ export class GameView {
       if (v.frozen && (e.state === 'idle' || (e.state === 'dead' && e.dead >= 1)) && Math.abs((e.y ?? 0) - v.frozenY) <= 1e-3) continue;          // (PT-076: so does a body that has finished falling)
       const s = this.prev.enemies.get(e.id) || e;
       // WORLD placement: the view owns v.root (x, z, yaw, and y = the sim's ground for this actor). v.pose() animates inside v.rig and must never write the root (ground-contract.js)
-      v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = lerp(s.yaw, e.yaw, alpha);
+      const yawNow = s.yaw + wrapA(e.yaw - s.yaw) * alpha;                                                       // PT-078: the SHORT way round (the sim keeps some creatures' facing in -pi..pi: a plain lerp across the seam spun them a full turn in one frame)
+      v.root.position.set(lerp(s.x, e.x, alpha), lerp(s.y ?? e.y ?? 0, e.y ?? 0, alpha), lerp(s.z, e.z, alpha)); v.root.rotation.y = yawNow;
       const def = ENEMIES[e.kind], t = w.time + alpha * TICK + e.id * 1.7;
+      // PT-078, how the body moves on the screen this frame (render only): turning on the spot steps the feet instead of sliding them round, a dash faster than its walk leans into it, a side-step tilts across it
+      const mv = (v.mv ??= { x: v.root.position.x, z: v.root.position.z, yaw: yawNow, turn: 0, ph: 0, lf: 0, ls: 0 }), fdt = Math.max(1e-3, dt || TICK), live = e.state !== 'dead';
+      { const vx = (v.root.position.x - mv.x) / fdt, vz = (v.root.position.z - mv.z) / fdt, dyaw = wrapA(yawNow - mv.yaw), fx = Math.sin(yawNow), fz = Math.cos(yawNow), ref = def.speed || 2, k = Math.min(1, fdt * 8), still = e.walk < 0.5;
+        mv.x = v.root.position.x; mv.z = v.root.position.z; mv.yaw = yawNow; const fast = Math.hypot(vx, vz) > ref * 6;          // (a jump of the root, a spawn or a carried body, is not a run)
+        mv.turn += ((live && still ? Math.min(1, Math.abs(dyaw) / fdt / Math.max(0.5, def.turnRate ?? 3)) : 0) - mv.turn) * k; if (live && still) mv.ph += Math.abs(dyaw) * 2.2;
+        mv.lf += ((live && !fast ? Math.min(1.5, Math.max(0, (vx * fx + vz * fz) / ref - 1.15)) * 0.12 : 0) - mv.lf) * k;
+        mv.ls += ((live && !fast ? Math.max(-1.5, Math.min(1.5, (vx * fz - vz * fx) / ref)) * -0.07 : 0) - mv.ls) * k; }
       const L = def.lunge, lunge = L && (e.lungeT ?? -1) >= 0 ? (e.lungeT < L.windup ? -(e.lungeT / L.windup) : 1) : 0;      // -1..0 crouch, 1 dash
       // the attack pose comes from whichever windup is running: a swing, a Warden's shoulder-down charge, a Sexton's raised staff, the Cantor's arms up before a pulse
       let attack = e.attackT >= 0 ? e.attackT / def.attack.duration : e.actK === 'call' ? 0.4 * Math.min(1, 1 - e.actT / BRAIN.call.windup) : 0;          // (PT-076: a Bellhand calling for help lifts its bell as for a shot, brain.js)
@@ -350,7 +359,8 @@ export class GameView {
       const sweep = def.sweep && (e.sweepT ?? -1) >= 0 ? (e.sweepT < def.sweep.tell ? e.sweepT / def.sweep.tell : 1 + Math.min(1, (e.sweepT - def.sweep.tell) / def.sweep.duration)) : 0, aim = sweep > 0 && e.sweepLine ? Math.atan2(Math.sin(e.sweepLine.ang - v.root.rotation.y), Math.cos(e.sweepLine.ang - v.root.rotation.y)) : 0;          // PT-033: the Gate Warden's eye follows its beam
       if (v.glow) v.glow.color.setHex(eyeColor(e, attack, lunge));
       this.tells.add(v.root.position.x, v.root.position.y, v.root.position.z, v.root.rotation.y, def.height ?? 1.8, tellOf(e, Math.hypot(w.player.x - e.x, w.player.z - e.z)), this.cam);          // ENEMY ACTIONS: the windup's glint (tells.js)                                                          // PT-061 V8: asleep dim, awake teal, hunting amber-white, striking white
-      v.pose({ t, walk: e.walk, phase: e.phase, attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
+      const look = live && e.state !== 'idle' ? wrapA(Math.atan2(w.player.x - v.root.position.x, w.player.z - v.root.position.z) - yawNow) : 0, swingOn = e.attackT >= 0;
+      v.pose({ t, walk: Math.max(e.walk, 0.6 * mv.turn), phase: e.phase + mv.ph, look, leanF: mv.lf, leanS: mv.ls, ...(swingOn ? { strike: def.attack.windup, dur: def.attack.duration } : {}), attack, lunge, dead: e.dead, flash: e.flash, awake: e.state !== 'idle', swell, weep, sweep, aim, afraid: e.state === 'flee', beat: beatK, ...((e.snipeT ?? -1) >= 0 ? { snipe: Math.min(1, e.snipeT / (ENEMIES[e.kind].snipe.track + ENEMIES[e.kind].snipe.lock)) } : {}), ...(e.healTarget != null ? { heal: 1 } : {}), ...(e.lift != null ? { lift: e.lift } : {}), ...(e.rb ? bellPose(e, v.root.rotation.y) : {}) });          // awake: 'idle' is asleep (a sleeper is frozen into one mesh below); the Bellhand's hand-bell rings only while awake
       // performance: an enemy that is still asleep stands perfectly still, so draw it as ONE merged mesh (~35 draw calls -> 1); swap the rig back in the moment it wakes or dies
       // A sleeper on a MOVING floor is not frozen: the merge bakes the world height, so a floor that keeps moving would leave it buried or hovering. It freezes once its ground is steady.
       // PT-076 (the owner: "should we have old bodies disappear to help with performance?"): a body that has finished falling is as still as a sleeper, so it is frozen the same way (it stays; a Sexton that raises it thaws it)

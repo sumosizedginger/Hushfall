@@ -499,7 +499,32 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
-## PT-077 · the stats database · built, awaiting the owner's check · FIXED-IN-CODE (awaiting the owner)
+## PT-078 · enemy motion is stiff (the Tollbearer's swing) · MAJOR · FIXED-IN-CODE (awaiting the owner)
+**Reported (2026-10-31):** "is there a way to smooth out the enemy actions? Like the bell monster in red that swings, not shoots, in the first level seems stiff." (The red bell monster that swings is the Tollbearer; the Bellhand is the one that shoots.)
+**Measured** (`node tools/dev/pose-pops.mjs maps`, six levels played by the bot, two frames a tick as a 120 Hz screen draws them): 2,622 frame-to-frame snaps, a joint turning more than half a radian in one frame. The causes:
+1. The shared swing lifted the arm back overhead during its "recovery" and the next frame dropped it to the walk: 141 degrees in one frame at the end of every Tollbearer, Sexton, Warden-Graft and Resonant blow. The Bellhand's jaw snapped the same way.
+2. The brain's acts keep a creature's facing in -pi..pi, and the view blended across the seam the long way: a full turn in one frame when a creature dodged, strafed, cowered or circled.
+3. The Acolyte's wheel angle was time x speed, so a change of speed threw it round at random.
+4. The Gaunt's lunge and a brain act that sets walking to full at once snapped arms and legs.
+
+**Fixed (render only; the sim, hit volumes and tells are untouched, every level played tick for tick the same):**
+- the blow is timed from the sim (the slam is centred on the tick the damage is dealt), with a coil before it and a follow-through after, and returns to the walk;
+- the view turns creatures the short way;
+- the Acolyte's wheel angle is integrated;
+- every creature has INERTIALIZATION: a joint that would jump more than 0.45 rad in a frame keeps the jump as an offset that fades over 0.16 s (`MOTION` in `src/render/choir_kit.js`), so slower motion (including the blow's slam) is untouched;
+- creatures turning on the spot step their feet, their head follows you (up to 35 degrees, and lets go when you are behind it), and they lean into a dash or across a side-step.
+
+Snaps on the same six levels: 2,622 -> 0; every creature kind through a scripted fight: 106 -> 0 (`tests/pose-smooth.test.js`).
+
+**What to watch for, in play:**
+1. A Tollbearer's swing: the arm rises, the body coils, the bell is thrown out, the blow comes down as the hit lands, then everything settles back. No snap at the end.
+2. A Gaunt dodging or circling you never spins.
+3. A creature turning to face you shuffles its feet; its head turns toward you first.
+4. A Tollbearer's lurch (the groan, then the surge) leans forward into the run.
+
+Not fixed by this: the walk cycle itself is a plain swing of thin legs. That belongs to the rigs' proportions (`design/ART_ASSESSMENT.md` item 6).
+
+ · built, awaiting the owner's check · FIXED-IN-CODE (awaiting the owner)
 **The owner's go (2026-10-31):** "go, so when we finish I can start from the beginning and make sure everything tracks. Make sure the UI shows the things we're tracking as well." The plan and what was built: `design/STATS_DATABASE.md` (section 0). A checklist, in the order you will meet it:
 1. On the title, **Your stats** (under The Record). On a browser that has never played this build it says nothing is recorded yet.
 2. Start a **new game**. Pause (Esc) and open **Your stats**: This playthrough shows 1 attempt, 0 finished. Fire five flares at a wall and look again: the flare cannon's Attacks goes up by 5 and Connected does not move.
