@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { traceBeams, BEAM, DIRS } from '../engine/beams.js';
 import { ENEMIES } from '../engine/defs.js';
+import { beamMaterial } from './glowfx.js';
 
 const lam = (o) => new THREE.MeshLambertMaterial(o);
 const bas = (o) => new THREE.MeshBasicMaterial(o);
@@ -47,7 +48,7 @@ export function makeBeamView(map, tex = {}) {
   }
   const lines = new THREE.Group(); group.add(lines); let key = '';
   const bar = (x0, z0, x1, z1, y, w, mat) => { const len = Math.hypot(x1 - x0, z1 - z0); if (len < 0.01) return; const m = new THREE.Mesh(new THREE.BoxGeometry(w, w, len), mat); m.position.set((x0 + x1) / 2, y, (z0 + z1) / 2); m.rotation.y = Math.atan2(x1 - x0, z1 - z0); lines.add(m); };
-  const coreM = bas({ color: 0xfff3c9 }), haloM = add({ color: 0xffc860, opacity: 0.32 }), outerM = add({ color: 0xb58cff, opacity: 0.12 });
+  const coreM = bas({ color: 0xfff3c9 }), haloM = beamMaterial(0xffc860, 0.55), outerM = beamMaterial(0xb58cff, 0.22);          // PT-080: the soft parts fade across the beam (glowfx.js), no flat translucent face
 
   /** per frame: turn the plates towards their rotations, redraw the beams when they changed, light the receivers */
   function update(w, dt, time) {
@@ -71,7 +72,7 @@ export function makeBeamView(map, tex = {}) {
  *  down to the beam's height over the first few metres and then level, through every bounce a mirror gave it. Pooled unit boxes, nothing allocated per frame. */
 export function makeSweepView() {
   const group = new THREE.Group(), pool = [], unit = new THREE.BoxGeometry(1, 1, 1), V0 = new THREE.Vector3(), V1 = new THREE.Vector3(), SA = new THREE.Vector3(), SB = new THREE.Vector3(), SM = new THREE.Vector3(), SE = new THREE.Vector3();          // SA..SE: scratch points for a segment (FREEZE F12, Grok 4: the comment above said nothing is allocated per frame, and four vectors a segment were)
-  const mats = { core: bas({ color: 0xfff6d8 }), halo: add({ color: 0xffc860, opacity: 0.4 }), outer: add({ color: 0x9ad8ff, opacity: 0.16 }), warn: add({ color: 0xffe9a8, opacity: 0.3 }) };
+  const mats = { core: bas({ color: 0xfff6d8 }), halo: beamMaterial(0xffc860, 0.7), outer: beamMaterial(0x9ad8ff, 0.3), warn: beamMaterial(0xffe9a8, 0.6) };          // PT-080: the soft parts fade across the beam (glowfx.js): the sweep was a wide translucent slab
   const take = (i, mat) => { let m = pool[i]; if (!m) { m = new THREE.Mesh(unit, mat); m.frustumCulled = false; group.add(m); pool[i] = m; } m.material = mat; m.visible = true; return m; };
   const seg = (i, a, b, wd, mat) => { const m = take(i, mat), len = V0.copy(b).sub(a).length(); if (len < 0.01) { m.visible = false; return i + 1; } m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(wd, wd, len); m.lookAt(b); return i + 1; };
   function update(w, time) {

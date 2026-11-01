@@ -5,6 +5,8 @@ import { modMarks } from '../engine/mods.js';
 import { gravTarget } from '../engine/gravity.js';
 import { noiseHud } from '../engine/noisetell.js';
 
+/** PT-080: the pixel-size setting in words (the world is drawn this many pixels wide and enlarged to the screen) */
+const PIXEL_LABEL = { 320: '320: very chunky (fastest)', 400: '400: chunkier', 480: '480: chunky pixels (default)', 640: '640: finer', 800: '800: finer still', 960: '960: sharp pixels' };
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /** PT-022: what the later weapons say when they are picked up (the older ones are in TOASTS below) */
 import { describeNext, TRACKS, modRows } from '../engine/progress.js';
@@ -56,7 +58,7 @@ export class UI {
     $('set-fov').oninput = (e) => this.h.setSetting('fov', Number(e.target.value)); $('set-bright').oninput = (e) => this.h.setSetting('brightness', Number(e.target.value));
     { const xh = (key, conv = (v) => v) => (e) => { this.xh = { ...this.xh, [key]: conv(e.target.value) }; this.h.setSetting('crosshair', this.xh); };      // PT-048 / V2: the crosshair's style, size, colour and opacity (crosshair.js)
       $('set-xh-style').onchange = xh('style'); $('set-xh-size').onchange = xh('size'); $('set-xh-color').onchange = xh('color'); $('set-xh-opacity').oninput = xh('opacity', Number); }
-    $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${r} px wide</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
+    $('set-res').innerHTML = RESOLUTIONS.map((r) => `<option value="${r}">${PIXEL_LABEL[r] ?? r + ' wide'}</option>`).join(''); $('set-res').onchange = (e) => this.h.setSetting('internalWidth', Number(e.target.value));
     $('set-aimtoggle').onchange = (e) => this.h.setSetting('aimToggle', e.target.checked); $('set-sprinttoggle').onchange = (e) => this.h.setSetting('sprintToggle', e.target.checked);
     $('set-wheelslow').onchange = (e) => this.h.setSetting('wheelSlow', e.target.checked); $('set-wheeltoggle').onchange = (e) => this.h.setSetting('wheelToggle', e.target.checked);
     $('set-playlog').onchange = (e) => this.h.setSetting('playLog', e.target.checked); $('btn-playlog-export').onclick = () => this.h.playlogExport(); $('btn-playlog-copy').onclick = () => this.h.playlogCopy(); $('btn-playlog-clear').onclick = () => this.h.playlogClear();

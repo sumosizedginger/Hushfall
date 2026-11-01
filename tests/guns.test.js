@@ -47,11 +47,10 @@ test('the forearm of a gun is solved once and sits on the screen below the hand:
   }
 });
 
-test('the shield is plates, not a ball: three bands of ten curved plates, no wireframe, a resting strength that flares when a hit is absorbed', () => {
-  const s = makeShield(); assert.equal(s.rings.length, SHIELD.bands.length);
-  for (const m of s.rings) { assert.ok(!m.material.wireframe && m.material.transparent && m.material.side === THREE.DoubleSide); assert.equal(m.geometry.type, 'BufferGeometry', 'merged plates, not an icosphere'); assert.ok(Math.abs(m.material.opacity - SHIELD.rest) < 1e-9); }
-  assert.equal(s.rings[0].geometry.index.count / (6 * 6), SHIELD.plates, 'the plates of a band (six segments each)');
+test('the shield is a bell of sound, not a ball and not slabs (PT-080, Art Gate 4): bell-shaped shells, additive and depth-blind (no pane, no ink box), a resting strength that flares when a hit is absorbed', () => {
+  const s = makeShield(); assert.equal(s.rings.length, SHIELD.shells.length);
+  for (const m of s.rings) { assert.ok(!m.material.wireframe && m.material.transparent && m.material.side === THREE.DoubleSide && m.material.blending === THREE.AdditiveBlending && !m.material.depthWrite); assert.equal(m.geometry.type, 'LatheGeometry', 'a turned bell, not plates'); assert.ok(Math.abs(m.material.opacity - SHIELD.rest) < 1e-9); }
   s.update(0, 1); assert.ok(s.rings.every((m) => Math.abs(m.material.opacity - SHIELD.flare) < 1e-9), 'flares when a hit is absorbed'); s.update(1, 0); assert.ok(s.rings.every((m) => Math.abs(m.material.opacity - SHIELD.rest) < 1e-9));
-  const a = s.rings[0].rotation.y; s.update(2, 0); assert.notEqual(s.rings[0].rotation.y, a, 'the bands turn');
-  const box = new THREE.Box3().setFromObject(s.group, true); assert.ok(box.max.x <= 1.01 && box.min.x >= -1.01 && box.max.y - box.min.y > 1.5 && box.max.y - box.min.y < 2.6, 'unit radius, a person-sized cage');
+  const a = s.rings[0].rotation.y; s.update(2, 0); assert.notEqual(s.rings[0].rotation.y, a, 'the shells turn');
+  const box = new THREE.Box3().setFromObject(s.group, true); assert.ok(box.max.x <= 1.01 && box.min.x >= -1.01 && box.max.y - box.min.y > 1.5 && box.max.y - box.min.y < 2.6, 'unit radius, a person-sized bell');
 });
