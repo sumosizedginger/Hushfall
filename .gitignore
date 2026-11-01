@@ -18,3 +18,6 @@ review/**/*.gif
 review/**/*.webp
 review/codex-audit/
 review/visual/
+
+# the owner's working reference sheets (2026-10-31): pictures and their index, regenerated on demand (see its README)
+review/art assets to refine/
