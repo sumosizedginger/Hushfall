@@ -192,6 +192,9 @@ test('THE PAGES show every table the recorder fills (weapons, hurt, deaths, kill
   assert.equal(m.overview.deaths, 1); assert.equal(m.overview.finished, 2); assert.equal(m.records.streak, 2);
   assert.match(lines[0], /^You finished 2 levels in 3 attempts, and died once\.$/); assert.ok(lines.some((l) => /hurt you more than anything else/.test(l)));
   assert.ok(lines.every((l) => !/undefined|NaN|null/.test(l)), lines.join(' | '));
+  const withMap = statsHtml(m, lines, { where: () => 'near the start', mapOf: (id) => MAPS[id] });          // PT-080: the death map: a plan of the level with a dot where you fell
+  assert.ok(withMap.includes('Where you fell') && withMap.includes('<svg class="st-map"') && /<circle cx="5\.00" cy="10\.00"/.test(withMap), 'the death at (10, 20) m is a dot at cell (5, 10)');
+  assert.ok(!html.includes('<svg'), 'with no maps given, no plan');
   const card = runCardHtml(runCard(db, 1, pt)); assert.match(card, /THIS LEVEL, FROM YOUR STATS/); assert.match(card, /Attempts at this level/);
   assert.match(statsHtml(rundown(fresh(), null), [], { lifetime: true }), /Nothing recorded yet/);
 });

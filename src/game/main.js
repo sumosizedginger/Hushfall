@@ -167,7 +167,7 @@ const statsWhere = (id, x, z) => { const m = MAPS[id], c = m?.cell ?? 2; return 
 function syncStats(note = '') {
   const S = g.stats, pt = (g.statsFrom === 'title' ? titleProgress() : g.progress).statsPt ?? null, scope = pt == null ? 'life' : g.statsScope;
   let m = null; if (S) { try { m = S.rundown(scope === 'pt' ? pt : null); } catch (e) { console.warn('stats read error:', e); } }          // (reading still works when recording has stopped)
-  const html = m ? statsHtml(m, S.story(m), { where: statsWhere, lifetime: scope !== 'pt' }) : `<p class="st-none">${escHtml(g.statsNote || 'The stats are not available.')}</p>`;
+  const html = m ? statsHtml(m, S.story(m), { where: statsWhere, lifetime: scope !== 'pt', mapOf: (id) => MAPS[id] ?? null }) : `<p class="st-none">${escHtml(g.statsNote || 'The stats are not available.')}</p>`;
   ui.show('stats', { html, scope, hasPt: pt != null, status: S ? (g.statsOff ? g.statsNote : S.status) : '', note, canImport: g.statsFrom === 'title' && !!S && !g.statsOff });
 }
 /** the stats as a file (a SQLite database: any SQLite tool opens it), and back */

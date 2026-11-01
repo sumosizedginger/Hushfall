@@ -499,7 +499,19 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
-## PT-079 · the art fixes of the assessment · FIXED-IN-CODE (awaiting the owner)
+## PT-080 · the rest of the art list, overnight · FIXED-IN-CODE (awaiting the owner)
+**The owner's go (2026-10-31):** "I want you to do EVERYTHING still on your list." What changed, and what to look at:
+1. **Boss shields** are a glowing bell of sound round the boss (clear in the middle, bright at the edges, rings running up it), not tall teal slabs. Look at the first boss (the Cantor, end of Episode 1), the Gate Warden and the Root Bell (where you stand inside the bell and see its rings overhead).
+2. **Beams** (the Mirror Array's, the Gate Warden's sweep) fade softly across their width: no translucent boxes.
+3. **The Tollbearer and the Gaunt** have fuller limbs and bodies (still inside their hit areas: nothing about combat changed). The Bellhand stays slim on purpose so you can tell it from the Tollbearer.
+4. **The walk has weight:** the hips drop as each foot lands (they used to rise), the feet stay planted, and the Tollbearer lurches under its bell.
+5. **The Hollow Stair** has pale marble ribs up the drum wall and a stronger, angled sun. **Harmonic Gardens'** box walls have green spilling over their tops. **Tall halls** of human places have chains with lamps hanging under the roof.
+6. **Your stats** show a death map: the plan of each of your three deadliest levels, with a red dot where you fell.
+7. **The Journal** pages are wider.
+8. **Settings:** "Pixel size": 480 chunky (default) or 960 sharp.
+9. **The Charge-Arc Lamp** glows electric white-blue, not the Vael teal.
+
+ · FIXED-IN-CODE (awaiting the owner)
 **The owner's go (2026-10-31):** "Do eet!", after `design/ART_ASSESSMENT.md`. What changed, and what to look at:
 1. **Rooms are dressed.** In the harbour's human places (iron, brick, timber, plaster, concrete walls) the walls now carry shelves at eye level with jars, tins and bottles; notice boards with papers; pipe runs under high ceilings; and outdoors, life rings near the water, hooks with rope, posted notices. They are drawn only: you walk exactly as before. Alien places get none. Too busy, too sparse, or wrong anywhere?
 2. **The gun's pixels** are now twice as fine as the world's (they were the screen's own), so it sits in the same chunky picture. The flare cannon's glass tube glows signal red instead of teal. If you preferred the crisp gun, it is one number: `WEAPON_DENSITY` in `src/render/post.js`.

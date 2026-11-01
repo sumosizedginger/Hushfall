@@ -15,8 +15,16 @@ function table(cols, rows, none) {
 }
 const section = (id, title, help, body) => `<section class="st-sec" id="st-${id}"><h3>${esc(title)}</h3>${help ? `<p class="st-help">${esc(help)}</p>` : ''}${body}</section>`;
 
+/** PT-080, THE DEATH MAP: a level's plan (its open ground, row by row) with a red dot where each death happened. `map` is the parsed level, `spots` [{ x, z }] in metres. An SVG string. */
+export function deathMapSvg(map, spots) {
+  const W = map.w, H = map.h, open = (x, z) => { const k = map.kind(x, z); return k !== 'wall' && k !== 'void'; }, rows = [];
+  for (let z = 0; z < H; z++) { let x = 0; while (x < W) { const o = open(x, z); let e = x + 1; while (e < W && open(e, z) === o) e++; if (o) rows.push(`<rect x="${x}" y="${z}" width="${e - x}" height="1"/>`); x = e; } }
+  const r = Math.max(0.9, Math.max(W, H) / 70), dots = spots.map((s) => `<circle cx="${(s.x / map.cell).toFixed(2)}" cy="${(s.z / map.cell).toFixed(2)}" r="${r.toFixed(2)}"/>`).join('');
+  return `<svg class="st-map" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${spots.length} deaths"><g fill="#33434a">${rows.join('')}</g><g fill="#e8503c" stroke="#1a0808" stroke-width="${(r * 0.35).toFixed(2)}">${dots}</g></svg>`;
+}
+
 /** the whole stats page for one scope. `m` = report.js rundown, `story` = report.js story(m), `where(levelId, x, z)` = a place in words (journal.js placeOf), `lifetime` = which scope this is */
-export function statsHtml(m, story, { where = () => '', lifetime = false } = {}) {
+export function statsHtml(m, story, { where = () => '', lifetime = false, mapOf = () => null } = {}) {
   const o = m.overview ?? {};
   if (!o.attempts) return `<p class="st-none">${lifetime ? 'Nothing recorded yet. Play a level: every attempt is counted from the moment it starts.' : 'Nothing recorded in this playthrough yet. Play a level: every attempt is counted from the moment it starts.'}</p>`;
   const tiles = [['Levels finished', n(o.finished)], ['Attempts', n(o.attempts)], ['Time played', clockOf(o.seconds)], ['Deaths', n(o.deaths)], ['Kills', n(o.kills)], ['Damage taken', n(o.damage_taken)],
@@ -30,6 +38,11 @@ export function statsHtml(m, story, { where = () => '', lifetime = false } = {})
   out.push(section('deaths', 'Deaths', '',
     table([['Level', 'name'], ['Deaths', 'deaths', 1], ['Attempts', 'attempts', 1]], m.deathsByLevel, 'You have not died.')
     + (m.killers.length ? `<h4>Killed by</h4>` + table([['', 'name'], ['Deaths', 'deaths', 1]], m.killers, '') : '')
+    + (() => {                                                                                                                                   // PT-080: the three levels you died on most, each a plan with a dot where you fell
+      const by = new Map(); for (const s of m.deathSpots ?? []) { if (!by.has(s.level_id)) by.set(s.level_id, []); by.get(s.level_id).push(s); }
+      const top = [...by.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, 3).map(([id, spots]) => [mapOf(id), spots]).filter(([mp]) => mp);
+      return top.length ? `<h4>Where you fell</h4><div class="st-maps">${top.map(([mp, spots]) => `<figure>${deathMapSvg(mp, spots)}<figcaption>${esc(mp.name ?? mp.id)}: ${spots.length} ${spots.length === 1 ? 'death' : 'deaths'}</figcaption></figure>`).join('')}</div>` : '';
+    })()
     + (m.recentDeaths.length ? `<h4>The last deaths</h4>` + table([['Level', 'level'], ['Killed by', 'killer'], ['Where', (r) => where(r.level_id, r.x, r.z) || '–'], ['Into the level', (r) => clockOf(r.at_second), 1]], m.recentDeaths, '') : '')));
   out.push(section('kills', 'What you killed', 'A creature raised from the dead and killed again counts twice here: you killed it twice. (The tally at the end of a level counts the bodies still down.)', table([['Creature', (r) => r.name + (r.is_boss ? ' (boss)' : '')], ['Kills', 'kills', 1]], m.killsByCreature, 'No kills yet.')));
   const R = m.records, rec = [

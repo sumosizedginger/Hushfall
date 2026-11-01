@@ -38,6 +38,9 @@ GROUP BY r.level_id HAVING COUNT(d.death_id) > 0 ORDER BY deaths DESC, attempts 
 SELECT s.name, COUNT(*) AS deaths
 FROM deaths d JOIN r ON r.run_id = d.run_id JOIN sources s ON s.source_id = d.killer
 GROUP BY d.killer ORDER BY deaths DESC LIMIT 6`,
+  /** PT-080, the death map: every death's level and where (metres), for the plans on the stats screen */
+  deathSpots: `${RUNS}
+SELECT r.level_id, d.x, d.z FROM deaths d JOIN r ON r.run_id = d.run_id ORDER BY d.death_id`,
   recentDeaths: `${RUNS}
 SELECT l.level_id, l.name AS level, s.name AS killer, d.x, d.z, d.at_second
 FROM deaths d JOIN r ON r.run_id = d.run_id JOIN levels l ON l.level_id = r.level_id JOIN sources s ON s.source_id = d.killer
@@ -93,7 +96,7 @@ export function rundown(db, scope) {
   const guns = all(Q.guns).map((g) => ({ ...g, accuracy: g.attacks > 0 ? Math.round((g.connected * 100) / g.attacks) : null }));
   return {
     scope: scope ?? null, overview, guns,
-    hurt: all(Q.hurt), hurtTypes: all(Q.hurtTypes), deathsByLevel: all(Q.deathsByLevel), killers: all(Q.killers), recentDeaths: all(Q.recentDeaths), killsByCreature: all(Q.killsByCreature),
+    hurt: all(Q.hurt), hurtTypes: all(Q.hurtTypes), deathsByLevel: all(Q.deathsByLevel), deathSpots: all(Q.deathSpots), killers: all(Q.killers), recentDeaths: all(Q.recentDeaths), killsByCreature: all(Q.killsByCreature),
     records: { closest: db.get(Q.closestCall, P), streak: Number(one(Q.streak).longest ?? 0), longest: db.get(Q.longestLevel, P), bestPar: db.get(Q.bestAgainstPar, P) },
     parByChapter: all(Q.parByChapter), favourites: all(Q.favouriteByChapter),
   };

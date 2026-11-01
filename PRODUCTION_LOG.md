@@ -1,11 +1,21 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
+- 2026-11-01 (PT-080, overnight at the owner's "do EVERYTHING still on your list") **THE REST OF THE ART LIST IS BUILT; local commits, NOT pushed; the owner has not seen it.**
+  - Gate 4: the shield is a bell of sound (`shellMaterial`), and the beams' soft parts fade across their width (`beamMaterial`).
+  - Gate 3: mass inside the hit cylinders (Tollbearer, Gaunt) and the walk's weight (planted feet: the hips drop by what a swung leg loses).
+  - Gate 1: the Hollow Stair's marble ribs and light; Harmonic Gardens' green caps; hanging lamps in tall halls.
+  - The death map on the stats screen; wider Journal pages; the pixel-size setting.
+  - The render-budget baseline was deleted on purpose (the dressing adds triangles: the pier vantage 39k -> 52k), so the regeneration records a new one.
+  - The regeneration was then run from that commit (see the next line when it finishes).
+  - Item 6 of the assessment (fuller bodies BEYOND the hit cylinder) was NOT done: it would change combat or fairness and needs the owner's word.
 - 2026-10-31 (PT-080) **HANDOFF: the owner was at 98% of weekly usage; this is where it stopped.** DONE this session:
   - 960 is a render-width option (`RESOLUTIONS` in `src/game/settings.js`; 480 stays the default; the comparison is in `review/render-width-test/` in D:\Doom);
   - the Charge-Arc Lamp's teal glows are electric white-blue (`models_arc.js`);
   - Art Gate 0 (`design/ART_GATE0_EVIDENCE.md`);
-  - the evidence regeneration (`npm run regen` with GPU=1) was STARTED from this commit, in the background in D:\Doom_work; its log is in D:\Doom_workeviewegen-pt080. Check it, then commit `validation/` if it is green.
+  - the evidence regeneration (`npm run regen` with GPU=1) was STARTED from this commit, in the background in D:\Doom_work; its log is in D:\Doom_work
+eview
+egen-pt080. Check it, then commit `validation/` if it is green.
 
   NEXT, in order (the owner said yes to all three):
   1. GATE 4 EFFECTS: the boss shields (`src/render/shield.js` + `glowfx.js` `plateMaterial`) and the Gate Warden's sweep (`beamfx.js` `makeSweepView`) still read as flat translucent teal slabs in `review/art-gate0/sheet-bosses-vfx.png`. Make them read as resonating volumes: a curved, thin, mostly clear shell with a bright leading rim, ripples, no ink box; the sweep as a hot core and halo only. Render only.
