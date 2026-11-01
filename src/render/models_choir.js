@@ -37,9 +37,9 @@ export function tollbearer(tex, o = {}) {
   const C = cellsOf('tollbearer'), stage = o.stage ?? 2, big = stage >= 2;
   return makeCreature(tex, (R) => {
     R.joint('hips', null, [0, 0.94, 0]);
-    legs(R, 'hips', 0.11, { a: 0.46, b: 0.44, r0: 0.105, r1: 0.082, r2: 0.058, cellA: C.trou, cellB: C.skin }, C.trou);
+    legs(R, 'hips', 0.115, { a: 0.46, b: 0.44, r0: 0.132, r1: 0.104, r2: 0.074, cellA: C.trou, cellB: C.skin }, C.trou);          // PT-080 (Art Gate 3): MASS inside the hit cylinder: the limbs and torso, not the outline, are fuller (tools/look/check-rigs.mjs keeps the 85% radius within the cylinder)
     R.joint('spine', 'hips', [0, 0.05, 0]);
-    R.cyl('spine', 0.15, 0.18, 0.78, 8, C.skin, { pos: [0, 0.38, 0], scale: [1, 1, 0.75] });                                                 // the torso under the coat: skin
+    R.cyl('spine', 0.19, 0.22, 0.78, 8, C.skin, { pos: [0, 0.38, 0], scale: [1, 1, 0.8] });                                                  // the torso under the coat: skin (PT-080: a heavier trunk)
     R.pleat('spine', V2([[0.15, 0.82], [0.2, 0.78], [0.255, 0.66], [0.27, 0.48], [0.285, 0.28], [0.32, 0.06], [0.36, -0.14], [0.38, -0.3]]), 12, 5, 0.07, C.coat, { scale: [1, 1, 0.72], phi: [0.55, PI * 2 - 1.1] });   // the oilskin coat, torn open down the front
     for (const s of [-1, 1]) R.lump('spine', 0.12, 0, 0.18, s + 2, C.coat, { pos: [s * 0.25, 0.74, 0], scale: [1.2, 0.8, 1] });             // hunched shoulders
     const strips = big ? 8 : 5;
@@ -47,7 +47,7 @@ export function tollbearer(tex, o = {}) {
       const a = (i / strips) * PI * 2 + 0.3, len = 0.3 + 0.2 * ((i * 5) % 3) / 2;
       R.joint('tat' + i, 'spine', [S(a) * 0.35 * 0.98, -0.28, K(a) * 0.35 * 0.72], [0, a, 0]); R.rag('tat' + i, 0.13, len, 0.05, 0.5, i % 2 ? C.coat : C.coatDk, { pos: [0, -len / 2, 0] });
     }
-    for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.27, 0.7, 0], { a: 0.36, b: 0.5, r0: 0.075, r1: 0.062, r2: 0.052, cellA: C.coat, cellB: C.skin }); hand(R, C, n, { len: 0.56 }); }
+    for (const [n, s] of [['armA', -1], ['armB', 1]]) { R.limb('spine', n, [s * 0.27, 0.7, 0], { a: 0.36, b: 0.5, r0: 0.096, r1: 0.08, r2: 0.066, cellA: C.coat, cellB: C.skin }); hand(R, C, n, { len: 0.56 }); }          // (PT-080: heavier arms)
     head(R, C, { neckAt: [0, 0.82, 0.03], r: 0.165, tall: 1.28, neck: 0.22, eyes: 'one' });
     // THE BELL: a church bell on a rope that has grown into the screen-right shoulder, swinging at the hip as a pendulum
     const bh = big ? 0.5 : 0.34, rl = big ? 0.28 : 0.18, rope = 0.3;
@@ -62,7 +62,7 @@ export function tollbearer(tex, o = {}) {
     R.J.bellEchoes = R.echo(bell, 1, 0.14);
     if (big) R.cone('spine', 0.12, 0.6, 5, C.bone, { pos: [-0.34, 0.12, -0.05], rot: [0, 0, 1.15] });                                         // a bone spur grown from the other hip
   }, (p, J, R) => {
-    const t = p.t, h = humanoidPose(p, J, big ? { stoop: 0.2, lean: -0.10, headX: 0.5, headZ: 0.32, jawOpen: 0.5, hipY: 0.94 } : { stoop: 0.14, lean: -0.1, headX: 0.35, headZ: 0.2, jawOpen: 0.4, hipY: 0.96 });
+    const t = p.t, h = humanoidPose(p, J, big ? { stoop: 0.2, lean: -0.10, headX: 0.5, headZ: 0.32, jawOpen: 0.5, hipY: 0.94, bob: 0.05 } : { stoop: 0.14, lean: -0.1, headX: 0.35, headZ: 0.2, jawOpen: 0.4, hipY: 0.96, bob: 0.04 });          // (PT-080: it lurches under the bell: a deeper bob than a walker's)
     J.armA.rotation.z = -0.16;                                                                                                                      // PT-035: it slumps toward the weight of the bell and the other arm trails out: no other creature's outline leans or trails
     const ring = h.raise * (1 - h.rec);
     J.bellPivot.rotation.z = S(t * 1.7) * 0.05 + S(p.phase - 0.9) * 0.3 * p.walk + 0.5 * h.raise * (1 - h.slam) - 0.4 * h.slam * (1 - h.rec);       // the pendulum: it lags the stride and is thrown out by the raised arm
@@ -77,13 +77,13 @@ export function gaunt(tex) {
   const C = cellsOf('gaunt');
   return makeCreature(tex, (R) => {
     R.joint('hips', null, [0, 0.66, 0]);
-    for (const [n, s] of [['legA', -1], ['legB', 1]]) { R.limb('hips', n, [s * 0.1, 0, 0], { a: 0.36, b: 0.36, r0: 0.1, r1: 0.075, r2: 0.05, cellA: C.skin, cellB: C.skinDk, seg: 6 }); R.box(n + 'M', 0.12, 0.06, 0.26, C.bone, { pos: [0, -0.36, 0.07] }); }
+    for (const [n, s] of [['legA', -1], ['legB', 1]]) { R.limb('hips', n, [s * 0.1, 0, 0], { a: 0.36, b: 0.36, r0: 0.11, r1: 0.084, r2: 0.056, cellA: C.skin, cellB: C.skinDk, seg: 6 }); R.box(n + 'M', 0.12, 0.06, 0.26, C.bone, { pos: [0, -0.36, 0.07] }); }          // (PT-080: haunches with mass)
     R.joint('spine', 'hips', [0, 0.04, 0]);
     R.cyl('spine', 0.2, 0.24, 0.6, 7, C.skin, { pos: [0, 0.3, 0], scale: [1, 1, 0.85] });
     R.cyl('spine', 0.11, 0.13, 0.36, 6, C.flesh, { pos: [0.04, 0.34, 0.15], scale: [1, 1, 0.45] });                       // the open chest: raw
     for (let i = 0; i < 4; i++) R.cone('spine', 0.05, 0.22, 4, C.bone, { pos: [0, 0.12 + i * 0.14, -0.2 - i * 0.01], rot: [-0.75, 0, 0] });             // a ridge of bone down the back
     for (const [n, s] of [['armA', -1], ['armB', 1]]) {
-      R.limb('spine', n, [s * 0.27, 0.52, 0], { a: 0.36, b: 0.4, r0: 0.085, r1: 0.07, r2: 0.055, cellA: C.skin, cellB: C.skinDk, seg: 6 });
+      R.limb('spine', n, [s * 0.27, 0.52, 0], { a: 0.36, b: 0.4, r0: 0.094, r1: 0.078, r2: 0.06, cellA: C.skin, cellB: C.skinDk, seg: 6 });          // (PT-080: heavier arms)
       R.lump(n + 'M', 0.09, 0, 0.14, 7, C.skinDk, { pos: [0, -0.43, 0], scale: [1, 1.25, 0.85] });
       for (const d of [-1, 0, 1]) R.cone(n + 'M', 0.024, 0.24, 4, C.claw, { pos: [d * 0.04, -0.63, 0.02], rot: [PI, 0, 0] });                            // bone claws
     }
@@ -114,7 +114,7 @@ export function bellhand(tex) {
   const C = cellsOf('bellhand');
   return makeCreature(tex, (R) => {
     R.joint('hips', null, [0, 0.9, 0]);
-    legs(R, 'hips', 0.1, { a: 0.47, b: 0.43, r0: 0.09, r1: 0.07, r2: 0.05, cellA: C.trou, cellB: C.trou }, C.coatDk);
+    legs(R, 'hips', 0.1, { a: 0.47, b: 0.43, r0: 0.09, r1: 0.07, r2: 0.05, cellA: C.trou, cellB: C.trou }, C.coatDk);          // (PT-080: left slim on purpose: its outline must stay apart from the Tollbearer's and the Sexton's, tests/silhouettes.test.js)
     R.joint('spine', 'hips', [0, 0.05, 0]);
     R.pleat('spine', V2([[0.1, 0.84], [0.16, 0.78], [0.2, 0.62], [0.2, 0.4], [0.21, 0.18], [0.24, -0.05], [0.27, -0.26]]), 12, 6, 0.05, C.coat, { scale: [1, 1, 0.75] });       // the long coat, buttoned to the throat
     R.lathe('spine', V2([[0.22, 0.95], [0.2, 0.9], [0.15, 0.82], [0.12, 0.78]]), 10, C.coatDk, { pos: [0, 0, 0.02] });                                                          // a flared collar: the head stands in it like a clapper

@@ -208,8 +208,12 @@ export function humanoidPose(p, J, k = {}) {
   const w = p.walk, ph = p.phase, t = p.t, stoop = k.stoop ?? 0.2, hipY = k.hipY ?? 0.96, stride = k.stride ?? 0.65;
   const swing = Math.sin(ph) * stride * w;
   J.legA.rotation.x = swing; J.legB.rotation.x = -swing;
-  J.legAM.rotation.x = 0.12 + Math.max(0, Math.cos(ph)) * 0.8 * w; J.legBM.rotation.x = 0.12 + Math.max(0, -Math.cos(ph)) * 0.8 * w;
-  J.hips.position.y = hipY - 0.02 + Math.abs(Math.sin(ph)) * 0.035 * w;
+  // PT-080 (Art Gate 3, the walk's weight): the hips SINK when a foot lands (legs apart: |sin| at its peak) and rise as the legs pass (it was the other way round: a body that floated up at each footfall);
+  // the knees give a little at the landing, and the hips shift over the standing leg. `k.bob` is how heavy the creature walks on top of that.
+  // (PLANTED FEET: a leg swung out by `swing` reaches (1 - cos swing) of its length less far down, so the hips drop by exactly that and both feet stay on the floor; `k.leg` is the leg's length)
+  const land = Math.abs(Math.sin(ph)) * w;
+  J.legAM.rotation.x = 0.12 + Math.max(0, Math.cos(ph)) * 0.8 * w + 0.05 * land; J.legBM.rotation.x = 0.12 + Math.max(0, -Math.cos(ph)) * 0.8 * w + 0.05 * land;
+  J.hips.position.y = hipY - 0.02 - (k.leg ?? 0.88) * (1 - Math.cos(swing)) - (k.bob ?? 0.02) * land; J.hips.position.x = 0.025 * Math.cos(ph) * w;
   J.spine.rotation.x = stoop + 0.08 * w + Math.sin(t * 1.3) * 0.02; J.spine.rotation.z = (k.lean ?? 0) + Math.sin(ph) * 0.06 * w + Math.sin(t * 0.9) * 0.015; J.spine.rotation.y = -Math.sin(ph) * 0.12 * w;
   J.armA.rotation.x = -Math.sin(ph) * 0.4 * w + Math.sin(t * 1.1) * 0.05; J.armA.rotation.z = -0.08;
   J.armB.rotation.x = Math.sin(ph) * 0.4 * w + Math.sin(t * 1.3 + 1) * 0.05; J.armB.rotation.z = 0.08;
