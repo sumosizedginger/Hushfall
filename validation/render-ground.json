@@ -1,12 +1,12 @@
 {
-  "when": "2026-10-27T12:52:14.000Z",
-  "commit": "cf91e55",
+  "when": "2026-11-01T16:55:34.846Z",
+  "commit": "40dc707",
   "sources": {
-    "engine": "cdefcf5dd7d3a7c6",
-    "render": "8da2144bcf22e3b4",
-    "game": "050ca4b156e40bc4",
-    "audio": "27aea5dcf7cfbb88",
-    "assets": "50e27e20f7559732",
+    "engine": "2ada63ee432a9533",
+    "render": "9e01092ceb75ff7b",
+    "game": "3d95c6af30d4f0fb",
+    "audio": "34c405c843e5c792",
+    "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
@@ -39,22 +39,22 @@
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
       "ok": true,
-      "detail": "340 rows (282 on raised floors), 0 violations, deepest 0 m, highest 0.125 m"
+      "detail": "340 rows (282 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.959, 6 nodes"
+      "detail": "body 4.814 m tall on 12 m, shield r 2.963, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
       "ok": true,
-      "detail": "body 4.25 m tall on 0 m, shield r 3.154, 3 nodes"
+      "detail": "body 4.25 m tall on 0 m, shield r 3.174, 3 nodes"
     },
     {
       "name": "render truth: every enemy kind's sim hit height equals its drawn height within 0.10 m (the hit box matches the visible enemy)",
       "ok": true,
-      "detail": "tollbearer 2.246 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.332 drawn / 2.35 hit; sexton 2.335 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
+      "detail": "tollbearer 2.244 drawn / 2.25 hit; gaunt 1.507 drawn / 1.5 hit; bellhand 2.33 drawn / 2.35 hit; sexton 2.335 drawn / 2.35 hit; wardengraft 3.071 drawn / 3 hit; cantor 4.814 drawn / 4.8 hit; bellnode 2.444 drawn / 2.45 hit; gill 1.167 drawn / 1.15 hit; feeder 2.15 drawn / 2.1 hit; graftmother 4.251 drawn / 4.2 hit"
     }
   ],
   "report": {
@@ -78,14 +78,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 42,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 16,
@@ -118,14 +118,14 @@
           "raised": 17,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 84,
           "raised": 42,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 38,
@@ -158,14 +158,14 @@
           "raised": 5,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 55,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 37,
@@ -198,14 +198,14 @@
           "raised": 6,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 68,
           "raised": 26,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 44,
@@ -238,14 +238,14 @@
           "raised": 43,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 112,
           "raised": 99,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 45,
@@ -278,28 +278,28 @@
           "raised": 17,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 98,
           "raised": 56,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 43,
           "raised": 20,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.018
+          "worstFloat": 0
         },
         "corpses": {
           "n": 43,
           "raised": 20,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.04
+          "worstFloat": 0.023
         },
         "corpseRaised": 20
       },
@@ -318,14 +318,14 @@
           "raised": 7,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 85,
           "raised": 29,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 37,
@@ -358,14 +358,14 @@
           "raised": 34,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.121
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 139,
           "raised": 97,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.125
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 41,
@@ -438,14 +438,14 @@
           "raised": 2,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 69,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 30,
@@ -478,14 +478,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 55,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 54,
@@ -518,14 +518,14 @@
           "raised": 2,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 69,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 37,
@@ -558,14 +558,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 56,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 33,
@@ -598,14 +598,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 55,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 17,
@@ -638,14 +638,14 @@
           "raised": 21,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 97,
           "raised": 55,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 44,
@@ -685,7 +685,7 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 31,
@@ -718,14 +718,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 68,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 20,
@@ -798,14 +798,14 @@
           "raised": 8,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 124,
           "raised": 55,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 25,
@@ -838,14 +838,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 69,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 24,
@@ -878,14 +878,14 @@
           "raised": 7,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 69,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 32,
@@ -918,14 +918,14 @@
           "raised": 4,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 81,
           "raised": 26,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 23,
@@ -958,14 +958,14 @@
           "raised": 21,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 82,
           "raised": 82,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 21,
@@ -998,14 +998,14 @@
           "raised": 17,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 150,
           "raised": 150,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 17,
@@ -1038,14 +1038,14 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 69,
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 21,
@@ -1078,7 +1078,7 @@
           "raised": 0,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.076
         },
         "matrix": {
           "n": 122,
@@ -1158,14 +1158,14 @@
           "raised": 27,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 150,
           "raised": 107,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 36,
@@ -1198,14 +1198,14 @@
           "raised": 34,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 150,
           "raised": 150,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 34,
@@ -1238,14 +1238,14 @@
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 125,
           "raised": 70,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 24,
@@ -1278,14 +1278,14 @@
           "raised": 4,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 68,
           "raised": 13,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 16,
@@ -1318,14 +1318,14 @@
           "raised": 31,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 150,
           "raised": 95,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 38,
@@ -1358,14 +1358,14 @@
           "raised": 35,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 189,
           "raised": 147,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 42,
@@ -1398,14 +1398,14 @@
           "raised": 31,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 177,
           "raised": 177,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 31,
@@ -1438,14 +1438,14 @@
           "raised": 11,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 111,
           "raised": 56,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 20,
@@ -1525,7 +1525,7 @@
           "raised": 68,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 46,
@@ -1558,14 +1558,14 @@
           "raised": 49,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 151,
           "raised": 135,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 58,
@@ -1598,14 +1598,14 @@
           "raised": 37,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 136,
           "raised": 136,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.225
+          "worstFloat": 0.223
         },
         "dying": {
           "n": 37,
@@ -1638,7 +1638,7 @@
           "raised": 27,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 151,
@@ -1678,14 +1678,14 @@
           "raised": 33,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 137,
           "raised": 81,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 43,
@@ -1718,14 +1718,14 @@
           "raised": 21,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 136,
           "raised": 81,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 30,
@@ -1758,14 +1758,14 @@
           "raised": 12,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 123,
           "raised": 42,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 38,
@@ -1798,14 +1798,14 @@
           "raised": 23,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 176,
           "raised": 134,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 30,
@@ -1878,14 +1878,14 @@
           "raised": 69,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 97,
           "raised": 97,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.225
+          "worstFloat": 0.207
         },
         "dying": {
           "n": 69,
@@ -1918,14 +1918,14 @@
           "raised": 46,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 97,
           "raised": 97,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.225
+          "worstFloat": 0.207
         },
         "dying": {
           "n": 46,
@@ -1958,14 +1958,14 @@
           "raised": 61,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 121,
           "raised": 121,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 61,
@@ -1998,14 +1998,14 @@
           "raised": 42,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 219,
           "raised": 219,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 42,
@@ -2038,14 +2038,14 @@
           "raised": 31,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 84,
           "raised": 84,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 31,
@@ -2078,14 +2078,14 @@
           "raised": 40,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 166,
           "raised": 166,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 40,
@@ -2118,14 +2118,14 @@
           "raised": 19,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 85,
           "raised": 85,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 19,
@@ -2158,14 +2158,14 @@
           "raised": 25,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 181,
           "raised": 83,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 54,
@@ -2198,14 +2198,14 @@
           "raised": 63,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 248,
           "raised": 248,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 63,
@@ -2238,14 +2238,14 @@
           "raised": 48,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 235,
           "raised": 180,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 53,
@@ -2278,14 +2278,14 @@
           "raised": 33,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 182,
           "raised": 153,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 37,
@@ -2318,14 +2318,14 @@
           "raised": 29,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 209,
           "raised": 125,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 42,
@@ -2358,14 +2358,14 @@
           "raised": 4,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 114,
           "raised": 16,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 26,
@@ -2398,14 +2398,14 @@
           "raised": 2,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 179,
           "raised": 42,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.082
         },
         "dying": {
           "n": 66,
@@ -2438,14 +2438,14 @@
           "raised": 9,
           "bad": [],
           "worstBuried": -0.018,
-          "worstFloat": 0.101
+          "worstFloat": 0.01
         },
         "matrix": {
           "n": 71,
           "raised": 58,
           "bad": [],
           "worstBuried": -0.013,
-          "worstFloat": 0.105
+          "worstFloat": 0.025
         },
         "dying": {
           "n": 10,
@@ -2478,14 +2478,14 @@
           "raised": 24,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 181,
           "raised": 181,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.12
         },
         "dying": {
           "n": 28,
@@ -2518,14 +2518,14 @@
           "raised": 30,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 179,
           "raised": 97,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.225
+          "worstFloat": 0.221
         },
         "dying": {
           "n": 39,
@@ -2558,14 +2558,14 @@
           "raised": 35,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.101
+          "worstFloat": 0.051
         },
         "matrix": {
           "n": 124,
           "raised": 111,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.105
+          "worstFloat": 0.081
         },
         "dying": {
           "n": 37,
@@ -2645,7 +2645,7 @@
           "raised": 55,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.069
+          "worstFloat": 0.025
         },
         "dying": {
           "n": 11,
@@ -2803,28 +2803,28 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.064
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.009
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.075
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.125
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -2847,28 +2847,28 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.064
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.077
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.02
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -2891,14 +2891,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -2912,7 +2912,7 @@
             "raised": 3,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -2935,14 +2935,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -2956,7 +2956,7 @@
             "raised": 3,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -2979,14 +2979,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3000,7 +3000,7 @@
             "raised": 3,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3023,28 +3023,28 @@
             "raised": 0,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 3,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.116
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 3,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.002
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 0,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.083
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3067,14 +3067,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3111,21 +3111,21 @@
             "raised": 0,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.037
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.014
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3155,21 +3155,21 @@
             "raised": 0,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.088
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.037
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3199,7 +3199,7 @@
             "raised": 0,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3213,7 +3213,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.088
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3243,14 +3243,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3287,7 +3287,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3301,14 +3301,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.105
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3331,7 +3331,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3345,14 +3345,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.105
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3375,14 +3375,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
+            "worstFloat": 0
           },
           {
             "n": 4,
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3419,14 +3419,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
-          },
-          {
-            "n": 4,
-            "raised": 4,
-            "bad": [],
-            "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3440,7 +3433,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3463,14 +3463,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
-          },
-          {
-            "n": 4,
-            "raised": 4,
-            "bad": [],
-            "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3484,7 +3477,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3507,14 +3507,7 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.044
-          },
-          {
-            "n": 4,
-            "raised": 4,
-            "bad": [],
-            "worstBuried": 0,
-            "worstFloat": 0.057
+            "worstFloat": 0
           },
           {
             "n": 4,
@@ -3528,7 +3521,14 @@
             "raised": 4,
             "bad": [],
             "worstBuried": 0,
-            "worstFloat": 0.055
+            "worstFloat": 0
+          },
+          {
+            "n": 4,
+            "raised": 4,
+            "bad": [],
+            "worstBuried": 0,
+            "worstFloat": 0
           }
         ],
         "moved": true
@@ -3559,7 +3559,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.959
+        "r": 2.963
       },
       "farthestBodyCornerFromShieldCentre": 2.846,
       "ring": [
@@ -3629,7 +3629,7 @@
         "x": 87,
         "y": 2.2,
         "z": 27,
-        "r": 3.154
+        "r": 3.174
       },
       "farthestBodyCornerFromShieldCentre": 3.188,
       "ring": [
@@ -3785,7 +3785,7 @@
     ],
     "hitVolume": {
       "tollbearer": {
-        "drawnHeight": 2.246,
+        "drawnHeight": 2.244,
         "hitHeight": 2.25,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
@@ -3805,7 +3805,7 @@
         "drawnWidthX": 0.777
       },
       "bellhand": {
-        "drawnHeight": 2.332,
+        "drawnHeight": 2.33,
         "hitHeight": 2.35,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
@@ -4005,7 +4005,7 @@
         "drawnWidthX": 1.385
       },
       "zealot": {
-        "drawnHeight": 2.242,
+        "drawnHeight": 2.232,
         "hitHeight": 2.3,
         "drawnAboveHit": 0,
         "hitCoversFractionOfDrawn": 1,
@@ -4105,7 +4105,7 @@
         "rows": 340,
         "violations": 0,
         "deepest": 0,
-        "highest": 0.125
+        "highest": 0
       }
     },
     "violations": [],

@@ -1,7 +1,7 @@
 {
   "mapId": "C2M27",
-  "when": "2026-10-27T13:12:24.113Z",
-  "commit": "cf91e55",
+  "when": "2026-11-01T17:17:47.166Z",
+  "commit": "40dc707",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,11 +11,11 @@
   "mapSha": "d429b538dad1e755",
   "routesSha": "4f76513a74213ff5",
   "sources": {
-    "engine": "cdefcf5dd7d3a7c6",
-    "render": "8da2144bcf22e3b4",
-    "game": "050ca4b156e40bc4",
-    "audio": "27aea5dcf7cfbb88",
-    "assets": "50e27e20f7559732",
+    "engine": "2ada63ee432a9533",
+    "render": "9e01092ceb75ff7b",
+    "game": "3d95c6af30d4f0fb",
+    "audio": "34c405c843e5c792",
+    "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
@@ -23,9 +23,9 @@
     "main": {
       "ok": true,
       "ticks": 5433,
-      "hash": "54f5f428",
+      "hash": "f1e621ea",
       "nodeTicks": 5433,
-      "nodeHash": "54f5f428",
+      "nodeHash": "f1e621ea",
       "agree": true,
       "kills": 34,
       "secrets": 0,
@@ -34,9 +34,9 @@
     "secret": {
       "ok": true,
       "ticks": 5793,
-      "hash": "1f0843db",
+      "hash": "9a101174",
       "nodeTicks": 5793,
-      "nodeHash": "1f0843db",
+      "nodeHash": "9a101174",
       "agree": true,
       "kills": 34,
       "secrets": 1,
@@ -62,14 +62,14 @@
       "raised": 35,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.101
+      "highest": 0.051
     },
     "matrix": {
       "rows": 124,
       "raised": 111,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.105
+      "highest": 0.081
     },
     "dying": {
       "rows": 37,
@@ -103,14 +103,7 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.044
-          },
-          {
-            "rows": 4,
-            "raised": 4,
-            "violations": 0,
-            "deepest": 0,
-            "highest": 0.057
+            "highest": 0
           },
           {
             "rows": 4,
@@ -124,7 +117,14 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.055
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
           }
         ]
       },
@@ -145,14 +145,7 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.044
-          },
-          {
-            "rows": 4,
-            "raised": 4,
-            "violations": 0,
-            "deepest": 0,
-            "highest": 0.057
+            "highest": 0
           },
           {
             "rows": 4,
@@ -166,7 +159,14 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.055
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
           }
         ]
       },
@@ -187,14 +187,7 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.044
-          },
-          {
-            "rows": 4,
-            "raised": 4,
-            "violations": 0,
-            "deepest": 0,
-            "highest": 0.057
+            "highest": 0
           },
           {
             "rows": 4,
@@ -208,7 +201,14 @@
             "raised": 4,
             "violations": 0,
             "deepest": 0,
-            "highest": 0.055
+            "highest": 0
+          },
+          {
+            "rows": 4,
+            "raised": 4,
+            "violations": 0,
+            "deepest": 0,
+            "highest": 0
           }
         ]
       }
@@ -224,7 +224,7 @@
     {
       "name": "real-game route C2M27.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5433/54f5f428 vs node 5433/54f5f428"
+      "detail": "browser 5433/f1e621ea vs node 5433/f1e621ea"
     },
     {
       "name": "real-game route C2M27.secret: completes in the browser",
@@ -234,7 +234,7 @@
     {
       "name": "real-game route C2M27.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 5793/1f0843db vs node 5793/1f0843db"
+      "detail": "browser 5793/9a101174 vs node 5793/9a101174"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -244,12 +244,12 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "74 rows (35 on raised floors), 0 violations, deepest 0 m, highest 0.101 m; two samples of all 37 enemies: true"
+      "detail": "74 rows (35 on raised floors), 0 violations, deepest 0 m, highest 0.051 m; two samples of all 37 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "124 rows (111 on raised floors), 0 violations, deepest 0 m, highest 0.105 m"
+      "detail": "124 rows (111 on raised floors), 0 violations, deepest 0 m, highest 0.081 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
@@ -259,7 +259,7 @@
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
       "ok": true,
-      "detail": "60 rows (60 on raised floors), 0 violations, deepest 0 m, highest 0.057 m"
+      "detail": "60 rows (60 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
@@ -282,5 +282,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 20
+  "wallSeconds": 23
 }

@@ -78,3 +78,7 @@ Held by `tests/repo-layout.test.js`: only the allowed names at the root of the t
 Not done on purpose: `review/gate-1` and `review/gate-2` keep their reports and json (about 0.2 MB of text: the bundle tools and `npm run validate` read them); the look baseline `review/self-audit` (195 MB, git-ignored) stays until the owner accepts the visual plan.
 
 Note (T2): the comment in `vite.config.js` still calls `look.html` "the frozen look demo". It is left as it was on purpose: `vite.config.js` is part of the game source set that the real-game evidence is stamped with (`tools/textsha.mjs`), so editing it, even a comment, stales the evidence of every map.
+
+## 2026-11-01 (PT-080)
+
+Moved to `D:\Doom_archive\2026-11-01\` (about 40 MB, all output of finished tasks, none read by a tool): `review/gate1` (the Art Gate 1 before/after stills), `review/poses-tb` (the pose-pop study of PT-078), `review/res-test` (render widths), `review/vfx2` (the shield and beam before/after sheet), `review/regen-pt080` (a regeneration that was stopped and replaced) and `review/regen-final` with its `.out` logs (the green regeneration from 40dc707). Kept: `review/art-gate0` (named by `design/ART_GATE0_EVIDENCE.md`).

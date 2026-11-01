@@ -1,7 +1,7 @@
 {
   "mapId": "C2M29",
-  "when": "2026-10-27T13:13:16.354Z",
-  "commit": "cf91e55",
+  "when": "2026-11-01T17:18:45.330Z",
+  "commit": "40dc707",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,11 +11,11 @@
   "mapSha": "c2f1e59d3ba9520e",
   "routesSha": "4ae40f02818d21c4",
   "sources": {
-    "engine": "cdefcf5dd7d3a7c6",
-    "render": "8da2144bcf22e3b4",
-    "game": "050ca4b156e40bc4",
-    "audio": "27aea5dcf7cfbb88",
-    "assets": "50e27e20f7559732",
+    "engine": "2ada63ee432a9533",
+    "render": "9e01092ceb75ff7b",
+    "game": "3d95c6af30d4f0fb",
+    "audio": "34c405c843e5c792",
+    "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
@@ -23,24 +23,24 @@
     "main": {
       "ok": true,
       "ticks": 7239,
-      "hash": "322ffaa8",
+      "hash": "bb769d38",
       "nodeTicks": 7239,
-      "nodeHash": "322ffaa8",
+      "nodeHash": "bb769d38",
       "agree": true,
       "kills": 11,
       "secrets": 0,
-      "wallSeconds": 2
+      "wallSeconds": 3
     },
     "secret": {
       "ok": true,
       "ticks": 7441,
-      "hash": "be1d41f3",
+      "hash": "4f14456b",
       "nodeTicks": 7441,
-      "nodeHash": "be1d41f3",
+      "nodeHash": "4f14456b",
       "agree": true,
       "kills": 11,
       "secrets": 1,
-      "wallSeconds": 2
+      "wallSeconds": 3
     }
   },
   "hud": {
@@ -69,7 +69,7 @@
       "raised": 55,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.069
+      "highest": 0.025
     },
     "dying": {
       "rows": 11,
@@ -92,22 +92,22 @@
     {
       "name": "real-game route C2M29.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7239 policy=standing wall=2s"
+      "detail": "status=complete failed=null ticks=7239 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M29.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7239/322ffaa8 vs node 7239/322ffaa8"
+      "detail": "browser 7239/bb769d38 vs node 7239/bb769d38"
     },
     {
       "name": "real-game route C2M29.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7441 policy=standing wall=2s"
+      "detail": "status=complete failed=null ticks=7441 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M29.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7441/be1d41f3 vs node 7441/be1d41f3"
+      "detail": "browser 7441/4f14456b vs node 7441/4f14456b"
     },
     {
       "name": "C2M29: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -127,7 +127,7 @@
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "69 rows (55 on raised floors), 0 violations, deepest 0 m, highest 0.069 m"
+      "detail": "69 rows (55 on raised floors), 0 violations, deepest 0 m, highest 0.025 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 11
+  "wallSeconds": 13
 }
