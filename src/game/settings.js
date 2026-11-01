@@ -5,7 +5,7 @@ import { defaultCrosshair, sanitizeCrosshair } from './crosshair.js';
 import { sanitizeMinimap } from './minimap.js';
 
 export const SETTINGS_VERSION = 1;
-export const RESOLUTIONS = [320, 400, 480, 640, 800];
+export const RESOLUTIONS = [320, 400, 480, 640, 800, 960];          // (PT-080: 960 is the sharp option the owner asked for; 480 stays the default)
 export const defaultSettings = () => ({
   version: SETTINGS_VERSION, sensitivity: 1, masterVolume: 0.8, sfxVolume: 1, musicVolume: 0.6,
   internalWidth: 480, outline: true, paint: true, aimToggle: false, sprintToggle: false, fov: 70, brightness: 1, bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),

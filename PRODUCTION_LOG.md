@@ -1,6 +1,18 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
+- 2026-10-31 (PT-080) **HANDOFF: the owner was at 98% of weekly usage; this is where it stopped.** DONE this session:
+  - 960 is a render-width option (`RESOLUTIONS` in `src/game/settings.js`; 480 stays the default; the comparison is in `review/render-width-test/` in D:\Doom);
+  - the Charge-Arc Lamp's teal glows are electric white-blue (`models_arc.js`);
+  - Art Gate 0 (`design/ART_GATE0_EVIDENCE.md`);
+  - the evidence regeneration (`npm run regen` with GPU=1) was STARTED from this commit, in the background in D:\Doom_work; its log is in D:\Doom_workeviewegen-pt080. Check it, then commit `validation/` if it is green.
+
+  NEXT, in order (the owner said yes to all three):
+  1. GATE 4 EFFECTS: the boss shields (`src/render/shield.js` + `glowfx.js` `plateMaterial`) and the Gate Warden's sweep (`beamfx.js` `makeSweepView`) still read as flat translucent teal slabs in `review/art-gate0/sheet-bosses-vfx.png`. Make them read as resonating volumes: a curved, thin, mostly clear shell with a bright leading rim, ripples, no ink box; the sweep as a hot core and halo only. Render only.
+  2. GATE 1 ROOM SHAPE: the opening maps (C1E1M01, M02, M03) and the Hollow Stair (C1E4M07: one saturated blue, mean luma 31) and Harmonic Gardens (C2M14: box hedges) need focal architecture, a second material and light. Prove the routes unchanged (`route-fingerprint.mjs`).
+  3. Item 6 (fuller ordinary enemies) still waits for the owner's word on hit volumes.
+
+  After 1 and 2, regenerate again (any src change stales the evidence).
 - 2026-10-31 (PT-079) **THE ART FIXES OF `design/ART_ASSESSMENT.md` ARE BUILT (nine of ten; item 6 waits for the owner's word on hit volumes); local commits, NOT pushed; the owner has not seen them.** The owner: "Do eet!". The items:
   1. `src/render/dressing.js` (wall dressing, drawn only, under the trims' 24 cm rule);
   2. `WEAPON_DENSITY` 2 in `post.js` (the gun's own pixels) and the flare glass red;

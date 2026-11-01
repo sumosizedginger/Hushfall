@@ -50,7 +50,7 @@ test('a new choice of width starts it again; forget() drops stale samples; the r
   const g = new QualityGovernor(480); feed(g, 33, 10); g.reset(800); assert.equal(g.width, 800); assert.equal(g.samples.length, 0);
   g.sample(10, 0.01); g.forget(); assert.equal(g.samples.length, 0);
   assert.equal(new QualityGovernor(123).width, 480, 'an unknown width falls back to the default');
-  assert.deepEqual(RESOLUTIONS, [320, 400, 480, 640, 800]);
+  assert.deepEqual(RESOLUTIONS, [320, 400, 480, 640, 800, 960]);
   assert.ok(QUALITY.slowMs > QUALITY.fastMs && QUALITY.fastMs > 16.7, 'a dead band between slow and quiet, and quiet is above one 60 Hz frame');
 });
 
