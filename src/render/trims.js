@@ -177,6 +177,6 @@ export function buildTrims(map, { tex, wallTex, patch = null }) {
   if (!frames.empty) { const m = new THREE.Mesh(frames.geometry(), mat(tex('wall_iron_a'), 0x9a948c, 'trim')); m.userData.trim = 'frame'; out.push(m); }
   for (const [hex, q] of lamps) { const m = new THREE.Mesh(q.geometry(), new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(TRIMS.doorLamp.k) })); m.userData.trim = 'lamp'; out.push(m); }
   if (!glow.empty) out.push(glow.mesh());
-  { const d = buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, tex, patch }); out.push(...d.meshes); stats.dressing = d.count; }          // PT-079: what people put on their walls (dressing.js)
+  { const d = buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, tex, patch, wallTop }); out.push(...d.meshes); stats.dressing = d.count; }          // PT-079: what people put on their walls (dressing.js)
   return { meshes: out, stats };
 }

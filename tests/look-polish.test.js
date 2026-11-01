@@ -28,6 +28,9 @@ test('surface: the shader reads the numbers of SURFACE, in world space, with a f
   assert.throws(() => patchSurface(new THREE.MeshLambertMaterial(), 'sky'));
 });
 
+/** PT-080: drawn-only pieces wholly this far above their floor are out of every body's reach (the player is under 2 m tall) */
+const HEADROOM = 2.6;
+
 test('trims: on every shipped map they build, every piece stands within a hand\'s width of something solid, and every map with roofed rooms gets its skirting and cornices', () => {
   const maxProud = Math.max(TRIMS.skirt.d, TRIMS.cornice.d, TRIMS.plinth.d, TRIMS.coping.d, TRIMS.pilaster.d, TRIMS.pilaster.base.d, TRIMS.pilaster.cap.d, TRIMS.jamb.d, TRIMS.doorLamp.d + TRIMS.jamb.d * 0.5);
   assert.ok(maxProud <= 0.25, 'nothing stands more than 25 cm proud (a body keeps further than that from a wall)');
@@ -39,6 +42,8 @@ test('trims: on every shipped map they build, every piece stands within a hand\'
     for (const m of meshes) {
       const p = m.geometry.attributes.position.array; for (const v of p) assert.ok(Number.isFinite(v), id + ': a finite trim');
       if (m.userData.trimGlow) continue;
+      const overhead = m.userData.trim === 'dressing' && (() => { let lo = Infinity; for (let i = 1; i < p.length; i += 3) lo = Math.min(lo, p[i] - map.floor(Math.floor(p[i - 1] / S), Math.floor(p[i + 1] / S))); return lo >= HEADROOM; })();          // PT-080: a hanging lamp is mid-room but wholly above any head (it can never be walked into)
+      if (overhead) continue;
       for (let i = 0; i < p.length; i += 3) assert.ok(distSolid(p[i], p[i + 2]) <= maxProud + 1e-4, `${id}: a ${m.userData.trim} vertex at ${p[i].toFixed(2)}, ${p[i + 2].toFixed(2)} stands ${distSolid(p[i], p[i + 2]).toFixed(2)} m from anything solid`);
     }
     if (stats.skirt > 0) { roofedMaps++; assert.ok(stats.cornice > 0, id + ': a roofed map has cornices'); }

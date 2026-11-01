@@ -15,6 +15,9 @@ export const DRESS = Object.freeze({
   skins: ['wall_bulkhead_a', 'brick_warm_a', 'wall_timber_a', 'wall_plaster_a', 'wall_concrete_a', 'wall_iron_a', 'wall_corrugated_a', 'wall_saltbrick_a', 'wall_kiln_a', 'wall_dock_a', 'wall_tidestone_a', 'wall_saltplate_a', 'wall_quiet_a'],
   chance: 0.72, chanceOut: 0.4, waterNear: 5, margin: 0.36, clear: 1.5,          // (the first pass, half as dense and with single shelves, barely read in the real game's frames at 480 pixels: a piece has to have MASS to be seen)
   shelf: { ys: [1.0, 1.48, 1.96], d: 0.2, t: 0.05 }, cabinet: { h: [0.85, 1.25], d: 0.2 }, vpipe: { d: 0.14, w: 0.11 }, board: { y0: 1.05, y1: 2.0, d: 0.04 }, pipe: { below: 0.62, d: 0.15, h: 0.13, minH: 3.2 }, ring: { y: 1.55, r: 0.3, tube: 0.06 }, hook: { y: 1.7 },
+  // PT-080 (Art Gate 1): green that spills over the top of a garden's box walls, so a planted wall is not a cube (the maps and the wall skins it grows on); and chains with a lamp under the roof of a tall hall
+  caps: { C2M14: ['wall_orchard_a'] }, capColors: [0x3e6a34, 0x4e7a3c, 0x5a8a44, 0x2e5428], bloom: [0xd88aa8, 0xe8e0c0, 0xc8a0d8],
+  hang: { minH: 4.6, every: 4, clearWalls: 2, drop: [1.0, 1.7], chain: 0x2e2a28, shade: 0x5a4a38, bulb: 0xffd49a },
   colors: { wood: 0x8a6a48, tin: 0x8a8e92, glassG: 0x4e7a52, glassA: 0x9a6a2a, paper: 0xd8cfb0, cork: 0x8a6440, pipe: 0x6a6460, bracket: 0x3a3634, ring: 0xd85a2c, rope: 0xb89a68 },
 });
 
@@ -26,7 +29,7 @@ const idHash = (s) => { let h = 7; for (const c of String(s)) h = (h * 31 + c.ch
  * `ctx`: { Q (the quad builder of trims.js), faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, S } from buildTrims; `tex(name)` a texture; `patch` the level's surface treatment.
  * Returns { meshes, count }.
  */
-export function buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, tex, patch = null }) {
+export function buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, tex, patch = null, wallTop = null }) {
   const S = map.cell, seed = idHash(map.id), D = DRESS, human = new Set(Object.entries(WALL_SKINS).filter(([, id]) => D.skins.includes(id)).map(([c]) => c));
   const q = { wood: new Q(), tin: new Q(), glassG: new Q(), glassA: new Q(), paper: new Q(), cork: new Q(), pipe: new Q(), bracket: new Q(), rope: new Q() }, rings = [], ropes = [];
   const standing = new Set(map.props.map((p) => Math.floor(p.at[0]) + ',' + Math.floor(p.at[1])));
@@ -88,6 +91,32 @@ export function buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels,
     const g = mergeGeometries(geos); geos.forEach((x) => x.dispose()); const m = new THREE.Mesh(g, lam(color)); m.userData.trim = 'dressing'; out.push(m);
   };
   torus(rings, D.ring.r, D.ring.tube, C.ring);
+  // PT-080: the green over a garden's walls (drawn on top of the wall, inside its footprint but for a hand's breadth: the walls already block every sight line, so nothing the sim sees changes)
+  const capSkins = new Set(Object.entries(WALL_SKINS).filter(([, id]) => (D.caps[map.id] ?? []).includes(id)).map(([c]) => c)), caps = [], blooms = [];
+  if (capSkins.size && wallTop) for (let cz = 1; cz < map.h - 1; cz++) for (let cx = 1; cx < map.w - 1; cx++) {
+    if (kind(cx, cz) !== 'wall' || !capSkins.has(skinOf(cx, cz))) continue;
+    const top = wallTop(cx, cz); if (!Number.isFinite(top)) continue;
+    const r = (j) => h01(seed + 7 + j, cx, cz, 0), x = (cx + 0.5) * S, z = (cz + 0.5) * S;
+    for (let k = 0; k < 3; k++) { const g = new THREE.IcosahedronGeometry(1, 1); g.scale(S * (0.32 + 0.16 * r(k)), 0.22 + 0.22 * r(k + 3), S * (0.32 + 0.16 * r(k + 6))); g.translate(x + (r(k + 9) - 0.5) * S * 0.45, top + 0.06 + 0.1 * r(k + 12), z + (r(k + 15) - 0.5) * S * 0.45); caps.push({ g, c: D.capColors[Math.floor(r(k + 18) * D.capColors.length)] }); }
+    if (r(30) < 0.45) { const g = new THREE.IcosahedronGeometry(0.11, 0); g.translate(x + (r(31) - 0.5) * S * 0.6, top + 0.34, z + (r(32) - 0.5) * S * 0.6); blooms.push({ g, c: D.bloom[Math.floor(r(33) * D.bloom.length)] }); }
+  }
+  const lumps = (list, emissive = 0) => { if (!list.length) return; const byC = new Map(); for (const { g, c } of list) { if (!byC.has(c)) byC.set(c, []); byC.get(c).push(g); } for (const [c, gs] of byC) { const g = mergeGeometries(gs); gs.forEach((x) => x.dispose()); const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: c, flatShading: true, emissive })); m.userData.trim = 'dressing'; out.push(m); } };
+  lumps(caps); lumps(blooms, 0x221418);
+  // PT-080: chains with a lamp hanging from the roof of a tall hall of a human place (above head height, every few cells, never near a wall: thin, high things that never hide a creature)
+  const H = D.hang, hang = [], bulbs = [], nearHuman = (cx, cz) => { for (let a = -3; a <= 3; a++) for (let b = -3; b <= 3; b++) if (kind(cx + a, cz + b) === 'wall' && human.has(skinOf(cx + a, cz + b))) return true; return false; };
+  for (let cz = 2; cz < map.h - 2; cz += 1) for (let cx = 2; cx < map.w - 2; cx += 1) {
+    if (kind(cx, cz) !== 'floor' || sector(cx, cz) || (cx * 7 + cz * 3) % H.every !== 0 || h01(seed + 40, cx, cz, 0) > 0.3) continue;
+    const f = fl(cx, cz), top = ce(cx, cz); if (top - f < H.minH) continue;
+    let ok = true; for (let a = -H.clearWalls; a <= H.clearWalls && ok; a++) for (let b = -H.clearWalls; b <= H.clearWalls; b++) if (kind(cx + a, cz + b) !== 'floor') { ok = false; break; }
+    if (!ok || !nearHuman(cx, cz)) continue;
+    const x = (cx + 0.5) * S, z = (cz + 0.5) * S, low = Math.max(f + 3.0, top - (H.drop[0] + (H.drop[1] - H.drop[0]) * h01(seed + 41, cx, cz, 0)));
+    const chain = new THREE.BoxGeometry(0.035, top - low, 0.035); chain.translate(x, (top + low) / 2, z); hang.push({ g: chain, c: H.chain });
+    const shade = new THREE.ConeGeometry(0.26, 0.2, 10, 1, true); shade.translate(x, low - 0.06, z); hang.push({ g: shade, c: H.shade });
+    const bulb = new THREE.IcosahedronGeometry(0.08, 0); bulb.translate(x, low - 0.16, z); bulbs.push(bulb);
+  }
+  lumps(hang);
+  if (bulbs.length) { const g = mergeGeometries(bulbs); bulbs.forEach((x) => x.dispose()); const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: H.bulb })); m.userData.trim = 'dressing'; out.push(m); }
+  count += caps.length + hang.length / 2;
   torus(ropes, 0.2, 0.05, C.rope);
   for (const m of Object.values(mats)) if (!out.some((x) => x.material === m)) m.dispose();
   return { meshes: out, count };

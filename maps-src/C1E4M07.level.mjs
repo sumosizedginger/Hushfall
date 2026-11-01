@@ -160,6 +160,13 @@ if (SECRET) { const [qx, qz] = SECRET.centre; for (const [k, dx, dz] of [['ammo_
   }
 }
 // ---- end PT-035 materials ----
+// ---- PT-080, the drum (design/ART_GATE0_EVIDENCE.md row 5b: the drum's own wall is 1,173 cells of one saturated blue and read as a blue grid from everywhere in the hollow): a RIB of the Gate's marble every
+// 20 degrees up the drum wall, so the hollow has a rhythm and a second material; only skins change, never a kind, so no route, sight line or shot moves ----
+for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
+  if (L.g[z][x] !== '1' || rad(x, z) < DRUM + 1.5) continue;
+  const a = ((Math.atan2(z + 0.5 - CZ, x + 0.5 - CX) * 180 / Math.PI) + 360) % 20; if (a < 2.4) L.g[z][x] = '2';
+}
+// ---- end PT-080 ----
 const MAP = {
   id: 'C1E4M07', name: 'The Hollow Stair', version: 1, ceilingHeight: 40, par: { time: 600 },
   atmosphere: { fog: '#161c44', fogDensity: 0.0032, sky: 'gate', look: 'stair' },
