@@ -62,15 +62,27 @@ export const recipesC4 = {
       for (let i = 0; i < 12; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(14, 34), '#1c1004', 70);
     }),
   },
-  // ---- the unrung gate's walk (C2M30): quiet marble gone dim, long soft veins, a single thin line of gold at head height all the way along, dust in the corners and nothing else ---------------------------------------------------------------------------------------------------------
+  // ---- the unrung gate's walk (C2M30), PT-079 (design/ART_ASSESSMENT.md item 4: four plain grey squares a tile): quiet marble ASHLAR gone dim, courses of blocks of different lengths, each with a lit top lip,
+  // a dark foot and its own cool or warm grey; long soft veins that wander across several blocks; a single thin line of gold at head height all the way along; chips at the corners; dust gathered at the foot
   wall_unrung_a: {
     seed: 9806, width: 256, height: 256,
     draw: R((g) => {
-      g.bg('#9a9aa2'); g.solid(0, 0, 256, 256, '#9a9aa2');
-      for (const [x, y] of [[0, 0], [128, 0], [0, 128], [128, 128]]) { g.solid(x + 2, y + 2, 124, 124, pick(g, ['#a4a4ac', '#9696a0', '#acacb4', '#8e8e98'])); g.solid(x + 2, y + 2, 124, 3, '#cacad2'); g.solid(x, y, 3, 128, '#5a5a64'); g.solid(x, y, 128, 3, '#5a5a64'); }
-      for (let i = 0; i < 12; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); ink(g, x, y, x + g.rnd(-50, 50), y + g.rnd(20, 80), pick(g, ['#6a6a78', '#c4c4ce']), g.rnd(1, 2.6), 120); }
-      g.solid(0, 126, 256, 4, '#8a7a4a'); g.solid(0, 126, 256, 1.4, '#d8c88a');
-      wash(g, 0, 200, 256, 56, '#6a6a74', 50);
+      g.bg('#7a7a84'); g.solid(0, 0, 256, 256, '#7a7a84');
+      let y = 0;
+      for (const h of [64, 48, 72, 72]) {
+        const x0 = -g.rnd(0, 90); let x = x0;
+        while (x < x0 + 256 - 1) {
+          const w = Math.min(g.rnd(70, 130), x0 + 256 - x), c = pick(g, ['#a4a4ac', '#9a9aa4', '#acacb4', '#9696a0', '#a8a49c', '#9c9ca8']);
+          wash(g, x + 1.5, y + 1.5, w - 2, h - 2, c, 255); wash(g, x + 1.5, y + 1.5, w - 2, 3, '#d2d2da', 220); wash(g, x + 1.5, y + h - 3.5, w - 2, 2.5, '#5c5c66', 220);
+          blot(g, x + 3, y + 3, g.rnd(3, 6), '#6a6a74', 210); blot(g, x + w - 4, y + h - 4, g.rnd(3, 5), '#6a6a74', 190);
+          x += w;
+        }
+        y += h;
+      }
+      for (let i = 0; i < 6; i++) { let x = g.rnd(0, 256), yy = g.rnd(0, 256), a = g.rnd(-0.5, 0.5) + Math.PI / 2; const col = pick(g, ['#6a6a78', '#c4c4ce', '#7e7a84']), wt = g.rnd(1.2, 2.2);
+        for (let k = 0; k < 7; k++) { a += g.rnd(-0.45, 0.45); const nx = x + Math.cos(a) * g.rnd(14, 26), ny = yy + Math.sin(a) * g.rnd(14, 26); ink(g, x, yy, nx, ny, col, wt, 120); x = nx; yy = ny; } }
+      g.solid(0, 124, 256, 4, '#8a7a4a'); g.solid(0, 124, 256, 1.4, '#e0d090');
+      for (let i = 0; i < 8; i++) wash(g, 0, 214 + i * 5, 256, 5, '#5a5a62', 12 + i * 6);
     }),
   },
 

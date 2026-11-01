@@ -5,14 +5,15 @@
 // Same conventions as recipes_g2.js: opaque, tiling (g.tile paints at 9 wrapped offsets), top-left px. Translucent washes and ellipses are plain p5 (`g.p`) so they do not depend on brush's scatter.
 import { R } from './recipes.js';
 import { hex, mix } from './paint_util.js';
+import { blot as wearBlot, ink as wearInk } from './wear.js';
 
 const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
 // (g.p works in a frame centred on the canvas: x + dx - width / 2)
 const rgba = (g, c, a) => { const [r, gg, b] = hex(c); g.p.fill(r, gg, b, a); };
 /** a translucent rectangle, an ellipse and a straight ink line, each repeated at the nine wrapped offsets */
 const wash = (g, x, y, w, h, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(x + dx - g.p.width / 2, y + dy - g.p.height / 2, w, h); g.p.pop(); });
-const blot = (g, x, y, d, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, d, d); g.p.pop(); });
-const ink = (g, x1, y1, x2, y2, c, wt, a = 255) => g.tile((dx, dy) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 + dx - g.p.width / 2, y1 + dy - g.p.height / 2, x2 + dx - g.p.width / 2, y2 + dy - g.p.height / 2); g.p.pop(); });
+const blot = wearBlot;          // PT-079: tools/baker/wear.js (a big faint blot is a stain; everything else as before)
+const ink = wearInk;          // PT-079: tools/baker/wear.js (a big faint thin line is a scratch; everything else as before)
 /** an irregular stain: a cluster of small blots round (x, y), not one round disc */
 const stain = (g, x, y, r, cols, a, n = 9) => { for (let i = 0; i < n; i++) { const t = g.rnd(0, Math.PI * 2), d = r * Math.sqrt(g.rnd(0, 1)); blot(g, x + Math.cos(t) * d, y + Math.sin(t) * d * 0.8, r * g.rnd(0.22, 0.6), pick(g, cols), a * g.rnd(0.6, 1)); } };
 

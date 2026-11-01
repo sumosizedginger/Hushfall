@@ -12,7 +12,7 @@ const PI = Math.PI;
 const gripProfile = [[0.034, -0.09], [0.047, -0.055], [0.05, -0.005], [0.047, 0.045], [0.04, 0.09]];
 
 export function makeFlareCannon(tex, gunTex, o = {}) {
-  const K = gunKit(tex, gunTex), { G } = K, g = new THREE.Group(), glassMat = new THREE.MeshLambertMaterial({ map: gunTex ?? tex, emissive: 0x1a8a7a }); glassMat.userData.atlas = 'guns';
+  const K = gunKit(tex, gunTex), { G } = K, g = new THREE.Group(), glassMat = new THREE.MeshLambertMaterial({ color: 0xc0482a, emissive: 0x5a160a });          // PT-079: the flare in its glass glows signal red (it was the atlas's teal glass, the Hush's colour, which the art bible keeps for the Vael)
   const dbl = K.gmat.clone(); dbl.side = THREE.DoubleSide; dbl.userData.atlas = 'guns';
   const barrel = G(new THREE.CylinderGeometry(0.052, 0.064, 0.56, 10), 2); barrel.rotation.x = -PI / 2; barrel.position.z = -0.27; g.add(barrel);                       // brass
   for (const z of [-0.16, -0.38]) { const b = G(new THREE.TorusGeometry(0.068, 0.012, 5, 12), 2); b.position.z = z; g.add(b); }                                           // brass bands

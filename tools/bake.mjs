@@ -12,9 +12,9 @@ const PREVIEW = process.env.BAKE_PREVIEW ? path.resolve(process.env.BAKE_PREVIEW
 fs.mkdirSync(outDir, { recursive: true });
 const want = process.argv.slice(2);
 
-const server = await createServer({ root: path.join(root, 'tools/baker'), logLevel: 'error', server: { port: Number(process.env.BAKE_PORT || 5199), strictPort: true, fs: { allow: [root] } } });
+const server = await createServer({ root: path.join(root, 'tools/baker'), logLevel: 'error', server: { port: Number(process.env.BAKE_PORT || 5199), strictPort: true, hmr: false, fs: { allow: [root] } } });          // (PT-079: no live-reload socket: a refused one was reported as a page error and threw away a whole bake)
 await server.listen();
-const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await puppeteer.launch({ headless: true, args: process.env.GPU ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });          // GPU=1: the machine's own graphics card (PT-079: it HUNG one p5.brush job past the 300 s timeout; bake on SwiftShader, the default)
 const errors = [];
 async function job(id, bg) {
   const page = await browser.newPage();
@@ -33,10 +33,14 @@ async function job(id, bg) {
 let env;
 const recipeIds = (await import('./baker/all.js')).recipes;
 const ids = want.length ? want : Object.keys(recipeIds);
-const results = [];
+const results = [], failed = [];
 for (const id of ids) {
-  if (recipeIds[id].transparent) { results.push(await job(id, '#000000')); results.push(await job(id, '#ffffff')); }
-  else results.push(await job(id, '#000000'));
+  const t0 = Date.now();
+  try {
+    if (recipeIds[id].transparent) { results.push(await job(id, '#000000')); results.push(await job(id, '#ffffff')); }
+    else results.push(await job(id, '#000000'));
+    console.log('painted', id, ((Date.now() - t0) / 1000).toFixed(1) + ' s');
+  } catch (e) { failed.push(`${id}: ${String(e.message ?? e).slice(0, 160)}`); console.log('FAILED', id, ((Date.now() - t0) / 1000).toFixed(1) + ' s', String(e.message ?? e).slice(0, 120)); }          // PT-079: one slow recipe names itself and the rest still bake
 }
 if (errors.length) { console.error('BAKE ERRORS', errors); await browser.close(); await server.close(); process.exit(1); }
 
@@ -71,5 +75,6 @@ for (const [id, rs] of byId) {
   console.log('baked', id, r.width + 'x' + r.height, 'seed', r.seed, r.transparent ? '(matted alpha)' : '');
 }
 if (!PREVIEW) fs.writeFileSync(mp, JSON.stringify(manifest, null, 2));
+if (failed.length) { console.error('NOT BAKED (the rest were written):', failed); process.exitCode = 1; }
 await browser.close();
 await server.close();

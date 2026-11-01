@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs",
+  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -178,8 +178,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "67af3951664be77d7fed85ce136ff28d2c2370544b07c816b634ac3550ed9eb6",
-      "bytes": 23227
+      "sha256": "df7b91f4c3c86a5719b301d723289bbc4bbe616322bd793b775da93e1204cf7f",
+      "bytes": 27977
     },
     "wall_iron_a": {
       "seed": 27401,
@@ -194,8 +194,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ba6e62fab0a77903573c75e470f182ac9150b8c299cb3c3de1674bca282a1a36",
-      "bytes": 53566
+      "sha256": "d02ba88493eebe59d073e896dd8df1f36737c7a05cd5a93a34e57f21e9d81ded",
+      "bytes": 59403
     },
     "floor_tile_a": {
       "seed": 27601,
@@ -274,8 +274,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "674186905f8a66911fe7f27282cf25a82e4cc2a5599b3b01be8ed04af760115e",
-      "bytes": 35281
+      "sha256": "a484b6ad24a5b29329e3e1aa9aeb73230f83e9689ba35b5646301a036d26e950",
+      "bytes": 43643
     },
     "floor_saltcrust_a": {
       "seed": 9201,
@@ -346,224 +346,224 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f3aad6a2d42f900f6d8b87acb2d6893514548ad24ad565a84be7db97ff45aa06",
-      "bytes": 30556
+      "sha256": "93f6079e8d5d7a4bac47f1eb7a38de7430b6248cdbf80cfaa80e94f963f278d2",
+      "bytes": 30778
     },
     "choir_gaunt": {
       "seed": 2302,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "32c208f542c5b5de46c53e12071f82f602686a9d2bbcd4860f37d60934448a1e",
-      "bytes": 21331
+      "sha256": "dd60fc3d58a2156267aa683ec9eaf7c7c4ed55610466407919efe290a04a898a",
+      "bytes": 21493
     },
     "choir_bellhand": {
       "seed": 2303,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "33c0d46e02563754fdd931a6fe4325d521d088ff3fb9c06e69ac7794352ed139",
-      "bytes": 30572
+      "sha256": "69930f711fb286c04e833aea1513080c41ef274814291a12f8a91ca88f65fac0",
+      "bytes": 30739
     },
     "choir_sexton": {
       "seed": 2304,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e260bf545f9f42df08b947b62d8fbc5aa4a4a5a87461da9cd2e8e6823c1dba87",
-      "bytes": 30715
+      "sha256": "0352047d6746f4a22d7f14c64056ae7e65ce1861f30d138d68adc32577ed9024",
+      "bytes": 30939
     },
     "choir_wardengraft": {
       "seed": 2305,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "409491329c5309ed8d8331c5133f5f34fb78a7299dfc5c3ae7bd8cfbaf2c1b7e",
-      "bytes": 35219
+      "sha256": "d12a084ed38f864c9d329d9145549870975a52cd817a91afcaa036b4cee96b25",
+      "bytes": 35534
     },
     "choir_cantor": {
       "seed": 2306,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "05fee51734a24ebe96571ebc50598ca559fd89f3f2e6d2be3bd71c5780380b48",
-      "bytes": 29699
+      "sha256": "fcb20c0b3c9312309e46ebaf6d0b94d49a57b28b6ef1a53ecd1bc639cfbecc5b",
+      "bytes": 29963
     },
     "choir_bellnode": {
       "seed": 2307,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "98cf253d3bea39ace85da825877b9452ec380c56b4486ecbf34c86ce8f5e0a04",
-      "bytes": 22515
+      "sha256": "6a4c7171cf52c41cdc36490f688d85ce28e48f5928bdf014832cebab0936d612",
+      "bytes": 22597
     },
     "choir_gill": {
       "seed": 2308,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e7d9ef866510f0b32e0dc808c1849187cf449b656b796336664f56f920db204d",
-      "bytes": 22552
+      "sha256": "84d98f97ac72d2f10f372b13f0c4bf005cf32afb51390e195066a5818d776f1b",
+      "bytes": 22722
     },
     "choir_feeder": {
       "seed": 2309,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4986a04bbcfa5c92c158d43408e42a8a3554f546f2159b38264d42738cf73b04",
-      "bytes": 28347
+      "sha256": "bab55970abb6b74bb5951f10d2c74ec72d7d269da161f2268c5de099ae574738",
+      "bytes": 28607
     },
     "choir_chorister": {
       "seed": 2311,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "3d7c9507f5a7eaad7bb1644a4e27537d843853bb8e542830f82ea4fd0b2605ec",
-      "bytes": 35134
+      "sha256": "7cabd5f171fca42bbf9d8b2cee5a9fce9a6a4d22b08173c1baf41b26a216a3aa",
+      "bytes": 35346
     },
     "choir_bulwark": {
       "seed": 2312,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "222c8e979fcc36517babf851c2516a46b869478107a32abffb597ea8b68e7661",
-      "bytes": 37728
+      "sha256": "fd90e04c1f4f7f6c0410a117173016d504108347d67aaa5c044927da9f690ad2",
+      "bytes": 37852
     },
     "choir_weeping": {
       "seed": 2313,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "a3f362b49a39707d37b8c60fefd27193274547e07d4c208712748225a8a50684",
-      "bytes": 40255
+      "sha256": "2d7148e326f373a288a350610354b3b6d110a25fe2ccfbb23bba9e96ebbb0a07",
+      "bytes": 40585
     },
     "choir_acolyte": {
       "seed": 2314,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "39d71a20f6ecdb1f4112f2a770247d547f361eb8027e2dbfac34db5fc65c113c",
-      "bytes": 26646
+      "sha256": "5bd8b45ba727a2adb51b64e373092dad8d79b825d9a047ee2cd6f5c59f0eb3cd",
+      "bytes": 26726
     },
     "choir_vat": {
       "seed": 2315,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4675c615aed436434f84ada873025646cae9df72518a67eb82a99ff6e8ee28e8",
-      "bytes": 29631
+      "sha256": "8b9129783b8d2b90ebd826fd254a0f90274e7a899e2559389de7e44fbba256c2",
+      "bytes": 29729
     },
     "choir_reed": {
       "seed": 2316,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "1eeed848c51c46127009ecf254c84db39565b91d655bbdcc8c1a25cae2950f4d",
-      "bytes": 24536
+      "sha256": "e7604575a3e2a5119539f13041c4b5d50e6482e30138a534c8db6d89320e74ca",
+      "bytes": 24814
     },
     "choir_grandcantor": {
       "seed": 2317,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f28ca634642d4aacd29fe1a9d9af9a2d04275b0cc27f3df129f1a8f8864f5373",
-      "bytes": 45127
+      "sha256": "ade13328de8bb8998ac15a648f1e720550a009e7a118af1f535f99a9ab8ac654",
+      "bytes": 45352
     },
     "choir_gatewarden": {
       "seed": 2330,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "25d6b3372eca4448e55c0897599af4ac384146d99029d9ad2ad0b440662d02db",
-      "bytes": 37155
+      "sha256": "8d7a850ca40862c0eb6d73a50787644c529f8fea77c1c4cabdcc2cc5b4f8a5e9",
+      "bytes": 37339
     },
     "choir_seal": {
       "seed": 2331,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "8ea2dcc91120b84b3cf71ff3d767ee058c47dd480d2c3d74c69ddf23957023b4",
-      "bytes": 21724
+      "sha256": "5d798e6a8875e3500a3cb8e799ba17c03eb4dd2fab5bf394a9f1106b576658ec",
+      "bytes": 21826
     },
     "choir_vaelfolk": {
       "seed": 3701,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "77c7662fe48262dc0aecd691591c7e548497125993e5c7f216c530dd1d20b4b0",
-      "bytes": 26223
+      "sha256": "9a8ed335916aa4230a621820c75d0389d944df83c5cf978be8a4d060ec06e4a3",
+      "bytes": 26451
     },
     "choir_zealot": {
       "seed": 3801,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "8cf3f2ea17d04ae61b9806e60f79535e71f9c040707a8835c4a3142cf4537c8b",
-      "bytes": 33637
+      "sha256": "dbbd89a4df2a18a97d9c6976c647e3dd29c0aabb16cf05929a3ed698ed95ae57",
+      "bytes": 33760
     },
     "choir_marksman": {
       "seed": 6001,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "23c3afb0135c8146f832d4c5f98ab2b78eb9c1be5ff052f643abecff4861a655",
-      "bytes": 36026
+      "sha256": "7d441e87d82509e5f86dd65df270866de9d780a0aa6389eb58c84744ed636423",
+      "bytes": 36262
     },
     "choir_mender": {
       "seed": 6002,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f10447195b4942fb707ec533d3c791e9da617c6f942b68a2e54747569be00e8f",
-      "bytes": 29406
+      "sha256": "4d2461508a33fe40986eb94383676673010ff459b6efb29d88181974b265521b",
+      "bytes": 29552
     },
     "choir_subcantor": {
       "seed": 3901,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "b67b3e96c4aad9fed15603de934f69721d119abe9205b8949d0a714430b51482",
-      "bytes": 30316
+      "sha256": "2348064f51167aa239021d8215425f6d19fcf9a22d7515fd88c23075e96611be",
+      "bytes": 30498
     },
     "choir_resonant": {
       "seed": 4301,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "c91b34c0f71da9aa7df5bb7f913ef028601ccb8049dd824d216937144d0aa6cf",
-      "bytes": 31601
+      "sha256": "ba1bc160d3e6a7b0a38b4db4016f8ed36f9499dc893ce8dd4ef4a7053689012a",
+      "bytes": 31793
     },
     "choir_hivecantor": {
       "seed": 4302,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "348ec861089bac97e5103e85a475738dee1badcdfaf34fca7e85e7714e97319b",
-      "bytes": 30454
+      "sha256": "4cbfffbd0471db37451eff45304c248ffb4ca71c18def00586d97526c90608ef",
+      "bytes": 30597
     },
     "choir_rootbell": {
       "seed": 4303,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "900e613a845fd12a89bf6f47fc71c80c682d220baa64b343a54f7ed2adcb9b8d",
-      "bytes": 27155
+      "sha256": "91a07ddc6b7915a5fe28930f6b73b42d111a88c6643543af4c46697108f8479d",
+      "bytes": 27402
     },
     "choir_rootanchor": {
       "seed": 4304,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ffecf641851e2b93dad7b835f0a7856b51c1a254686ada511fdb66a93362062a",
-      "bytes": 20959
+      "sha256": "2cb7521a411180d9a0ff2c28644757e750ad47547e1384b9707a93c94397d02c",
+      "bytes": 21060
     },
     "choir_graftmother": {
       "seed": 2310,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "c6ce08f412d6ceb5664aedffe7a9ce83a5b5f6ace3111ab99915c480f603ed4a",
-      "bytes": 35392
+      "sha256": "3038950b96d215832843a26473882aa24bc2129dd93912140e87992615e1c009",
+      "bytes": 35616
     },
     "sky_bleach": {
       "seed": 8401,
@@ -602,48 +602,48 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "2d4864ea844fea300bf57ee1e4176a02090d61b82d2fec3dfa9dfa6ab74e2673",
-      "bytes": 25484
+      "sha256": "4fa79c86a9c9e199feea81e8c712a7e6350bfb6d5d7cfa8d61b6832b6772945d",
+      "bytes": 40748
     },
     "floor_gill_a": {
       "seed": 9302,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "aa59c9ee0ab3eba06c5cd92cb0dc49e05e03c17e188e4e6ff29ac4696bc9e049",
-      "bytes": 43409
+      "sha256": "b56396b00fa4a09add82e8e94a3c4868bcec4f81f0ad70be329580c6e0822f4c",
+      "bytes": 66712
     },
     "door_gill_a": {
       "seed": 9303,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "a60427713fe4abe90200f42e4fa98b04a3dbe1367ee05ee0161211d0c1dfe718",
-      "bytes": 31796
+      "sha256": "d36bc7e486eb4fb5be4d95da9528b26da1ff01c878342a329bbdc758fddfca39",
+      "bytes": 50473
     },
     "floor_spore_a": {
       "seed": 9304,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "14e2d3ba88f84cf776c71271ad1e592fc598e205d0fca808b769f5bad9d5ee92",
-      "bytes": 40728
+      "sha256": "e08796a1cfc473a928a1bf8a731f0ac7723c93556fad537eb59d11aadff56094",
+      "bytes": 77675
     },
     "wall_loom_a": {
       "seed": 9311,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ec16f3e812ab8f1d821d54f00f0e368b79a852325ce5d5ffedf0cb7054c22f2a",
-      "bytes": 17092
+      "sha256": "2c71af0a4303dd4835ba01e97864a24e2587943338b5001b2a8bb4edfefa1f81",
+      "bytes": 24592
     },
     "floor_loom_a": {
       "seed": 9312,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4fe69a398a06645cf669b84ed12aa6e83e51a7cbbfbc3a2da91bc692adcb7854",
-      "bytes": 31182
+      "sha256": "10b05157289dcb3af53796e82411926b5357e7dee058b03c5deac354bb949458",
+      "bytes": 51610
     },
     "wall_loft_a": {
       "seed": 9313,
@@ -658,72 +658,72 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e517f10614c4dfc31c21d58867422a17e56c760c03cc64e4e25c25c21d17b235",
-      "bytes": 14464
+      "sha256": "4930cb94a795ae40a26aee051576b7617a53a90670b5bf61583c7e642a879494",
+      "bytes": 19113
     },
     "wall_foundry_a": {
       "seed": 9315,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "20e16050d6cfe8831929b7d5ac6ac4e3e76f734aad99bffe63a67cc59c8cbd97",
-      "bytes": 19257
+      "sha256": "ac890860fc51538b180a1a49b88f6e3d3e19fdedaada4479010f2d0d7ebedf8a",
+      "bytes": 24632
     },
     "floor_foundry_a": {
       "seed": 9316,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "9ed183114e7e832d25dc2041f7ac4143bea93772f31dd6df6ba08d360096df2d",
-      "bytes": 18654
+      "sha256": "732db22d4e1b8b5bebc1c996b776865be24fae527235149f4d58cf59e45f27c9",
+      "bytes": 41031
     },
     "wall_throat_a": {
       "seed": 9317,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "35dec7bf3bc230e8c619c8ccb19a46c5bc5b2f689ccfd4acf327272595cc88b7",
-      "bytes": 23872
+      "sha256": "6aeda2feae9e38a93bb4b3bf1deded6b2f42c2de785389be2a7bd36b47924b6d",
+      "bytes": 30558
     },
     "floor_throat_a": {
       "seed": 9318,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "a56daf74ab3be456c2c6fe0620813bdac60432fa1425e706bafd10882d81e6ce",
-      "bytes": 35799
+      "sha256": "e27008ee3332ceb3e04b0902ccf3ca3e1fc6485c73fc1cc2ec3892d34a067892",
+      "bytes": 66028
     },
     "wall_lattice_a": {
       "seed": 9401,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "8ca82c7be38839e5e3915d46f3fcb5fe8a202abfbbba2d9fe0c200fdb3df84d6",
-      "bytes": 20803
+      "sha256": "a4cecf4d959ba8077831fbf64764891fcaf2decd4ba7d52511012c4bc7d59db2",
+      "bytes": 23944
     },
     "wall_hull_a": {
       "seed": 9402,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "01a47a0289558abd35e2c57d9d925e3b617cb92640eefb1b96c520b341438539",
-      "bytes": 23894
+      "sha256": "3ac777228cb4d0ba06d8d5c5fbb18ae4e9e9f8b0511ef5ecb12e5573732e05fd",
+      "bytes": 41403
     },
     "floor_deck_a": {
       "seed": 9403,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "2b6df7817d8146baf0c0f6ebb57aa6ccb6a82c98bbbddef46e2ccf97e952c668",
-      "bytes": 21630
+      "sha256": "6680dc550690d18c6b9f9d814e4f48864f645f9911cf9ac7f00e3675b41ac7d5",
+      "bytes": 32399
     },
     "floor_hull_a": {
       "seed": 9404,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "23b911830963ff4c93ce6cbc9e5d7a4eb67ffe5611843f6eebc9740215b6b08a",
-      "bytes": 17801
+      "sha256": "c8341bbf7068c28046ae88057f32e1ea700fa627f28fb6e55d5d4135c9a72dab",
+      "bytes": 30813
     },
     "sky_orbit": {
       "seed": 9405,
@@ -746,8 +746,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "7ad41126c2d65a4d916f040558396ad16b009777a864aa8a9a0b6fa80cde597e",
-      "bytes": 21587
+      "sha256": "61f0b100fbb33393b04bee3d6fba94137945df4a5242c9b1b6df0f0596956235",
+      "bytes": 39270
     },
     "floor_prism_a": {
       "seed": 9412,
@@ -762,56 +762,56 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "2f23d3e0ff5736b94c67faef969258b80763d72f99739214524131c4741587c6",
-      "bytes": 15868
+      "sha256": "f0df49d3ddd1aa61d4ec45b9d9c6a8866a88ed15df0172a899ada3675faaa55e",
+      "bytes": 32189
     },
     "floor_quiet_a": {
       "seed": 9414,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "ee555348964267f812194043f8c95d75ba3cdc36707886775475b53b8975d804",
-      "bytes": 31859
+      "sha256": "530456f78752bd14f12cfc906c0fbfd3f9abf6b11568f47a3e35af1a89fdc021",
+      "bytes": 56495
     },
     "wall_dock_a": {
       "seed": 9415,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "726944441ff3410b49584d3ca21e87a4d3a5a7dc83f56db9168c1cbc8ecb630c",
-      "bytes": 14245
+      "sha256": "64cc4000cb75bd8305323e9f93465e1f770e8aa13aede2f62f4cd75b7583135c",
+      "bytes": 24988
     },
     "floor_dock_a": {
       "seed": 9416,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "22d27338f5a6979d512e73bad8277ae0820968592074edaf34bf7b0e73d80613",
-      "bytes": 17100
+      "sha256": "184dfe6326970acbd3a1524f3816e11fb97b16b3e5ad5cf54f7772c2f8b20c66",
+      "bytes": 31009
     },
     "wall_orchard_a": {
       "seed": 9417,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e4c1f10afba2ddd0be5f25c29c8900287439af35c79d957be5ac90d026b6543f",
-      "bytes": 18548
+      "sha256": "e8de20c448e4a13142cd0c2ac9cc8d052dfffe760ac455d5a38d71147f88c032",
+      "bytes": 29460
     },
     "wall_bark_a": {
       "seed": 9418,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f61b1cdcb92dc6b0457308a747440882aed653f8a5b6aabbf025185c0b0ce434",
-      "bytes": 11150
+      "sha256": "8a1631456f0a38b34ea231b7aa57cfa8f12d7bbdf494640486b0cb36a5a6a90b",
+      "bytes": 18201
     },
     "floor_moss_a": {
       "seed": 9419,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "fdc59f0ad3e206b6aa7bb76b6fb5eead6acc3f8d17ac16507afadfd4d0acd100",
-      "bytes": 27560
+      "sha256": "aa3eb26e54c16e14f69f6a63cb0a3e7eaddf22930bb758698ac0c6527e4e9157",
+      "bytes": 63985
     },
     "wall_approach_a": {
       "seed": 9420,
@@ -826,40 +826,40 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e255f3d4adc5f7ea4a19203eaed6f6ceda20e244193f1d8c535a5615f485efa5",
-      "bytes": 12639
+      "sha256": "ab7132db89898b4aee2ad29b7f46e3b1e1c13fc685321e7a25957d8d7eaf248c",
+      "bytes": 18708
     },
     "wall_stair_a": {
       "seed": 9422,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "855fa1c59306a5239e9b541349def0e9005a01ac06dcd8f5b5d9f09af54283bd",
-      "bytes": 7407
+      "sha256": "a822273e7e31a1621af766b1ed3256ba8d1364a4370b5abb4baaf4bc67c266f8",
+      "bytes": 8911
     },
     "floor_stair_a": {
       "seed": 9423,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "dba959de5e843dfd59b694ac7ef096de9b4435f68c3e0dfa2e32ad4b8560ed9d",
-      "bytes": 10723
+      "sha256": "5841e3e855e37666bcf0076c737d6a7313578f02e98dafedce3d67307b46fdbe",
+      "bytes": 18016
     },
     "wall_gate_a": {
       "seed": 9424,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "6031221be601b4ca81a331e503913e103ba016b59e8a83a81581e8492afe5f45",
-      "bytes": 20633
+      "sha256": "042010db083ba3c97cdfc59b5e73d37a6cce527ec11018945c97286c71d71e52",
+      "bytes": 38430
     },
     "floor_gate_a": {
       "seed": 9425,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f5fb6d871865ae9605eeffd22aab6fe0bb002712d050cf2282250090e6cbc99e",
-      "bytes": 28123
+      "sha256": "b4d996ad7eb72631e25a1adc598f853ef8c3fc9f9c3c82fe0b109477b856a084",
+      "bytes": 46265
     },
     "sky_gate": {
       "seed": 9426,
@@ -898,80 +898,80 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "f033dafee0c8ea4f2949814315a7c10ded8b569a15d97794341c6b7a34c0b2ef",
-      "bytes": 27086
+      "sha256": "96e10d35326645d408fe535819d0f84173c103344bbb8e7726358b0b563be58f",
+      "bytes": 50506
     },
     "wall_saltplate_a": {
       "seed": 9502,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "c82cd1e6278b950c8419d21cfbeb47785975074c6cfe345c4a7c13a9d1ce3736",
-      "bytes": 16122
+      "sha256": "839e78e3eca0911d6ba9b16e98747890d0c19520651ac0f0dbb5d88819427172",
+      "bytes": 28611
     },
     "wall_basalt_a": {
       "seed": 9503,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "726b7cc2941a8c41c9cf738826a37fccb5c5ce738b2489d6468b051fadbba9ce",
-      "bytes": 9308
+      "sha256": "00b01db8f2320dc0b18fa9a161e0a8c71feebe89069d795911826d96ab9461ae",
+      "bytes": 11856
     },
     "wall_bonecoral_a": {
       "seed": 9504,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "9d7c68b859ad6f4a495f9fb1e60e06feb893ea65733c3f049ec147d487a79c15",
-      "bytes": 33222
+      "sha256": "8d115dbf1dd78193e65b485485fe303d9966a21fe356ad3265f47f0063911fd3",
+      "bytes": 50692
     },
     "wall_reliquary_a": {
       "seed": 9505,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "b5e523ecdc7864c078d60a41532945ec85020d89e7e30c8cda56a4b8c356e454",
-      "bytes": 17106
+      "sha256": "5e2eeca0e73b80699f9561c7a54725730fe9d795de46a236f7ecd6d6892a6640",
+      "bytes": 26986
     },
     "wall_chitin_a": {
       "seed": 9506,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "e83ea97cf13aacc106e9a062ac950d45e8ecfc32f2ae9e4752a29a03d4e5c3c4",
-      "bytes": 12874
+      "sha256": "b2ea3159f473acc5aabe3a4a942bc3e06aeece4b714062a06750e665d66a8c41",
+      "bytes": 23905
     },
     "floor_glasssand_a": {
       "seed": 9511,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "1f5f4ad9efe52246fea83700ab1a161b3a5c4d143750ab6b0ef0ce2a859a883a",
-      "bytes": 25628
+      "sha256": "25cb33099960a79daa84d22b5c204391173061619ad82e41984d73e1bdcb8adf",
+      "bytes": 58109
     },
     "floor_basaltflag_a": {
       "seed": 9512,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "fcb8c1c3697f5a7152bc233fb24d25c66ea4985a6e9f28f9f7e4d9fe88f86368",
-      "bytes": 9020
+      "sha256": "83ceefaf705e3234601964726ad4f254ccc043ecd71ca2adea60b25b442555ac",
+      "bytes": 13076
     },
     "floor_terrace_a": {
       "seed": 9513,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "03bc3eefe47bc83e0b6fef0d98ab7c89e0bce61991070978896f70048d0642e1",
-      "bytes": 14121
+      "sha256": "e854f36f1462a767cfe032c00bf129b1a8ed4e29d978bb4d6661a365167b7ecb",
+      "bytes": 21028
     },
     "floor_chitin_a": {
       "seed": 9514,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "d486cfd06a3603fa48220902c6c670f9870208fddc357fe4aa9664f9672fade4",
-      "bytes": 11502
+      "sha256": "6aff8dbc84a8c3e1f3deccfc04e3221c73fcbfd9bca9122bfeca955a6529f002",
+      "bytes": 23501
     },
     "sky_anselm": {
       "seed": 9515,
@@ -986,16 +986,16 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "2eee843ccd51a67bc2fe1dd324fe69ef3670b4bfce2a8413fa459e6eed695956",
-      "bytes": 18081
+      "sha256": "b03141f6dadfcfd5ee26c8d83045b33b4df8973b11883554e21dc040afe8b97b",
+      "bytes": 31827
     },
     "wall_citystone_a": {
       "seed": 9602,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "759bec2c8975bd57edae6d4550653d31ceff4d8853dce198e67edda69957bd02",
-      "bytes": 11069
+      "sha256": "135ffd24a5b16f5793791a932838d9d22fb5693e80069c3c361226709edc080d",
+      "bytes": 19626
     },
     "wall_marblebronze_a": {
       "seed": 9603,
@@ -1018,32 +1018,32 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "c45a0eca632c01838632afbb2febef9c1f602283f3890aeb10b7439d45f32f10",
-      "bytes": 14624
+      "sha256": "47a5354284d92e0452e51aaabf2259e56d8bbbc03d88defb63941eec82d49ba5",
+      "bytes": 17335
     },
     "wall_ashstone_a": {
       "seed": 9606,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "3d006eb8cd99bf54a9503b20328369e08278c70685499fed87ee89e394da833a",
-      "bytes": 16658
+      "sha256": "663fa672d86f49e8073c91edcb2ca7137c253e4b78132f4fc63c65a265bebde7",
+      "bytes": 36026
     },
     "wall_heartflesh_a": {
       "seed": 9607,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4a70b3534997ded78a25e8b9e0e2363ef139c89ce223f5d0f2fab27af33c0dbb",
-      "bytes": 23961
+      "sha256": "e6a2a74f4ea65629f0a3cbb37ae90f68c91787394f30832065a138f21105d5d4",
+      "bytes": 45851
     },
     "floor_flowstone_a": {
       "seed": 9611,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "3cdd9f805a666064fa2fb2dcf5c5650222ad98818e47553b667c97ab651d8f27",
-      "bytes": 30106
+      "sha256": "e7b77b263d7f71f61732d5bebf8b2fbd41ecc9031075027e4fd1eaacde2f605b",
+      "bytes": 41558
     },
     "floor_marble_a": {
       "seed": 9612,
@@ -1074,72 +1074,72 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "d5cd3c69ae2096485c94c81f16969be5c5495b48e472566d9c014ef1b35f1047",
-      "bytes": 27481
+      "sha256": "d98cbf31e7e33a45dced64b0ea9c08c80368a864c9f4e02a87ab3216e2fe06cf",
+      "bytes": 39263
     },
     "wall_nerve_a": {
       "seed": 9702,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "597edd97788a1e126b2443b2d6fc979bc05c70a2391e7d6c514c0b9690c83f52",
-      "bytes": 21547
+      "sha256": "b769abec5d3a035f87d3f2f8866025b8ed8c4d9d442e9f29da15d28bc9355541",
+      "bytes": 31989
     },
     "wall_bonewoven_a": {
       "seed": 9703,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "b6d28606311b5ebd9ef6526e80a48a8e32d902fd39a611ab57e366c4ca0380e2",
-      "bytes": 9776
+      "sha256": "35d36c1abe1b51749918cad6819ccb9c28481806a4b2a9ae74d2ac3a75f9c48e",
+      "bytes": 11286
     },
     "wall_vein_a": {
       "seed": 9704,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "489a8f0d20b1e5700cb73b4d684cbd2053ea3b20949e0211a7c9a93e9f5320a6",
-      "bytes": 15031
+      "sha256": "da3aacc9a1360702c274969526d401fde5c0b8b0c3cbbf23cd97cd43ac4dc43a",
+      "bytes": 21123
     },
     "wall_reactor_a": {
       "seed": 9705,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "a1fd75eae3b642aeca0d7de3dbbb64031e7441474b01546a83a7ffe99db189b8",
-      "bytes": 14094
+      "sha256": "83915e03e39d685b89ea8852f5fe69ed9ec57452bcdc37d95ffe7b2a6ee9c042",
+      "bytes": 27241
     },
     "wall_mourning_a": {
       "seed": 9706,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4d82116cb378a002961137dcc9eb900b476925365e57571b815b8342c2e14ac5",
-      "bytes": 7571
+      "sha256": "185e53e1a53a52e5e1c8165ee7be580d70c1f7a0f376467527c88d2e8178d7ca",
+      "bytes": 8386
     },
     "wall_crystal_a": {
       "seed": 9707,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "8174d62c8bfed8d0735c8f80028b31d8a2660447e92a3775825460df17687352",
-      "bytes": 19312
+      "sha256": "bbe3bd6799e4c93ea43ca1b00cc00a6c22c1197fc6b03ca7a7b5d05b79861bab",
+      "bytes": 31755
     },
     "wall_amphi_a": {
       "seed": 9708,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "1e45354d8b20747ce9e36bff0e7c6d5d0d029b055bdfeae47d7c10306253bf5e",
-      "bytes": 10054
+      "sha256": "29888c4d7e6e95e38aae080cae067c68b53985624e0a251269bdec1605a7d07e",
+      "bytes": 13494
     },
     "floor_hivetrench_a": {
       "seed": 9711,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "4e8a17e3f205d55de6edffad0e34098874e24bcb0e4eafb9344e94b0f574365b",
-      "bytes": 14743
+      "sha256": "c392cebd549c74903cdc9c35af3912917902ed07d327875a80ca63246a926d43",
+      "bytes": 25043
     },
     "floor_nervegrid_a": {
       "seed": 9712,
@@ -1154,24 +1154,24 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "d0c8b20df35260bebf6375a60eec2e30e2d9394ca1760f895566ed96c621c45b",
-      "bytes": 8359
+      "sha256": "fb02c3a3031deb5fe69ec4226d987472450c773054d27ebd2181be5f8f64494e",
+      "bytes": 12777
     },
     "floor_veinrail_a": {
       "seed": 9714,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "7fbae7b2797a131e6596d5b6879692e59c5be433f86bd44bead7ad4c1293a06f",
-      "bytes": 15640
+      "sha256": "e9e408c2fffaab3dcf2cf1bb544cdbff17499b5925e67e03c05d353d2c987318",
+      "bytes": 21526
     },
     "floor_reactor_a": {
       "seed": 9715,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "64e5e33c6d1c9105363bb1198b046f9dd7c02d61180a8904d0563a6b35b42bde",
-      "bytes": 20449
+      "sha256": "562ca39254c7c9dcff71a8a2c752ae5c1cb99eb70aed1bdbfc1026af5b3922ff",
+      "bytes": 27974
     },
     "floor_mourning_a": {
       "seed": 9716,
@@ -1194,8 +1194,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "1e39842259eec81056677191494d8cbd37f87989192456475c29bd37de6f2126",
-      "bytes": 6176
+      "sha256": "787aa65d6a38bce823908a647fe7933efa63ed6f96530bdde9fae7e84f31590e",
+      "bytes": 6881
     },
     "sky_hive": {
       "seed": 9720,
@@ -1226,8 +1226,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "556b407d50acdd63b0bde805c1a82e373cc4c5c7a8c698e7bc96374a2c3d77a9",
-      "bytes": 26866
+      "sha256": "adb60d54ed721e6f5ef6adcc924cc4ebc2504450d28b2ab7d91c93710d5411ed",
+      "bytes": 35947
     },
     "wall_rootbark_a": {
       "seed": 9802,
@@ -1242,8 +1242,8 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "68a650cd2b89b670159f767d4b6c107f62756657106f40d218f66d97a4bf12ae",
-      "bytes": 9014
+      "sha256": "008e99677ecc66602e948d68e9a2ae5b83f363b8def47e935919f576a704bbd4",
+      "bytes": 16280
     },
     "wall_tidestone_a": {
       "seed": 9804,
@@ -1258,32 +1258,32 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "3f85fea938fd8459e13e4dca6206665ea7c2f9186bcde49d042967cf9c8ee9a9",
-      "bytes": 15531
+      "sha256": "3ed8a694bc47f41aebcef52922ea92c5049e1f78116047be1b7df001e15e1551",
+      "bytes": 20660
     },
     "wall_unrung_a": {
       "seed": 9806,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "1bb1bd8928cbaeb83d6d68bf56896ba979f0d7bd5757405e6ef529a1c59860ab",
-      "bytes": 6944
+      "sha256": "0d75bfead9d434d07f23785cf430b21be3e017cd170ac8125c35d55112a1d501",
+      "bytes": 10946
     },
     "floor_rootwell_a": {
       "seed": 9811,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "6c17994be099a21b67a5d8c84bd1a64a11dc6b08248cf720fb62af1d365bff81",
-      "bytes": 13486
+      "sha256": "3ad9d820c19f02be4d0cc774667bd69f55a86b59e957befa27457eb12cc5c23c",
+      "bytes": 16548
     },
     "floor_rootloam_a": {
       "seed": 9812,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "32770ccf4deb69c587d2d27158e119384bc632ad5165c18af9ed2bd9104029ae",
-      "bytes": 35576
+      "sha256": "4a5415324556b65dfb046d057372f4aa7c071ec0307da1d7c47535cc3cc450b4",
+      "bytes": 61409
     },
     "floor_faultrock_a": {
       "seed": 9813,
@@ -1298,16 +1298,16 @@
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "29c3045c715ddcb83b1aeabb05ad232c07c735bf2479f21ff60f4c67b476a589",
-      "bytes": 20364
+      "sha256": "00275dabb4a757395d13a608c9ac40cc5717a5356c3f37fb4be8197c8528c963",
+      "bytes": 32483
     },
     "floor_bellstone_a": {
       "seed": 9815,
       "width": 256,
       "height": 256,
       "transparent": false,
-      "sha256": "d56fa6ec10fcd6e063e3148760e0eb3c5c95dadc359f4058788dc84d7110f434",
-      "bytes": 12319
+      "sha256": "8a428ae13d806913e2040236d89d3d19d82a001dfe480e30a65a64f474fb0d2e",
+      "bytes": 15706
     },
     "floor_unrung_a": {
       "seed": 9816,

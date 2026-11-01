@@ -9,6 +9,7 @@
 // Pure in its inputs (a MapData and the textures), deterministic, and cheap: a few merged meshes per map. `TRIMS` holds every size.
 import * as THREE from 'three';
 import { WALL_SKINS, KEYS } from '../engine/defs.js';
+import { buildDressing } from './dressing.js';
 
 export const TRIMS = Object.freeze({
   skirt: { h: 0.3, d: 0.07, tint: 0x6c645c }, cornice: { h: 0.3, d: 0.12, tint: 0x7c7268 },                   // (the second pass made them bolder: at the game's 480 pixels the first ones were a pixel tall)
@@ -21,7 +22,7 @@ export const TRIMS = Object.freeze({
 const DIRS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
 
 /** quads with world-unit UVs and normals (one mesh per material) */
-class Q {
+export class Q {
   constructor() { this.pos = []; this.nor = []; this.uv = []; this.idx = []; }
   get empty() { return this.pos.length === 0; }
   quad(p, n, uv) {
@@ -69,7 +70,7 @@ class Glow {
 }
 
 /** a wall face of cell (cx, cz) toward (dx, dz): the plane's origin at the face's start corner, the tangent along it (its length is S) and the outward normal */
-function faceFrame(S, cx, cz, dx, dz) {
+export function faceFrame(S, cx, cz, dx, dz) {
   if (dz === -1) return { o: [cx * S, cz * S], t: [1, 0], n: [0, -1] };
   if (dz === 1) return { o: [cx * S, (cz + 1) * S], t: [1, 0], n: [0, 1] };
   if (dx === -1) return { o: [cx * S, cz * S], t: [0, 1], n: [-1, 0] };
@@ -81,7 +82,7 @@ function faceFrame(S, cx, cz, dx, dz) {
  * texture of a wall skin. `patch(material, kind)` (optional) gives the trims the level's surface treatment.
  */
 export function buildTrims(map, { tex, wallTex, patch = null }) {
-  const S = map.cell, H = map.ceiling, out = [], stats = { skirt: 0, cornice: 0, plinth: 0, coping: 0, pilasters: 0, doors: 0, levers: 0, pools: 0 };
+  const S = map.cell, H = map.ceiling, out = [], stats = { skirt: 0, cornice: 0, plinth: 0, coping: 0, pilasters: 0, doors: 0, levers: 0, pools: 0, dressing: 0 };
   const kind = (x, z) => map.kind(x, z), fl = (x, z) => map.floor(x, z), ce = (x, z) => map.ceilingAt(x, z);
   const roofed = (k) => k === 'floor' || k === 'door' || k === 'secret';
   const sector = (x, z) => map.sectorAt(x, z) >= 0;
@@ -176,5 +177,6 @@ export function buildTrims(map, { tex, wallTex, patch = null }) {
   if (!frames.empty) { const m = new THREE.Mesh(frames.geometry(), mat(tex('wall_iron_a'), 0x9a948c, 'trim')); m.userData.trim = 'frame'; out.push(m); }
   for (const [hex, q] of lamps) { const m = new THREE.Mesh(q.geometry(), new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(TRIMS.doorLamp.k) })); m.userData.trim = 'lamp'; out.push(m); }
   if (!glow.empty) out.push(glow.mesh());
+  { const d = buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels, skinOf, clearOf, tex, patch }); out.push(...d.meshes); stats.dressing = d.count; }          // PT-079: what people put on their walls (dressing.js)
   return { meshes: out, stats };
 }

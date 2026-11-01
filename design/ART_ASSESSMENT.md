@@ -76,8 +76,9 @@ Ordered by how much a first impression suffers.
    - **What I saw:** in nearly every interior frame, two or three wall planes run unbroken from floor to ceiling. Furniture comes in grids (crates in rows, tables in lines) and there is little at eye level: no shelves, pipes, signs, hanging cloth, debris piles or clutter on tables. The shaping kit and the trims added bays, skirting and cornices, but they are small next to a 6 m wall.
    - **Why it matters:** store screenshots and trailers are read in under a second. Empty space at that size reads as "unfinished" before it reads as "atmospheric".
 2. **The held weapon belongs to a different picture.**
-   - **What I saw:** since the polish, the gun is drawn at the screen's full resolution, smooth and crisp. The world is drawn at 480 pixels wide and enlarged into chunky pixels. The flare cannon also takes about a quarter of the frame, and its saturated cyan grip is the brightest colour on screen in most frames. The line-thrower and the mortar fill the bottom centre with a plain yellow slab.
-   - **Why it matters:** two pixel sizes in one frame is the classic tell of assembled-from-parts art. A plain slab reads as a placeholder.
+   - **What I saw:** since the polish, the gun is drawn at the screen's full resolution, smooth and crisp. The world is drawn at 480 pixels wide and enlarged into chunky pixels. The flare cannon also takes about a quarter of the frame, and its glass flare tube glows the Hush's teal, the brightest colour on screen in most frames (the art bible keeps teal for the Vael).
+   - **Correction (2026-10-31, while fixing it):** a first draft said the line-thrower and the mortar fill the bottom of the frame with a plain yellow slab. That came from store pictures taken before the October 26 polish. The current guns have real shapes, so the slab is not a defect of the game as it stands.
+   - **Why it matters:** two pixel sizes in one frame is the classic tell of assembled-from-parts art.
 3. **Surfaces show the generator's marks.**
    - **What I saw:** across the 101 wall and floor textures, the same three devices repeat:
      - soft translucent circles used as grime;
@@ -101,7 +102,7 @@ Ordered by how much a first impression suffers.
    - **Why it matters:** a melee enemy that looks fragile has no menace.
 7. **Murk.**
    - **What I saw:** several interiors (the green-brown hall of Episode 1, the night quay, parts of Episode 3) sit in a narrow band of dark mid-tones where the banding has few steps to work with. Creatures in red and brown then sink into brown wood rooms. The warm "hall" light makes every creature orange.
-8. **The HUD is small and dim at 1080p.** The objective line, the message strip and the Journal's body text are a few pixels tall in the frames. Fine on a laptop, a squint on a television or a 1440p monitor.
+8. **Reading text is small at 1080p and above.** The HUD itself already grows with the window (its sizes follow the window's height). The Journal's pages, the Record and the stats screen were fixed at 11 to 13 pixels: fine on a laptop, a squint on a television or a 1440p monitor. (A first draft said the HUD; on checking, it is the reading screens.)
 9. **Scale and repetition on floors.** The Customs Hall checkerboard is huge in the frame and tiles obviously into the distance; large plazas show the 256-pixel repeat.
 
 ## 5. Where it sits in the market
@@ -127,7 +128,7 @@ What is not fixed by this is the stiffness of the walk itself: a plain swing of 
 ## 7. What I would do, in order of value for the money
 
 1. **Dress the first three levels for the camera.** Add clutter at eye level to every room a store screenshot could come from (Marrow Quay, Customs Hall, the Boardwalk): shelves, coils of rope, nets, crates in piles rather than rows, hanging lamps, signs, broken furniture. These are new props from the existing kit. The first ten minutes are the store page.
-2. **Put the weapon back in the world's picture.** Draw it at the world's pixel size (or exactly twice it) with the same bands. Lower the flare cannon's grip to the palette's brass and slate. Give the line-thrower and the mortar real shapes in place of their slabs.
+2. **Put the weapon back in the world's picture.** Draw it at the world's pixel size (or exactly twice it) with the same bands. Take the teal out of the flare cannon's glass.
 3. **Re-bake the materials without the generator's marks.**
    - Retire the soft-circle grime and the uniform scratches.
    - Give each material one idea of wear that belongs to it: salt crust along the bottom of harbour brick, rust bleeding down from rivets, worn paths on planks, soot above lamps.
@@ -141,7 +142,7 @@ What is not fixed by this is the stiffness of the walk itself: a plain swing of 
 6. **Give the ordinary enemies mass.** Thicker coats, shoulders and bells, a lower stance. This needs the owner's word on the hit-volume width rule: drawing them fuller means either widening their hit cylinders (a combat change) or accepting a drawn body slightly wider than what a shot tests.
 7. **Paint value into the creature skins**: big light and shadow masses, belts, straps, seams, a darker underside. This is what reads at game distance, not fine detail. Then check each creature against the room it lives in (the red Tollbearer in brown wood rooms).
 8. **Lift the murky interiors** a band or two, and give each warm room one cold light (and each cold one a warm one) so creatures separate from walls.
-9. **HUD at 1080p and above:** scale with the window height, raise the contrast of the objective and message lines.
+9. **Reading screens at 1080p and above:** let the Journal, the Record and the stats screen scale their text with the window height.
 10. **Break floor repeats** in the big plazas: a second floor material in patches, the existing floor marks denser there, and the Customs Hall checkerboard at half its size.
 
 None of these changes how the game plays except item 6. Items 1, 2, 3 and 5 are the ones a store page shows.

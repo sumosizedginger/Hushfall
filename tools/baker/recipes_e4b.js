@@ -4,14 +4,15 @@
 // (a brush fill in the hundreds hangs the baker).
 import { R } from './recipes.js';
 import { hex, mix } from './paint_util.js';
+import { blot as wearBlot, ink as wearInk } from './wear.js';
 
 const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
 const rgba = (g, c, a) => { const [r, gg, b] = hex(c); g.p.fill(r, gg, b, a); };
 const wash = (g, x, y, w, h, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(x + dx - g.p.width / 2, y + dy - g.p.height / 2, w, h); g.p.pop(); });
-const blot = (g, x, y, d, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, d, d); g.p.pop(); });
+const blot = wearBlot;          // PT-079: tools/baker/wear.js (a big faint blot is a stain; everything else as before)
 const oval = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, rw, rh); g.p.pop(); });
 const skyBlot = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { if (dy) return; g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y - g.p.height / 2, rw, rh); g.p.pop(); });
-const ink = (g, x1, y1, x2, y2, c, wt, a = 255) => g.tile((dx, dy) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 + dx - g.p.width / 2, y1 + dy - g.p.height / 2, x2 + dx - g.p.width / 2, y2 + dy - g.p.height / 2); g.p.pop(); });
+const ink = wearInk;          // PT-079: tools/baker/wear.js (a big faint thin line is a scratch; everything else as before)
 const gradient = (g, w, h, stops) => { for (let y = 0; y < h; y += 2) { const t = y / h; let i = 0; while (i < stops.length - 2 && t > stops[i + 1][0]) i++; const [t0, c0] = stops[i], [t1, c1] = stops[i + 1], k = Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))); g.solid(0, y, w, 2.5, mix(c0, c1, k)); } };
 
 export const recipesE4b = {
@@ -89,16 +90,26 @@ export const recipesE4b = {
       for (let i = 0; i < 40; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(2, 6), '#ffffff', g.rnd(60, 160));
     }),
   },
-  // ---- the orchard's wall: living glass: pale green panes with darker veins, leaf-shaped shadows, gold sap running down the joints ---------------------------------------------------------------------------------------------------------------
+  // ---- the orchard's wall, PT-079 (design/ART_ASSESSMENT.md item 4: square green panes in a grid, so the gardens read as green cubes): living glass LEADED like a church window, irregular panes on a warped
+  // lattice (it repeats seamlessly), each pane its own green or amber with a darker vein and a lit corner, dark lead with a gold bead along it, leaf shadows falling across from outside
   wall_orchard_a: {
     seed: 9417, width: 256, height: 256,
     draw: R((g) => {
-      g.bg('#7cae72'); g.solid(0, 0, 256, 256, '#7cae72');
-      for (let i = 0; i < 18; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(40, 100), pick(g, ['#8cc482', '#68a060', '#a4d89a']), 100);
-      for (let i = 0; i < 12; i++) { const x = g.rnd(10, 246), y = g.rnd(10, 246); oval(g, x, y, g.rnd(16, 34), g.rnd(6, 12), pick(g, ['#3c6c3a', '#2c5430']), 150); ink(g, x - 12, y, x + 12, y + g.rnd(-3, 3), '#c8f0b0', 1, 140); }
-      for (const x of [0, 128]) { g.solid(x, 0, 5, 256, '#3a5a34'); g.solid(x + 5, 0, 3, 256, '#e8d070'); }
-      for (const y of [0, 128]) { g.solid(0, y, 256, 5, '#3a5a34'); g.solid(0, y + 5, 256, 3, '#e8d070'); }
-      for (let i = 0; i < 40; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(2, 5), '#f8ffe0', g.rnd(60, 150));
+      g.bg('#2a4a2a'); g.solid(0, 0, 256, 256, '#2a4a2a');
+      const n = 4, cs = 64, J = Array.from({ length: n }, () => Array.from({ length: n }, () => [g.rnd(-17, 17), g.rnd(-17, 17)]));
+      const P = (i, j) => { const a = J[((i % n) + n) % n][((j % n) + n) % n]; return [i * cs + a[0], j * cs + a[1]]; };
+      const poly = (pts, rgb, a, stroke = null, wt = 0) => g.tile((dx, dy) => { g.p.push(); if (stroke) { g.p.noFill(); g.p.stroke(stroke[0], stroke[1], stroke[2], a); g.p.strokeWeight(wt); } else { g.p.noStroke(); g.p.fill(rgb[0], rgb[1], rgb[2], a); } g.p.beginShape(); for (const [x, y] of pts) g.p.vertex(x + dx - 128, y + dy - 128); g.p.endShape(g.p.CLOSE); g.p.pop(); });
+      const hx = (c) => [1, 3, 5].map((k) => parseInt(c.slice(k, k + 2), 16));
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+        const q = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)], c = pick(g, ['#7cae72', '#8cc482', '#68a060', '#a4d89a', '#94b85a', '#c8b860']);
+        poly(q, hx(c), 255);
+        const m = q.map(([x, y]) => [x * 0.55 + (q[0][0] + q[2][0]) * 0.225, y * 0.55 + (q[0][1] + q[2][1]) * 0.225]); poly(m, hx(mix(c, '#ffffff', 0.18)), 110);
+        const [ax, ay] = q[0]; poly([[ax + 6, ay + 6], [ax + 22, ay + 7], [ax + 7, ay + 20]], [248, 255, 224], 120);
+        { let x = (q[0][0] + q[1][0]) / 2, yy = (q[0][1] + q[3][1]) / 2 + 6; for (let k = 0; k < 4; k++) { const nx = x + g.rnd(-9, 9), ny = yy + g.rnd(6, 12); ink(g, x, yy, nx, ny, mix(c, '#1a3a1a', 0.55), 1.4, 170); x = nx; yy = ny; } }
+        poly(q, null, 255, [20, 34, 18], 5); poly(q, null, 200, [232, 208, 112], 1.4);
+      }
+      for (let i = 0; i < 9; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); oval(g, x, y, g.rnd(18, 36), g.rnd(7, 13), pick(g, ['#1e3a1c', '#2a4a26']), 90); }
+      for (let i = 0; i < 30; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(1.6, 4), '#f8ffe0', g.rnd(60, 150));
     }),
   },
   // ---- the great tree's bark: deep vertical furrows in brown and gold, moss in the folds, amber seams of sap --------------------------------------------------------------------------------------------------------------------------------
@@ -147,15 +158,28 @@ export const recipesE4b = {
       for (let i = 0; i < 24; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(2, 6), '#1a1c2e', 150);
     }),
   },
-  // ---- the stair's wall: black-indigo basalt in tall panels, a long seam of white light down each joint, arched relief ------------------------------------------------------------------------------------------------------------------------------
+  // ---- the stair's wall, PT-079 (design/ART_ASSESSMENT.md item 4: two flat indigo panels a tile, so the whole drum read as a blue grid): dressed black-indigo basalt in COURSES of different heights, every
+  // block its own value with a lit top and a dark foot, the joints never lining up course to course; one arch of relief and one broken seam of the Gate's white light a tile; pale lichen in the joints
   wall_stair_a: {
     seed: 9422, width: 256, height: 256,
     draw: R((g) => {
-      g.bg('#1a1a34'); g.solid(0, 0, 256, 256, '#1a1a34');
-      for (let i = 0; i < 16; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(40, 90), pick(g, ['#22224a', '#12122a', '#2a2a58']), 120);
-      for (let c = 0; c < 2; c++) { const x = c * 128; g.solid(x + 10, 24, 108, 232, '#20204a'); g.tile((dx, dy) => { g.p.push(); g.p.noFill(); g.p.stroke(70, 70, 140, 200); g.p.strokeWeight(3); g.p.arc(x + 64 + dx - 128, 78 + dy - 128, 90, 110, Math.PI, 0); g.p.pop(); }); g.solid(x + 19, 78, 3, 170, '#464690'); g.solid(x + 106, 78, 3, 170, '#464690'); }
-      for (const x of [0, 128]) { g.solid(x, 0, 6, 256, '#06061a'); g.solid(x + 6, 0, 2, 256, '#e8f0ff'); wash(g, x + 8, 0, 6, 256, '#8aa0ff', 90); }                                  // the seam of light
-      for (let i = 0; i < 24; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(2, 5), '#c8d4ff', g.rnd(40, 120));
+      g.bg('#0e0e22'); g.solid(0, 0, 256, 256, '#0e0e22');
+      let y = 0;
+      for (const h of [52, 40, 60, 44, 60]) {
+        const x0 = -g.rnd(0, 70); let x = x0;
+        while (x < x0 + 256 - 1) {
+          const w = Math.min(g.rnd(44, 100), x0 + 256 - x), c = pick(g, ['#262650', '#1e1e42', '#2c2c5e', '#1a1a3a', '#32326a', '#22224a']);
+          wash(g, x + 2, y + 2, w - 3, h - 3, c, 255);
+          wash(g, x + 2, y + 2, w - 3, 3, '#5a5aa4', 200); wash(g, x + 2, y + h - 5, w - 3, 4, '#08081a', 220); wash(g, x + w - 4, y + 2, 3, h - 3, '#0c0c22', 170);
+          if (g.rnd(0, 1) < 0.35) wash(g, x + 6, y + 8, w * g.rnd(0.3, 0.6), h * 0.35, '#3a3a7a', 70);
+          x += w;
+        }
+        y += h;
+      }
+      g.tile((dx, dy) => { g.p.push(); g.p.noFill(); g.p.stroke(96, 96, 170, 210); g.p.strokeWeight(4); g.p.arc(70 + dx - 128, 120 + dy - 128, 92, 120, Math.PI, 0); g.p.stroke(12, 12, 34, 230); g.p.strokeWeight(2); g.p.arc(70 + dx - 128, 123 + dy - 128, 92, 120, Math.PI, 0); g.p.pop(); });
+      for (let yy = 0; yy < 256; yy += 6) if (g.rnd(0, 1) < 0.72) { wash(g, 196, yy, 2.2, 6, '#e8f0ff', 230); wash(g, 198, yy, 6, 6, '#8aa0ff', 70); }
+      for (let i = 0; i < 18; i++) { const x = g.rnd(0, 256), yy = pick(g, [52, 92, 152, 196]) + g.rnd(-3, 1); blot(g, x, yy, g.rnd(3, 6), pick(g, ['#7a8aa8', '#9aaac0']), 170); }
+      for (let i = 0; i < 26; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(1.6, 3.4), '#c8d4ff', g.rnd(40, 120));
     }),
   },
   // ---- the stair's floor: slabs of dark indigo stone, faint concentric light in the joints, scuffed pale where feet have gone ------------------------------------------------------------------------------------------------------------------------

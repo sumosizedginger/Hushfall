@@ -3,15 +3,16 @@
 // game renders at about 480 px wide and bands the value). The Deep is dark: the lantern and the amber lamps do the lighting, so the textures stay mid-value and carry their colour in the shapes.
 import { R } from './recipes.js';
 import { hex, mix } from './paint_util.js';
+import { blot as wearBlot, ink as wearInk } from './wear.js';
 
 const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
 const rgba = (g, c, a) => { const [r, gg, b] = hex(c); g.p.fill(r, gg, b, a); };
 const wash = (g, x, y, w, h, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(x + dx - g.p.width / 2, y + dy - g.p.height / 2, w, h); g.p.pop(); });
-const blot = (g, x, y, d, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, d, d); g.p.pop(); });
+const blot = wearBlot;          // PT-079: tools/baker/wear.js (a big faint blot is a stain; everything else as before)
 const oval = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, rw, rh); g.p.pop(); });
 const skyBlot = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { if (dy) return; g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y - g.p.height / 2, rw, rh); g.p.pop(); });
 const gradient = (g, w, h, stops) => { for (let y = 0; y < h; y += 2) { const t = y / h; let i = 0; while (i < stops.length - 2 && t > stops[i + 1][0]) i++; const [t0, c0] = stops[i], [t1, c1] = stops[i + 1], k = Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))); g.solid(0, y, w, 2.5, mix(c0, c1, k)); } };
-const ink = (g, x1, y1, x2, y2, c, wt, a = 255) => g.tile((dx, dy) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 + dx - g.p.width / 2, y1 + dy - g.p.height / 2, x2 + dx - g.p.width / 2, y2 + dy - g.p.height / 2); g.p.pop(); });
+const ink = wearInk;          // PT-079: tools/baker/wear.js (a big faint thin line is a scratch; everything else as before)
 
 export const recipesC2b = {
   // ---- cave rock: blue-black stone in wet strata, bands of lighter and darker rock, vertical fissures, thin amber mineral veins, pale wet streaks running down from the bands --------------------------------------------------------

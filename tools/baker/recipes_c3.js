@@ -4,15 +4,16 @@
 // The helpers are exported for recipes_c4.js (Act D).
 import { R } from './recipes.js';
 import { hex, mix } from './paint_util.js';
+import { blot as wearBlot, ink as wearInk } from './wear.js';
 
 export const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
 export const rgba = (g, c, a) => { const [r, gg, b] = hex(c); g.p.fill(r, gg, b, a); };
 export const wash = (g, x, y, w, h, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(x + dx - g.p.width / 2, y + dy - g.p.height / 2, w, h); g.p.pop(); });
-export const blot = (g, x, y, d, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, d, d); g.p.pop(); });
+export const blot = wearBlot;          // PT-079: tools/baker/wear.js (a big faint blot is a stain; everything else as before)
 export const oval = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, rw, rh); g.p.pop(); });
 export const skyBlot = (g, x, y, rw, rh, c, a) => g.tile((dx, dy) => { if (dy) return; g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y - g.p.height / 2, rw, rh); g.p.pop(); });
 export const gradient = (g, w, h, stops) => { for (let y = 0; y < h; y += 2) { const t = y / h; let i = 0; while (i < stops.length - 2 && t > stops[i + 1][0]) i++; const [t0, c0] = stops[i], [t1, c1] = stops[i + 1], k = Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))); g.solid(0, y, w, 2.5, mix(c0, c1, k)); } };
-export const ink = (g, x1, y1, x2, y2, c, wt, a = 255) => g.tile((dx, dy) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 + dx - g.p.width / 2, y1 + dy - g.p.height / 2, x2 + dx - g.p.width / 2, y2 + dy - g.p.height / 2); g.p.pop(); });
+export const ink = wearInk;          // PT-079: tools/baker/wear.js (a big faint thin line is a scratch; everything else as before)
 /** a vein: a wandering polyline from (x, y) of `n` segments, drawn in a dark underline, the colour and a thin bright core */
 export const vein = (g, x, y, n, c, core, wt, dirx = 0, diry = 1, wob = 14, seg = [14, 30]) => { for (let k = 0; k < n; k++) { const L = g.rnd(seg[0], seg[1]), nx = x + dirx * L + g.rnd(-wob, wob) * (diry ? 1 : 0), ny = y + diry * L + g.rnd(-wob, wob) * (dirx ? 1 : 0); ink(g, x, y, nx, ny, '#08040a', wt + 1.4, 150); ink(g, x, y, nx, ny, c, wt, 235); if (core) ink(g, x, y, nx, ny, core, Math.max(0.8, wt * 0.4), 230); x = nx; y = ny; } };
 
@@ -65,18 +66,27 @@ export const recipesC3 = {
       for (let i = 0; i < 10; i++) { const x = g.rnd(0, 256), y = g.rnd(0, 256); ink(g, x, y, x + g.rnd(-3, 3), y + g.rnd(14, 40), '#1a1012', g.rnd(1.4, 3), 150); }
     }),
   },
-  // ---- the pulse foundry (C2M21): copper panels in a 4 x 4 grid, riveted, with round portholes that glow orange from inside, a vertical pipe at the joints, heat-scorch above each glass -------------------------------------------------------------------------------------
+  // ---- the pulse foundry (C2M21), PT-079 (design/ART_ASSESSMENT.md item 4: it was a 4 x 4 grid of panels with a glowing porthole on every third, and the porthole grid was all a long wall showed): two tall copper sheets of
+  // unequal width, their light bending down the sheet, rivets down both edges, ONE porthole per tile off the centre with the heat-scorch it has drawn up the copper, a pipe in brackets at the joint, verdigris runs
   wall_reactor_a: {
     seed: 9705, width: 256, height: 256,
     draw: R((g) => {
-      g.bg('#4a2e1c'); g.solid(0, 0, 256, 256, '#4a2e1c');
-      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
-        const x = c * 64, y = r * 64; g.solid(x + 2, y + 2, 60, 60, pick(g, ['#7a4a2a', '#8a5632', '#6a3e22', '#965f38'])); g.solid(x + 2, y + 2, 60, 3, '#d8986a'); g.solid(x + 2, y + 58, 60, 4, '#2a160a');
-        for (const [dx, dy] of [[8, 8], [56, 8], [8, 56], [56, 56]]) { blot(g, x + dx, y + dy, 6, '#2a160a', 255); blot(g, x + dx - 0.8, y + dy - 0.8, 3, '#e0b088', 230); }
-        if ((r * 4 + c) % 3 === 0) { blot(g, x + 32, y + 32, 34, '#26120a', 255); blot(g, x + 32, y + 32, 28, '#d8986a', 255); blot(g, x + 32, y + 32, 24, '#ff9a30', 255); blot(g, x + 32, y + 32, 14, '#ffe488', 255); blot(g, x + 28, y + 28, 5, '#ffffff', 200); wash(g, x + 14, y + 4, 36, 10, '#1a0c06', 90); }
+      g.bg('#3e2616'); g.solid(0, 0, 256, 256, '#3e2616');
+      for (const [x, w] of [[0, 100], [100, 156]]) {
+        g.solid(x + 2, 2, w - 4, 252, pick(g, ['#7a4a2a', '#8a5632', '#744628']));
+        for (let y = 2; y < 254; y += 6) wash(g, x + 2, y, w - 4, 6, y < 120 ? '#e0a070' : '#160a04', Math.round(Math.abs(y - 120) / 120 * (y < 120 ? 30 : 46)));
+        g.solid(x + 2, 2, w - 4, 3, '#e6ac7c'); g.solid(x + w - 6, 2, 4, 252, '#22120a');
+        for (let y = 12; y < 256; y += 24) { blot(g, x + 8, y, 5.5, '#22120a', 255); blot(g, x + 7.3, y - 0.7, 2.4, '#ecbe94', 230); blot(g, x + w - 11, y + 12, 5.5, '#22120a', 255); blot(g, x + w - 11.7, y + 11.3, 2.4, '#ecbe94', 230); }
       }
-      for (const x of [0, 128]) { g.solid(x + 60, 0, 8, 256, '#34200e'); g.solid(x + 62, 0, 2.5, 256, '#c8905a'); }
-      for (let i = 0; i < 12; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(10, 30), '#1a0c06', 70);
+      const px = 168, py = 150;
+      for (let i = 0; i < 8; i++) wash(g, px - 24 + i * 2.5, py - 78 + i * 7, 48 - i * 5, 70 - i * 7, '#1a0c06', 20);
+      blot(g, px, py, 50, '#1c0c04', 255); blot(g, px, py, 44, '#b47c4c', 255); blot(g, px, py, 37, '#381808', 255); blot(g, px, py, 31, '#ff8a20', 255); blot(g, px, py, 20, '#ffd070', 255); blot(g, px - 7, py - 7, 6.5, '#ffffff', 210);
+      for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2; blot(g, px + Math.cos(a) * 23, py + Math.sin(a) * 23, 3.6, '#24120a', 255); blot(g, px + Math.cos(a) * 23 - 0.6, py + Math.sin(a) * 23 - 0.6, 1.4, '#f0c8a0', 220); }
+      g.solid(93, 0, 14, 256, '#2a1608'); g.solid(96, 0, 5, 256, '#c8905a'); g.solid(102, 0, 3, 256, '#140a04');
+      for (const y of [44, 176]) { g.solid(88, y, 24, 9, '#4a2c16'); g.solid(88, y, 24, 2, '#e0a878'); g.solid(88, y + 7, 24, 2, '#140a04'); }
+      for (let i = 0; i < 10; i++) { const x = g.rnd(10, 246), y = g.rnd(12, 190); ink(g, x, y, x + g.rnd(-1.5, 1.5), y + g.rnd(16, 44), pick(g, ['#5e8a5a', '#6e9a64']), 1.8, 120); }
+      for (let i = 0; i < 10; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(26, 64), pick(g, ['#1a0c06', '#5a3418', '#8a5a34']), 56);
+      wash(g, 0, 224, 256, 32, '#120804', 84);
     }),
   },
   // ---- the mourning halls (C2M22): ash-white plaster in tall panels, and across the top of each panel a black cloth hung in scallops with a fringe of old gold: grief as an interior decoration; a few long dust streaks -----------------------------------------------------------

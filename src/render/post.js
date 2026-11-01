@@ -64,7 +64,7 @@ void main() {
     if (uDebug > 0.5) { gl_FragColor = vec4(vec3(edge), 1.0); return; }          // dev measurement only: the ink mask (tools/dev/shoot-outlines.mjs)
   }
 
-  // THE HELD WEAPON (look polish 1): drawn into its own target at the screen's resolution, so the object you look at all game is crisp while the world keeps its chunky pixels. It wears the same
+  // THE HELD WEAPON (look polish 1; PT-079 ART 2): drawn into its own target at WEAPON_DENSITY times the world's pixels (it was the screen's own resolution: a smooth gun pasted over a chunky world), so it is finer than the world but in the same pixel language. It wears the same
   // painted grade; its ink is a clean line where its opaque silhouette ends (sleeves fading in the sights are not inked). Its colour is premultiplied by its coverage (blended over a clear target).
   if (uWeapon > 0.5) {
     vec4 wc = texture2D(tWeapon, vUv);
@@ -95,6 +95,8 @@ void main() {
 
 const CLASSIC = typeof location !== 'undefined' && new URLSearchParams(location.search).get('outline') === 'classic';      // ?outline=classic: the whole picture gets the original ink (to compare)
 const CREASE_LO = 0.0007, CREASE_HI = 0.0014;
+/** PT-079 (design/ART_ASSESSMENT.md item 2): the held weapon's pixels are this many times finer than the world's (1 = the world's own chunky pixels; the look polish drew it at the screen's resolution) */
+export const WEAPON_DENSITY = 2;
 /** look polish 4 (colour): every place's shadow and light tints pushed this much further from neutral, so a place's light has a temperature (cool shadows, warm lamps, or its own pair) */
 export const GRADE_K = 1.5;       // 1/z units per pixel at 480 px wide: about 40% / 80% of a floor-wall corner seen from eye height
 
@@ -115,11 +117,11 @@ export class PostPass {
   }
   /** the place's grade: { shadow: [r,g,b], light: [r,g,b], sat } (LOOKS in defs.js; the exposure is the view's: the player's brightness times the place's) */
   setGrade(g) { const k = GRADE_K, x = (v) => 1 + (v - 1) * k; this.uniforms.uShadowTint.value.set(...g.shadow.map(x)); this.uniforms.uLightTint.value.set(...g.light.map(x)); this.uniforms.uSat.value = g.sat; }
-  /** w x h = the internal (chunky) resolution of the world; dw x dh = the screen's, for the held weapon's own target (capped at 1920 wide: a crisp gun, not a costly one) */
+  /** w x h = the internal (chunky) resolution of the world; dw x dh = the screen's; the held weapon's own target is WEAPON_DENSITY times the world's width (never wider than the screen), sampled with square pixels */
   resize(w, h, dw = w, dh = h) {
     this.rt?.dispose(); this.rt?.depthTexture?.dispose(); this.wrt?.dispose();
-    const ww = Math.max(w, Math.min(1920, Math.round(dw))), wh = Math.max(1, Math.round(ww * (dh / Math.max(1, dw))));
-    this.wrt = new THREE.WebGLRenderTarget(ww, wh, { type: THREE.HalfFloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: true, samples: 0 });
+    const ww = Math.max(w, Math.min(Math.round(dw), Math.round(w * WEAPON_DENSITY))), wh = Math.max(1, Math.round(ww * (dh / Math.max(1, dw))));
+    this.wrt = new THREE.WebGLRenderTarget(ww, wh, { type: THREE.HalfFloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: true, samples: 0 });
     this.uniforms.tWeapon.value = this.wrt.texture; this.uniforms.uWRes.value.set(ww, wh);
     const depth = new THREE.DepthTexture(w, h); depth.type = THREE.UnsignedIntType; depth.minFilter = depth.magFilter = THREE.NearestFilter;
     this.rt = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthTexture: depth, samples: 0 });

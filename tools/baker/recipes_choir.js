@@ -40,7 +40,15 @@ const cell = (s) => (g, X, Y) => {
   if (s.blots) for (const b of s.blots) blots(g, X, Y, b.cols, b.n, b.r?.[0] ?? 5, b.r?.[1] ?? 11, b.a ?? 210);
   if (s.marks) for (const m of s.marks) marks(g, X, Y, m);
   s.extra?.(g, X, Y);
+  if (s.shade !== false) shadeCell(g, X, Y);
 };
+/** PT-079 (design/ART_ASSESSMENT.md item 7): every part is lit from above and darker underneath, painted in (the game's value banding keeps big value shifts and loses fine marks): a pale lip along the cell's top,
+ *  a darkening over its lower third (a sleeve's end, a coat's hem, the underside of a bell). A lathe's cell runs crown-first and a limb's top is its cell's top, so this lands where the light would. */
+function shadeCell(g, X, Y) {
+  const r = (x, y, w, h, c, a) => { g.p.push(); g.p.noStroke(); g.p.fill(c[0], c[1], c[2], a); g.p.rect(x - 128, y - 128, w, h); g.p.pop(); };
+  r(X, Y, 64, 3, [255, 246, 226], 70); r(X, Y + 3, 64, 4, [255, 246, 226], 32);
+  for (let i = 0; i < 6; i++) r(X, Y + 40 + i * 4, 64, 4, [10, 8, 14], 10 + i * 12);
+}
 const ring = (g, cx, cy, rs, col, wt, kind = '2B') => { g.noFill(); g.stroke(kind, col, wt); for (const r of rs) g.circle(cx, cy, r); };
 /** veined cells (nearest-site boundaries drawn as line work): membrane, wrappings, flesh */
 function veins(g, X, Y, col, wt, n = 8) {

@@ -3,6 +3,8 @@
 import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
 import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, FX, lookOf } from '../engine/defs.js';
+/** PT-079: floors whose pattern is drawn this many times smaller than one tile a cell (the Customs Hall's checkerboard read as squares a metre wide) */
+export const FLOOR_REPEAT = { floor_tile_a: 2 };
 import { beltAtCell } from '../engine/belts.js';
 import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
@@ -124,7 +126,8 @@ export function buildLevel(map, tex) {
     if (fx === 's') { const pi = map.pulses.indexOf(map.pulseAt(cx, cz)); if (pi >= 0) { const x0 = cx * S, z0 = cz * S, bed = [[x0, y + 0.07, z0], [x0, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0]], mist = bed.map((r) => [r[0], y + 0.8, r[2]]); sporeBed[pi].add(bed, [0, 1, 0], bed.map((r) => [r[0] / 2, r[2] / 2])); sporeMist[pi].add(mist, [0, 1, 0], mist.map((r) => [r[0] / 6, r[2] / 6])); } }
     if (fx && fx in fxQuads && !(map.belts.length && FX[fx]?.flow && beltAtCell(map, cx, cz))) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
   }
-  const skinTex = (c) => { const f = FLOOR_SKINS[c]; return [T(f?.tex ?? 'floor_planks_a'), f?.tint ?? 0xffffff]; };
+  const repeated = new Map(), clones = [];                                                                         // PT-079 (design/ART_ASSESSMENT.md item 10): a floor whose pattern is too big for a room is drawn at FLOOR_REPEAT times (its clone is freed with the level)
+  const skinTex = (c) => { const f = FLOOR_SKINS[c], name = f?.tex ?? 'floor_planks_a', k = FLOOR_REPEAT[name]; let t = T(name); if (k) { if (!repeated.has(name)) { const t2 = t.clone(); t2.needsUpdate = true; t2.repeat.set(k, k); clones.push(t2); repeated.set(name, t2); } t = repeated.get(name); } return [t, f?.tint ?? 0xffffff]; };
   const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group, surf = 'wall') => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), patchSurface(new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true }), surf, S)); parent.add(mesh); return mesh; };          // look polish 2: every level surface varies in world space (surface.js)
   for (const [c, q] of walls) mk(q, T(WALL_SKINS[c]));
   for (const [c, q] of floors) { const [t, tint] = skinTex(c); const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor'; mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000, group, 'floor'); }
@@ -143,7 +146,7 @@ export function buildLevel(map, tex) {
   const water = new THREE.Mesh(new THREE.PlaneGeometry(wsize, wsize), new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xa8b4c4 }));
   tex.water_dusk.repeat.set(wsize / 8, wsize / 8); water.rotation.x = -Math.PI / 2; water.position.set(map.w * S / 2, WATER_Y, map.h * S / 2); if (!map.hasVoid) group.add(water);          // (a map with open sky has no sea under it: PT-032)
   // wading water and toxic residue: translucent overlays just above the floor (they share the sea texture; the view pulses the toxic one)
-  const fxMats = {}, ownTex = [];                                                                                  // ownTex: the textures this level CLONED (a material's dispose never frees its map); `dispose` below frees exactly those, never the shared sea texture
+  const fxMats = {}, ownTex = clones;                                                                                  // ownTex: the textures this level CLONED (a material's dispose never frees its map); `dispose` below frees exactly those, never the shared sea texture
   if (!fxQuads.w.empty) { fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false }); const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w); m.renderOrder = 2; group.add(m); }
   for (const c of ['>', '<', '^', 'v']) if (!fxQuads[c].empty) {                                                 // PT-037: a current is wading water that flows: its own copy of the sea texture, scrolled along its direction by the view (view.js), tinted greener than still water
     const t = tex.water_dusk.clone(); ownTex.push(t); t.needsUpdate = true; t.repeat.copy(tex.water_dusk.repeat); fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });

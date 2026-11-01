@@ -3,12 +3,13 @@
 // pink cartilage, red-violet muscle, a veined wet floor). Same conventions as recipes_e3.js: opaque, tiling (g.tile paints at 9 wrapped offsets), top-left px, big shapes and strong value steps first (the game renders at about 480 px wide and bands the value).
 import { R } from './recipes.js';
 import { hex, mix } from './paint_util.js';
+import { blot as wearBlot, ink as wearInk } from './wear.js';
 
 const pick = (g, arr) => arr[Math.floor(g.rnd(0, arr.length))];
 const rgba = (g, c, a) => { const [r, gg, b] = hex(c); g.p.fill(r, gg, b, a); };
 const wash = (g, x, y, w, h, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.rect(x + dx - g.p.width / 2, y + dy - g.p.height / 2, w, h); g.p.pop(); });
-const blot = (g, x, y, d, c, a) => g.tile((dx, dy) => { g.p.push(); g.p.noStroke(); rgba(g, c, a); g.p.ellipse(x + dx - g.p.width / 2, y + dy - g.p.height / 2, d, d); g.p.pop(); });
-const ink = (g, x1, y1, x2, y2, c, wt, a = 255) => g.tile((dx, dy) => { g.p.push(); const [r, gg, b] = hex(c); g.p.stroke(r, gg, b, a); g.p.strokeWeight(wt); g.p.line(x1 + dx - g.p.width / 2, y1 + dy - g.p.height / 2, x2 + dx - g.p.width / 2, y2 + dy - g.p.height / 2); g.p.pop(); });
+const blot = wearBlot;          // PT-079: tools/baker/wear.js (a big faint blot is a stain; everything else as before)
+const ink = wearInk;          // PT-079: tools/baker/wear.js (a big faint thin line is a scratch; everything else as before)
 
 export const recipesE3b = {
   // ---- the Loom's wall: dark violet lacquer posts with taut gold strings in bundles between them, bronze pegs, a dark foot ---------------------------------------------------------------------------------

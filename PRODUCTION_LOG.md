@@ -1,6 +1,19 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
+- 2026-10-31 (PT-079) **THE ART FIXES OF `design/ART_ASSESSMENT.md` ARE BUILT (nine of ten; item 6 waits for the owner's word on hit volumes); local commits, NOT pushed; the owner has not seen them.** The owner: "Do eet!". The items:
+  1. `src/render/dressing.js` (wall dressing, drawn only, under the trims' 24 cm rule);
+  2. `WEAPON_DENSITY` 2 in `post.js` (the gun's own pixels) and the flare glass red;
+  3. `tools/baker/wear.js` (stains and scratches for eight recipe files);
+  4. four walls rebuilt;
+  5. `src/render/glowfx.js` (the shield's plates and the rings);
+  7. the creature skins' lit top and dark underside (`shadeCell` in `recipes_choir.js`);
+  8. the lamps of six murky looks;
+  9. the reading screens' text;
+  10. `FLOOR_REPEAT` (the checkerboard).
+  - One assessment claim was stale and is corrected in the document: the yellow "slab" guns came from pre-polish store pictures.
+  - Bakes: `GPU=1` hung a p5.brush job (a 300 s timeout), so the bake ran on SwiftShader.
+  - The real-game evidence of every map is stale until the next regeneration.
 - 2026-10-31 (PT-078) **ENEMY MOTION SMOOTHED, AND AN ART ASSESSMENT WRITTEN; local commits, NOT pushed; the owner has not seen either.** The owner: "is there a way to smooth out the enemy actions? Like the bell monster in red that swings ... seems stiff", and "a detailed artistic assessment of your assets ... for originality and professionalism".
   - MOTION:
     - `tools/dev/pose-pops.mjs` (node only) measured 2,622 frame-to-frame snaps on six real levels: the swing's recovery lifting the arm overhead and dropping it, the -pi..pi seam spinning creatures a full turn, the Acolyte's wheel, the Gaunt's lunge.

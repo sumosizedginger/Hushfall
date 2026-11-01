@@ -499,7 +499,19 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
-## PT-078 · enemy motion is stiff (the Tollbearer's swing) · MAJOR · FIXED-IN-CODE (awaiting the owner)
+## PT-079 · the art fixes of the assessment · FIXED-IN-CODE (awaiting the owner)
+**The owner's go (2026-10-31):** "Do eet!", after `design/ART_ASSESSMENT.md`. What changed, and what to look at:
+1. **Rooms are dressed.** In the harbour's human places (iron, brick, timber, plaster, concrete walls) the walls now carry shelves at eye level with jars, tins and bottles; notice boards with papers; pipe runs under high ceilings; and outdoors, life rings near the water, hooks with rope, posted notices. They are drawn only: you walk exactly as before. Alien places get none. Too busy, too sparse, or wrong anywhere?
+2. **The gun's pixels** are now twice as fine as the world's (they were the screen's own), so it sits in the same chunky picture. The flare cannon's glass tube glows signal red instead of teal. If you preferred the crisp gun, it is one number: `WEAPON_DENSITY` in `src/render/post.js`.
+3. **Textures repainted.** The late-game materials no longer use the soft round grime and ruled scratches: stains are irregular with a tide line, and scratches bend and taper. Four walls are rebuilt: the Hollow Stair (stone courses with an arch), the Harmonic Gardens (leaded glass), the Pulse Foundry (one porthole a sheet, a pipe in brackets), the Unrung Gate walk (marble blocks). Every creature's skin has a lit top edge and a darker underside.
+4. **Shields and rings glow.** A boss's shield plates are framed glass with a sheen and rings of sound running up them, not flat teal slabs. A ring pulse has a bright leading edge and a fading trail. The dangerous edge is exactly where it was.
+5. **Murky places are less murky.** The lamps are about 30% brighter in Customs Hall, the moonlit maps, the cellars, the Signal House, the Hollow Stair and the Pulse Foundry. The dark stays dark; the lit parts are brighter. Measured on the same frames: where a lamp is in view the highlights rose (the Signal House cellar 76 -> 104 of 255, Customs Hall 131 -> 143); rooms lit only by the sky or a far lamp (the chandlery shop, the boardwalk at night, the Hollow Stair) barely changed. Say if any of those reads as too dark to play.
+6. **The Customs Hall checkerboard** is half the size it was.
+7. **Reading screens** (the Journal, the Record, Your stats) scale their text with the window, and with your text-size setting.
+
+Not done, on purpose: item 6 of the assessment (fuller bodies for the ordinary enemies). Drawing them wider than what a shot tests would break the fairness rule, and widening their hit cylinders would make them easier to hit. That is a combat change and needs the owner's word. The three overcast skies were left as they are: they read as weather.
+
+ (the Tollbearer's swing) · MAJOR · FIXED-IN-CODE (awaiting the owner)
 **Reported (2026-10-31):** "is there a way to smooth out the enemy actions? Like the bell monster in red that swings, not shoots, in the first level seems stiff." (The red bell monster that swings is the Tollbearer; the Bellhand is the one that shoots.)
 **Measured** (`node tools/dev/pose-pops.mjs maps`, six levels played by the bot, two frames a tick as a 120 Hz screen draws them): 2,622 frame-to-frame snaps, a joint turning more than half a radian in one frame. The causes:
 1. The shared swing lifted the arm back overhead during its "recovery" and the next frame dropped it to the walk: 141 degrees in one frame at the end of every Tollbearer, Sexton, Warden-Graft and Resonant blow. The Bellhand's jaw snapped the same way.

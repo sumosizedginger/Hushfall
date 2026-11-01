@@ -4,6 +4,7 @@
 // Three bands of curved plates, each a ring of ten with gaps between, turning against each other: a cage of bells, not a ball. Unit radius; the caller scales the group.
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { plateMaterial } from './glowfx.js';
 
 export const SHIELD = { bands: [{ y: 0.55, h: 0.7, spin: 0.55 }, { y: 0, h: 0.8, spin: -0.4 }, { y: -0.55, h: 0.7, spin: 0.7 }], plates: 6, arc: 0.34, rest: 0.2, flare: 0.95 };   // PT-035: ten plates of 0.5 rad at 0.42 (a near-solid drum: the boss showed only as ink lines inside a teal slab at every reveal) became six of 0.34 at 0.2: about a third of the cage is plate, the body shows between; a hit still flares it to 0.95
 
@@ -11,10 +12,10 @@ export function makeShield() {
   const group = new THREE.Group(), rings = [];
   for (const b of SHIELD.bands) {
     const parts = []; for (let i = 0; i < SHIELD.plates; i++) { const g = new THREE.CylinderGeometry(1, 1, b.h, 6, 1, true, 0, SHIELD.arc); g.rotateY(i * Math.PI * 2 / SHIELD.plates); parts.push(g); }
-    const m = new THREE.Mesh(mergeGeometries(parts), new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: SHIELD.rest, side: THREE.DoubleSide, depthWrite: false }));
+    const m = new THREE.Mesh(mergeGeometries(parts), plateMaterial(0x3fffe0, SHIELD.rest));          // PT-079: framed glass with a sheen and rings of sound running up it (glowfx.js), not a flat teal slab
     parts.forEach((p) => p.dispose()); m.position.y = b.y; m.userData.spin = b.spin; group.add(m); rings.push(m);
   }
   /** turn the bands and set their strength: `flash` 0..1 is how recently a hit was absorbed */
-  const update = (time, flash = 0) => { rings.forEach((m, i) => { m.rotation.y = time * m.userData.spin + i; m.material.opacity = SHIELD.rest + (SHIELD.flare - SHIELD.rest) * flash; m.material.color.setHex(flash > 0.05 ? 0xd8fff8 : 0x3fffe0); }); };
+  const update = (time, flash = 0) => { rings.forEach((m, i) => { m.rotation.y = time * m.userData.spin + i; const u = m.material.userData.u; u.uTime.value = time + i * 1.7; u.uFlash.value = flash; m.material.opacity = SHIELD.rest + (SHIELD.flare - SHIELD.rest) * flash; }); };
   return { group, rings, update };
 }

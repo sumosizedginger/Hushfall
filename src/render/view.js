@@ -28,6 +28,7 @@ import { makeCreatureFx } from './creaturefx.js';                               
 import { makeHiveView } from './hivefx.js';                                                                       // PT-043: the Hive Cantor's threads, the Root Bell's chain and shadow, the spikes
 import { DecalLayer } from './decals.js';
 import { makeShield } from './shield.js';
+import { ringGeometry, ringMaterial } from './glowfx.js';                                                   // PT-079: rings of sound with a leading edge and a trail
 import { graftStage } from './graftstage.js';
 import { makeShadows } from './shadows.js';
 import { HurtFlash } from './hurtflash.js';
@@ -124,7 +125,7 @@ export class GameView {
     this.shotGeo = new THREE.IcosahedronGeometry(0.17, 1); this.shotRing = new THREE.TorusGeometry(0.3, 0.025, 4, 14); this.shotMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 }); this.shotViews = new Map();      // Bellhand toll-shots: teal, slow, readable
     // Gate 2 effects: channel beams and node links (thin teal cylinders), the Cantor's shield, expanding tone-pulse rings
     this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); this.beamMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.55, depthWrite: false }); this.beams = new Map();
-    this.ringGeo = new THREE.RingGeometry(0.94, 1.0, 72); this.pulseViews = new Map();
+    this.ringGeo = ringGeometry(72); this.pulseViews = new Map();
     this.tearGeo = new THREE.IcosahedronGeometry(0.36, 1); this.tearMat = new THREE.MeshBasicMaterial({ color: 0xffd468 }); this.tearCoreGeo = new THREE.IcosahedronGeometry(0.17, 0); this.tearCoreMat = new THREE.MeshBasicMaterial({ color: 0xfffbe6 }); this.tearViews = new Map(); this.poolGeo = new THREE.CircleGeometry(1, 28); this.poolViews = new Map();
     this.wardViews = new Map(); this.wardRingMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false }); this.wardDiscMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.07, side: THREE.DoubleSide, depthWrite: false });      // PT-029: the floor ring of an awake Acolyte's ward       // PT-028: a Weeping Mother's tears in the air and the pools they leave
     this.streakMat = new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.85, depthWrite: false }); this.arcMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.95, depthWrite: false }); this.arcs = []; this.arcLife = 0.09; this.lampLight = new THREE.PointLight(0x6ffff0, 0, 14, 2); scene.add(this.lampLight);       // the lamp's lightning (jagged teal segments, 0.09 s) and the glow it throws on the level (the light is always in the scene: a constant light count means no shader recompiles)
@@ -207,7 +208,7 @@ export class GameView {
         for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.scale.setScalar(2.2); m.position.set(e.x + (this.rnd() - 0.5) * 5, (e.y ?? 0) + 0.3, e.z + (this.rnd() - 0.5) * 5); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.5 + 0.1, this.rnd() - 0.5).multiplyScalar(5), life: 0.5 + this.rnd() * 0.5 }); }
       }
       else if (e.type === 'pin') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.dustMat); m.position.set(e.x, 1.2, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.1, this.rnd() - 0.5).multiplyScalar(3.4), life: 0.3 + this.rnd() * 0.2 }); } }
-      else if (e.type === 'shield_hit') { this.shieldFlash = 1; const m = new THREE.Mesh(this.ringGeo, new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.75, side: THREE.DoubleSide, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.set(e.x, this.shield ? this.shield.group.position.y : 2.2, e.z); m.scale.setScalar(1.4); this.scene.add(m); this.ripples.push({ m, t: 0 }); }       // the hit was absorbed: the plates flare and a ring of sound goes out
+      else if (e.type === 'shield_hit') { this.shieldFlash = 1; const m = new THREE.Mesh(this.ringGeo, ringMaterial(0xbafff2, 0.75)); m.rotation.x = -Math.PI / 2; m.position.set(e.x, this.shield ? this.shield.group.position.y : 2.2, e.z); m.scale.setScalar(1.4); this.scene.add(m); this.ripples.push({ m, t: 0 }); }       // the hit was absorbed: the plates flare and a ring of sound goes out
       else if (e.type === 'headshot') { for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(this.debGeo, this.sparkMat); m.scale.setScalar(0.45); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.8 + 0.3, this.rnd() - 0.5).multiplyScalar(4), life: 0.22 + this.rnd() * 0.2 }); } }
       else if (e.type === 'grav_punt') { this.puntT = 0; this.flashT = 0.14; this.addShock(1.4); this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, e.hit ? 0.28 : 0.1); this.shakeT = Math.max(this.shakeT || 0, 0.18); this.muzzleLight.color.setHex(0x9ffff0); }
       else if (e.type === 'shot_reflect') { for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(this.debGeo, this.moteMat); m.scale.setScalar(0.6); m.position.set(e.x, e.y, e.z); this.scene.add(m); this.debris.push({ m, v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() - 0.2, this.rnd() - 0.5).multiplyScalar(5), life: 0.25 + this.rnd() * 0.2 }); } }
@@ -390,7 +391,7 @@ export class GameView {
       const pseen = new Set();
       for (const q of w.pulses || []) {
         pseen.add(q.id); let m = this.pulseViews.get(q.id);
-        if (!m) { m = new THREE.Mesh(this.ringGeo, new THREE.MeshBasicMaterial({ color: 0xbafff2, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false })); m.rotation.x = -Math.PI / 2; this.scene.add(m); this.pulseViews.set(q.id, m); }
+        if (!m) { m = new THREE.Mesh(this.ringGeo, ringMaterial(0xbafff2, 0.8)); m.rotation.x = -Math.PI / 2; this.scene.add(m); this.pulseViews.set(q.id, m); }
         m.position.set(q.x, (q.y ?? 0) + 0.16, q.z); m.scale.setScalar(Math.max(0.01, q.r + q.speed * alpha * TICK)); m.material.opacity = 0.9 * Math.max(0, 1 - q.r / q.maxR);
       }
       for (const [id, m] of this.pulseViews) if (!pseen.has(id)) { this.scene.remove(m); m.material.dispose(); this.pulseViews.delete(id); }
