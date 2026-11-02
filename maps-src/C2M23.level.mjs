@@ -70,8 +70,14 @@ ENC.dropIn({ at: [56,17], radius: 2, cells: ENC.around([56,17], { n: 3, min: 6, 
 ENC.dropIn({ at: [42,45], radius: 2, cells: ENC.around([42,45], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'cellar', search: { region: [3, 3, 96, 96], prefer: [5, 75], lane: laneOf('C2M23') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A cellar that ought to be under a house I know, and is not. A vest and a mend on the shelf where the jam was kept.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M23', name: 'The Reprise', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M23', name: 'The Reprise', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'copy', sky: 'dusk', beat: true, fog: '#2a4058', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 130, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE REPRISE', lines: ['A harbour, a town and a hill, built from what the grafted remember of them.', 'The pier is on the wrong side. The sea is glass. Everything is in the right place.'] },
@@ -125,4 +131,6 @@ ENC.apply(MAP);
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [42, 50] }, { type: 'pickup', kind: 'health_large', at: [42, 54] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(6, 0, ...[{op: 'crack', at: [5, 68]}, [5, 67, 0], [5, 69, 0]]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;

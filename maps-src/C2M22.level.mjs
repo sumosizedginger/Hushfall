@@ -6,6 +6,7 @@
 // (`choice halls=silent` | `songkeepers`) decides how many there are (six or three) and what they say. What is left in the cloister is what comes for them: Zealots, Gaunts, a Weeping Mother's brood and Sextons.
 // A hidden chapel behind the north arm holds the longest text of the act. Nothing is thrown away: the exit unlocks when the lift has gone.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 84, H = 100, L = new Level(W, H, { fill: 'ζ' }); L.usedHeights = true; L.usedCeil = true;
@@ -75,10 +76,17 @@ const EXIT = [65, 82];
 const AMB = { c1: [[6, 9], [6, 14], [7, 11], [8, 9], [8, 14]], c2: [[77, 9], [77, 14], [76, 11], [75, 9], [75, 14]], c3: [[77, 61], [77, 66], [76, 63], [75, 61], [75, 66]], c4: [[6, 61], [6, 66], [7, 63], [8, 61], [8, 66]] };
 const AMBUSH = Object.fromEntries(Object.entries(AMB).map(([id, cells]) => [id, [{ spawn: { kind: 'gaunt', at: cells[0], group: 'amb-' + id } }, { spawn: { kind: 'gaunt', at: cells[1], group: 'amb-' + id } }, { spawn: { kind: 'zealot', at: cells[2], group: 'amb-' + id } }, { spawn: { kind: 'bellhand', at: cells[4], group: 'amb-' + id } }]]));
 const chapelMsg = (id, at, text) => ({ id, at, radius: 0.1, speaker: 'HULL', text });
+const SQUEEZE = [{axis:'x',cuts:[[4,5], [13,14], [17,18], [27,28], [31,32], [35,36], [47,48], [53,54], [56,57], [62,63], [70,71], [74,76], [79,80]]}, {axis:'z',cuts:[[28,29],[31,32],[42,43],[44,45],[58,59],[66,67],[77,78]]}];          // PT-082: defined here so the fun pass's secret room keeps out of every cut column and row
+const cutAt = (ax, c) => SQUEEZE.find((q) => q.axis === ax).cuts.some(([a, b]) => c >= a && c < b);
+// ---- PT-082 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), clear of the squeeze's cuts ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'ossuary', search: { region: [3, 3, 80, 96], prefer: [12, 50], ok: (q) => { for (let x = q.rect[0] - 1; x <= q.rect[2] + 1; x++) if (cutAt('x', x)) return false; for (let z = q.rect[1] - 1; z <= q.rect[3] + 1; z++) if (cutAt('z', z)) return false; return !cutAt('x', q.panel[0]) && !cutAt('z', q.panel[1]); } }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A bone-room behind the crack, the cloister\'s own ossuary. Someone left a vest and a mend on the shelf of skulls, which is either respect or the opposite.' } });
+// ---- end PT-082 fun pass ----
+
 const MAP = {
-  id: 'C2M22', name: 'Mourning Halls', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M22', name: 'Mourning Halls', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'mourning', sky: 'overcast', fog: '#262428', fogDensity: 0.012 },
-  entryLoadout: { hp: 100, armor: 30, ammo: { flare: 14, shell: 22, rivet: 220, bolt: 10, cell: 30, round: 30, rocket: 3 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
+  entryLoadout: { hp: 100, armor: 30, ammo: { flare: 14, shell: 36, rivet: 220, bolt: 10, cell: 30, round: 30, rocket: 3 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'MOURNING HALLS', lines: ['A cloister with a garden of graves, and a chapel at every corner with somebody in it.', 'There is not much left to shoot with. There is not much to shoot.'] },
   outro: 'The lift came to the bottom and stopped. The shaft is a long way down. The east door of the hall had unlocked itself by then.',
   objective: 'Throw the latch in each of the four chapels, one at each corner of the cloister. Ammunition is low: spend it',
@@ -142,4 +150,10 @@ export const waypoints = {
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "door": ["msg:gone"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). A squeeze of 14 columns, where nothing stands and no stair runs (tools/dev/squeeze-map.mjs).
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M22`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = SQUEEZE;
+// ---- end PT-052 Level B squeeze ----
+
+FUN.apply(MAP);                                                                                  // PT-082: the fun pass joins the map
 export default MAP;

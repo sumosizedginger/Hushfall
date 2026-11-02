@@ -94,8 +94,14 @@ ENC.dropIn({ at: [68,34], radius: 2, cells: ENC.around([68,34], { n: 3, min: 6, 
 ENC.dropIn({ at: [124,31], radius: 2, cells: ENC.around([124,31], { n: 3, min: 4, max: 9 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'sump', search: { region: [3, 3, 144, 56], prefer: [67, 4], lane: laneOf('C2M17') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A dry sump behind the cracked wall, where the hive\'s water used to stand. Somebody stored a vest and a mend in it, above the line.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M17', name: 'The Hive-Song Approach', version: 1, ceilingHeight: 4.2, par: { time: 540 },
+  id: 'C2M17', name: 'The Hive-Song Approach', version: 2, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'hive', sky: 'hive', beat: true, fog: '#2a1822', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 12, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE HIVE-SONG APPROACH', lines: ['A gorge nearly three hundred metres long, and a tower at the end of it that keeps time.', 'Six posts on the banks, a song in every one. The way to the gate is the trench and two levers.'] },
@@ -157,4 +163,6 @@ MAP.entities.push({ type: 'pickup', kind: 'health_large', at: [120, 32] }, { typ
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [60, 26] }, { type: 'pickup', kind: 'health_large', at: [65, 33] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(5, 0, { op: 'crack', at: [57,5] }, [57,4, 0], [57,6, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;

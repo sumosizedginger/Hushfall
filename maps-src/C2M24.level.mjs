@@ -5,6 +5,8 @@
 // At half its hit points, or with the choir dead, PHASE TWO: a ring every bar and Choristers called from the dome. When it falls the beat stops (`beatOff`): Act D is quiet because of it. The start hall west of the bowl holds every box of ammunition (a boss map keeps them all); the exit is east of the
 // podium and opens when the conductor is dead. A conductor's alcove behind the north wall, behind a pillar, is the secret.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 90, H = 58, L = new Level(W, H, { fill: 'θ' }); L.usedHeights = true; L.usedCeil = true;
@@ -54,8 +56,14 @@ SEC.cells.slice(0, 5).forEach(([x, z], i) => P.P(['armor_vest', 'ammo_rocket', '
 L.put(9, CZ, '@'); const EXIT = [CX + 21, CZ];
 put({ type: 'exit', dest: 'next', at: EXIT, locked: true });
 const msg = (id, x, z, r, speaker, text) => ({ id, at: [x, z], radius: r, speaker, text });
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'niche', search: { region: [3, 3, 86, 54], prefer: [41, 45], lane: laneOf('C2M24') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An alcove in the amphitheatre wall, behind the crack: a vest and a mend left by a singer who stopped.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M24', name: 'Choir of One', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M24', name: 'Choir of One', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'conductor', fog: '#2a1a2c', fogDensity: 0.005, sky: 'hive', beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 28, shell: 24, rivet: 200, bolt: 24, cell: 70, round: 60, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'CHOIR OF ONE', lines: ['A bowl of seats, nine singers, one conductor over the podium.', 'Everything in the Hive keeps time to it.'] },
@@ -94,4 +102,6 @@ export const waypoints = {
   main: [G(9, CZ), G(20, CZ), G(CX - 19, CZ), G(CX - 16, CZ), G(CX - 12, CZ), { op: 'killboss' }, G(CX + 10, CZ), G(CX + 16, CZ), G(CX + 20, CZ), G(EXIT[0], EXIT[1])],
   secret: [G(9, CZ), G(20, CZ), G(CX - 19, CZ), G(CX - 16, CZ), G(CX - 12, CZ), { op: 'killboss' }, G(XS, ZS + 4), { op: 'use', at: SEC.panel }, G(XS, ZS - 2), G(XS, ZS + 4), G(CX + 10, CZ), G(CX + 16, CZ), G(CX + 20, CZ), G(EXIT[0], EXIT[1])],
 };
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(5, 0, ...[{op: 'crack', at: [41, 44]}, [41, 45, 0], [41, 43, 0]]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;

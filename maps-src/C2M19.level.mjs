@@ -80,8 +80,14 @@ const ENC = new Encounters(L);
 ENC.dropIn({ at: [48,81], radius: 2, cells: ENC.around([48,81], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'spool', search: { region: [3, 3, 96, 96], prefer: [37, 44], lane: laneOf('C2M19') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A spool-room behind the cracked wall, the thread wound and left. A vest on the spindle, a mend beside it.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M19', name: 'Bone Loom', version: 1, ceilingHeight: 4.2, par: { time: 660 },
+  id: 'C2M19', name: 'Bone Loom', version: 2, ceilingHeight: 4.2, par: { time: 660 },
   atmosphere: { look: 'woven', fog: '#2a2214', fogDensity: 0.012, beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BONE LOOM', lines: ['Nine crossings under a roof of rails, and a cradle hung over every one.', 'The doors breathe on the beat. The way to the key is three of them.'] },
@@ -129,4 +135,6 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "door": ["key:iron"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(18, 0, { op: 'crack', at: [43,37] }, [42,37, 0], [44,37, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;

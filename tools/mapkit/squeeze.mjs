@@ -96,7 +96,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     for (const d of map.doors ?? []) for (let k = -1; k <= 1; k++) mark(d.at[axis] + k, 'door'); for (const s of map.secrets ?? []) { for (let k = -1; k <= 1; k++) mark(s.panel[axis] + k, 'secret'); for (const c of s.cells) for (let k = -1; k <= 1; k++) mark(c[axis] + k, 'secret'); } for (const c of map.closets ?? []) for (let k = -1; k <= 1; k++) mark(c.at[axis] + k, 'closet');
     for (const [a, b] of keepOut) for (let c = a; c <= b; c++) mark(c, 'avoid');
     for (const v of map.vents ?? []) { mark(v.at[axis], 'vent'); mark(v.to[axis], 'vent'); }
-    const jump = (c) => { let n = 0; for (let o = 0; o < O; o++) { if (ch(c - 1, o) !== ch(c + 1, o)) n++; else if (ht(c - 1, o) !== ht(c + 1, o)) n++; } return n; };
+    for (const s of map.sectors ?? []) for (const c of s.cells ?? []) mark(c[axis], 'sector');          // PT-082: a lift's cells are listed one by one; a cut through them listed a cell twice (the Mourning Halls)
+    const jump =(c) => { let n = 0; for (let o = 0; o < O; o++) { if (ch(c - 1, o) !== ch(c + 1, o)) n++; else if (ht(c - 1, o) !== ht(c + 1, o)) n++; } return n; };
     const stepAcross = (c) => { for (let o = 0; o < O; o++) if (isFloor(ch(c - 1, o)) && isFloor(ch(c + 1, o)) && ht(c - 1, o) !== ht(c + 1, o)) return true; return false; };          // a stair or a ramp runs ALONG the axis through this column: taking it out makes a taller step (the step rule is 0.6 m)
     const blocked = (c) => c < 3 || c >= N - 3 || used[c] !== '' || stepAcross(c), rows = [];
     for (let c = 0; c < N; c++) rows.push({ c, used: used[c], jump: c > 0 && c < N - 1 ? jump(c) : 0 });
