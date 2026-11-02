@@ -59,7 +59,7 @@ export function tollbearer(tex, o = {}) {
     R.tor('bell', rl, 0.03, 4, 12, C.bronzeDk, { pos: [0, -bh + 0.02, 0], rot: [PI / 2, 0, 0] });
     if (big) R.cyl('bell', rl * 0.94, rl * 1.0, 0.13, 10, C.verd, { pos: [0, -bh + 0.1, 0] });
     R.sph('bell', 0.05, 6, 4, 'glow', { pos: [0, -bh + 0.0, 0], name: 'clapper' });
-    R.J.bellEchoes = R.echo(bell, 1, 0.14);
+    R.J.bellEchoes = R.echo(bell, 1, 0.14, { solid: true });                                                                                  // PT-081: the swing turns the bell to light
     if (big) R.cone('spine', 0.12, 0.6, 5, C.bone, { pos: [-0.34, 0.12, -0.05], rot: [0, 0, 1.15] });                                         // a bone spur grown from the other hip
   }, (p, J, R) => {
     const t = p.t, h = humanoidPose(p, J, big ? { stoop: 0.2, lean: -0.10, headX: 0.5, headZ: 0.32, jawOpen: 0.5, hipY: 0.94, bob: 0.05 } : { stoop: 0.14, lean: -0.1, headX: 0.35, headZ: 0.2, jawOpen: 0.4, hipY: 0.96, bob: 0.04 });          // (PT-080: it lurches under the bell: a deeper bob than a walker's)
@@ -127,7 +127,7 @@ export function bellhand(tex) {
     R.cyl('hb', 0.022, 0.03, 0.2, 5, C.bone, { pos: [0, 0.1, 0] }); R.sph('hb', 0.04, 5, 4, C.bone, { pos: [0, 0.22, 0] });
     const hbell = R.bell('hb', 0.3, 0.19, C.bronze, C.bronzeDk, { pos: [0, -0.3, 0], name: 'hbellMesh', seg: 8 });
     R.sph('hb', 0.045, 5, 4, 'glow', { pos: [0, -0.3, 0], name: 'hclapper' });
-    R.J.hbEchoes = R.echo(hbell, 1, 0.14);
+    R.J.hbEchoes = R.echo(hbell, 1, 0.14, { solid: true });                                                                                   // PT-081: the toll turns the hand-bell to light
     // armB (screen-right): hangs, a long rope coiled on the hip
     R.limb('spine', 'armB', [0.24, 0.7, 0], { a: 0.36, b: 0.42, r0: 0.07, r1: 0.062, r2: 0.055, cellA: C.coat, cellB: C.skin }); hand(R, C, 'armB', { len: 0.46 });
     R.tube('spine', [[0.27, 0.0, 0.1], [0.34, -0.04, 0.12], [0.36, -0.14, 0.1], [0.3, -0.2, 0.1], [0.24, -0.12, 0.12]], 0.025, 4, C.rope);

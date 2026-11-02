@@ -132,6 +132,7 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glow = new THREE.MeshBasicMaterial({ color: 0x3fffe0 }), amber = new THREE.MeshBasicMaterial({ color: 0xffa23a });          // teal is the Hush's light; amber (PT-043) is the Hive's and the Root Bell's own
   const echoMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.4, depthWrite: false, side: THREE.BackSide });
+  const solidMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.FrontSide });          // PT-081: a bell that turns to LIGHT as it swings (the owner: "looks cool"); `echo(..., { solid: true })`
   const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);
   const J = { rig }, echoes = [];
   const fit = (m, o = {}) => { if (o.pos) m.position.set(...o.pos); if (o.rot) m.rotation.set(...o.rot); if (o.scale) m.scale.set(...(Array.isArray(o.scale) ? o.scale : [o.scale, o.scale, o.scale])); return m; };
@@ -169,14 +170,14 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
       R.cyl(name, r0, r1, a, seg, cellA, { pos: [0, -a / 2, 0] }); R.cyl(name + 'M', r1 * 0.96, r2, b, seg, cellB ?? cellA, { pos: [0, -b / 2, 0] });
     },
     /** teal outline shells round a mesh (the RINGING tell): k copies of its geometry, each a little larger, hidden by a vanishing scale (never visible=false, see the top of this file) */
-    echo(src, k = 2, step = 0.12) {
+    echo(src, k = 2, step = 0.12, { solid = false } = {}) {
       const out = [];
       const pr = src.userData.profile, cheap = pr ? new THREE.LatheGeometry(ascending(pr.filter((_, i) => i % 3 === 0 || i === pr.length - 1)), 8) : src.geometry;
-      for (let i = 1; i <= k; i++) { const m = new THREE.Mesh(cheap, echoMat); m.position.copy(src.position); m.rotation.copy(src.rotation); m.userData.base = src.scale.clone().multiplyScalar(1 + i * step); m.scale.copy(m.userData.base).multiplyScalar(0.0001); src.parent.add(m); out.push(m); echoes.push(m); }
+      for (let i = 1; i <= k; i++) { const m = new THREE.Mesh(cheap, solid ? solidMat : echoMat); m.position.copy(src.position); m.rotation.copy(src.rotation); m.userData.base = src.scale.clone().multiplyScalar(1 + i * step); m.scale.copy(m.userData.base).multiplyScalar(0.0001); src.parent.add(m); out.push(m); echoes.push(m); }
       return out;
     },
     /** drive a set of echo shells: amp 0 = vanished, 1 = full */
-    ring(shells, amp) { for (const m of shells) { m.scale.copy(m.userData.base).multiplyScalar(amp > 0.02 ? 1 : 0.0001); } echoMat.opacity = 0.15 + 0.4 * clamp01(amp); },
+    ring(shells, amp) { for (const m of shells) { m.scale.copy(m.userData.base).multiplyScalar(amp > 0.02 ? 1 : 0.0001); } const a = clamp01(amp); if (shells[0]?.material === solidMat) solidMat.opacity = 0.25 + 0.67 * a; else echoMat.opacity = 0.15 + 0.4 * a; },
   };
   build(R);
   const merged = KIT.merge ? mergeParts(rig, J, echoes) : null;
