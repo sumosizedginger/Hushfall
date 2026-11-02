@@ -499,6 +499,12 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
+## PT-081 · the fun pass, Episode 1 · IN PROGRESS
+**The owner, 2026-11-01, first play of Marrow Quay after the pass:** "it tells me there are 2 secrets, but I only found 1."
+- **Cause:** the second secret is the NEW kind, a cracked wall that opens to a shot (the rope store, in the lantern-lit nook in the north wall of the yard). Nothing in the game had taught that such walls exist.
+- **Fixed in code (5be959f):** Ines names the crack when the player comes near that nook (the message `rope-store-hint`, heard on the main route), and every cracked wall's line of light is wider and brighter with a soft glow.
+- **To check on the next play:** is the crack visible from the yard? Does the hint make it obvious without giving every later crack away?
+
 ## PT-080 · the rest of the art list, overnight · FIXED-IN-CODE (awaiting the owner)
 **The owner's go (2026-10-31):** "I want you to do EVERYTHING still on your list." What changed, and what to look at:
 1. **Boss shields** are a glowing bell of sound round the boss (clear in the middle, bright at the edges, rings running up it), not tall teal slabs. Look at the first boss (the Cantor, end of Episode 1), the Gate Warden and the Root Bell (where you stand inside the bell and see its rings overhead).
