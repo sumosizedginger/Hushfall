@@ -22,9 +22,9 @@
   "##########BffffffffffffffffffffffffffffffgggggB#######",
   "##########Bffffffffffffffffffffffffffffffgggggg#######",
   "##########fffffffffffffffffffffffffffffffgggggg#######",
-  "##########fffffffffffffffffffffffffffffffgggggg#######",
-  "##########ftttttBBBBBBBBBBBBBBBBBBBBBBBBBgggggB#######",
-  "##########BtttttBpppppppppppppppppppppppBgggggB#######",
+  "#######ff#fffffffffffffffffffffffffffffffgggggg#######",
+  "#######ffSftttttBBBBBBBBBBBBBBBBBBBBBBBBBgggggB#######",
+  "#######ff#BtttttBpppppppppppppppppppppppBgggggB#######",
   "##########BtttttBpppppppppppppppppppppppBgggggB#######",
   "##########BtttttBpppppppppppppppppppppppBgggggg#######",
   "##########ttttttBpppppppppppppppppppppppBgggggg#######",
@@ -86,9 +86,9 @@
   "...........cccddddddeeeeeefffffgggggghhhhiiiii........",
   "...........cccddddddeeeeeefffffgggggghhhhiiiiij.......",
   "..........ccccddddddeeeeeefffffgggggghhhhjjjjjj.......",
-  "..........ccccddddddeeeeeefffffgggggghhhhjjjjjj.......",
-  "..........cbbbbb.........................jjjjj........",
-  "...........bbbbb.ooooooooooooooooooooooo.jjjjj........",
+  ".......cc.ccccddddddeeeeeefffffgggggghhhhjjjjjj.......",
+  ".......ccccbbbbb.........................jjjjj........",
+  ".......cc..bbbbb.ooooooooooooooooooooooo.jjjjj........",
   "...........bbbbb.orrrrqpooooooooopqrrrro.jjjjj........",
   "...........aaaaa.orrrrqpooooooooopqrrrro.kkkkkk.......",
   "..........aaaaaa.orrrrqpooooooooopqrrrro.kkkkkk.......",
@@ -155,6 +155,14 @@
     [48, 42]
    ],
    "open": "shoot"
+  },
+  {
+   "id": "ringers-cupboard",
+   "panel": [9, 12],
+   "cells": [
+    [8, 12],
+    [7, 12]
+   ]
   }
  ],
  "triggers": [
@@ -302,6 +310,11 @@
    "at": [38, 10]
   },
   {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [7, 11]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [30, 11]
@@ -310,6 +323,11 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [42, 11]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [7, 12]
   },
   {
    "type": "prop",
@@ -1154,6 +1172,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "The vestry chest. Robes, a sexton's medicine and a box of flares. He kept them from the bell."
+  },
+  {
+   "id": "ringers-cupboard",
+   "at": [8, 12],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The bell-ringers' cupboard. Ropes, gloves, and a flask nobody finished."
   }
  ],
  "decals": [
@@ -1180,6 +1205,13 @@
    "kind": "scorch",
    "at": [28, 25],
    "size": 1.6
+  },
+  {
+   "kind": "scrape",
+   "at": [10, 11],
+   "wall": "west",
+   "y": 1,
+   "size": 1
   }
  ],
  "growth": [

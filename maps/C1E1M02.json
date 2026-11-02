@@ -58,11 +58,11 @@
   "#sssssssssssssssPtttttPttttttttttttttttttttttttttt##############",
   "#CssssssssssssssPtttttPtttttttttttttttttttttttttttt#############",
   "#CssssssssssssssPtttttPttttttttttttttttttttttttttt##############",
-  "#CCsssssssssssssPPPPPPPtttttttttttttttttttttttttP###############",
-  "#CCCssssssssssssC#####PtttttttttttttttttttttttttP###############",
-  "#CCCCsssCCsssCCCC#####PPPPPPXPPPPXPPPPXPPPPXPPPPP###############",
-  "#####sss##sss##############PtP##PtP##PtP##PtP###################",
-  "###########################PPP##PPP##PPP##PPP###################"
+  "#CCsssssssssssssPPPPttPtttttttttttttttttttttttttP###############",
+  "#CCCssssssssssssC##PPtPtttttttttttttttttttttttttP###############",
+  "#CCCCsssCCsssCCCC###PtPPtPPPXPPPPXPPPPXPPPPXPPPPP###############",
+  "#####sss##sss#######PttttP#PtP##PtP##PtP##PtP###################",
+  "####################PPPPPP#PPP##PPP##PPP##PPP###################"
  ],
  "heights": [
   "................................................................",

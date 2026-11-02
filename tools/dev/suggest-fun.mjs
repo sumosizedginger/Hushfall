@@ -42,7 +42,7 @@ console.log(`${id} ${map.name}: ${W}x${H}, ${route.length} route points`);
 for (const p of picks) console.log(`  BYPASS ${p.n} cells, the route walks ${p.walk} cells between its ends:  E.bypass({ from: [${p.from}], to: [${p.to}] });`);
 if (!picks.length) console.log('  no bypass candidate');
 // the platform: the 5 x 4 block (with its steps along x, and a ring) of one-height floor off the lane, nearest the middle of the route
-for (const [w, d] of [[5, 4], [4, 3]]) {
+for (const [w, d] of [[5, 4], [4, 3], [3, 3]]) {
   let best = null; const mid = route[Math.floor(route.length / 2)] ?? [W / 2, H / 2];
   for (let z = 1; z < H - d; z++) for (let x = 1; x < W - w; x++) {
     const h0 = ht(x, z); let ok = true;
@@ -53,5 +53,5 @@ for (const [w, d] of [[5, 4], [4, 3]]) {
     if (!ok) continue; const dd = Math.hypot(x + w / 2 - mid[0], z + d / 2 - mid[1]); if (!best || dd < best.d) best = { x, z, d: dd };
   }
   if (best) { console.log(`  PLATFORM ${w}x${d} off the lane at [${best.x}, ${best.z}]:  E.platform({ search: { region: [${best.x - 2}, ${best.z - 2}, ${best.x + w + 2}, ${best.z + d + 2}], lane: laneOf('${id}') }, w: ${w}, d: ${d} });`); break; }
-  if (w === 4) console.log('  no platform spot off the lane');
+  if (w === 3) console.log('  no platform spot off the lane');
 }

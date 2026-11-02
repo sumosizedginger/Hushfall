@@ -57,6 +57,8 @@ const E = new Encounters(L);
 E.dropIn({ at: [22, 28], radius: 2, cells: E.around([22, 28], { n: 3, min: 6, max: 10 }), kind: 'g' });                  // the flooded undercroft: three Gaunts come wading out of the pillars
 E.secretRoom({ id: 'smugglers-cupboard', search: { region: [3, 3, 56, 50], prefer: [45, 10], lane: laneOf('C1E1M04') }, open: 'shoot', rewards: ['v', 'e', 'H'], message: { speaker: 'INES', text: "A smuggler's cupboard behind the chandlery wall. He never came back for what he hid." } });          // PT-081: a second secret of another kind, a cracked wall
 E.dropIn({ at: [17, 44], radius: 2, cells: E.around([17, 44], { n: 2, min: 5, max: 9 }), kind: 'g' });          // PT-081 (the 175 m walk with nothing awake through the south rooms): two Gaunts come up out of the flooded store
+E.bypass({ from: [25, 21], to: [23, 22], minLen: 2 });          // PT-081: a flooded cut-through: the route walks 124 cells round
+E.bypass({ from: [16, 40], to: [16, 43] });          // PT-081: and a loop through the south stores
 E.cage({ at: [51, 24], radius: 1.5, cells: E.around([51, 24], { n: 2, min: 3, max: 6 }), kind: 'g' });                  // the iron key on the chandler's desk: lifting it brings two Gaunts in from the shelves
 // ---- end PT-052 ----
 

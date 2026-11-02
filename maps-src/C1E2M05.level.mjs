@@ -57,6 +57,7 @@ ENC.cage({ at: [44,22], radius: 1.5, cells: ENC.around([44,22], { n: 3, min: 4, 
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'linen-store', search: { region: [3, 3, 68, 40], prefer: [53, 28], lane: laneOf('C1E2M05') }, open: 'shoot', rewards: ['H', 'r'], message: { speaker: 'INES', text: 'The annex linen store. Whoever sealed it was not keeping things out.' } });
 FUN.bypass({ from: [50, 14], to: [61, 15] });          // a service passage: a flank round the last ward
+FUN.platform({ search: { region: [46, 23, 57, 34], lane: laneOf('C1E2M05') }, w: 3, d: 3 });          // a raised nurse's station in the last ward
 // ---- end PT-081 fun pass ----
 
 const layers = L.layers();
