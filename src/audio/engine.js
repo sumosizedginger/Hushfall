@@ -4,6 +4,8 @@ import { zoneBeat } from '../engine/hive.js';
 import { SFX, seededRandom } from './synth.js';
 import { soundsForEvent } from './events.js';
 import { Music } from './music.js';
+import { IntensityTracker, weightOf } from './intensity.js';                                                     // PT-081: the smart music
+import { themeFor } from './score.js';
 import { Ambience } from './ambience.js';
 import { makeSawVoice, sawState } from './sawvoice.js';                                                             // PT-061 S1: the chainsaw's sustained voice
 import { PLAYER } from '../engine/defs.js';
@@ -15,6 +17,7 @@ export class AudioEngine {
     this.settings = settings; this.ctx = null; this.unsupported = false; this.rand = seededRandom(20260929);
     this.stats = { played: 0, dropped: 0, log: [] };
     this.tension = 0; this.muffled = false; this.dead = false; this.lastStep = 0; this.nextCreak = 6; this.nextBeat = 0; this.bellTimers = new Map(); this.clock = 0;
+    this.intensity = new IntensityTracker(); this.musicTheme = undefined;
   }
   /** 'locked' (no context yet) | 'suspended' | 'running' | 'closed' | 'unsupported' */
   get state() { return this.ctx ? this.ctx.state : this.unsupported ? 'unsupported' : 'locked'; }
@@ -79,20 +82,24 @@ export class AudioEngine {
     for (const e of events) {
       for (const s of soundsForEvent(e)) this.play(s.id, { pos: s.pos, gain: s.gain, delay: s.delay });
       if (e.type === 'player_died') { this.dead = true; this._applyMuffle(); }
+      if (e.type === 'hurt') this.intensity.hurt(e.amount);                                                        // PT-081: being hurt pushes the music up
+      if (e.type === 'enemy_died' && !e.folk && weightOf(e.kind) >= 2.5) this.music?.kill?.();                    // a big one died: a bell on the next beat
       if (e.type === 'silence') { this.hushT = this.clock + 1.4; this.stepAfterHush = true; }                  // PT-043: every sound cuts out for a held second, then one footstep
     }
   }
 
   _applyMuffle() { if (!this.ctx) return; const t = this.ctx.currentTime, m = this.muffled || this.dead; this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25); this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (this.silent ? 0 : m ? 0.35 : 1), t, 0.25); }
   setMuffled(b) { this.muffled = b; this._applyMuffle(); }
-  newLevel() { this.lastBeat = -1; this.hushT = 0; this.stepAfterHush = false; this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
+  newLevel() { this.intensity.reset(); try { this.music?.restart?.(); } catch { this.musicFailed = true; } this.lastBeat = -1; this.hushT = 0; this.stepAfterHush = false; this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
 
   /** per-frame: listener, footsteps, ambience mix, tension-driven music, enemy bells, low-health heartbeat */
   update(world, dt, map) {
     if (!this.ctx || this.ctx.state !== 'running') return;
     this.clock += dt; const c = this.ctx, p = world?.player;
-    this.music.tick();
-    if (!p) { this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 }); this.music.setIntensity(0); return; }
+    if (!this.musicFailed) { try { this.music.tick(); } catch { this.musicFailed = true; } }                       // a fault in the score must never end a session: it goes quiet instead
+    if (!p) { this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 }); this.music.setIntensity(0); this.music.setLevel?.(0); return; }
+    { const th = themeFor(map?.id, map); if (th !== this.musicTheme) { this.musicTheme = th; try { this.music.setTheme?.(th); } catch { this.musicFailed = true; } } }        // PT-081: the place's theme
+    this.music.setLevel?.(this.intensity.update(world, dt));
     if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') { const bn = Math.floor(world.tick / 90); if (bn !== this.lastBeat) { this.lastBeat = bn; this.play('hive_beat', { gain: 0.5 }); } }          // PT-043: the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
     const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
     if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }

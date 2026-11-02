@@ -1,0 +1,129 @@
+// THE SCORE (PT-081, the smart music): the themes as DATA and the pure functions that turn a theme, a bar and a fight's level into
+// note events. No WebAudio here: `music.js` performs what this returns, and the node tests read it directly.
+// A theme has a CALM version (the place's tune) and a BATTLE version of the same tune (darker, twice as fast), and a fight has four
+// levels: 0 calm, 1 noticed (a pulse and a held low note), 2 fighting (the band and the tune), 3 overwhelmed (sixteenths, toms,
+// the tune an octave up, a choir). Every tune here is original. An event: { at, dur (beats), voice, f (Hz, pitched voices), gain, pan, glide (Hz it slides from), vib (cents) }.
+
+const NAMES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+/** 'D3', 'Bb1', 'C#4' -> Hz (A4 = 440, equal temperament) */
+export function NOTE(n) {
+  const m = /^([A-G])(b|#)?(-?\d)$/.exec(n); if (!m) throw new Error('bad note ' + n);
+  const semi = NAMES[m[1]] + (m[2] === 'b' ? -1 : m[2] === '#' ? 1 : 0) + 12 * (Number(m[3]) + 1);
+  return 440 * 2 ** ((semi - 69) / 12);
+}
+
+// ---- the instruments: a spectrum each (harmonic number k at frequency f -> amplitude), performed as one PeriodicWave per note ----
+const res = (f, fc, bw, g) => g / (1 + ((f - fc) / (bw / 2)) ** 2);
+export const SPECTRA = {
+  cello: (f, k) => (1 / k ** 0.9) * (res(f, 420, 380, 1) + res(f, 1500, 700, 0.45) + res(f, 2900, 600, 0.12) + 0.03),
+  harmonium: (f, k) => (1 / k ** 0.75) * (res(f, 320, 400, 0.7) + res(f, 1150, 900, 0.5) + 0.04),
+  brass: (f, k) => (1 / k ** 0.45) * (res(f, 650, 500, 0.8) + res(f, 1350, 900, 0.7) + res(f, 2600, 1200, 0.25) + 0.05),
+  choir: (f, k) => (1 / k ** 0.6) * (res(f, 700, 160, 1) + res(f, 1150, 180, 0.6) + res(f, 2700, 300, 0.15) + 0.01),
+  bass: (f, k) => 1 / k ** 1.1,
+};
+/** the voices that are pitched notes (the rest are drums and the bell) and how each one moves */
+export const VOICES = {
+  cello: { att: 0.12, rel: 0.35, bus: 'clean' }, harmonium: { att: 0.35, rel: 0.9, bus: 'clean', trem: 0.05 }, choir: { att: 0.25, rel: 0.3, bus: 'clean' },
+  brass: { att: 0.03, rel: 0.1, bus: 'drive' }, bass: { att: 0.004, rel: 0.05, bus: 'drive' }, chordBrass: { att: 0.06, rel: 0.12, bus: 'drive', spectrum: 'brass' },
+};
+export const DRUMS = ['kick', 'snare', 'hat', 'tomH', 'tomL', 'anvil', 'crash', 'boom', 'bell'];
+
+/** the imaginary coefficients of a PeriodicWave for `voice` at `f0` (index 0 is the DC term, always 0); harmonics stop at maxHz */
+export function harmonics(voice, f0, maxHz = 6000) {
+  const spec = SPECTRA[VOICES[voice]?.spectrum ?? voice]; if (!spec) throw new Error('no spectrum ' + voice);
+  const n = Math.max(1, Math.min(96, Math.floor(maxHz / f0))), im = new Float32Array(n + 1);
+  for (let k = 1; k <= n; k++) im[k] = spec(k * f0, k);
+  return im;
+}
+
+// ---- THE THEMES ----
+// HARBOUR (Campaign 1, Episode 1): the Tollbearers' hymn. Calm: D Dorian, 63 bpm in three, a cello over a pump organ, a far bell
+// (tuned so D, F and A are its own partials) at each phrase. Battle: the same tune in D Aeolian (B becomes Bb), 126 bpm in four, on brass.
+export const THEMES = {
+  harbour: {
+    name: 'harbour',
+    calm: {
+      bpm: 63, meter: 3, bell: 'D3',
+      phrases: [
+        { mel: [['D3', 1], ['F3', 1], ['A3', 1], ['G3', 1.5], ['F3', 0.5], ['E3', 1], ['F3', 1], ['E3', 1], ['C3', 1], ['D3', 3]],
+          chords: [['D2', 'D3', 'F3', 'A3'], ['G2', 'G3', 'B3', 'D4'], ['F2', 'F3', 'A3', 'C4'], ['D2', 'D3', 'F3', 'A3']] },
+        { mel: [['A3', 1], ['B3', 1], ['C4', 1], ['D4', 2], ['A3', 1], ['B3', 1], ['A3', 1], ['G3', 1], ['A3', 3]],
+          chords: [['A2', 'E3', 'A3', 'C4'], ['G2', 'G3', 'B3', 'D4'], ['E2', 'E3', 'G3', 'B3'], ['A2', 'E3', 'A3', 'C4']] },
+      ],
+      rest: 2,                                                                                         // beats of breath between phrases
+    },
+    battle: {
+      bpm: 126, meter: 4,
+      roots: ['D2', 'C2', 'F2', 'D2', 'Bb1', 'D2', 'G1', 'A1'],
+      chords: { D2: ['D3', 'F3', 'A3'], C2: ['C3', 'E3', 'G3'], F2: ['F3', 'A3', 'C4'], Bb1: ['Bb2', 'D3', 'F3'], G1: ['G2', 'Bb2', 'D3'], A1: ['A2', 'C#3', 'E3'] },
+      lead: [[['D4', 2], ['F4', 1], ['A4', 1]], [['G4', 1.5], ['F4', 0.5], ['E4', 2]], [['F4', 1], ['E4', 1], ['C4', 2]], [['D4', 4]],
+        [['A4', 1], ['Bb4', 1], ['C5', 2]], [['D5', 3], ['A4', 1]], [['Bb4', 1], ['A4', 1], ['G4', 2]], [['A4', 4]]],
+      bell: 'D2', killBell: 'A2', clear: ['D2', 'A2', 'D3', 'F3', 'A3'],
+    },
+  },
+};
+
+/** which theme a map plays (null = the older generative score, until that place has its own theme) */
+export function themeFor(mapId, map) {
+  const named = map?.atmosphere?.music; if (named !== undefined) return named && THEMES[named] ? named : null;
+  if (/^C1E1/.test(mapId ?? '')) return 'harbour';
+  return null;
+}
+/** the seconds a beat lasts in a section */
+export const beatSeconds = (section) => 60 / section.bpm;
+
+/** CALM: every event of phrase `i` (beats from the phrase's start) and the phrase's length in beats */
+export function calmPhrase(theme, i) {
+  const C = THEMES[theme].calm, P = C.phrases[i % C.phrases.length], ev = [{ at: 0, voice: 'bell', f: NOTE(C.bell), gain: 0.07, pan: -0.5 }];
+  P.chords.forEach((ch, b) => ch.forEach((n, j) => ev.push({ at: b * C.meter, dur: C.meter + 0.05, voice: 'harmonium', f: NOTE(n), gain: j === 0 ? 0.05 : 0.032, pan: [0, -0.35, 0.1, 0.35][j] })));
+  let t = 0, prev = 0;
+  for (const [n, b] of P.mel) { const f = NOTE(n); ev.push({ at: t, dur: b - 0.02, voice: 'cello', f, gain: 0.13, pan: 0.15, vib: 16, glide: prev }); prev = f; t += b; }
+  return { events: ev, beats: P.chords.length * C.meter + C.rest };
+}
+
+/** BATTLE, one beat: the drums and the bass of beat `q` of bar `bar` at `level` (beats from the beat's start) */
+export function battleBeat(theme, bar, q, level) {
+  const B = THEMES[theme].battle, root = NOTE(B.roots[bar % B.roots.length]), ev = [];
+  if (level === 1) {
+    ev.push({ at: 0, voice: 'kick', gain: q % 2 ? 0.25 : 0.45 }, { at: 0.5, voice: 'anvil', gain: 0.035, pan: 0.6 });
+    if (q === 0) ev.push({ at: 0, dur: B.meter - 0.1, voice: 'bass', f: root, gain: 0.07, pan: 0, held: true });
+  }
+  if (level >= 2) {
+    ev.push({ at: 0, voice: 'kick', gain: q % 2 ? 0.45 : 0.75 }, { at: 0.5, voice: 'anvil', gain: 0.06, pan: 0.55 });
+    if (q % 2) ev.push({ at: 0, voice: 'snare', gain: 0.32, pan: -0.1 });
+    for (const e of [0, 0.5]) { const acc = (q === 0 && e === 0) || (q === 2 && e === 0.5) ? 1 : 0.6;
+      ev.push({ at: e, dur: 0.27, voice: 'bass', f: root, gain: 0.11 * acc, pan: 0 }, { at: e, dur: 0.27, voice: 'bass', f: root * 2, gain: 0.035 * acc, pan: 0.2 }); }
+  }
+  if (level === 3) {
+    ev.push({ at: 0, voice: 'hat', gain: 0.12, pan: -0.4 }, { at: 0.25, voice: 'hat', gain: 0.09, pan: 0.4 }, { at: 0.75, voice: 'hat', gain: 0.09, pan: 0.4 }, { at: 0, voice: 'kick', gain: 0.3 });
+    if (q === B.meter - 1) [0, 0.25, 0.5, 0.75].forEach((s, i) => ev.push({ at: s, voice: i < 2 ? 'tomH' : 'tomL', gain: 0.3, pan: i < 2 ? 0.3 : -0.3 }));
+  }
+  return ev;
+}
+
+/** BATTLE, one bar's long notes (chords, the tune, the choir, the bell of an overwhelmed bar): only from level 2; `prevF` is the tune's last note (it slides from it) */
+export function battleBar(theme, bar, level, prevF = 0) {
+  const B = THEMES[theme].battle, ev = []; if (level < 2) return { events: ev, lastF: prevF };
+  const root = B.roots[bar % B.roots.length];
+  B.chords[root].forEach((n, j) => ev.push({ at: 0, dur: B.meter - 0.1, voice: 'chordBrass', f: NOTE(n), gain: 0.03, pan: [-0.5, 0, 0.5][j] }));
+  let t = 0, last = prevF;
+  for (const [n, b] of B.lead[bar % B.lead.length]) {
+    const f = NOTE(n); ev.push({ at: t, dur: b - 0.06, voice: 'brass', f, gain: 0.085, pan: -0.05, vib: 12, glide: last }, { at: t, dur: b - 0.06, voice: 'cello', f: f / 2, gain: 0.05, pan: 0.25 });
+    if (level === 3) ev.push({ at: t, dur: b - 0.06, voice: 'brass', f: f * 2, gain: 0.04, pan: 0.3, vib: 12 });
+    last = f; t += b;
+  }
+  if (level === 3) { B.chords[root].forEach((n, j) => ev.push({ at: 0, dur: B.meter, voice: 'choir', f: NOTE(n) * 2, gain: 0.03, pan: [-0.7, 0, 0.7][j], vib: 20 })); ev.push({ at: 0, voice: 'bell', f: NOTE('D3'), gain: 0.12, pan: -0.4 }); }
+  return { events: ev, lastF: last };
+}
+
+/** STINGERS: 'start' (something noticed you), 'up3' (overwhelmed), 'up2' (the band comes in), 'kill' (a big one died), 'clear' (the room is clear) */
+export function stinger(theme, kind) {
+  const B = THEMES[theme].battle;
+  if (kind === 'start') return [{ at: 0, voice: 'bell', f: NOTE(B.bell), gain: 0.32, pan: 0 }, { at: 0, voice: 'boom', gain: 0.35 }];
+  if (kind === 'up2') return [{ at: 0, voice: 'crash', gain: 0.2, pan: 0.3 }];
+  if (kind === 'up3') return [{ at: 0, voice: 'crash', gain: 0.2, pan: 0.3 }, { at: 0, voice: 'boom', gain: 0.45 }, { at: 0, voice: 'bell', f: NOTE(B.bell), gain: 0.3, pan: 0.2 }];
+  if (kind === 'kill') return [{ at: 0, voice: 'bell', f: NOTE(B.killBell), gain: 0.4, pan: -0.2 }, { at: 0, voice: 'crash', gain: 0.18, pan: -0.3 }];
+  if (kind === 'clear') return [{ at: 0, voice: 'bell', f: NOTE('D3'), gain: 0.3 }, { at: 0, voice: 'kick', gain: 0.6 }, { at: 0, voice: 'crash', gain: 0.18, pan: -0.2 },
+    ...B.clear.map((n, j) => ({ at: 0, dur: 3.4, voice: 'chordBrass', f: NOTE(n), gain: j ? 0.04 : 0.07, pan: [0, -0.4, 0.4, -0.2, 0.2][j], rel: 1.8 }))];
+  throw new Error('no stinger ' + kind);
+}
