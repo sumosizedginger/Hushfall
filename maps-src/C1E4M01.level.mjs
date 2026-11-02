@@ -6,6 +6,8 @@
 // tube 2 (cabin 2, the ramp) -> open 2 (three loads out of step across the road, and the FREIGHT BAY cut into the cable: containers, the car-call switch) -> tube 3 (cabin 3, the last ramp) -> the car (a round cab inside the cable).
 // Scale class MIXED (about half of it is roofed: the tubes, the cabins, the deck). Look: tether (hard white sun, rust and frost, the black behind it). The sky is orbit: stars over the limb of the world, and below the road the world itself.
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const W = 72, H = 72, CX = 36, CZ = 36, TAU = Math.PI * 2;
 const R0 = 27, PITCH = 8, HW = 2.9, CORE = 6, PHI0 = (135 * Math.PI) / 180;                      // the road: centre radius 27 at the foot, 11 at the top, 8 cells between turns (6 of road, 2 of sky)
@@ -157,6 +159,13 @@ let swAt = null, swWall = 'north';
 for (const [x, z] of bayFloor) { for (const [w, dx, dz] of [['north', 0, -1], ['south', 0, 1], ['west', -1, 0], ['east', 1, 0]]) { if (L.g[z + dz]?.[x + dx] === 'N' && !used.has(x + ',' + z)) { swAt = [x, z]; swWall = w; break; } } if (swAt) break; }
 if (SECRET) { const [qx, qz] = SECRET.centre; for (const [k, dx, dz] of [['ammo_shell', -1, -1], ['ammo_rivet', 1, -1], ['ammo_flare', 0, 1], ['health_large', 1, 1], ['armor_vest', -1, 1]]) { const p = [qx + dx, qz + dz]; if (isFloor(...p) && !used.has(p.join(','))) { used.add(p.join(',')); ents.push({ type: 'pickup', kind: k, at: p }); } } }
 const exitCell = [CX - 1, CZ - 1];
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'tether-locker', search: { region: [3, 3, 68, 68], prefer: [45, 40], lane: laneOf('C1E4M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A maintenance locker on the tether, sealed when the cars stopped. Somebody meant to come back.' } });
+FUN.dropIn({ at: [26, 27], radius: 2, cells: FUN.around([26, 27], { n: 2, min: 5, max: 9 }), kind: 'g' });          // the 119 m walk round the ring with nothing awake: two Gaunts come off the cables
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M01', name: 'Ascent Tether', version: 1, ceilingHeight: 30, par: { time: 480 },
   atmosphere: { fog: '#161c28', fogDensity: 0.004, sky: 'orbit', look: 'tether' },
@@ -187,5 +196,6 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [[c1[0] - 4, c1[1] - 4, c1[0] + 4, c1[1] + 4], [c3[0] - 4, c3[1] - 4, c3[0] + 4, c3[1] + 4]] };
 console.log('C1E4M01: road', Math.round(S_END), 'cells, enemies', ents.filter((e) => e.type === 'enemy').length, 'bay', bayCells.length, 'switch', swAt, swWall);
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, at, hU, S_END };

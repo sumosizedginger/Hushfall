@@ -31,11 +31,11 @@
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2222222;;;;;2222222AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2222222;;;;;2222222AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA22;;;;;;;;;;;;;;;;;22AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA22222;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;22;;;;;;;;;;;;;;;;;22AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;S;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;2;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2222;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;;;;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;22;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2;;;;;;22;;;;;;;;;;;2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -152,9 +152,9 @@
   "...........................................99999..........................................",
   ".....................................88888888888888888....................................",
   ".....................................88888888888888888....................................",
-  ".....................................88888888888888888....................................",
-  "....................................8888888888888888888...................................",
-  "....................................8888888888888888888...................................",
+  ".................................88..88888888888888888....................................",
+  ".................................8888888888888888888888...................................",
+  ".................................88.8888888888888888888...................................",
   "....................................8888888888888888888...................................",
   "....................................8888888888888888888...................................",
   "....................................8888888888888888888...................................",
@@ -401,6 +401,15 @@
     [72, 100],
     [72, 101]
    ]
+  },
+  {
+   "id": "rank-cell",
+   "panel": [35, 21],
+   "cells": [
+    [34, 21],
+    [33, 21]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -527,6 +536,16 @@
   }
  ],
  "entities": [
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [33, 20]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 21]
+  },
   {
    "type": "player",
    "at": [45, 108]
@@ -1160,6 +1179,13 @@
    "radius": 5.5,
    "speaker": "HULL",
    "text": "A service lock in the east wall. Its inner door and its outer door will not stand open together. The hatch at the far end of it is open to the dark."
+  },
+  {
+   "id": "rank-cell",
+   "at": [34, 21],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A guard cell in the rank wall, bricked up. Whoever kept watch here left in a hurry."
   }
  ],
  "vacuum": [

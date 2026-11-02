@@ -53,9 +53,9 @@
   "JJJJJJJJJJJJJJJJJJJJJJJJJJJ4444444444444JJJJJJJJ44444444444444JJJJJJJJJJ",
   "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ444444444444JJJJJJ444444444444444JJJJJJJJJJ",
   "JJJJJJJJJJJJJ4JJJJJJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
-  "JJJJJJJJJ444444444JJJJJJJJJJJJ44444444444444J4444444444444444JJJJJJJJJJJ",
-  "JJJJJJJJ44444444444JJJJJJJJJJJJ4444444444444J4444444444444444JJJJJJJJJJJ",
-  "JJJJJJJ444444444444444444D444444444444444444D444444444444444JJJJJJJJJJJJ",
+  "JJJJJJJJJ444444444JJJJJJJJJJJJ44444444444444J4444444444444444J44JJJJJJJJ",
+  "JJJJJJJJ44444444444JJJJJJJJJJJJ4444444444444J4444444444444444S44JJJJJJJJ",
+  "JJJJJJJ444444444444444444D444444444444444444D444444444444444JJ44JJJJJJJJ",
   "JJJJJJ444444444444444JJJJJJJJJJJ444444444444J444444444444444JJJJJJJJJJJJ",
   "JJJJJJ444444444444444JJJJJJJJJJJJ44444444444J44444444444444JJJJJJJJJJJJJ",
   "JJJJJJ444444444444444JJJJJJJJJJJJJ4444444444J4444444444444JJJJJJJJJJJJJJ",
@@ -125,9 +125,9 @@
   "...........................44........122........221........444..........",
   ".....................................1222......2221........444..........",
   "......................................122222222221........444...........",
-  ".......................................1122222211.........444...........",
-  ".........................................111111..........4444...........",
-  ".........................................................444............",
+  ".......................................1122222211.........444.44........",
+  ".........................................111111..........4444444........",
+  ".........................................................444..44........",
   "........................................................4444............",
   ".......................................................4444.............",
   "................................................112...4444..............",
@@ -263,6 +263,15 @@
     [12, 22],
     [13, 22]
    ]
+  },
+  {
+   "id": "lens-store",
+   "panel": [61, 43],
+   "cells": [
+    [62, 43],
+    [63, 43]
+   ],
+   "open": "shoot"
   }
  ],
  "closets": [
@@ -469,6 +478,16 @@
   {
    "type": "player",
    "at": [8, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [63, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [63, 44]
   },
   {
    "type": "prop",
@@ -917,6 +936,13 @@
    "radius": 4.5,
    "speaker": "HULL",
    "text": "A plinth in the west wall rises to a ledge, holds, and sinks again on a count of fourteen. Something is kept on the ledge."
+  },
+  {
+   "id": "lens-store",
+   "at": [62, 43],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A store for spare mirrors, bricked in. Two of them are not broken."
   }
  ],
  "objective": "The antechamber: turn the mirror so the light reaches the receiver. It opens the way into the array",

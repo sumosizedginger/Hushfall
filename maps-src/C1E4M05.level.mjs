@@ -132,6 +132,12 @@ const ENC = new Encounters(L);
 ENC.dropIn({ at: [50,45], radius: 2, cells: ENC.around([50,45], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'seed-store', search: { region: [3, 3, 92, 92], prefer: [76, 72], lane: laneOf('C1E4M05') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A seed store under the orchard, grown over. The Vael kept our seeds too.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M05', name: 'Drift Orchard', version: 1, ceilingHeight: 20, par: { time: 400 },
   atmosphere: { fog: '#cfe4b4', fogDensity: 0.004, sky: 'orbit', ambient: 0.9, look: 'orchard' },
@@ -170,5 +176,6 @@ MAP.entities.push(...[["mod_longchain",43,70]].map(([kind, x, z]) => ({ type: 'p
 MAP.roster = { id: 'C1E4M05', lane: [...(laneOf('C1E4M05') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, VENTS, byId, TREE, CX, CZ };

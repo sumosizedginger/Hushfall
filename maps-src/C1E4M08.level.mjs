@@ -4,6 +4,8 @@
 // stone stand about the arena, and they are what makes the hall compress), the MIRRORS (three, on plinths, one-sided, turned a quarter step by Use) turn it: a beam that comes off a mirror turned the right way passes through the seal beyond it and shatters it. Or shoot the
 // seals. It also sings a ring of tone like the Cantors' and calls Drone-Gills out of the walls. The exit, behind the dais, is locked until it falls. Scale class MIXED (the dome over the west half and the rim, the sky over the east). Look: gate (white and black).
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const W = 72, H = 60, CX = 36, CZ = 30, RAD = Math.PI / 180, R2 = Math.SQRT1_2;
 const L = new Level(W, H, { fill: '2' });
@@ -119,6 +121,12 @@ for (const [x, z] of [[CX - 6, CZ - 8], [CX - 6, CZ + 8], [CX + 18, CZ - 2], [CX
 if (SECRET) { const [qx, qz] = SECRET.centre; for (const [k, dx, dz] of [['ammo_shell', -1, 0], ['ammo_rivet', 1, 0], ['ammo_flare', 0, 1], ['health_large', 1, 1], ['armor_vest', -1, 1]]) ents.push({ type: 'pickup', kind: k, at: [qx + dx, qz + dz] }); }
 for (const [x, z] of PILLARS) void x, void z;
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'warden-alcove', search: { region: [3, 3, 68, 56], prefer: [49, 52], lane: laneOf('C1E4M08') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An alcove behind the rim, sealed by the builders of the Gate. They left something for whoever came this far.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M08', name: 'Gate Warden', version: 1, ceilingHeight: 14, par: { time: 720 },
   atmosphere: { fog: '#c8ccdc', fogDensity: 0.0035, sky: 'gate', look: 'gate' },
@@ -151,5 +159,6 @@ const MAP = {
 };
 MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };
 console.log('C1E4M08: enemies', ents.filter((e) => e.type === 'enemy').length, 'seals', SEALS.length, 'blocks', PILLARS.length, 'mirror rots', JSON.stringify(MIRRORS.map((m) => [m.id, m.rot, m.solve])), 'secret', SECRET?.panel);
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, WARDEN, EXIT, START, SEALS, MIRRORS, PILLARS, SECRET, DAIS };

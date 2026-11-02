@@ -132,6 +132,11 @@ ENC.dropIn({ at: [51,13], radius: 2, cells: ENC.around([51,13], { n: 3, min: 6, 
 ENC.dropIn({ at: [88,31], radius: 2, cells: ENC.around([88,31], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M02', name: 'Wreck Belt', version: 1, par: { time: 480 },
   atmosphere: { fog: '#0c1618', fogDensity: 0.005, sky: 'orbit', look: 'wreck' },
@@ -172,5 +177,6 @@ MAP.entities.push(...[["ld_pen_rivet",75,37],["ld_pen_harpoon",75,42],["ld_pen_c
 MAP.roster = { id: 'C1E4M02', lane: [...(laneOf('C1E4M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"tollbearer","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, VENTS };

@@ -48,10 +48,10 @@
   "NNNNNNOggggggOOddddddNNNaaaaaNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
   "NNNNNNOOgggggO_ddddddNNNaaaaaNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
   "NNNNNNNOaaaaO__ddddddNNNNaaaNNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
-  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNaaaaaaNNNNNNNNOaaaaO__ddddddNNNNNNNNNNN",
-  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNaaaaNNNNNNNNNaaaaaO__ddddddNNNNNNNNNNN",
-  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNNOaaaaO___addddNNNNNNNNNNNN",
-  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNNOaaaaO__OaaaaONNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNaaaaaaNNNNNaaNOaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNaaaaNNNNNNaaSaaaaaO__ddddddNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNaaNaaaaO___addddNNNNNNNNNNNN",
+  "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNNNaaaaO__OaaaaONNNNNNNNNNNN",
   "NNNNNNNOaaaaO__ddddddNNNNNNNNNNNNNNaaNNNNNNNNOaaaaaO__OaaaaONNNNNNNNNNNN",
   "NNNNNNNNaaaaa___ddddddNNNNNNNNaaaaaaaNNNNNNNOaaaaaO__OaaaaaONNNNNNNNNNNN",
   "NNNNNNNNOaaaaO__ddddddNNNNNNNaaaaaaaaNOOOONOaaaaaO___OaaaaONNNNNNNNNNNNN",
@@ -122,9 +122,9 @@
   "...............cccccc...ccccc....oooooo.........iiii...666666...........",
   "...............cccccc...ccccc....oooooo.........iiii...666666...........",
   "...............cccccc....ccc.....oooooo.........iiii...666666...........",
-  "...............cccccc............oooooo.........iiii...666666...........",
-  "...............cccccc.............oooo.........iiiii...666666...........",
-  "...............cccccc..............oo..........iiii....66666............",
+  "...............cccccc............oooooo.....ii..iiii...666666...........",
+  "...............cccccc.............oooo......iiiiiiii...666666...........",
+  "...............cccccc..............oo.......ii.iiii....66666............",
   "...............cccccc..............oo..........iiii....6666.............",
   "...............cccccc..............oo.........jjjii....6666.............",
   "................cccccc........ooooooo........kkjjj....66666.............",
@@ -260,6 +260,15 @@
     [26, 36],
     [27, 36]
    ]
+  },
+  {
+   "id": "tether-locker",
+   "panel": [46, 38],
+   "cells": [
+    [45, 38],
+    [44, 38]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -284,9 +293,51 @@
      "objective": "The freight bay: throw the car-call switch on its wall"
     }
    ]
+  },
+  {
+   "id": "fun-dropin-1",
+   "when": "enter",
+   "at": [26, 27],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [26, 20],
+      "group": "fun-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [19, 27],
+      "group": "fun-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [44, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 38]
+  },
   {
    "type": "player",
    "at": [10, 64]
@@ -896,6 +947,13 @@
    "radius": 3,
    "speaker": "INES",
    "text": "It goes into the cable. Of course it does."
+  },
+  {
+   "id": "tether-locker",
+   "at": [45, 38],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A maintenance locker on the tether, sealed when the cars stopped. Somebody meant to come back."
   }
  ],
  "loads": [

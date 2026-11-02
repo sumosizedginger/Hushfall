@@ -122,6 +122,12 @@ for (let x = 64; x <= 65; x++) for (let z = 48; z <= 50; z++) L.g[z][x] = '_';  
 const VAC = [{ rect: [61, 48, 62, 50], seals: [HATCH] }, { rect: [CHAMBER[0], CHAMBER[1], CHAMBER[0], CHAMBER[1]], seals: [HATCH], and: [LOCK2] }];
 // ---- end F7 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'rank-cell', search: { region: [3, 3, 86, 114], prefer: [20, 17], lane: laneOf('C1E4M06') }, open: 'shoot', rewards: ['H', 'r'], message: { speaker: 'INES', text: 'A guard cell in the rank wall, bricked up. Whoever kept watch here left in a hurry.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M06', name: "Gatekeeper's Approach", version: 1, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#34365a', fogDensity: 0.005, sky: 'gate', ambient: 0.9, look: 'approach' },
@@ -163,5 +169,6 @@ MAP.roster = { id: 'C1E4M06', lane: [...(laneOf('C1E4M06') ?? [])], keep: [], pl
 MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [70, 99] }, { type: 'pickup', kind: 'health_small', at: [71, 99] });
 // ---- end F8 ----
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, hw, CX, SCREENS, RANKS };

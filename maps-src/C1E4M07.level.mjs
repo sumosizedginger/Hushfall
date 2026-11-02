@@ -5,6 +5,8 @@
 // ways back) are the shortcut and the flank: a bold player can fly over a landing, but the levers still have to be thrown. A loose panel in the drum wall at the north ramp is the secret. Look: stair (deep indigo, the white coming up the shaft).
 // Scale class SET-PIECE (no lid anywhere: the whole of it is open to the sky). Fights: L1 the swarm, L2 the crossfire (singers on the far landings), L3 the shell and the ward, L4 the Mother and a Warden, the Gate's light at your back.
 import { Level, hchar } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const W = 66, H = 66, CX = 33, CZ = 33, DRUM = 31;
 const L = new Level(W, H, { fill: '1' });
@@ -167,6 +169,12 @@ for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
   const a = ((Math.atan2(z + 0.5 - CZ, x + 0.5 - CX) * 180 / Math.PI) + 360) % 20; if (a < 2.4) L.g[z][x] = '2';
 }
 // ---- end PT-080 ----
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'stair-niche', search: { region: [3, 3, 62, 62], prefer: [32, 58], lane: laneOf('C1E4M07') }, open: 'shoot', rewards: ['v', 'e'], message: { speaker: 'INES', text: 'A niche in the drum wall, sealed with bone. A climber\'s cache: rope, food, shells.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M07', name: 'The Hollow Stair', version: 1, ceilingHeight: 40, par: { time: 600 },
   atmosphere: { fog: '#161c44', fogDensity: 0.0032, sky: 'gate', look: 'stair' },
@@ -194,5 +202,6 @@ const MAP = {
 };
 MAP.drops = { scale: 1, keep: [...LEVERS.map((lv) => [lv.at[0] - 2, lv.at[1] - 2, lv.at[0] + 2, lv.at[1] + 2]), ...RAMP_SUPPLY.map(([x, z]) => [x - 2, z - 2, x + 3, z + 3])] };
 console.log('C1E4M07: enemies', ents.filter((e) => e.type === 'enemy').length, 'levers', LEVERS.length, 'vents', VENTS.length, 'secret', SECRET?.panel);
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, VENTS, START, EXIT, LEVERS, SECRET, cellOf, sectorOf };

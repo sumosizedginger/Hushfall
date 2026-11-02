@@ -52,10 +52,10 @@
   "GGGGGGGGGGGGGGGGGWcccWWWcccccWWGGGGGGGGxxxxxxxxxGGGGGGGGWWcccccWWGGGGGGGGGGGGGGGGGGG",
   "GGGGGGGGGGGGGGGGGWcccWGWWWcWWWWWWWWWGGGxxxxxxxxxGGGWWWWWWWWWcWWWGGGGGGGGGGGGGGGGGGGG",
   "GGGGGGGGGGGGGxxGGWWDWWGGGWcccccccccDxxxxxxxxxxxxxxxDcccccccccWGGGGGGGGGxxGGGGGGGGGGG",
-  "GGGGGGGGGG__GxxxxxxxxGGGGWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWWWWWWGGGGxxxxxxxG__GGGGGGGG",
-  "GGGGGGGGGG__DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxD__GGGGGGGG",
-  "GGGGGGGGGG__GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxG__GGGGGGGG",
-  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxGGGGWWWWWWWWWWWxxxxxxxxxxxxxxxWWWWWWSWWWWGGGGxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGG__DxxxxxxxxxxxxxxGGGGGGGGGxxxxxxxxxxxxxxxGGGGWcccWxxxxxxxxxxxxxD__GGGGGGGG",
+  "GGGGGGGGGG__GxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxWcccWxxxxxxxxxxxxxG__GGGGGGGG",
+  "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxxxxxxxxxxxxxxxWWWWWxxxxxxxxxxxxxGGGGGGGGGGG",
   "GGGGGGGGGGGGGxxxxxxxxxxxxxxGGGGGxxxxxxxxxIIIIIxxxxxxxxxGGGGGxxxxxxxxxxxxxGGGGGGGGGGG",
   "GGGGGGGGGG__GxxxxxxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxIIIIIxxxxxxxxxxxxxG__GGGGGGGG",
   "GGGGGGGGGG__DxxxxxxxxxxxxxxDxxDxxxxxxxxxxIIIIIxxxxxxxxxxDxxDxxxxxxxxxxxxxD__GGGGGGGG",
@@ -138,9 +138,9 @@
   "........................44444..........444444444..........44444.....................",
   "..........................4............444444444............4.......................",
   "..........................44444444444444444444444444444444444.......................",
-  "....................................444444444444444.................................",
-  ".......................1234.........444444444444444.........4321....................",
-  ".......................1234.....44444444444444444444444.....4321....................",
+  "....................................444444444444444......4..........................",
+  ".......................1234.........444444444444444.....444.4321....................",
+  ".......................1234.....44444444444444444444444.444.4321....................",
   ".......................1234.....44444444444444444444444.....4321....................",
   ".......................1234.....444444444.....444444444.....4321....................",
   ".......................1234.....444444444.....444444444.....4321....................",
@@ -388,6 +388,15 @@
     [52, 67],
     [53, 67]
    ]
+  },
+  {
+   "id": "dock-store",
+   "panel": [57, 36],
+   "cells": [
+    [57, 37],
+    [57, 38]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -497,6 +506,16 @@
   }
  ],
  "entities": [
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [56, 38]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [57, 38]
+  },
   {
    "type": "player",
    "at": [43, 70]
@@ -1121,6 +1140,13 @@
    "radius": 0.1,
    "speaker": "INES",
    "text": "And the air comes back. I won't say thank you out loud."
+  },
+  {
+   "id": "dock-store",
+   "at": [57, 37],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A dock store with its door welded. The seal held; the air inside is still good."
   }
  ],
  "vacuum": [

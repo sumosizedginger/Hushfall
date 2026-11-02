@@ -136,6 +136,12 @@ ENC.dropIn({ at: [47,49], radius: 2, cells: ENC.around([47,49], { n: 3, min: 6, 
 ENC.dropIn({ at: [59,46], radius: 2, cells: ENC.around([59,46], { n: 3, min: 4, max: 8 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'dock-store', search: { region: [3, 3, 80, 80], prefer: [62, 40], lane: laneOf('C1E4M03') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A dock store with its door welded. The seal held; the air inside is still good.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M03', name: 'Cold Dock', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8c4cc', fogDensity: 0.006, sky: 'orbit', ambient: 0.9, look: 'dock' },
@@ -186,5 +192,6 @@ MAP.squeeze = [{axis:'x',cuts:[[3,4], [7,8], [13,14], [69,70], [79,80], [82,83],
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane (AUTHORING cells: the map is squeezed; shipped 33,43 and 43,38), before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [36, 47] }, { type: 'pickup', kind: 'health_large', at: [46, 42] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L, B, hw };

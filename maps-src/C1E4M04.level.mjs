@@ -95,6 +95,12 @@ for (const [x, z] of LEDGE) { L.g[z][x] = '4'; L.ht[z][x] = 4; L.ce[z][x] = L.ce
 const LIFT = { id: 'lift', cells: LIFT_CELLS, low: 0, high: 2, speed: 2, cycle: { period: 14, hold: 8, phase: 0 } };
 // ---- end F7 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'lens-store', search: { region: [3, 3, 68, 66], prefer: [59, 44], lane: laneOf('C1E4M04') }, open: 'shoot', rewards: ['v', 'e'], message: { speaker: 'INES', text: 'A store for spare mirrors, bricked in. Two of them are not broken.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
   id: 'C1E4M04', name: 'Mirror Array', version: 1, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#10081c', fogDensity: 0.009, sky: 'orbit', look: 'mirror' },
@@ -136,5 +142,6 @@ console.log('C1E4M04: enemies', ents.filter((e) => e.type === 'enemy').length);
 MAP.roster = { id: 'C1E4M04', lane: [...(laneOf('C1E4M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"chorister","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
 export { L };
