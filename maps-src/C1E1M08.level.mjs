@@ -65,7 +65,7 @@ console.log('C1E1M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 // ---- PT-081 (design/FUN_CHECK.md: the tower had no secret at all) ----
 const E = new Encounters(L);
 E.secretRoom({ id: 'vestry-chest', search: { region: [3, 3, 50, 58], prefer: [44, 54], lane: laneOf('C1E1M08') }, open: 'shoot', rewards: ['v', 'a', 'H'], message: { speaker: 'INES', text: "The vestry chest. Robes, a sexton's medicine and a box of flares. He kept them from the bell." } });          // PT-081: a second secret of another kind, a cracked wall
-E.secretRoom({ id: 'ringers-cupboard', search: { region: [3, 3, 50, 58], prefer: [10, 12], lane: laneOf('C1E1M08') }, rewards: ['h', 'e'], message: { speaker: 'INES', text: "The bell-ringers' cupboard. Ropes, gloves, and a flask nobody finished." } });          // a second secret, of the plain kind (Use)
+E.secretRoom({ id: 'ringers-cupboard', search: { region: [3, 3, 50, 58], prefer: [10, 12], lane: laneOf('C1E1M08') }, rewards: ['h', 'e'], message: { speaker: 'INES', text: "The bell-ringers' cupboard. Ropes, gloves, and a flask still half full." } });          // a second secret, of the plain kind (Use)
 // ---- end PT-081 ----
 
 const layers = L.layers();

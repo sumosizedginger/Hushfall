@@ -1,122 +1,167 @@
 // C2M04 TUNING FORK FIELDS: sound-lure hazards; the Song is an economy. (Campaign 2, Act A THRESHOLD.)
-// A hillside of three terraces, each a field of standing forks (the resonators: they ring at a noise, call the forks beside them and wake everything asleep near them) with a long roofed FORCING HALL behind it where the spare forks hang. You climb by stairs at the ends of the halls, zig-zagging west and east
-// (L1 -> L2 at the east, L2 -> L3 at the west, L3 -> the plateau at the east), to the TUNING TOWER on the plateau: a round bell house with the great bell and a lever on its stand, which works the north gate. The harvesters (Tollbearers) tend the forks and are asleep on their feet along the rows. The answer is the gun you
-// choose: the arc lamp (14 m: a fork hears it from 8 m), a blow (9 m) and the tuning-fork gun (12 m) are quiet; a rivet driver is heard from 12 m, a rocket from 18 m, and a row of twenty forks takes twenty seconds to ring through. Some forks wear a plate on their foot: they are people.
-// SHAPE: a hillside of terraces (0 / 2 / 4 / 6 m), halls with doorways to the fields, stair rooms at alternating ends, a round tower on the plateau (the big thing). Scale class MIXED (the halls, the stair rooms and the tower are roofed: about 46%).
+// PT-082 REDRAW (design/FUN_CHECK.md: the old map was three bands stacked like a spreadsheet, mirrored, with a 178 m walk where nothing woke). Now a HILL drawn by hand, climbed in one turn: a hollow way into
+// the LOWER FIELD, the DRYING BARN on its east side (the harvesters' way up: a stair to the hay loft, and the loft door onto the terrace), the TERRACE that overlooks the field from 2 m, the GREAT STAIR whose lower
+// flight has fallen (you see the gate at its head from the field and cannot reach it), the WINCH HOUSE at the terrace's west end whose chain works that gate (the gate you come back through: a pack has come down the
+// stair by the time you return), the UPPER FIELD with a broken shrine and a ledge over the terrace, two stairs to the SUMMIT (a loop), and the TUNING TOWER: the great bell, the lever on its stand, the north gate.
+// The forks (the resonators: they ring at a noise, call the forks beside them and wake everything asleep near them) stand in clusters of three, apart: the answer is still the gun you choose and where you fight.
+// Two secrets of two kinds: the harvesters' store behind the barn's east wall (a panel) and the forkwright's cupboard behind the winch house's split wall (shoot it).
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
-import { setCell, ellipse, ellipseCells, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
+import { placer } from '../tools/mapkit/c2.mjs';
+import { sketch } from '../tools/mapkit/sketch.mjs';
 
-const W = 80, H = 78, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
-const XA = 16, XB = 63, LV = [{ zb: 70, h: 0 }, { zb: 55, h: 4 }, { zb: 40, h: 8 }];
-const stairAt = [[60, 63], [16, 19], [60, 63]];                                                            // the stair room of each level: east, west, east
-// ---- the three levels: field (open turf), a wall with three doorways, a roofed hall, its north wall with the stair room's opening --------------------------------------------------------------------------------------------------------------
-LV.forEach(({ zb, h }, k) => {
-  box(L, [XA, zb - 6, XB, zb], '-', h);                                                                      // the field
-  box(L, [XA, zb - 7, XB, zb - 7], '$', h); for (const dx of [8, 24, 40]) box(L, [XA + dx, zb - 7, XA + dx + 2, zb - 7], '.', h, h * 1 + 9);         // the wall between the field and the hall, three doorways
-  box(L, [XA, zb - 13, XB, zb - 8], '.', h, h + 9);                                                          // the forcing hall: planks, a lid 4.5 m up
-  box(L, [XA, zb - 14, XB, zb - 14], '$', h);                                                                // the hall's north wall
-  const [sa, sb] = stairAt[k];
-  for (let z = zb - 13; z <= zb - 8; z++) for (let x = sa; x <= sb; x++) setCell(L, x, z, '.', h + [4, 3, 2, 1, 0, 0][z - (zb - 13)], h + 9 + 4);    // the stair room: from the hall's level (south) up 2 m to the next field (north)
-  box(L, [sa, zb - 14, sb, zb - 14], '.', h + 4, h + 13);                                                    // ... and out through the hall's north wall
-  const wallX = sa === 60 ? 59 : 20; for (let z = zb - 12; z <= zb - 9; z++) setCell(L, wallX, z, '$', h);   // the stair room's side wall
-});
-// ---- the plateau and the tuning tower ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-box(L, [XA, 6, XB, 25], '-', 12);
-const TOWER = ellipse(L, 40, 16, 8.5, 7, 'f', 12, 20); const TS = new Set(TOWER.map(([x, z]) => x + ',' + z));
-for (const [x, z] of ellipseCells(40, 16, 10.2, 8.7)) if (!TS.has(x + ',' + z)) setCell(L, x, z, '%', 12);       // the tower's wall: a ring of basalt round its floor
-for (let z = 22; z <= 26; z++) for (const x of [39, 40, 41]) setCell(L, x, z, 'f', 12, 20);                    // the tower's door on the south side
-for (const [cx, cz, rx, rz] of [[24, 18, 2, 1.5], [56, 18, 2.5, 1.5], [22, 10, 2, 1.5], [58, 10, 2, 1.5]]) ellipse(L, cx, cz, rx, rz, '!', 12);   // rocks on the plateau
-box(L, [38, 0, 42, 5], '$', 12); box(L, [39, 1, 41, 5], ')', 12, 22); L.door(40, 5, { remote: true }); setCell(L, 40, 5, 'D', 12); setCell(L, 39, 5, '$', 12); setCell(L, 41, 5, '$', 12);   // the north gate and the way out
-// ---- the cliff round it all: the fill is glass crust; the sheds and halls are salt plate, the tower basalt -----------------------------------------------------------------------------------------------------------------------------------------------------
-ring(L, '!', (x, z) => (z >= 26 && z <= 71 && x >= 14 && x <= 65 ? '$' : (x >= 28 && x <= 52 && z >= 5 && z <= 27 ? '%' : '!')));
-const P = placer(L); L.put(18, 68, '@'); P.reserve(18, 68);
-const { E, P: PK, PR } = P;
-// ---- the forks: CLUSTERS of three, set far apart (more than 18 m between one cluster and the next), so a ring wakes only what tends that cluster: fight away from the forks (pull the harvesters out of their zone), or choose the gun --------------------
-const cluster = (cx, cz) => { PR('resonator', cx, cz); PR('resonator', cx + 2, cz + 1); PR('resonator', cx + 1, cz - 2); };
-LV.forEach(({ zb }) => {
-  for (const x of [32, 52]) cluster(x, zb - 3 - (x === 52 ? 1 : 0));                                      // three clusters in each field
-  for (const x of [28, 52]) cluster(x, zb - 10);                                                              // two in each hall
-});
-cluster(22, 22); cluster(58, 22);                                                                             // and on the plateau, outside the tower
-// ---- the harvesters and the guards -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[24, 66], [36, 67], [48, 66], [58, 67]]) E('tollbearer', x, z);                         // field one
-for (const [x, z] of [[22, 51], [34, 52], [46, 51]]) E('tollbearer', x, z); E('gaunt', 56, 52);
-for (const [x, z] of [[24, 36], [50, 36]]) E('tollbearer', x, z); E('gaunt', 38, 37); E('gaunt', 60, 37);
-E('gaunt', 26, 60); E('gaunt', 46, 59); E('gaunt', 34, 45); E('gaunt', 52, 44); E('gaunt', 28, 29); E('gaunt', 46, 30);   // the halls
-E('bellhand', 56, 45); E('bellhand', 36, 30); E('bellhand', 56, 59);
-E('sexton', 40, 59); E('sexton', 24, 44); E('sexton', 44, 29);
-E('gill', 30, 62); E('gill', 50, 48); E('gill', 30, 34); E('gill', 50, 14);
-E('tollbearer', 28, 20); E('tollbearer', 52, 20); E('bulwark', 37, 19); E('bulwark', 43, 19); E('gaunt', 40, 12);         // the plateau and the tower
-E('gaunt', 35, 14); E('gaunt', 45, 14); E('gaunt', 40, 3);
-// ---- supplies and furniture -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[19, 68], [40, 66], [62, 66], [62, 58], [24, 52], [62, 52], [18, 44], [40, 50], [62, 44], [20, 38], [40, 33], [62, 30], [20, 22], [40, 26], [60, 22]]) PK(x % 3 ? 'health_small' : 'health_large', x, z);
-PK('armor_vest', 62, 62); PK('armor_vest', 18, 47); PK('armor_vest', 62, 32); PK('armor_vest', 40, 26);
-for (const [x, z] of [[30, 66], [54, 66], [30, 51], [54, 51], [30, 36], [54, 36]]) PR('crate', x, z);
-for (const [x, z] of [[24, 60], [40, 60], [56, 60], [24, 45], [40, 45], [56, 45], [24, 30], [40, 30], [56, 30]]) PR('lamp', x, z);
-for (const [x, z] of [[38, 17], [42, 17], [40, 14]]) PR('lantern', x, z);
-PR('bellnode', 40, 10);                                                                                         // the great bell, on its stand at the north of the tower
-for (const [x, z] of [[34, 16], [46, 16]]) PR('pillar', x, z, { skin: '%' });
-// ---- the secret: a shed in the east cliff of the first field: the harvesters' store (and a plate) -------------------------------------------------------------------------------------------------------------------------------------------------------
-const SEC = { panel: [64, 67], cells: [[65, 66], [66, 66], [67, 66], [65, 67], [66, 67], [67, 67], [65, 68], [66, 68], [67, 68]] };
-{ for (const [x, z] of SEC.cells) setCell(L, x, z, '.', 0, 8); box(L, [64, 65, 68, 65], '$', 0); box(L, [64, 69, 68, 69], '$', 0); box(L, [68, 66, 68, 68], '$', 0); setCell(L, 64, 66, '$', 0); setCell(L, 64, 68, '$', 0); setCell(L, 64, 67, 'S', 0);
-  PK('armor_vest', 65, 66); PK('health_large', 67, 66); PK('ammo_shell', 65, 68); PK('ammo_rivet', 67, 68); PK('ammo_flare', 66, 67); }
-// ---- rooms that are not boxes (tools/mapkit/shape.mjs: only floor is added and corners are cut, away from every object and the routes' lane; the routes prove nothing moved: route-fingerprint.mjs) ----
-import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
-const S = new Shape(L, { lane: laneOf('C2M04'), keep: [[32, 16]] });                                       // the lever's wall stays
-for (const { zb } of LV) { S.chamfer([XA, zb - 6, XB, zb], 'nw ne sw se', 2); S.hall([XA, zb - 13, XB, zb - 8], { sides: { s: { w: 3, gap: 5, d: 1 } }, cut: 2 }); }
-S.chamfer([XA, 6, XB, 25], 'nw ne sw se', 3);
-console.log('C2M04 shape:', S.summary()); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
-// ---- end shaping ----
-// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
+const W = 66, H = 62, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
+// ---- the hill, drawn: north is up; one character a cell. Heights are half-metres: the field 0, the terrace 4 (2 m), the upper field 8, the summit 12 (6 m) ------------------------------------------------------------------
+const PLAN = String.raw`
+                                             %%%%%
+                                             %eXe%
+                                             %eee%
+                                             %eee%
+                                           %%%%N%%%%
+                                      ;;;;%%fffffff%%;;;;
+                                      ;;;;%fffffffff%;;;;
+                                      ;;;%fffffOfffff%;J;;;
+                                      ;;;%ffGfffffGff%;;;;;
+                                 ;A;;;;;;%fffffffffff%;;;;;
+                                ;;;;;;G;;%Vffffffffff%;;G;;
+                                ;;;F;;;;;%fffffffffff%;;;;;
+                                ;;;;;;;;;%fffYfffYfff%;;F;;
+                                ;;;;;;;;;%fffffffffff%;;;;;
+                                ;;J;;;;;;%fffffffff*f%;;;;;
+                                ;;;;;T;;;%%fffffffff%%;;T;;
+                                ;;;;;;;;;;%%fffffff%%;;;;;;
+                                ;;;;;;;;;;;%%%fff%%%;;;;;;;
+                                ;;;;;;;;;;;;;;;;;;;;H;;;;;*
+                                 zzz;;;;;;;;;U;;;U;;;;;zzz
+                                 yyy;          ;;;;;;;;yyy
+                                 xxx;          ;;;;;;;;xxx
+             ::::::::::::::::::::::::::::::::::::::::::::::
+            #######:::::::::::::::::::::::::::::+::::::::::
+          ::#:::::#:::::::::::T:::::::G::::::::::::::::::::
+          ::#::H::::F:::::::::::::::::::::::::::::::F::::::
+          ::#:::::T:::::::::::::::::F::::::::::::::::::::::
+          ::#:::::#:::::::::::::::::::::::::::T:::::::G::::
+     ccc  ::###::##:::::J::::::::::::::::::::::::::::::::
+     ccc  ::::::::::::::::::*::::::::::::::::::::::::::::
+     ccc              ##D##::::::::::::::::::::::::
+  WWWWZWWWW           #ggg#::::::::::::::::::::::::
+  WwwwwwwwW           #777#:::::::::::::::::J::::::
+  WwwwwwGwW           #666#   :::::::::::::::::::::
+  WQwwwwwwW           #555#   ::::::::::::::WWWWWWWWWWWWWWWWW
+  WwwwwwwwW,,,,,,,,,,,,LLL,,,,E,,,,,,,,,    BBBBBBBBBBBBBBBBW
+  WwwwKwwww,G,,,,,E,,,,LLL,,,,,,F,,,,,,,,,,,BB*BBBBBBBBBBBBBW
+  Wwwwwwwww,,,,,F,,,H,,LLL,,T,,,,,,,,,,,,,,,BBEBBBBBEBJBBBBBW
+  WwAwwwwww,,,,,,,,,,,,,,,,,,,+,,,,,,,,,H,,,WBBBBBBBBBBBBBBBW
+  WwwwwwwwW    ,,,,,,,,,,,,,,,,,,,,,E,,,,,,,WBBBBBBBBBBBBBBBW
+  WWWWWW   .................................Wbbbbbbbbbb3333bW
+        ....................................WbRbbbbbbbb2222bW
+        ....................................Wbbbbbbbbbb1111bW
+        ...... ...................H.........WbbbbbbbbbbbbbbbW
+        ...... .......T..........K..........bbbbbbbbTbbbbbbbW
+        ...................      ...........bbbbGbbbbbbbbbbbW
+        ....T..............      .......T...WbbbbbbbbbbbbbRbWhhh
+        ........F.........G      ...........WbRbbbbbbbbbbbbbShhh
+        ...................      ....F......WbbbbbFbbbbbbbbbWhhh
+        ......................T.............bbbbbbbbbbbbbbbbW
+        ..........G.....*...................bbbbbbbbbbbbGbbbW
+        ............+....................   WbbKbbbbbbbbbbAbW
+      lllll                                 WbbbbbbbbbbbbRbbW
+      lllll                                 WWWWWWWWWWWWWWWWW
+      lllll
+      lllll
+   lll+l
+   lllll
+   lllll
+   ll@ll
+   lllll
+`;
+const F = (t, h, lid = null) => (lid == null ? { t, h } : { t, h, lid });
+const S = sketch(L, PLAN, {
+  '#': { t: '$' }, W: { t: 'W' }, '%': { t: '%' },
+  '.': F('-', 0), ',': F('-', 4), ':': F('-', 8), ';': F('-', 12),                                            // the lower field, the terrace, the upper field, the summit: turf open to the sky
+  l: F('(', 0),                                                                                                  // the hollow way: glass sand between banks
+  b: F('.', 0, 9), B: F('.', 4, 9), 1: F('.', 1, 12), 2: F('.', 2, 11), 3: F('.', 3, 10),                     // the barn: planks under a 4.5 m roof, the hay loft 2 m up, the loft stair
+  L: F('f', 4), g: F('f', 8), 5: F('f', 5), 6: F('f', 6), 7: F('f', 7),                                                       // the great stair: its landing and its upper flight
+  w: F('p', 4, 8), c: F('p', 4, 6),                                                                              // the winch house and the cupboard behind it
+  x: F('f', 9), y: F('f', 10), z: F('f', 11),                                                                    // the stairs from the upper field to the summit
+  f: F('f', 12, 10), e: F(')', 12, 8), h: F('.', 0, 8),                                                         // the tower (a 5 m roof), the passage beyond the north gate, the store
+}, { marks: '@XDNSZQVOTGHKJUF+*AERY' });
+const P = placer(L), { E, P: PK, PR } = P; const [sx, sz] = S.one('@'); L.put(sx, sz, '@'); P.reserve(sx, sz);
+// ---- the doors: the stair gate (the winch's chain) and the north gate (the bell's lever); the secrets' panels ----------------------------------------------------------------------------------------------------------------------
+const GATE = S.one('D'), NORTH = S.one('N'), STORE = S.one('S'), CRACK = S.one('Z');
+L.door(GATE[0], GATE[1], { remote: true }); L.door(NORTH[0], NORTH[1], { remote: true }); L.secretPanel(STORE[0], STORE[1]); L.secretPanel(CRACK[0], CRACK[1]);
+// ---- the forks: a cluster of three at every F, apart (a ring wakes what tends that cluster) ------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('F')) { PR('resonator', x, z); PR('resonator', x + 2, z + 1); PR('resonator', x + 1, z - 2); }
+// ---- the harvesters and the guards ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [ch, kind] of [['T', 'tollbearer'], ['G', 'gaunt'], ['H', 'bellhand'], ['K', 'sexton'], ['J', 'gill'], ['U', 'bulwark']]) for (const [x, z] of S.at(ch)) E(kind, x, z);
+// ---- supplies and furniture --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S.at('*')) PK('health_large', x, z); for (const [x, z] of S.at('A')) PK('armor_vest', x, z);
+for (const [x, z] of S.at('E')) PR('lamp', x, z); for (const [x, z] of S.at('R')) PR('crate', x, z); for (const [x, z] of S.at('Y')) PR('lantern', x, z);
+const BELL = S.one('O'); PR('bellnode', BELL[0], BELL[1]);
+for (const [x, z] of [[23, 41], [25, 42], [24, 40]]) PR('crate', x, z);                                           // what is left of the stair's lower flight
+PR('lamp', 7, 37); PR('lamp', 4, 32);                                                                            // the winch house is lit: its lever is the way on
+// the secrets' rewards
+PK('armor_vest', 61, 46); PK('health_large', 63, 46); PK('ammo_shell', 61, 48); PK('ammo_rivet', 63, 48); PK('ammo_flare', 62, 47);
+PK('ld_slag_scattergun', 6, 29); PK('armor_vest', 5, 28);
+
+// ---- the ambushes: the gaunts at the tower door (the pack that comes down the great stair when the chain runs is in the winch switch: the way back has changed) --------------------------------------------------------------------------------------------
 const ENC = new Encounters(L);
-ENC.dropIn({ at: [41,49], radius: 2, cells: ENC.around([41,49], { n: 3, min: 6, max: 10 }), kind: 'g' });
-ENC.dropIn({ at: [62,25], radius: 2, cells: ENC.around([62,25], { n: 3, min: 6, max: 10 }), kind: 'g' });
-// ---- end PT-052 ----
+ENC.dropIn({ at: [47, 20], radius: 2.5, cells: ENC.around([47, 20], { n: 3, min: 6, max: 10 }), kind: 'g' });
 
+const [qx, qz] = S.one('Q'), [vx, vz] = S.one('V'), EXIT = S.one('X');
 const MAP = {
-  id: 'C2M04', name: 'Tuning Fork Fields', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M04', name: 'Tuning Fork Fields', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#d0c090', fogDensity: 0.005, sky: 'anselm', look: 'fields' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'TUNING FORK FIELDS', lines: ['Every row on this hill is a fork, and every fork has been tuned.', 'What gets struck here is paid for somewhere else.'] },
   outro: 'Next: the Reliquary Road, where the Vael keep the people they have finished with.',
-  objective: 'Climb the hill: a stair at the end of each hall. The tower is on the plateau',
+  objective: 'Climb the hill to the tower on the summit',
   ...L.layers(),
-  secrets: [{ id: 'store', panel: SEC.panel, cells: SEC.cells }],
+  secrets: [{ id: 'store', panel: STORE, cells: [[62, 47], [61, 47]] }, { id: 'cupboard', panel: CRACK, cells: [[6, 30], [6, 29]], open: 'shoot' }],
   groups: [],
   entities: [...P.ents,
-    { type: 'switch', id: 'tune', at: [32, 16], wall: 'west', once: true, do: [{ open: [40, 5] }, { message: 'tune' }, { objective: 'The north gate is open: the corridor beyond it goes to the exit' }, { shake: 1.5 }] },
-    { type: 'exit', at: [40, 2], dest: 'next' }],
+    { type: 'switch', id: 'winch', at: [qx, qz], wall: 'west', once: true, do: [{ open: GATE }, { message: 'winch' }, ...[['gaunt', 22, 27], ['gaunt', 26, 27], ['tollbearer', 24, 25]].map(([kind, x, z]) => ({ spawn: { kind, at: [x, z], group: 'stairpack', facing: 'south', hunt: true } })), { objective: 'The stair gate is open: back along the terrace and up the great stair' }, { shake: 1 }] },
+    { type: 'switch', id: 'tune', at: [vx, vz], wall: 'west', once: true, do: [{ open: NORTH }, { message: 'tune' }, { objective: 'The north gate is open: the passage beyond it goes to the exit' }, { shake: 1.5 }] },
+    { type: 'exit', at: EXIT, dest: 'next' }],
   scenery: [{ kind: 'spire', at: [12, -6] }, { kind: 'spire', at: [66, -10] }, { kind: 'spire', at: [40, -22] }],
   messages: [
-    { id: 'start', at: [18, 68], radius: 3, speaker: 'INES', text: 'Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming, so low I feel it in my hands before I hear it.' },
-    { id: 'fork', at: [24, 64], radius: 3, speaker: 'HULL', text: 'A fork rings at a shot, answers its neighbours down the row, and everything asleep near them wakes. The arc lamp and a blow are heard from least far.' },
-    { id: 'plate', at: [30, 65], radius: 2.5, speaker: 'FORK PLATE', text: 'A brass plate hammered onto the foot, in our letters: AMBLER, T. BOSUN. Somebody here had that courtesy. I count eight more plates in this row.' },
-    { id: 'tend', at: [40, 52], radius: 4, speaker: 'INES', text: 'They are tending the forks. Weeding round them, wiping them down, putting an ear to them. Nobody looks up. I would like to keep it that way.' },
-    { id: 'count', at: [40, 46], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: a long number, a longer number, then one short note that rises like a question. Struck and owed, if I had to guess.' },
-    { id: 'tower', at: [40, 25], radius: 3.5, speaker: 'INES', text: 'A round tower on the top terrace with a bell inside it the size of a boat. Everything on this hill is tuned to that.' },
-    { id: 'lever', at: [33, 16], radius: 2, speaker: 'HULL', text: 'A lever on the bell stand. It works the gate in the north wall; the Keepers ring the bell and the gate answers.' },
+    { id: 'start', at: [5, 58], radius: 3, speaker: 'INES', text: 'Terraces, and on every terrace a row of standing forks, brass and green, taller than a man. They are all humming, so low I feel it in my hands before I hear it.' },
+    { id: 'fork', at: [9, 51], radius: 3, speaker: 'HULL', text: 'A fork rings at a shot, answers its neighbours down the row, and everything asleep near them wakes. The arc lamp and a blow are heard from least far.' },
+    { id: 'plate', at: [15, 45], radius: 2.5, speaker: 'FORK PLATE', text: 'A brass plate hammered onto the foot, in our letters: AMBLER, T. BOSUN. Somebody here had that courtesy. I count eight more plates in this row.' },
+    { id: 'tend', at: [30, 44], radius: 4, speaker: 'INES', text: 'They are tending the forks. Weeding round them, wiping them down, putting an ear to them. Nobody looks up. I would like to keep it that way.' },
+    { id: 'stair', at: [24, 43], radius: 3, speaker: 'HULL', text: 'The lower flight of the great stair has come down, and the gate at its head is shut. The harvesters go up through the barn and its hay loft.' },
+    { id: 'count', at: [50, 46], radius: 3, speaker: 'RINGING PLATE', text: 'Run a nail down it: a long number, a longer number, then one short note that rises like a question. Struck and owed, if I had to guess.' },
+    { id: 'hollow', at: [58, 47], radius: 2, speaker: 'HULL', text: 'The east wall of this barn rings hollow behind the crates.' },
+    { id: 'gate', at: [24, 36], radius: 2.5, speaker: 'HULL', text: 'The gate at the head of the stair is chained shut. The chain runs west along the terrace, into the winch house at the end of it.' },
+    { id: 'split', at: [6, 34], radius: 2.5, speaker: 'INES', text: 'The back wall of the winch house is split from floor to roof, and cold air comes through the split. One good shot would open it.' },
+    { id: 'shelf', at: [6, 29], radius: 1.5, speaker: 'INES', text: 'A forkwright\'s cupboard. Shells for the scattergun that burn, and a brass plate with nothing stamped on it yet.' },
+    { id: 'winch', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The chain runs out along the terrace and the stair gate swings open. Something on the field above it has started walking.' },
+    { id: 'tower', at: [40, 23], radius: 3.5, speaker: 'INES', text: 'A round tower on the top of the hill with a bell inside it the size of a boat. Everything on this hill is tuned to that.' },
+    { id: 'lever', at: [vx + 1, vz], radius: 2, speaker: 'HULL', text: 'A lever on the bell stand. It works the gate in the north wall; the Keepers ring the bell and the gate answers.' },
     { id: 'tune', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The gate in the north wall opens. Down the hill, every fork in every field gives one low note, and stops.' },
-    { id: 'hollow', at: [64, 66], radius: 2, speaker: 'HULL', text: 'The east wall of this field rings hollow behind the last fork.' },
   ],
   triggers: [
-    { id: 'l2', when: 'enter', at: [40, 52], radius: 3, do: [{ objective: 'Second terrace: the stair is at the west end of the hall behind it' }] },
-    { id: 'l3', when: 'enter', at: [40, 37], radius: 3, do: [{ objective: 'Third terrace: the stair is at the east end of the hall behind it' }] },
-    { id: 'plateau', when: 'enter', at: [40, 27], radius: 3, do: [{ objective: 'The tuning tower: the lever on the bell stand opens the north gate' }] },
+    { id: 'barn', when: 'enter', at: [24, 43], radius: 3, do: [{ objective: 'Up through the barn: its loft opens onto the terrace' }] },
+    { id: 'chained', when: 'enter', at: [24, 36], radius: 2.5, do: [{ objective: 'The stair gate is chained: the winch house is at the west end of the terrace' }] },
+    { id: 'upper', when: 'enter', at: [30, 26], radius: 3, do: [{ objective: 'The summit: a stair at each end of the upper field. The tower is on top' }] },
+    { id: 'summit', when: 'enter', at: [47, 19], radius: 3, do: [{ objective: 'The tuning tower: the lever on the bell stand opens the north gate' }] },
   ],
-  quality: { enemies: [26, 70], botSeconds: [40, 700], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 6, enemyKinds: { tollbearer: 8, gaunt: 4, bellhand: 3, sexton: 2, gill: 3, bulwark: 1 },
+  quality: { enemies: [30, 60], botSeconds: [40, 700], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 6, enemyKinds: { tollbearer: 8, gaunt: 8, bellhand: 4, sexton: 2, gill: 3, bulwark: 1 },
     scaleClass: 'MIXED',
     introduces: 'the resonators: standing forks that ring at a noise, answer the forks beside them down the row and wake everything asleep near them, so the gun you fire near them is the puzzle (the arc lamp, a blow and the tuning-fork gun are heard from least far)' },
 };
 MAP.drops = { scale: 1, keep: [] };
-console.log('C2M04: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'forks', P.ents.filter((e) => e.kind === 'resonator').length);
-// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C2M04', lane: [...(laneOf('C2M04') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1}] };
 ENC.apply(MAP);
+for (const [mid, unless] of Object.entries({ chained: ['msg:winch'], gate: ['msg:winch'] })) { const m = MAP.messages.find((q) => q.id === mid); if (m) m.unless = unless; }
+console.log('C2M04: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'forks', P.ents.filter((e) => e.kind === 'resonator').length);
 
-// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). The terraces were 80 by 75 cells for 36 creatures (thirteen per thousand cells): thirteen columns and eleven rows are taken out where nothing stands and no stair runs.
-// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M04`). Kit calls and the lane file stay in the authoring frame.
-MAP.squeeze = [{axis:'x',cuts:[[3,4], [7,8], [10,11], [17,18], [21,22], [25,26], [49,50], [51,52], [55,56], [61,62], [70,71], [72,73], [76,77]]}, {axis:'z',cuts:[[7,8], [13,14], [18,19], [21,22], [24,25], [39,40], [48,49], [54,55], [63,64], [73,75]]}];
-// ---- end PT-052 Level B squeeze ----
-
+const D = (x, z) => [x, z];
+export const waypoints = {
+  main: [[5, 59, 0], D(8, 52), D(12, 47), D(22, 46), [24, 44, 0], D(34, 45), D(40, 47), [44, 49, 0], D(49, 47), D(54, 47), [57, 44, 0], [57, 41, 0], D(56, 37), D(48, 37), [44, 36, 0], D(36, 37), D(28, 37), [24, 37, 0], D(20, 39), [12, 37, 0], [9, 37, 0], D(6, 35), { op: 'switch', id: 'winch' },
+    [9, 37, 0], D(20, 39), D(24, 37), [24, 34, 0], [24, 31, 0], D(24, 28), D(32, 26), D(38, 25), [34, 23, 0], [34, 19, 0], D(37, 15), D(44, 19), [47, 18, 0], D(47, 13), { op: 'switch', id: 'tune' }, [47, 6, 0], [47, 3, 0], [EXIT[0], EXIT[1], 0]],
+};
+waypoints.secret = (() => {
+  const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 54 && w[1] === 47), b = m.findIndex((w) => w.op === 'switch' && w.id === 'winch');
+  return [...m.slice(0, a + 1), [58, 47, 0], { op: 'use', at: STORE }, [62, 47, 0], [58, 47, 0], ...m.slice(a + 1, b + 1), [6, 34, 0], { op: 'crack', at: CRACK }, [6, 29, 0], [6, 34, 0], ...m.slice(b + 1)];
+})();
 export default MAP;

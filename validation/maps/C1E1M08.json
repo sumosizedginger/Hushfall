@@ -2,10 +2,10 @@
   "mapId": "C1E1M08",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "3864444",
+  "codeVersion": "6147455",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0eab011fe9196878",
+  "mapSha": "f04b275ec5b3a39d",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
@@ -565,7 +565,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E1M08.json: f75fd509ae054929 vs 0eab011fe9196878"
+        "detail": "validation/browser/C1E1M08.json: f75fd509ae054929 vs f04b275ec5b3a39d"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
