@@ -11,7 +11,13 @@ const ID = 'C1E1M01', SECRET = 'rope-store';
 const file = path.resolve(import.meta.dirname, '../../maps/' + ID + '.json'), pretty = (m) => JSON.stringify(m, null, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1, $2]');
 const lane = laneOf(ID) ?? new Set();
 const map = JSON.parse(fs.readFileSync(file, 'utf8'));
-if ((map.secrets ?? []).some((s) => s.id === SECRET)) { console.log(ID + ' already has ' + SECRET + ': nothing to do'); process.exit(0); }
+// the owner's first play (2026-11-01: "it tells me there are 2 secrets, but I only found 1"): a new KIND of secret is taught where it first appears. Ines names the crack when the player is near the nook.
+const HINT = { id: SECRET + '-hint', at: [40, 7], radius: 3, speaker: 'INES', text: "That back wall's cracked right through. One good shot would bring it down." };
+if ((map.secrets ?? []).some((s) => s.id === SECRET)) {
+  if (!(map.messages ?? []).some((m) => m.id === HINT.id)) { map.messages = [...map.messages, HINT]; fs.writeFileSync(file, pretty(map)); console.log(ID + ': added the hint ' + HINT.id); }
+  else console.log(ID + ' already has ' + SECRET + ' and its hint: nothing to do');
+  process.exit(0);
+}
 const H = map.grid.length, W = map.grid[0].length, grid = map.grid.map((r) => [...r]), ob = Array.from({ length: H }, () => Array(W).fill('.')), added = [];
 for (const e of map.entities) if (e.at) ob[Math.floor(e.at[1])][Math.floor(e.at[0])] = 'x';
 const ht = Array.from({ length: H }, () => Array(W).fill(0));
@@ -27,5 +33,6 @@ const r = E.secretRoom({ id: SECRET, search: { region: [2, 2, W - 3, H - 3], pre
 map.grid = grid.map((r) => r.join(''));
 map.entities = [...map.entities, ...added];                                                            // after every other entity
 E.apply(map);
+map.messages = [...map.messages, HINT];
 fs.writeFileSync(file, pretty(map));
 console.log(ID + ': added the cracked-wall secret', JSON.stringify(r), 'and', added.length, 'pickups');

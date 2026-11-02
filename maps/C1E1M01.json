@@ -656,6 +656,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A rope store, bricked up when the bells started. Bad mortar. Whoever did it was in a hurry."
+  },
+  {
+   "id": "rope-store-hint",
+   "at": [40, 7],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "That back wall's cracked right through. One good shot would bring it down."
   }
  ],
  "decals": [
