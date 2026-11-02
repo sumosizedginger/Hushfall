@@ -1,18 +1,18 @@
 {
   "mapId": "C2S01",
-  "mapVersion": 1,
+  "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "40dc707",
+  "codeVersion": "8a46e41",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "906587cd1819c333",
+  "mapSha": "817d9858839f1973",
   "assetVersion": "0fd1ea95586c4e78",
-  "engineSha": "2ada63ee432a9533",
+  "engineSha": "4767fce2cadbed7f",
   "sources": {
-    "engine": "2ada63ee432a9533",
-    "render": "9e01092ceb75ff7b",
+    "engine": "4767fce2cadbed7f",
+    "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "34c405c843e5c792",
+    "audio": "9e87f0bab73e6574",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -27,11 +27,11 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2907,
-      "finalHash": "220cccb5",
+      "ticks": 2905,
+      "finalHash": "a5701fe9",
       "kills": 0,
       "secrets": 0,
-      "items": 3,
+      "items": 2,
       "damageTaken": 0
     },
     {
@@ -40,11 +40,11 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2907,
-      "finalHash": "bc09b7f1",
+      "ticks": 2905,
+      "finalHash": "ba0f6ee1",
       "kills": 0,
       "secrets": 0,
-      "items": 3,
+      "items": 2,
       "damageTaken": 0
     },
     {
@@ -53,11 +53,11 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2907,
-      "finalHash": "99d3acb9",
+      "ticks": 2905,
+      "finalHash": "d2a8db15",
       "kills": 0,
       "secrets": 0,
-      "items": 3,
+      "items": 2,
       "damageTaken": 0
     }
   ],
@@ -67,8 +67,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 2907,
-    "finalHash": "bc09b7f1",
+    "ticks": 2905,
+    "finalHash": "ba0f6ee1",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -85,7 +85,7 @@
     "switches": 0,
     "sectors": 0,
     "heights": true,
-    "maxFloor": 2.5,
+    "maxFloor": 3,
     "fxCells": 0,
     "skins": 6,
     "wallSkins": [
@@ -134,7 +134,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.5,
+        "seconds": 48.4,
         "kills": 0,
         "failure": null
       }
@@ -168,7 +168,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.5,
+        "seconds": 48.4,
         "kills": 0,
         "failure": null
       }
@@ -202,7 +202,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.5,
+        "seconds": 48.4,
         "kills": 0,
         "failure": null
       }
@@ -228,7 +228,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -248,17 +248,17 @@
       {
         "name": "route C2S01.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "48.5 s"
+        "detail": "48.4 s"
       },
       {
         "name": "route C2S01.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "48.5 s"
+        "detail": "48.4 s"
       },
       {
         "name": "route C2S01.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "48.5 s"
+        "detail": "48.4 s"
       },
       {
         "name": "safe room: contains no enemies (placed or scripted)",
@@ -288,7 +288,7 @@
       {
         "name": "quality: perfect-bot time in [5,300] s",
         "ok": true,
-        "detail": "48.5 s"
+        "detail": "48.4 s"
       },
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
@@ -298,7 +298,7 @@
       {
         "name": "quality: uses mechanic 'heights'",
         "ok": true,
-        "detail": "max floor 2.5"
+        "detail": "max floor 3"
       },
       {
         "name": "quality: uses mechanic 'triggers'",
@@ -307,8 +307,8 @@
       },
       {
         "name": "placement: every roofed region has walls (a floating ceiling slab over open ground is a map that reads as indoors outside)",
-        "ok": true,
-        "detail": "ok"
+        "ok": false,
+        "detail": "35 roofed cells near 18,19 have 0 wall edges and 32 open edges"
       },
       {
         "name": "placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air",
@@ -328,7 +328,7 @@
       {
         "name": "feel: the measured map is SET-PIECE",
         "ok": true,
-        "detail": "4% roofed, p90 sightline 38.5 m (SET-PIECE:  <= 39% roofed)"
+        "detail": "6% roofed, p90 sightline 38.5 m (SET-PIECE:  <= 39% roofed)"
       },
       {
         "name": "feel: a set-piece names its reason (quality.reason)",
@@ -357,13 +357,13 @@
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2S01.json: 906587cd1819c333 vs 906587cd1819c333"
+        "ok": false,
+        "detail": "validation/browser/C2S01.json: 906587cd1819c333 vs 817d9858839f1973"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -372,8 +372,8 @@
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
@@ -384,5 +384,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

@@ -6,16 +6,18 @@
 // SHAPE: a round garden with a ring of ten beds (not a box), two short corridors. Scale class SET-PIECE (open to the cave roof; a safe room, no creatures: quality.safe).
 import { Level } from '../tools/mapkit/builder.mjs';
 import { setCell, box, ellipse, placer } from '../tools/mapkit/c2.mjs';
-import { skinWalls } from '../tools/mapkit/cave.mjs';
+import { skinWalls, blob } from '../tools/mapkit/cave.mjs';
 
 const W = 70, H = 64, L = new Level(W, H, { fill: '[' }); L.usedHeights = true; L.usedCeil = true;
 const ROCK = '[', PATH = ',', BED = '7', FLOW = '{';
 const FL = 4;
-ellipse(L, 35, 31, 27, 21, PATH, FL);
+blob(L, 35, 31, 27, 21, { seed: 2101, rough: 0.16, ch: PATH, h: FL });                                   // PT-082: a garden the cave made, not a drawn oval (it was a mirror, 0.98)
+ellipse(L, 21, 22, 4.5, 3.2, FLOW, FL - 1); ellipse(L, 21, 22, 5.5, 4.2, PATH, FL); ellipse(L, 21, 22, 4.5, 3.2, FLOW, FL - 1);          // a still pool off to the west, half a metre down
+ellipse(L, 50, 37, 4.6, 3.6, BED, FL + 1); ellipse(L, 50, 37, 3.2, 2.4, BED, FL + 2);                                   // and a knoll of moss to the east, two steps up
 box(L, [34, 48, 36, 60], FLOW, FL, 18); box(L, [34, 4, 36, 14], FLOW, FL, 18);
 const beds = [];
 for (let k = 0; k < 10; k++) {
-  const a = (k * 36 + 18) * Math.PI / 180, cx = Math.round(35 + 17 * Math.cos(a)), cz = Math.round(31 + 13 * Math.sin(a));
+  const a = (k * 36 + 18 + [6, -4, 0, 9, -6, 3, -9, 4, 0, -3][k]) * Math.PI / 180, cx = Math.round(35 + (17 + [2, -1, 3, 0, -2, 1, -1, 2, 0, -3][k]) * Math.cos(a)), cz = Math.round(31 + (13 + [1, 0, -2, 1, 2, -1, 0, -2, 1, 0][k]) * Math.sin(a));
   box(L, [cx - 2, cz - 1, cx + 2, cz + 1], BED, FL + 1); beds.push([cx, cz]);
 }
 skinWalls(L, ROCK, (x, z) => ((x + z) % 3 ? 'Q' : 'U'));
@@ -30,7 +32,7 @@ for (const k of [1, 5]) PK('health_large', ...beds[k]);
 for (const k of [3, 7]) PK('armor_vest', ...beds[k]);
 PK('ammo_cell', 35, 33); PK('ammo_shell', 33, 31); PK('ammo_rivet', 37, 31); PK('ammo_bolt', 35, 29);
 const MAP = {
-  id: 'C2S01', name: 'The Silent Orchard', version: 1, ceilingHeight: 4.2, par: { time: 150 },
+  id: 'C2S01', name: 'The Silent Orchard', version: 2, ceilingHeight: 4.2, par: { time: 150 },
   atmosphere: { look: 'tender', sky: 'deep', silence: true, fog: '#1a2a18', fogDensity: 0.006 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE SILENT ORCHARD', lines: ['Ten beds under a roof of small lights.', 'Someone has kept them.'] },
