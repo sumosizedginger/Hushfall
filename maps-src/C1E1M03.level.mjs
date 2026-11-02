@@ -21,8 +21,15 @@ for (const z of [42, 44]) { L.room([22, z, 22, z], { floor: 'f', wall: 'W' }); L
 L.room([56, 25, 56, 25], { floor: 'g', wall: 'I' }); L.door(55, 25, { remote: true }); L.door(57, 25, { remote: true });   // the two auction shutters
 L.room([58, 22, 63, 28], { floor: 't', wall: 'T' }); L.height([61, 23, 61, 27], 1); L.height([62, 23, 63, 27], 2);           // the auction hall, and its stage (+1 m)
 
+// ---- PT-081 (design/FUN_CHECK.md: "one big rectangle of parallel aisles"): a raised AUCTION BLOCK in the middle of the market (1 m, a half-metre step up on its west and east sides, a drop on the others) and a
+// BACK ALLEY from the smokehouse round to the west gate, so the market loops and can be flanked ----
+L.height([27, 23, 33, 27], 2); L.height([26, 23, 26, 27], 1); L.height([34, 23, 34, 27], 1);
+L.room([4, 27, 5, 44], { floor: 's', wall: 'B' }); L.room([6, 43, 7, 44], { floor: 'f', wall: 'W' });
+// ---- end PT-081 ----
+
 // ---- objects -------------------------------------------------------------------------------------------------------------
 L.put(4, 24, '@');
+L.putAll('g', [[4, 32], [5, 39]]); L.put(4, 36, 'h'); L.put(5, 41, 'r');                                // PT-081: the alley's two Gaunts and what they were guarding
 // stall blocks in staggered rows (two stalls each)
 const stalls = [];
 for (const [ri, row] of [14, 20, 26, 32, 38].entries()) for (let i = 0; i < 7; i++) { const x0 = 12 + i * 6 + (ri % 2 ? 3 : 0); if (x0 + 1 > 49) continue; stalls.push([x0, row], [x0 + 1, row]); }
