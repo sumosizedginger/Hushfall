@@ -45,7 +45,7 @@ test('the score: notes, spectra and every event of the harbour theme are finite;
   assert.ok(battleBar('harbour', 0, 2).events.some((e) => e.voice === 'brass'), 'the tune on brass from level 2');
   for (const k of ['start', 'up2', 'up3', 'kill', 'clear']) assert.ok(stinger('harbour', k).every(finite), k);
   assert.ok(T.battle.lead.every((bar) => bar.reduce((s, [, b]) => s + b, 0) === T.battle.meter), 'every bar of the battle tune is exactly one bar long');
-  assert.equal(themeFor('C1E1M03'), 'harbour'); assert.equal(themeFor('C2M10'), null); assert.equal(themeFor('C2M10', { atmosphere: { music: 'harbour' } }), 'harbour'); assert.equal(themeFor('C1E1M03', { atmosphere: { music: false } }), null);
+  assert.equal(themeFor('C1E1M03'), 'harbour'); assert.equal(themeFor('RANGE'), null); assert.equal(themeFor('C2M10'), 'deep'); assert.equal(themeFor('C2M04'), 'threshold'); assert.equal(themeFor('C2M20'), 'hive'); assert.equal(themeFor('C2M29'), 'root'); assert.equal(themeFor('C2S01'), 'deep'); assert.equal(themeFor('C2S02'), 'hive'); assert.equal(themeFor('C2M10', { atmosphere: { music: 'harbour' } }), 'harbour'); assert.equal(themeFor('C1E1M03', { atmosphere: { music: false } }), null);
 });
 
 const world = (enemies, hp = 100, status = 'playing') => ({ status, player: { x: 0, z: 0, hp }, enemies: enemies.map(([kind, d, state = 'chase']) => ({ kind, x: d, z: 0, hp: 10, state })) });

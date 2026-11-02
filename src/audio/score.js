@@ -133,6 +133,98 @@ export const THEMES = {
       bell: 'C3', killBell: 'G2', ringBell: 'C3', clear: ['C2', 'G2', 'C3', 'Eb3', 'G3'],
     },
   },
+  // PT-082, CAMPAIGN TWO. THRESHOLD (Act A: the land beyond the Gate, the glass steppe, the forks, the graves of other worlds): a lone cello over chords on glass in F Dorian, slow and open, a low bell;
+  // the second phrase climbs and turns on C major, the one leading note in the place. Battle: F minor at 132 on brass, the bass falling through D flat and E flat to the C turn.
+  threshold: {
+    name: 'threshold',
+    calm: {
+      bpm: 52, meter: 3, bell: 'F2', voices: { mel: 'cello', pad: 'glass', melGain: 0.13 },
+      phrases: [
+        { mel: [['F3', 2], ['C4', 1], ['Bb3', 1.5], ['Ab3', 0.5], ['G3', 1], ['Ab3', 1], ['Bb3', 1], ['C4', 1], ['F3', 3]],
+          chords: [['F2', 'C3', 'F3', 'Ab3'], ['Bb1', 'F2', 'Bb2', 'D3'], ['Ab1', 'Eb2', 'Ab2', 'C3'], ['F2', 'C3', 'F3', 'Ab3']] },
+        { mel: [['C4', 1], ['D4', 1], ['Eb4', 1], ['F4', 2], ['Eb4', 1], ['D4', 1], ['C4', 1], ['Bb3', 1], ['C4', 3]],
+          chords: [['C2', 'G2', 'C3', 'Eb3'], ['Bb1', 'F2', 'Bb2', 'D3'], ['G1', 'D2', 'G2', 'Bb2'], ['C2', 'G2', 'C3', 'E3']] },
+      ],
+      rest: 3,
+    },
+    battle: {
+      bpm: 132, meter: 4,
+      roots: ['F1', 'F1', 'Db2', 'Eb2', 'F1', 'Bb1', 'C2', 'C2'],
+      chords: { F1: ['F2', 'Ab2', 'C3'], Db2: ['Db3', 'F3', 'Ab3'], Eb2: ['Eb3', 'G3', 'Bb3'], Bb1: ['Bb2', 'Db3', 'F3'], C2: ['C3', 'E3', 'G3'] },
+      lead: [[['F4', 2], ['C5', 1], ['Ab4', 1]], [['Bb4', 1.5], ['Ab4', 0.5], ['G4', 2]], [['Ab4', 1], ['Bb4', 1], ['C5', 2]], [['Bb4', 2], ['G4', 2]],
+        [['F4', 1], ['Ab4', 1], ['C5', 1], ['F5', 1]], [['Eb5', 2], ['Db5', 1], ['Bb4', 1]], [['C5', 2], ['E5', 1], ['G5', 1]], [['E5', 2], ['C5', 2]]],
+      bell: 'F2', killBell: 'C3', ringBell: 'F2', clear: ['F1', 'C2', 'F2', 'Ab2', 'C3'],
+    },
+  },
+  // THE SOUNDING DEEP (Act B: caves, the echo markets, the drowned choir, the lantern): a low cello and a low choir in D Phrygian, very slow, with long breaths between phrases for the caves to
+  // answer; the second phrase ends on the Phrygian cadence (E flat to D minor). Battle: 120 in four, the flattened second in the bass, an A major turn at the end of the round.
+  deep: {
+    name: 'deep',
+    calm: {
+      bpm: 46, meter: 4, bell: 'D2', voices: { mel: 'cello', pad: 'choir', melGain: 0.12 },
+      phrases: [
+        { mel: [['D3', 3], ['Eb3', 1], ['D3', 2], ['C3', 1], ['Bb2', 1], ['A2', 2], ['Bb2', 1], ['C3', 1], ['D3', 4]],
+          chords: [['D2', 'A2', 'D3', 'F3'], ['Bb1', 'F2', 'Bb2', 'D3'], ['F1', 'C2', 'F2', 'A2'], ['D2', 'A2', 'D3', 'F3']] },
+        { mel: [['F3', 2], ['G3', 1], ['A3', 1], ['Bb3', 3], ['A3', 1], ['G3', 2], ['F3', 1], ['Eb3', 1], ['D3', 4]],
+          chords: [['F1', 'C2', 'F2', 'A2'], ['Bb1', 'F2', 'Bb2', 'D3'], ['Eb2', 'Bb2', 'Eb3', 'G3'], ['D2', 'A2', 'D3', 'F3']] },
+      ],
+      rest: 4,
+    },
+    battle: {
+      bpm: 120, meter: 4,
+      roots: ['D2', 'D2', 'Eb2', 'D2', 'C2', 'Bb1', 'Eb2', 'A1'],
+      chords: { D2: ['D3', 'F3', 'A3'], Eb2: ['Eb3', 'G3', 'Bb3'], C2: ['C3', 'Eb3', 'G3'], Bb1: ['Bb2', 'D3', 'F3'], A1: ['A2', 'C#3', 'E3'] },
+      lead: [[['D4', 2], ['Eb4', 1], ['D4', 1]], [['A4', 2], ['G4', 1], ['F4', 1]], [['G4', 1], ['F4', 1], ['Eb4', 2]], [['D4', 4]],
+        [['C5', 2], ['Bb4', 1], ['G4', 1]], [['F4', 1], ['G4', 1], ['F4', 1], ['D4', 1]], [['Eb4', 2], ['G4', 2]], [['E4', 2], ['C#4', 2]]],
+      bell: 'D2', killBell: 'A2', ringBell: 'D2', clear: ['D2', 'A2', 'D3', 'F3', 'A3'],
+    },
+  },
+  // THE HIVE-SONG (Act C: the hive's beat is one and a half seconds): a choir in G harmonic minor over the harmonium, a soft low drum on one and three, so at 80 a bar is two of the hive's beats;
+  // the second phrase ends on D major, never at home. Battle: in THREE at 120, so a bar is exactly one of the hive's beats.
+  hive: {
+    name: 'hive',
+    calm: {
+      bpm: 80, meter: 4, bell: 'G2', voices: { mel: 'choir', pad: 'harmonium', melGain: 0.12 }, tick: { voice: 'tomL', beats: [0, 2], gain: 0.05, pan: -0.2 },
+      phrases: [
+        { mel: [['G3', 1], ['A3', 1], ['Bb3', 2], ['C4', 1], ['D4', 1], ['Eb4', 2], ['D4', 1], ['C4', 1], ['Bb3', 1], ['A3', 1], ['G3', 4]],
+          chords: [['G2', 'D3', 'G3', 'Bb3'], ['C2', 'G2', 'C3', 'Eb3'], ['D2', 'A2', 'D3', 'F#3'], ['G2', 'D3', 'G3', 'Bb3']] },
+        { mel: [['D4', 2], ['Eb4', 1], ['D4', 1], ['F#4', 2], ['G4', 2], ['Eb4', 1], ['D4', 1], ['C4', 1], ['Bb3', 1], ['A3', 2], ['F#3', 2]],
+          chords: [['Eb2', 'Bb2', 'Eb3', 'G3'], ['D2', 'A2', 'D3', 'F#3'], ['C2', 'G2', 'C3', 'Eb3'], ['D2', 'A2', 'D3', 'F#3']] },
+      ],
+      rest: 2,
+    },
+    battle: {
+      bpm: 120, meter: 3,
+      roots: ['G1', 'G1', 'Eb2', 'D2', 'G1', 'C2', 'Eb2', 'D2'],
+      chords: { G1: ['G2', 'Bb2', 'D3'], Eb2: ['Eb3', 'G3', 'Bb3'], D2: ['D3', 'F#3', 'A3'], C2: ['C3', 'Eb3', 'G3'] },
+      lead: [[['G4', 1], ['Bb4', 1], ['D5', 1]], [['C5', 1.5], ['Bb4', 0.5], ['A4', 1]], [['Bb4', 1], ['G4', 1], ['Eb5', 1]], [['D5', 2], ['F#4', 1]],
+        [['G4', 1], ['A4', 1], ['Bb4', 1]], [['C5', 2], ['Eb5', 1]], [['D5', 1], ['C5', 1], ['Bb4', 1]], [['A4', 2], ['F#4', 1]]],
+      bell: 'G2', killBell: 'D3', ringBell: 'G2', clear: ['G1', 'D2', 'G2', 'Bb2', 'D3'],
+    },
+  },
+  // THE ROOT BELL (Act D, the end): the harbour's hymn from the first map comes back, a tone lower and slower, on a soft horn over the harmonium, under the deepest bell in the game; its second
+  // phrase stops on G, a long way from home. Battle: the harbour's battle tune, a tone lower, an octave higher and faster.
+  root: {
+    name: 'root',
+    calm: {
+      bpm: 44, meter: 3, bell: 'C2', voices: { mel: 'horn', pad: 'harmonium', melGain: 0.12 },
+      phrases: [
+        { mel: [['C3', 1], ['Eb3', 1], ['G3', 1], ['F3', 1.5], ['Eb3', 0.5], ['D3', 1], ['Eb3', 1], ['D3', 1], ['Bb2', 1], ['C3', 3]],
+          chords: [['C2', 'C3', 'Eb3', 'G3'], ['F2', 'F3', 'A3', 'C4'], ['Eb2', 'Eb3', 'G3', 'Bb3'], ['C2', 'C3', 'Eb3', 'G3']] },
+        { mel: [['G3', 1], ['A3', 1], ['Bb3', 1], ['C4', 2], ['G3', 1], ['A3', 1], ['G3', 1], ['F3', 1], ['G3', 3]],
+          chords: [['G2', 'D3', 'G3', 'Bb3'], ['F2', 'F3', 'A3', 'C4'], ['D2', 'D3', 'F3', 'A3'], ['G2', 'D3', 'G3', 'Bb3']] },
+      ],
+      rest: 3,
+    },
+    battle: {
+      bpm: 144, meter: 4,
+      roots: ['C2', 'Bb1', 'Eb2', 'C2', 'Ab1', 'C2', 'F1', 'G1'],
+      chords: { C2: ['C3', 'Eb3', 'G3'], Bb1: ['Bb2', 'D3', 'F3'], Eb2: ['Eb3', 'G3', 'Bb3'], Ab1: ['Ab2', 'C3', 'Eb3'], F1: ['F2', 'Ab2', 'C3'], G1: ['G2', 'B2', 'D3'] },
+      lead: [[['C5', 2], ['Eb5', 1], ['G5', 1]], [['F5', 1.5], ['Eb5', 0.5], ['D5', 2]], [['Eb5', 1], ['D5', 1], ['Bb4', 2]], [['C5', 4]],
+        [['G5', 1], ['Ab5', 1], ['Bb5', 2]], [['C6', 3], ['G5', 1]], [['Ab5', 1], ['G5', 1], ['F5', 2]], [['G5', 4]]],
+      bell: 'C2', killBell: 'G2', ringBell: 'C3', clear: ['C2', 'G2', 'C3', 'Eb3', 'G3'],
+    },
+  },
 };
 
 /** which theme a map plays (null = the older generative score, until that place has its own theme) */
@@ -142,6 +234,7 @@ export function themeFor(mapId, map) {
   if (/^C1E2/.test(mapId ?? '')) return 'works';
   if (/^C1E3/.test(mapId ?? '')) return 'choir';
   if (/^C1E4/.test(mapId ?? '')) return 'gate';
+  const m = /^C2([MS])(\d+)$/.exec(mapId ?? ''); if (m) { const n = Number(m[2]); if (m[1] === 'S') return n === 1 ? 'deep' : 'hive'; return n <= 8 ? 'threshold' : n <= 16 ? 'deep' : n <= 24 ? 'hive' : 'root'; }          // PT-082: Campaign Two, a theme an act (the secrets take their act's)
   return null;
 }
 /** the seconds a beat lasts in a section */
