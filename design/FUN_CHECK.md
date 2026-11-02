@@ -194,7 +194,8 @@ The owner's answers (2026-11-01): old-school shooters are the bar; redraw the tw
 | Secret kinds: cracked wall, lever | BUILT (engine, kit, bot op `crack`, secret routes) |
 | Episode 1: two secrets of two kinds on every map | DONE (c4028ac) |
 | Episode 1: ambushes in the two long empty walks | DONE (Customs Hall, the Chandlery) |
-| Episode 1: Fishmarket's grid, Marrow Quay's pier, shortcuts, the landmark lamp | NEXT |
+| Episode 1: Fishmarket Rows' grid broken (a raised auction block, a back alley that loops) | DONE (419ec6f) |
+| Episode 1: Marrow Quay's pier, shortcuts in Customs Hall and the Chandlery, Lamplighter Hill's landmark lamp | NEXT |
 | The standard as audit numbers and a ratchet | after Episode 1 |
 
 ## 7. Decisions for the owner
