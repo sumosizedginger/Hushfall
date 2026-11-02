@@ -67,7 +67,7 @@ const layers = L.layers();
 
 const VATS = [[27, 22, ['gaunt']], [41, 22, null], [41, 35, ['gaunt']], [27, 35, ['tollbearer']]];           // (the SW vat is the first: order by id = how a route meets them)
 const MAP = {
-  id: 'C1E3M07', name: 'The Spore Foundry', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C1E3M07', name: 'The Spore Foundry', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#101c14', fogDensity: 0.013, sky: 'night', look: 'foundry' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 22, rivet: 100 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { V: { type: 'prop', kind: 'vat' } },

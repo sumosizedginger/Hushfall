@@ -76,7 +76,7 @@ console.log('C1E1M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E1M04', name: 'The Drowned Chandlery', version: 1, ceilingHeight: 3.2, par: { time: 800 },
+  id: 'C1E1M04', name: 'The Drowned Chandlery', version: 2, ceilingHeight: 3.2, par: { time: 800 },
   atmosphere: { fog: '#0a1c1e', fogDensity: 0.028, sky: 'night', look: 'cellar' },
   growth: [{ at: [48, 38], r: 26, power: 1.3 }],                                                       // PT-021: it started in the vault and has crept through the hatch seams into the chandler's office
   decals: [{ kind: 'smear', at: [48, 29], rot: 1.5708, size: 2.4, h: 1.1 }, { kind: 'bloodpool', at: [48, 30], size: 1.2 }, { kind: 'scrape', at: [47, 30], wall: 'south', y: 1.0, size: 1.0 }, { kind: 'scrape', at: [49, 30], wall: 'south', y: 1.0, size: 1.0 }],      // a body was dragged to the hatch

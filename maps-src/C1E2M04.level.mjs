@@ -82,7 +82,7 @@ FUN.platform({ search: { region: [22, 18, 31, 26], lane: laneOf('C1E2M04') }, w:
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M04', name: 'Kiln Row', version: 1, ceilingHeight: 3.8, par: { time: 420 },
+  id: 'C1E2M04', name: 'Kiln Row', version: 2, ceilingHeight: 3.8, par: { time: 420 },
   atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'ash', look: 'kiln' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Brass damper handle', iron: 'Iron damper handle' },

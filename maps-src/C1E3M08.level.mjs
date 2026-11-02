@@ -68,7 +68,7 @@ const layers = L.layers();
 
 const REEDS = [[51, 25], [51, 32], [63, 20], [63, 37]];
 const MAP = {
-  id: 'C1E3M08', name: 'The Cantor\'s Throat', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E3M08', name: 'The Cantor\'s Throat', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#2a1020', fogDensity: 0.011, sky: 'night', look: 'throat' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 6: { type: 'enemy', kind: 'acolyte' } },

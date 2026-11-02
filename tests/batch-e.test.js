@@ -32,7 +32,7 @@ test('Spore Foundry: killing the four vats fires the trigger and unlocks the exi
 
 test('Spore Foundry: both routes complete on every difficulty; the secret one finds the cellar', () => {
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = complete('C1E3M07', 'main', difficulty); assert.equal(r.result, 'complete', difficulty + ' ' + r.failure); }
-  const s = complete('C1E3M07', 'secret'); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
+  const s = complete('C1E3M07', 'secret'); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 2);
 });
 
 test('Cantor\'s Throat: a gullet, four ribs that shut off the width in turn, a bell with a baffle across its mouth and a ring of pillars; the Grand Cantor stands behind four reeds, the exit is locked', () => {
@@ -58,5 +58,5 @@ test('Cantor\'s Throat: the reeds\' death fires the shield trigger, the boss\'s 
 
 test('Cantor\'s Throat: both routes complete on every difficulty (the secret one fetches the cellar of caught breath)', () => {
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = complete('C1E3M08', 'main', difficulty); assert.equal(r.result, 'complete', difficulty + ' ' + r.failure); assert.ok(r.world.enemies.filter((e) => e.kind === 'grandcantor').every((e) => e.state === 'dead'), 'the boss is dead'); }
-  const s = complete('C1E3M08', 'secret'); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
+  const s = complete('C1E3M08', 'secret'); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 2);
 });

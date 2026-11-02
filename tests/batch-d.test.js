@@ -29,7 +29,7 @@ test('Resonance Loom: the first lock listens (a noisy kill by the door keeps it 
   let ev = []; for (let i = 0; i < 4; i++) { step(w, idle({ use: true })); ev.push(...drainEvents(w)); } assert.ok(ev.some((e) => e.type === 'door_listen'), 'it listens'); assert.equal(door.target, 0);
   for (let i = 0; i < 60 * 4.2; i++) step(w, idle()); for (let i = 0; i < 4; i++) step(w, idle({ use: true })); assert.equal(door.target, 1, 'and opens once it has heard nothing for four seconds');
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRoute(loadMapFile('maps/C1E3M05.json'), loadRouteFile('routes/C1E3M05.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty + ' ' + r.failure); }
-  const s = runRoute(loadMapFile('maps/C1E3M05.json'), loadRouteFile('routes/C1E3M05.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
+  const s = runRoute(loadMapFile('maps/C1E3M05.json'), loadRouteFile('routes/C1E3M05.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 2);
 });
 
 test('The Choir Loft: a wedge of eight rising tiers, roofed below and open above, pews for cover with the aisle left open, one Acolyte and three singers, the tuned in rows; the way up is a lever and a door', () => {
@@ -44,6 +44,6 @@ test('The Choir Loft: a wedge of eight rising tiers, roofed below and open above
 
 test('The Choir Loft: both routes complete on every difficulty (the secret one fetches the niche behind the pew-back), nobody can be trapped', () => {
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRoute(loadMapFile('maps/C1E3M06.json'), loadRouteFile('routes/C1E3M06.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty + ' ' + r.failure); }
-  const s = runRoute(loadMapFile('maps/C1E3M06.json'), loadRouteFile('routes/C1E3M06.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
+  const s = runRoute(loadMapFile('maps/C1E3M06.json'), loadRouteFile('routes/C1E3M06.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 2);
   assert.equal(findTraps(shippedMap('C1E3M06')).traps, 0);
 });

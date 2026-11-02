@@ -74,7 +74,7 @@ console.log('C1E1M03 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E1M03', name: 'Fishmarket Rows', version: 1, ceilingHeight: 4.2, par: { time: 700 },
+  id: 'C1E1M03', name: 'Fishmarket Rows', version: 2, ceilingHeight: 4.2, par: { time: 700 },
   atmosphere: { fog: '#1a2438', fogDensity: 0.012, sky: 'night', look: 'moon' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 18, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'FISHMARKET ROWS', lines: ['The town tried to run. It ran here.', 'Every lane is a queue that never moved.'] },

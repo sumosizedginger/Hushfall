@@ -20,7 +20,7 @@ test('the secret panel shows a plain tell on each open side: a bright seam as ta
   assert.ok(SECRET_TELL.seam >= 0.1 && SECRET_TELL.seamOpacity >= 0.6 && SECRET_TELL.halo.length >= 2 && SECRET_TELL.spill.length >= 2, 'a floor under the tell constants: a quiet number cannot creep back in');
   const col = tell[0].geometry.getAttribute('color'); let top = 0; for (let i = 0; i < col.count; i++) top = Math.max(top, col.getX(i)); assert.ok(top >= 0.6 * 1.0 - 1e-6, 'the brightest vertex (the seam) is bright: ' + top);
   const spill = level.group.children.filter((c) => c.isMesh && c.material.blending === THREE.AdditiveBlending && c !== tell[0] && bbox(c).max.y - bbox(c).min.y < 1e-6);
-  assert.equal(spill.length, 1, 'one flat mesh of light on the floor'); assert.equal(spill[0].geometry.index.count / 6, 2 * SECRET_TELL.spill.length);
+  assert.equal(spill.length, 2, 'one flat mesh of light on the floor for each secret panel (PT-081: the net loft and the rope store)'); assert.equal(spill.reduce((n, m) => n + m.geometry.index.count / 6, 0), 4 * SECRET_TELL.spill.length, 'each panel lights two sides: the floor in front and the room behind');
   const floorY = bbox(spill[0]).min.y; assert.ok(floorY > 0 && floorY < 0.2, 'just above the floor: ' + floorY);
   const door = level.doorViews.get('7,19'); assert.ok(door && !door.children.some((c) => c.material?.blending === THREE.AdditiveBlending));
 });

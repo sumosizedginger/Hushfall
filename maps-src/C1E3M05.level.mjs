@@ -57,7 +57,7 @@ FUN.bypass({ from: [36, 18], to: [54, 24] });          // a passage round the no
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E3M05', name: 'Resonance Loom', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C1E3M05', name: 'Resonance Loom', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#1c1428', fogDensity: 0.012, sky: 'night', look: 'loom' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 6: { type: 'enemy', kind: 'acolyte' }, 5: { type: 'prop', kind: 'loomstring' } },

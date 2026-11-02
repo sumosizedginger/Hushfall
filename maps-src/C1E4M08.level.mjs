@@ -128,7 +128,7 @@ FUN.secretRoom({ id: 'warden-alcove', search: { region: [3, 3, 68, 56], prefer: 
 
 
 const MAP = {
-  id: 'C1E4M08', name: 'Gate Warden', version: 1, ceilingHeight: 14, par: { time: 720 },
+  id: 'C1E4M08', name: 'Gate Warden', version: 2, ceilingHeight: 14, par: { time: 720 },
   atmosphere: { fog: '#c8ccdc', fogDensity: 0.0035, sky: 'gate', look: 'gate' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'GATE WARDEN', lines: ['The Gate is behind it. It is the colour of the inside of a bell.', 'It has been here since before there was anything to keep out.'] },

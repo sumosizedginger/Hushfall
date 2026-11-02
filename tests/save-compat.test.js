@@ -13,8 +13,15 @@ import { sanitizeSettings, defaultSettings } from '../src/game/settings.js';
 import { sanitizeProgress } from '../src/engine/progress.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..'), read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
-const MAP = parseMap(JSON.parse(read('maps/C1E1M01.json')));
+const MAP = parseMap(JSON.parse(read('tests/fixtures/map-C1E1M01-v7.json')));          // PT-081: Marrow Quay as it was when the RC1 saves were made (version 7), FROZEN: these tests are about the save code
 const loader = (id) => (id === 'C1E1M01' ? MAP : null);
+const SHIPPED = parseMap(JSON.parse(read('maps/C1E1M01.json')));
+
+test('PT-081: an RC1 mid-level save of a map that has changed since (Marrow Quay, version 7 -> 8: a second secret) resumes from the level start with its carried loadout, never refused', () => {
+  const r = parseSave(read('tests/fixtures/save-rc1-mid.json')); assert.ok(SHIPPED.version > r.save.campaign.mapVersion, 'the shipped Marrow Quay is newer than the save');
+  const l = loadWorld(r.save, (id) => (id === 'C1E1M01' ? SHIPPED : null)); assert.equal(l.ok, true, l.detail); assert.match(String(l.degraded), /map-changed/);
+  assert.equal(l.world.tick, 0, 'from the level start'); const input = new InputState(); for (let i = 0; i < 120; i++) step(l.world, input.sample()); assert.equal(l.world.status, 'playing');
+});
 
 test('an RC1 mid-level save (the quick-save of that build) loads in this build and the world plays on', () => {
   const r = parseSave(read('tests/fixtures/save-rc1-mid.json')); assert.equal(r.ok, true, r.detail); assert.equal(r.save.version, SAVE_VERSION, 'the RC1 save is the current save version: no migration was needed, and none is promised away');

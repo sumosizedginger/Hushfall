@@ -72,6 +72,6 @@ test('the Landing Scar: the singers sleep at the spawn (out of their sight), wak
   const map = shippedMap('C1E3M01'), w = createWorld(map, { seed: 1, difficulty: 'normal' }); const singers = w.enemies.filter((e) => e.kind === 'chorister');
   assert.ok(singers.length >= 6, `${singers.length} singers`); run(w, 60 * 6); assert.ok(singers.every((e) => e.state === 'idle'), 'nobody has noticed the player at the spawn');
   for (const difficulty of ['easy', 'normal', 'hard']) { const r = runRouteEither(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.main.route.json'), { seed: 1, difficulty }); assert.equal(r.result, 'complete', difficulty); assert.ok(r.events.some((x) => x.type === 'suppress'), 'suppression happened'); }
-  const s = runRoute(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 1);
+  const s = runRoute(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.secret.route.json'), { seed: 1, difficulty: 'normal' }); assert.equal(s.result, 'complete'); assert.equal(s.world.stats.secrets, 2);
   assert.equal(findTraps(map).traps, 0, 'no pit');
 });

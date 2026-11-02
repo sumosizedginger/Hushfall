@@ -61,7 +61,7 @@ FUN.bypass({ from: [3, 24], to: [16, 19] });          // a way round the foot of
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E3M06', name: 'The Choir Loft', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C1E3M06', name: 'The Choir Loft', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#33241a', fogDensity: 0.007, sky: 'dusk', look: 'loft' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 6: { type: 'enemy', kind: 'acolyte' }, p: { type: 'prop', kind: 'pew', yaw: Math.PI / 2 } },

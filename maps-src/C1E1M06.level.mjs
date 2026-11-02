@@ -72,7 +72,7 @@ const layers = L.layers();
 const rampCells = [[54, 22], [55, 22], [54, 23], [55, 23], [54, 24], [55, 24], [54, 25], [55, 25], [54, 26], [55, 26]];
 
 const MAP = {
-  id: 'C1E1M06', name: 'Ferry Terminal', version: 2, ceilingHeight: 4.2, par: { time: 700 },
+  id: 'C1E1M06', name: 'Ferry Terminal', version: 3, ceilingHeight: 4.2, par: { time: 700 },
   atmosphere: { fog: '#2a2c38', fogDensity: 0.01, sky: 'dusk', look: 'dusk' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 24, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'FERRY TERMINAL', lines: ['The last boat is still at the quay.', 'It never left. Nobody on it did either.'] },

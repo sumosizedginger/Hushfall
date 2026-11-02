@@ -1,11 +1,11 @@
 {
   "mapId": "C1E4M05",
-  "mapVersion": 1,
+  "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "6170fc8",
+  "codeVersion": "7a4f4f8",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "49b93e4ff61ee087",
+  "mapSha": "4ffa85907d7de4e5",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
@@ -17,7 +17,7 @@
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
-  "routesSha": "2f5f72686a4f0cd4",
+  "routesSha": "b9fc5a00bb9ad57e",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4725,
-      "finalHash": "feeb2ee0",
+      "finalHash": "ca60f29b",
       "kills": 25,
       "secrets": 0,
       "items": 1,
@@ -41,7 +41,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 4327,
-      "finalHash": "d93a2ea5",
+      "finalHash": "ec7a7f8d",
       "kills": 24,
       "secrets": 0,
       "items": 1,
@@ -54,7 +54,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 4933,
-      "finalHash": "22250a49",
+      "finalHash": "5b43305b",
       "kills": 25,
       "secrets": 0,
       "items": 1,
@@ -66,25 +66,25 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 8341,
-      "finalHash": "58012804",
-      "kills": 34,
-      "secrets": 2,
-      "items": 4,
+      "ticks": 5984,
+      "finalHash": "940b376e",
+      "kills": 29,
+      "secrets": 1,
+      "items": 3,
       "damageTaken": 28
     },
     {
       "file": "routes/C1E4M05.secret.route.json",
       "difficulty": "normal",
       "seed": 1,
-      "policy": "standing",
+      "policy": "strafing",
       "result": "complete",
-      "ticks": 8315,
-      "finalHash": "8621f17f",
-      "kills": 34,
-      "secrets": 2,
-      "items": 4,
-      "damageTaken": 109
+      "ticks": 7233,
+      "finalHash": "12bcffa1",
+      "kills": 30,
+      "secrets": 1,
+      "items": 3,
+      "damageTaken": 74
     },
     {
       "file": "routes/C1E4M05.secret.route.json",
@@ -92,12 +92,12 @@
       "seed": 1,
       "policy": "strafing",
       "result": "complete",
-      "ticks": 8423,
-      "finalHash": "e7cae719",
-      "kills": 34,
-      "secrets": 2,
-      "items": 4,
-      "damageTaken": 98
+      "ticks": 6527,
+      "finalHash": "7f19ecdb",
+      "kills": 30,
+      "secrets": 1,
+      "items": 3,
+      "damageTaken": 81
     }
   ],
   "canonicalRoute": {
@@ -107,13 +107,13 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4327,
-    "finalHash": "d93a2ea5",
+    "finalHash": "ec7a7f8d",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 38,
-    "items": 21,
-    "secrets": 2
+    "items": 19,
+    "secrets": 1
   },
   "facts": {
     "enemies": 38,
@@ -150,7 +150,7 @@
       "d"
     ],
     "props": 42,
-    "secrets": 2,
+    "secrets": 1,
     "cells": 9216,
     "gates": 0,
     "spores": 0
@@ -322,7 +322,7 @@
       {
         "name": "all secrets reachable",
         "ok": true,
-        "detail": "[{\"id\":\"niche\",\"reachable\":true},{\"id\":\"seed-store\",\"reachable\":true}]"
+        "detail": "[{\"id\":\"niche\",\"reachable\":true}]"
       },
       {
         "name": "route C1E4M05.main.route.json on easy reaches the exit",
@@ -342,17 +342,17 @@
       {
         "name": "route C1E4M05.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "139.0 s"
+        "detail": "99.7 s"
       },
       {
         "name": "route C1E4M05.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "138.6 s"
+        "detail": "120.5 s (strafing)"
       },
       {
         "name": "route C1E4M05.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "140.4 s (strafing)"
+        "detail": "108.8 s (strafing)"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 44 damage)",
@@ -582,7 +582,7 @@
       {
         "name": "feel: a main map hides at least one secret",
         "ok": true,
-        "detail": "2 secrets"
+        "detail": "1 secrets"
       },
       {
         "name": "the shared browser check passed",
@@ -597,12 +597,12 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E4M05.json: 1e4253ecf9c57dc9 vs 49b93e4ff61ee087"
+        "detail": "validation/browser/C1E4M05.json: 1e4253ecf9c57dc9 vs 4ffa85907d7de4e5"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
-        "ok": false,
-        "detail": "b9fc5a00bb9ad57e vs 2f5f72686a4f0cd4"
+        "ok": true,
+        "detail": "b9fc5a00bb9ad57e vs b9fc5a00bb9ad57e"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
@@ -618,5 +618,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 38 enemies, 21 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 38 enemies, 19 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

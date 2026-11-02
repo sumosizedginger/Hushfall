@@ -87,7 +87,7 @@ E.dropIn({ at: [40, 31], radius: 2, cells: E.around([40, 31], { n: 2, min: 5, ma
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E1M02', name: 'Customs Hall', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E1M02', name: 'Customs Hall', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#2a3038', fogDensity: 0.012, sky: 'dusk', look: 'customs' },
   intro: { title: 'CUSTOMS HALL', lines: ['Every ship that ever came to Port Marrow was counted here.', 'The lamps are lit. Nobody lit them.'] },
   outro: 'Next: Fishmarket Rows. That is where the town tried to run.',
@@ -125,7 +125,7 @@ MAP.decals = [{ kind: 'scorch', at: [6, 28], wall: 'north', y: 1.3, size: 1.3 },
 // ---- end PT-021 marks and growth ----
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
-MAP.drops = { scale: 1 };
+MAP.drops = { scale: 1.15 };                                                                       // PT-081: the gallery's ambush costs shells; on Hard the slack fell under 1.5
 
 E.apply(MAP);                                                                                    // PT-081: the cracked-wall secret joins the map
 

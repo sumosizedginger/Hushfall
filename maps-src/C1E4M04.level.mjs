@@ -102,7 +102,7 @@ FUN.secretRoom({ id: 'lens-store', search: { region: [3, 3, 68, 66], prefer: [59
 
 
 const MAP = {
-  id: 'C1E4M04', name: 'Mirror Array', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C1E4M04', name: 'Mirror Array', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#10081c', fogDensity: 0.009, sky: 'orbit', look: 'mirror' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'MIRROR ARRAY', lines: ['The Gate is focused here, through glass.', 'A beam wants somewhere to go.'] },

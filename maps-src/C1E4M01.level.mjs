@@ -162,12 +162,12 @@ const exitCell = [CX - 1, CZ - 1];
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'tether-locker', search: { region: [3, 3, 68, 68], prefer: [45, 40], lane: laneOf('C1E4M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A maintenance locker on the tether, sealed when the cars stopped. Somebody meant to come back.' } });
-FUN.dropIn({ at: [26, 27], radius: 2, cells: FUN.around([26, 27], { n: 2, min: 5, max: 9 }), kind: 'g' });          // the 119 m walk round the ring with nothing awake: two Gaunts come off the cables
+FUN.dropIn({ at: [26, 27], radius: 2, cells: FUN.around([26, 27], { n: 3, min: 5, max: 9 }), kind: 'b' });          // the 119 m walk round the ring with nothing awake: three Bellhands come off the cables
 // ---- end PT-081 fun pass ----
 
 
 const MAP = {
-  id: 'C1E4M01', name: 'Ascent Tether', version: 1, ceilingHeight: 30, par: { time: 480 },
+  id: 'C1E4M01', name: 'Ascent Tether', version: 2, ceilingHeight: 30, par: { time: 480 },
   atmosphere: { fog: '#161c28', fogDensity: 0.004, sky: 'orbit', look: 'tether' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'ASCENT TETHER', lines: ['The last of the world is the foot of this cable.', 'The only way up is the road round it.'] },

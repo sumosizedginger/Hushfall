@@ -1,18 +1,18 @@
 {
   "mapId": "C1E3M01",
-  "mapVersion": 1,
+  "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "6170fc8",
+  "codeVersion": "7a4f4f8",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0f83a4a3aebb9157",
+  "mapSha": "4b4b7aae09d493e8",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
     "engine": "4767fce2cadbed7f",
     "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "977269f7d5bda464",
+    "audio": "5a6f9000131f21d2",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3272,
-      "finalHash": "20d8f800",
+      "finalHash": "a0096d7e",
       "kills": 28,
       "secrets": 0,
       "items": 4,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 3684,
-      "finalHash": "4f090c96",
+      "finalHash": "7a1b4404",
       "kills": 28,
       "secrets": 0,
       "items": 5,
@@ -54,7 +54,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 3868,
-      "finalHash": "fb7a95ef",
+      "finalHash": "5c3dbe5b",
       "kills": 28,
       "secrets": 0,
       "items": 5,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4535,
-      "finalHash": "b8eb90b2",
+      "finalHash": "b7311b48",
       "kills": 28,
       "secrets": 2,
       "items": 5,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5184,
-      "finalHash": "65e58e85",
+      "finalHash": "3cf1138b",
       "kills": 28,
       "secrets": 2,
       "items": 5,
@@ -93,7 +93,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 4862,
-      "finalHash": "4c163470",
+      "finalHash": "bf71f5be",
       "kills": 28,
       "secrets": 2,
       "items": 5,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 3684,
-    "finalHash": "4f090c96",
+    "finalHash": "7a1b4404",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -260,14 +260,14 @@
     "gate": [
       {
         "exit": "exit0",
-        "result": "complete",
-        "failure": null,
-        "ticks": 2123,
+        "result": "bot-failed",
+        "failure": "no path to 73,22",
+        "ticks": 1,
         "seeds": [
-          "1:complete",
-          "2:complete",
-          "3:complete",
-          "4:complete"
+          "1:bot-failed",
+          "2:bot-failed",
+          "3:bot-failed",
+          "4:bot-failed"
         ]
       }
     ],
@@ -360,8 +360,8 @@
         "detail": "complete"
       },
       {
-        "name": "gate: an invulnerable fighting bot sent straight at exit 'exit0' cannot complete the level (complete)",
-        "ok": false,
+        "name": "gate: an invulnerable fighting bot sent straight at exit 'exit0' cannot complete the level (bot-failed: no path to 73,22)",
+        "ok": true,
         "detail": ""
       },
       {
@@ -547,7 +547,7 @@
       {
         "name": "feel: the measured map is MIXED",
         "ok": true,
-        "detail": "47% roofed, p90 sightline 19.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
+        "detail": "46% roofed, p90 sightline 20 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -582,7 +582,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C1E3M01.json: 287df89071746d01 vs 0f83a4a3aebb9157"
+        "detail": "validation/browser/C1E3M01.json: 287df89071746d01 vs 4b4b7aae09d493e8"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -603,5 +603,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 25 enemies, 32 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 25 enemies, 32 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

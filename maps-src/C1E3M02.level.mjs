@@ -77,7 +77,7 @@ FUN.platform({ search: { region: [4, 22, 18, 34], lane: laneOf('C1E3M02') }, w: 
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E3M02', name: 'Ribbed Corridors', version: 1, ceilingHeight: 4.2, par: { time: 300 },
+  id: 'C1E3M02', name: 'Ribbed Corridors', version: 2, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#243430', fogDensity: 0.02, sky: 'ash', look: 'choir' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' } },

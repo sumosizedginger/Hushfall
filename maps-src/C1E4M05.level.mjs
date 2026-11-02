@@ -134,12 +134,11 @@ ENC.dropIn({ at: [50,45], radius: 2, cells: ENC.around([50,45], { n: 3, min: 6, 
 
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
-FUN.secretRoom({ id: 'seed-store', search: { region: [3, 3, 92, 92], prefer: [76, 72], lane: laneOf('C1E4M05') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A seed store under the orchard, grown over. The Vael kept our seeds too.' } });
 // ---- end PT-081 fun pass ----
 
 
 const MAP = {
-  id: 'C1E4M05', name: 'Drift Orchard', version: 1, ceilingHeight: 20, par: { time: 400 },
+  id: 'C1E4M05', name: 'Drift Orchard', version: 2, ceilingHeight: 20, par: { time: 400 },
   atmosphere: { fog: '#cfe4b4', fogDensity: 0.004, sky: 'orbit', ambient: 0.9, look: 'orchard' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'The fruit' },

@@ -76,7 +76,7 @@ FUN.bypass({ from: [29, 7], to: [31, 4] });          // a shortcut: the route wa
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M06', name: 'Pump Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E2M06', name: 'Pump Cathedral', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pump' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60, cell: 30 }, weapons: ['flare', 'scattergun', 'rivet', 'arc'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },

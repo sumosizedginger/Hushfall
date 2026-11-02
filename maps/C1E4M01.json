@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M01",
- "version": 1,
+ "version": 2,
  "name": "Ascent Tether",
  "ceilingHeight": 30,
  "atmosphere": {
@@ -308,7 +308,7 @@
     },
     {
      "spawn": {
-      "kind": "gaunt",
+      "kind": "bellhand",
       "at": [26, 20],
       "group": "fun-dropin-1",
       "facing": "south",
@@ -317,8 +317,17 @@
     },
     {
      "spawn": {
-      "kind": "gaunt",
+      "kind": "bellhand",
       "at": [19, 27],
+      "group": "fun-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [21, 22],
       "group": "fun-dropin-1",
       "facing": "south",
       "hunt": true

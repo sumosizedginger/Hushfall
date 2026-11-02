@@ -143,7 +143,7 @@ FUN.secretRoom({ id: 'dock-store', search: { region: [3, 3, 80, 80], prefer: [62
 
 
 const MAP = {
-  id: 'C1E4M03', name: 'Cold Dock', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C1E4M03', name: 'Cold Dock', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8c4cc', fogDensity: 0.006, sky: 'orbit', ambient: 0.9, look: 'dock' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 13, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coupling A', iron: 'Coupling B' },

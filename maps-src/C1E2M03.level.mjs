@@ -90,7 +90,7 @@ FUN.platform({ search: { region: [52, 8, 61, 16], lane: laneOf('C1E2M03') }, w: 
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M03', name: 'Rail Yard', version: 1, ceilingHeight: 4.2, par: { time: 400 },
+  id: 'C1E2M03', name: 'Rail Yard', version: 2, ceilingHeight: 4.2, par: { time: 400 },
   atmosphere: { fog: '#a0a094', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'RAIL YARD', lines: ['The line ends here, at the Works.', 'Everything that came down it was shipped inland on purpose.'] },

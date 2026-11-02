@@ -103,7 +103,7 @@ L.height([31, 5, 49, 17], 2); L.height([30, 5, 30, 18], 1); L.height([50, 5, 50,
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M02', name: 'Evaporation Pans', version: 1, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
+  id: 'C1E2M02', name: 'Evaporation Pans', version: 2, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
   atmosphere: { fog: '#b4b2a4', fogDensity: 0.0055, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'EVAPORATION PANS', lines: ['White ground to the horizon, and the horizon is working.', 'Nothing out here is hiding. That is the point.'] },

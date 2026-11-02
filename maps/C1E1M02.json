@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M02",
- "version": 1,
+ "version": 2,
  "name": "Customs Hall",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1446,6 +1446,6 @@
   "skins": 5
  },
  "drops": {
-  "scale": 1
+  "scale": 1.15
  }
 }

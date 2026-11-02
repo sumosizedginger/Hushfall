@@ -73,7 +73,7 @@ console.log('C1E1M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E1M07', name: 'Signal House', version: 2, ceilingHeight: 4.2, par: { time: 800 },
+  id: 'C1E1M07', name: 'Signal House', version: 3, ceilingHeight: 4.2, par: { time: 800 },
   atmosphere: { fog: '#0e1218', fogDensity: 0.03, sky: 'night', ambient: 0.3, look: 'signal' },
   keyLabels: { brass: 'Brass fuse', iron: 'Iron fuse', bell: 'Bell fuse' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 4, shell: 8, rivet: 40 }, weapons: ['flare', 'scattergun', 'rivet'] },
