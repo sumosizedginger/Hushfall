@@ -6,7 +6,7 @@
 //   node tools/dev/suggest-fun.mjs <ID> [--n=3]
 import fs from 'node:fs';
 import path from 'node:path';
-import { FLOOR_SKINS } from '../../src/engine/defs.js';
+import { FLOOR_SKINS, WALL_SKINS } from '../../src/engine/defs.js';
 
 const root = path.resolve(import.meta.dirname, '../..'), args = process.argv.slice(2), id = args.find((a) => !a.startsWith('--')), N = Number((args.find((a) => a.startsWith('--n=')) ?? '--n=3').slice(4));
 const map = JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8')), G = map.grid, H = G.length, W = G[0].length, FLOOR = new Set(Object.keys(FLOOR_SKINS));
@@ -16,7 +16,7 @@ const laneF = path.join(root, 'maps-src', 'lanes', id + '.json'), lane = fs.exis
 const route = JSON.parse(fs.readFileSync(path.join(root, 'routes', id + '.main.route.json'), 'utf8')).filter((o) => o.at && o.op === 'goto').map((o) => o.at);
 const key = (x, z) => x + ',' + z, D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 function bypass(from, to) {
-  const solid = (x, z) => x >= 1 && z >= 1 && x < W - 1 && z < H - 1 && !bad(get(x, z));
+  const solid = (x, z) => x >= 1 && z >= 1 && x < W - 1 && z < H - 1 && (get(x, z) in WALL_SKINS || get(x, z) === '#');
   const nearEnd = (x, z) => Math.max(Math.abs(x - from[0]), Math.abs(z - from[1])) <= 1 || Math.max(Math.abs(x - to[0]), Math.abs(z - to[1])) <= 1;
   const carvable = (x, z) => { if (!solid(x, z)) return false; const end = nearEnd(x, z); for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dz) continue; const c = get(x + dx, z + dz); if ('DSX'.includes(c) || (!end && FLOOR.has(c))) return false; } return true; };
   const goal = new Set(D4.map(([dx, dz]) => key(to[0] + dx, to[1] + dz))), prev = new Map(), q = [];

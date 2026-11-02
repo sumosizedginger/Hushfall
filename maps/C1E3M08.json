@@ -22,10 +22,10 @@
   "#####################################################HHiiiiiiHH###########",
   "######################################################HHHcHHHH############",
   "########################################################HcH###############",
-  "########################################################HcH###############",
-  "########################################################HcH###############",
-  "########################################################HcH###############",
-  "####################################################EEEEEiEEEEE###########",
+  "####################################################EEEEEcH###############",
+  "####################################################EiiiEcH###############",
+  "####################################################EiiiEcH###############",
+  "####################################################EESEEiEEEEE###########",
   "##################################################EEEiiiiiiiiiEEE#########",
   "#################################################EEiiiiiiiiiiiiiEE########",
   "################################################EEiiiiiiiiiiiiiiiEE#######",
@@ -144,6 +144,15 @@
     [17, 31],
     [17, 32]
    ]
+  },
+  {
+   "id": "throat-pocket",
+   "panel": [54, 14],
+   "cells": [
+    [54, 13],
+    [54, 12]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -227,6 +236,16 @@
    "kind": "lamp",
    "tint": "teal",
    "at": [57, 10]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [54, 12]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [55, 12]
   },
   {
    "type": "pickup",
@@ -988,6 +1007,13 @@
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The voice is gone, Calder. The ships are quiet. They were calling something, and it heard that. We should not be here when it answers."
+  },
+  {
+   "id": "throat-pocket",
+   "at": [54, 13],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A pocket in the throat wall. The Cantor's own, or something it swallowed."
   }
  ],
  "objective": "The Grand Cantor is at the bell, past the ribs. It walks. While a reed sings it throws two rings",

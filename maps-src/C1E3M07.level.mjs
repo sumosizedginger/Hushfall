@@ -57,6 +57,12 @@ ENC.dropIn({ at: [25,34], radius: 2, cells: ENC.around([25,34], { n: 2, min: 4, 
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'cold-furnace', search: { region: [3, 3, 48, 52], prefer: [17, 13], lane: laneOf('C1E3M07') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A furnace that never lit. They stored things in it, then sealed it.' } });
+FUN.bypass({ from: [30, 40], to: [27, 39] });          // a cut through the ring: the route walks 46 cells round
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const VATS = [[27, 22, ['gaunt']], [41, 22, null], [41, 35, ['gaunt']], [27, 35, ['tollbearer']]];           // (the SW vat is the first: order by id = how a route meets them)
@@ -102,4 +108,5 @@ ENC.apply(MAP);
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [29, 37] }, { type: 'pickup', kind: 'health_large', at: [35, 40] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

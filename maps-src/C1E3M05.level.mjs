@@ -48,6 +48,12 @@ const ENC = new Encounters(L);
 ENC.dropIn({ at: [22,28], radius: 2, cells: ENC.around([22,28], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'spool-room', search: { region: [3, 3, 70, 56], prefer: [44, 17], lane: laneOf('C1E3M05') }, open: 'shoot', rewards: ['H', 'r'], message: { speaker: 'INES', text: 'A spool room the loom grew over. The resin is brittle here.' } });
+FUN.bypass({ from: [36, 18], to: [54, 24] });          // a passage round the north of the loom: a loop, and the loom is no longer a mirror
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -102,4 +108,5 @@ MAP.quality.introduces += '; also found here: the fire axe, on a hook by the fir
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard and the clumsy bot on Normal once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [19, 28] }, { type: 'pickup', kind: 'health_large', at: [22, 28] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

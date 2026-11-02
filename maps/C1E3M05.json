@@ -27,17 +27,17 @@
   "##########################################################################",
   "##########################################################################",
   "#########################MMMMMMMMM########################################",
-  "#######################MMMwwwwwwwMMM######################################",
-  "#####################MMMwwwwwwwwwwwMMM####################################",
-  "####################MMwwwwwwwwwwwwwwwMM###################################",
-  "###################MMwwwwwwwwwwwwwwwwwMM##################################",
-  "##################MMwwwwwwwwwwwwwwwwwwwMM#################################",
-  "##################MwwwwwwwwwwwwwwwwwwwwwM#################################",
-  "#################MMwwwwwwwwwwwwwwwwwwwwwMM#######MMMMMM###################",
-  "######MMM########MwwwwwwwwwwwwwwwwwwwwwwwM#####MMMccccMMM#######MMM#######",
-  "####MMMwMMM#####MMwwwwwwwwwwwwwwwwwwwwwwwMM###MMccccccccMM###MMMMfMMMM####",
-  "###MMwwwwwMM####MwwwwwwwwwwwwwwwwwwwwwwwwwM###MccccccccccM##MMfffffffMM###",
-  "##MMwwwwwwwMM###MwwwwwwwwwwwwwwwwwwwwwwwwwM##MMccccccccccMM#MfffffffffM###",
+  "#######################MMMwwwwwwwMMMMMMMMMMMMMMMMMMMMMMMM#################",
+  "#####################MMMwwwwwwwwwwwMMwwwwwwwwwwwwwwwwwwwM#################",
+  "####################MMwwwwwwwwwwwwwwwwMMMMMMMMMMMMMMMMMwM#################",
+  "###################MMwwwwwwwwwwwwwwwwwMM##############MwM#################",
+  "##################MMwwwwwwwwwwwwwwwwwwwMM#############MwM#################",
+  "##################MwwwwwwwwwwwwwwwwwwwwwM#############MwM#################",
+  "#################MMwwwwwwwwwwwwwwwwwwwwwMM#######MMMMMMwM#################",
+  "######MMM########MwwwwwwwwwwwwwwwwwwwwwwwMMMMM#MMMccccwwM#######MMM#######",
+  "####MMMwMMM#####MMwwwwwwwwwwwwwwwwwwwwwwwMMwwMMMccccccccMM###MMMMfMMMM####",
+  "###MMwwwwwMM####MwwwwwwwwwwwwwwwwwwwwwwwwwSwwMMccccccccccM##MMfffffffMM###",
+  "##MMwwwwwwwMM###MwwwwwwwwwwwwwwwwwwwwwwwwwMwwMMccccccccccMM#MfffffffffM###",
   "##MwwwwwwwwwMMMMMwwwwwwwwwwwwwwwwwwwwwwwwwMMMMccccccccccccMMMfffffffffM###",
   "##MwwwwwwwwwDwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwDwwccccccccccccDwwfffffffffM###",
   "##MwwwwwwwwwMMMMMwwwwwwwwwwwwwwwwwwwwwwwwwMMMMccccccccccccMMMfffffffffM###",
@@ -285,6 +285,15 @@
     [29, 44],
     [29, 45]
    ]
+  },
+  {
+   "id": "spool-room",
+   "panel": [42, 25],
+   "cells": [
+    [43, 25],
+    [44, 25]
+   ],
+   "open": "shoot"
   }
  ],
  "sectors": [
@@ -587,6 +596,11 @@
    "facing": -1.385
   },
   {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [44, 25]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [4, 26]
@@ -606,6 +620,11 @@
    "type": "prop",
    "kind": "lamp",
    "at": [37, 26]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 26]
   },
   {
    "type": "prop",
@@ -993,6 +1012,13 @@
    "radius": 1.5,
    "speaker": "HULL",
    "text": "A fire axe on a hook by the first platform, the handle worn smooth. Slow, and it takes everything in front of you."
+  },
+  {
+   "id": "spool-room",
+   "at": [43, 25],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A spool room the loom grew over. The resin is brittle here."
   }
  ],
  "objective": "Cross the Loom. The doors listen: no noise near them",

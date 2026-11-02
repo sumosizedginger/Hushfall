@@ -69,6 +69,12 @@ const ENC = new Encounters(L);
 ENC.dropIn({ at: [24,22], radius: 2, cells: ENC.around([24,22], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'hull-pocket', search: { region: [3, 3, 80, 40], prefer: [39, 30], lane: laneOf('C1E3M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A pocket where the hull plating folded over. Somebody crawled in here to hide and left their kit.' } });
+FUN.bypass({ from: [54, 27], to: [73, 24] });          // a flank along the south side of the scar: a loop, and the scar is no longer a mirror
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -118,4 +124,5 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E3M01', lane: [...(laneOf('C1E3M01') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

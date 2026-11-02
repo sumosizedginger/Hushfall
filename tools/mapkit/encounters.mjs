@@ -8,7 +8,7 @@
 //   E.reinforce({ when: 'time:90' | 'dead:<group>', cells, kind })                      a second wave that always knows where you are (REINFORCEMENT)
 //   E.apply(MAP)                                                                        append the groups, triggers and messages to the map definition
 // A kind is a LEGEND character ('t' Tollbearer, 'g' Gaunt, 'b' Bellhand ...) in a closet and an enemy KIND name ('tollbearer') in a spawn: both accepted in either place. The flood (the tide) is not in the kit: it is a map field, not an encounter.
-import { FLOOR_SKINS, ENEMIES } from '../../src/engine/defs.js';
+import { FLOOR_SKINS, WALL_SKINS, ENEMIES } from '../../src/engine/defs.js';
 import { LEGEND } from './legend.mjs';
 
 const FLOOR = new Set(Object.keys(FLOOR_SKINS));
@@ -29,7 +29,7 @@ export class Encounters {
 
   /** SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint. `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set } finds the viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d the depth; rewards are LEGEND characters. Returns { id, panel, rect }. */
   secretRoom({ id, from = null, dir = null, search = null, w = 3, d = 2, floor = null, wall = null, rewards = [], message = null, open = 'use', lever = null }) {          // PT-081: `open` 'shoot' (a cracked wall) or 'switch' (`lever: { at: [x, z], wall }` opens it)
-    const L = this.L, V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }, solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && !FLOOR.has(L.get(x, z)) && L.get(x, z) !== 'D' && L.get(x, z) !== 'S' && L.get(x, z) !== 'X';
+    const L = this.L, V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }, solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');          // PT-081: WALL only (open sky or water is not something a room can be cut into)
     const spot = (fx, fz, k) => {
       const [dx, dz] = V[k], px = fx + dx, pz = fz + dz, [lx, lz] = [-dz, dx], half = (w - 1) / 2; if (!solid(px, pz) || !solid(px + lx, pz + lz) || !solid(px - lx, pz - lz)) return null;
       const cells = []; for (let i = 1; i <= d; i++) for (let j = -half; j <= half; j++) cells.push([px + dx * (i - 1) + lx * j + dx, pz + dz * (i - 1) + lz * j + dz]);
@@ -132,7 +132,7 @@ export class Encounters {
    *  closet on the way (it stays a corridor of its own), the shortest such (breadth first), at least `minLen` cells, its floor ramped from one end's height to the other's (half a metre a cell at most). */
   bypass({ from, to, floor = null, wall = null, minLen = 4 }) {
     const L = this.L, key = (x, z) => x + ',' + z, D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]], bad = (c) => FLOOR.has(c) || 'DSX'.includes(c);
-    const solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && !bad(L.get(x, z));
+    const solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');          // only through WALL (never across open sky, water or a hazard)
     const nearEnd = (x, z) => Math.max(Math.abs(x - from[0]), Math.abs(z - from[1])) <= 1 || Math.max(Math.abs(x - to[0]), Math.abs(z - to[1])) <= 1;
     const carvable = (x, z) => { if (!solid(x, z)) return false; const end = nearEnd(x, z); for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dz) continue; const c = L.get(x + dx, z + dz); if ('DSX'.includes(c) || (!end && FLOOR.has(c))) return false; } return true; };          // never beside a door, a panel or a closet, even at its ends
     const goal = new Set(D4.map(([dx, dz]) => key(to[0] + dx, to[1] + dz))), prev = new Map(), q = [];

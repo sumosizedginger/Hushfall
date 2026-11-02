@@ -52,6 +52,12 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'tier-closet', search: { region: [3, 3, 76, 44], prefer: [57, 30], lane: laneOf('C1E3M06') }, open: 'shoot', rewards: ['v', 'e'], message: { speaker: 'INES', text: 'A closet under the tiers, grown shut. Whoever sang here kept spares.' } });
+FUN.bypass({ from: [3, 24], to: [16, 19] });          // a way round the foot of the loft
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -99,4 +105,5 @@ MAP.entities.push(...[["mod_spinup",14,28]].map(([kind, x, z]) => ({ type: 'pick
 MAP.roster = { id: 'C1E3M06', lane: [...(laneOf('C1E3M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":1},{"pick":"range","from":"gaunt","to":"marksman","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

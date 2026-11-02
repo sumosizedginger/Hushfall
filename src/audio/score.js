@@ -20,12 +20,14 @@ export const SPECTRA = {
   brass: (f, k) => (1 / k ** 0.45) * (res(f, 650, 500, 0.8) + res(f, 1350, 900, 0.7) + res(f, 2600, 1200, 0.25) + 0.05),
   choir: (f, k) => (1 / k ** 0.6) * (res(f, 700, 160, 1) + res(f, 1150, 180, 0.6) + res(f, 2700, 300, 0.15) + 0.01),
   bass: (f, k) => 1 / k ** 1.1,
+  glass: (f, k) => (k === 1 ? 1 : k === 2 ? 0.22 : k === 3 ? 0.1 : k === 4 ? 0.05 : k === 6 ? 0.03 : 0) * (f < 5000 ? 1 : 0.2),          // a glass harmonica: nearly a sine, a few high partials
 };
 /** the voices that are pitched notes (the rest are drums and the bell) and how each one moves */
 export const VOICES = {
   cello: { att: 0.12, rel: 0.35, bus: 'clean' }, harmonium: { att: 0.35, rel: 0.9, bus: 'clean', trem: 0.05 }, choir: { att: 0.25, rel: 0.3, bus: 'clean' },
   brass: { att: 0.03, rel: 0.1, bus: 'drive' }, bass: { att: 0.004, rel: 0.05, bus: 'drive' }, chordBrass: { att: 0.06, rel: 0.12, bus: 'drive', spectrum: 'brass' },
-  horn: { att: 0.16, rel: 0.45, bus: 'clean', spectrum: 'brass' },                                     // a band's horn, played soft: the calm voice of the works
+  horn: { att: 0.16, rel: 0.45, bus: 'clean', spectrum: 'brass' },
+  glass: { att: 0.3, rel: 1.2, bus: 'clean' },                                                      // the Gate's voice: slow to speak, long to die                                     // a band's horn, played soft: the calm voice of the works
 };
 export const DRUMS = ['kick', 'snare', 'hat', 'tomH', 'tomL', 'anvil', 'crash', 'boom', 'bell'];
 
@@ -85,6 +87,52 @@ export const THEMES = {
       bell: 'E2', killBell: 'B1', ringBell: 'E3', clear: ['E2', 'B2', 'E3', 'G3', 'B3'],
     },
   },
+  // THE CHOIR (Campaign 1, Episode 3: inside the choir ships): a slow chant for a wordless choir in A Lydian (bright, and wrong: the raised fourth), the choir on the chords too, a deep ship's bell
+  // at each phrase. Battle: the chant darkened into A minor at 120, on brass, ending on an E major turn.
+  choir: {
+    name: 'choir',
+    calm: {
+      bpm: 58, meter: 3, bell: 'A2', voices: { mel: 'choir', pad: 'choir', melGain: 0.12 },
+      phrases: [
+        { mel: [['A3', 2], ['B3', 1], ['C#4', 1], ['D#4', 1], ['E4', 1], ['D#4', 2], ['C#4', 1], ['B3', 3]],
+          chords: [['A2', 'E3', 'A3', 'C#4'], ['B2', 'F#3', 'B3', 'D#4'], ['E2', 'B2', 'E3', 'G#3'], ['B2', 'F#3', 'B3', 'D#4']] },
+        { mel: [['E4', 1], ['F#4', 1], ['G#4', 1], ['A4', 2], ['G#4', 1], ['F#4', 1], ['E4', 1], ['D#4', 1], ['E4', 3]],
+          chords: [['E2', 'B2', 'E3', 'G#3'], ['A2', 'E3', 'A3', 'C#4'], ['B2', 'F#3', 'B3', 'D#4'], ['E2', 'B2', 'E3', 'G#3']] },
+      ],
+      rest: 3,
+    },
+    battle: {
+      bpm: 120, meter: 4,
+      roots: ['A1', 'A1', 'F1', 'G1', 'C2', 'D2', 'E2', 'A1'],
+      chords: { A1: ['A2', 'C3', 'E3'], F1: ['F2', 'A2', 'C3'], G1: ['G2', 'B2', 'D3'], C2: ['C3', 'E3', 'G3'], D2: ['D3', 'F3', 'A3'], E2: ['E3', 'G#3', 'B3'] },
+      lead: [[['A4', 2], ['B4', 1], ['C5', 1]], [['D5', 1], ['E5', 1], ['D5', 2]], [['C5', 2], ['B4', 1], ['A4', 1]], [['B4', 4]],
+        [['E5', 1], ['F5', 1], ['G5', 1], ['A5', 1]], [['G5', 2], ['F5', 1], ['E5', 1]], [['D5', 1], ['C5', 1], ['B4', 2]], [['A4', 4]]],
+      bell: 'A2', killBell: 'E2', ringBell: 'A2', clear: ['A1', 'E2', 'A2', 'C3', 'E3'],
+    },
+  },
+  // THE GATE (Campaign 1, Episode 4: the tether, the wreck belt, the docks in vacuum, the Gate itself): a slow processional in C minor on a glass harmonica over a quiet choir, a gold bell at each
+  // phrase; the second phrase turns on the minor key's G major. Battle: the processional at 138 on brass, the same turn.
+  gate: {
+    name: 'gate',
+    calm: {
+      bpm: 54, meter: 4, bell: 'C3', voices: { mel: 'glass', pad: 'choir', melGain: 0.16 },
+      phrases: [
+        { mel: [['C4', 3], ['D4', 1], ['Eb4', 2], ['G4', 2], ['F4', 1], ['Eb4', 1], ['D4', 2], ['C4', 4]],
+          chords: [['C2', 'C3', 'Eb3', 'G3'], ['Eb2', 'Eb3', 'G3', 'Bb3'], ['Bb1', 'Bb2', 'D3', 'F3'], ['C2', 'C3', 'Eb3', 'G3']] },
+        { mel: [['G4', 2], ['Ab4', 1], ['G4', 1], ['F4', 2], ['Eb4', 2], ['D4', 1], ['Eb4', 1], ['F4', 1], ['D4', 1], ['C4', 4]],
+          chords: [['Ab1', 'Ab2', 'C3', 'G3'], ['F1', 'F2', 'Ab2', 'C3'], ['G1', 'G2', 'B2', 'D3'], ['C2', 'C3', 'Eb3', 'G3']] },
+      ],
+      rest: 2,
+    },
+    battle: {
+      bpm: 138, meter: 4,
+      roots: ['C2', 'C2', 'Eb2', 'Bb1', 'Ab1', 'F1', 'G1', 'C2'],
+      chords: { C2: ['C3', 'Eb3', 'G3'], Eb2: ['Eb3', 'G3', 'Bb3'], Bb1: ['Bb2', 'D3', 'F3'], Ab1: ['Ab2', 'C3', 'Eb3'], F1: ['F2', 'Ab2', 'C3'], G1: ['G2', 'B2', 'D3'] },
+      lead: [[['C5', 2], ['D5', 1], ['Eb5', 1]], [['G5', 2], ['F5', 1], ['Eb5', 1]], [['D5', 1], ['Eb5', 1], ['F5', 1], ['D5', 1]], [['C5', 4]],
+        [['G5', 2], ['Ab5', 1], ['G5', 1]], [['F5', 2], ['Eb5', 2]], [['D5', 2], ['B4', 2]], [['C5', 4]]],
+      bell: 'C3', killBell: 'G2', ringBell: 'C3', clear: ['C2', 'G2', 'C3', 'Eb3', 'G3'],
+    },
+  },
 };
 
 /** which theme a map plays (null = the older generative score, until that place has its own theme) */
@@ -92,6 +140,8 @@ export function themeFor(mapId, map) {
   const named = map?.atmosphere?.music; if (named !== undefined) return named && THEMES[named] ? named : null;
   if (/^C1E1/.test(mapId ?? '')) return 'harbour';
   if (/^C1E2/.test(mapId ?? '')) return 'works';
+  if (/^C1E3/.test(mapId ?? '')) return 'choir';
+  if (/^C1E4/.test(mapId ?? '')) return 'gate';
   return null;
 }
 /** the seconds a beat lasts in a section */

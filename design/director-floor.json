@@ -214,7 +214,7 @@
    "loops": 0,
    "topShare": 32,
    "symmetry": 0.91,
-   "walk": 1219
+   "walk": 1248
   },
   "C1E3M02": {
    "density": 25,
@@ -224,7 +224,7 @@
    "loops": 1,
    "topShare": 33,
    "symmetry": 0.5,
-   "walk": 954
+   "walk": 982
   },
   "C1E3M03": {
    "density": 18,
@@ -254,7 +254,7 @@
    "loops": 0,
    "topShare": 43,
    "symmetry": 0.68,
-   "walk": 807
+   "walk": 840
   },
   "C1E3M06": {
    "density": 14,
@@ -264,7 +264,7 @@
    "loops": 0,
    "topShare": 35,
    "symmetry": 0.81,
-   "walk": 1185
+   "walk": 1214
   },
   "C1E3M07": {
    "density": 33,

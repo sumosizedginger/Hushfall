@@ -24,11 +24,11 @@
   "##############VVVVuuuuuuuuuuuuuuuuuuuuuuuuuuuVV#####################################################",
   "##############VVVuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV##########",
   "##############VVuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VVVoooooooooooooooooooooooooVVV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VVoooooooooooooooooooooooooooVV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VoooooooooooooooooooooooooooooV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VoooooooooooooooooooooooooooooV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV############VoooooooooooooooooooooooooooooV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV###n####n###VoooooooooooooooooooooooooooooV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVVVV#########VVoooooooooooooooooooooooooooVV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVuuV#########VoooooooooooooooooooooooooooooV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuSuuV#########VoooooooooooooooooooooooooooooV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVuuV#########VoooooooooooooooooooooooooooooV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVVVVn####n###VoooooooooooooooooooooooooooooV##########",
   "##VVVVVVVVVVVVVuuuuuuuuuuuuuuuuuuuuuuuuuuRRuuuV##nnn##nnn##VoooooooooooooooooooooooooooooV##########",
   "##VnnnnnnnnnnnVuuuuuuuuuuuuuuuuuRRuuuuuuuRRuuuVVVnnnVVnnnVVVoooooooooooooooooooooooooooooVVVVVVVVVV#",
   "##VnnnnnnnnnnnVuuuuuRRuuuuuuuuuuRRuuuuuuuuuuuuVnnnnnnnnnnnnVoooooooooooooooooooooooooooooVVVnnnnnVV#",
@@ -36,11 +36,11 @@
   "##VnnnnnnnnnnnnuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnnnnnnnnnnoooooooooooooVVVoooooooooooooVVnnnnnnnV#",
   "##VnnnnnnnnnnnnuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnnnnnnnnnnoooooooooooooVVVoooooooooooooDnnnnnnnnV#",
   "##VnnnnnnnnnnnnuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnnnnnnnnnnoooooooooooooVVVoooooooooooooVVnnnnnnnV#",
-  "##VnnnnnnnnnnnVuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVnnnnnnnnnnnnVoooooooooooooooooooooooooooooVVnnnnnnnV#",
-  "##VnnnnnnnnnnnVuuuuuRRuuuuuuuuuuRRuuuuuuuuuuuuVnnnnnnnnnnnnVoooooooooooooooooooooooooooooVVVnnnnnVV#",
-  "##VnnnnnnnnnnnVuuuuuRRuuuuuuuuuuRRuuuuuuuRRuuuVVVVVVSVVVVVVVoooooooooooooooooooooooooooooVVVVVVVVVV#",
-  "##VVVVVVVVVVVVVuuuuuuuuuuuuuuuuuuuuuuuuuuRRuuuV#VnnnnnnnV##VoooooooooooooooooooooooooooooV##########",
-  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV#VnnnnnnnV##VoooooooooooooooooooooooooooooV##########",
+  "##VnnnnnnnnnnnVuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuVnnnnnnnnnnnnooooooooooooooooooooooooooooooVVnnnnnnnV#",
+  "##VnnnnnnnnnnnVuuuuuRRuuuuuuuuuuRRuuuuuuuuuuuuVnnnnnnnnnnnnooooooooooooooooooooooooooooooVVVnnnnnVV#",
+  "##VnnnnnnnnnnnVuuuuuRRuuuuuuuuuuRRuuuuuuuRRuuuVVVVVVSVVVVVVooooooooooooooooooooooooooooooVVVVVVVVVV#",
+  "##VVVVVVVVVVVVVuuuuuuuuuuuuuuuuuuuuuuuuuuRRuuuV#VnnnnnnnV#VooooooooooooooooooooooooooooooV##########",
+  "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV#VnnnnnnnV#VVoooooooooooooooooooooooooooooV##########",
   "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV#VnnnnnnnV##VoooooooooooooooooooooooooooooV##########",
   "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV#VnnnnnnnV##VoooooooooooooooooooooooooooooV##########",
   "##############VuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuV#VnnnnnnnV##VoooooooooooooooooooooooooooooV##########",
@@ -80,9 +80,9 @@
   "......................................................................666666666.....................",
   "......................................................................666666666.....................",
   "......................................................................666666666.....................",
-  "......................................................................666666666.....................",
-  "......................................................................666666666.....................",
-  "......................................................................666666666.....................",
+  "...................................122221.............................666666666.....................",
+  "...................................122221.............................666666666.....................",
+  "...................................122221.............................666666666.....................",
   "......................................................................666666666.....................",
   "........................................................................666.........................",
   "........................................................................555.........................",
@@ -209,6 +209,15 @@
     [52, 29],
     [52, 30]
    ]
+  },
+  {
+   "id": "chute-cache",
+   "panel": [46, 15],
+   "cells": [
+    [47, 15],
+    [48, 15]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -281,6 +290,16 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [86, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [48, 15]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [48, 16]
   },
   {
    "type": "enemy",
@@ -819,6 +838,13 @@
    "radius": 2.5,
    "speaker": "INES",
    "text": "The hatchery. Past that is the nave, and it is bigger than this."
+  },
+  {
+   "id": "chute-cache",
+   "at": [47, 15],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The gardens' waste chute, sealed with resin. There is something made by people inside."
   }
  ],
  "decals": [

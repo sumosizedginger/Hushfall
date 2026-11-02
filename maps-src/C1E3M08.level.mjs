@@ -5,6 +5,8 @@
 // Route: the airlock -> the gullet (the secret: a cellar of caught breath) -> the four ribs (sleepers, a Bulwark, singers, an Acolyte) -> the bell: the reeds, then the Grand Cantor (the bot's `killboss` op) -> the north passage -> the exit.
 // Scale class COMPRESSION (all roofed under a 9 m vault; the ribs and a ring of pillars break the sightlines). Look: throat (wet pink and red-violet), ribbed walls, a wet floor.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(74, 58);
 const WALL = 'H';
@@ -57,6 +59,11 @@ if (skipped.length) console.log('C1E3M08: skipped (not floor):', skipped.join(';
   }
 }
 // ---- end PT-035 materials ----
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'throat-pocket', search: { region: [3, 3, 70, 54], prefer: [56, 28], lane: laneOf('C1E3M08') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A pocket in the throat wall. The Cantor\'s own, or something it swallowed.' } });
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const REEDS = [[51, 25], [51, 32], [63, 20], [63, 37]];
@@ -100,4 +107,5 @@ const MAP = {
 // ---- PT-025: the boss map keeps ALL its ammunition boxes on the ground (the reeds, the boss and its called singers never drop; the fight eats rivets); drops add to them ----
 MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

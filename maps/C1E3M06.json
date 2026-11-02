@@ -28,22 +28,22 @@
   "##################EiiiiiiiE####EEEEEiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "##################EiiiiiiiEEEEEEiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "##################EEiiiiEEEEiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "###################EEESEiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "###############EEEEEiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "######EEE####EEEiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "####EEEiEEE##EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE###EEEEEEE#######",
-  "###EEiiiiiEE#EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE##EEiiiiiEE######",
-  "##EEiiiiiiiEEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#EEiiiiiiiEE#####",
-  "##EiiiiiiiiiEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEiiiiiiiiiE#####",
-  "##EiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzDiiiiiiiiiiiE#####",
-  "##EiiiiiiiiiEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEiiiiiiiiiE#####",
+  "####EEEEEEEEEEEEEE#EEESEiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
+  "##EEEiiiiiiiiiiiiEEEiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
+  "#EEiiiEEEEEEEEEEiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
+  "EEiiEEEiEEE##EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE###EEEEEEE#######",
+  "EiiEEiiiiiEE#EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE##EEiiiiiEE######",
+  "EiEEiiiiiiiEEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#EEiiiiiiiEE#####",
+  "EiEiiiiiiiiiEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEiiiiiiiiiE#####",
+  "EiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzDiiiiiiiiiiiE#####",
+  "EEEiiiiiiiiiEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEiiiiiiiiiE#####",
   "##EiiiiiiiiiEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#EiiiiiiiiiE#####",
   "##EEiiiiiiiEEEiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#EEiiiiiiiEE#####",
-  "###EEiiiiiEE#EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE##EEiiiiiEE######",
-  "####EEEiEEE##EEEiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE###EEEEEEE#######",
-  "######EEE######EEEEEiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "###################EEEEEiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
-  "#######################EEEEEiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
+  "###EEiiiiiEE#EiiiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEEEiiiiiEE######",
+  "####EEEiEEE##EEEiiiiiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEzzEEEEEEEE#######",
+  "######EEE######EEEEEiiiiiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzSzzE##############",
+  "###################EEEEEiiiiiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEzzE##############",
+  "#######################EEEEEiiiiiiiiiizzzzzzzzzzzzzzzzzzzzzzzzEEEE##############",
   "###########################EEEEEiiiiiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "###############################EEEEEiizzzzzzzzzzzzzzzzzzzzzzzzE#################",
   "###################################EEEEzzzzzzzzzzzzzzzzzzzzzzzE#################",
@@ -175,6 +175,15 @@
     [22, 15],
     [22, 14]
    ]
+  },
+  {
+   "id": "tier-closet",
+   "panel": [62, 30],
+   "cells": [
+    [63, 30],
+    [64, 30]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -627,11 +636,21 @@
    "at": [60, 30]
   },
   {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [64, 30]
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [29, 31],
    "facing": -1.844,
    "group": "tuned"
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [64, 31]
   },
   {
    "type": "prop",
@@ -759,6 +778,13 @@
    "radius": 2.5,
    "speaker": "INES",
    "text": "Past the conductor. They were rehearsing for this."
+  },
+  {
+   "id": "tier-closet",
+   "at": [63, 30],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A closet under the tiers, grown shut. Whoever sang here kept spares."
   }
  ],
  "objective": "Climb the Loft. The conductor's lever is at the top",

@@ -36,17 +36,17 @@
   "##TssssssmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnDggggggggggggDnnnnnnR########",
   "##TssssssmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRnnnnnnR########",
   "##TssssssmmmmmmmmmmmmmTTmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRnnnnRR########",
-  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRRRRRRR########",
-  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRgggggggggggR###############",
-  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRRRRRRRRRRRRR###############",
-  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmRRnnnnnnnnnnnnnnnnnnnnRR############################",
-  "##TsssssssssssssssssssssssssssssRRRnnnnnnnnnnnnnnnnnnRRR############################",
+  "##TssssssmmmmmmmmmmmmmTTmmmmmmmmRnnnnnnnnnnnnnnnnnnnnnnRggggggggggggRRRRRnRR########",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnRRgggggggggggR###RnR#########",
+  "##TssssssmmmmTTmmTTmmmmmmmTTmmmmRnnnnnnnnnnnnnnnnnnnnnnnRRRRRRRRRRRRRRRRRnR#########",
+  "##TssssssmmmmmmmmmmmmmmmmmmmmmmmRRnnnnnnnnnnnnnnnnnnnnRnnnnnnnnnnnnnnnnnnnR#########",
+  "##TsssssssssssssssssssssssssssssRRRnnnnnnnnnnnnnnnnnnRRRRRRRRRRRRRRRRRRRRRR#########",
   "##TsssssssssssssssssssssssssssssRRRRnnnRRRnnnRRRnnnRRRRR############################",
   "##TsssssssssssssssssssssssssssssT###nnn###nnn###nnn#################################",
   "##TsssssssssssssssssssssssssssssT####n#####n#####n##################################",
-  "##TsssssssssssssssssssssssssssssT###################################################",
-  "##TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT###################################################",
-  "####################################################################################",
+  "##TsssssssssssssssssssssssssssssT####S##############################################",
+  "##TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT###nnn#############################################",
+  "####################################nnn#############################################",
   "####################################################################################",
   "####################################################################################",
   "####################################################################################",
@@ -90,9 +90,9 @@
   "...6666666666666666666666654321.....222...222...222.................................",
   "...6666666666666666666666654321.....222...222...222.................................",
   "...6666666666666666666666654321......2.....2.....2..................................",
-  "...6666666666666666666666654321.....................................................",
-  "....................................................................................",
-  "....................................................................................",
+  "...6666666666666666666666654321......2..............................................",
+  "....................................222.............................................",
+  "....................................222.............................................",
   "....................................................................................",
   "....................................................................................",
   "....................................................................................",
@@ -120,6 +120,15 @@
     [44, 11],
     [44, 10]
    ]
+  },
+  {
+   "id": "hull-pocket",
+   "panel": [37, 33],
+   "cells": [
+    [37, 34],
+    [37, 35]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -633,6 +642,16 @@
    "at": [26, 32]
   },
   {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [36, 35]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [37, 35]
+  },
+  {
    "type": "switch",
    "id": "valve",
    "at": [62, 17],
@@ -744,6 +763,13 @@
    "radius": 2.5,
    "speaker": "INES",
    "text": "Past that is the ship proper. Listen. It's breathing."
+  },
+  {
+   "id": "hull-pocket",
+   "at": [37, 34],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A pocket where the hull plating folded over. Somebody crawled in here to hide and left their kit."
   }
  ],
  "decals": [

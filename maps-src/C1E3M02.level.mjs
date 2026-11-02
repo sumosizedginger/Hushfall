@@ -67,6 +67,13 @@ ENC.dropIn({ at: [46,25], radius: 2, cells: ENC.around([46,25], { n: 3, min: 4, 
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'rib-cavity', search: { region: [3, 3, 74, 42], prefer: [21, 12], lane: laneOf('C1E3M02') }, open: 'shoot', rewards: ['H', 'e'], message: { speaker: 'INES', text: 'A hollow between two ribs, grown shut. It split when the ship flexed.' } });
+FUN.bypass({ from: [34, 19], to: [53, 19] });          // a passage along the north ribs: a loop round the middle chambers
+FUN.platform({ search: { region: [4, 22, 18, 34], lane: laneOf('C1E3M02') }, w: 5, d: 4 });          // a raised membrane floor in the first chamber
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -112,4 +119,5 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E3M02', lane: [...(laneOf('C1E3M02') ?? [])], keep: [], plan: [{"from":"gaunt","to":"bellhand","pick":"spread","n":1},{"from":"gaunt","to":"chorister","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

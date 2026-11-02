@@ -8,6 +8,7 @@
 // Scale class SET-PIECE (about a third roofed: the narthex, the galleries and the exit are under a roof; the nave, the balconies, the chapels and the apse are open to the sky). Look: choir, the ash sky, rib walls, silt and slate floors.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 
 const L = new Level(100, 60);
 const WALL = 'V';
@@ -65,6 +66,11 @@ S.hall([77, 26, 85, 32], { sides: { n: { w: 3, gap: 2, d: 1 }, s: { w: 3, gap: 2
 console.log('C1E3M04 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'nave-reliquary', search: { region: [3, 3, 96, 56], prefer: [69, 51], lane: laneOf('C1E3M04') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A sealed reliquary. Our things, kept like relics: boots, a coat, a box of shells.' } });
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -106,4 +112,5 @@ MAP.entities = [...(MAP.entities ?? []), ...S.dressing()];
 MAP.decals = [{ kind: 'ichorpool', at: [66, 29], size: 2.4 }, { kind: 'damp', at: [70, 25], size: 2 }, { kind: 'damp', at: [70, 33], size: 2 }, { kind: 'scorch', at: [44, 29], size: 2 }, { kind: 'bloodpool', at: [24, 27], size: 1.6 }, { kind: 'smear', at: [57, 29], size: 1.6 }, { kind: 'damp', at: [31, 10], size: 1.8 }];
 MAP.growth = [{ at: [70, 29], r: 26, power: 1.25 }];                                                        // the throne's growth reaches out across the nave
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
