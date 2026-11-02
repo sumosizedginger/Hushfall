@@ -7,6 +7,8 @@
 // SHAPE: a cathedral plan (narthex, nave with aisle arcades, transept, sanctuary, loft) and the causeway; the Drowned hold the water, the player holds the dry. Scale class SET-PIECE: the nave's roof is gone (the wreck fell
 // through it), so the whole cathedral but the narthex and the crypt lies open to the cave's own roof (sky_deep).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, box, ramp, placer } from '../tools/mapkit/c2.mjs';
 import { skinWalls } from '../tools/mapkit/cave.mjs';
 
@@ -70,8 +72,14 @@ for (const [x, z] of [[22, 62], [74, 62], [28, 40], [68, 40]]) E('gaunt', x, z);
 // ---- the waves: the Drowned rise out of the water (spawned in wading cells, awake) -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 const wave = (cells, group) => cells.map(([x, z]) => ({ spawn: { kind: 'tollbearer', variant: 'drowned', at: [x, z], group, facing: S } }));
 const rise = (z, xs) => xs.map((x) => [x, z]);
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'vestry', search: { region: [3, 3, 96, 100], prefer: [10, 51], lane: laneOf('C2M12') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A vestry the water never reached. Robes on hooks, a vest among them, and a mend in a tin.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M12', name: 'The Drowned Choir', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M12', name: 'The Drowned Choir', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'drowned', sky: 'deep', fog: '#0a1814', fogDensity: 0.016 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 44, shell: 20, rivet: 90, bolt: 10, cell: 60, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE DROWNED CHOIR', lines: ['A cathedral the sea took, and the water never left.', 'The choir is still in its stalls.'] },
@@ -112,10 +120,17 @@ const MAP = {
   quality: { enemies: [30, 110], botSeconds: [40, 900], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 6, enemyKinds: { tollbearer: 20, gill: 4, chorister: 4, bulwark: 2, gaunt: 3 },
     scaleClass: 'SET-PIECE', reason: 'the nave lost its roof when a hull came through it: the player crosses the open water on a causeway, with the Drowned in the stalls on both sides', introduces: 'the drowned: a flooded cathedral whose choir stalls hold a crowd of the earliest conversions, a dry causeway through them, and the arc lamp\'s bolt jumping through the water' },
 };
-MAP.drops = { scale: 1, keep: [] };
+MAP.drops = { scale: 1, keep: [[46, 52], [50, 52], [46, 24], [50, 24], [46, 64], [50, 64], [46, 44], [50, 44]] };          // PT-082: squeezed denser, the flare gate on Normal ran short (the flare's cap is 30): eight flare boxes on the causeway that the drops keep (three rounds each on Hard)
+MAP.entities.push(...[[46, 52], [50, 52], [46, 24], [50, 24], [46, 64], [50, 64], [46, 44], [50, 44]].map((at) => ({ type: 'pickup', kind: 'ammo_flare', at })));          // eight: an even count keeps the parity of every later id
 console.log('C2M12: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind !== 'vaelfolk').length, 'drowned placed', P.ents.filter((e) => e.variant === 'drowned').length);
 export const waypoints = {
   main: [[48, 98, 0], [48, 92, 0], [48, 84], [48, 76], [48, 66], [48, 56], [48, 46], [48, 36], [48, 30], [48, 26], [48, 22], [48, 18], [48, 15], [38, 13], { op: 'switch', id: 'rope' }, [48, 13], [48, 12, 0]],
-  secret: [[48, 98, 0], [48, 92, 0], [48, 84], [48, 76], [48, 66], [48, 56], [58, 54], [72, 52], [86, 52], { op: 'use', at: [89, 52] }, [93, 52, 0], [95, 52, 0]],
+  secret: [[48, 98, 0], [48, 92, 0], [48, 84], [48, 76], [48, 66], [48, 56], [20, 52], [10, 51, 0], { op: 'crack', at: [7, 51] }, [6, 51, 0], [10, 51, 0], [20, 52, 0], [48, 56, 0], [58, 54], [72, 52], [86, 52], { op: 'use', at: [89, 52] }, [93, 52, 0], [95, 52, 0]],
 };
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+// ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). A squeeze of 14 columns and 20 rows, where nothing stands and no stair runs (tools/dev/squeeze-map.mjs).
+// Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M12`). Kit calls and the lane file stay in the authoring frame.
+MAP.squeeze = [{axis:'x',cuts:[[3,4], [9,10], [14,15], [16,17], [23,24], [25,26], [29,30], [57,58], [69,71], [75,76], [79,80], [83,84], [87,88]]}, {axis:'z',cuts:[[3,5], [8,9], [18,19], [23,24], [31,32], [35,36], [45,46], [47,48], [57,58], [63,64], [67,68], [69,70], [75,76], [79,80], [83,84], [87,88], [93,94], [95,96], [99,100]]}];
+// ---- end PT-052 Level B squeeze ----
+
 export default MAP;

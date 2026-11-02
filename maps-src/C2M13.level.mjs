@@ -80,8 +80,14 @@ ENC.dropIn({ at: [7,43], radius: 2, cells: ENC.around([7,43], { n: 3, min: 6, ma
 ENC.dropIn({ at: [27,20], radius: 2, cells: ENC.around([27,20], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'niche', search: { region: [3, 3, 72, 72], prefer: [37, 70], lane: laneOf('C2M13') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A burial niche, empty and kept ready. Someone has been keeping a vest and a mend here, against the dark.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M13', name: 'Lantern Ossuary', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M13', name: 'Lantern Ossuary', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'ossuary', dark: true, fog: '#050408', fogDensity: 0.02 },
   lantern: { oil: 40, max: 90 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
@@ -125,7 +131,7 @@ const spiral = [polar(30.5, 90), polar(30.5, 110), polar(30.5, 130), polar(30.5,
 const around = [polar(30.5, 90), polar(30.5, 110), polar(30.5, 130), polar(30.5, 150), polar(30.5, 170), polar(30.5, 190), polar(30.5, 210), polar(30.5, 230), polar(30.5, 250), polar(30.5, 265)];
 export const waypoints = {
   main: [[38, 72, 0], [38, 68], ...spiral],
-  secret: [[38, 72, 0], [38, 68], ...around, [38, 7], { op: 'use', at: [38, 5] }, [38, 3, 0], [38, 8, 0], polar(30.5, 280), polar(30.5, 290), polar(26, 290), polar(20.5, 290), polar(20.5, 270), polar(20.5, 250), polar(16, 245), ...spiral.slice(11)],
+  secret: [[38, 72, 0], { op: 'crack', at: [34, 72] }, [33, 72, 0], [35, 72, 0], [38, 68], ...around, [38, 7], { op: 'use', at: [38, 5] }, [38, 3, 0], [38, 8, 0], polar(30.5, 280), polar(30.5, 290), polar(26, 290), polar(20.5, 290), polar(20.5, 270), polar(20.5, 250), polar(16, 245), ...spiral.slice(11)],
 };
 // ---- PT-057 (R9, weapon mods): the flare cannon phosphor, in the far corner of the ossuary, off the road ----
 MAP.entities ??= [];
@@ -138,4 +144,5 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "sealedhint": ["msg:winch"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

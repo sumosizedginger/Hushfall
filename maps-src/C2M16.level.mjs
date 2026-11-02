@@ -7,6 +7,8 @@
 // A seam in the guard hall's north wall hides the last cache. Drop-fed ammunition keeps its boxes (a boss map).
 // SHAPE: two blobs and a waist (the cave kit), a dais, pillars; no rectangle but the exit corridor. Scale class SET-PIECE (the lobes are open to the cave's roof: sky_deep; the boss needs the room it keeps).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, box, ellipse, placer, FLOORS } from '../tools/mapkit/c2.mjs';
 import { blob, finger, smooth, rng } from '../tools/mapkit/cave.mjs';
 
@@ -54,8 +56,14 @@ for (const [x, z] of [[8, 42], [14, 44], [22, 36], [22, 52], [34, 44], [44, 44],
 for (const [x, z] of [[10, 44], [30, 40], [48, 40], [64, 36], [78, 52]]) PK('armor_vest', x, z);
 for (const [x, z, k] of [[18, 44, 'ammo_rivet'], [28, 38, 'ammo_shell'], [28, 50, 'ammo_flare'], [46, 44, 'ammo_bolt'], [60, 44, 'ammo_rivet'], [66, 38, 'ammo_shell'], [66, 50, 'ammo_cell'], [76, 38, 'ammo_flare'], [76, 50, 'ammo_rivet'], [50, 44, 'ammo_cell'], [80, 44, 'ammo_bolt'], [42, 44, 'ammo_shell'], [14, 42, 'ammo_rivet'], [24, 44, 'ammo_rivet'], [56, 42, 'ammo_rivet'], [64, 44, 'ammo_rivet'], [84, 42, 'ammo_rivet']]) PK(k, x, z);
 PK('armor_vest', xn - 1, zn - 3); PK('health_large', xn + 1, zn - 3); PK('ammo_shell', xn - 1, zn - 2); PK('ammo_rivet', xn + 1, zn - 2); PK('ammo_flare', xn, zn - 3);
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'vent', search: { region: [3, 3, 50, 86], prefer: [22, 62], lane: laneOf('C2M16') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A dry vent behind the cracked rock, warm from the heart below. A vest and a mend, left by someone who meant to come back.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M16', name: 'Sounding Deep Heart', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M16', name: 'Sounding Deep Heart', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'heart', sky: 'deep', fog: '#1a0610', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 16, shell: 24, rivet: 100, bolt: 12, cell: 50, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'SOUNDING DEEP HEART', lines: ['The bottom of the Deep: a floor like skin, and over it the thing that the Song is kept in.', 'One conductor stands between you and the stair.'] },
@@ -93,6 +101,7 @@ MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };
 console.log('C2M16: enemies', P.ents.filter((e) => e.type === 'enemy').length, 'pillars', pillars.length, 'sec', SEC.cells.length, 'xn zn', xn, zn);
 export const waypoints = {
   main: [[6, 44, 0], [14, 44, 0], [20, 44], [26, 44], [32, 44], [40, 44], [48, 44], [56, 44], [60, 44], { op: 'killboss' }, [80, 44, 0], [86, 44, 0], [91, 44, 0]],
-  secret: [[6, 44, 0], [14, 44, 0], [20, 44], [xn, zn + 3], { op: 'use', at: [xn, zn - 1] }, [xn, zn - 3, 0], [xn, zn + 3, 0], [26, 44], [32, 44], [40, 44], [48, 44], [56, 44], [60, 44], { op: 'killboss' }, [80, 44, 0], [86, 44, 0], [91, 44, 0]],
+  secret: [[6, 44, 0], [14, 44, 0], [20, 44], [22, 53, 0], { op: 'crack', at: [23, 58] }, [23, 60, 0], [22, 53, 0], [20, 46, 0], [xn, zn + 3], { op: 'use', at: [xn, zn - 1] }, [xn, zn - 3, 0], [xn, zn + 3, 0], [26, 44], [32, 44], [40, 44], [48, 44], [56, 44], [60, 44], { op: 'killboss' }, [80, 44, 0], [86, 44, 0], [91, 44, 0]],
 };
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
