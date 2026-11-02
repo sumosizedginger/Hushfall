@@ -71,6 +71,14 @@ const ENC = new Encounters(L);
 ENC.cage({ at: [9,23], radius: 1.5, cells: ENC.around([9,23], { n: 3, min: 4, max: 8 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'kiln-flue', search: { region: [3, 3, 78, 42], prefer: [28, 11], lane: laneOf('C1E2M04') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A cold flue, sealed with fire brick. Somebody stored more than ash in it.' } });
+FUN.bypass({ from: [11, 21], to: [11, 18] });          // a cut through between the first kilns
+FUN.bypass({ from: [31, 23], to: [31, 27] });          // and one behind the middle row
+FUN.platform({ search: { region: [22, 18, 31, 26], lane: laneOf('C1E2M04') }, w: 5, d: 4 });          // a kiln top to stand on
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -137,4 +145,5 @@ MAP.entities.push(...[["ld_slag_scattergun",20,33],["ld_slag_rivet",22,33]].map(
 MAP.roster = { id: 'C1E2M04', lane: [...(laneOf('C1E2M04') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"sexton","pick":"range","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

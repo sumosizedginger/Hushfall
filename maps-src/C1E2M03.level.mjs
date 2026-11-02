@@ -81,6 +81,12 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'signal-hut', search: { region: [3, 3, 80, 36], prefer: [57, 34], lane: laneOf('C1E2M03') }, open: 'shoot', rewards: ['H', 'e'], message: { speaker: 'INES', text: 'A signal hut walled into the embankment. The levers still move.' } });
+FUN.platform({ search: { region: [52, 8, 61, 16], lane: laneOf('C1E2M03') }, w: 5, d: 4 });          // a loading dock to fight from
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -146,4 +152,5 @@ ENC.apply(MAP);
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane out of the start, before the first fight (the route bot died there at 18 s on Hard once the creatures had a brain). A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [9, 19] }, { type: 'pickup', kind: 'health_large', at: [13, 19] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

@@ -7,6 +7,7 @@
 // Open air vs roof: everything is `g f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 
 const L = new Level(66, 56);
 
@@ -49,6 +50,11 @@ S.chamfer([3, 26, 9, 32], 'nw ne sw se', 1);
 S.ledges([26, 8, 60, 46]); S.ledges([11, 24, 24, 34]); 
 console.log('C1E2M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
+
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'orderly-cupboard', search: { region: [3, 3, 62, 52], prefer: [47, 20], lane: laneOf('C1E2M08') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An orderly\'s cupboard, sealed from outside. Medicine, and nobody left to use it.' } });
+// ---- end PT-081 fun pass ----
 
 const layers = L.layers();
 
@@ -108,4 +114,5 @@ MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // the boss map k
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the places the clumsy strafing bot (Normal) and the route bot (Hard) died once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [46, 20] }, { type: 'pickup', kind: 'health_large', at: [46, 40] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

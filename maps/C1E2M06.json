@@ -13,11 +13,11 @@
  "grid": [
   "############################################################################",
   "############################################################################",
-  "############################################################################",
-  "############################################################################",
-  "#################g######g######g######g######g######g#######################",
-  "################ggg####ggg####ggg####ggg####ggg####ggg######################",
-  "############IIIIgggIIIIgggIIIIgggIIIIgggIIIIgggIIIIgggIIIII#################",
+  "###########################IIIIII###########################################",
+  "###########################IggggI###########################################",
+  "#################g######g##IgIIgI#####g######g######g#######################",
+  "################ggg####ggg#IgIggg####ggg####ggg####ggg######################",
+  "############IIIIgggIIIIgggIIgggggIIIIgggIIIIgggIIIIgggIIIII#################",
   "############IIIIggggggggggggggggggggggggggggggggggggggggIII#################",
   "############IIIggggggggggggggggggggggggggggggggggggggggggII#################",
   "#####LLLLLLLLIggggggggggKKKggggggggggggggggggggggggggggggggg################",
@@ -49,9 +49,9 @@
   "###########gggggggKKKKgggggggggggggKKgggKKKKgggggggggggggggg################",
   "############IgggggKKKKggggggggKKKKKgggggKKKKgggggggggIIgggI#################",
   "############IgggggKKKKggggggggKKKKKgggggKKKKgggggggggIIgggI#################",
-  "############IgggggKKKKggKKKgggKKKKKgggggKKKKggggggggggggggI#################",
-  "###########gggggggggggggKKKggggggggggggggggggggggggggggggggg################",
-  "###########gggggggggggggKKKggggggggggggggggggggggggggggggggg################",
+  "############IgggggKKKKggKKKgggKKKKKgggggKKKKggggggggggggggI##gg#############",
+  "###########gggggggggggggKKKgggggggggggggggggggggggggggggggggSgg#############",
+  "###########gggggggggggggKKKggggggggggggggggggggggggggggggggg#gg#############",
   "###########ggIggggggggggKKKggggggggggggggggggggggggggggggggg################",
   "############IIIggggggggggggggggggggggggggggggggggggggggggII#################",
   "############IIIIggggggggggggggggggggggggggggggggggggggggIII#################",
@@ -68,10 +68,10 @@
   "............................................................................",
   "............................................................................",
   "............................................................................",
-  "............................................................................",
-  ".................1......1......h......h......f......9.......................",
-  "................111....111....hhh....hhh....fff....999......................",
-  "................111....111....hhh....hhh....fff....999......................",
+  "............................hhhh............................................",
+  ".................1......1...g..h......h......f......9.......................",
+  "................111....111..g.hhh....hhh....fff....999......................",
+  "................111....111..gghhh....hhh....fff....999......................",
   "................11111111111.ggggggggggggggggfedcba98888888..................",
   "................11111111111.ggggggggggggggggfedcba98888888..................",
   "............................ggggggggggggggggfedcba9888888899................",
@@ -103,9 +103,9 @@
   "...........11........................................8888899................",
   ".....................................................88888..................",
   ".....................................................88888..................",
-  ".....................................................88888..................",
-  "...........11........................................8888899................",
-  "...........11...............ggggggggggggggggfedcba9888888899................",
+  ".....................................................88888...99.............",
+  "...........11........................................8888899999.............",
+  "...........11...............ggggggggggggggggfedcba9888888899.99.............",
   "...........11...............ggggggggggggggggfedcba9888888899................",
   "................11111111111.ggggggggggggggggfedcba98888888..................",
   "................11111111111.ggggggggggggggggfedcba98888888..................",
@@ -240,6 +240,15 @@
     [10, 12],
     [9, 12]
    ]
+  },
+  {
+   "id": "inspection-gallery",
+   "panel": [60, 39],
+   "cells": [
+    [61, 39],
+    [62, 39]
+   ],
+   "open": "shoot"
   }
  ],
  "sectors": [
@@ -825,6 +834,11 @@
    "at": [55, 38]
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [62, 39]
+  },
+  {
    "type": "prop",
    "kind": "lantern",
    "at": [15, 40]
@@ -844,6 +858,11 @@
    "type": "prop",
    "kind": "lamp",
    "at": [36, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [62, 40]
   },
   {
    "type": "pickup",
@@ -1178,6 +1197,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "The hatch leads under the Works: the Slurry Undercroft. It's dark down there, and it's where everything drains to."
+  },
+  {
+   "id": "inspection-gallery",
+   "at": [61, 39],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "An inspection gallery behind the pumps, bricked up after the floods. Dry in here, at least."
   }
  ],
  "decals": [

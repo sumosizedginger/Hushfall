@@ -25,6 +25,7 @@ export const SPECTRA = {
 export const VOICES = {
   cello: { att: 0.12, rel: 0.35, bus: 'clean' }, harmonium: { att: 0.35, rel: 0.9, bus: 'clean', trem: 0.05 }, choir: { att: 0.25, rel: 0.3, bus: 'clean' },
   brass: { att: 0.03, rel: 0.1, bus: 'drive' }, bass: { att: 0.004, rel: 0.05, bus: 'drive' }, chordBrass: { att: 0.06, rel: 0.12, bus: 'drive', spectrum: 'brass' },
+  horn: { att: 0.16, rel: 0.45, bus: 'clean', spectrum: 'brass' },                                     // a band's horn, played soft: the calm voice of the works
 };
 export const DRUMS = ['kick', 'snare', 'hat', 'tomH', 'tomL', 'anvil', 'crash', 'boom', 'bell'];
 
@@ -61,12 +62,36 @@ export const THEMES = {
       bell: 'D2', killBell: 'A2', clear: ['D2', 'A2', 'D3', 'F3', 'A3'],
     },
   },
+  // THE WORKS (Campaign 1, Episode 2: the salt pans, the kilns, the rail yard, the pumps): a colliery band's slow chorale in E minor on soft horns over the organ, an anvil keeping time on two and
+  // four. Battle: the same tune twice as fast in E Phrygian (F sharp becomes F), on brass, the bass walking down to a B major turn.
+  works: {
+    name: 'works',
+    calm: {
+      bpm: 66, meter: 4, bell: null, voices: { mel: 'horn', pad: 'harmonium', melGain: 0.11 }, tick: { voice: 'anvil', beats: [1, 3], gain: 0.025, pan: 0.45 },
+      phrases: [
+        { mel: [['E3', 2], ['G3', 1], ['A3', 1], ['B3', 2], ['A3', 1], ['G3', 1], ['A3', 1], ['G3', 1], ['F#3', 1], ['D3', 1], ['E3', 4]],
+          chords: [['E2', 'E3', 'G3', 'B3'], ['G2', 'G3', 'B3', 'D4'], ['D2', 'D3', 'F#3', 'A3'], ['E2', 'E3', 'G3', 'B3']] },
+        { mel: [['G3', 1], ['A3', 1], ['B3', 2], ['D4', 2], ['C4', 1], ['B3', 1], ['A3', 2], ['G3', 1], ['F#3', 1], ['E3', 4]],
+          chords: [['G2', 'G3', 'B3', 'D4'], ['C2', 'C3', 'E3', 'G3'], ['D2', 'D3', 'F#3', 'A3'], ['E2', 'E3', 'G3', 'B3']] },
+      ],
+      rest: 2,
+    },
+    battle: {
+      bpm: 132, meter: 4,
+      roots: ['E2', 'E2', 'C2', 'D2', 'E2', 'A1', 'B1', 'E2'],
+      chords: { E2: ['E3', 'G3', 'B3'], C2: ['C3', 'E3', 'G3'], D2: ['D3', 'F3', 'A3'], A1: ['A2', 'C3', 'E3'], B1: ['B2', 'D#3', 'F#3'] },
+      lead: [[['E4', 2], ['G4', 1], ['A4', 1]], [['B4', 2], ['A4', 1], ['G4', 1]], [['A4', 1], ['G4', 1], ['F4', 1], ['D4', 1]], [['E4', 4]],
+        [['G4', 1], ['A4', 1], ['B4', 2]], [['D5', 2], ['C5', 1], ['B4', 1]], [['A4', 2], ['G4', 1], ['F4', 1]], [['E4', 4]]],
+      bell: 'E2', killBell: 'B1', ringBell: 'E3', clear: ['E2', 'B2', 'E3', 'G3', 'B3'],
+    },
+  },
 };
 
 /** which theme a map plays (null = the older generative score, until that place has its own theme) */
 export function themeFor(mapId, map) {
   const named = map?.atmosphere?.music; if (named !== undefined) return named && THEMES[named] ? named : null;
   if (/^C1E1/.test(mapId ?? '')) return 'harbour';
+  if (/^C1E2/.test(mapId ?? '')) return 'works';
   return null;
 }
 /** the seconds a beat lasts in a section */
@@ -74,10 +99,11 @@ export const beatSeconds = (section) => 60 / section.bpm;
 
 /** CALM: every event of phrase `i` (beats from the phrase's start) and the phrase's length in beats */
 export function calmPhrase(theme, i) {
-  const C = THEMES[theme].calm, P = C.phrases[i % C.phrases.length], ev = [{ at: 0, voice: 'bell', f: NOTE(C.bell), gain: 0.07, pan: -0.5 }];
-  P.chords.forEach((ch, b) => ch.forEach((n, j) => ev.push({ at: b * C.meter, dur: C.meter + 0.05, voice: 'harmonium', f: NOTE(n), gain: j === 0 ? 0.05 : 0.032, pan: [0, -0.35, 0.1, 0.35][j] })));
+  const C = THEMES[theme].calm, P = C.phrases[i % C.phrases.length], V = { mel: 'cello', pad: 'harmonium', melGain: 0.13, ...C.voices }, ev = C.bell ? [{ at: 0, voice: 'bell', f: NOTE(C.bell), gain: 0.07, pan: -0.5 }] : [];
+  P.chords.forEach((ch, b) => ch.forEach((n, j) => ev.push({ at: b * C.meter, dur: C.meter + 0.05, voice: V.pad, f: NOTE(n), gain: j === 0 ? 0.05 : 0.032, pan: [0, -0.35, 0.1, 0.35][j] })));
+  if (C.tick) for (let b = 0; b < P.chords.length * C.meter; b++) if (C.tick.beats.includes(b % C.meter)) ev.push({ at: b, voice: C.tick.voice, gain: C.tick.gain, pan: C.tick.pan ?? 0.4 });          // the works keep time: an anvil on two and four
   let t = 0, prev = 0;
-  for (const [n, b] of P.mel) { const f = NOTE(n); ev.push({ at: t, dur: b - 0.02, voice: 'cello', f, gain: 0.13, pan: 0.15, vib: 16, glide: prev }); prev = f; t += b; }
+  for (const [n, b] of P.mel) { const f = NOTE(n); ev.push({ at: t, dur: b - 0.02, voice: V.mel, f, gain: V.melGain, pan: 0.15, vib: 16, glide: prev }); prev = f; t += b; }
   return { events: ev, beats: P.chords.length * C.meter + C.rest };
 }
 
@@ -112,7 +138,7 @@ export function battleBar(theme, bar, level, prevF = 0) {
     if (level === 3) ev.push({ at: t, dur: b - 0.06, voice: 'brass', f: f * 2, gain: 0.04, pan: 0.3, vib: 12 });
     last = f; t += b;
   }
-  if (level === 3) { B.chords[root].forEach((n, j) => ev.push({ at: 0, dur: B.meter, voice: 'choir', f: NOTE(n) * 2, gain: 0.03, pan: [-0.7, 0, 0.7][j], vib: 20 })); ev.push({ at: 0, voice: 'bell', f: NOTE('D3'), gain: 0.12, pan: -0.4 }); }
+  if (level === 3) { B.chords[root].forEach((n, j) => ev.push({ at: 0, dur: B.meter, voice: 'choir', f: NOTE(n) * 2, gain: 0.03, pan: [-0.7, 0, 0.7][j], vib: 20 })); ev.push({ at: 0, voice: 'bell', f: NOTE(B.ringBell ?? 'D3'), gain: 0.12, pan: -0.4 }); }
   return { events: ev, lastF: last };
 }
 
@@ -123,7 +149,7 @@ export function stinger(theme, kind) {
   if (kind === 'up2') return [{ at: 0, voice: 'crash', gain: 0.2, pan: 0.3 }];
   if (kind === 'up3') return [{ at: 0, voice: 'crash', gain: 0.2, pan: 0.3 }, { at: 0, voice: 'boom', gain: 0.45 }, { at: 0, voice: 'bell', f: NOTE(B.bell), gain: 0.3, pan: 0.2 }];
   if (kind === 'kill') return [{ at: 0, voice: 'bell', f: NOTE(B.killBell), gain: 0.4, pan: -0.2 }, { at: 0, voice: 'crash', gain: 0.18, pan: -0.3 }];
-  if (kind === 'clear') return [{ at: 0, voice: 'bell', f: NOTE('D3'), gain: 0.3 }, { at: 0, voice: 'kick', gain: 0.6 }, { at: 0, voice: 'crash', gain: 0.18, pan: -0.2 },
+  if (kind === 'clear') return [{ at: 0, voice: 'bell', f: NOTE(B.ringBell ?? 'D3'), gain: 0.3 }, { at: 0, voice: 'kick', gain: 0.6 }, { at: 0, voice: 'crash', gain: 0.18, pan: -0.2 },
     ...B.clear.map((n, j) => ({ at: 0, dur: 3.4, voice: 'chordBrass', f: NOTE(n), gain: j ? 0.04 : 0.07, pan: [0, -0.4, 0.4, -0.2, 0.2][j], rel: 1.8 }))];
   throw new Error('no stinger ' + kind);
 }

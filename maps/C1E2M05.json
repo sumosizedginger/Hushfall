@@ -23,10 +23,10 @@
   "########################################################################",
   "########################################################################",
   "########################################################################",
-  "###############RRRRRRR##################################################",
-  "###############RfffffR##################################################",
-  "###############RfffffR#######################YYYYYYYYYYYYYYYYYYY########",
-  "#############g#RfffffR####f###f######g####g##YYYfffffffffffffYYY########",
+  "###############RRRRRRR############################YYYYYYYYYYYYYY########",
+  "###############RfffffR###########################YYffffffffffffY########",
+  "###############RfffffR#######################YYYYYffYYYYYYYYYYfY########",
+  "#############g#RfffffR####f###f######g####g##YYYfffffffffffffffY########",
   "##########RRgggRRRSRRRRRRRXRRRXRRRRRgggRRgggRYYfffffffffffffffYY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
@@ -43,10 +43,10 @@
   "##########RggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##########RRgggRRgggRRRRgggRgggRRRRRgggRRgggRYYfffffffffffffffYY########",
   "#############g####g######g###g#######g####g##YYYfffffffffffffYYY########",
-  "#############################################YYYYYYYYYYYYYYYYYYY########",
-  "########################################################################",
-  "########################################################################",
-  "########################################################################",
+  "#############################################YYYYYYYYSYYYYYYYYYY########",
+  "###################################################YfffY################",
+  "###################################################YfffY################",
+  "###################################################YYYYY################",
   "########################################################################",
   "########################################################################",
   "########################################################################",
@@ -74,6 +74,15 @@
     [18, 13],
     [18, 12]
    ]
+  },
+  {
+   "id": "linen-store",
+   "panel": [53, 31],
+   "cells": [
+    [53, 32],
+    [53, 33]
+   ],
+   "open": "shoot"
   }
  ],
  "closets": [
@@ -709,6 +718,16 @@
    "at": [42, 30]
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [52, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [53, 33]
+  },
+  {
    "type": "exit",
    "at": [61, 28],
    "locked": true,
@@ -855,6 +874,13 @@
    "radius": 1.5,
    "speaker": "VAEL INSTRUMENT",
    "text": "A Vael tuning-fork, still humming, left on the rail. Hold it up and things lean toward you; the crates in this hall will come with them."
+  },
+  {
+   "id": "linen-store",
+   "at": [53, 32],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The annex linen store. Whoever sealed it was not keeping things out."
   }
  ],
  "growth": [

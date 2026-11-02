@@ -94,6 +94,12 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'salt-office', search: { region: [3, 3, 80, 48], prefer: [38, 29], lane: laneOf('C1E2M02') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'The salt clerk\'s office. They bricked the door when the pans went quiet.' } });
+FUN.platform({ search: { region: [24, 4, 58, 24], prefer: [38, 13], lane: laneOf('C1E2M02') }, w: 4, d: 3 });          // a raking stage above the pans
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -167,4 +173,5 @@ MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at:
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, 5 to 10 cells before the place the clumsy strafing bot died on Normal once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [46, 25] }, { type: 'pickup', kind: 'health_large', at: [50, 25] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

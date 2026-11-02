@@ -67,6 +67,12 @@ const ENC = new Encounters(L);
 ENC.cage({ at: [54,25], radius: 1.5, cells: ENC.around([54,25], { n: 3, min: 4, max: 8 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'inspection-gallery', search: { region: [3, 3, 72, 48], prefer: [63, 39], lane: laneOf('C1E2M06') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An inspection gallery behind the pumps, bricked up after the floods. Dry in here, at least.' } });
+FUN.bypass({ from: [29, 7], to: [31, 4] });          // a shortcut: the route walks 134 cells between its ends
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -128,4 +134,5 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E2M06', lane: [...(laneOf('C1E2M06') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"gill","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

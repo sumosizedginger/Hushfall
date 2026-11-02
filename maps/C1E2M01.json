@@ -19,9 +19,9 @@
   "############################################################################",
   "############################################################################",
   "############################################################################",
-  "############################################################################",
-  "############################################################################",
-  "##########LLLLlllLLLlllLLLlllLLLlllLLLlllLLLLL##############################",
+  "################################################fff#########################",
+  "################################################fff#########################",
+  "##########LLLLlllLLLlllLLLlllLLLlllLLLlllLLLLL###S##########################",
   "##########LmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL###f#####f#####f##############",
   "##########lmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmLLL##fff###fff###fff#############",
   "##########lllmmmlKKKKKKDKKKKlllllllllllllllLLLLLfffLLLfffLLLfffLLL##########",
@@ -32,14 +32,14 @@
   "##KKKKKKKKKllmmmlKKKKKKDKKKKlllllllllllllllLLLfffffffffffffffffffRRRRRRRRRR#",
   "##K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
   "##K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
-  "##K.......KsspppsssssssssssssssssssssssssssLLLfffffffffffffffffffRffffffffR#",
-  "##K.......DsspppssssssssssssssssssssssssssssDffffffffffffffffffffDffffffffR#",
-  "##K.......KsspppsssssssssssssssssssssssssssLLLfffffffffffffffffffRffffffffR#",
-  "##K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
-  "##K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
-  "##KKKKKKKKKllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRRRRRRRRRR#",
-  "##########LllmmmlKKKKDKKKKKKKKlllllllllllllLLLfffffffffffffffffffL##########",
-  "##########LllmmmlKfffffffKfffKlllllllllllllLLLfffffffffffffffffffL##########",
+  "KKK.......KsspppsssssssssssssssssssssssssssLLLfffffffffffffffffffRffffffffR#",
+  "K.........DsspppssssssssssssssssssssssssssssDffffffffffffffffffffDffffffffR#",
+  "K.K.......KsspppsssssssssssssssssssssssssssLLLfffffffffffffffffffRffffffffR#",
+  "K.K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
+  "K.K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
+  "K.KKKKKKKK.llmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRRRRRRRRRR#",
+  "K..........llmmmlKKKKDKKKKKKKKlllllllllllllLLLfffffffffffffffffffL##########",
+  "KKKKKKKKKKKllmmmlKfffffffKfffKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKfffffffSfffKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########lllmmmlKfffffffKfffKlllllllllllllLLLLLfffLLLfffLLLfffLLL##########",
   "##########lllmmmlKKKKKKKKKKKKKlllllllllllllLLL##fff###fff###fff#############",
@@ -61,9 +61,9 @@
   "............................................................................",
   "............................................................................",
   "............................................................................",
-  "............................................................................",
-  "............................................................................",
-  "..............111...111...111...111...111...................................",
+  "................................................111.........................",
+  "................................................111.........................",
+  "..............111...111...111...111...111........1..........................",
   ".................................................1.....1.....1..............",
   "..........1.....................................111...111...111.............",
   "..........1.....................................111...111...111.............",
@@ -208,6 +208,15 @@
     [27, 29],
     [28, 29]
    ]
+  },
+  {
+   "id": "brine-locker",
+   "panel": [49, 10],
+   "cells": [
+    [49, 9],
+    [49, 8]
+   ],
+   "open": "shoot"
   }
  ],
  "closets": [
@@ -241,6 +250,16 @@
   }
  ],
  "entities": [
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [49, 8]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [50, 8]
+  },
   {
    "type": "pickup",
    "kind": "health_large",
@@ -1136,6 +1155,13 @@
    "radius": 2.5,
    "speaker": "SIGNAL HOUSE",
    "text": "That's the way into the Works. After it, the Evaporation Pans: open flats and channels, and not a roof for a kilometre."
+  },
+  {
+   "id": "brine-locker",
+   "at": [49, 9],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A gatekeeper's locker, plastered over. The tide tables are still pinned up inside."
   }
  ],
  "decals": [

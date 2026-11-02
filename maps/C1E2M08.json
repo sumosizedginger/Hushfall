@@ -34,9 +34,9 @@
   "########################fffffffffffffffffffffffffffffffffffffff###",
   "#########################YffffIIIIIfffffffffffffffffIIIIIffffY####",
   "#########################YffffIIIIIfffffffffffffffffIIIIIffffY####",
-  "#########################YffffIIIIIffffffIIIIIffffffIIIIIffffY####",
-  "##########RRRgggRRRgggRRRYffffIIIIIffffffIIIIIffffffIIIIIffffff###",
-  "##########RRggggggggggggYYffffIIIIIffffffIIIIIffffffIIIIIfffffff##",
+  "#########################YffffIIIIIffffffIISIIffffffIIIIIffffY####",
+  "##########RRRgggRRRgggRRRYffffIIIIIffffffIfffIffffffIIIIIffffff###",
+  "##########RRggggggggggggYYffffIIIIIffffffIfffIffffffIIIIIfffffff##",
   "##KKKKKKKKRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffff###",
   "##KffffffRRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
   "##KfffffffRggggggggggggggYfffffffffffffffIIIIIfffffffffffffffY####",
@@ -202,6 +202,15 @@
     [18, 37],
     [18, 38]
    ]
+  },
+  {
+   "id": "orderly-cupboard",
+   "panel": [43, 22],
+   "cells": [
+    [43, 23],
+    [43, 24]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -456,6 +465,16 @@
    "type": "pickup",
    "kind": "ammo_shell",
    "at": [38, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [42, 24]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [43, 24]
   },
   {
    "type": "pickup",
@@ -1326,6 +1345,13 @@
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The line is broken, Calder. The set is reading something large down in a crater east of the Works."
+  },
+  {
+   "id": "orderly-cupboard",
+   "at": [43, 23],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "An orderly's cupboard, sealed from outside. Medicine, and nobody left to use it."
   }
  ],
  "decals": [

@@ -106,6 +106,48 @@ export class Encounters {
     if (message) this.messages.push({ id: name, at: cells[0], radius: 1, ...message }); this.log.push({ kind: 'reinforce', id: name, creatures: cells.length }); return { group: name };
   }
   /** append everything to the map definition (call after MAP is built; the dark's restore level is the map's own ambient light) */
+  /** PT-081 (design/FUN_CHECK.md, standard 4: height in the fights): a raised PLATFORM, the auction-block pattern: a w x d block of floor raised `up` half-metres with a ring of half-height steps on two
+   *  opposite sides (axis 'x': west and east; 'z': north and south) and a drop on the others. Found by search like a secret room: the block, its steps and a ring round them are floor of one height under the
+   *  map's own ceiling, the block and its steps hold nothing and are off the lane. Returns the block's rect. */
+  platform({ search, w = 5, d = 4, up = 2, axis = 'x' }) {
+    const L = this.L, { region: [x0, z0, x1, z1], prefer = [(x0 + x1) / 2, (z0 + z1) / 2], lane = null } = search, sx = axis === 'x' ? 1 : 0, sz = 1 - sx;
+    let best = null;
+    for (let z = z0; z <= z1 - d + 1; z++) for (let x = x0; x <= x1 - w + 1; x++) {
+      const h0 = L.ht[z]?.[x]; let ok = true;
+      for (let zz = z - 1 - sz; zz <= z + d + sz && ok; zz++) for (let xx = x - 1 - sx; xx <= x + w + sx && ok; xx++) {
+        if (!FLOOR.has(L.get(xx, zz)) || L.ht[zz]?.[xx] !== h0 || (L.ce && L.ce[zz][xx] !== '.')) { ok = false; break; }
+        const inner = xx >= x - sx && xx <= x + w - 1 + sx && zz >= z - sz && zz <= z + d - 1 + sz;
+        if (inner && (L.ob[zz][xx] !== '.' || lane?.has(xx + ',' + zz))) ok = false;
+      }
+      if (!ok) continue;
+      const dd = Math.hypot(x + w / 2 - prefer[0], z + d / 2 - prefer[1]); if (!best || dd < best.d) best = { x, z, d: dd };
+    }
+    if (!best) throw new Error(`platform: no ${w}x${d} spot in ${search.region}`);
+    const { x, z } = best, h0 = L.ht[z][x], half = h0 + Math.round(up / 2);
+    L.height([x, z, x + w - 1, z + d - 1], h0 + up);
+    if (sx) { L.height([x - 1, z, x - 1, z + d - 1], half); L.height([x + w, z, x + w, z + d - 1], half); } else { L.height([x, z - 1, x + w - 1, z - 1], half); L.height([x, z + d, x + w - 1, z + d], half); }
+    this.log.push({ kind: 'platform', rect: [x, z, x + w - 1, z + d - 1] }); return [x, z, x + w - 1, z + d - 1];
+  }
+  /** PT-081 (standard 2: a loop; standard 1: no mirror): a BYPASS, a corridor carved through SOLID from beside floor cell `from` to beside floor cell `to`, never touching any other floor, a door, a panel or a
+   *  closet on the way (it stays a corridor of its own), the shortest such (breadth first), at least `minLen` cells, its floor ramped from one end's height to the other's (half a metre a cell at most). */
+  bypass({ from, to, floor = null, wall = null, minLen = 4 }) {
+    const L = this.L, key = (x, z) => x + ',' + z, D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]], bad = (c) => FLOOR.has(c) || 'DSX'.includes(c);
+    const solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && !bad(L.get(x, z));
+    const nearEnd = (x, z) => Math.max(Math.abs(x - from[0]), Math.abs(z - from[1])) <= 1 || Math.max(Math.abs(x - to[0]), Math.abs(z - to[1])) <= 1;
+    const carvable = (x, z) => { if (!solid(x, z)) return false; const end = nearEnd(x, z); for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dz) continue; const c = L.get(x + dx, z + dz); if ('DSX'.includes(c) || (!end && FLOOR.has(c))) return false; } return true; };          // never beside a door, a panel or a closet, even at its ends
+    const goal = new Set(D4.map(([dx, dz]) => key(to[0] + dx, to[1] + dz))), prev = new Map(), q = [];
+    for (const [dx, dz] of D4) { const s = [from[0] + dx, from[1] + dz]; if (carvable(...s)) { prev.set(key(...s), null); q.push(s); } }
+    let end = null;
+    for (let i = 0; i < q.length; i++) { const [x, z] = q[i]; if (goal.has(key(x, z))) { end = [x, z]; break; } for (const [dx, dz] of D4) { const n = [x + dx, z + dz], k = key(...n); if (!prev.has(k) && carvable(...n)) { prev.set(k, [x, z]); q.push(n); } } }
+    if (!end) throw new Error(`bypass: no way through solid from ${from} to ${to}`);
+    const cells = []; for (let c = end; c; c = prev.get(key(...c))) cells.unshift(c);
+    if (cells.length < minLen) throw new Error(`bypass: ${from} to ${to} is only ${cells.length} cells`);
+    const hA = L.ht[from[1]][from[0]], hB = L.ht[to[1]][to[0]], n = cells.length;
+    if (Math.abs(hB - hA) > n + 1) throw new Error(`bypass: ${n} cells cannot climb ${Math.abs(hB - hA) / 2} m`);
+    const fl = floor ?? L.get(from[0], from[1]), wl = wall ?? L.get(cells[0][0], cells[0][1]);          // the corridor wears the wall it was cut through
+    cells.forEach(([x, z], i) => { L.room([x, z, x, z], { floor: fl, wall: wl }); const h = Math.round(hA + (hB - hA) * (i + 1) / (n + 1)); if (h) L.height([x, z, x, z], h); });
+    this.log.push({ kind: 'bypass', from, to, cells: n }); return cells;
+  }
   apply(MAP) {
     const amb = MAP.atmosphere?.ambient ?? 1;
     MAP.groups = [...(MAP.groups ?? []), ...this.groups];

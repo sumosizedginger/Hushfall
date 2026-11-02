@@ -97,6 +97,12 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'brine-locker', search: { region: [3, 3, 72, 36], prefer: [50, 10], lane: laneOf('C1E2M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A gatekeeper\'s locker, plastered over. The tide tables are still pinned up inside.' } });
+FUN.bypass({ from: [3, 22], to: [11, 26] });          // a way round the gatehouse: the route walks 64 cells between its ends
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -152,4 +158,5 @@ ENC.apply(MAP);
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the clumsy strafing bot died on Normal once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [24, 26] }, { type: 'pickup', kind: 'health_large', at: [30, 25] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

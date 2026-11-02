@@ -60,6 +60,11 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'drainers-cache', search: { region: [3, 3, 64, 44], prefer: [60, 40], lane: laneOf('C1E2M07') }, open: 'shoot', rewards: ['v', 'e'], message: { speaker: 'INES', text: 'A drainers\' cache under the walkway. Their own spares, not the company\'s.' } });
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -119,4 +124,5 @@ MAP.drops = { scale: 1 };
 MAP.roster = { id: 'C1E2M07', lane: [...(laneOf('C1E2M07') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"bellhand","pick":"spread","n":2},{"from":"tollbearer","to":"gill","pick":"spread","n":1},{"from":"tollbearer","to":"gaunt","pick":"spread","n":1}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

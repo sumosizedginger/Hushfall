@@ -53,6 +53,12 @@ const ENC = new Encounters(L);
 ENC.cage({ at: [44,22], radius: 1.5, cells: ENC.around([44,22], { n: 3, min: 4, max: 8 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'linen-store', search: { region: [3, 3, 68, 40], prefer: [53, 28], lane: laneOf('C1E2M05') }, open: 'shoot', rewards: ['H', 'r'], message: { speaker: 'INES', text: 'The annex linen store. Whoever sealed it was not keeping things out.' } });
+FUN.bypass({ from: [50, 14], to: [61, 15] });          // a service passage: a flank round the last ward
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -109,4 +115,5 @@ ENC.apply(MAP);
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the clumsy strafing bot died on Normal once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [22, 22] }, { type: 'pickup', kind: 'health_large', at: [34, 22] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

@@ -40,9 +40,9 @@
   "#K.......KsssssssssssssspppppssssssKfffffffffKsssssspppppsssssLffffffffLL###########",
   "#K.......KllllllllllllllmmmmmllllllKfffffffffKllllllmmmmmlllllLffffffffLL###########",
   "#K.......KllllllllllllllmmmmmllllllKfffffffffKKKKKKlmmmmmlllllLffffffffLL###########",
-  "#K.......KllllllllllllllmmmmmllllllKfffffffffKKKKKKlmmmmmlllllLffffffffLL###########",
-  "#KKKKKKKKKllllllllllllllmmmmmllllllKKKKKKKKKKKKKKKKlmmmmmlllllLffffffffLL###########",
-  "#########LllllllllllllllmmmmmlllllllllllllllllKKKKKlmmmmmlllllLLLLLLLLLLL###########",
+  "#K.......KllllllllllllllmmmmmllllllKfffffffffKKlllKlmmmmmlllllLffffffffLL###########",
+  "#KKKKKKKKKllllllllllllllmmmmmllllllKKKKKKKKKKKKlllKlmmmmmlllllLffffffffLL###########",
+  "#########LllllllllllllllmmmmmlllllllllllllllllKKSKKlmmmmmlllllLLLLLLLLLLL###########",
   "#########LllllllllllllllmmmmmlllllllllllllllllllllllmmmmmlllllllllllllllL###########",
   "#########LllllllllllllllmmmmmlllllllllllllllllllllllmmmmmlllllllllllllllL###########",
   "#########lllllllllllllllmmmmmlllllllllllllllllllllllmmmmmllllllllllllllll###########",
@@ -74,9 +74,9 @@
   "....................................................................................",
   "....................................................................................",
   ".........1..............................................................1...........",
-  ".........1..............................................................1...........",
-  ".........1..............................................................1...........",
-  "....................................................................................",
+  ".........1............................122221............................1...........",
+  ".........1............................122221............................1...........",
+  "......................................122221........................................",
   "....................................................................................",
   "....................................................................................",
   ".........1..............................................................1...........",
@@ -196,6 +196,15 @@
     [47, 22],
     [48, 22]
    ]
+  },
+  {
+   "id": "salt-office",
+   "panel": [48, 31],
+   "cells": [
+    [48, 30],
+    [48, 29]
+   ],
+   "open": "shoot"
   }
  ],
  "triggers": [
@@ -1016,6 +1025,16 @@
    "group": "cradlehall"
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [48, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [49, 29]
+  },
+  {
    "type": "prop",
    "kind": "barrel",
    "at": [61, 29]
@@ -1598,6 +1617,13 @@
    "radius": 2.5,
    "speaker": "INES",
    "text": "Rails of cradles, all the way down. The hatch is under the last one."
+  },
+  {
+   "id": "salt-office",
+   "at": [48, 30],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The salt clerk's office. They bricked the door when the pans went quiet."
   }
  ],
  "decals": [

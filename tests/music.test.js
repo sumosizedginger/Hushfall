@@ -105,3 +105,15 @@ test('the real audio engine drives the real music on Marrow Quay without throwin
   assert.equal(a.musicFailed, undefined); assert.equal(a.music.mode, 'battle'); assert.ok(a.intensity.level >= 2, 'four after you at arm\'s length is a fight: ' + a.intensity.level);
   a.newLevel(); assert.equal(a.music.mode, 'calm');
 });
+
+test('every theme: its calm phrases fill their bars, every battle bar of the tune is one bar long, every event is finite, and the real player plays it against a strict context', () => {
+  for (const [name, T] of Object.entries(THEMES)) {
+    T.calm.phrases.forEach((P, i) => { assert.equal(P.mel.reduce((s, [, b]) => s + b, 0), P.chords.length * T.calm.meter, `${name} calm phrase ${i}`); assert.ok(calmPhrase(name, i).events.every((e) => Number.isFinite(e.at) && Number.isFinite(e.gain) && (e.f === undefined || e.f > 20)), name); });
+    assert.ok(T.battle.lead.every((bar) => bar.reduce((s, [, b]) => s + b, 0) === T.battle.meter), name + ' battle bars');
+    for (const r of T.battle.roots) assert.ok(T.battle.chords[r], `${name}: a chord for ${r}`);
+    const ctx = strictCtx(), m = new Music(ctx, { connect() {} }); m.setTheme(name);
+    for (let t = 0; t < 40; t = +(t + 0.05).toFixed(2)) { ctx.currentTime = t; m.setLevel(t < 6 ? 0 : t < 12 ? 2 : t < 24 ? 3 : 0); m.tick(); }
+    assert.equal(m.mode, 'calm', name + ': back to calm'); assert.ok(ctx.log.starts.length > 100, name + ' played');
+  }
+  assert.equal(themeFor('C1E2M05'), 'works');
+});
