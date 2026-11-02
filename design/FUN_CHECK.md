@@ -183,6 +183,20 @@ What the best old-school shooters and their modern heirs share, in level terms:
 
 Every step ends with the owner's play. Any change to `src`, `maps` or `assets` stales the real-game evidence, so the single regeneration waits for F10 (and a named yes); bakes and browser jobs need a named yes.
 
+## 8. AS BUILT (updated as the work goes)
+
+The owner's answers (2026-11-01): old-school shooters are the bar; redraw the twelve and keep 68; "You are in charge, start where you will, but make sure it is fun, the music fits, and that covers everything needed to make it something you would be proud of."
+
+| Step | State |
+|--|--|
+| Smart music (`src/audio/score.js`, `intensity.js`, `music.js`) | BUILT; the harbour theme plays on Episode 1; every other place keeps the generative score until its theme is written. Not heard by anyone |
+| Teal bell swing | BUILT (Tollbearer, Bellhand) |
+| Secret kinds: cracked wall, lever | BUILT (engine, kit, bot op `crack`, secret routes) |
+| Episode 1: two secrets of two kinds on every map | DONE (c4028ac) |
+| Episode 1: ambushes in the two long empty walks | DONE (Customs Hall, the Chandlery) |
+| Episode 1: Fishmarket's grid, Marrow Quay's pier, shortcuts, the landmark lamp | NEXT |
+| The standard as audit numbers and a ratchet | after Episode 1 |
+
 ## 7. Decisions for the owner
 
 1. Is this standard the bar? (Default: yes.)
