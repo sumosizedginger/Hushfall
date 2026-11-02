@@ -29,7 +29,7 @@ L.room([4, 27, 5, 44], { floor: 's', wall: 'B' }); L.room([6, 43, 7, 44], { floo
 
 // ---- objects -------------------------------------------------------------------------------------------------------------
 L.put(4, 24, '@');
-L.putAll('g', [[4, 32], [5, 39]]); L.put(4, 36, 'h'); L.put(5, 41, 'r');                                // PT-081: the alley's two Gaunts and what they were guarding
+L.put(4, 32, 'g'); L.put(5, 39, 'b'); L.put(4, 36, 'h'); L.put(5, 41, 'r');          // PT-081: the alley's Gaunt and Bellhand and what they were guarding
 // stall blocks in staggered rows (two stalls each)
 const stalls = [];
 for (const [ri, row] of [14, 20, 26, 32, 38].entries()) for (let i = 0; i < 7; i++) { const x0 = 12 + i * 6 + (ri % 2 ? 3 : 0); if (x0 + 1 > 49) continue; stalls.push([x0, row], [x0 + 1, row]); }
