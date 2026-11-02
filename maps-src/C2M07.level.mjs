@@ -1,105 +1,154 @@
 // C2M07 BELLWRIGHT YARD: enemy factory denial; where the Bells are grown. (Campaign 2, Act A THRESHOLD; the new thing: SEEDS.)
-// A ring yard of cinder, 24 cells in radius, with a great round KILN HOUSE in the middle (r 11: a furnace on a platform 3 m up, stairs down all round inside the hall, a lever on its west wall) and four long sheds round the edge (north, east, south, west) where the Bells are GROWN: bells of new bronze on stands, ringing very
-// faintly, two to a shed. A seed is a bell node (it takes a lot of damage to break) with a clock on it: at its time it CRACKS and a bell-bearer steps out of it (a trigger `time:` AND `not:dead:<seed>`: the first use of `not:`, so breaking a seed before its time denies it, and a seed that is left cracks once). The seeds
-// crack in the order the player reaches the sheds: south at 45 and 70 s, west at 100 and 125, east at 160 and 185, north at 220 and 245; a message warns twenty seconds before. Forks (the resonators of M04) stand at each shed door: break a seed with a rifle and they ring and call the yard; a blow, the arc or the tuning-fork gun does not. The
-// exit gate (behind the north shed) opens by the kiln's lever. Four watchtowers 4 m up on the diagonals hold Bellhands. Route: the south door -> round the south shed to the kiln house -> up to the lever -> the north shed -> its rear door -> the exit.
-// SHAPE: a circle with a round hall in the middle (the big thing), four sheds, four towers; heights 0 / 3 / 4 m. Scale class MIXED (the kiln house and the sheds are roofed: about 50%).
+// PT-082 REDRAW (design/FUN_CHECK.md: a perfect ring with a round hall in the middle, four sheds and four towers, mirrored). Drawn by hand as a working foundry: the start lane into the CASTING YARD (moulds
+// stacked for cover, two sunken casting pits with steps), the long SOUTH SHED off it with two doors, the WEST SHED down a lane, the COAL YARD with its heaps west of the kiln and the barred YARD GATE in its far
+// corner (the way out, seen early), the KILN HOUSE off-centre (an octagon of basalt, the furnace on a platform 2 m up, a gallery out of its east side), the TERRACE along the east 3 m up (a balcony over the yard, a
+// ramp up from it, a watchtower), the EAST SHED on the terrace, and a stair down from the terrace's north end into the NORTH SHED, whose west door opens on the coal yard. A ring of walking round the kiln.
+// A seed is a bell node (it takes a lot of damage to break) with a clock on it: at its time it CRACKS and a bell-bearer steps out of it (a trigger `time:` AND `not:dead:<seed>`), in the order the sheds are
+// reached: south at 45 and 70 s, west at 100 and 125, east at 160 and 185, north at 220 and 245; a message warns twenty seconds before. Forks stand by each shed's door: a bell broken loudly rings them and the
+// yard hears. The kiln's lever unbars the yard gate. Two secrets of two kinds: the bellwrights' store behind the west shed (a panel) and a cupboard behind the east shed's split wall (shoot it).
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
-import { laneOf } from '../tools/mapkit/shape.mjs';
-import { setCell, ellipse, ellipseCells, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
+import { placer } from '../tools/mapkit/c2.mjs';
+import { sketch } from '../tools/mapkit/sketch.mjs';
 
-const W = 76, H = 76, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
-const CX = 38, CZ = 38, R = 24;
-// ---- the yard ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of ellipseCells(CX, CZ, R, R)) setCell(L, x, z, (x + z) % 7 === 0 ? 'l' : 'm', 0);
-// ---- the kiln house: a round hall, r 13 (floor), its wall to r 14.8, gaps north and south; the furnace platform r 7 at 3 m, stairs down all round ---------------------------------------------------------------------------------------------------------
-for (let z = CZ - 16; z <= CZ + 16; z++) for (let x = CX - 16; x <= CX + 16; x++) {
-  const dx = x + 0.5 - CX, dz = z + 0.5 - CZ, r = Math.hypot(dx, dz);
-  if (r <= 11.4) { const h = r <= 6 ? 6 : Math.max(0, Math.round(11.4 - r)); setCell(L, x, z, 'k', h, 18 + h * 1); }
-  else if (r <= 12.9) { if (!(Math.abs(dx) <= 1.7)) setCell(L, x, z, '$', 0); else setCell(L, x, z, 'k', 0, 18); }
-}
-// ---- the four sheds (interior 13 x 7), roofed, with a doorway three wide facing the kiln; the north one has a rear door ---------------------------------------------------------------------------------------------------------------------------------------------
-const SHED = { n: [32, 15, 44, 21], s: [32, 55, 44, 61], e: [55, 32, 61, 44], w: [15, 32, 21, 44] };
-for (const [k, r] of Object.entries(SHED)) { box(L, [r[0] - 1, r[1] - 1, r[2] + 1, r[3] + 1], '$', 0); box(L, r, 'k', 0, 9); for (const [x, z] of [[r[0], r[1]], [r[2], r[1]], [r[0], r[3]], [r[2], r[3]]]) setCell(L, x, z, '$', 0); }
-for (let i = -1; i <= 1; i++) { setCell(L, CX + i, 22, 'k', 0, 9); setCell(L, CX + i, 54, 'k', 0, 9); setCell(L, 54, CZ + i, 'k', 0, 9); setCell(L, 22, CZ + i, 'k', 0, 9); }   // the doorways (the shed wall rows / columns beside the kiln's side)
-// the north shed's rear door and the way out
-L.door(CX, 14, { remote: true }); setCell(L, CX, 14, 'D', 0); box(L, [CX - 1, 14, CX - 1, 14], '$', 0); box(L, [CX + 1, 14, CX + 1, 14], '$', 0);
-box(L, [CX, 8, CX, 13], 'k', 0, 9); box(L, [CX - 2, 4, CX + 2, 7], 'k', 0, 9);
-// ---- the four watchtowers on the diagonals: a platform of open deck 4 m up, a stair (a unit a cell) up from the yard on the side facing the kiln ------------------------------------------------------------------------------------------------------------------------
-const TOW = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sz]) => [CX + sx * 17, CZ + sz * 17]);
-for (const [tx, tz] of TOW) { box(L, [tx - 2, tz - 2, tx + 2, tz + 2], 'd', 8); const sx = tx < CX ? 1 : -1; for (let i = 1; i <= 8; i++) for (let dz = -1; dz <= 1; dz++) setCell(L, tx + sx * (2 + i), tz + dz, 'd', 8 - i); }
-ring(L, '!', (x, z) => '%');
-const P = placer(L); L.put(26, 54, '@'); P.reserve(26, 54);
-const { E, P: PK, PR } = P;
-// ---- the seeds: bell nodes, two to a shed, each with a name for its group ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const SEEDS = [['s', 36, 60, 45, 36, 58], ['s', 40, 60, 70, 40, 58], ['w', 16, 36, 100, 18, 36], ['w', 16, 40, 125, 18, 40], ['e', 60, 36, 160, 58, 36], ['e', 60, 40, 185, 58, 40], ['n', 36, 16, 220, 36, 18], ['n', 40, 16, 245, 40, 18]];       // [shed, x, z, ripens at (s), where the bell-bearer steps out]
-SEEDS.forEach(([, x, z], i) => E('bellnode', x, z, { group: 'seed' + i }));
-// ---- the yard ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[24, 56], [52, 56], [24, 24], [52, 24]]) E('tollbearer', x, z); for (const [x, z] of [[30, 46], [46, 46], [30, 30], [46, 30]]) E('gaunt', x, z);
-for (const [x, z] of [[20, 50], [56, 50], [20, 26], [56, 26], [38, 24]]) E('gaunt', x, z);
-for (const [tx, tz] of TOW) E('bellhand', tx, tz);
-E('tollbearer', 36, 49); E('tollbearer', 40, 49); E('tollbearer', 38, 47); E('gaunt', 34, 50); E('bellhand', 42, 46);          // at the kiln house's south gap
-E('gill', 52, 46);
-for (const k of ['n', 'e', 's', 'w']) { const r = SHED[k]; E(k === 'n' || k === 's' ? 'bellhand' : 'tollbearer', Math.round((r[0] + r[2]) / 2), Math.round((r[1] + r[3]) / 2)); }     // a keeper in each shed
-E('gaunt', CX, 6); E('tollbearer', CX - 1, 18); E('bulwark', CX + 3, 19);                                  // (a shell in the north shed: the last fight)                                                          // the way out
-// ---- the forks at each shed door (a cluster of three): a broken seed rung out loud calls the yard ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[34, 25], [42, 51], [51, 34], [25, 42]]) { PR('resonator', x, z); PR('resonator', x + 2, z + 1); PR('resonator', x + 1, z - 2); }
-for (const [x, z] of [[28, 52], [48, 52], [28, 24], [50, 24]]) PR('lantern', x, z);
-for (const [x, z] of [[CX, CZ - 2], [CX - 3, CZ + 3], [CX + 3, CZ + 3]]) PR('lamp', x, z);
-PR('vat', CX, CZ);                                                                                       // the furnace
-for (const [x, z] of [[33, 17], [43, 17], [33, 59], [43, 59], [57, 34], [57, 42], [19, 34], [19, 42]]) PR('lamp', x, z);
-for (const [x, z] of [[30, 38], [46, 38], [26, 26], [50, 50], [26, 50], [50, 26]]) PR('crate', x, z);
-for (const [x, z] of [[24, 52], [52, 52], [24, 26], [52, 26]]) PR('barrel', x, z);
-for (const [x, z] of [[27, 52], [CX - 7, 53], [CX + 7, 53], [24, 38], [52, 38], [CX, 34], [CX - 7, 24], [CX + 7, 24], [CX, 11]]) PK(x % 3 ? 'health_small' : 'health_large', x, z);
-PK('armor_vest', 28, 54); PK('armor_vest', 48, 54); PK('armor_vest', CX, 26);
-// ---- the secret: behind the west shed's back wall: the bellwrights' store (the spare bells, four of them) -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const SEC = { panel: [14, 38], cells: [[11, 37], [12, 37], [13, 37], [11, 38], [12, 38], [13, 38], [11, 39], [12, 39], [13, 39]] };
-{ for (const [x, z] of SEC.cells) setCell(L, x, z, 'k', 0, 9); box(L, [10, 36, 14, 36], '$', 0); box(L, [10, 40, 14, 40], '$', 0); box(L, [10, 37, 10, 39], '$', 0); setCell(L, 14, 37, '$', 0); setCell(L, 14, 39, '$', 0); setCell(L, 14, 38, 'S', 0);
-  PK('armor_vest', 11, 37); PK('health_large', 13, 37); PK('ammo_shell', 11, 39); PK('ammo_rivet', 13, 39); PK('ammo_flare', 12, 38); }
+const W = 68, H = 61, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
+// ---- the yard, drawn: north is up. The ground is 1 m up (h 2) so the casting pits can be sunk into it; the furnace platform, the gallery and the terrace are 3 m up (h 6), the watchtower 5 m (h 10) ---------------------------------------------------
+const PLAN = String.raw`
+
+
+                         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+       $$$$$$$$ccccccBc  $nnnnnnnnnnnnnnnnnnnnnnnnnnn$
+       $eeeeee$ccccccccccnnnLnnnnnNnnnnnnnnnNnnnnnnnn$
+       $eXeeeeDccccccFc!cnnnnnnnnnnnnnnnnnHnnn+nnUnnn$
+       $eeeeee$ccccccccccnnnnn&nnnnnTnnnnnnnnnnnnnLnn$
+       $$$$$$$$cccTcccc  $nnnnnnnnnnnnnnnnnnnnnnnnnnn$
+               cccccc    $$$$$$$$$$$$$$$$$$$$$$33333$$
+               cc  cc                          44444
+               cc  cc                          55555
+               cc  cc      %%%%%%%%%%%%%%%%%%%tttttt
+               ccccc+      %%%%fffffffffff%%%%ttYttt
+               cccccc      %%%fffffffffffffU%%tttGtt
+               cccccc      %%ffffPPPPPPPffff%%tttttt
+               c cccG      %ff&ffPPPHPPPfffff%tttttt
+    $$$$$      c cccc      %fLfffPPPPPPPggggggtttttt
+    $hhh$      cccccc      %fffffPPPPPPPggHgggtttttR
+    $hhh$      ccccccccccccffffffPPPLPPPggggggtttttt
+    $hhh$      ccccccccccccffffffPPPPPPPfffff%tttttt
+    $hhh$      cccc  ccccccffffffPPPPPPPfffff%ttttJt
+   $$$S$$$       cc  cc    %ffffffuuuuufff+ff%tttttt
+   $wwwww$       cc        %VfffffvvvvvffffLf%tt+ttt
+   $wwwLw$       cccc      %ffffffxxxxxffffff%tttttt $$$$$$$$$$$
+   $wwGww$       cHcc      %%fTfffffffffffTf%%tttttt $EEEEEEEEE$
+   $wwwww$       cccc      %%%ffffffffff!ff%%%tttGtt $ELEEEEEEE$
+   $wwNww$       cccc      %%%%fffffGfffff%%%%ttttttt$EEENE&EEE$$$$$
+   $wwwww$       Ycc&      %%%%%%%%fff%%%%%%%%tttttttEEEEEEEEEE$ooo$
+   $wwwww$       cccc              yyy        ttttFttEEEEEEEEEEZooo$
+   $wwTww$       cccR              yyy        tttttttEEEEETEEEE$ooo$
+   $wwwww$       cccc              yyy        ttttttt$EEEEEEEEE$$$$$
+   $wwwww$        yyyyyyyyyyyyyyyyyyyyyyyyyyyytttttt $EEEEEENGE$
+   $wwNww$        yyyyyyyyyyyyyyyyyyyyyy&yyyyytHtttt $EEEEEEELE$
+   $wwwwwwyyyyyyRyyyyyyyyyyyyyyyyyyyTyyyy  yyytttttt $$$$$$$$$$$
+   $wwwwwwyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy  yyyttttt! $$$$$$$$$$$
+   $ww&Lwwyyyyyyyqqqqqyy   yyyyyyyyyyyyyyyyyyytttttB
+   $wwwww$    yyyqqGqqzy   yyyyyyyyyyyyyyyyRyytHtttt
+   $$$$$$$    yyyqqqqqzy    yyJyyyyyyyyyyyyyyytttttt
+              yyyqqqqqyyyyyyyyyyyyyyyGyyyyyyyyttttYt
+              yyyyyyyyyyyyyGyyyyyyyyyyyyyyyyB ttttttt   WWWW
+              yGyyyyyyyyyyyyyyyyyyyyyyyyyyyyy tttttTt789WWWW
+              yyFyyyyyyyyyyyyqqqqqyyyyyyTyyyy345ttttt78JWHWW
+              yyyyyyyyyyyyyyzqqqqqyyyyyyyyyyy345ttttt789WW+W
+              yyyyyyTyyyyyyyzqqTqqyyyyyyyyyyy345ttttt   WWWW
+                yyyyyyyyyyyyyqqqqqy+         345tt&t
+                yyyyyyyyyyyyyyyyyyyy          tttttt
+     yyyyyy&yyyyyyyyyyyyKyFyyyyyyyyy          Rttttt
+     yyyyyyyyyyy+yyyyyyyyyyyyyyyyy!y
+     yyyy       yyyyyyyyyyyyyyyyyyyy
+     yyyy      $$$$ss$$$$$$$$$$$ss$$$$
+     y+yy      $sssssssssssssssssssss$
+     yyyy      $ssLsssNsssssssNsssLss$
+     yyyy      $ssssGsssssHssssssssss$
+     yyyy      $sssssssssssssssssssss$
+     yyyy      $$$$$$$$$$$$$$$$$$$$$$$
+     yyyy
+     y@yy
+     yyyy
+     yyyy
+`;
+const F = (t, h, lid = null) => (lid == null ? { t, h } : { t, h, lid });
+const S = sketch(L, PLAN, {
+  '$': { t: '$' }, '%': { t: '%' },
+  y: F('m', 2), q: F('m', 0), z: F('m', 1), c: F('k', 2),                                                            // the casting yard, its pits and their steps, the coal yard
+  s: F('k', 2, 9), w: F('k', 2, 9), n: F('k', 2, 9), E: F('k', 6, 9), h: F('k', 2, 8), o: F('k', 6, 7), e: F('f', 2, 9),     // the sheds (the east one on the terrace), the store, the cupboard, the exit passage
+  f: F('f', 2, 16), P: F('f', 6, 12), u: F('f', 5, 13), v: F('f', 4, 14), x: F('f', 3, 15), g: F('f', 6, 12),      // the kiln house: its floor, the furnace platform, the platform's stair, the gallery
+  t: F('k', 6), 3: F('k', 3), 4: F('k', 4), 5: F('k', 5), 7: F('d', 7), 8: F('d', 8), 9: F('d', 9), W: F('d', 10),   // the terrace, the ramps and stairs, the watchtower
+}, { marks: '@XVDSZNFTGHJUK&+!LYRB' });
+const P = placer(L), { E, P: PK, PR } = P; const [sx, sz] = S.one('@'); L.put(sx, sz, '@'); P.reserve(sx, sz);
+const GATE = S.one('D'), STORE = S.one('S'), CUPBOARD = S.one('Z'), EXIT = S.one('X'), [vx, vz] = S.one('V');
+L.door(GATE[0], GATE[1], { remote: true }); L.secretPanel(STORE[0], STORE[1]); L.secretPanel(CUPBOARD[0], CUPBOARD[1]);
+// ---- the seeds: bell nodes, two to a shed, in the order they ripen; a bearer steps out on the side of the shed's door -------------------------------------------------------------------------------------------------------------------------------------------
+const shedOf = ([x, z]) => (z >= 49 ? 0 : x <= 9 ? 1 : x >= 53 ? 2 : 3), OUT = [[0, -1], [1, 0], [-1, 0], [0, 1]], TIMES = [[45, 70], [100, 125], [160, 185], [220, 245]];
+const SEEDS = []; for (let k = 0; k < 4; k++) S.at('N').filter((p) => shedOf(p) === k).sort((a, b) => a[0] - b[0] || a[1] - b[1]).forEach(([x, z], j) => SEEDS.push({ x, z, t: TIMES[k][j], out: [x + OUT[k][0], z + OUT[k][1]] }));
+SEEDS.forEach(({ x, z }, i) => E('bellnode', x, z, { group: 'seed' + i }));
+// ---- the yard's keepers -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [ch, kind] of [['T', 'tollbearer'], ['G', 'gaunt'], ['H', 'bellhand'], ['J', 'gill'], ['U', 'bulwark'], ['K', 'sexton']]) for (const [x, z] of S.at(ch)) E(kind, x, z);
+// ---- the forks by each shed's door (a cluster of three): a broken seed rung out loud calls the yard ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('F')) { PR('resonator', x, z); PR('resonator', x + 2, z + 1); PR('resonator', x + 1, z - 2); }
+// ---- supplies and furniture ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('&')) PK('health_large', x, z); for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S.at('!')) PK('armor_vest', x, z);
+for (const [x, z] of S.at('L')) PR('lamp', x, z); for (const [x, z] of S.at('Y')) PR('lantern', x, z); for (const [x, z] of S.at('R')) PR('crate', x, z); for (const [x, z] of S.at('B')) PR('barrel', x, z);
+PR('vat', 36, 17);                                                                                                             // the furnace, on its platform
+PK('armor_vest', 5, 17); PK('health_large', 7, 17); PK('ammo_shell', 5, 19); PK('ammo_rivet', 7, 19); PK('ammo_flare', 6, 18);         // the bellwrights' store
+PK('ld_pen_carbine', 65, 28); PK('armor_vest', 64, 27);                                                                           // the cupboard
 const warn = (i, t) => ({ id: 'warn' + i, when: ['time:' + (t - 20), 'not:dead:seed' + i], do: [{ message: 'ripening' }] });
 const crack = (i, at, t) => ({ id: 'crack' + i, when: ['time:' + t, 'not:dead:seed' + i], do: [{ spawn: { kind: i % 2 ? 'gaunt' : 'tollbearer', at, group: 'born' } }, { message: 'cracked' }] });
-// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
 
-// ---- end PT-052 ----
-
 const MAP = {
-  id: 'C2M07', name: 'Bellwright Yard', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M07', name: 'Bellwright Yard', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#b08060', fogDensity: 0.007, sky: 'anselm', look: 'bellwright' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BELLWRIGHT YARD', lines: ['The Vael do not cast their bells. They grow them.', 'Every one of these is waiting for someone.'] },
   outro: 'Next: the Threshold Ascent, a city built up a cliff of glass, and the shaft in the middle of it.',
-  objective: 'Reach the kiln house and its lever: the exit gate is behind the north shed. Break the bells before they crack',
+  objective: 'The kiln house and its lever unbar the yard gate in the coal yard. Break the bells before they crack',
   ...L.layers(),
-  secrets: [{ id: 'spares', panel: SEC.panel, cells: SEC.cells }],
+  secrets: [{ id: 'spares', panel: STORE, cells: [[5, 17], [6, 17], [7, 17], [5, 18], [6, 18], [7, 18], [5, 19], [6, 19], [7, 19], [5, 20], [6, 20], [7, 20]] }, { id: 'cupboard', panel: CUPBOARD, cells: [[64, 28], [65, 28]], open: 'shoot' }],
   groups: [],
   entities: [...P.ents,
-    { type: 'switch', id: 'quench', at: [CX - 11, CZ], wall: 'west', once: true, do: [{ open: [CX, 14] }, { message: 'quench' }, { objective: 'The north shed\'s rear door is open: through it to the exit' }, { shake: 1.5 }] },
-    { type: 'exit', at: [CX, 5], dest: 'next' }],
-  scenery: [{ kind: 'spire', at: [8, 4] }, { kind: 'spire', at: [68, 6] }, { kind: 'spire', at: [38, -16] }],
+    { type: 'switch', id: 'quench', at: [vx, vz], wall: 'west', once: true, do: [{ open: GATE }, { message: 'quench' }, { objective: 'The yard gate is open: the north-west corner of the coal yard' }, { shake: 1.5 }] },
+    { type: 'exit', at: EXIT, dest: 'next' }],
+  scenery: [{ kind: 'spire', at: [8, -6] }, { kind: 'spire', at: [66, -4] }, { kind: 'spire', at: [38, -18] }],
   messages: [
-    { id: 'start', at: [26, 54], radius: 3, speaker: 'INES', text: 'A yard round a kiln. Four long sheds, a tower on each diagonal, and in the middle a furnace the size of a house. The air tastes of hot metal.' },
-    { id: 'seeds', at: [24, 50], radius: 4, speaker: 'INES', text: 'Bells on stands in the shed, green with new bronze, ringing very faintly. They weren\'t cast. Each is for somebody who hasn\'t been brought here yet.' },
-    { id: 'forks', at: [CX, 52], radius: 3, speaker: 'HULL', text: 'Forks stand at every shed door. A bell broken with a rifle rings them, and the yard hears. A blow, the arc lamp and the tuning-fork gun are quieter.' },
-    { id: 'tally', at: [17, 38], radius: 2.5, speaker: "BELLWRIGHT'S TALLY", text: 'THE MARROW ORDER. 311 BELLS GROWN. 311 HUNG. FOUR SPARE.' },
+    { id: 'start', at: [sx, sz], radius: 3, speaker: 'INES', text: 'A yard round a kiln. Long sheds, a coal yard, a tower on a terrace, and a furnace the size of a house. The air tastes of hot metal.' },
+    { id: 'seeds', at: [22, 47], radius: 3, speaker: 'INES', text: 'Bells on stands in the shed, green with new bronze, ringing very faintly. They weren\'t cast. Each is for somebody who hasn\'t been brought here yet.' },
+    { id: 'forks', at: [27, 44], radius: 3, speaker: 'HULL', text: 'Forks stand at every shed door. A bell broken with a rifle rings them, and the yard hears. A blow, the arc lamp and the tuning-fork gun are quieter.' },
+    { id: 'tally', at: [6, 28], radius: 2.5, speaker: "BELLWRIGHT'S TALLY", text: 'THE MARROW ORDER. 311 BELLS GROWN. 311 HUNG. FOUR SPARE.' },
+    { id: 'hollow', at: [6, 23], radius: 2, speaker: 'HULL', text: 'The north wall of the west shed rings hollow.' },
+    { id: 'gate', at: [19, 6], radius: 3, speaker: 'HULL', text: 'The yard gate, in the corner of the coal yard. It is barred, and the bar is worked from the kiln house.' },
     { id: 'ripening', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'A bell in one of the sheds has begun to ring louder. When it cracks, a bell-bearer steps out of it. Break it first.' },
     { id: 'cracked', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'A bell cracks, and something steps out of it.' },
-    { id: 'kiln', at: [CX, 46], radius: 3, speaker: 'INES', text: 'The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that isn\'t hot.' },
-    { id: 'quench', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The lever drops. Somewhere behind the north shed a bar falls out of a door.' },
-    { id: 'hollow', at: [13, 38], radius: 2, speaker: 'HULL', text: 'The back wall of the west shed rings hollow.' },
+    { id: 'kiln', at: [36, 29], radius: 3, speaker: 'INES', text: 'The furnace is banked with salt, not out. The lever on the kiln house wall is the only thing in here that isn\'t hot.' },
+    { id: 'quench', at: [0, 0], radius: 0.1, speaker: 'HULL', text: 'The lever drops. Out in the coal yard, the bar falls out of the gate.' },
+    { id: 'split', at: [61, 28], radius: 2, speaker: 'INES', text: 'The back wall of this shed has split, and warm air comes through the split. A shot would bring it down.' },
+    { id: 'spare', at: [65, 28], radius: 1.5, speaker: 'INES', text: 'A bellwright\'s cupboard: carbine rounds with hard tips, a vest, and a small bell with no name in it yet.' },
   ],
   triggers: [
-    { id: 'kiln', when: 'enter', at: [CX, 44], radius: 3, do: [{ objective: 'The kiln house: the lever is on its west wall, at the foot of the stairs' }] },
-    ...SEEDS.flatMap(([, , , t, sx, sz], i) => [warn(i, t), crack(i, [sx, sz], t)]),
+    { id: 'kiln', when: 'enter', at: [36, 29], radius: 3, do: [{ objective: 'The kiln house: the lever is on its west wall' }] },
+    ...SEEDS.flatMap(({ t, out }, i) => [warn(i, t), crack(i, out, t)]),
   ],
   quality: { enemies: [26, 70], botSeconds: [40, 700], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 5, enemyKinds: { tollbearer: 8, gaunt: 5, bellhand: 4, bulwark: 1, bellnode: 8 },
     scaleClass: 'MIXED', introduces: 'seeds: bells that ripen on a clock and crack a bell-bearer out of themselves unless broken first, in sheds with forks at their doors, so a loud kill calls the yard and a quiet one does not' },
 };
 MAP.drops = { scale: 1.3, keep: [] };
-console.log('C2M07: enemies', P.ents.filter((e) => e.type === 'enemy').length);
-// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C2M07', lane: [...(laneOf('C2M07') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
+console.log('C2M07: enemies', P.ents.filter((e) => e.type === 'enemy').length);
 
+const D = (x, z) => [x, z];
+export const waypoints = {
+  main: [[sx, sz, 0], D(6, 48), D(14, 46), D(22, 46), D(28, 40), D(36, 33), [36, 28, 0], D(36, 25), D(31, 23), { op: 'switch', id: 'quench' }, [36, 25, 0], [36, 22, 0], D(36, 17), [42, 17, 0], [46, 17, 0], D(49, 22), D(49, 28), [53, 28, 0], D(57, 29), [53, 28, 0],
+    D(49, 20), D(49, 13), [49, 10, 0], [49, 8, 0], D(46, 5), D(38, 5), D(30, 5), [25, 5, 0], D(20, 5), [15, 5, 0], [EXIT[0], EXIT[1], 0]],
+};
+waypoints.secret = (() => {
+  const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 14 && w[1] === 46), b = m.findIndex((w) => Array.isArray(w) && w[0] === 57 && w[1] === 29);
+  return [...m.slice(0, a + 1), [12, 34, 0], [9, 34, 0], D(6, 30), [6, 23, 0], { op: 'use', at: STORE }, [6, 19, 0], [6, 23, 0], [9, 34, 0], [12, 34, 0], ...m.slice(a + 1, b + 1), [60, 28, 0], { op: 'crack', at: CUPBOARD }, [65, 28, 0], [60, 28, 0], ...m.slice(b + 1)];
+})();
 export default MAP;
