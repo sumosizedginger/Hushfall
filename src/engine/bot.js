@@ -430,6 +430,15 @@ export class Bot {
     else if (op.op === 'waitfor') done = conditionMet(w, { when: op.when });                                           // PT-046 (C2M28): stand and fight until a trigger condition holds ('time:200', 'dead:w8', a list is an AND); the wave comes to the bot
     else if (op.op === 'lamp') { this.lampWanted = op.on !== false; done = true; }                                                 // PT-038: the lantern lit or out from here on
     else if (op.op === 'killboss') done = this.bossTick();
+    else if (op.op === 'crack') {                                                                                                  // PT-081: a cracked wall: walk near it, face it and shoot until it gives
+      const d = w.doors.find((q) => q.cx === op.at[0] && q.cz === op.at[1]), m = w.map;
+      if (!d) this.failed = 'no panel at ' + op.at;
+      else if (d.target === 1) { this.setHeld('fire', false); done = true; }
+      else if (this.follow(op.from ?? op.at, 0.6, op.from ? null : 3.2)) {
+        const tx = (op.at[0] + 0.5) * m.cell, tz = (op.at[1] + 0.5) * m.cell; this.aimAt(tx, tz);
+        this.setHeld('fire', Math.abs(norm(DM.atan2(-(tx - p.x), -(tz - p.z)) - p.yaw)) < 0.06);
+      }
+    }
     else if (op.op === 'switch') {
       const sw = w.map.switches.find((s) => s.id === op.id);
       if (!sw) this.failed = 'no switch ' + op.id;

@@ -193,7 +193,13 @@ export function buildLevel(map, tex) {
       const nk = map.kind(s.panel[0] + dx, s.panel[1] + dz); if (nk !== 'floor' && nk !== 'outdoor') continue;
       const along = [dz, 0, -dx], out = [dx, 0, dz];                                                  // along the face, and out of it
       SECRET_TELL.halo.forEach(([w, op], i) => wallGlow.quad([px + dx * (S / 2 + 0.008 + i * 0.002), fy + span / 2, pz + dz * (S / 2 + 0.008 + i * 0.002)], along, [0, 1, 0], w / 2, span / 2, op));
-      wallGlow.quad([px + dx * (S / 2 + 0.016), fy + span / 2, pz + dz * (S / 2 + 0.016)], along, [0, 1, 0], SECRET_TELL.seam / 2, span / 2, SECRET_TELL.seamOpacity);
+      if (s.open === 'shoot') {                                                                       // PT-081: a CRACK, not a seam: a jagged line of light up the face (shoot it open)
+        let sx0 = -0.05, y = fy + span * 0.1; const off = S / 2 + 0.016;
+        for (const [sx, h] of [[0.16, 0.42], [-0.13, 0.38], [0.15, 0.36], [-0.09, 0.32], [0.07, 0.28]]) {
+          const len = Math.hypot(sx, h), a = Math.atan2(sx, h), sa = Math.sin(a), ca = Math.cos(a), dir = [dz * sa, ca, -dx * sa], perp = [dz * ca, -sa, -dx * ca];
+          wallGlow.quad([px + dx * off + dz * (sx0 + sx / 2), y + h / 2, pz + dz * off - dx * (sx0 + sx / 2)], perp, dir, 0.025, len / 2 + 0.01, 1.1); sx0 += sx; y += h;
+        }
+      } else wallGlow.quad([px + dx * (S / 2 + 0.016), fy + span / 2, pz + dz * (S / 2 + 0.016)], along, [0, 1, 0], SECRET_TELL.seam / 2, span / 2, SECRET_TELL.seamOpacity);
       for (const [w, d, op] of SECRET_TELL.spill) floorGlow.quad([px + dx * (S / 2), fy + 0.09, pz + dz * (S / 2)], along, out, w / 2, d / 2, op);
     }
     if (!wallGlow.empty) { const wm = wallGlow.mesh(); holder.add(wm); const fm = floorGlow.mesh(); group.add(fm); }

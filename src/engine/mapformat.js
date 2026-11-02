@@ -47,7 +47,8 @@ export class MapData {
     this.sectorIndex = new Map(); this.sectors.forEach((s, i) => s.cells.forEach(([cx, cz]) => this.sectorIndex.set(cx + ',' + cz, i)));
     this.triggers = (src.triggers || []).map((t) => ({ ...t, x: t.at ? (t.at[0] + 0.5) * this.cell : 0, z: t.at ? (t.at[1] + 0.5) * this.cell : 0, r: (t.radius ?? 1.5) * this.cell }));
     this.groups = [...new Set((src.entities || []).filter((e) => e.group).map((e) => e.group))];
-    this.secrets = (src.secrets || []).map((s) => ({ id: s.id, panel: s.panel, cells: s.cells }));
+    this.secrets = (src.secrets || []).map((s) => ({ id: s.id, panel: s.panel, cells: s.cells, ...(s.open && s.open !== 'use' ? { open: s.open } : {}) }));          // PT-081: how a panel opens: Use (the default), a SHOT (a cracked wall) or a SWITCH elsewhere
+    this.hasCracks = this.secrets.some((s) => s.open === 'shoot');
     this.entities = (src.entities || []).map((e) => ({ ...e, x: (e.at[0] + 0.5) * this.cell, z: (e.at[1] + 0.5) * this.cell }));
     this.spawn = (() => { const e = this.entities.find((x) => x.type === 'player'); return { x: e.x, z: e.z, yaw: typeof e.facing === 'number' ? e.facing : FACING[e.facing ?? 'east'] }; })();
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
@@ -178,6 +179,8 @@ function validateMapChecks(src) {
     if (!s.id) err('secret without id');
     if (!s.panel || tile(...s.panel) !== 'S') err(`secret '${s.id}' panel must be on an 'S' tile`);
     if (!Array.isArray(s.cells) || !s.cells.length) err(`secret '${s.id}' has no cells`);
+    if (s.open !== undefined && !['use', 'shoot', 'switch'].includes(s.open)) err(`secret '${s.id}' open must be use, shoot or switch`);
+    if (s.open === 'switch' && s.panel && !JSON.stringify([src.triggers ?? [], (src.entities ?? []).filter((e) => e.type === 'switch')]).includes(`{"open":[${s.panel[0]},${s.panel[1]}]}`)) err(`secret '${s.id}' opens by a switch but no action opens [${s.panel}]`);
     for (const c of s.cells || []) { if (!walkable(tile(c[0], c[1]))) err(`secret '${s.id}' cell ${c} is not walkable`); secretCells.add(c.join(',')); }
   }
   for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) if (tile(cx, cz) === 'S' && !(src.secrets || []).some((s) => s.panel[0] === cx && s.panel[1] === cz)) err(`'S' tile at ${cx},${cz} is not the panel of any secret`);

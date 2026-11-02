@@ -106,7 +106,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
   w.player.y = groundAt(w, w.player.x, w.player.z, PLAYER.radius);
   if (map.movables?.length) w.phys = spawnPhys(w, map);                                      // PT-022: props the gravity tool can lift (only a map that lists them has any)
   for (const d of map.doors.values()) { const on = d.breath ? (gateOpen(d.breath, 0) ? 1 : 0) : d.startOpen ? 1 : 0; w.doors.push({ cx: d.cx, cz: d.cz, key: d.key, open: on, target: on, hold: 0, secret: !!d.closet || !!d.remote || !!d.startOpen, remote: !!d.remote, closet: !!d.closet, sealed: false, ...(d.breath ? { breath: d.breath } : {}), ...(d.soundlock ? { soundlock: d.soundlock } : {}), ...(d.interlock ? { interlock: d.interlock, closedAt: -99 } : {}) }); }
-  for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id });
+  for (const s of map.secrets) w.doors.push({ cx: s.panel[0], cz: s.panel[1], key: null, open: 0, target: 0, hold: 0, secret: true, secretId: s.id, ...(s.open === 'shoot' ? { hidden: 'shoot' } : s.open === 'switch' ? { remote: true } : {}) });          // PT-081: a cracked wall is a wall to Use; a panel a switch opens says "opened elsewhere"
   if (map.emitters.length || map.mirrors.length) w.mirrors = Object.fromEntries(map.mirrors.map((m) => [m.id, m.rot]));
   { const ch = makeChimes(map); if (ch) w.chimes = ch; }                                                           // PT-038 (E6): chime state, only where the map has a chime or a tree
   if (map.lantern) w.player.lamp = { on: false, oil: map.lantern.oil, max: map.lantern.max ?? LANTERN.max, eternal: !!map.lantern.eternal || choices?.lamp === 'own' };          // PT-038 (E5): the hand lantern: lazy, only a map that carries one has it; PT-046: Ines's own lamp (taken in C2S02: choices.lamp = 'own') burns without oil and holds a ring back harder
@@ -407,8 +407,13 @@ function updateSpores(w) {
   });
 }
 
+/** PT-081: a cracked wall (a secret whose panel opens to a SHOT) gives way to a pellet, a bolt or a blast that reaches it */
+function crackCell(w, cx, cz) { const d = doorAtCell(w, cx, cz); if (d?.hidden === 'shoot' && d.target === 0) openCrack(w, d); }
+function openCrack(w, d) { const c = w.map.cell; d.target = 1; d.hold = 0; emit(w, 'door_open', { cx: d.cx, cz: d.cz, secret: true, cracked: true, x: (d.cx + 0.5) * c, z: (d.cz + 0.5) * c }); }
+
 function explode(w, x, y, z, ownerIsPlayer, def, struck = null, by = null) {
   emit(w, 'explode', { x, y, z, r: def.splash }); noise(w, x, z, NOISE.explosion);
+  if (w.map.hasCracks) for (const d of w.doors) if (d.hidden === 'shoot' && d.target === 0 && Math.hypot((d.cx + 0.5) * w.map.cell - x, (d.cz + 0.5) * w.map.cell - z) < def.splash + w.map.cell * 0.5) openCrack(w, d);
   if (def.burn) ignite(w, x, y, z, def.burn);
   for (const e of w.enemies) {
     if (e.state === 'dead') continue;
@@ -435,7 +440,7 @@ function fireHitscan(w, def, cone) {
     let x = p.x, y = p.y + PLAYER.eye, z = p.z, target = null, stop = false, dist = 0;
     const march = (skipE) => { target = null; for (dist += 0.25; dist <= def.range && !target && !stop; dist += 0.25) {
       x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
-      if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
+      if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; if (map.hasCracks) crackCell(w, Math.floor(x / map.cell), Math.floor(z / map.cell)); break; }
       for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) { stop = true; if (pr.kind === 'chime' && w.chimes && !struckChimes.has(pr)) struckChimes.add(pr); }
       if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
       if (stop) break;
@@ -467,7 +472,7 @@ function fireBolt(w, def, cone) {
   const x0 = p.x, y0 = p.y + PLAYER.eye, z0 = p.z; let x = x0, y = y0, z = z0, stop = false, dist = 0;
   for (dist = 0.25; dist <= def.range && !stop && hit.length <= def.pierce; dist += 0.25) {
     x += f[0] * 0.25; y += f[1] * 0.25; z += f[2] * 0.25;
-    if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; break; }
+    if (y < floorAt(w, x, z) + 0.02 || y > ceilingAt(w, x, z) || cellSolid(w, Math.floor(x / map.cell), Math.floor(z / map.cell))) { stop = true; if (map.hasCracks) crackCell(w, Math.floor(x / map.cell), Math.floor(z / map.cell)); break; }
     for (const pr of map.props) if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) stop = true;
     if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
     if (stop) break;
@@ -697,7 +702,7 @@ export function useTarget(w) {
   const p = w.player, map = w.map, fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw);
   for (let s = 0.3; s <= PLAYER.useReach; s += 0.25) {
     const cx = Math.floor((p.x + fx * s) / map.cell), cz = Math.floor((p.z + fz * s) / map.cell), k = map.kind(cx, cz);
-    if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); if (d?.closet) break; return d; }         // a closet panel is a wall to the player
+    if (k === 'door' || k === 'secret') { const d = doorAtCell(w, cx, cz); if (d?.closet || d?.hidden) break; return d; }         // a closet panel is a wall to the player (and so is a cracked wall: PT-081)
     if (k === 'wall') break;
   }
   { const ch = chimeTarget(w); if (ch) return { chimeProp: ch, secret: false, target: 0, open: 0, key: null, remote: false, sealed: false }; }          // PT-038: a chime or the tree
