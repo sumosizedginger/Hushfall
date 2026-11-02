@@ -97,7 +97,7 @@ const ENC = new Encounters(L);
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'salt-office', search: { region: [3, 3, 80, 48], prefer: [38, 29], lane: laneOf('C1E2M02') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'The salt clerk\'s office. They bricked the door when the pans went quiet.' } });
-FUN.platform({ search: { region: [24, 4, 58, 24], prefer: [38, 13], lane: laneOf('C1E2M02') }, w: 4, d: 3 });          // a raking stage above the pans
+L.height([31, 5, 49, 17], 2); L.height([30, 5, 30, 18], 1); L.height([50, 5, 50, 18], 1); L.height([31, 18, 49, 18], 1);          // the north half of the middle pan is a raised SALT TERRACE (1 m, half-metre steps on three sides): height to fight from, and the pans are no longer a mirror
 // ---- end PT-081 fun pass ----
 
 const layers = L.layers();
