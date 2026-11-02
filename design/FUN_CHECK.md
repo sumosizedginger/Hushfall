@@ -195,8 +195,16 @@ The owner's answers (2026-11-01): old-school shooters are the bar; redraw the tw
 | Episode 1: two secrets of two kinds on every map | DONE (c4028ac) |
 | Episode 1: ambushes in the two long empty walks | DONE (Customs Hall, the Chandlery) |
 | Episode 1: Fishmarket Rows' grid broken (a raised auction block, a back alley that loops) | DONE (419ec6f) |
-| Episode 1: Marrow Quay's pier, shortcuts in Customs Hall and the Chandlery, Lamplighter Hill's landmark lamp | NEXT |
-| The standard as audit numbers and a ratchet | after Episode 1 |
+| Episode 1: loops in Customs Hall (servants' passage) and the Chandlery (a cut that saves a 124-cell walk, a loop through the south stores); the Bell Tower's second secret | DONE (679d064) |
+| THE OWNER'S GO FOR ALL OF CAMPAIGN 1 ("work until you have done all of the first 4 episodes") | |
+| Episode 2: a cracked wall on all 8; loops (Brine Gate, Kiln Row x2, the Cradle Annex, the Pump Cathedral's shortcut: 8 cells for a 134-cell walk); height (Evaporation Pans' salt terrace, platforms in the Rail Yard, Kiln Row, the Cradle Annex); THE WORKS theme | DONE |
+| Episode 3: a cracked wall on all 8; passages on one side (Ribbed Corridors, Gill Gardens' shortcut, the Resonance Loom, the Choir Loft, the Spore Foundry's shortcut: 7 cells for 46); height (Ribbed Corridors, Gill Gardens); THE CHOIR theme | DONE |
+| Episode 4: a cracked wall on 6 of 8; the Ascent Tether's empty ring walk gets an ambush; THE GATE theme | DONE |
+| Saves: every changed map's version raised (an older mid-level save resumes from the level start with its carry) | DONE |
+| The whole suite | 1547 of 1547 (3864444, then the last four maps' tests) |
+| NOT DONE, and why: the bosses and set pieces (Bell Tower, Grafting Floor, Marrow Nave, Cantor's Throat, Ascent Tether, Gate Warden) wait for the owner's play; the Wreck Belt and Drift Orchard keep one secret (no wall thick enough: they are islands); Landing Scar's mirror stays (its passage let a bot skip a gate); Slurry Undercroft has no loop (the cuts broke a lever's wall or a counted block) and, with the Spore Foundry, no platform spot; the Pump Cathedral's two empty rooms; Marrow Quay's raised pier; Lamplighter Hill's landmark lamp (it needs a new prop) | |
+| The standard as audit numbers and a ratchet | NEXT |
+| The real-game evidence (one regeneration, a Chrome job, the owner's named yes) | after the owner's play |
 
 ## 7. Decisions for the owner
 
