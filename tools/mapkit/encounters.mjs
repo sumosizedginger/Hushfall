@@ -27,7 +27,7 @@ export class Encounters {
     return cells.map(([x, z]) => { this.#floor(x, z, what); return { spawn: { kind: k, at: [x, z], group, facing: extra.facing ?? 'south', hunt: extra.hunt !== false } }; });
   }
 
-  /** SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint. `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set } finds the viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d the depth; rewards are LEGEND characters. Returns { id, panel, rect }. */
+  /** SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint. `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set, ok?: (spot) => boolean (PT-082: e.g. a squeezed map's cut columns) } finds the viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d the depth; rewards are LEGEND characters. Returns { id, panel, rect }. */
   secretRoom({ id, from = null, dir = null, search = null, w = 3, d = 2, floor = null, wall = null, rewards = [], message = null, open = 'use', lever = null }) {          // PT-081: `open` 'shoot' (a cracked wall) or 'switch' (`lever: { at: [x, z], wall }` opens it)
     const L = this.L, V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }, solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');          // PT-081: WALL only (open sky or water is not something a room can be cut into)
     const spot = (fx, fz, k) => {
@@ -41,7 +41,7 @@ export class Encounters {
     let pick = null;
     if (from) { pick = spot(from[0], from[1], dir); if (!pick) throw new Error(`secretRoom ${id}: no room fits behind ${from} going ${dir}`); }
     else {
-      const [x0, z0, x1, z1] = search.region, best = []; for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) { if (!FLOOR.has(L.get(x, z)) || L.ob[z][x] !== '.' || search.lane?.has(x + ',' + z)) continue; for (const k of Object.keys(V)) { const s = spot(x, z, k); if (s) best.push({ s, d: Math.hypot(x - search.prefer[0], z - search.prefer[1]) }); } }
+      const [x0, z0, x1, z1] = search.region, best = []; for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) { if (!FLOOR.has(L.get(x, z)) || L.ob[z][x] !== '.' || search.lane?.has(x + ',' + z)) continue; for (const k of Object.keys(V)) { const s = spot(x, z, k); if (s && (!search.ok || search.ok(s))) best.push({ s, d: Math.hypot(x - search.prefer[0], z - search.prefer[1]) }); } }
       best.sort((p, q) => p.d - q.d || p.s.panel[1] - q.s.panel[1] || p.s.panel[0] - q.s.panel[0]); pick = best[0]?.s; if (!pick) throw new Error(`secretRoom ${id}: no viable spot in ${search.region}`);
     }
     L.room(pick.rect, { floor: floor ?? L.get(pick.front[0], pick.front[1]), wall: wall ?? L.get(pick.panel[0], pick.panel[1]) }); L.secretPanel(pick.panel[0], pick.panel[1]);

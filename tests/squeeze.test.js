@@ -78,7 +78,7 @@ test('a list of specs squeezes the columns and then the rows; a cell converts to
 });
 
 test('every squeezed map: the shipped JSON is the squeeze of the drawing, every route completes on all three difficulties, and the scan would not cut a stair or the wall behind a lever there', async () => {
-  for (const id of ['C2M26', 'C2M08', 'C1E4M03'])          // PT-082: C2M04 was redrawn by hand to its size and is no longer squeezed {
+  for (const id of ['C2M26', 'C2M08', 'C1E4M03']) {          // PT-082: C2M04 was redrawn by hand to its size and is no longer squeezed
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sqt-'));
     try {
       const run = spawnSync(process.execPath, [path.join(ROOT, 'tools/mapkit/compile.mjs'), id], { cwd: ROOT, env: { ...process.env, SQUEEZE: 'off', MAP_OUT: dir }, encoding: 'utf8' }); assert.equal(run.status, 0, id + ': ' + (run.stderr || run.stdout).slice(0, 300));

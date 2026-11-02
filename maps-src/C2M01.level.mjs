@@ -82,8 +82,14 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'coat', search: { region: [3, 3, 86, 56], prefer: [68, 17], lane: laneOf('C2M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A cleft in the rock with a coat hung in it, and a vest and a mend folded on a ledge for whoever came next.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M01', name: 'Threshold Beach', version: 1, ceilingHeight: 4.2, par: { time: 360 },
+  id: 'C2M01', name: 'Threshold Beach', version: 2, ceilingHeight: 4.2, par: { time: 360 },
   atmosphere: { fog: '#c88a70', fogDensity: 0.006, sky: 'anselm', look: 'threshold' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THRESHOLD BEACH', lines: ['The Gate set you down at the edge of the last water on the world.', 'The people who came before you are standing on the sand.'] },
@@ -128,4 +134,5 @@ MAP.entities.push(...[["mod_doublebarrel",59,37]].map(([kind, x, z]) => ({ type:
 MAP.roster = { id: 'C2M01', lane: [...(laneOf('C2M01') ?? [])], keep: [], plan: [{"from":"tollbearer","to":"gaunt","pick":"spread","n":2}] };
 ENC.apply(MAP);
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

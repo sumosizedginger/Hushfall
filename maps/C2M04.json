@@ -305,15 +305,6 @@
       "facing": "south",
       "hunt": true
      }
-    },
-    {
-     "spawn": {
-      "kind": "gaunt",
-      "at": [54, 16],
-      "group": "amb-dropin-1",
-      "facing": "south",
-      "hunt": true
-     }
     }
    ]
   }
@@ -554,20 +545,8 @@
   {
    "type": "enemy",
    "kind": "gaunt",
-   "at": [38, 10],
-   "facing": -0.593
-  },
-  {
-   "type": "enemy",
-   "kind": "gaunt",
    "at": [56, 10],
    "facing": -0.805
-  },
-  {
-   "type": "enemy",
-   "kind": "gaunt",
-   "at": [38, 24],
-   "facing": -0.756
   },
   {
    "type": "enemy",
@@ -664,12 +643,6 @@
    "kind": "gill",
    "at": [55, 7],
    "facing": -0.766
-  },
-  {
-   "type": "enemy",
-   "kind": "gill",
-   "at": [34, 14],
-   "facing": -0.572
   },
   {
    "type": "enemy",
@@ -835,6 +808,16 @@
    "type": "prop",
    "kind": "crate",
    "at": [24, 40]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [44, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [40, 17]
   },
   {
    "type": "prop",

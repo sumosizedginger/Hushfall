@@ -79,8 +79,15 @@ const ENC = new Encounters(L);
 
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'sap', search: { region: [3, 3, 92, 96], prefer: [49, 75], lane: laneOf('C2M03') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A sapper\'s cut under the fort, given up half-way. Somebody left their kit in it.' } });
+FUN.dropIn({ at: [46, 45], radius: 2.5, cells: [[41, 37], [51, 37], [45, 41]], kind: 'g' });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M03', name: 'Cantor Outpost', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M03', name: 'Cantor Outpost', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8928c', fogDensity: 0.007, sky: 'anselm', look: 'outpost' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'CANTOR OUTPOST', lines: ['Five points, a ditch and one bridge.', 'Something in the middle of it is being kept.'] },
@@ -124,4 +131,5 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "bridge": ["msg:gate"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

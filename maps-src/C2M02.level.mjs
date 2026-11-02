@@ -79,8 +79,16 @@ ENC.dropIn({ at: [58, 35], radius: 2.5, cells: ENC.around([58, 35], { n: 3, min:
 ENC.dropIn({ at: [94, 35], radius: 2.5, cells: ENC.around([94, 35], { n: 2, min: 6, max: 10, avoid: taken }), kind: 'gaunt' });
 // ---- end PT-052 ----
 
+const SQUEEZE = { axis: 'x', cuts: [[5, 7], [15, 17], [19, 20], [24, 25], [26, 27], [31, 32], [35, 36], [37, 38], [39, 40], [43, 44], [51, 52], [55, 56], [58, 60], [65, 66], [71, 72], [73, 74], [77, 78], [79, 80], [82, 83], [85, 86], [90, 91], [99, 100], [103, 104], [106, 107], [109, 110], [112, 113], [116, 117], [118, 119], [122, 123], [126, 127], [128, 129]] };          // PT-082: defined here so the fun pass's secret room keeps out of every cut column
+const cut = (c) => SQUEEZE.cuts.some(([a, b]) => c >= a && c < b);
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'pit', search: { region: [10, 4, 122, 9], prefer: [70, 6], lane: laneOf('C2M02'), ok: (q) => { for (let x = q.rect[0] - 1; x <= q.rect[2] + 1; x++) if (cut(x)) return false; return !cut(q.panel[0]) && q.rect[1] <= 5; } }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A pit the first party dug and roofed over. A vest, a mend, and a word scratched in the lid: NINE.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M02', name: 'Glass Steppe', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M02', name: 'Glass Steppe', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#d8b49a', fogDensity: 0.0035, sky: 'anselm', look: 'steppe' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 24, rivet: 90, bolt: 18, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'GLASS STEPPE', lines: ['East of the cliff there was a sea. The floor of it is a plain of glass.', 'There is one road across.'] },
@@ -125,7 +133,8 @@ MAP.roster = { id: 'C2M02', lane: [...(laneOf('C2M02') ?? [])], keep: [], plan: 
 ENC.apply(MAP);
 // ---- PT-052 exemplar 2: THE SQUEEZE (tools/mapkit/squeeze.mjs). The crossing was 132 columns of mostly empty glass for 58 creatures (nine per thousand cells); thirty-four columns are taken out where nothing stands (the crossing is a quarter shorter).
 // Everything above this line is in the AUTHORING frame (the 132-column drawing); the shipped map is narrower and its routes are the same routes with the same cuts (`node tools/mapkit/squeeze.mjs routes C2M02`). Kit calls and the lane file stay in the authoring frame.
-MAP.squeeze = { axis: 'x', cuts: [[5, 7], [15, 17], [19, 20], [24, 25], [26, 27], [31, 32], [35, 36], [37, 38], [39, 40], [43, 44], [51, 52], [55, 56], [58, 60], [65, 66], [71, 72], [73, 74], [77, 78], [79, 80], [82, 83], [85, 86], [90, 91], [99, 100], [103, 104], [106, 107], [109, 110], [112, 113], [116, 117], [118, 119], [122, 123], [126, 127], [128, 129]] };
+MAP.squeeze = SQUEEZE;
 // ---- end PT-052 exemplar 2 ----
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;

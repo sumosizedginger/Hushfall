@@ -10,7 +10,8 @@ import { runRouteEither as runRoute } from '../src/engine/harness.js';
 import { evaluateViability, viabilityChecks, levelFacts, qualityChecks, analyseReach } from '../src/engine/viability.js';
 import { ROOT } from './helpers.js';
 
-const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).sort();
+const only = process.env.MAPS ? new Set(process.env.MAPS.split(',')) : null;          // PT-082: MAPS=C2M04,C2M05 runs these maps only (the whole file takes the better part of an hour)
+const ids = fs.readdirSync(path.join(ROOT, 'maps')).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')).filter((id) => !only || only.has(id)).sort();
 const load = (id) => JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', id + '.json'), 'utf8'));
 const route = (id, name) => { const f = path.join(ROOT, 'routes', `${id}.${name}.route.json`); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
 

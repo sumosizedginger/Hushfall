@@ -14,4 +14,12 @@ for (const id of ids) {
   console.log(`${fails.length ? 'FAIL' : 'PASS'} ${id}${fails.length ? '' : ' (every node gate)'}`); for (const f of fails) console.log('   ' + f);
   if (fails.length) bad++;
 }
+// PT-082: the strict per-map tests of tests/maps.test.js (the gate-skip probe, ammunition on Hard, the robustness runs judged as the suite judges them) failed where verify-map passed, more than once: run them too
+if (!process.env.NO_STRICT) {
+  let out = ''; try { out = execFileSync(process.execPath, ['--test', 'tests/maps.test.js'], { cwd: root, encoding: 'utf8', env: { ...process.env, MAPS: ids.join(',') }, stdio: ['ignore', 'pipe', 'pipe'] }); } catch (e) { out = String(e.stdout ?? '') + String(e.stderr ?? ''); }
+  const failed = out.split('\n').filter((l) => /^✖ /.test(l) && !/failing tests/.test(l)), uniq = [...new Set(failed)];
+  console.log(uniq.length ? 'STRICT FAIL' : 'STRICT PASS (tests/maps.test.js)'); for (const l of uniq) console.log('   ' + l.replace(/ \(\d+(\.\d+)?ms\)$/, ''));
+  for (const l of out.split('\n').filter((q) => /AssertionError/.test(q))) console.log('     ' + l.trim().slice(0, 220));
+  if (uniq.length) bad++;
+}
 process.exit(bad ? 1 : 0);

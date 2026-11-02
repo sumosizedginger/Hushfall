@@ -23,11 +23,11 @@ const PLAN = String.raw`
                                       ;;;%fffffOfffff%;J;;;
                                       ;;;%ffGfffffGff%;;;;;
                                  ;A;;;;;;%fffffffffff%;;;;;
-                                ;;;;;;G;;%Vffffffffff%;;G;;
+                                ;;;;;;;;;%Vffffffffff%;;G;;
                                 ;;;F;;;;;%fffffffffff%;;;;;
                                 ;;;;;;;;;%fffYfffYfff%;;F;;
                                 ;;;;;;;;;%fffffffffff%;;;;;
-                                ;;J;;;;;;%fffffffff*f%;;;;;
+                                ;;;;;;;;;%fffffffff*f%;;;;;
                                 ;;;;;T;;;%%fffffffff%%;;T;;
                                 ;;;;;;;;;;%%fffffff%%;;;;;;
                                 ;;;;;;;;;;;%%%fff%%%;;;;;;;
@@ -37,7 +37,7 @@ const PLAN = String.raw`
                                  xxx;          ;;;;;;;;xxx
              ::::::::::::::::::::::::::::::::::::::::::::::
             #######:::::::::::::::::::::::::::::+::::::::::
-          ::#:::::#:::::::::::T:::::::G::::::::::::::::::::
+          ::#:::::#:::::::::::T::::::::::::::::::::::::::::
           ::#::H::::F:::::::::::::::::::::::::::::::F::::::
           ::#:::::T:::::::::::::::::F::::::::::::::::::::::
           ::#:::::#:::::::::::::::::::::::::::T:::::::G::::
@@ -99,6 +99,7 @@ for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S
 for (const [x, z] of S.at('E')) PR('lamp', x, z); for (const [x, z] of S.at('R')) PR('crate', x, z); for (const [x, z] of S.at('Y')) PR('lantern', x, z);
 const BELL = S.one('O'); PR('bellnode', BELL[0], BELL[1]);
 for (const [x, z] of [[23, 41], [25, 42], [24, 40]]) PR('crate', x, z);                                           // what is left of the stair's lower flight
+PK('armor_vest', 44, 19); PK('health_large', 40, 17);                                                     // before the summit fight: a vest and a mend on the walk to the tower door (the strafing robustness run died at the tower door)
 PR('lamp', 7, 37); PR('lamp', 4, 32);                                                                            // the winch house is lit: its lever is the way on
 // the secrets' rewards
 PK('armor_vest', 61, 46); PK('health_large', 63, 46); PK('ammo_shell', 61, 48); PK('ammo_rivet', 63, 48); PK('ammo_flare', 62, 47);
@@ -106,7 +107,7 @@ PK('ld_slag_scattergun', 6, 29); PK('armor_vest', 5, 28);
 
 // ---- the ambushes: the gaunts at the tower door (the pack that comes down the great stair when the chain runs is in the winch switch: the way back has changed) --------------------------------------------------------------------------------------------
 const ENC = new Encounters(L);
-ENC.dropIn({ at: [47, 20], radius: 2.5, cells: ENC.around([47, 20], { n: 3, min: 6, max: 10 }), kind: 'g' });
+ENC.dropIn({ at: [47, 20], radius: 2.5, cells: ENC.around([47, 20], { n: 2, min: 6, max: 10 }), kind: 'g' });
 
 const [qx, qz] = S.one('Q'), [vx, vz] = S.one('V'), EXIT = S.one('X');
 const MAP = {

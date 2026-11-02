@@ -57,8 +57,16 @@ ENC.dropIn({ at: [32,72], radius: 2, cells: ENC.around([32,72], { n: 3, min: 6, 
 ENC.dropIn({ at: [50,48], radius: 2, cells: ENC.around([50,48], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+const SQUEEZE = [{axis:'x',cuts:[[3,4], [6,7], [9,10], [12,13], [17,18], [19,20], [23,24], [25,26], [29,30], [41,43], [47,48], [49,50], [51,52], [55,56], [58,59], [60,61], [63,64], [66,67]]}, {axis:'z',cuts:[[3,5], [9,10], [15,16], [17,18], [21,22], [35,36], [39,40], [41,42], [49,50], [51,52], [57,58], [67,68], [73,74], [83,84], [87,88], [93,94], [95,96]]}];          // PT-082: defined here so the fun pass's secret room keeps out of every cut column and row
+const cutCol = (ax, c) => SQUEEZE.find((q) => q.axis === ax).cuts.some(([a, b]) => c >= a && c < b);
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'ledge', search: { region: [3, 3, 60, 90], prefer: [29, 14], lane: laneOf('C2M08'), ok: (q) => { for (let x = q.rect[0] - 1; x <= q.rect[2] + 1; x++) if (cutCol('x', x)) return false; for (let z = q.rect[1] - 1; z <= q.rect[3] + 1; z++) if (cutCol('z', z)) return false; return !cutCol('x', q.panel[0]) && !cutCol('z', q.panel[1]); } }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A climber\'s store cut into the glass: a vest and a mend, roped to a peg.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M08', name: 'Threshold Ascent', version: 1, ceilingHeight: 4.2, par: { time: 540 },
+  id: 'C2M08', name: 'Threshold Ascent', version: 2, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { fog: '#d8d0e8', fogDensity: 0.003, sky: 'anselm', look: 'ascent' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THRESHOLD ASCENT', lines: ['A city built up a cliff of glass, one tier above another.', 'The way down is at the top.'] },
@@ -106,7 +114,8 @@ ENC.apply(MAP);
 
 // ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). A squeeze of 19 columns and 18 rows, where nothing stands and no stair runs (tools/dev/squeeze-map.mjs).
 // Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M08`). Kit calls and the lane file stay in the authoring frame.
-MAP.squeeze = [{axis:'x',cuts:[[3,4], [6,7], [9,10], [12,13], [17,18], [19,20], [23,24], [25,26], [29,30], [41,43], [47,48], [49,50], [51,52], [55,56], [58,59], [60,61], [63,64], [66,67]]}, {axis:'z',cuts:[[3,5], [9,10], [15,16], [17,18], [21,22], [35,36], [39,40], [41,42], [49,50], [51,52], [57,58], [67,68], [73,74], [83,84], [87,88], [93,94], [95,96]]}];
+MAP.squeeze = SQUEEZE;
 // ---- end PT-052 Level B squeeze ----
 
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
