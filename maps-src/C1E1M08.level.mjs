@@ -4,6 +4,7 @@
 // Route: courtyard -> tower door (SE) -> south leg (west) -> west leg (north) -> north leg (east) -> east leg (south; a Warden-Graft among pillars) -> chamber door -> the ring, the Cantor, the hatch.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 
 const L = new Level(54, 62);
 L.rect([10, 6, 46, 44], 'B');                                                   // the tower: solid stone, corridors carved out of it
@@ -61,6 +62,11 @@ S.hall([20, 45, 48, 57], { sides: { w: { w: 3, gap: 3, d: 1 }, e: { w: 3, gap: 3
 console.log('C1E1M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-081 (design/FUN_CHECK.md: the tower had no secret at all) ----
+const E = new Encounters(L);
+E.secretRoom({ id: 'vestry-chest', search: { region: [3, 3, 50, 58], prefer: [44, 54], lane: laneOf('C1E1M08') }, open: 'shoot', rewards: ['v', 'a', 'H'], message: { speaker: 'INES', text: "The vestry chest. Robes, a sexton's medicine and a box of flares. He kept them from the bell." } });          // PT-081: a second secret of another kind, a cracked wall
+// ---- end PT-081 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -113,4 +119,6 @@ MAP.drops = { scale: 1.3, keep: [[0, 0, 999, 999]] };          // a boss map kee
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "ring": ["msg:quiet"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+E.apply(MAP);                                                                                    // PT-081: the tower's first secret joins the map
+
 export default MAP;

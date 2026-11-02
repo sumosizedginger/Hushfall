@@ -46,10 +46,10 @@
   "##fffffffffffffffffffffffffB::::::::::::::::::::::::::II############",
   "##BBfffffffffffffffffffffffB::::::::::::::::::::::::::II############",
   "##BBBfffffffffffffffffffffBB::::::::::::::::::::::::::II############",
-  "##BBBBBfffBBBfffBBBfffBBBSBB::::::::::::::::::::::::::II############",
-  "#######fff###fff###fff#BfffB::::::::::::::::::::::::::II############",
-  "#######################BfffB::::::::::::::::::::::::::II############",
-  "#######################BBBBB::::::::::::::::::::::::::II############",
+  "##BBBBBBSBBBBfffBBBfffBBBSBB::::::::::::::::::::::::::II############",
+  "######BfffB##fff###fff#BfffB::::::::::::::::::::::::::II############",
+  "######BfffB############BfffB::::::::::::::::::::::::::II############",
+  "######BBBBB############BBBBB::::::::::::::::::::::::::II############",
   "###########################BB:::::::::::::::::::::::::II############",
   "###########################BBB:::::::::::::::::::::::III############",
   "###########################BBBBB:::BBBB:::BBBB:::BBBBBB#############",
@@ -142,8 +142,8 @@
   "..eeeeeeeeeeeeeeeeeeeeeeeee.........................................",
   "...eeeeeeeeeeeeeeeeeeeeeeee.........................................",
   "...eeeeeeeeeeeeeeeeeeeeeeee.........................................",
-  ".......eee...eee...eee..............................................",
-  ".......eee...eee...eee..............................................",
+  ".............eee...eee..............................................",
+  ".............eee...eee..............................................",
   "....................................................................",
   "....................................................................",
   "....................................................................",
@@ -160,6 +160,15 @@
   }
  ],
  "secrets": [
+  {
+   "id": "ticket-office",
+   "panel": [8, 35],
+   "cells": [
+    [8, 36],
+    [8, 37]
+   ],
+   "open": "shoot"
+  },
   {
    "id": "porters-cage",
    "panel": [25, 35],
@@ -1048,6 +1057,21 @@
   {
    "type": "pickup",
    "kind": "armor_vest",
+   "at": [7, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [8, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [9, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
    "at": [24, 37]
   },
   {
@@ -1129,12 +1153,6 @@
    "type": "prop",
    "kind": "lamp",
    "at": [2, 31],
-   "tint": "cool"
-  },
-  {
-   "type": "prop",
-   "kind": "lamp",
-   "at": [8, 36],
    "tint": "cool"
   },
   {
@@ -1273,6 +1291,13 @@
    "radius": 6,
    "speaker": "INES",
    "text": "Past the pillars the south quay is dry, and under water in a minute: the tide here still turns. Somebody chalked the hours on the shed."
+  },
+  {
+   "id": "ticket-office",
+   "at": [8, 36],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A ticket office the tide got into. Somebody bricked it shut from this side."
   },
   {
    "id": "porters-cage",

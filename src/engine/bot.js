@@ -435,6 +435,8 @@ export class Bot {
       if (!d) this.failed = 'no panel at ' + op.at;
       else if (d.target === 1) { this.setHeld('fire', false); done = true; }
       else if (this.follow(op.from ?? op.at, 0.6, op.from ? null : 3.2)) {
+        const has = (id) => p.weapons.includes(id) && (p.ammo[WEAPONS[id].ammo] || 0) > 0, gun = ['scattergun', 'rivet', 'harpoon', 'flare'].find(has);          // a loaded gun (the scattergun first: no splash at arm's length)
+        if (gun && p.weapon !== gun && !this.pendingRelease && w.tick - (this.lastSwitch ?? -99) > 30) { const key = { flare: 'weapon1', scattergun: 'weapon2', rivet: 'weapon3', harpoon: 'weapon4' }[gun]; this.in.press(key); this.pendingRelease = key; this.lastSwitch = w.tick; }
         const tx = (op.at[0] + 0.5) * m.cell, tz = (op.at[1] + 0.5) * m.cell; this.aimAt(tx, tz);
         this.setHeld('fire', Math.abs(norm(DM.atan2(-(tx - p.x), -(tz - p.z)) - p.yaw)) < 0.06);
       }

@@ -50,6 +50,7 @@ L.putAll('b', [[62, 24], [62, 26]]); L.putAll('t', [[60, 23], [60, 27]]); L.put(
 reroster(L, { id: 'C1E1M03', lane: laneOf('C1E1M03'), keep: [[22, 42], [22, 44], [60, 23], [60, 27]], plan: [{ from: 't', to: 'b', n: 4, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });          // the closet pair and the stage guards stay as they were
 const E = new Encounters(L);
 E.secretRoom({ id: 'strongbox-room', search: { region: [8, 11, 50, 40], prefer: [40, 40], lane: laneOf('C1E1M03') }, rewards: ['v', 'H', 'r'], message: { speaker: 'INES', text: "A stallholder's cupboard, shut from the inside. Somebody hid here and left the good coat." } });
+E.secretRoom({ id: 'ice-room', search: { region: [3, 3, 62, 44], prefer: [12, 14], lane: laneOf('C1E1M03') }, open: 'shoot', rewards: ['v', 'e', 'H'], message: { speaker: 'INES', text: 'An ice room, bricked shut when the boats stopped. Cheap mortar. It gave at the first shot.' } });          // PT-081: a second secret of another kind, a cracked wall
 E.dropIn({ at: [24, 21], radius: 2, cells: E.around([24, 21], { n: 3, min: 6, max: 10 }), kind: 'g' });                  // the middle of the rows: a pack of Gaunts closes in from the stalls as the player crosses the open
 // ---- end PT-052 ----
 

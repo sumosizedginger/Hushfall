@@ -14,9 +14,9 @@
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
   "~~~~~~~~~~~~~~~~~############~~~~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~BBB#..........#BBB~~~~~~~~~~~~~~~~",
-  "~~~~~~~~~~~~~~BB..............BB~~~BBBBBBBBBB~~~",
-  "~~~~~~~~~~~~~~B................B~~~BB.BBBBBBB~~~",
+  "~~~~~~~~~~~~~~BBB#..........#BBB~~~~~~~...~~~~~~",
+  "~~~~~~~~~~~~~~BB..............BB~~~BBBB...BBB~~~",
+  "~~~~~~~~~~~~~~B................B~~~BB.BBSBBBB~~~",
   "~~~~~~~~~~~~~~BB..............BB~~~B...B...BB~~~",
   "~~~~~~~~~~~~~~BBB#..........#BBB~BBB...B...BBBB~",
   "~~~~~~~~~~~~~~~~~#####D######~~~~B............B~",
@@ -72,6 +72,15 @@
     [3, 22],
     [2, 22]
    ]
+  },
+  {
+   "id": "rope-store",
+   "panel": [40, 5],
+   "cells": [
+    [40, 4],
+    [40, 3]
+   ],
+   "open": "shoot"
   }
  ],
  "entities": [
@@ -535,6 +544,16 @@
    "type": "prop",
    "kind": "lantern",
    "at": [41, 6]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [41, 3]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [40, 3]
   }
  ],
  "scenery": [
@@ -630,6 +649,13 @@
    "radius": 2,
    "speaker": "NET-LOFT NOTE",
    "text": "Your father hid this the night he learned the Hush was old. 'Sound is a door. Ring it wrong and it opens both ways.'"
+  },
+  {
+   "id": "rope-store",
+   "at": [40, 4],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A rope store, bricked up when the bells started. Bad mortar. Whoever did it was in a hurry."
   }
  ],
  "decals": [

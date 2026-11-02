@@ -51,10 +51,10 @@
   "##########BtttttBpppppppppppppppppppppppBgggggB#######",
   "##########BtttttBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#######",
   "##########BfffffffffffffffffffffffffffffffffffB#######",
-  "##########BfffffffffffffffffffffffffffffffffffB#######",
-  "##########BfffffffffffffffffffffffffffffffffffB#######",
-  "##########BfffffffffffffffffffffffffffffffffffB#######",
-  "##########BfffffffffffffffffffffffffffffffffffB#######",
+  "##########BfffffffffffffffffffffffffffffffffffBBBB####",
+  "##########BfffffffffffffffffffffffffffffffffffBffB####",
+  "##########BfffffffffffffffffffffffffffffffffffSffB####",
+  "##########BfffffffffffffffffffffffffffffffffffBffB####",
   "##########BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBDBBBBB####",
   "###################BB:::::::::::::::::::::::::::BB####",
   "###################B:::::::::::::::::::::::::::::B####",
@@ -146,7 +146,17 @@
    "at": [44, 44]
   }
  ],
- "secrets": [],
+ "secrets": [
+  {
+   "id": "vestry-chest",
+   "panel": [46, 42],
+   "cells": [
+    [47, 42],
+    [48, 42]
+   ],
+   "open": "shoot"
+  }
+ ],
  "triggers": [
   {
    "id": "sealed",
@@ -769,6 +779,11 @@
    "facing": -0.62
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [48, 41]
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [16, 42],
@@ -785,6 +800,11 @@
    "kind": "gaunt",
    "at": [36, 42],
    "facing": -0.432
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_flare",
+   "at": [48, 42]
   },
   {
    "type": "pickup",
@@ -805,6 +825,11 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [42, 43]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [48, 43]
   },
   {
    "type": "prop",
@@ -1122,6 +1147,13 @@
    "radius": 3,
    "speaker": "SIGNAL HOUSE",
    "text": "The tower is silent, Calder, and the signal didn't stop. It was only a machine. I have its bearing: the Salt Works. The hatch is open."
+  },
+  {
+   "id": "vestry-chest",
+   "at": [47, 42],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "The vestry chest. Robes, a sexton's medicine and a box of flares. He kept them from the bell."
   }
  ],
  "decals": [

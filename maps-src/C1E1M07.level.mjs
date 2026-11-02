@@ -55,6 +55,7 @@ L.putAll('t', [[47, 24], [53, 24], [50, 31]]); L.putAll('g', [[47, 32], [53, 32]
 reroster(L, { id: 'C1E1M07', lane: laneOf('C1E1M07'), plan: [{ from: 't', to: 'b', n: 9, pick: 'range' }] });          // eleven Bellhands in the dark: the standing fighter dies on them, the strafing one (Bot v2, first half: either policy completes a seed) walks through; picked by range so the gantry sees them one at a time
 const E = new Encounters(L);
 E.cage({ at: [5, 8], radius: 1.5, cells: E.around([5, 8], { n: 3, min: 4, max: 8 }), kind: 'g' });                  // the line-thrower: lifting it brings three Gaunts in through the dark
+E.secretRoom({ id: 'valve-store', search: { region: [3, 3, 56, 42], prefer: [50, 10], lane: laneOf('C1E1M07') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'Spare valves for the signal set, sealed behind the plaster. The House kept its own spares.' } });          // PT-081: a second secret of another kind, a cracked wall
 E.secretRoom({ id: 'relay-cupboard', search: { region: [3, 3, 56, 42], prefer: [30, 23], lane: laneOf('C1E1M07') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: 'A relay cupboard behind the switch frames. Someone left the spare fuses and a flask.' } });
 // ---- end PT-052 ----
 

@@ -45,6 +45,7 @@ L.putAll('t', [[16, 13], [26, 12], [38, 13]]); L.putAll('b', [[24, 9], [40, 8]])
 reroster(L, { id: 'C1E1M05', lane: laneOf('C1E1M05'), plan: [{ from: 't', to: 'b', n: 3, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });
 const E = new Encounters(L);
 E.cage({ at: [5, 49], radius: 1.5, cells: E.around([5, 49], { n: 3, min: 4, max: 8 }), kind: 'g' });                  // the mallet: lifting it brings three Gaunts in off the hill
+E.secretRoom({ id: 'oil-store', search: { region: [3, 3, 52, 57], prefer: [10, 30], lane: laneOf('C1E1M05') }, open: 'shoot', rewards: ['v', 'a', 'H'], message: { speaker: 'INES', text: 'The old oil store, walled up after the second fire. They kept the good oil in here.' } });          // PT-081: a second secret of another kind, a cracked wall
 E.secretRoom({ id: 'lamplighter-locker', search: { region: [3, 3, 52, 57], prefer: [28, 30], lane: laneOf('C1E1M05') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: "A lamplighter's locker cut into the hill. Oil cans, a ladder, a coat nobody came back for." } });
 // ---- end PT-052 ----
 

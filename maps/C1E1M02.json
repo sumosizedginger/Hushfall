@@ -43,9 +43,9 @@
   "###WffffffffffW#######PPPPPtttPPPPWDWPPPPtttPPPPP###############",
   "###fffffffffffWWW#####PtttttttttttttttttttttttttP###############",
   "###fffffffffffXfW#####PtttttttttttttttttttttttttP###############",
-  "###fffffffffffWWWWWWWWPttttttttttttttttttttttttttt##############",
-  "###WffffffffffW#WfffffPtttttttttttttttttttttttttttt#############",
-  "###WffffffffffW#WfffffPttttttttttttttttttttttttttt##############",
+  "###fffffffffffWWWWWWWWPttttttttttttttttttttttttttt##tt##########",
+  "###WffffffffffW#WfffffPttttttttttttttttttttttttttttStt##########",
+  "###WffffffffffW#WfffffPttttttttttttttttttttttttttt##tt##########",
   "###WffffffffffW#WfffffPtttttttttttttttttttttttttP###############",
   "###WWWWWfWWWWWW#WfffffPtttttttttttttttttttttttttP###############",
   "#CCCCCCWDWCCCCCCWfffffPtttttttttttttttttttttttttP###############",
@@ -199,6 +199,15 @@
     [19, 38],
     [19, 37]
    ]
+  },
+  {
+   "id": "seized-goods",
+   "panel": [51, 33],
+   "cells": [
+    [52, 33],
+    [53, 33]
+   ],
+   "open": "shoot"
   }
  ],
  "closets": [
@@ -331,6 +340,38 @@
     },
     {
      "wake": "stair"
+    }
+   ]
+  },
+  {
+   "id": "amb-dropin-1",
+   "when": "enter",
+   "at": [40, 31],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [47, 31],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [33, 31],
+      "group": "amb-dropin-1",
+      "facing": "south",
+      "hunt": true
+     }
     }
    ]
   }
@@ -777,6 +818,11 @@
    "facing": -1.286
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [53, 32]
+  },
+  {
    "type": "prop",
    "kind": "shelf",
    "at": [12, 33]
@@ -785,6 +831,11 @@
    "type": "prop",
    "kind": "lamp",
    "at": [19, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [53, 33]
   },
   {
    "type": "prop",
@@ -800,6 +851,11 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [20, 34]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [53, 34]
   },
   {
    "type": "pickup",
@@ -1316,6 +1372,13 @@
    "radius": 3,
    "speaker": "COUNTER-BOOK",
    "text": "Final entry: 'Tone verified.' Then the ink stops, mid-word."
+  },
+  {
+   "id": "seized-goods",
+   "at": [52, 33],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "Seized goods, bricked up and never logged. Customs kept a few things for itself."
   }
  ],
  "decals": [

@@ -16,7 +16,7 @@ const kindOf = (k) => (ENEMIES[k] ? k : LEGEND[k]?.type === 'enemy' ? LEGEND[k].
 const charOf = (k) => (LEGEND[k]?.type === 'enemy' ? k : Object.keys(LEGEND).find((c) => LEGEND[c].type === 'enemy' && LEGEND[c].kind === k) ?? null);
 
 export class Encounters {
-  constructor(L, { prefix = 'amb' } = {}) { this.L = L; this.prefix = prefix; this.groups = []; this.triggers = []; this.messages = []; this.secrets = []; this.decals = []; this.log = []; this.n = 0; }
+  constructor(L, { prefix = 'amb' } = {}) { this.L = L; this.prefix = prefix; this.groups = []; this.triggers = []; this.messages = []; this.secrets = []; this.decals = []; this.levers = []; this.log = []; this.n = 0; }
   #name(kind) { return `${this.prefix}-${kind}-${++this.n}`; }
   #floor(x, z, what) {
     const c = this.L.get(x, z); if (!FLOOR.has(c)) throw new Error(`${what}: cell ${x},${z} is not floor ('${c}')`);
@@ -28,7 +28,7 @@ export class Encounters {
   }
 
   /** SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint. `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set } finds the viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d the depth; rewards are LEGEND characters. Returns { id, panel, rect }. */
-  secretRoom({ id, from = null, dir = null, search = null, w = 3, d = 2, floor = null, wall = null, rewards = [], message = null }) {
+  secretRoom({ id, from = null, dir = null, search = null, w = 3, d = 2, floor = null, wall = null, rewards = [], message = null, open = 'use', lever = null }) {          // PT-081: `open` 'shoot' (a cracked wall) or 'switch' (`lever: { at: [x, z], wall }` opens it)
     const L = this.L, V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }, solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && !FLOOR.has(L.get(x, z)) && L.get(x, z) !== 'D' && L.get(x, z) !== 'S' && L.get(x, z) !== 'X';
     const spot = (fx, fz, k) => {
       const [dx, dz] = V[k], px = fx + dx, pz = fz + dz, [lx, lz] = [-dz, dx], half = (w - 1) / 2; if (!solid(px, pz) || !solid(px + lx, pz + lz) || !solid(px - lx, pz - lz)) return null;
@@ -44,13 +44,15 @@ export class Encounters {
       const [x0, z0, x1, z1] = search.region, best = []; for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) { if (!FLOOR.has(L.get(x, z)) || L.ob[z][x] !== '.' || search.lane?.has(x + ',' + z)) continue; for (const k of Object.keys(V)) { const s = spot(x, z, k); if (s) best.push({ s, d: Math.hypot(x - search.prefer[0], z - search.prefer[1]) }); } }
       best.sort((p, q) => p.d - q.d || p.s.panel[1] - q.s.panel[1] || p.s.panel[0] - q.s.panel[0]); pick = best[0]?.s; if (!pick) throw new Error(`secretRoom ${id}: no viable spot in ${search.region}`);
     }
-    L.room(pick.rect, { floor: floor ?? L.get(pick.front[0], pick.front[1]), wall: wall ?? L.get(pick.panel[0], pick.panel[1]) }); L.secretPanel(pick.panel[0], pick.panel[1]);          // by default the room wears the floor in front of its panel and the wall the panel is set in
+    L.room(pick.rect, { floor: floor ?? L.get(pick.front[0], pick.front[1]), wall: wall ?? L.get(pick.panel[0], pick.panel[1]) }); L.secretPanel(pick.panel[0], pick.panel[1]);
+    { const fh = L.ht?.[pick.front[1]]?.[pick.front[0]] ?? 0; if (fh && L.height) L.height(pick.rect, fh); }          // PT-081: the room stands at the height of the floor in front of its panel (a room 3 m below a walkway was a trap: Signal House)          // by default the room wears the floor in front of its panel and the wall the panel is set in
     const free = pick.cells.slice().reverse(); rewards.forEach((c, i) => { const [x, z] = free[i % free.length]; L.put(x, z, c); });
     const half = (w - 1) / 2, far = [pick.cells[half], pick.cells[w + half]].filter(Boolean);          // the secret counts as found when the player stands in the first cells behind the panel (the centre column), as in the hand-built ones
-    this.secrets.push({ id, panel: pick.panel, cells: far });
+    this.secrets.push({ id, panel: pick.panel, cells: far, ...(open !== 'use' ? { open } : {}) });
+    if (open === 'switch') { if (!lever?.at) throw new Error(`secretRoom ${id}: a switch secret needs lever.at`); this.levers.push({ type: 'switch', id: id + '-lever', at: lever.at, wall: lever.wall ?? 'north', do: [{ open: pick.panel }] }); }
     // the hint: a scuffed patch on the PLAIN wall one cell to the side of the panel (a decal sits on a wall, and the panel is a secret tile, not a wall); none if neither side is floor in front of plain wall
     const [vx, vz] = V[pick.dir], hint = [1, -1].map((s) => [pick.front[0] - vz * s, pick.front[1] + vx * s]).find(([cx, cz]) => FLOOR.has(L.get(cx, cz)) && solid(cx + vx, cz + vz));
-    if (hint) this.decals.push({ kind: 'scrape', at: hint, wall: { n: 'north', s: 'south', e: 'east', w: 'west' }[pick.dir], y: 1.0, size: 1.0 });
+    if (hint && open !== 'shoot') this.decals.push({ kind: 'scrape', at: hint, wall: { n: 'north', s: 'south', e: 'east', w: 'west' }[pick.dir], y: 1.0, size: 1.0 });
     if (message) this.messages.push({ id, at: far[0], radius: 2, ...message });
     this.log.push({ kind: 'secret', id, panel: pick.panel }); return { id, panel: pick.panel, rect: pick.rect };
   }
@@ -111,6 +113,7 @@ export class Encounters {
     if (this.messages.length) MAP.messages = [...(MAP.messages ?? []), ...this.messages];
     if (this.secrets.length) MAP.secrets = [...(MAP.secrets ?? []), ...this.secrets];
     if (this.decals.length) MAP.decals = [...(MAP.decals ?? []), ...this.decals];
+    if (this.levers.length) MAP.entities = [...(MAP.entities ?? []), ...this.levers];                          // PT-081: the levers of switch secrets, after every other entity
     return MAP;
   }
 }

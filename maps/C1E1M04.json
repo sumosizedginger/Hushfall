@@ -29,10 +29,10 @@
   "###W......................WW################################",
   "###WW....................WWW################################",
   "###WWWWWWWWW....WWWWWWWWWWWW################################",
-  "###########W....W###########################################",
-  "###########W....W###########################################",
-  "###########W....W###########################################",
-  "###WWWfffWWW....WWfffWWWfffWWWfffWWWfffWWWWW...WWW...WWW####",
+  "###########W....W##########################WWWWW############",
+  "###########W....W##########################W...W############",
+  "###########W....W##########################W...W############",
+  "###WWWfffWWW....WWfffWWWfffWWWfffWWWfffWWWWWWSWWWW...WWW####",
   "###WWWWfffffffffffffffffffffffffffffffffWW.............W####",
   "###WWWfffffffffffffffffffffffffffffffffffW.............W####",
   "###fWffffffffffffffffffffffffffffffffffffW.............W####",
@@ -254,6 +254,15 @@
     [56, 39],
     [57, 39]
    ]
+  },
+  {
+   "id": "smugglers-cupboard",
+   "panel": [45, 21],
+   "cells": [
+    [45, 20],
+    [45, 19]
+   ],
+   "open": "shoot"
   }
  ],
  "closets": [
@@ -345,7 +354,39 @@
    ]
   },
   {
-   "id": "amb-cage-2",
+   "id": "amb-dropin-2",
+   "when": "enter",
+   "at": [17, 44],
+   "radius": 2,
+   "do": [
+    {
+     "sound": "creak"
+    },
+    {
+     "shake": 0.8
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [17, 37],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [18, 49],
+      "group": "amb-dropin-2",
+      "facing": "south",
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "amb-cage-3",
    "when": "enter",
    "at": [51, 24],
    "radius": 1.5,
@@ -360,7 +401,7 @@
      "spawn": {
       "kind": "gaunt",
       "at": [47, 22],
-      "group": "amb-cage-2",
+      "group": "amb-cage-3",
       "facing": "south",
       "hunt": true
      }
@@ -369,7 +410,7 @@
      "spawn": {
       "kind": "gaunt",
       "at": [53, 28],
-      "group": "amb-cage-2",
+      "group": "amb-cage-3",
       "facing": "south",
       "hunt": true
      }
@@ -499,6 +540,21 @@
    "type": "prop",
    "kind": "lamp",
    "at": [15, 14]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [44, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [45, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [46, 19]
   },
   {
    "type": "pickup",
@@ -1160,6 +1216,13 @@
    "radius": 1.5,
    "speaker": "RIGGER'S HOOK",
    "text": "A marlinspike on the stair hook. Put it into a sleeper from behind and it does not wake: three times the work of a stab from the front."
+  },
+  {
+   "id": "smugglers-cupboard",
+   "at": [45, 20],
+   "radius": 2,
+   "speaker": "INES",
+   "text": "A smuggler's cupboard behind the chandlery wall. He never came back for what he hid."
   }
  ],
  "decals": [

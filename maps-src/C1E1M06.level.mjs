@@ -54,6 +54,7 @@ L.put(62, 24, '>');
 // ---- PT-052 R2 (the Director's Plan, the roster pass, design/ROADMAP.md 0.12): no kind over a third, over a quarter of the creatures shoot, a secret (the kit: tools/mapkit/roster.mjs and encounters.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 reroster(L, { id: 'C1E1M06', lane: laneOf('C1E1M06'), plan: [{ from: 't', to: 'b', n: 5, pick: 'range' }, { from: 't', to: 'g', n: 4, pick: 'spread' }] });          // eleven Bellhands killed the perfect bot on hard: nine is what it takes
 const E = new Encounters(L);
+E.secretRoom({ id: 'ticket-office', search: { region: [3, 3, 64, 42], prefer: [8, 36], lane: laneOf('C1E1M06') }, open: 'shoot', rewards: ['v', 'r', 'H'], message: { speaker: 'INES', text: 'A ticket office the tide got into. Somebody bricked it shut from this side.' } });          // PT-081: a second secret of another kind, a cracked wall
 E.secretRoom({ id: 'porters-cage', search: { region: [3, 3, 64, 42], prefer: [34, 23], lane: laneOf('C1E1M06') }, rewards: ['v', 'H', 'a'], message: { speaker: 'INES', text: "A porter's cage under the ramp. The ferry company locked its lost property in here and kept the key." } });
 // ---- end PT-052 ----
 

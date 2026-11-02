@@ -4,6 +4,7 @@
 //        -> iron door -> descending stair corridor -> exit. Secret: the Lost Property office behind the vestibule wall.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
 
 const L = new Level(64, 52);
 
@@ -77,6 +78,12 @@ S.dressBays('shelf', regBays);
 console.log('C1E1M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
 
+// ---- PT-081 (design/FUN_CHECK.md, standard 7: secrets of more than one kind) ----
+const E = new Encounters(L);
+E.secretRoom({ id: 'seized-goods', search: { region: [3, 3, 60, 49], prefer: [55, 30], lane: laneOf('C1E1M02') }, open: 'shoot', rewards: ['v', 'r', 'H'], message: { speaker: 'INES', text: 'Seized goods, bricked up and never logged. Customs kept a few things for itself.' } });          // PT-081: a second secret of another kind, a cracked wall
+E.dropIn({ at: [40, 31], radius: 2, cells: E.around([40, 31], { n: 2, min: 5, max: 9 }), kind: 'g' });          // PT-081 (the 160 m walk with nothing awake: up the stair, along the gallery to the brass door): two Gaunts come over the balustrade
+// ---- end PT-081 ----
+
 const layers = L.layers();
 
 const MAP = {
@@ -119,5 +126,7 @@ MAP.decals = [{ kind: 'scorch', at: [6, 28], wall: 'north', y: 1.3, size: 1.3 },
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
 MAP.drops = { scale: 1 };
+
+E.apply(MAP);                                                                                    // PT-081: the cracked-wall secret joins the map
 
 export default MAP;

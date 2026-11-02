@@ -16,7 +16,7 @@ const at = (kind) => map.entities.filter((e) => e.kind === kind);
 test('Marrow Quay is valid, and structurally what the design says it is', () => {
   assert.deepEqual(validateMap(shippedSrc()), { ok: true, errors: [] });
   assert.equal(map.name, 'Marrow Quay'); assert.equal(map.id, 'C1E1M01');
-  assert.deepEqual(map.counts().secrets, 1);
+  assert.deepEqual(map.counts().secrets, 2);                                                       // PT-081: the net loft, and a cracked wall (the rope store: tools/dev/fun-m01.mjs)
   assert.ok(map.scenery.some((s) => s.kind === 'tower'), 'the bell tower is visible landmark scenery');
   assert.ok(map.scenery.filter((s) => s.kind === 'boat').length >= 2);
   const kinds = new Set(map.tiles.flat()); for (const t of ['~', 'p', ':', 'B', '.', 'D', 'S']) assert.ok(kinds.has(t), 'uses tile ' + t);
@@ -25,7 +25,7 @@ test('Marrow Quay is valid, and structurally what the design says it is', () => 
 test('reachability: exit, key, every pickup and enemy, and the secret are all reachable', () => {
   const r = analyseReach(map);
   assert.equal(r.exitReachable, true); assert.deepEqual(r.keysObtainable, ['brass']); assert.deepEqual(r.unreachable, []);
-  assert.deepEqual(r.secretsReachable, [{ id: 'net-loft', reachable: true }]);
+  assert.deepEqual(r.secretsReachable, [{ id: 'net-loft', reachable: true }, { id: 'rope-store', reachable: true }]);
 });
 
 test('the exit really is gated: without the brass key the dock is unreachable', () => {
@@ -96,7 +96,7 @@ test('par time is plausible against the bot: between 2x and 8x the required rout
 
 test('canonical routes: only the secret route finds the secret, and both stay within par', () => {
   const main = runRoute(map, shippedRoute('C1E1M01.main'), { seed: 1 }), sec = runRoute(map, shippedRoute('C1E1M01.secret'), { seed: 1 });
-  assert.equal(main.world.stats.secrets, 0); assert.equal(sec.world.stats.secrets, 1);
+  assert.equal(main.world.stats.secrets, 0); assert.equal(sec.world.stats.secrets, 2);
   assert.ok(sec.world.stats.items > main.world.stats.items, 'the secret adds items');
   for (const r of [main, sec]) { assert.ok(r.world.endStats.time > 30, 'not trivially short'); assert.ok(r.world.endStats.time < map.par.time, 'within par: ' + r.world.endStats.time.toFixed(0)); }
 });
