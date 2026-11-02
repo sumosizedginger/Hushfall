@@ -1,139 +1,177 @@
-// C2M10 ECHO MARKETS: a ring bazaar round an echo-well; dozens of peaceful Vael, Zealots among them. (Campaign 2, Act B THE SOUNDING DEEP; design/ACTB.md.)
-// A hall 86 m across under a cave roof, and in it a market laid out as a wheel: the WELL in the middle (a funnel 3 m deep, the one place in the hall where a loud noise turns round and comes back), a plaza ring round the
-// well, three belts of houses and stalls between rings of street, twelve alleys through the belts, each belt's alleys offset from the last so that no street runs straight through (the sightline is short). `atmosphere.echo: 2`:
-// a SHOT carries twice as far in here (engine: ECHO in defs.js, noise() in world.js; the arc lamp uncharged, a blow and the fork are quiet and carry as they always did). The crowd runs from a shot, the Zealots and porters
-// sleeping in the alleys wake to it, and the north gate is on a SOUND-LOCK: it will not open while the hall has been loud inside the last six seconds. The verb is aim discipline: a civilian shot is an innocent (a message and a rank
-// cost, never a death). Scale class COMPRESSION (all roofed, short sightlines). No new engine beyond the echo.
-// SHAPE: a wheel, not a box: a funnel well, a plaza ring, three belts of houses with seeded gaps and a few open squares, an outer street along the cave wall; the south gate and north gate are straight corridors.
+// C2M10 ECHO MARKETS: a bazaar round an echo-well; dozens of peaceful Vael, Zealots among them. (Campaign 2, Act B THE SOUNDING DEEP; design/ACTB.md.)
+// PT-082 REDRAW (design/FUN_CHECK.md: a perfect disc with rings of blocks, flat, six empty rooms). Drawn by hand as a MARKET TOWN under a cave roof: the south gate opens on the lower market (house blocks with
+// lanes between, no street running straight through), the ECHO WELL on the west (a funnel 3 m deep in a pillared ring: the one place where a loud noise turns round and comes back), the ARCADE along the west wall
+// (the Silent's wing, roofed in bone-coral, its back room behind a panel), the east street under the UPPER QUARTER (2 m up, marble, its own houses and lanes, a parapet over the street and a stair at each end: the
+// loop above the loop), and the north square before the SOUND-LOCKED gate. `atmosphere.echo: 2`: a SHOT carries twice as far in here (the arc lamp uncharged, a blow and the fork are quiet). The crowd runs from a
+// shot, the Zealots and porters sleeping in the lanes wake to it, and the north gate will not open while the hall has been loud in the last six seconds. A civilian shot is an innocent (a message and a rank cost).
+// Two secrets of two kinds: the Silent's back room (a panel in the arcade's west wall) and a sealed house behind the quarter's east wall (shoot the crack).
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
-import { laneOf } from '../tools/mapkit/shape.mjs';
-import { setCell, box, placer } from '../tools/mapkit/c2.mjs';
-import { blob, rng } from '../tools/mapkit/cave.mjs';
+import { placer } from '../tools/mapkit/c2.mjs';
+import { rng } from '../tools/mapkit/cave.mjs';
+import { sketch } from '../tools/mapkit/sketch.mjs';
 
-const SC = 0.82, W = 88, H = 88, CX = 44, CZ = 44, L = new Level(W, H, { fill: '[' }); L.usedHeights = true; L.usedCeil = true;
-const ROCK = '[', FLAG = 'f', PLAZA = ')', WELL = '{', CITY = ']', MARBLE = '|', SLAB = '^', CARPET = 'c', BONE = '*';
-const BASE = 6, S = 0, N = Math.PI, EAST = Math.PI / 2, WEST = -Math.PI / 2;
-const rnd = rng(1010);
-// ---- the hall: one carved cavern under a dome (floor 3 m up, the vault 13 to 17 m) ----------------------------------------------------------------------------------------------------------------------------------------------------------
-const hall = blob(L, CX, CZ, 43 * SC, 43 * SC, { seed: 101, rough: 0.05, ch: FLAG, h: BASE, lidMid: 34, lidEdge: 27 });
-const polar = (r, deg) => [Math.round(CX - 0.5 + r * SC * Math.cos((deg * Math.PI) / 180)), Math.round(CZ - 0.5 + r * SC * Math.sin((deg * Math.PI) / 180))];       // deg 0 = east, 90 = south, -90 = north
-// ---- the wheel: classify every carved cell by radius and angle ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const BELTS = [{ r0: 12.5, r1: 16.5, off: 0, w: 3.6 }, { r0: 20, r1: 25.5, off: 15, w: 3.6 }, { r0: 29.5, r1: 35, off: 0, w: 4 }];
-const openSq = new Set(); for (const [b, k] of [[0, 1], [0, 8], [1, 3], [1, 10], [2, 5], [2, 11], [2, 2]]) openSq.add(b + ':' + k);        // sectors with no houses: small squares
-const wellCells = [], houseCells = [];
-for (const [x, z] of hall) {
-  const dx = x + 0.5 - CX, dz = z + 0.5 - CZ, rc = Math.hypot(dx, dz), r = rc / SC, th = (Math.atan2(dz, dx) * 180) / Math.PI;
-  if (r < 8) { setCell(L, x, z, WELL, Math.max(0, BASE - Math.round(6.5 - rc))); wellCells.push([x, z]); continue; }
-  if (r < 12.5) { setCell(L, x, z, PLAZA); continue; }
-  for (const [bi, b] of BELTS.entries()) {
-    if (r < b.r0 || r >= b.r1) continue;
-    const sector = Math.floor((((th - b.off) % 360) + 360) % 360 / 30), phase = ((((th - b.off) % 30) + 30) % 30), distToGap = Math.min(phase, 30 - phase) * (Math.PI / 180) * rc;
-    if (distToGap < b.w / 2 || openSq.has(bi + ':' + sector)) break;                                               // an alley, or an open square
-    setCell(L, x, z, CITY); houseCells.push([x, z]); break;
-  }
-  if (r >= 35.5 && L.g[z][x] === FLAG) setCell(L, x, z, '{');                                                   // the outer street along the wall is flowstone
-}
-// ---- the gates: a corridor from the south with the start, the sound-locked north gate and its antechamber -------------------------------------------------------------------------------------------------------------------------------------------------
-for (let z = 77; z <= 84; z++) for (let x = CX - 1; x <= CX + 1; x++) setCell(L, x, z, FLAG, BASE, 14);
-for (let z = 6; z <= 12; z++) for (let x = CX - 2; x <= CX + 2; x++) setCell(L, x, z, FLAG, BASE, 20);
-for (let z = 2; z <= 4; z++) setCell(L, CX, z, SLAB, BASE, 14); setCell(L, CX - 1, 5, MARBLE, BASE); setCell(L, CX + 1, 5, MARBLE, BASE); L.door(CX, 5, { soundlock: { quiet: 6, radius: 45 } }); L.height([CX, 5, CX, 5], BASE);
-// ---- the store: a secret room in the west wall behind a panel (the quiet bazaar: the Silent sell at the back) ----------------------------------------------------------------------------------------------------------------------------------------------
-let xw = 99; for (const [x, z] of hall) if (z === CZ && x < xw) xw = x;
-const SEC = { panel: [xw - 1, CZ], cells: [] };
-for (let z = CZ - 3; z <= CZ + 3; z++) for (let x = Math.max(2, xw - 6); x <= xw - 2; x++) { setCell(L, x, z, SLAB, BASE, BASE + 12); SEC.cells.push([x, z]); }
-setCell(L, xw - 1, CZ, 'S', BASE);
-// ---- the walls: the rock round the hall is city stone with lamp niches on the south and bone-coral in the north (the Silent's wing) -----------------------------------------------------------------------------------------------------------
-const skin = (x, z) => (z < 30 && x > 30 && x < 70 ? BONE : CITY);
-for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) if (L.g[z][x] === ROCK) { let t = false; for (let dz = -1; dz <= 1 && !t; dz++) for (let dx = -1; dx <= 1; dx++) if ('fcl{)^'.includes(L.g[z + dz][x + dx])) { t = true; break; } if (t) L.g[z][x] = skin(x, z); }
-const P = placer(L); L.put(CX, 82, '@'); P.reserve(CX, 82);
-const { E, P: PK, PR } = P;
-// ---- kiosks of city stone in the outer street (the long curve of it was the longest sightline in the hall): a block of 2 x 2 every 20 degrees, never at the gates --------------------------------------------------------------------------------------------------------
-for (let k = 0; k < 18; k++) { const d = k * 20 + 10; if ((d > 78 && d < 102) || (d > 258 && d < 282)) continue; const [x, z] = polar(38.5, d); if ([[0, 0], [1, 0], [0, 1], [1, 1]].every(([a2, b2]) => 'f{)'.includes(L.g[z + b2]?.[x + a2] ?? '#'))) box(L, [x, z, x + 1, z + 1], CITY); }
-for (let k = 0; k < 9; k++) { const d = k * 40 + 20; if ((d > 78 && d < 102) || (d > 258 && d < 282)) continue; const [x, z] = polar(27.5, d); if ([[0, 0], [1, 0]].every(([a2, b2]) => 'f{)'.includes(L.g[z + b2]?.[x + a2] ?? '#'))) box(L, [x, z, x + 1, z], CITY); }              // street 2: a 2 x 1 stall of stone every 40 degrees
-for (let k = 0; k < 18; k++) { const [x, z] = polar(11.5, k * 20 + 10); if (L.g[z]?.[x] === PLAZA) setCell(L, x, z, MARBLE); }                                                                                                   // posts of marble on the plaza ring
-// ---- the stalls and the lamps: seeded props in the streets, never in an alley's mouth -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const isStreet = (r) => (r >= 16.5 && r < 20) || (r >= 25.5 && r < 29.5) || (r >= 35 && r < 42);
-const kinds = ['crate2', 'crate2', 'shelf', 'shelf', 'shelf', 'stall', 'cart', 'crate2', 'table'];
-const taken = [];
-for (let n = 0, tries = 0; n < 150 && tries < 9000; tries++) {
-  const r = 17 + rnd() * 24, th = rnd() * 360, [x, z] = polar(r, th); if (!isStreet(Math.hypot(x + 0.5 - CX, z + 0.5 - CZ) / SC) || !P.isFloor(x, z)) continue;
-  if (Math.hypot(x - CX, z - 80) < 6 || Math.hypot(x - CX, z - 8) < 6) continue;
-  if (taken.some(([a, b]) => Math.abs(a - x) < 2 && Math.abs(b - z) < 2)) continue;
+const W = 72, H = 68, L = new Level(W, H, { fill: '[' }); L.usedHeights = true; L.usedCeil = true;
+// ---- the town, drawn: north is up. The market floor is 3 m up (h 6) so the well can be sunk; the upper quarter is 2 m above it (h 10); the cave roof is 15 m (30) over all of it --------------------------------------
+const PLAN = String.raw`
+
+                                   ###
+                                   #X#
+                               #####g#####
+                               #####g#####
+                               #####g#####
+                               #####g#####
+                               #####g#####
+                               #####D#####
+                                fffffffff
+                                fffffffff
+               fffffffffffffffffffffffffffffffffffff
+               fffffffffffffYfffffffYfffTfffffffffff
+    *******    fffff#####fQffffffffffffffffff  77777
+    *ccccc*fffffffff#####fffffffff#####+fffff  88888
+    *ccccc*fff#####f#####fffffffff#####ffffff  99999
+    *ccYcc*fff#####f#####fffffffff#####ffffff  qqqqq
+    *ccccc*fff#####fffffffffGfffff#####ffffff qqqqqqqqqqqqqqqq
+    *ccccccfff#####ffffffffffffffffffffffffff qqqqqqqqqHqqqqqq
+    *ccccccffffffffffffff#####fffffffff#####f qqqqqqqqqqqqqqqq
+    *ccccccf$fffffffffff!#####ffffff$ff#####f qqq#####qq#####q
+    *ccccc*fffff#####ffff#####fffffffff#####f qqq#####qq#####qqqq
+    *cccHc*fffff#####ffff#####fffffffff#####f qqq#####qq#####qqqq
+    *ccccc*fffff#####ffffffffffffffffffffffff qqq#####qq#####qqqq
+    *ccccc*fffff#####fffffffffTfffffffffffYff qqqqqqqqqqqqqqqqqqq
+    *ccccc*fQfffffffffffffffffffffffffffffffffqqqqqqTqqYqqq!qqHqq
+    *ccccc*ffffffffrrffffff+ffffffffffffffffffAqqqqqqqqqqqqqqqqqq
+    *ccccc*fYfffrrrrrrrrffffffffffffffffffTfffqqq######qq#####qqq
+    *ccc+c*fffrrrrrrrrTrrrffffffffffffffffffffqqq######qq#####qqq
+    *ccccc*ffrrrrrrwwrrrrrrfffffffffffff#####fqqq######qq#####qqq#####
+    *ccccccfrrrrwwwwKwwwrrrrff#####fffff#####fqHq######qq#####qqq#kkk#
+    *ccccccfrrrwwwwwwwwwwrrrff#####fffff#####fqqqqqqqqqqq#####qqqZkkk#
+*****ccccccrrrwwwwwwwwwwwwrrrf#####fffff#####fqqqqqqqqqqqqqqqqqqq#kkk#
+*hhh*ccccc*rrrwwwwwwwwwwwwrrrf#####fffffffffffqqYqqqqqq$qqQqGqqqq#####
+*hhh*ccccc*rrrwwwwwwwwwwwwrrrf#####fffffffffQfqqq#####qqqqqqqqqqq
+*hhhSccccc*rrwwwwwwwwwwwwwwrrrffffffffffffffffqqq#####qq#####qqqq
+*hhh*ccccc*rrwwwwwwwwwwwwwwrrrffffffffff#####fqqq#####qq#####qqqq
+*hhh*ccccc*rrrwwwwwwwwwwwwrrrfffffffffff#####fqqq#####qq#####qqqq
+*****ccccc*rTrwwwwwwwwwwwwrrrf#####fffff#####fqqq#####qq#####qqqq
+    *ccccc*rrrwwwwwwwwwwwwrrrf#####fffff#####fqqqqqqqqqqqqqqqqqqq
+    *ccccccfrrrwwwwwwwwwwrrrff#####fffffffffffqHqqq+qqqTqqqqqqqqq
+    *ccccccfrrrrwwwwwwwwrrrrff#####fffffffffffqqqqqqqqqqqqqqqqqqq
+    *ccccccffrrrKrrwwrrrrrKfff#####fffffffYfffqqq######qq#####qqq
+    *ccccc*fffrrrrrrrrrrrrffffffffffffffffffffqqq######qq#####qqq
+    *ccccc*GffffrrrrrrrrffffffffffffQfGfffff+fqqq######qq#####qqq
+    *ccccc*ffffffffrrfffffffffffffffffffffffffqqq######qq#####qqq
+    *ccccc*fffffffffffffffffffffffffffffffffffqqqqqqqqqqq#####qqq
+    *ccccc*fffYfffffTfffffffffffffffffffffffffqqqqqqqqqYqqqqqq
+    *cc$cc*   ffffffffffffffffYfffffffffffffffqqqqqGqqqqqqqqqq
+    *ccccc*   ffffffffffQffffffffffffffffffffGqqqqqqqqqqqqqq+q
+    *ccccc*fffffffff+ffffff#####ffffff#####fffqqqqqqqqqqqqqqqq
+    *ccccc*ffff#####fffffff#####ffffff#####ffff   9999
+    *ccYcc*ffff#####fffffff#####ffff!f#####ffff   8888
+    *ccccc*ffff#####fffffff#####ffffff#####ffff   7777
+    *ccccc*ffff#####ffffffffffffffffffffffffffffffffff
+    *ccccc*ffffffffffffffffffffffTffffffffffffffffffff
+    *******fffffffffff#####ffffffffffff#####ffffffffff
+           fffff#####f#####fff$ffffffff#####ffffffffff
+           fffff#####T#####ffffffffffff#####fff
+           fffff#####f#####ffffffffYfff#####
+           fffff#####fffffffffffffffffffffff
+                                 #sss#
+                                 #sss#
+                                 #s@s#
+                                 #sss#
+                                 #sss#
+                                 #####
+`;
+const ROOF = 30, F = (t, h, c = ROOF) => ({ t, h, c });
+const S = sketch(L, PLAN, {
+  '#': { t: ']' }, '*': { t: '*' },
+  f: F('f', 6), r: F(')', 6), w: { t: '{', h: (x, z) => Math.max(0, 6 - Math.round(6.6 - Math.hypot(x + 0.5 - 20, z + 0.5 - 36))), c: ROOF },     // the lanes, the ring, the well's funnel
+  q: F('^', 10), 7: F('f', 7), 8: F('f', 8), 9: F('f', 9),                                                        // the upper quarter and its stairs
+  c: { t: 'c', h: 6, lid: 6 }, h: { t: '^', h: 6, lid: 6 }, k: { t: 'c', h: 10, lid: 5 },                        // the arcade (low roof), the back room, the sealed house
+  g: F('f', 6, 20), e: F('^', 6, 14), s: F('f', 6, 14),                                                           // the gate's stair, the exit, the south gate's corridor
+}, { marks: '@XDSZQTGKHA$+!Y' });
+const P = placer(L), { E, P: PK, PR } = P, rnd = rng(1010); const [sx, sz] = S.one('@'); L.put(sx, sz, '@'); P.reserve(sx, sz);
+const GATE = S.one('D'), ROOM = S.one('S'), SEALED = S.one('Z'), EXIT = S.one('X');
+L.door(GATE[0], GATE[1], { soundlock: { quiet: 6, radius: 45 } }); L.secretPanel(ROOM[0], ROOM[1]); L.secretPanel(SEALED[0], SEALED[1]);
+// ---- the hostile: sleepers among the crowd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [ch, kind] of [['Q', 'zealot'], ['T', 'tollbearer'], ['G', 'gaunt'], ['K', 'chorister'], ['H', 'bellhand'], ['A', 'acolyte']]) for (const [x, z] of S.at(ch)) E(kind, x, z, kind === 'zealot' ? { facing: rnd() * 6.28 } : undefined);
+// ---- health and armour (ammunition comes from the dead) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('$')) PK('health_large', x, z); for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S.at('!')) PK('armor_vest', x, z);
+// the back room (the quiet bazaar: the Silent sell at the back) and the sealed house
+PK('armor_vest', 1, 34); PK('health_large', 1, 36); PK('ammo_shell', 2, 33); PK('ammo_rivet', 2, 37); PK('ammo_flare', 3, 34); PK('ammo_bolt', 3, 36);
+PK('ld_rime_scattergun', 67, 31); PK('health_large', 66, 30);
+// ---- the light: lanterns where drawn, a ring of them round the well, lamps hung over the lanes ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (const [x, z] of S.at('Y')) PR('lantern', x, z);
+for (let k = 0; k < 16; k++) { const a = (k / 16) * 2 * Math.PI; PR('lantern', Math.round(20 - 0.5 + 8.6 * Math.cos(a)), Math.round(36 - 0.5 + 8.6 * Math.sin(a))); }
+for (let k = 0; k < 8; k++) { const a = (k / 8) * 2 * Math.PI + 0.2; PR('pillar', Math.round(20 - 0.5 + 7.8 * Math.cos(a)), Math.round(36 - 0.5 + 7.8 * Math.sin(a))); }
+// ---- the stalls: seeded against the house walls, only where the lane is wide enough that a stall never closes it ----------------------------------------------------------------------------------------------------------------------------------------------
+const lane = (x, z) => L.g[z]?.[x] === 'f' || L.g[z]?.[x] === '^';
+const nearGate = (x, z) => Math.hypot(x - sx, z - sz) < 6 || Math.hypot(x - GATE[0], z - GATE[1]) < 6;
+const kinds = ['crate2', 'shelf', 'shelf', 'stall', 'cart', 'crate2', 'table', 'stall'], taken = [];
+for (let n = 0, tries = 0; n < 70 && tries < 12000; tries++) {
+  const x = 2 + Math.floor(rnd() * (W - 4)), z = 2 + Math.floor(rnd() * (H - 4));
+  if (!lane(x, z) || nearGate(x, z)) continue;
+  const wall = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => L.g[z + b]?.[x + a] === ']'); if (!wall) continue;
+  let open = 0; for (let b = -2; b <= 2; b++) for (let a = -2; a <= 2; a++) if (lane(x + a, z + b)) open++; if (open < 15) continue;          // the lane is at least three wide here
+  if (taken.some(([a, b]) => Math.abs(a - x) < 3 && Math.abs(b - z) < 3)) continue;
   taken.push([x, z]); PR(kinds[Math.floor(rnd() * kinds.length)], x, z); n++;
 }
-for (let k = 0; k < 12; k++) PR('pillar', ...polar(12, k * 30 + 15));                                                                                   // the plaza ring is pillared
-for (let k = 0; k < 36; k++) { PR('lantern', ...polar(10.5, k * 10)); }                                                                                     // round the well
-for (let k = 0; k < 24; k++) { PR('lantern', ...polar(18.2, k * 15 + 7)); PR('lantern', ...polar(27.4, k * 15 + 3)); }                                          // the two inner streets
-for (let k = 0; k < 20; k++) PR('lamp', ...polar(38.5, k * 18 + 4));                                                                                          // the outer street hangs lamps from the vault
-// ---- health and armour (ammunition comes from the dead: the compiler drops the boxes of the public part) -------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [r, d] of [[18, 70], [18, 200], [18, -20], [27.5, 120], [27.5, 300], [27.5, 20], [10, 10], [10, 190], [38, 90], [38, 270], [38, 0], [38, 180], [18, 120], [27.5, 240]]) PK(d % 3 ? 'health_small' : 'health_large', ...polar(r, d));
-for (const [r, d] of [[10, 100], [27.5, 200], [38, 330], [18, -110], [27.5, 80]]) PK('armor_vest', ...polar(r, d));
-PK('armor_vest', xw - 4, CZ - 2); PK('health_large', xw - 4, CZ + 2); PK('ammo_shell', xw - 3, CZ - 1); PK('ammo_rivet', xw - 3, CZ + 1); PK('ammo_flare', xw - 5, CZ); PK('ammo_bolt', xw - 5, CZ - 2);          // the store
-// ---- the hostile: sleepers, among the crowd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [r, d] of [[27.5, 20], [27.5, 100], [27.5, 175], [27.5, 255], [27.5, 335], [10.5, -90]]) E('zealot', ...polar(r, d), { facing: ((d + 90) * Math.PI) / 180 });
-for (const [r, d, k] of [[18.2, 50, 'tollbearer'], [18.2, 120, 'tollbearer'], [18.2, 200, 'tollbearer'], [18.2, 290, 'tollbearer'], [18.2, -30, 'tollbearer'], [38, 60, 'tollbearer'], [38, 150, 'tollbearer'], [38, 240, 'tollbearer'], [38, -50, 'tollbearer'], [27.5, 60, 'tollbearer']]) E(k, ...polar(r, d));
-for (const [r, d] of [[38, 100], [38, 195], [38, 285], [38, -10], [27.5, 140], [27.5, 300]]) E('gaunt', ...polar(r, d));
-E('chorister', ...polar(10.5, 40)); E('chorister', ...polar(10.5, 160)); E('chorister', ...polar(10.5, 280));
-E('bellhand', ...polar(18.2, 80)); E('bellhand', ...polar(18.2, 255)); E('bellhand', ...polar(27.5, -70));
-E('acolyte', ...polar(27.5, -88));
-// ---- the crowd: peaceful Vael on every street and round the well, seeded --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (let n = 0, tries = 0; n < 40 && tries < 4000; tries++) {
-  const r = 9 + rnd() * 32, th = rnd() * 360, [x, z] = polar(r, th), rr = Math.hypot(x + 0.5 - CX, z + 0.5 - CZ) / SC;
-  if (!(rr >= 9 && rr < 12.5) && !isStreet(rr)) continue; if (!P.isFloor(x, z) || Math.hypot(x - CX, z - 80) < 7 || Math.hypot(x - CX, z - 8) < 7) continue;
+// ---- the crowd: peaceful Vael in the lanes, round the well and in the quarter, seeded ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for (let n = 0, tries = 0; n < 40 && tries < 8000; tries++) {
+  const x = 2 + Math.floor(rnd() * (W - 4)), z = 2 + Math.floor(rnd() * (H - 4)), t = L.g[z]?.[x];
+  if (!(t === 'f' || t === ')' || t === '^') || nearGate(x, z)) continue;
   if (E('vaelfolk', x, z, { facing: rnd() * 6.28 })) n++;
 }
-// ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
-ENC.dropIn({ at: [39,65], radius: 2, cells: ENC.around([39,65], { n: 3, min: 6, max: 10 }), kind: 'g' });
-// ---- end PT-052 ----
+ENC.dropIn({ at: [24, 47], radius: 2.5, cells: [[19, 49], [28, 48], [25, 52]], kind: 'g' });                        // porters out of the lanes as you cross to the well
 
 const MAP = {
-  id: 'C2M10', name: 'Echo Markets', version: 1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M10', name: 'Echo Markets', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'markets', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
-  intro: { title: 'ECHO MARKETS', lines: ['A market under the roof of the cave, laid out as a wheel round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },
+  intro: { title: 'ECHO MARKETS', lines: ['A market town under the roof of the cave, round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },
   outro: 'The north gate opened when the hall had gone quiet. Behind it the stair goes down, and the noise of the market stays behind.',
   objective: 'Cross the market, south gate to north gate. The north gate will not open while the hall is loud',
   ...L.layers(),
-  secrets: [{ id: 'store', panel: SEC.panel, cells: SEC.cells }],
+  secrets: [{ id: 'store', panel: ROOM, cells: [[1, 33], [2, 33], [3, 33], [1, 34], [2, 34], [3, 34], [1, 35], [2, 35], [3, 35], [1, 36], [2, 36], [3, 36], [1, 37], [2, 37], [3, 37]] },
+    { id: 'sealed', panel: SEALED, cells: [[66, 31], [67, 31]], open: 'shoot' }],
   groups: [],
-  entities: [...P.ents, { type: 'exit', at: [CX, 3], dest: 'next' }],
+  entities: [...P.ents, { type: 'exit', at: EXIT, dest: 'next' }],
   scenery: [],
   messages: [
-    { id: 'start', at: [CX, 81], radius: 4, speaker: 'INES', text: 'A hall with a roof I can\'t see. Stalls, strings of lamps, and a crowd that\'s doing its buying in a murmur. Nobody here has a bell.' },
-    { id: 'echo', at: [CX, 74], radius: 4, speaker: 'HULL', text: 'The hall has an echo: a shot carries twice as far as it does outside, and wakes what sleeps that far off. A blow, the arc lamp uncharged and the fork are quiet.' },
-    { id: 'folk', at: [CX, 67], radius: 5, speaker: 'INES', text: 'A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I\'m carrying.' },
-    { id: 'ledger', at: polar(27.5, 105), radius: 3, speaker: 'MARKET LEDGER', text: 'Cord, per length: one voice. Lamp oil, per tin: two. A room at the back, for a night: nothing, and ask no one.' },
-    { id: 'zealot', at: polar(18.2, 105), radius: 4, speaker: 'INES', text: 'Spears among the stalls. They stand with the butts on the flags and nobody gives them room or takes any. Part of the furniture, like the bollards at home.' },
-    { id: 'well', at: polar(10.5, 160), radius: 5, speaker: 'HULL', text: 'The well is an echo well: a noise made over it comes back from the walls. Keep anything quiet away from it.' },
-    { id: 'north', at: [CX, 13], radius: 4, speaker: 'HULL', text: 'The north gate is on a sound-lock. It will not open while the hall has made a loud noise in the last six seconds. Wait, then use it.' },
-    { id: 'hollow', at: [xw + 1, CZ], radius: 2, speaker: 'HULL', text: 'The west wall rings hollow behind the last stall.' },
-    { id: 'rack', at: [xw - 3, CZ], radius: 3, speaker: 'A SILENT (NOTE)', text: 'This is the room at the back. Nobody asks. Take what you need and leave the door as it was.' },
-    { id: 'end', at: [CX, 4], radius: 2, speaker: 'INES', text: 'A stair down, wide, and the murmur of the market already thinner behind me. It was a good market. I did not buy anything.' },
+    { id: 'start', at: [sx, sz - 1], radius: 4, speaker: 'INES', text: 'A hall with a roof I can\'t see. Stalls, strings of lamps, and a crowd that\'s doing its buying in a murmur. Nobody here has a bell.' },
+    { id: 'echo', at: [35, 57], radius: 4, speaker: 'HULL', text: 'The hall has an echo: a shot carries twice as far as it does outside, and wakes what sleeps that far off. A blow, the arc lamp uncharged and the fork are quiet.' },
+    { id: 'folk', at: [30, 50], radius: 4, speaker: 'INES', text: 'A stallholder throws a cloth over the fruit as I pass, the way you cover a pan when a gull lands. Not at me. At what I\'m carrying.' },
+    { id: 'zealot', at: [22, 47], radius: 4, speaker: 'INES', text: 'Spears among the stalls. They stand with the butts on the flags and nobody gives them room or takes any. Part of the furniture, like the bollards at home.' },
+    { id: 'well', at: [20, 26], radius: 4, speaker: 'HULL', text: 'The well is an echo well: a noise made over it comes back from the walls. Keep anything quiet away from it.' },
+    { id: 'ledger', at: [27, 24], radius: 3, speaker: 'MARKET LEDGER', text: 'Cord, per length: one voice. Lamp oil, per tin: two. A room at the back, for a night: nothing, and ask no one.' },
+    { id: 'north', at: [36, 11], radius: 4, speaker: 'HULL', text: 'The north gate is on a sound-lock. It will not open while the hall has made a loud noise in the last six seconds. Wait, then use it.' },
+    { id: 'hollow', at: [5, 35], radius: 2, speaker: 'HULL', text: 'The west wall of the arcade rings hollow behind the last stall.' },
+    { id: 'rack', at: [2, 35], radius: 2, speaker: 'A SILENT (NOTE)', text: 'This is the room at the back. Nobody asks. Take what you need and leave the door as it was.' },
+    { id: 'split', at: [63, 31], radius: 2, speaker: 'INES', text: 'One house in the quarter has its door walled up, and the wall has cracked. Whatever is inside has been inside a long time.' },
+    { id: 'sealed', at: [67, 31], radius: 1.5, speaker: 'INES', text: 'A room shut a long time ago and left: a bed, a lamp, scattergun shells packed in frost, and a mend in a tin by the door.' },
+    { id: 'end', at: [EXIT[0], EXIT[1] + 1], radius: 2, speaker: 'INES', text: 'A stair down, wide, and the murmur of the market already thinner behind me. It was a good market. I did not buy anything.' },
   ],
   triggers: [
-    { id: 'wheel', when: 'enter', at: [CX, 54], radius: 6, do: [{ objective: 'The wheel: the plaza ring, then the belts of houses. North is straight on' }] },
-    { id: 'gate', when: 'enter', at: [CX, 11], radius: 6, do: [{ objective: 'The north gate is sound-locked: stand quiet until it opens, then use it' }] },
+    { id: 'wheel', when: 'enter', at: [24, 47], radius: 4, do: [{ objective: 'The market: round the well or up through the quarter. The north gate is beyond' }] },
+    { id: 'gate', when: 'enter', at: [36, 12], radius: 5, do: [{ objective: 'The north gate is sound-locked: stand quiet until it opens, then use it' }] },
   ],
   quality: { enemies: [25, 60], botSeconds: [40, 900], mechanics: ['heights', 'triggers', 'secret'], skins: 6, enemyKinds: { zealot: 5, tollbearer: 8, gaunt: 5, chorister: 3, bellhand: 2, acolyte: 1 },
     scaleClass: 'COMPRESSION', introduces: 'the echo: a hall where a shot carries twice as far and wakes the market, a crowd of peaceful Vael to keep from harm, and a gate that only opens when the hall has gone quiet' },
 };
 MAP.drops = { scale: 1, keep: [] };
-console.log('C2M10: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind !== 'vaelfolk').length, 'folk', P.ents.filter((e) => e.kind === 'vaelfolk').length, 'props', P.ents.filter((e) => e.type === 'prop').length, 'houses', houseCells.length, 'xw', xw);
-// the route's waypoints (cells), by the same polar rule as the placement: the routes are written from these (node maps-src/C2M10.route.mjs)
-export const waypoints = (() => {
-  const south = [[CX, 79], [CX, 75], polar(38, 90)];
-  const wheel = [polar(27.5, 90), polar(27.5, 105), polar(22.5, 105), polar(18.2, 105), polar(14.5, 120), polar(10.5, 130), polar(10.5, 180), polar(10.5, -150), polar(14.5, -120), polar(18.2, -105), polar(22.5, -105), polar(27.5, -90), polar(32, -90), polar(38, -90), [CX, 8], [CX, 7]];
-  const gate = [{ op: 'use', at: [CX, 5] }, [CX, 4, 0], [CX, 3, 0]];
-  return { main: [...south, ...wheel, ...gate], secret: [...south, polar(38, 130), polar(38, 165), [xw + 2, CZ], { op: 'use', at: [xw - 1, CZ] }, [xw - 3, CZ, 0], [xw + 3, CZ, 0], polar(38, 130), ...wheel, ...gate] };
-})();
-// ---- PT-052 R2: which kinds stand where (applied by the compiler, tools/mapkit/roster.mjs) and what the kit built join the map ----
-MAP.roster = { id: 'C2M10', lane: [...(laneOf('C2M10') ?? [])], keep: [], plan: [] };
 ENC.apply(MAP);
+// FREEZE F8: the heavy ammunition crate in the back room, with a dressing beside it (an even count of new entities)
+MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [1, 35] }, { type: 'pickup', kind: 'health_small', at: [3, 35] });
+console.log('C2M10: enemies', P.ents.filter((e) => e.type === 'enemy' && e.kind !== 'vaelfolk').length, 'folk', P.ents.filter((e) => e.kind === 'vaelfolk').length, 'props', P.ents.filter((e) => e.type === 'prop').length);
 
-// ---- FREEZE F8 (src/engine/crate.js): a heavy ammunition crate in the cache, appended after every other entity (no id shifts), with a dressing beside it where the room has a second cell (an even count of new entities keeps the id parity); off the traffic of the routes (tools/dev/place-crates.mjs) ----
-MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [4, 41] }, { type: 'pickup', kind: 'health_small', at: [5, 41] });
-// ---- end F8 ----
-
+const D = (x, z) => [x, z];
+export const waypoints = {
+  main: [[sx, sz, 0], [35, 59, 0], D(34, 54), D(30, 49), D(22, 47), D(14, 45), D(11, 38), D(13, 28), D(20, 26), D(27, 24), D(30, 18), D(33, 12), [36, 10, 0], [36, 9, 0], { op: 'use', at: GATE }, [36, 6, 0], [EXIT[0], EXIT[1], 0]],
+};
+waypoints.secret = (() => {
+  const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 11 && w[1] === 38), b = m.findIndex((w) => Array.isArray(w) && w[0] === 33 && w[1] === 12);
+  return [...m.slice(0, a + 1), [11, 41, 0], [9, 41, 0], [6, 37, 0], { op: 'use', at: ROOM }, [2, 35, 0], [6, 35, 0], [9, 41, 0], [11, 41, 0], ...m.slice(a + 1, b + 1),
+    [40, 12, 0], [47, 12, 0], [49, 14, 0], [49, 17, 0], D(55, 25), D(55, 32), [60, 32, 0], [62, 31, 0], { op: 'crack', at: SEALED }, [67, 31, 0], [62, 31, 0], D(55, 32), D(55, 25), [49, 17, 0], [49, 14, 0], [47, 12, 0], [40, 11, 0], ...m.slice(b + 1)];
+})();
 export default MAP;
