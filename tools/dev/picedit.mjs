@@ -8,10 +8,12 @@ const file = path.join(root, 'maps-src', id + '.level.mjs'), src = fs.readFileSy
 const open = src.indexOf('String.raw`'), close = src.indexOf('`;', open); if (open < 0 || close < 0) throw new Error(id + ': no String.raw plan');
 const head = src.slice(0, open + 'String.raw`'.length), body = src.slice(open + 'String.raw`'.length, close), tail = src.slice(close);
 const lines = body.split('\n'); const lead = lines[0] === '' ? 1 : 0;                     // the plan starts on the line after the backtick
-const rows = lines.slice(lead, lines.length - 1).map((l) => [...l]);
+const from = args.find((a) => a.startsWith('--from='));                                   // --from=<file>: the whole plan replaced by a picture in a text file
+const rows = (from ? fs.readFileSync(from.slice(7), 'utf8').replace(/\s+$/, '').split(/\r?\n/) : lines.slice(lead, lines.length - 1)).map((l) => [...l]);
 const set = (x, z, c) => { while (rows.length <= z) rows.push([]); const r = rows[z]; while (r.length <= x) r.push(' '); r[x] = c === '_' ? ' ' : c; };
 let print = null;
 for (const a of args) {
+  if (a.startsWith('--from=')) continue;
   if (a.startsWith('--print')) { print = a.includes('=') ? a.split('=')[1].split(',').map(Number) : [0, 0, 999, 999]; continue; }
   const p = a.split(','); const c = p.pop(); const n = p.map(Number);
   if (n.length === 2) set(n[0], n[1], c); else for (let z = n[1]; z <= n[3]; z++) for (let x = n[0]; x <= n[2]; x++) set(x, z, c);

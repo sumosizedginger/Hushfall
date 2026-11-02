@@ -4,7 +4,7 @@
 //   const S = sketch(L, PLAN, { a: { t: '-', h: 0 }, b: { t: '.', h: 4, lid: 9 }, '#': { t: '$' } }, { marks: 'TG@X' });
 //   for (const [x, z] of S.at('T')) E('tollbearer', x, z);   const [sx, sz] = S.one('@');
 //
-// PLAN is a template string; its first and last empty lines are dropped and a line's characters start at column 0 (so write the plan at the left margin of the file). A space leaves the cell as the Level's fill.
+// PLAN is a template string; the newline after its backtick and its trailing empty lines are dropped (a blank row inside the picture stays a row) and a line's characters start at column 0 (so write the plan at the left margin of the file). A space leaves the cell as the Level's fill.
 // A legend entry is { t: tile, h: floor height (0.5 m units) or (x, z) => height, c: absolute lid or lid: lid above the floor (both 0.5 m units; neither = open sky), fx: a floor effect }.
 // A marker (a character of `marks`) takes the terrain of the first floor beside it (left, right, up, down; then the diagonals), so a creature or a lever can be drawn anywhere on a floor.
 import { FLOOR_SKINS } from '../../src/engine/defs.js';
@@ -13,7 +13,7 @@ import { setCell } from './c2.mjs';
 const FLOORS = new Set(Object.keys(FLOOR_SKINS));
 
 export function sketch(L, plan, legend, { ox = 0, oz = 0, marks = '' } = {}) {
-  const lines = plan.split(/\r?\n/); while (lines.length && !lines[0].trim()) lines.shift(); while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+  const lines = plan.split(/\r?\n/); if (lines.length && lines[0] === '') lines.shift(); while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
   const isMark = (ch) => marks.includes(ch), pos = new Map(), terrainOf = (ch) => legend[ch];
   for (const line of lines) for (const ch of line) if (ch !== ' ' && !isMark(ch) && !legend[ch]) throw new Error(`sketch: '${ch}' is in the plan but neither in the legend nor a mark`);
   const at = (x, z) => lines[z]?.[x] ?? ' ';
