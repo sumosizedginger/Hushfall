@@ -15,6 +15,7 @@ const FLOORS = new Set(Object.keys(FLOOR_SKINS));
 export function sketch(L, plan, legend, { ox = 0, oz = 0, marks = '' } = {}) {
   const lines = plan.split(/\r?\n/); if (lines.length && lines[0] === '') lines.shift(); while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
   const isMark = (ch) => marks.includes(ch), pos = new Map(), terrainOf = (ch) => legend[ch];
+  for (const ch of marks) if (legend[ch]) throw new Error(`sketch: '${ch}' is both a mark and a legend entry`);              // a roofed floor called 'T' and a creature called 'T' made 189 creatures once
   for (const line of lines) for (const ch of line) if (ch !== ' ' && !isMark(ch) && !legend[ch]) throw new Error(`sketch: '${ch}' is in the plan but neither in the legend nor a mark`);
   const at = (x, z) => lines[z]?.[x] ?? ' ';
   const floorAround = (x, z) => {
