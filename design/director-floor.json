@@ -649,333 +649,333 @@
  },
  "routes": {
   "C1E1M01": {
-   "botSeconds": 71,
+   "botSeconds": 78,
    "firstFightS": 2,
-   "threatPct": 38,
-   "longestWalkM": 68
+   "threatPct": 41,
+   "longestWalkM": 73
   },
   "C1E1M02": {
    "botSeconds": 123,
    "firstFightS": 0,
-   "threatPct": 48,
-   "longestWalkM": 141
+   "threatPct": 46,
+   "longestWalkM": 160
   },
   "C1E1M03": {
-   "botSeconds": 159,
+   "botSeconds": 162,
    "firstFightS": 0,
-   "threatPct": 50,
-   "longestWalkM": 118
+   "threatPct": 56,
+   "longestWalkM": 102
   },
   "C1E1M04": {
-   "botSeconds": 135,
+   "botSeconds": 138,
    "firstFightS": 3,
-   "threatPct": 52,
+   "threatPct": 48,
    "longestWalkM": 175
   },
   "C1E1M05": {
-   "botSeconds": 139,
+   "botSeconds": 146,
    "firstFightS": 0,
-   "threatPct": 78,
-   "longestWalkM": 43
+   "threatPct": 79,
+   "longestWalkM": 56
   },
   "C1E1M06": {
-   "botSeconds": 102,
+   "botSeconds": 110,
    "firstFightS": 0,
-   "threatPct": 82,
-   "longestWalkM": 58
+   "threatPct": 80,
+   "longestWalkM": 61
   },
   "C1E1M07": {
-   "botSeconds": 161,
+   "botSeconds": 176,
    "firstFightS": 0,
-   "threatPct": 36,
-   "longestWalkM": 218
+   "threatPct": 50,
+   "longestWalkM": 167
   },
   "C1E1M08": {
-   "botSeconds": 174,
+   "botSeconds": 177,
    "firstFightS": 0,
-   "threatPct": 58,
+   "threatPct": 64,
    "longestWalkM": 57
   },
   "C1E2M01": {
-   "botSeconds": 80,
+   "botSeconds": 94,
    "firstFightS": 2,
-   "threatPct": 64,
+   "threatPct": 74,
    "longestWalkM": 43
   },
   "C1E2M02": {
-   "botSeconds": 61,
+   "botSeconds": 62,
    "firstFightS": 2,
-   "threatPct": 68,
-   "longestWalkM": 35
+   "threatPct": 75,
+   "longestWalkM": 32
   },
   "C1E2M03": {
-   "botSeconds": 70,
+   "botSeconds": 75,
    "firstFightS": 2,
-   "threatPct": 83,
+   "threatPct": 78,
    "longestWalkM": 30
   },
   "C1E2M04": {
-   "botSeconds": 85,
-   "firstFightS": 2,
-   "threatPct": 71,
-   "longestWalkM": 42
+   "botSeconds": 84,
+   "firstFightS": 1,
+   "threatPct": 70,
+   "longestWalkM": 37
   },
   "C1E2M05": {
-   "botSeconds": 46,
-   "firstFightS": 2,
-   "threatPct": 51,
-   "longestWalkM": 41
-  },
-  "C1E2M06": {
-   "botSeconds": 112,
+   "botSeconds": 49,
    "firstFightS": 2,
    "threatPct": 68,
-   "longestWalkM": 128
+   "longestWalkM": 27
+  },
+  "C1E2M06": {
+   "botSeconds": 115,
+   "firstFightS": 2,
+   "threatPct": 77,
+   "longestWalkM": 65
   },
   "C1E2M07": {
-   "botSeconds": 77,
+   "botSeconds": 75,
    "firstFightS": 0,
-   "threatPct": 57,
-   "longestWalkM": 47
+   "threatPct": 58,
+   "longestWalkM": 43
   },
   "C1E2M08": {
-   "botSeconds": 68,
+   "botSeconds": 69,
    "firstFightS": 2,
-   "threatPct": 70,
+   "threatPct": 71,
    "longestWalkM": 33
   },
   "C1E3M01": {
-   "botSeconds": 54,
+   "botSeconds": 61,
    "firstFightS": 0,
-   "threatPct": 61,
+   "threatPct": 68,
    "longestWalkM": 47
   },
   "C1E3M02": {
-   "botSeconds": 47,
+   "botSeconds": 60,
    "firstFightS": 5,
-   "threatPct": 68,
+   "threatPct": 53,
    "longestWalkM": 37
   },
   "C1E3M03": {
-   "botSeconds": 72,
+   "botSeconds": 70,
    "firstFightS": 0,
-   "threatPct": 68,
+   "threatPct": 70,
    "longestWalkM": 37
   },
   "C1E3M04": {
-   "botSeconds": 77,
+   "botSeconds": 74,
    "firstFightS": 2,
-   "threatPct": 73,
-   "longestWalkM": 53
+   "threatPct": 70,
+   "longestWalkM": 50
   },
   "C1E3M05": {
-   "botSeconds": 74,
+   "botSeconds": 75,
    "firstFightS": 0,
-   "threatPct": 58,
+   "threatPct": 67,
    "longestWalkM": 41
   },
   "C1E3M06": {
-   "botSeconds": 56,
+   "botSeconds": 62,
    "firstFightS": 2,
-   "threatPct": 60,
+   "threatPct": 71,
    "longestWalkM": 58
   },
   "C1E3M07": {
-   "botSeconds": 88,
+   "botSeconds": 108,
    "firstFightS": 0,
-   "threatPct": 55,
-   "longestWalkM": 58
+   "threatPct": 71,
+   "longestWalkM": 59
   },
   "C1E3M08": {
-   "botSeconds": 120,
+   "botSeconds": 119,
    "firstFightS": 5,
-   "threatPct": 70,
-   "longestWalkM": 60
+   "threatPct": 75,
+   "longestWalkM": 59
   },
   "C1E4M01": {
-   "botSeconds": 122,
+   "botSeconds": 126,
    "firstFightS": 0,
-   "threatPct": 42,
-   "longestWalkM": 164
+   "threatPct": 44,
+   "longestWalkM": 119
   },
   "C1E4M02": {
-   "botSeconds": 81,
+   "botSeconds": 86,
    "firstFightS": 0,
-   "threatPct": 56,
+   "threatPct": 67,
    "longestWalkM": 58
   },
   "C1E4M03": {
-   "botSeconds": 113,
+   "botSeconds": 124,
    "firstFightS": 0,
-   "threatPct": 26,
-   "longestWalkM": 85
+   "threatPct": 29,
+   "longestWalkM": 77
   },
   "C1E4M04": {
-   "botSeconds": 64,
+   "botSeconds": 71,
    "firstFightS": 0,
-   "threatPct": 44,
+   "threatPct": 49,
    "longestWalkM": 70
   },
   "C1E4M05": {
-   "botSeconds": 68,
+   "botSeconds": 64,
    "firstFightS": 0,
    "threatPct": 62,
-   "longestWalkM": 25
+   "longestWalkM": 32
   },
   "C1E4M06": {
    "botSeconds": 106,
    "firstFightS": 5,
-   "threatPct": 49,
-   "longestWalkM": 80
+   "threatPct": 71,
+   "longestWalkM": 37
   },
   "C1E4M07": {
-   "botSeconds": 119,
+   "botSeconds": 120,
    "firstFightS": 0,
-   "threatPct": 58,
+   "threatPct": 60,
    "longestWalkM": 56
   },
   "C1E4M08": {
-   "botSeconds": 105,
+   "botSeconds": 177,
    "firstFightS": 0,
-   "threatPct": 61,
-   "longestWalkM": 50
+   "threatPct": 72,
+   "longestWalkM": 39
   },
   "C2M01": {
-   "botSeconds": 96,
-   "firstFightS": 1,
-   "threatPct": 64,
+   "botSeconds": 97,
+   "firstFightS": 0,
+   "threatPct": 69,
    "longestWalkM": 55
   },
   "C2M02": {
-   "botSeconds": 120,
+   "botSeconds": 132,
    "firstFightS": 0,
-   "threatPct": 70,
-   "longestWalkM": 62
+   "threatPct": 82,
+   "longestWalkM": 49
   },
   "C2M03": {
-   "botSeconds": 106,
+   "botSeconds": 111,
    "firstFightS": 0,
-   "threatPct": 58,
-   "longestWalkM": 91
+   "threatPct": 60,
+   "longestWalkM": 100
   },
   "C2M04": {
-   "botSeconds": 127,
+   "botSeconds": 126,
    "firstFightS": 0,
-   "threatPct": 55,
-   "longestWalkM": 173
+   "threatPct": 62,
+   "longestWalkM": 178
   },
   "C2M05": {
-   "botSeconds": 129,
+   "botSeconds": 135,
    "firstFightS": 0,
-   "threatPct": 58,
-   "longestWalkM": 53
+   "threatPct": 59,
+   "longestWalkM": 55
   },
   "C2M06": {
-   "botSeconds": 148,
+   "botSeconds": 153,
    "firstFightS": 0,
-   "threatPct": 44,
-   "longestWalkM": 45
+   "threatPct": 47,
+   "longestWalkM": 44
   },
   "C2M07": {
-   "botSeconds": 71,
+   "botSeconds": 56,
    "firstFightS": 0,
-   "threatPct": 73,
-   "longestWalkM": 37
-  },
-  "C2M08": {
-   "botSeconds": 108,
-   "firstFightS": 0,
-   "threatPct": 61,
-   "longestWalkM": 80
-  },
-  "C2M09": {
-   "botSeconds": 91,
-   "firstFightS": 0,
-   "threatPct": 84,
-   "longestWalkM": 28
-  },
-  "C2M10": {
-   "botSeconds": 66,
-   "firstFightS": 1,
-   "threatPct": 79,
+   "threatPct": 67,
    "longestWalkM": 23
   },
+  "C2M08": {
+   "botSeconds": 114,
+   "firstFightS": 0,
+   "threatPct": 71,
+   "longestWalkM": 64
+  },
+  "C2M09": {
+   "botSeconds": 97,
+   "firstFightS": 0,
+   "threatPct": 84,
+   "longestWalkM": 33
+  },
+  "C2M10": {
+   "botSeconds": 74,
+   "firstFightS": 1,
+   "threatPct": 87,
+   "longestWalkM": 11
+  },
   "C2M11": {
-   "botSeconds": 71,
+   "botSeconds": 81,
    "firstFightS": 6,
-   "threatPct": 49,
+   "threatPct": 64,
    "longestWalkM": 52
   },
   "C2M12": {
-   "botSeconds": 93,
+   "botSeconds": 100,
    "firstFightS": 2,
-   "threatPct": 79,
+   "threatPct": 81,
    "longestWalkM": 65
   },
   "C2M13": {
-   "botSeconds": 82,
+   "botSeconds": 89,
    "firstFightS": 0,
-   "threatPct": 62,
-   "longestWalkM": 29
+   "threatPct": 67,
+   "longestWalkM": 32
   },
   "C2M14": {
-   "botSeconds": 129,
+   "botSeconds": 127,
    "firstFightS": 1,
    "threatPct": 60,
-   "longestWalkM": 190
+   "longestWalkM": 189
   },
   "C2M15": {
-   "botSeconds": 182,
+   "botSeconds": 192,
    "firstFightS": 0,
-   "threatPct": 74,
-   "longestWalkM": 33
+   "threatPct": 77,
+   "longestWalkM": 32
   },
   "C2M16": {
-   "botSeconds": 84,
+   "botSeconds": 83,
    "firstFightS": 2,
-   "threatPct": 63,
-   "longestWalkM": 58
+   "threatPct": 77,
+   "longestWalkM": 41
   },
   "C2M17": {
-   "botSeconds": 132,
+   "botSeconds": 130,
    "firstFightS": 0,
-   "threatPct": 64,
-   "longestWalkM": 78
+   "threatPct": 69,
+   "longestWalkM": 89
   },
   "C2M18": {
-   "botSeconds": 185,
+   "botSeconds": 167,
    "firstFightS": 0,
    "threatPct": 66,
-   "longestWalkM": 60
+   "longestWalkM": 127
   },
   "C2M19": {
-   "botSeconds": 125,
+   "botSeconds": 132,
    "firstFightS": 1,
-   "threatPct": 50,
-   "longestWalkM": 96
+   "threatPct": 55,
+   "longestWalkM": 97
   },
   "C2M20": {
    "botSeconds": 130,
    "firstFightS": 12,
-   "threatPct": 55,
+   "threatPct": 60,
    "longestWalkM": 77
   },
   "C2M21": {
-   "botSeconds": 83,
+   "botSeconds": 97,
    "firstFightS": 0,
-   "threatPct": 39,
-   "longestWalkM": 124
+   "threatPct": 45,
+   "longestWalkM": 125
   },
   "C2M22": {
-   "botSeconds": 178,
+   "botSeconds": 176,
    "firstFightS": 0,
-   "threatPct": 46,
-   "longestWalkM": 122
+   "threatPct": 43,
+   "longestWalkM": 121
   },
   "C2M23": {
-   "botSeconds": 168,
+   "botSeconds": 178,
    "firstFightS": 0,
-   "threatPct": 59,
+   "threatPct": 60,
    "longestWalkM": 72
   },
   "C2M24": {
@@ -985,28 +985,28 @@
    "longestWalkM": 46
   },
   "C2M25": {
-   "botSeconds": 116,
+   "botSeconds": 129,
    "firstFightS": 0,
-   "threatPct": 61,
+   "threatPct": 66,
    "longestWalkM": 49
   },
   "C2M26": {
-   "botSeconds": 126,
-   "firstFightS": 3,
+   "botSeconds": 123,
+   "firstFightS": 2,
    "threatPct": 45,
-   "longestWalkM": 119
+   "longestWalkM": 101
   },
   "C2M27": {
-   "botSeconds": 89,
+   "botSeconds": 91,
    "firstFightS": 0,
-   "threatPct": 66,
+   "threatPct": 65,
    "longestWalkM": 45
   },
   "C2M29": {
-   "botSeconds": 112,
+   "botSeconds": 121,
    "firstFightS": 4,
-   "threatPct": 89,
-   "longestWalkM": 52
+   "threatPct": 86,
+   "longestWalkM": 60
   }
  },
  "updated": "2026-10-19",
