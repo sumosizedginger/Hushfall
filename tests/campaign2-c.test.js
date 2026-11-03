@@ -146,7 +146,7 @@ test('C2M21: three catwalk rings at 0, 5 and 10 m joined by ramps (diagonals up 
   // a Resonant alone does not ring; with company it does (the sim's beat), and a ring that crosses a pier or a floor a metre apart is not felt
   const w = createWorld(map, { seed: 1 }); const R = w.enemies.find((e) => e.kind === 'resonant'); assert.ok(R);
   const m0 = runRoute(map, route('C2M21'), { seed: 1 }); assert.equal(m0.world.stats.secrets, 0);
-  const sec = runRoute(map, route('C2M21', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1, 'the hatch');
+  const sec = runRoute(map, route('C2M21', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 2, 'the hatch and the cracked stores by the cooling pond (PT-082)');
   assert.ok(m0.events.some((e) => e.type === 'resonant_ring') || sec.events.some((e) => e.type === 'resonant_ring'), 'a Resonant rang on the way');
 });
 

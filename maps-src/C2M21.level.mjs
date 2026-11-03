@@ -98,8 +98,17 @@ ENC.dropIn({ at: [47,23], radius: 2, cells: ENC.around([47,23], { n: 3, min: 6, 
 ENC.dropIn({ at: [54,41], radius: 2, cells: ENC.around([54,41], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-082 (design/FUN_CHECK.md: a wheel with spokes, mirrored 0.99): the foundry's mirror broken by what is bolted onto two of its corners. The PATTERN SHOP in the south-west (the moulds' wooden patterns, two ways
+// in from the outer ring: a loop off the wheel) and the COOLING POND in the north-east (a still pool of the reactor's run-off, a cracked wall behind it into a stores closet: the second secret, of another kind) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+for (let z = 86; z <= 96; z++) for (let x = 3; x <= 12; x++) setCell(L, x, z, 'Α', 0, 12);                                  // the pattern shop, roofed at 6 m
+FUN.bypass({ from: [12, 92], to: [26, 90] }); FUN.bypass({ from: [6, 86], to: [13, 78] });
+for (let z = 3; z <= 13; z++) for (let x = 85; x <= 97; x++) if (((x + 0.5 - 91) / 5.6) ** 2 + ((z + 0.5 - 8) / 4.8) ** 2 <= 1) setCell(L, x, z, '{', 0);          // the cooling pond (open to the roof)
+FUN.bypass({ from: [89, 12], to: [84, 18] });
+FUN.secretRoom({ id: 'stores', search: { region: [84, 1, 98, 16], prefer: [95, 5] }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A stores closet behind the pond, the wall cracked by the heat. A vest and a mend among the spare gaskets.' } });
+// ---- end PT-082 ----
 const MAP = {
-  id: 'C2M21', name: 'Pulse Foundry', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M21', name: 'Pulse Foundry', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'reactor', sky: 'ash', beat: true, fog: '#2a1a10', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'PULSE FOUNDRY', lines: ['Three catwalks round a pit of white light, one above another, and a bell in a body at every turn.', 'The valves that open the way are where the biggest ones stand.'] },
@@ -155,4 +164,7 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "exit": ["msg:v3"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-082: the shop and the pond join the map
+MAP.entities.push(...[['bellhand', 6, 92], ['gaunt', 10, 90], ['gaunt', 89, 7], ['chorister', 93, 10]].map(([kind, x, z]) => ({ type: 'enemy', kind, at: [x, z], ...(kind === 'tollbearer' ? { variant: 'hived' } : {}) })), { type: 'pickup', kind: 'health_large', at: [4, 95] }, { type: 'prop', kind: 'crate', at: [11, 95] });          // six: an even count keeps the parity of every later id
+{ const s = waypoints.secret; s.splice(6, 0, [70, 9, 0], [88, 11, 0], { op: 'crack', at: [92, 13] }, [92, 14, 0], [88, 11, 0], [70, 9, 0], [18, 18, 0]); }          // PT-082: the crack detour round the outer ring to the cooling pond, kept in the source so write-routes keeps it
 export default MAP;
