@@ -103,8 +103,9 @@ test('H-E1: the last-resort feed hands out the ammunition of a gun the player CA
 });
 
 test('H-E2: every creature a summoner or a vat makes counts in the kill total AND in the kills when it dies, so the ratio holds (by design)', () => {
-  const src = ['world', 'simcore', 'player', 'weapons', 'enemies', 'place'].map((f) => fs.readFileSync(path.join(ROOT, 'src/engine', f + '.js'), 'utf8')).join('
-'),
+  const src = ['world', 'simcore', 'player', 'weapons', 'enemies', 'place']
+      .map((f) => fs.readFileSync(path.join(ROOT, 'src/engine', f + '.js'), 'utf8'))
+      .join('\n'),
     at = [...src.matchAll(/summoned = true/g)].map((m) => m.index);
   assert.ok(at.length >= 4, 'the summoners, the Mother, the vat and the Hive Cantor: ' + at.length);
   for (const i of at)
