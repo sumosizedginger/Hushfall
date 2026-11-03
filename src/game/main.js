@@ -4,7 +4,7 @@ import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url, coldTowerUrl, ending
 import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
-import { automated } from './lockpolicy.js';
+import { automated, askLock } from './lockpolicy.js';
 import CAMPAIGN from '../../CAMPAIGN_MANIFEST.json';
 import { nextMapId, mapName } from './campaign.js';
 import { InputState } from '../engine/input.js';
@@ -116,7 +116,7 @@ const ui = new UI({
   playlogClear: () => { clearLog(storage); g.playlog = loadLog(storage); logMeta(); ui.playlogNote('Cleared. ' + describe(g.playlog)); },
   surveyAnswer: (k, v) => { g.survey ??= { answers: {}, note: '' }; g.survey.answers[k] = v; commitSurvey(); ui.survey(true, g.survey.answers, g.survey.note); },
   surveyNote: (t) => { g.survey ??= { answers: {}, note: '' }; g.survey.note = t; commitSurvey(); },
-  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); g.view?.setEffects(0); } if (k === 'autoQuality') { resize(); g.view?.setEffects(v !== false ? g.governor.effects : 0); } if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'playLog') { if (v) logMeta(); ui.playlogNote(describe(g.playlog)); } if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion') && g.view) g.view.setLook(settings); },
+  setSetting: (k, v) => { settings[k] = v; saveSettings(storage, settings); if (k === 'aimToggle') g.input.setToggle('aim', v); if (k === 'sprintToggle') g.input.setToggle('sprint', v); if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings); if (k === 'internalWidth') { g.governor.reset(v); resize(); g.view?.setEffects(0); } if (k === 'autoQuality') { resize(); g.view?.setEffects(v !== false ? g.governor.effects : 0); } if (k === 'crosshair') ui.applyCrosshair(v); if (k === 'textSize' || k === 'reducedMotion') applyComfort(); if (k === 'captions' && !v) g.captions.clear(); if (k === 'playLog') { if (v) logMeta(); ui.playlogNote(describe(g.playlog)); } if (k === 'minimap') { ui.setMinimap(v); g.miniModel = null; } if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion' || k === 'headBob') && g.view) g.view.setLook(settings); },
 });
 g.input.setToggle('aim', settings.aimToggle); g.input.setToggle('sprint', settings.sprintToggle);
 function commitBindings(b, note = '') { g.input.setBindings(b); settings.bindings = JSON.parse(JSON.stringify(g.input.bindings)); saveSettings(storage, settings); ui.syncBindings(settings.bindings, null, note); }
@@ -385,7 +385,7 @@ function requestLock(fromClick = false) {
   if (g.lockFailed) return;
   if (automated()) { g.lockFailed = true; return; }                          // PT-050: a script-driven browser never asks for the pointer lock (it can hide and confine the real cursor; see lockpolicy.js)
   g.lockClick = fromClick;
-  try { const p = canvas.requestPointerLock?.(); p?.catch?.(lockDenied); } catch { lockDenied(); }
+  askLock(canvas, settings.rawMouse !== false, lockDenied);
 }
 
 /** One fixed simulation tick. Everything (keyboard, mouse, bot, test hook) reaches the sim through g.input. */
@@ -433,8 +433,8 @@ canvas.addEventListener('wheel', (e) => {                                   // w
 }, { passive: false });
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());                       // right button is Aim
 // sensitivity follows the zoom: at full ADS the same hand movement turns the view by the same on-screen amount
-const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan((WEAPONS[g.world?.player.weapon]?.adsFov ?? VIEW.adsFov) * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
-addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) { if (g.wheel.open) g.wheel.feed(e.movementX, e.movementY); else { if (e.movementX || e.movementY) g.padActive = false; g.input.addMouse(e.movementX, e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); } } });
+const adsSensScale = () => { const a = g.world?.player.ads ?? 0, r = Math.tan((WEAPONS[g.world?.player.weapon]?.adsFov ?? VIEW.adsFov) * Math.PI / 360) / Math.tan(VIEW.fov * Math.PI / 360); return 1 + (r * (settings.adsSens ?? 1) - 1) * a; };           // the zoom RATIO is constant, so this holds at any base FOV
+addEventListener('mousemove', (e) => { if (g.mode === 'playing' && (g.locked || (g.lockFailed && dragging))) { if (g.wheel.open) g.wheel.feed(e.movementX, e.movementY); else { if (e.movementX || e.movementY) g.padActive = false; g.input.addMouse(e.movementX, settings.mouseInvertY ? -e.movementY : e.movementY, 0.0022 * settings.sensitivity * adsSensScale()); } } });
 addEventListener('keydown', (e) => {
   if (g.capturePad) { e.preventDefault(); e.stopPropagation(); if (e.code === 'Escape') cancelPadCapture('Cancelled.'); return; }
   if (g.capture) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) captureCode(e.code); return; }
@@ -593,7 +593,7 @@ function frameBody(now) {
   audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map')); mapCanvas.classList.toggle('hidden', !showMap); if (showMap) { const mdl = automapModel(g.world); if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins; drawAutomap(mapCanvas, mdl); }
   { const mm = settings.minimap ?? 'small'; miniCanvas.classList.toggle('hidden', !!showMap || g.mode === 'cinematic'); if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') { if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) { g.miniModel = automapModel(g.world); drawMinimap(miniCanvas, g.miniModel, mm); } } else g.miniModel = null; }          // PT-052 U4: the corner map, redrawn every few frames from the same model as the big one
-  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt); ui.hud(g.world, g.mode !== 'title' && g.mode !== 'cinematic'); ui.captions(settings.captions && g.mode === 'playing' ? g.captions.lines(g.world.time) : []); } else { ui.hud(null, false); ui.captions([]); }
+  if (g.view && g.world) { g.view.render(g.world, g.mode === 'playing' ? alpha : 1, dt, g.mode === 'playing' && !g.manual ? g.input.pendingLook(alpha) : null); ui.hud(g.world, g.mode !== 'title' && g.mode !== 'cinematic'); ui.captions(settings.captions && g.mode === 'playing' ? g.captions.lines(g.world.time) : []); } else { ui.hud(null, false); ui.captions([]); }
   updateWheelUI(); ui.useHint(g.mode === 'playing' && g.world ? doorPrompt(g.world) : ''); rangePanel();
 }
 /** the weapons range's readout (PT-016): shown only while a range map is being played */

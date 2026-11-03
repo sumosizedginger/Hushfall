@@ -54,7 +54,7 @@ export function installTestHook(app) {
     /** PT-065 (V4/V12): the tone shoulder's two numbers, set live (a probe renders one state under several curves and measures the picture; `shoulder` in post.js and tonecurve.js) */
     setup_weaponLight(floor) { WEAPON_LIGHT.floor = floor; g.view.setPlace(g.view.look); },
     setup_tone(k, pre) { const u = g.view.post.uniforms; u.uShoulder.value = k; u.uShoulderPre.value = pre; },
-    setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint' || k === 'reducedMotion') g.view?.setLook(g.settings); if (k === 'internalWidth') g.governor.reset(v); },
+    setSetting(k, v) { g.settings[k] = v; if (k === 'outline' || k === 'paint' || k === 'reducedMotion' || k === 'headBob') g.view?.setLook(g.settings); if (k === 'internalWidth') g.governor.reset(v); },
     // -- route bot: same InputState as a human --
     startBot(name, opts = {}) { bot = new Bot(g.world, g.input, typeof name === 'string' ? ROUTES[name] : name, opts); return { ops: bot.route.length }; },
     stepBot(n = 60) { for (let i = 0; i < n && bot && !bot.done && !bot.failed && g.mode === 'playing'; i++) { bot.tick(); app.stepOnce(); } render(); return { done: bot?.done ?? null, failed: bot?.failed ?? null, op: bot?.i ?? null, ...snap() }; },

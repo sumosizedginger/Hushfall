@@ -113,7 +113,7 @@ summary::before{content:"+";display:inline-block;width:1.4em;color:var(--teal)}
 details[open]>summary::before{content:"\2212"}
 h1{margin:0;font:400 38px/1 var(--serif);letter-spacing:.18em;color:var(--paper);text-shadow:3px 3px 0 var(--ink)}
 h2{margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--brass);font:400 22px/1.2 var(--serif);letter-spacing:.34em;text-transform:uppercase;color:var(--paper)}
-.sub{color:#9fb4b0;margin-bottom:16px}
+.sub{color:#9fb4b0;margin-bottom:16px}.fine{color:#9fb4b0;font-size:.9em}input.num{width:64px;margin-left:8px}
 button{display:block;width:100%;margin:4px 0;padding:11px 16px 11px 20px;background:transparent;color:var(--paper);border:0;border-left:3px solid #3a4a4e;font:400 15px/1.2 var(--serif);letter-spacing:.26em;text-transform:uppercase;text-align:left;cursor:pointer;transition:background .12s,border-color .12s,padding-left .12s,color .12s}
 button:hover,button:focus-visible{background:linear-gradient(90deg,#3fffe024,transparent 85%);border-left-color:var(--teal);color:var(--teal);padding-left:27px;outline:none}
 button:active{background:#3fffe03a}
@@ -385,11 +385,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</pre></div></details>
     <details id="settings-box"><summary>Settings</summary>
-    <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"></label>
+    <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"><input id="set-sens-num" type="number" min="0.1" max="4" step="0.01" class="num"></label>
+    <label>Sensitivity through the sights <input id="set-adssens" type="range" min="0.4" max="1.6" step="0.05"></label>
+    <label>Invert mouse Y <input id="set-mouseinvert" type="checkbox"></label>
+    <label>Raw mouse input (no system acceleration, where the browser offers it) <input id="set-rawmouse" type="checkbox"></label>
     <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
     <label>Sound effects <input id="set-sfx" type="range" min="0" max="1" step="0.05"></label>
     <label>Music <input id="set-music" type="range" min="0" max="1" step="0.05"></label>
-    <label>Field of view <input id="set-fov" type="range" min="60" max="105" step="1"></label>
+    <label>Field of view <span id="set-fov-val" class="fine"></span> <input id="set-fov" type="range" min="60" max="105" step="1"></label>
+    <label>Head bob <select id="set-headbob"><option value="full">Full</option><option value="gentle">Gentle</option><option value="off">Off</option></select></label>
     <label>Brightness <input id="set-bright" type="range" min="0.6" max="1.8" step="0.05"></label>
     <label>Crosshair <select id="set-xh-style"><option value="crossdot">Cross and dot</option><option value="cross">Cross</option><option value="dot">Dot</option><option value="circle">Circle</option></select></label>
     <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>

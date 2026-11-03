@@ -38,7 +38,7 @@ import { BRAIN } from '../engine/brain.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { gunFactor } from './gunlight.js';
-import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf, PITCH_LIMIT } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
@@ -54,6 +54,11 @@ const ENEMY_MODELS = Object.fromEntries(Object.keys(CHOIR).map((kind) => [kind, 
 
 const NEAR = 0.1, FAR = 170, LIGHT_BUDGET = 8, LIGHT_FADE = 3, FX_LIGHTS = 4;      // the nearest LIGHT_BUDGET lamps are lit (a constant light count means no shader recompiles); the last one fades with how much nearer it is than the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
 const lerp = (a, b, t) => a + (b - a) * t;
+/** what the comfort settings make of every camera motion and flash (1 = as built): head bob, the shake, the view's own kicks (recoil, a swing), the widening of the view (sprint, air, a parry, a hit), the weapon's sway, the hurt flash, the muzzle light. PT-083 C5: reduced motion stills all of them. */
+export function comfortFor({ reducedMotion = false, headBob = 'full' } = {}) {
+  const bob = headBob === 'off' ? 0 : headBob === 'gentle' ? 0.5 : 1;
+  return reducedMotion ? { bob: 0, shake: 0, kick: 0.25, fov: 0, sway: 0.25, hurt: 0.35, muzzle: 0.4 } : { bob, shake: 1, kick: 1, fov: 1, sway: 1, hurt: 1, muzzle: 1 };
+}
 const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const freeRig = (root) => root.traverse((o) => { if (o.isMesh) o.geometry?.dispose(); });         // (geometry only: a rig's materials are cached and shared by its kind)
 /** which builder draws a pickup (PT-022 added the carbine, the rocket line-thrower, the tuning-fork and the chainsaw) */
@@ -150,8 +155,8 @@ export class GameView {
     if (this.floorMarks) this.floorMarks.mesh.visible = level < 1;
     this.lightBudget = level >= 2 ? FX_LIGHTS : LIGHT_BUDGET;
   }
-  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false }) {
-    this.comfort = reducedMotion ? { shake: 0, hurt: 0.35, muzzle: 0.4 } : { shake: 1, hurt: 1, muzzle: 1 };                      // PT-071 R20: no camera shake, a gentler hurt flash and muzzle light (render only: the sim is untouched)
+  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false, headBob = 'full' }) {
+    this.comfort = comfortFor({ reducedMotion, headBob });                                                                         // PT-071 R20, PT-083 C5: every camera motion and flash the settings can calm (render only: the sim is untouched)
     this.post.uniforms.uOutline.value = outline ? 1 : 0; this.post.uniforms.uPaint.value = paint ? 1 : 0; this.brightness = brightness; this.post.uniforms.uExposure.value = 2.2 * brightness * (this.exposureK ?? 1);       // the player's brightness setting times the place's exposure
     this.baseFov = fov; this.adsFov = fov * (VIEW.adsFov / VIEW.fov);                                                      // aiming keeps the same zoom ratio at any field of view
   }
@@ -297,19 +302,20 @@ export class GameView {
   /** PT-063 (R13): a story scene's camera pose { x, y, z, yaw, pitch, fov? } (cinematics.js `cameraAt`), or null to give the eye back to the player. The held weapon is not drawn while it is set. Render only. */
   setCinematic(pose) { this.cine = pose ?? null; }
 
-  render(w, alpha, dt) {
-    this.time += dt; const p = w.player, pp = this.prev.player;
+  /** `look`: the look the player has made since the last tick (InputState.pendingLook), when one is being played: the camera turns with the hand in this frame instead of blending between the last two ticks */
+  render(w, alpha, dt, look = null) {
+    this.time += dt; const p = w.player, pp = this.prev.player, C = this.comfort;
     // the swing's own clock: render time since the swing began, minus the time the view model was held at the contact (a view-only hit-stop; the simulation never sees it, and a pause or the wheel's slowed time hold it too)
     let ph = this.vm.sample(w.time + alpha * TICK), sk = this.vm.kind ?? p.swingKind;
     if (!ph) ph = (p.swingT ?? -1) >= 0 && p.swingKind ? swingPhase(p.swingKind, p.swingT + alpha * TICK) : { a: 0, b: 0, c: 0, h: 0, on: false };      // (a swing the view never saw begin, a loaded save: follow the simulation)
-    const ck = swingCamera(sk, ph), lookYaw = lerp(pp.yaw, p.yaw, alpha), lookPitch = lerp(pp.pitch, p.pitch, alpha);
+    const ck = swingCamera(sk, ph), lookYaw = look ? p.yaw + look.yaw : lerp(pp.yaw, p.yaw, alpha), lookPitch = look ? Math.max(-PITCH_LIMIT, Math.min(PITCH_LIMIT, p.pitch + look.pitch)) : lerp(pp.pitch, p.pitch, alpha);
     if (this.lastLook && dt > 0) {                                                                                     // the view model trails a turning view
       let dy = lookYaw - this.lastLook[0]; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); const vy = Math.max(-5, Math.min(5, dy / dt)), vp = Math.max(-5, Math.min(5, (lookPitch - this.lastLook[1]) / dt)), k = Math.min(1, dt * 11);
       this.lag.x += (Math.max(-0.07, Math.min(0.07, vy * 0.016)) - this.lag.x) * k; this.lag.y += (Math.max(-0.05, Math.min(0.05, -vp * 0.012)) - this.lag.y) * k;
     }
     this.lastLook = [lookYaw, lookPitch];
     // camera (interpolated)
-    const speed = Math.hypot(p.vx, p.vz), bob = Math.sin(p.bob * 2) * 0.035 * Math.min(1, speed / PLAYER.speed);
+    const speed = Math.hypot(p.vx, p.vz), bob = Math.sin(p.bob * 2) * 0.035 * Math.min(1, speed / PLAYER.speed) * C.bob;
     let eye = PLAYER.eye + bob, roll = 0;
     if (w.status === 'dead') { this.deadT = Math.min(1, this.deadT + dt / 0.8); eye = lerp(PLAYER.eye, 0.35, this.deadT); roll = this.deadT * 0.5; } else this.deadT = 0;
     this.eyeBase += ((p.y ?? 0) - this.eyeBase) * Math.min(1, dt * 14);                                            // stairs and lifts glide the camera instead of popping it
@@ -322,9 +328,9 @@ export class GameView {
       this.handLamp.intensity = 17 * this.lampK * fl * low; this.handLamp.position.set(this.cam.position.x, this.cam.position.y - 0.15, this.cam.position.z);
       const m = this.lampModel; m.userData.core.color.setScalar(0.35 + 0.65 * this.lampK * low); m.userData.flame.scale.setScalar(0.5 + 0.55 * this.lampK * fl); m.position.y = -0.3 + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK); m.rotation.z = 0.05 * Math.sin(this.time * 1.3);
     }
-    this.cam.rotation.set(lookPitch + p.kick + ck.pitch, lookYaw, roll + ck.roll); if (this.cine) this.cam.rotation.set(this.cine.pitch, this.cine.yaw, 0);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
+    this.cam.rotation.set(lookPitch + (p.kick + ck.pitch) * C.kick, lookYaw, (roll + ck.roll) * C.kick); if (this.cine) this.cam.rotation.set(this.cine.pitch, this.cine.yaw, 0);                                      // (ck: the camera's own kick in a swing, see FEEL in weapon-pose.js)
     this.airK += ((w.player.air ? 1 : 0) - this.airK) * Math.min(1, dt * 6);                                                // PT-032: the view opens a little in the air
-    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick;       // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
+    const adsFov = (this.baseFov ?? VIEW.fov) * ((WEAPONS[p.weapon].adsFov ?? VIEW.adsFov) / VIEW.fov), fov = lerp(this.baseFov ?? VIEW.fov, adsFov, p.ads) + (VIEW.sprintFovKick * p.sprint + 5 * this.airK - 4 * Math.max(0, 1 - this.parryT / 0.2) - 1.6 * this.hitKick) * C.fov;     // zoom for the sights (the harpoon rifle zooms in much further), a little stretch for sprint
     const fovNow = this.cine ? (this.cine.fov ?? this.baseFov ?? VIEW.fov) : fov; if (Math.abs(this.cam.fov - fovNow) > 0.01) { this.cam.fov = fovNow; this.cam.updateProjectionMatrix(); }
     this.sky.position.copy(this.cam.position); this.skyBelow?.position.copy(this.cam.position);
     if (this.map.lookZones) this.applyZone(this.map.lookZones, w.player);                                      // PT-043: a dev map's rooms are lit by their own look
@@ -544,7 +550,7 @@ this.beltView?.update(w, dt, this.time); this.tideView?.update(w, dt, this.time)
     for (const [id, r] of Object.entries(this.rigs)) r.group.visible = id === shown;
     const rig = this.rigs[shown];
     // weapon pose = hip, blended toward the sights, then toward the lowered sprint carry
-    const a = p.ads, sp = p.sprint, sway = Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed);
+    const a = p.ads, sp = p.sprint, sway = (Math.sin(p.bob) * 0.008 * Math.min(1, speed / PLAYER.speed) * (1 - 0.85 * a) + Math.sin(p.bob) * 0.02 * sp * Math.min(1, speed / PLAYER.speed)) * C.sway;
     const chg = shown === 'arc' && (p.ammo.cell || 0) > 0 ? Math.min(1, Math.max(0, ((p.charge || 0) - WEAPONS.arc.charge.min) / (WEAPONS.arc.charge.max - WEAPONS.arc.charge.min))) : 0;
     this.hitKick = Math.max(0, this.hitKick - dt * 5); this.parryT += dt;
     let wpose;

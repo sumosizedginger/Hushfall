@@ -21,6 +21,9 @@ export const defaultSettings = () => ({
   reducedMotion: false,                                                       // PT-071 R20: no camera shake, a gentler hurt flash and muzzle light
   captions: false,                                                            // PT-071 R20: the sounds that matter as words on the screen (captions.js)
   firstRunSeen: false,                                                        // PT-071 R20: the first-run line has been shown (it comes once, with the first level of a new game)
+  rawMouse: true,                                                             // PT-083 C2: ask for the mouse without the system's acceleration where the browser offers it
+  mouseInvertY: false, adsSens: 1,                                            // PT-083 C3: invert the mouse; the sensitivity through the sights, as a share of the one that matches the zoom
+  headBob: 'full',                                                            // PT-083 C5: full | gentle | off (reduced motion turns it off whatever this says)
   crosshair: defaultCrosshair(),                                              // PT-048 / V2: style, size, colour, opacity of the crosshair (crosshair.js)
 });
 const clamp = (x, a, b, d) => (Number.isFinite(x) ? Math.min(b, Math.max(a, x)) : d);
@@ -50,6 +53,7 @@ export function sanitizeSettings(raw) {
   { const g = raw.gamepad && typeof raw.gamepad === 'object' ? raw.gamepad : {}, P = PAD_SETTINGS; s.gamepad = { enabled: g.enabled !== false, lookRate: clamp(g.lookRate, 1, 8, P.lookRate), deadzone: clamp(g.deadzone, 0.05, 0.5, P.deadzone), curve: clamp(g.curve, 1, 3, P.curve), invertY: g.invertY === true, assist: clamp(g.assist, 0, 1, P.assist), vibration: g.vibration !== false, glyphs: ['auto', 'ps', 'xbox'].includes(g.glyphs) ? g.glyphs : 'auto' }; }
   s.padBindings = sanitizePadBindings(raw.padBindings);
   s.playLog = raw.playLog === true; s.autoQuality = raw.autoQuality !== false; s.textSize = ['normal', 'large', 'larger'].includes(raw.textSize) ? raw.textSize : d.textSize; s.reducedMotion = raw.reducedMotion === true; s.captions = raw.captions === true; s.firstRunSeen = raw.firstRunSeen === true;
+  s.rawMouse = raw.rawMouse !== false; s.mouseInvertY = raw.mouseInvertY === true; s.adsSens = clamp(raw.adsSens, 0.4, 1.6, d.adsSens); s.headBob = ['full', 'gentle', 'off'].includes(raw.headBob) ? raw.headBob : d.headBob;
   s.crosshair = sanitizeCrosshair(raw.crosshair);                                 // an older save has none: the new default
   return { settings: s, notes };
 }
@@ -63,3 +67,6 @@ export function loadSettings(storage) {
   } catch (e) { return { settings: defaultSettings(), notes: ['settings unreadable: ' + e.message] }; }
 }
 export function saveSettings(storage, s) { try { storage?.setItem(KEY, JSON.stringify(s)); return true; } catch { return false; } }
+/** the field of view setting is the VERTICAL angle (three.js); what it spans across a window of this shape, in degrees */
+export const fovAcross = (vertical, aspect) => Math.round(2 * Math.atan(Math.tan(vertical * Math.PI / 360) * aspect) * 180 / Math.PI);
+export const fovLabel = (vertical, aspect) => `${Math.round(vertical)}° tall, ${fovAcross(vertical, aspect)}° across`;

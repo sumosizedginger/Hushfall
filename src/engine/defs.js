@@ -21,6 +21,7 @@ export const PLAYER = {
 };
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
+export const PITCH_LIMIT = 1.3;       // radians up or down the view can tilt (the sim holds it; the view draws a pending look inside it)
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
 /** ECHO (PT-039, Act B; a map's atmosphere.echo): a noise louder than `loud` metres carries `echo` times as far (a shot in the Echo Markets' well); the quiet ones (the arc lamp uncharged, a blow, the fork) carry as they always did: that is the whole of the answer */
 export const ECHO = { loud: 16 };

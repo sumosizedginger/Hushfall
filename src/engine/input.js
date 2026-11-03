@@ -42,6 +42,11 @@ export class InputState {
   addYaw(rad) { this.yaw += rad; }
   addPitch(rad) { this.pitch += rad; }
   releaseAll() { this.down.clear(); this.edge.clear(); this.tapped.clear(); this.yaw = this.pitch = 0; this.analog = [0, 0]; }
+  /** The look collected since the last tick, not yet in the simulation: the camera is drawn with it, so the view moves in the frame the hand moves (the shot still goes where the view is: the tick applies this before it fires). `alpha` = how far into the next tick the clock is, for the held turn keys. */
+  pendingLook(alpha = 0) {
+    const d = this.down;
+    return { yaw: this.yaw + ((d.has('turnLeft') ? 1 : 0) - (d.has('turnRight') ? 1 : 0)) * TURN_RATE * TICK * alpha, pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK * alpha };
+  }
   /** One command per sim tick. Edge actions (use, weapon, pause) fire once per press. */
   sample() {
     if (this.toggles.has('sprint') && !this.down.has('forward') && !this.tapped.has('forward')) this.down.delete('sprint');   // toggled sprint ends when you stop moving

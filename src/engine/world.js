@@ -6,7 +6,7 @@ import { loadState, loadIndex, inLoad } from './loads.js';
 import { carState, carCovers, carDeckY } from './cars.js';                                                          // PT-045 (E8b): cars (lazy: a map with no `cars` never reaches them)
 import { beltPush, beltAtCell } from './belts.js';                                                                // PT-045 (E8a): conveyors on a clock (lazy: a map with no `belts` never reaches them)
 import { makeChimes, strikeChime, playTree, updateChimes, chimeTarget } from './chimes.js';
-import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS, CORPSES } from './defs.js';
+import { SUPPRESS, TICK, DIFFICULTY, PLAYER, AMMO_MAX, WEAPONS, WEAPON_ORDER, SLOT_KEYS, MELEE_ORDER, ALL_WEAPONS, GUARD, BASH, ENEMY_STRIKE, ENEMIES, PICKUPS, PROPS, DOOR, NOISE, STEP, FX, LOWG, VACUUM, LOCK, LOADS, CARS, FLOW, GRAFT, LANTERN, ECHO, LAMP_HOLDS, CORPSES, PITCH_LIMIT } from './defs.js';
 import { ammoCap, armorCap, sanitizeUpgrades } from './progress.js';
 import { AMMO_LOADS } from './defs.js';
 import { modDef, modTier, addMod } from './mods.js';
@@ -1250,7 +1250,7 @@ export function step(w, cmd) {
   if (w.sectors.length) for (const it of w.pickups) it.y = floorAt(w, it.x, it.z);       // ...and whatever lies on them (audit A22)
 
   // look + move
-  p.yaw += Number.isFinite(cmd.yaw) ? cmd.yaw : 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -1.3, 1.3);      // PT-050 H-I2: an infinite look value (a broken device) would make the view vector NaN for good
+  p.yaw += Number.isFinite(cmd.yaw) ? cmd.yaw : 0; p.pitch = clamp(p.pitch + (cmd.pitch || 0), -PITCH_LIMIT, PITCH_LIMIT);      // PT-050 H-I2: an infinite look value (a broken device) would make the view vector NaN for good
   let sx = clamp(cmd.move?.[0] || 0, -1, 1), sf = clamp(cmd.move?.[1] || 0, -1, 1);
   const len = Math.hypot(sx, sf); if (len > 1) { sx /= len; sf /= len; }
   const fx = -DM.sin(p.yaw), fz = -DM.cos(p.yaw), rx = DM.cos(p.yaw), rz = -DM.sin(p.yaw), a = Math.min(1, dt * PLAYER.accel);
