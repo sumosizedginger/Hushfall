@@ -16,7 +16,9 @@ const lidOf = (h, kind) => h + (kind === 'corner' ? 13 : kind === 'edge' ? 15 : 
 const kindOf = (i, j) => (i === 1 && j === 1 ? 'mid' : i === 1 || j === 1 ? 'edge' : 'corner');
 const floorCell = (x, z, h, ce) => setCell(L, x, z, FLOOR, h, ce);
 // ---- the nine crossings and their stumps ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+const GONE = (i, j) => i === 0 && j === 0;                                                                             // PT-082: no crossing in the north-west corner (the grid is broken: design/FUN_CHECK.md)
 for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) {
+  if (GONE(i, j)) continue;
   const h = CH[j][i], k = kindOf(i, j);
   for (let z = Z0[j]; z < Z0[j] + 12; z++) for (let x = X0[i]; x < X0[i] + 12; x++) floorCell(x, z, h, lidOf(h, k));
   const s = k === 'mid' ? 3 : 2;                                                                                       // the frame in the middle: the big one (6 x 6), or a stump (4 x 4)
@@ -24,8 +26,14 @@ for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) {
 }
 // ---- the corridors, four wide, with a flat of three cells at each end and a ramp between ---------------------------------------------------------------------------------------------------------------------------------------------------
 const ramp = (a, b, k) => a + Math.round((b - a) * Math.min(1, Math.max(0, (k - 3) / 7)));
-for (let j = 0; j < 3; j++) for (let i = 0; i < 2; i++) for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) { const h = ramp(CH[j][i], CH[j][i + 1], k); floorCell(X0[i] + 12 + k, Z0[j] + o, h, h + 9); }          // east-west
-for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) { const h = ramp(CH[j][i], CH[j + 1][i], k); floorCell(X0[i] + o, Z0[j] + 12 + k, h, h + 9); }          // north-south
+for (let j = 0; j < 3; j++) for (let i = 0; i < 2; i++) for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) { if (GONE(i, j)) continue; const h = ramp(CH[j][i], CH[j][i + 1], k); floorCell(X0[i] + 12 + k, Z0[j] + o, h, h + 9); }          // east-west
+for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) { if (GONE(i, j)) continue; const h = ramp(CH[j][i], CH[j + 1][i], k); floorCell(X0[i] + o, Z0[j] + 12 + k, h, h + 9); }          // north-south
+// ---- PT-082: the grid broken into rooms. The west column's two halls are one broad SPOOL HALL that ramps between them; the south-east crossing is a big DYE HALL; the north-east one runs north into a bay ----
+for (let k = 0; k < 14; k++) for (let o = 0; o < 12; o++) { const h = ramp(CH[1][0], CH[2][0], k); floorCell(X0[0] + o, Z0[1] + 12 + k, h, h + 13); }
+for (let z = Z0[2]; z < Z0[2] + 16; z++) for (let x = X0[2]; x < X0[2] + 18; x++) if (L.g[z][x] !== WALL) floorCell(x, z, CH[2][2], lidOf(CH[2][2], 'corner'));
+for (let z = Z0[2] + 4; z < Z0[2] + 8; z++) for (let x = X0[2] + 4; x < X0[2] + 8; x++) setCell(L, x, z, WALL, CH[2][2]);
+for (let z = Z0[0] - 5; z < Z0[0]; z++) for (let x = X0[2] + 2; x < X0[2] + 10; x++) floorCell(x, z, CH[0][2], lidOf(CH[0][2], 'corner'));
+// ---- end PT-082 ----
 // ---- the start (west of the bottom-left crossing), the exit (east of the top-right one), the cutting room (north of the top-middle one) -----------------------------------------------------------------------------------------------
 for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) setCell(L, 4 + k, Z0[2] + o, 'Ζ', 6, 15);
 for (let k = 0; k < 14; k++) for (let o = 4; o < 8; o++) setCell(L, X0[2] + 12 + k, Z0[0] + o, 'Ζ', 6, 15);
@@ -83,6 +91,7 @@ ENC.dropIn({ at: [48,81], radius: 2, cells: ENC.around([48,81], { n: 3, min: 6, 
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'spool', search: { region: [3, 3, 96, 96], prefer: [37, 44], lane: laneOf('C2M19') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A spool-room behind the cracked wall, the thread wound and left. A vest on the spindle, a mend beside it.' } });
+FUN.bypass({ from: [24, 52], to: [44, 32] });                                                         // PT-082: a back way from the spool hall to the top crossing, through where the north-west crossing was (a loop)
 // ---- end PT-081 fun pass ----
 
 
