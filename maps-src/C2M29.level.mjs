@@ -5,6 +5,8 @@
 // a charge (a crash into stone stuns it), rooted spikes where you stand, the guard's second wave (two Zealots). Under 30%: THE LAST NOTE (the lights fall, the note rolls the floor every three seconds over the tiers, the heart cracks open). At zero it does not break: it hangs, and every
 // sound in the game cuts out (the score, the ambience, the guns, your steps) for a held second, then one footstep. The stair north opens. A lit lantern cuts a ring to 0.6 (`lampHolds`), Ines's own lamp to 0.4. A root hollow in the wall of the top tier holds a cache.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 
 const W = 72, H = 72, L = new Level(W, H, { fill: '#' }); L.usedHeights = true; L.usedCeil = true;
@@ -61,12 +63,17 @@ L.g[SEC.panel[1]][SEC.panel[0]] = 'S'; L.ht[SEC.panel[1]][SEC.panel[0]] = 6;
 SEC.cells.forEach(([x, z], i) => P.P(['armor_vest', 'health_large', 'ammo_rocket', 'ammo_rivet', 'health_small', 'ammo_cell'][i], x, z));
 L.put(7, CZ, '@');
 put({ type: 'exit', dest: 'next', at: [CX, CZ - 17], locked: true });
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'bell-founder', search: { region: [3, 3, 68, 68], prefer: [24, 18], lane: laneOf('C2M29') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A bell-founder\'s niche behind the cracked root, older than the bell. A vest and a mend, and a mould with nothing in it.' } });
+// ---- end PT-081 fun pass ----
+
 const layers = L.layers();
 
 const spawn = (kind, x, z, facing, group) => ({ spawn: { kind, at: [x, z], facing, group } });
 const msg = (id, x, z, r, speaker, text) => ({ id, at: [x, z], radius: r, speaker, text });
 const MAP = {
-  id: 'C2M29', name: 'The Root Bell', version: 1, ceilingHeight: 4.2, par: { time: 720 },
+  id: 'C2M29', name: 'The Root Bell', version: 2, ceilingHeight: 4.2, par: { time: 720 },
   atmosphere: { look: 'rootbell', dark: true, fog: '#080604', fogDensity: 0.018, sky: 'root' },
   lantern: { oil: 150, max: 150 },
   lampHolds: { plain: 0.6, own: 0.4 },
@@ -106,4 +113,6 @@ export const waypoints = {
   main: [[7, CZ, 0], [CX - 24, CZ, 0], [CX - 14, CZ, 0], { op: 'killboss', max: 400, fallback: true }, [CX, CZ - 6, 0], [CX, CZ - 14, 0], [CX, CZ - 17, 0]],
   secret: [[7, CZ, 0], [CX - 24, CZ, 0], [CX - 14, CZ, 0], { op: 'killboss', max: 400, fallback: true }, [47, 51, 0], { op: 'use', at: SEC.panel }, [47, 54, 0], [47, 51, 0], [CX, CZ - 6, 0], [CX, CZ - 14, 0], [CX, CZ - 17, 0]],
 };
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(2, 0, ...[{op: 'crack', at: [24, 33]}, [24, 32, 0], [24, 34, 0]]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;

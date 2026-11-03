@@ -6,6 +6,8 @@
 // causeway to the mole (`dead:last`); on the mole the BELL ROPE (a lever, lit, named by the objective from the start) is the ninth stroke, and ringing it unlocks the exit in the north wall. Health and armour lie along the highest step for the first thirty seconds. Drop-fed
 // ammunition. A seam in the outer wall holds a cache.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { Encounters } from '../tools/mapkit/encounters.mjs';
+import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, box, placer } from '../tools/mapkit/c2.mjs';
 
 const W = 64, H = 64, C = 32, L = new Level(W, H, { fill: 'μ' }); L.usedHeights = true;
@@ -90,8 +92,14 @@ triggers.push({ id: 'last', when: 'time:' + (strokeT(8) + 28), do: [{ sound: 'to
 triggers.push({ id: 'mole', when: ['dead:w8', 'dead:last'], do: [{ open: [32, 29] }, { message: 'mole' }, { objective: 'The causeway is open. The rope is on the plinth in the middle of the mole' }] });
 triggers.push({ id: 'tide1', when: 'time:' + (strokeT(3) + 2), do: [{ objective: 'The water is rising. Keep to the highest step' }] });
 triggers.push({ id: 'stand', when: 'time:' + strokeT(1), do: [{ objective: 'Hold the dock. The gates open at every stroke' }] });
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'tide-locker', search: { region: [3, 3, 60, 60], prefer: [25, 58], lane: laneOf('C2M28') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A tide-keeper\'s locker behind the cracked dock wall, above the high-water mark. A vest and a mend, kept dry.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M28', name: 'Last Tide', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M28', name: 'Last Tide', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'tide', sky: 'anselm', fog: '#34382c', fogDensity: 0.006 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'LAST TIDE', lines: ['The harbour has been copied in a smaller size, stone for stone, with the sea left out.', 'A bell hangs in the middle of it. Somebody rings it from outside.'] },
@@ -135,4 +143,6 @@ export const waypoints = {
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "exit": ["msg:ninth"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(1, 0, ...[{op: 'crack', at: [25, 59]}, [25, 60, 0], [25, 58, 0]]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;
