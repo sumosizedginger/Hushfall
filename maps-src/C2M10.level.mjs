@@ -125,9 +125,13 @@ for (let n = 0, tries = 0; n < 40 && tries < 8000; tries++) {
 const ENC = new Encounters(L);
 ENC.dropIn({ at: [24, 47], radius: 2.5, cells: [[19, 49], [28, 48], [25, 52]], kind: 'g' });                        // porters out of the lanes as you cross to the well
 
+// PT-082 (after the stalls and the crowd are placed, so neither moves): the LOWER MARKET (every lane south of the well) is open to the cavern's own vault of small lights (sky_deep, as in the Silent Orchard); the well, the arcade, the upper quarter and the north
+// square stay under the rock. The town reads as a hall of two halves, and the space contract measures it as MIXED (it was a 100% roofed hall with 23.5 m sightlines, which no class allows). The
+// simulation is the same on either floor (an outdoor cell walks, sees and shoots as a roofed one, the ceiling layer is unchanged): only what is drawn overhead differs.
+for (let z = 42; z < H; z++) for (let x = 0; x < W; x++) if (L.get(x, z) === 'f') L.g[z][x] = 's';
 const MAP = {
   id: 'C2M10', name: 'Echo Markets', version: 2, ceilingHeight: 4.2, par: { time: 420 },
-  atmosphere: { look: 'markets', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
+  atmosphere: { look: 'markets', sky: 'deep', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ECHO MARKETS', lines: ['A market town under the roof of the cave, round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },
   outro: 'The north gate opened when the hall had gone quiet. Behind it the stair goes down, and the noise of the market stays behind.',
@@ -157,7 +161,7 @@ const MAP = {
     { id: 'gate', when: 'enter', at: [36, 12], radius: 5, do: [{ objective: 'The north gate is sound-locked: stand quiet until it opens, then use it' }] },
   ],
   quality: { enemies: [25, 60], botSeconds: [40, 900], mechanics: ['heights', 'triggers', 'secret'], skins: 6, enemyKinds: { zealot: 5, tollbearer: 8, gaunt: 5, chorister: 3, bellhand: 2, acolyte: 1 },
-    scaleClass: 'COMPRESSION', introduces: 'the echo: a hall where a shot carries twice as far and wakes the market, a crowd of peaceful Vael to keep from harm, and a gate that only opens when the hall has gone quiet' },
+    scaleClass: 'MIXED', introduces: 'the echo: a hall where a shot carries twice as far and wakes the market, a crowd of peaceful Vael to keep from harm, and a gate that only opens when the hall has gone quiet' },
 };
 MAP.drops = { scale: 1, keep: [] };
 ENC.apply(MAP);

@@ -2,17 +2,17 @@
   "mapId": "C2M05",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "c9a154a",
+  "codeVersion": "b4d0e51",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "980148a41eb8c7e5",
+  "mapSha": "8c8cba95604cfcec",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
     "engine": "4767fce2cadbed7f",
     "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "5a6f9000131f21d2",
+    "audio": "9e87f0bab73e6574",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -595,8 +595,8 @@
       },
       {
         "name": "placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air",
-        "ok": false,
-        "detail": "4 floating: lamp@12,9 lamp@56,10 lamp@11,22 lamp@53,41"
+        "ok": true,
+        "detail": "ok"
       },
       {
         "name": "placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)",
@@ -610,8 +610,8 @@
       },
       {
         "name": "feel: the measured map is MIXED",
-        "ok": false,
-        "detail": "39% roofed, p90 sightline 14.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
+        "ok": true,
+        "detail": "41% roofed, p90 sightline 14.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -646,7 +646,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C2M05.json: 67e41bd9ecb06f70 vs 980148a41eb8c7e5"
+        "detail": "validation/browser/C2M05.json: 67e41bd9ecb06f70 vs 8c8cba95604cfcec"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

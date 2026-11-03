@@ -2,17 +2,17 @@
   "mapId": "C2M04",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "c9a154a",
+  "codeVersion": "b4d0e51",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "ac821a3aae30dbd2",
+  "mapSha": "f110acff5ccc6335",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
     "engine": "4767fce2cadbed7f",
     "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "5a6f9000131f21d2",
+    "audio": "9e87f0bab73e6574",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
@@ -144,7 +144,7 @@
       ")",
       "-",
       "f",
-      "p",
+      "&",
       ".",
       "("
     ],
@@ -576,13 +576,13 @@
       },
       {
         "name": "placement: every roofed region has walls (a floating ceiling slab over open ground is a map that reads as indoors outside)",
-        "ok": false,
-        "detail": "9 roofed cells near 33,19 have 3 wall edges and 9 open edges; 9 roofed cells near 55,19 have 3 wall edges and 9 open edges"
+        "ok": true,
+        "detail": "ok"
       },
       {
         "name": "placement: ceiling-hung props (lamp, pod, cradle) stand under a roof, not in open air",
-        "ok": false,
-        "detail": "5 floating: lamp@30,35 lamp@18,36 lamp@36,39 lamp@7,37 lamp@4,32"
+        "ok": true,
+        "detail": "ok"
       },
       {
         "name": "placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)",
@@ -592,12 +592,17 @@
       {
         "name": "feel: the map declares a scale class (COMPRESSION, MIXED or SET-PIECE)",
         "ok": true,
-        "detail": "MIXED"
+        "detail": "SET-PIECE"
       },
       {
-        "name": "feel: the measured map is MIXED",
-        "ok": false,
-        "detail": "25% roofed, p90 sightline 22.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
+        "name": "feel: the measured map is SET-PIECE",
+        "ok": true,
+        "detail": "28% roofed, p90 sightline 22.5 m (SET-PIECE:  <= 39% roofed)"
+      },
+      {
+        "name": "feel: a set-piece names its reason (quality.reason)",
+        "ok": true,
+        "detail": "a hill climbed in the open: the field, the terrace and the summit are open ground on purpose, the forks stand in it, and the barn, the winch house and the tower are the cover the climb is planned round"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -632,7 +637,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C2M04.json: 28976e9272cf65c1 vs ac821a3aae30dbd2"
+        "detail": "validation/browser/C2M04.json: 28976e9272cf65c1 vs f110acff5ccc6335"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

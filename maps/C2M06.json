@@ -707,17 +707,17 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [6, 15]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [30, 25]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [25, 29]
   },
   {
@@ -727,17 +727,17 @@
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [8, 41]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [44, 41]
   },
   {
    "type": "prop",
-   "kind": "lamp",
+   "kind": "lantern",
    "at": [60, 53]
   },
   {
@@ -1025,7 +1025,8 @@
    "gill": 3,
    "bulwark": 2
   },
-  "scaleClass": "MIXED",
+  "scaleClass": "SET-PIECE",
+  "reason": "the water course is open to the sky: the climb upstream against the current is the point; the tower, the pumphouse and the siphon hall are roofed",
   "introduces": "the current: wading water that pushes (2.2 m/s: against it you crawl, with it you fly), the whole map an upstream climb through two weirs, with creatures carried down to you; the arc lamp conducts through the water"
  },
  "drops": {

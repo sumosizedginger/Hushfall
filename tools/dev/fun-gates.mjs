@@ -10,7 +10,7 @@ for (const id of ids) {
   let mc = ''; try { mc = execFileSync(process.execPath, ['tools/dev/map-check.mjs', id], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); } catch (e) { mc = String(e.stdout ?? '') + String(e.stderr ?? ''); }
   try { execFileSync(process.execPath, ['tools/verify-map.mjs', id], { cwd: root, stdio: 'ignore' }); } catch { /* the evidence file says what failed */ }
   const v = JSON.parse(fs.readFileSync(path.join(root, 'validation', 'maps', id + '.json'), 'utf8'));
-  const fails = [...mc.split('\n').filter((l) => l.startsWith('FAIL')).map((l) => l.replace(/^FAIL \S+ /, 'map-check: ')), ...v.automated.checks.filter((c) => c.pass === false && !/real-game|browser check|THIS map/.test(c.name ?? '')).map((c) => (c.name ?? '').slice(0, 140) + (c.detail ? ' | ' + String(c.detail).slice(0, 160) : ''))];
+  const fails = [...mc.split('\n').filter((l) => l.startsWith('FAIL')).map((l) => l.replace(/^FAIL \S+ /, 'map-check: ')), ...v.automated.checks.filter((c) => (c.pass === false || c.ok === false) && !/real-game|browser check|THIS map/.test(c.name ?? '')).map((c) => (c.name ?? '').slice(0, 140) + (c.detail ? ' | ' + String(c.detail).slice(0, 160) : ''))];
   console.log(`${fails.length ? 'FAIL' : 'PASS'} ${id}${fails.length ? '' : ' (every node gate)'}`); for (const f of fails) console.log('   ' + f);
   if (fails.length) bad++;
 }

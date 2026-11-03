@@ -8,6 +8,7 @@ import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 import { sketch } from '../tools/mapkit/sketch.mjs';
+import { FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 64, H = 58, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true; L.usedFx = true;
 // ---- the water's course, drawn: north is up. The basin, low channel and ravine on the ground; the reservoir, bridge and tower gallery 3 m up (h 6); the top channel and the siphon 6 m up (h 12). Water cells carry their flow ----------------
@@ -89,7 +90,7 @@ L.door(DOOR[0], DOOR[1], { remote: true }); L.secretPanel(STORE[0], STORE[1]); L
 for (const [ch, kind] of [['T', 'tollbearer'], ['G', 'gaunt'], ['H', 'bellhand'], ['J', 'gill'], ['U', 'bulwark']]) for (const [x, z] of S.at(ch)) E(kind, x, z);
 // ---- supplies and furniture ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of S.at('$')) PK('health_large', x, z); for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S.at('!')) PK('armor_vest', x, z);
-for (const [x, z] of S.at('L')) PR('lamp', x, z); for (const [x, z] of S.at('Y')) PR('lantern', x, z); for (const [x, z] of S.at('R')) PR('crate', x, z);
+for (const [x, z] of S.at('L')) PR(FLOOR_SKINS[L.get(x, z)]?.kind === 'outdoor' ? 'lantern' : 'lamp', x, z);          /* PT-082: a lamp hangs from a roof; in the open the same light is a standing lantern */ for (const [x, z] of S.at('Y')) PR('lantern', x, z); for (const [x, z] of S.at('R')) PR('crate', x, z);
 PK('armor_vest', 49, 55); PK('health_large', 51, 55); PK('ammo_shell', 49, 56); PK('ammo_rivet', 51, 56); PK('ammo_flare', 50, 56);       // the keepers' store
 PK('ld_slag_rivet', 27, 34); PK('health_large', 26, 33);                                                                                  // the grotto
 const ENC = new Encounters(L);
@@ -131,7 +132,7 @@ const MAP = {
     { id: 'siphon', when: 'enter', at: [16, 9], radius: 3, do: [{ objective: 'The siphon: the lever on its north wall opens the door to the exit' }] },
   ],
   quality: { enemies: [26, 70], botSeconds: [40, 700], mechanics: ['heights', 'triggers', 'switches', 'secret', 'hazards'], skins: 6, enemyKinds: { tollbearer: 7, gaunt: 5, bellhand: 3, gill: 3, bulwark: 2 },
-    scaleClass: 'MIXED', introduces: 'the current: wading water that pushes (2.2 m/s: against it you crawl, with it you fly), the whole map an upstream climb through two weirs, with creatures carried down to you; the arc lamp conducts through the water' },
+    scaleClass: 'SET-PIECE', reason: 'the water course is open to the sky: the climb upstream against the current is the point; the tower, the pumphouse and the siphon hall are roofed', introduces: 'the current: wading water that pushes (2.2 m/s: against it you crawl, with it you fly), the whole map an upstream climb through two weirs, with creatures carried down to you; the arc lamp conducts through the water' },
 };
 MAP.drops = { scale: 1.4, keep: [] };
 ENC.apply(MAP);

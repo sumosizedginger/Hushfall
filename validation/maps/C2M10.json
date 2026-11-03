@@ -2,10 +2,10 @@
   "mapId": "C2M10",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "938dee6",
+  "codeVersion": "b4d0e51",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0dfb9c9cea9216df",
+  "mapSha": "e7ca771395acfe8c",
   "assetVersion": "0fd1ea95586c4e78",
   "engineSha": "4767fce2cadbed7f",
   "sources": {
@@ -133,7 +133,7 @@
     "heights": true,
     "maxFloor": 5,
     "fxCells": 0,
-    "skins": 8,
+    "skins": 9,
     "wallSkins": [
       "[",
       "]",
@@ -144,7 +144,8 @@
       "c",
       "^",
       ")",
-      "{"
+      "{",
+      "s"
     ],
     "props": 107,
     "secrets": 2,
@@ -501,7 +502,7 @@
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
         "ok": true,
-        "detail": 8
+        "detail": 9
       },
       {
         "name": "quality: uses mechanic 'heights'",
@@ -566,12 +567,12 @@
       {
         "name": "feel: the map declares a scale class (COMPRESSION, MIXED or SET-PIECE)",
         "ok": true,
-        "detail": "COMPRESSION"
+        "detail": "MIXED"
       },
       {
-        "name": "feel: the measured map is COMPRESSION",
-        "ok": false,
-        "detail": "100% roofed, p90 sightline 23.5 m (COMPRESSION: >= 80% roofed, sightline <= 20 m)"
+        "name": "feel: the measured map is MIXED",
+        "ok": true,
+        "detail": "75% roofed, p90 sightline 23.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -606,7 +607,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C2M10.json: e4922482fa0ba376 vs 0dfb9c9cea9216df"
+        "detail": "validation/browser/C2M10.json: e4922482fa0ba376 vs e7ca771395acfe8c"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

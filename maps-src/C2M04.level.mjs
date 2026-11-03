@@ -48,11 +48,11 @@ const PLAN = String.raw`
   WwwwwwwwW           #777#:::::::::::::::::J::::::
   WwwwwwGwW           #666#   :::::::::::::::::::::
   WQwwwwwwW           #555#   ::::::::::::::WWWWWWWWWWWWWWWWW
-  WwwwwwwwW,,,,,,,,,,,,LLL,,,,E,,,,,,,,,    BBBBBBBBBBBBBBBBW
-  WwwwKwwww,G,,,,,E,,,,LLL,,,,,,F,,,,,,,,,,,BB*BBBBBBBBBBBBBW
+  WwwwwwwwW,,,,,,,,,,,,LLL,,,,Y,,,,,,,,,    BBBBBBBBBBBBBBBBW
+  WwwwKwwww,G,,,,,Y,,,,LLL,,,,,,F,,,,,,,,,,,BB*BBBBBBBBBBBBBW
   Wwwwwwwww,,,,,F,,,H,,LLL,,T,,,,,,,,,,,,,,,BBEBBBBBEBJBBBBBW
   WwAwwwwww,,,,,,,,,,,,,,,,,,,+,,,,,,,,,H,,,WBBBBBBBBBBBBBBBW
-  WwwwwwwwW    ,,,,,,,,,,,,,,,,,,,,,E,,,,,,,WBBBBBBBBBBBBBBBW
+  WwwwwwwwW    ,,,,,,,,,,,,,,,,,,,,,Y,,,,,,,WBBBBBBBBBBBBBBBW
   WWWWWW   .................................Wbbbbbbbbbb3333bW
         ....................................WbRbbbbbbbb2222bW
         ....................................Wbbbbbbbbbb1111bW
@@ -82,8 +82,8 @@ const S = sketch(L, PLAN, {
   l: F('(', 0),                                                                                                  // the hollow way: glass sand between banks
   b: F('.', 0, 9), B: F('.', 4, 9), 1: F('.', 1, 12), 2: F('.', 2, 11), 3: F('.', 3, 10),                     // the barn: planks under a 4.5 m roof, the hay loft 2 m up, the loft stair
   L: F('f', 4), g: F('f', 8), 5: F('f', 5), 6: F('f', 6), 7: F('f', 7),                                                       // the great stair: its landing and its upper flight
-  w: F('p', 4, 8), c: F('p', 4, 6),                                                                              // the winch house and the cupboard behind it
-  x: F('f', 9), y: F('f', 10), z: F('f', 11),                                                                    // the stairs from the upper field to the summit
+  w: F('.', 4, 8), c: F('.', 4, 6),                                                                              // the winch house and the cupboard behind it (PT-082: roofed planks: a house, so its lamps hang from a roof)
+  x: F('&', 9), y: F('&', 10), z: F('&', 11),                                                                    // the stairs from the upper field to the summit (PT-082: open-air stone steps, not a roofed slab)
   f: F('f', 12, 10), e: F(')', 12, 8), h: F('.', 0, 8),                                                         // the tower (a 5 m roof), the passage beyond the north gate, the store
 }, { marks: '@XDNSZQVOTGHKJUF+*AERY' });
 const P = placer(L), { E, P: PK, PR } = P; const [sx, sz] = S.one('@'); L.put(sx, sz, '@'); P.reserve(sx, sz);
@@ -148,7 +148,7 @@ const MAP = {
     { id: 'summit', when: 'enter', at: [47, 19], radius: 3, do: [{ objective: 'The tuning tower: the lever on the bell stand opens the north gate' }] },
   ],
   quality: { enemies: [30, 60], botSeconds: [40, 700], mechanics: ['heights', 'triggers', 'switches', 'secret'], skins: 6, enemyKinds: { tollbearer: 8, gaunt: 8, bellhand: 4, sexton: 2, gill: 3, bulwark: 1 },
-    scaleClass: 'MIXED',
+    scaleClass: 'SET-PIECE', reason: 'a hill climbed in the open: the field, the terrace and the summit are open ground on purpose, the forks stand in it, and the barn, the winch house and the tower are the cover the climb is planned round',
     introduces: 'the resonators: standing forks that ring at a noise, answer the forks beside them down the row and wake everything asleep near them, so the gun you fire near them is the puzzle (the arc lamp, a blow and the tuning-fork gun are heard from least far)' },
 };
 MAP.drops = { scale: 1, keep: [] };

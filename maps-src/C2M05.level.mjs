@@ -9,6 +9,7 @@ import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 import { sketch } from '../tools/mapkit/sketch.mjs';
+import { FLOOR_SKINS } from '../src/engine/defs.js';
 
 const W = 68, H = 62, L = new Level(W, H, { fill: '!' }); L.usedHeights = true; L.usedCeil = true;
 // ---- the hillside, drawn: north is up. The road: leg one at 3 m (h 6), leg two 2 m, leg three 1 m, the yard on the ground. Chapels (')' under a 4.5 m lid), arches (roofed road, 6 m), closets N with their niches n ----------------
@@ -46,11 +47,11 @@ const PLAN = String.raw`
 "yy"=cccHcccc= *rrrLrrrr*    ==========          =cccc+cc=
 "yy"=cccccc!c= *rrrrrrrr* n          n           =ccccccc=
 "Yy"=cccccccc==****rr****=N==========N============ccccccc=
-"yy"=cccccccccccccccccccccccccccccCCCCCCCCccccccccccccccc=
-"yy"=ccc+cccccccccccccccccccccccccYCCCCCCCcccccc$cccccccc=
-"zzzOcccccccccccccccTcccccc$ccccccCCCCCCCCJccHccccccccccc=
-"zzz=cccccccccccc+ccccccccccccccccCCCCCCCYccccccccccccccc=
-""""=QccccccccccccccccccccccccccccCCCCCCCCccccccccccccccc=
+"yy"=cccccccccccccccccccccccccccCCCCCCCCCCCCccccccccccccc=
+"yy"=ccc+ccccccccccccccccccccccccCYCCCCCCCCCcccc$cccccccc=
+"zzzOcccccccccccccccTcccccc$ccccCCCCCCCCCCJCCHccccccccccc=
+"zzz=cccccccccccc+ccccccccccccccCCCCCCCCCYCCccccccccccccc=
+""""=QccccccccccccccccccccccccccCCCCCCCCCCCCccccccccccccc=
     =====N=====N======N======rr====================111111=
          n     n      n  =rrrrrrrr=          ======111111=====
                          =rrrrrrrr=          =ddddddddddddddd=
@@ -103,7 +104,7 @@ for (const [ch, kind] of [['T', 'tollbearer'], ['G', 'gaunt'], ['H', 'bellhand']
 CLOSETS.forEach((c, i) => E(i % 3 === 2 ? 'bellhand' : 'gaunt', c.nx, c.nz, { group: 'cl' + i }));
 // ---- supplies and furniture ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for (const [x, z] of S.at('$')) PK('health_large', x, z); for (const [x, z] of S.at('+')) PK('health_small', x, z); for (const [x, z] of S.at('!')) PK('armor_vest', x, z);
-for (const [x, z] of S.at('L')) PR('lamp', x, z); for (const [x, z] of S.at('Y')) PR('lantern', x, z);
+for (const [x, z] of S.at('L')) PR(FLOOR_SKINS[L.get(x, z)]?.kind === 'outdoor' ? 'lantern' : 'lamp', x, z);          /* PT-082: a lamp hangs from a roof; in the open the same light is a standing lantern */ for (const [x, z] of S.at('Y')) PR('lantern', x, z);
 // the secrets: Calder's slab (and the heavy crate, FREEZE F8) and the reliquary niche
 PR('grave', 64, 46); PK('armor_vest', 62, 45); PK('health_large', 64, 45); PK('ammo_shell', 62, 47); PK('ammo_rivet', 63, 45); PK('ammo_flare', 63, 47);
 PK('ld_rime_harpoon', 30, 47); PK('armor_vest', 29, 46);

@@ -12,7 +12,7 @@ const W = 70, H = 64, L = new Level(W, H, { fill: '[' }); L.usedHeights = true; 
 const ROCK = '[', PATH = ',', BED = '7', FLOW = '{';
 const FL = 4;
 blob(L, 35, 31, 27, 21, { seed: 2101, rough: 0.16, ch: PATH, h: FL });                                   // PT-082: a garden the cave made, not a drawn oval (it was a mirror, 0.98)
-ellipse(L, 21, 22, 4.5, 3.2, FLOW, FL - 1); ellipse(L, 21, 22, 5.5, 4.2, PATH, FL); ellipse(L, 21, 22, 4.5, 3.2, FLOW, FL - 1);          // a still pool off to the west, half a metre down
+ellipse(L, 21, 22, 4.5, 3.2, '@', FL - 1); ellipse(L, 21, 22, 5.5, 4.2, PATH, FL); ellipse(L, 21, 22, 4.5, 3.2, '@', FL - 1);          // a still pool off to the west, half a metre down (PT-082: the open-air flowstone '@', not the roofed '{')
 ellipse(L, 50, 37, 4.6, 3.6, BED, FL + 1); ellipse(L, 50, 37, 3.2, 2.4, BED, FL + 2);                                   // and a knoll of moss to the east, two steps up
 box(L, [34, 48, 36, 60], FLOW, FL, 18); box(L, [34, 4, 36, 14], FLOW, FL, 18);
 const beds = [];
