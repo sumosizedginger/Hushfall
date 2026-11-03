@@ -44,7 +44,7 @@ export const BRAIN = Object.freeze({
 
 const wrap = (a) => DM.atan2(DM.sin(a), DM.cos(a)),
   clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
-const span = (r, [a, b]) => a + r() * (b - a);
+const span = (r, ab) => ab[0] + r() * (ab[1] - ab[0]);
 /** does creature `e` have this part of the brain, and is it one of the ordinary roster (bosses, nodes, range targets keep their own code) */
 export const has = (e, part) => !!ENEMIES[e.kind].brain?.[part] && ordinary(e);
 const busy = (e) => e.attackT >= 0 || (e.lungeT ?? -1) >= 0 || (e.chargeT ?? -1) >= 0;
@@ -198,8 +198,8 @@ export function brainStep(ctx) {
         facePlayer(ctx, 1.5);
         e.walk *= 0.8;
         return true;
-      // the groan: it plants itself and leans in (a player who comes within reach meanwhile gets the swing instead: a runner slipped past a planted
-      // Tollbearer)
+        // the groan: it plants itself and leans in (a player who comes within reach meanwhile gets the swing instead: a runner slipped past a planted
+        // Tollbearer)
       }
       if (dist <= def.attack.range + 0.1) return stop(); // there: the ordinary rules swing, once it has its balance
       facePlayer(ctx, L.turn);

@@ -473,8 +473,7 @@ function validateMapChecks(src) {
       (e.type === 'enemy' ? ENEMIES[e.kind]?.radius : e.type === 'player' ? PLAYER.radius : e.type === 'pickup' ? 0.25 : e.type === 'exit' ? 0.3 : 0) ?? 0;
   const okAt = ents.filter((e) => Array.isArray(e.at) && e.at.length === 2 && e.at.every(Number.isFinite));
   for (const [i, a] of okAt.entries()) {
-    const ar = bodyR(a),
-      pa = PROPS[a.kind];
+    const ar = bodyR(a);
     if (a.type === 'prop' || !ar) continue;
     for (const [j, b] of okAt.entries()) {
       if (i === j) continue;
@@ -550,7 +549,7 @@ function validateMapChecks(src) {
   }
   if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
-  validateKit(src, { w, h, tile, walkable, err, ents, msgIds, keyPickups });
+  validateKit(src, { w, h, tile, walkable, err, ents, msgIds });
   return errors.length ? { ok: false, errors } : { ok: true, errors: [] };
 }
 

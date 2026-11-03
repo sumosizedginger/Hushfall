@@ -40,7 +40,7 @@ function pcm(f32) {
 }
 
 export function installTestHook(app) {
-  const { g, MAPS, store, audio, ui } = app;
+  const { g, store, audio, ui } = app;
   let bot = null;
   const snap = () => {
     const w = g.world,
@@ -134,7 +134,9 @@ export function installTestHook(app) {
     newGame(difficulty = 'normal', seed = 1, { realtime = false, mapId = null, keepProgress = false } = {}) {
       g.lockFailed = true;
       if (!keepProgress) g.progress = sanitizeProgress(null);
-      /* a new game starts a fresh campaign, as the real button does: a choice made in C2M11 leaked into the next map's world of the same page session and made the browser's state hash differ from the node sim's on every later Campaign Two map */ app.startLevel(
+      // a new game starts a fresh campaign, as the real button does: a choice made in C2M11 leaked into the next map's world of the same page session
+      // and made the browser's state hash differ from the node sim's on every later Campaign Two map
+      app.startLevel(
         { difficulty, seed, ...(mapId ? { mapId } : {}) },
       );
       g.manual = !realtime;

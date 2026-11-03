@@ -7,7 +7,7 @@
 // FOLK.fearT s after the last one, then settles where it ended up. No random stream is read (a small hash of its id and the clock stands in), so a
 // world without folk is byte for byte what it was, and one with folk
 // is deterministic. The damage side (an innocent is not a kill) lives in world.js `damageEnemy`.
-import { ENEMIES, FOLK, NOISE } from './defs.js';
+import { FOLK, NOISE } from './defs.js';
 import { tryMove, moveClear, hasLOS, emit } from './world.js';
 import * as DM from './dmath.js'; // the same bits on every engine (sin, cos, atan2, acos, exp)
 

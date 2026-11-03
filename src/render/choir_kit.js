@@ -258,7 +258,6 @@ export function pleatGeom(profile, seg = 12, k = 5, amp = 0.06, hem = 0.7, phi) 
     const x = p.getX(i),
       y = p.getY(i),
       z = p.getZ(i),
-      r = Math.hypot(x, z) || 1e-6,
       a = Math.atan2(z, x),
       low = 1 - (y - y0) / (y1 - y0 || 1),
       f = 1 + amp * Math.sin(k * a) * (1 - hem + hem * low);

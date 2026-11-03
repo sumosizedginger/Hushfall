@@ -257,7 +257,6 @@ export function buildLevel(map, tex) {
     switchViews = new Map(),
     exitViews = new Map();
   const T = (name) => tex[name] ?? tex.wall_bulkhead_a;
-  const isOpenKind = (k) => k !== 'wall';
   const hasCeil = (k) => k === 'floor' || k === 'door' || k === 'secret';
   const fl = (cx, cz) => map.floor(cx, cz),
     ce = (cx, cz) => map.ceilingAt(cx, cz);

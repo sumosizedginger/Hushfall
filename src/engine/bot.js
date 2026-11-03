@@ -32,7 +32,11 @@ export class Bot {
   constructor(world, input, route, { stuckTicks = 240, maxTicksPerOp = 60 * 90, fights = true, weave = false } = {}) {
     if (!fights) stuckTicks = Infinity; // a passive runner that is boxed in stays there and takes what comes (that is the point of the runner)
     this.fights = fights;
-    this.weave = weave;
+    this.weave = /** @type {boolean | number} */ (weave);
+    /** @type {any} */
+    this.skipPickups = undefined;
+    /** @type {any} */
+    this.anchorSkip = undefined;
     this.fightTicks = 0;
     this.noFightUntil = 0;
     this.w = world;
@@ -441,8 +445,8 @@ export class Bot {
         if (++st.n > 180) (this.skipPickups ??= new Set()).add(want.id);
       }
       return false;
-    // `follow` says 'close enough' (something sits on the exact spot): a pickup it cannot collect is given up, or the bot would forage at it forever
-    // instead of going for the boss // quiet moment: top up
+      // `follow` says 'close enough' (something sits on the exact spot): a pickup it cannot collect is given up, or the bot would forage at it forever
+      // instead of going for the boss // quiet moment: top up
     }
     const cg = ENEMIES[boss.kind].unison?.group,
       singers = cg
@@ -1117,8 +1121,8 @@ export class Bot {
         for (const e of w.enemies) if (e.state !== 'dead') hp += e.hp;
         if (this.foeHp != null && hp < this.foeHp - 1e-6) this.stillFor = 0;
         this.foeHp = hp;
-      // (damage dealt is progress: a Bellhand that runs across between shots and dodges takes longer than four seconds at range, and a brawl in its
-      // face that ends with the nearest target far off was both called "stuck in combat")
+        // (damage dealt is progress: a Bellhand that runs across between shots and dodges takes longer than four seconds at range, and a brawl in its
+        // face that ends with the nearest target far off was both called "stuck in combat")
       }
       // a human stops trading shots with something pinned behind cover and gets on with it: after ~3 s of one fight on a non-kill op, ignore combat
       // for 2.5 s
@@ -1128,8 +1132,8 @@ export class Bot {
           this.noFightUntil = w.tick + 150;
           this.stillFor = 0;
         }
-      // never walk away from something that is in your face (and the walk on gets its own time: the stuck clock had run through the fight and failed
-      // the bot first)
+        // never walk away from something that is in your face (and the walk on gets its own time: the stuck clock had run through the fight and failed
+        // the bot first)
       }
       if (op.op === 'kill' || op.op === 'ride') {
         this.stillFor = 0;
@@ -1139,10 +1143,9 @@ export class Bot {
         if (this.stillFor > this.stuckTicks && t.d > 6) this.failed = 'stuck in combat';
         return;
       }
-    // (ENEMY ACTIONS, 2026-10-26: a fight within 6 m is a fight, not being stuck: the bot's own shots kept knocking a Bulwark back from 2.7 to 5 m on
-    // the Hollow Stair, and the old 4 m called that stuck)
-    }
-    else {
+      // (ENEMY ACTIONS, 2026-10-26: a fight within 6 m is a fight, not being stuck: the bot's own shots kept knocking a Bulwark back from 2.7 to 5 m on
+      // the Hollow Stair, and the old 4 m called that stuck)
+    } else {
       if (this.wasFighting) {
         this.stillFor = 0;
         this.wasFighting = false;

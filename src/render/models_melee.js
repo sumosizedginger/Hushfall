@@ -232,7 +232,7 @@ export const glove = (M) => {
 
 // ---------------------------------------------------------------------------------------------------------------------- the fists
 export function makeFists(tex) {
-  const { mat, sleeveMat, M } = kit(tex),
+  const { sleeveMat, M } = kit(tex),
     g = new THREE.Group();
   const fist = (side) => {
     const a = new THREE.Group(),

@@ -12,7 +12,7 @@ const mendable = (o) => {
   return o.state !== 'dead' && o.state !== 'idle' && o.state !== 'calm' && o.state !== 'flee' && !d.node && !d.boss && !d.spawner && !d.peaceful && !d.heal;
 };
 export function healStep(ctx) {
-  const { w, e, def, diff, dt, sees, dist, emit, retreat, toward } = ctx,
+  const { w, e, def, diff, dt, sees, dist, emit, toward } = ctx,
     H = def.heal;
   const full = (o) => ENEMIES[o.kind].hp * diff.enemyHp,
     wounded = (o, lim) => mendable(o) && o.hp < full(o) * lim,

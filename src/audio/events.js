@@ -276,8 +276,6 @@ export function soundsForEvent(e) {
       return [{ id: 'load_creak', pos: at(e) }];
     case 'load_land':
       return [{ id: 'load_crash', pos: at(e) }];
-    case 'load_hit':
-      return [{ id: 'pulse_hit' }];
     case 'vent_launch':
       return [{ id: 'vent_launch', pos: at(e) }];
     case 'air_land':

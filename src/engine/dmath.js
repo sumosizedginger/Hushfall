@@ -224,6 +224,7 @@ export function atan(x) {
 const PI_O_4 = 7.85398163397448279e-1,
   PI_O_2 = 1.570796326794896558,
   PI = 3.141592653589793116,
+  // eslint-disable-next-line no-loss-of-precision -- the fdlibm constant, digit for digit
   PI_LO = 1.2246467991473531772e-16,
   TINY = 1.0e-300;
 /** atan2(y, x), the same bits on every engine */

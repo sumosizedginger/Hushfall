@@ -25,7 +25,7 @@ export const FACING = ['NW', 'NE', 'SE', 'SW'];
 
 /** the beams of a map: lit receivers, the polylines to draw (cell-centre coordinates, in cells), and every cell a beam crosses.
  *  rots: { [mirrorId]: 0..3 } (a mirror not listed keeps its map rotation); doorOpen(cx, cz): is the door or panel there open? (default: shut) */
-export function traceBeams(map, rots = {}, doorOpen = () => false) {
+export function traceBeams(map, rots = {}, doorOpen = /** @type {(cx: number, cz: number) => boolean} */ (() => false)) {
   const out = { lit: [], lines: [], cells: new Set(), dead: [] };
   if (!map.emitters?.length) return out;
   const mirrorAt = new Map(map.mirrors.map((m) => [m.at.join(','), m])),

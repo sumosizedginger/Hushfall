@@ -24,6 +24,7 @@ const NOTE =
 const num = (x, lo, hi, d = 0) => (Number.isFinite(x) ? Math.min(hi, Math.max(lo, Math.round(x * 100) / 100)) : d);
 const text = (s, n) =>
   String(s ?? '')
+    // eslint-disable-next-line no-control-regex -- control characters are what this removes
     .replace(/[\u0000-\u001f\u007f]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()

@@ -230,7 +230,6 @@ export class UI {
       (objectives.done.length ? `<h3>Earlier on this map</h3>${objectives.done.map((t) => `<div class="goal done">${esc(t)}</div>`).join('')}` : '');
     if (items) {
       // what you carry and how to use it, then what you picked up on this level and when
-      const meta = (x) => (x ? `<small class="meta">${esc(x.when)} · ${esc(x.where)}</small>` : '');
       const W = items.weapons
         .map(
           (w) =>

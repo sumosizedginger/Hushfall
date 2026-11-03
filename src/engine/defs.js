@@ -264,8 +264,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.9, 1.0, 1.0], [1.0, 1.03, 0.97], 0.78),
     shade: { foot: 0.35, ao: 0.4, patch: 0.1 },
-  // institutional: cold tubes, grey-green, drained // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a
-  // narrow spread)
+    // institutional: cold tubes, grey-green, drained // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a
+    // narrow spread)
   },
   moon: {
     hemi: [0x6c84b8, 0x181e34, 1.5],
@@ -274,8 +274,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.8, 0.94, 1.22], [1.1, 1.02, 0.9], 1.08),
     shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
-  // the harbour at night: blue shade, the lamps are the warm things // the lamps brighter, so its dark has highlights in it (it measured murky: dark
-  // on average AND a narrow spread)
+    // the harbour at night: blue shade, the lamps are the warm things // the lamps brighter, so its dark has highlights in it (it measured murky: dark
+    // on average AND a narrow spread)
   },
   cellar: {
     hemi: [0x4a7068, 0x141c1c, 1.1],
@@ -284,8 +284,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.82, 1.06, 1.0], [1.1, 1.0, 0.86], 0.9),
     shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
-  // damp stone under the quay: green-black, a lamp is a room // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
-  // average AND a narrow spread)
+    // damp stone under the quay: green-black, a lamp is a room // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
+    // average AND a narrow spread)
   },
   signal: {
     hemi: [0x5c6c88, 0x14182a, 1.2],
@@ -294,8 +294,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.84, 0.94, 1.18], [1.08, 1.0, 0.9], 0.85),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
-  // the dark house on the hill: cold blue, the generator light // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
-  // average AND a narrow spread)
+    // the dark house on the hill: cold blue, the generator light // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
+    // average AND a narrow spread)
   },
   hill: {
     hemi: [0xa8b4c8, 0x383440, 2.1],
@@ -312,8 +312,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.94, 1.0, 1.06], [1.1, 1.03, 0.9], 0.8),
     shade: { foot: 0.3, ao: 0.36, patch: 0.1 },
-  // the works: bleached, hard, chemical (the pans were one white plane under a white sky: a lower, warmer sun, a cooler shadow, a little more colour
-  // and a darker foot to every wall, so the white has a side that is lit and a side that is not)
+    // the works: bleached, hard, chemical (the pans were one white plane under a white sky: a lower, warmer sun, a cooler shadow, a little more colour
+    // and a darker foot to every wall, so the white has a side that is lit and a side that is not)
   },
   kiln: {
     hemi: [0x7a5240, 0x1e1412, 1.3],
@@ -442,8 +442,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.92, 0.94, 1.1], [1.12, 1.03, 0.9], 0.97),
     shade: { foot: 0.38, ao: 0.42, patch: 0.1 },
-  // the Gatekeeper's Approach: stone that warms rank by rank, indigo shadow, the Gate's light at the far end (it was too dark to read, hemisphere 2.1
-  // -> 3, lamps 1.9 -> 2.6, a warmer light grade)
+    // the Gatekeeper's Approach: stone that warms rank by rank, indigo shadow, the Gate's light at the far end (it was too dark to read, hemisphere 2.1
+    // -> 3, lamps 1.9 -> 2.6, a warmer light grade)
   },
   stair: {
     hemi: [0x5c6090, 0xc0c8ff, 1.75],
@@ -452,9 +452,9 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0),
     shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
-  // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere) // the lamps brighter, so its dark has highlights
-  // in it (it measured murky: dark on average AND a narrow spread); a less saturated sky light and a stronger sun, so the drum's ribs and courses
-  // cast shade
+    // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere) // the lamps brighter, so its dark has highlights
+    // in it (it measured murky: dark on average AND a narrow spread); a less saturated sky light and a stronger sun, so the drum's ribs and courses
+    // cast shade
   },
   // Campaign 2, Act A, THRESHOLD: bleached glass, salt and rust under a low red sun
   // ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -645,8 +645,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([1.04, 0.9, 0.78], [1.2, 1.0, 0.76], 1.15),
     shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
-  // C2M21, the pulse foundry: copper and orange heat // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND
-  // a narrow spread)
+    // C2M21, the pulse foundry: copper and orange heat // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND
+    // a narrow spread)
   },
   mourning: {
     hemi: [0xc8c4cc, 0x3a363e, 1.9],
@@ -719,8 +719,8 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.98, 0.95, 0.94], [1.08, 1.03, 0.94], 0.85),
     shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
-  // C2M30, the walk to the Gate: warm ivory marble and one gold line (it read as extremely gray at saturation 0.35; the walk to it now passes through
-  // the colours of the places it recalls)
+    // C2M30, the walk to the Gate: warm ivory marble and one gold line (it read as extremely gray at saturation 0.35; the walk to it now passes through
+    // the colours of the places it recalls)
   },
   gate: {
     hemi: [0xf0f0ff, 0x30303c, 2.4],
@@ -787,10 +787,10 @@ export const FX = {
   '<': { name: 'current west', speed: 0.78, water: true, flow: [-1, 0] },
   '^': { name: 'current north', speed: 0.78, water: true, flow: [0, -1] },
   v: { name: 'current south', speed: 0.78, water: true, flow: [0, 1] },
-// CURRENT, wading water that PUSHES (`flow` is the direction: > east, < west, ^ north (-z), v south (+z)), FLOW.push m/s on top of whatever you do,
-// on the player and every awake walker; it conducts the arc lamp like any wading water (`water`) // `d`: DRIFT, a floor with almost no grip: the
-// body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the
-// speed cap is the walking speed // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves
+  // CURRENT, wading water that PUSHES (`flow` is the direction: > east, < west, ^ north (-z), v south (+z)), FLOW.push m/s on top of whatever you do,
+  // on the player and every awake walker; it conducts the arc lamp like any wading water (`water`) // `d`: DRIFT, a floor with almost no grip: the
+  // body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the
+  // speed cap is the walking speed // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves
 };
 /*
  * THE SHIP BREATHES: `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing
@@ -916,10 +916,10 @@ export const WALL_SKINS = {
   μ: 'wall_tidestone_a',
   ν: 'wall_bellinside_a',
   ξ: 'wall_unrung_a',
-// Acts C and D (recipes_c3.js, recipes_c4.js): the ASCII alphabet is full, so these are Greek letters // Campaign 2 Act B: cave rock, city stone,
-// cold marble and bronze, drowned stone, ossuary bone, basilica ash, the heart's membrane; // Campaign 2 Act A: fused glass crust, rusted salt plate,
-// basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin // Episode 4: glass, dock, orchard, bark, approach, stair, gate,
-// quiet // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+  // Acts C and D (recipes_c3.js, recipes_c4.js): the ASCII alphabet is full, so these are Greek letters // Campaign 2 Act B: cave rock, city stone,
+  // cold marble and bronze, drowned stone, ossuary bone, basilica ash, the heart's membrane; // Campaign 2 Act A: fused glass crust, rusted salt plate,
+  // basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin // Episode 4: glass, dock, orchard, bark, approach, stair, gate,
+  // quiet // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
 };
 export const FLOOR_SKINS = {
   '.': { kind: 'floor', tex: 'floor_planks_a' },
@@ -1018,9 +1018,9 @@ export const GRAV = {
     props: 15,
     lift: 3.5,
     glance: 0.25,
-  // push: m/s at the start, ending after `time` s (about 3.4 m); `impact`: the damage of a wall or a body (scaled by how fast it was still going and
-  // by `hit`, the share of the speed the wall stopped); `glance`: the least such share that counts as a blow (0.25 = about 15 degrees from the wall's
-  // surface; less slides on); elites take `elite` of the push and no impact
+    // push: m/s at the start, ending after `time` s (about 3.4 m); `impact`: the damage of a wall or a body (scaled by how fast it was still going and
+    // by `hit`, the share of the speed the wall stopped); `glance`: the least such share that counts as a blow (0.25 = about 15 degrees from the wall's
+    // surface; less slides on); elites take `elite` of the push and no impact
   },
   throw: { speed: 25, cooldown: 0.55 },
   // a toll-shot in the cone is sent back at `speed` x for `dmg` x its damage, against the creatures
@@ -1075,8 +1075,8 @@ export const WEAPONS = {
     spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 },
     muzzle: { fwd: 0.7, right: 0.12, down: 0.14 },
     hit: { flinch: 0.25, interrupt: 3 },
-  // identity: CLOSE. Every hit staggers a little; inside `interrupt` metres a hit CANCELS the windup of the attack it lands on. (First try 0.45 s: on
-  // C1E2M03 it cut a perfect bot's damage taken on normal from 51 to 19: a flinch that long is a stun-lock in a stationary player's hands.)
+    // identity: CLOSE. Every hit staggers a little; inside `interrupt` metres a hit CANCELS the windup of the attack it lands on. (First try 0.45 s: on
+    // C1E2M03 it cut a perfect bot's damage taken on normal from 51 to 19: a flinch that long is a stun-lock in a stationary player's hands.)
   },
   // sustained fire from the hip or the sights: a stream of small hits, accurate while you stay still and settled (bloom builds the longer you hold
   // the trigger).
@@ -1101,10 +1101,10 @@ export const WEAPONS = {
     heatCone: 3.2,
     spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 },
     hit: { slow: 0.1, slowT: 0.8, cancelLunge: true },
-  // identity: SUPPRESS. Rivets slow what they hit (10% for 0.8 s, at most 1 s at a time: SLOW_MAX in world.js) and break a Gaunt's lunge windup (once
-  // in a while): it holds crowds off, it does not kill them. (First tries: 30% for 1 s cut a perfect bot's damage taken on C1E2M04 hard from 45 to 9;
-  // 20% still failed C1E2M04 and C1E2M07's viability gates; 10% passes all of them. A stream of 12 shots a second turns any slow into a permanent
-  // one: that is why it is small.)
+    // identity: SUPPRESS. Rivets slow what they hit (10% for 0.8 s, at most 1 s at a time: SLOW_MAX in world.js) and break a Gaunt's lunge windup (once
+    // in a while): it holds crowds off, it does not kill them. (First tries: 30% for 1 s cut a perfect bot's damage taken on C1E2M04 hard from 45 to 9;
+    // 20% still failed C1E2M04 and C1E2M07's viability gates; 10% passes all of them. A stream of 12 shots a second turns any slow into a permanent
+    // one: that is why it is small.)
   },
   // the long gun (Gate 4, owner go 2026-10-06): one heavy bolt, instant, almost no drop-off at 90 m, and it goes THROUGH: it punches the front plate
   // of an armoured target (the Warden-Graft's shield-arm no longer
@@ -1132,7 +1132,7 @@ export const WEAPONS = {
     muzzle: { fwd: 0.8, right: 0.1, down: 0.12 },
     spread: { hip: 0.05, ads: 0.0008, moveFactor: 1.2 },
     hit: { flinch: 0.4, pin: { wall: 3, t: 2 } },
-  // identity: ONE HEAVY SHOT. A bolt that leaves a body with a wall within `wall` metres behind it PINS it for `t` s (not the elites or the bosses)
+    // identity: ONE HEAVY SHOT. A bolt that leaves a body with a wall within `wall` metres behind it PINS it for `t` s (not the elites or the bosses)
   },
   // the lamp (Gate 4, owner go 2026-10-06): held fire, 12 m, it picks its own target (the nearest body inside a lock cone around where you look; the
   // sights narrow the cone) and the arc JUMPS to up to `chain` more bodies within `jump` metres of the last, each for `chainFalloff` of the one

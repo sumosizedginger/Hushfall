@@ -435,8 +435,8 @@ export function sexton(tex) {
       R.cone('head', 0.21, 0.42, 7, C.robe, { pos: [0, 0.2, -0.06], rot: [0.25, 0, 0] }); // the hood
     },
     (p, J, R) => {
-      const t = p.t,
-        h = humanoidPose(p, J, { stoop: 0.35, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
+      const t = p.t;
+      humanoidPose(p, J, { stoop: 0.35, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
       J.legA.rotation.x *= 0.5;
       J.legB.rotation.x *= 0.5;
       for (let i = 0; i < 5; i++) {

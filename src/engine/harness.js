@@ -1,4 +1,5 @@
 // Headless play harness: world + input layer + bot, stepped exactly like the game loop does. Used by tests and evidence tools.
+// @ts-ignore: node's own module (the types are not installed)
 import fs from 'node:fs';
 import { createWorld, step, drainEvents, hashWorld } from './world.js';
 import { InputState } from './input.js';
@@ -21,6 +22,7 @@ const mulberry = (a) => () => {
  * Play a route with the bot. Robustness options degrade the PLAYER, not the level: tremor adds +-tremor rad of aim error on every fire tick (a human
  * is not a perfect shot); ammoScale scales every ammo pickup (a human wastes shots).
  */
+/** @param {any} map @param {any} route @param {any} [options] */
 export function runRoute(
   map,
   route,

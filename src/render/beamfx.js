@@ -200,7 +200,6 @@ export function makeSweepView() {
     pool = [],
     unit = new THREE.BoxGeometry(1, 1, 1),
     V0 = new THREE.Vector3(),
-    V1 = new THREE.Vector3(),
     SA = new THREE.Vector3(),
     SB = new THREE.Vector3(),
     SM = new THREE.Vector3(),

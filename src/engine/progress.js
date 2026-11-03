@@ -71,7 +71,7 @@ export function rankFor(end, par) {
   // a Vael who never raised a hand and is dead costs the rank, and only a map that has such Vael ever carries the count
   const cost = Math.min(FOLK.innocentMax, (end.innocents ?? 0) * FOLK.innocentCost);
   const score = Math.max(0, Math.round((w.kills * kills + w.time * time + (hasSecrets ? w.secrets * secrets : 0) - cost) * 1000) / 1000);
-  const rank = (RANK.thresholds.find(([, min]) => score >= min) ?? ['C'])[0];
+  const rank = String((RANK.thresholds.find((t) => score >= Number(t[1])) ?? ['C'])[0]);
   return { rank, score, parts: { kills, time, secrets } };
 }
 export const salvageFor = (rank, secretsFound) => (RANK.salvage[rank] ?? 0) + RANK.secretSalvage * Math.max(0, secretsFound | 0);

@@ -5,7 +5,6 @@
 // The bomb sits in the bell until the cooldown runs out (the view drives `bolt`, as it does the line-thrower's rocket). Gun space: -z is forward, the
 // tube is tilted up a little the way a mortar is carried.
 import * as THREE from 'three';
-import { atlas } from './atlasuv.js';
 import { ironSights } from './weapon-sights.js';
 import { gunKit, lathe, fist, muzzleFlash } from './gunkit.js';
 

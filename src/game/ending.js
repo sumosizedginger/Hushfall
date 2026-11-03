@@ -127,7 +127,7 @@ export function tally(manifest, progress, campaign) {
 }
 
 // ---- the card sequence
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------
 // characters typed per second, the pause before a card starts, and how long a typed card is held before the next comes by itself
 export const TYPING = { cps: 42, lead: 0.9, hold: (text) => Math.max(3.2, 1.6 + text.length * 0.045) };
 

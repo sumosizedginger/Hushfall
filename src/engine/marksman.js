@@ -8,7 +8,7 @@
 import { runAway } from './reposition.js';
 import * as DM from './dmath.js'; // the same bits on every engine (sin, cos, atan2, acos, exp)
 export function snipeStep(ctx) {
-  const { w, e, def, diff, dt, sees, dist, emit, hurt, rayClear, retreat } = ctx,
+  const { w, e, def, diff, dt, sees, dist, emit, hurt, rayClear } = ctx,
     S = def.snipe,
     p = w.player;
   e.snipeCd = Math.max(0, (e.snipeCd ?? 1.2) - dt);

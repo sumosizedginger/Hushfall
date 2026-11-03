@@ -1,6 +1,5 @@
 // Code-authored low-poly 3D models. Every surface wears a p5.brush-painted UV atlas cell / texture.
 import * as THREE from 'three';
-import { ironSights, tang } from './weapon-sights.js';
 
 import { atlas } from './atlasuv.js';
 export { atlas }; // (it lives in atlasuv.js so the gun and melee modules need not import this file)

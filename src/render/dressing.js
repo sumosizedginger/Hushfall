@@ -206,7 +206,6 @@ export function buildDressing(map, { Q, faceFrame, kind, fl, ce, sector, panels,
             q.bracket.box(o, t, n, S / 2 - 0.03, S / 2 + 0.03, 0.14, f + D.hook.y, f + D.hook.y + 0.05, S, f);
             ropes.push({ c: [o[0] + (t[0] * S) / 2 + n[0] * 0.08, f + D.hook.y - 0.28, o[1] + (t[1] * S) / 2 + n[1] * 0.08], n });
           } else {
-            const B = D.board;
             q.paper.box(o, t, n, u0 + 0.3, u1 - 0.3, 0.02, f + 1.3, f + 1.75, S, f);
             q.bracket.box(o, t, n, u0 + 0.28, u1 - 0.28, 0.01, f + 1.74, f + 1.78, S, f);
           }

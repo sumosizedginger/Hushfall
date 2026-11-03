@@ -5,9 +5,9 @@ import { GameView } from '../render/view.js';
 import { createWorld, step, drainEvents, useTarget, carryOver } from '../engine/world.js';
 import { lockBusy } from '../engine/airlock.js';
 import { automated, askLock } from './lockpolicy.js';
+import { makeShellState } from './state.js';
 import CAMPAIGN from '../../CAMPAIGN_MANIFEST.json';
 import { nextMapId, mapName } from './campaign.js';
-import { InputState } from '../engine/input.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore, storeSave } from '../engine/save.js';
@@ -32,11 +32,10 @@ import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadSte
 import { referenceRows } from './stats/schema.js';
 import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
-import { captionFor, CaptionFeed } from './captions.js';
+import { captionFor } from './captions.js';
 import { firstRunLine } from './firstrun.js';
-import { QualityGovernor } from './quality.js';
 import { creditsLines, creditsHeight, creditsState } from './credits.js';
-import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe, FrameHistogram } from './playlog.js';
+import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe } from './playlog.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
@@ -124,40 +123,7 @@ document.getElementById('ending-art').src = endingArtUrl();
 for (const u of [endingCoastUrl(), endingLampDarkUrl(), endingArt2Url(), coldTowerUrl()]) if (u) new Image().src = u;
 
 const FIRST_MAP = 'C1E1M01'; // a new game always starts here (audit A17: it used to re-enter the last map played)
-const g = {
-  playlog: loadLog(storage),
-  hist: new FrameHistogram(),
-  attempt: 0,
-  attemptLogged: true,
-  survey: null,
-  governor: new QualityGovernor(settings.internalWidth),
-  captions: new CaptionFeed(),
-  mode: 'title',
-  world: null,
-  view: null,
-  loop: null,
-  mapId: FIRST_MAP,
-  difficulty: 'normal',
-  seed: 1,
-  timer: 0,
-  // the campaign run's salvage, upgrade tiers and per-map records (engine/progress.js); saved with every save, reset by a new game
-  progress: newProgress(),
-  input: new InputState(settings.bindings),
-  settings,
-  locked: false,
-  lockFailed: false,
-  events: [], // every event this session (dev/test hook reads and clears it)
-  capture: null,
-  mapOpen: false,
-  unread: new Set(),
-  journalTab: 'map',
-  objectives: [],
-  miniN: 0,
-  miniModel: null,
-  manual: false,
-  frameTimes: [],
-  last: performance.now(),
-};
+const g = makeShellState({ storage, settings, firstMap: FIRST_MAP });
 
 // THE STATS DATABASE (src/game/stats, design/STATS_DATABASE.md): sql.js starts in the background. The game never waits for it; if it cannot start,
 // the stats are off this session and the stats screen says why.
@@ -1525,8 +1491,8 @@ function pollPad(dt) {
   if (import.meta.env.DEV && g.manual) {
     g.input.setAnalog(0, 0);
     return;
-  // the dev test hook owns the clock: a controller that happens to be plugged into the machine (a stick at rest is never exactly zero) must not steer
-  // a bot or a still (found 2026-10-10: every real-game route stalled, the same commits that had passed)
+    // the dev test hook owns the clock: a controller that happens to be plugged into the machine (a stick at rest is never exactly zero) must not steer
+    // a bot or a still (found 2026-10-10: every real-game route stalled, the same commits that had passed)
   }
   const list = navigator.getGamepads ? Array.from(navigator.getGamepads()) : [],
     gp = list.find((x) => x && x.connected && x.mapping === 'standard') ?? list.find((x) => x && x.connected) ?? null;
@@ -1721,7 +1687,7 @@ function frameBody(now) {
   } else if (g.mode === 'title' && ui.screen === 'credits') stepCredits(raw > 0.25 ? 0 : dt);
   else if (g.mode === 'cinematic') {
     if (!g.manual) stepCinematic(raw > 0.25 ? 0 : dt);
-  // (g.manual: the dev test hook owns the clock) // (a long hitch, a background tab: the scene waits, it does not leap)
+    // (g.manual: the dev test hook owns the clock) // (a long hitch, a background tab: the scene waits, it does not leap)
   }
   audio.update(g.mode === 'playing' || g.mode === 'dying' || g.mode === 'cinematic' ? g.world : null, dt, MAPS[g.mapId]);
   const showMap = g.world && ((g.mapOpen && (g.mode === 'playing' || g.mode === 'dying')) || (ui.screen === 'journal' && g.journalTab === 'map'));

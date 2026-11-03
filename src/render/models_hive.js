@@ -118,7 +118,6 @@ export function resonant(tex) {
         w = p.walk,
         ph = p.phase,
         beat = p.beat ?? 0,
-        a = p.attack,
         d = ease(clamp01(p.dead)),
         sw = S(ph) * 0.5 * w;
       J.legA.rotation.x = sw;

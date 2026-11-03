@@ -92,8 +92,8 @@ export function designate(w, p, def, f = forwardVec(p), from = eyeOf(p), jitter 
       d = Math.hypot(lx - p.x, lz - p.z);
       clamped = true;
     }
-  // H-W1 (Gemini-04): the push-out to minRange must not land INSIDE a wall (4 of 4 aims at a near wall did, and the ring lied): walk it back to the
-  // wall's foot
+    // H-W1 (Gemini-04): the push-out to minRange must not land INSIDE a wall (4 of 4 aims at a near wall did, and the ring lied): walk it back to the
+    // wall's foot
   }
   if (jitter) {
     lx += jitter[0] * d;
