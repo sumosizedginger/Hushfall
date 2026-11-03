@@ -505,7 +505,8 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 2. **Two secrets of two kinds on nearly every map.** The new one is a cracked wall: shoot it. The Reprise and the Unrung Gate keep theirs as they were.
 3. **Shorter, tighter maps:** the Drowned Choir and the Mourning Halls (short of ammunition on purpose: 36 shells to start) were squeezed. Too cramped, or still too long?
 4. **Music:** four Campaign 2 themes: Threshold (Act A), the Deep (Act B), the Hive (Act C: the fight is in three-four time, one bar a hive beat) and the Root (Act D: the harbour hymn comes back). Does each fit its place, and does the fight music come in at the right moments?
-5. **Left as they were, on purpose:** the bosses, the Nerve Cathedral's lattice over the drop (it is the map's idea), the Unrung Gate (the silent walk is the ending).
+5. **Echo Markets' lower market** (south of the well) is open to the cavern's vault of small lights, like the Silent Orchard; the rest of the town stays under the rock. Does it read as one town, and is the vault too bright or too dark there?
+6. **Left as they were, on purpose:** the bosses, the Nerve Cathedral's lattice over the drop (it is the map's idea), the Unrung Gate (the silent walk is the ending).
 
 ## PT-081 · the fun pass, Episode 1 · IN PROGRESS
 **The owner, 2026-11-01, first play of Marrow Quay after the pass:** "it tells me there are 2 secrets, but I only found 1."

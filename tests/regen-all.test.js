@@ -45,7 +45,7 @@ test('the low-priority launcher propagates the actual child exit code', { skip: 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hushfall-low-'));
   try {
     const script = path.join(dir, 'fail.mjs'); fs.writeFileSync(script, 'process.exit(7);\n');
-    const r = spawnSync('powershell', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(ROOT, 'tools/dev/low.ps1'), path.join(dir, 'child.log'), script], { cwd: ROOT, encoding: 'utf8', timeout: 15000 });
+    const r = spawnSync('powershell', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(ROOT, 'tools/dev/low.ps1'), path.join(dir, 'child.log'), script], { cwd: ROOT, encoding: 'utf8', timeout: 120000 });          // the child runs at IDLE priority: on a busy machine (the whole suite, or the owner playing) it can wait well past 15 s for a core
     assert.ifError(r.error); assert.equal(r.status, 7, r.stdout + r.stderr);
-  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+  } finally { fs.rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 }); }
 });
