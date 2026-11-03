@@ -97,6 +97,7 @@ ENC.dropIn({ at: [124,31], radius: 2, cells: ENC.around([124,31], { n: 3, min: 4
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'sump', search: { region: [3, 3, 144, 56], prefer: [67, 4], lane: laneOf('C2M17') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A dry sump behind the cracked wall, where the hive\'s water used to stand. Somebody stored a vest and a mend in it, above the line.' } });
+FUN.bypass({ from: [117, 41], to: [127, 41] });                                                         // PT-082: a side passage where the route walked round (a loop in the S)
 // ---- end PT-081 fun pass ----
 
 

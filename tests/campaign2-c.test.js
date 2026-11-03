@@ -167,7 +167,7 @@ test('C2M22, the trough: four latches open the way to the lift, six of the Silen
   // the way to the hall is shut before the call: the route cannot pass the stair door without the four latches
   const early = runRoute(map, [{ op: 'goto', at: [41, 69] }, { op: 'goto', at: [41, 80] }], { seed: 1 }); assert.notEqual(early.result, 'complete'); assert.ok(!early.world.messagesSeen.includes('hall'), 'the hall is not reached');
   // the hidden chapel holds the longest text of the act
-  const sec = runRoute(map, route('C2M22', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 1); assert.ok(['g1', 'g2', 'g3'].every((id) => sec.world.messagesSeen.includes(id)));
+  const sec = runRoute(map, route('C2M22', 'secret'), { seed: 1 }); assert.equal(sec.world.stats.secrets, 2, 'the hidden chapel and the cracked ossuary (PT-082)'); assert.ok(['g1', 'g2', 'g3'].every((id) => sec.world.messagesSeen.includes(id)));
   assert.ok(s.messages.filter((m) => /^g\d$/.test(m.id)).reduce((a, m) => a + m.text.length, 0) > 400, 'a testimony of some length');
 });
 
@@ -205,7 +205,7 @@ test('C2M24, Choir of One: the Hive Cantor over a flat podium, nine singers who 
   // the podium is flat (the ring is a plane at its floor): the floor under the conductor and the first ring of the arena are level
   assert.equal(map.floor(54, 28), 0); assert.equal(map.floor(54 + 6, 28), 0); assert.ok(map.floor(54 + 12, 28) >= 1.5, 'a tier a metre and a half up');
   const r = runRoute(map, route('C2M24'), { seed: 1 }); assert.equal(r.result, 'complete', r.failure); assert.ok(r.world.beatOff === true, 'the beat is off'); assert.ok(r.world.enemies.find((e) => e.kind === 'hivecantor').state === 'dead');
-  const sec = runRoute(map, route('C2M24', 'secret'), { seed: 1 }); assert.equal(sec.result, 'complete', sec.failure); assert.equal(sec.world.stats.secrets, 1);
+  const sec = runRoute(map, route('C2M24', 'secret'), { seed: 1 }); assert.equal(sec.result, 'complete', sec.failure); assert.equal(sec.world.stats.secrets, 2, 'the alcove and the cracked niche (PT-082)');
   // the plate says the sum the first plate said
   const m17 = SRC.C2M17.messages.find((m) => m.id === 'count'), m24 = s.messages.find((m) => m.id === 'plate'); assert.ok(/52,310/.test(m17.text) && /49,715/.test(m17.text) && /52,310/.test(m24.text) && /49,715/.test(m24.text) && /2,595/.test(m24.text), 'the same count, short by the same sum');
 });
