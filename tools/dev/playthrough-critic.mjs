@@ -11,7 +11,7 @@ fs.mkdirSync(outDir, { recursive: true });
 const server = await createServer({
   root,
   logLevel: 'error',
-  server: { port: 5388, strictPort: true }
+  server: { port: 5388, strictPort: true },
 });
 await server.listen();
 const port = server.config.server.port;
@@ -19,7 +19,7 @@ console.log(`Vite server listening on http://localhost:${port}/`);
 
 const browser = await puppeteer.launch({
   headless: true,
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
+  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
 });
 const page = await browser.newPage();
 await page.setViewport({ width: 1280, height: 720 });
@@ -49,7 +49,7 @@ const report = {
   weaponFeel: {},
   controls: {},
   maps: {},
-  errors: []
+  errors: [],
 };
 
 try {
@@ -124,7 +124,7 @@ try {
     await T('t.tick(20)');
     report.weaponFeel[w] = {
       adsFov,
-      recoilPitchDelta: +(camPitchFired - camPitch0).toFixed(4)
+      recoilPitchDelta: +(camPitchFired - camPitch0).toFixed(4),
     };
   }
 
@@ -198,7 +198,7 @@ try {
     ticks: botRes.tick,
     hp: botRes.player?.hp,
     stats: botRes.stats,
-    secretsFound: botRes.secretsFound
+    secretsFound: botRes.secretsFound,
   };
 
   // Step 4: C1E1M02 Customs Hall
@@ -279,7 +279,6 @@ try {
   report.errors = errors;
   fs.writeFileSync(path.join(root, 'gemini-playthrough/play_report.json'), JSON.stringify(report, null, 2));
   console.log('PLAYTHROUGH RUN COMPLETE! Report written to gemini-playthrough/play_report.json');
-
 } catch (err) {
   console.error('Playthrough encountered error:', err);
 } finally {

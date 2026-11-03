@@ -1,5 +1,7 @@
-// THE STATS SCREENS' QUESTIONS (PT-077): every number the game shows about your play is one SQL query here, asked of the stats database when a screen opens (nothing is cached: the database is small and local).
-// Every query takes `:pt`: a playthrough's number for "this playthrough", or NULL for "lifetime" (everything ever recorded): `WHERE :pt IS NULL OR playthrough_id = :pt` serves both with one text.
+// THE STATS SCREENS' QUESTIONS: every number the game shows about your play is one SQL query here, asked of the stats database when a screen opens
+// (nothing is cached: the database is small and local).
+// Every query takes `:pt`: a playthrough's number for "this playthrough", or NULL for "lifetime" (everything ever recorded): `WHERE :pt IS NULL OR
+// playthrough_id = :pt` serves both with one text.
 // The results are plain objects; the story is a few sentences built only from those facts. No DOM.
 
 /** the runs in scope, as a CTE ("common table expression": a named, temporary result the rest of the query uses) */
@@ -38,7 +40,7 @@ GROUP BY r.level_id HAVING COUNT(d.death_id) > 0 ORDER BY deaths DESC, attempts 
 SELECT s.name, COUNT(*) AS deaths
 FROM deaths d JOIN r ON r.run_id = d.run_id JOIN sources s ON s.source_id = d.killer
 GROUP BY d.killer ORDER BY deaths DESC LIMIT 6`,
-  /** PT-080, the death map: every death's level and where (metres), for the plans on the stats screen */
+  /* * the death map: every death's level and where (metres), for the plans on the stats screen */
   deathSpots: `${RUNS}
 SELECT r.level_id, d.x, d.z FROM deaths d JOIN r ON r.run_id = d.run_id ORDER BY d.death_id`,
   recentDeaths: `${RUNS}
@@ -91,40 +93,77 @@ const pt = (p) => ({ ':pt': p ?? null });
 
 /** the whole rundown for a scope (a playthrough's number, or null for lifetime) */
 export function rundown(db, scope) {
-  const P = pt(scope), one = (q) => db.get(q, P) ?? {}, all = (q) => db.all(q, P);
+  const P = pt(scope),
+    one = (q) => db.get(q, P) ?? {},
+    all = (q) => db.all(q, P);
   const overview = one(Q.overview);
   const guns = all(Q.guns).map((g) => ({ ...g, accuracy: g.attacks > 0 ? Math.round((g.connected * 100) / g.attacks) : null }));
   return {
-    scope: scope ?? null, overview, guns,
-    hurt: all(Q.hurt), hurtTypes: all(Q.hurtTypes), deathsByLevel: all(Q.deathsByLevel), deathSpots: all(Q.deathSpots), killers: all(Q.killers), recentDeaths: all(Q.recentDeaths), killsByCreature: all(Q.killsByCreature),
-    records: { closest: db.get(Q.closestCall, P), streak: Number(one(Q.streak).longest ?? 0), longest: db.get(Q.longestLevel, P), bestPar: db.get(Q.bestAgainstPar, P) },
-    parByChapter: all(Q.parByChapter), favourites: all(Q.favouriteByChapter),
+    scope: scope ?? null,
+    overview,
+    guns,
+    hurt: all(Q.hurt),
+    hurtTypes: all(Q.hurtTypes),
+    deathsByLevel: all(Q.deathsByLevel),
+    deathSpots: all(Q.deathSpots),
+    killers: all(Q.killers),
+    recentDeaths: all(Q.recentDeaths),
+    killsByCreature: all(Q.killsByCreature),
+    records: {
+      closest: db.get(Q.closestCall, P),
+      streak: Number(one(Q.streak).longest ?? 0),
+      longest: db.get(Q.longestLevel, P),
+      bestPar: db.get(Q.bestAgainstPar, P),
+    },
+    parByChapter: all(Q.parByChapter),
+    favourites: all(Q.favouriteByChapter),
   };
 }
 
 /** the short card about ONE run (after a level, or on the death screen) */
 export function runCard(db, runId, scope) {
-  const R = { ':run': runId }, run = db.get(Q.run, R); if (!run) return null;
-  const gun = db.get(Q.runGun, R), hurt = db.get(Q.runHurt, R), low = db.get(Q.runLowest, R)?.hp ?? null, hist = db.get(Q.levelHistory, { ':level': run.level_id, ...pt(scope) }) ?? {};
-  return { level: run.name, seconds: run.seconds, outcome: run.outcome, par: run.par, kills: Number(db.get(Q.runKills, R)?.kills ?? 0),
+  const R = { ':run': runId },
+    run = db.get(Q.run, R);
+  if (!run) return null;
+  const gun = db.get(Q.runGun, R),
+    hurt = db.get(Q.runHurt, R),
+    low = db.get(Q.runLowest, R)?.hp ?? null,
+    hist = db.get(Q.levelHistory, { ':level': run.level_id, ...pt(scope) }) ?? {};
+  return {
+    level: run.name,
+    seconds: run.seconds,
+    outcome: run.outcome,
+    par: run.par,
+    kills: Number(db.get(Q.runKills, R)?.kills ?? 0),
     gun: gun ? { name: gun.name, attacks: gun.attacks, accuracy: gun.attacks > 0 ? Math.round((gun.connected * 100) / gun.attacks) : null } : null,
-    hurt: hurt ? { name: hurt.name, damage: hurt.damage } : null, lowest: low, attempts: Number(hist.attempts ?? 0), deaths: Number(hist.deaths ?? 0), killer: db.get(Q.runDeath, R)?.killer ?? null };
+    hurt: hurt ? { name: hurt.name, damage: hurt.damage } : null,
+    lowest: low,
+    attempts: Number(hist.attempts ?? 0),
+    deaths: Number(hist.deaths ?? 0),
+    killer: db.get(Q.runDeath, R)?.killer ?? null,
+  };
 }
 
 const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
-/** a creature is "the Tollbearer"; a hazard's name already reads as the start of a sentence ("Toxic residue", "A falling container", "Your own blast") */
+/**
+ * a creature is "the Tollbearer"; a hazard's name already reads as the start of a sentence ("Toxic residue", "A falling container", "Your own blast")
+ */
 const subject = (name, type) => (type === 'creature' && !/^The /.test(name) ? 'The ' + name : name);
 const gunName = (name) => (name === 'Fists' ? 'your fists' : 'the ' + name);
 /** the run as a story, from the facts only (design/STATS_DATABASE.md, the end of a campaign) */
 export function story(m) {
-  const o = m.overview ?? {}, lines = [];
+  const o = m.overview ?? {},
+    lines = [];
   if (!o.attempts) return ['Nothing recorded yet.'];
-  lines.push(`You finished ${plural(o.finished, 'level')} in ${plural(o.attempts, 'attempt')}, and died ${o.deaths === 0 ? 'not once' : o.deaths === 1 ? 'once' : o.deaths + ' times'}.`);
+  lines.push(
+    `You finished ${plural(o.finished, 'level')} in ${plural(o.attempts, 'attempt')}, and died ${o.deaths === 0 ? 'not once' : o.deaths === 1 ? 'once' : o.deaths + ' times'}.`,
+  );
   if (m.hurt[0]) lines.push(`${subject(m.hurt[0].name, m.hurt[0].type)} hurt you more than anything else: ${Math.round(m.hurt[0].damage)} damage.`);
   if (m.deathsByLevel[0] && m.deathsByLevel[0].deaths >= 2) lines.push(`${m.deathsByLevel[0].name} claimed you ${m.deathsByLevel[0].deaths} times.`);
   const g = m.guns.find((x) => x.attacks > 0);
   if (g) lines.push(`You used ${gunName(g.name)} ${g.attacks} times${g.accuracy != null ? `, and ${g.accuracy}% of them found something` : ''}.`);
-  const k = m.killsByCreature[0]; if (k) lines.push(`You put down ${plural(k.kills, k.name)}${m.killsByCreature.length > 1 ? `, more than any other kind` : ''}.`);
+  const k = m.killsByCreature[0];
+  if (k) lines.push(`You put down ${plural(k.kills, k.name)}${m.killsByCreature.length > 1 ? `, more than any other kind` : ''}.`);
   if (m.records.closest) lines.push(`Your closest call: ${m.records.closest.hp} health left on ${m.records.closest.level}, and you still finished it.`);
   if (m.records.streak >= 2) lines.push(`Your longest stretch without dying: ${m.records.streak} levels.`);
   if (o.innocents > 0) lines.push(`${plural(o.innocents, 'of the quiet folk', 'of the quiet folk')} died by your hand.`);

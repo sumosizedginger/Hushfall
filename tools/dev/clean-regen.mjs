@@ -13,8 +13,17 @@ execSync('npm ci', { cwd: tmp, stdio: 'inherit' });
 execSync('node tools/bake.mjs', { cwd: tmp, stdio: 'inherit' });
 const res = {};
 for (const f of fs.readdirSync(path.join(tmp, 'assets/baked')).filter((x) => x.endsWith('.png'))) {
-  const a = PNG.sync.read(fs.readFileSync(path.join(root, 'assets/baked', f))), b = PNG.sync.read(fs.readFileSync(path.join(tmp, 'assets/baked', f)));
-  let n = 0, max = 0; for (let i = 0; i < a.data.length; i++) { const d = Math.abs(a.data[i] - b.data[i]); if (d) { n++; max = Math.max(max, d); } }
+  const a = PNG.sync.read(fs.readFileSync(path.join(root, 'assets/baked', f))),
+    b = PNG.sync.read(fs.readFileSync(path.join(tmp, 'assets/baked', f)));
+  let n = 0,
+    max = 0;
+  for (let i = 0; i < a.data.length; i++) {
+    const d = Math.abs(a.data[i] - b.data[i]);
+    if (d) {
+      n++;
+      max = Math.max(max, d);
+    }
+  }
   res[f] = { differingBytes: n, totalBytes: a.data.length, fractionDiffering: +(n / a.data.length).toFixed(5), maxChannelDelta: max };
 }
 console.log(JSON.stringify({ cleanDir: tmp, node: process.version, results: res }, null, 2));

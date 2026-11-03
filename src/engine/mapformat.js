@@ -1,6 +1,34 @@
 // Map format v1: ASCII grid for geometry + entity list for everything else. Pure data, no DOM/Three.
 // validateMap() never throws; it returns every problem it can find so authors can fix a map in one pass.
-import { TICK, LOWG, LOADS, BELT, TIDE, CARS, VARIANTS, CELL, DEFAULT_CEILING, RANGE, LOOKS, DECALS, GROWTH, ENEMIES, PICKUPS, PROPS, PHYS, KEYS, FACING, SCENERY, PLAYER, HEIGHT_UNIT, MIN_HEADROOM, STEP, FX, WALL_SKINS, FLOOR_SKINS } from './defs.js';
+import {
+  TICK,
+  LOWG,
+  LOADS,
+  BELT,
+  TIDE,
+  CARS,
+  VARIANTS,
+  CELL,
+  DEFAULT_CEILING,
+  RANGE,
+  LOOKS,
+  DECALS,
+  GROWTH,
+  ENEMIES,
+  PICKUPS,
+  PROPS,
+  PHYS,
+  KEYS,
+  FACING,
+  SCENERY,
+  PLAYER,
+  HEIGHT_UNIT,
+  MIN_HEADROOM,
+  STEP,
+  FX,
+  WALL_SKINS,
+  FLOOR_SKINS,
+} from './defs.js';
 
 import { makeCar, carState, boardingCells } from './cars.js';
 
@@ -10,185 +38,387 @@ export const MAP_FORMAT = 1;
 //   floors:  . interior planks    : cobble (open air)    p pier planks (open air)
 //   water:   ~ blocks walking, but not sight or projectiles
 //   D door   S secret panel (drawn as wall until opened)
-//   Gate 2 skins: walls W timber, P plaster, C concrete, I iron plate, R Vael resin, T tower stone; floors t tile, g grating, c carpet, f flagstone, n silt (indoor), m silt, s slate (outdoor)
+// Gate 2 skins: walls W timber, P plaster, C concrete, I iron plate, R Vael resin, T tower stone; floors t tile, g grating, c carpet, f flagstone, n
+// silt (indoor), m silt, s slate (outdoor)
 //   X = a trigger-only panel (a closet door drawn as wall); listed in `closets`
-// Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z A-Z, 31 m at most), `ceilings` (absolute ceiling height in
-// 0.5 m units, '.' = floor + ceilingHeight), `fx` (floor effect: w wading water, x toxic residue). Lists: `sectors` (moving floors), `closets`, `triggers`,
+// Optional layers (same size as `grid`, one char per cell): `heights` (floor height, 0.5 m units: . or 0-9 a-z A-Z, 31 m at most), `ceilings`
+// (absolute ceiling height in
+// 0.5 m units, '.' = floor + ceilingHeight), `fx` (floor effect: w wading water, x toxic residue). Lists: `sectors` (moving floors), `closets`,
+// `triggers`,
 // entities of type `switch`. See design/EPISODE1.md and tests/kit.test.js for the exact shapes.
-const TILES = { '~': 'water', _: 'void', D: 'door', S: 'secret', X: 'secret' };      // _ = the void (PT-032): open sky, no floor
+const TILES = { '~': 'water', _: 'void', D: 'door', S: 'secret', X: 'secret' }; // _ = the void: open sky, no floor
 for (const c of Object.keys(WALL_SKINS)) TILES[c] = 'wall';
 for (const [c, f] of Object.entries(FLOOR_SKINS)) TILES[c] = f.kind;
-const WALL_CHARS = new Set(Object.keys(WALL_SKINS)), WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
-// the height alphabet (PT-045, E13): `.` 0, `0-9` 0-9, `a-z` 10-35 (the original 17.5 m), `A-Z` 36-61 (31 m: the Root Bell Descent's shaft); a unit is HEIGHT_UNIT metres. Old maps use no capital, so they parse as they always did.
+const WALL_CHARS = new Set(Object.keys(WALL_SKINS)),
+  WALKABLE_CHARS = new Set(Object.keys(FLOOR_SKINS));
+// the height alphabet: `.` 0, `0-9` 0-9, `a-z` 10-35 (the original 17.5 m), `A-Z` 36-61 (31 m: the Root Bell Descent's shaft); a unit is HEIGHT_UNIT
+// metres. Old maps use no capital, so they parse as they always did.
 export const HEIGHT_MAX_UNITS = 61;
-export const hval = (c) => (c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : /[A-Z]/.test(c) ? c.charCodeAt(0) - 29 : NaN);
-export const ACTION_KEYS = ['open', 'close', 'unlock', 'seal', 'unseal', 'wake', 'spawn', 'sector', 'message', 'exit', 'alert', 'shake', 'objective', 'toggle', 'lights', 'choose', 'sound', 'tremor', 'silence', 'beatOff', 'lamp', 'cinematic'];      // PT-043: a sound cue, a rumble, and the end of the score
+export const hval = (c) =>
+  c === '.' || c == null ? 0 : /[0-9]/.test(c) ? Number(c) : /[a-z]/.test(c) ? c.charCodeAt(0) - 87 : /[A-Z]/.test(c) ? c.charCodeAt(0) - 29 : NaN;
+export const ACTION_KEYS = [
+  'open',
+  'close',
+  'unlock',
+  'seal',
+  'unseal',
+  'wake',
+  'spawn',
+  'sector',
+  'message',
+  'exit',
+  'alert',
+  'shake',
+  'objective',
+  'toggle',
+  'lights',
+  'choose',
+  'sound',
+  'tremor',
+  'silence',
+  'beatOff',
+  'lamp',
+  'cinematic',
+]; // a sound cue, a rumble, and the end of the score
 
 export class MapError extends Error {
-  constructor(errors) { super('Invalid map: ' + errors.join('; ')); this.errors = errors; }
+  constructor(errors) {
+    super('Invalid map: ' + errors.join('; '));
+    this.errors = errors;
+  }
 }
 
 export class MapData {
   constructor(src) {
-    this.id = src.id; this.version = src.version; this.name = src.name;
-    this.cell = src.cellSize ?? CELL; this.ceiling = src.ceilingHeight ?? DEFAULT_CEILING;
+    this.id = src.id;
+    this.version = src.version;
+    this.name = src.name;
+    this.cell = src.cellSize ?? CELL;
+    this.ceiling = src.ceilingHeight ?? DEFAULT_CEILING;
     this.tiles = src.grid.map((r) => [...r]);
-    this.h = this.tiles.length; this.w = this.tiles[0].length;
-    this.doors = new Map([...(src.doors || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: d.key ?? null, remote: !!d.remote, breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null, soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null, interlock: d.interlock ?? null, startOpen: !!d.open }]), ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }])]);
-    this.heightRows = src.heights || null; this.ceilingRows = src.ceilings || null; this.fxRows = src.fx || null;
-    this.hasCurrent = !!this.fxRows && this.fxRows.some((r) => /[<>^v]/.test(r));          // PT-037 (E3): a flowing floor somewhere in the map
-    this.hasVoid = src.grid.some((r) => r.includes('_'));                                  // PT-032: a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
-    this.cars = (src.cars || []).map((c) => makeCar(c, this.cell));                      // PT-045 (E8b): floors that ride a loop on a clock (cars.js)
-    this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid && !this.cars.length;                   // no terrain layers: every floor is y=0 (the Gate 1 fast path)
-    this.vents = (src.vents || []).map((v) => ({ at: v.at, to: v.to, time: v.time, g: v.g ?? null }));      // PT-032: launch plates (LOWG in defs.js)
+    this.h = this.tiles.length;
+    this.w = this.tiles[0].length;
+    this.doors = new Map([
+      ...(src.doors || []).map((d) => [
+        d.at.join(','),
+        {
+          cx: d.at[0],
+          cz: d.at[1],
+          key: d.key ?? null,
+          remote: !!d.remote,
+          breath: d.breath ? { period: d.breath.period, open: d.breath.open, phase: d.breath.phase ?? 0 } : null,
+          soundlock: d.soundlock ? { quiet: d.soundlock.quiet ?? 4, radius: d.soundlock.radius ?? 40 } : null,
+          interlock: d.interlock ?? null,
+          startOpen: !!d.open,
+        },
+      ]),
+      ...(src.closets || []).map((d) => [d.at.join(','), { cx: d.at[0], cz: d.at[1], key: null, remote: true, closet: true }]),
+    ]);
+    this.heightRows = src.heights || null;
+    this.ceilingRows = src.ceilings || null;
+    this.fxRows = src.fx || null;
+    this.hasCurrent = !!this.fxRows && this.fxRows.some((r) => /[<>^v]/.test(r)); // a flowing floor somewhere in the map
+    this.hasVoid = src.grid.some((r) => r.includes('_')); // a map with open sky has a floor 6 m down in those cells, so it is never 'flat'
+    this.cars = (src.cars || []).map((c) => makeCar(c, this.cell)); // floors that ride a loop on a clock (cars.js)
+    // no terrain layers: every floor is y=0 (the Gate 1 fast path)
+    this.flat = !this.heightRows && !this.ceilingRows && !this.hasVoid && !this.cars.length;
+    this.vents = (src.vents || []).map((v) => ({ at: v.at, to: v.to, time: v.time, g: v.g ?? null })); // launch plates (LOWG in defs.js)
     this.ventCells = new Set(this.vents.map((v) => v.at.join(',')));
-    this.sectors = (src.sectors || []).map((s) => ({ id: s.id, cells: s.cells, low: s.low, high: s.high, speed: s.speed ?? 1.2, start: s.start ?? 'low', cycle: s.cycle ? { period: s.cycle.period, hold: s.cycle.hold, phase: s.cycle.phase ?? 0 } : null }));      // PT-029: a `cycle` sector is a TIMING PLATFORM (platforms.js)
-    this.hasSoundlock = (src.doors || []).some((d) => d.soundlock);                              // PT-029: a map with a sound-lock door records the player's noise (world.noise)
-    this.sectorIndex = new Map(); this.sectors.forEach((s, i) => s.cells.forEach(([cx, cz]) => this.sectorIndex.set(cx + ',' + cz, i)));
-    this.triggers = (src.triggers || []).map((t) => ({ ...t, x: t.at ? (t.at[0] + 0.5) * this.cell : 0, z: t.at ? (t.at[1] + 0.5) * this.cell : 0, r: (t.radius ?? 1.5) * this.cell }));
+    this.sectors = (src.sectors || []).map((s) => ({
+      id: s.id,
+      cells: s.cells,
+      low: s.low,
+      high: s.high,
+      speed: s.speed ?? 1.2,
+      start: s.start ?? 'low',
+      cycle: s.cycle ? { period: s.cycle.period, hold: s.cycle.hold, phase: s.cycle.phase ?? 0 } : null,
+    })); // a `cycle` sector is a TIMING PLATFORM (platforms.js)
+    this.hasSoundlock = (src.doors || []).some((d) => d.soundlock); // a map with a sound-lock door records the player's noise (world.noise)
+    this.sectorIndex = new Map();
+    this.sectors.forEach((s, i) => s.cells.forEach(([cx, cz]) => this.sectorIndex.set(cx + ',' + cz, i)));
+    this.triggers = (src.triggers || []).map((t) => ({
+      ...t,
+      x: t.at ? (t.at[0] + 0.5) * this.cell : 0,
+      z: t.at ? (t.at[1] + 0.5) * this.cell : 0,
+      r: (t.radius ?? 1.5) * this.cell,
+    }));
     this.groups = [...new Set((src.entities || []).filter((e) => e.group).map((e) => e.group))];
-    this.secrets = (src.secrets || []).map((s) => ({ id: s.id, panel: s.panel, cells: s.cells, ...(s.open && s.open !== 'use' ? { open: s.open } : {}) }));          // PT-081: how a panel opens: Use (the default), a SHOT (a cracked wall) or a SWITCH elsewhere
+    // how a panel opens: Use (the default), a SHOT (a cracked wall) or a SWITCH elsewhere
+    this.secrets = (src.secrets || []).map((s) => ({ id: s.id, panel: s.panel, cells: s.cells, ...(s.open && s.open !== 'use' ? { open: s.open } : {}) }));
     this.hasCracks = this.secrets.some((s) => s.open === 'shoot');
     this.entities = (src.entities || []).map((e) => ({ ...e, x: (e.at[0] + 0.5) * this.cell, z: (e.at[1] + 0.5) * this.cell }));
-    this.spawn = (() => { const e = this.entities.find((x) => x.type === 'player'); return { x: e.x, z: e.z, yaw: typeof e.facing === 'number' ? e.facing : FACING[e.facing ?? 'east'] }; })();
+    this.spawn = (() => {
+      const e = this.entities.find((x) => x.type === 'player');
+      return { x: e.x, z: e.z, yaw: typeof e.facing === 'number' ? e.facing : FACING[e.facing ?? 'east'] };
+    })();
     this.exits = this.entities.filter((e) => e.type === 'exit').map((e, i) => ({ id: e.id ?? 'exit' + i, dest: 'next', locked: false, ...e }));
-    this.switches = this.entities.filter((e) => e.type === 'switch').map((e) => { const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1]; return { once: true, ...e, wallDir: e.wall ?? 'north', px: e.x + d[0] * (this.cell / 2 - 0.08), pz: e.z + d[1] * (this.cell / 2 - 0.08), fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])) }; });
+    this.switches = this.entities
+      .filter((e) => e.type === 'switch')
+      .map((e) => {
+        const d = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'] || [0, -1];
+        return {
+          once: true,
+          ...e,
+          wallDir: e.wall ?? 'north',
+          px: e.x + d[0] * (this.cell / 2 - 0.08),
+          pz: e.z + d[1] * (this.cell / 2 - 0.08),
+          fy: this.floor(Math.floor(e.at[0]), Math.floor(e.at[1])),
+        };
+      });
     this.objective = src.objective ?? null;
-    this.loads = (src.loads || []).map((l) => ({ rect: l.rect, period: l.period, phase: l.phase ?? 0, ...(l.start != null ? { start: l.start } : {}), ...(l.count != null ? { count: l.count } : {}), ...(l.loop != null ? { loop: l.loop } : {}), ...(l.tremor != null ? { tremor: l.tremor } : {}) }));      // PT-032: falling loads on a clock (loads.js)
-    this.belts = (src.belts || []).map((b) => ({ rect: b.rect, period: b.period, phase: b.phase ?? 0, mode: b.mode ?? 'flip', on: b.on ?? null, speed: b.speed ?? BELT.speed }));      // PT-045 (E8a): conveyors on a clock (belts.js)
-    this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null, rect: src.tide.rect ?? null } : null;      // PT-045 (E12): the water level of the whole map on a clock (tide.js)
-    this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));            // PT-033: regions of vacuum while their seal doors are open (airlock.js)
-    this.pulses = (src.pulses || []).map((p) => ({ rect: p.rect, period: p.period, on: p.on, phase: p.phase ?? 0, ...(p.tint != null ? { tint: p.tint } : {}) }));      // PT-027: spore regions that bloom on a clock (breath.js)
-    this.chimeSeqs = src.chimes ?? [];                                                         // PT-038 (E6): the phrases of this map's chimes: [{ id, phrase: [notes], window }]
-    this.echo = src.atmosphere?.echo ?? 1;                                                      // PT-039 (Act B): a place where every noise carries `echo` times as far (the Echo Markets' well); 1 = the ordinary world
-    this.noiseTell = src.noiseTell === true;                                                    // PT-045 (E9): the HUD and the automap say how far a shot from the weapon in hand carries (noisetell.js)
-    this.dev = !!src.dev;                                                                      // PT-043: a dev map that is NOT the Range (mortal, real rules): its exit goes back to the title without scoring
-    this.lookZones = src.lookZones ?? null;                                                    // PT-043 (dev maps only): rooms lit by their own look: [{ rect, look, sky?, fog?, fogDensity? }] (view.js applyZone)
-    this.devEnding = src.devEnding ?? null;                                                    // PT-043 (dev maps only): an exit with this `dest` shows the draft epilogue of that campaign instead of leaving at once
-    this.lampHolds = src.lampHolds ?? null;                                                    // PT-043 (design/ACTD.md): a lit lantern cuts the damage of a ring to `plain` of it (`own` with Ines's eternal lamp)
-    this.dark = src.atmosphere?.dark === true; this.lantern = src.lantern ?? null;                // PT-038 (E5): a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
-    this.drops = src.drops ?? null;                               // PT-025: { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
-    this.range = !!src.range;                                     // PT-016: the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
-    this.entryLoadout = src.entryLoadout ?? null;                 // what the player has when this level is started cold (not arriving from the previous map)
-    this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable);                 // the STATIC props (collision, nav, the merged level mesh)
-    this.movables = this.entities.filter((e) => e.type === 'prop' && e.movable);                // PT-022: props the gravity tool can lift and throw (world.phys, drawn one by one, never part of the static props)
-    { const cellOf = (e) => [Math.floor(e.at[0]), Math.floor(e.at[1])], of = (kind) => this.props.filter((e) => e.kind === kind);      // PT-033: the beam tracer's emitters, mirrors and receivers (beams.js); they are ordinary solid props too
-      this.mirrors = of('mirror').map((e) => ({ id: e.id, at: cellOf(e), rot: e.rot ?? 0 })); this.emitters = of('emitter').map((e) => ({ id: e.id, at: cellOf(e), dir: e.dir ?? 'e' })); this.receivers = of('receiver').map((e) => ({ id: e.id, at: cellOf(e) })); }
+    this.loads = (src.loads || []).map((l) => ({
+      rect: l.rect,
+      period: l.period,
+      phase: l.phase ?? 0,
+      ...(l.start != null ? { start: l.start } : {}),
+      ...(l.count != null ? { count: l.count } : {}),
+      ...(l.loop != null ? { loop: l.loop } : {}),
+      ...(l.tremor != null ? { tremor: l.tremor } : {}),
+    })); // falling loads on a clock (loads.js)
+    this.belts = (src.belts || []).map((b) => ({
+      rect: b.rect,
+      period: b.period,
+      phase: b.phase ?? 0,
+      mode: b.mode ?? 'flip',
+      on: b.on ?? null,
+      speed: b.speed ?? BELT.speed,
+    })); // conveyors on a clock (belts.js)
+    // the water level of the whole map on a clock (tide.js)
+    this.tide = src.tide ? { levels: src.tide.levels.map((q) => [q[0], q[1]]), loop: src.tide.loop ?? null, rect: src.tide.rect ?? null } : null;
+    // regions of vacuum while their seal doors are open (airlock.js)
+    this.vacuum = (src.vacuum || []).map((v) => ({ rect: v.rect, seals: v.seals, and: v.and ?? [] }));
+    this.pulses = (src.pulses || []).map((p) => ({
+      rect: p.rect,
+      period: p.period,
+      on: p.on,
+      phase: p.phase ?? 0,
+      ...(p.tint != null ? { tint: p.tint } : {}),
+    })); // spore regions that bloom on a clock (breath.js)
+    this.chimeSeqs = src.chimes ?? []; // the phrases of this map's chimes: [{ id, phrase: [notes], window }]
+    this.echo = src.atmosphere?.echo ?? 1; // a place where every noise carries `echo` times as far (the Echo Markets' well); 1 = the ordinary world
+    this.noiseTell = src.noiseTell === true; // the HUD and the automap say how far a shot from the weapon in hand carries (noisetell.js)
+    this.dev = !!src.dev; // a dev map that is NOT the Range (mortal, real rules): its exit goes back to the title without scoring
+    this.lookZones = src.lookZones ?? null; // rooms lit by their own look: [{ rect, look, sky?, fog?, fogDensity? }] (view.js applyZone)
+    this.devEnding = src.devEnding ?? null; // an exit with this `dest` shows the draft epilogue of that campaign instead of leaving at once
+    this.lampHolds = src.lampHolds ?? null; // a lit lantern cuts the damage of a ring to `plain` of it (`own` with Ines's eternal lamp)
+    this.dark = src.atmosphere?.dark === true;
+    this.lantern = src.lantern ?? null; // a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
+    this.drops = src.drops ?? null; // { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
+    this.range = !!src.range; // the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
+    this.entryLoadout = src.entryLoadout ?? null; // what the player has when this level is started cold (not arriving from the previous map)
+    this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable); // the STATIC props (collision, nav, the merged level mesh)
+    // props the gravity tool can lift and throw (world.phys, drawn one by one, never part of the static props)
+    this.movables = this.entities.filter((e) => e.type === 'prop' && e.movable);
+    {
+      const cellOf = (e) => [Math.floor(e.at[0]), Math.floor(e.at[1])],
+        // the beam tracer's emitters, mirrors and receivers (beams.js); they are ordinary solid props too
+        of = (kind) => this.props.filter((e) => e.kind === kind);
+      this.mirrors = of('mirror').map((e) => ({ id: e.id, at: cellOf(e), rot: e.rot ?? 0 }));
+      this.emitters = of('emitter').map((e) => ({ id: e.id, at: cellOf(e), dir: e.dir ?? 'e' }));
+      this.receivers = of('receiver').map((e) => ({ id: e.id, at: cellOf(e) }));
+    }
     this.par = src.par ?? null;
     this.scenery = (src.scenery || []).map((s) => ({ ...s, x: (s.at[0] + 0.5) * this.cell, z: (s.at[1] + 0.5) * this.cell }));
-    this.growth = src.growth || [];                                                      // where the Vael's growth started (PT-021): view data, the simulation never reads it
-    this.noFloorMarks = src.floorMarks === false;                                         // PT-063 (V6b): a map may say `floorMarks: false` and keep its floors clean (view data)
-    this.decals = src.decals || [];                                                     // marks the map starts with (PT-021): view data, the simulation never reads it
+    this.growth = src.growth || []; // where the Vael's growth started: view data, the simulation never reads it
+    this.noFloorMarks = src.floorMarks === false; // a map may say `floorMarks: false` and keep its floors clean (view data)
+    this.decals = src.decals || []; // marks the map starts with: view data, the simulation never reads it
     this.messages = (src.messages || []).map((m) => ({ ...m, x: (m.at[0] + 0.5) * this.cell, z: (m.at[1] + 0.5) * this.cell, r: (m.radius ?? 2) * this.cell }));
-    this.intro = src.intro ?? null; this.outro = src.outro ?? null;
+    this.intro = src.intro ?? null;
+    this.outro = src.outro ?? null;
     this.atmosphere = { fog: '#2a2244', fogDensity: 0.028, ...(src.atmosphere || {}) };
-    this.keyLabels = src.keyLabels || {};                     // optional display names for the keys on this level (the Signal House calls them fuses)
+    this.keyLabels = src.keyLabels || {}; // optional display names for the keys on this level (the Signal House calls them fuses)
   }
-  tile(cx, cz) { return (cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) ? '#' : this.tiles[cz][cx]; }
-  kind(cx, cz) { return TILES[this.tile(cx, cz)]; }
+  tile(cx, cz) {
+    return cx < 0 || cz < 0 || cx >= this.w || cz >= this.h ? '#' : this.tiles[cz][cx];
+  }
+  kind(cx, cz) {
+    return TILES[this.tile(cx, cz)];
+  }
   /** solid for geometry purposes, ignoring door/secret state */
-  isWall(cx, cz) { return this.kind(cx, cz) === 'wall'; }
-  isOutdoor(cx, cz) { return this.kind(cx, cz) === 'outdoor'; }
-  isWater(cx, cz) { return this.kind(cx, cz) === 'water'; }
+  isWall(cx, cz) {
+    return this.kind(cx, cz) === 'wall';
+  }
+  isOutdoor(cx, cz) {
+    return this.kind(cx, cz) === 'outdoor';
+  }
+  isWater(cx, cz) {
+    return this.kind(cx, cz) === 'water';
+  }
   /** static floor height of a cell in metres (0 when the map has no `heights` layer) */
-  floor(cx, cz) { if (!this.heightRows || cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) return 0; return (hval(this.heightRows[cz][cx]) || 0) * HEIGHT_UNIT; }
+  floor(cx, cz) {
+    if (!this.heightRows || cx < 0 || cz < 0 || cx >= this.w || cz >= this.h) return 0;
+    return (hval(this.heightRows[cz][cx]) || 0) * HEIGHT_UNIT;
+  }
   /** ceiling height above sea level of an interior cell: an explicit `ceilings` char, else floor + ceilingHeight */
-  ceilingAt(cx, cz) { const c = this.ceilingRows?.[cz]?.[cx]; return c != null && c !== '.' ? hval(c) * HEIGHT_UNIT : this.floor(cx, cz) + this.ceiling; }
+  ceilingAt(cx, cz) {
+    const c = this.ceilingRows?.[cz]?.[cx];
+    return c != null && c !== '.' ? hval(c) * HEIGHT_UNIT : this.floor(cx, cz) + this.ceiling;
+  }
   /** the floor effect char at a cell ('w' | 'x' | null) */
   /** the spore region the cell lies in (the first that lists it), or null */
-  pulseAt(cx, cz) { for (const p of this.pulses) if (cx >= p.rect[0] && cx <= p.rect[2] && cz >= p.rect[1] && cz <= p.rect[3]) return p; return null; }
-  fx(cx, cz) { const c = this.fxRows?.[cz]?.[cx]; return c && c !== '.' && c !== ' ' ? c : null; }
-  sectorAt(cx, cz) { return this.sectorIndex.size ? (this.sectorIndex.get(cx + ',' + cz) ?? -1) : -1; }
+  pulseAt(cx, cz) {
+    for (const p of this.pulses) if (cx >= p.rect[0] && cx <= p.rect[2] && cz >= p.rect[1] && cz <= p.rect[3]) return p;
+    return null;
+  }
+  fx(cx, cz) {
+    const c = this.fxRows?.[cz]?.[cx];
+    return c && c !== '.' && c !== ' ' ? c : null;
+  }
+  sectorAt(cx, cz) {
+    return this.sectorIndex.size ? (this.sectorIndex.get(cx + ',' + cz) ?? -1) : -1;
+  }
   /** the raw tile char, for choosing a skin when drawing */
-  skin(cx, cz) { return this.tile(cx, cz); }
+  skin(cx, cz) {
+    return this.tile(cx, cz);
+  }
   /** interior = has a ceiling */
-  isInterior(x, z) { const cx = Math.floor(x / this.cell), cz = Math.floor(z / this.cell); const k = this.kind(cx, cz); return k === 'floor' || k === 'door' || k === 'secret'; }
-  doorAt(cx, cz) { return this.doors.get(cx + ',' + cz) || null; }
+  isInterior(x, z) {
+    const cx = Math.floor(x / this.cell),
+      cz = Math.floor(z / this.cell);
+    const k = this.kind(cx, cz);
+    return k === 'floor' || k === 'door' || k === 'secret';
+  }
+  doorAt(cx, cz) {
+    return this.doors.get(cx + ',' + cz) || null;
+  }
   /** door/secret slab runs along 'x' when the wall line is east-west */
-  doorAxis(cx, cz) { return this.isWall(cx - 1, cz) && this.isWall(cx + 1, cz) ? 'x' : 'z'; }
+  doorAxis(cx, cz) {
+    return this.isWall(cx - 1, cz) && this.isWall(cx + 1, cz) ? 'x' : 'z';
+  }
   counts() {
-    return { enemies: this.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length, items: this.entities.filter((e) => e.type === 'pickup' && !PICKUPS[e.kind]?.key).length, secrets: this.secrets.length };
+    return {
+      enemies: this.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length,
+      items: this.entities.filter((e) => e.type === 'pickup' && !PICKUPS[e.kind]?.key).length,
+      secrets: this.secrets.length,
+    };
   }
 }
 
-/** Validate a map source. Never throws: a malformed shape the checks did not anticipate is reported as an error (audit A06), and absurd sizes are refused before anything walks the grid. */
+/**
+ * Validate a map source. Never throws: a malformed shape the checks did not anticipate is reported as an error (audit A06), and absurd sizes are
+ * refused before anything walks the grid.
+ */
 export function validateMap(src) {
-  try { return validateMapChecks(src); } catch (e) { return { ok: false, errors: ['malformed map (' + (e && e.message ? e.message : e) + ')'] }; }
+  try {
+    return validateMapChecks(src);
+  } catch (e) {
+    return { ok: false, errors: ['malformed map (' + (e && e.message ? e.message : e) + ')'] };
+  }
 }
-const MAX_CELLS = 160 * 160, MAX_SIDE = 400;
+const MAX_CELLS = 160 * 160,
+  MAX_SIDE = 400;
 function validateMapChecks(src) {
   const errors = [];
   const err = (m) => errors.push(m);
   if (!src || typeof src !== 'object') return { ok: false, errors: ['map is not an object'] };
   if (src.cellSize != null && !(typeof src.cellSize === 'number' && src.cellSize >= 1 && src.cellSize <= 8)) err('cellSize must be a number in [1, 8] metres');
-  if (src.ceilingHeight != null && !(typeof src.ceilingHeight === 'number' && src.ceilingHeight >= 2 && src.ceilingHeight <= 40)) err('ceilingHeight must be a number in [2, 40] metres');
-  if (Array.isArray(src.grid) && (src.grid.length > MAX_SIDE || (typeof src.grid[0] === 'string' && (src.grid[0].length > MAX_SIDE || src.grid.length * src.grid[0].length > MAX_CELLS)))) return { ok: false, errors: [...errors, `map is too large (limit ${MAX_SIDE} per side, ${MAX_CELLS} cells)`] };
+  if (src.ceilingHeight != null && !(typeof src.ceilingHeight === 'number' && src.ceilingHeight >= 2 && src.ceilingHeight <= 40))
+    err('ceilingHeight must be a number in [2, 40] metres');
+  if (
+    Array.isArray(src.grid) &&
+    (src.grid.length > MAX_SIDE || (typeof src.grid[0] === 'string' && (src.grid[0].length > MAX_SIDE || src.grid.length * src.grid[0].length > MAX_CELLS)))
+  )
+    return { ok: false, errors: [...errors, `map is too large (limit ${MAX_SIDE} per side, ${MAX_CELLS} cells)`] };
   if (src.format !== MAP_FORMAT) err(`unsupported format ${src.format} (expected ${MAP_FORMAT})`);
   for (const f of ['id', 'name']) if (typeof src[f] !== 'string' || !src[f]) err(`missing ${f}`);
   if (!Number.isInteger(src.version) || src.version < 1) err('version must be a positive integer');
-  if (!Array.isArray(src.grid) || !src.grid.length) { err('grid missing'); return { ok: false, errors }; }
-  const w = src.grid[0].length, h = src.grid.length;
-  src.grid.forEach((r, i) => { if (typeof r !== 'string' || r.length !== w) err(`grid row ${i} has length ${r?.length}, expected ${w}`); });
-  if (errors.length) return { ok: false, errors };
-  const tile = (cx, cz) => (cx < 0 || cz < 0 || cx >= w || cz >= h) ? '#' : src.grid[cz][cx];
-  for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) {
-    const c = tile(cx, cz);
-    if (!(c in TILES)) err(`unknown tile '${c}' at ${cx},${cz}`);
-    const edge = cx === 0 || cz === 0 || cx === w - 1 || cz === h - 1;
-    if (c === '_' && edge) err(`the void at ${cx},${cz} is on the map edge`);
-    if (edge && !WALL_CHARS.has(c) && c !== '~') err(`map edge at ${cx},${cz} is not a wall or water (level would leak)`);
+  if (!Array.isArray(src.grid) || !src.grid.length) {
+    err('grid missing');
+    return { ok: false, errors };
   }
+  const w = src.grid[0].length,
+    h = src.grid.length;
+  src.grid.forEach((r, i) => {
+    if (typeof r !== 'string' || r.length !== w) err(`grid row ${i} has length ${r?.length}, expected ${w}`);
+  });
+  if (errors.length) return { ok: false, errors };
+  const tile = (cx, cz) => (cx < 0 || cz < 0 || cx >= w || cz >= h ? '#' : src.grid[cz][cx]);
+  for (let cz = 0; cz < h; cz++)
+    for (let cx = 0; cx < w; cx++) {
+      const c = tile(cx, cz);
+      if (!(c in TILES)) err(`unknown tile '${c}' at ${cx},${cz}`);
+      const edge = cx === 0 || cz === 0 || cx === w - 1 || cz === h - 1;
+      if (c === '_' && edge) err(`the void at ${cx},${cz} is on the map edge`);
+      if (edge && !WALL_CHARS.has(c) && c !== '~') err(`map edge at ${cx},${cz} is not a wall or water (level would leak)`);
+    }
   const walkable = (c) => WALKABLE_CHARS.has(c);
   const wallc = (c) => WALL_CHARS.has(c);
   // leaks: an outdoor cell may only touch walls or outdoor/floor cells (no void), already ensured by the edge check
   const doors = src.doors || [];
   const doorKeys = new Set();
   for (const d of doors) {
-    if (!Array.isArray(d.at) || tile(d.at[0], d.at[1]) !== 'D') { err(`doors entry ${JSON.stringify(d.at)} is not on a 'D' tile`); continue; }
+    if (!Array.isArray(d.at) || tile(d.at[0], d.at[1]) !== 'D') {
+      err(`doors entry ${JSON.stringify(d.at)} is not on a 'D' tile`);
+      continue;
+    }
     doorKeys.add(d.at.join(','));
     if (d.key != null && !KEYS[d.key]) err(`door ${d.at} needs unknown key '${d.key}'`);
-    if (d.interlock != null) {                                           // PT-033: an airlock: the partner is a door that says the same of this one
+    if (d.interlock != null) {
+      // an airlock: the partner is a door that says the same of this one
       const pr = Array.isArray(d.interlock) ? doors.find((q) => Array.isArray(q.at) && q.at.join(',') === d.interlock.join(',')) : null;
-      if (!pr) err(`door ${d.at}: interlock must be the cell of another door`); else if (!Array.isArray(pr.interlock) || pr.interlock.join(',') !== d.at.join(',')) err(`door ${d.at}: its interlock partner ${d.interlock} must name it back`);
+      if (!pr) err(`door ${d.at}: interlock must be the cell of another door`);
+      else if (!Array.isArray(pr.interlock) || pr.interlock.join(',') !== d.at.join(','))
+        err(`door ${d.at}: its interlock partner ${d.interlock} must name it back`);
       if (d.breath != null || d.remote || d.soundlock != null) err(`door ${d.at}: a lock door is opened by Use: no breath, remote or sound-lock`);
     }
-    if (d.open != null && (d.open !== true || !d.remote || d.breath != null)) err(`door ${d.at}: open: true (a hull door that starts open) must be a remote door with no breath`);
-    if (d.soundlock != null) {                                           // PT-029: a sound-lock door only opens (by Use) when nothing loud has been heard near it for `quiet` s
+    if (d.open != null && (d.open !== true || !d.remote || d.breath != null))
+      err(`door ${d.at}: open: true (a hull door that starts open) must be a remote door with no breath`);
+    if (d.soundlock != null) {
+      // a sound-lock door only opens (by Use) when nothing loud has been heard near it for `quiet` s
       const k = d.soundlock;
-      if (typeof k !== 'object' || !(k.quiet >= 2 && k.quiet <= 12) || (k.radius != null && !(k.radius >= 8))) err(`door ${d.at}: soundlock needs { quiet between 2 and 12 s, radius >= 8 m }`);
+      if (typeof k !== 'object' || !(k.quiet >= 2 && k.quiet <= 12) || (k.radius != null && !(k.radius >= 8)))
+        err(`door ${d.at}: soundlock needs { quiet between 2 and 12 s, radius >= 8 m }`);
       if (d.breath != null || d.remote) err(`door ${d.at}: a sound-lock door is opened by Use: it has no breath and is not remote`);
     }
-    if (d.breath != null) {                                              // PT-027: a breathing gate opens on a clock and nothing else opens it
+    if (d.breath != null) {
+      // a breathing gate opens on a clock and nothing else opens it
       const b = d.breath;
-      if (typeof b !== 'object' || !(b.period >= 2) || !(b.open > 0 && b.open < 1) || (b.phase != null && typeof b.phase !== 'number')) err(`door ${d.at}: breath needs { period >= 2, open between 0 and 1, phase }`);
-      else if (b.period * Math.min(b.open, 1 - b.open) < 2) err(`door ${d.at}: a breathing gate must stay open and shut for at least 2 s (period ${b.period}, open ${b.open})`);
+      if (typeof b !== 'object' || !(b.period >= 2) || !(b.open > 0 && b.open < 1) || (b.phase != null && typeof b.phase !== 'number'))
+        err(`door ${d.at}: breath needs { period >= 2, open between 0 and 1, phase }`);
+      else if (b.period * Math.min(b.open, 1 - b.open) < 2)
+        err(`door ${d.at}: a breathing gate must stay open and shut for at least 2 s (period ${b.period}, open ${b.open})`);
       if (d.key != null || d.remote) err(`door ${d.at}: a breathing gate has no key and is not remote`);
     }
   }
-  for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) {
-    const c = tile(cx, cz);
-    if (c === 'D' && !doorKeys.has(cx + ',' + cz)) err(`'D' tile at ${cx},${cz} has no doors entry`);
-    if (c === 'D' || c === 'S' || c === 'X') {
-      const ew = wallc(tile(cx - 1, cz)) && wallc(tile(cx + 1, cz)), ns = wallc(tile(cx, cz - 1)) && wallc(tile(cx, cz + 1));
-      const passEW = walkable(tile(cx - 1, cz)) || walkable(tile(cx + 1, cz)), passNS = walkable(tile(cx, cz - 1)) || walkable(tile(cx, cz + 1));
-      if (!((ew && passNS) || (ns && passEW))) err(`door/secret at ${cx},${cz} is not set in a straight wall line`);
+  for (let cz = 0; cz < h; cz++)
+    for (let cx = 0; cx < w; cx++) {
+      const c = tile(cx, cz);
+      if (c === 'D' && !doorKeys.has(cx + ',' + cz)) err(`'D' tile at ${cx},${cz} has no doors entry`);
+      if (c === 'D' || c === 'S' || c === 'X') {
+        const ew = wallc(tile(cx - 1, cz)) && wallc(tile(cx + 1, cz)),
+          ns = wallc(tile(cx, cz - 1)) && wallc(tile(cx, cz + 1));
+        const passEW = walkable(tile(cx - 1, cz)) || walkable(tile(cx + 1, cz)),
+          passNS = walkable(tile(cx, cz - 1)) || walkable(tile(cx, cz + 1));
+        if (!((ew && passNS) || (ns && passEW))) err(`door/secret at ${cx},${cz} is not set in a straight wall line`);
+      }
     }
-  }
   const secretCells = new Set();
   for (const s of src.secrets || []) {
     if (!s.id) err('secret without id');
     if (!s.panel || tile(...s.panel) !== 'S') err(`secret '${s.id}' panel must be on an 'S' tile`);
     if (!Array.isArray(s.cells) || !s.cells.length) err(`secret '${s.id}' has no cells`);
     if (s.open !== undefined && !['use', 'shoot', 'switch'].includes(s.open)) err(`secret '${s.id}' open must be use, shoot or switch`);
-    if (s.open === 'switch' && s.panel && !JSON.stringify([src.triggers ?? [], (src.entities ?? []).filter((e) => e.type === 'switch')]).includes(`{"open":[${s.panel[0]},${s.panel[1]}]}`)) err(`secret '${s.id}' opens by a switch but no action opens [${s.panel}]`);
-    for (const c of s.cells || []) { if (!walkable(tile(c[0], c[1]))) err(`secret '${s.id}' cell ${c} is not walkable`); secretCells.add(c.join(',')); }
+    if (
+      s.open === 'switch' &&
+      s.panel &&
+      !JSON.stringify([src.triggers ?? [], (src.entities ?? []).filter((e) => e.type === 'switch')]).includes(`{"open":[${s.panel[0]},${s.panel[1]}]}`)
+    )
+      err(`secret '${s.id}' opens by a switch but no action opens [${s.panel}]`);
+    for (const c of s.cells || []) {
+      if (!walkable(tile(c[0], c[1]))) err(`secret '${s.id}' cell ${c} is not walkable`);
+      secretCells.add(c.join(','));
+    }
   }
-  for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) if (tile(cx, cz) === 'S' && !(src.secrets || []).some((s) => s.panel[0] === cx && s.panel[1] === cz)) err(`'S' tile at ${cx},${cz} is not the panel of any secret`);
+  for (let cz = 0; cz < h; cz++)
+    for (let cx = 0; cx < w; cx++)
+      if (tile(cx, cz) === 'S' && !(src.secrets || []).some((s) => s.panel[0] === cx && s.panel[1] === cz))
+        err(`'S' tile at ${cx},${cz} is not the panel of any secret`);
   const ents = src.entities || [];
   const players = ents.filter((e) => e.type === 'player');
   if (players.length !== 1) err(`expected exactly 1 player entity, found ${players.length}`);
   if (!ents.some((e) => e.type === 'exit')) err('no exit entity');
-  const keyPickups = new Set(), beamIds = new Set();
+  const keyPickups = new Set(),
+    beamIds = new Set();
   ents.forEach((e, i) => {
     const tag = `entity #${i} (${e.type}${e.kind ? ':' + e.kind : ''})`;
     if (!Array.isArray(e.at) || e.at.length !== 2 || !e.at.every(Number.isFinite)) return err(`${tag} has bad 'at'`);
@@ -200,45 +430,76 @@ function validateMapChecks(src) {
     if (e.type === 'enemy' && e.variant != null && !VARIANTS[e.variant]) err(`${tag}: unknown variant '${e.variant}' (${Object.keys(VARIANTS).join(', ')})`);
     if (e.type === 'enemy' && e.sight != null && !(e.sight > 0)) err(`${tag}: sight must be a positive number of metres`);
     if (e.type === 'enemy' && e.onBeat != null && typeof e.onBeat !== 'boolean') err(`${tag}: onBeat must be true or false`);
-    if (e.type === 'enemy' && e.rings != null && (typeof e.rings !== 'boolean' || !src.range || !e.hold)) err(`${tag}: rings must be true or false, and only a range target that has a hold may ring (the lamp yard)`);
-    if (e.type === 'enemy' && e.swing != null && typeof e.swing !== 'boolean') err(`${tag}: swing must be true or false (a range sponge Root Bell swings only if it says so)`);                 // PT-043: starts an attack only on a Hive beat (hive.js)
-    if ((e.hold != null || e.hp != null || e.sight != null) && !src.range) err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
-    else if (e.type === 'pickup') { if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`); else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key); }
-    else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
+    if (e.type === 'enemy' && e.rings != null && (typeof e.rings !== 'boolean' || !src.range || !e.hold))
+      err(`${tag}: rings must be true or false, and only a range target that has a hold may ring (the lamp yard)`);
+    if (e.type === 'enemy' && e.swing != null && typeof e.swing !== 'boolean')
+      // starts an attack only on a Hive beat (hive.js)
+      err(`${tag}: swing must be true or false (a range sponge Root Bell swings only if it says so)`);
+    if ((e.hold != null || e.hp != null || e.sight != null) && !src.range)
+      err(`${tag}: hold / hp / sight are for the dev range only (the map must say range: true)`);
+    else if (e.type === 'pickup') {
+      if (!PICKUPS[e.kind]) err(`${tag}: unknown pickup kind`);
+      else if (PICKUPS[e.kind].key) keyPickups.add(PICKUPS[e.kind].key);
+    } else if (e.type === 'prop' && !PROPS[e.kind]) err(`${tag}: unknown prop kind`);
     else if (!['player', 'enemy', 'pickup', 'prop', 'exit', 'switch'].includes(e.type)) err(`${tag}: unknown entity type`);
-    if (e.type === 'prop' && (e.kind === 'mirror' || e.kind === 'emitter' || e.kind === 'receiver')) {                                       // PT-033: the beam tracer's props
-      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`); else { if (beamIds.has(e.id)) err(`${tag}: duplicate beam id '${e.id}'`); beamIds.add(e.id); }
+    if (e.type === 'prop' && (e.kind === 'mirror' || e.kind === 'emitter' || e.kind === 'receiver')) {
+      // the beam tracer's props
+      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`);
+      else {
+        if (beamIds.has(e.id)) err(`${tag}: duplicate beam id '${e.id}'`);
+        beamIds.add(e.id);
+      }
       if (e.kind === 'mirror' && !(Number.isInteger(e.rot ?? 0) && (e.rot ?? 0) >= 0 && (e.rot ?? 0) <= 3)) err(`${tag}: rot must be 0, 1, 2 or 3`);
       if (e.kind === 'emitter' && !'nesw'.includes(e.dir ?? 'e')) err(`${tag}: dir must be n, e, s or w`);
     }
-    if (e.type === 'prop' && (e.kind === 'chime' || e.kind === 'chimetree')) {                                                                  // PT-038: chimes and the tree
-      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`); else { if (beamIds.has(e.id)) err(`${tag}: duplicate id '${e.id}'`); beamIds.add(e.id); }
+    if (e.type === 'prop' && (e.kind === 'chime' || e.kind === 'chimetree')) {
+      // chimes and the tree
+      if (typeof e.id !== 'string' || !e.id) err(`${tag}: a ${e.kind} needs an id`);
+      else {
+        if (beamIds.has(e.id)) err(`${tag}: duplicate id '${e.id}'`);
+        beamIds.add(e.id);
+      }
       if (e.kind === 'chime' && !(Number.isInteger(e.note) && e.note >= 0 && e.note < 5)) err(`${tag}: a chime's note must be 0 to 4`);
-      if (e.kind === 'chimetree' && !(Array.isArray(e.plays) && e.plays.length && e.plays.every((q) => (src.chimes ?? []).some((c) => c.id === q)))) err(`${tag}: a chimetree needs plays: a list of phrase ids that exist in the map's chimes`);
+      if (e.kind === 'chimetree' && !(Array.isArray(e.plays) && e.plays.length && e.plays.every((q) => (src.chimes ?? []).some((c) => c.id === q))))
+        err(`${tag}: a chimetree needs plays: a list of phrase ids that exist in the map's chimes`);
     }
-    if (e.movable != null && (e.type !== 'prop' || e.movable !== true || !PHYS[e.kind])) err(`${tag}: movable is for a crate, a barrel or a sack (movable: true)`);
+    if (e.movable != null && (e.type !== 'prop' || e.movable !== true || !PHYS[e.kind]))
+      err(`${tag}: movable is for a crate, a barrel or a sack (movable: true)`);
     if (e.type === 'player' && e.facing != null && typeof e.facing !== 'number' && !(e.facing in FACING)) err(`${tag}: bad facing`);
   });
   // nothing may spawn inside a solid prop (or inside another actor): a body embedded in a collider is stuck or unfair from tick 0
-  const cellM = src.cellSize ?? CELL, bodyR = (e) => (e.type === 'enemy' ? ENEMIES[e.kind]?.radius : e.type === 'player' ? PLAYER.radius : e.type === 'pickup' ? 0.25 : e.type === 'exit' ? 0.3 : 0) ?? 0;
+  const cellM = src.cellSize ?? CELL,
+    bodyR = (e) =>
+      (e.type === 'enemy' ? ENEMIES[e.kind]?.radius : e.type === 'player' ? PLAYER.radius : e.type === 'pickup' ? 0.25 : e.type === 'exit' ? 0.3 : 0) ?? 0;
   const okAt = ents.filter((e) => Array.isArray(e.at) && e.at.length === 2 && e.at.every(Number.isFinite));
   for (const [i, a] of okAt.entries()) {
-    const ar = bodyR(a), pa = PROPS[a.kind]; if (a.type === 'prop' || !ar) continue;
+    const ar = bodyR(a),
+      pa = PROPS[a.kind];
+    if (a.type === 'prop' || !ar) continue;
     for (const [j, b] of okAt.entries()) {
-      if (i === j) continue; const dist = Math.hypot((a.at[0] - b.at[0]) * cellM, (a.at[1] - b.at[1]) * cellM);
-      if (b.type === 'prop') { const pr = PROPS[b.kind]?.radius ?? 0; if (pr > 0 && dist < ar + pr) err(`${a.type}${a.kind ? ':' + a.kind : ''} at ${a.at} overlaps solid prop ${b.kind} at ${b.at}`); }
-      else if ((a.type === 'enemy' || a.type === 'player') && (b.type === 'enemy' || b.type === 'player') && j > i && dist < ar + bodyR(b)) err(`${a.type} at ${a.at} overlaps ${b.type} at ${b.at}`);
+      if (i === j) continue;
+      const dist = Math.hypot((a.at[0] - b.at[0]) * cellM, (a.at[1] - b.at[1]) * cellM);
+      if (b.type === 'prop') {
+        const pr = PROPS[b.kind]?.radius ?? 0;
+        if (pr > 0 && dist < ar + pr) err(`${a.type}${a.kind ? ':' + a.kind : ''} at ${a.at} overlaps solid prop ${b.kind} at ${b.at}`);
+      } else if ((a.type === 'enemy' || a.type === 'player') && (b.type === 'enemy' || b.type === 'player') && j > i && dist < ar + bodyR(b))
+        err(`${a.type} at ${a.at} overlaps ${b.type} at ${b.at}`);
     }
   }
   for (const [i, s] of (src.scenery || []).entries()) {
     if (!SCENERY[s.kind]) err(`scenery #${i}: unknown kind '${s.kind}'`);
     if (!Array.isArray(s.at) || s.at.length !== 2 || !s.at.every(Number.isFinite)) err(`scenery #${i} has bad 'at'`);
   }
-  if (src.drops != null && (typeof src.drops !== 'object' || Array.isArray(src.drops) || (src.drops.scale != null && !(src.drops.scale > 0 && src.drops.scale <= 4)))) err('drops must be { scale } with a scale above 0 and at most 4');
+  if (
+    src.drops != null &&
+    (typeof src.drops !== 'object' || Array.isArray(src.drops) || (src.drops.scale != null && !(src.drops.scale > 0 && src.drops.scale <= 4)))
+  )
+    err('drops must be { scale } with a scale above 0 and at most 4');
   if (src.growth != null && (!Array.isArray(src.growth) || src.growth.length > GROWTH.max)) err(`growth must be a list of at most ${GROWTH.max}`);
   for (const [i, gr] of (Array.isArray(src.growth) ? src.growth : []).entries()) {
     const tag = `growth #${i}`;
-    if (!Array.isArray(gr?.at) || gr.at.length !== 2 || !gr.at.every(Number.isFinite) || gr.at[0] < 0 || gr.at[1] < 0 || gr.at[0] >= w || gr.at[1] >= h) err(`${tag}: 'at' must be inside the grid (cells)`);
+    if (!Array.isArray(gr?.at) || gr.at.length !== 2 || !gr.at.every(Number.isFinite) || gr.at[0] < 0 || gr.at[1] < 0 || gr.at[0] >= w || gr.at[1] >= h)
+      err(`${tag}: 'at' must be inside the grid (cells)`);
     else if (!walkable(tile(Math.floor(gr.at[0]), Math.floor(gr.at[1])))) err(`${tag}: 'at' must be on a walkable cell`);
     if (!(gr?.r >= 2 && gr.r <= 30)) err(`${tag}: r must be in [2, 30] metres`);
     if (gr?.power != null && !(gr.power >= 0.2 && gr.power <= 2)) err(`${tag}: power must be in [0.2, 2]`);
@@ -247,7 +508,8 @@ function validateMapChecks(src) {
   for (const [i, d] of (Array.isArray(src.decals) ? src.decals : []).entries()) {
     const tag = `decal #${i}`;
     if (!DECALS.kinds[d?.kind]) err(`${tag}: kind must be one of ${Object.keys(DECALS.kinds).join(', ')}`);
-    if (!Array.isArray(d?.at) || d.at.length !== 2 || !d.at.every(Number.isFinite) || d.at[0] < 0 || d.at[1] < 0 || d.at[0] >= w || d.at[1] >= h) err(`${tag}: 'at' must be inside the grid (cells)`);
+    if (!Array.isArray(d?.at) || d.at.length !== 2 || !d.at.every(Number.isFinite) || d.at[0] < 0 || d.at[1] < 0 || d.at[0] >= w || d.at[1] >= h)
+      err(`${tag}: 'at' must be inside the grid (cells)`);
     if (d?.wall != null && !['north', 'south', 'east', 'west'].includes(d.wall)) err(`${tag}: wall must be north, south, east or west`);
     for (const k of ['size', 'h']) if (d?.[k] != null && !(d[k] >= 0.1 && d[k] <= 4)) err(`${tag}: ${k} must be in [0.1, 4] metres`);
     if (d?.y != null && !(d.y >= 0 && d.y <= 6)) err(`${tag}: y must be in [0, 6] metres`);
@@ -257,20 +519,34 @@ function validateMapChecks(src) {
   const msgIds = new Set();
   for (const [i, m] of (src.messages || []).entries()) {
     const tag = `message #${i} (${m.id})`;
-    if (!m.id || msgIds.has(m.id)) err(`${tag}: missing or duplicate id`); msgIds.add(m.id);
-    if (!Array.isArray(m.at) || m.at.length !== 2 || !m.at.every(Number.isFinite) || m.at[0] < 0 || m.at[1] < 0 || m.at[0] >= w || m.at[1] >= h) err(`${tag}: 'at' must be inside the grid`);
-    if (typeof m.text !== 'string' || !m.text.trim()) err(`${tag}: empty text`); else if (m.text.length > 180) err(`${tag}: text too long (${m.text.length} > 180)`);
+    if (!m.id || msgIds.has(m.id)) err(`${tag}: missing or duplicate id`);
+    msgIds.add(m.id);
+    if (!Array.isArray(m.at) || m.at.length !== 2 || !m.at.every(Number.isFinite) || m.at[0] < 0 || m.at[1] < 0 || m.at[0] >= w || m.at[1] >= h)
+      err(`${tag}: 'at' must be inside the grid`);
+    if (typeof m.text !== 'string' || !m.text.trim()) err(`${tag}: empty text`);
+    else if (m.text.length > 180) err(`${tag}: text too long (${m.text.length} > 180)`);
     if (m.radius != null && !(m.radius > 0 && m.radius <= 8)) err(`${tag}: radius must be in (0, 8] cells`);
-    if (m.choice != null && !/^[a-z0-9-]{1,24}(=|!=)[a-z0-9-]{1,24}$/.test(String(m.choice))) err(`${tag}: choice must be '<id>=<value>' or '<id>!=<value>'`);                      // PT-039: shown only when the remembered choice matches (or does not)
+    // shown only when the remembered choice matches (or does not)
+    if (m.choice != null && !/^[a-z0-9-]{1,24}(=|!=)[a-z0-9-]{1,24}$/.test(String(m.choice))) err(`${tag}: choice must be '<id>=<value>' or '<id>!=<value>'`);
   }
-  for (const [i, m] of (src.messages || []).entries()) {                                                                                      // PT-070: `unless` = one condition or a list (msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on), the message is silent once any holds
-    if (m.unless == null) continue; const tag = `message #${i} (${m.id})`;
-    for (const term of Array.isArray(m.unless) ? m.unless : [m.unless]) for (const q of Array.isArray(term) ? term : [term]) {                // a list item that is itself a list is an AND
-      if (typeof q !== 'string') { err(`${tag}: unless must be a condition or a list of conditions`); continue; }
-      if (q.startsWith('msg:')) { if (!msgIds.has(q.slice(4))) err(`${tag}: unless names an unknown message '${q}'`); }
-      else if (q.startsWith('key:') || q.startsWith('dead:') || q.startsWith('lit:') || q.startsWith('sector:') || q === 'lamp:on') { /* the same forms a trigger accepts: checked by the trigger validator's rules at play time */ }
-      else err(`${tag}: unless '${q}' must be msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on`);
-    }
+  for (const [i, m] of (src.messages || []).entries()) {
+    // `unless` = one condition or a list (msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on), the message is
+    // silent once any holds
+    if (m.unless == null) continue;
+    const tag = `message #${i} (${m.id})`;
+    for (const term of Array.isArray(m.unless) ? m.unless : [m.unless])
+      for (const q of Array.isArray(term) ? term : [term]) {
+        // a list item that is itself a list is an AND
+        if (typeof q !== 'string') {
+          err(`${tag}: unless must be a condition or a list of conditions`);
+          continue;
+        }
+        if (q.startsWith('msg:')) {
+          if (!msgIds.has(q.slice(4))) err(`${tag}: unless names an unknown message '${q}'`);
+        } else if (q.startsWith('key:') || q.startsWith('dead:') || q.startsWith('lit:') || q.startsWith('sector:') || q === 'lamp:on') {
+          /* the same forms a trigger accepts: checked by the trigger validator's rules at play time */
+        } else err(`${tag}: unless '${q}' must be msg:<id> | key:<k> | dead:<group> | sector:<id>:<low|high> | lit:<receiver> | lamp:on`);
+      }
   }
   if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
@@ -282,191 +558,442 @@ function validateMapChecks(src) {
 function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   const layer = (name, rows, allowed) => {
     if (rows == null) return false;
-    if (!Array.isArray(rows) || rows.length !== h || rows.some((r) => typeof r !== 'string' || r.length !== w)) { err(`layer '${name}' must be ${w} x ${h} like the grid`); return false; }
-    for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) if (!allowed(rows[cz][cx])) err(`layer '${name}' has an invalid char '${rows[cz][cx]}' at ${cx},${cz}`);
+    if (!Array.isArray(rows) || rows.length !== h || rows.some((r) => typeof r !== 'string' || r.length !== w)) {
+      err(`layer '${name}' must be ${w} x ${h} like the grid`);
+      return false;
+    }
+    for (let cz = 0; cz < h; cz++)
+      for (let cx = 0; cx < w; cx++) if (!allowed(rows[cz][cx])) err(`layer '${name}' has an invalid char '${rows[cz][cx]}' at ${cx},${cz}`);
     return true;
   };
-  const hasH = layer('heights', src.heights, (c) => !Number.isNaN(hval(c))), hasC = layer('ceilings', src.ceilings, (c) => !Number.isNaN(hval(c))), hasF = layer('fx', src.fx, (c) => c === '.' || c === ' ' || c in FX);
+  const hasH = layer('heights', src.heights, (c) => !Number.isNaN(hval(c))),
+    hasC = layer('ceilings', src.ceilings, (c) => !Number.isNaN(hval(c))),
+    hasF = layer('fx', src.fx, (c) => c === '.' || c === ' ' || c in FX);
   const floorOf = (cx, cz) => (hasH ? (hval(src.heights[cz][cx]) || 0) * HEIGHT_UNIT : 0);
-  const ceilOf = (cx, cz) => { const c = hasC ? src.ceilings[cz][cx] : '.'; return c !== '.' ? hval(c) * HEIGHT_UNIT : floorOf(cx, cz) + (src.ceilingHeight ?? DEFAULT_CEILING); };
+  const ceilOf = (cx, cz) => {
+    const c = hasC ? src.ceilings[cz][cx] : '.';
+    return c !== '.' ? hval(c) * HEIGHT_UNIT : floorOf(cx, cz) + (src.ceilingHeight ?? DEFAULT_CEILING);
+  };
   const interior = (c) => FLOOR_SKINS[c]?.kind === 'floor';
   const pulseRects = [];
-  for (const [i, p] of (src.pulses || []).entries()) {                                  // PT-027: spore regions
+  for (const [i, p] of (src.pulses || []).entries()) {
+    // spore regions
     const tag = `pulse #${i}`;
-    if (!Array.isArray(p.rect) || p.rect.length !== 4 || p.rect.some((n) => !Number.isInteger(n)) || p.rect[0] > p.rect[2] || p.rect[1] > p.rect[3] || p.rect[0] < 0 || p.rect[1] < 0 || p.rect[2] >= w || p.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] inside the map`); continue; }
-    if (!(p.period >= 3) || !(p.on >= 1.5) || !(p.period - p.on >= 2)) err(`${tag}: period >= 3, on >= 1.5 s and a dormant spell of at least 2 s (period ${p.period}, on ${p.on})`);
+    if (
+      !Array.isArray(p.rect) ||
+      p.rect.length !== 4 ||
+      p.rect.some((n) => !Number.isInteger(n)) ||
+      p.rect[0] > p.rect[2] ||
+      p.rect[1] > p.rect[3] ||
+      p.rect[0] < 0 ||
+      p.rect[1] < 0 ||
+      p.rect[2] >= w ||
+      p.rect[3] >= h
+    ) {
+      err(`${tag}: rect must be [x0,z0,x1,z1] inside the map`);
+      continue;
+    }
+    if (!(p.period >= 3) || !(p.on >= 1.5) || !(p.period - p.on >= 2))
+      err(`${tag}: period >= 3, on >= 1.5 s and a dormant spell of at least 2 s (period ${p.period}, on ${p.on})`);
     if (p.phase != null && typeof p.phase !== 'number') err(`${tag}: phase must be a number`);
     pulseRects.push(p.rect);
   }
-  for (const [i, l] of (src.loads || []).entries()) {                                  // PT-032: falling loads
+  for (const [i, l] of (src.loads || []).entries()) {
+    // falling loads
     const tag = `load #${i}`;
-    if (!Array.isArray(l.rect) || l.rect.length !== 4 || l.rect.some((n) => !Number.isInteger(n)) || l.rect[0] > l.rect[2] || l.rect[1] > l.rect[3] || l.rect[0] < 0 || l.rect[1] < 0 || l.rect[2] >= w || l.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`); continue; }
+    if (
+      !Array.isArray(l.rect) ||
+      l.rect.length !== 4 ||
+      l.rect.some((n) => !Number.isInteger(n)) ||
+      l.rect[0] > l.rect[2] ||
+      l.rect[1] > l.rect[3] ||
+      l.rect[0] < 0 ||
+      l.rect[1] < 0 ||
+      l.rect[2] >= w ||
+      l.rect[3] >= h
+    ) {
+      err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`);
+      continue;
+    }
     if (!(l.period >= 4)) err(`${tag}: period must be at least 4 s (it is seen coming for ${LOADS.warn} s)`);
     if (l.phase != null && typeof l.phase !== 'number') err(`${tag}: phase must be a number`);
-    if (l.start != null || l.count != null || l.loop != null) {                       // PT-045: a scheduled load (a strip of the collapse front)
+    if (l.start != null || l.count != null || l.loop != null) {
+      // a scheduled load (a strip of the collapse front)
       if (l.phase != null) err(`${tag}: a scheduled load (start, count, loop) uses start, not phase`);
       if (l.start != null && !(Number.isFinite(l.start) && l.start >= 0)) err(`${tag}: start must be a time in seconds, 0 or more`);
       if (l.count != null && !(Number.isInteger(l.count) && l.count >= 1 && l.count <= 999)) err(`${tag}: count must be a whole number from 1 to 999`);
-      if (l.loop != null && !(Number.isFinite(l.loop) && l.loop > (l.start ?? 0) + ((l.count ?? 1) - 1) * l.period + LOADS.linger)) err(`${tag}: loop must be longer than start plus the time of its last impact`);
+      if (l.loop != null && !(Number.isFinite(l.loop) && l.loop > (l.start ?? 0) + ((l.count ?? 1) - 1) * l.period + LOADS.linger))
+        err(`${tag}: loop must be longer than start plus the time of its last impact`);
     }
     if (l.tremor != null && !(l.tremor > 0 && l.tremor <= 3)) err(`${tag}: tremor must be in (0, 3]`);
-    let floor = 0; for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
+    let floor = 0;
+    for (let cz = l.rect[1]; cz <= l.rect[3]; cz++) for (let cx = l.rect[0]; cx <= l.rect[2]; cx++) if (walkable(tile(cx, cz))) floor++;
     if (!floor) err(`${tag}: no floor under it`);
   }
-  if (src.tide != null) {                                                              // PT-045 (E12): the tide
-    const T = src.tide, L = T?.levels;
-    if (!T || typeof T !== 'object' || Array.isArray(T) || !Array.isArray(L) || L.length < 2 || L.length > TIDE.maxPoints || !L.every((q) => Array.isArray(q) && q.length === 2 && Number.isFinite(q[0]) && Number.isFinite(q[1]))) err(`tide must be { levels: [[t, h], ...] } with 2 to ${TIDE.maxPoints} points`);
+  if (src.tide != null) {
+    // the tide
+    const T = src.tide,
+      L = T?.levels;
+    if (
+      !T ||
+      typeof T !== 'object' ||
+      Array.isArray(T) ||
+      !Array.isArray(L) ||
+      L.length < 2 ||
+      L.length > TIDE.maxPoints ||
+      !L.every((q) => Array.isArray(q) && q.length === 2 && Number.isFinite(q[0]) && Number.isFinite(q[1]))
+    )
+      err(`tide must be { levels: [[t, h], ...] } with 2 to ${TIDE.maxPoints} points`);
     else {
       if (L[0][0] !== 0 || L.some((q, i) => i > 0 && !(q[0] > L[i - 1][0]))) err('tide: the first point is at t = 0 and the times rise');
       if (L.some((q) => q[1] < TIDE.minH || q[1] > TIDE.maxH)) err(`tide: a level must be between ${TIDE.minH} and ${TIDE.maxH} m`);
-      if (T.rect != null && (!Array.isArray(T.rect) || T.rect.length !== 4 || T.rect.some((n) => !Number.isInteger(n)) || T.rect[0] > T.rect[2] || T.rect[1] > T.rect[3] || T.rect[0] < 0 || T.rect[1] < 0 || T.rect[2] >= w || T.rect[3] >= h)) err('tide: rect must be [x0, z0, x1, z1] cells inside the grid (the water only reaches those cells)');
+      if (
+        T.rect != null &&
+        (!Array.isArray(T.rect) ||
+          T.rect.length !== 4 ||
+          T.rect.some((n) => !Number.isInteger(n)) ||
+          T.rect[0] > T.rect[2] ||
+          T.rect[1] > T.rect[3] ||
+          T.rect[0] < 0 ||
+          T.rect[1] < 0 ||
+          T.rect[2] >= w ||
+          T.rect[3] >= h)
+      )
+        err('tide: rect must be [x0, z0, x1, z1] cells inside the grid (the water only reaches those cells)');
       if (T.loop != null && !(T.loop > L[L.length - 1][0])) err('tide: loop must be longer than the last point');
       if (T.loop != null && L[L.length - 1][1] !== L[0][1]) err('tide: a looping tide must end at the level it starts at (the loop would jump)');
-      for (let i = 1; i < L.length; i++) if (Math.abs(L[i][1] - L[i - 1][1]) / (L[i][0] - L[i - 1][0]) > 0.5) err(`tide: the water may not rise or fall faster than 0.5 m a second (points ${i - 1} and ${i})`);
+      for (let i = 1; i < L.length; i++)
+        if (Math.abs(L[i][1] - L[i - 1][1]) / (L[i][0] - L[i - 1][0]) > 0.5)
+          err(`tide: the water may not rise or fall faster than 0.5 m a second (points ${i - 1} and ${i})`);
     }
   }
-  { const cellM = src.cellSize ?? CELL, carIds = new Set();                              // PT-045 (E8b): cars
+  {
+    const cellM = src.cellSize ?? CELL,
+      carIds = new Set(); // cars
     for (const [i, c] of (src.cars || []).entries()) {
-      const tag = `car #${i}${c?.id ? ' (' + c.id + ')' : ''}`, num = (x) => Number.isFinite(x); let carErr = 0; const cerr = (m) => { carErr++; err(m); };
-      if (typeof c?.id !== 'string' || !c.id) cerr(`${tag}: needs an id`); else { if (carIds.has(c.id)) cerr(`${tag}: duplicate id`); carIds.add(c.id); }
-      if (!Array.isArray(c?.size) || c.size.length !== 2 || !c.size.every((q) => num(q) && q >= CARS.minSize && q <= CARS.maxSize)) { cerr(`${tag}: size must be [w, d] cells, each ${CARS.minSize} to ${CARS.maxSize}`); continue; }
-      if (!Array.isArray(c.path) || c.path.length < 2 || c.path.length > 24 || !c.path.every((q) => Array.isArray(q) && (q.length === 2 || q.length === 3) && q.every(num))) { cerr(`${tag}: path must be 2 to 24 points [x, z] or [x, z, y] (cell coordinates of the centre, y in metres)`); continue; }
+      const tag = `car #${i}${c?.id ? ' (' + c.id + ')' : ''}`,
+        num = (x) => Number.isFinite(x);
+      let carErr = 0;
+      const cerr = (m) => {
+        carErr++;
+        err(m);
+      };
+      if (typeof c?.id !== 'string' || !c.id) cerr(`${tag}: needs an id`);
+      else {
+        if (carIds.has(c.id)) cerr(`${tag}: duplicate id`);
+        carIds.add(c.id);
+      }
+      if (!Array.isArray(c?.size) || c.size.length !== 2 || !c.size.every((q) => num(q) && q >= CARS.minSize && q <= CARS.maxSize)) {
+        cerr(`${tag}: size must be [w, d] cells, each ${CARS.minSize} to ${CARS.maxSize}`);
+        continue;
+      }
+      if (
+        !Array.isArray(c.path) ||
+        c.path.length < 2 ||
+        c.path.length > 24 ||
+        !c.path.every((q) => Array.isArray(q) && (q.length === 2 || q.length === 3) && q.every(num))
+      ) {
+        cerr(`${tag}: path must be 2 to 24 points [x, z] or [x, z, y] (cell coordinates of the centre, y in metres)`);
+        continue;
+      }
       if (c.y != null && !num(c.y)) cerr(`${tag}: y must be a number (metres)`);
       if (c.path.some((q) => (q[2] ?? c.y ?? 0) < -2 || (q[2] ?? c.y ?? 0) > 40)) cerr(`${tag}: a deck height must be between -2 and 40 m`);
-      if (c.path.some((q) => q[0] - c.size[0] / 2 < 0.5 || q[1] - c.size[1] / 2 < 0.5 || q[0] + c.size[0] / 2 > w - 0.5 || q[1] + c.size[1] / 2 > h - 0.5)) cerr(`${tag}: the deck leaves the map at a path point`);
-      if (c.stops != null && (!Array.isArray(c.stops) || c.stops.length < 2 || !c.stops.every((q) => Number.isInteger(q) && q >= 0 && q < c.path.length) || new Set(c.stops).size !== c.stops.length)) cerr(`${tag}: stops must be two or more different path indices`);
+      if (c.path.some((q) => q[0] - c.size[0] / 2 < 0.5 || q[1] - c.size[1] / 2 < 0.5 || q[0] + c.size[0] / 2 > w - 0.5 || q[1] + c.size[1] / 2 > h - 0.5))
+        cerr(`${tag}: the deck leaves the map at a path point`);
+      if (
+        c.stops != null &&
+        (!Array.isArray(c.stops) ||
+          c.stops.length < 2 ||
+          !c.stops.every((q) => Number.isInteger(q) && q >= 0 && q < c.path.length) ||
+          new Set(c.stops).size !== c.stops.length)
+      )
+        cerr(`${tag}: stops must be two or more different path indices`);
       if (c.speed != null && !(c.speed >= 1 && c.speed <= 10)) cerr(`${tag}: speed must be 1 to 10 m/s`);
       if (c.dwell != null && !(c.dwell >= CARS.minDwell && c.dwell <= 60)) cerr(`${tag}: dwell must be ${CARS.minDwell} to 60 s (time to step on)`);
       if (c.phase != null && !num(c.phase)) cerr(`${tag}: phase must be a number`);
       if (carErr) continue;
-      const car = makeCar(c, cellM); if (!(car.cycle > 0) || car.legs.some((l) => !(l.len > 0.5))) { cerr(`${tag}: two stops are on the same spot (every run must be at least half a metre long)`); continue; }
+      const car = makeCar(c, cellM);
+      if (!(car.cycle > 0) || car.legs.some((l) => !(l.len > 0.5))) {
+        cerr(`${tag}: two stops are on the same spot (every run must be at least half a metre long)`);
+        continue;
+      }
       const mapLike = { kind: (x, z) => TILES[tile(x, z)], floor: floorOf };
-      for (const v of car.stops) if (!boardingCells(mapLike, car, v, STEP).length) cerr(`${tag}: nothing to board from at the stop on vertex ${v}: no floor within a step (${STEP} m) of the deck beside it`);
-      let bad = null;                                                                  // the deck sweeps the whole cycle: no wall in its way, and head room under a roof
+      for (const v of car.stops)
+        if (!boardingCells(mapLike, car, v, STEP).length)
+          cerr(`${tag}: nothing to board from at the stop on vertex ${v}: no floor within a step (${STEP} m) of the deck beside it`);
+      let bad = null; // the deck sweeps the whole cycle: no wall in its way, and head room under a roof
       for (let t = 0; t < car.cycle && !bad; t += 0.25) {
-        const st = carState(car, t), hw = c.size[0] * cellM / 2, hd = c.size[1] * cellM / 2;
-        for (const [dx, dz] of [[0, 0], [-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
-          const cx = Math.floor((st.x + dx * hw * 0.98) / cellM), cz = Math.floor((st.z + dz * hd * 0.98) / cellM), k = TILES[tile(cx, cz)];
-          if (k === 'wall' || k === 'door' || k === 'secret' || k === 'water') { bad = `drives into a ${k} at ${cx},${cz} (at ${t.toFixed(1)} s into its cycle)`; break; }
-          if (interior(tile(cx, cz)) && ceilOf(cx, cz) - st.y < MIN_HEADROOM) { bad = `has no head room under the roof at ${cx},${cz} (at ${t.toFixed(1)} s)`; break; }
+        const st = carState(car, t),
+          hw = (c.size[0] * cellM) / 2,
+          hd = (c.size[1] * cellM) / 2;
+        for (const [dx, dz] of [
+          [0, 0],
+          [-1, -1],
+          [1, -1],
+          [-1, 1],
+          [1, 1],
+          [0, -1],
+          [0, 1],
+          [-1, 0],
+          [1, 0],
+        ]) {
+          const cx = Math.floor((st.x + dx * hw * 0.98) / cellM),
+            cz = Math.floor((st.z + dz * hd * 0.98) / cellM),
+            k = TILES[tile(cx, cz)];
+          if (k === 'wall' || k === 'door' || k === 'secret' || k === 'water') {
+            bad = `drives into a ${k} at ${cx},${cz} (at ${t.toFixed(1)} s into its cycle)`;
+            break;
+          }
+          if (interior(tile(cx, cz)) && ceilOf(cx, cz) - st.y < MIN_HEADROOM) {
+            bad = `has no head room under the roof at ${cx},${cz} (at ${t.toFixed(1)} s)`;
+            break;
+          }
         }
       }
       if (bad) cerr(`${tag}: the deck ${bad}`);
     }
   }
-  const beltRects = [];                                                                // PT-045 (E8a): clocked conveyors
+  const beltRects = []; // clocked conveyors
   for (const [i, b] of (src.belts || []).entries()) {
     const tag = `belt #${i}`;
-    if (!Array.isArray(b?.rect) || b.rect.length !== 4 || b.rect.some((n) => !Number.isInteger(n)) || b.rect[0] > b.rect[2] || b.rect[1] > b.rect[3] || b.rect[0] < 0 || b.rect[1] < 0 || b.rect[2] >= w || b.rect[3] >= h) { err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`); continue; }
+    if (
+      !Array.isArray(b?.rect) ||
+      b.rect.length !== 4 ||
+      b.rect.some((n) => !Number.isInteger(n)) ||
+      b.rect[0] > b.rect[2] ||
+      b.rect[1] > b.rect[3] ||
+      b.rect[0] < 0 ||
+      b.rect[1] < 0 ||
+      b.rect[2] >= w ||
+      b.rect[3] >= h
+    ) {
+      err(`${tag}: rect must be [x0,z0,x1,z1] cells inside the grid`);
+      continue;
+    }
     const mode = b.mode ?? 'flip';
     if (mode !== 'flip' && mode !== 'run') err(`${tag}: mode must be 'flip' or 'run'`);
     if (!(b.period >= BELT.minPeriod)) err(`${tag}: period must be at least ${BELT.minPeriod} s`);
-    else if (mode === 'run' && !(b.on >= 2 && b.period - b.on >= 2)) err(`${tag}: a 'run' belt needs on >= 2 s and a rest of at least 2 s (period ${b.period}, on ${b.on})`);
+    else if (mode === 'run' && !(b.on >= 2 && b.period - b.on >= 2))
+      err(`${tag}: a 'run' belt needs on >= 2 s and a rest of at least 2 s (period ${b.period}, on ${b.on})`);
     if (b.phase != null && typeof b.phase !== 'number') err(`${tag}: phase must be a number`);
     if (b.speed != null && !(b.speed >= 0.5 && b.speed <= 8)) err(`${tag}: speed must be 0.5 to 8 m/s`);
-    let flow = 0; if (hasF) for (let cz = b.rect[1]; cz <= b.rect[3]; cz++) for (let cx = b.rect[0]; cx <= b.rect[2]; cx++) if (FX[src.fx[cz][cx]]?.flow) flow++;
+    let flow = 0;
+    if (hasF) for (let cz = b.rect[1]; cz <= b.rect[3]; cz++) for (let cx = b.rect[0]; cx <= b.rect[2]; cx++) if (FX[src.fx[cz][cx]]?.flow) flow++;
     if (!flow) err(`${tag}: no flowing floor (> < ^ v in the fx layer) under it`);
-    for (const r of beltRects) if (b.rect[0] <= r[2] && b.rect[2] >= r[0] && b.rect[1] <= r[3] && b.rect[3] >= r[1]) err(`${tag}: overlaps another belt (a cell would have two clocks)`);
+    for (const r of beltRects)
+      if (b.rect[0] <= r[2] && b.rect[2] >= r[0] && b.rect[1] <= r[3] && b.rect[3] >= r[1]) err(`${tag}: overlaps another belt (a cell would have two clocks)`);
     beltRects.push(b.rect);
   }
-  for (const [i, v] of (src.vacuum || []).entries()) {                               // PT-033: regions of vacuum
-    const tag = `vacuum #${i}`, cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && tile(c[0], c[1]) === 'D';
-    if (!Array.isArray(v?.rect) || v.rect.length !== 4 || !v.rect.every(Number.isInteger) || v.rect[0] > v.rect[2] || v.rect[1] > v.rect[3] || v.rect[0] < 0 || v.rect[1] < 0 || v.rect[2] >= w || v.rect[3] >= h) err(`${tag}: rect must be [x0, z0, x1, z1] inside the grid`);
+  for (const [i, v] of (src.vacuum || []).entries()) {
+    // regions of vacuum
+    const tag = `vacuum #${i}`,
+      cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && tile(c[0], c[1]) === 'D';
+    if (
+      !Array.isArray(v?.rect) ||
+      v.rect.length !== 4 ||
+      !v.rect.every(Number.isInteger) ||
+      v.rect[0] > v.rect[2] ||
+      v.rect[1] > v.rect[3] ||
+      v.rect[0] < 0 ||
+      v.rect[1] < 0 ||
+      v.rect[2] >= w ||
+      v.rect[3] >= h
+    )
+      err(`${tag}: rect must be [x0, z0, x1, z1] inside the grid`);
     if (!Array.isArray(v?.seals) || !v.seals.length || !v.seals.every(cellOk)) err(`${tag}: seals must list door cells (a hull door)`);
     if (v?.and != null && (!Array.isArray(v.and) || !v.and.every(cellOk))) err(`${tag}: and must list door cells`);
   }
-  const ventAts = new Set();                                                          // PT-032: launch vents
+  const ventAts = new Set(); // launch vents
   for (const [i, v] of (src.vents || []).entries()) {
-    const tag = `vent #${i}`, cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && c[0] >= 0 && c[1] >= 0 && c[0] < w && c[1] < h;
-    if (!cellOk(v?.at) || !cellOk(v?.to)) { err(`${tag}: at and to must be [x, z] cells inside the grid`); continue; }
+    const tag = `vent #${i}`,
+      cellOk = (c) => Array.isArray(c) && c.length === 2 && c.every(Number.isInteger) && c[0] >= 0 && c[1] >= 0 && c[0] < w && c[1] < h;
+    if (!cellOk(v?.at) || !cellOk(v?.to)) {
+      err(`${tag}: at and to must be [x, z] cells inside the grid`);
+      continue;
+    }
     if (!walkable(tile(v.at[0], v.at[1]))) err(`${tag}: the plate at ${v.at} is not on a floor cell`);
     if (!walkable(tile(v.to[0], v.to[1]))) err(`${tag}: it lands at ${v.to}, which is not a floor cell (the void and walls are no landing)`);
     if (v.at[0] === v.to[0] && v.at[1] === v.to[1]) err(`${tag}: it lands on its own plate`);
     if (!(v.time >= LOWG.minTime && v.time <= LOWG.maxTime)) err(`${tag}: time must be in [${LOWG.minTime}, ${LOWG.maxTime}] s`);
     if (v.g != null && !(v.g >= 0.5 && v.g <= 20)) err(`${tag}: g must be in [0.5, 20]`);
-    if (ventAts.has(v.at.join(','))) err(`${tag}: two vents on one plate`); ventAts.add(v.at.join(','));
-    if (walkable(tile(v.at[0], v.at[1])) && walkable(tile(v.to[0], v.to[1])) && v.time >= LOWG.minTime && v.time <= LOWG.maxTime) {          // the ideal arc (no steering) must be CLEAR: no wall, no ledge higher than the body, no roof lower than its head, from plate to landing
-      const g = v.g ?? LOWG.g, n = Math.max(1, Math.round(v.time / TICK)), tt = n * TICK, x0 = (v.at[0] + 0.5) * (src.cellSize ?? CELL), z0 = (v.at[1] + 0.5) * (src.cellSize ?? CELL), x1 = (v.to[0] + 0.5) * (src.cellSize ?? CELL), z1 = (v.to[1] + 0.5) * (src.cellSize ?? CELL);
-      const y0 = floorOf(v.at[0], v.at[1]), y1 = floorOf(v.to[0], v.to[1]); let vy = (y1 - y0) / tt + 0.5 * g * (tt + TICK), y = y0, bad = null;
+    if (ventAts.has(v.at.join(','))) err(`${tag}: two vents on one plate`);
+    ventAts.add(v.at.join(','));
+    if (walkable(tile(v.at[0], v.at[1])) && walkable(tile(v.to[0], v.to[1])) && v.time >= LOWG.minTime && v.time <= LOWG.maxTime) {
+      // the ideal arc (no steering) must be CLEAR: no wall, no ledge higher than the body, no roof lower than its head, from plate to landing
+      const g = v.g ?? LOWG.g,
+        n = Math.max(1, Math.round(v.time / TICK)),
+        tt = n * TICK,
+        x0 = (v.at[0] + 0.5) * (src.cellSize ?? CELL),
+        z0 = (v.at[1] + 0.5) * (src.cellSize ?? CELL),
+        x1 = (v.to[0] + 0.5) * (src.cellSize ?? CELL),
+        z1 = (v.to[1] + 0.5) * (src.cellSize ?? CELL);
+      const y0 = floorOf(v.at[0], v.at[1]),
+        y1 = floorOf(v.to[0], v.to[1]);
+      let vy = (y1 - y0) / tt + 0.5 * g * (tt + TICK),
+        y = y0,
+        bad = null;
       for (let i = 1; i <= n && !bad; i++) {
-        vy -= g * TICK; y += vy * TICK; const x = x0 + (x1 - x0) * i / n, z = z0 + (z1 - z0) * i / n, cx = Math.floor(x / (src.cellSize ?? CELL)), cz = Math.floor(z / (src.cellSize ?? CELL)), c = tile(cx, cz), kind = TILES[c];
+        vy -= g * TICK;
+        y += vy * TICK;
+        const x = x0 + ((x1 - x0) * i) / n,
+          z = z0 + ((z1 - z0) * i) / n,
+          cx = Math.floor(x / (src.cellSize ?? CELL)),
+          cz = Math.floor(z / (src.cellSize ?? CELL)),
+          c = tile(cx, cz),
+          kind = TILES[c];
         if (kind === 'wall' || kind === 'door' || kind === 'secret') bad = `passes through a ${kind} at ${cx},${cz}`;
         else if (kind === 'void' || kind === 'water') continue;
-        else if (i < n - 2 && floorOf(cx, cz) > y + STEP) bad = `a ledge at ${cx},${cz} is higher than the body there (y ${y.toFixed(2)}, floor ${floorOf(cx, cz).toFixed(2)})`;
-        else if (interior(c) && ceilOf(cx, cz) < y + PLAYER.eye + 0.35) bad = `no headroom at ${cx},${cz} (roof ${ceilOf(cx, cz).toFixed(2)}, the body's head ${(y + PLAYER.eye + 0.3).toFixed(2)}): a vent needs open sky or a high roof`;
+        else if (i < n - 2 && floorOf(cx, cz) > y + STEP)
+          bad = `a ledge at ${cx},${cz} is higher than the body there (y ${y.toFixed(2)}, floor ${floorOf(cx, cz).toFixed(2)})`;
+        else if (interior(c) && ceilOf(cx, cz) < y + PLAYER.eye + 0.35)
+          bad = `no headroom at ${cx},${cz} (roof ${ceilOf(cx, cz).toFixed(2)}, the body's head ${(y + PLAYER.eye + 0.3).toFixed(2)}): a vent needs open sky or a high roof`;
       }
       if (bad) err(`${tag}: the arc from ${v.at} to ${v.to} ${bad}`);
     }
   }
-  const sectorOf = new Map(), sectorIds = new Set();
+  const sectorOf = new Map(),
+    sectorIds = new Set();
   for (const [i, s] of (src.sectors || []).entries()) {
     const tag = `sector #${i} (${s.id})`;
-    if (!s.id || sectorIds.has(s.id)) err(`${tag}: missing or duplicate id`); sectorIds.add(s.id);
-    if (!Array.isArray(s.cells) || !s.cells.length) { err(`${tag}: no cells`); continue; }
+    if (!s.id || sectorIds.has(s.id)) err(`${tag}: missing or duplicate id`);
+    sectorIds.add(s.id);
+    if (!Array.isArray(s.cells) || !s.cells.length) {
+      err(`${tag}: no cells`);
+      continue;
+    }
     if (!(Number.isFinite(s.low) && Number.isFinite(s.high) && s.low < s.high)) err(`${tag}: needs numeric low < high (metres)`);
     if (s.start != null && s.start !== 'low' && s.start !== 'high') err(`${tag}: start must be 'low' or 'high'`);
     if (s.speed != null && !(s.speed > 0)) err(`${tag}: speed must be positive`);
-    if (s.cycle != null) {                                                               // PT-029: a timing platform rises and falls on a clock of its own
-      const C = s.cycle, sp = s.speed ?? 1.2, mv = (s.high - s.low) / sp;
-      if (typeof C !== 'object' || !(C.period >= 4) || !(C.hold >= 1.5) || (C.phase != null && typeof C.phase !== 'number')) err(`${tag}: cycle needs { period >= 4, hold >= 1.5, phase }`);
-      else if (C.period - C.hold - 2 * mv < 1.5) err(`${tag}: a platform must wait at the bottom for at least 1.5 s (period ${C.period}, hold ${C.hold}, travel ${mv.toFixed(2)} s each way)`);
+    if (s.cycle != null) {
+      // a timing platform rises and falls on a clock of its own
+      const C = s.cycle,
+        sp = s.speed ?? 1.2,
+        mv = (s.high - s.low) / sp;
+      if (typeof C !== 'object' || !(C.period >= 4) || !(C.hold >= 1.5) || (C.phase != null && typeof C.phase !== 'number'))
+        err(`${tag}: cycle needs { period >= 4, hold >= 1.5, phase }`);
+      else if (C.period - C.hold - 2 * mv < 1.5)
+        err(`${tag}: a platform must wait at the bottom for at least 1.5 s (period ${C.period}, hold ${C.hold}, travel ${mv.toFixed(2)} s each way)`);
     }
     for (const [cx, cz] of s.cells) {
       if (!walkable(tile(cx, cz))) err(`${tag}: cell ${cx},${cz} is not a floor cell`);
-      if (sectorOf.has(cx + ',' + cz)) err(`${tag}: cell ${cx},${cz} is already in another sector`); sectorOf.set(cx + ',' + cz, s.id);
+      if (sectorOf.has(cx + ',' + cz)) err(`${tag}: cell ${cx},${cz} is already in another sector`);
+      sectorOf.set(cx + ',' + cz, s.id);
       if (interior(tile(cx, cz)) && ceilOf(cx, cz) - s.high < MIN_HEADROOM) err(`${tag}: cell ${cx},${cz} has no headroom at its high position`);
     }
   }
-  for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) {
-    const c = tile(cx, cz);
-    if (hasF && src.fx[cz][cx] in FX && !walkable(c)) err(`fx '${src.fx[cz][cx]}' at ${cx},${cz} is not on a floor cell`);
-    if (hasF && FX[src.fx[cz][cx]]?.pulse && !pulseRects.some((r) => cx >= r[0] && cx <= r[2] && cz >= r[1] && cz <= r[3])) err(`spore bed at ${cx},${cz} is in no pulse region (it would be on forever)`);
-    if (walkable(c) && interior(c)) { const room = ceilOf(cx, cz) - floorOf(cx, cz); if (room < MIN_HEADROOM) err(`interior cell ${cx},${cz} has ${room.toFixed(1)} m of headroom (needs ${MIN_HEADROOM})`); }
-    if (c === 'D' || c === 'X') for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const n = tile(cx + dx, cz + dz); if (walkable(n) && Math.abs(floorOf(cx + dx, cz + dz) - floorOf(cx, cz)) > 1e-6) err(`door at ${cx},${cz} is not on level ground (neighbour ${cx + dx},${cz + dz} differs)`); }
-  }
+  for (let cz = 0; cz < h; cz++)
+    for (let cx = 0; cx < w; cx++) {
+      const c = tile(cx, cz);
+      if (hasF && src.fx[cz][cx] in FX && !walkable(c)) err(`fx '${src.fx[cz][cx]}' at ${cx},${cz} is not on a floor cell`);
+      if (hasF && FX[src.fx[cz][cx]]?.pulse && !pulseRects.some((r) => cx >= r[0] && cx <= r[2] && cz >= r[1] && cz <= r[3]))
+        err(`spore bed at ${cx},${cz} is in no pulse region (it would be on forever)`);
+      if (walkable(c) && interior(c)) {
+        const room = ceilOf(cx, cz) - floorOf(cx, cz);
+        if (room < MIN_HEADROOM) err(`interior cell ${cx},${cz} has ${room.toFixed(1)} m of headroom (needs ${MIN_HEADROOM})`);
+      }
+      if (c === 'D' || c === 'X')
+        for (const [dx, dz] of [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ]) {
+          const n = tile(cx + dx, cz + dz);
+          if (walkable(n) && Math.abs(floorOf(cx + dx, cz + dz) - floorOf(cx, cz)) > 1e-6)
+            err(`door at ${cx},${cz} is not on level ground (neighbour ${cx + dx},${cz + dz} differs)`);
+        }
+    }
   const closetCells = new Set();
-  for (const c of src.closets || []) { if (!Array.isArray(c.at) || tile(c.at[0], c.at[1]) !== 'X') err(`closets entry ${JSON.stringify(c.at)} is not on an 'X' tile`); else closetCells.add(c.at.join(',')); }
-  for (let cz = 0; cz < h; cz++) for (let cx = 0; cx < w; cx++) if (tile(cx, cz) === 'X' && !closetCells.has(cx + ',' + cz)) err(`'X' tile at ${cx},${cz} has no closets entry`);
+  for (const c of src.closets || []) {
+    if (!Array.isArray(c.at) || tile(c.at[0], c.at[1]) !== 'X') err(`closets entry ${JSON.stringify(c.at)} is not on an 'X' tile`);
+    else closetCells.add(c.at.join(','));
+  }
+  for (let cz = 0; cz < h; cz++)
+    for (let cx = 0; cx < w; cx++) if (tile(cx, cz) === 'X' && !closetCells.has(cx + ',' + cz)) err(`'X' tile at ${cx},${cz} has no closets entry`);
   const actionsOf = (list) => (Array.isArray(list) ? list : []);
   const groups = new Set(ents.filter((e) => e.group).map((e) => e.group));
-  const owners = [...ents.filter((e) => e.type === 'switch').map((e) => ({ tag: `switch '${e.id}'`, do: e.do })), ...(src.triggers || []).map((t) => ({ tag: `trigger '${t.id}'`, do: t.do }))];
+  const owners = [
+    ...ents.filter((e) => e.type === 'switch').map((e) => ({ tag: `switch '${e.id}'`, do: e.do })),
+    ...(src.triggers || []).map((t) => ({ tag: `trigger '${t.id}'`, do: t.do })),
+  ];
   for (const o of owners) for (const a of actionsOf(o.do)) if (a?.spawn?.group) groups.add(a.spawn.group);
-  const doorCells = new Set([...(src.doors || []).map((d) => d.at.join(',')), ...closetCells, ...(src.secrets || []).map((s) => s.panel.join(','))]), opened = new Set();
+  const doorCells = new Set([...(src.doors || []).map((d) => d.at.join(',')), ...closetCells, ...(src.secrets || []).map((s) => s.panel.join(','))]),
+    opened = new Set();
   const drivenSectors = new Set();
   const checkAction = (tag, a) => {
     if (!a || typeof a !== 'object') return err(`${tag}: action must be an object`);
-    const keys = Object.keys(a); if (keys.length !== 1 || !ACTION_KEYS.includes(keys[0])) return err(`${tag}: an action has exactly one of ${ACTION_KEYS.join(', ')} (got ${keys.join(',') || 'nothing'})`);
-    const k = keys[0], v = a[k];
-    if (['open', 'close', 'unlock', 'seal', 'unseal', 'toggle'].includes(k)) { if (!Array.isArray(v) || v.length !== 2 || !doorCells.has(v.join(','))) err(`${tag}: ${k} needs the [cx,cz] of a door, closet or secret panel (got ${JSON.stringify(v)})`); else if (k === 'open' || k === 'toggle' || k === 'unlock') opened.add(v.join(',')); }
-    else if (k === 'wake') { if (!groups.has(v)) err(`${tag}: wake refers to unknown group '${v}'`); }
-    else if (k === 'spawn') { if (!v || !ENEMIES[v.kind]) err(`${tag}: spawn needs a known enemy kind`); else if (!Array.isArray(v.at) || !walkable(tile(Math.floor(v.at[0]), Math.floor(v.at[1])))) err(`${tag}: spawn point ${JSON.stringify(v.at)} is not on a floor cell`); }
-    else if (k === 'sector') { if (!v || !sectorIds.has(v.id) || !['low', 'high', 'toggle'].includes(v.to)) err(`${tag}: sector needs {id, to: low|high|toggle} for a known sector`); else drivenSectors.add(v.id); }
-    else if (k === 'message') { if (!msgIds.has(v)) err(`${tag}: message '${v}' does not exist`); }
-    else if (k === 'exit') { if (!v || !['unlock', 'lock'].includes(v.set)) err(`${tag}: exit needs {set: 'unlock'|'lock', id?}`); }
-    else if (k === 'shake') { if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`); }
-    else if (k === 'sound') { if (typeof v !== 'string' || !/^[a-z0-9_]{2,32}$/.test(v)) err(`${tag}: sound must be the name of a sound`); }                    // PT-043: a toll from a trigger (the name is checked against the synth by a test)
-    else if (k === 'tremor') { if (!(v > 0 && v <= 3)) err(`${tag}: tremor must be in (0, 3]`); }                                                       // PT-043: the view shakes and a low sound runs
-    else if (k === 'lamp') { if (v !== 'plain' && v !== 'own') err(`${tag}: lamp must be 'plain' or 'own'`); else if (!src.range) err(`${tag}: the lamp action is for the dev range only (the map must say range: true)`); }                                 // PT-045: switch the hand lantern between the plain one and Ines's own
-    else if (k === 'silence') { if (v !== true) err(`${tag}: silence must be true`); }
-    else if (k === 'cinematic') { if (typeof v !== 'string' || !/^[a-z0-9-]{2,32}$/.test(v)) err(`${tag}: cinematic must be the id of a scene (a test checks it exists)`); }                        // PT-063 (R13): a story scene; the sim only announces it, the shell plays it
-    else if (k === 'beatOff') { if (v !== true) err(`${tag}: beatOff must be true`); }                                                                  // PT-043: the Hive's beat stops (hive.js zoneBeat reads w.beatOff)                                                                 // PT-043: from then on the score and the ambience are cut
-    else if (k === 'lights') { if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`); }
-    else if (k === 'objective') { if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`); }
-    else if (k === 'choose') { if (!v || !/^[a-z0-9-]{1,24}$/.test(v.id ?? '') || !/^[a-z0-9-]{1,24}$/.test(v.value ?? '')) err(`${tag}: choose needs {id, value} of 1-24 lower-case letters, digits or dashes`); }                   // PT-039: a remembered choice (progress.choices, read by later maps)
+    const keys = Object.keys(a);
+    if (keys.length !== 1 || !ACTION_KEYS.includes(keys[0]))
+      return err(`${tag}: an action has exactly one of ${ACTION_KEYS.join(', ')} (got ${keys.join(',') || 'nothing'})`);
+    const k = keys[0],
+      v = a[k];
+    if (['open', 'close', 'unlock', 'seal', 'unseal', 'toggle'].includes(k)) {
+      if (!Array.isArray(v) || v.length !== 2 || !doorCells.has(v.join(',')))
+        err(`${tag}: ${k} needs the [cx,cz] of a door, closet or secret panel (got ${JSON.stringify(v)})`);
+      else if (k === 'open' || k === 'toggle' || k === 'unlock') opened.add(v.join(','));
+    } else if (k === 'wake') {
+      if (!groups.has(v)) err(`${tag}: wake refers to unknown group '${v}'`);
+    } else if (k === 'spawn') {
+      if (!v || !ENEMIES[v.kind]) err(`${tag}: spawn needs a known enemy kind`);
+      else if (!Array.isArray(v.at) || !walkable(tile(Math.floor(v.at[0]), Math.floor(v.at[1]))))
+        err(`${tag}: spawn point ${JSON.stringify(v.at)} is not on a floor cell`);
+    } else if (k === 'sector') {
+      if (!v || !sectorIds.has(v.id) || !['low', 'high', 'toggle'].includes(v.to)) err(`${tag}: sector needs {id, to: low|high|toggle} for a known sector`);
+      else drivenSectors.add(v.id);
+    } else if (k === 'message') {
+      if (!msgIds.has(v)) err(`${tag}: message '${v}' does not exist`);
+    } else if (k === 'exit') {
+      if (!v || !['unlock', 'lock'].includes(v.set)) err(`${tag}: exit needs {set: 'unlock'|'lock', id?}`);
+    } else if (k === 'shake') {
+      if (!(v > 0 && v <= 3)) err(`${tag}: shake must be in (0, 3]`);
+    } else if (k === 'sound') {
+      if (typeof v !== 'string' || !/^[a-z0-9_]{2,32}$/.test(v)) err(`${tag}: sound must be the name of a sound`);
+    } // a toll from a trigger (the name is checked against the synth by a test)
+    else if (k === 'tremor') {
+      if (!(v > 0 && v <= 3)) err(`${tag}: tremor must be in (0, 3]`);
+    } // the view shakes and a low sound runs
+    else if (k === 'lamp') {
+      if (v !== 'plain' && v !== 'own') err(`${tag}: lamp must be 'plain' or 'own'`);
+      else if (!src.range) err(`${tag}: the lamp action is for the dev range only (the map must say range: true)`);
+    } // switch the hand lantern between the plain one and Ines's own
+    else if (k === 'silence') {
+      if (v !== true) err(`${tag}: silence must be true`);
+    } else if (k === 'cinematic') {
+      if (typeof v !== 'string' || !/^[a-z0-9-]{2,32}$/.test(v)) err(`${tag}: cinematic must be the id of a scene (a test checks it exists)`);
+    } // a story scene; the sim only announces it, the shell plays it
+    else if (k === 'beatOff') {
+      if (v !== true) err(`${tag}: beatOff must be true`);
+    } // the Hive's beat stops (hive.js zoneBeat reads w.beatOff) // from then on the score and the ambience are cut
+    else if (k === 'lights') {
+      if (!(v >= 0.05 && v <= 1.5)) err(`${tag}: lights must be a level in [0.05, 1.5]`);
+    } else if (k === 'objective') {
+      if (typeof v !== 'string' || !v.trim() || v.length > 80) err(`${tag}: objective must be 1-80 characters`);
+    } else if (k === 'choose') {
+      if (!v || !/^[a-z0-9-]{1,24}$/.test(v.id ?? '') || !/^[a-z0-9-]{1,24}$/.test(v.value ?? ''))
+        err(`${tag}: choose needs {id, value} of 1-24 lower-case letters, digits or dashes`);
+    } // a remembered choice (progress.choices, read by later maps)
     if (k === 'spawn' && v?.variant != null && !VARIANTS[v.variant]) err(`${tag}: unknown variant '${v.variant}'`);
   };
   const swIds = new Set();
-  for (const e of ents) if (e.type === 'switch') {
-    const tag = `switch '${e.id}'`;
-    if (!e.id || swIds.has(e.id)) err(`${tag}: missing or duplicate id`); swIds.add(e.id);
-    const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'];
-    if (!dir) err(`${tag}: wall must be north|south|east|west`);
-    else if (Array.isArray(e.at) && !WALL_CHARS.has(tile(Math.floor(e.at[0]) + dir[0], Math.floor(e.at[1]) + dir[1]))) err(`${tag}: is not mounted on a wall (the ${e.wall ?? 'north'} neighbour is not a wall)`);
-    if (!Array.isArray(e.do) || !e.do.length) err(`${tag}: needs a non-empty do[] list`);
-    if (e.needs != null && (!Array.isArray(e.needs) || !e.needs.length || !e.needs.every((k) => KEYS[k]))) err(`${tag}: needs must list known keys (${Object.keys(KEYS).join(', ')})`);
-    for (const a of actionsOf(e.do)) checkAction(tag, a);
-  }
-  if (src.keyLabels != null && (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))) err('keyLabels must map known keys to 1-24 character names');
+  for (const e of ents)
+    if (e.type === 'switch') {
+      const tag = `switch '${e.id}'`;
+      if (!e.id || swIds.has(e.id)) err(`${tag}: missing or duplicate id`);
+      swIds.add(e.id);
+      const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[e.wall ?? 'north'];
+      if (!dir) err(`${tag}: wall must be north|south|east|west`);
+      else if (Array.isArray(e.at) && !WALL_CHARS.has(tile(Math.floor(e.at[0]) + dir[0], Math.floor(e.at[1]) + dir[1])))
+        err(`${tag}: is not mounted on a wall (the ${e.wall ?? 'north'} neighbour is not a wall)`);
+      if (!Array.isArray(e.do) || !e.do.length) err(`${tag}: needs a non-empty do[] list`);
+      if (e.needs != null && (!Array.isArray(e.needs) || !e.needs.length || !e.needs.every((k) => KEYS[k])))
+        err(`${tag}: needs must list known keys (${Object.keys(KEYS).join(', ')})`);
+      for (const a of actionsOf(e.do)) checkAction(tag, a);
+    }
+  if (
+    src.keyLabels != null &&
+    (typeof src.keyLabels !== 'object' || Object.entries(src.keyLabels).some(([k, v]) => !KEYS[k] || typeof v !== 'string' || !v.trim() || v.length > 24))
+  )
+    err('keyLabels must map known keys to 1-24 character names');
   if (src.atmosphere?.ambient != null && !(src.atmosphere.ambient >= 0.05 && src.atmosphere.ambient <= 1.5)) err('atmosphere.ambient must be in [0.05, 1.5]');
   if (src.atmosphere?.silence != null && typeof src.atmosphere.silence !== 'boolean') err('atmosphere.silence must be true or false');
   if (src.noiseTell != null && typeof src.noiseTell !== 'boolean') err('noiseTell must be true or false');
@@ -474,38 +1001,84 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.atmosphere?.echo != null && !(src.atmosphere.echo >= 1 && src.atmosphere.echo <= 4)) err('atmosphere.echo must be a number from 1 to 4');
   if (src.chimes != null) {
     if (!Array.isArray(src.chimes)) err('chimes must be a list of { id, phrase, window }');
-    else { const ids = new Set(); for (const [i, q] of src.chimes.entries()) { const tag = `chimes #${i}`;
-      if (typeof q?.id !== 'string' || !q.id) err(`${tag}: needs an id`); else { if (ids.has(q.id)) err(`${tag}: duplicate id '${q.id}'`); ids.add(q.id); }
-      if (!Array.isArray(q?.phrase) || q.phrase.length < 2 || q.phrase.length > 8 || !q.phrase.every((n) => Number.isInteger(n) && n >= 0 && n < 5)) err(`${tag}: phrase must be 2 to 8 notes, each 0 to 4`);
-      if (!(q?.window >= 1 && q.window <= 30)) err(`${tag}: window must be 1 to 30 seconds between notes`); } }
-    const chimeProps = (src.entities || []).filter((q) => q.type === 'prop' && q.kind === 'chime'); if (Array.isArray(src.chimes) && src.chimes.length && !chimeProps.length) err('a map with chimes needs at least one chime prop');
+    else {
+      const ids = new Set();
+      for (const [i, q] of src.chimes.entries()) {
+        const tag = `chimes #${i}`;
+        if (typeof q?.id !== 'string' || !q.id) err(`${tag}: needs an id`);
+        else {
+          if (ids.has(q.id)) err(`${tag}: duplicate id '${q.id}'`);
+          ids.add(q.id);
+        }
+        if (!Array.isArray(q?.phrase) || q.phrase.length < 2 || q.phrase.length > 8 || !q.phrase.every((n) => Number.isInteger(n) && n >= 0 && n < 5))
+          err(`${tag}: phrase must be 2 to 8 notes, each 0 to 4`);
+        if (!(q?.window >= 1 && q.window <= 30)) err(`${tag}: window must be 1 to 30 seconds between notes`);
+      }
+    }
+    const chimeProps = (src.entities || []).filter((q) => q.type === 'prop' && q.kind === 'chime');
+    if (Array.isArray(src.chimes) && src.chimes.length && !chimeProps.length) err('a map with chimes needs at least one chime prop');
   }
   if (src.lantern != null) {
-    const l = src.lantern; if (typeof l !== 'object' || Array.isArray(l)) err('lantern must be { oil, max, eternal }');
-    else { if (!(l.oil >= 0 && l.oil <= 600)) err('lantern.oil must be 0 to 600'); if (l.max != null && !(l.max >= 1 && l.max <= 600)) err('lantern.max must be 1 to 600'); if (l.eternal != null && typeof l.eternal !== 'boolean') err('lantern.eternal must be true or false'); if (src.atmosphere?.dark !== true) err('a lantern needs atmosphere.dark: true (it is carried where it is dark)'); }
+    const l = src.lantern;
+    if (typeof l !== 'object' || Array.isArray(l)) err('lantern must be { oil, max, eternal }');
+    else {
+      if (!(l.oil >= 0 && l.oil <= 600)) err('lantern.oil must be 0 to 600');
+      if (l.max != null && !(l.max >= 1 && l.max <= 600)) err('lantern.max must be 1 to 600');
+      if (l.eternal != null && typeof l.eternal !== 'boolean') err('lantern.eternal must be true or false');
+      if (src.atmosphere?.dark !== true) err('a lantern needs atmosphere.dark: true (it is carried where it is dark)');
+    }
   }
   if (src.atmosphere?.look != null && !LOOKS[src.atmosphere.look]) err(`atmosphere.look must be one of ${Object.keys(LOOKS).join(', ')}`);
   const trIds = new Set();
   for (const t of src.triggers || []) {
     const tag = `trigger '${t.id}'`;
-    if (!t.id || trIds.has(t.id)) err(`${tag}: missing or duplicate id`); trIds.add(t.id);
-    const whens = Array.isArray(t.when) ? t.when : [t.when];                                       // PT-033: a list of conditions is an AND (the Hollow Stair: all four levers)
-    if (Array.isArray(t.when) && (t.when.length < 2 || t.when.some((q) => q === 'enter' || q === 'start'))) err(`${tag}: a list of conditions needs two or more of key: dead: msg: time: sector: lit:`);
+    if (!t.id || trIds.has(t.id)) err(`${tag}: missing or duplicate id`);
+    trIds.add(t.id);
+    const whens = Array.isArray(t.when) ? t.when : [t.when]; // a list of conditions is an AND (the Hollow Stair: all four levers)
+    if (Array.isArray(t.when) && (t.when.length < 2 || t.when.some((q) => q === 'enter' || q === 'start')))
+      err(`${tag}: a list of conditions needs two or more of key: dead: msg: time: sector: lit:`);
     for (const wn0 of whens.map((q) => String(q ?? ''))) {
-    const neg = wn0.startsWith('not:'), wn = neg ? wn0.slice(4) : wn0;                                          // PT-037: 'not:<condition>' is the opposite of any condition that is not a position or the start (a seed that ripens unless its bell is dead: not:dead:seed)
-    if (neg && (wn === 'enter' || wn === 'start' || wn.startsWith('not:'))) { err(`${tag}: 'not:' needs a key: dead: msg: time: sector: or lit: condition (got '${wn0}')`); continue; }
-    if (wn === 'enter') { if (!Array.isArray(t.at) || t.at.length !== 2 || !t.at.every(Number.isFinite)) err(`${tag}: 'enter' needs at:[cx,cz]`); }
-    else if (wn.startsWith('key:')) { if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`); }
-    else if (wn.startsWith('dead:')) { if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`); }
-    else if (wn.startsWith('msg:')) { if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`); }
-    else if (wn.startsWith('seq:')) { if (!(src.chimes || []).some((q) => q.id === wn.slice(4))) err(`${tag}: unknown phrase in '${wn}'`); }                       // PT-038: a chime phrase has been played
-    else if (wn.startsWith('choice:')) { if (!/^choice:[a-z0-9-]{1,24}=[a-z0-9-]{1,24}$/.test(wn)) err(`${tag}: '${wn}' must be choice:<id>=<value>`); }                      // PT-039: a choice an earlier map recorded
-    else if (wn.startsWith('hp:')) { const m = /^hp:([A-Za-z0-9_-]+)<([0-9.]+)$/.exec(wn); if (!m || !(Number(m[2]) > 0 && Number(m[2]) <= 1)) err(`${tag}: '${wn}' must be hp:<group><fraction between 0 and 1>`); else if (!groups.has(m[1])) err(`${tag}: unknown group in '${wn}'`); }          // PT-043: a group has less than that share of its hit points left (phases.js)
-    else if (wn === 'lamp:on') { if (!src.lantern) err(`${tag}: lamp:on needs a map with a lantern`); }                                                           // PT-043: the hand lantern is lit (the Unrung Gate)
-    else if (wn.startsWith('lit:')) { if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`); }
-    else if (wn.startsWith('time:')) { if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`); }
-    else if (wn.startsWith('sector:')) { const [, id, pos] = wn.split(':'); if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`); }
-    else if (wn !== 'start') err(`${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> | hp:<group><fraction (got '${wn}')`);
+      const neg = wn0.startsWith('not:'),
+        // 'not:<condition>' is the opposite of any condition that is not a position or the start (a seed that ripens unless its bell is dead:
+        // not:dead:seed)
+        wn = neg ? wn0.slice(4) : wn0;
+      if (neg && (wn === 'enter' || wn === 'start' || wn.startsWith('not:'))) {
+        err(`${tag}: 'not:' needs a key: dead: msg: time: sector: or lit: condition (got '${wn0}')`);
+        continue;
+      }
+      if (wn === 'enter') {
+        if (!Array.isArray(t.at) || t.at.length !== 2 || !t.at.every(Number.isFinite)) err(`${tag}: 'enter' needs at:[cx,cz]`);
+      } else if (wn.startsWith('key:')) {
+        if (!KEYS[wn.slice(4)]) err(`${tag}: unknown key in '${wn}'`);
+      } else if (wn.startsWith('dead:')) {
+        if (!groups.has(wn.slice(5))) err(`${tag}: unknown group in '${wn}'`);
+      } else if (wn.startsWith('msg:')) {
+        if (!msgIds.has(wn.slice(4))) err(`${tag}: unknown message in '${wn}'`);
+      } else if (wn.startsWith('seq:')) {
+        if (!(src.chimes || []).some((q) => q.id === wn.slice(4))) err(`${tag}: unknown phrase in '${wn}'`);
+      } // a chime phrase has been played
+      else if (wn.startsWith('choice:')) {
+        if (!/^choice:[a-z0-9-]{1,24}=[a-z0-9-]{1,24}$/.test(wn)) err(`${tag}: '${wn}' must be choice:<id>=<value>`);
+      } // a choice an earlier map recorded
+      else if (wn.startsWith('hp:')) {
+        const m = /^hp:([A-Za-z0-9_-]+)<([0-9.]+)$/.exec(wn);
+        if (!m || !(Number(m[2]) > 0 && Number(m[2]) <= 1)) err(`${tag}: '${wn}' must be hp:<group><fraction between 0 and 1>`);
+        else if (!groups.has(m[1])) err(`${tag}: unknown group in '${wn}'`);
+      } // a group has less than that share of its hit points left (phases.js)
+      else if (wn === 'lamp:on') {
+        if (!src.lantern) err(`${tag}: lamp:on needs a map with a lantern`);
+      } // the hand lantern is lit (the Unrung Gate)
+      else if (wn.startsWith('lit:')) {
+        if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`);
+      } else if (wn.startsWith('time:')) {
+        if (!(Number(wn.slice(5)) >= 0)) err(`${tag}: bad time in '${wn}'`);
+      } else if (wn.startsWith('sector:')) {
+        const [, id, pos] = wn.split(':');
+        if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`);
+      } else if (wn !== 'start')
+        err(
+          `${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> | hp:<group><fraction (got '${wn}')`,
+        );
     }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);
     for (const a of actionsOf(t.do)) checkAction(tag, a);
@@ -516,19 +1089,39 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
   if (src.quality != null && (typeof src.quality !== 'object' || Array.isArray(src.quality))) err('quality must be an object');
   for (const d of src.doors || []) if (d.remote && !d.open && !opened.has(d.at.join(','))) err(`remote door ${d.at} is never opened by any switch or trigger`);
   for (const c of closetCells) if (!opened.has(c)) err(`closet ${c} is never opened by any switch or trigger`);
-  const exitIds = new Set(), exitCells = new Map(); let exitN = 0;
-  for (const e of ents) if (e.type === 'exit') {           // ids: explicit, else 'exit' + the exit's index among ALL exits (exactly what MapData does; audit R04)
-    if (e.dest != null && e.dest !== 'next' && e.dest !== 'secret') err(`exit at ${e.at}: dest must be 'next' or 'secret'`);
-    const id = e.id ?? 'exit' + exitN; exitN++; if (exitIds.has(id)) err(`duplicate exit id '${id}'`); exitIds.add(id);
-    // two exits on one cell: the sim takes the first, so a locked exit under an unlocked one never locks (a '>' glyph plus an explicit exit entity did exactly that)
-    if (Array.isArray(e.at)) { const k = Math.floor(e.at[0]) + ',' + Math.floor(e.at[1]); if (exitCells.has(k)) err(`two exits on cell ${k} ('${exitCells.get(k)}' and '${id}'): the sim uses the first, so a lock on the second never applies`); exitCells.set(k, id); }
-    // a locked exit needs something that can unlock it
-    if (e.locked) { const unlocks = owners.some((o) => actionsOf(o.do).some((a) => a?.exit?.set === 'unlock' && (!a.exit.id || a.exit.id === id))); if (!unlocks) err(`exit '${id}' is locked but no switch or trigger ever unlocks it`); }
-  }
+  const exitIds = new Set(),
+    exitCells = new Map();
+  let exitN = 0;
+  for (const e of ents)
+    if (e.type === 'exit') {
+      // ids: explicit, else 'exit' + the exit's index among ALL exits (exactly what MapData does; audit R04)
+      if (e.dest != null && e.dest !== 'next' && e.dest !== 'secret') err(`exit at ${e.at}: dest must be 'next' or 'secret'`);
+      const id = e.id ?? 'exit' + exitN;
+      exitN++;
+      if (exitIds.has(id)) err(`duplicate exit id '${id}'`);
+      exitIds.add(id);
+      // two exits on one cell: the sim takes the first, so a locked exit under an unlocked one never locks (a '>' glyph plus an explicit exit entity
+      // did exactly that)
+      if (Array.isArray(e.at)) {
+        const k = Math.floor(e.at[0]) + ',' + Math.floor(e.at[1]);
+        if (exitCells.has(k)) err(`two exits on cell ${k} ('${exitCells.get(k)}' and '${id}'): the sim uses the first, so a lock on the second never applies`);
+        exitCells.set(k, id);
+      }
+      // a locked exit needs something that can unlock it
+      if (e.locked) {
+        const unlocks = owners.some((o) => actionsOf(o.do).some((a) => a?.exit?.set === 'unlock' && (!a.exit.id || a.exit.id === id)));
+        if (!unlocks) err(`exit '${id}' is locked but no switch or trigger ever unlocks it`);
+      }
+    }
   // a switch that needs items needs those items to exist on the level
-  for (const e of ents) if (e.type === 'switch' && Array.isArray(e.needs)) for (const k of e.needs) if (KEYS[k] && !ents.some((q) => q.type === 'pickup' && PICKUPS[q.kind]?.key === k)) err(`switch '${e.id}' needs '${k}' but the level has no such pickup`);
+  for (const e of ents)
+    if (e.type === 'switch' && Array.isArray(e.needs))
+      for (const k of e.needs)
+        if (KEYS[k] && !ents.some((q) => q.type === 'pickup' && PICKUPS[q.kind]?.key === k))
+          err(`switch '${e.id}' needs '${k}' but the level has no such pickup`);
   const p = ents.find((e) => e.type === 'player');
-  if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX) err('the player starts on a floor effect (wading water / toxic residue / spore bed)');
+  if (p && hasF && Array.isArray(p.at) && src.fx[Math.floor(p.at[1])]?.[Math.floor(p.at[0])] in FX)
+    err('the player starts on a floor effect (wading water / toxic residue / spore bed)');
 }
 
 export function parseMap(src) {

@@ -1,5 +1,7 @@
-// Text-map compiler: maps-src/<ID>.level.mjs -> maps/<ID>.json. The source is drawn as layers of ASCII (geometry, heights, ceilings, fx, objects) so a level
-// can be read and edited as a picture; this turns it into the runtime map format and validates it. Usage: node tools/mapkit/compile.mjs [ID ...]   (MAP_OUT=<dir> writes the JSON there instead of maps/: a dry run)
+// Text-map compiler: maps-src/<ID>.level.mjs -> maps/<ID>.json. The source is drawn as layers of ASCII (geometry, heights, ceilings, fx, objects) so
+// a level
+// can be read and edited as a picture; this turns it into the runtime map format and validates it. Usage: node tools/mapkit/compile.mjs [ID ...]
+// (MAP_OUT=<dir> writes the JSON there instead of maps/: a dry run)
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -15,50 +17,147 @@ export { LEGEND };
 const DIRS = { north: 0, south: Math.PI, east: -Math.PI / 2, west: Math.PI / 2 };
 
 export function compile(lv) {
-  const errors = [], geo = lv.geometry, h = geo.length, w = geo[0].length;
-  const layer = (name, rows) => { if (rows == null) return null; if (rows.length !== h || rows.some((r) => r.length !== w)) errors.push(`layer '${name}' must be ${w} x ${h} (got ${rows.length} rows, widths ${[...new Set(rows.map((r) => r.length))]})`); return rows; };
+  const errors = [],
+    geo = lv.geometry,
+    h = geo.length,
+    w = geo[0].length;
+  const layer = (name, rows) => {
+    if (rows == null) return null;
+    if (rows.length !== h || rows.some((r) => r.length !== w))
+      errors.push(`layer '${name}' must be ${w} x ${h} (got ${rows.length} rows, widths ${[...new Set(rows.map((r) => r.length))]})`);
+    return rows;
+  };
   if (geo.some((r) => r.length !== w)) errors.push(`geometry rows differ in width: ${[...new Set(geo.map((r) => r.length))]}`);
-  const heights = layer('heights', lv.heights), ceilings = layer('ceilings', lv.ceilings), fx = layer('fx', lv.fx), objects = layer('objects', lv.objects);
-  const legend = { ...LEGEND, ...(lv.legend || {}) }, entities = [], doors = [], closets = [];
+  const heights = layer('heights', lv.heights),
+    ceilings = layer('ceilings', lv.ceilings),
+    fx = layer('fx', lv.fx),
+    objects = layer('objects', lv.objects);
+  const legend = { ...LEGEND, ...(lv.legend || {}) },
+    entities = [],
+    doors = [],
+    closets = [];
   let spawn = null;
   const at = (s) => s.split(',').map(Number);
-  if (objects) for (let z = 0; z < h; z++) for (let x = 0; x < w; x++) {
-    const c = objects[z]?.[x]; if (!c || c === ' ' || c === '.') continue;
-    const def = legend[c]; if (!def) { errors.push(`objects: unknown symbol '${c}' at ${x},${z}`); continue; }
-    const e = { ...def, at: [x, z] }; entities.push(e); if (e.type === 'player') spawn = e;
+  if (objects)
+    for (let z = 0; z < h; z++)
+      for (let x = 0; x < w; x++) {
+        const c = objects[z]?.[x];
+        if (!c || c === ' ' || c === '.') continue;
+        const def = legend[c];
+        if (!def) {
+          errors.push(`objects: unknown symbol '${c}' at ${x},${z}`);
+          continue;
+        }
+        const e = { ...def, at: [x, z] };
+        entities.push(e);
+        if (e.type === 'player') spawn = e;
+      }
+  for (const e of lv.entities || []) {
+    entities.push({ ...e });
+    if (e.type === 'player') spawn = e;
   }
-  for (const e of lv.entities || []) { entities.push({ ...e }); if (e.type === 'player') spawn = e; }
-  if (!spawn) errors.push('no player symbol (@) in objects'); else if (lv.startFacing) spawn.facing = lv.startFacing;
+  if (!spawn) errors.push('no player symbol (@) in objects');
+  else if (lv.startFacing) spawn.facing = lv.startFacing;
   // enemies face the player's start unless told otherwise (radians, or a compass word); everything else keeps the map's own facing rules
   for (const e of entities) {
     if (e.type !== 'enemy' || e.facing != null) continue;
-    const o = lv.facing?.[e.at.join(',')]; if (o != null) { e.facing = typeof o === 'string' ? DIRS[o] : o; continue; }
+    const o = lv.facing?.[e.at.join(',')];
+    if (o != null) {
+      e.facing = typeof o === 'string' ? DIRS[o] : o;
+      continue;
+    }
     if (spawn) e.facing = Math.round(Math.atan2(spawn.at[0] - e.at[0], spawn.at[1] - e.at[1]) * 1000) / 1000;
   }
-  if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);                // PT-052: which kinds stand where (tools/mapkit/roster.mjs): applied to every creature of the finished map, wherever its source placed it
-  for (const g of lv.groups || []) for (const e of entities) if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;
-  for (let z = 0; z < h; z++) for (let x = 0; x < w; x++) {
-    if (geo[z][x] === 'D') doors.push({ at: [x, z], ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}), ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}), ...(lv.doorInterlock?.[x + ',' + z] ? { interlock: lv.doorInterlock[x + ',' + z] } : {}), ...(lv.doorStartOpen?.includes(x + ',' + z) ? { open: true } : {}), ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}), ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}) });
-    if (geo[z][x] === 'X') closets.push({ at: [x, z] });
-  }
+  // PT-052: which kinds stand where (tools/mapkit/roster.mjs): applied to every creature of the finished map, wherever its source placed it
+  if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);
+  for (const g of lv.groups || [])
+    for (const e of entities)
+      if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;
+  for (let z = 0; z < h; z++)
+    for (let x = 0; x < w; x++) {
+      if (geo[z][x] === 'D')
+        doors.push({
+          at: [x, z],
+          ...(lv.doorKeys?.[x + ',' + z] ? { key: lv.doorKeys[x + ',' + z] } : {}),
+          ...(lv.remoteDoors?.includes(x + ',' + z) ? { remote: true } : {}),
+          ...(lv.doorInterlock?.[x + ',' + z] ? { interlock: lv.doorInterlock[x + ',' + z] } : {}),
+          ...(lv.doorStartOpen?.includes(x + ',' + z) ? { open: true } : {}),
+          ...(lv.doorBreath?.[x + ',' + z] ? { breath: lv.doorBreath[x + ',' + z] } : {}),
+          ...(lv.doorSoundlock?.[x + ',' + z] ? { soundlock: lv.doorSoundlock[x + ',' + z] } : {}),
+        });
+      if (geo[z][x] === 'X') closets.push({ at: [x, z] });
+    }
   let out = {
-    format: 1, id: lv.id, version: lv.version ?? 1, name: lv.name, ...(lv.cellSize ? { cellSize: lv.cellSize } : {}), ...(lv.ceilingHeight ? { ceilingHeight: lv.ceilingHeight } : {}),
-    ...(lv.atmosphere ? { atmosphere: lv.atmosphere } : {}), ...(lv.keyLabels ? { keyLabels: lv.keyLabels } : {}), grid: geo, ...(heights ? { heights } : {}), ...(ceilings ? { ceilings } : {}), ...(fx ? { fx } : {}),
-    doors, secrets: lv.secrets || [], ...(closets.length ? { closets } : {}), ...(lv.sectors ? { sectors: lv.sectors } : {}), ...(lv.triggers ? { triggers: lv.triggers } : {}),
-    entities, ...(lv.scenery ? { scenery: lv.scenery } : {}), ...(lv.par ? { par: lv.par } : {}), ...(lv.intro ? { intro: lv.intro } : {}), ...(lv.outro ? { outro: lv.outro } : {}), ...(lv.messages ? { messages: lv.messages } : {}), ...(lv.decals ? { decals: lv.decals } : {}), ...(lv.growth ? { growth: lv.growth } : {}), ...(lv.pulses ? { pulses: lv.pulses } : {}), ...(lv.vents ? { vents: lv.vents } : {}), ...(lv.loads ? { loads: lv.loads } : {}), ...(lv.belts ? { belts: lv.belts } : {}), ...(lv.cars ? { cars: lv.cars } : {}), ...(lv.tide ? { tide: lv.tide } : {}), ...(lv.vacuum ? { vacuum: lv.vacuum } : {}), ...(lv.objective ? { objective: lv.objective } : {}), ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
+    format: 1,
+    id: lv.id,
+    version: lv.version ?? 1,
+    name: lv.name,
+    ...(lv.cellSize ? { cellSize: lv.cellSize } : {}),
+    ...(lv.ceilingHeight ? { ceilingHeight: lv.ceilingHeight } : {}),
+    ...(lv.atmosphere ? { atmosphere: lv.atmosphere } : {}),
+    ...(lv.keyLabels ? { keyLabels: lv.keyLabels } : {}),
+    grid: geo,
+    ...(heights ? { heights } : {}),
+    ...(ceilings ? { ceilings } : {}),
+    ...(fx ? { fx } : {}),
+    doors,
+    secrets: lv.secrets || [],
+    ...(closets.length ? { closets } : {}),
+    ...(lv.sectors ? { sectors: lv.sectors } : {}),
+    ...(lv.triggers ? { triggers: lv.triggers } : {}),
+    entities,
+    ...(lv.scenery ? { scenery: lv.scenery } : {}),
+    ...(lv.par ? { par: lv.par } : {}),
+    ...(lv.intro ? { intro: lv.intro } : {}),
+    ...(lv.outro ? { outro: lv.outro } : {}),
+    ...(lv.messages ? { messages: lv.messages } : {}),
+    ...(lv.decals ? { decals: lv.decals } : {}),
+    ...(lv.growth ? { growth: lv.growth } : {}),
+    ...(lv.pulses ? { pulses: lv.pulses } : {}),
+    ...(lv.vents ? { vents: lv.vents } : {}),
+    ...(lv.loads ? { loads: lv.loads } : {}),
+    ...(lv.belts ? { belts: lv.belts } : {}),
+    ...(lv.cars ? { cars: lv.cars } : {}),
+    ...(lv.tide ? { tide: lv.tide } : {}),
+    ...(lv.vacuum ? { vacuum: lv.vacuum } : {}),
+    ...(lv.objective ? { objective: lv.objective } : {}),
+    ...(lv.entryLoadout ? { entryLoadout: lv.entryLoadout } : {}),
     ...(lv.quality ? { quality: lv.quality } : {}),
-    ...(lv.lantern ? { lantern: lv.lantern } : {}), ...(lv.noiseTell ? { noiseTell: true } : {}), ...(lv.lampHolds ? { lampHolds: lv.lampHolds } : {}), ...(lv.lookZones ? { lookZones: lv.lookZones } : {}), ...(lv.dev ? { dev: true } : {}), ...(lv.devEnding ? { devEnding: lv.devEnding } : {}), ...(lv.chimes ? { chimes: lv.chimes } : {}),          // PT-038: the hand lantern and the chime phrases
-    ...(lv.range ? { range: true } : {}),                                  // PT-016: the dev-only weapons range (see maps-dev/)
+    ...(lv.lantern ? { lantern: lv.lantern } : {}),
+    ...(lv.noiseTell ? { noiseTell: true } : {}),
+    ...(lv.lampHolds ? { lampHolds: lv.lampHolds } : {}),
+    ...(lv.lookZones ? { lookZones: lv.lookZones } : {}),
+    ...(lv.dev ? { dev: true } : {}),
+    ...(lv.devEnding ? { devEnding: lv.devEnding } : {}),
+    ...(lv.chimes ? { chimes: lv.chimes } : {}), // PT-038: the hand lantern and the chime phrases
+    ...(lv.range ? { range: true } : {}), // PT-016: the dev-only weapons range (see maps-dev/)
   };
-  // PT-052: a squeezed map (tools/mapkit/squeeze.mjs) is narrowed LAST: everything above is in the authoring frame, the shipped JSON is in the squeezed one (SQUEEZE=off compiles it unsqueezed, for the scan)
+  // PT-052: a squeezed map (tools/mapkit/squeeze.mjs) is narrowed LAST: everything above is in the authoring frame, the shipped JSON is in the
+  // squeezed one (SQUEEZE=off compiles it unsqueezed, for the scan)
   let drops = lv.drops;
-  if (lv.squeeze && process.env.SQUEEZE !== 'off') { const r = squeezeMap(out, lv.squeeze); out = r.map; if (drops?.keep) drops = { ...drops, keep: squeezeKeep(drops.keep, lv.squeeze) }; for (const w of r.warnings) errors.push(`squeeze: a coordinate pair under '${w}' was not moved (add the key to squeeze.mjs or rename it)`); }
-  let v = validateMap(out); if (!v.ok) errors.push(...v.errors);
-  // PT-025: a map that says `drops` is fed by the dead, not by boxes on the road: its ammunition boxes in the PUBLIC part of the map (reachable from the spawn with every secret panel shut) are not built; the ones in its secrets stay
+  if (lv.squeeze && process.env.SQUEEZE !== 'off') {
+    const r = squeezeMap(out, lv.squeeze);
+    out = r.map;
+    if (drops?.keep) drops = { ...drops, keep: squeezeKeep(drops.keep, lv.squeeze) };
+    for (const w of r.warnings) errors.push(`squeeze: a coordinate pair under '${w}' was not moved (add the key to squeeze.mjs or rename it)`);
+  }
+  let v = validateMap(out);
+  if (!v.ok) errors.push(...v.errors);
+  // PT-025: a map that says `drops` is fed by the dead, not by boxes on the road: its ammunition boxes in the PUBLIC part of the map (reachable from
+  // the spawn with every secret panel shut) are not built; the ones in its secrets stay
   if (v.ok && drops) {
-    const m = parseMap(out), pub = findTraps(m, { secrets: false }), keep = drops.keep ?? [], kept = (e) => keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3])), inPublic = (e) => pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1]))) && !kept(e);          // keep: cells [x, z] and rectangles [x0, z0, x1, z1] whose boxes stay          // `keep`: boxes a boss arena keeps on the ground (its ring and its mother are not fed by the dead: nodes and summons never drop)
-    out.entities = out.entities.filter((e) => !(e.type === 'pickup' && /^ammo_/.test(e.kind) && inPublic(e))); out.drops = drops;
-    v = validateMap(out); if (!v.ok) errors.push(...v.errors);
+    const m = parseMap(out),
+      pub = findTraps(m, { secrets: false }),
+      keep = drops.keep ?? [],
+      kept = (e) =>
+        keep.some((k) => (k.length === 2 ? e.at[0] === k[0] && e.at[1] === k[1] : e.at[0] >= k[0] && e.at[1] >= k[1] && e.at[0] <= k[2] && e.at[1] <= k[3])),
+      // keep: cells [x, z] and rectangles [x0, z0, x1, z1] whose boxes stay // `keep`: boxes a boss arena keeps on the ground (its ring and its
+      // mother are not fed by the dead: nodes and summons never drop)
+      inPublic = (e) => pub.reach.has(pub.key(Math.floor(e.at[0]), Math.floor(e.at[1]))) && !kept(e);
+    out.entities = out.entities.filter((e) => !(e.type === 'pickup' && /^ammo_/.test(e.kind) && inPublic(e)));
+    out.drops = drops;
+    v = validateMap(out);
+    if (!v.ok) errors.push(...v.errors);
   }
   return { map: out, errors };
 }
@@ -66,13 +165,23 @@ export function compile(lv) {
 const pretty = (m) => JSON.stringify(m, null, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1, $2]');
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const dir = path.join(root, 'maps-src');
-  const ids = process.argv.slice(2), files = fs.readdirSync(dir).filter((f) => f.endsWith('.level.mjs') && (!ids.length || ids.includes(f.split('.')[0])));
+  const ids = process.argv.slice(2),
+    files = fs.readdirSync(dir).filter((f) => f.endsWith('.level.mjs') && (!ids.length || ids.includes(f.split('.')[0])));
   let bad = 0;
   for (const f of files) {
-    const lv = (await import(pathToFileURL(path.join(dir, f)).href)).default, { map, errors } = compile(lv);
-    if (errors.length) { bad++; console.error(`FAIL ${f}:\n  ` + errors.slice(0, 40).join('\n  ')); continue; }
-    const outDir = process.env.MAP_OUT ? path.resolve(process.env.MAP_OUT) : path.join(root, 'maps'); fs.mkdirSync(outDir, { recursive: true }); fs.writeFileSync(path.join(outDir, lv.id + '.json'), pretty(map));
-    console.log(`ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> ${path.relative(root, outDir)}/${lv.id}.json`);
+    const lv = (await import(pathToFileURL(path.join(dir, f)).href)).default,
+      { map, errors } = compile(lv);
+    if (errors.length) {
+      bad++;
+      console.error(`FAIL ${f}:\n  ` + errors.slice(0, 40).join('\n  '));
+      continue;
+    }
+    const outDir = process.env.MAP_OUT ? path.resolve(process.env.MAP_OUT) : path.join(root, 'maps');
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, lv.id + '.json'), pretty(map));
+    console.log(
+      `ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> ${path.relative(root, outDir)}/${lv.id}.json`,
+    );
     for (const w of lv.placementWarnings ?? []) console.log(`  WARN ${w}: an objects-layer cell holds ONE character, the earlier object is gone`);
   }
   process.exit(bad ? 1 : 0);

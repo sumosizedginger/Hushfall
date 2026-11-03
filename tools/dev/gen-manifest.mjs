@@ -1,11 +1,16 @@
 // One-time bootstrap of CAMPAIGN_MANIFEST.json. After creation the manifest is hand-edited; this refuses to overwrite it.
 import fs from 'node:fs';
 const outUrl = new URL('../../CAMPAIGN_MANIFEST.json', import.meta.url);
-if (fs.existsSync(outUrl)) { console.error('CAMPAIGN_MANIFEST.json exists; refusing to overwrite'); process.exit(1); }
+if (fs.existsSync(outUrl)) {
+  console.error('CAMPAIGN_MANIFEST.json exists; refusing to overwrite');
+  process.exit(1);
+}
 
 // "Name | gameplay thesis | narrative purpose"
 const EPISODES = [
-  { title: 'Port Marrow', theme: 'Fog-bound harbour town on the first night of the Hush. Human scale, salt and lamplight.',
+  {
+    title: 'Port Marrow',
+    theme: 'Fog-bound harbour town on the first night of the Hush. Human scale, salt and lamplight.',
     maps: [
       'Marrow Quay | Teach movement and the flare cannon on a quiet pier that turns wrong; first Tollbearers; the tower bell glimpsed | Normal life ends; the Hush becomes audible',
       'Customs Hall | Key hunt through a looping hall with ambush closets | Evidence of the harvest: manifests, bodies counted twice',
@@ -16,8 +21,11 @@ const EPISODES = [
       'Signal House | Tight interior, scarce ammo, radio narrative | First clear transmission: the Vael intent',
       'Bell Tower of St. Orrin | First Cantor encounter; sever the ring | The Bell is a machine; Episode 1 climax',
     ],
-    secret: 'The Lighthouse Cellar | Quiet cache room behind an unremarkable wall | Warden Calder family history' },
-  { title: 'The Salt Works', theme: 'Industrial evaporation works and rail yards repurposed as processing.',
+    secret: 'The Lighthouse Cellar | Quiet cache room behind an unremarkable wall | Warden Calder family history',
+  },
+  {
+    title: 'The Salt Works',
+    theme: 'Industrial evaporation works and rail yards repurposed as processing.',
     maps: [
       'Brine Gate | Checkpoint assault across open ground | The processing site is guarded and organised',
       'Evaporation Pans | Open salt flats with hazard channels | Hunting parties working the pans',
@@ -28,8 +36,11 @@ const EPISODES = [
       'Slurry Undercroft | Dark close-quarters, light management | The Hush is thickest underground',
       'The Grafting Floor | Boss: Graft-Mother | Episode 2 climax; the production line breaks',
     ],
-    secret: 'The Rime Vault | Cold-storage vault, puzzle-lite | Pre-invasion Marrow research the Wardens hid' },
-  { title: 'The Choir Ships', theme: 'Living alien vessels grown from grafted bell-chitin.',
+    secret: 'The Rime Vault | Cold-storage vault, puzzle-lite | Pre-invasion Marrow research the Wardens hid',
+  },
+  {
+    title: 'The Choir Ships',
+    theme: 'Living alien vessels grown from grafted bell-chitin.',
     maps: [
       'Landing Scar | Crater approach, crossfire lanes | First look at a grounded Choir Ship',
       'Ribbed Corridors | Organic maze, door-gates that breathe | The ship is a body',
@@ -40,8 +51,11 @@ const EPISODES = [
       'Spore Foundry | Enemy spawner denial | Mass production of the next wave',
       "The Cantor's Throat | Boss: Grand Cantor | Episode 3 climax; the Choir Ship falls",
     ],
-    secret: "The Choirless Chamber | Silent inverse of the ship | A Vael defector's message" },
-  { title: 'The Hollow Sky', theme: 'Orbital wrecks and the Gate the Song is opening.',
+    secret: "The Choirless Chamber | Silent inverse of the ship | A Vael defector's message",
+  },
+  {
+    title: 'The Hollow Sky',
+    theme: 'Orbital wrecks and the Gate the Song is opening.',
     maps: [
       'Ascent Tether | Vertical climb with falling hazards | Leaving the world behind',
       'Wreck Belt | Low-gravity drifts between hulks | Earlier invasions, other worlds',
@@ -52,7 +66,8 @@ const EPISODES = [
       'The Hollow Stair | Long vertical set-piece | The Gate itself, seen',
       'Gate Warden | Boss: Gate Warden; the Gate opens | Campaign One climax; the player follows through',
     ],
-    secret: "The Quiet Room | Contemplative, near enemy-free | Ines's choice, foreshadowed" },
+    secret: "The Quiet Room | Contemplative, near enemy-free | Ines's choice, foreshadowed",
+  },
 ];
 // Campaign Two "The Long Descent": Act A Threshold 1-8, Act B Sounding Deep 9-16, Act C Hive-Song 17-24, Act D Root Bell 25-30
 const C2 = [
@@ -91,28 +106,65 @@ const C2_SECRETS = [
   "The Silent Orchard | Hidden garden, resource cache | A Vael grave-tender's testimony",
   "Ines's Lamp | Reflective callback | The lamp from the title art",
 ];
-const C2_SECRET_FROM = [12, 23];   // main-map order holding the secret exit; return goes to order+1
+const C2_SECRET_FROM = [12, 23]; // main-map order holding the secret exit; return goes to order+1
 
-const parse = (line) => { const [name, gameplayThesis, narrativePurpose] = line.split(' | '); return { name, gameplayThesis, narrativePurpose }; };
+const parse = (line) => {
+  const [name, gameplayThesis, narrativePurpose] = line.split(' | ');
+  return { name, gameplayThesis, narrativePurpose };
+};
 const n2 = (n) => String(n).padStart(2, '0');
 const slots = [];
 
 EPISODES.forEach((ep, ei) => {
   const e = ei + 1;
   ep.maps.forEach((line, i) => {
-    const o = i + 1, id = `C1E${e}M${n2(o)}`;
-    const next = o < 8 ? `C1E${e}M${n2(o + 1)}` : (e < 4 ? `C1E${e + 1}M01` : 'C2M01');
+    const o = i + 1,
+      id = `C1E${e}M${n2(o)}`;
+    const next = o < 8 ? `C1E${e}M${n2(o + 1)}` : e < 4 ? `C1E${e + 1}M01` : 'C2M01';
     slots.push({ id, campaign: 1, episode: e, kind: 'main', order: o, ...parse(line), next, secretExit: o === 4 ? `C1E${e}S01` : null, status: 'PLANNED' });
   });
-  slots.push({ id: `C1E${e}S01`, campaign: 1, episode: e, kind: 'secret', order: 9, ...parse(ep.secret), next: null, returnsTo: `C1E${e}M05`, enteredFrom: `C1E${e}M04`, status: 'PLANNED' });
+  slots.push({
+    id: `C1E${e}S01`,
+    campaign: 1,
+    episode: e,
+    kind: 'secret',
+    order: 9,
+    ...parse(ep.secret),
+    next: null,
+    returnsTo: `C1E${e}M05`,
+    enteredFrom: `C1E${e}M04`,
+    status: 'PLANNED',
+  });
 });
 C2.forEach((line, i) => {
-  const o = i + 1, si = C2_SECRET_FROM.indexOf(o);
-  slots.push({ id: `C2M${n2(o)}`, campaign: 2, episode: null, kind: 'main', order: o, ...parse(line), next: o < 30 ? `C2M${n2(o + 1)}` : null, secretExit: si >= 0 ? `C2S${n2(si + 1)}` : null, status: 'PLANNED' });
+  const o = i + 1,
+    si = C2_SECRET_FROM.indexOf(o);
+  slots.push({
+    id: `C2M${n2(o)}`,
+    campaign: 2,
+    episode: null,
+    kind: 'main',
+    order: o,
+    ...parse(line),
+    next: o < 30 ? `C2M${n2(o + 1)}` : null,
+    secretExit: si >= 0 ? `C2S${n2(si + 1)}` : null,
+    status: 'PLANNED',
+  });
 });
 C2_SECRETS.forEach((line, i) => {
   const from = C2_SECRET_FROM[i];
-  slots.push({ id: `C2S${n2(i + 1)}`, campaign: 2, episode: null, kind: 'secret', order: 31 + i, ...parse(line), next: null, returnsTo: `C2M${n2(from + 1)}`, enteredFrom: `C2M${n2(from)}`, status: 'PLANNED' });
+  slots.push({
+    id: `C2S${n2(i + 1)}`,
+    campaign: 2,
+    episode: null,
+    kind: 'secret',
+    order: 31 + i,
+    ...parse(line),
+    next: null,
+    returnsTo: `C2M${n2(from + 1)}`,
+    enteredFrom: `C2M${n2(from)}`,
+    status: 'PLANNED',
+  });
 });
 
 const manifest = {

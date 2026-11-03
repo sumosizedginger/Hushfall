@@ -1,5 +1,7 @@
-// One canonical route, played in the REAL game (headless Chrome, live game page, the dev-only __GAME_TEST__ hook) and in the headless Node sim: do they agree?
-// Shared by tools/dev/browser-check.mjs (the Episode 1 routes it has always run) and tools/dev/browser-map.mjs (any map, one command): one implementation, so a new map is
+// One canonical route, played in the REAL game (headless Chrome, live game page, the dev-only __GAME_TEST__ hook) and in the headless Node sim: do
+// they agree?
+// Shared by tools/dev/browser-check.mjs (the Episode 1 routes it has always run) and tools/dev/browser-map.mjs (any map, one command): one
+// implementation, so a new map is
 // held to exactly the bar the old ones are.
 import path from 'node:path';
 import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.js';
@@ -10,25 +12,55 @@ import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.j
  * returns { ok, status, failed, ticks, hash, nodeTicks, nodeHash, agree, kills, secrets, wallSeconds, routeOps, policy: 'standing' | 'strafing' }
  */
 export async function runRouteParity(ctx, id, name, opts = {}) {
-  // PT-065: the maps are judged against EITHER fighter (viability.js `runRouteEither`: a standing bot, then a strafing one), so the real game is too: the standing fighter first, and only if it does not finish the strafing one (`weave: 2`), each against the headless sim played the same way
-  const first = await playRoute(ctx, id, name, opts, false); if (first.ok) return { ...first, policy: 'standing' };
+  // PT-065: the maps are judged against EITHER fighter (viability.js `runRouteEither`: a standing bot, then a strafing one), so the real game is too:
+  // the standing fighter first, and only if it does not finish the strafing one (`weave: 2`), each against the headless sim played the same way
+  const first = await playRoute(ctx, id, name, opts, false);
+  if (first.ok) return { ...first, policy: 'standing' };
   const second = await playRoute(ctx, id, name, { ...opts, shots: false }, true);
-  return second.ok ? { ...second, policy: 'strafing', standing: { status: first.status, ticks: first.ticks, agree: first.agree } } : { ...first, policy: 'standing', strafing: { status: second.status, ticks: second.ticks, agree: second.agree } };
+  return second.ok
+    ? { ...second, policy: 'strafing', standing: { status: first.status, ticks: first.ticks, agree: first.agree } }
+    : { ...first, policy: 'standing', strafing: { status: second.status, ticks: second.ticks, agree: second.agree } };
 }
 async function playRoute({ T, root, shot = null }, id, name, { shots = false, onStep = null, maxSteps = 1500 } = {}, weave = false) {
-  const gm = loadMapFile(path.join(root, 'maps', id + '.json')), gr = loadRouteFile(path.join(root, 'routes', id + '.' + name + '.route.json'));
+  const gm = loadMapFile(path.join(root, 'maps', id + '.json')),
+    gr = loadRouteFile(path.join(root, 'routes', id + '.' + name + '.route.json'));
   const gn = runRoute(gm, gr, { seed: 1, difficulty: 'normal', ...(weave ? { weave: 2 } : {}) });
-  await T(`t.newGame('normal', 1, { mapId: '${id}' })`); await T('t.clearOverlays()'); await T(`t.startBot('${id}.${name}', ${weave ? '{ weave: 2 }' : '{}'})`);
-  let rr, lastOp = -1, shotN = 0; const t0 = Date.now(), want = new Set(shots && name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
+  await T(`t.newGame('normal', 1, { mapId: '${id}' })`);
+  await T('t.clearOverlays()');
+  await T(`t.startBot('${id}.${name}', ${weave ? '{ weave: 2 }' : '{}'})`);
+  let rr,
+    lastOp = -1,
+    shotN = 0;
+  const t0 = Date.now(),
+    want = new Set(shots && name === 'main' ? [Math.floor(gr.length * 0.3), Math.floor(gr.length * 0.6), gr.length - 3] : []);
   for (let i = 0; i < maxSteps; i++) {
     rr = await T('t.stepBot(90)');
-    if (rr.mode === 'cinematic') { await T('t.skip_cinematic()'); continue; }                                  // PT-063: a story scene stops the sim; a player skips it with a key, so the route does (the scene touches nothing: the sim is not stepped)
-    if (shot && rr.op !== lastOp && want.has(rr.op) && shotN < 3) { await shot('g2-' + id.toLowerCase() + '-' + name + '-op' + String(rr.op).padStart(2, '0')); shotN++; }
+    if (rr.mode === 'cinematic') {
+      await T('t.skip_cinematic()');
+      continue;
+    } // PT-063: a story scene stops the sim; a player skips it with a key, so the route does (the scene touches nothing: the sim is not stepped)
+    if (shot && rr.op !== lastOp && want.has(rr.op) && shotN < 3) {
+      await shot('g2-' + id.toLowerCase() + '-' + name + '-op' + String(rr.op).padStart(2, '0'));
+      shotN++;
+    }
     lastOp = rr.op;
     if (onStep) await onStep(rr);
     if (rr.done || rr.failed || rr.status !== 'playing') break;
   }
   const ok = rr.status === 'complete' && !rr.failed;
   await T('t.clearOverlays()');
-  return { ok, status: rr.status, failed: rr.failed, ticks: rr.tick, hash: rr.hash, nodeTicks: gn.ticks, nodeHash: gn.hash, agree: rr.tick === gn.ticks && rr.hash === gn.hash, kills: rr.stats?.kills, secrets: rr.stats?.secrets, wallSeconds: Math.round((Date.now() - t0) / 1000), routeOps: gr.length };
+  return {
+    ok,
+    status: rr.status,
+    failed: rr.failed,
+    ticks: rr.tick,
+    hash: rr.hash,
+    nodeTicks: gn.ticks,
+    nodeHash: gn.hash,
+    agree: rr.tick === gn.ticks && rr.hash === gn.hash,
+    kills: rr.stats?.kills,
+    secrets: rr.stats?.secrets,
+    wallSeconds: Math.round((Date.now() - t0) / 1000),
+    routeOps: gr.length,
+  };
 }

@@ -3,27 +3,53 @@ import * as THREE from 'three';
 import { ironSights, tang } from './weapon-sights.js';
 
 import { atlas } from './atlasuv.js';
-export { atlas };                                                 // (it lives in atlasuv.js so the gun and melee modules need not import this file)
+export { atlas }; // (it lives in atlasuv.js so the gun and melee modules need not import this file)
 
 // Shared, cached materials for STATIC props so they can be merged into one draw call per material (see render/merge.js).
 const matCache = new Map();
 const keyOf = (o) => JSON.stringify(o, (k, v) => (v && v.isTexture ? v.uuid : v));
-export function lam(params) { const k = 'L' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshLambertMaterial(params)); return m; }
-export function bas(params) { const k = 'B' + keyOf(params); let m = matCache.get(k); if (!m) matCache.set(k, m = new THREE.MeshBasicMaterial(params)); return m; }
+export function lam(params) {
+  const k = 'L' + keyOf(params);
+  let m = matCache.get(k);
+  if (!m) matCache.set(k, (m = new THREE.MeshLambertMaterial(params)));
+  return m;
+}
+export function bas(params) {
+  const k = 'B' + keyOf(params);
+  let m = matCache.get(k);
+  if (!m) matCache.set(k, (m = new THREE.MeshBasicMaterial(params)));
+  return m;
+}
 const ease = (t) => t * t * (3 - 2 * t);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
-/** WORLD vs POSE (contract: ground-contract.js). The view places `root` (x, z, yaw and y = the sim's authoritative ground); a model animates inside
- *  `rig`, a child of root: scale, topple, joints. `ground()` runs at the end of every pose and lifts the rig by the depth of its lowest rendered vertex
- *  below root's plane, so no animation (a body toppling backwards, a Gaunt crouching, a Cantor at 2x scale) can bury the mesh. It only ever lifts. */
+/**
+ * WORLD vs POSE (contract: ground-contract.js). The view places `root` (x, z, yaw and y = the sim's authoritative ground); a model animates inside
+ * `rig`, a child of root: scale, topple, joints. `ground()` runs at the end of every pose and lifts the rig by the depth of its lowest rendered
+ * vertex
+ * below root's plane, so no animation (a body toppling backwards, a Gaunt crouching, a Cantor at 2x scale) can bury the mesh. It only ever lifts.
+ */
 export function makeRigGrounder(root, rig, maxLift = 3) {
-  const parts = []; rig.traverse((o) => { const pos = o.isMesh && o.geometry?.attributes?.position; if (pos) parts.push({ o, a: pos.array, n: pos.count, s: pos.itemSize }); });
+  const parts = [];
+  rig.traverse((o) => {
+    const pos = o.isMesh && o.geometry?.attributes?.position;
+    if (pos) parts.push({ o, a: pos.array, n: pos.count, s: pos.itemSize });
+  });
   return function ground() {
-    rig.position.y = 0; root.updateMatrixWorld(true);
-    const base = root.matrixWorld.elements[13]; let low = Infinity;
+    rig.position.y = 0;
+    root.updateMatrixWorld(true);
+    const base = root.matrixWorld.elements[13];
+    let low = Infinity;
     for (const { o, a, n, s } of parts) {
-      const e = o.matrixWorld.elements, m1 = e[1], m5 = e[5], m9 = e[9], m13 = e[13];
-      for (let i = 0, k = 0; i < n; i++, k += s) { const y = m1 * a[k] + m5 * a[k + 1] + m9 * a[k + 2] + m13; if (y < low) low = y; }
+      const e = o.matrixWorld.elements,
+        m1 = e[1],
+        m5 = e[5],
+        m9 = e[9],
+        m13 = e[13];
+      for (let i = 0, k = 0; i < n; i++, k += s) {
+        const y = m1 * a[k] + m5 * a[k + 1] + m9 * a[k + 2] + m13;
+        if (y < low) low = y;
+      }
     }
     rig.position.y = low < base ? Math.min(maxLift, base - low) : 0;
   };
@@ -36,113 +62,257 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
   const M = (g, cell, m = mat) => new THREE.Mesh(atlas(g, cell), m);
-  const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);        // root = world placement (the view owns it); rig = everything a pose may change
-  const hips = new THREE.Group(); hips.position.y = 0.96; rig.add(hips);
+  const root = new THREE.Group(),
+    rig = new THREE.Group();
+  root.add(rig); // root = world placement (the view owns it); rig = everything a pose may change
+  const hips = new THREE.Group();
+  hips.position.y = 0.96;
+  rig.add(hips);
 
   const legs = [-1, 1].map((s) => {
-    const thigh = new THREE.Group(); thigh.position.set(s * 0.11, 0, 0); hips.add(thigh);
-    const tm = M(new THREE.CylinderGeometry(0.09, 0.075, 0.46, 7), 4); tm.position.y = -0.23; thigh.add(tm);
-    const shin = new THREE.Group(); shin.position.y = -0.46; thigh.add(shin);
-    const sm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.44, 7), 4); sm.position.y = -0.22; shin.add(sm);
-    const boot = M(new THREE.BoxGeometry(0.13, 0.09, 0.27), 5); boot.position.set(0, -0.455, 0.05); shin.add(boot);
+    const thigh = new THREE.Group();
+    thigh.position.set(s * 0.11, 0, 0);
+    hips.add(thigh);
+    const tm = M(new THREE.CylinderGeometry(0.09, 0.075, 0.46, 7), 4);
+    tm.position.y = -0.23;
+    thigh.add(tm);
+    const shin = new THREE.Group();
+    shin.position.y = -0.46;
+    thigh.add(shin);
+    const sm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.44, 7), 4);
+    sm.position.y = -0.22;
+    shin.add(sm);
+    const boot = M(new THREE.BoxGeometry(0.13, 0.09, 0.27), 5);
+    boot.position.set(0, -0.455, 0.05);
+    shin.add(boot);
     return { thigh, shin };
   });
 
-  const spine = new THREE.Group(); spine.position.y = 0.05; hips.add(spine);
-  const coat = M(new THREE.CylinderGeometry(0.2, 0.31, 0.78, 8), bh ? 1 : 0); coat.scale.z = 0.72; coat.position.y = 0.36; spine.add(coat);
-  const hem = M(new THREE.CylinderGeometry(0.31, 0.37, 0.24, 8, 1, true), bh ? 1 : 0); hem.scale.z = 0.72; hem.position.y = -0.09; spine.add(hem);
-  const placket = M(new THREE.BoxGeometry(0.07, 0.74, 0.03), bh ? 5 : 1); placket.position.set(0, 0.36, 0.19); spine.add(placket);
+  const spine = new THREE.Group();
+  spine.position.y = 0.05;
+  hips.add(spine);
+  const coat = M(new THREE.CylinderGeometry(0.2, 0.31, 0.78, 8), bh ? 1 : 0);
+  coat.scale.z = 0.72;
+  coat.position.y = 0.36;
+  spine.add(coat);
+  const hem = M(new THREE.CylinderGeometry(0.31, 0.37, 0.24, 8, 1, true), bh ? 1 : 0);
+  hem.scale.z = 0.72;
+  hem.position.y = -0.09;
+  spine.add(hem);
+  const placket = M(new THREE.BoxGeometry(0.07, 0.74, 0.03), bh ? 5 : 1);
+  placket.position.set(0, 0.36, 0.19);
+  spine.add(placket);
 
   const arms = [-1, 1].map((s) => {
     const long = s < 0;
-    const sh = new THREE.Group(); sh.position.set(s * 0.3, 0.68, 0); spine.add(sh);
-    const ua = M(new THREE.CylinderGeometry(0.06, 0.052, 0.36, 7), 0); ua.position.y = -0.18; sh.add(ua);
-    const el = new THREE.Group(); el.position.y = -0.36; sh.add(el);
+    const sh = new THREE.Group();
+    sh.position.set(s * 0.3, 0.68, 0);
+    spine.add(sh);
+    const ua = M(new THREE.CylinderGeometry(0.06, 0.052, 0.36, 7), 0);
+    ua.position.y = -0.18;
+    sh.add(ua);
+    const el = new THREE.Group();
+    el.position.y = -0.36;
+    sh.add(el);
     const fl = long ? 0.5 : 0.4;
-    const fa = M(new THREE.CylinderGeometry(0.052, 0.045, fl, 7), 0); fa.position.y = -fl / 2; el.add(fa);
-    const hand = M(new THREE.BoxGeometry(0.09, 0.13, 0.05), 8); hand.position.y = -fl - 0.05; el.add(hand);
-    if (bh && !long) {                                                          // the hand-bell: a bronze cup hung from the wrist, glowing clapper
-      const cup = M(new THREE.CylinderGeometry(0.04, 0.16, 0.22, 9), 5); cup.position.y = -fl - 0.17; el.add(cup);
-      const lip = M(new THREE.TorusGeometry(0.16, 0.02, 4, 12), 5); lip.rotation.x = Math.PI / 2; lip.position.y = -fl - 0.28; el.add(lip);
-      const clap = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 4), glowMat); clap.position.y = -fl - 0.27; el.add(clap);
+    const fa = M(new THREE.CylinderGeometry(0.052, 0.045, fl, 7), 0);
+    fa.position.y = -fl / 2;
+    el.add(fa);
+    const hand = M(new THREE.BoxGeometry(0.09, 0.13, 0.05), 8);
+    hand.position.y = -fl - 0.05;
+    el.add(hand);
+    if (bh && !long) {
+      // the hand-bell: a bronze cup hung from the wrist, glowing clapper
+      const cup = M(new THREE.CylinderGeometry(0.04, 0.16, 0.22, 9), 5);
+      cup.position.y = -fl - 0.17;
+      el.add(cup);
+      const lip = M(new THREE.TorusGeometry(0.16, 0.02, 4, 12), 5);
+      lip.rotation.x = Math.PI / 2;
+      lip.position.y = -fl - 0.28;
+      el.add(lip);
+      const clap = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 4), glowMat);
+      clap.position.y = -fl - 0.27;
+      el.add(clap);
     }
     return { sh, el };
   });
 
-  const neck = new THREE.Group(); neck.position.set(0, 0.8, 0.02); spine.add(neck);
-  const head = new THREE.Group(); head.position.y = 0.1; neck.add(head);
-  const skull = M(new THREE.IcosahedronGeometry(0.16, 1), 2); skull.scale.set(0.92, 1.12, 1); skull.position.y = 0.06; head.add(skull);
-  const jawPivot = new THREE.Group(); jawPivot.position.set(0, -0.06, 0.03); head.add(jawPivot);
-  const jaw = M(new THREE.BoxGeometry(0.13, 0.07, 0.13), 3); jaw.position.set(0, -0.035, 0.05); jawPivot.add(jaw);
-  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.024, 6, 4), glowMat); e.position.set(s * 0.06, 0.08, 0.145); head.add(e); }
-
-  // warden hat (a converted Tide-Warden), shoulder pads, belt
-  const brim = M(new THREE.CylinderGeometry(0.27, 0.27, 0.025, 10), 1); brim.position.set(0, 0.2, 0.02); head.add(brim);
-  const crown = M(new THREE.CylinderGeometry(0.13, 0.16, bh ? 0.26 : 0.15, 10), 1); crown.position.set(0, bh ? 0.33 : 0.28, 0.02); head.add(crown);          // the Bellhand wears a tall bellman's hat
-  for (const s of [-1, 1]) { const pad = M(new THREE.IcosahedronGeometry(0.095, 0), 0); pad.position.set(s * 0.29, 0.7, 0); spine.add(pad); }
-  const belt = M(new THREE.TorusGeometry(0.22, 0.022, 4, 10), 5); belt.rotation.x = Math.PI / 2; belt.scale.set(1.15, 0.72, 1); belt.position.y = 0.28; spine.add(belt);
-
-  // the Bell: crystal growth from the right shoulder
-  const bell = new THREE.Group(); bell.position.set(0.3, 0.7, -0.02); spine.add(bell); if (bh) bell.scale.setScalar(0.6);
-  const mass = M(new THREE.IcosahedronGeometry(0.11, 0), 6); bell.add(mass);
-  const big = M(new THREE.CylinderGeometry(0.015, 0.11, 0.52, 5), 6); big.position.set(0.05, 0.3, 0); big.rotation.z = -0.3; bell.add(big);
-  const small = M(new THREE.CylinderGeometry(0.01, 0.07, 0.3, 5), 7); small.position.set(-0.03, 0.2, 0.08); small.rotation.set(0.4, 0, 0.25); bell.add(small);
-  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 4), glowMat); glow.position.set(0.02, 0.07, 0.1); bell.add(glow);
-
-  // ---- Gate 2 variants: the same rig, different silhouettes (this is a 3D game: a new enemy is a new shape, not a recoloured sprite) ----
-  if (variant === 'sexton') {                                                                    // a stooped bellman with a tall staff: bell on top, teal in the bell
-    rig.scale.set(0.94, 1.0, 0.94);
-    const hood = M(new THREE.ConeGeometry(0.2, 0.36, 7), 1); hood.position.set(0, 0.33, -0.02); head.add(hood);
-    const staff = M(new THREE.CylinderGeometry(0.018, 0.022, 2.0, 5), 5); staff.position.set(0.02, -0.2, 0.05); arms[1].el.add(staff);
-    const sbell = M(new THREE.CylinderGeometry(0.03, 0.14, 0.22, 8), 6); sbell.position.y = 1.0; staff.add(sbell);
-    const sglow = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 4), glowMat); sglow.position.y = 0.9; staff.add(sglow);
-    const censer = M(new THREE.SphereGeometry(0.07, 6, 4), 6); censer.position.set(-0.28, 0.02, 0.16); spine.add(censer);
-  } else if (variant === 'warden') {                                                             // a converted Tide-Warden in plate: broad, slow, faceless
-    rig.scale.setScalar(1.28);
-    for (const s of [-1, 1]) { const pd = M(new THREE.SphereGeometry(0.17, 7, 5), 6); pd.scale.set(1.25, 0.8, 1.1); pd.position.set(s * 0.34, 0.74, 0); spine.add(pd); }
-    const chest = M(new THREE.BoxGeometry(0.42, 0.44, 0.1), 5); chest.position.set(0, 0.5, 0.2); spine.add(chest);
-    const rim = M(new THREE.BoxGeometry(0.44, 0.06, 0.12), 6); rim.position.set(0, 0.74, 0.2); spine.add(rim);
-    const mask = M(new THREE.BoxGeometry(0.22, 0.26, 0.06), 5); mask.position.set(0, 0.03, 0.16); head.add(mask);
-    const crest = M(new THREE.ConeGeometry(0.06, 0.3, 5), 6); crest.position.set(0, 0.38, 0.02); head.add(crest);
-    const shield = M(new THREE.BoxGeometry(0.07, 0.56, 0.36), 5); shield.position.set(-0.07, -0.28, 0.06); arms[0].el.add(shield);
-    const shieldRim = M(new THREE.BoxGeometry(0.09, 0.6, 0.06), 6); shieldRim.position.set(-0.07, -0.28, 0.24); arms[0].el.add(shieldRim);
-  } else if (variant === 'cantor') {                                                             // the Cantor: robed, crowned in bells, a great bell on its chest
-    rig.scale.setScalar(2.0);
-    const skirt = M(new THREE.CylinderGeometry(0.34, 0.66, 0.95, 10, 1, true), 1); skirt.position.set(0, -0.15, 0); spine.add(skirt);
-    for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2, cb = M(new THREE.ConeGeometry(0.06, 0.18, 6), 6); cb.position.set(Math.cos(a) * 0.22, 0.34, Math.sin(a) * 0.22); cb.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5); head.add(cb); }
-    const gb = M(new THREE.CylinderGeometry(0.08, 0.3, 0.52, 10), 6); gb.position.set(0, 0.42, 0.24); spine.add(gb);
-    const gbRim = M(new THREE.TorusGeometry(0.3, 0.03, 4, 12), 7); gbRim.rotation.x = Math.PI / 2; gbRim.position.set(0, 0.16, 0.24); spine.add(gbRim);
-    const gbCore = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), glowMat); gbCore.position.set(0, 0.2, 0.24); spine.add(gbCore);
-    for (const s of [-1, 1]) { const cr = M(new THREE.ConeGeometry(0.1, 0.5, 5), 6); cr.position.set(s * 0.42, 0.9, -0.06); cr.rotation.z = -s * 0.5; spine.add(cr); }
+  const neck = new THREE.Group();
+  neck.position.set(0, 0.8, 0.02);
+  spine.add(neck);
+  const head = new THREE.Group();
+  head.position.y = 0.1;
+  neck.add(head);
+  const skull = M(new THREE.IcosahedronGeometry(0.16, 1), 2);
+  skull.scale.set(0.92, 1.12, 1);
+  skull.position.y = 0.06;
+  head.add(skull);
+  const jawPivot = new THREE.Group();
+  jawPivot.position.set(0, -0.06, 0.03);
+  head.add(jawPivot);
+  const jaw = M(new THREE.BoxGeometry(0.13, 0.07, 0.13), 3);
+  jaw.position.set(0, -0.035, 0.05);
+  jawPivot.add(jaw);
+  for (const s of [-1, 1]) {
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.024, 6, 4), glowMat);
+    e.position.set(s * 0.06, 0.08, 0.145);
+    head.add(e);
   }
 
-  root.traverse((o) => { if (o.isMesh) o.frustumCulled = true; });
+  // warden hat (a converted Tide-Warden), shoulder pads, belt
+  const brim = M(new THREE.CylinderGeometry(0.27, 0.27, 0.025, 10), 1);
+  brim.position.set(0, 0.2, 0.02);
+  head.add(brim);
+  const crown = M(new THREE.CylinderGeometry(0.13, 0.16, bh ? 0.26 : 0.15, 10), 1);
+  crown.position.set(0, bh ? 0.33 : 0.28, 0.02);
+  head.add(crown); // the Bellhand wears a tall bellman's hat
+  for (const s of [-1, 1]) {
+    const pad = M(new THREE.IcosahedronGeometry(0.095, 0), 0);
+    pad.position.set(s * 0.29, 0.7, 0);
+    spine.add(pad);
+  }
+  const belt = M(new THREE.TorusGeometry(0.22, 0.022, 4, 10), 5);
+  belt.rotation.x = Math.PI / 2;
+  belt.scale.set(1.15, 0.72, 1);
+  belt.position.y = 0.28;
+  spine.add(belt);
+
+  // the Bell: crystal growth from the right shoulder
+  const bell = new THREE.Group();
+  bell.position.set(0.3, 0.7, -0.02);
+  spine.add(bell);
+  if (bh) bell.scale.setScalar(0.6);
+  const mass = M(new THREE.IcosahedronGeometry(0.11, 0), 6);
+  bell.add(mass);
+  const big = M(new THREE.CylinderGeometry(0.015, 0.11, 0.52, 5), 6);
+  big.position.set(0.05, 0.3, 0);
+  big.rotation.z = -0.3;
+  bell.add(big);
+  const small = M(new THREE.CylinderGeometry(0.01, 0.07, 0.3, 5), 7);
+  small.position.set(-0.03, 0.2, 0.08);
+  small.rotation.set(0.4, 0, 0.25);
+  bell.add(small);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 4), glowMat);
+  glow.position.set(0.02, 0.07, 0.1);
+  bell.add(glow);
+
+  // ---- Gate 2 variants: the same rig, different silhouettes (this is a 3D game: a new enemy is a new shape, not a recoloured sprite) ----
+  if (variant === 'sexton') {
+    // a stooped bellman with a tall staff: bell on top, teal in the bell
+    rig.scale.set(0.94, 1.0, 0.94);
+    const hood = M(new THREE.ConeGeometry(0.2, 0.36, 7), 1);
+    hood.position.set(0, 0.33, -0.02);
+    head.add(hood);
+    const staff = M(new THREE.CylinderGeometry(0.018, 0.022, 2.0, 5), 5);
+    staff.position.set(0.02, -0.2, 0.05);
+    arms[1].el.add(staff);
+    const sbell = M(new THREE.CylinderGeometry(0.03, 0.14, 0.22, 8), 6);
+    sbell.position.y = 1.0;
+    staff.add(sbell);
+    const sglow = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 4), glowMat);
+    sglow.position.y = 0.9;
+    staff.add(sglow);
+    const censer = M(new THREE.SphereGeometry(0.07, 6, 4), 6);
+    censer.position.set(-0.28, 0.02, 0.16);
+    spine.add(censer);
+  } else if (variant === 'warden') {
+    // a converted Tide-Warden in plate: broad, slow, faceless
+    rig.scale.setScalar(1.28);
+    for (const s of [-1, 1]) {
+      const pd = M(new THREE.SphereGeometry(0.17, 7, 5), 6);
+      pd.scale.set(1.25, 0.8, 1.1);
+      pd.position.set(s * 0.34, 0.74, 0);
+      spine.add(pd);
+    }
+    const chest = M(new THREE.BoxGeometry(0.42, 0.44, 0.1), 5);
+    chest.position.set(0, 0.5, 0.2);
+    spine.add(chest);
+    const rim = M(new THREE.BoxGeometry(0.44, 0.06, 0.12), 6);
+    rim.position.set(0, 0.74, 0.2);
+    spine.add(rim);
+    const mask = M(new THREE.BoxGeometry(0.22, 0.26, 0.06), 5);
+    mask.position.set(0, 0.03, 0.16);
+    head.add(mask);
+    const crest = M(new THREE.ConeGeometry(0.06, 0.3, 5), 6);
+    crest.position.set(0, 0.38, 0.02);
+    head.add(crest);
+    const shield = M(new THREE.BoxGeometry(0.07, 0.56, 0.36), 5);
+    shield.position.set(-0.07, -0.28, 0.06);
+    arms[0].el.add(shield);
+    const shieldRim = M(new THREE.BoxGeometry(0.09, 0.6, 0.06), 6);
+    shieldRim.position.set(-0.07, -0.28, 0.24);
+    arms[0].el.add(shieldRim);
+  } else if (variant === 'cantor') {
+    // the Cantor: robed, crowned in bells, a great bell on its chest
+    rig.scale.setScalar(2.0);
+    const skirt = M(new THREE.CylinderGeometry(0.34, 0.66, 0.95, 10, 1, true), 1);
+    skirt.position.set(0, -0.15, 0);
+    spine.add(skirt);
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * Math.PI * 2,
+        cb = M(new THREE.ConeGeometry(0.06, 0.18, 6), 6);
+      cb.position.set(Math.cos(a) * 0.22, 0.34, Math.sin(a) * 0.22);
+      cb.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5);
+      head.add(cb);
+    }
+    const gb = M(new THREE.CylinderGeometry(0.08, 0.3, 0.52, 10), 6);
+    gb.position.set(0, 0.42, 0.24);
+    spine.add(gb);
+    const gbRim = M(new THREE.TorusGeometry(0.3, 0.03, 4, 12), 7);
+    gbRim.rotation.x = Math.PI / 2;
+    gbRim.position.set(0, 0.16, 0.24);
+    spine.add(gbRim);
+    const gbCore = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), glowMat);
+    gbCore.position.set(0, 0.2, 0.24);
+    spine.add(gbCore);
+    for (const s of [-1, 1]) {
+      const cr = M(new THREE.ConeGeometry(0.1, 0.5, 5), 6);
+      cr.position.set(s * 0.42, 0.9, -0.06);
+      cr.rotation.z = -s * 0.5;
+      spine.add(cr);
+    }
+  }
+
+  root.traverse((o) => {
+    if (o.isMesh) o.frustumCulled = true;
+  });
   const ground = makeRigGrounder(root, rig);
 
   /** p: {t, walk 0..1, phase, attack 0..1 (0 = not attacking), dead 0..1, flash 0..1}. Writes the RIG only: root is the view's. */
   function pose(p) {
-    const w = p.walk, ph = p.phase, t = p.t;
+    const w = p.walk,
+      ph = p.phase,
+      t = p.t;
     const swing = Math.sin(ph) * 0.65 * w;
-    legs[0].thigh.rotation.x = swing; legs[1].thigh.rotation.x = -swing;
+    legs[0].thigh.rotation.x = swing;
+    legs[1].thigh.rotation.x = -swing;
     legs[0].shin.rotation.x = 0.12 + Math.max(0, Math.cos(ph)) * 0.8 * w;
     legs[1].shin.rotation.x = 0.12 + Math.max(0, -Math.cos(ph)) * 0.8 * w;
     hips.position.y = 0.96 - 0.02 + Math.abs(Math.sin(ph)) * 0.035 * w;
     spine.rotation.x = 0.2 + 0.08 * w + Math.sin(t * 1.3) * 0.02;
     spine.rotation.z = Math.sin(ph) * 0.06 * w + Math.sin(t * 0.9) * 0.015;
     spine.rotation.y = -Math.sin(ph) * 0.12 * w;
-    arms[0].sh.rotation.x = -Math.sin(ph) * 0.4 * w + Math.sin(t * 1.1) * 0.05; arms[0].sh.rotation.z = -0.08;
-    arms[1].sh.rotation.x = Math.sin(ph) * 0.4 * w + Math.sin(t * 1.3 + 1) * 0.05; arms[1].sh.rotation.z = 0.08;
-    arms[0].el.rotation.x = -0.12 - 0.1 * w; arms[1].el.rotation.x = -0.2;
-    let a = p.attack, bellPulse = 1 + 0.2 * Math.sin(t * 3);
-    if (a > 0) {                                  // readable tell: raise the arm, bell flares, slam
-      const raise = a < 0.55 ? ease(a / 0.55) : 1, slam = a < 0.55 ? 0 : ease(clamp01((a - 0.55) / 0.12)), rec = a < 0.7 ? 0 : ease(clamp01((a - 0.7) / 0.3));
-      arms[1].sh.rotation.x = -2.5 * raise + (2.6 * slam) * (1 - rec) + (rec ? 0 : 0);
+    arms[0].sh.rotation.x = -Math.sin(ph) * 0.4 * w + Math.sin(t * 1.1) * 0.05;
+    arms[0].sh.rotation.z = -0.08;
+    arms[1].sh.rotation.x = Math.sin(ph) * 0.4 * w + Math.sin(t * 1.3 + 1) * 0.05;
+    arms[1].sh.rotation.z = 0.08;
+    arms[0].el.rotation.x = -0.12 - 0.1 * w;
+    arms[1].el.rotation.x = -0.2;
+    let a = p.attack,
+      bellPulse = 1 + 0.2 * Math.sin(t * 3);
+    if (a > 0) {
+      // readable tell: raise the arm, bell flares, slam
+      const raise = a < 0.55 ? ease(a / 0.55) : 1,
+        slam = a < 0.55 ? 0 : ease(clamp01((a - 0.55) / 0.12)),
+        rec = a < 0.7 ? 0 : ease(clamp01((a - 0.7) / 0.3));
+      arms[1].sh.rotation.x = -2.5 * raise + 2.6 * slam * (1 - rec) + (rec ? 0 : 0);
       arms[1].el.rotation.x = -0.6 * raise * (1 - slam);
       spine.rotation.x += 0.35 * slam * (1 - rec) - 0.15 * raise * (1 - slam);
       bellPulse += 1.6 * raise * (1 - rec);
       jawPivot.rotation.x = 0.7 * raise;
     } else jawPivot.rotation.x = 0.15 + 0.1 * Math.sin(t * 2);
-    head.rotation.x = 0.35 + Math.sin(t * 0.8) * 0.04; head.rotation.z = Math.sin(t * 0.6) * 0.05;
+    head.rotation.x = 0.35 + Math.sin(t * 0.8) * 0.04;
+    head.rotation.z = Math.sin(t * 0.6) * 0.05;
     glow.scale.setScalar(bellPulse);
     // death: topple backwards about the feet, then rest ON the floor (ground() lifts the rig by however deep the toppled body sank)
     const d = ease(clamp01(p.dead));
@@ -153,55 +323,114 @@ export function makeTollbearer(atlasTex, variant = 'tollbearer') {
   return { root, rig, pose, mat };
 }
 
-// ------------------------------------------------------------- Flare cannon and scattergun: models_guns.js (PT-021)
+// Flare cannon and scattergun: models_guns.js
 import { makeFlareCannon, makeScattergun } from './models_guns.js';
 export { makeFlareCannon, makeScattergun };
 
 // -------------------------------------------------------------------- props
-export function makeCrate(tex) { return new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), lam({ map: tex })); }
-export function makeBarrel(tex) { return new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.34, 1.0, 10), lam({ map: tex, color: 0xb8a890 })); }
-export function makePillar(tex, H) { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, H, 1.1), lam({ map: tex })); m.position.y = H / 2; const g = new THREE.Group(); g.add(m); return g; }
+export function makeCrate(tex) {
+  return new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), lam({ map: tex }));
+}
+export function makeBarrel(tex) {
+  return new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.34, 1.0, 10), lam({ map: tex, color: 0xb8a890 }));
+}
+export function makePillar(tex, H) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, H, 1.1), lam({ map: tex }));
+  m.position.y = H / 2;
+  const g = new THREE.Group();
+  g.add(m);
+  return g;
+}
 
 export function makePod(tex, H) {
   const group = new THREE.Group();
-  const prof = [[0.001, -0.95], [0.26, -0.82], [0.5, -0.45], [0.56, 0.1], [0.44, 0.6], [0.2, 0.9], [0.001, 0.98]].map(([x, y]) => new THREE.Vector2(x, y));
+  const prof = [
+    [0.001, -0.95],
+    [0.26, -0.82],
+    [0.5, -0.45],
+    [0.56, 0.1],
+    [0.44, 0.6],
+    [0.2, 0.9],
+    [0.001, 0.98],
+  ].map(([x, y]) => new THREE.Vector2(x, y));
   const body = new THREE.Mesh(new THREE.LatheGeometry(prof, 10), lam({ map: tex, emissive: 0x2a0f30 }));
-  body.position.y = -1.9; group.add(body);
+  body.position.y = -1.9;
+  group.add(body);
   const cable = lam({ map: tex, color: 0x9a7aa0 });
-  for (const [dx, dz] of [[0.18, 0.1], [-0.15, 0.14], [0.02, -0.2]]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.045, 1.0, 5), cable); c.position.set(dx, -0.5, dz); group.add(c); }
-  for (let i = 0; i < 6; i++) {                        // neural taps
-    const a = i * 1.047, spike = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.28, 5), bas({ color: 0x3fd6c0 }));
-    spike.position.set(Math.cos(a) * 0.55, -1.7 + (i % 2) * 0.4, Math.sin(a) * 0.55); spike.rotation.z = -Math.cos(a) * 1.2; spike.rotation.x = Math.sin(a) * 1.2; group.add(spike);
+  for (const [dx, dz] of [
+    [0.18, 0.1],
+    [-0.15, 0.14],
+    [0.02, -0.2],
+  ]) {
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.045, 1.0, 5), cable);
+    c.position.set(dx, -0.5, dz);
+    group.add(c);
+  }
+  for (let i = 0; i < 6; i++) {
+    // neural taps
+    const a = i * 1.047,
+      spike = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.28, 5), bas({ color: 0x3fd6c0 }));
+    spike.position.set(Math.cos(a) * 0.55, -1.7 + (i % 2) * 0.4, Math.sin(a) * 0.55);
+    spike.rotation.z = -Math.cos(a) * 1.2;
+    spike.rotation.x = Math.sin(a) * 1.2;
+    group.add(spike);
   }
   const light = new THREE.PointLight(0x3fffe0, 40, 10, 2);
-  light.userData.base = 40; light.userData.flicker = 'pod';
+  light.userData.base = 40;
+  light.userData.flicker = 'pod';
   return { group, light };
 }
 
 /** lamp tint = the light of that room: warm oil lamps (hut, loft), cold customs tubes (shed), the pods' teal (warehouse) */
 const LAMP_TINTS = { warm: { bulb: 0xffd48a, light: 0xffb060 }, cool: { bulb: 0xd8f4ff, light: 0xa8dcff }, teal: { bulb: 0xa8ffee, light: 0x50ffd8 } };
-/** a soft ball of light round a bulb (PT-021: the lamps were black hooks with a point of colour): two nested additive spheres, shared materials so they merge with the other props */
-export function halo(g, x, y, z, r, color = 0xffc070) { for (const [k, op] of [[1, 0.3], [2.8, 0.1]]) { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(r * k, 1), bas({ color, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false })); m.position.set(x, y, z); g.add(m); } }
+/* * a soft ball of light round a bulb: two nested additive spheres, shared materials so they merge with the other props */
+export function halo(g, x, y, z, r, color = 0xffc070) {
+  for (const [k, op] of [
+    [1, 0.3],
+    [2.8, 0.1],
+  ]) {
+    const m = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(r * k, 1),
+      bas({ color, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false }),
+    );
+    m.position.set(x, y, z);
+    g.add(m);
+  }
+}
 export function makeLamp(H, tint = 'warm') {
-  const T = LAMP_TINTS[tint] ?? LAMP_TINTS.warm, group = new THREE.Group();
+  const T = LAMP_TINTS[tint] ?? LAMP_TINTS.warm,
+    group = new THREE.Group();
   const shade = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.3, 8, 1, true), lam({ color: 0x2f3a3a, side: THREE.DoubleSide }));
-  shade.position.y = -0.85; group.add(shade);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: T.bulb })); bulb.position.y = -0.92; group.add(bulb);
-  const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), bas({ color: 0x14100c })); wire.position.y = -0.35; group.add(wire);
+  shade.position.y = -0.85;
+  group.add(shade);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.1, 0), bas({ color: T.bulb }));
+  bulb.position.y = -0.92;
+  group.add(bulb);
+  const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.7, 4), bas({ color: 0x14100c }));
+  wire.position.y = -0.35;
+  group.add(wire);
   halo(group, 0, -0.92, 0, 0.2, T.light);
   const light = new THREE.PointLight(T.light, 110, 16, 2);
-  light.userData.base = 110; light.userData.flicker = 'lamp';
+  light.userData.base = 110;
+  light.userData.flicker = 'lamp';
   return { group, light };
 }
 
 export function makeLampPost() {
   const group = new THREE.Group();
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), lam({ color: 0x24302f })); pole.position.y = 1.6; group.add(pole);
-  const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), lam({ color: 0x1a201f })); cage.position.y = 3.3; group.add(cage);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: 0xffe0a0 })); bulb.position.y = 3.3; group.add(bulb);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), lam({ color: 0x24302f }));
+  pole.position.y = 1.6;
+  group.add(pole);
+  const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), lam({ color: 0x1a201f }));
+  cage.position.y = 3.3;
+  group.add(cage);
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: 0xffe0a0 }));
+  bulb.position.y = 3.3;
+  group.add(bulb);
   halo(group, 0, 3.3, 0, 0.28, 0xffc880);
   const light = new THREE.PointLight(0xffc880, 120, 20, 2);
-  light.userData.base = 120; light.userData.flicker = 'lamp';
+  light.userData.base = 120;
+  light.userData.flicker = 'lamp';
   return { group, light };
 }
 
@@ -212,42 +441,90 @@ export function makePickup(kind, tex, weaponTex, gunTex) {
   const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
   const g = new THREE.Group();
   if (kind.startsWith('health')) {
-    const big = kind === 'health_large', s = big ? 1.35 : 1;
-    const box = M(new THREE.BoxGeometry(0.42 * s, 0.26 * s, 0.3 * s), 0); box.position.y = 0.16 * s; g.add(box);
-    const strap = M(new THREE.BoxGeometry(0.06, 0.29 * s, 0.32 * s), 4); strap.position.y = 0.16 * s; g.add(strap);
+    const big = kind === 'health_large',
+      s = big ? 1.35 : 1;
+    const box = M(new THREE.BoxGeometry(0.42 * s, 0.26 * s, 0.3 * s), 0);
+    box.position.y = 0.16 * s;
+    g.add(box);
+    const strap = M(new THREE.BoxGeometry(0.06, 0.29 * s, 0.32 * s), 4);
+    strap.position.y = 0.16 * s;
+    g.add(strap);
   } else if (kind === 'ammo_flare') {
-    const box = M(new THREE.BoxGeometry(0.44, 0.24, 0.3), 1); box.position.y = 0.14; g.add(box);
-    for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.045, 0.045, 0.2, 6), 3); shell.rotation.z = Math.PI / 2; shell.position.set(0, 0.3, i * 0.09); g.add(shell); }
+    const box = M(new THREE.BoxGeometry(0.44, 0.24, 0.3), 1);
+    box.position.y = 0.14;
+    g.add(box);
+    for (let i = -1; i <= 1; i++) {
+      const shell = M(new THREE.CylinderGeometry(0.045, 0.045, 0.2, 6), 3);
+      shell.rotation.z = Math.PI / 2;
+      shell.position.set(0, 0.3, i * 0.09);
+      g.add(shell);
+    }
   } else if (kind === 'ammo_shell') {
-    const box = M(new THREE.BoxGeometry(0.4, 0.2, 0.28), 1); box.position.y = 0.12; g.add(box);
-    for (let i = -1; i <= 1; i++) { const shell = M(new THREE.CylinderGeometry(0.04, 0.04, 0.16, 6), 4); shell.position.set(i * 0.09, 0.3, 0); g.add(shell); const cap = M(new THREE.CylinderGeometry(0.042, 0.042, 0.04, 6), 3); cap.position.set(i * 0.09, 0.22, 0); g.add(cap); }
+    const box = M(new THREE.BoxGeometry(0.4, 0.2, 0.28), 1);
+    box.position.y = 0.12;
+    g.add(box);
+    for (let i = -1; i <= 1; i++) {
+      const shell = M(new THREE.CylinderGeometry(0.04, 0.04, 0.16, 6), 4);
+      shell.position.set(i * 0.09, 0.3, 0);
+      g.add(shell);
+      const cap = M(new THREE.CylinderGeometry(0.042, 0.042, 0.04, 6), 3);
+      cap.position.set(i * 0.09, 0.22, 0);
+      g.add(cap);
+    }
   } else if (kind === 'weapon_scattergun') {
-    const gun = makeScattergun(weaponTex || tex, gunTex, { hands: false }).group; gun.scale.setScalar(0.5); gun.rotation.set(0, Math.PI / 2, 0); gun.position.y = 0.3; g.add(gun);
-    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.62; g.add(glow);
+    const gun = makeScattergun(weaponTex || tex, gunTex, { hands: false }).group;
+    gun.scale.setScalar(0.5);
+    gun.rotation.set(0, Math.PI / 2, 0);
+    gun.position.y = 0.3;
+    g.add(gun);
+    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a }));
+    glow.position.y = 0.62;
+    g.add(glow);
   } else if (kind.startsWith('armor')) {
-    const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2); body.position.y = 0.26; g.add(body);
-    for (const x of [-0.14, 0.14]) { const strap = M(new THREE.BoxGeometry(0.06, 0.44, 0.18), 7); strap.position.set(x, 0.26, 0); g.add(strap); }
+    const body = M(new THREE.BoxGeometry(0.5, 0.42, 0.16), 2);
+    body.position.y = 0.26;
+    g.add(body);
+    for (const x of [-0.14, 0.14]) {
+      const strap = M(new THREE.BoxGeometry(0.06, 0.44, 0.18), 7);
+      strap.position.set(x, 0.26, 0);
+      g.add(strap);
+    }
   } else if (kind.startsWith('key')) {
-    if (kind === 'key_iron') mat.color.set(0x9fb4d0); else if (kind === 'key_bell') mat.color.set(0x60f0d8);          // brass / iron / bell keys read as different colours from across a room
-    const ring = M(new THREE.TorusGeometry(0.11, 0.035, 5, 8), 3); ring.position.y = 0.55; g.add(ring);
-    const shaft = M(new THREE.BoxGeometry(0.06, 0.34, 0.05), 3); shaft.position.y = 0.3; g.add(shaft);
-    for (const y of [0.16, 0.24]) { const tooth = M(new THREE.BoxGeometry(0.14, 0.05, 0.05), 3); tooth.position.set(0.07, y, 0); g.add(tooth); }
-    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.05, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a })); glow.position.y = 0.55; g.add(glow);
+    if (kind === 'key_iron') mat.color.set(0x9fb4d0);
+    else if (kind === 'key_bell') mat.color.set(0x60f0d8); // brass / iron / bell keys read as different colours from across a room
+    const ring = M(new THREE.TorusGeometry(0.11, 0.035, 5, 8), 3);
+    ring.position.y = 0.55;
+    g.add(ring);
+    const shaft = M(new THREE.BoxGeometry(0.06, 0.34, 0.05), 3);
+    shaft.position.y = 0.3;
+    g.add(shaft);
+    for (const y of [0.16, 0.24]) {
+      const tooth = M(new THREE.BoxGeometry(0.14, 0.05, 0.05), 3);
+      tooth.position.set(0.07, y, 0);
+      g.add(tooth);
+    }
+    const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(0.05, 0), new THREE.MeshBasicMaterial({ color: 0xffe08a }));
+    glow.position.y = 0.55;
+    g.add(glow);
   }
   return g;
 }
 
 /** Sliding door slab. axis 'x' = wall line runs east-west (slab spans x). keyed doors get a brass lock plate. */
 export function makeDoorSlab(tex, cell, H, axis, keyed) {
-  const thick = 0.36, w = axis === 'x' ? cell : thick, d = axis === 'x' ? thick : cell;
+  const thick = 0.36,
+    w = axis === 'x' ? cell : thick,
+    d = axis === 'x' ? thick : cell;
   const g = new THREE.Group();
   const slab = new THREE.Mesh(new THREE.BoxGeometry(w, H, d), new THREE.MeshLambertMaterial({ map: tex }));
-  slab.position.y = H / 2; g.add(slab);
+  slab.position.y = H / 2;
+  g.add(slab);
   if (keyed) {
     const plate = new THREE.MeshLambertMaterial({ color: 0xc9a44c, emissive: 0x3a2a08 });
     for (const s of [-1, 1]) {
       const p = new THREE.Mesh(new THREE.BoxGeometry(axis === 'x' ? 0.34 : 0.05, 0.34, axis === 'x' ? 0.05 : 0.34), plate);
-      p.position.set(axis === 'x' ? 0 : s * (thick / 2 + 0.02), 1.3, axis === 'x' ? s * (thick / 2 + 0.02) : 0); g.add(p);
+      p.position.set(axis === 'x' ? 0 : s * (thick / 2 + 0.02), 1.3, axis === 'x' ? s * (thick / 2 + 0.02) : 0);
+      g.add(p);
     }
   }
   return g;
@@ -258,10 +535,20 @@ export function makeExitGate(tex, H) {
   const g = new THREE.Group();
   const wood = new THREE.MeshLambertMaterial({ map: tex });
   const glow = new THREE.MeshBasicMaterial({ color: 0xffc070 });
-  const panel = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.5, 2.4), glow); panel.position.set(0, 1.25, 0); g.add(panel);
-  for (const z of [-1.4, 1.4]) { const post = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.8, 0.35), wood); post.position.set(0.05, 1.4, z); g.add(post); }
-  const lintel = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 3.2), wood); lintel.position.set(0.05, 2.75, 0); g.add(lintel);
-  const light = new THREE.PointLight(0xffb060, 60, 14, 2); light.position.set(-1.5, 1.6, 0); g.add(light);
+  const panel = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.5, 2.4), glow);
+  panel.position.set(0, 1.25, 0);
+  g.add(panel);
+  for (const z of [-1.4, 1.4]) {
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.8, 0.35), wood);
+    post.position.set(0.05, 1.4, z);
+    g.add(post);
+  }
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 3.2), wood);
+  lintel.position.set(0.05, 2.75, 0);
+  g.add(lintel);
+  const light = new THREE.PointLight(0xffb060, 60, 14, 2);
+  light.position.set(-1.5, 1.6, 0);
+  g.add(light);
   return { group: g, light };
 }
 
@@ -271,59 +558,138 @@ export function makeGaunt(atlasTex) {
   const mat = new THREE.MeshLambertMaterial({ map: atlasTex });
   const glowMat = new THREE.MeshBasicMaterial({ color: 0x3fffe0 });
   const M = (g, cell) => new THREE.Mesh(atlas(g, cell), mat);
-  const root = new THREE.Group(), rig = new THREE.Group(); root.add(rig);        // root = world placement (the view owns it); rig = everything a pose may change
-  const hips = new THREE.Group(); hips.position.y = 0.8; rig.add(hips);
+  const root = new THREE.Group(),
+    rig = new THREE.Group();
+  root.add(rig); // root = world placement (the view owns it); rig = everything a pose may change
+  const hips = new THREE.Group();
+  hips.position.y = 0.8;
+  rig.add(hips);
   const legs = [-1, 1].map((s) => {
-    const thigh = new THREE.Group(); thigh.position.set(s * 0.09, 0, 0); hips.add(thigh);
-    const tm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.42, 6), 2); tm.position.y = -0.21; thigh.add(tm);
-    const shin = new THREE.Group(); shin.position.y = -0.42; thigh.add(shin);
-    const sm = M(new THREE.CylinderGeometry(0.05, 0.035, 0.42, 6), 2); sm.position.y = -0.21; shin.add(sm);
-    const foot = M(new THREE.BoxGeometry(0.08, 0.05, 0.22), 3); foot.position.set(0, -0.43, 0.06); shin.add(foot);
+    const thigh = new THREE.Group();
+    thigh.position.set(s * 0.09, 0, 0);
+    hips.add(thigh);
+    const tm = M(new THREE.CylinderGeometry(0.07, 0.055, 0.42, 6), 2);
+    tm.position.y = -0.21;
+    thigh.add(tm);
+    const shin = new THREE.Group();
+    shin.position.y = -0.42;
+    thigh.add(shin);
+    const sm = M(new THREE.CylinderGeometry(0.05, 0.035, 0.42, 6), 2);
+    sm.position.y = -0.21;
+    shin.add(sm);
+    const foot = M(new THREE.BoxGeometry(0.08, 0.05, 0.22), 3);
+    foot.position.set(0, -0.43, 0.06);
+    shin.add(foot);
     return { thigh, shin };
   });
-  const spine = new THREE.Group(); spine.position.y = 0.04; hips.add(spine);
-  const torso = M(new THREE.CylinderGeometry(0.12, 0.16, 0.56, 6), 2); torso.scale.z = 0.8; torso.position.y = 0.28; spine.add(torso);
-  const rags = M(new THREE.BoxGeometry(0.2, 0.42, 0.03), 1); rags.position.set(0, 0.3, -0.13); rags.rotation.x = -0.15; spine.add(rags);            // torn oilskin still hanging off the back
-  const stub = M(new THREE.ConeGeometry(0.05, 0.22, 5), 6); stub.position.set(0.11, 0.5, -0.1); stub.rotation.set(-0.5, 0, -0.3); spine.add(stub);      // stunted Bell
-  const neck = new THREE.Group(); neck.position.set(0, 0.58, 0.02); spine.add(neck);
-  const head = new THREE.Group(); neck.add(head);
-  const skull = M(new THREE.IcosahedronGeometry(0.12, 1), 2); skull.scale.set(0.85, 1, 1.2); skull.position.y = 0.06; head.add(skull);
-  const jawPivot = new THREE.Group(); jawPivot.position.set(0, -0.03, 0.05); head.add(jawPivot);
-  const jaw = M(new THREE.BoxGeometry(0.1, 0.05, 0.13), 3); jaw.position.set(0, -0.025, 0.05); jawPivot.add(jaw);
-  const eyes = [-1, 1].map((s) => { const e = new THREE.Mesh(new THREE.SphereGeometry(0.026, 6, 4), glowMat); e.position.set(s * 0.05, 0.09, 0.12); head.add(e); return e; });
+  const spine = new THREE.Group();
+  spine.position.y = 0.04;
+  hips.add(spine);
+  const torso = M(new THREE.CylinderGeometry(0.12, 0.16, 0.56, 6), 2);
+  torso.scale.z = 0.8;
+  torso.position.y = 0.28;
+  spine.add(torso);
+  const rags = M(new THREE.BoxGeometry(0.2, 0.42, 0.03), 1);
+  rags.position.set(0, 0.3, -0.13);
+  rags.rotation.x = -0.15;
+  spine.add(rags); // torn oilskin still hanging off the back
+  const stub = M(new THREE.ConeGeometry(0.05, 0.22, 5), 6);
+  stub.position.set(0.11, 0.5, -0.1);
+  stub.rotation.set(-0.5, 0, -0.3);
+  spine.add(stub); // stunted Bell
+  const neck = new THREE.Group();
+  neck.position.set(0, 0.58, 0.02);
+  spine.add(neck);
+  const head = new THREE.Group();
+  neck.add(head);
+  const skull = M(new THREE.IcosahedronGeometry(0.12, 1), 2);
+  skull.scale.set(0.85, 1, 1.2);
+  skull.position.y = 0.06;
+  head.add(skull);
+  const jawPivot = new THREE.Group();
+  jawPivot.position.set(0, -0.03, 0.05);
+  head.add(jawPivot);
+  const jaw = M(new THREE.BoxGeometry(0.1, 0.05, 0.13), 3);
+  jaw.position.set(0, -0.025, 0.05);
+  jawPivot.add(jaw);
+  const eyes = [-1, 1].map((s) => {
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.026, 6, 4), glowMat);
+    e.position.set(s * 0.05, 0.09, 0.12);
+    head.add(e);
+    return e;
+  });
   const arms = [-1, 1].map((s) => {
-    const sh = new THREE.Group(); sh.position.set(s * 0.2, 0.5, 0); spine.add(sh);
-    const ua = M(new THREE.CylinderGeometry(0.045, 0.035, 0.4, 6), 2); ua.position.y = -0.2; sh.add(ua);
-    const el = new THREE.Group(); el.position.y = -0.4; sh.add(el);
-    const fa = M(new THREE.CylinderGeometry(0.035, 0.028, 0.46, 6), 2); fa.position.y = -0.23; el.add(fa);
-    for (let i = -1; i <= 1; i++) { const c = M(new THREE.ConeGeometry(0.014, 0.16, 4), 6); c.position.set(i * 0.025, -0.53, 0.02); c.rotation.x = Math.PI; el.add(c); }   // bronze claws
+    const sh = new THREE.Group();
+    sh.position.set(s * 0.2, 0.5, 0);
+    spine.add(sh);
+    const ua = M(new THREE.CylinderGeometry(0.045, 0.035, 0.4, 6), 2);
+    ua.position.y = -0.2;
+    sh.add(ua);
+    const el = new THREE.Group();
+    el.position.y = -0.4;
+    sh.add(el);
+    const fa = M(new THREE.CylinderGeometry(0.035, 0.028, 0.46, 6), 2);
+    fa.position.y = -0.23;
+    el.add(fa);
+    for (let i = -1; i <= 1; i++) {
+      const c = M(new THREE.ConeGeometry(0.014, 0.16, 4), 6);
+      c.position.set(i * 0.025, -0.53, 0.02);
+      c.rotation.x = Math.PI;
+      el.add(c);
+    } // bronze claws
     return { sh, el };
   });
 
   const ground = makeRigGrounder(root, rig);
   /** p: {t, walk, phase, attack 0..1, lunge -1..1 (negative = crouch, 1 = dash), dead 0..1, flash}. Writes the RIG only: root is the view's. */
   function pose(p) {
-    const w = p.walk, ph = p.phase, t = p.t, cr = Math.max(0, -p.lunge), ex = Math.max(0, p.lunge);
+    const w = p.walk,
+      ph = p.phase,
+      t = p.t,
+      cr = Math.max(0, -p.lunge),
+      ex = Math.max(0, p.lunge);
     const swing = Math.sin(ph) * 1.0 * w;
-    legs[0].thigh.rotation.x = swing * (1 - ex) - ex * 0.9; legs[1].thigh.rotation.x = -swing * (1 - ex) - ex * 0.9;
-    legs[0].shin.rotation.x = 0.4 + Math.max(0, Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2; legs[1].shin.rotation.x = 0.4 + Math.max(0, -Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2;
-    hips.position.y = 0.8 - cr * 0.42 - ex * 0.12 + Math.abs(Math.sin(ph)) * 0.05 * w;                 // the tell: a deep squat...
+    legs[0].thigh.rotation.x = swing * (1 - ex) - ex * 0.9;
+    legs[1].thigh.rotation.x = -swing * (1 - ex) - ex * 0.9;
+    legs[0].shin.rotation.x = 0.4 + Math.max(0, Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2;
+    legs[1].shin.rotation.x = 0.4 + Math.max(0, -Math.cos(ph)) * 1.0 * w + cr * 1.1 + ex * 0.2;
+    hips.position.y = 0.8 - cr * 0.42 - ex * 0.12 + Math.abs(Math.sin(ph)) * 0.05 * w; // the tell: a deep squat...
     spine.rotation.x = 0.85 + 0.1 * w + cr * 0.5 + ex * 0.45 + Math.sin(t * 1.8) * 0.03;
-    spine.rotation.y = -Math.sin(ph) * 0.15 * w; spine.rotation.z = Math.sin(ph) * 0.06 * w + Math.sin(t * 38) * 0.08 * cr;   // ...with a violent quiver
-    for (const e of eyes) e.scale.setScalar(1 + cr * 1.6 + ex * 0.8);                                              // ...and eyes that flare
-    let armX = -1.15 - Math.sin(ph) * 0.7 * w;                                     // hang forward and down; swing when running
-    arms[0].sh.rotation.x = armX; arms[1].sh.rotation.x = -1.15 + Math.sin(ph) * 0.7 * w;
-    arms[0].sh.rotation.z = -0.15; arms[1].sh.rotation.z = 0.15;
-    arms[0].el.rotation.x = -0.2; arms[1].el.rotation.x = -0.2;
-    if (cr > 0) { arms[0].sh.rotation.x = -0.4; arms[1].sh.rotation.x = -0.4; arms[0].el.rotation.x = -1.4; arms[1].el.rotation.x = -1.4; }     // coiled: arms drawn back
-    if (ex > 0) { arms[0].sh.rotation.x = -2.6; arms[1].sh.rotation.x = -2.6; arms[0].el.rotation.x = 0; arms[1].el.rotation.x = 0; }               // reaching
+    spine.rotation.y = -Math.sin(ph) * 0.15 * w;
+    spine.rotation.z = Math.sin(ph) * 0.06 * w + Math.sin(t * 38) * 0.08 * cr; // ...with a violent quiver
+    for (const e of eyes) e.scale.setScalar(1 + cr * 1.6 + ex * 0.8); // ...and eyes that flare
+    let armX = -1.15 - Math.sin(ph) * 0.7 * w; // hang forward and down; swing when running
+    arms[0].sh.rotation.x = armX;
+    arms[1].sh.rotation.x = -1.15 + Math.sin(ph) * 0.7 * w;
+    arms[0].sh.rotation.z = -0.15;
+    arms[1].sh.rotation.z = 0.15;
+    arms[0].el.rotation.x = -0.2;
+    arms[1].el.rotation.x = -0.2;
+    if (cr > 0) {
+      arms[0].sh.rotation.x = -0.4;
+      arms[1].sh.rotation.x = -0.4;
+      arms[0].el.rotation.x = -1.4;
+      arms[1].el.rotation.x = -1.4;
+    } // coiled: arms drawn back
+    if (ex > 0) {
+      arms[0].sh.rotation.x = -2.6;
+      arms[1].sh.rotation.x = -2.6;
+      arms[0].el.rotation.x = 0;
+      arms[1].el.rotation.x = 0;
+    } // reaching
     const a = p.attack;
-    if (a > 0) { const up = a < 0.4 ? ease(a / 0.4) : 1, sl = a < 0.4 ? 0 : ease(clamp01((a - 0.4) / 0.2)); arms[1].sh.rotation.x = -2.9 * up + 1.8 * sl; arms[0].sh.rotation.x = -2.9 * up * 0.6 + 1.4 * sl; }
-    head.rotation.x = -0.6 + Math.sin(t * 2.4) * 0.05; head.rotation.z = Math.sin(t * 1.3) * 0.08;
+    if (a > 0) {
+      const up = a < 0.4 ? ease(a / 0.4) : 1,
+        sl = a < 0.4 ? 0 : ease(clamp01((a - 0.4) / 0.2));
+      arms[1].sh.rotation.x = -2.9 * up + 1.8 * sl;
+      arms[0].sh.rotation.x = -2.9 * up * 0.6 + 1.4 * sl;
+    }
+    head.rotation.x = -0.6 + Math.sin(t * 2.4) * 0.05;
+    head.rotation.z = Math.sin(t * 1.3) * 0.08;
     jawPivot.rotation.x = 0.35 + Math.max(cr, ex) * 0.6 + (a > 0 ? 0.5 : 0) + Math.sin(t * 5) * 0.05;
     const d = ease(clamp01(p.dead));
     rig.rotation.z = d * 1.5;
-    ground();                                                                       // a crouch, a leap or the death roll must never bury a claw or a shoulder
+    ground(); // a crouch, a leap or the death roll must never bury a claw or a shoulder
     mat.emissive.setRGB(0.7 * p.flash, 0.55 * p.flash, 0.4 * p.flash);
   }
   return { root, rig, pose, mat };
@@ -331,58 +697,163 @@ export function makeGaunt(atlasTex) {
 
 // ------------------------------------------------ Marrow Quay: set dressing and scenery
 /** scale a primitive's UVs so a texture tile covers `tile` metres (walls of different sizes keep the same texel density) */
-function tileUV(geom, w, h, tile = 4) { const uv = geom.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (w / tile), uv.getY(i) * (h / tile)); return geom; }
+function tileUV(geom, w, h, tile = 4) {
+  const uv = geom.attributes.uv;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (w / tile), uv.getY(i) * (h / tile));
+  return geom;
+}
 
 export function makeCrate2(tex) {
-  const g = new THREE.Group(), mat = lam({ map: tex });
-  const a = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), mat); a.position.y = 0.55; g.add(a);
-  const b = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mat); b.position.set(0.08, 1.6, -0.05); b.rotation.y = 0.35; g.add(b);
+  const g = new THREE.Group(),
+    mat = lam({ map: tex });
+  const a = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), mat);
+  a.position.y = 0.55;
+  g.add(a);
+  const b = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mat);
+  b.position.set(0.08, 1.6, -0.05);
+  b.rotation.y = 0.35;
+  g.add(b);
   return g;
 }
 export function makeBollard() {
-  const g = new THREE.Group(), iron = lam({ color: 0x20262a });
-  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.19, 0.62, 8), iron); post.position.y = 0.31; g.add(post);
-  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.1, 8), iron); cap.position.y = 0.66; g.add(cap);
-  const rope = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.03, 4, 10), lam({ color: 0x8a7a5a })); rope.rotation.x = Math.PI / 2; rope.position.y = 0.48; g.add(rope);
+  const g = new THREE.Group(),
+    iron = lam({ color: 0x20262a });
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.19, 0.62, 8), iron);
+  post.position.y = 0.31;
+  g.add(post);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.1, 8), iron);
+  cap.position.y = 0.66;
+  g.add(cap);
+  const rope = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.03, 4, 10), lam({ color: 0x8a7a5a }));
+  rope.rotation.x = Math.PI / 2;
+  rope.position.y = 0.48;
+  g.add(rope);
   return g;
 }
 export function makeStall(woodTex, awningTex) {
-  const g = new THREE.Group(), wood = lam({ map: woodTex }), dark = lam({ color: 0x2a2018 });
-  const counter = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 0.9), wood); counter.position.y = 0.45; g.add(counter);
-  for (const [x, z] of [[-0.9, -0.4], [0.9, -0.4], [-0.9, 0.4], [0.9, 0.4]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.2, 0.07), dark); p.position.set(x, 1.1, z); g.add(p); }
-  const aw = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.6), lam({ map: awningTex, side: THREE.DoubleSide })); aw.position.set(0, 2.15, 0); aw.rotation.set(-Math.PI / 2 + 0.28, 0, 0); g.add(aw);
+  const g = new THREE.Group(),
+    wood = lam({ map: woodTex }),
+    dark = lam({ color: 0x2a2018 });
+  const counter = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 0.9), wood);
+  counter.position.y = 0.45;
+  g.add(counter);
+  for (const [x, z] of [
+    [-0.9, -0.4],
+    [0.9, -0.4],
+    [-0.9, 0.4],
+    [0.9, 0.4],
+  ]) {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.2, 0.07), dark);
+    p.position.set(x, 1.1, z);
+    g.add(p);
+  }
+  const aw = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.6), lam({ map: awningTex, side: THREE.DoubleSide }));
+  aw.position.set(0, 2.15, 0);
+  aw.rotation.set(-Math.PI / 2 + 0.28, 0, 0);
+  g.add(aw);
   const fish = lam({ color: 0x8a9aa8 });
-  for (let i = 0; i < 5; i++) { const f = new THREE.Mesh(new THREE.IcosahedronGeometry(0.11, 0), fish); f.scale.set(1.8, 0.6, 0.8); f.position.set(-0.7 + i * 0.35, 0.98, ((i * 37) % 5) * 0.06 - 0.12); f.rotation.y = i; g.add(f); }
+  for (let i = 0; i < 5; i++) {
+    const f = new THREE.Mesh(new THREE.IcosahedronGeometry(0.11, 0), fish);
+    f.scale.set(1.8, 0.6, 0.8);
+    f.position.set(-0.7 + i * 0.35, 0.98, ((i * 37) % 5) * 0.06 - 0.12);
+    f.rotation.y = i;
+    g.add(f);
+  }
   return g;
 }
 export function makeBoat(hullTex) {
-  const g = new THREE.Group(), hull = lam({ map: hullTex }), wood = lam({ color: 0x6a4a2a }), cloth = lam({ color: 0xcfc4a4, side: THREE.DoubleSide });
-  const body = new THREE.Mesh(tileUV(new THREE.CylinderGeometry(1.25, 0.55, 1.1, 10), 6, 2), hull); body.scale.set(3.2, 1, 1); body.position.y = 0.1; g.add(body);
-  const deck = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.06, 10), wood); deck.scale.set(3.15, 1, 0.95); deck.position.y = 0.66; g.add(deck);
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.2, 1.5), hull); cabin.position.set(-0.6, 1.25, 0); g.add(cabin);
-  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.09, 6.2, 6), wood); mast.position.set(1.4, 3.7, 0); g.add(mast);
-  const sail = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 4.2), cloth); sail.position.set(0.4, 3.6, 0.06); sail.rotation.y = 0.12; g.add(sail);
+  const g = new THREE.Group(),
+    hull = lam({ map: hullTex }),
+    wood = lam({ color: 0x6a4a2a }),
+    cloth = lam({ color: 0xcfc4a4, side: THREE.DoubleSide });
+  const body = new THREE.Mesh(tileUV(new THREE.CylinderGeometry(1.25, 0.55, 1.1, 10), 6, 2), hull);
+  body.scale.set(3.2, 1, 1);
+  body.position.y = 0.1;
+  g.add(body);
+  const deck = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.06, 10), wood);
+  deck.scale.set(3.15, 1, 0.95);
+  deck.position.y = 0.66;
+  g.add(deck);
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.2, 1.5), hull);
+  cabin.position.set(-0.6, 1.25, 0);
+  g.add(cabin);
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.09, 6.2, 6), wood);
+  mast.position.set(1.4, 3.7, 0);
+  g.add(mast);
+  const sail = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 4.2), cloth);
+  sail.position.set(0.4, 3.6, 0.06);
+  sail.rotation.y = 0.12;
+  g.add(sail);
   return g;
 }
 export function makeCrane() {
-  const g = new THREE.Group(), iron = lam({ color: 0x2b3438 });
-  for (const z of [-0.9, 0.9]) { const leg = new THREE.Mesh(new THREE.BoxGeometry(0.35, 14, 0.35), iron); leg.position.set(0, 7, z); g.add(leg); }
-  const brace = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 2.2), iron); brace.position.set(0, 9, 0); g.add(brace);
-  const arm = new THREE.Mesh(new THREE.BoxGeometry(11, 0.35, 0.35), iron); arm.position.set(4.5, 14, 0); g.add(arm);
-  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 8, 4), iron); cable.position.set(8.5, 10, 0); g.add(cable);
-  const hook = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), iron); hook.position.set(8.5, 6, 0); g.add(hook);
+  const g = new THREE.Group(),
+    iron = lam({ color: 0x2b3438 });
+  for (const z of [-0.9, 0.9]) {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.35, 14, 0.35), iron);
+    leg.position.set(0, 7, z);
+    g.add(leg);
+  }
+  const brace = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 2.2), iron);
+  brace.position.set(0, 9, 0);
+  g.add(brace);
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(11, 0.35, 0.35), iron);
+  arm.position.set(4.5, 14, 0);
+  g.add(arm);
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 8, 4), iron);
+  cable.position.set(8.5, 10, 0);
+  g.add(cable);
+  const hook = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), iron);
+  hook.position.set(8.5, 6, 0);
+  g.add(hook);
   return g;
 }
 /** The bell tower of St. Orrin, seen from everywhere in Port Marrow. The Bell at the top pulses teal: the Hush has a source. */
 export function makeTower(stoneTex, atlasTex) {
-  const g = new THREE.Group(), stone = lam({ map: stoneTex }), roof = lam({ color: 0x3a3438 });
+  const g = new THREE.Group(),
+    stone = lam({ map: stoneTex }),
+    roof = lam({ color: 0x3a3438 });
   let y = -0.6;
-  for (const [w, h] of [[9, 12], [7.4, 11], [6, 9]]) { const b = new THREE.Mesh(tileUV(new THREE.BoxGeometry(w, h, w), w, h, 5), stone); b.position.y = y + h / 2; g.add(b); y += h; }
-  for (const [dx, dz] of [[-2.4, -2.4], [2.4, -2.4], [-2.4, 2.4], [2.4, 2.4]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.9, 6, 0.9), stone); p.position.set(dx, y + 3, dz); g.add(p); }
-  const cap = new THREE.Mesh(new THREE.ConeGeometry(4.6, 7, 4), roof); cap.position.y = y + 6 + 3.5; cap.rotation.y = Math.PI / 4; g.add(cap);
-  const prof = [[0.01, 0], [0.7, 0.2], [1.2, 1.0], [1.35, 1.7], [1.15, 2.0]].map(([x, yy]) => new THREE.Vector2(x, yy));
-  const bellMesh = new THREE.Mesh(atlas(new THREE.LatheGeometry(prof, 10), 6), lam({ map: atlasTex, emissive: 0x1a3a34 })); bellMesh.position.y = y + 1.5; bellMesh.rotation.x = Math.PI; bellMesh.position.y += 2; g.add(bellMesh);
-  const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), bas({ color: 0x3fffe0 })); glow.position.y = y + 2.6; g.add(glow);
-  glow.userData.keep = true; g.userData.glow = glow;
+  for (const [w, h] of [
+    [9, 12],
+    [7.4, 11],
+    [6, 9],
+  ]) {
+    const b = new THREE.Mesh(tileUV(new THREE.BoxGeometry(w, h, w), w, h, 5), stone);
+    b.position.y = y + h / 2;
+    g.add(b);
+    y += h;
+  }
+  for (const [dx, dz] of [
+    [-2.4, -2.4],
+    [2.4, -2.4],
+    [-2.4, 2.4],
+    [2.4, 2.4],
+  ]) {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.9, 6, 0.9), stone);
+    p.position.set(dx, y + 3, dz);
+    g.add(p);
+  }
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(4.6, 7, 4), roof);
+  cap.position.y = y + 6 + 3.5;
+  cap.rotation.y = Math.PI / 4;
+  g.add(cap);
+  const prof = [
+    [0.01, 0],
+    [0.7, 0.2],
+    [1.2, 1.0],
+    [1.35, 1.7],
+    [1.15, 2.0],
+  ].map(([x, yy]) => new THREE.Vector2(x, yy));
+  const bellMesh = new THREE.Mesh(atlas(new THREE.LatheGeometry(prof, 10), 6), lam({ map: atlasTex, emissive: 0x1a3a34 }));
+  bellMesh.position.y = y + 1.5;
+  bellMesh.rotation.x = Math.PI;
+  bellMesh.position.y += 2;
+  g.add(bellMesh);
+  const glow = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), bas({ color: 0x3fffe0 }));
+  glow.position.y = y + 2.6;
+  g.add(glow);
+  glow.userData.keep = true;
+  g.userData.glow = glow;
   return g;
 }

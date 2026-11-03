@@ -1,5 +1,7 @@
-// Round 1 of the outside audit (Gemini, Grok and Codex all read the same frames): the Journal and the end-of-map panel showed the live message strip, the pickup lines and the last pickup card through their dim.
-// The fix is one CSS rule. A browser decides what it looks like (the real-game frames of the regeneration); this holds the rule to the real ids so it cannot name a screen or an element that is not there.
+// Round 1 of the outside audit (Gemini, Grok and Codex all read the same frames): the Journal and the end-of-map panel showed the live message strip,
+// the pickup lines and the last pickup card through their dim.
+// The fix is one CSS rule. A browser decides what it looks like (the real-game frames of the regeneration); this holds the rule to the real ids so it
+// cannot name a screen or an element that is not there.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -11,10 +13,15 @@ const rule = html.match(/body:is\(((?:\[data-screen=[a-z]+\],?)+)\) :is\(([^)]+)
 
 test('one rule hides the live overlays under a full-panel screen, and every screen and element it names exists', () => {
   assert.ok(rule, 'the rule is in index.html');
-  const screens = [...rule[1].matchAll(/data-screen=([a-z]+)/g)].map((m) => m[1]), els = rule[2].split(',').map((s) => s.trim());
-  assert.deepEqual(screens.sort(), ['complete', 'credits', 'dead', 'ending', 'journal', 'record', 'stats']);          // (PT-077: Your stats is a full panel too)
+  const screens = [...rule[1].matchAll(/data-screen=([a-z]+)/g)].map((m) => m[1]),
+    els = rule[2].split(',').map((s) => s.trim());
+  // (PT-077: Your stats is a full panel too)
+  assert.deepEqual(screens.sort(), ['complete', 'credits', 'dead', 'ending', 'journal', 'record', 'stats']);
   for (const s of screens) assert.ok(html.includes(`id="screen-${s}"`), 'screen-' + s + ' exists');
-  for (const e of els) { assert.match(e, /^#[a-z-]+$/, e); assert.ok(html.includes(`id="${e.slice(1)}"`), e + ' exists'); }
+  for (const e of els) {
+    assert.match(e, /^#[a-z-]+$/, e);
+    assert.ok(html.includes(`id="${e.slice(1)}"`), e + ' exists');
+  }
   assert.deepEqual(els.sort(), ['#captions', '#comms', '#cross-note', '#pickup-card', '#tips', '#toasts']);
 });
 

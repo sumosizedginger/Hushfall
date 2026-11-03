@@ -1,6 +1,6 @@
 // Data tables. Everything tunable about the simulation lives here (no magic numbers in world.js).
-export const TICK = 1 / 60;          // fixed simulation step (seconds)
-export const CELL = 2;               // metres per map cell
+export const TICK = 1 / 60; // fixed simulation step (seconds)
+export const CELL = 2; // metres per map cell
 export const DEFAULT_CEILING = 3.6;
 
 export const DIFFICULTY = {
@@ -10,335 +10,1518 @@ export const DIFFICULTY = {
 };
 
 export const PLAYER = {
-  radius: 0.32, eye: 1.6, accel: 14, maxHp: 100, maxArmor: 100, startAmmo: { flare: 8 }, dryFeed: { every: 10, amount: 1 }, useReach: 2.3, armorAbsorb: 0.5,
-  speed: 6.4,               // walk, m/s
-  sprintMult: 1.55,         // applies to the forward component only; strafing and backing up stay at walk speed
-  sprintMinForward: 0.3,    // sprint needs this much forward input
-  sprintRecover: 0.18,      // s after sprint ends before the weapon can fire (weapon raise)
-  sprintBlendTime: 0.2,     // s to lower/raise the weapon (view pose)
-  adsTime: 0.14,            // s to bring the weapon up to the sights
-  adsMoveMult: 0.55,        // movement speed at full aim
+  radius: 0.32,
+  eye: 1.6,
+  accel: 14,
+  maxHp: 100,
+  maxArmor: 100,
+  startAmmo: { flare: 8 },
+  dryFeed: { every: 10, amount: 1 },
+  useReach: 2.3,
+  armorAbsorb: 0.5,
+  speed: 6.4, // walk, m/s
+  sprintMult: 1.55, // applies to the forward component only; strafing and backing up stay at walk speed
+  sprintMinForward: 0.3, // sprint needs this much forward input
+  sprintRecover: 0.18, // s after sprint ends before the weapon can fire (weapon raise)
+  sprintBlendTime: 0.2, // s to lower/raise the weapon (view pose)
+  adsTime: 0.14, // s to bring the weapon up to the sights
+  adsMoveMult: 0.55, // movement speed at full aim
 };
 // Camera constants shared by the view and the sensitivity scaling (view-only; the sim never reads FOV).
 export const VIEW = { fov: 70, adsFov: 46, sprintFovKick: 5 };
-export const PITCH_LIMIT = 1.3;       // radians up or down the view can tilt (the sim holds it; the view draws a pending look inside it)
+export const PITCH_LIMIT = 1.3; // radians up or down the view can tilt (the sim holds it; the view draws a pending look inside it)
 /** enemies notice loud gunfire this far away (only if nothing solid is in the way, or very close) */
-/** ECHO (PT-039, Act B; a map's atmosphere.echo): a noise louder than `loud` metres carries `echo` times as far (a shot in the Echo Markets' well); the quiet ones (the arc lamp uncharged, a blow, the fork) carry as they always did: that is the whole of the answer */
+/*
+ * ECHO: a noise louder than `loud` metres carries `echo` times as far (a shot in the Echo Markets' well); the quiet ones (the arc lamp uncharged, a
+ * blow, the fork) carry as they always did: that is the whole of the answer
+ */
 export const ECHO = { loud: 16 };
-/** ENEMY VARIANTS (PT-039, Act B): a map entity (or a `spawn` action) of an ordinary kind may wear a variant: a tint on its rig and nothing else (the Drowned of C2M12 are Tollbearers in the colours the water made of them) */
-export const VARIANTS = { drowned: { name: 'Drowned', tint: 0x6f9a8c }, hived: { name: 'Hived', tint: 0xeab464 }, woven: { name: 'Woven', tint: 0xdcd6c4 }, crystal: { name: 'Crystal', tint: 0x94cbe6 } };      // PT-043 (Acts C and D): the Hive's amber-veined, the Loom's pale, the copy-town's glass
-export const NOISE = { flare: 22, scattergun: 26, rivet: 20, harpoon: 30, arc: 14, carbine: 24, linethrower: 30, mortar: 32, fork: 12, chainsaw: 18, explosion: 24, closeRange: 9, melee: 9 };
+/*
+ * ENEMY VARIANTS: a map entity (or a `spawn` action) of an ordinary kind may wear a variant: a tint on its rig and nothing else (the Drowned of C2M12
+ * are Tollbearers in the colours the water made of them)
+ */
+export const VARIANTS = {
+  drowned: { name: 'Drowned', tint: 0x6f9a8c },
+  hived: { name: 'Hived', tint: 0xeab464 },
+  woven: { name: 'Woven', tint: 0xdcd6c4 },
+  crystal: { name: 'Crystal', tint: 0x94cbe6 },
+}; // the Hive's amber-veined, the Loom's pale, the copy-town's glass
+export const NOISE = {
+  flare: 22,
+  scattergun: 26,
+  rivet: 20,
+  harpoon: 30,
+  arc: 14,
+  carbine: 24,
+  linethrower: 30,
+  mortar: 32,
+  fork: 12,
+  chainsaw: 18,
+  explosion: 24,
+  closeRange: 9,
+  melee: 9,
+};
 export const AMMO_MAX = { flare: 30, shell: 40, rivet: 200, bolt: 24, cell: 100, round: 180, rocket: 12 };
-/** AMMO_LOADS (PT-056, R9 of the Director's Plan; design/WEAPONS_AND_CONTROLS_PLAN.md section 15; not the falling LOADS of loads.js): an alternate type of ammunition for a gun you already hold, chosen with the `load` action (key T, the pad's X). A gun carries its standard ammunition plus up to three
- *  loads, each with its own count and a cap that is a share (`cap`) of the standard cap; a load never replaces the standard (it runs out and the gun goes back to it) and drops only from caches, secrets and elites. Lazy state: `p.loads` ({ gun: { load: n } }) and
- *  `p.loadSel` ({ gun: load }) exist only once a load has been picked up, so a world that never meets one is byte-for-byte what it was. `cost` is how many units of the load a shot spends (default 1).
- *  SLAG sets what it hits alight (`ignite`: dps for t s; it fizzles on a creature standing in water). RIME does `dmg` x the damage, chills for `chill.t` s (`slow` of its speed taken away) and makes the NEXT hit do `chill.brittle` x; it puts a fire out; a bell node takes `nodeMult` x.
- *  PEN (the penetrator) does `plate` x to a plated creature (a Warden-Graft, a Bulwark, ...) and goes through one more body (`through`) at `throughMult` of the damage; the rivet driver and the carbine spend two rounds a shot. Every number a first guess, none played. */
+/**
+ * AMMO_LOADS (R9 of the Director's Plan; design/WEAPONS_AND_CONTROLS_PLAN.md section 15; not the falling LOADS of loads.js): an alternate type of
+ * ammunition for a gun you already hold, chosen with the `load` action (key T, the pad's X). A gun carries its standard ammunition plus up to three
+ * loads, each with its own count and a cap that is a share (`cap`) of the standard cap; a load never replaces the standard (it runs out and the gun
+ * goes back to it) and drops only from caches, secrets and elites. Lazy state: `p.loads` ({ gun: { load: n } }) and
+ * `p.loadSel` ({ gun: load }) exist only once a load has been picked up, so a world that never meets one is byte-for-byte what it was. `cost` is how
+ * many units of the load a shot spends (default 1).
+ * SLAG sets what it hits alight (`ignite`: dps for t s; it fizzles on a creature standing in water). RIME does `dmg` x the damage, chills for
+ * `chill.t` s (`slow` of its speed taken away) and makes the NEXT hit do `chill.brittle` x; it puts a fire out; a bell node takes `nodeMult` x.
+ * PEN (the penetrator) does `plate` x to a plated creature (a Warden-Graft, a Bulwark, ...) and goes through one more body (`through`) at
+ * `throughMult` of the damage; the rivet driver and the carbine spend two rounds a shot. Every number a first guess, none played.
+ */
 export const AMMO_LOADS = {
   slag: { name: 'Slag', mark: 'S', color: '#ff8a3a', guns: ['scattergun', 'rivet', 'carbine'], cap: 0.4, dmg: 1, ignite: { dps: 6, t: 4 } },
-  rime: { name: 'Rime', mark: 'R', color: '#8fd8ff', guns: ['scattergun', 'harpoon', 'flare'], cap: 0.4, dmg: 0.8, chill: { t: 3, slow: 0.4, brittle: 1.5 }, nodeMult: 2 },
-  pen: { name: 'Penetrator', mark: 'P', color: '#f2e6b8', guns: ['rivet', 'harpoon', 'carbine'], cap: 0.3, dmg: 1, plate: 2, through: 1, throughMult: 0.7, cost: { rivet: 2, carbine: 2 } },
+  rime: {
+    name: 'Rime',
+    mark: 'R',
+    color: '#8fd8ff',
+    guns: ['scattergun', 'harpoon', 'flare'],
+    cap: 0.4,
+    dmg: 0.8,
+    chill: { t: 3, slow: 0.4, brittle: 1.5 },
+    nodeMult: 2,
+  },
+  pen: {
+    name: 'Penetrator',
+    mark: 'P',
+    color: '#f2e6b8',
+    guns: ['rivet', 'harpoon', 'carbine'],
+    cap: 0.3,
+    dmg: 1,
+    plate: 2,
+    through: 1,
+    throughMult: 0.7,
+    cost: { rivet: 2, carbine: 2 },
+  },
 };
 export const AMMO_LOAD_ORDER = ['slag', 'rime', 'pen'];
-/** MODS (PT-057, R9; design/WEAPONS_AND_CONTROLS_PLAN.md section 16): a permanent upgrade to ONE gun, found on a map (a pickup `mod_<id>`) and carried like a weapon. Tier 2 is bought with salvage at the Locker (`tier2.cost`, progress.js `buyMod`). Lazy state: `p.mods` ({ id: 1 }) exists once a mod is
- *  found; the tier two a player has bought rides in `w.upgrades.mods2` (only once any is bought). `src/engine/mods.js` turns a gun's definition into the modded one at the moment of the shot. Every number a first guess, nothing played.
- *  DOUBLE BARREL: both barrels at once (`pellets` x2 for `cost` 2 shells, a cycle of `cooldown` s; tier two `cooldown2`); with one shell left it fires one barrel as before. SPIN-UP: the rate climbs while the trigger is held (`rate` x the cooldown at full speed after `time` s) and the spread tightens (`tighten`);
- *  tier two stops the heat bloom. LONG CHAIN: the lamp chains `chain` more jumps (tier two one more). BARBED BOLT: the harpoon pins a lunging or charging creature for `pin` s and staggers a Bulwark (tier two: `pin2` s and a bleed of `bleed.dps` for `bleed.t` s). PHOSPHOR: a flare's ground burns `t` x as long and its light reaches
- *  further (tier two: `r2` x the radius). AIRBURST (optional, the mortar): `r` x the blast radius and no ground effect (tier two: `r2`). */
+/**
+ * MODS (R9; design/WEAPONS_AND_CONTROLS_PLAN.md section 16): a permanent upgrade to ONE gun, found on a map (a pickup `mod_<id>`) and carried like a
+ * weapon. Tier 2 is bought with salvage at the Locker (`tier2.cost`, progress.js `buyMod`). Lazy state: `p.mods` ({ id: 1 }) exists once a mod is
+ * found; the tier two a player has bought rides in `w.upgrades.mods2` (only once any is bought). `src/engine/mods.js` turns a gun's definition into
+ * the modded one at the moment of the shot. Every number a first guess, nothing played.
+ * DOUBLE BARREL: both barrels at once (`pellets` x2 for `cost` 2 shells, a cycle of `cooldown` s; tier two `cooldown2`); with one shell left it fires
+ * one barrel as before. SPIN-UP: the rate climbs while the trigger is held (`rate` x the cooldown at full speed after `time` s) and the spread
+ * tightens (`tighten`);
+ * tier two stops the heat bloom. LONG CHAIN: the lamp chains `chain` more jumps (tier two one more). BARBED BOLT: the harpoon pins a lunging or
+ * charging creature for `pin` s and staggers a Bulwark (tier two: `pin2` s and a bleed of `bleed.dps` for `bleed.t` s). PHOSPHOR: a flare's ground
+ * burns `t` x as long and its light reaches
+ * further (tier two: `r2` x the radius). AIRBURST (optional, the mortar): `r` x the blast radius and no ground effect (tier two: `r2`).
+ */
 export const MODS = {
-  doublebarrel: { name: 'Double barrel', gun: 'scattergun', mark: 'DB', line: 'Both barrels at once: twice the pellets for two shells, and a longer cycle.', pellets: 2, cost: 2, cooldown: 1.3, tier2: { cost: 8, line: 'A shorter cycle.', cooldown: 1.05 } },
-  spinup: { name: 'Spin-up', gun: 'rivet', mark: 'SU', line: 'The rate climbs while you hold the trigger, and the spread tightens at full speed.', time: 1.2, rate: 0.55, tighten: 0.4, tier2: { cost: 12, line: 'The spread no longer grows as you fire.' } },
-  longchain: { name: 'Long chain', gun: 'arc', mark: 'LC', line: 'The arc chains two more jumps.', chain: 2, tier2: { cost: 12, line: 'One more jump.', chain: 1 } },
-  barbed: { name: 'Barbed bolt', gun: 'harpoon', mark: 'BB', line: 'A bolt pins a lunging or charging creature for a moment and staggers a Bulwark.', pin: 1.2, tier2: { cost: 12, line: 'A longer pin, and the wound bleeds.', pin: 1.8, bleed: { dps: 5, t: 3 } } },
-  phosphor: { name: 'Phosphor', gun: 'flare', mark: 'PH', line: 'The burning ground lasts twice as long, and its light reaches further.', t: 2, tier2: { cost: 12, line: 'A wider light.', r: 1.3 } },
-  airburst: { name: 'Airburst', gun: 'mortar', mark: 'AB', line: 'The shell bursts a little wider.', r: 1.2, tier2: { cost: 12, line: 'Wider again.', r: 1.4 } },
+  doublebarrel: {
+    name: 'Double barrel',
+    gun: 'scattergun',
+    mark: 'DB',
+    line: 'Both barrels at once: twice the pellets for two shells, and a longer cycle.',
+    pellets: 2,
+    cost: 2,
+    cooldown: 1.3,
+    tier2: { cost: 8, line: 'A shorter cycle.', cooldown: 1.05 },
+  },
+  spinup: {
+    name: 'Spin-up',
+    gun: 'rivet',
+    mark: 'SU',
+    line: 'The rate climbs while you hold the trigger, and the spread tightens at full speed.',
+    time: 1.2,
+    rate: 0.55,
+    tighten: 0.4,
+    tier2: { cost: 12, line: 'The spread no longer grows as you fire.' },
+  },
+  longchain: {
+    name: 'Long chain',
+    gun: 'arc',
+    mark: 'LC',
+    line: 'The arc chains two more jumps.',
+    chain: 2,
+    tier2: { cost: 12, line: 'One more jump.', chain: 1 },
+  },
+  barbed: {
+    name: 'Barbed bolt',
+    gun: 'harpoon',
+    mark: 'BB',
+    line: 'A bolt pins a lunging or charging creature for a moment and staggers a Bulwark.',
+    pin: 1.2,
+    tier2: { cost: 12, line: 'A longer pin, and the wound bleeds.', pin: 1.8, bleed: { dps: 5, t: 3 } },
+  },
+  phosphor: {
+    name: 'Phosphor',
+    gun: 'flare',
+    mark: 'PH',
+    line: 'The burning ground lasts twice as long, and its light reaches further.',
+    t: 2,
+    tier2: { cost: 12, line: 'A wider light.', r: 1.3 },
+  },
+  airburst: {
+    name: 'Airburst',
+    gun: 'mortar',
+    mark: 'AB',
+    line: 'The shell bursts a little wider.',
+    r: 1.2,
+    tier2: { cost: 12, line: 'Wider again.', r: 1.4 },
+  },
 };
 export const MOD_ORDER = ['doublebarrel', 'spinup', 'longchain', 'barbed', 'phosphor', 'airburst'];
 /** how many units of a load one pickup carries, by gun (shells, rivets, rounds, bolts, flares) */
-export const AMMO_LOAD_AMOUNT = { slag: { scattergun: 8, rivet: 60, carbine: 40 }, rime: { scattergun: 8, harpoon: 4, flare: 5 }, pen: { rivet: 40, harpoon: 4, carbine: 30 } };
+export const AMMO_LOAD_AMOUNT = {
+  slag: { scattergun: 8, rivet: 60, carbine: 40 },
+  rime: { scattergun: 8, harpoon: 4, flare: 5 },
+  pen: { rivet: 40, harpoon: 4, carbine: 30 },
+};
 /** every GUN in one stable order (save sorting, the HUD's list, the next / previous ring); a weapon occupies its place once owned. */
 export const WEAPON_ORDER = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'fork', 'mortar'];
-/** the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has been key 6 since PT-013 and stays), 7..9 the guns PT-022 added, 0 the mortar (PT-027) */
+/*
+ * the KEYS: 1..5 the first five guns, 6 the melee slot (fists always, plus the found weapons of MELEE_ORDER: pressing 6 again cycles them; it has
+ * been key 6 since and stays), 7..9 the guns added, 0 the mortar
+ */
 export const SLOT_KEYS = ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'melee', 'carbine', 'linethrower', 'fork', 'mortar'];
 export const MELEE_ORDER = ['fists', 'boathook', 'marlinspike', 'mallet', 'axe', 'chainsaw'];
-export const MELEE_SLOT = SLOT_KEYS.indexOf('melee');                              // the slot index of the melee slot (0-based: key 6)
+export const MELEE_SLOT = SLOT_KEYS.indexOf('melee'); // the slot index of the melee slot (0-based: key 6)
 /** every weapon id in one stable order (save sorting, the HUD) */
 export const ALL_WEAPONS = [...WEAPON_ORDER, ...MELEE_ORDER];
-/** Guard and parry (PT-013, owner go 2026-10-07; every number a first guess). With a melee weapon in hand the Aim key GUARDS (always a hold). A guard raised no more than `window` s before a melee strike lands PARRIES it:
- *  the attacker is staggered `parryStun` s and the next melee hit lands for `riposteMult` x (for `riposteT` s). A guard held longer BLOCKS (`block` of the damage gets through; a heavy blow breaks the block for `brokenT` s). A parry window that found nothing
- *  costs `whiffCd` s before a new one can open (no spamming the key). Only attackers in front of the player (`cos`) can be guarded against. Ranged toll-shots are not guarded (a deliberate limit). */
+/**
+ * Guard and parry (owner go 2026-10-07; every number a first guess). With a melee weapon in hand the Aim key GUARDS (always a hold). A guard raised
+ * no more than `window` s before a melee strike lands PARRIES it:
+ * the attacker is staggered `parryStun` s and the next melee hit lands for `riposteMult` x (for `riposteT` s). A guard held longer BLOCKS (`block` of
+ * the damage gets through; a heavy blow breaks the block for `brokenT` s). A parry window that found nothing
+ * costs `whiffCd` s before a new one can open (no spamming the key). Only attackers in front of the player (`cos`) can be guarded against. Ranged
+ * toll-shots are not guarded (a deliberate limit).
+ */
 export const GUARD = { raise: 0.1, window: 0.2, whiffCd: 0.6, block: 0.3, cos: 0.3, parryStun: 1.0, riposteT: 2.0, riposteMult: 2, brokenT: 0.8 };
 /** a quick bash with whatever is in hand (key V): a free, weak strike that does not need ammunition. It blocks the gun for its own duration. */
-/** PT-014: where an enemy's melee blow can land. A blow lands only on a player INSIDE the creature's frontal arc at the moment it lands (cos of the half-angle: 0.34 = about 70 degrees each side), a dash (a Gaunt's lunge, a Warden's charge) only on a player AHEAD of it (0.5 = 60 degrees). The windup is the tell: a creature does not turn once it has begun. cos -1 = the old behaviour, a blow all the way round. */
+/*
+ * where an enemy's melee blow can land. A blow lands only on a player INSIDE the creature's frontal arc at the moment it lands (cos of the
+ * half-angle: 0.34 = about 70 degrees each side), a dash (a Gaunt's lunge, a Warden's charge) only on a player AHEAD of it (0.5 = 60 degrees). The
+ * windup is the tell: a creature does not turn once it has begun. cos -1 = the old behaviour, a blow all the way round.
+ */
 export const ENEMY_STRIKE = { cos: 0.34, dashCos: 0.5 };
-/** PT-016, the dev-only weapons range (maps-dev/RANGE.json, `range: true`; never part of the campaign). A target with `hold` stands on its post: 'inert' never fights, 'turn' faces you and swings, 'fixed' never turns; it heals fully after `healAfter` s unhurt and, killed, stands up again after `respawnAfter` s. The player cannot die there, is healed after `playerHealAfter` s unhurt and has every ammunition refilled after `refillAfter` s without firing (or at once when the gun in hand is empty). */
-/** The tell of a secret panel (PT-015: the owner finished the level and "no sign of a secret"; the old tell was a 5 cm hairline at 32% in the middle of the panel). View constants only, the sim never reads them: lamplight leaks out of the
- *  seam into every open side as a bright full-height seam (`seam` metres wide), stepped halos round it ([width m, opacity]) and a patch of light on the floor in front of it ([width m, depth m, opacity]), all additive. */
-export const SECRET_TELL = { color: 0xffb45a, seam: 0.12, seamOpacity: 0.9, halo: [[0.45, 0.22], [1.0, 0.1]], spill: [[1.0, 0.7, 0.3], [1.8, 1.6, 0.18], [2.6, 2.6, 0.1]] };
+/*
+ * the dev-only weapons range (maps-dev/RANGE.json, `range: true`; never part of the campaign). A target with `hold` stands on its post: 'inert' never
+ * fights, 'turn' faces you and swings, 'fixed' never turns; it heals fully after `healAfter` s unhurt and, killed, stands up again after
+ * `respawnAfter` s. The player cannot die there, is healed after `playerHealAfter` s unhurt and has every ammunition refilled after `refillAfter` s
+ * without firing (or at once when the gun in hand is empty).
+ */
 /**
- * The LOOK of a place (PT-021, the outside critique: "the rooms are boxes... a player should know which place they are in with the gun down", "the light is flat"): until now EVERY map was lit by the same hemisphere, the same purple
- * sun and one global post grade, and a map differed only by its fog colour, its sky and an `ambient` scalar. A map now names a look (`atmosphere.look`); the default is exactly the old one, so a map that names none is unchanged.
+ * The tell of a secret panel (the owner finished the level and "no sign of a secret"; the old tell was a 5 cm hairline at 32% in the middle of the
+ * panel). View constants only, the sim never reads them: lamplight leaks out of the
+ * seam into every open side as a bright full-height seam (`seam` metres wide), stepped halos round it ([width m, opacity]) and a patch of light on
+ * the floor in front of it ([width m, depth m, opacity]), all additive.
+ */
+export const SECRET_TELL = {
+  color: 0xffb45a,
+  seam: 0.12,
+  seamOpacity: 0.9,
+  halo: [
+    [0.45, 0.22],
+    [1.0, 0.1],
+  ],
+  spill: [
+    [1.0, 0.7, 0.3],
+    [1.8, 1.6, 0.18],
+    [2.6, 2.6, 0.1],
+  ],
+};
+/**
+ * The LOOK of a place (the outside critique: "the rooms are boxes... a player should know which place they are in with the gun down", "the light is
+ * flat"): until now EVERY map was lit by the same hemisphere, the same purple
+ * sun and one global post grade, and a map differed only by its fog colour, its sky and an `ambient` scalar. A map now names a look
+ * (`atmosphere.look`); the default is exactly the old one, so a map that names none is unchanged.
  * View constants only: the simulation never reads them (render and post read them; the validator only checks the name).
- *   hemi [sky, ground, level]   sun [colour, level, [x, y, z] direction]   lamp  scale of every lamp / pod / lantern light   exposure  scale of the post exposure
- *   grade { shadow, light, sat }  the post pass's cool-shadow / warm-light tint (multipliers per channel) and its saturation
- *   shade { foot, ao, patch }  baked into the level's vertex colours: how dark a wall's foot and head are, how much a floor / ceiling darkens toward a wall, how strongly large patches vary the tile (0 = off)
+ * hemi [sky, ground, level] sun [colour, level, [x, y, z] direction] lamp scale of every lamp / pod / lantern light exposure scale of the post
+ * exposure
+ * grade { shadow, light, sat } the post pass's cool-shadow / warm-light tint (multipliers per channel) and its saturation
+ * shade { foot, ao, patch } baked into the level's vertex colours: how dark a wall's foot and head are, how much a floor / ceiling darkens toward a
+ * wall, how strongly large patches vary the tile (0 = off)
  */
 const GR = (shadow, light, sat) => ({ shadow, light, sat });
 export const LOOKS = {
-  harbour: { hemi: [0x9fb4d0, 0x3a2a40, 2.4], sun: [0xd8b0e0, 1.3, [-8, 14, -6]], lamp: 1, exposure: 1, grade: GR([0.9, 1.0, 1.08], [1.07, 1.0, 0.93], 1), shade: { foot: 0, ao: 0, patch: 0 } },                    // the pre-PT-021 light: the default
-  dusk: { hemi: [0xd2aa98, 0x2c2638, 2.3], sun: [0xffa868, 1.9, [-14, 7, -5]], lamp: 1, exposure: 1, grade: GR([0.84, 0.92, 1.14], [1.14, 1.0, 0.84], 1.12), shade: { foot: 0.3, ao: 0.35, patch: 0.08 } },          // Port Marrow's one hour: low warm sun, violet shade
-  customs: { hemi: [0xb4c4cc, 0x2a3038, 1.5], sun: [0xe8f0ff, 0.5, [-6, 14, -8]], lamp: 1.6, exposure: 1, grade: GR([0.9, 1.0, 1.0], [1.0, 1.03, 0.97], 0.78), shade: { foot: 0.35, ao: 0.4, patch: 0.1 } },       // institutional: cold tubes, grey-green, drained          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread)
-  moon: { hemi: [0x6c84b8, 0x181e34, 1.5], sun: [0x9cb4ff, 1.0, [7, 13, -9]], lamp: 1.85, exposure: 1, grade: GR([0.8, 0.94, 1.22], [1.1, 1.02, 0.9], 1.08), shade: { foot: 0.3, ao: 0.4, patch: 0.1 } },            // the harbour at night: blue shade, the lamps are the warm things          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread)
-  cellar: { hemi: [0x4a7068, 0x141c1c, 1.1], sun: [0x80c0b0, 0.2, [-6, 14, -6]], lamp: 2.05, exposure: 1, grade: GR([0.82, 1.06, 1.0], [1.1, 1.0, 0.86], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },           // damp stone under the quay: green-black, a lamp is a room          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread)
-  signal: { hemi: [0x5c6c88, 0x14182a, 1.2], sun: [0x9aa8c8, 0.3, [-6, 14, -6]], lamp: 2.05, exposure: 1, grade: GR([0.84, 0.94, 1.18], [1.08, 1.0, 0.9], 0.85), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the dark house on the hill: cold blue, the generator light          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread)
-  hill: { hemi: [0xa8b4c8, 0x383440, 2.1], sun: [0xd0d0e0, 0.9, [-9, 12, -3]], lamp: 1.1, exposure: 1, grade: GR([0.9, 0.97, 1.1], [1.04, 1.0, 0.94], 0.95), shade: { foot: 0.25, ao: 0.3, patch: 0.08 } },           // overcast, wind, the survivors' lanterns
-  salt: { hemi: [0xe0e0dc, 0x6a6458, 2.3], sun: [0xffe8c0, 1.9, [-5, 12, -4]], lamp: 0.6, exposure: 1, grade: GR([0.94, 1.0, 1.06], [1.1, 1.03, 0.9], 0.8), shade: { foot: 0.3, ao: 0.36, patch: 0.1 } },          // the works: bleached, hard, chemical (PT-035: the pans were one white plane under a white sky: a lower, warmer sun, a cooler shadow, a little more colour and a darker foot to every wall, so the white has a side that is lit and a side that is not)
-  kiln: { hemi: [0x7a5240, 0x1e1412, 1.3], sun: [0xff8a4c, 1.1, [-12, 6, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },            // Kiln Row: soot and ember, red-brown shade
-  cradle: { hemi: [0x58b4a4, 0x2a1830, 1.3], sun: [0x70f0d0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.06, 1.06], [1.1, 1.03, 0.88], 1), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },             // the Vael's rooms: wet teal, the pods are the light
-  pump: { hemi: [0x78988a, 0x16201a, 1.5], sun: [0xd0e0c0, 0.7, [-4, 16, -2]], lamp: 1.3, exposure: 1, grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },               // pumps and slurry: industrial green-black
-  choir: { hemi: [0x86a89a, 0x241a2e, 1.6], sun: [0xbfe8d8, 0.8, [-9, 12, -6]], lamp: 1.35, exposure: 1, grade: GR([0.88, 1.04, 1.02], [1.06, 1.02, 0.9], 0.9), shade: { foot: 0.38, ao: 0.45, patch: 0.12 } },       // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
-  loom: { hemi: [0x7a6a9c, 0x1a1026, 1.25], sun: [0xf0d890, 0.35, [-6, 14, -6]], lamp: 1.65, exposure: 1, grade: GR([0.9, 0.94, 1.16], [1.14, 1.04, 0.8], 0.95), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },             // the Resonance Loom: dim, violet-black, the lamps and the strings are gold
-  loft: { hemi: [0xc49a66, 0x2a1a10, 1.55], sun: [0xffd89a, 0.9, [-8, 12, -5]], lamp: 1.4, exposure: 1, grade: GR([1.02, 0.9, 0.8], [1.15, 1.03, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },                   // the Choir Loft: amber and walnut, the warm room
-  foundry: { hemi: [0x4a7a52, 0x0e1a10, 1.05], sun: [0xa8ff90, 0.22, [-6, 14, -6]], lamp: 1.75, exposure: 1, grade: GR([0.86, 1.04, 0.88], [1.1, 1.08, 0.84], 1.05), shade: { foot: 0.48, ao: 0.5, patch: 0.12 } },    // the Spore Foundry: green-black iron, the glow is the light (PT-035: the grade eased so the furnace's kiln brick can read as hot)
-  throat: { hemi: [0xb0587a, 0x2a0e1e, 1.2], sun: [0xff9ab8, 0.4, [-5, 12, -5]], lamp: 1.5, exposure: 1, grade: GR([1.04, 0.88, 0.98], [1.14, 0.97, 0.92], 1.1), shade: { foot: 0.4, ao: 0.5, patch: 0.14 } },                // the Cantor's Throat: wet pink and red-violet (PT-035: the grade eased so the bone ribs and the brass bell can read)
-  tether: { hemi: [0xd8e4f8, 0x1c2230, 2.3], sun: [0xfff4dc, 1.9, [-12, 16, -4]], lamp: 0.9, exposure: 1, grade: GR([0.94, 0.98, 1.1], [1.08, 1.04, 0.92], 0.8), shade: { foot: 0.28, ao: 0.34, patch: 0.08 } },          // Episode 4, the Ascent Tether: a hard white sun, rust and frost, the black behind it
-  wreck: { hemi: [0x5c9096, 0x0c1418, 1.35], sun: [0xa8e4ec, 0.55, [-6, 10, -8]], lamp: 1.6, exposure: 1, grade: GR([0.82, 1.04, 1.08], [1.06, 1.02, 0.9], 0.95), shade: { foot: 0.42, ao: 0.46, patch: 0.12 } },            // the Wreck Belt: torn hulls, cold teal shade, sparks
-  rime: { hemi: [0xcce0f0, 0x5a7088, 2.6], sun: [0xe0f0ff, 1.5, [-8, 15, -6]], lamp: 0.9, exposure: 1, grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7), shade: { foot: 0.25, ao: 0.3, patch: 0.06 } },              // the cold vault: pale, blue, still
-  mirror: { hemi: [0x7a6ac0, 0x201838, 1.9], sun: [0xffd890, 0.35, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.92, 0.92, 1.18], [1.14, 1.04, 0.86], 1.05), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },          // Episode 4, the Mirror Array: dark violet glass, the gold of the beams
-  quiet: { hemi: [0xc0a47c, 0x3a2c20, 2.0], sun: [0xffd8a0, 0.3, [-6, 14, -6]], lamp: 2.3, exposure: 1, grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8), shade: { foot: 0.5, ao: 0.5, patch: 0.1 } },                                   // the Quiet Room: smoky bronze, one warm lamp
-  dock: { hemi: [0xd8f0f4, 0x4a6670, 2.6], sun: [0xe8ffff, 0.8, [-5, 16, -4]], lamp: 0.8, exposure: 1, grade: GR([0.88, 1.04, 1.1], [1.02, 1.03, 1.0], 0.75), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },                       // the Cold Dock: sterile cyan-white strip light, hazard yellow
-  orchard: { hemi: [0xc8e8a0, 0x2a4020, 2.2], sun: [0xfff0b0, 1.2, [-8, 16, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.06, 0.9], [1.1, 1.04, 0.84], 1.1), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },                      // the Drift Orchard: green-gold, soft, weightless
-  approach: { hemi: [0xa8b0d8, 0x4a4660, 3], sun: [0xf0ecff, 0.8, [-6, 14, -6]], lamp: 2.6, exposure: 1, grade: GR([0.92, 0.94, 1.1], [1.12, 1.03, 0.9], 0.97), shade: { foot: 0.38, ao: 0.42, patch: 0.1 } },                  // the Gatekeeper's Approach: stone that warms rank by rank, indigo shadow, the Gate's light at the far end (PT-035: it was too dark to read, hemisphere 2.1 -> 3, lamps 1.9 -> 2.6, a warmer light grade)
-  stair: { hemi: [0x5c6090, 0xc0c8ff, 1.75], sun: [0xe8f0ff, 0.85, [9, 20, -6]], lamp: 1.6, exposure: 1, grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0), shade: { foot: 0.3, ao: 0.4, patch: 0.1 } },                                  // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere)          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread); PT-080: a less saturated sky light and a stronger sun, so the drum's ribs and courses cast shade
-  // ---- Campaign 2, Act A, THRESHOLD (PT-037): bleached glass, salt and rust under a low red sun ---------------------------------------------------------------------------------------------------------------------------------------------------------
-  threshold: { hemi: [0xe8b8a8, 0x3a2634, 2.3], sun: [0xff7a50, 1.8, [-14, 5, -4]], lamp: 1, exposure: 1, grade: GR([0.9, 0.92, 1.08], [1.18, 1.0, 0.8], 1.05), shade: { foot: 0.25, ao: 0.3, patch: 0.08 } },          // Threshold Beach: a red sun low over the surf, violet shade
-  steppe: { hemi: [0xf0d8c8, 0x6a5a58, 2.5], sun: [0xffd0a0, 1.7, [-10, 9, -6]], lamp: 1, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.1, 1.04, 0.9], 0.78), shade: { foot: 0.2, ao: 0.26, patch: 0.06 } },              // the Glass Steppe: bleached, hard, nothing to hide behind
-  outpost: { hemi: [0xb8a8a0, 0x2a2428, 1.7], sun: [0xff9060, 1.3, [-12, 7, -3]], lamp: 1.2, exposure: 1, grade: GR([0.92, 0.94, 1.04], [1.12, 1.0, 0.84], 0.9), shade: { foot: 0.35, ao: 0.4, patch: 0.1 } },            // the Cantor Outpost: ash and bronze, a fortress in a bad light
-  fields: { hemi: [0xd8d8a8, 0x3a3a28, 2.2], sun: [0xffc070, 1.6, [-12, 8, -5]], lamp: 1, exposure: 1, grade: GR([0.92, 1.02, 0.9], [1.1, 1.04, 0.84], 1.1), shade: { foot: 0.22, ao: 0.3, patch: 0.08 } },                // the Tuning Fork Fields: dry gold and olive terraces
-  reliquary: { hemi: [0xa8a8c4, 0x26263a, 1.7], sun: [0xc8c0e8, 0.7, [-8, 12, -6]], lamp: 1.2, exposure: 1, grade: GR([0.88, 0.92, 1.14], [1.02, 1.0, 0.96], 0.8), shade: { foot: 0.4, ao: 0.44, patch: 0.1 } },            // the Reliquary Road: cold grey-violet, overcast, the graves
-  aqueduct: { hemi: [0x9cc8b4, 0x1e3a34, 2.0], sun: [0xf0ffd8, 1.2, [-8, 14, -6]], lamp: 1, exposure: 1, grade: GR([0.86, 1.06, 1.02], [1.04, 1.04, 0.9], 0.95), shade: { foot: 0.3, ao: 0.38, patch: 0.1 } },             // the Chitin Aqueduct: wet green-white, the water is the light
-  bellwright: { hemi: [0xc89878, 0x2a1a14, 1.5], sun: [0xff8040, 1.4, [-12, 6, -6]], lamp: 1.4, exposure: 1, grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1), shade: { foot: 0.4, ao: 0.45, patch: 0.1 } },          // the Bellwright Yard: kiln orange, soot
-  ascent: { hemi: [0xe8e0f0, 0x504860, 2.5], sun: [0xfff0d8, 1.8, [-6, 16, -5]], lamp: 1, exposure: 1, grade: GR([0.92, 0.96, 1.1], [1.08, 1.03, 0.9], 0.85), shade: { foot: 0.22, ao: 0.3, patch: 0.06 } },              // the Threshold Ascent: high, thin, clear air
-  deep: { hemi: [0x40506a, 0x0a0c14, 0.42], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.94, 0.98, 1.12], [1.1, 1.02, 0.9], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },          // PT-038: the Deep Range (dev only): a cave that is dark but for a hand lantern and a few hung ones
-  // ---- Campaign 2, Act B, THE SOUNDING DEEP (PT-039): the Vael under the stone; amber lamps and a lantern are the light ---------------------------------------------------------------------------------------------------------------------------------------
-  deepgate: { hemi: [0x5a6a90, 0x10121e, 1.3], sun: [0x8898c0, 0.3, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.9, 0.96, 1.14], [1.16, 1.04, 0.84], 1.0), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },          // the Sounding Deep Gate: blue-black stone, the city's amber lights far below
-  markets: { hemi: [0xd0b090, 0x2a2018, 1.55], sun: [0xffc890, 0.4, [-8, 12, -6]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.94, 0.9], [1.14, 1.02, 0.82], 1.05), shade: { foot: 0.35, ao: 0.42, patch: 0.1 } },            // the Echo Markets: warm lamplight on pale wet stone
-  halls: { hemi: [0xa0a8c8, 0x1e2030, 1.6], sun: [0xd0d8ff, 0.5, [-6, 14, -6]], lamp: 1.3, exposure: 1, grade: GR([0.9, 0.96, 1.12], [1.08, 1.0, 0.92], 0.85), shade: { foot: 0.38, ao: 0.42, patch: 0.1 } },                  // the Undercantor Halls: cold marble, bronze, a lit wing and a dim one
-  drowned: { hemi: [0x5a8c78, 0x0c1814, 1.55], sun: [0x90e0c0, 0.4, [-6, 14, -6]], lamp: 1.8, exposure: 1, grade: GR([0.84, 1.06, 0.98], [1.0, 1.06, 0.9], 0.9), shade: { foot: 0.45, ao: 0.5, patch: 0.14 } },              // the Drowned Choir: green-black water, pale shafts
-  ossuary: { hemi: [0x483c34, 0x08080c, 0.38], sun: [0x8090b0, 0.0, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.12, 1.02, 0.86], 1.0), shade: { foot: 0.5, ao: 0.6, patch: 0.1 } },           // the Lantern Ossuary: almost black, bone white where the lantern reaches
-  gardens: { hemi: [0x58a888, 0x20184a, 0.95], sun: [0xa0ffd0, 0.25, [-6, 14, -6]], lamp: 1.5, exposure: 1, grade: GR([0.84, 1.08, 1.02], [1.1, 1.0, 1.04], 1.1), shade: { foot: 0.4, ao: 0.46, patch: 0.12 } },               // the Harmonic Gardens: phosphor green and violet
-  basilica: { hemi: [0x908c90, 0x24201c, 1.4], sun: [0xff9050, 0.6, [-8, 10, -4]], lamp: 1.5, exposure: 1, grade: GR([0.94, 0.94, 0.96], [1.18, 0.98, 0.8], 0.7), shade: { foot: 0.4, ao: 0.46, patch: 0.1 } },               // the Ash Basilica: ash grey, a fire at the altar
-  heart: { hemi: [0xb85a88, 0x1e0818, 1.7], sun: [0xff80c0, 0.6, [-6, 14, -6]], lamp: 1.9, exposure: 1, grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05), shade: { foot: 0.42, ao: 0.5, patch: 0.14 } },                // the Sounding Deep Heart: red-violet, a pulse
-  tender: { hemi: [0xb0c898, 0x2a3a28, 1.4], sun: [0xffe8b0, 0.5, [-8, 14, -6]], lamp: 1.0, exposure: 1, grade: GR([0.94, 1.04, 0.92], [1.08, 1.02, 0.88], 0.95), shade: { foot: 0.2, ao: 0.28, patch: 0.06 } },               // the Silent Orchard: soft green-gold, a garden kept by someone
-  // ---- Campaign 2, Acts C and D (PT-043, the Preview): fourteen places, each its own light ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  hive: { hemi: [0xc08a98, 0x2a1020, 1.7], sun: [0xff9060, 1.1, [-12, 6, -5]], lamp: 1.3, exposure: 1, grade: GR([1.02, 0.88, 0.94], [1.16, 0.98, 0.84], 1.1), shade: { foot: 0.38, ao: 0.45, patch: 0.12 } },                       // C2M17, the throat: plum shade, amber from the ribs, a red sun behind the tower
-  nerve: { hemi: [0x7a4a8a, 0x120618, 1.2], sun: [0xff6a9a, 0.4, [-6, 14, -6]], lamp: 1.6, exposure: 1, grade: GR([0.96, 0.84, 1.08], [1.12, 0.94, 0.96], 1.1), shade: { foot: 0.45, ao: 0.5, patch: 0.12 } },                       // C2M18, the nerve cathedral: black violet and the pink of living cords
-  woven: { hemi: [0xd8c8a0, 0x4a3e28, 1.8], sun: [0xffe0a0, 0.9, [-8, 12, -5]], lamp: 1.2, exposure: 1, grade: GR([1.0, 0.96, 0.86], [1.1, 1.04, 0.84], 0.95), shade: { foot: 0.3, ao: 0.38, patch: 0.1 } },                         // C2M19, the bone loom: warm cream and old gold
-  veins: { hemi: [0x9a6068, 0x1c1014, 1.4], sun: [0xff8a70, 0.6, [-8, 12, -5]], lamp: 1.5, exposure: 1, grade: GR([1.0, 0.86, 0.9], [1.12, 0.98, 0.9], 1.0), shade: { foot: 0.42, ao: 0.48, patch: 0.12 } },                           // C2M20, the vein rail: iron and red meat
-  reactor: { hemi: [0xc88a50, 0x24120a, 1.5], sun: [0xffa040, 0.8, [-8, 12, -5]], lamp: 2.0, exposure: 1, grade: GR([1.04, 0.9, 0.78], [1.2, 1.0, 0.76], 1.15), shade: { foot: 0.4, ao: 0.46, patch: 0.1 } },                       // C2M21, the pulse foundry: copper and orange heat          // PT-079 (design/ART_ASSESSMENT.md item 8): the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a narrow spread)
-  mourning: { hemi: [0xc8c4cc, 0x3a363e, 1.9], sun: [0xe8e4f0, 0.5, [-6, 14, -6]], lamp: 1.1, exposure: 1, grade: GR([0.92, 0.94, 1.0], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.38, patch: 0.08 } },                      // C2M22, the mourning halls: ash white, black cloth, nearly no colour
-  copy: { hemi: [0xa0c8e0, 0x2a4058, 2.1], sun: [0xfff0d0, 1.4, [-10, 12, -6]], lamp: 1.0, exposure: 1, grade: GR([0.88, 1.0, 1.12], [1.04, 1.04, 1.0], 0.9), shade: { foot: 0.25, ao: 0.32, patch: 0.08 } },                         // C2M23, the copy of the quay: glass-blue light, too clear
-  conductor: { hemi: [0xb09cb4, 0x2a1828, 1.15], sun: [0xffc0d8, 0.3, [-6, 14, -6]], lamp: 1.9, exposure: 1, grade: GR([0.98, 0.9, 1.0], [1.1, 1.0, 0.94], 0.95), shade: { foot: 0.38, ao: 0.44, patch: 0.1 } },                       // C2M24, the choir of one: pale nerve-white, a ring of red-pink lamps
-  descent: { hemi: [0x4a6a58, 0x08120c, 0.9], sun: [0x90e0b0, 0.2, [-6, 14, -6]], lamp: 1.7, exposure: 1, grade: GR([0.86, 1.04, 0.94], [1.06, 1.04, 0.9], 0.9), shade: { foot: 0.5, ao: 0.55, patch: 0.12 } },                      // C2M25, the well: black wet stone, copper going green, a lamp the only warm thing
-  roots: { hemi: [0x8a8470, 0x181410, 1.2], sun: [0xd8d0b0, 0.3, [-6, 14, -6]], lamp: 1.3, exposure: 1, grade: GR([0.96, 0.96, 0.94], [1.04, 1.02, 0.96], 0.55), shade: { foot: 0.45, ao: 0.5, patch: 0.1 } },                         // C2M26, the silent roots: pale, dead, no green
-  fault: { hemi: [0xa8704a, 0x180c08, 1.4], sun: [0xff7a2a, 1.2, [-10, 5, -4]], lamp: 1.4, exposure: 1, grade: GR([1.04, 0.88, 0.8], [1.2, 0.98, 0.78], 1.1), shade: { foot: 0.38, ao: 0.44, patch: 0.1 } },                           // C2M27, the fault line: basalt and a copper light welling up
-  tide: { hemi: [0xa0a890, 0x2a2e28, 1.9], sun: [0xf0e0b0, 0.9, [-8, 12, -5]], lamp: 1.2, exposure: 1, grade: GR([0.94, 0.98, 0.96], [1.08, 1.04, 0.9], 0.85), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                           // C2M28, the last tide: grey-brown dock, lime and weed
-  rootbell: { hemi: [0x6a5a3a, 0x0c0a06, 0.7], sun: [0xffb060, 0.2, [-6, 14, -6]], lamp: 1.9, exposure: 1, grade: GR([1.0, 0.92, 0.82], [1.14, 1.0, 0.8], 1.0), shade: { foot: 0.5, ao: 0.55, patch: 0.1 } },                      // C2M29, inside the Bell: bronze, verdigris, one copper glow
-  unrung: { hemi: [0xe8dcc8, 0x5a4c44, 1.7], sun: [0xffe4b0, 0.5, [-4, 18, -4]], lamp: 1.1, exposure: 1, grade: GR([0.98, 0.95, 0.94], [1.08, 1.03, 0.94], 0.85), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                       // C2M30, the walk to the Gate: warm ivory marble and one gold line (PT-043 report 1: it read as extremely gray at saturation 0.35; the walk to it now passes through the colours of the places it recalls)
-  gate: { hemi: [0xf0f0ff, 0x30303c, 2.4], sun: [0xffffff, 1.6, [-4, 18, -4]], lamp: 0.8, exposure: 1, grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5), shade: { foot: 0.3, ao: 0.36, patch: 0.08 } },                         // the Gate: white and black, a ring of light
+  harbour: {
+    hemi: [0x9fb4d0, 0x3a2a40, 2.4],
+    sun: [0xd8b0e0, 1.3, [-8, 14, -6]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.9, 1.0, 1.08], [1.07, 1.0, 0.93], 1),
+    shade: { foot: 0, ao: 0, patch: 0 },
+  }, // the pre-light: the default
+  dusk: {
+    hemi: [0xd2aa98, 0x2c2638, 2.3],
+    sun: [0xffa868, 1.9, [-14, 7, -5]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.84, 0.92, 1.14], [1.14, 1.0, 0.84], 1.12),
+    shade: { foot: 0.3, ao: 0.35, patch: 0.08 },
+  }, // Port Marrow's one hour: low warm sun, violet shade
+  customs: {
+    hemi: [0xb4c4cc, 0x2a3038, 1.5],
+    sun: [0xe8f0ff, 0.5, [-6, 14, -8]],
+    lamp: 1.6,
+    exposure: 1,
+    grade: GR([0.9, 1.0, 1.0], [1.0, 1.03, 0.97], 0.78),
+    shade: { foot: 0.35, ao: 0.4, patch: 0.1 },
+  // institutional: cold tubes, grey-green, drained // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND a
+  // narrow spread)
+  },
+  moon: {
+    hemi: [0x6c84b8, 0x181e34, 1.5],
+    sun: [0x9cb4ff, 1.0, [7, 13, -9]],
+    lamp: 1.85,
+    exposure: 1,
+    grade: GR([0.8, 0.94, 1.22], [1.1, 1.02, 0.9], 1.08),
+    shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
+  // the harbour at night: blue shade, the lamps are the warm things // the lamps brighter, so its dark has highlights in it (it measured murky: dark
+  // on average AND a narrow spread)
+  },
+  cellar: {
+    hemi: [0x4a7068, 0x141c1c, 1.1],
+    sun: [0x80c0b0, 0.2, [-6, 14, -6]],
+    lamp: 2.05,
+    exposure: 1,
+    grade: GR([0.82, 1.06, 1.0], [1.1, 1.0, 0.86], 0.9),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
+  // damp stone under the quay: green-black, a lamp is a room // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
+  // average AND a narrow spread)
+  },
+  signal: {
+    hemi: [0x5c6c88, 0x14182a, 1.2],
+    sun: [0x9aa8c8, 0.3, [-6, 14, -6]],
+    lamp: 2.05,
+    exposure: 1,
+    grade: GR([0.84, 0.94, 1.18], [1.08, 1.0, 0.9], 0.85),
+    shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
+  // the dark house on the hill: cold blue, the generator light // the lamps brighter, so its dark has highlights in it (it measured murky: dark on
+  // average AND a narrow spread)
+  },
+  hill: {
+    hemi: [0xa8b4c8, 0x383440, 2.1],
+    sun: [0xd0d0e0, 0.9, [-9, 12, -3]],
+    lamp: 1.1,
+    exposure: 1,
+    grade: GR([0.9, 0.97, 1.1], [1.04, 1.0, 0.94], 0.95),
+    shade: { foot: 0.25, ao: 0.3, patch: 0.08 },
+  }, // overcast, wind, the survivors' lanterns
+  salt: {
+    hemi: [0xe0e0dc, 0x6a6458, 2.3],
+    sun: [0xffe8c0, 1.9, [-5, 12, -4]],
+    lamp: 0.6,
+    exposure: 1,
+    grade: GR([0.94, 1.0, 1.06], [1.1, 1.03, 0.9], 0.8),
+    shade: { foot: 0.3, ao: 0.36, patch: 0.1 },
+  // the works: bleached, hard, chemical (the pans were one white plane under a white sky: a lower, warmer sun, a cooler shadow, a little more colour
+  // and a darker foot to every wall, so the white has a side that is lit and a side that is not)
+  },
+  kiln: {
+    hemi: [0x7a5240, 0x1e1412, 1.3],
+    sun: [0xff8a4c, 1.1, [-12, 6, -6]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15),
+    shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
+  }, // Kiln Row: soot and ember, red-brown shade
+  cradle: {
+    hemi: [0x58b4a4, 0x2a1830, 1.3],
+    sun: [0x70f0d0, 0.25, [-6, 14, -6]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([0.84, 1.06, 1.06], [1.1, 1.03, 0.88], 1),
+    shade: { foot: 0.4, ao: 0.5, patch: 0.14 },
+  }, // the Vael's rooms: wet teal, the pods are the light
+  pump: {
+    hemi: [0x78988a, 0x16201a, 1.5],
+    sun: [0xd0e0c0, 0.7, [-4, 16, -2]],
+    lamp: 1.3,
+    exposure: 1,
+    grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8),
+    shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
+  }, // pumps and slurry: industrial green-black
+  choir: {
+    hemi: [0x86a89a, 0x241a2e, 1.6],
+    sun: [0xbfe8d8, 0.8, [-9, 12, -6]],
+    lamp: 1.35,
+    exposure: 1,
+    grade: GR([0.88, 1.04, 1.02], [1.06, 1.02, 0.9], 0.9),
+    shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
+  }, // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
+  loom: {
+    hemi: [0x7a6a9c, 0x1a1026, 1.25],
+    sun: [0xf0d890, 0.35, [-6, 14, -6]],
+    lamp: 1.65,
+    exposure: 1,
+    grade: GR([0.9, 0.94, 1.16], [1.14, 1.04, 0.8], 0.95),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
+  }, // the Resonance Loom: dim, violet-black, the lamps and the strings are gold
+  loft: {
+    hemi: [0xc49a66, 0x2a1a10, 1.55],
+    sun: [0xffd89a, 0.9, [-8, 12, -5]],
+    lamp: 1.4,
+    exposure: 1,
+    grade: GR([1.02, 0.9, 0.8], [1.15, 1.03, 0.82], 1.05),
+    shade: { foot: 0.35, ao: 0.42, patch: 0.1 },
+  }, // the Choir Loft: amber and walnut, the warm room
+  foundry: {
+    hemi: [0x4a7a52, 0x0e1a10, 1.05],
+    sun: [0xa8ff90, 0.22, [-6, 14, -6]],
+    lamp: 1.75,
+    exposure: 1,
+    grade: GR([0.86, 1.04, 0.88], [1.1, 1.08, 0.84], 1.05),
+    shade: { foot: 0.48, ao: 0.5, patch: 0.12 },
+  }, // the Spore Foundry: green-black iron, the glow is the light (the grade eased so the furnace's kiln brick can read as hot)
+  throat: {
+    hemi: [0xb0587a, 0x2a0e1e, 1.2],
+    sun: [0xff9ab8, 0.4, [-5, 12, -5]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([1.04, 0.88, 0.98], [1.14, 0.97, 0.92], 1.1),
+    shade: { foot: 0.4, ao: 0.5, patch: 0.14 },
+  }, // the Cantor's Throat: wet pink and red-violet (the grade eased so the bone ribs and the brass bell can read)
+  tether: {
+    hemi: [0xd8e4f8, 0x1c2230, 2.3],
+    sun: [0xfff4dc, 1.9, [-12, 16, -4]],
+    lamp: 0.9,
+    exposure: 1,
+    grade: GR([0.94, 0.98, 1.1], [1.08, 1.04, 0.92], 0.8),
+    shade: { foot: 0.28, ao: 0.34, patch: 0.08 },
+  }, // Episode 4, the Ascent Tether: a hard white sun, rust and frost, the black behind it
+  wreck: {
+    hemi: [0x5c9096, 0x0c1418, 1.35],
+    sun: [0xa8e4ec, 0.55, [-6, 10, -8]],
+    lamp: 1.6,
+    exposure: 1,
+    grade: GR([0.82, 1.04, 1.08], [1.06, 1.02, 0.9], 0.95),
+    shade: { foot: 0.42, ao: 0.46, patch: 0.12 },
+  }, // the Wreck Belt: torn hulls, cold teal shade, sparks
+  rime: {
+    hemi: [0xcce0f0, 0x5a7088, 2.6],
+    sun: [0xe0f0ff, 1.5, [-8, 15, -6]],
+    lamp: 0.9,
+    exposure: 1,
+    grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7),
+    shade: { foot: 0.25, ao: 0.3, patch: 0.06 },
+  }, // the cold vault: pale, blue, still
+  mirror: {
+    hemi: [0x7a6ac0, 0x201838, 1.9],
+    sun: [0xffd890, 0.35, [-6, 14, -6]],
+    lamp: 1.7,
+    exposure: 1,
+    grade: GR([0.92, 0.92, 1.18], [1.14, 1.04, 0.86], 1.05),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
+  }, // Episode 4, the Mirror Array: dark violet glass, the gold of the beams
+  quiet: {
+    hemi: [0xc0a47c, 0x3a2c20, 2.0],
+    sun: [0xffd8a0, 0.3, [-6, 14, -6]],
+    lamp: 2.3,
+    exposure: 1,
+    grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8),
+    shade: { foot: 0.5, ao: 0.5, patch: 0.1 },
+  }, // the Quiet Room: smoky bronze, one warm lamp
+  dock: {
+    hemi: [0xd8f0f4, 0x4a6670, 2.6],
+    sun: [0xe8ffff, 0.8, [-5, 16, -4]],
+    lamp: 0.8,
+    exposure: 1,
+    grade: GR([0.88, 1.04, 1.1], [1.02, 1.03, 1.0], 0.75),
+    shade: { foot: 0.22, ao: 0.3, patch: 0.06 },
+  }, // the Cold Dock: sterile cyan-white strip light, hazard yellow
+  orchard: {
+    hemi: [0xc8e8a0, 0x2a4020, 2.2],
+    sun: [0xfff0b0, 1.2, [-8, 16, -6]],
+    lamp: 1.0,
+    exposure: 1,
+    grade: GR([0.94, 1.06, 0.9], [1.1, 1.04, 0.84], 1.1),
+    shade: { foot: 0.2, ao: 0.28, patch: 0.06 },
+  }, // the Drift Orchard: green-gold, soft, weightless
+  approach: {
+    hemi: [0xa8b0d8, 0x4a4660, 3],
+    sun: [0xf0ecff, 0.8, [-6, 14, -6]],
+    lamp: 2.6,
+    exposure: 1,
+    grade: GR([0.92, 0.94, 1.1], [1.12, 1.03, 0.9], 0.97),
+    shade: { foot: 0.38, ao: 0.42, patch: 0.1 },
+  // the Gatekeeper's Approach: stone that warms rank by rank, indigo shadow, the Gate's light at the far end (it was too dark to read, hemisphere 2.1
+  // -> 3, lamps 1.9 -> 2.6, a warmer light grade)
+  },
+  stair: {
+    hemi: [0x5c6090, 0xc0c8ff, 1.75],
+    sun: [0xe8f0ff, 0.85, [9, 20, -6]],
+    lamp: 1.6,
+    exposure: 1,
+    grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0),
+    shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
+  // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere) // the lamps brighter, so its dark has highlights
+  // in it (it measured murky: dark on average AND a narrow spread); a less saturated sky light and a stronger sun, so the drum's ribs and courses
+  // cast shade
+  },
+  // Campaign 2, Act A, THRESHOLD: bleached glass, salt and rust under a low red sun
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------
+  threshold: {
+    hemi: [0xe8b8a8, 0x3a2634, 2.3],
+    sun: [0xff7a50, 1.8, [-14, 5, -4]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.9, 0.92, 1.08], [1.18, 1.0, 0.8], 1.05),
+    shade: { foot: 0.25, ao: 0.3, patch: 0.08 },
+  }, // Threshold Beach: a red sun low over the surf, violet shade
+  steppe: {
+    hemi: [0xf0d8c8, 0x6a5a58, 2.5],
+    sun: [0xffd0a0, 1.7, [-10, 9, -6]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.96, 0.96, 1.04], [1.1, 1.04, 0.9], 0.78),
+    shade: { foot: 0.2, ao: 0.26, patch: 0.06 },
+  }, // the Glass Steppe: bleached, hard, nothing to hide behind
+  outpost: {
+    hemi: [0xb8a8a0, 0x2a2428, 1.7],
+    sun: [0xff9060, 1.3, [-12, 7, -3]],
+    lamp: 1.2,
+    exposure: 1,
+    grade: GR([0.92, 0.94, 1.04], [1.12, 1.0, 0.84], 0.9),
+    shade: { foot: 0.35, ao: 0.4, patch: 0.1 },
+  }, // the Cantor Outpost: ash and bronze, a fortress in a bad light
+  fields: {
+    hemi: [0xd8d8a8, 0x3a3a28, 2.2],
+    sun: [0xffc070, 1.6, [-12, 8, -5]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.92, 1.02, 0.9], [1.1, 1.04, 0.84], 1.1),
+    shade: { foot: 0.22, ao: 0.3, patch: 0.08 },
+  }, // the Tuning Fork Fields: dry gold and olive terraces
+  reliquary: {
+    hemi: [0xa8a8c4, 0x26263a, 1.7],
+    sun: [0xc8c0e8, 0.7, [-8, 12, -6]],
+    lamp: 1.2,
+    exposure: 1,
+    grade: GR([0.88, 0.92, 1.14], [1.02, 1.0, 0.96], 0.8),
+    shade: { foot: 0.4, ao: 0.44, patch: 0.1 },
+  }, // the Reliquary Road: cold grey-violet, overcast, the graves
+  aqueduct: {
+    hemi: [0x9cc8b4, 0x1e3a34, 2.0],
+    sun: [0xf0ffd8, 1.2, [-8, 14, -6]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.86, 1.06, 1.02], [1.04, 1.04, 0.9], 0.95),
+    shade: { foot: 0.3, ao: 0.38, patch: 0.1 },
+  }, // the Chitin Aqueduct: wet green-white, the water is the light
+  bellwright: {
+    hemi: [0xc89878, 0x2a1a14, 1.5],
+    sun: [0xff8040, 1.4, [-12, 6, -6]],
+    lamp: 1.4,
+    exposure: 1,
+    grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1),
+    shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
+  }, // the Bellwright Yard: kiln orange, soot
+  ascent: {
+    hemi: [0xe8e0f0, 0x504860, 2.5],
+    sun: [0xfff0d8, 1.8, [-6, 16, -5]],
+    lamp: 1,
+    exposure: 1,
+    grade: GR([0.92, 0.96, 1.1], [1.08, 1.03, 0.9], 0.85),
+    shade: { foot: 0.22, ao: 0.3, patch: 0.06 },
+  }, // the Threshold Ascent: high, thin, clear air
+  deep: {
+    hemi: [0x40506a, 0x0a0c14, 0.42],
+    sun: [0x8090b0, 0.0, [-6, 14, -6]],
+    lamp: 1.6,
+    exposure: 1,
+    grade: GR([0.94, 0.98, 1.12], [1.1, 1.02, 0.9], 1.0),
+    shade: { foot: 0.5, ao: 0.6, patch: 0.1 },
+  }, // the Deep Range (dev only): a cave that is dark but for a hand lantern and a few hung ones
+  // Campaign 2, Act B, THE SOUNDING DEEP: the Vael under the stone; amber lamps and a lantern are the light
+  // ---------------------------------------------------------------------------------------------------------------------------------------
+  deepgate: {
+    hemi: [0x5a6a90, 0x10121e, 1.3],
+    sun: [0x8898c0, 0.3, [-6, 14, -6]],
+    lamp: 1.7,
+    exposure: 1,
+    grade: GR([0.9, 0.96, 1.14], [1.16, 1.04, 0.84], 1.0),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
+  }, // the Sounding Deep Gate: blue-black stone, the city's amber lights far below
+  markets: {
+    hemi: [0xd0b090, 0x2a2018, 1.55],
+    sun: [0xffc890, 0.4, [-8, 12, -6]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([1.0, 0.94, 0.9], [1.14, 1.02, 0.82], 1.05),
+    shade: { foot: 0.35, ao: 0.42, patch: 0.1 },
+  }, // the Echo Markets: warm lamplight on pale wet stone
+  halls: {
+    hemi: [0xa0a8c8, 0x1e2030, 1.6],
+    sun: [0xd0d8ff, 0.5, [-6, 14, -6]],
+    lamp: 1.3,
+    exposure: 1,
+    grade: GR([0.9, 0.96, 1.12], [1.08, 1.0, 0.92], 0.85),
+    shade: { foot: 0.38, ao: 0.42, patch: 0.1 },
+  }, // the Undercantor Halls: cold marble, bronze, a lit wing and a dim one
+  drowned: {
+    hemi: [0x5a8c78, 0x0c1814, 1.55],
+    sun: [0x90e0c0, 0.4, [-6, 14, -6]],
+    lamp: 1.8,
+    exposure: 1,
+    grade: GR([0.84, 1.06, 0.98], [1.0, 1.06, 0.9], 0.9),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.14 },
+  }, // the Drowned Choir: green-black water, pale shafts
+  ossuary: {
+    hemi: [0x483c34, 0x08080c, 0.38],
+    sun: [0x8090b0, 0.0, [-6, 14, -6]],
+    lamp: 1.7,
+    exposure: 1,
+    grade: GR([0.96, 0.96, 1.04], [1.12, 1.02, 0.86], 1.0),
+    shade: { foot: 0.5, ao: 0.6, patch: 0.1 },
+  }, // the Lantern Ossuary: almost black, bone white where the lantern reaches
+  gardens: {
+    hemi: [0x58a888, 0x20184a, 0.95],
+    sun: [0xa0ffd0, 0.25, [-6, 14, -6]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([0.84, 1.08, 1.02], [1.1, 1.0, 1.04], 1.1),
+    shade: { foot: 0.4, ao: 0.46, patch: 0.12 },
+  }, // the Harmonic Gardens: phosphor green and violet
+  basilica: {
+    hemi: [0x908c90, 0x24201c, 1.4],
+    sun: [0xff9050, 0.6, [-8, 10, -4]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([0.94, 0.94, 0.96], [1.18, 0.98, 0.8], 0.7),
+    shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
+  }, // the Ash Basilica: ash grey, a fire at the altar
+  heart: {
+    hemi: [0xb85a88, 0x1e0818, 1.7],
+    sun: [0xff80c0, 0.6, [-6, 14, -6]],
+    lamp: 1.9,
+    exposure: 1,
+    grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05),
+    shade: { foot: 0.42, ao: 0.5, patch: 0.14 },
+  }, // the Sounding Deep Heart: red-violet, a pulse
+  tender: {
+    hemi: [0xb0c898, 0x2a3a28, 1.4],
+    sun: [0xffe8b0, 0.5, [-8, 14, -6]],
+    lamp: 1.0,
+    exposure: 1,
+    grade: GR([0.94, 1.04, 0.92], [1.08, 1.02, 0.88], 0.95),
+    shade: { foot: 0.2, ao: 0.28, patch: 0.06 },
+  }, // the Silent Orchard: soft green-gold, a garden kept by someone
+  // Campaign 2, Acts C and D: fourteen places, each its own light
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  hive: {
+    hemi: [0xc08a98, 0x2a1020, 1.7],
+    sun: [0xff9060, 1.1, [-12, 6, -5]],
+    lamp: 1.3,
+    exposure: 1,
+    grade: GR([1.02, 0.88, 0.94], [1.16, 0.98, 0.84], 1.1),
+    shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
+  }, // C2M17, the throat: plum shade, amber from the ribs, a red sun behind the tower
+  nerve: {
+    hemi: [0x7a4a8a, 0x120618, 1.2],
+    sun: [0xff6a9a, 0.4, [-6, 14, -6]],
+    lamp: 1.6,
+    exposure: 1,
+    grade: GR([0.96, 0.84, 1.08], [1.12, 0.94, 0.96], 1.1),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.12 },
+  }, // C2M18, the nerve cathedral: black violet and the pink of living cords
+  woven: {
+    hemi: [0xd8c8a0, 0x4a3e28, 1.8],
+    sun: [0xffe0a0, 0.9, [-8, 12, -5]],
+    lamp: 1.2,
+    exposure: 1,
+    grade: GR([1.0, 0.96, 0.86], [1.1, 1.04, 0.84], 0.95),
+    shade: { foot: 0.3, ao: 0.38, patch: 0.1 },
+  }, // C2M19, the bone loom: warm cream and old gold
+  veins: {
+    hemi: [0x9a6068, 0x1c1014, 1.4],
+    sun: [0xff8a70, 0.6, [-8, 12, -5]],
+    lamp: 1.5,
+    exposure: 1,
+    grade: GR([1.0, 0.86, 0.9], [1.12, 0.98, 0.9], 1.0),
+    shade: { foot: 0.42, ao: 0.48, patch: 0.12 },
+  }, // C2M20, the vein rail: iron and red meat
+  reactor: {
+    hemi: [0xc88a50, 0x24120a, 1.5],
+    sun: [0xffa040, 0.8, [-8, 12, -5]],
+    lamp: 2.0,
+    exposure: 1,
+    grade: GR([1.04, 0.9, 0.78], [1.2, 1.0, 0.76], 1.15),
+    shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
+  // C2M21, the pulse foundry: copper and orange heat // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND
+  // a narrow spread)
+  },
+  mourning: {
+    hemi: [0xc8c4cc, 0x3a363e, 1.9],
+    sun: [0xe8e4f0, 0.5, [-6, 14, -6]],
+    lamp: 1.1,
+    exposure: 1,
+    grade: GR([0.92, 0.94, 1.0], [1.04, 1.02, 1.0], 0.5),
+    shade: { foot: 0.3, ao: 0.38, patch: 0.08 },
+  }, // C2M22, the mourning halls: ash white, black cloth, nearly no colour
+  copy: {
+    hemi: [0xa0c8e0, 0x2a4058, 2.1],
+    sun: [0xfff0d0, 1.4, [-10, 12, -6]],
+    lamp: 1.0,
+    exposure: 1,
+    grade: GR([0.88, 1.0, 1.12], [1.04, 1.04, 1.0], 0.9),
+    shade: { foot: 0.25, ao: 0.32, patch: 0.08 },
+  }, // C2M23, the copy of the quay: glass-blue light, too clear
+  conductor: {
+    hemi: [0xb09cb4, 0x2a1828, 1.15],
+    sun: [0xffc0d8, 0.3, [-6, 14, -6]],
+    lamp: 1.9,
+    exposure: 1,
+    grade: GR([0.98, 0.9, 1.0], [1.1, 1.0, 0.94], 0.95),
+    shade: { foot: 0.38, ao: 0.44, patch: 0.1 },
+  }, // C2M24, the choir of one: pale nerve-white, a ring of red-pink lamps
+  descent: {
+    hemi: [0x4a6a58, 0x08120c, 0.9],
+    sun: [0x90e0b0, 0.2, [-6, 14, -6]],
+    lamp: 1.7,
+    exposure: 1,
+    grade: GR([0.86, 1.04, 0.94], [1.06, 1.04, 0.9], 0.9),
+    shade: { foot: 0.5, ao: 0.55, patch: 0.12 },
+  }, // C2M25, the well: black wet stone, copper going green, a lamp the only warm thing
+  roots: {
+    hemi: [0x8a8470, 0x181410, 1.2],
+    sun: [0xd8d0b0, 0.3, [-6, 14, -6]],
+    lamp: 1.3,
+    exposure: 1,
+    grade: GR([0.96, 0.96, 0.94], [1.04, 1.02, 0.96], 0.55),
+    shade: { foot: 0.45, ao: 0.5, patch: 0.1 },
+  }, // C2M26, the silent roots: pale, dead, no green
+  fault: {
+    hemi: [0xa8704a, 0x180c08, 1.4],
+    sun: [0xff7a2a, 1.2, [-10, 5, -4]],
+    lamp: 1.4,
+    exposure: 1,
+    grade: GR([1.04, 0.88, 0.8], [1.2, 0.98, 0.78], 1.1),
+    shade: { foot: 0.38, ao: 0.44, patch: 0.1 },
+  }, // C2M27, the fault line: basalt and a copper light welling up
+  tide: {
+    hemi: [0xa0a890, 0x2a2e28, 1.9],
+    sun: [0xf0e0b0, 0.9, [-8, 12, -5]],
+    lamp: 1.2,
+    exposure: 1,
+    grade: GR([0.94, 0.98, 0.96], [1.08, 1.04, 0.9], 0.85),
+    shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
+  }, // C2M28, the last tide: grey-brown dock, lime and weed
+  rootbell: {
+    hemi: [0x6a5a3a, 0x0c0a06, 0.7],
+    sun: [0xffb060, 0.2, [-6, 14, -6]],
+    lamp: 1.9,
+    exposure: 1,
+    grade: GR([1.0, 0.92, 0.82], [1.14, 1.0, 0.8], 1.0),
+    shade: { foot: 0.5, ao: 0.55, patch: 0.1 },
+  }, // C2M29, inside the Bell: bronze, verdigris, one copper glow
+  unrung: {
+    hemi: [0xe8dcc8, 0x5a4c44, 1.7],
+    sun: [0xffe4b0, 0.5, [-4, 18, -4]],
+    lamp: 1.1,
+    exposure: 1,
+    grade: GR([0.98, 0.95, 0.94], [1.08, 1.03, 0.94], 0.85),
+    shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
+  // C2M30, the walk to the Gate: warm ivory marble and one gold line (it read as extremely gray at saturation 0.35; the walk to it now passes through
+  // the colours of the places it recalls)
+  },
+  gate: {
+    hemi: [0xf0f0ff, 0x30303c, 2.4],
+    sun: [0xffffff, 1.6, [-4, 18, -4]],
+    lamp: 0.8,
+    exposure: 1,
+    grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5),
+    shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
+  }, // the Gate: white and black, a ring of light
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
 /**
- * MARKS THAT STAY (PT-021 step 2): the cells of the 4 x 4 `decals_atlas` by name, how many marks of each ring the view keeps (the oldest is recycled), and which creatures bleed (the rest leave the Vael's ichor).
+ * MARKS THAT STAY : the cells of the 4 x 4 `decals_atlas` by name, how many marks of each ring the view keeps (the oldest is recycled), and which
+ * creatures bleed (the rest leave the Vael's ichor).
  * A map may list its own marks (`decals`, validated by kind). View data only: the simulation never reads it and no save holds it.
  */
 export const DECALS = {
-  kinds: { blood: [0, 1, 2], pock: [3], ichor: [4, 5, 6], drip: [7], bloodpool: [8], ichorpool: [9], scorch: [10], streak: [11], smear: [12], scrape: [13], damp: [14], soot: [15] },
+  kinds: {
+    blood: [0, 1, 2],
+    pock: [3],
+    ichor: [4, 5, 6],
+    drip: [7],
+    bloodpool: [8],
+    ichorpool: [9],
+    scorch: [10],
+    streak: [11],
+    smear: [12],
+    scrape: [13],
+    damp: [14],
+    soot: [15],
+  },
   rings: { pock: 96, splat: 128, mark: 96 },
   human: ['tollbearer', 'gaunt', 'bellhand', 'sexton', 'wardengraft'],
 };
-/** THE VAEL'S GROWTH with thickness (PT-021 step 5): a map lists where it started (`growth: [{ at, r, power }]`); render-only. max sources, how fast it thins with distance, lobes per wall face at full strength, how high it climbs, sacs at the heart. */
+/*
+ * THE VAEL'S GROWTH with thickness: a map lists where it started (`growth: [{ at, r, power }]`); render-only. max sources, how fast it thins with
+ * distance, lobes per wall face at full strength, how high it climbs, sacs at the heart.
+ */
 export const GROWTH = { max: 8, falloff: 1.15, perFace: 9, reach: 3.2, sacs: 14 };
 export const RANGE = { holdModes: ['inert', 'turn', 'fixed'], healAfter: 3, respawnAfter: 5, playerHealAfter: 3, refillAfter: 1.5 };
 export const BASH = { reach: 1.9, arc: 1.3, damage: 15, windup: 0.1, recover: 0.35, knock: 0.5, flinch: 0.5 };
-export const KEYS = { brass: { name: 'Brass key', color: '#c9a44c' }, iron: { name: 'Iron key', color: '#8fa3b8' }, bell: { name: 'Bell key', color: '#4ff3d4' } };
+export const KEYS = {
+  brass: { name: 'Brass key', color: '#c9a44c' },
+  iron: { name: 'Iron key', color: '#8fa3b8' },
+  bell: { name: 'Bell key', color: '#4ff3d4' },
+};
 
 // ---- terrain (Gate 2 production kit) ----------------------------------------------------------------------------------
-/** heights are authored in 0.5 m units (0-9, a-z, and A-Z for 36 to 61: 30.5 m at most, PT-045); an actor can step UP at most STEP metres and can drop any distance */
-export const HEIGHT_UNIT = 0.5, STEP = 0.6;
+/*
+ * heights are authored in 0.5 m units (0-9, a-z, and A-Z for 36 to 61: 30.5 m at most,); an actor can step UP at most STEP metres and can drop any
+ * distance
+ */
+export const HEIGHT_UNIT = 0.5,
+  STEP = 0.6;
 /** floor effects (the map's optional `fx` layer): wading water slows; toxic residue slows a little and burns */
-export const FX = { w: { name: 'wading water', speed: 0.62 }, x: { name: 'toxic residue', speed: 0.8, dps: 6 }, h: { name: 'ember bed', speed: 0.85, dps: 8 }, s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true }, p: { name: 'weeping pool', speed: 0.65, dps: 5 }, d: { name: 'drift', speed: 1, grip: 0.1 },
-  '>': { name: 'current east', speed: 0.78, water: true, flow: [1, 0] }, '<': { name: 'current west', speed: 0.78, water: true, flow: [-1, 0] }, '^': { name: 'current north', speed: 0.78, water: true, flow: [0, -1] }, 'v': { name: 'current south', speed: 0.78, water: true, flow: [0, 1] } };      // PT-037 (Campaign 2 Act A, E3): CURRENT, wading water that PUSHES (`flow` is the direction: > east, < west, ^ north (-z), v south (+z)), FLOW.push m/s on top of whatever you do, on the player and every awake walker; it conducts the arc lamp like any wading water (`water`)      // `d` (PT-033, Episode 4 Batch D): DRIFT, a floor with almost no grip: the body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the speed cap is the walking speed      // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves (PT-028)
-/** THE SHIP BREATHES (PT-027, Episode 3 Batch B; src/engine/breath.js): `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing gate never closes on anyone within DOOR.autoCloseClearance */
+export const FX = {
+  w: { name: 'wading water', speed: 0.62 },
+  x: { name: 'toxic residue', speed: 0.8, dps: 6 },
+  h: { name: 'ember bed', speed: 0.85, dps: 8 },
+  s: { name: 'spore bed', speed: 0.7, dps: 7, pulse: true },
+  p: { name: 'weeping pool', speed: 0.65, dps: 5 },
+  d: { name: 'drift', speed: 1, grip: 0.1 },
+  '>': { name: 'current east', speed: 0.78, water: true, flow: [1, 0] },
+  '<': { name: 'current west', speed: 0.78, water: true, flow: [-1, 0] },
+  '^': { name: 'current north', speed: 0.78, water: true, flow: [0, -1] },
+  v: { name: 'current south', speed: 0.78, water: true, flow: [0, 1] },
+// CURRENT, wading water that PUSHES (`flow` is the direction: > east, < west, ^ north (-z), v south (+z)), FLOW.push m/s on top of whatever you do,
+// on the player and every awake walker; it conducts the arc lamp like any wading water (`water`) // `d`: DRIFT, a floor with almost no grip: the
+// body's velocity follows what you ask for at `grip` of the ground's rate (momentum: it takes about 0.7 s to get going and as long to stop); the
+// speed cap is the walking speed // `p` is never drawn in a map's fx layer: it is the pool a Weeping Mother's tear leaves
+};
+/*
+ * THE SHIP BREATHES: `warn` is how long a spore bed swells and glows before it blooms, `fade` how long the glow lingers after it stops; a breathing
+ * gate never closes on anyone within DOOR.autoCloseClearance
+ */
 export const BREATH = { warn: 1.2, fade: 0.8 };
-/** CURRENT (PT-037, E3): how hard a flowing floor (FX '>' '<' '^' 'v') pushes a body that stands on it, in m/s, added to its own movement (a walker upstream at full speed still gains ground: 6.4 x 0.78 - 2.2 = 2.8 m/s) */
+/*
+ * CURRENT: how hard a flowing floor (FX '>' '<' '^' 'v') pushes a body that stands on it, in m/s, added to its own movement (a walker upstream at
+ * full speed still gains ground: 6.4 x 0.78 - 2.2 = 2.8 m/s)
+ */
 export const FLOW = { push: 2.2 };
-/** CLOCKED CONVEYORS (PT-045, drop B, E8a; src/engine/belts.js): a map's `belts: [{ rect, period, phase, mode, on?, speed? }]` put a clock on the flowing floors (FX '>' '<' '^' 'v') under their rect. 'flip': the floor carries you the way it is drawn for half a period,
- *  stops for `stop` s, carries you the other way for half, stops again; 'run': it runs for `on` s of every period and stands still for the rest. A belt eases to and from a stop over `ease` s (so the push is never a jump and the chevrons visibly slow before it stops);
- *  `speed` (m/s, default `speed` here) is how hard a running belt pushes: harder than a current, because it is a machine. */
+/**
+ * CLOCKED CONVEYORS (drop B, E8a; src/engine/belts.js): a map's `belts: [{ rect, period, phase, mode, on?, speed? }]` put a clock on the flowing
+ * floors (FX '>' '<' '^' 'v') under their rect. 'flip': the floor carries you the way it is drawn for half a period,
+ * stops for `stop` s, carries you the other way for half, stops again; 'run': it runs for `on` s of every period and stands still for the rest. A
+ * belt eases to and from a stop over `ease` s (so the push is never a jump and the chevrons visibly slow before it stops);
+ * `speed` (m/s, default `speed` here) is how hard a running belt pushes: harder than a current, because it is a machine.
+ */
 export const BELT = { speed: 3.0, stop: 0.8, ease: 0.6, minPeriod: 6 };
-/** THE TIDE (PT-045, drop B, E12; src/engine/tide.js): a map's `tide: { levels: [[t, h], ...], loop?, rect? }` is the water level of the whole map (or of the cells in `rect`, so one yard of a dev map can have a tide) in metres, a piecewise-linear function of the sim clock; a walkable cell whose floor is more than `wet` below it takes the wading effect
- *  (FX 'w': slow, and the arc lamp conducts) and the view draws a sea at that height. It never drowns anyone: it takes standing room and speed, and it is the only thing in the game that changes which floors are cheap to stand on. */
+/**
+ * THE TIDE (drop B, E12; src/engine/tide.js): a map's `tide: { levels: [[t, h], ...], loop?, rect? }` is the water level of the whole map (or of the
+ * cells in `rect`, so one yard of a dev map can have a tide) in metres, a piecewise-linear function of the sim clock; a walkable cell whose floor is
+ * more than `wet` below it takes the wading effect
+ * (FX 'w': slow, and the arc lamp conducts) and the view draws a sea at that height. It never drowns anyone: it takes standing room and speed, and it
+ * is the only thing in the game that changes which floors are cheap to stand on.
+ */
 export const TIDE = { wet: 0.05, minH: -2, maxH: 40, maxPoints: 32 };
-/** CARS (PT-045, drop B, E8b; src/engine/cars.js): a rectangular floor that rides a closed polyline over the void on a pure clock, dwelling at its stops. `speed` is the PEAK speed of a run (m/s: a run eases in and out, its average is two thirds of it), `dwell` how long it waits at a stop
- *  (never under `minDwell`: time to step on), `warn` how long before it leaves the rim lights blink (the tell), `board` how far a rider's feet may be from the deck and still be carried, `size` limits in cells. A car carries the player and nobody else (a creature never boards). */
+/**
+ * CARS (drop B, E8b; src/engine/cars.js): a rectangular floor that rides a closed polyline over the void on a pure clock, dwelling at its stops.
+ * `speed` is the PEAK speed of a run (m/s: a run eases in and out, its average is two thirds of it), `dwell` how long it waits at a stop
+ * (never under `minDwell`: time to step on), `warn` how long before it leaves the rim lights blink (the tell), `board` how far a rider's feet may be
+ * from the deck and still be carried, `size` limits in cells. A car carries the player and nobody else (a creature never boards).
+ */
 export const CARS = { speed: 4, dwell: 8, minDwell: 3, warn: 2, board: 0.35, minSize: 1, maxSize: 12 };
 /**
- * LOW GRAVITY WITHOUT A JUMP KEY (PT-032, Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
- * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.
- * A `_` tile is the VOID (open sky, kind 'void': it blocks walking for everyone but a body in the air, is not solid for sight or shots, and has no floor; its floor is `voidDepth` m down): landing over it is a MISS, the body falls on (`voidFallG`)
- * and is set back on the last solid ground it stood on after `voidDamage` hurt, never killed outright. `ventCooldown` s after a launch (or a set-back) a plate does not fire again. `p.air` is lazy state: only a world with a vent ever has it.
+ * LOW GRAVITY WITHOUT A JUMP KEY (Episode 4 Batch A; design/EPISODE4.md E1). A map's `vents` ([{ at, to, time }]) throw a player who steps on the
+ * plate at cell `at` along a ballistic arc to the cell `to` in `time` s (the arc is exact for the sim's
+ * integrator, as the mortar's and the Weeping Mother's are) under gravity `g`; in the air the body keeps its launch velocity plus a little steering
+ * (`steer` of walking speed), the weapon fires as usual, a wall stops the horizontal part, a ceiling the climb.
+ * A `_` tile is the VOID (open sky, kind 'void': it blocks walking for everyone but a body in the air, is not solid for sight or shots, and has no
+ * floor; its floor is `voidDepth` m down): landing over it is a MISS, the body falls on (`voidFallG`)
+ * and is set back on the last solid ground it stood on after `voidDamage` hurt, never killed outright. `ventCooldown` s after a launch (or a
+ * set-back) a plate does not fire again. `p.air` is lazy state: only a world with a vent ever has it.
  */
-/** FALLING LOADS (PT-032; src/engine/loads.js): the warning, the settling cloud, and what a landing does to someone under it */
+/* * FALLING LOADS: the warning, the settling cloud, and what a landing does to someone under it */
 export const LOADS = { warn: 1.5, linger: 1.2, damage: 30, enemyDamage: 80 };
-export const LOWG = { g: 3.2, steer: 0.28, ventCooldown: 0.5, setBackCooldown: 1.5, voidDepth: 6, voidFallG: 14, voidDamage: 15, minTime: 1, maxTime: 8, maxAir: 14 };
-/** AIRLOCKS AND VACUUM (PT-033; src/engine/airlock.js): how long a lock's second door stays refused after the first has shut (the pressure equalising), and what a body in vacuum takes */
-export const CORPSES = { cap: 24, every: 120 };                               // PT-050 H-L4: of the creatures a vat, a mother or a summoner BORE, at most `cap` corpses are kept (the oldest go), checked every `every` ticks; a mapped creature's body is never removed
-export const LOCK = { cycle: 3, hold: 2, giveUp: 6 };                       // giveUp: a queued door forgets the press when you walk this far (metres) from it
+export const LOWG = {
+  g: 3.2,
+  steer: 0.28,
+  ventCooldown: 0.5,
+  setBackCooldown: 1.5,
+  voidDepth: 6,
+  voidFallG: 14,
+  voidDamage: 15,
+  minTime: 1,
+  maxTime: 8,
+  maxAir: 14,
+};
+/*
+ * AIRLOCKS AND VACUUM: how long a lock's second door stays refused after the first has shut (the pressure equalising), and what a body in vacuum
+ * takes
+ */
+// H-L4: of the creatures a vat, a mother or a summoner BORE, at most `cap` corpses are kept (the oldest go), checked every `every` ticks; a mapped
+// creature's body is never removed
+export const CORPSES = { cap: 24, every: 120 };
+export const LOCK = { cycle: 3, hold: 2, giveUp: 6 }; // giveUp: a queued door forgets the press when you walk this far (metres) from it
 export const VACUUM = { dps: 2, tick: 0.5 };
 /** how much room an interior cell must have between floor and ceiling for the player to fit (validated) */
 export const MIN_HEADROOM = 2.4;
 /** wall / floor skins: the tile char picks the painted texture. kind: what the sim/renderer treat it as. ceiling: interior cells get one. */
-export const WALL_SKINS = { '#': 'wall_bulkhead_a', B: 'brick_warm_a', W: 'wall_timber_a', P: 'wall_plaster_a', C: 'wall_concrete_a', I: 'wall_iron_a', R: 'wall_resin_a', T: 'tower_stone_a', L: 'wall_saltbrick_a', K: 'wall_corrugated_a', Y: 'wall_kiln_a', Z: 'wall_rime_a', V: 'wall_rib_a', M: 'wall_loom_a', E: 'wall_loft_a', N: 'wall_lattice_a', O: 'wall_hull_a', F: 'wall_foundry_a', H: 'wall_throat_a', J: 'wall_glass_a', G: 'wall_dock_a', Q: 'wall_orchard_a', U: 'wall_bark_a', A: 'wall_approach_a', '1': 'wall_stair_a', '2': 'wall_gate_a', '3': 'wall_quiet_a',
-  '!': 'wall_glasscrust_a', '$': 'wall_saltplate_a', '%': 'wall_basalt_a', '*': 'wall_bonecoral_a', '=': 'wall_reliquary_a', '?': 'wall_chitin_a',
-  '[': 'wall_deeprock_a', ']': 'wall_citystone_a', '|': 'wall_marblebronze_a', '}': 'wall_drowned_a', '"': 'wall_ossuary_a', "'": 'wall_ashstone_a', '0': 'wall_heartflesh_a', 'α': 'wall_hivegorge_a', 'β': 'wall_nerve_a', 'γ': 'wall_bonewoven_a', 'δ': 'wall_vein_a', 'ε': 'wall_reactor_a', 'ζ': 'wall_mourning_a', 'η': 'wall_crystal_a', 'θ': 'wall_amphi_a', 'ι': 'wall_rootwell_a', 'κ': 'wall_rootbark_a', 'λ': 'wall_fault_a', 'μ': 'wall_tidestone_a', 'ν': 'wall_bellinside_a', 'ξ': 'wall_unrung_a' };      // PT-043: Acts C and D (recipes_c3.js, recipes_c4.js): the ASCII alphabet is full, so these are Greek letters      // Campaign 2 Act B (PT-039, recipes_c2b.js): cave rock, city stone, cold marble and bronze, drowned stone, ossuary bone, basilica ash, the heart's membrane;      // Campaign 2 Act A (PT-037, recipes_c2a.js): fused glass crust, rusted salt plate, basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin      // Episode 4: glass, dock, orchard, bark, approach, stair, gate, quiet            // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+export const WALL_SKINS = {
+  '#': 'wall_bulkhead_a',
+  B: 'brick_warm_a',
+  W: 'wall_timber_a',
+  P: 'wall_plaster_a',
+  C: 'wall_concrete_a',
+  I: 'wall_iron_a',
+  R: 'wall_resin_a',
+  T: 'tower_stone_a',
+  L: 'wall_saltbrick_a',
+  K: 'wall_corrugated_a',
+  Y: 'wall_kiln_a',
+  Z: 'wall_rime_a',
+  V: 'wall_rib_a',
+  M: 'wall_loom_a',
+  E: 'wall_loft_a',
+  N: 'wall_lattice_a',
+  O: 'wall_hull_a',
+  F: 'wall_foundry_a',
+  H: 'wall_throat_a',
+  J: 'wall_glass_a',
+  G: 'wall_dock_a',
+  Q: 'wall_orchard_a',
+  U: 'wall_bark_a',
+  A: 'wall_approach_a',
+  1: 'wall_stair_a',
+  2: 'wall_gate_a',
+  3: 'wall_quiet_a',
+  '!': 'wall_glasscrust_a',
+  $: 'wall_saltplate_a',
+  '%': 'wall_basalt_a',
+  '*': 'wall_bonecoral_a',
+  '=': 'wall_reliquary_a',
+  '?': 'wall_chitin_a',
+  '[': 'wall_deeprock_a',
+  ']': 'wall_citystone_a',
+  '|': 'wall_marblebronze_a',
+  '}': 'wall_drowned_a',
+  '"': 'wall_ossuary_a',
+  "'": 'wall_ashstone_a',
+  0: 'wall_heartflesh_a',
+  α: 'wall_hivegorge_a',
+  β: 'wall_nerve_a',
+  γ: 'wall_bonewoven_a',
+  δ: 'wall_vein_a',
+  ε: 'wall_reactor_a',
+  ζ: 'wall_mourning_a',
+  η: 'wall_crystal_a',
+  θ: 'wall_amphi_a',
+  ι: 'wall_rootwell_a',
+  κ: 'wall_rootbark_a',
+  λ: 'wall_fault_a',
+  μ: 'wall_tidestone_a',
+  ν: 'wall_bellinside_a',
+  ξ: 'wall_unrung_a',
+// Acts C and D (recipes_c3.js, recipes_c4.js): the ASCII alphabet is full, so these are Greek letters // Campaign 2 Act B: cave rock, city stone,
+// cold marble and bronze, drowned stone, ossuary bone, basilica ash, the heart's membrane; // Campaign 2 Act A: fused glass crust, rusted salt plate,
+// basalt bastion, ivory bone-coral slots, cold reliquary stone, pale ribbed chitin // Episode 4: glass, dock, orchard, bark, approach, stair, gate,
+// quiet // L, K: Episode 2 (the Salt Works); Y kiln brick, Z frosted steel (Gate 4 batch 2)
+};
 export const FLOOR_SKINS = {
-  '.': { kind: 'floor', tex: 'floor_planks_a' }, ':': { kind: 'outdoor', tex: 'cobble_wet_a' }, p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
-  t: { kind: 'floor', tex: 'floor_tile_a' }, g: { kind: 'floor', tex: 'floor_grate_a' }, c: { kind: 'floor', tex: 'floor_carpet_a' }, f: { kind: 'floor', tex: 'floor_flag_a' },
-  m: { kind: 'outdoor', tex: 'floor_silt_a' }, n: { kind: 'floor', tex: 'floor_silt_a' }, s: { kind: 'outdoor', tex: 'floor_slate_a' },
-  l: { kind: 'outdoor', tex: 'floor_saltcrust_a' },                                  // Episode 2: the pans
-  b: { kind: 'outdoor', tex: 'floor_track_a' }, q: { kind: 'floor', tex: 'floor_track_a' }, k: { kind: 'floor', tex: 'floor_clinker_a' }, v: { kind: 'floor', tex: 'floor_slurry_a' }, r: { kind: 'floor', tex: 'floor_rime_a' },   // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
-  o: { kind: 'floor', tex: 'floor_gill_a' }, u: { kind: 'outdoor', tex: 'floor_gill_a' },       // Episode 3 (PT-027): the gill gardens' damp floor, roofed and open to the sky
-  w: { kind: 'floor', tex: 'floor_loom_a' }, e: { kind: 'outdoor', tex: 'floor_loom_a' }, i: { kind: 'floor', tex: 'floor_loft_a' }, z: { kind: 'outdoor', tex: 'floor_loft_a' }, j: { kind: 'floor', tex: 'floor_foundry_a' }, y: { kind: 'floor', tex: 'floor_throat_a' },
-  a: { kind: 'floor', tex: 'floor_deck_a' }, d: { kind: 'outdoor', tex: 'floor_deck_a' }, h: { kind: 'outdoor', tex: 'floor_hull_a' },       // Episode 3 (PT-029, PT-030): the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
-  '+': { kind: 'floor', tex: 'floor_hull_a' },       // Episode 4: the wreck's roofed hull floor (the plate of h, under a lid)
-  '4': { kind: 'floor', tex: 'floor_prism_a' }, '5': { kind: 'floor', tex: 'floor_quiet_a' }, x: { kind: 'floor', tex: 'floor_dock_a' }, '6': { kind: 'floor', tex: 'floor_moss_a' }, '7': { kind: 'outdoor', tex: 'floor_moss_a' },
-  '8': { kind: 'floor', tex: 'floor_approach_a' }, '9': { kind: 'floor', tex: 'floor_stair_a' }, '&': { kind: 'outdoor', tex: 'floor_stair_a' }, ';': { kind: 'floor', tex: 'floor_gate_a' }, '<': { kind: 'outdoor', tex: 'floor_gate_a' },       // Episode 4 (PT-033): prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
-  '(': { kind: 'outdoor', tex: 'floor_glasssand_a' }, ')': { kind: 'floor', tex: 'floor_basaltflag_a' }, '-': { kind: 'outdoor', tex: 'floor_terrace_a' }, ',': { kind: 'outdoor', tex: 'floor_chitin_a' }, '/': { kind: 'floor', tex: 'floor_chitin_a' },       // Campaign 2 Act A (PT-037): glass sand, basalt flags, terrace turf, aqueduct chitin (open and roofed)
-  '{': { kind: 'floor', tex: 'floor_flowstone_a' }, '^': { kind: 'floor', tex: 'floor_marble_a' }, '>': { kind: 'floor', tex: 'floor_flesh_a' }, '@': { kind: 'outdoor', tex: 'floor_flowstone_a' },
-  'Α': { kind: 'outdoor', tex: 'floor_hivetrench_a' }, 'Β': { kind: 'outdoor', tex: 'floor_nervegrid_a' }, 'Γ': { kind: 'floor', tex: 'floor_loomweave_a' }, 'Δ': { kind: 'floor', tex: 'floor_veinrail_a' }, 'Ε': { kind: 'floor', tex: 'floor_reactor_a' }, 'Ζ': { kind: 'floor', tex: 'floor_mourning_a' }, 'Η': { kind: 'outdoor', tex: 'floor_crystal_a' }, 'Θ': { kind: 'floor', tex: 'floor_amphi_a' }, 'Ι': { kind: 'outdoor', tex: 'floor_rootwell_a' }, 'Κ': { kind: 'floor', tex: 'floor_rootloam_a' }, 'Λ': { kind: 'outdoor', tex: 'floor_faultrock_a' }, 'Μ': { kind: 'outdoor', tex: 'floor_tideplank_a' }, 'Ν': { kind: 'floor', tex: 'floor_bellstone_a' }, 'Ξ': { kind: 'floor', tex: 'floor_unrung_a' }, 'Ο': { kind: 'floor', tex: 'floor_hivetrench_a' }, 'Π': { kind: 'outdoor', tex: 'floor_amphi_a' },       // PT-043: Acts C and D       // Campaign 2 Act B (PT-039): flowstone, marble, the heart's skin
+  '.': { kind: 'floor', tex: 'floor_planks_a' },
+  ':': { kind: 'outdoor', tex: 'cobble_wet_a' },
+  p: { kind: 'outdoor', tex: 'floor_planks_a', tint: 0xa8b0bc },
+  t: { kind: 'floor', tex: 'floor_tile_a' },
+  g: { kind: 'floor', tex: 'floor_grate_a' },
+  c: { kind: 'floor', tex: 'floor_carpet_a' },
+  f: { kind: 'floor', tex: 'floor_flag_a' },
+  m: { kind: 'outdoor', tex: 'floor_silt_a' },
+  n: { kind: 'floor', tex: 'floor_silt_a' },
+  s: { kind: 'outdoor', tex: 'floor_slate_a' },
+  l: { kind: 'outdoor', tex: 'floor_saltcrust_a' }, // Episode 2: the pans
+  b: { kind: 'outdoor', tex: 'floor_track_a' },
+  q: { kind: 'floor', tex: 'floor_track_a' },
+  k: { kind: 'floor', tex: 'floor_clinker_a' },
+  v: { kind: 'floor', tex: 'floor_slurry_a' },
+  r: { kind: 'floor', tex: 'floor_rime_a' }, // Episode 2 (batch 2): rail track, kiln clinker, slurry, rime deck
+  o: { kind: 'floor', tex: 'floor_gill_a' },
+  u: { kind: 'outdoor', tex: 'floor_gill_a' }, // Episode 3: the gill gardens' damp floor, roofed and open to the sky
+  w: { kind: 'floor', tex: 'floor_loom_a' },
+  e: { kind: 'outdoor', tex: 'floor_loom_a' },
+  i: { kind: 'floor', tex: 'floor_loft_a' },
+  z: { kind: 'outdoor', tex: 'floor_loft_a' },
+  j: { kind: 'floor', tex: 'floor_foundry_a' },
+  y: { kind: 'floor', tex: 'floor_throat_a' },
+  a: { kind: 'floor', tex: 'floor_deck_a' },
+  d: { kind: 'outdoor', tex: 'floor_deck_a' },
+  // Episode 3: the Loom's woven floor, the Loft's boards, the Foundry's grating, the Throne's wet membrane
+  h: { kind: 'outdoor', tex: 'floor_hull_a' },
+  '+': { kind: 'floor', tex: 'floor_hull_a' }, // Episode 4: the wreck's roofed hull floor (the plate of h, under a lid)
+  4: { kind: 'floor', tex: 'floor_prism_a' },
+  5: { kind: 'floor', tex: 'floor_quiet_a' },
+  x: { kind: 'floor', tex: 'floor_dock_a' },
+  6: { kind: 'floor', tex: 'floor_moss_a' },
+  7: { kind: 'outdoor', tex: 'floor_moss_a' },
+  8: { kind: 'floor', tex: 'floor_approach_a' },
+  9: { kind: 'floor', tex: 'floor_stair_a' },
+  '&': { kind: 'outdoor', tex: 'floor_stair_a' },
+  ';': { kind: 'floor', tex: 'floor_gate_a' },
+  '<': { kind: 'outdoor', tex: 'floor_gate_a' }, // Episode 4: prism, quiet, dock, moss (roofed / open), approach, stair (roofed / open), gate
+  '(': { kind: 'outdoor', tex: 'floor_glasssand_a' },
+  ')': { kind: 'floor', tex: 'floor_basaltflag_a' },
+  '-': { kind: 'outdoor', tex: 'floor_terrace_a' },
+  ',': { kind: 'outdoor', tex: 'floor_chitin_a' },
+  '/': { kind: 'floor', tex: 'floor_chitin_a' }, // Campaign 2 Act A: glass sand, basalt flags, terrace turf, aqueduct chitin (open and roofed)
+  '{': { kind: 'floor', tex: 'floor_flowstone_a' },
+  '^': { kind: 'floor', tex: 'floor_marble_a' },
+  '>': { kind: 'floor', tex: 'floor_flesh_a' },
+  '@': { kind: 'outdoor', tex: 'floor_flowstone_a' },
+  Α: { kind: 'outdoor', tex: 'floor_hivetrench_a' },
+  Β: { kind: 'outdoor', tex: 'floor_nervegrid_a' },
+  Γ: { kind: 'floor', tex: 'floor_loomweave_a' },
+  Δ: { kind: 'floor', tex: 'floor_veinrail_a' },
+  Ε: { kind: 'floor', tex: 'floor_reactor_a' },
+  Ζ: { kind: 'floor', tex: 'floor_mourning_a' },
+  Η: { kind: 'outdoor', tex: 'floor_crystal_a' },
+  Θ: { kind: 'floor', tex: 'floor_amphi_a' },
+  Ι: { kind: 'outdoor', tex: 'floor_rootwell_a' },
+  Κ: { kind: 'floor', tex: 'floor_rootloam_a' },
+  Λ: { kind: 'outdoor', tex: 'floor_faultrock_a' },
+  Μ: { kind: 'outdoor', tex: 'floor_tideplank_a' },
+  Ν: { kind: 'floor', tex: 'floor_bellstone_a' },
+  Ξ: { kind: 'floor', tex: 'floor_unrung_a' },
+  Ο: { kind: 'floor', tex: 'floor_hivetrench_a' },
+  Π: { kind: 'outdoor', tex: 'floor_amphi_a' }, // Acts C and D // Campaign 2 Act B: flowstone, marble, the heart's skin
 };
 
 /**
- * THE GRAVITY TOOL (PT-022, owner go 2026-10-08: "if we're going to make a gravity gun we should make a gravity gun"): the Vael tuning-fork. HOLD AIM = the beam: it drags the body nearest the middle of the view toward you (a movable prop is
- * lifted and held `hold.dist` m ahead; a creature is dragged in and stunned at melee range), FIRE with a prop held THROWS it, FIRE with nothing held is a PUNT: a shock that shoves the creatures in front of it (a wall or another body is struck
+ * THE GRAVITY TOOL (owner go 2026-10-08: "if we're going to make a gravity gun we should make a gravity gun"): the Vael tuning-fork. HOLD AIM = the
+ * beam: it drags the body nearest the middle of the view toward you (a movable prop is
+ * lifted and held `hold.dist` m ahead; a creature is dragged in and stunned at melee range), FIRE with a prop held THROWS it, FIRE with nothing held
+ * is a PUNT: a shock that shoves the creatures in front of it (a wall or another body is struck
  * for `impact`), launches the props, and turns a toll-shot back on the one who tolled it. No ammunition: a cooldown. Every number a first guess.
  */
 export const GRAV = {
-  reach: 8.5, cone: 0.5,                                                            // how far the beam finds anything, and the half-angle (rad) of the cone it looks in
-  hold: { dist: 2.3, up: -0.2, follow: 15, max: 3.6, blocked: 1.2 },                // a held prop floats `dist` m ahead (`up` m about eye height), closes the gap at `follow` m/s, is let go when `max` m from where it belongs or blocked for `blocked` s
-  pull: { speed: 8.5, stop: 1.9, stun: 1.0, maxPoise: 3, linger: 0.25 },            // a creature is dragged in at `speed` m/s until `stop` m from you, then stunned `stun` s (poise `maxPoise` and above, bosses and nodes: never); it stays helpless `linger` s after the beam lets go
-  punt: { cooldown: 0.8, miss: 0.45, reach: 9.5, cone: 0.6, push: 17, time: 0.4, falloff: 0.5, impact: 26, stun: 1.3, elite: 0.35, props: 15, lift: 3.5, glance: 0.25 },     // push: m/s at the start, ending after `time` s (about 3.4 m); `impact`: the damage of a wall or a body (scaled by how fast it was still going and by `hit`, the share of the speed the wall stopped); `glance`: the least such share that counts as a blow (0.25 = about 15 degrees from the wall's surface; less slides on); elites take `elite` of the push and no impact
+  reach: 8.5,
+  cone: 0.5, // how far the beam finds anything, and the half-angle (rad) of the cone it looks in
+  // a held prop floats `dist` m ahead (`up` m about eye height), closes the gap at `follow` m/s, is let go when `max` m from where it belongs or
+  // blocked for `blocked` s
+  hold: { dist: 2.3, up: -0.2, follow: 15, max: 3.6, blocked: 1.2 },
+  // a creature is dragged in at `speed` m/s until `stop` m from you, then stunned `stun` s (poise `maxPoise` and above, bosses and nodes: never); it
+  // stays helpless `linger` s after the beam lets go
+  pull: { speed: 8.5, stop: 1.9, stun: 1.0, maxPoise: 3, linger: 0.25 },
+  punt: {
+    cooldown: 0.8,
+    miss: 0.45,
+    reach: 9.5,
+    cone: 0.6,
+    push: 17,
+    time: 0.4,
+    falloff: 0.5,
+    impact: 26,
+    stun: 1.3,
+    elite: 0.35,
+    props: 15,
+    lift: 3.5,
+    glance: 0.25,
+  // push: m/s at the start, ending after `time` s (about 3.4 m); `impact`: the damage of a wall or a body (scaled by how fast it was still going and
+  // by `hit`, the share of the speed the wall stopped); `glance`: the least such share that counts as a blow (0.25 = about 15 degrees from the wall's
+  // surface; less slides on); elites take `elite` of the push and no impact
+  },
   throw: { speed: 25, cooldown: 0.55 },
-  catch: { reach: 7.5, cone: 0.75, speed: 1.3, dmg: 2 },                             // a toll-shot in the cone is sent back at `speed` x for `dmg` x its damage, against the creatures
+  // a toll-shot in the cone is sent back at `speed` x for `dmg` x its damage, against the creatures
+  catch: { reach: 7.5, cone: 0.75, speed: 1.3, dmg: 2 },
 };
-/** movable props (a map's `prop` with `movable: true`): collision radius, height, the damage of a throw at full speed, how many bodies one takes before it breaks (an authored prop; nothing in the shipped maps is movable yet) */
-export const PHYS = { crate: { r: 0.62, h: 1.1, dmg: 42, hits: 1 }, barrel: { r: 0.42, h: 1.0, dmg: 34, hits: 2 }, sack: { r: 0.42, h: 0.7, dmg: 20, hits: 3 } };
-export const PHYS_RULES = { gravity: 17, bounce: 0.3, friction: 5, hitSpeed: 6.5, breakSpeed: 14, throwRef: 25, respawnAfter: 4, strayAfter: 10 };       // respawnAfter / strayAfter: the Range only (a broken prop comes back; one left far from home for that long goes back)
+/**
+ * movable props (a map's `prop` with `movable: true`): collision radius, height, the damage of a throw at full speed, how many bodies one takes
+ * before it breaks (an authored prop; nothing in the shipped maps is movable yet)
+ */
+export const PHYS = {
+  crate: { r: 0.62, h: 1.1, dmg: 42, hits: 1 },
+  barrel: { r: 0.42, h: 1.0, dmg: 34, hits: 2 },
+  sack: { r: 0.42, h: 0.7, dmg: 20, hits: 3 },
+};
+// respawnAfter / strayAfter: the Range only (a broken prop comes back; one left far from home for that long goes back)
+export const PHYS_RULES = { gravity: 17, bounce: 0.3, friction: 5, hitSpeed: 6.5, breakSpeed: 14, throwRef: 25, respawnAfter: 4, strayAfter: 10 };
 
 // kind 'projectile' is implemented; other kinds are added with their weapons in Gate 1.
 export const WEAPONS = {
-  flare: { name: 'Flare cannon', kind: 'projectile', ammo: 'flare', cooldown: 0.9, speed: 24, gravity: 2.2, splash: 3.4, splashDamage: 70, direct: 12, selfDamage: 0.35, switchTime: 0.4,
-    // PT-013 identity: AREA. The burst leaves burning ground (enemies standing in it burn; the player is not hurt by their own fire) and lights the room for as long as it lasts.
-    burn: { r: 2.5, t: 4, dps: 9, max: 8 }, muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
-    spread: { hip: 0.035, ads: 0.003, moveFactor: 0.5 },   // radians (half-angle); hip spread grows with movement, aiming tightens it
+  flare: {
+    name: 'Flare cannon',
+    kind: 'projectile',
+    ammo: 'flare',
+    cooldown: 0.9,
+    speed: 24,
+    gravity: 2.2,
+    splash: 3.4,
+    splashDamage: 70,
+    direct: 12,
+    selfDamage: 0.35,
+    switchTime: 0.4,
+    // identity: AREA. The burst leaves burning ground (enemies standing in it burn; the player is not hurt by their own fire) and lights the room for
+    // as long as it lasts.
+    burn: { r: 2.5, t: 4, dps: 9, max: 8 },
+    muzzle: { fwd: 0.7, right: 0.16, down: 0.14 },
+    spread: { hip: 0.035, ads: 0.003, moveFactor: 0.5 }, // radians (half-angle); hip spread grows with movement, aiming tightens it
   },
   // hitscan close-range punch: instant, no splash, no self-damage, useless past ~15 m. The flare is the slow area-denial counterpart.
-  scattergun: { name: 'Tidewarden scattergun', kind: 'hitscan', ammo: 'shell', cooldown: 0.95, switchTime: 0.35, pellets: 9, damage: 9, range: 26, falloffStart: 5, falloffMin: 0.3, knock: 0.22, kick: 0.11, spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 }, muzzle: { fwd: 0.7, right: 0.12, down: 0.14 },
-    hit: { flinch: 0.25, interrupt: 3 } },                  // PT-013 identity: CLOSE. Every hit staggers a little; inside `interrupt` metres a hit CANCELS the windup of the attack it lands on. (First try 0.45 s: on C1E2M03 it cut a perfect bot's damage taken on normal from 51 to 19: a flinch that long is a stun-lock in a stationary player's hands.)
-  // sustained fire from the hip or the sights: a stream of small hits, accurate while you stay still and settled (bloom builds the longer you hold the trigger).
-  // The answer to crowds of weak targets and the workhorse when shells and flares run dry; weak per hit, so it does not replace the scattergun's punch.
-  rivet: { name: 'Riveter driver', kind: 'hitscan', ammo: 'rivet', cooldown: 0.085, switchTime: 0.35, pellets: 1, damage: 7, range: 34, falloffStart: 14, falloffMin: 0.55, knock: 0.05, kick: 0.035, muzzle: { fwd: 0.7, right: 0.1, down: 0.1 }, heatPerShot: 0.075, heatDecay: 1.4, heatCone: 3.2, spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 },
-    hit: { slow: 0.1, slowT: 0.8, cancelLunge: true } },    // PT-013 identity: SUPPRESS. Rivets slow what they hit (10% for 0.8 s, at most 1 s at a time: SLOW_MAX in world.js) and break a Gaunt's lunge windup (once in a while): it holds crowds off, it does not kill them. (First tries: 30% for 1 s cut a perfect bot's damage taken on C1E2M04 hard from 45 to 9; 20% still failed C1E2M04 and C1E2M07's viability gates; 10% passes all of them. A stream of 12 shots a second turns any slow into a permanent one: that is why it is small.)
-  // the long gun (Gate 4, owner go 2026-10-06): one heavy bolt, instant, almost no drop-off at 90 m, and it goes THROUGH: it punches the front plate of an armoured target (the Warden-Graft's shield-arm no longer
-  // turns it) and the bolt carries on into a second body behind the first at 60%. Slow (a bolt every 1.35 s), few rounds (24 at most), loud (30 m), and only accurate when you stop and use the sights, which also zoom it right in.
-  // It is the answer to what the other three cannot reach: a Drone-Gill hovering out of scattergun range, a Bellhand on a far causeway, plate. It is not the answer to a crowd.
-  harpoon: { name: 'Harpoon rifle', kind: 'hitscan', ammo: 'bolt', cooldown: 1.35, switchTime: 0.55, pellets: 1, damage: 80, range: 90, falloffStart: 90, falloffMin: 1, pierce: 1, pierceDamage: 0.6, pierceArmor: true, knock: 0.55, kick: 0.07, adsFov: 24, muzzle: { fwd: 0.8, right: 0.1, down: 0.12 },
+  scattergun: {
+    name: 'Tidewarden scattergun',
+    kind: 'hitscan',
+    ammo: 'shell',
+    cooldown: 0.95,
+    switchTime: 0.35,
+    pellets: 9,
+    damage: 9,
+    range: 26,
+    falloffStart: 5,
+    falloffMin: 0.3,
+    knock: 0.22,
+    kick: 0.11,
+    spread: { hip: 0.075, ads: 0.038, moveFactor: 0.4 },
+    muzzle: { fwd: 0.7, right: 0.12, down: 0.14 },
+    hit: { flinch: 0.25, interrupt: 3 },
+  // identity: CLOSE. Every hit staggers a little; inside `interrupt` metres a hit CANCELS the windup of the attack it lands on. (First try 0.45 s: on
+  // C1E2M03 it cut a perfect bot's damage taken on normal from 51 to 19: a flinch that long is a stun-lock in a stationary player's hands.)
+  },
+  // sustained fire from the hip or the sights: a stream of small hits, accurate while you stay still and settled (bloom builds the longer you hold
+  // the trigger).
+  // The answer to crowds of weak targets and the workhorse when shells and flares run dry; weak per hit, so it does not replace the scattergun's
+  // punch.
+  rivet: {
+    name: 'Riveter driver',
+    kind: 'hitscan',
+    ammo: 'rivet',
+    cooldown: 0.085,
+    switchTime: 0.35,
+    pellets: 1,
+    damage: 7,
+    range: 34,
+    falloffStart: 14,
+    falloffMin: 0.55,
+    knock: 0.05,
+    kick: 0.035,
+    muzzle: { fwd: 0.7, right: 0.1, down: 0.1 },
+    heatPerShot: 0.075,
+    heatDecay: 1.4,
+    heatCone: 3.2,
+    spread: { hip: 0.03, ads: 0.006, moveFactor: 1.2 },
+    hit: { slow: 0.1, slowT: 0.8, cancelLunge: true },
+  // identity: SUPPRESS. Rivets slow what they hit (10% for 0.8 s, at most 1 s at a time: SLOW_MAX in world.js) and break a Gaunt's lunge windup (once
+  // in a while): it holds crowds off, it does not kill them. (First tries: 30% for 1 s cut a perfect bot's damage taken on C1E2M04 hard from 45 to 9;
+  // 20% still failed C1E2M04 and C1E2M07's viability gates; 10% passes all of them. A stream of 12 shots a second turns any slow into a permanent
+  // one: that is why it is small.)
+  },
+  // the long gun (Gate 4, owner go 2026-10-06): one heavy bolt, instant, almost no drop-off at 90 m, and it goes THROUGH: it punches the front plate
+  // of an armoured target (the Warden-Graft's shield-arm no longer
+  // turns it) and the bolt carries on into a second body behind the first at 60%. Slow (a bolt every 1.35 s), few rounds (24 at most), loud (30 m),
+  // and only accurate when you stop and use the sights, which also zoom it right in.
+  // It is the answer to what the other three cannot reach: a Drone-Gill hovering out of scattergun range, a Bellhand on a far causeway, plate. It is
+  // not the answer to a crowd.
+  harpoon: {
+    name: 'Harpoon rifle',
+    kind: 'hitscan',
+    ammo: 'bolt',
+    cooldown: 1.35,
+    switchTime: 0.55,
+    pellets: 1,
+    damage: 80,
+    range: 90,
+    falloffStart: 90,
+    falloffMin: 1,
+    pierce: 1,
+    pierceDamage: 0.6,
+    pierceArmor: true,
+    knock: 0.55,
+    kick: 0.07,
+    adsFov: 24,
+    muzzle: { fwd: 0.8, right: 0.1, down: 0.12 },
     spread: { hip: 0.05, ads: 0.0008, moveFactor: 1.2 },
-    hit: { flinch: 0.4, pin: { wall: 3, t: 2 } } },         // PT-013 identity: ONE HEAVY SHOT. A bolt that leaves a body with a wall within `wall` metres behind it PINS it for `t` s (not the elites or the bosses)
-  // the lamp (Gate 4, owner go 2026-10-06): held fire, 12 m, it picks its own target (the nearest body inside a lock cone around where you look; the sights narrow the cone) and the arc JUMPS to up to `chain` more bodies within `jump` metres of the last, each for `chainFalloff` of the one before.
-  // Forgiving where the rifle is exact, and quiet (14 m). It is the answer to what the others handle badly: a crowd, a clutch of Gills hovering about, a dark room. Weak per hit; plate and shields count as they do for any shot.
-  arc: { name: 'Charge-arc lamp', kind: 'arc', ammo: 'cell', cooldown: 0.16, switchTime: 0.4, damage: 11, range: 12, chain: 3, jump: 4.5, chainFalloff: 0.7, lock: { hip: 0.14, ads: 0.06 }, kick: 0.012, muzzle: { fwd: 0.6, right: 0.1, down: 0.1 }, spread: { hip: 0, ads: 0, moveFactor: 0 },
-    // PT-013 identity (owner: 'it doesn't make me feel more powerful or like I have more range'): TAP = the short arc above (it fires on release). HOLD past `min` s CHARGES to `max`: a forked bolt, `range` m, `damage`, `chain` jumps at `chainFalloff`, up to `forks` branches, for up to `cells` cells.
-    // WATER: a struck body standing in wading water conducts to every body in the same water within `water.r` m, for `water.mult` x the base damage. VAEL: Drone-Gills struck are stunned `vael.stun` s; bell nodes take `vael.nodeMult` x.
-    charge: { min: 0.35, max: 1.2, damage: 60, range: 24, chain: 5, chainFalloff: 0.8, jump: 6, forks: 2, cells: 8, recover: 0.35 }, water: { r: 8, mult: 1.5, max: 8 }, vael: { stun: 1.2, kinds: ['gill'], nodeMult: 2 }, hit: { flinch: 0.15 } },
-  // ---- PT-022 (owner go 2026-10-08; built in the Range first, on no map yet; every number a first guess) ----------------------------------------------------------------------------------------------------
-  // the carbine (keys 7): PRECISION. A steady automatic rifle for the player who aims: no bloom (the riveter's stream spreads the longer you hold), the round goes where the crosshair is out to 60 m, and a round in the HEAD zone (the top share of the
-  // body's drawn height, `head.from`) does `head.mult` x and staggers. Not the riveter (a weak spray that slows) and not the harpoon (one heavy shot): it is the gun that rewards a steady hand with the fastest kill of the three.
-  carbine: { name: 'Harbour carbine', kind: 'hitscan', ammo: 'round', cooldown: 0.13, switchTime: 0.4, pellets: 1, damage: 11, range: 60, falloffStart: 30, falloffMin: 0.7, knock: 0.04, kick: 0.04, adsFov: 34, muzzle: { fwd: 0.8, right: 0.1, down: 0.1 },
-    spread: { hip: 0.024, ads: 0.0012, moveFactor: 1.0 }, head: { from: 0.74, mult: 2.4, flinch: 0.3 } },
-  // the rocket line-thrower (key 8): BLAST. A fast, almost flat rocket (a lifesaving line-thrower's rocket, turned on the dead): a wide blast that never needs a clean hit, big knock, `directHit` extra on the body it strikes, double on a bell node, and it hurts you
+    hit: { flinch: 0.4, pin: { wall: 3, t: 2 } },
+  // identity: ONE HEAVY SHOT. A bolt that leaves a body with a wall within `wall` metres behind it PINS it for `t` s (not the elites or the bosses)
+  },
+  // the lamp (Gate 4, owner go 2026-10-06): held fire, 12 m, it picks its own target (the nearest body inside a lock cone around where you look; the
+  // sights narrow the cone) and the arc JUMPS to up to `chain` more bodies within `jump` metres of the last, each for `chainFalloff` of the one
+  // before.
+  // Forgiving where the rifle is exact, and quiet (14 m). It is the answer to what the others handle badly: a crowd, a clutch of Gills hovering
+  // about, a dark room. Weak per hit; plate and shields count as they do for any shot.
+  arc: {
+    name: 'Charge-arc lamp',
+    kind: 'arc',
+    ammo: 'cell',
+    cooldown: 0.16,
+    switchTime: 0.4,
+    damage: 11,
+    range: 12,
+    chain: 3,
+    jump: 4.5,
+    chainFalloff: 0.7,
+    lock: { hip: 0.14, ads: 0.06 },
+    kick: 0.012,
+    muzzle: { fwd: 0.6, right: 0.1, down: 0.1 },
+    spread: { hip: 0, ads: 0, moveFactor: 0 },
+    // identity: TAP = the short arc above (it fires on release). HOLD past `min` s CHARGES to `max`: a forked bolt, `range` m, `damage`, `chain`
+    // jumps at `chainFalloff`, up to `forks` branches, for up to `cells` cells.
+    // WATER: a struck body standing in wading water conducts to every body in the same water within `water.r` m, for `water.mult` x the base damage.
+    // VAEL: Drone-Gills struck are stunned `vael.stun` s; bell nodes take `vael.nodeMult` x.
+    charge: { min: 0.35, max: 1.2, damage: 60, range: 24, chain: 5, chainFalloff: 0.8, jump: 6, forks: 2, cells: 8, recover: 0.35 },
+    water: { r: 8, mult: 1.5, max: 8 },
+    vael: { stun: 1.2, kinds: ['gill'], nodeMult: 2 },
+    hit: { flinch: 0.15 },
+  },
+  // the carbine (keys 7): PRECISION. A steady automatic rifle for the player who aims: no bloom (the riveter's stream spreads the longer you hold),
+  // the round goes where the crosshair is out to 60 m, and a round in the HEAD zone (the top share of the
+  // body's drawn height, `head.from`) does `head.mult` x and staggers. Not the riveter (a weak spray that slows) and not the harpoon (one heavy
+  // shot): it is the gun that rewards a steady hand with the fastest kill of the three.
+  carbine: {
+    name: 'Harbour carbine',
+    kind: 'hitscan',
+    ammo: 'round',
+    cooldown: 0.13,
+    switchTime: 0.4,
+    pellets: 1,
+    damage: 11,
+    range: 60,
+    falloffStart: 30,
+    falloffMin: 0.7,
+    knock: 0.04,
+    kick: 0.04,
+    adsFov: 34,
+    muzzle: { fwd: 0.8, right: 0.1, down: 0.1 },
+    spread: { hip: 0.024, ads: 0.0012, moveFactor: 1.0 },
+    head: { from: 0.74, mult: 2.4, flinch: 0.3 },
+  },
+  // the rocket line-thrower (key 8): BLAST. A fast, almost flat rocket (a lifesaving line-thrower's rocket, turned on the dead): a wide blast that
+  // never needs a clean hit, big knock, `directHit` extra on the body it strikes, double on a bell node, and it hurts you
   // (`selfDamage`) inside 65% of the blast. Plate does not turn a blast (splash ignores it). Slow (1.5 s), twelve rockets at most, loud.
-  linethrower: { name: 'Rocket line-thrower', kind: 'projectile', ammo: 'rocket', cooldown: 1.5, speed: 21, gravity: 0.6, splash: 4.4, splashDamage: 120, direct: 55, directHit: 70, selfDamage: 0.6, knock: 2.2, nodeMult: 2, switchTime: 0.7, kick: 0.16, adsFov: 52,
-    muzzle: { fwd: 0.9, right: 0.15, down: 0.12 }, spread: { hip: 0.02, ads: 0.002, moveFactor: 0.6 } },
-  // the Bell-breaker mortar (key 0, PT-027): INDIRECT fire. The shell flies TO the point the crosshair rests on (src/engine/mortar.js): a high arc, 1 to 2.6 s in the air, so it reaches a ledge or goes over a crate; the landing point is pushed out to `minRange`
-  // (a mortar cannot be fired at your boots). A very wide blast (it hurts you inside 65% of it), a big knock, `directHit` extra on the body it lands on, double on a bell node. It spends TWO rockets (it shares the line-thrower's ammunition), takes 2.2 s to
-  // reload and 0.95 s to bring up. `designate`: minRange / maxRange m, speed (m/s the flight time is judged by), tmin / tmax s (flight time bounds), apex m (the arc's height over the straight line, at most distance / 8).
-  mortar: { name: 'Bell-breaker mortar', kind: 'projectile', ammo: 'rocket', cost: 2, cooldown: 2.2, speed: 22, gravity: 12, splash: 5.2, splashDamage: 150, direct: 35, directHit: 60, selfDamage: 0.6, knock: 3, nodeMult: 2, switchTime: 0.95, kick: 0.22, adsFov: 54,
-    muzzle: { fwd: 0.9, right: 0.12, down: 0.05 }, spread: { hip: 0.012, ads: 0.003, moveFactor: 0.8 }, designate: { minRange: 9, maxRange: 60, speed: 22, tmin: 0.9, tmax: 2.6, apex: 2.6 } },
+  linethrower: {
+    name: 'Rocket line-thrower',
+    kind: 'projectile',
+    ammo: 'rocket',
+    cooldown: 1.5,
+    speed: 21,
+    gravity: 0.6,
+    splash: 4.4,
+    splashDamage: 120,
+    direct: 55,
+    directHit: 70,
+    selfDamage: 0.6,
+    knock: 2.2,
+    nodeMult: 2,
+    switchTime: 0.7,
+    kick: 0.16,
+    adsFov: 52,
+    muzzle: { fwd: 0.9, right: 0.15, down: 0.12 },
+    spread: { hip: 0.02, ads: 0.002, moveFactor: 0.6 },
+  },
+  // the Bell-breaker mortar (key 0,): INDIRECT fire. The shell flies TO the point the crosshair rests on (src/engine/mortar.js): a high arc, 1 to 2.6
+  // s in the air, so it reaches a ledge or goes over a crate; the landing point is pushed out to `minRange`
+  // (a mortar cannot be fired at your boots). A very wide blast (it hurts you inside 65% of it), a big knock, `directHit` extra on the body it lands
+  // on, double on a bell node. It spends TWO rockets (it shares the line-thrower's ammunition), takes 2.2 s to
+  // reload and 0.95 s to bring up. `designate`: minRange / maxRange m, speed (m/s the flight time is judged by), tmin / tmax s (flight time bounds),
+  // apex m (the arc's height over the straight line, at most distance / 8).
+  mortar: {
+    name: 'Bell-breaker mortar',
+    kind: 'projectile',
+    ammo: 'rocket',
+    cost: 2,
+    cooldown: 2.2,
+    speed: 22,
+    gravity: 12,
+    splash: 5.2,
+    splashDamage: 150,
+    direct: 35,
+    directHit: 60,
+    selfDamage: 0.6,
+    knock: 3,
+    nodeMult: 2,
+    switchTime: 0.95,
+    kick: 0.22,
+    adsFov: 54,
+    muzzle: { fwd: 0.9, right: 0.12, down: 0.05 },
+    spread: { hip: 0.012, ads: 0.003, moveFactor: 0.8 },
+    designate: { minRange: 9, maxRange: 60, speed: 22, tmin: 0.9, tmax: 2.6, apex: 2.6 },
+  },
   // the tuning-fork (key 9): GRAVITY, see GRAV above. No ammunition; the sim reads `grav`.
   fork: { name: 'Vael tuning-fork', kind: 'tool', switchTime: 0.5, grav: GRAV },
-  // ---- melee (PT-013): fists are always owned (slot 6); the found weapons are picked up and take the same slot (key 6 again cycles). `swing`: reach m (from the player's centre to the body's surface), arc rad (full cone), damage, windup/recover s, knock m, flinch s,
-  // optional stun s, pull m, backstab x (sleeping or turned-away targets), cleave (every body in the arc), ignorePlate (the Warden's front plate does not turn it). Every number a first guess.
-  fists: { name: 'Fists', kind: 'melee', switchTime: 0.25, swing: { reach: 1.9, arc: 1.3, damage: 8, windup: 0.08, recover: 0.27, knock: 0.25, flinch: 0.25 },
-    charge: { min: 0.3, max: 0.65, heavy: { reach: 2.1, arc: 1.2, damage: 30, windup: 0.1, recover: 0.8, knock: 1.4, stun: 1.0, flinch: 0.6 } } },
-  boathook: { name: 'Boat hook', kind: 'melee', switchTime: 0.4, swing: { reach: 2.8, arc: 0.7, damage: 28, windup: 0.2, recover: 0.5, knock: 0, pull: 1.5, flinch: 0.4 } },
-  marlinspike: { name: 'Marlinspike', kind: 'melee', switchTime: 0.3, swing: { reach: 1.9, arc: 0.6, damage: 16, windup: 0.07, recover: 0.25, knock: 0.1, backstab: 3, flinch: 0.15 } },      // 16 x 3 = 48: a stab kills a Tollbearer (45) that did not see it coming
-  mallet: { name: "Lamplighter's mallet", kind: 'melee', switchTime: 0.5, swing: { reach: 2.1, arc: 1.1, damage: 30, windup: 0.3, recover: 0.65, knock: 1.0, stun: 1.5, ignorePlate: true, flinch: 0.6 } },
-  axe: { name: 'Fire axe', kind: 'melee', switchTime: 0.55, swing: { reach: 2.3, arc: 1.75, damage: 55, windup: 0.35, recover: 0.75, knock: 0.8, cleave: true, flinch: 0.6 } },
-  // the chainsaw (PT-022; joins key 6's cycle): HOLD FIRE to rev (`spinUp` s), then it cuts every body in front of you every `every` s for `damage` (cleaves the lot, a flinch each time), drags you forward `drag` m/s into what it is cutting and slows you `slow` while it runs;
-  // it is LOUD (every `noiseEvery` s a noise of NOISE.chainsaw), has no guard, and UNLIMITED FUEL with a STALL: cutting builds heat (`heatTime` s of cutting to stall, cooling `cool` /s at rest), plate and bells kick it back (`plateHeat`, `nodeHeat` extra per cut), and a stalled saw is
+  // melee: fists are always owned (slot 6); the found weapons are picked up and take the same slot (key 6 again cycles). `swing`: reach m (from the
+  // player's centre to the body's surface), arc rad (full cone), damage, windup/recover s, knock m, flinch s,
+  // optional stun s, pull m, backstab x (sleeping or turned-away targets), cleave (every body in the arc), ignorePlate (the Warden's front plate does
+  // not turn it). Every number a first guess.
+  fists: {
+    name: 'Fists',
+    kind: 'melee',
+    switchTime: 0.25,
+    swing: { reach: 1.9, arc: 1.3, damage: 8, windup: 0.08, recover: 0.27, knock: 0.25, flinch: 0.25 },
+    charge: { min: 0.3, max: 0.65, heavy: { reach: 2.1, arc: 1.2, damage: 30, windup: 0.1, recover: 0.8, knock: 1.4, stun: 1.0, flinch: 0.6 } },
+  },
+  boathook: {
+    name: 'Boat hook',
+    kind: 'melee',
+    switchTime: 0.4,
+    swing: { reach: 2.8, arc: 0.7, damage: 28, windup: 0.2, recover: 0.5, knock: 0, pull: 1.5, flinch: 0.4 },
+  },
+  marlinspike: {
+    name: 'Marlinspike',
+    kind: 'melee',
+    switchTime: 0.3,
+    swing: { reach: 1.9, arc: 0.6, damage: 16, windup: 0.07, recover: 0.25, knock: 0.1, backstab: 3, flinch: 0.15 },
+  }, // 16 x 3 = 48: a stab kills a Tollbearer (45) that did not see it coming
+  mallet: {
+    name: "Lamplighter's mallet",
+    kind: 'melee',
+    switchTime: 0.5,
+    swing: { reach: 2.1, arc: 1.1, damage: 30, windup: 0.3, recover: 0.65, knock: 1.0, stun: 1.5, ignorePlate: true, flinch: 0.6 },
+  },
+  axe: {
+    name: 'Fire axe',
+    kind: 'melee',
+    switchTime: 0.55,
+    swing: { reach: 2.3, arc: 1.75, damage: 55, windup: 0.35, recover: 0.75, knock: 0.8, cleave: true, flinch: 0.6 },
+  },
+  // the chainsaw: HOLD FIRE to rev (`spinUp` s), then it cuts every body in front of you every `every` s for `damage` (cleaves the lot, a flinch each
+  // time), drags you forward `drag` m/s into what it is cutting and slows you `slow` while it runs;
+  // it is LOUD (every `noiseEvery` s a noise of NOISE.chainsaw), has no guard, and UNLIMITED FUEL with a STALL: cutting builds heat (`heatTime` s of
+  // cutting to stall, cooling `cool` /s at rest), plate and bells kick it back (`plateHeat`, `nodeHeat` extra per cut), and a stalled saw is
   // dead for `stall` s. Key V is a short chop (`swing`) like every melee weapon.
-  chainsaw: { name: "Shipwright's chainsaw", kind: 'melee', switchTime: 0.6, noGuard: true, swing: { reach: 2.0, arc: 1.0, damage: 14, windup: 0.14, recover: 0.4, knock: 0.2, flinch: 0.3 },
-    saw: { reach: 2.1, arc: 1.0, damage: 5, every: 0.1, spinUp: 0.4, spinDown: 0.5, heatTime: 5.5, cool: 0.5, stall: 1.8, restart: 0.3, plateHeat: 0.2, nodeHeat: 0.12, flinch: 0.25, drag: 1.3, slow: 0.35, noiseEvery: 0.4 } },
+  chainsaw: {
+    name: "Shipwright's chainsaw",
+    kind: 'melee',
+    switchTime: 0.6,
+    noGuard: true,
+    swing: { reach: 2.0, arc: 1.0, damage: 14, windup: 0.14, recover: 0.4, knock: 0.2, flinch: 0.3 },
+    saw: {
+      reach: 2.1,
+      arc: 1.0,
+      damage: 5,
+      every: 0.1,
+      spinUp: 0.4,
+      spinDown: 0.5,
+      heatTime: 5.5,
+      cool: 0.5,
+      stall: 1.8,
+      restart: 0.3,
+      plateHeat: 0.2,
+      nodeHeat: 0.12,
+      flinch: 0.25,
+      drag: 1.3,
+      slow: 0.35,
+      noiseEvery: 0.4,
+    },
+  },
 };
 
-// `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN height, `hitRadius` (default `radius`) and
-// `hitForward` (default 0: metres ahead of the feet along the facing) fit the drawn body. Measured on the real rigs and enforced by tests/hit-volume-fair.test.js (owner decision 2026-10-05, PT-005).
+// `radius` is the MOVEMENT collider (walls, props, bodies, pathing). SHOTS test the hit volume (src/engine/hitvolume.js): `height` is the DRAWN
+// height, `hitRadius` (default `radius`) and
+// `hitForward` (default 0: metres ahead of the feet along the facing) fit the drawn body. Measured on the real rigs and enforced by
+// tests/hit-volume-fair.test.js.
 export const ENEMIES = {
-  tollbearer: { hush: true, name: 'Tollbearer', hp: 45, speed: 1.8, gait: 6.5, radius: 0.4, height: 2.25, sight: 22, turnRate: 3, attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 } },
+  tollbearer: {
+    hush: true,
+    name: 'Tollbearer',
+    hp: 45,
+    speed: 1.8,
+    gait: 6.5,
+    radius: 0.4,
+    height: 2.25,
+    sight: 22,
+    turnRate: 3,
+    attack: { range: 1.9, reach: 2.6, windup: 0.64, duration: 1.5, cooldown: 0.9, damage: 18 },
+  },
   // fast, fragile pursuer. Crouches (the tell), then dashes in a straight line: strafe out of it. Punishes standing still.
-  gaunt: { name: 'Gaunt Runner', poise: 0.8, hp: 24, speed: 4.2, gait: 12, radius: 0.34, height: 1.5, hitRadius: 0.5, hitForward: 0.3, sight: 26, turnRate: 6, attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 }, lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4, back: 0.55 } },          // (back: ENEMY ACTIONS, it hops back that long after a lunge)
-  // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in the open.
-  bellhand: { hush: true, name: 'Bellhand', hp: 32, speed: 1.9, gait: 6, radius: 0.38, height: 2.35, sight: 32, turnRate: 3.5, attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 }, ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 } },
+  gaunt: {
+    name: 'Gaunt Runner',
+    poise: 0.8,
+    hp: 24,
+    speed: 4.2,
+    gait: 12,
+    radius: 0.34,
+    height: 1.5,
+    hitRadius: 0.5,
+    hitForward: 0.3,
+    sight: 26,
+    turnRate: 6,
+    attack: { range: 1.5, reach: 2.1, windup: 0.4, duration: 0.75, cooldown: 0.4, damage: 9 },
+    lunge: { min: 3, max: 6, windup: 0.3, duration: 0.36, speed: 11, cooldown: 2.4, back: 0.55 },
+  }, // (back: ENEMY ACTIONS, it hops back that long after a lunge)
+  // Ranged: stops at `hold` metres and tolls a slow, dodgeable shot after a readable arm-raise. Punishes running in straight lines and standing in
+  // the open.
+  bellhand: {
+    hush: true,
+    name: 'Bellhand',
+    hp: 32,
+    speed: 1.9,
+    gait: 6,
+    radius: 0.38,
+    height: 2.35,
+    sight: 32,
+    turnRate: 3.5,
+    attack: { range: 1.9, reach: 2.4, windup: 0.6, duration: 1.3, cooldown: 1.1, damage: 12 },
+    ranged: { hold: 9, minRange: 3, maxRange: 22, speed: 9.5, damage: 14, aimHeight: 1.2 },
+  },
 };
 
 // ---- Gate 2 roster ---------------------------------------------------------------------------------------------------------
-// Sexton: support. Keeps its distance and raises the fallen after a visible channel (a teal beam from its bell to the corpse). Kill it first, or interrupt it by hurting it.
-ENEMIES.sexton = { hush: true, name: 'Sexton', hp: 42, speed: 1.7, gait: 6, radius: 0.38, height: 2.35, sight: 28, turnRate: 3.5, attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
-  support: { range: 11, channel: 2.2, cooldown: 5, reviveHp: 0.5, keepAway: 8, maxRevives: 2, kinds: ['tollbearer', 'gaunt', 'bellhand'] } };
-// Warden-Graft: elite. Plate on the front arc (direct hits from the front do a third of the damage; splash and hits from behind do not care). Charges in a straight line after a
-// readable windup; a charge into a wall or prop staggers it, and it takes extra damage while it is down. The flare cannon and a step to the side are the answers.
-ENEMIES.wardengraft = { name: 'Warden-Graft', poise: 3, hp: 260, speed: 1.5, gait: 5, radius: 0.55, height: 3.0, sight: 30, turnRate: 2.4, attack: { range: 2.6, reach: 3.2, windup: 0.62, duration: 1.7, cooldown: 1.2, damage: 30 },
-  armor: { front: 0.34, cos: 0.6, stunMult: 1.6 }, charge: { min: 5, max: 16, windup: 0.85, speed: 11.5, duration: 1.5, damage: 36, stun: 2.6, cooldown: 3.2, knock: 3.0 } };
+// Sexton: support. Keeps its distance and raises the fallen after a visible channel (a teal beam from its bell to the corpse). Kill it first, or
+// interrupt it by hurting it.
+ENEMIES.sexton = {
+  hush: true,
+  name: 'Sexton',
+  hp: 42,
+  speed: 1.7,
+  gait: 6,
+  radius: 0.38,
+  height: 2.35,
+  sight: 28,
+  turnRate: 3.5,
+  attack: { range: 1.6, reach: 2.1, windup: 0.7, duration: 1.2, cooldown: 1.4, damage: 8 },
+  support: { range: 11, channel: 2.2, cooldown: 5, reviveHp: 0.5, keepAway: 8, maxRevives: 2, kinds: ['tollbearer', 'gaunt', 'bellhand'] },
+};
+// Warden-Graft: elite. Plate on the front arc (direct hits from the front do a third of the damage; splash and hits from behind do not care). Charges
+// in a straight line after a
+// readable windup; a charge into a wall or prop staggers it, and it takes extra damage while it is down. The flare cannon and a step to the side are
+// the answers.
+ENEMIES.wardengraft = {
+  name: 'Warden-Graft',
+  poise: 3,
+  hp: 260,
+  speed: 1.5,
+  gait: 5,
+  radius: 0.55,
+  height: 3.0,
+  sight: 30,
+  turnRate: 2.4,
+  attack: { range: 2.6, reach: 3.2, windup: 0.62, duration: 1.7, cooldown: 1.2, damage: 30 },
+  armor: { front: 0.34, cos: 0.6, stunMult: 1.6 },
+  charge: { min: 5, max: 16, windup: 0.85, speed: 11.5, duration: 1.5, damage: 36, stun: 2.6, cooldown: 3.2, knock: 3.0 },
+};
 // Bell node: one of the ring the Cantor sings through. Immobile; destroying them all breaks the Cantor's shield.
-ENEMIES.bellnode = { name: 'Bell node', hp: 120, speed: 0, gait: 0, radius: 0.7, height: 2.45, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
-// Cantor: the boss. Shielded (5% damage) while any bell node stands. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and fans toll-shots once its ring is broken.
-ENEMIES.cantor = { name: 'Cantor', poise: 8, hp: 720, speed: 1.3, gait: 4.5, radius: 0.65, height: 4.8, hitRadius: 0.8, sight: 70, turnRate: 2, attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 }, boss: true,
-  shield: { reduce: 0.05 }, pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 }, enragedPulseCooldown: 3.6,
-  shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 }, summon: { kind: 'gaunt', count: 3, every: 18, max: 8 }, stagger: 3.0 };
+ENEMIES.bellnode = {
+  name: 'Bell node',
+  hp: 120,
+  speed: 0,
+  gait: 0,
+  radius: 0.7,
+  height: 2.45,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+};
+// Cantor: the boss. Shielded (5% damage) while any bell node stands. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and
+// fans toll-shots once its ring is broken.
+ENEMIES.cantor = {
+  name: 'Cantor',
+  poise: 8,
+  hp: 720,
+  speed: 1.3,
+  gait: 4.5,
+  radius: 0.65,
+  height: 4.8,
+  hitRadius: 0.8,
+  sight: 70,
+  turnRate: 2,
+  attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 },
+  boss: true,
+  shield: { reduce: 0.05 },
+  pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 },
+  enragedPulseCooldown: 3.6,
+  shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 },
+  summon: { kind: 'gaunt', count: 3, every: 18, max: 8 },
+  stagger: 3.0,
+};
 
-// ---- Gate 4 batch 2 roster (Episode 2): the first Vael-grown creatures -------------------------------------------------------------------------------------------------------------------------
-// Drone-Gill: a hatched, FLYING Vael drone (design/CAMPAIGN_SPINE.md section 3: the first non-human enemy, C1E2M05). It hovers `hover` metres above the floor (the hit volume starts there: shoot at the body, not at the floor
-// under it), ignores props and water (only walls and closed doors stop it), keeps its distance, strafes while it spits slow spores, and drops to the floor when it dies. Fragile; the scattergun and the rivet driver answer it.
-ENEMIES.gill = { name: 'Drone-Gill', poise: 0.8, hp: 30, speed: 2.7, gait: 9, radius: 0.36, height: 1.15, hover: 1.2, flying: true, hitRadius: 0.6, sight: 30, turnRate: 4.5,
+// ---- Gate 4 batch 2 roster (Episode 2): the first Vael-grown creatures
+// -------------------------------------------------------------------------------------------------------------------------
+// Drone-Gill: a hatched, FLYING Vael drone (design/CAMPAIGN_SPINE.md section 3: the first non-human enemy, C1E2M05). It hovers `hover` metres above
+// the floor (the hit volume starts there: shoot at the body, not at the floor
+// under it), ignores props and water (only walls and closed doors stop it), keeps its distance, strafes while it spits slow spores, and drops to the
+// floor when it dies. Fragile; the scattergun and the rivet driver answer it.
+ENEMIES.gill = {
+  name: 'Drone-Gill',
+  poise: 0.8,
+  hp: 30,
+  speed: 2.7,
+  gait: 9,
+  radius: 0.36,
+  height: 1.15,
+  hover: 1.2,
+  flying: true,
+  hitRadius: 0.6,
+  sight: 30,
+  turnRate: 4.5,
   attack: { range: 1.8, reach: 2.2, windup: 0.5, duration: 0.9, cooldown: 0.8, damage: 8 },
-  ranged: { hold: 7, minRange: 2.2, maxRange: 20, speed: 8.5, damage: 9, aimHeight: 1.1, muzzleY: 1.75 }, strafe: { speed: 2.4, every: 1.1 } };
-// Cradle feeder: one of the three feeding cradles that keep the Graft-Mother's shield up (the Cantor's bell node, grown: immobile, destroying them all drops the shield).
-// PT-062 (R10, the boss changes): the feeders now FEED her: every `every` s an awake feeder swells and a Drone-Gill hatches beside it (`max` of its own alive), so cutting the feeders is cutting the supply, and while any stands her shield is HALF (it was a twentieth). Same machinery as the Brood Vat (vatStep).
-ENEMIES.feeder = { name: 'Cradle feeder', hp: 100, speed: 0, gait: 0, radius: 0.7, height: 2.1, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true, feeds: { kinds: ['gill'], count: 1, every: 11, first: 6, swell: 1.2, max: 2, range: 34 } };
-// Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end, shielded (6% damage) while any feeder stands. Spits fans of spores (always, wider once her feeders are gone), hatches Drone-Gills from the pods round her,
+  ranged: { hold: 7, minRange: 2.2, maxRange: 20, speed: 8.5, damage: 9, aimHeight: 1.1, muzzleY: 1.75 },
+  strafe: { speed: 2.4, every: 1.1 },
+};
+// Cradle feeder: one of the three feeding cradles that keep the Graft-Mother's shield up (the Cantor's bell node, grown: immobile, destroying them
+// all drops the shield).
+// the feeders now FEED her: every `every` s an awake feeder swells and a Drone-Gill hatches beside it (`max` of its own alive), so cutting the
+// feeders is cutting the supply, and while any stands her shield is HALF (it was a twentieth). Same machinery as the Brood Vat (vatStep).
+ENEMIES.feeder = {
+  name: 'Cradle feeder',
+  hp: 100,
+  speed: 0,
+  gait: 0,
+  radius: 0.7,
+  height: 2.1,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+  feeds: { kinds: ['gill'], count: 1, every: 11, first: 6, swell: 1.2, max: 2, range: 34 },
+};
+// Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end, shielded (6% damage) while any feeder stands. Spits fans of spores (always,
+// wider once her feeders are gone), hatches Drone-Gills from the pods round her,
 // and slams anything that reaches her. She barely moves.
-ENEMIES.graftmother = { name: 'Graft-Mother', poise: 8, hp: 680, speed: 0.8, keepAway: 0, gait: 3, radius: 0.9, height: 4.2, hitRadius: 1.4, sight: 70, turnRate: 1.6, attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 }, boss: true,
-  shield: { reduce: 0.5, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] }, shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true }, summon: { kind: 'gill', count: 2, every: 18, max: 4 }, stagger: 3.0 };
+ENEMIES.graftmother = {
+  name: 'Graft-Mother',
+  poise: 8,
+  hp: 680,
+  speed: 0.8,
+  keepAway: 0,
+  gait: 3,
+  radius: 0.9,
+  height: 4.2,
+  hitRadius: 1.4,
+  sight: 70,
+  turnRate: 1.6,
+  attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 },
+  boss: true,
+  shield: { reduce: 0.5, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] },
+  shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true },
+  summon: { kind: 'gill', count: 2, every: 18, max: 4 },
+  stagger: 3.0,
+};
 
-// ---- PT-060 (R8 of the Director's Plan): the two new archetypes; design/ENEMY_ROSTER.md. Every number a first guess, nothing played. ----
-// Marksman: a Songkeeper with a reed-rifle. A line of light follows you for `track` s, freezes for `lock` s, then the shot goes down it (marksman.js): move after it freezes and it misses, cover stops it. It keeps `keep` m away and backs off; at close range it fights with its hands.
-ENEMIES.marksman = { hush: true, name: 'Marksman', poise: 0.8, hp: 34, speed: 1.7, gait: 5.5, radius: 0.38, height: 2.5, hitRadius: 0.6, sight: 46, turnRate: 3.2, attack: { range: 1.8, reach: 2.3, windup: 0.6, duration: 1.3, cooldown: 1.2, damage: 12 },
-  snipe: { min: 10, max: 40, keep: 14, track: 0.9, lock: 0.45, cooldown: 3.4, damage: 18, width: 0.55, aimHeight: 1.2, muzzleY: 1.7 } };
-// Mender: a small Vael that mends the creatures near it (mender.js): `rate` hit points a second to the most hurt one within `range`, until it is whole (a creature is only started on below `below` of its hit points). It keeps `keepAway` m from you and never mends a node, a boss, a spawner or another Mender.
-ENEMIES.mender = { name: 'Mender', poise: 0.5, hp: 22, speed: 2.4, gait: 8, radius: 0.3, height: 1.4, sight: 30, turnRate: 4.5, attack: { range: 1.4, reach: 1.9, windup: 0.5, duration: 0.9, cooldown: 1.2, damage: 6 },
-  heal: { range: 8, rate: 7, keepAway: 9, below: 0.9 } };
+// the two new archetypes; design/ENEMY_ROSTER.md. Every number a first guess, nothing played. ----
+// Marksman: a Songkeeper with a reed-rifle. A line of light follows you for `track` s, freezes for `lock` s, then the shot goes down it
+// (marksman.js): move after it freezes and it misses, cover stops it. It keeps `keep` m away and backs off; at close range it fights with its hands.
+ENEMIES.marksman = {
+  hush: true,
+  name: 'Marksman',
+  poise: 0.8,
+  hp: 34,
+  speed: 1.7,
+  gait: 5.5,
+  radius: 0.38,
+  height: 2.5,
+  hitRadius: 0.6,
+  sight: 46,
+  turnRate: 3.2,
+  attack: { range: 1.8, reach: 2.3, windup: 0.6, duration: 1.3, cooldown: 1.2, damage: 12 },
+  snipe: { min: 10, max: 40, keep: 14, track: 0.9, lock: 0.45, cooldown: 3.4, damage: 18, width: 0.55, aimHeight: 1.2, muzzleY: 1.7 },
+};
+// Mender: a small Vael that mends the creatures near it (mender.js): `rate` hit points a second to the most hurt one within `range`, until it is
+// whole (a creature is only started on below `below` of its hit points). It keeps `keepAway` m from you and never mends a node, a boss, a spawner or
+// another Mender.
+ENEMIES.mender = {
+  name: 'Mender',
+  poise: 0.5,
+  hp: 22,
+  speed: 2.4,
+  gait: 8,
+  radius: 0.3,
+  height: 1.4,
+  sight: 30,
+  turnRate: 4.5,
+  attack: { range: 1.4, reach: 1.9, windup: 0.5, duration: 0.9, cooldown: 1.2, damage: 6 },
+  heal: { range: 8, rate: 7, keepAway: 9, below: 0.9 },
+};
 
 export const PICKUPS = {
   key_iron: { type: 'key', key: 'iron' },
@@ -358,213 +1541,559 @@ export const PICKUPS = {
   weapon_marlinspike: { type: 'weapon', weapon: 'marlinspike' },
   weapon_mallet: { type: 'weapon', weapon: 'mallet' },
   weapon_axe: { type: 'weapon', weapon: 'axe' },
-  weapon_carbine: { type: 'weapon', weapon: 'carbine', ammo: 'round', amount: 60 },       // PT-022: placed on no map yet
+  weapon_carbine: { type: 'weapon', weapon: 'carbine', ammo: 'round', amount: 60 }, // placed on no map yet
   ammo_round: { type: 'ammo', ammo: 'round', amount: 40 },
   weapon_linethrower: { type: 'weapon', weapon: 'linethrower', ammo: 'rocket', amount: 4 },
-  weapon_mortar: { type: 'weapon', weapon: 'mortar', ammo: 'rocket', amount: 6 },                   // PT-027: three shells' worth of the line-thrower's rockets
+  weapon_mortar: { type: 'weapon', weapon: 'mortar', ammo: 'rocket', amount: 6 }, // three shells' worth of the line-thrower's rockets
   ammo_rocket: { type: 'ammo', ammo: 'rocket', amount: 3 },
-  oil: { type: 'oil', amount: 30 },                                                                                  // PT-038: a tin of lamp oil for the hand lantern (only taken where the map has a lantern, and not past `max`)
+  oil: { type: 'oil', amount: 30 }, // a tin of lamp oil for the hand lantern (only taken where the map has a lantern, and not past `max`)
   weapon_fork: { type: 'weapon', weapon: 'fork' },
   weapon_chainsaw: { type: 'weapon', weapon: 'chainsaw' },
   armor_vest: { type: 'armor', amount: 50 },
-  ammo_crate: { type: 'crate', fill: 0.6 },                                                                            // FREEZE F8 (src/engine/crate.js): a heavy ammunition crate, found behind secrets: every gun you carry to 60% of what it can hold
+  // FREEZE F8 (src/engine/crate.js): a heavy ammunition crate, found behind secrets: every gun you carry to 60% of what it can hold
+  ammo_crate: { type: 'crate', fill: 0.6 },
   key_brass: { type: 'key', key: 'brass' },
 };
-// the load pickups (PT-056): `ld_<load>_<gun>`, one kind for every pairing LOADS allows (the toast names them, the sim adds the units to p.loads)
-for (const id of MOD_ORDER) PICKUPS[`mod_${id}`] = { type: 'mod', mod: id };                                  // PT-057: one pickup kind per mod
-for (const id of AMMO_LOAD_ORDER) for (const gun of AMMO_LOADS[id].guns) PICKUPS[`ld_${id}_${gun}`] = { type: 'load', load: id, gun, amount: AMMO_LOAD_AMOUNT[id][gun] };
+// the load pickups: `ld_<load>_<gun>`, one kind for every pairing LOADS allows (the toast names them, the sim adds the units to p.loads)
+for (const id of MOD_ORDER) PICKUPS[`mod_${id}`] = { type: 'mod', mod: id }; // one pickup kind per mod
+for (const id of AMMO_LOAD_ORDER)
+  for (const gun of AMMO_LOADS[id].guns) PICKUPS[`ld_${id}_${gun}`] = { type: 'load', load: id, gun, amount: AMMO_LOAD_AMOUNT[id][gun] };
 
 // radius > 0 means a solid circular collider; blocksCell marks props that make a whole 2 m cell impassable for pathing.
 export const PROPS = {
   crate: { radius: 0.78, blocksCell: true },
-  crate2: { radius: 0.78, blocksCell: true, blocksSight: true },            // two stacked crates
-  stall: { radius: 0.95, blocksCell: true },             // fish-market stall with an awning
-  bollard: { radius: 0.22, blocksCell: false },          // mooring post
+  crate2: { radius: 0.78, blocksCell: true, blocksSight: true }, // two stacked crates
+  stall: { radius: 0.95, blocksCell: true }, // fish-market stall with an awning
+  bollard: { radius: 0.22, blocksCell: false }, // mooring post
   barrel: { radius: 0.5, blocksCell: false },
   pillar: { radius: 0.62, blocksCell: true, blocksSight: true },
   lamppost: { radius: 0.3, blocksCell: false },
   lamp: { radius: 0, blocksCell: false },
   pod: { radius: 0, blocksCell: false },
   // Gate 2 set dressing
-  cart: { radius: 0.85, blocksCell: true },              // handcart / luggage trolley
-  sack: { radius: 0.45, blocksCell: false },             // grain / salt sacks
-  cradle: { radius: 0, blocksCell: false },              // a Vael cradle: a captive hung from the ceiling (nothing to bump into)
-  rope: { radius: 0.3, blocksCell: false },              // coil of rope
+  cart: { radius: 0.85, blocksCell: true }, // handcart / luggage trolley
+  sack: { radius: 0.45, blocksCell: false }, // grain / salt sacks
+  cradle: { radius: 0, blocksCell: false }, // a Vael cradle: a captive hung from the ceiling (nothing to bump into)
+  rope: { radius: 0.3, blocksCell: false }, // coil of rope
   table: { radius: 0.8, blocksCell: true },
   shelf: { radius: 0.7, blocksCell: true, blocksSight: true },
-  lantern: { radius: 0, blocksCell: false },             // small lamp on a hook: warm light, survivors' signal
-  bellnode: { radius: 0.7, blocksCell: false },          // decor twin of the boss ring nodes
-  // Episode 3, Batches D and E (PT-029, PT-030): the second half's own furniture
-  pew: { radius: 0.85, blocksCell: true },               // a church pew: 1.2 m of cover (rounds stop on it, creatures see over it)
-  organ: { radius: 1.0, blocksCell: true, blocksSight: true },       // an organ case of pipes: a wall of bronze
-  vat: { radius: 1.0, blocksCell: true },                // the Foundry's green-lit cauldron
-  loomstring: { radius: 0.3, blocksCell: false },        // the Loom's string frame: posts and taut gold cables (you walk through the cables' gap; the posts are thin)
-  // Episode 4, Batch B (PT-033, beams.js): the Mirror Array's furniture; drawn by the view from the sim's own state (never merged into the static level mesh)
-  mirror: { radius: 0.62, blocksCell: true },            // a mirror on a plinth: Use turns it a quarter step
-  emitter: { radius: 0.62, blocksCell: true },           // sends a beam out of its cell
+  lantern: { radius: 0, blocksCell: false }, // small lamp on a hook: warm light, survivors' signal
+  bellnode: { radius: 0.7, blocksCell: false }, // decor twin of the boss ring nodes
+  // Episode 3, Batches D and E: the second half's own furniture
+  pew: { radius: 0.85, blocksCell: true }, // a church pew: 1.2 m of cover (rounds stop on it, creatures see over it)
+  organ: { radius: 1.0, blocksCell: true, blocksSight: true }, // an organ case of pipes: a wall of bronze
+  vat: { radius: 1.0, blocksCell: true }, // the Foundry's green-lit cauldron
+  // the Loom's string frame: posts and taut gold cables (you walk through the cables' gap; the posts are thin)
+  loomstring: { radius: 0.3, blocksCell: false },
+  // Episode 4, Batch B: the Mirror Array's furniture; drawn by the view from the sim's own state (never merged into the static level mesh)
+  mirror: { radius: 0.62, blocksCell: true }, // a mirror on a plinth: Use turns it a quarter step
+  emitter: { radius: 0.62, blocksCell: true }, // sends a beam out of its cell
   receiver: { radius: 0.62, blocksCell: true },
-  chime: { radius: 0.4, blocksCell: true },              // PT-038 (E6): a note on a plinth: Use or a shot strikes it
-  chimetree: { radius: 0.9, blocksCell: true },          // PT-038: the Great Chime-Tree: Use plays the phrase of the next round          // lit while a beam enters its cell
-  // Episode 4, Batch C (PT-033): the dock's furniture
-  grave: { radius: 0.32, blocksCell: false },            // PT-037 (Campaign 2 Act A): a grave of the Reliquary Road: a slab on a low mound, low enough to step over a creature's reach but a solid post to a round
-  resonator: { radius: 0.4, blocksCell: false },        // PT-037 (Campaign 2, resonator.js): a standing tuning-fork: it rings at a noise and calls what sleeps
-  lighter: { radius: 1.6, blocksCell: true, blocksSight: false },    // a Vael shuttle on its struts: a wall of hull to walk round and take cover behind (rounds stop on it, creatures see over it)
+  chime: { radius: 0.4, blocksCell: true }, // a note on a plinth: Use or a shot strikes it
+  chimetree: { radius: 0.9, blocksCell: true }, // the Great Chime-Tree: Use plays the phrase of the next round // lit while a beam enters its cell
+  // Episode 4, Batch C: the dock's furniture
+  // a grave of the Reliquary Road: a slab on a low mound, low enough to step over a creature's reach but a solid post to a round
+  grave: { radius: 0.32, blocksCell: false },
+  resonator: { radius: 0.4, blocksCell: false }, // a standing tuning-fork: it rings at a noise and calls what sleeps
+  // a Vael shuttle on its struts: a wall of hull to walk round and take cover behind (rounds stop on it, creatures see over it)
+  lighter: { radius: 1.6, blocksCell: true, blocksSight: false },
 };
 
 /** distant, non-colliding set dressing (may lie outside the playable grid) */
-export const SCENERY = { tower: {}, boat: {}, crane: {}, gantry: {}, arch: {}, spire: {}, rib: {}, cityface: {}, hangrock: {}, heartmass: {}, hivetower: {}, ganglion: {}, reactor: {}, rails: {}, crystaltower: {}, rootcolumn: {}, shaft: {} };            // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): PT-037, models_c2.js
+export const SCENERY = {
+  tower: {},
+  boat: {},
+  crane: {},
+  gantry: {},
+  arch: {},
+  spire: {},
+  rib: {},
+  cityface: {},
+  hangrock: {},
+  heartmass: {},
+  hivetower: {},
+  ganglion: {},
+  reactor: {},
+  rails: {},
+  crystaltower: {},
+  rootcolumn: {},
+  shaft: {},
+}; // arch (the Gate seen from Anselm-Nine's shore) and spire (a far Vael needle): models_c2.js
 
-/** PT-037 (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
- *  sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within `chain` m of it; then it is deaf for `cooldown` s. */
+/**
+ * (Campaign 2 Act A, resonator.js): the standing forks of the Tuning Fork Fields. `hear` x a noise's radius is how far from the shot a fork listens
+ * (the arc lamp's 14 m is heard within 8.4 m, a rocket's 30 within 18 m); it rings `delay` s later,
+ * sends out a ring (`pulse`: a tone pulse, `damage` before the difficulty), wakes every sleeper within `lure` m of ITSELF, and calls the forks within
+ * `chain` m of it; then it is deaf for `cooldown` s.
+ */
 export const RESONATOR = { hear: 0.6, delay: 0.2, cooldown: 3, lure: 18, chain: 9, pulse: { speed: 9, maxR: 7, width: 1.1, damage: 4 } };
 export const DOOR = { speed: 1.5, passableAt: 0.85, holdOpen: 5, autoCloseClearance: 1.3 };
 export const FACING = { east: -Math.PI / 2, west: Math.PI / 2, north: 0, south: Math.PI };
 
 /**
- * AMMUNITION DROPS (PT-025, owner 2026-10-09: "maybe instead of ground pickups we make it drops from enemies? The gun you're using or the one missing the most ammo is the type?").
- * A map that says `drops: { scale }` gets its ammunition from the dead instead of from boxes on the road (a few boxes stay in its secrets). On a kill (never a summoned or a raised creature, a bell node or a range
- * target) the dead may drop one box, of the type the player NEEDS: among the guns fired in the last `window` s (the one in hand always counts) the one with the lowest share of its cap; with none fired, the
- * emptiest carried gun. The chance rises as that share falls and a run of dry kills guarantees one (`pity`), so a player is neither starved nor flooded. A drop is the ordinary box of that type (`amount`
- * is each type's old ground box), pulled toward the player inside `magnet.r` m. Every number is a first guess; the ones a map can move are `scale` (its overall supply) and a creature's own `chance`.
+ * AMMUNITION DROPS (owner 2026-10-09: "maybe instead of ground pickups we make it drops from enemies? The gun you're using or the one missing the
+ * most ammo is the type?").
+ * A map that says `drops: { scale }` gets its ammunition from the dead instead of from boxes on the road (a few boxes stay in its secrets). On a kill
+ * (never a summoned or a raised creature, a bell node or a range
+ * target) the dead may drop one box, of the type the player NEEDS: among the guns fired in the last `window` s (the one in hand always counts) the
+ * one with the lowest share of its cap; with none fired, the
+ * emptiest carried gun. The chance rises as that share falls and a run of dry kills guarantees one (`pity`), so a player is neither starved nor
+ * flooded. A drop is the ordinary box of that type (`amount`
+ * is each type's old ground box), pulled toward the player inside `magnet.r` m. Every number is a first guess; the ones a map can move are `scale`
+ * (its overall supply) and a creature's own `chance`.
  */
 export const DROPS = {
-  window: 90,                                                                                       // s: a gun fired within this long is "in use" (the one in hand always is)
-  full: 0.95,                                                                                       // a type this full is not dropped
-  chance: { tollbearer: 0.30, gaunt: 0.25, bellhand: 0.45, sexton: 0.50, gill: 0.25, chorister: 0.40, wardengraft: 1, default: 0.30 },   // per kill, before the need and the type weigh in; 1 = always
-  weight: { flare: 1, shell: 1, rivet: 1, bolt: 0.7, cell: 0.9, round: 1, rocket: 0.6 },            // the heavy guns' boxes are rarer
-  need: { floor: 0.5, slope: 1.5 },                                                                 // chance x (floor + slope x (1 - share of the cap held)): 0.5x when full-ish, 2x when empty
-  pity: 5,                                                                                          // kills without a drop, while the need is at least `pityNeed`, after which the next one drops
+  window: 90, // s: a gun fired within this long is "in use" (the one in hand always is)
+  full: 0.95, // a type this full is not dropped
+  // per kill, before the need and the type weigh in; 1 = always
+  chance: { tollbearer: 0.3, gaunt: 0.25, bellhand: 0.45, sexton: 0.5, gill: 0.25, chorister: 0.4, wardengraft: 1, default: 0.3 },
+  weight: { flare: 1, shell: 1, rivet: 1, bolt: 0.7, cell: 0.9, round: 1, rocket: 0.6 }, // the heavy guns' boxes are rarer
+  need: { floor: 0.5, slope: 1.5 }, // chance x (floor + slope x (1 - share of the cap held)): 0.5x when full-ish, 2x when empty
+  pity: 5, // kills without a drop, while the need is at least `pityNeed`, after which the next one drops
   pityNeed: 0.5,
-  magnet: { r: 3.2, speed: 8, stop: 0.55 },                                                         // m, m/s, m: a drop within r that the player has a clear line to slides toward them
+  magnet: { r: 3.2, speed: 8, stop: 0.55 }, // m, m/s, m: a drop within r that the player has a clear line to slides toward them
 };
 
-// ---- Episode 3, The Choir Ships (PT-026, owner approval 2026-10-09 of the five new creatures; Batch A needs only the first) --------------------------------------------------------------------------------------------
-// Chorister: the SUPPRESSION creature (design/CAMPAIGN_SPINE.md section 3, GAME_VISION.md "Chorister (suppression, flanking)"). A grafted singer whose throat is a grown horn: it keeps its distance (`ranged.hold`, and backs off while you are inside
-// `keep`: `retreat`), circles the player (`strafe`: it flanks round whatever the player stands behind) and sings in BURSTS: `burst.count` fast, light shots `burst.gap` s apart, each a little off the line (`spread`). One shot does
-// little (3); a ring of Choristers does a lot, and a shot that goes by within `suppress.r` m SUPPRESSES: for `SUPPRESS.time` s every gun the player fires opens its cone by up to `SUPPRESS.cone`. Standing in the open under
+// Episode 3, The Choir Ships (owner approval 2026-10-09 of the five new creatures; Batch A needs only the first)
+// --------------------------------------------------------------------------------------------
+// Chorister: the SUPPRESSION creature (design/CAMPAIGN_SPINE.md section 3, GAME_VISION.md "Chorister (suppression, flanking)"). A grafted singer
+// whose throat is a grown horn: it keeps its distance (`ranged.hold`, and backs off while you are inside
+// `keep`: `retreat`), circles the player (`strafe`: it flanks round whatever the player stands behind) and sings in BURSTS: `burst.count` fast, light
+// shots `burst.gap` s apart, each a little off the line (`spread`). One shot does
+// little (3); a ring of Choristers does a lot, and a shot that goes by within `suppress.r` m SUPPRESSES: for `SUPPRESS.time` s every gun the player
+// fires opens its cone by up to `SUPPRESS.cone`. Standing in the open under
 // their fire makes you shoot badly; cover and the carbine (no cone to open) are the answers.
-ENEMIES.chorister = { name: 'Chorister', poise: 1, hp: 38, speed: 2.5, gait: 8, radius: 0.36, height: 2.3, hitRadius: 0.65, sight: 26, turnRate: 4.5,
+ENEMIES.chorister = {
+  name: 'Chorister',
+  poise: 1,
+  hp: 38,
+  speed: 2.5,
+  gait: 8,
+  radius: 0.36,
+  height: 2.3,
+  hitRadius: 0.65,
+  sight: 26,
+  turnRate: 4.5,
   attack: { range: 1.8, reach: 2.2, windup: 0.45, duration: 0.8, cooldown: 2.2, damage: 8 },
-  ranged: { hold: 12, keep: 8, minRange: 4, maxRange: 30, speed: 19, damage: 3, aimHeight: 1.2, muzzleY: 1.7, burst: { count: 4, gap: 0.1, spread: 0.06 }, suppress: { r: 1.5 } }, strafe: { speed: 3.1, every: 1.7 }, retreat: true };
-/** suppression (PT-026): a shot that passes close sets `p.suppT` to `time`; every weapon's cone is opened by `cone` x (the share of `time` left) */
+  ranged: {
+    hold: 12,
+    keep: 8,
+    minRange: 4,
+    maxRange: 30,
+    speed: 19,
+    damage: 3,
+    aimHeight: 1.2,
+    muzzleY: 1.7,
+    burst: { count: 4, gap: 0.1, spread: 0.06 },
+    suppress: { r: 1.5 },
+  },
+  strafe: { speed: 3.1, every: 1.7 },
+  retreat: true,
+};
+/* * suppression: a shot that passes close sets `p.suppT` to `time`; every weapon's cone is opened by `cone` x (the share of `time` left) */
 export const SUPPRESS = { time: 0.9, cone: 0.9 };
 
-// ---- Episode 3, Batch C (PT-028, owner go 2026-10-09 "batch c"): the two ELITES the Marrow Nave needs ------------------------------------------------------------------------------------------------
-// Bulwark Shell: the shield-bearer, a conch carapace on short legs. Its carapace is CLOSED while it walks: a direct hit from the front half-plane does `armor.front` (7%) of its damage (splash, a harpoon bolt, the mallet's head
-// and the tuning-fork's throws ignore it, and so does anything from behind or the side). It turns slowly (`turnRate`), so a player who circles it is behind it in a second. It OPENS to strike (`armor.opens`: for as long as its
-// bash lasts, shots land in full) and the bash is heavy (breaks a guard) and shoves the player back (`attack.knock`). A stagger (a parry, a stun) leaves it open for `stunMult` x damage. Escort of the singers: the wall they stand behind.
-ENEMIES.bulwark = { name: 'Bulwark Shell', poise: 3, hp: 240, speed: 1.4, gait: 4.5, radius: 0.75, height: 1.85, hitRadius: 1.12, sight: 26, turnRate: 1.5,
+// Episode 3, Batch C: the two ELITES the Marrow Nave needs
+// ------------------------------------------------------------------------------------------------
+// Bulwark Shell: the shield-bearer, a conch carapace on short legs. Its carapace is CLOSED while it walks: a direct hit from the front half-plane
+// does `armor.front` (7%) of its damage (splash, a harpoon bolt, the mallet's head
+// and the tuning-fork's throws ignore it, and so does anything from behind or the side). It turns slowly (`turnRate`), so a player who circles it is
+// behind it in a second. It OPENS to strike (`armor.opens`: for as long as its
+// bash lasts, shots land in full) and the bash is heavy (breaks a guard) and shoves the player back (`attack.knock`). A stagger (a parry, a stun)
+// leaves it open for `stunMult` x damage. Escort of the singers: the wall they stand behind.
+ENEMIES.bulwark = {
+  name: 'Bulwark Shell',
+  poise: 3,
+  hp: 240,
+  speed: 1.4,
+  gait: 4.5,
+  radius: 0.75,
+  height: 1.85,
+  hitRadius: 1.12,
+  sight: 26,
+  turnRate: 1.5,
   attack: { range: 2.5, reach: 3.1, windup: 0.5, duration: 1.7, cooldown: 1.1, damage: 24, heavy: true, knock: 1.6 },
-  armor: { front: 0.07, cos: 0.05, stunMult: 1.8, opens: true } };
-// Cantor Acolyte (PT-029, Episode 3 Batch D): the Choir's attendant, a tall thin figure on stilts with a halo of bells. It WARDS: while it is awake (and not staggered) every other creature within `ward.r` m takes `ward.reduce` of the damage
-// it would (a ring on the floor shows how far), so it is the first thing to kill in a crowd; it keeps its distance (`keepAway`) and sings a small tone pulse (`pulse`: the Cantor's ring, smaller: stone stops it and standing 1 m higher passes under it).
-ENEMIES.acolyte = { name: 'Cantor Acolyte', poise: 3, hp: 170, speed: 1.7, gait: 5.5, radius: 0.45, height: 3.0, hitRadius: 0.82, sight: 34, turnRate: 2.6, keepAway: 9,
+  armor: { front: 0.07, cos: 0.05, stunMult: 1.8, opens: true },
+};
+// Cantor Acolyte: the Choir's attendant, a tall thin figure on stilts with a halo of bells. It WARDS: while it is awake (and not staggered) every
+// other creature within `ward.r` m takes `ward.reduce` of the damage
+// it would (a ring on the floor shows how far), so it is the first thing to kill in a crowd; it keeps its distance (`keepAway`) and sings a small
+// tone pulse (`pulse`: the Cantor's ring, smaller: stone stops it and standing 1 m higher passes under it).
+ENEMIES.acolyte = {
+  name: 'Cantor Acolyte',
+  poise: 3,
+  hp: 170,
+  speed: 1.7,
+  gait: 5.5,
+  radius: 0.45,
+  height: 3.0,
+  hitRadius: 0.82,
+  sight: 34,
+  turnRate: 2.6,
+  keepAway: 9,
   attack: { range: 2.0, reach: 2.6, windup: 0.6, duration: 1.2, cooldown: 1.2, damage: 14 },
-  ward: { r: 9, reduce: 0.5 }, pulse: { cooldown: 6, first: 3, windup: 1.0, speed: 8, damage: 14, width: 1.1, maxR: 18, hitHeight: 1.0 } };
-// Weeping Mother: the elite brood-mother, an organ throne hung with cradle sacs. She barely walks (`stand`: she plants herself that many metres from you and works from there), WEEPS (`tears`: every `every` s, after a
-// `windup` s tell, a slow tear is lobbed to where you stand (she goes no further than `leash` m from her throne); it lands in a pool that slows (`FX.p`) and burns for `life` s, the arc is long enough to see and to leave), and BROODS (`brood`: a sac swells for `swell` s, then
+  ward: { r: 9, reduce: 0.5 },
+  pulse: { cooldown: 6, first: 3, windup: 1.0, speed: 8, damage: 14, width: 1.1, maxR: 18, hitHeight: 1.0 },
+};
+// Weeping Mother: the elite brood-mother, an organ throne hung with cradle sacs. She barely walks (`stand`: she plants herself that many metres from
+// you and works from there), WEEPS (`tears`: every `every` s, after a
+// `windup` s tell, a slow tear is lobbed to where you stand (she goes no further than `leash` m from her throne); it lands in a pool that slows
+// (`FX.p`) and burns for `life` s, the arc is long enough to see and to leave), and BROODS (`brood`: a sac swells for `swell` s, then
 // `count` creatures of `kind` drop beside her, `max` alive at most). Up close she slams. Kill the brood or kill the mother; keep moving either way.
-ENEMIES.weeping = { name: 'Weeping Mother', poise: 3, hp: 380, speed: 1.0, gait: 3.5, radius: 0.9, height: 3.3, hitRadius: 1.45, sight: 40, turnRate: 1.6, stand: 11, leash: 5,
+ENEMIES.weeping = {
+  name: 'Weeping Mother',
+  poise: 3,
+  hp: 380,
+  speed: 1.0,
+  gait: 3.5,
+  radius: 0.9,
+  height: 3.3,
+  hitRadius: 1.45,
+  sight: 40,
+  turnRate: 1.6,
+  stand: 11,
+  leash: 5,
   attack: { range: 3.0, reach: 3.7, windup: 0.5, duration: 1.8, cooldown: 1.3, damage: 32, heavy: true, knock: 1.2 },
   brood: { kind: 'gaunt', count: 2, every: 16, max: 4, swell: 1.8, first: 6 },
-  tears: { every: 5.5, first: 3, windup: 0.9, minRange: 4, maxRange: 30, gravity: 9, minFlight: 0.9, maxFlight: 2.2, speedPerM: 0.1, r: 1.8, life: 6 } };
+  tears: { every: 5.5, first: 3, windup: 0.9, minRange: 4, maxRange: 30, gravity: 9, minFlight: 0.9, maxFlight: 2.2, speedPerM: 0.1, r: 1.8, life: 6 },
+};
 
-// ---- Episode 3, Batch E (PT-030, owner overnight go 2026-10-09): the Foundry's spawner and the Throat's boss -----------------------------------------------------------------------------------------------
-// Brood Vat: the SPAWNER (spawner denial). An iron cauldron sealed under a dome. It wakes when it sees you inside `spawner.range` m (or on noise, or when a map's `wake` names its group), and then every `every` s (x the difficulty's reaction) its dome swells
-// for `swell` s (announced: a sound and a bulging dome) and `count` creatures of the kinds in `kinds` (a map entity may name its own with `spawns`) drop beside it, at most `max` of ITS brood alive. It never fights. It is a NODE in the sim's sense
-// (immobile, never flinches, takes double from a rocket, drops nothing, an Acolyte's ward does not reach it), so a vat is something to destroy, not to outlast: killing it is the denial. NOTE a boss's shield counts any living node: a map with a boss has no vats.
-ENEMIES.vat = { name: 'Brood Vat', hp: 220, speed: 0, gait: 0, radius: 1.0, height: 4.9, hitRadius: 1.08, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true,
-  spawner: { kinds: ['gaunt', 'tollbearer'], count: 1, every: 8, first: 3, swell: 1.2, max: 3, range: 30 } };
+// Episode 3, Batch E: the Foundry's spawner and the Throat's boss
+// -----------------------------------------------------------------------------------------------
+// Brood Vat: the SPAWNER (spawner denial). An iron cauldron sealed under a dome. It wakes when it sees you inside `spawner.range` m (or on noise, or
+// when a map's `wake` names its group), and then every `every` s (x the difficulty's reaction) its dome swells
+// for `swell` s (announced: a sound and a bulging dome) and `count` creatures of the kinds in `kinds` (a map entity may name its own with `spawns`)
+// drop beside it, at most `max` of ITS brood alive. It never fights. It is a NODE in the sim's sense
+// (immobile, never flinches, takes double from a rocket, drops nothing, an Acolyte's ward does not reach it), so a vat is something to destroy, not
+// to outlast: killing it is the denial. NOTE a boss's shield counts any living node: a map with a boss has no vats.
+ENEMIES.vat = {
+  name: 'Brood Vat',
+  hp: 220,
+  speed: 0,
+  gait: 0,
+  radius: 1.0,
+  height: 4.9,
+  hitRadius: 1.08,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+  spawner: { kinds: ['gaunt', 'tollbearer'], count: 1, every: 8, first: 3, swell: 1.2, max: 3, range: 30 },
+};
 // Reed: one of the pipes the Grand Cantor sings through (the Throat's bell node, grown: immobile; destroying them all breaks the boss's shield).
-ENEMIES.reed = { name: 'Reed', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 3.5, hitRadius: 0.7, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
-// Grand Cantor: the Episode 3 boss, the Choir's voice itself: a four-legged body that carries a horn the size of a doorway. Shielded (5%) while any reed stands. Its pulse is a DOUBLE RING (`pulse.echo`: the second ring leaves `gap` s after the first, so
-// one step behind stone is not enough: hold the cover until both have gone by), it calls Choristers from the alcoves of its chamber (`summon`), fans toll-shots from the start (`shots.always`, wider and faster once the reeds are gone) and slams what reaches it.
-// PT-062 (R10, the boss changes): the Grand Cantor is a MOBILE fight now, with no shield. It walks (2.4 m/s), keeps 9 m from you and circles at that range (`strafe`), and every reed that stands is a voice in its song: while ANY reed sings it throws its second returning ring (`echoReeds`),
-// and cutting the reeds ends the echo and enrages it (faster rings, the fans). Nothing takes a twentieth any more: the verb is to chase and shoot a moving singer through two rings, and to cut the reeds to thin the song.
-ENEMIES.grandcantor = { name: 'Grand Cantor', poise: 8, hp: 760, speed: 1.9, gait: 5, radius: 0.9, height: 6.2, hitRadius: 1.95, hitForward: 0.6, sight: 70, turnRate: 2.2, keepAway: 9, strafe: { speed: 2.4, every: 1.8 }, echoReeds: true,
-  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 2.4, damage: 36 }, boss: true,
-  pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 13, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } }, enragedPulseCooldown: 4.6,
-  shots: { count: 3, spread: 0.24, speed: 8.5, damage: 8, cooldown: 5, aimHeight: 1.2, muzzleY: 4.2, always: true }, summon: { kind: 'chorister', count: 2, every: 30, max: 3 }, stagger: 3.0 };
-/** THE GATE WARDEN (PT-033, Episode 4 Batch E; design/EPISODE4.md E5): the Campaign One boss. An arch of grafted bone and bell-chitin standing in the mouth of the Gate with a ring of light behind it (a silhouette of its own: nothing else is a ring). It does not move.
- *  Shielded (5%) while any of its three SEALS (nodes on the arch) stand; a seal's death staggers it, the last drops the shield. A SWEEP (src/engine/sweep.js): after a 2.4 s tell a beam from its eye turns through 143 degrees in 2.8 s (pillars stop it, the Mirror Array's
- *  mirrors turn it: a reflected stretch through a seal shatters it); a ring pulse like the Cantors'; Drone-Gills called out of the Gate (from the entity's `summons` cells); and it slams what stands at its feet. */
-ENEMIES.gatewarden = { name: 'Gate Warden', poise: 8, hp: 900, speed: 0, gait: 1, radius: 1.6, height: 7.2, hitRadius: 1.9, hitForward: 0, sight: 80, turnRate: 1.2, keepAway: 0,
-  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 3.4, damage: 40 }, boss: true,
-  shield: { reduce: 0.05, y: 3.6, r: 4.2, note: ['SEAL', 'SEALS', 'STAND'] }, pulse: { cooldown: 10, windup: 1.4, speed: 8, damage: 10, width: 1.3, maxR: 44, hitHeight: 1.0 }, enragedPulseCooldown: 8,
-  sweep: { first: 6, cooldown: 10, tell: 2.4, duration: 2.8, arc: 2.5, damage: 18, width: 0.6, range: 64, hitCd: 1.0, beamY: 1.0 }, summon: { kind: 'gill', count: 1, every: 30, max: 2 }, stagger: 3.0 };
-/** THE SUB-CANTOR (PT-039, Act B; the boss of the Sounding Deep Heart): the conductor of ONE district, a lesser Cantor and an afraid one: it keeps its distance (`keepAway`), never speaks, and breathes out a tone pulse whose RING TURNS BACK at `pulse.reflect` m (the wall of its bowl)
- *  and comes home to it as its own voice: cover that held for the ring going out must be held again for the ring coming in (the first hit does not spend the ring: `hit` is cleared when it turns). Shielded (5%) while any of its four FORKS (`bellnode`, the nodes that
- *  hold the note it no longer remembers) stands; calls Gaunts out of its `summons` cells; fans toll-shots once the forks are down (enraged). Every number a first guess. */
-ENEMIES.subcantor = { name: 'Sub-Cantor', poise: 8, hp: 560, speed: 1.5, gait: 5, radius: 0.6, height: 3.8, hitRadius: 0.72, sight: 70, turnRate: 2.2, keepAway: 9,
-  attack: { range: 3.0, reach: 3.5, windup: 0.8, duration: 1.6, cooldown: 2.6, damage: 24 }, boss: true,
-  shield: { reduce: 0.05, y: 1.9, r: 1.7, note: ['FORK', 'FORKS', 'STILL HOLD THE NOTE'] }, pulse: { cooldown: 7, windup: 1.3, speed: 9, damage: 12, width: 1.3, maxR: 60, hitHeight: 1.0, reflect: 22 }, enragedPulseCooldown: 5,
-  shots: { count: 3, spread: 0.26, speed: 8.5, damage: 7, cooldown: 5.5, aimHeight: 1.2, muzzleY: 2.8 }, summon: { kind: 'gaunt', count: 2, every: 26, max: 4 }, stagger: 3.0 };
-ENEMIES.seal = { name: 'Seal', hp: 150, speed: 0, gait: 0, radius: 0.7, height: 2.6, hitRadius: 0.95, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };      // a seal on the Gate Warden's arch: a node
+ENEMIES.reed = {
+  name: 'Reed',
+  hp: 150,
+  speed: 0,
+  gait: 0,
+  radius: 0.7,
+  height: 3.5,
+  hitRadius: 0.7,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+};
+// Grand Cantor: the Episode 3 boss, the Choir's voice itself: a four-legged body that carries a horn the size of a doorway. Shielded (5%) while any
+// reed stands. Its pulse is a DOUBLE RING (`pulse.echo`: the second ring leaves `gap` s after the first, so
+// one step behind stone is not enough: hold the cover until both have gone by), it calls Choristers from the alcoves of its chamber (`summon`), fans
+// toll-shots from the start (`shots.always`, wider and faster once the reeds are gone) and slams what reaches it.
+// the Grand Cantor is a MOBILE fight now, with no shield. It walks (2.4 m/s), keeps 9 m from you and circles at that range (`strafe`), and every reed
+// that stands is a voice in its song: while ANY reed sings it throws its second returning ring (`echoReeds`),
+// and cutting the reeds ends the echo and enrages it (faster rings, the fans). Nothing takes a twentieth any more: the verb is to chase and shoot a
+// moving singer through two rings, and to cut the reeds to thin the song.
+ENEMIES.grandcantor = {
+  name: 'Grand Cantor',
+  poise: 8,
+  hp: 760,
+  speed: 1.9,
+  gait: 5,
+  radius: 0.9,
+  height: 6.2,
+  hitRadius: 1.95,
+  hitForward: 0.6,
+  sight: 70,
+  turnRate: 2.2,
+  keepAway: 9,
+  strafe: { speed: 2.4, every: 1.8 },
+  echoReeds: true,
+  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 2.4, damage: 36 },
+  boss: true,
+  pulse: { cooldown: 6.6, windup: 1.3, speed: 8.5, damage: 13, width: 1.3, maxR: 44, hitHeight: 1.0, echo: { gap: 0.95 } },
+  enragedPulseCooldown: 4.6,
+  shots: { count: 3, spread: 0.24, speed: 8.5, damage: 8, cooldown: 5, aimHeight: 1.2, muzzleY: 4.2, always: true },
+  summon: { kind: 'chorister', count: 2, every: 30, max: 3 },
+  stagger: 3.0,
+};
+/**
+ * THE GATE WARDEN (Episode 4 Batch E; design/EPISODE4.md E5): the Campaign One boss. An arch of grafted bone and bell-chitin standing in the mouth of
+ * the Gate with a ring of light behind it (a silhouette of its own: nothing else is a ring). It does not move.
+ * Shielded (5%) while any of its three SEALS (nodes on the arch) stand; a seal's death staggers it, the last drops the shield. A SWEEP
+ * (src/engine/sweep.js): after a 2.4 s tell a beam from its eye turns through 143 degrees in 2.8 s (pillars stop it, the Mirror Array's
+ * mirrors turn it: a reflected stretch through a seal shatters it); a ring pulse like the Cantors'; Drone-Gills called out of the Gate (from the
+ * entity's `summons` cells); and it slams what stands at its feet.
+ */
+ENEMIES.gatewarden = {
+  name: 'Gate Warden',
+  poise: 8,
+  hp: 900,
+  speed: 0,
+  gait: 1,
+  radius: 1.6,
+  height: 7.2,
+  hitRadius: 1.9,
+  hitForward: 0,
+  sight: 80,
+  turnRate: 1.2,
+  keepAway: 0,
+  attack: { range: 3.8, reach: 4.4, windup: 0.9, duration: 1.7, cooldown: 3.4, damage: 40 },
+  boss: true,
+  shield: { reduce: 0.05, y: 3.6, r: 4.2, note: ['SEAL', 'SEALS', 'STAND'] },
+  pulse: { cooldown: 10, windup: 1.4, speed: 8, damage: 10, width: 1.3, maxR: 44, hitHeight: 1.0 },
+  enragedPulseCooldown: 8,
+  sweep: { first: 6, cooldown: 10, tell: 2.4, duration: 2.8, arc: 2.5, damage: 18, width: 0.6, range: 64, hitCd: 1.0, beamY: 1.0 },
+  summon: { kind: 'gill', count: 1, every: 30, max: 2 },
+  stagger: 3.0,
+};
+/**
+ * THE SUB-CANTOR (Act B; the boss of the Sounding Deep Heart): the conductor of ONE district, a lesser Cantor and an afraid one: it keeps its
+ * distance (`keepAway`), never speaks, and breathes out a tone pulse whose RING TURNS BACK at `pulse.reflect` m (the wall of its bowl)
+ * and comes home to it as its own voice: cover that held for the ring going out must be held again for the ring coming in (the first hit does not
+ * spend the ring: `hit` is cleared when it turns). Shielded (5%) while any of its four FORKS (`bellnode`, the nodes that
+ * hold the note it no longer remembers) stands; calls Gaunts out of its `summons` cells; fans toll-shots once the forks are down (enraged). Every
+ * number a first guess.
+ */
+ENEMIES.subcantor = {
+  name: 'Sub-Cantor',
+  poise: 8,
+  hp: 560,
+  speed: 1.5,
+  gait: 5,
+  radius: 0.6,
+  height: 3.8,
+  hitRadius: 0.72,
+  sight: 70,
+  turnRate: 2.2,
+  keepAway: 9,
+  attack: { range: 3.0, reach: 3.5, windup: 0.8, duration: 1.6, cooldown: 2.6, damage: 24 },
+  boss: true,
+  shield: { reduce: 0.05, y: 1.9, r: 1.7, note: ['FORK', 'FORKS', 'STILL HOLD THE NOTE'] },
+  pulse: { cooldown: 7, windup: 1.3, speed: 9, damage: 12, width: 1.3, maxR: 60, hitHeight: 1.0, reflect: 22 },
+  enragedPulseCooldown: 5,
+  shots: { count: 3, spread: 0.26, speed: 8.5, damage: 7, cooldown: 5.5, aimHeight: 1.2, muzzleY: 2.8 },
+  summon: { kind: 'gaunt', count: 2, every: 26, max: 4 },
+  stagger: 3.0,
+};
+ENEMIES.seal = {
+  name: 'Seal',
+  hp: 150,
+  speed: 0,
+  gait: 0,
+  radius: 0.7,
+  height: 2.6,
+  hitRadius: 0.95,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+}; // a seal on the Gate Warden's arch: a node
 
-// ---- Campaign 2, Act A (PT-037; design/CAMPAIGN2.md E1): THE QUIET FOLK ------------------------------------------------------------------------------------------------------------------------------
-// A VAEL CIVILIAN is the first Vael who is not a weapon: PEACEFUL. It never attacks. It stands near its post (`wander`), turns to look at the player, and RUNS from gunfire, blasts and being hit (`FOLK`, src/engine/folk.js);
-// nothing automatic ever picks it (the arc lamp's lock, the route bot). It can still be shot: a dead one is an INNOCENT (never a kill: `stats.innocents`, a cost to the rank, a line on the results, no drop).
+// Campaign 2, Act A: THE QUIET FOLK
+// ------------------------------------------------------------------------------------------------------------------------------
+// A VAEL CIVILIAN is the first Vael who is not a weapon: PEACEFUL. It never attacks. It stands near its post (`wander`), turns to look at the player,
+// and RUNS from gunfire, blasts and being hit (`FOLK`, src/engine/folk.js);
+// nothing automatic ever picks it (the arc lamp's lock, the route bot). It can still be shot: a dead one is an INNOCENT (never a kill:
+// `stats.innocents`, a cost to the rank, a line on the results, no drop).
 // Its states are 'calm' and 'flee', never 'idle' / 'chase', so nothing that wakes or counts sleepers touches it.
-ENEMIES.vaelfolk = { name: 'Vael civilian', peaceful: true, poise: 0.5, hp: 26, speed: 3.6, gait: 8, radius: 0.42, height: 2.42, hitRadius: 0.4, sight: 12, turnRate: 5, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 } };
+ENEMIES.vaelfolk = {
+  name: 'Vael civilian',
+  peaceful: true,
+  poise: 0.5,
+  hp: 26,
+  speed: 3.6,
+  gait: 8,
+  radius: 0.42,
+  height: 2.42,
+  hitRadius: 0.4,
+  sight: 12,
+  turnRate: 5,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+};
 export const FOLK = {
-  calmSpeed: 0.9,           // m/s while it wanders
-  wanderEvery: 5,           // s: a new place to stand (or the same one) a few metres from its post
-  wanderR: 3.2,             // m from its post
-  hear: 1.0,                // a noise frightens it inside radius x hear (and with a clear line, or very close, as for any sleeper)
-  fearT: 5,                 // s it keeps running after the last shot, blast or blow it noticed
-  look: 7,                  // m: it turns to look at the player inside this, while calm
-  innocentCost: 0.1,        // rank score lost per innocent harmed (src/engine/progress.js rankFor), at most `innocentMax` in all
+  calmSpeed: 0.9, // m/s while it wanders
+  wanderEvery: 5, // s: a new place to stand (or the same one) a few metres from its post
+  wanderR: 3.2, // m from its post
+  hear: 1.0, // a noise frightens it inside radius x hear (and with a clear line, or very close, as for any sleeper)
+  fearT: 5, // s it keeps running after the last shot, blast or blow it noticed
+  look: 7, // m: it turns to look at the player inside this, while calm
+  innocentCost: 0.1, // rank score lost per innocent harmed (src/engine/progress.js rankFor), at most `innocentMax` in all
   innocentMax: 0.4,
 };
 
-// ---- Campaign 2, Act B (PT-038; design/ACTB.md): THE ZEALOT ---------------------------------------------------------------------------------------------------------------------------------------
-// A Songkeeper under arms: a tall hooded Vael in bronze plate with a long bone lance (a bell at its tip). It keeps a lance's distance and THRUSTS (`attack.reach` 3.5 m, the dip of the lance is the tell) and lunges
-// across a gap (the Gaunt's dash, with a point on it). A hit GRAFTS (`graft`): the damage of the blow and `time` seconds of `GRAFT.slow` off the player's walking speed, a bronze sting. Hard to stagger (`poise`).
-ENEMIES.zealot = { name: 'Zealot', poise: 2.2, hp: 110, speed: 2.3, gait: 7, radius: 0.42, height: 2.3, hitRadius: 0.62, hitForward: 0, sight: 32, turnRate: 3.4,
-  attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 }, lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 }, graft: { time: 3 } };
+// Campaign 2, Act B: THE ZEALOT
+// ---------------------------------------------------------------------------------------------------------------------------------------
+// A Songkeeper under arms: a tall hooded Vael in bronze plate with a long bone lance (a bell at its tip). It keeps a lance's distance and THRUSTS
+// (`attack.reach` 3.5 m, the dip of the lance is the tell) and lunges
+// across a gap (the Gaunt's dash, with a point on it). A hit GRAFTS (`graft`): the damage of the blow and `time` seconds of `GRAFT.slow` off the
+// player's walking speed, a bronze sting. Hard to stagger (`poise`).
+ENEMIES.zealot = {
+  name: 'Zealot',
+  poise: 2.2,
+  hp: 110,
+  speed: 2.3,
+  gait: 7,
+  radius: 0.42,
+  height: 2.3,
+  hitRadius: 0.62,
+  hitForward: 0,
+  sight: 32,
+  turnRate: 3.4,
+  attack: { range: 2.7, reach: 3.5, windup: 0.62, duration: 1.2, cooldown: 0.9, damage: 12 },
+  lunge: { min: 3.2, max: 6.5, windup: 0.5, duration: 0.34, speed: 10, cooldown: 2.6 },
+  graft: { time: 3 },
+};
 export const GRAFT = { slow: 0.38 };
-// ---- Campaign 2, Act B (PT-038; design/ACTB.md E6): CHIMES (src/engine/chimes.js) ---------------------------------------------------------------------------------------------------------------------
-// five notes, each with a glyph and a colour as well as a pitch (a puzzle is never audio-only); `beat` s between the notes a tree plays, `lead` s before the first, the last `keep` notes struck are remembered
-export const CHIME = { notes: 5, glyphs: ['circle', 'triangle', 'square', 'diamond', 'ring'], colors: ['#f2b84a', '#3fd0c0', '#9a7ae0', '#e0584a', '#f4f0e0'], beat: 0.7, lead: 0.5, keep: 16 };
+// Campaign 2, Act B: CHIMES (src/engine/chimes.js)
+// ---------------------------------------------------------------------------------------------------------------------
+// five notes, each with a glyph and a colour as well as a pitch (a puzzle is never audio-only); `beat` s between the notes a tree plays, `lead` s
+// before the first, the last `keep` notes struck are remembered
+export const CHIME = {
+  notes: 5,
+  glyphs: ['circle', 'triangle', 'square', 'diamond', 'ring'],
+  colors: ['#f2b84a', '#3fd0c0', '#9a7ae0', '#e0584a', '#f4f0e0'],
+  beat: 0.7,
+  lead: 0.5,
+  keep: 16,
+};
 
-// ---- Campaign 2, Act B (PT-038; design/ACTB.md E5): THE HAND LANTERN ---------------------------------------------------------------------------------------------------------------------------
-// A map that says `atmosphere.dark: true` is a dark place: creatures notice the player from `sightDark` metres, or from `sightLit` when the lantern is lit or the player stands within `radius` of a lit prop
-// (`lightProps`). The Hush-driven kinds (`hush: true` in their definition) follow the Hush and not the light and keep their ordinary range. The lantern is the map's `lantern: { oil, max, eternal }`
-// (lazy: `p.lamp` exists only where the map has one): it burns `burn` oil a second while lit; an oil tin gives `PICKUPS.oil.amount`. `eternal` is Ines's own lamp (it never burns out).
+// Campaign 2, Act B: THE HAND LANTERN
+// ---------------------------------------------------------------------------------------------------------------------------
+// A map that says `atmosphere.dark: true` is a dark place: creatures notice the player from `sightDark` metres, or from `sightLit` when the lantern
+// is lit or the player stands within `radius` of a lit prop
+// (`lightProps`). The Hush-driven kinds (`hush: true` in their definition) follow the Hush and not the light and keep their ordinary range. The
+// lantern is the map's `lantern: { oil, max, eternal }`
+// (lazy: `p.lamp` exists only where the map has one): it burns `burn` oil a second while lit; an oil tin gives `PICKUPS.oil.amount`. `eternal` is
+// Ines's own lamp (it never burns out).
 export const LANTERN = { sightDark: 6, sightLit: 24, radius: 8, burn: 1, max: 90, lightProps: ['lantern', 'lamp'] };
-                     // the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)
+// the share of the player's walking speed a graft takes away while `p.graftT` runs (lazy: only a map with a Zealot ever sets it)
 
-// ---- Campaign 2, Acts C and D: THE PREVIEW (PT-043; design/PREVIEW.md, design/ACTC.md, design/ACTD.md) ----------------------------------------------------------------------------------------------------------------
-/** THE HIVE BEAT (design/ACTC.md section 2): the one clock of Act C. A pure function of the tick (hive.js), so saves, replays and bots need nothing stored. `onBeat` creatures start an attack only on a beat tick. */
+// Campaign 2, Acts C and D: THE PREVIEW
+// ----------------------------------------------------------------------------------------------------------------
+/**
+ * THE HIVE BEAT (design/ACTC.md section 2): the one clock of Act C. A pure function of the tick (hive.js), so saves, replays and bots need nothing
+ * stored. `onBeat` creatures start an attack only on a beat tick.
+ */
 export const HIVE = { beat: 1.5, bar: 4 };
-/** THE RESONANT (a fused-human hulk: three Tollbearers joined at the hip with a ring of bells welded round the waist). Slow and wide. On every beat, if another hostile stands within `ring.near` m, it sends a low ring whose damage grows with its company:
- *  `ring.base` x (1 + neighbours), at most `ring.cap` (before the difficulty). A Resonant alone is a slow brute; in a crowd it is a ring factory, so the verb is separating it from the others. The ring passes over anyone a metre above it and stops at cover. */
-ENEMIES.resonant = { name: 'Resonant', poise: 3, hp: 420, speed: 1.1, gait: 3.6, radius: 0.85, height: 2.55, hitRadius: 1.0, hitForward: 0, sight: 26, turnRate: 1.6,
+/**
+ * THE RESONANT (a fused-human hulk: three Tollbearers joined at the hip with a ring of bells welded round the waist). Slow and wide. On every beat,
+ * if another hostile stands within `ring.near` m, it sends a low ring whose damage grows with its company:
+ * `ring.base` x (1 + neighbours), at most `ring.cap` (before the difficulty). A Resonant alone is a slow brute; in a crowd it is a ring factory, so
+ * the verb is separating it from the others. The ring passes over anyone a metre above it and stops at cover.
+ */
+ENEMIES.resonant = {
+  name: 'Resonant',
+  poise: 3,
+  hp: 420,
+  speed: 1.1,
+  gait: 3.6,
+  radius: 0.85,
+  height: 2.55,
+  hitRadius: 1.0,
+  hitForward: 0,
+  sight: 26,
+  turnRate: 1.6,
   attack: { range: 2.4, reach: 3.0, windup: 0.56, duration: 1.6, cooldown: 1.2, damage: 22, heavy: true, knock: 1.0 },
-  ring: { near: 7, base: 5, cap: 20, speed: 9, width: 1.2, maxR: 14, hitHeight: 1.0 } };
-/** THE HIVE CANTOR (Act C's boss, C2M24): a tall thin conductor that hovers over the podium and never walks, its fingers trailing threads to the tiers of the choir. `unison`: the damage it takes is `floor` + (1 - floor) x (the share of the choir
- *  (the creatures of the group `unison.group`) that is dead): the choir's death is the way in. `hive.ring`: on the beat numbered `at` of every `every` beats (a bar is HIVE.bar beats) it lets go a DOUBLE RETURNING RING (turns at `reflect` m, a second
- *  ring `echo` s behind the first); it starts to draw it one beat earlier. `phases`: at half its hit points, or with the choir dead, a ring every bar and Choristers called from the dome. Every number a first guess. */
-ENEMIES.hivecantor = { name: 'Hive Cantor', poise: 9, hp: 1500, speed: 0, gait: 1, radius: 0.9, height: 3.9, hover: 1.1, flying: true, hitRadius: 0.5, sight: 90, turnRate: 1.6, keepAway: 0,
-  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, boss: true,
+  ring: { near: 7, base: 5, cap: 20, speed: 9, width: 1.2, maxR: 14, hitHeight: 1.0 },
+};
+/**
+ * THE HIVE CANTOR (Act C's boss, C2M24): a tall thin conductor that hovers over the podium and never walks, its fingers trailing threads to the tiers
+ * of the choir. `unison`: the damage it takes is `floor` + (1 - floor) x (the share of the choir
+ * (the creatures of the group `unison.group`) that is dead): the choir's death is the way in. `hive.ring`: on the beat numbered `at` of every `every`
+ * beats (a bar is HIVE.bar beats) it lets go a DOUBLE RETURNING RING (turns at `reflect` m, a second
+ * ring `echo` s behind the first); it starts to draw it one beat earlier. `phases`: at half its hit points, or with the choir dead, a ring every bar
+ * and Choristers called from the dome. Every number a first guess.
+ */
+ENEMIES.hivecantor = {
+  name: 'Hive Cantor',
+  poise: 9,
+  hp: 1500,
+  speed: 0,
+  gait: 1,
+  radius: 0.9,
+  height: 3.9,
+  hover: 1.1,
+  flying: true,
+  hitRadius: 0.5,
+  sight: 90,
+  turnRate: 1.6,
+  keepAway: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  boss: true,
   unison: { group: 'choir', floor: 0.05 },
-  hive: { ring: { every: 8, at: 2, speed: 9, damage: 13, width: 1.3, maxR: 70, reflect: 40, echo: 0.95, h: 0.8 } },      // h: the ring is 0.8 m high: any floor a metre above the conductor's clears it, a half-step does not (PT-043 report 3)
-  phases: [{ at: 0.5, choirDead: true, hive: { ring: { every: 4, at: 2 } }, summon: { kind: 'chorister', count: 2, every: 16, max: 4 } }] };                // (PT-046: three every thirteen seconds, six at most, was more than a bot or the second half of the fight could stand: two every sixteen, four at most)
-/** THE ROOT BELL'S CLAPPER (the last boss, C2M29; design/ACTD.md section 4): the heart of the Bell, a mass of bronze and black root. Hung from the dome on a chain it swings as a PENDULUM (`bell`: rootbell.js, a pure function of the clock, the swing
- *  turns `turn` rad at every pass of the middle); it strikes a ring across the floor at each end of a swing; its lowest point crushes whoever stands under the middle of the swing. Four ROOT ANCHORS (nodes) take 70% of every hit while any stands and each one cut
- *  lowers it and widens the swing. The last cut and it FALLS and becomes a ground boss: a charge (Warden-Graft machinery: a crash into stone stuns it), rooted spikes where you stand. Under `bell.last` of its hit points the lights fall, the note rolls
- *  the whole floor and the heart cracks open (it takes `bell.exposed` times the damage). Every number a first guess. */
-ENEMIES.rootbell = { name: 'Root Bell', poise: 9, hp: 2400, speed: 1.2, gait: 3, radius: 1.5, height: 4.7, hitRadius: 1.5, hitForward: 0, sight: 90, turnRate: 1.3, keepAway: 0,
-  attack: { range: 3.8, reach: 4.6, windup: 0.5, duration: 1.8, cooldown: 2.4, damage: 40, heavy: true, knock: 2.5 }, boss: true,
+  // h: the ring is 0.8 m high: any floor a metre above the conductor's clears it, a half-step does not
+  hive: { ring: { every: 8, at: 2, speed: 9, damage: 13, width: 1.3, maxR: 70, reflect: 40, echo: 0.95, h: 0.8 } },
+  phases: [{ at: 0.5, choirDead: true, hive: { ring: { every: 4, at: 2 } }, summon: { kind: 'chorister', count: 2, every: 16, max: 4 } }],
+}; // (three every thirteen seconds, six at most, was more than a bot or the second half of the fight could stand: two every sixteen, four at most)
+/**
+ * THE ROOT BELL'S CLAPPER (the last boss, C2M29; design/ACTD.md section 4): the heart of the Bell, a mass of bronze and black root. Hung from the
+ * dome on a chain it swings as a PENDULUM (`bell`: rootbell.js, a pure function of the clock, the swing
+ * turns `turn` rad at every pass of the middle); it strikes a ring across the floor at each end of a swing; its lowest point crushes whoever stands
+ * under the middle of the swing. Four ROOT ANCHORS (nodes) take 70% of every hit while any stands and each one cut
+ * lowers it and widens the swing. The last cut and it FALLS and becomes a ground boss: a charge (Warden-Graft machinery: a crash into stone stuns
+ * it), rooted spikes where you stand. Under `bell.last` of its hit points the lights fall, the note rolls
+ * the whole floor and the heart cracks open (it takes `bell.exposed` times the damage). Every number a first guess.
+ */
+ENEMIES.rootbell = {
+  name: 'Root Bell',
+  poise: 9,
+  hp: 2400,
+  speed: 1.2,
+  gait: 3,
+  radius: 1.5,
+  height: 4.7,
+  hitRadius: 1.5,
+  hitForward: 0,
+  sight: 90,
+  turnRate: 1.3,
+  keepAway: 0,
+  attack: { range: 3.8, reach: 4.6, windup: 0.5, duration: 1.8, cooldown: 2.4, damage: 40, heavy: true, knock: 2.5 },
+  boss: true,
   shield: { reduce: 0.3, y: 1.8, r: 2.6, note: ['ANCHOR', 'ANCHORS', 'STILL HOLD THE CHAIN'] },
   charge: { min: 5, max: 30, windup: 1.0, speed: 12, duration: 2.2, damage: 45, stun: 3.0, cooldown: 3.2, knock: 3.5 },
-  bell: { top: 16.4, period: 6, turn: 0.7854, len: [12.6, 12.9, 13.2, 13.4, 13.6], amp: [0.5, 0.58, 0.66, 0.74, 0.82], ease: 1.6, crush: { below: 2.4, r: 1.9, damage: 40, knock: 4, cooldown: 1.4 },
-    ring: { speed: 10, width: 1.4, maxR: 36, damage: 12, every: 6, h: 1.0 }, fall: { g: 16, slam: { speed: 12, width: 1.6, maxR: 26, damage: 18 } },
+  bell: {
+    top: 16.4,
+    period: 6,
+    turn: 0.7854,
+    len: [12.6, 12.9, 13.2, 13.4, 13.6],
+    amp: [0.5, 0.58, 0.66, 0.74, 0.82],
+    ease: 1.6,
+    crush: { below: 2.4, r: 1.9, damage: 40, knock: 4, cooldown: 1.4 },
+    ring: { speed: 10, width: 1.4, maxR: 36, damage: 12, every: 6, h: 1.0 },
+    fall: { g: 16, slam: { speed: 12, width: 1.6, maxR: 26, damage: 18 } },
     spikes: { every: 3.2, warn: 1.0, r: 1.15, damage: 20, life: 1.6 },
-    last: 0.3, exposed: 1.5, lastRing: { every: 3, h: 3.2, damage: 15, speed: 10, maxR: 44 }, lastCharge: { cooldown: 2.0, speed: 14 } } };
-ENEMIES.rootanchor = { name: 'Root anchor', hp: 350, speed: 0, gait: 0, radius: 0.8, height: 3.65, hitRadius: 0.9, sight: 0, turnRate: 0, attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 }, node: true };
-// PT-076 THE BRAIN (brain.js, the numbers in BRAIN there): what each ordinary creature does besides walk and strike. `dodge` is its chance to dash out of your sights when you fire at it or hold it
-// there; `strafe` a shooter's run across after each shot; `lurch` the Tollbearer's surge; `circle` the Gaunt's run round you; `cower` a run for a moment when it is badly hurt; `call` the Bellhand's ring for help.
+    last: 0.3,
+    exposed: 1.5,
+    lastRing: { every: 3, h: 3.2, damage: 15, speed: 10, maxR: 44 },
+    lastCharge: { cooldown: 2.0, speed: 14 },
+  },
+};
+ENEMIES.rootanchor = {
+  name: 'Root anchor',
+  hp: 350,
+  speed: 0,
+  gait: 0,
+  radius: 0.8,
+  height: 3.65,
+  hitRadius: 0.9,
+  sight: 0,
+  turnRate: 0,
+  attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
+  node: true,
+};
+// THE BRAIN (brain.js, the numbers in BRAIN there): what each ordinary creature does besides walk and strike. `dodge` is its chance to dash out of
+// your sights when you fire at it or hold it
+// there; `strafe` a shooter's run across after each shot; `lurch` the Tollbearer's surge; `circle` the Gaunt's run round you; `cower` a run for a
+// moment when it is badly hurt; `call` the Bellhand's ring for help.
 // The elites (Warden-Graft, Bulwark, Acolyte, Weeping Mother, Resonant) stand their ground: no brain.
 for (const [kind, brain] of Object.entries({
   tollbearer: { lurch: true },
@@ -573,6 +2102,11 @@ for (const [kind, brain] of Object.entries({
   gill: { dodge: 0.45, cower: true },
   chorister: { dodge: 0.3 },
   zealot: { dodge: 0.3 },
-})) ENEMIES[kind].brain = brain;
-/** the lamp holds sound back (design/ACTD.md section 1; Campaign 1's first secret says the lamp is a counter-tone): a map that says `lampHolds: { plain, own }` cuts the damage of a pulse ring that reaches a player with a LIT lantern to `plain`, or to `own` with Ines's own lamp (an eternal lantern) */
+}))
+  ENEMIES[kind].brain = brain;
+/**
+ * the lamp holds sound back (design/ACTD.md section 1; Campaign 1's first secret says the lamp is a counter-tone): a map that says `lampHolds: {
+ * plain, own }` cuts the damage of a pulse ring that reaches a player with a LIT lantern to `plain`, or to `own` with Ines's own lamp (an eternal
+ * lantern)
+ */
 export const LAMP_HOLDS = { plain: 0.6, own: 0.4 };

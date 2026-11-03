@@ -5,44 +5,90 @@ import { carLinks } from './cars.js';
 
 export function analyseReach(map) {
   const blocked = new Set(map.props.filter((p) => PROPS[p.kind]?.blocksCell).map((p) => Math.floor(p.at[0]) + ',' + Math.floor(p.at[1])));
-  const keys = new Set(), reach = new Set();
+  const keys = new Set(),
+    reach = new Set();
   // heights a cell can have: a sector cell may be at either end of its travel; anything else has one static height
-  const floors = (cx, cz) => { const si = map.sectorAt(cx, cz); return si >= 0 ? [map.sectors[si].low, map.sectors[si].high] : [map.floor(cx, cz)]; };
-  const canStep = (ax, az, bx, bz) => { for (const fa of floors(ax, az)) for (const fb of floors(bx, bz)) if (fb - fa <= STEP + 1e-6) return true; return false; };
+  const floors = (cx, cz) => {
+    const si = map.sectorAt(cx, cz);
+    return si >= 0 ? [map.sectors[si].low, map.sectors[si].high] : [map.floor(cx, cz)];
+  };
+  const canStep = (ax, az, bx, bz) => {
+    for (const fa of floors(ax, az)) for (const fb of floors(bx, bz)) if (fb - fa <= STEP + 1e-6) return true;
+    return false;
+  };
   const cellOf = (e) => [Math.floor(e.at[0]), Math.floor(e.at[1])];
   const passable = (cx, cz) => {
     const k = map.kind(cx, cz);
     if (blocked.has(cx + ',' + cz)) return false;
-    if (k === 'floor' || k === 'outdoor' || k === 'secret') return true;         // secret panels are opened with Use
-    if (k === 'door') { const d = map.doorAt(cx, cz); return !d.key || keys.has(d.key); }
+    if (k === 'floor' || k === 'outdoor' || k === 'secret') return true; // secret panels are opened with Use
+    if (k === 'door') {
+      const d = map.doorAt(cx, cz);
+      return !d.key || keys.has(d.key);
+    }
     return false;
   };
-  const links = map.cars.length ? carLinks(map, STEP) : [], linkOf = new Map(); links.forEach((g, gi) => g.forEach((stop) => stop.forEach(([x, z]) => linkOf.set(x + ',' + z, gi))));      // PT-045: a car is a ride between the cells beside its stops
+  const links = map.cars.length ? carLinks(map, STEP) : [],
+    linkOf = new Map();
+  // a car is a ride between the cells beside its stops
+  links.forEach((g, gi) => g.forEach((stop) => stop.forEach(([x, z]) => linkOf.set(x + ',' + z, gi))));
   let changed = true;
   while (changed) {
     changed = false;
-    reach.clear(); const ridden = new Set();
+    reach.clear();
+    const ridden = new Set();
     const [sx, sz] = [Math.floor(map.spawn.x / map.cell), Math.floor(map.spawn.z / map.cell)];
-    const q = [[sx, sz]]; reach.add(sx + ',' + sz);
+    const q = [[sx, sz]];
+    reach.add(sx + ',' + sz);
     while (q.length) {
       const [cx, cz] = q.pop();
-      const gi = linkOf.get(cx + ',' + cz); if (gi !== undefined && !ridden.has(gi)) { ridden.add(gi); for (const stop of links[gi]) for (const [x, z] of stop) { const k = x + ',' + z; if (!reach.has(k) && passable(x, z)) { reach.add(k); q.push([x, z]); } } }
-      for (const v of map.vents) if (v.at[0] === cx && v.at[1] === cz && !reach.has(v.to.join(','))) { reach.add(v.to.join(',')); q.push([v.to[0], v.to[1]]); }      // PT-032: a vent plate throws the player to its landing
-      for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-        const nx = cx + dx, nz = cz + dz, k = nx + ',' + nz;
-        if (!reach.has(k) && passable(nx, nz) && canStep(cx, cz, nx, nz)) { reach.add(k); q.push([nx, nz]); }
+      const gi = linkOf.get(cx + ',' + cz);
+      if (gi !== undefined && !ridden.has(gi)) {
+        ridden.add(gi);
+        for (const stop of links[gi])
+          for (const [x, z] of stop) {
+            const k = x + ',' + z;
+            if (!reach.has(k) && passable(x, z)) {
+              reach.add(k);
+              q.push([x, z]);
+            }
+          }
+      }
+      for (const v of map.vents)
+        if (v.at[0] === cx && v.at[1] === cz && !reach.has(v.to.join(','))) {
+          reach.add(v.to.join(','));
+          q.push([v.to[0], v.to[1]]);
+        } // a vent plate throws the player to its landing
+      for (const [dx, dz] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const nx = cx + dx,
+          nz = cz + dz,
+          k = nx + ',' + nz;
+        if (!reach.has(k) && passable(nx, nz) && canStep(cx, cz, nx, nz)) {
+          reach.add(k);
+          q.push([nx, nz]);
+        }
       }
     }
-    for (const e of map.entities) if (e.type === 'pickup' && PICKUPS[e.kind].key) {
-      const [cx, cz] = cellOf(e);
-      if (reach.has(cx + ',' + cz) && !keys.has(PICKUPS[e.kind].key)) { keys.add(PICKUPS[e.kind].key); changed = true; }
-    }
+    for (const e of map.entities)
+      if (e.type === 'pickup' && PICKUPS[e.kind].key) {
+        const [cx, cz] = cellOf(e);
+        if (reach.has(cx + ',' + cz) && !keys.has(PICKUPS[e.kind].key)) {
+          keys.add(PICKUPS[e.kind].key);
+          changed = true;
+        }
+      }
   }
   const at = (e) => reach.has(cellOf(e).join(','));
   return {
     keysObtainable: [...keys],
     exitReachable: map.exits.every(at) && map.exits.length > 0,
-    unreachable: map.entities.filter((e) => e.type !== 'player' && !(e.type === 'prop' && PROPS[e.kind]?.blocksCell) && !at(e)).map((e) => ({ type: e.type, kind: e.kind ?? null, at: e.at })),
+    unreachable: map.entities
+      .filter((e) => e.type !== 'player' && !(e.type === 'prop' && PROPS[e.kind]?.blocksCell) && !at(e))
+      .map((e) => ({ type: e.type, kind: e.kind ?? null, at: e.at })),
     secretsReachable: map.secrets.map((s) => ({ id: s.id, reachable: s.cells.every(([cx, cz]) => reach.has(cx + ',' + cz)) })),
     reachableCells: reach.size,
   };

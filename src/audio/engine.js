@@ -4,29 +4,50 @@ import { zoneBeat } from '../engine/hive.js';
 import { SFX, seededRandom } from './synth.js';
 import { soundsForEvent } from './events.js';
 import { Music } from './music.js';
-import { IntensityTracker, weightOf } from './intensity.js';                                                     // PT-081: the smart music
+import { IntensityTracker, weightOf } from './intensity.js'; // the smart music
 import { themeFor } from './score.js';
 import { Ambience } from './ambience.js';
-import { makeSawVoice, sawState } from './sawvoice.js';                                                             // PT-061 S1: the chainsaw's sustained voice
+import { makeSawVoice, sawState } from './sawvoice.js'; // the chainsaw's sustained voice
 import { PLAYER } from '../engine/defs.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
 export class AudioEngine {
   constructor(settings) {
-    this.settings = settings; this.ctx = null; this.unsupported = false; this.rand = seededRandom(20260929);
+    this.settings = settings;
+    this.ctx = null;
+    this.unsupported = false;
+    this.rand = seededRandom(20260929);
     this.stats = { played: 0, dropped: 0, log: [] };
-    this.tension = 0; this.muffled = false; this.dead = false; this.lastStep = 0; this.nextCreak = 6; this.nextBeat = 0; this.bellTimers = new Map(); this.clock = 0;
-    this.intensity = new IntensityTracker(); this.musicTheme = undefined;
+    this.tension = 0;
+    this.muffled = false;
+    this.dead = false;
+    this.lastStep = 0;
+    this.nextCreak = 6;
+    this.nextBeat = 0;
+    this.bellTimers = new Map();
+    this.clock = 0;
+    this.intensity = new IntensityTracker();
+    this.musicTheme = undefined;
   }
   /** 'locked' (no context yet) | 'suspended' | 'running' | 'closed' | 'unsupported' */
-  get state() { return this.ctx ? this.ctx.state : this.unsupported ? 'unsupported' : 'locked'; }
+  get state() {
+    return this.ctx ? this.ctx.state : this.unsupported ? 'unsupported' : 'locked';
+  }
 
   unlock() {
     if (!this.ctx) {
       const AC = globalThis.AudioContext || globalThis.webkitAudioContext;
-      if (!AC) { this.unsupported = true; return false; }
-      try { this.ctx = new AC({ latencyHint: 'interactive' }); } catch { this.unsupported = true; return false; }
+      if (!AC) {
+        this.unsupported = true;
+        return false;
+      }
+      try {
+        this.ctx = new AC({ latencyHint: 'interactive' });
+      } catch {
+        this.unsupported = true;
+        return false;
+      }
       this._build();
     }
     if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
@@ -36,101 +57,278 @@ export class AudioEngine {
   _build() {
     const c = this.ctx;
     this.master = c.createGain();
-    const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 5; comp.attack.value = 0.003; comp.release.value = 0.2;
-    this.master.connect(comp); comp.connect(c.destination);
-    this.sfxBus = c.createGain(); this.sfxBus.connect(this.master);
-    this.musicLP = c.createBiquadFilter(); this.musicLP.type = 'lowpass'; this.musicLP.frequency.value = 18000; this.musicBus = c.createGain(); this.musicLP.connect(this.musicBus); this.musicBus.connect(this.master);
-    this.ambBus = c.createGain(); this.ambBus.connect(this.master);
+    const comp = c.createDynamicsCompressor();
+    comp.threshold.value = -14;
+    comp.knee.value = 10;
+    comp.ratio.value = 5;
+    comp.attack.value = 0.003;
+    comp.release.value = 0.2;
+    this.master.connect(comp);
+    comp.connect(c.destination);
+    this.sfxBus = c.createGain();
+    this.sfxBus.connect(this.master);
+    this.musicLP = c.createBiquadFilter();
+    this.musicLP.type = 'lowpass';
+    this.musicLP.frequency.value = 18000;
+    this.musicBus = c.createGain();
+    this.musicLP.connect(this.musicBus);
+    this.musicBus.connect(this.master);
+    this.ambBus = c.createGain();
+    this.ambBus.connect(this.master);
     // shared reverb: a synthetic decaying-noise impulse; sends are tiny outdoors, larger indoors
-    const len = Math.floor(c.sampleRate * 1.7), imp = c.createBuffer(2, len, c.sampleRate);
-    for (let ch = 0; ch < 2; ch++) { const d = imp.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (this.rand() * 2 - 1) * Math.pow(1 - i / len, 3); }
-    this.reverb = c.createConvolver(); this.reverb.buffer = imp; this.reverbSend = c.createGain(); this.reverbSend.gain.value = 0.25; this.reverbWet = c.createGain(); this.reverbWet.gain.value = 0.5;
-    this.reverbSend.connect(this.reverb); this.reverb.connect(this.reverbWet); this.reverbWet.connect(this.master);
-    this.music = new Music(c, this.musicLP); this.ambience = new Ambience(c, this.ambBus);
+    const len = Math.floor(c.sampleRate * 1.7),
+      imp = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = imp.getChannelData(ch);
+      for (let i = 0; i < len; i++) d[i] = (this.rand() * 2 - 1) * Math.pow(1 - i / len, 3);
+    }
+    this.reverb = c.createConvolver();
+    this.reverb.buffer = imp;
+    this.reverbSend = c.createGain();
+    this.reverbSend.gain.value = 0.25;
+    this.reverbWet = c.createGain();
+    this.reverbWet.gain.value = 0.5;
+    this.reverbSend.connect(this.reverb);
+    this.reverb.connect(this.reverbWet);
+    this.reverbWet.connect(this.master);
+    this.music = new Music(c, this.musicLP);
+    this.ambience = new Ambience(c, this.ambBus);
     this.applySettings(this.settings);
   }
 
   applySettings(s) {
-    this.settings = s; if (!this.ctx) return;
-    const t = this.ctx.currentTime, v = clamp(s.masterVolume, 0, 1);
-    this.master.gain.setTargetAtTime(v * v * 1.1, t, 0.05);                     // squared: perceptually even slider
+    this.settings = s;
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime,
+      v = clamp(s.masterVolume, 0, 1);
+    this.master.gain.setTargetAtTime(v * v * 1.1, t, 0.05); // squared: perceptually even slider
     this.sfxBus.gain.setTargetAtTime(clamp(s.sfxVolume, 0, 1), t, 0.05);
-    const q = this.silent ? 0 : 1;                                              // PT-028: a map with atmosphere.silence (the Choirless Chamber) has no score and no ambience
+    const q = this.silent ? 0 : 1; // a map with atmosphere.silence (the Choirless Chamber) has no score and no ambience
     this.ambBus.gain.setTargetAtTime(clamp(s.sfxVolume, 0, 1) * q, t, this.silent ? 0.6 : 0.05);
     this.musicBus.gain.setTargetAtTime(clamp(s.musicVolume, 0, 1) * 0.55 * q, t, this.silent ? 0.6 : 0.05);
   }
 
   /** play a recipe; pos = [x, z] world metres for positional playback */
   play(id, { pos, gain = 1, delay = 0 } = {}) {
-    const fn = SFX[id]; if (!fn) return false;
-    if (!this.ctx || this.ctx.state !== 'running') { this.stats.dropped++; return false; }
-    if (this.hushT > this.clock && id !== 'step_plank') return false;                                         // PT-043: the held second of nothing after the Root Bell stops
-    if (!Number.isFinite(gain)) gain = 1; if (!Number.isFinite(delay)) delay = 0;                              // round 1 (Gemini 4): a browser throws a TypeError for a non-finite AudioParam value, and a sound's position must never end a session
-    if (pos && !(Number.isFinite(pos[0]) && Number.isFinite(pos[1]))) pos = null;                                // (a position nobody can place plays plain, centred)
-    const c = this.ctx, t = c.currentTime + 0.005 + delay;
-    const g = c.createGain(); g.gain.value = gain; let head = g;
+    const fn = SFX[id];
+    if (!fn) return false;
+    if (!this.ctx || this.ctx.state !== 'running') {
+      this.stats.dropped++;
+      return false;
+    }
+    if (this.hushT > this.clock && id !== 'step_plank') return false; // the held second of nothing after the Root Bell stops
+    if (!Number.isFinite(gain)) gain = 1;
+    // round 1 (Gemini 4): a browser throws a TypeError for a non-finite AudioParam value, and a sound's position must never end a session
+    if (!Number.isFinite(delay)) delay = 0;
+    if (pos && !(Number.isFinite(pos[0]) && Number.isFinite(pos[1]))) pos = null; // (a position nobody can place plays plain, centred)
+    const c = this.ctx,
+      t = c.currentTime + 0.005 + delay;
+    const g = c.createGain();
+    g.gain.value = gain;
+    let head = g;
     if (pos) {
-      const p = c.createPanner(); p.panningModel = 'equalpower'; p.distanceModel = 'inverse'; p.refDistance = 3; p.rolloffFactor = 1.1; p.maxDistance = 70;
-      p.positionX.value = pos[0]; p.positionY.value = 1.2; p.positionZ.value = pos[1]; g.connect(p); head = p; p.connect(this.sfxBus); p.connect(this.reverbSend);
-    } else { g.connect(this.sfxBus); g.connect(this.reverbSend); }
+      const p = c.createPanner();
+      p.panningModel = 'equalpower';
+      p.distanceModel = 'inverse';
+      p.refDistance = 3;
+      p.rolloffFactor = 1.1;
+      p.maxDistance = 70;
+      p.positionX.value = pos[0];
+      p.positionY.value = 1.2;
+      p.positionZ.value = pos[1];
+      g.connect(p);
+      head = p;
+      p.connect(this.sfxBus);
+      p.connect(this.reverbSend);
+    } else {
+      g.connect(this.sfxBus);
+      g.connect(this.reverbSend);
+    }
     const dur = fn(c, g, t, { r: this.rand });
-    this.stats.played++; this.stats.log.push({ id, pos: pos ? [+pos[0].toFixed(1), +pos[1].toFixed(1)] : null, dur: +dur.toFixed(2) }); if (this.stats.log.length > 200) this.stats.log.shift();
-    void head; return true;
+    this.stats.played++;
+    this.stats.log.push({ id, pos: pos ? [+pos[0].toFixed(1), +pos[1].toFixed(1)] : null, dur: +dur.toFixed(2) });
+    if (this.stats.log.length > 200) this.stats.log.shift();
+    void head;
+    return true;
   }
 
   handleEvents(events) {
     for (const e of events) {
       for (const s of soundsForEvent(e)) this.play(s.id, { pos: s.pos, gain: s.gain, delay: s.delay });
-      if (e.type === 'player_died') { this.dead = true; this._applyMuffle(); }
-      if (e.type === 'hurt') this.intensity.hurt(e.amount);                                                        // PT-081: being hurt pushes the music up
-      if (e.type === 'enemy_died' && !e.folk && weightOf(e.kind) >= 2.5) this.music?.kill?.();                    // a big one died: a bell on the next beat
-      if (e.type === 'silence') { this.hushT = this.clock + 1.4; this.stepAfterHush = true; }                  // PT-043: every sound cuts out for a held second, then one footstep
+      if (e.type === 'player_died') {
+        this.dead = true;
+        this._applyMuffle();
+      }
+      if (e.type === 'hurt') this.intensity.hurt(e.amount); // being hurt pushes the music up
+      if (e.type === 'enemy_died' && !e.folk && weightOf(e.kind) >= 2.5) this.music?.kill?.(); // a big one died: a bell on the next beat
+      if (e.type === 'silence') {
+        this.hushT = this.clock + 1.4;
+        this.stepAfterHush = true;
+      } // every sound cuts out for a held second, then one footstep
     }
   }
 
-  _applyMuffle() { if (!this.ctx) return; const t = this.ctx.currentTime, m = this.muffled || this.dead; this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25); this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (this.silent ? 0 : m ? 0.35 : 1), t, 0.25); }
-  setMuffled(b) { this.muffled = b; this._applyMuffle(); }
-  newLevel() { this.intensity.reset(); try { this.music?.restart?.(); } catch { this.musicFailed = true; } this.lastBeat = -1; this.hushT = 0; this.stepAfterHush = false; this.dead = false; this.tension = 0; this.bellTimers.clear(); this.silent = false; this.applySettings(this.settings); this._applyMuffle(); }
+  _applyMuffle() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime,
+      m = this.muffled || this.dead;
+    this.musicLP.frequency.setTargetAtTime(m ? 420 : 18000, t, 0.25);
+    this.ambBus.gain.setTargetAtTime(clamp(this.settings.sfxVolume, 0, 1) * (this.silent ? 0 : m ? 0.35 : 1), t, 0.25);
+  }
+  setMuffled(b) {
+    this.muffled = b;
+    this._applyMuffle();
+  }
+  newLevel() {
+    this.intensity.reset();
+    try {
+      this.music?.restart?.();
+    } catch {
+      this.musicFailed = true;
+    }
+    this.lastBeat = -1;
+    this.hushT = 0;
+    this.stepAfterHush = false;
+    this.dead = false;
+    this.tension = 0;
+    this.bellTimers.clear();
+    this.silent = false;
+    this.applySettings(this.settings);
+    this._applyMuffle();
+  }
 
   /** per-frame: listener, footsteps, ambience mix, tension-driven music, enemy bells, low-health heartbeat */
   update(world, dt, map) {
     if (!this.ctx || this.ctx.state !== 'running') return;
-    this.clock += dt; const c = this.ctx, p = world?.player;
-    if (!this.musicFailed) { try { this.music.tick(); } catch { this.musicFailed = true; } }                       // a fault in the score must never end a session: it goes quiet instead
-    if (!p) { this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 }); this.music.setIntensity(0); this.music.setLevel?.(0); return; }
-    { const th = themeFor(map?.id, map); if (th !== this.musicTheme) { this.musicTheme = th; try { this.music.setTheme?.(th); } catch { this.musicFailed = true; } } }        // PT-081: the place's theme
+    this.clock += dt;
+    const c = this.ctx,
+      p = world?.player;
+    if (!this.musicFailed) {
+      try {
+        this.music.tick();
+      } catch {
+        this.musicFailed = true;
+      }
+    } // a fault in the score must never end a session: it goes quiet instead
+    if (!p) {
+      this.ambience.update({ interior: 1, hush: 0.3, level: 0.6 });
+      this.music.setIntensity(0);
+      this.music.setLevel?.(0);
+      return;
+    }
+    {
+      const th = themeFor(map?.id, map);
+      if (th !== this.musicTheme) {
+        this.musicTheme = th;
+        try {
+          this.music.setTheme?.(th);
+        } catch {
+          this.musicFailed = true;
+        }
+      }
+    } // the place's theme
     this.music.setLevel?.(this.intensity.update(world, dt));
-    if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') { const bn = Math.floor(world.tick / 90); if (bn !== this.lastBeat) { this.lastBeat = bn; this.play('hive_beat', { gain: 0.5 }); } }          // PT-043: the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
-    const L = c.listener, fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
-    if (L.positionX) { L.positionX.value = p.x; L.positionY.value = PLAYER.eye; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = 0; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
-    else { L.setPosition(p.x, PLAYER.eye, p.z); L.setOrientation(fx, 0, fz, 0, 1, 0); }
-    { const ss = sawState(p);                                                                                       // the chainsaw's engine: a sustained voice driven by the saw's own state (created when a saw first runs; a context that cannot make one just goes without)
-      if (ss && !this.sawFailed) { try { this.sawVoice ??= makeSawVoice(c, this.sfxBus); this.sawVoice.set({ ...ss, t: this.clock }); } catch { this.sawFailed = true; this.sawVoice = null; } } else if (this.sawVoice) this.sawVoice.set({ spin: 0 }, 0.08); }
-    const silent = !!map.atmosphere?.silence || !!world.silenced;                                                  // PT-043: a map's silence, or the one the Root Bell leaves (world.silenced)
-    if (this.stepAfterHush && this.clock >= this.hushT) { this.stepAfterHush = false; this.play('step_plank', { gain: 0.9 }); }
-    if (silent !== !!this.silent) { this.silent = silent; this.applySettings(this.settings); this._applyMuffle(); }
+    if (zoneBeat(map, p.x, p.z, world) && world.status === 'playing') {
+      const bn = Math.floor(world.tick / 90);
+      if (bn !== this.lastBeat) {
+        this.lastBeat = bn;
+        this.play('hive_beat', { gain: 0.5 });
+      }
+    } // the Hive's low pulse under everything (atmosphere.beat; the beat is world.tick / 90, hive.js)
+    const L = c.listener,
+      fx = -Math.sin(p.yaw),
+      fz = -Math.cos(p.yaw);
+    if (L.positionX) {
+      L.positionX.value = p.x;
+      L.positionY.value = PLAYER.eye;
+      L.positionZ.value = p.z;
+      L.forwardX.value = fx;
+      L.forwardY.value = 0;
+      L.forwardZ.value = fz;
+      L.upX.value = 0;
+      L.upY.value = 1;
+      L.upZ.value = 0;
+    } else {
+      L.setPosition(p.x, PLAYER.eye, p.z);
+      L.setOrientation(fx, 0, fz, 0, 1, 0);
+    }
+    {
+      // the chainsaw's engine: a sustained voice driven by the saw's own state (created when a saw first runs; a context that cannot make one just
+      // goes without)
+      const ss = sawState(p);
+      if (ss && !this.sawFailed) {
+        try {
+          this.sawVoice ??= makeSawVoice(c, this.sfxBus);
+          this.sawVoice.set({ ...ss, t: this.clock });
+        } catch {
+          this.sawFailed = true;
+          this.sawVoice = null;
+        }
+      } else if (this.sawVoice) this.sawVoice.set({ spin: 0 }, 0.08);
+    }
+    const silent = !!map.atmosphere?.silence || !!world.silenced; // a map's silence, or the one the Root Bell leaves (world.silenced)
+    if (this.stepAfterHush && this.clock >= this.hushT) {
+      this.stepAfterHush = false;
+      this.play('step_plank', { gain: 0.9 });
+    }
+    if (silent !== !!this.silent) {
+      this.silent = silent;
+      this.applySettings(this.settings);
+      this._applyMuffle();
+    }
     const interior = map.isInterior(p.x, p.z);
     this.reverbSend.gain.setTargetAtTime(interior ? 0.28 : 0.1, c.currentTime, 0.4);
     // footsteps: one per head-bob cycle, when actually moving
-    const speed = Math.hypot(p.vx, p.vz), stepIdx = Math.floor(p.bob / Math.PI);
-    if (stepIdx !== this.lastStep) { if (speed > 1.2 && world.status === 'playing') this.play(interior ? 'step_plank' : 'step_outdoor', { gain: p.sprinting ? 1.15 : 0.8 }); this.lastStep = stepIdx; }
+    const speed = Math.hypot(p.vx, p.vz),
+      stepIdx = Math.floor(p.bob / Math.PI);
+    if (stepIdx !== this.lastStep) {
+      if (speed > 1.2 && world.status === 'playing') this.play(interior ? 'step_plank' : 'step_outdoor', { gain: p.sprinting ? 1.15 : 0.8 });
+      this.lastStep = stepIdx;
+    }
     // nearest alien growth (pods) and awake enemies
-    let hush = 0; for (const pr of map.props) if (pr.kind === 'pod') hush = Math.max(hush, clamp(1 - Math.hypot(pr.x - p.x, pr.z - p.z) / 9, 0, 1));
+    let hush = 0;
+    for (const pr of map.props) if (pr.kind === 'pod') hush = Math.max(hush, clamp(1 - Math.hypot(pr.x - p.x, pr.z - p.z) / 9, 0, 1));
     let awake = 0;
     for (const e of world.enemies) {
-      if (e.state !== 'chase') { this.bellTimers.delete(e.id); continue; }
-      const d = Math.hypot(e.x - p.x, e.z - p.z); if (d < 26) awake += 1 - d / 40;
-      let t = this.bellTimers.get(e.id); if (t === undefined) t = this.clock + this.rand() * 2;
-      if (this.clock >= t && d < 30) { this.play('toll_soft', { pos: [e.x, e.z] }); t = this.clock + 2.5 + this.rand() * 3.5; }
+      if (e.state !== 'chase') {
+        this.bellTimers.delete(e.id);
+        continue;
+      }
+      const d = Math.hypot(e.x - p.x, e.z - p.z);
+      if (d < 26) awake += 1 - d / 40;
+      let t = this.bellTimers.get(e.id);
+      if (t === undefined) t = this.clock + this.rand() * 2;
+      if (this.clock >= t && d < 30) {
+        this.play('toll_soft', { pos: [e.x, e.z] });
+        t = this.clock + 2.5 + this.rand() * 3.5;
+      }
       this.bellTimers.set(e.id, t);
     }
     const target = clamp(awake / 3, 0, 1);
-    this.tension += (target - this.tension) * clamp(dt * (target > this.tension ? 1.2 : 0.35), 0, 1);      // rises fast, falls slowly
+    this.tension += (target - this.tension) * clamp(dt * (target > this.tension ? 1.2 : 0.35), 0, 1); // rises fast, falls slowly
     this.music.setIntensity(world.status === 'playing' ? this.tension : 0);
     this.ambience.update({ interior: interior ? 1 : 0, hush, level: 1 });
-    if (interior && !silent && this.clock > this.nextCreak) { this.play('creak', { pos: [p.x + (this.rand() - 0.5) * 20, p.z + (this.rand() - 0.5) * 20], gain: 0.8 }); this.nextCreak = this.clock + 9 + this.rand() * 14; }
-    if (p.hp > 0 && p.hp < 30 && world.status === 'playing' && this.clock > this.nextBeat) { this.play('heartbeat', { gain: 0.9 * (1 - p.hp / 30) + 0.2 }); this.nextBeat = this.clock + 0.55 + p.hp / 60; }
+    if (interior && !silent && this.clock > this.nextCreak) {
+      this.play('creak', { pos: [p.x + (this.rand() - 0.5) * 20, p.z + (this.rand() - 0.5) * 20], gain: 0.8 });
+      this.nextCreak = this.clock + 9 + this.rand() * 14;
+    }
+    if (p.hp > 0 && p.hp < 30 && world.status === 'playing' && this.clock > this.nextBeat) {
+      this.play('heartbeat', { gain: 0.9 * (1 - p.hp / 30) + 0.2 });
+      this.nextBeat = this.clock + 0.55 + p.hp / 60;
+    }
   }
 
-  dispose() { try { this.sawVoice?.stop(); } catch { /* ok */ } try { this.ctx?.close(); } catch { /* already closed */ } this.ctx = null; }
+  dispose() {
+    try {
+      this.sawVoice?.stop();
+    } catch {
+      /* ok */
+    }
+    try {
+      this.ctx?.close();
+    } catch {
+      /* already closed */
+    }
+    this.ctx = null;
+  }
 }

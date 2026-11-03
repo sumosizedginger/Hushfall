@@ -1,295 +1,889 @@
 // MapData -> Three.js scene content. Geometry comes from the grid (+ the optional terrain layers); props/lights/doors/scenery from the entity lists.
-// Gate 2: per-cell floor heights with risers, per-cell ceilings, wall/floor skins, moving-floor sectors, wading/toxic overlays, switch panels, closets.
+// Gate 2: per-cell floor heights with risers, per-cell ceilings, wall/floor skins, moving-floor sectors, wading/toxic overlays, switch panels,
+// closets.
 import * as THREE from 'three';
 import { mergeStatic } from './merge.js';
 import { WALL_SKINS, FLOOR_SKINS, SECRET_TELL, FX, lookOf } from '../engine/defs.js';
-/** PT-079: floors whose pattern is drawn this many times smaller than one tile a cell (the Customs Hall's checkerboard read as squares a metre wide) */
+/* * floors whose pattern is drawn this many times smaller than one tile a cell (the Customs Hall's checkerboard read as squares a metre wide) */
 export const FLOOR_REPEAT = { floor_tile_a: 2 };
 import { beltAtCell } from '../engine/belts.js';
 import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
-import { makeCrate, makeBarrel, makePod, makeLamp, makeLampPost, makePillar, makeDoorSlab, makeExitGate, makeCrate2, makeBollard, makeStall, makeBoat, makeCrane, makeTower } from './models.js';
+import {
+  makeCrate,
+  makeBarrel,
+  makePod,
+  makeLamp,
+  makeLampPost,
+  makePillar,
+  makeDoorSlab,
+  makeExitGate,
+  makeCrate2,
+  makeBollard,
+  makeStall,
+  makeBoat,
+  makeCrane,
+  makeTower,
+} from './models.js';
 import { makeCart, makeSack, makeCradle, makeRope, makeTable, makeShelf, makeLantern, makeBellNode, makeSwitchPanel } from './models_g2.js';
 import { makePew, makeOrgan, makeVat, makeLoomString } from './models_e3d.js';
 import { makeLighter } from './models_e4.js';
-import { makeFork, makeGateArch, makeSpire, makeGrave, makeRib, makeCityFace, makeHangRock, makeHeartMass, makeHiveTower, makeGanglion, makeReactor, makeRails, makeCrystalTower, makeRootColumn, makeShaft } from './models_c2.js';
+import {
+  makeFork,
+  makeGateArch,
+  makeSpire,
+  makeGrave,
+  makeRib,
+  makeCityFace,
+  makeHangRock,
+  makeHeartMass,
+  makeHiveTower,
+  makeGanglion,
+  makeReactor,
+  makeRails,
+  makeCrystalTower,
+  makeRootColumn,
+  makeShaft,
+} from './models_c2.js';
 
-const WATER_Y = -0.55;                        // the sea; walls and pier fascia run down to just below it
+const WATER_Y = -0.55; // the sea; walls and pier fascia run down to just below it
 class Quads {
-  constructor() { this.pos = []; this.nor = []; this.uv = []; this.col = []; this.idx = []; }
-  add(p, n, uvs, cols) { const b = this.pos.length / 3; for (let i = 0; i < 4; i++) { this.pos.push(...p[i]); this.nor.push(...n); this.uv.push(...uvs[i]); this.col.push(...(cols ? cols[i] : [1, 1, 1])); } this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3); }
-  get empty() { return this.pos.length === 0; }
+  constructor() {
+    this.pos = [];
+    this.nor = [];
+    this.uv = [];
+    this.col = [];
+    this.idx = [];
+  }
+  add(p, n, uvs, cols) {
+    const b = this.pos.length / 3;
+    for (let i = 0; i < 4; i++) {
+      this.pos.push(...p[i]);
+      this.nor.push(...n);
+      this.uv.push(...uvs[i]);
+      this.col.push(...(cols ? cols[i] : [1, 1, 1]));
+    }
+    this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
+  }
+  get empty() {
+    return this.pos.length === 0;
+  }
   geometry() {
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
-    g.setIndex(this.idx); return g;
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
+    g.setIndex(this.idx);
+    return g;
   }
 }
-const DIRS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const DIRS = [
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+];
 
-/** One vertical face of cell (cx,cz) toward neighbour (dx,dz), spanning y0..y1. UVs are in world units; the vertical coordinate counts up from `vBase` (the floor the face rises from),
- *  so a wall's texture starts at its own floor: a plaster wainscot sits at the bottom of a wall on a raised gallery too, and walls beside a panel line up with it. */
+/**
+ * One vertical face of cell (cx,cz) toward neighbour (dx,dz), spanning y0..y1. UVs are in world units; the vertical coordinate counts up from `vBase`
+ * (the floor the face rises from),
+ * so a wall's texture starts at its own floor: a plaster wainscot sits at the bottom of a wall on a raised gallery too, and walls beside a panel line
+ * up with it.
+ */
 function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0) {
-  const x = cx * S, z = cz * S, u = (px, pz) => (px + pz) / S;
+  const x = cx * S,
+    z = cz * S,
+    u = (px, pz) => (px + pz) / S;
   let p0, a;
-  if (dz === -1) { p0 = [x + S, z]; a = [-1, 0]; } else if (dz === 1) { p0 = [x, z + S]; a = [1, 0]; } else if (dx === -1) { p0 = [x, z]; a = [0, 1]; } else { p0 = [x + S, z + S]; a = [0, -1]; }
-  const p = [[p0[0], y0, p0[1]], [p0[0] + a[0] * S, y0, p0[1] + a[1] * S], [p0[0] + a[0] * S, y1, p0[1] + a[1] * S], [p0[0], y1, p0[1]]];
-  q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]));
+  if (dz === -1) {
+    p0 = [x + S, z];
+    a = [-1, 0];
+  } else if (dz === 1) {
+    p0 = [x, z + S];
+    a = [1, 0];
+  } else if (dx === -1) {
+    p0 = [x, z];
+    a = [0, 1];
+  } else {
+    p0 = [x + S, z + S];
+    a = [0, -1];
+  }
+  const p = [
+    [p0[0], y0, p0[1]],
+    [p0[0] + a[0] * S, y0, p0[1] + a[1] * S],
+    [p0[0] + a[0] * S, y1, p0[1] + a[1] * S],
+    [p0[0], y1, p0[1]],
+  ];
+  q.add(
+    p,
+    [dx, 0, dz],
+    p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]),
+  );
 }
-/** Additive glow quads in ONE mesh (PT-015): each quad is a centre, two unit axes, half sizes and an intensity that goes into the vertex colour (SECRET_TELL.color scaled), so one material draws all of them. */
+/*
+ * Additive glow quads in ONE mesh: each quad is a centre, two unit axes, half sizes and an intensity that goes into the vertex colour
+ * (SECRET_TELL.color scaled), so one material draws all of them.
+ */
 function glowBuilder() {
-  const pos = [], col = [], idx = [], c = new THREE.Color(SECRET_TELL.color);
+  const pos = [],
+    col = [],
+    idx = [],
+    c = new THREE.Color(SECRET_TELL.color);
   return {
-    get empty() { return pos.length === 0; },
+    get empty() {
+      return pos.length === 0;
+    },
     quad(ctr, u, v, hu, hv, k) {
       const b = pos.length / 3;
-      for (const [a, d] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { pos.push(ctr[0] + u[0] * a * hu + v[0] * d * hv, ctr[1] + u[1] * a * hu + v[1] * d * hv, ctr[2] + u[2] * a * hu + v[2] * d * hv); col.push(c.r * k, c.g * k, c.b * k); }
+      for (const [a, d] of [
+        [-1, -1],
+        [1, -1],
+        [1, 1],
+        [-1, 1],
+      ]) {
+        pos.push(ctr[0] + u[0] * a * hu + v[0] * d * hv, ctr[1] + u[1] * a * hu + v[1] * d * hv, ctr[2] + u[2] * a * hu + v[2] * d * hv);
+        col.push(c.r * k, c.g * k, c.b * k);
+      }
       idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
     },
     mesh() {
-      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx);
-      const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.renderOrder = 3; m.frustumCulled = false; return m;
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+      g.setIndex(idx);
+      const m = new THREE.Mesh(
+        g,
+        new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
+      );
+      m.renderOrder = 3;
+      m.frustumCulled = false;
+      return m;
     },
   };
 }
-/** a horizontal cell quad; `shade(X, Z, wx, wz)` (optional) gives the brightness at each corner (X, Z the lattice point, wx, wz its world position) */
+/**
+ * a horizontal cell quad; `shade(X, Z, wx, wz)` (optional) gives the brightness at each corner (X, Z the lattice point, wx, wz its world position)
+ */
 const flatQuad = (q, S, cx, cz, y, up, shade) => {
-  const x = cx * S, z = cz * S, p = up ? [[x, y, z], [x, y, z + S], [x + S, y, z + S], [x + S, y, z]] : [[x, y, z], [x + S, y, z], [x + S, y, z + S], [x, y, z + S]];
-  q.add(p, [0, up ? 1 : -1, 0], p.map((r) => [r[0] / S, r[2] / S]), shade ? p.map((r) => { const k = shade(Math.round(r[0] / S), Math.round(r[2] / S), r[0], r[2]); return [k, k, k]; }) : null);
+  const x = cx * S,
+    z = cz * S,
+    p = up
+      ? [
+          [x, y, z],
+          [x, y, z + S],
+          [x + S, y, z + S],
+          [x + S, y, z],
+        ]
+      : [
+          [x, y, z],
+          [x + S, y, z],
+          [x + S, y, z + S],
+          [x, y, z + S],
+        ];
+  q.add(
+    p,
+    [0, up ? 1 : -1, 0],
+    p.map((r) => [r[0] / S, r[2] / S]),
+    shade
+      ? p.map((r) => {
+          const k = shade(Math.round(r[0] / S), Math.round(r[2] / S), r[0], r[2]);
+          return [k, k, k];
+        })
+      : null,
+  );
 };
-/** a wall face in rows with a baked brightness: a dark foot and head, large soft patches (shading.js); the geometry and the UVs are exactly face()'s, only cut into strips */
+/**
+ * a wall face in rows with a baked brightness: a dark foot and head, large soft patches (shading.js); the geometry and the UVs are exactly face()'s,
+ * only cut into strips
+ */
 function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed) {
-  const x = cx * S, z = cz * S, u = (px, pz) => (px + pz) / S;
+  const x = cx * S,
+    z = cz * S,
+    u = (px, pz) => (px + pz) / S;
   let p0, a;
-  if (dz === -1) { p0 = [x + S, z]; a = [-1, 0]; } else if (dz === 1) { p0 = [x, z + S]; a = [1, 0]; } else if (dx === -1) { p0 = [x, z]; a = [0, 1]; } else { p0 = [x + S, z + S]; a = [0, -1]; }
-  const p1 = [p0[0] + a[0] * S, p0[1] + a[1] * S], rows = wallRows(y0, y1, foot), k = (px, pz, y, r) => { const v = r * patchFactor(px + pz, y, patch, seed); return [v, v, v]; };
+  if (dz === -1) {
+    p0 = [x + S, z];
+    a = [-1, 0];
+  } else if (dz === 1) {
+    p0 = [x, z + S];
+    a = [1, 0];
+  } else if (dx === -1) {
+    p0 = [x, z];
+    a = [0, 1];
+  } else {
+    p0 = [x + S, z + S];
+    a = [0, -1];
+  }
+  const p1 = [p0[0] + a[0] * S, p0[1] + a[1] * S],
+    rows = wallRows(y0, y1, foot),
+    k = (px, pz, y, r) => {
+      const v = r * patchFactor(px + pz, y, patch, seed);
+      return [v, v, v];
+    };
   for (let i = 0; i + 1 < rows.length; i++) {
-    const [ya, ka] = rows[i], [yb, kb] = rows[i + 1], p = [[p0[0], ya, p0[1]], [p1[0], ya, p1[1]], [p1[0], yb, p1[1]], [p0[0], yb, p0[1]]];
-    q.add(p, [dx, 0, dz], p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]), [k(p0[0], p0[1], ya, ka), k(p1[0], p1[1], ya, ka), k(p1[0], p1[1], yb, kb), k(p0[0], p0[1], yb, kb)]);
+    const [ya, ka] = rows[i],
+      [yb, kb] = rows[i + 1],
+      p = [
+        [p0[0], ya, p0[1]],
+        [p1[0], ya, p1[1]],
+        [p1[0], yb, p1[1]],
+        [p0[0], yb, p0[1]],
+      ];
+    q.add(
+      p,
+      [dx, 0, dz],
+      p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]),
+      [k(p0[0], p0[1], ya, ka), k(p1[0], p1[1], ya, ka), k(p1[0], p1[1], yb, kb), k(p0[0], p0[1], yb, kb)],
+    );
   }
 }
 
 export function buildLevel(map, tex) {
-  const S = map.cell, H = map.ceiling, group = new THREE.Group(), look = lookOf(map.atmosphere), sh = look.shade, shaded = sh.foot > 0 || sh.ao > 0 || sh.patch > 0;
-  const kindAt = (cx, cz) => map.kind(cx, cz), floorShade = (seed) => (X, Z, wx, wz) => cornerAO(kindAt, X, Z, sh.ao) * patchFactor(wx, wz, sh.patch, seed);       // the baked brightness of a floor / ceiling corner (PT-021)
-  const lights = [], doorViews = new Map(), sectorViews = [], switchViews = new Map(), exitViews = new Map();
+  const S = map.cell,
+    H = map.ceiling,
+    group = new THREE.Group(),
+    look = lookOf(map.atmosphere),
+    sh = look.shade,
+    shaded = sh.foot > 0 || sh.ao > 0 || sh.patch > 0;
+  const kindAt = (cx, cz) => map.kind(cx, cz),
+    // the baked brightness of a floor / ceiling corner
+    floorShade = (seed) => (X, Z, wx, wz) => cornerAO(kindAt, X, Z, sh.ao) * patchFactor(wx, wz, sh.patch, seed);
+  const lights = [],
+    doorViews = new Map(),
+    sectorViews = [],
+    switchViews = new Map(),
+    exitViews = new Map();
   const T = (name) => tex[name] ?? tex.wall_bulkhead_a;
   const isOpenKind = (k) => k !== 'wall';
   const hasCeil = (k) => k === 'floor' || k === 'door' || k === 'secret';
-  const fl = (cx, cz) => map.floor(cx, cz), ce = (cx, cz) => map.ceilingAt(cx, cz);
+  const fl = (cx, cz) => map.floor(cx, cz),
+    ce = (cx, cz) => map.ceilingAt(cx, cz);
   const sectorOf = (cx, cz) => map.sectorAt(cx, cz);
   const floorSkinAt = (cx, cz) => {
-    const c = map.skin(cx, cz); if (FLOOR_SKINS[c]) return c;
-    for (const [dx, dz] of DIRS) { const n = map.skin(cx + dx, cz + dz); if (FLOOR_SKINS[n]) return n; }
+    const c = map.skin(cx, cz);
+    if (FLOOR_SKINS[c]) return c;
+    for (const [dx, dz] of DIRS) {
+      const n = map.skin(cx + dx, cz + dz);
+      if (FLOOR_SKINS[n]) return n;
+    }
     return '.';
   };
-  const wallSkinNear = (cx, cz) => { for (const [dx, dz] of [[-1, 0], [0, -1], [1, 0], [0, 1]]) { const c = map.skin(cx + dx, cz + dz); if (WALL_SKINS[c]) return c; } return '#'; };
+  const wallSkinNear = (cx, cz) => {
+    for (const [dx, dz] of [
+      [-1, 0],
+      [0, -1],
+      [1, 0],
+      [0, 1],
+    ]) {
+      const c = map.skin(cx + dx, cz + dz);
+      if (WALL_SKINS[c]) return c;
+    }
+    return '#';
+  };
   /** how high the solid block at a wall cell rises: to the ceiling of an interior neighbour, or floor + H beside open air */
-  const wallTop = (cx, cz) => { let t = -Infinity; for (const [dx, dz] of DIRS) { const nx = cx + dx, nz = cz + dz, k = map.kind(nx, nz); if (k === 'wall') continue; t = Math.max(t, hasCeil(k) ? ce(nx, nz) : fl(nx, nz) + H); } return t; };
+  const wallTop = (cx, cz) => {
+    let t = -Infinity;
+    for (const [dx, dz] of DIRS) {
+      const nx = cx + dx,
+        nz = cz + dz,
+        k = map.kind(nx, nz);
+      if (k === 'wall') continue;
+      t = Math.max(t, hasCeil(k) ? ce(nx, nz) : fl(nx, nz) + H);
+    }
+    return t;
+  };
 
-  const walls = new Map(), floors = new Map(), risers = new Map(), ceil = new Quads(), ceilSteps = new Quads(), fascia = new Quads();
-  const bucket = (m, key) => { let q = m.get(key); if (!q) m.set(key, q = new Quads()); return q; };
-  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads(), '>': new Quads(), '<': new Quads(), '^': new Quads(), v: new Quads() }, wsize = 3000;
-  const sporeBed = map.pulses.map(() => new Quads()), sporeMist = map.pulses.map(() => new Quads());      // PT-027: a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js)         // the sea reaches past the fog: no black gap at the horizon from a high vantage
+  const walls = new Map(),
+    floors = new Map(),
+    risers = new Map(),
+    ceil = new Quads(),
+    ceilSteps = new Quads(),
+    fascia = new Quads();
+  const bucket = (m, key) => {
+    let q = m.get(key);
+    if (!q) m.set(key, (q = new Quads()));
+    return q;
+  };
+  const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads(), '>': new Quads(), '<': new Quads(), '^': new Quads(), v: new Quads() },
+    wsize = 3000;
+  const sporeBed = map.pulses.map(() => new Quads()),
+    // a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js) // the sea reaches past the fog: no black gap at the
+    // horizon from a high vantage
+    sporeMist = map.pulses.map(() => new Quads());
   const sectorQ = map.sectors.map(() => ({ top: new Map(), skirt: new Map() }));
 
-  for (let cz = 0; cz < map.h; cz++) for (let cx = 0; cx < map.w; cx++) {
-    const k = map.kind(cx, cz), skin = map.skin(cx, cz);
-    if (k === 'water' || k === 'void') continue;                                    // one big water plane below covers all water cells; open sky (PT-032) has no floor at all
-    if (k === 'wall') {
-      const top = wallTop(cx, cz); if (top === -Infinity) continue;
-      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (nk === 'wall') continue; const base = nk === 'water' ? WATER_Y : nk === 'void' ? -6 : fl(cx + dx, cz + dz) - 0.05; const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'), vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz); if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5); else face(wq, S, cx, cz, dx, dz, base, top, vb); }
-      continue;
+  for (let cz = 0; cz < map.h; cz++)
+    for (let cx = 0; cx < map.w; cx++) {
+      const k = map.kind(cx, cz),
+        skin = map.skin(cx, cz);
+      if (k === 'water' || k === 'void') continue; // one big water plane below covers all water cells; open sky has no floor at all
+      if (k === 'wall') {
+        const top = wallTop(cx, cz);
+        if (top === -Infinity) continue;
+        for (const [dx, dz] of DIRS) {
+          const nk = map.kind(cx + dx, cz + dz);
+          if (nk === 'wall') continue;
+          const base = nk === 'water' ? WATER_Y : nk === 'void' ? -6 : fl(cx + dx, cz + dz) - 0.05;
+          const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'),
+            vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz);
+          if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5);
+          else face(wq, S, cx, cz, dx, dz, base, top, vb);
+        }
+        continue;
+      }
+      const fs = floorSkinAt(cx, cz),
+        si = sectorOf(cx, cz),
+        y = si >= 0 ? 0 : fl(cx, cz);
+      if (si >= 0) {
+        // a moving floor: its own meshes, positioned by the view each frame
+        flatQuad(bucket(sectorQ[si].top, fs), S, cx, cz, 0, true);
+        const sd = map.sectors[si],
+          depth = sd.high - sd.low + 0.6;
+        for (const [dx, dz] of DIRS) face(bucket(sectorQ[si].skirt, fs), S, cx, cz, dx, dz, -depth, 0);
+      } else flatQuad(bucket(floors, fs), S, cx, cz, y, true, shaded ? floorShade(3) : undefined);
+      if (hasCeil(k)) {
+        flatQuad(ceil, S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
+        for (const [dx, dz] of DIRS) {
+          const nk = map.kind(cx + dx, cz + dz);
+          if (hasCeil(nk) && ce(cx + dx, cz + dz) < ce(cx, cz) - 1e-6) face(ceilSteps, S, cx + dx, cz + dz, -dx, -dz, ce(cx + dx, cz + dz), ce(cx, cz));
+        }
+      }
+      // risers: where this cell stands above a walkable neighbour (stairs, terraces, ledges) and the drop to the water
+      for (const [dx, dz] of DIRS) {
+        const nx = cx + dx,
+          nz = cz + dz,
+          nk = map.kind(nx, nz);
+        if (nk === 'water') {
+          if (si < 0) face(fascia, S, cx, cz, dx, dz, WATER_Y, y);
+          continue;
+        }
+        if (nk === 'void') {
+          if (si < 0) face(fascia, S, cx, cz, dx, dz, y - 0.8, y);
+          continue;
+        } // the deck's edge is a plate 80 cm thick, and below it is the sky
+        if (nk === 'wall' || si >= 0) continue;
+        const nsi = sectorOf(nx, nz),
+          lowN = nsi >= 0 ? map.sectors[nsi].low : fl(nx, nz);
+        if (y > lowN + 1e-6) face(bucket(risers, fs), S, cx, cz, dx, dz, lowN, y);
+      }
+      const fx = map.fx(cx, cz);
+      if (fx === 's') {
+        const pi = map.pulses.indexOf(map.pulseAt(cx, cz));
+        if (pi >= 0) {
+          const x0 = cx * S,
+            z0 = cz * S,
+            bed = [
+              [x0, y + 0.07, z0],
+              [x0, y + 0.07, z0 + S],
+              [x0 + S, y + 0.07, z0 + S],
+              [x0 + S, y + 0.07, z0],
+            ],
+            mist = bed.map((r) => [r[0], y + 0.8, r[2]]);
+          sporeBed[pi].add(
+            bed,
+            [0, 1, 0],
+            bed.map((r) => [r[0] / 2, r[2] / 2]),
+          );
+          sporeMist[pi].add(
+            mist,
+            [0, 1, 0],
+            mist.map((r) => [r[0] / 6, r[2] / 6]),
+          );
+        }
+      }
+      if (fx && fx in fxQuads && !(map.belts.length && FX[fx]?.flow && beltAtCell(map, cx, cz))) {
+        const yy = y + 0.07,
+          x0 = cx * S,
+          z0 = cz * S,
+          p = [
+            [x0, yy, z0],
+            [x0, yy, z0 + S],
+            [x0 + S, yy, z0 + S],
+            [x0 + S, yy, z0],
+          ];
+        fxQuads[fx].add(
+          p,
+          [0, 1, 0],
+          p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize])),
+        );
+      }
     }
-    const fs = floorSkinAt(cx, cz), si = sectorOf(cx, cz), y = si >= 0 ? 0 : fl(cx, cz);
-    if (si >= 0) {                                                                  // a moving floor: its own meshes, positioned by the view each frame
-      flatQuad(bucket(sectorQ[si].top, fs), S, cx, cz, 0, true);
-      const sd = map.sectors[si], depth = sd.high - sd.low + 0.6;
-      for (const [dx, dz] of DIRS) face(bucket(sectorQ[si].skirt, fs), S, cx, cz, dx, dz, -depth, 0);
-    } else flatQuad(bucket(floors, fs), S, cx, cz, y, true, shaded ? floorShade(3) : undefined);
-    if (hasCeil(k)) {
-      flatQuad(ceil, S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
-      for (const [dx, dz] of DIRS) { const nk = map.kind(cx + dx, cz + dz); if (hasCeil(nk) && ce(cx + dx, cz + dz) < ce(cx, cz) - 1e-6) face(ceilSteps, S, cx + dx, cz + dz, -dx, -dz, ce(cx + dx, cz + dz), ce(cx, cz)); }
+  const repeated = new Map(),
+    clones = []; // a floor whose pattern is too big for a room is drawn at FLOOR_REPEAT times (its clone is freed with the level)
+  const skinTex = (c) => {
+    const f = FLOOR_SKINS[c],
+      name = f?.tex ?? 'floor_planks_a',
+      k = FLOOR_REPEAT[name];
+    let t = T(name);
+    if (k) {
+      if (!repeated.has(name)) {
+        const t2 = t.clone();
+        t2.needsUpdate = true;
+        t2.repeat.set(k, k);
+        clones.push(t2);
+        repeated.set(name, t2);
+      }
+      t = repeated.get(name);
     }
-    // risers: where this cell stands above a walkable neighbour (stairs, terraces, ledges) and the drop to the water
-    for (const [dx, dz] of DIRS) {
-      const nx = cx + dx, nz = cz + dz, nk = map.kind(nx, nz);
-      if (nk === 'water') { if (si < 0) face(fascia, S, cx, cz, dx, dz, WATER_Y, y); continue; }
-      if (nk === 'void') { if (si < 0) face(fascia, S, cx, cz, dx, dz, y - 0.8, y); continue; }              // PT-032: the deck's edge is a plate 80 cm thick, and below it is the sky
-      if (nk === 'wall' || si >= 0) continue;
-      const nsi = sectorOf(nx, nz), lowN = nsi >= 0 ? map.sectors[nsi].low : fl(nx, nz);
-      if (y > lowN + 1e-6) face(bucket(risers, fs), S, cx, cz, dx, dz, lowN, y);
-    }
-    const fx = map.fx(cx, cz);
-    if (fx === 's') { const pi = map.pulses.indexOf(map.pulseAt(cx, cz)); if (pi >= 0) { const x0 = cx * S, z0 = cz * S, bed = [[x0, y + 0.07, z0], [x0, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0 + S], [x0 + S, y + 0.07, z0]], mist = bed.map((r) => [r[0], y + 0.8, r[2]]); sporeBed[pi].add(bed, [0, 1, 0], bed.map((r) => [r[0] / 2, r[2] / 2])); sporeMist[pi].add(mist, [0, 1, 0], mist.map((r) => [r[0] / 6, r[2] / 6])); } }
-    if (fx && fx in fxQuads && !(map.belts.length && FX[fx]?.flow && beltAtCell(map, cx, cz))) { const yy = y + 0.07, x0 = cx * S, z0 = cz * S, p = [[x0, yy, z0], [x0, yy, z0 + S], [x0 + S, yy, z0 + S], [x0 + S, yy, z0]]; fxQuads[fx].add(p, [0, 1, 0], p.map((r) => (fx === 'h' ? [r[0], r[2]] : [r[0] / wsize, r[2] / wsize]))); }
-  }
-  const repeated = new Map(), clones = [];                                                                         // PT-079 (design/ART_ASSESSMENT.md item 10): a floor whose pattern is too big for a room is drawn at FLOOR_REPEAT times (its clone is freed with the level)
-  const skinTex = (c) => { const f = FLOOR_SKINS[c], name = f?.tex ?? 'floor_planks_a', k = FLOOR_REPEAT[name]; let t = T(name); if (k) { if (!repeated.has(name)) { const t2 = t.clone(); t2.needsUpdate = true; t2.repeat.set(k, k); clones.push(t2); repeated.set(name, t2); } t = repeated.get(name); } return [t, f?.tint ?? 0xffffff]; };
-  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group, surf = 'wall') => { if (q.empty) return null; const mesh = new THREE.Mesh(q.geometry(), patchSurface(new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true }), surf, S)); parent.add(mesh); return mesh; };          // look polish 2: every level surface varies in world space (surface.js)
+    return [t, f?.tint ?? 0xffffff];
+  };
+  const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group, surf = 'wall') => {
+    if (q.empty) return null;
+    const mesh = new THREE.Mesh(q.geometry(), patchSurface(new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true }), surf, S));
+    parent.add(mesh);
+    return mesh;
+  }; // look polish 2: every level surface varies in world space (surface.js)
   for (const [c, q] of walls) mk(q, T(WALL_SKINS[c]));
-  for (const [c, q] of floors) { const [t, tint] = skinTex(c); const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor'; mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000, group, 'floor'); }
-  for (const [c, q] of risers) { const [t] = skinTex(c); mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser'); }
-  const ceilTex = tex.ceiling_a ?? T('floor_planks_a');                                                                // look polish 2: ceilings have their own boards (they wore the floor's planks)
-  mk(ceil, ceilTex, tex.ceiling_a ? 0xa89888 : 0x8a7a6a, 0x000000, group, 'ceil'); mk(ceilSteps, ceilTex, tex.ceiling_a ? 0x887a6e : 0x6a5e52, 0x000000, group, 'riser'); mk(fascia, T('floor_planks_a'), 0x5a6068, 0x000000, group, 'riser');
+  for (const [c, q] of floors) {
+    const [t, tint] = skinTex(c);
+    const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor';
+    mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000, group, 'floor');
+  }
+  for (const [c, q] of risers) {
+    const [t] = skinTex(c);
+    mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser');
+  }
+  const ceilTex = tex.ceiling_a ?? T('floor_planks_a'); // look polish 2: ceilings have their own boards (they wore the floor's planks)
+  mk(ceil, ceilTex, tex.ceiling_a ? 0xa89888 : 0x8a7a6a, 0x000000, group, 'ceil');
+  mk(ceilSteps, ceilTex, tex.ceiling_a ? 0x887a6e : 0x6a5e52, 0x000000, group, 'riser');
+  mk(fascia, T('floor_planks_a'), 0x5a6068, 0x000000, group, 'riser');
   // sector meshes (lifts, ramps): a group per sector, moved along y by the view
   map.sectors.forEach((sd, i) => {
-    const g = new THREE.Group(); group.add(g); sectorViews[i] = g;
-    for (const [c, q] of sectorQ[i].top) { const [t, tint] = skinTex(c); mk(q, t, tint, 0x0a0c10, g, 'floor'); }
-    for (const [c, q] of sectorQ[i].skirt) { const [t] = skinTex(c); mk(q, t, 0x7a8088, 0x050607, g, 'riser'); }
+    const g = new THREE.Group();
+    group.add(g);
+    sectorViews[i] = g;
+    for (const [c, q] of sectorQ[i].top) {
+      const [t, tint] = skinTex(c);
+      mk(q, t, tint, 0x0a0c10, g, 'floor');
+    }
+    for (const [c, q] of sectorQ[i].skirt) {
+      const [t] = skinTex(c);
+      mk(q, t, 0x7a8088, 0x050607, g, 'riser');
+    }
     g.position.y = sd.start === 'high' ? sd.high : sd.low;
   });
 
   // water: one big plane, painted sky reflections; the view scrolls the texture slowly
   const water = new THREE.Mesh(new THREE.PlaneGeometry(wsize, wsize), new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xa8b4c4 }));
-  tex.water_dusk.repeat.set(wsize / 8, wsize / 8); water.rotation.x = -Math.PI / 2; water.position.set(map.w * S / 2, WATER_Y, map.h * S / 2); if (!map.hasVoid) group.add(water);          // (a map with open sky has no sea under it: PT-032)
+  tex.water_dusk.repeat.set(wsize / 8, wsize / 8);
+  water.rotation.x = -Math.PI / 2;
+  water.position.set((map.w * S) / 2, WATER_Y, (map.h * S) / 2);
+  if (!map.hasVoid) group.add(water); // (a map with open sky has no sea under it:)
   // wading water and toxic residue: translucent overlays just above the floor (they share the sea texture; the view pulses the toxic one)
-  const fxMats = {}, ownTex = clones;                                                                                  // ownTex: the textures this level CLONED (a material's dispose never frees its map); `dispose` below frees exactly those, never the shared sea texture
-  if (!fxQuads.w.empty) { fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false }); const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w); m.renderOrder = 2; group.add(m); }
-  for (const c of ['>', '<', '^', 'v']) if (!fxQuads[c].empty) {                                                 // PT-037: a current is wading water that flows: its own copy of the sea texture, scrolled along its direction by the view (view.js), tinted greener than still water
-    const t = tex.water_dusk.clone(); ownTex.push(t); t.needsUpdate = true; t.repeat.copy(tex.water_dusk.repeat); fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });
-    const m = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c]); m.renderOrder = 2; group.add(m);
-    // a second, finer and paler skin of ripples that slides faster (view.js): two layers at two speeds read as water moving, one layer on a green floor read as a green floor (the real-game still of the aqueduct, PT-037)
-    const t2 = tex.water_dusk.clone(); ownTex.push(t2); t2.needsUpdate = true; t2.repeat.set(tex.water_dusk.repeat.x * 2.6, tex.water_dusk.repeat.y * 2.6); fxMats[c + '2'] = new THREE.MeshBasicMaterial({ map: t2, color: 0xd8fff0, transparent: true, opacity: 0.3, depthWrite: false });
-    const m2 = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c + '2']); m2.position.y = 0.012; m2.renderOrder = 3; group.add(m2);
+  const fxMats = {},
+    // ownTex: the textures this level CLONED (a material's dispose never frees its map); `dispose` below frees exactly those, never the shared sea
+    // texture
+    ownTex = clones;
+  if (!fxQuads.w.empty) {
+    fxMats.w = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x9ab8c8, transparent: true, opacity: 0.55, depthWrite: false });
+    const m = new THREE.Mesh(fxQuads.w.geometry(), fxMats.w);
+    m.renderOrder = 2;
+    group.add(m);
   }
-  if (!fxQuads.x.empty) { fxMats.x = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x3fffc0, transparent: true, opacity: 0.62, depthWrite: false }); const m = new THREE.Mesh(fxQuads.x.geometry(), fxMats.x); m.renderOrder = 2; group.add(m); }
+  for (const c of ['>', '<', '^', 'v'])
+    if (!fxQuads[c].empty) {
+      // a current is wading water that flows: its own copy of the sea texture, scrolled along its direction by the view (view.js), tinted greener
+      // than still water
+      const t = tex.water_dusk.clone();
+      ownTex.push(t);
+      t.needsUpdate = true;
+      t.repeat.copy(tex.water_dusk.repeat);
+      fxMats[c] = new THREE.MeshBasicMaterial({ map: t, color: 0x8ad0c0, transparent: true, opacity: 0.62, depthWrite: false });
+      const m = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c]);
+      m.renderOrder = 2;
+      group.add(m);
+      // a second, finer and paler skin of ripples that slides faster (view.js): two layers at two speeds read as water moving, one layer on a green
+      // floor read as a green floor (the real-game still of the aqueduct,)
+      const t2 = tex.water_dusk.clone();
+      ownTex.push(t2);
+      t2.needsUpdate = true;
+      t2.repeat.set(tex.water_dusk.repeat.x * 2.6, tex.water_dusk.repeat.y * 2.6);
+      fxMats[c + '2'] = new THREE.MeshBasicMaterial({ map: t2, color: 0xd8fff0, transparent: true, opacity: 0.3, depthWrite: false });
+      const m2 = new THREE.Mesh(fxQuads[c].geometry(), fxMats[c + '2']);
+      m2.position.y = 0.012;
+      m2.renderOrder = 3;
+      group.add(m2);
+    }
+  if (!fxQuads.x.empty) {
+    fxMats.x = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0x3fffc0, transparent: true, opacity: 0.62, depthWrite: false });
+    const m = new THREE.Mesh(fxQuads.x.geometry(), fxMats.x);
+    m.renderOrder = 2;
+    group.add(m);
+  }
 
   // ceiling beams along x through each interior row run (only where the ceiling height is constant along the run)
   const beamMat = patchSurface(new THREE.MeshLambertMaterial({ map: tex.crate_wood_a, color: 0x8a7a6a }), 'trim', S);
   for (let cz = 1; cz < map.h - 1; cz += 2) {
-    let start = null, startCe = 0;
+    let start = null,
+      startCe = 0;
     for (let cx = 0; cx <= map.w; cx++) {
       const inside = cx < map.w && map.kind(cx, cz) === 'floor' && (start === null || Math.abs(ce(cx, cz) - startCe) < 1e-6);
-      if (inside && start === null) { start = cx; startCe = ce(cx, cz); }
-      if (!inside && start !== null) { const len = (cx - start) * S; if (len >= 2 * S) { const b = new THREE.Mesh(new THREE.BoxGeometry(len, 0.34, 0.34), beamMat); b.position.set(start * S + len / 2, startCe - 0.17, (cz + 0.5) * S); group.add(b); } start = null; if (cx < map.w && map.kind(cx, cz) === 'floor') { start = cx; startCe = ce(cx, cz); } }
+      if (inside && start === null) {
+        start = cx;
+        startCe = ce(cx, cz);
+      }
+      if (!inside && start !== null) {
+        const len = (cx - start) * S;
+        if (len >= 2 * S) {
+          const b = new THREE.Mesh(new THREE.BoxGeometry(len, 0.34, 0.34), beamMat);
+          b.position.set(start * S + len / 2, startCe - 0.17, (cz + 0.5) * S);
+          group.add(b);
+        }
+        start = null;
+        if (cx < map.w && map.kind(cx, cz) === 'floor') {
+          start = cx;
+          startCe = ce(cx, cz);
+        }
+      }
     }
   }
 
-  // look polish 2 and 3: skirting, cornices, plinths and copings, pilasters on long walls, door frames with their lamps, lever halos and lamp pools (trims.js: drawn only, the sim never sees them)
-  const trims = buildTrims(map, { tex: T, wallTex: (c) => T(WALL_SKINS[c]), patch: (m, k) => patchSurface(m, k, S) }); for (const m of trims.meshes) group.add(m);
+  // look polish 2 and 3: skirting, cornices, plinths and copings, pilasters on long walls, door frames with their lamps, lever halos and lamp pools
+  // (trims.js: drawn only, the sim never sees them)
+  const trims = buildTrims(map, { tex: T, wallTex: (c) => T(WALL_SKINS[c]), patch: (m, k) => patchSurface(m, k, S) });
+  for (const m of trims.meshes) group.add(m);
 
   // doors, closets and secret panels (dynamic meshes; the sim owns their open state)
   for (const d of map.doors.values()) {
-    const fy = fl(d.cx, d.cz), span = ce(d.cx, d.cz) - fy, pos = [(d.cx + 0.5) * S, fy, (d.cz + 0.5) * S];
-    if (d.closet) {                                                                 // a closet panel is drawn exactly like the wall it sits in
-      const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, d.cx, d.cz, dx, dz, fy, fy + span, fy);
-      const holder = new THREE.Group(); holder.add(new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(d.cx, d.cz)]) }))); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(d.cx + ',' + d.cz, holder); continue;
+    const fy = fl(d.cx, d.cz),
+      span = ce(d.cx, d.cz) - fy,
+      pos = [(d.cx + 0.5) * S, fy, (d.cz + 0.5) * S];
+    if (d.closet) {
+      // a closet panel is drawn exactly like the wall it sits in
+      const q = new Quads();
+      for (const [dx, dz] of DIRS) face(q, S, d.cx, d.cz, dx, dz, fy, fy + span, fy);
+      const holder = new THREE.Group();
+      holder.add(new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(d.cx, d.cz)]) })));
+      holder.userData = { base: 0, span: span - 0.05 };
+      group.add(holder);
+      doorViews.set(d.cx + ',' + d.cz, holder);
+      continue;
     }
     const m = makeDoorSlab(d.breath ? (tex.door_gill_a ?? T('door_hatch_a')) : T('door_hatch_a'), S, span, map.doorAxis(d.cx, d.cz), !!d.key);
-    m.position.set(...pos); m.userData = { base: fy, span: span - 0.05 }; group.add(m); doorViews.set(d.cx + ',' + d.cz, m);
+    m.position.set(...pos);
+    m.userData = { base: fy, span: span - 0.05 };
+    group.add(m);
+    doorViews.set(d.cx + ',' + d.cz, m);
   }
   for (const s of map.secrets) {
-    const fy = fl(s.panel[0], s.panel[1]), span = ce(s.panel[0], s.panel[1]) - fy;
-    const q = new Quads(); for (const [dx, dz] of DIRS) face(q, S, s.panel[0], s.panel[1], dx, dz, fy, fy + span, fy);
-    const m = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(s.panel[0], s.panel[1])]) }));                 // match the wall it sits in
-    const holder = new THREE.Group(); holder.add(m); holder.userData = { base: 0, span: span - 0.05 }; group.add(holder); doorViews.set(s.panel.join(','), holder);
-    // the tell (PT-015): lamplight leaking out of the seam into every open side: a bright seam the height of the panel, stepped halos round it, and a patch of light on the floor in front of it (SECRET_TELL). The seam and halos ride with
-    // the panel when it opens; the floor patch stays (it reads as light coming through the opening). Additive, vertex-coloured (intensity is in the colour), no textures: two draw calls a panel, nothing to leak when the level is disposed.
-    const wallGlow = glowBuilder(), floorGlow = glowBuilder(), px = (s.panel[0] + 0.5) * S, pz = (s.panel[1] + 0.5) * S;
+    const fy = fl(s.panel[0], s.panel[1]),
+      span = ce(s.panel[0], s.panel[1]) - fy;
+    const q = new Quads();
+    for (const [dx, dz] of DIRS) face(q, S, s.panel[0], s.panel[1], dx, dz, fy, fy + span, fy);
+    // match the wall it sits in
+    const m = new THREE.Mesh(q.geometry(), new THREE.MeshLambertMaterial({ map: T(WALL_SKINS[wallSkinNear(s.panel[0], s.panel[1])]) }));
+    const holder = new THREE.Group();
+    holder.add(m);
+    holder.userData = { base: 0, span: span - 0.05 };
+    group.add(holder);
+    doorViews.set(s.panel.join(','), holder);
+    // the tell: lamplight leaking out of the seam into every open side: a bright seam the height of the panel, stepped halos round it, and a patch of
+    // light on the floor in front of it (SECRET_TELL). The seam and halos ride with
+    // the panel when it opens; the floor patch stays (it reads as light coming through the opening). Additive, vertex-coloured (intensity is in the
+    // colour), no textures: two draw calls a panel, nothing to leak when the level is disposed.
+    const wallGlow = glowBuilder(),
+      floorGlow = glowBuilder(),
+      px = (s.panel[0] + 0.5) * S,
+      pz = (s.panel[1] + 0.5) * S;
     for (const [dx, dz] of DIRS) {
-      const nk = map.kind(s.panel[0] + dx, s.panel[1] + dz); if (nk !== 'floor' && nk !== 'outdoor') continue;
-      const along = [dz, 0, -dx], out = [dx, 0, dz];                                                  // along the face, and out of it
-      SECRET_TELL.halo.forEach(([w, op], i) => wallGlow.quad([px + dx * (S / 2 + 0.008 + i * 0.002), fy + span / 2, pz + dz * (S / 2 + 0.008 + i * 0.002)], along, [0, 1, 0], w / 2, span / 2, op));
-      if (s.open === 'shoot') {                                                                       // PT-081: a CRACK, not a seam: a jagged line of light up the face (shoot it open)
-        let sx0 = -0.05, y = fy + span * 0.1; const off = S / 2 + 0.016;
-        for (const [sx, h] of [[0.16, 0.42], [-0.13, 0.38], [0.15, 0.36], [-0.09, 0.32], [0.07, 0.28]]) {
-          const len = Math.hypot(sx, h), a = Math.atan2(sx, h), sa = Math.sin(a), ca = Math.cos(a), dir = [dz * sa, ca, -dx * sa], perp = [dz * ca, -sa, -dx * ca];
-          wallGlow.quad([px + dx * off + dz * (sx0 + sx / 2), y + h / 2, pz + dz * off - dx * (sx0 + sx / 2)], perp, dir, 0.045, len / 2 + 0.02, 1.6);          // (the owner missed the first one: wider and brighter, about three pixels at ten metres)
-          wallGlow.quad([px + dx * off + dz * (sx0 + sx / 2), y + h / 2, pz + dz * off - dx * (sx0 + sx / 2)], perp, dir, 0.11, len / 2 + 0.05, 0.35); sx0 += sx; y += h;          // a soft glow round the crack
+      const nk = map.kind(s.panel[0] + dx, s.panel[1] + dz);
+      if (nk !== 'floor' && nk !== 'outdoor') continue;
+      const along = [dz, 0, -dx],
+        out = [dx, 0, dz]; // along the face, and out of it
+      SECRET_TELL.halo.forEach(([w, op], i) =>
+        wallGlow.quad([px + dx * (S / 2 + 0.008 + i * 0.002), fy + span / 2, pz + dz * (S / 2 + 0.008 + i * 0.002)], along, [0, 1, 0], w / 2, span / 2, op),
+      );
+      if (s.open === 'shoot') {
+        // a CRACK, not a seam: a jagged line of light up the face (shoot it open)
+        let sx0 = -0.05,
+          y = fy + span * 0.1;
+        const off = S / 2 + 0.016;
+        for (const [sx, h] of [
+          [0.16, 0.42],
+          [-0.13, 0.38],
+          [0.15, 0.36],
+          [-0.09, 0.32],
+          [0.07, 0.28],
+        ]) {
+          const len = Math.hypot(sx, h),
+            a = Math.atan2(sx, h),
+            sa = Math.sin(a),
+            ca = Math.cos(a),
+            dir = [dz * sa, ca, -dx * sa],
+            perp = [dz * ca, -sa, -dx * ca];
+          // (the owner missed the first one: wider and brighter, about three pixels at ten metres)
+          wallGlow.quad([px + dx * off + dz * (sx0 + sx / 2), y + h / 2, pz + dz * off - dx * (sx0 + sx / 2)], perp, dir, 0.045, len / 2 + 0.02, 1.6);
+          wallGlow.quad([px + dx * off + dz * (sx0 + sx / 2), y + h / 2, pz + dz * off - dx * (sx0 + sx / 2)], perp, dir, 0.11, len / 2 + 0.05, 0.35);
+          sx0 += sx;
+          y += h; // a soft glow round the crack
         }
-      } else wallGlow.quad([px + dx * (S / 2 + 0.016), fy + span / 2, pz + dz * (S / 2 + 0.016)], along, [0, 1, 0], SECRET_TELL.seam / 2, span / 2, SECRET_TELL.seamOpacity);
+      } else
+        wallGlow.quad(
+          [px + dx * (S / 2 + 0.016), fy + span / 2, pz + dz * (S / 2 + 0.016)],
+          along,
+          [0, 1, 0],
+          SECRET_TELL.seam / 2,
+          span / 2,
+          SECRET_TELL.seamOpacity,
+        );
       for (const [w, d, op] of SECRET_TELL.spill) floorGlow.quad([px + dx * (S / 2), fy + 0.09, pz + dz * (S / 2)], along, out, w / 2, d / 2, op);
     }
-    if (!wallGlow.empty) { const wm = wallGlow.mesh(); holder.add(wm); const fm = floorGlow.mesh(); group.add(fm); }
+    if (!wallGlow.empty) {
+      const wm = wallGlow.mesh();
+      holder.add(wm);
+      const fm = floorGlow.mesh();
+      group.add(fm);
+    }
   }
   // wall switches: an iron panel with a lamp (red = waiting, green = used)
   for (const sw of map.switches) {
-    const r = makeSwitchPanel(); const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[sw.wallDir] || [0, -1];
-    r.group.position.set(sw.px, sw.fy + 1.35, sw.pz); r.group.rotation.y = Math.atan2(-dir[0], -dir[1]);           // faces away from the wall (local +z)
-    if (map.atmosphere.dark) {                                           // PT-039 (Lantern Ossuary: "impossible to find the switch"): in a dark map a lever shows a big lamp and throws a red glow on the wall round it, so it can be seen from down the corridor
+    const r = makeSwitchPanel();
+    const dir = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] }[sw.wallDir] || [0, -1];
+    r.group.position.set(sw.px, sw.fy + 1.35, sw.pz);
+    r.group.rotation.y = Math.atan2(-dir[0], -dir[1]); // faces away from the wall (local +z)
+    if (map.atmosphere.dark) {
+      // in a dark map a lever shows a big lamp and throws a red glow on the wall round it, so it can be seen from down the corridor
       r.lamp.scale.setScalar(2.6);
-      const lt = new THREE.PointLight(0xff4a3a, 22, 10, 2); lt.userData.base = 22; lt.position.set(sw.px - dir[0] * 0.5, sw.fy + 1.45, sw.pz - dir[1] * 0.5); group.add(lt); lights.push(lt); r.light = lt;
+      const lt = new THREE.PointLight(0xff4a3a, 22, 10, 2);
+      lt.userData.base = 22;
+      lt.position.set(sw.px - dir[0] * 0.5, sw.fy + 1.45, sw.pz - dir[1] * 0.5);
+      group.add(lt);
+      lights.push(lt);
+      r.light = lt;
     }
-    group.add(r.group); switchViews.set(sw.id, r);
+    group.add(r.group);
+    switchViews.set(sw.id, r);
   }
 
-  const dressing = new THREE.Group(); group.add(dressing);              // all static props + scenery; merged into a few meshes at the end
+  const dressing = new THREE.Group();
+  group.add(dressing); // all static props + scenery; merged into a few meshes at the end
   let seed = 7;
-  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const rnd = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
   for (const p of map.props) {
-    if (p.kind === 'chime' || p.kind === 'chimetree') continue;                                                // PT-038: drawn by GameView from the sim's own state (chimefx.js)
-    if (p.kind === 'mirror' || p.kind === 'emitter' || p.kind === 'receiver') continue;                       // PT-033: the Mirror Array's furniture is drawn by GameView from the sim's own state (beamfx.js)
-    const yaw = (rnd() - 0.5) * 0.5; let m = null; const pcx = Math.floor(p.at[0]), pcz = Math.floor(p.at[1]), fy = fl(pcx, pcz), cy = hasCeil(map.kind(pcx, pcz)) ? ce(pcx, pcz) : fy + H;
-    if (p.kind === 'crate') { m = makeCrate(tex.crate_wood_a); m.position.set(p.x, fy + 0.55, p.z); m.rotation.y = yaw; }
-    else if (p.kind === 'crate2') { m = makeCrate2(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = yaw; }
-    else if (p.kind === 'barrel') { m = makeBarrel(tex.crate_wood_a); m.position.set(p.x, fy + 0.5, p.z); }
-    else if (p.kind === 'bollard') { m = makeBollard(); m.position.set(p.x, fy, p.z); }
-    else if (p.kind === 'stall') { m = makeStall(tex.crate_wood_a, tex.awning_stripe_a); m.position.set(p.x, fy, p.z); m.rotation.y = (p.yaw ?? 0) + yaw * 0.3; }
-    else if (p.kind === 'pillar') { m = makePillar(T(WALL_SKINS[p.skin] ?? 'wall_bulkhead_a'), cy - fy); m.position.set(p.x, fy, p.z); }
-    else if (p.kind === 'pod') { const r = makePod(tex.pod_organic_a, cy); m = r.group; m.position.set(p.x, cy, p.z); r.light.position.set(p.x, cy - 1.6, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'lamp') { const r = makeLamp(cy, p.tint); m = r.group; m.position.set(p.x, cy, p.z); r.light.position.set(p.x, cy - 0.9, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'lamppost') { const r = makeLampPost(); m = r.group; m.position.set(p.x, fy, p.z); r.light.position.set(p.x, fy + 3.2, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'lantern') { const r = makeLantern(); m = r.group; m.position.set(p.x, fy, p.z); r.light.position.set(p.x, fy + 2.3, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'cart') { m = makeCart(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = (p.yaw ?? 0) + yaw; }
-    else if (p.kind === 'sack') { m = makeSack(); m.position.set(p.x, fy, p.z); m.rotation.y = yaw * 4; }
-    else if (p.kind === 'rope') { m = makeRope(); m.position.set(p.x, fy, p.z); m.rotation.y = yaw * 4; }
-    else if (p.kind === 'table') { m = makeTable(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = (p.yaw ?? 0) + yaw * 0.3; }
-    else if (p.kind === 'shelf') { m = makeShelf(tex.crate_wood_a); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'cradle') { const r = makeCradle(tex.tollbearer_atlas); m = r.group; m.position.set(p.x, cy, p.z); r.light.position.set(p.x, cy - 1.8, p.z); group.add(r.light); lights.push(r.light); }
-    else if (p.kind === 'bellnode') { m = makeBellNode(); m.position.set(p.x, fy, p.z); }
-    else if (p.kind === 'pew') { m = makePew(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'lighter') { m = makeLighter(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'organ') { m = makeOrgan(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'vat') { m = makeVat(); m.position.set(p.x, fy, p.z); }
-    else if (p.kind === 'grave') { m = makeGrave(Math.floor(p.x * 7 + p.z * 3)); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'resonator') { m = makeFork(); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
-    else if (p.kind === 'loomstring') { m = makeLoomString(cy - fy); m.position.set(p.x, fy, p.z); m.rotation.y = p.yaw ?? 0; }
+    if (p.kind === 'chime' || p.kind === 'chimetree') continue; // drawn by GameView from the sim's own state (chimefx.js)
+    // the Mirror Array's furniture is drawn by GameView from the sim's own state (beamfx.js)
+    if (p.kind === 'mirror' || p.kind === 'emitter' || p.kind === 'receiver') continue;
+    const yaw = (rnd() - 0.5) * 0.5;
+    let m = null;
+    const pcx = Math.floor(p.at[0]),
+      pcz = Math.floor(p.at[1]),
+      fy = fl(pcx, pcz),
+      cy = hasCeil(map.kind(pcx, pcz)) ? ce(pcx, pcz) : fy + H;
+    if (p.kind === 'crate') {
+      m = makeCrate(tex.crate_wood_a);
+      m.position.set(p.x, fy + 0.55, p.z);
+      m.rotation.y = yaw;
+    } else if (p.kind === 'crate2') {
+      m = makeCrate2(tex.crate_wood_a);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = yaw;
+    } else if (p.kind === 'barrel') {
+      m = makeBarrel(tex.crate_wood_a);
+      m.position.set(p.x, fy + 0.5, p.z);
+    } else if (p.kind === 'bollard') {
+      m = makeBollard();
+      m.position.set(p.x, fy, p.z);
+    } else if (p.kind === 'stall') {
+      m = makeStall(tex.crate_wood_a, tex.awning_stripe_a);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = (p.yaw ?? 0) + yaw * 0.3;
+    } else if (p.kind === 'pillar') {
+      m = makePillar(T(WALL_SKINS[p.skin] ?? 'wall_bulkhead_a'), cy - fy);
+      m.position.set(p.x, fy, p.z);
+    } else if (p.kind === 'pod') {
+      const r = makePod(tex.pod_organic_a, cy);
+      m = r.group;
+      m.position.set(p.x, cy, p.z);
+      r.light.position.set(p.x, cy - 1.6, p.z);
+      group.add(r.light);
+      lights.push(r.light);
+    } else if (p.kind === 'lamp') {
+      const r = makeLamp(cy, p.tint);
+      m = r.group;
+      m.position.set(p.x, cy, p.z);
+      r.light.position.set(p.x, cy - 0.9, p.z);
+      group.add(r.light);
+      lights.push(r.light);
+    } else if (p.kind === 'lamppost') {
+      const r = makeLampPost();
+      m = r.group;
+      m.position.set(p.x, fy, p.z);
+      r.light.position.set(p.x, fy + 3.2, p.z);
+      group.add(r.light);
+      lights.push(r.light);
+    } else if (p.kind === 'lantern') {
+      const r = makeLantern();
+      m = r.group;
+      m.position.set(p.x, fy, p.z);
+      r.light.position.set(p.x, fy + 2.3, p.z);
+      group.add(r.light);
+      lights.push(r.light);
+    } else if (p.kind === 'cart') {
+      m = makeCart(tex.crate_wood_a);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = (p.yaw ?? 0) + yaw;
+    } else if (p.kind === 'sack') {
+      m = makeSack();
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = yaw * 4;
+    } else if (p.kind === 'rope') {
+      m = makeRope();
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = yaw * 4;
+    } else if (p.kind === 'table') {
+      m = makeTable(tex.crate_wood_a);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = (p.yaw ?? 0) + yaw * 0.3;
+    } else if (p.kind === 'shelf') {
+      m = makeShelf(tex.crate_wood_a);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'cradle') {
+      const r = makeCradle(tex.tollbearer_atlas);
+      m = r.group;
+      m.position.set(p.x, cy, p.z);
+      r.light.position.set(p.x, cy - 1.8, p.z);
+      group.add(r.light);
+      lights.push(r.light);
+    } else if (p.kind === 'bellnode') {
+      m = makeBellNode();
+      m.position.set(p.x, fy, p.z);
+    } else if (p.kind === 'pew') {
+      m = makePew();
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'lighter') {
+      m = makeLighter();
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'organ') {
+      m = makeOrgan(cy - fy);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'vat') {
+      m = makeVat();
+      m.position.set(p.x, fy, p.z);
+    } else if (p.kind === 'grave') {
+      m = makeGrave(Math.floor(p.x * 7 + p.z * 3));
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'resonator') {
+      m = makeFork();
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    } else if (p.kind === 'loomstring') {
+      m = makeLoomString(cy - fy);
+      m.position.set(p.x, fy, p.z);
+      m.rotation.y = p.yaw ?? 0;
+    }
     if (m) dressing.add(m);
   }
   // scenery: non-colliding landmarks, possibly far outside the playable grid
   let towerGlow = null;
   for (const sc of map.scenery) {
     let m = null;
-    if (sc.kind === 'tower') { m = makeTower(tex.tower_stone_a, tex.tollbearer_atlas); towerGlow = m.userData.glow; }
-    else if (sc.kind === 'boat') { m = makeBoat(tex.boat_hull_a); m.position.y = -0.35; }
-    else if (sc.kind === 'crane' || sc.kind === 'gantry') { m = makeCrane(); }
-    else if (sc.kind === 'arch') m = makeGateArch();
+    if (sc.kind === 'tower') {
+      m = makeTower(tex.tower_stone_a, tex.tollbearer_atlas);
+      towerGlow = m.userData.glow;
+    } else if (sc.kind === 'boat') {
+      m = makeBoat(tex.boat_hull_a);
+      m.position.y = -0.35;
+    } else if (sc.kind === 'crane' || sc.kind === 'gantry') {
+      m = makeCrane();
+    } else if (sc.kind === 'arch') m = makeGateArch();
     else if (sc.kind === 'spire') m = makeSpire();
     else if (sc.kind === 'rib') m = makeRib();
     else if (sc.kind === 'cityface') m = makeCityFace();
     else if (sc.kind === 'hangrock') m = makeHangRock();
     else if (sc.kind === 'heartmass') m = makeHeartMass();
-    else if (sc.kind === 'hivetower') m = makeHiveTower(); else if (sc.kind === 'ganglion') m = makeGanglion(); else if (sc.kind === 'reactor') m = makeReactor(); else if (sc.kind === 'rails') m = makeRails();          // PT-043: the scenery of Acts C and D (models_c2.js)
-    else if (sc.kind === 'crystaltower') m = makeCrystalTower(); else if (sc.kind === 'rootcolumn') m = makeRootColumn(); else if (sc.kind === 'shaft') m = makeShaft();
+    else if (sc.kind === 'hivetower') m = makeHiveTower();
+    else if (sc.kind === 'ganglion') m = makeGanglion();
+    else if (sc.kind === 'reactor') m = makeReactor();
+    else if (sc.kind === 'rails')
+      m = makeRails(); // the scenery of Acts C and D (models_c2.js)
+    else if (sc.kind === 'crystaltower') m = makeCrystalTower();
+    else if (sc.kind === 'rootcolumn') m = makeRootColumn();
+    else if (sc.kind === 'shaft') m = makeShaft();
     if (!m) continue;
-    m.position.x = sc.x; m.position.z = sc.z; m.position.y += sc.y ?? 0; m.rotation.y = sc.yaw ?? 0; if (sc.scale) m.scale.setScalar(sc.scale); dressing.add(m);
+    m.position.x = sc.x;
+    m.position.z = sc.z;
+    m.position.y += sc.y ?? 0;
+    m.rotation.y = sc.yaw ?? 0;
+    if (sc.scale) m.scale.setScalar(sc.scale);
+    dressing.add(m);
   }
   mergeStatic(dressing);
-  for (const e of map.exits) {                                // the gate is set flush against the nearest wall, facing into the room
-    const r = makeExitGate(tex.door_hatch_a, H), cx = Math.floor(e.at[0]), cz = Math.floor(e.at[1]);
+  for (const e of map.exits) {
+    // the gate is set flush against the nearest wall, facing into the room
+    const r = makeExitGate(tex.door_hatch_a, H),
+      cx = Math.floor(e.at[0]),
+      cz = Math.floor(e.at[1]);
     let best = null;
-    for (const [dx, dz, rot] of [[1, 0, 0], [-1, 0, Math.PI], [0, 1, -Math.PI / 2], [0, -1, Math.PI / 2]]) {
-      for (let n = 1; n <= 4; n++) if (map.kind(cx + dx * n, cz + dz * n) === 'wall') { if (!best || n < best.n) best = { n, dx, dz, rot }; break; }
+    for (const [dx, dz, rot] of [
+      [1, 0, 0],
+      [-1, 0, Math.PI],
+      [0, 1, -Math.PI / 2],
+      [0, -1, Math.PI / 2],
+    ]) {
+      for (let n = 1; n <= 4; n++)
+        if (map.kind(cx + dx * n, cz + dz * n) === 'wall') {
+          if (!best || n < best.n) best = { n, dx, dz, rot };
+          break;
+        }
     }
     best = best || { n: 1, dx: 1, dz: 0, rot: 0 };
     const dist = (best.n - 0.5) * S - 0.3;
-    r.group.position.set(e.x + best.dx * dist, fl(cx, cz), e.z + best.dz * dist); r.group.rotation.y = best.rot;
-    r.light.userData.base = 60; r.light.userData.flicker = 'lamp'; r.group.userData.exitId = e.id;
-    group.add(r.group); lights.push(r.light);
+    r.group.position.set(e.x + best.dx * dist, fl(cx, cz), e.z + best.dz * dist);
+    r.group.rotation.y = best.rot;
+    r.light.userData.base = 60;
+    r.light.userData.flicker = 'lamp';
+    r.group.userData.exitId = e.id;
+    group.add(r.group);
+    lights.push(r.light);
     exitViews.set(e.id, r);
   }
-  if (!fxQuads.h.empty) { fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false }); const m = new THREE.Mesh(fxQuads.h.geometry(), fxMats.h); m.renderOrder = 2; group.add(m); }                // ember bed (Kiln Row): a glowing orange wash
-  const sporeViews = map.pulses.map((p, i) => {                                                                    // PT-027: the spore beds: the view sets both materials from the clock every frame
-    const bed = new THREE.MeshBasicMaterial({ map: tex.floor_spore_a ?? tex.floor_ember_a, color: 0xffffff, transparent: true, opacity: 0.2, depthWrite: false }), mist = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xd6ee8c, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
-    if (!sporeBed[i].empty) { const m = new THREE.Mesh(sporeBed[i].geometry(), bed); m.renderOrder = 2; group.add(m); }
-    if (!sporeMist[i].empty) { const m = new THREE.Mesh(sporeMist[i].geometry(), mist); m.renderOrder = 3; group.add(m); }
-    if (p.tint != null) mist.color.setHex(p.tint);                                                                    // PT-043: the Hive's beds bloom pink-amber, not spore-green
+  if (!fxQuads.h.empty) {
+    fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false });
+    const m = new THREE.Mesh(fxQuads.h.geometry(), fxMats.h);
+    m.renderOrder = 2;
+    group.add(m);
+  } // ember bed (Kiln Row): a glowing orange wash
+  const sporeViews = map.pulses.map((p, i) => {
+    // the spore beds: the view sets both materials from the clock every frame
+    const bed = new THREE.MeshBasicMaterial({
+        map: tex.floor_spore_a ?? tex.floor_ember_a,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.2,
+        depthWrite: false,
+      }),
+      mist = new THREE.MeshBasicMaterial({ map: tex.water_dusk, color: 0xd6ee8c, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+    if (!sporeBed[i].empty) {
+      const m = new THREE.Mesh(sporeBed[i].geometry(), bed);
+      m.renderOrder = 2;
+      group.add(m);
+    }
+    if (!sporeMist[i].empty) {
+      const m = new THREE.Mesh(sporeMist[i].geometry(), mist);
+      m.renderOrder = 3;
+      group.add(m);
+    }
+    if (p.tint != null) mist.color.setHex(p.tint); // the Hive's beds bloom pink-amber, not spore-green
     return { bed, mist, tint: p.tint != null ? new THREE.Color(p.tint) : null };
   });
-  { const gr = buildGrowth(map, tex); if (gr) group.add(gr); }                                                    // the Vael's growth, thick where it started (PT-021)
-  const dispose = () => { for (const t of ownTex) t.dispose(); ownTex.length = 0; };                               // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
+  {
+    const gr = buildGrowth(map, tex);
+    if (gr) group.add(gr);
+  } // the Vael's growth, thick where it started
+  const dispose = () => {
+    for (const t of ownTex) t.dispose();
+    ownTex.length = 0;
+  }; // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
   return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose, trims: trims.stats };
 }

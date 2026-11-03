@@ -1,5 +1,7 @@
-// THE STATS DATABASE, its blueprint (PT-077; design/STATS_DATABASE.md is the plan, written for someone learning SQL). Pure: SQL text and plain rows, no DOM, no sql.js.
-// A database file knows its blueprint's version (`PRAGMA user_version`); MIGRATIONS[n] upgrades a file from version n - 1 to n inside one transaction, so a player's old stats survive a newer game.
+// THE STATS DATABASE, its blueprint (; design/STATS_DATABASE.md is the plan, written for someone learning SQL). Pure: SQL text and plain rows, no
+// DOM, no sql.js.
+// A database file knows its blueprint's version (`PRAGMA user_version`); MIGRATIONS[n] upgrades a file from version n - 1 to n inside one
+// transaction, so a player's old stats survive a newer game.
 
 export const SCHEMA_VERSION = 1;
 
@@ -98,11 +100,27 @@ export const HAZARDS = [
 ];
 
 /** the reference rows from the game's own data: every level of the manifest, every weapon (and the quick bash), every creature and hazard */
-/** Campaign Two has acts, not episodes (the manifest: A 1-8, B 9-16, C 17-24, D 25-30; the two secrets belong to Acts B and C); they go in the same column, 1 to 4 */
-export const actOf = (m) => (m.campaign !== 2 ? null : m.id === 'C2S01' ? 2 : m.id === 'C2S02' ? 3 : m.order <= 8 ? 1 : m.order <= 16 ? 2 : m.order <= 24 ? 3 : 4);
+/**
+ * Campaign Two has acts, not episodes (the manifest: A 1-8, B 9-16, C 17-24, D 25-30; the two secrets belong to Acts B and C); they go in the same
+ * column, 1 to 4
+ */
+export const actOf = (m) =>
+  m.campaign !== 2 ? null : m.id === 'C2S01' ? 2 : m.id === 'C2S02' ? 3 : m.order <= 8 ? 1 : m.order <= 16 ? 2 : m.order <= 24 ? 3 : 4;
 export function referenceRows({ manifest, maps, weapons, enemies }) {
-  const levels = manifest.maps.filter((m) => maps[m.id]).map((m) => ({ id: m.id, name: maps[m.id].name ?? m.name ?? m.id, campaign: m.campaign, episode: m.episode ?? actOf(m), kind: m.kind === 'secret' ? 'secret' : 'main', par: maps[m.id].par?.time > 0 ? Math.round(maps[m.id].par.time) : null }));
+  const levels = manifest.maps
+    .filter((m) => maps[m.id])
+    .map((m) => ({
+      id: m.id,
+      name: maps[m.id].name ?? m.name ?? m.id,
+      campaign: m.campaign,
+      episode: m.episode ?? actOf(m),
+      kind: m.kind === 'secret' ? 'secret' : 'main',
+      par: maps[m.id].par?.time > 0 ? Math.round(maps[m.id].par.time) : null,
+    }));
   const guns = [...Object.entries(weapons).map(([id, d]) => ({ id, name: d.name ?? id })), { id: 'bash', name: 'Quick bash' }];
-  const sources = [...Object.entries(enemies).map(([k, d]) => ({ id: 'enemy:' + k, type: 'creature', name: d.name ?? k, boss: d.boss ? 1 : 0, peaceful: d.peaceful ? 1 : 0 })), ...HAZARDS.map(([id, type, name]) => ({ id, type, name, boss: 0, peaceful: 0 }))];
+  const sources = [
+    ...Object.entries(enemies).map(([k, d]) => ({ id: 'enemy:' + k, type: 'creature', name: d.name ?? k, boss: d.boss ? 1 : 0, peaceful: d.peaceful ? 1 : 0 })),
+    ...HAZARDS.map(([id, type, name]) => ({ id, type, name, boss: 0, peaceful: 0 })),
+  ];
   return { levels, guns, sources };
 }

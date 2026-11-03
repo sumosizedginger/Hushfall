@@ -7,14 +7,18 @@ import { textSha, engineSha, routesSha, sourceShas, staleSets, describeStale } f
 
 const root = process.env.HUSHFALL_ROOT ? path.resolve(process.env.HUSHFALL_ROOT) : path.resolve(import.meta.dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
-const errors = [], warnings = [];
-const err = (m) => errors.push(m), warn = (m) => warnings.push(m);
+const errors = [],
+  warnings = [];
+const err = (m) => errors.push(m),
+  warn = (m) => warnings.push(m);
 const maps = manifest.maps;
 const byId = new Map(maps.map((m) => [m.id, m]));
 
 // ---- topology ----
-const main = maps.filter((m) => m.kind === 'main'), secret = maps.filter((m) => m.kind === 'secret');
-const c1 = maps.filter((m) => m.campaign === 1), c2 = maps.filter((m) => m.campaign === 2);
+const main = maps.filter((m) => m.kind === 'main'),
+  secret = maps.filter((m) => m.kind === 'secret');
+const c1 = maps.filter((m) => m.campaign === 1),
+  c2 = maps.filter((m) => m.campaign === 2);
 if (maps.length !== 68) err(`expected 68 map slots, found ${maps.length}`);
 if (c1.length !== 36) err(`Campaign One expected 36, found ${c1.length}`);
 if (c2.length !== 32) err(`Campaign Two expected 32, found ${c2.length}`);
@@ -23,7 +27,8 @@ if (secret.length !== 6) err(`expected exactly 6 secret-map slots, found ${secre
 if (byId.size !== maps.length) err('duplicate map IDs');
 for (const e of [1, 2, 3, 4]) {
   const em = c1.filter((m) => m.episode === e);
-  if (em.filter((m) => m.kind === 'main').length !== 8 || em.filter((m) => m.kind === 'secret').length !== 1) err(`C1 episode ${e} must have 8 main + 1 secret`);
+  if (em.filter((m) => m.kind === 'main').length !== 8 || em.filter((m) => m.kind === 'secret').length !== 1)
+    err(`C1 episode ${e} must have 8 main + 1 secret`);
 }
 if (c2.filter((m) => m.kind === 'main').length !== 30 || c2.filter((m) => m.kind === 'secret').length !== 2) err('Campaign Two must have 30 main + 2 secret');
 const names = new Set();
@@ -34,22 +39,38 @@ for (const m of maps) {
 }
 // main chain: walk from C1E1M01, must visit all 62 main maps once and end with next=null at C2M30
 {
-  const seen = new Set(); let cur = 'C1E1M01';
+  const seen = new Set();
+  let cur = 'C1E1M01';
   while (cur) {
-    if (seen.has(cur)) { err(`main route loops at ${cur}`); break; }
-    const m = byId.get(cur); if (!m) { err(`main route references missing map ${cur}`); break; }
+    if (seen.has(cur)) {
+      err(`main route loops at ${cur}`);
+      break;
+    }
+    const m = byId.get(cur);
+    if (!m) {
+      err(`main route references missing map ${cur}`);
+      break;
+    }
     if (m.kind !== 'main') err(`main route reaches non-main map ${cur}`);
-    seen.add(cur); cur = m.next;
+    seen.add(cur);
+    cur = m.next;
   }
   if (seen.size !== 62) err(`main route visits ${seen.size} maps, expected 62`);
   if (!seen.has('C2M30')) err('main route never reaches C2M30 (final map)');
 }
 // secret entrances/returns
 for (const s of secret) {
-  const from = byId.get(s.enteredFrom), back = byId.get(s.returnsTo);
-  if (!from || from.kind !== 'main') { err(`${s.id}: invalid enteredFrom ${s.enteredFrom}`); continue; }
+  const from = byId.get(s.enteredFrom),
+    back = byId.get(s.returnsTo);
+  if (!from || from.kind !== 'main') {
+    err(`${s.id}: invalid enteredFrom ${s.enteredFrom}`);
+    continue;
+  }
   if (from.secretExit !== s.id) err(`${s.id}: ${from.id}.secretExit does not point back`);
-  if (!back || back.kind !== 'main') { err(`${s.id}: invalid returnsTo ${s.returnsTo}`); continue; }
+  if (!back || back.kind !== 'main') {
+    err(`${s.id}: invalid returnsTo ${s.returnsTo}`);
+    continue;
+  }
   if (from.next !== s.returnsTo) err(`${s.id}: returns to ${s.returnsTo} but ${from.id}.next is ${from.next}`);
 }
 for (const m of main) if (m.secretExit && byId.get(m.secretExit)?.kind !== 'secret') err(`${m.id}: secretExit ${m.secretExit} is not a secret slot`);
@@ -57,17 +78,36 @@ for (const m of main) if (m.secretExit && byId.get(m.secretExit)?.kind !== 'secr
 // ---- evidence-derived status ----
 const ORDER = ['PLANNED', 'IMPLEMENTED', 'AGENT_VERIFIED', 'COMPLETE'];
 const nowSources = sourceShas(root);
-/** Real-game evidence has two halves. (1) The shared browser check (validation/browser-check.json) is about CODE: it must come from THIS engine/render/game/audio/asset code and have passed.
- *  (2) The map's OWN file validation/browser/<ID>.json (tools/dev/browser-map.mjs: every route played in the real game == the Node sim, the HUD, the render-truth census) must come from THIS code,
- *  THIS map file and THIS map's route files, and have passed. So a new or edited map invalidates only itself; changed engine/render/shell/audio/asset code invalidates every map. */
+/**
+ * Real-game evidence has two halves. (1) The shared browser check (validation/browser-check.json) is about CODE: it must come from THIS
+ * engine/render/game/audio/asset code and have passed.
+ * (2) The map's OWN file validation/browser/<ID>.json (tools/dev/browser-map.mjs: every route played in the real game == the Node sim, the HUD, the
+ * render-truth census) must come from THIS code,
+ * THIS map file and THIS map's route files, and have passed. So a new or edited map invalidates only itself; changed engine/render/shell/audio/asset
+ * code invalidates every map.
+ */
 function browserStale(id, mapFile) {
-  const bf = path.join(root, 'validation/browser-check.json'); if (!fs.existsSync(bf)) return 'validation/browser-check.json is missing';
-  let b; try { b = JSON.parse(fs.readFileSync(bf, 'utf8')); } catch { return 'validation/browser-check.json is unreadable'; }
-  const st = staleSets(root, b.sources, 'browser'); if (st.length) return `the shared browser check was generated by other code (${describeStale(st)}); re-run npm run browsercheck`;
+  const bf = path.join(root, 'validation/browser-check.json');
+  if (!fs.existsSync(bf)) return 'validation/browser-check.json is missing';
+  let b;
+  try {
+    b = JSON.parse(fs.readFileSync(bf, 'utf8'));
+  } catch {
+    return 'validation/browser-check.json is unreadable';
+  }
+  const st = staleSets(root, b.sources, 'browser');
+  if (st.length) return `the shared browser check was generated by other code (${describeStale(st)}); re-run npm run browsercheck`;
   if (!(b.checks ?? []).every((c) => c.ok)) return 'the latest shared browser check has failing checks';
-  const pf = path.join(root, 'validation/browser', id + '.json'); if (!fs.existsSync(pf)) return `validation/browser/${id}.json is missing; run: node tools/dev/browser-map.mjs ${id}`;
-  let e; try { e = JSON.parse(fs.readFileSync(pf, 'utf8')); } catch { return `validation/browser/${id}.json is unreadable`; }
-  const se = staleSets(root, e.sources, 'browserMap'); if (se.length) return `the map's real-game evidence was generated by other code (${describeStale(se)}); re-run node tools/dev/browser-map.mjs ${id}`;
+  const pf = path.join(root, 'validation/browser', id + '.json');
+  if (!fs.existsSync(pf)) return `validation/browser/${id}.json is missing; run: node tools/dev/browser-map.mjs ${id}`;
+  let e;
+  try {
+    e = JSON.parse(fs.readFileSync(pf, 'utf8'));
+  } catch {
+    return `validation/browser/${id}.json is unreadable`;
+  }
+  const se = staleSets(root, e.sources, 'browserMap');
+  if (se.length) return `the map's real-game evidence was generated by other code (${describeStale(se)}); re-run node tools/dev/browser-map.mjs ${id}`;
   if (fs.existsSync(mapFile) && e.mapSha !== textSha(mapFile)) return "the map's real-game evidence did not run this map file";
   if ((routesSha(root, id) ?? null) !== (e.routesSha ?? null)) return "a route file changed since the map's real-game evidence was made";
   if (!(e.checks ?? []).length || !Object.keys(e.routes ?? {}).length) return "the map's real-game evidence has no route or census results";
@@ -77,49 +117,117 @@ function browserStale(id, mapFile) {
 function derive(id) {
   const f = path.join(root, 'validation', 'maps', id + '.json');
   if (!fs.existsSync(f)) return { status: 'PLANNED', why: 'no evidence file' };
-  let ev; try { ev = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { err(`${id}: evidence unreadable: ${e.message}`); return { status: 'PLANNED', why: 'bad evidence' }; }
+  let ev;
+  try {
+    ev = JSON.parse(fs.readFileSync(f, 'utf8'));
+  } catch (e) {
+    err(`${id}: evidence unreadable: ${e.message}`);
+    return { status: 'PLANNED', why: 'bad evidence' };
+  }
   if (ev.mapId !== id) err(`${id}: evidence mapId mismatch`);
   const mapFile = path.join(root, 'maps', id + '.json');
-  if (ev.mapSha && fs.existsSync(mapFile) && textSha(mapFile) !== ev.mapSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
-  if (fs.existsSync(path.join(root, 'src/engine'))) {       // evidence must say which simulation produced it (audit A10/R11): none recorded, or a different one, is stale
+  if (ev.mapSha && fs.existsSync(mapFile) && textSha(mapFile) !== ev.mapSha)
+    return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: map changed since it was verified' };
+  if (fs.existsSync(path.join(root, 'src/engine'))) {
+    // evidence must say which simulation produced it (audit A10/R11): none recorded, or a different one, is stale
     if (!ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: it records no engine hash; re-run verify-map' };
-    if (engineSha(root) !== ev.engineSha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the simulation (src/engine) changed since it was generated; re-run verify-map' };
+    if (engineSha(root) !== ev.engineSha)
+      return {
+        status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED',
+        why: 'evidence is stale: the simulation (src/engine) changed since it was generated; re-run verify-map',
+      };
   }
   const stale = (why) => ({ status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: ' + why });
-  if (fs.existsSync(path.join(root, 'routes')) && (routesSha(root, id) || ev.routesSha)) {      // ALL of the map's route files (the canonical one is checked below), not only the main one
+  if (fs.existsSync(path.join(root, 'routes')) && (routesSha(root, id) || ev.routesSha)) {
+    // ALL of the map's route files (the canonical one is checked below), not only the main one
     if (!ev.routesSha) return stale('it records no hash of the route files; re-run verify-map');
     if (routesSha(root, id) !== ev.routesSha) return stale('a route file changed since verification; re-run verify-map');
   }
-  if (ev.assetVersion != null && nowSources.assets && ev.assetVersion !== nowSources.assets) return stale('the baked assets changed since verification; re-run verify-map');
-  if (ev.browser) { const why = browserStale(id, mapFile); if (why) return stale(why); }                // render / game-shell / audio / asset changes invalidate the evidence that drove the real game
+  if (ev.assetVersion != null && nowSources.assets && ev.assetVersion !== nowSources.assets)
+    return stale('the baked assets changed since verification; re-run verify-map');
+  if (ev.browser) {
+    const why = browserStale(id, mapFile);
+    if (why) return stale(why);
+  } // render / game-shell / audio / asset changes invalidate the evidence that drove the real game
   const rf = ev.canonicalRoute?.file && path.join(root, ev.canonicalRoute.file);
-  if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && textSha(rf) !== ev.canonicalRoute.sha) return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
-  let status = 'PLANNED', why = 'map does not load';
-  if (ev.loads === true) { status = 'IMPLEMENTED'; why = 'loads; verification incomplete'; }
-  if (status === 'IMPLEMENTED' && ev.automated?.pass === true && ev.canonicalRoute?.reachedExit === true && ev.canonicalRoute?.file && fs.existsSync(path.join(root, ev.canonicalRoute.file))) { status = 'AGENT_VERIFIED'; why = 'automated pass + canonical route reached exit'; }
-  if (status === 'AGENT_VERIFIED' && ev.humanReview?.approved === true && ev.humanReview?.by && ev.humanReview?.date && !(ev.knownBlockers?.length)) { status = 'COMPLETE'; why = 'human review recorded'; }
+  if (ev.canonicalRoute?.sha && rf && fs.existsSync(rf) && textSha(rf) !== ev.canonicalRoute.sha)
+    return { status: ev.loads === true ? 'IMPLEMENTED' : 'PLANNED', why: 'evidence is stale: the canonical route file changed since verification' };
+  let status = 'PLANNED',
+    why = 'map does not load';
+  if (ev.loads === true) {
+    status = 'IMPLEMENTED';
+    why = 'loads; verification incomplete';
+  }
+  if (
+    status === 'IMPLEMENTED' &&
+    ev.automated?.pass === true &&
+    ev.canonicalRoute?.reachedExit === true &&
+    ev.canonicalRoute?.file &&
+    fs.existsSync(path.join(root, ev.canonicalRoute.file))
+  ) {
+    status = 'AGENT_VERIFIED';
+    why = 'automated pass + canonical route reached exit';
+  }
+  if (status === 'AGENT_VERIFIED' && ev.humanReview?.approved === true && ev.humanReview?.by && ev.humanReview?.date && !ev.knownBlockers?.length) {
+    status = 'COMPLETE';
+    why = 'human review recorded';
+  }
   return { status, why };
 }
 const derived = new Map(maps.map((m) => [m.id, derive(m.id)]));
-for (const m of maps) if (m.status && ORDER.indexOf(m.status) > ORDER.indexOf(derived.get(m.id).status)) err(`${m.id}: manifest claims ${m.status} but evidence supports ${derived.get(m.id).status}`);
+for (const m of maps)
+  if (m.status && ORDER.indexOf(m.status) > ORDER.indexOf(derived.get(m.id).status))
+    err(`${m.id}: manifest claims ${m.status} but evidence supports ${derived.get(m.id).status}`);
 
 // ---- review bundles must not claim a status the evidence does not support ----
-// A bundle is the human-facing summary of a gate. Its numbers are copied from the evidence when it is generated, so they go stale the moment the code changes. Every LIVE bundle
-// (review/gate-N/) is compared with the status derived right now: build-info.json counts, maps.json rows, the README's status line and table. A bundle of an earlier gate is a
-// frozen snapshot and says so (build-info.json "historical": true plus a "Historical snapshot" banner in its README); its numbers describe that moment, not now.
+// A bundle is the human-facing summary of a gate. Its numbers are copied from the evidence when it is generated, so they go stale the moment the code
+// changes. Every LIVE bundle
+// (review/gate-N/) is compared with the status derived right now: build-info.json counts, maps.json rows, the README's status line and table. A
+// bundle of an earlier gate is a
+// frozen snapshot and says so (build-info.json "historical": true plus a "Historical snapshot" banner in its README); its numbers describe that
+// moment, not now.
 // (The gate bundle tools run this validator with --no-bundles: they are about to rewrite the bundle.)
 if (!process.argv.includes('--no-bundles')) {
-  const live = Object.fromEntries(ORDER.map((st) => [st, 0])); for (const d of derived.values()) live[d.status]++;
-  const rdir = path.join(root, 'review'), readJson = (p) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; } };
-  for (const b of fs.existsSync(rdir) ? fs.readdirSync(rdir).filter((n) => /^gate-\d+$/.test(n)).sort() : []) {
-    const dir = path.join(rdir, b), rel = 'review/' + b, info = readJson(path.join(dir, 'build-info.json')), readme = fs.existsSync(path.join(dir, 'README.md')) ? fs.readFileSync(path.join(dir, 'README.md'), 'utf8') : '';
-    if (info?.historical) { if (!/historical snapshot/i.test(readme)) err(`${rel}: build-info.json says historical but its README has no "Historical snapshot" banner`); continue; }
+  const live = Object.fromEntries(ORDER.map((st) => [st, 0]));
+  for (const d of derived.values()) live[d.status]++;
+  const rdir = path.join(root, 'review'),
+    readJson = (p) => {
+      try {
+        return JSON.parse(fs.readFileSync(p, 'utf8'));
+      } catch {
+        return null;
+      }
+    };
+  for (const b of fs.existsSync(rdir)
+    ? fs
+        .readdirSync(rdir)
+        .filter((n) => /^gate-\d+$/.test(n))
+        .sort()
+    : []) {
+    const dir = path.join(rdir, b),
+      rel = 'review/' + b,
+      info = readJson(path.join(dir, 'build-info.json')),
+      readme = fs.existsSync(path.join(dir, 'README.md')) ? fs.readFileSync(path.join(dir, 'README.md'), 'utf8') : '';
+    if (info?.historical) {
+      if (!/historical snapshot/i.test(readme)) err(`${rel}: build-info.json says historical but its README has no "Historical snapshot" banner`);
+      continue;
+    }
     const stale = `the bundle is stale: re-run the gate bundle tool from a clean commit after re-verifying, or mark it historical`;
-    if (info?.status) for (const st of ORDER) if (info.status[st] !== undefined && info.status[st] !== live[st]) err(`${rel}/build-info.json claims ${info.status[st]} ${st}, derived evidence says ${live[st]}: ${stale}`);
-    for (const m of readJson(path.join(dir, 'maps.json'))?.maps ?? []) if (m.status && derived.has(m.id) && m.status !== derived.get(m.id).status) err(`${rel}/maps.json: ${m.id} claims ${m.status}, derived evidence says ${derived.get(m.id).status}: ${stale}`);
+    if (info?.status)
+      for (const st of ORDER)
+        if (info.status[st] !== undefined && info.status[st] !== live[st])
+          err(`${rel}/build-info.json claims ${info.status[st]} ${st}, derived evidence says ${live[st]}: ${stale}`);
+    for (const m of readJson(path.join(dir, 'maps.json'))?.maps ?? [])
+      if (m.status && derived.has(m.id) && m.status !== derived.get(m.id).status)
+        err(`${rel}/maps.json: ${m.id} claims ${m.status}, derived evidence says ${derived.get(m.id).status}: ${stale}`);
     const line = readme.match(/PLANNED (\d+) \/ IMPLEMENTED (\d+) \/ AGENT_VERIFIED (\d+) \/ COMPLETE (\d+)/);
-    if (line) ORDER.forEach((st, i) => { if (+line[i + 1] !== live[st]) err(`${rel}/README.md claims ${line[i + 1]} ${st}, derived evidence says ${live[st]}: ${stale}`); });
-    for (const row of readme.matchAll(/^\| (C[12][A-Z0-9]+) \|[^|]*\| (PLANNED|IMPLEMENTED|AGENT_VERIFIED|COMPLETE) \|/gm)) if (derived.has(row[1]) && derived.get(row[1]).status !== row[2]) err(`${rel}/README.md: the table says ${row[1]} is ${row[2]}, derived evidence says ${derived.get(row[1]).status}: ${stale}`);
+    if (line)
+      ORDER.forEach((st, i) => {
+        if (+line[i + 1] !== live[st]) err(`${rel}/README.md claims ${line[i + 1]} ${st}, derived evidence says ${live[st]}: ${stale}`);
+      });
+    for (const row of readme.matchAll(/^\| (C[12][A-Z0-9]+) \|[^|]*\| (PLANNED|IMPLEMENTED|AGENT_VERIFIED|COMPLETE) \|/gm))
+      if (derived.has(row[1]) && derived.get(row[1]).status !== row[2])
+        err(`${rel}/README.md: the table says ${row[1]} is ${row[2]}, derived evidence says ${derived.get(row[1]).status}: ${stale}`);
   }
 }
 
@@ -129,7 +237,10 @@ if (fs.existsSync(am)) {
   const a = JSON.parse(fs.readFileSync(am, 'utf8'));
   for (const [id, info] of Object.entries(a.assets)) {
     const f = path.join(root, 'assets/baked', id + '.png');
-    if (!fs.existsSync(f)) { err(`asset ${id}: file missing`); continue; }
+    if (!fs.existsSync(f)) {
+      err(`asset ${id}: file missing`);
+      continue;
+    }
     const h = crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
     if (h !== info.sha256) warn(`asset ${id}: file hash differs from assets/baked/manifest.json (re-bake or update; bakes are only tolerance-stable)`);
   }
@@ -138,14 +249,31 @@ if (fs.existsSync(am)) {
 // ---- report ----
 const counts = Object.fromEntries(ORDER.map((s) => [s, 0]));
 for (const d of derived.values()) counts[d.status]++;
-const report = { generatedFrom: 'CAMPAIGN_MANIFEST.json + validation/maps/*.json', slots: maps.length, main: main.length, secret: secret.length, counts, errors, warnings };
+const report = {
+  generatedFrom: 'CAMPAIGN_MANIFEST.json + validation/maps/*.json',
+  slots: maps.length,
+  main: main.length,
+  secret: secret.length,
+  counts,
+  errors,
+  warnings,
+};
 fs.mkdirSync(path.join(root, 'validation'), { recursive: true });
-fs.writeFileSync(path.join(root, 'validation/campaign.json'), JSON.stringify({ ...report, perMap: Object.fromEntries([...derived].map(([k, v]) => [k, v.status])) }, null, 2) + '\n');
+fs.writeFileSync(
+  path.join(root, 'validation/campaign.json'),
+  JSON.stringify({ ...report, perMap: Object.fromEntries([...derived].map(([k, v]) => [k, v.status])) }, null, 2) + '\n',
+);
 if (process.argv.includes('--status')) {
-  console.log(`Maps  PLANNED ${counts.PLANNED}/68  IMPLEMENTED ${counts.IMPLEMENTED}/68  AGENT_VERIFIED ${counts.AGENT_VERIFIED}/68  COMPLETE ${counts.COMPLETE}/68`);
+  console.log(
+    `Maps  PLANNED ${counts.PLANNED}/68  IMPLEMENTED ${counts.IMPLEMENTED}/68  AGENT_VERIFIED ${counts.AGENT_VERIFIED}/68  COMPLETE ${counts.COMPLETE}/68`,
+  );
   console.log(`Secret maps in manifest: ${secret.length}/6 (verified: ${secret.filter((s) => ORDER.indexOf(derived.get(s.id).status) >= 2).length})`);
 }
 for (const w of warnings) console.warn('WARN ', w);
 for (const e of errors) console.error('ERROR', e);
-console.log(errors.length ? `validate: FAILED (${errors.length} errors)` : `validate: OK (topology ${maps.length} slots: C1 ${c1.length}, C2 ${c2.length}, main ${main.length}, secret ${secret.length})`);
+console.log(
+  errors.length
+    ? `validate: FAILED (${errors.length} errors)`
+    : `validate: OK (topology ${maps.length} slots: C1 ${c1.length}, C2 ${c2.length}, main ${main.length}, secret ${secret.length})`,
+);
 process.exit(errors.length ? 1 : 0);

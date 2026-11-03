@@ -1,47 +1,115 @@
-// THE READING PAGE (PT-070, R17): the whole story in play order as one page the director reads (and comments on, by line, with the viewer's own comment tool). Built from the data tools/dev/story-export.mjs writes
+// THE READING PAGE (PT-070, R17): the whole story in play order as one page the director reads (and comments on, by line, with the viewer's own
+// comment tool). Built from the data tools/dev/story-export.mjs writes
 // (`--json=`), plus the continuity sheet. The page is HTML for the Artifact tool (no <html>/<body>: the tool wraps it). Node only.
 //   node tools/dev/story-export.mjs --json=<data.json>   then   node tools/dev/story-page.mjs <data.json> <out.html>
 import fs from 'node:fs';
 import path from 'node:path';
 
-const [inFile, outFile] = process.argv.slice(2); if (!inFile || !outFile) { console.error('usage: story-page.mjs <data.json> <out.html>'); process.exit(2); }
+const [inFile, outFile] = process.argv.slice(2);
+if (!inFile || !outFile) {
+  console.error('usage: story-page.mjs <data.json> <out.html>');
+  process.exit(2);
+}
 const root = path.resolve(import.meta.dirname, '../..');
 const data = JSON.parse(fs.readFileSync(inFile, 'utf8'));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const mmss = (t) => `${Math.floor(t / 3600)}:${String(Math.floor((t % 3600) / 60)).padStart(2, '0')}`;
 const isDoc = (sp) => /\b(LOG|LOGS|NOTE|NOTES|NOTICE|MANIFEST|LEDGER|REGISTER|BOOK|DRAWING|PLACARD|BOARD|INSCRIPTION|PLATE|TALLY)\b/.test(sp || '');
-const kindOf = (sp) => (sp === 'INES' ? 'ines' : sp === 'SIGNAL HOUSE' ? 'signal' : sp === 'HULL' ? 'hull' : isDoc(sp) ? 'doc' : /SILENT|TENDER|QUIET ONE|VAEL|ZEALOT|TIDE-WARDEN|KEEPER/.test(sp || '') ? 'voice' : 'other');
+const kindOf = (sp) =>
+  sp === 'INES'
+    ? 'ines'
+    : sp === 'SIGNAL HOUSE'
+      ? 'signal'
+      : sp === 'HULL'
+        ? 'hull'
+        : isDoc(sp)
+          ? 'doc'
+          : /SILENT|TENDER|QUIET ONE|VAEL|ZEALOT|TIDE-WARDEN|KEEPER/.test(sp || '')
+            ? 'voice'
+            : 'other';
 const words = (s) => (String(s).match(/\S+/g) || []).length;
 
 /** a small markdown for the continuity sheet: headings, tables, bullets, bold, code */
 function md(src) {
-  const inline = (t) => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\*([^*]+)\*/g, '<i>$1</i>');
-  const lines = src.split('\n'), out = []; let i = 0;
+  const inline = (t) =>
+    esc(t)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+      .replace(/\*([^*]+)\*/g, '<i>$1</i>');
+  const lines = src.split('\n'),
+    out = [];
+  let i = 0;
   while (i < lines.length) {
     const l = lines[i];
-    if (/^#{1,3} /.test(l)) { const n = l.match(/^#+/)[0].length; out.push(`<h${n + 2}>${inline(l.replace(/^#+ /, ''))}</h${n + 2}>`); i++; }
-    else if (/^\|/.test(l) && /^\|[-| ]+\|$/.test(lines[i + 1] || '')) {
-      const head = l.split('|').slice(1, -1).map((c) => c.trim()); i += 2; const rows = [];
-      while (i < lines.length && /^\|/.test(lines[i])) { rows.push(lines[i].split('|').slice(1, -1).map((c) => c.trim())); i++; }
-      out.push(`<div class="scroll"><table><thead><tr>${head.map((h) => `<th>${inline(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
-    }
-    else if (/^- /.test(l)) { const items = []; while (i < lines.length && /^- /.test(lines[i])) { items.push(`<li>${inline(lines[i].slice(2))}</li>`); i++; } out.push(`<ul>${items.join('')}</ul>`); }
-    else if (l.trim()) { out.push(`<p>${inline(l)}</p>`); i++; }
-    else i++;
+    if (/^#{1,3} /.test(l)) {
+      const n = l.match(/^#+/)[0].length;
+      out.push(`<h${n + 2}>${inline(l.replace(/^#+ /, ''))}</h${n + 2}>`);
+      i++;
+    } else if (/^\|/.test(l) && /^\|[-| ]+\|$/.test(lines[i + 1] || '')) {
+      const head = l
+        .split('|')
+        .slice(1, -1)
+        .map((c) => c.trim());
+      i += 2;
+      const rows = [];
+      while (i < lines.length && /^\|/.test(lines[i])) {
+        rows.push(
+          lines[i]
+            .split('|')
+            .slice(1, -1)
+            .map((c) => c.trim()),
+        );
+        i++;
+      }
+      out.push(
+        `<div class="scroll"><table><thead><tr>${head.map((h) => `<th>${inline(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
+      );
+    } else if (/^- /.test(l)) {
+      const items = [];
+      while (i < lines.length && /^- /.test(lines[i])) {
+        items.push(`<li>${inline(lines[i].slice(2))}</li>`);
+        i++;
+      }
+      out.push(`<ul>${items.join('')}</ul>`);
+    } else if (l.trim()) {
+      out.push(`<p>${inline(l)}</p>`);
+      i++;
+    } else i++;
   }
   return out.join('\n');
 }
 
-let nMsg = 0, nWords = 0; for (const m of data.maps) for (const x of [...m.messages, ...m.never]) { nMsg++; nWords += words(x.text); }
-const groups = []; for (const m of data.maps) { const key = `${m.campaign}|${m.group}`; let g = groups.find((q) => q.key === key); if (!g) { g = { key, campaign: m.campaign, title: m.group, maps: [] }; groups.push(g); } g.maps.push(m); }
+let nMsg = 0,
+  nWords = 0;
+for (const m of data.maps)
+  for (const x of [...m.messages, ...m.never]) {
+    nMsg++;
+    nWords += words(x.text);
+  }
+const groups = [];
+for (const m of data.maps) {
+  const key = `${m.campaign}|${m.group}`;
+  let g = groups.find((q) => q.key === key);
+  if (!g) {
+    g = { key, campaign: m.campaign, title: m.group, maps: [] };
+    groups.push(g);
+  }
+  g.maps.push(m);
+}
 
-const msgRow = (x, extra = '') => `<li class="m k-${kindOf(x.speaker)}${extra}" id="m-${esc(x.id)}"><span class="who">${esc(x.speaker || '-')}</span><span class="tx">${esc(x.text)}</span><span class="meta">${x.tick != null ? mmss(x.tick) + ' ' : ''}${esc(x.route ?? '')}${x.route ? ' ' : ''}<span class="id">${esc(x.id)}</span></span></li>`;
-const cards = (list, cls = '') => `<ul class="cards ${cls}">${list.map((c) => `<li class="m k-${kindOf(c.who)}"><span class="who">${esc(c.who || '')}</span><span class="tx">${esc(c.text)}</span></li>`).join('')}</ul>`;
+const msgRow = (x, extra = '') =>
+  `<li class="m k-${kindOf(x.speaker)}${extra}" id="m-${esc(x.id)}"><span class="who">${esc(x.speaker || '-')}</span><span class="tx">${esc(x.text)}</span><span class="meta">${x.tick != null ? mmss(x.tick) + ' ' : ''}${esc(x.route ?? '')}${x.route ? ' ' : ''}<span class="id">${esc(x.id)}</span></span></li>`;
+const cards = (list, cls = '') =>
+  `<ul class="cards ${cls}">${list.map((c) => `<li class="m k-${kindOf(c.who)}"><span class="who">${esc(c.who || '')}</span><span class="tx">${esc(c.text)}</span></li>`).join('')}</ul>`;
 
 function mapHtml(m) {
   const sec = m.kind === 'secret';
-  const ob = m.objectives.length ? `<details class="obj"><summary>Objectives on the main route (${m.objectives.length})</summary><ul>${m.objectives.map((o) => `<li><span class="meta">${mmss(o.t)}</span> ${esc(o.text)}</li>`).join('')}</ul></details>` : '';
-  const never = m.never.length ? `<p class="held">Said only in another case (a reminder held once its gate is open, or the other choice):</p><ul class="msgs">${m.never.map((x) => msgRow({ ...x, route: x.choice ? 'choice ' + x.choice : 'held', tick: null }, ' held')).join('')}</ul>` : '';
+  const ob = m.objectives.length
+    ? `<details class="obj"><summary>Objectives on the main route (${m.objectives.length})</summary><ul>${m.objectives.map((o) => `<li><span class="meta">${mmss(o.t)}</span> ${esc(o.text)}</li>`).join('')}</ul></details>`
+    : '';
+  const never = m.never.length
+    ? `<p class="held">Said only in another case (a reminder held once its gate is open, or the other choice):</p><ul class="msgs">${m.never.map((x) => msgRow({ ...x, route: x.choice ? 'choice ' + x.choice : 'held', tick: null }, ' held')).join('')}</ul>`
+    : '';
   return `<article class="map${sec ? ' secret' : ''}" id="${m.id}">
   <h3><span class="mid">${m.id}</span> ${esc(m.name)}${sec ? ' <span class="tag">secret</span>' : ''}</h3>
   ${m.purpose ? `<p class="purpose">${esc(m.purpose)}</p>` : ''}
@@ -56,7 +124,11 @@ function mapHtml(m) {
 }
 
 const sheet = fs.readFileSync(path.join(root, 'design/story/CONTINUITY.md'), 'utf8');
-const nav = groups.map((g) => `<div class="grp"><b>${g.campaign === 1 ? 'One' : 'Two'}: ${esc(g.title)}</b>${g.maps.map((m) => `<a href="#${m.id}">${m.id}</a>`).join('')}</div>`).join('');
+const nav = groups
+  .map(
+    (g) => `<div class="grp"><b>${g.campaign === 1 ? 'One' : 'Two'}: ${esc(g.title)}</b>${g.maps.map((m) => `<a href="#${m.id}">${m.id}</a>`).join('')}</div>`,
+  )
+  .join('');
 
 const html = `<title>Hushfall Story Record</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

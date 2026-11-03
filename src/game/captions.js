@@ -1,5 +1,7 @@
-// SOUND CAPTIONS (PT-071, R20 accessibility): the sounds that matter, as words on the screen, with where they came from. Off by default (settings.captions). Pure: no DOM, no sim; it reads drained events, the way the audio layer does.
-// Every event the audio layer handles (src/audio/events.js) is either captioned here or listed in NO_CAPTION with the reason, so a new event cannot slip by (tests/captions.test.js reads events.js and checks).
+// SOUND CAPTIONS: the sounds that matter, as words on the screen, with where they came from. Off by default (settings.captions). Pure: no DOM, no
+// sim; it reads drained events, the way the audio layer does.
+// Every event the audio layer handles (src/audio/events.js) is either captioned here or listed in NO_CAPTION with the reason, so a new event cannot
+// slip by (tests/captions.test.js reads events.js and checks).
 import { ENEMIES } from '../engine/defs.js';
 
 const name = (k) => ENEMIES[k]?.name ?? 'Something';
@@ -10,7 +12,7 @@ export const CAPTIONS = {
   // threats
   enemy_windup: T((e) => `${name(e.kind)} winds up`, { danger: true, where: true }),
   enemy_lunge: T((e) => `${name(e.kind)} lunges`, { danger: true, where: true }),
-  enemy_lurch: T((e) => `${name(e.kind)} groans and surges`, { danger: true, where: true }),          // PT-076 (brain.js)
+  enemy_lurch: T((e) => `${name(e.kind)} groans and surges`, { danger: true, where: true }),
   enemy_call_windup: T((e) => `${name(e.kind)} lifts its bell`, { danger: true, where: true }),
   enemy_call: T((e) => `${name(e.kind)} rings for help`, { where: true }),
   enemy_dodge: T((e) => `${name(e.kind)} dodges`, { where: true }),
@@ -35,7 +37,7 @@ export const CAPTIONS = {
   bell_last: T('The Last Note: the floor rolls', { danger: true }),
   load_warn: T('Freight is about to fall (orange light)', { danger: true, where: true }),
   load_land: T('Freight lands', { where: true }),
-  sweep_tell: T('The Gate Warden\'s eye opens: a beam follows', { danger: true, where: true }),
+  sweep_tell: T("The Gate Warden's eye opens: a beam follows", { danger: true, where: true }),
   sweep_hit: T('The beam burns you', { danger: true }),
   spore_warn: T('A spore bed is about to bloom', { danger: true, where: true }),
   spore_bloom: T('A spore bed blooms', { where: true }),
@@ -79,43 +81,134 @@ export const CAPTIONS = {
 
 /** every other event the audio layer knows, and why it has no caption */
 export const NO_CAPTION = {
-  'the player\'s own action or feedback (the screen, the gun and the HUD already show it)': ['fire', 'charge_start', 'charge_full', 'swing', 'melee_hit', 'parry', 'guard_up', 'block', 'guard_break', 'headshot', 'dry', 'dry_feed', 'load_cycle', 'load_empty', 'load_hit', 'load_none', 'saw_hit', 'saw_kick', 'saw_restart', 'saw_stall', 'saw_start', 'saw_stop', 'grav_catch', 'grav_drop', 'grav_grab', 'grav_punt', 'grav_punt_prop', 'grav_throw', 'lamp', 'lamp_out', 'mirror_turn', 'weapon_switch', 'weapon_pickup', 'pickup', 'pin', 'wade', 'air_land', 'void_fall', 'vent_launch'],
-  'shown by the HUD or a toast already': ['hurt', 'armor_hit', 'burn', 'door_locked', 'exit_locked', 'switch_need', 'innocent', 'player_died', 'level_complete', 'folk_fear'],
-  'a hit the player causes or sees (the creature shows it)': ['enemy_hit', 'enemy_died', 'enemy_spawn', 'shield_hit', 'ward_hit', 'shot_impact', 'shot_reflect', 'impact', 'pulse_hit', 'phys_break', 'phys_hit', 'shove_impact', 'switch_dead', 'door_breath'],
+  "the player's own action or feedback (the screen, the gun and the HUD already show it)": [
+    'fire',
+    'charge_start',
+    'charge_full',
+    'swing',
+    'melee_hit',
+    'parry',
+    'guard_up',
+    'block',
+    'guard_break',
+    'headshot',
+    'dry',
+    'dry_feed',
+    'load_cycle',
+    'load_empty',
+    'load_hit',
+    'load_none',
+    'saw_hit',
+    'saw_kick',
+    'saw_restart',
+    'saw_stall',
+    'saw_start',
+    'saw_stop',
+    'grav_catch',
+    'grav_drop',
+    'grav_grab',
+    'grav_punt',
+    'grav_punt_prop',
+    'grav_throw',
+    'lamp',
+    'lamp_out',
+    'mirror_turn',
+    'weapon_switch',
+    'weapon_pickup',
+    'pickup',
+    'pin',
+    'wade',
+    'air_land',
+    'void_fall',
+    'vent_launch',
+  ],
+  'shown by the HUD or a toast already': [
+    'hurt',
+    'armor_hit',
+    'burn',
+    'door_locked',
+    'exit_locked',
+    'switch_need',
+    'innocent',
+    'player_died',
+    'level_complete',
+    'folk_fear',
+  ],
+  'a hit the player causes or sees (the creature shows it)': [
+    'enemy_hit',
+    'enemy_died',
+    'enemy_spawn',
+    'shield_hit',
+    'ward_hit',
+    'shot_impact',
+    'shot_reflect',
+    'impact',
+    'pulse_hit',
+    'phys_break',
+    'phys_hit',
+    'shove_impact',
+    'switch_dead',
+    'door_breath',
+  ],
   'shell or story cue (the scene carries its own subtitle)': ['cue', 'graft'],
   'covered by the caption of the tell before it': ['tear_lob'],
 };
 
 /** where a sound came from, for a listener at (px, pz) facing yaw: 'close' under 2.5 m, else one of eight directions */
 export function dirLabel(px, pz, yaw, x, z) {
-  const dx = x - px, dz = z - pz, d = Math.hypot(dx, dz);
+  const dx = x - px,
+    dz = z - pz,
+    d = Math.hypot(dx, dz);
   if (!(d >= 2.5)) return 'close';
-  const side = (dx * Math.cos(yaw) - dz * Math.sin(yaw)) / d, fwd = (dx * Math.sin(yaw) + dz * Math.cos(yaw)) / d;
-  const a = Math.atan2(side, fwd), bin = Math.round(a / (Math.PI / 4));                       // 0 ahead, 2 right, 4 behind, -2 left
+  const side = (dx * Math.cos(yaw) - dz * Math.sin(yaw)) / d,
+    fwd = (dx * Math.sin(yaw) + dz * Math.cos(yaw)) / d;
+  const a = Math.atan2(side, fwd),
+    bin = Math.round(a / (Math.PI / 4)); // 0 ahead, 2 right, 4 behind, -2 left
   return ['ahead', 'ahead right', 'right', 'behind right', 'behind', 'behind left', 'left', 'ahead left'][((bin % 8) + 8) % 8];
 }
 
 /** one event -> { text, danger } or null (an event with no caption, or one that is too far to matter) */
 export function captionFor(e, player) {
-  const c = CAPTIONS[e?.type]; if (!c) return null;
-  if (e.type === 'door_open' || e.type === 'door_close') { if (!e.breath) return null; }       // an ordinary door is shown by the door
+  const c = CAPTIONS[e?.type];
+  if (!c) return null;
+  if (e.type === 'door_open' || e.type === 'door_close') {
+    if (!e.breath) return null;
+  } // an ordinary door is shown by the door
   let text = typeof c.text === 'function' ? c.text(e) : c.text;
   if (c.where && player && Number.isFinite(e.x) && Number.isFinite(e.z)) {
-    const d = Math.hypot(e.x - player.x, e.z - player.z); if (d > 60 && !c.danger) return null;
+    const d = Math.hypot(e.x - player.x, e.z - player.z);
+    if (d > 60 && !c.danger) return null;
     text += `, ${dirLabel(player.x, player.z, player.yaw ?? 0, e.x, e.z)}`;
   }
   return { text, danger: !!c.danger };
 }
 
-/** the lines on the screen: at most three, each for 3.4 s (5 s for a threat); the same words inside 1.2 s are one line, kept fresh; a threat is never pushed out by something that is only news */
+/**
+ * the lines on the screen: at most three, each for 3.4 s (5 s for a threat); the same words inside 1.2 s are one line, kept fresh; a threat is never
+ * pushed out by something that is only news
+ */
 export class CaptionFeed {
-  constructor() { this.items = []; }
+  constructor() {
+    this.items = [];
+  }
   push(cap, now) {
     if (!cap) return;
-    const same = this.items.find((i) => i.text === cap.text && now - i.at < 1.2); if (same) { same.at = now; return; }
+    const same = this.items.find((i) => i.text === cap.text && now - i.at < 1.2);
+    if (same) {
+      same.at = now;
+      return;
+    }
     this.items.push({ ...cap, at: now });
-    while (this.items.length > 3) { const k = this.items.findIndex((i) => !i.danger); this.items.splice(k >= 0 ? k : 0, 1); }
+    while (this.items.length > 3) {
+      const k = this.items.findIndex((i) => !i.danger);
+      this.items.splice(k >= 0 ? k : 0, 1);
+    }
   }
-  lines(now) { this.items = this.items.filter((i) => now - i.at < (i.danger ? 5 : 3.4)); return this.items.map((i) => ({ text: i.text, danger: i.danger })); }
-  clear() { this.items = []; }
+  lines(now) {
+    this.items = this.items.filter((i) => now - i.at < (i.danger ? 5 : 3.4));
+    return this.items.map((i) => ({ text: i.text, danger: i.danger }));
+  }
+  clear() {
+    this.items = [];
+  }
 }

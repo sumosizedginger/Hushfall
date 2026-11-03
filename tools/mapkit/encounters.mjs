@@ -1,152 +1,377 @@
-// THE ENCOUNTER KIT (PT-052, R1 of the Director's Plan, workstream B): the scripted surprises of the ambush catalogue as calls, so a map source can say what it means instead of writing triggers by hand, and every one is checked
-// against the level it goes in (a cell that is not floor, or that already holds an object, is an error at BUILD time, not a creature stuck in a wall at play time). Node only.
+// THE ENCOUNTER KIT (PT-052, R1 of the Director's Plan, workstream B): the scripted surprises of the ambush catalogue as calls, so a map source can
+// say what it means instead of writing triggers by hand, and every one is checked
+// against the level it goes in (a cell that is not floor, or that already holds an object, is an error at BUILD time, not a creature stuck in a wall
+// at play time). Node only.
 //   const E = new Encounters(L);                         L = the Level the map is drawn in (call BEFORE L.layers(): a closet carves a niche)
-//   E.closet({ panel: [x, z], niche: [x0, z0, x1, z1], kinds: 't' | ['t', 'g'], when: { at: [x, z], radius } })   a wall panel slides back and a niche of sleepers wakes (CLOSET)
-//   E.cage({ at: [x, z], radius, cells: [[x, z], ...], kind })                          stepping onto a spot spawns a pack round you (CAGE: the spot is where a reward lies)
-//   E.dropIn({ at: [x, z], radius, cells, kind })                                        a pack drops in from the far side of a room as you cross it (DROP-IN)
-//   E.lightsOut({ at: [x, z], radius, cells, kind, level })                              the room goes dark, a pack comes, the light returns when they are dead (LIGHTS OUT)
+// E.closet({ panel: [x, z], niche: [x0, z0, x1, z1], kinds: 't' | ['t', 'g'], when: { at: [x, z], radius } }) a wall panel slides back and a niche of
+// sleepers wakes (CLOSET)
+// E.cage({ at: [x, z], radius, cells: [[x, z], ...], kind }) stepping onto a spot spawns a pack round you (CAGE: the spot is where a reward lies)
+// E.dropIn({ at: [x, z], radius, cells, kind }) a pack drops in from the far side of a room as you cross it (DROP-IN)
+// E.lightsOut({ at: [x, z], radius, cells, kind, level }) the room goes dark, a pack comes, the light returns when they are dead (LIGHTS OUT)
 //   E.reinforce({ when: 'time:90' | 'dead:<group>', cells, kind })                      a second wave that always knows where you are (REINFORCEMENT)
-//   E.apply(MAP)                                                                        append the groups, triggers and messages to the map definition
-// A kind is a LEGEND character ('t' Tollbearer, 'g' Gaunt, 'b' Bellhand ...) in a closet and an enemy KIND name ('tollbearer') in a spawn: both accepted in either place. The flood (the tide) is not in the kit: it is a map field, not an encounter.
+// E.apply(MAP) append the groups, triggers and messages to the map definition
+// A kind is a LEGEND character ('t' Tollbearer, 'g' Gaunt, 'b' Bellhand ...) in a closet and an enemy KIND name ('tollbearer') in a spawn: both
+// accepted in either place. The flood (the tide) is not in the kit: it is a map field, not an encounter.
 import { FLOOR_SKINS, WALL_SKINS, ENEMIES } from '../../src/engine/defs.js';
 import { LEGEND } from './legend.mjs';
 
 const FLOOR = new Set(Object.keys(FLOOR_SKINS));
 const kindOf = (k) => (ENEMIES[k] ? k : LEGEND[k]?.type === 'enemy' ? LEGEND[k].kind : null);
-const charOf = (k) => (LEGEND[k]?.type === 'enemy' ? k : Object.keys(LEGEND).find((c) => LEGEND[c].type === 'enemy' && LEGEND[c].kind === k) ?? null);
+const charOf = (k) => (LEGEND[k]?.type === 'enemy' ? k : (Object.keys(LEGEND).find((c) => LEGEND[c].type === 'enemy' && LEGEND[c].kind === k) ?? null));
 
 export class Encounters {
-  constructor(L, { prefix = 'amb' } = {}) { this.L = L; this.prefix = prefix; this.groups = []; this.triggers = []; this.messages = []; this.secrets = []; this.decals = []; this.levers = []; this.log = []; this.n = 0; }
-  #name(kind) { return `${this.prefix}-${kind}-${++this.n}`; }
+  constructor(L, { prefix = 'amb' } = {}) {
+    this.L = L;
+    this.prefix = prefix;
+    this.groups = [];
+    this.triggers = [];
+    this.messages = [];
+    this.secrets = [];
+    this.decals = [];
+    this.levers = [];
+    this.log = [];
+    this.n = 0;
+  }
+  #name(kind) {
+    return `${this.prefix}-${kind}-${++this.n}`;
+  }
   #floor(x, z, what) {
-    const c = this.L.get(x, z); if (!FLOOR.has(c)) throw new Error(`${what}: cell ${x},${z} is not floor ('${c}')`);
+    const c = this.L.get(x, z);
+    if (!FLOOR.has(c)) throw new Error(`${what}: cell ${x},${z} is not floor ('${c}')`);
     if (this.L.ob[z][x] !== '.') throw new Error(`${what}: cell ${x},${z} already holds '${this.L.ob[z][x]}'`);
   }
   #spawns(what, cells, kind, group, extra = {}) {
-    const k = kindOf(kind); if (!k) throw new Error(`${what}: unknown creature '${kind}'`);
-    return cells.map(([x, z]) => { this.#floor(x, z, what); return { spawn: { kind: k, at: [x, z], group, facing: extra.facing ?? 'south', hunt: extra.hunt !== false } }; });
+    const k = kindOf(kind);
+    if (!k) throw new Error(`${what}: unknown creature '${kind}'`);
+    return cells.map(([x, z]) => {
+      this.#floor(x, z, what);
+      return { spawn: { kind: k, at: [x, z], group, facing: extra.facing ?? 'south', hunt: extra.hunt !== false } };
+    });
   }
 
-  /** SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint. `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set, ok?: (spot) => boolean (PT-082: e.g. a squeezed map's cut columns) } finds the viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d the depth; rewards are LEGEND characters. Returns { id, panel, rect }. */
-  secretRoom({ id, from = null, dir = null, search = null, w = 3, d = 2, floor = null, wall = null, rewards = [], message = null, open = 'use', lever = null }) {          // PT-081: `open` 'shoot' (a cracked wall) or 'switch' (`lever: { at: [x, z], wall }` opens it)
-    const L = this.L, V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }, solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');          // PT-081: WALL only (open sky or water is not something a room can be cut into)
+  /**
+   * SECRET ROOM: a small room behind a panel in a straight wall, with its rewards inside and a scuffed-wall decal on the near face as the hint.
+   * `search` = { region: [x0, z0, x1, z1], prefer: [x, z], lane?: Set, ok?: (spot) => boolean (PT-082: e.g. a squeezed map's cut columns) } finds the
+   * viable spot nearest `prefer` (never on the lane); `from` + `dir` ('n' 's' 'e' 'w') says exactly where. w is odd (the width across the wall), d
+   * the depth; rewards are LEGEND characters. Returns { id, panel, rect }.
+   */
+  secretRoom({
+    id,
+    from = null,
+    dir = null,
+    search = null,
+    w = 3,
+    d = 2,
+    floor = null,
+    wall = null,
+    rewards = [],
+    message = null,
+    open = 'use',
+    lever = null,
+  }) {
+    // PT-081: `open` 'shoot' (a cracked wall) or 'switch' (`lever: { at: [x, z], wall }` opens it)
+    const L = this.L,
+      V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] },
+      // PT-081: WALL only (open sky or water is not something a room can be cut into)
+      solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');
     const spot = (fx, fz, k) => {
-      const [dx, dz] = V[k], px = fx + dx, pz = fz + dz, [lx, lz] = [-dz, dx], half = (w - 1) / 2; if (!solid(px, pz) || !solid(px + lx, pz + lz) || !solid(px - lx, pz - lz)) return null;
-      const cells = []; for (let i = 1; i <= d; i++) for (let j = -half; j <= half; j++) cells.push([px + dx * (i - 1) + lx * j + dx, pz + dz * (i - 1) + lz * j + dz]);
+      const [dx, dz] = V[k],
+        px = fx + dx,
+        pz = fz + dz,
+        [lx, lz] = [-dz, dx],
+        half = (w - 1) / 2;
+      if (!solid(px, pz) || !solid(px + lx, pz + lz) || !solid(px - lx, pz - lz)) return null;
+      const cells = [];
+      for (let i = 1; i <= d; i++) for (let j = -half; j <= half; j++) cells.push([px + dx * (i - 1) + lx * j + dx, pz + dz * (i - 1) + lz * j + dz]);
       if (cells.some(([x, z]) => !solid(x, z) || L.ob[z][x] !== '.')) return null;
-      // the ring round the new room must be solid wall (it takes the room's wall skin): the room may touch nothing else; the panel's own cell is the one opening
-      const set = new Set(cells.map(([x, z]) => x + ',' + z)); for (const [x, z] of cells) for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { const nx = x + a, nz = z + b; if (set.has(nx + ',' + nz) || (nx === px && nz === pz)) continue; if (!solid(nx, nz)) return null; }
-      const xs = cells.map((c) => c[0]), zs = cells.map((c) => c[1]); return { panel: [px, pz], rect: [Math.min(...xs), Math.min(...zs), Math.max(...xs), Math.max(...zs)], cells, front: [fx, fz], dir: k };
+      // the ring round the new room must be solid wall (it takes the room's wall skin): the room may touch nothing else; the panel's own cell is the
+      // one opening
+      const set = new Set(cells.map(([x, z]) => x + ',' + z));
+      for (const [x, z] of cells)
+        for (let a = -1; a <= 1; a++)
+          for (let b = -1; b <= 1; b++) {
+            const nx = x + a,
+              nz = z + b;
+            if (set.has(nx + ',' + nz) || (nx === px && nz === pz)) continue;
+            if (!solid(nx, nz)) return null;
+          }
+      const xs = cells.map((c) => c[0]),
+        zs = cells.map((c) => c[1]);
+      return { panel: [px, pz], rect: [Math.min(...xs), Math.min(...zs), Math.max(...xs), Math.max(...zs)], cells, front: [fx, fz], dir: k };
     };
     let pick = null;
-    if (from) { pick = spot(from[0], from[1], dir); if (!pick) throw new Error(`secretRoom ${id}: no room fits behind ${from} going ${dir}`); }
-    else {
-      const [x0, z0, x1, z1] = search.region, best = []; for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) { if (!FLOOR.has(L.get(x, z)) || L.ob[z][x] !== '.' || search.lane?.has(x + ',' + z)) continue; for (const k of Object.keys(V)) { const s = spot(x, z, k); if (s && (!search.ok || search.ok(s))) best.push({ s, d: Math.hypot(x - search.prefer[0], z - search.prefer[1]) }); } }
-      best.sort((p, q) => p.d - q.d || p.s.panel[1] - q.s.panel[1] || p.s.panel[0] - q.s.panel[0]); pick = best[0]?.s; if (!pick) throw new Error(`secretRoom ${id}: no viable spot in ${search.region}`);
+    if (from) {
+      pick = spot(from[0], from[1], dir);
+      if (!pick) throw new Error(`secretRoom ${id}: no room fits behind ${from} going ${dir}`);
+    } else {
+      const [x0, z0, x1, z1] = search.region,
+        best = [];
+      for (let z = z0; z <= z1; z++)
+        for (let x = x0; x <= x1; x++) {
+          if (!FLOOR.has(L.get(x, z)) || L.ob[z][x] !== '.' || search.lane?.has(x + ',' + z)) continue;
+          for (const k of Object.keys(V)) {
+            const s = spot(x, z, k);
+            if (s && (!search.ok || search.ok(s))) best.push({ s, d: Math.hypot(x - search.prefer[0], z - search.prefer[1]) });
+          }
+        }
+      best.sort((p, q) => p.d - q.d || p.s.panel[1] - q.s.panel[1] || p.s.panel[0] - q.s.panel[0]);
+      pick = best[0]?.s;
+      if (!pick) throw new Error(`secretRoom ${id}: no viable spot in ${search.region}`);
     }
-    L.room(pick.rect, { floor: floor ?? L.get(pick.front[0], pick.front[1]), wall: wall ?? L.get(pick.panel[0], pick.panel[1]) }); L.secretPanel(pick.panel[0], pick.panel[1]);
-    { const fh = L.ht?.[pick.front[1]]?.[pick.front[0]] ?? 0; if (fh && L.height) L.height(pick.rect, fh); }          // PT-081: the room stands at the height of the floor in front of its panel (a room 3 m below a walkway was a trap: Signal House)          // by default the room wears the floor in front of its panel and the wall the panel is set in
-    const free = pick.cells.slice().reverse(); rewards.forEach((c, i) => { const [x, z] = free[i % free.length]; L.put(x, z, c); });
-    const half = (w - 1) / 2, far = [pick.cells[half], pick.cells[w + half]].filter(Boolean);          // the secret counts as found when the player stands in the first cells behind the panel (the centre column), as in the hand-built ones
+    L.room(pick.rect, { floor: floor ?? L.get(pick.front[0], pick.front[1]), wall: wall ?? L.get(pick.panel[0], pick.panel[1]) });
+    L.secretPanel(pick.panel[0], pick.panel[1]);
+    {
+      const fh = L.ht?.[pick.front[1]]?.[pick.front[0]] ?? 0;
+      if (fh && L.height) L.height(pick.rect, fh);
+    // PT-081: the room stands at the height of the floor in front of its panel (a room 3 m below a walkway was a trap: Signal House) // by default
+    // the room wears the floor in front of its panel and the wall the panel is set in
+    }
+    const free = pick.cells.slice().reverse();
+    rewards.forEach((c, i) => {
+      const [x, z] = free[i % free.length];
+      L.put(x, z, c);
+    });
+    const half = (w - 1) / 2,
+      // the secret counts as found when the player stands in the first cells behind the panel (the centre column), as in the hand-built ones
+      far = [pick.cells[half], pick.cells[w + half]].filter(Boolean);
     this.secrets.push({ id, panel: pick.panel, cells: far, ...(open !== 'use' ? { open } : {}) });
-    if (open === 'switch') { if (!lever?.at) throw new Error(`secretRoom ${id}: a switch secret needs lever.at`); this.levers.push({ type: 'switch', id: id + '-lever', at: lever.at, wall: lever.wall ?? 'north', do: [{ open: pick.panel }] }); }
-    // the hint: a scuffed patch on the PLAIN wall one cell to the side of the panel (a decal sits on a wall, and the panel is a secret tile, not a wall); none if neither side is floor in front of plain wall
-    const [vx, vz] = V[pick.dir], hint = [1, -1].map((s) => [pick.front[0] - vz * s, pick.front[1] + vx * s]).find(([cx, cz]) => FLOOR.has(L.get(cx, cz)) && solid(cx + vx, cz + vz));
-    if (hint && open !== 'shoot') this.decals.push({ kind: 'scrape', at: hint, wall: { n: 'north', s: 'south', e: 'east', w: 'west' }[pick.dir], y: 1.0, size: 1.0 });
-    if (message) this.messages.push({ id, at: far[0], radius: 2, ...message });
-    this.log.push({ kind: 'secret', id, panel: pick.panel }); return { id, panel: pick.panel, rect: pick.rect };
-  }
-  /** n free floor cells `min`..`max` cells from `at` that SEE `at` over level floor, within half a metre of its height, at least `sep` cells apart; the same answer every time (best to a middle distance first) */
-  around(at, { n, min = 4, max = 9, sep = 3, avoid = [] }) {
-    const L = this.L, mid = (min + max) / 2, h0 = L.ht[at[1]]?.[at[0]] ?? 0, bad = new Set(avoid.map(([x, z]) => x + ',' + z)), cand = [];
-    for (let z = at[1] - max; z <= at[1] + max; z++) for (let x = at[0] - max; x <= at[0] + max; x++) {
-      const d = Math.hypot(x - at[0], z - at[1]); if (d < min || d > max || !FLOOR.has(L.get(x, z)) || L.ob[z]?.[x] !== '.' || bad.has(x + ',' + z) || Math.abs((L.ht[z]?.[x] ?? 0) - h0) > 1) continue;
-      let seen = true; const m = Math.max(Math.abs(x - at[0]), Math.abs(z - at[1])); for (let i = 1; i < m; i++) if (!FLOOR.has(L.get(Math.round(at[0] + (x - at[0]) * i / m), Math.round(at[1] + (z - at[1]) * i / m)))) { seen = false; break; }
-      if (seen) cand.push({ x, z, k: Math.abs(d - mid), a: Math.atan2(z - at[1], x - at[0]) });
+    if (open === 'switch') {
+      if (!lever?.at) throw new Error(`secretRoom ${id}: a switch secret needs lever.at`);
+      this.levers.push({ type: 'switch', id: id + '-lever', at: lever.at, wall: lever.wall ?? 'north', do: [{ open: pick.panel }] });
     }
-    cand.sort((p, q) => p.k - q.k || p.a - q.a); const out = [];
-    for (const c of cand) { if (out.length >= n) break; if (out.every(([x, z]) => Math.hypot(x - c.x, z - c.z) >= sep)) out.push([c.x, c.z]); }
-    if (out.length < n) throw new Error(`around: wanted ${n} cells near ${at}, found ${out.length}`); return out;
+    // the hint: a scuffed patch on the PLAIN wall one cell to the side of the panel (a decal sits on a wall, and the panel is a secret tile, not a
+    // wall); none if neither side is floor in front of plain wall
+    const [vx, vz] = V[pick.dir],
+      hint = [1, -1].map((s) => [pick.front[0] - vz * s, pick.front[1] + vx * s]).find(([cx, cz]) => FLOOR.has(L.get(cx, cz)) && solid(cx + vx, cz + vz));
+    if (hint && open !== 'shoot')
+      this.decals.push({ kind: 'scrape', at: hint, wall: { n: 'north', s: 'south', e: 'east', w: 'west' }[pick.dir], y: 1.0, size: 1.0 });
+    if (message) this.messages.push({ id, at: far[0], radius: 2, ...message });
+    this.log.push({ kind: 'secret', id, panel: pick.panel });
+    return { id, panel: pick.panel, rect: pick.rect };
   }
-  #trigger(id, when, at, radius, list) { const t = { id, when, ...(at ? { at, radius } : {}), do: list }; this.triggers.push(t); return t; }
+  /**
+   * n free floor cells `min`..`max` cells from `at` that SEE `at` over level floor, within half a metre of its height, at least `sep` cells apart;
+   * the same answer every time (best to a middle distance first)
+   */
+  around(at, { n, min = 4, max = 9, sep = 3, avoid = [] }) {
+    const L = this.L,
+      mid = (min + max) / 2,
+      h0 = L.ht[at[1]]?.[at[0]] ?? 0,
+      bad = new Set(avoid.map(([x, z]) => x + ',' + z)),
+      cand = [];
+    for (let z = at[1] - max; z <= at[1] + max; z++)
+      for (let x = at[0] - max; x <= at[0] + max; x++) {
+        const d = Math.hypot(x - at[0], z - at[1]);
+        if (d < min || d > max || !FLOOR.has(L.get(x, z)) || L.ob[z]?.[x] !== '.' || bad.has(x + ',' + z) || Math.abs((L.ht[z]?.[x] ?? 0) - h0) > 1) continue;
+        let seen = true;
+        const m = Math.max(Math.abs(x - at[0]), Math.abs(z - at[1]));
+        for (let i = 1; i < m; i++)
+          if (!FLOOR.has(L.get(Math.round(at[0] + ((x - at[0]) * i) / m), Math.round(at[1] + ((z - at[1]) * i) / m)))) {
+            seen = false;
+            break;
+          }
+        if (seen) cand.push({ x, z, k: Math.abs(d - mid), a: Math.atan2(z - at[1], x - at[0]) });
+      }
+    cand.sort((p, q) => p.k - q.k || p.a - q.a);
+    const out = [];
+    for (const c of cand) {
+      if (out.length >= n) break;
+      if (out.every(([x, z]) => Math.hypot(x - c.x, z - c.z) >= sep)) out.push([c.x, c.z]);
+    }
+    if (out.length < n) throw new Error(`around: wanted ${n} cells near ${at}, found ${out.length}`);
+    return out;
+  }
+  #trigger(id, when, at, radius, list) {
+    const t = { id, when, ...(at ? { at, radius } : {}), do: list };
+    this.triggers.push(t);
+    return t;
+  }
 
-  /** CLOSET: carve a niche (floor `floor`, walls `wall`), set a closet panel in the wall in front of it, put the sleepers in; `when` makes a trigger that opens it, or splice the returned `actions` into a switch's `do` */
+  /**
+   * CLOSET: carve a niche (floor `floor`, walls `wall`), set a closet panel in the wall in front of it, put the sleepers in; `when` makes a trigger
+   * that opens it, or splice the returned `actions` into a switch's `do`
+   */
   closet({ panel, niche, kinds, floor = 'f', wall = 'W', when = null, sound = 'bell_strike', message = null }) {
-    const [x0, z0, x1, z1] = niche, cells = []; for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) cells.push([x, z]);
-    const list = Array.isArray(kinds) ? kinds : cells.map(() => kinds); if (list.length !== cells.length) throw new Error(`closet: ${cells.length} niche cells but ${list.length} creatures`);
+    const [x0, z0, x1, z1] = niche,
+      cells = [];
+    for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) cells.push([x, z]);
+    const list = Array.isArray(kinds) ? kinds : cells.map(() => kinds);
+    if (list.length !== cells.length) throw new Error(`closet: ${cells.length} niche cells but ${list.length} creatures`);
     for (const k of list) if (!charOf(k) || !kindOf(k)) throw new Error(`closet: unknown creature '${k}'`);
-    const name = this.#name('closet'); this.L.room(niche, { floor, wall }); this.L.closet(panel[0], panel[1]);
+    const name = this.#name('closet');
+    this.L.room(niche, { floor, wall });
+    this.L.closet(panel[0], panel[1]);
     cells.forEach(([x, z], i) => this.L.put(x, z, charOf(list[i]) ?? list[i]));
     this.groups.push({ name, rect: niche });
     const actions = [{ open: [panel[0], panel[1]] }, { wake: name }, { sound }, { shake: 0.6 }];
     if (when) this.#trigger(name, 'enter', when.at, when.radius ?? 1.5, actions);
     if (message) this.messages.push({ id: name, at: when?.at ?? panel, radius: when?.radius ?? 1.5, ...message });
-    this.log.push({ kind: 'closet', id: name, creatures: cells.length }); return { group: name, actions };
+    this.log.push({ kind: 'closet', id: name, creatures: cells.length });
+    return { group: name, actions };
   }
   /** CAGE: a spot (where the reward lies) that, stepped on, spawns a pack round the player */
   cage({ at, radius = 1.6, cells, kind, sound = 'bell_strike', message = null, facing }) {
-    const name = this.#name('cage'), list = [{ sound }, { shake: 1 }, ...this.#spawns('cage', cells, kind, name, { facing })]; this.#trigger(name, 'enter', at, radius, list);
-    if (message) this.messages.push({ id: name, at, radius, ...message }); this.log.push({ kind: 'cage', id: name, creatures: cells.length }); return { group: name };
+    const name = this.#name('cage'),
+      list = [{ sound }, { shake: 1 }, ...this.#spawns('cage', cells, kind, name, { facing })];
+    this.#trigger(name, 'enter', at, radius, list);
+    if (message) this.messages.push({ id: name, at, radius, ...message });
+    this.log.push({ kind: 'cage', id: name, creatures: cells.length });
+    return { group: name };
   }
   /** DROP-IN: the same, wider, with the pack dropping in at the far side of the room as the player crosses it */
   dropIn({ at, radius = 3, cells, kind, sound = 'creak', message = null, facing }) {
-    const name = this.#name('dropin'), list = [{ sound }, { shake: 0.8 }, ...this.#spawns('dropIn', cells, kind, name, { facing })]; this.#trigger(name, 'enter', at, radius, list);
-    if (message) this.messages.push({ id: name, at, radius, ...message }); this.log.push({ kind: 'dropin', id: name, creatures: cells.length }); return { group: name };
+    const name = this.#name('dropin'),
+      list = [{ sound }, { shake: 0.8 }, ...this.#spawns('dropIn', cells, kind, name, { facing })];
+    this.#trigger(name, 'enter', at, radius, list);
+    if (message) this.messages.push({ id: name, at, radius, ...message });
+    this.log.push({ kind: 'dropin', id: name, creatures: cells.length });
+    return { group: name };
   }
   /** LIGHTS OUT: dim the room (`level`), send a pack, and give the light back when the pack is dead */
   lightsOut({ at, radius = 3, cells, kind, level = 0.3, sound = 'toll_alert', message = null, facing }) {
-    const name = this.#name('dark'), list = [{ lights: level }, { sound }, ...this.#spawns('lightsOut', cells, kind, name, { facing })]; this.#trigger(name, 'enter', at, radius, list);
+    const name = this.#name('dark'),
+      list = [{ lights: level }, { sound }, ...this.#spawns('lightsOut', cells, kind, name, { facing })];
+    this.#trigger(name, 'enter', at, radius, list);
     this.#trigger(name + '-light', 'dead:' + name, null, 0, [{ lights: '__ambient' }]);
-    if (message) this.messages.push({ id: name, at, radius, ...message }); this.log.push({ kind: 'lightsout', id: name, creatures: cells.length }); return { group: name };
+    if (message) this.messages.push({ id: name, at, radius, ...message });
+    this.log.push({ kind: 'lightsout', id: name, creatures: cells.length });
+    return { group: name };
   }
-  /** REINFORCEMENT: a wave that always knows where the player stands, sent by a clock ('time:90') or by the death of another group ('dead:<group>') */
+  /**
+   * REINFORCEMENT: a wave that always knows where the player stands, sent by a clock ('time:90') or by the death of another group ('dead:<group>')
+   */
   reinforce({ when, cells, kind, sound = 'toll_alert', message = null, facing }) {
     if (!/^(time:\d+|dead:[\w-]+)$/.test(when)) throw new Error(`reinforce: when must be 'time:<seconds>' or 'dead:<group>' (got '${when}')`);
-    const name = this.#name('wave'), list = [{ sound }, ...this.#spawns('reinforce', cells, kind, name, { facing, hunt: true })]; this.#trigger(name, when, null, 0, list);
-    if (message) this.messages.push({ id: name, at: cells[0], radius: 1, ...message }); this.log.push({ kind: 'reinforce', id: name, creatures: cells.length }); return { group: name };
+    const name = this.#name('wave'),
+      list = [{ sound }, ...this.#spawns('reinforce', cells, kind, name, { facing, hunt: true })];
+    this.#trigger(name, when, null, 0, list);
+    if (message) this.messages.push({ id: name, at: cells[0], radius: 1, ...message });
+    this.log.push({ kind: 'reinforce', id: name, creatures: cells.length });
+    return { group: name };
   }
   /** append everything to the map definition (call after MAP is built; the dark's restore level is the map's own ambient light) */
-  /** PT-081 (design/FUN_CHECK.md, standard 4: height in the fights): a raised PLATFORM, the auction-block pattern: a w x d block of floor raised `up` half-metres with a ring of half-height steps on two
-   *  opposite sides (axis 'x': west and east; 'z': north and south) and a drop on the others. Found by search like a secret room: the block, its steps and a ring round them are floor of one height under the
-   *  map's own ceiling, the block and its steps hold nothing and are off the lane. Returns the block's rect. */
+  /**
+   * PT-081 (design/FUN_CHECK.md, standard 4: height in the fights): a raised PLATFORM, the auction-block pattern: a w x d block of floor raised `up`
+   * half-metres with a ring of half-height steps on two
+   * opposite sides (axis 'x': west and east; 'z': north and south) and a drop on the others. Found by search like a secret room: the block, its steps
+   * and a ring round them are floor of one height under the
+   * map's own ceiling, the block and its steps hold nothing and are off the lane. Returns the block's rect.
+   */
   platform({ search, w = 5, d = 4, up = 2, axis = 'x' }) {
-    const L = this.L, { region: [x0, z0, x1, z1], prefer = [(x0 + x1) / 2, (z0 + z1) / 2], lane = null } = search, sx = axis === 'x' ? 1 : 0, sz = 1 - sx;
+    const L = this.L,
+      {
+        region: [x0, z0, x1, z1],
+        prefer = [(x0 + x1) / 2, (z0 + z1) / 2],
+        lane = null,
+      } = search,
+      sx = axis === 'x' ? 1 : 0,
+      sz = 1 - sx;
     let best = null;
-    for (let z = z0; z <= z1 - d + 1; z++) for (let x = x0; x <= x1 - w + 1; x++) {
-      const h0 = L.ht[z]?.[x]; let ok = true;
-      for (let zz = z - 1 - sz; zz <= z + d + sz && ok; zz++) for (let xx = x - 1 - sx; xx <= x + w + sx && ok; xx++) {
-        if (!FLOOR.has(L.get(xx, zz)) || L.ht[zz]?.[xx] !== h0 || (L.ce && L.ce[zz][xx] !== '.')) { ok = false; break; }
-        const inner = xx >= x - sx && xx <= x + w - 1 + sx && zz >= z - sz && zz <= z + d - 1 + sz;
-        if (inner && (L.ob[zz][xx] !== '.' || lane?.has(xx + ',' + zz))) ok = false;
+    for (let z = z0; z <= z1 - d + 1; z++)
+      for (let x = x0; x <= x1 - w + 1; x++) {
+        const h0 = L.ht[z]?.[x];
+        let ok = true;
+        for (let zz = z - 1 - sz; zz <= z + d + sz && ok; zz++)
+          for (let xx = x - 1 - sx; xx <= x + w + sx && ok; xx++) {
+            if (!FLOOR.has(L.get(xx, zz)) || L.ht[zz]?.[xx] !== h0 || (L.ce && L.ce[zz][xx] !== '.')) {
+              ok = false;
+              break;
+            }
+            const inner = xx >= x - sx && xx <= x + w - 1 + sx && zz >= z - sz && zz <= z + d - 1 + sz;
+            if (inner && (L.ob[zz][xx] !== '.' || lane?.has(xx + ',' + zz))) ok = false;
+          }
+        if (!ok) continue;
+        const dd = Math.hypot(x + w / 2 - prefer[0], z + d / 2 - prefer[1]);
+        if (!best || dd < best.d) best = { x, z, d: dd };
       }
-      if (!ok) continue;
-      const dd = Math.hypot(x + w / 2 - prefer[0], z + d / 2 - prefer[1]); if (!best || dd < best.d) best = { x, z, d: dd };
-    }
     if (!best) throw new Error(`platform: no ${w}x${d} spot in ${search.region}`);
-    const { x, z } = best, h0 = L.ht[z][x], half = h0 + Math.round(up / 2);
+    const { x, z } = best,
+      h0 = L.ht[z][x],
+      half = h0 + Math.round(up / 2);
     L.height([x, z, x + w - 1, z + d - 1], h0 + up);
-    if (sx) { L.height([x - 1, z, x - 1, z + d - 1], half); L.height([x + w, z, x + w, z + d - 1], half); } else { L.height([x, z - 1, x + w - 1, z - 1], half); L.height([x, z + d, x + w - 1, z + d], half); }
-    this.log.push({ kind: 'platform', rect: [x, z, x + w - 1, z + d - 1] }); return [x, z, x + w - 1, z + d - 1];
+    if (sx) {
+      L.height([x - 1, z, x - 1, z + d - 1], half);
+      L.height([x + w, z, x + w, z + d - 1], half);
+    } else {
+      L.height([x, z - 1, x + w - 1, z - 1], half);
+      L.height([x, z + d, x + w - 1, z + d], half);
+    }
+    this.log.push({ kind: 'platform', rect: [x, z, x + w - 1, z + d - 1] });
+    return [x, z, x + w - 1, z + d - 1];
   }
-  /** PT-081 (standard 2: a loop; standard 1: no mirror): a BYPASS, a corridor carved through SOLID from beside floor cell `from` to beside floor cell `to`, never touching any other floor, a door, a panel or a
-   *  closet on the way (it stays a corridor of its own), the shortest such (breadth first), at least `minLen` cells, its floor ramped from one end's height to the other's (half a metre a cell at most). */
+  /**
+   * PT-081 (standard 2: a loop; standard 1: no mirror): a BYPASS, a corridor carved through SOLID from beside floor cell `from` to beside floor cell
+   * `to`, never touching any other floor, a door, a panel or a
+   * closet on the way (it stays a corridor of its own), the shortest such (breadth first), at least `minLen` cells, its floor ramped from one end's
+   * height to the other's (half a metre a cell at most).
+   */
   bypass({ from, to, floor = null, wall = null, minLen = 4 }) {
-    const L = this.L, key = (x, z) => x + ',' + z, D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]], bad = (c) => FLOOR.has(c) || 'DSX'.includes(c);
-    const solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');          // only through WALL (never across open sky, water or a hazard)
+    const L = this.L,
+      key = (x, z) => x + ',' + z,
+      D4 = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ],
+      bad = (c) => FLOOR.has(c) || 'DSX'.includes(c);
+    // only through WALL (never across open sky, water or a hazard)
+    const solid = (x, z) => x >= 1 && z >= 1 && x < L.w - 1 && z < L.h - 1 && (L.get(x, z) in WALL_SKINS || L.get(x, z) === '#');
     const nearEnd = (x, z) => Math.max(Math.abs(x - from[0]), Math.abs(z - from[1])) <= 1 || Math.max(Math.abs(x - to[0]), Math.abs(z - to[1])) <= 1;
-    const carvable = (x, z) => { if (!solid(x, z)) return false; const end = nearEnd(x, z); for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dz) continue; const c = L.get(x + dx, z + dz); if ('DSX'.includes(c) || (!end && FLOOR.has(c))) return false; } return true; };          // never beside a door, a panel or a closet, even at its ends
-    const goal = new Set(D4.map(([dx, dz]) => key(to[0] + dx, to[1] + dz))), prev = new Map(), q = [];
-    for (const [dx, dz] of D4) { const s = [from[0] + dx, from[1] + dz]; if (carvable(...s)) { prev.set(key(...s), null); q.push(s); } }
+    const carvable = (x, z) => {
+      if (!solid(x, z)) return false;
+      const end = nearEnd(x, z);
+      for (let dz = -1; dz <= 1; dz++)
+        for (let dx = -1; dx <= 1; dx++) {
+          if (!dx && !dz) continue;
+          const c = L.get(x + dx, z + dz);
+          if ('DSX'.includes(c) || (!end && FLOOR.has(c))) return false;
+        }
+      return true;
+    }; // never beside a door, a panel or a closet, even at its ends
+    const goal = new Set(D4.map(([dx, dz]) => key(to[0] + dx, to[1] + dz))),
+      prev = new Map(),
+      q = [];
+    for (const [dx, dz] of D4) {
+      const s = [from[0] + dx, from[1] + dz];
+      if (carvable(...s)) {
+        prev.set(key(...s), null);
+        q.push(s);
+      }
+    }
     let end = null;
-    for (let i = 0; i < q.length; i++) { const [x, z] = q[i]; if (goal.has(key(x, z))) { end = [x, z]; break; } for (const [dx, dz] of D4) { const n = [x + dx, z + dz], k = key(...n); if (!prev.has(k) && carvable(...n)) { prev.set(k, [x, z]); q.push(n); } } }
+    for (let i = 0; i < q.length; i++) {
+      const [x, z] = q[i];
+      if (goal.has(key(x, z))) {
+        end = [x, z];
+        break;
+      }
+      for (const [dx, dz] of D4) {
+        const n = [x + dx, z + dz],
+          k = key(...n);
+        if (!prev.has(k) && carvable(...n)) {
+          prev.set(k, [x, z]);
+          q.push(n);
+        }
+      }
+    }
     if (!end) throw new Error(`bypass: no way through solid from ${from} to ${to}`);
-    const cells = []; for (let c = end; c; c = prev.get(key(...c))) cells.unshift(c);
+    const cells = [];
+    for (let c = end; c; c = prev.get(key(...c))) cells.unshift(c);
     if (cells.length < minLen) throw new Error(`bypass: ${from} to ${to} is only ${cells.length} cells`);
-    const hA = L.ht[from[1]][from[0]], hB = L.ht[to[1]][to[0]], n = cells.length;
+    const hA = L.ht[from[1]][from[0]],
+      hB = L.ht[to[1]][to[0]],
+      n = cells.length;
     if (Math.abs(hB - hA) > n + 1) throw new Error(`bypass: ${n} cells cannot climb ${Math.abs(hB - hA) / 2} m`);
-    const fl = floor ?? L.get(from[0], from[1]), wl = wall ?? L.get(cells[0][0], cells[0][1]);          // the corridor wears the wall it was cut through
-    cells.forEach(([x, z], i) => { L.room([x, z, x, z], { floor: fl, wall: wl }); const h = Math.round(hA + (hB - hA) * (i + 1) / (n + 1)); if (h) L.height([x, z, x, z], h); });
-    this.log.push({ kind: 'bypass', from, to, cells: n }); return cells;
+    const fl = floor ?? L.get(from[0], from[1]),
+      wl = wall ?? L.get(cells[0][0], cells[0][1]); // the corridor wears the wall it was cut through
+    cells.forEach(([x, z], i) => {
+      L.room([x, z, x, z], { floor: fl, wall: wl });
+      const h = Math.round(hA + ((hB - hA) * (i + 1)) / (n + 1));
+      if (h) L.height([x, z, x, z], h);
+    });
+    this.log.push({ kind: 'bypass', from, to, cells: n });
+    return cells;
   }
   apply(MAP) {
     const amb = MAP.atmosphere?.ambient ?? 1;
@@ -155,7 +380,8 @@ export class Encounters {
     if (this.messages.length) MAP.messages = [...(MAP.messages ?? []), ...this.messages];
     if (this.secrets.length) MAP.secrets = [...(MAP.secrets ?? []), ...this.secrets];
     if (this.decals.length) MAP.decals = [...(MAP.decals ?? []), ...this.decals];
-    if (this.levers.length) MAP.entities = [...(MAP.entities ?? []), ...this.levers];                          // PT-081: the levers of switch secrets, after every other entity
+    // PT-081: the levers of switch secrets, after every other entity
+    if (this.levers.length) MAP.entities = [...(MAP.entities ?? []), ...this.levers];
     return MAP;
   }
 }

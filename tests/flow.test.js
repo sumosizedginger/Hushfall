@@ -7,7 +7,8 @@ import { nextMapId, mapName } from '../src/game/campaign.js';
 import { ROOT } from './helpers.js';
 
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
-const all = () => true, none = () => false;
+const all = () => true,
+  none = () => false;
 
 test('the normal exit leads to the next map in the manifest, and only if that map exists', () => {
   assert.equal(nextMapId(manifest, 'C1E1M01', 'next', all), 'C1E1M02');
@@ -22,6 +23,10 @@ test('a secret exit goes to the secret map; the secret map returns to the main r
   assert.equal(nextMapId(manifest, 'C1E1M02', 'secret', all), null);
 });
 test('every secret slot points back into the main chain consistently (enteredFrom.next === returnsTo)', () => {
-  for (const s of manifest.maps.filter((m) => m.kind === 'secret')) { const from = manifest.maps.find((m) => m.id === s.enteredFrom); assert.equal(from.next, s.returnsTo, s.id); assert.equal(from.secretExit, s.id); }
+  for (const s of manifest.maps.filter((m) => m.kind === 'secret')) {
+    const from = manifest.maps.find((m) => m.id === s.enteredFrom);
+    assert.equal(from.next, s.returnsTo, s.id);
+    assert.equal(from.secretExit, s.id);
+  }
   assert.equal(mapName(manifest, 'C1E1M02'), 'Customs Hall');
 });

@@ -20,14 +20,28 @@ try {
         p.pixelDensity(1);
         p.createCanvas(r.width, r.height, p.WEBGL);
         p.noLoop();
-        p.randomSeed(r.seed); p.noiseSeed(r.seed);
-        brush.seed(r.seed); brush.noiseSeed(r.seed); // REQUIRED in ESM instance mode: the p5 randomSeed hook does not reach brush's RNG (it seeds from Math.random)
+        p.randomSeed(r.seed);
+        p.noiseSeed(r.seed);
+        brush.seed(r.seed);
+        brush.noiseSeed(r.seed); // REQUIRED in ESM instance mode: the p5 randomSeed hook does not reach brush's RNG (it seeds from Math.random)
         p.background(bgColor);
         r.draw(p, brush, r.width, r.height);
-        window.__BAKE_RESULT__ = { id, bg: bgColor, transparent: !!r.transparent, seed: r.seed, width: r.width, height: r.height, dataUrl: p.canvas.toDataURL('image/png') };
+        window.__BAKE_RESULT__ = {
+          id,
+          bg: bgColor,
+          transparent: !!r.transparent,
+          seed: r.seed,
+          width: r.width,
+          height: r.height,
+          dataUrl: p.canvas.toDataURL('image/png'),
+        };
         window.__BAKE_ENV__ = { p5: p5.VERSION, ua: navigator.userAgent };
         window.__BAKE_DONE__ = true;
-      } catch (e) { window.__BAKE_ERROR__ = String(e && e.stack || e); }
+      } catch (e) {
+        window.__BAKE_ERROR__ = String((e && e.stack) || e);
+      }
     };
   }, document.getElementById('out'));
-} catch (e) { window.__BAKE_ERROR__ = String(e && e.stack || e); }
+} catch (e) {
+  window.__BAKE_ERROR__ = String((e && e.stack) || e);
+}

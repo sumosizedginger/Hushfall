@@ -5,27 +5,28 @@ import { PICKUPS } from '../engine/defs.js';
 /** Events the sim emits that are deliberately silent (with the reason), so a new event without a sound fails the coverage test. */
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
-  cinematic: 'shell-only: a map trigger named a story scene; the shell plays it (cinematics.js) and its own cues carry the sounds (PT-063)',
-  choice: 'shell-only: a remembered choice was made (a wing of the Undercantor Halls); the shell keeps it in progress.choices and nothing is heard (script.js, PT-039)',
+  cinematic: 'shell-only: a map trigger named a story scene; the shell plays it (cinematics.js) and its own cues carry the sounds',
+  choice:
+    'shell-only: a remembered choice was made (a wing of the Undercantor Halls); the shell keeps it in progress.choices and nothing is heard',
   chime_played: 'view-only: the tree has finished its phrase; its notes carry the sounds (chimes.js)',
   sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',
   spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
   message: 'the UI plays RADIO_SOUND when the (queued) message is actually shown, not when the sim fires it',
   shot_impact_silent: 'reserved',
   shake: 'view-only effect (camera shake): the view reads it',
-  arc: 'view-only: the lamp\'s lightning between the bodies it struck; the fire event carries the sound, enemy_hit the strike',
-  bolt: 'view-only: the harpoon\'s streak and the bolt left in the wall; the fire event carries the sound, the impact event the strike',
+  arc: "view-only: the lamp's lightning between the bodies it struck; the fire event carries the sound, enemy_hit the strike",
+  bolt: "view-only: the harpoon's streak and the bolt left in the wall; the fire event carries the sound, the impact event the strike",
   objective: 'shown as HUD text',
   trigger: 'bookkeeping: what a trigger DOES makes the sound',
   exit_lock: 'bookkeeping',
   phys_respawn: 'the dev Range only: a broken prop comes back, the view just puts it there',
-  pool_dry: 'view-only: a tear pool dries up (PT-028); the landing carries the sound',
-  drop: 'a box a creature dropped appears (PT-025): the view shows it, taking it plays the ordinary pickup sound',
+  pool_dry: 'view-only: a tear pool dries up; the landing carries the sound',
+  drop: 'a box a creature dropped appears: the view shows it, taking it plays the ordinary pickup sound',
   beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
-  mender_stop: 'view-only: the Mender\'s tether lets go; mender_start carries the sound (mender.js, PT-060)',
-  saw_rev: 'the saw engine is a sustained voice now (sawvoice.js), driven from p.saw every frame: the retriggered rev is gone (PT-061 S1)',
-  dmg: 'bookkeeping for the stats database (PT-077): which gun and which attack dealt a blow; the hit itself sounds through enemy_hit / enemy_died',
-  silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this (engine.js, PT-043: the Root Bell hangs still)',
+  mender_stop: "view-only: the Mender's tether lets go; mender_start carries the sound",
+  saw_rev: 'the saw engine is a sustained voice now (sawvoice.js), driven from p.saw every frame: the retriggered rev is gone',
+  dmg: 'bookkeeping for the stats database: which gun and which attack dealt a blow; the hit itself sounds through enemy_hit / enemy_died',
+  silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this',
 };
 export const RADIO_SOUND = 'radio';
 
@@ -41,157 +42,415 @@ const WEAPON_FIRE = {
 };
 /** melee moves that land like a hammer (the others land like a fist) */
 const HEAVY_SWING = new Set(['mallet', 'axe', 'boathook']);
-const ENEMY_ALERT = { tollbearer: 'toll_alert', gaunt: 'gaunt_screech', bellhand: 'bell_alert', sexton: 'bell_alert', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_chirp', chorister: 'chorister_alert', graftmother: 'mother_roar', bulwark: 'bulwark_alert', weeping: 'weeping_alert', acolyte: 'acolyte_alert', grandcantor: 'grandcantor_alert', gatewarden: 'gatewarden_alert', zealot: 'zealot_alert', subcantor: 'subcantor_alert', resonant: 'resonant_alert', hivecantor: 'hivecantor_alert', rootbell: 'rootbell_alert', marksman: 'marksman_alert', mender: 'mender_alert' };
-const ENEMY_WINDUP = { tollbearer: 'wheeze_windup', gaunt: 'gaunt_lunge', bellhand: 'bell_charge', sexton: 'wheeze_windup', wardengraft: 'warden_roar', cantor: 'cantor_call', gill: 'gill_spit', chorister: 'chorister_draw', graftmother: 'mother_roar', bulwark: 'bulwark_open', weeping: 'weeping_alert', acolyte: 'acolyte_draw', grandcantor: 'grandcantor_draw', gatewarden: 'gatewarden_draw', zealot: 'zealot_draw', subcantor: 'subcantor_draw', resonant: 'resonant_draw', hivecantor: 'hivecantor_draw', rootbell: 'rootbell_draw', marksman: 'wheeze_windup', mender: 'wheeze_windup' };
+const ENEMY_ALERT = {
+  tollbearer: 'toll_alert',
+  gaunt: 'gaunt_screech',
+  bellhand: 'bell_alert',
+  sexton: 'bell_alert',
+  wardengraft: 'warden_roar',
+  cantor: 'cantor_call',
+  gill: 'gill_chirp',
+  chorister: 'chorister_alert',
+  graftmother: 'mother_roar',
+  bulwark: 'bulwark_alert',
+  weeping: 'weeping_alert',
+  acolyte: 'acolyte_alert',
+  grandcantor: 'grandcantor_alert',
+  gatewarden: 'gatewarden_alert',
+  zealot: 'zealot_alert',
+  subcantor: 'subcantor_alert',
+  resonant: 'resonant_alert',
+  hivecantor: 'hivecantor_alert',
+  rootbell: 'rootbell_alert',
+  marksman: 'marksman_alert',
+  mender: 'mender_alert',
+};
+const ENEMY_WINDUP = {
+  tollbearer: 'wheeze_windup',
+  gaunt: 'gaunt_lunge',
+  bellhand: 'bell_charge',
+  sexton: 'wheeze_windup',
+  wardengraft: 'warden_roar',
+  cantor: 'cantor_call',
+  gill: 'gill_spit',
+  chorister: 'chorister_draw',
+  graftmother: 'mother_roar',
+  bulwark: 'bulwark_open',
+  weeping: 'weeping_alert',
+  acolyte: 'acolyte_draw',
+  grandcantor: 'grandcantor_draw',
+  gatewarden: 'gatewarden_draw',
+  zealot: 'zealot_draw',
+  subcantor: 'subcantor_draw',
+  resonant: 'resonant_draw',
+  hivecantor: 'hivecantor_draw',
+  rootbell: 'rootbell_draw',
+  marksman: 'wheeze_windup',
+  mender: 'wheeze_windup',
+};
 
 const at = (e) => (Number.isFinite(e.x) && Number.isFinite(e.z) ? [e.x, e.z] : undefined);
 
 export function soundsForEvent(e) {
   switch (e.type) {
-    case 'fire': if (e.mod === 'doublebarrel' && e.weapon === 'scattergun') return [{ id: 'scatter_fire' }, { id: 'scatter_fire', delay: 0.06, gain: 0.85 }, { id: 'pump', delay: 0.55 }];          // PT-057: both barrels, a beat apart
-      return e.weapon === 'arc' && e.charge > 0.04 ? [{ id: 'arc_bolt', gain: 0.7 + 0.3 * e.charge }] : (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s }));      // a charged lamp is a different, bigger sound
-    case 'charge_start': return [{ id: e.weapon === 'arc' ? 'arc_charge' : 'fist_charge' }];
-    case 'charge_full': return [{ id: e.weapon === 'arc' ? 'charge_full' : 'fist_charge', gain: e.weapon === 'arc' ? 1 : 0.6 }];
-    case 'swing': return [{ id: e.heavy || HEAVY_SWING.has(e.kind) ? 'swing_heavy' : 'swing', gain: e.kind === 'bash' ? 0.8 : 1 }];
-    case 'melee_hit': return [{ id: e.kind === 'heavy' || HEAVY_SWING.has(e.kind) ? 'melee_hit_heavy' : 'melee_hit', pos: at(e) }, ...(e.riposte ? [{ id: 'parry', gain: 0.6, delay: 0.02 }] : [])];
-    case 'parry': return [{ id: 'parry' }];
-    case 'guard_up': return [{ id: 'guard_up' }];
-    case 'block': return [{ id: 'block' }];
-    case 'guard_break': return [{ id: 'guard_break' }];
-    case 'snipe_tell': return [{ id: 'snipe_tell', pos: at(e) }];                                                                 // PT-060: the Marksman's line of light
-    case 'snipe_shot': return [{ id: 'snipe_shot', pos: [e.x0, e.z0] }];
-    case 'mender_start': return [{ id: 'mender_hum', pos: at(e), gain: 0.8 }];
-    case 'burn': return [{ id: e.frost ? 'chill_crack' : 'burn_start', pos: at(e) }];
-    case 'load_cycle': return [{ id: 'load_click', gain: 0.7 }];                                                              // PT-056: ammunition loads: the key that turns the gun to its next load
-    case 'load_none': return [{ id: 'dry_click', gain: 0.5 }];
-    case 'load_empty': return [{ id: 'load_click', gain: 0.45 }];
-    case 'load_hit': return [{ id: e.fx === 'ignite' ? 'ignite_hiss' : e.fx === 'chill' ? 'chill_crack' : 'quench_hiss', pos: at(e), gain: 0.8 }];
-    case 'pin': return [{ id: 'pin_thunk', pos: at(e) }];
-    case 'dry': return [{ id: 'dry_click' }];
-    case 'weapon_switch': return [{ id: 'weapon_switch' }];
-    case 'explode': return [{ id: (e.r ?? 0) > 4 ? 'rocket_boom' : 'flare_boom', pos: at(e) }];
-    case 'headshot': return [{ id: 'head_tick', pos: at(e) }];
-    case 'grav_grab': return [{ id: 'grav_grab' }];
-    case 'grav_drop': return [{ id: 'grav_drop', gain: 0.8 }];
-    case 'grav_throw': return [{ id: 'grav_throw' }];
-    case 'grav_punt': return [{ id: 'grav_punt', gain: e.hit ? 1 : 0.55 }];
-    case 'grav_punt_prop': return [{ id: 'grav_throw', gain: 0.6, pos: at(e) }];
-    case 'grav_catch': return [{ id: 'grav_catch', pos: at(e) }];
-    case 'shot_reflect': return [{ id: 'shot_reflect', pos: at(e) }];
-    case 'shove_impact': return [{ id: 'shove_impact', pos: at(e) }];
-    case 'phys_hit': return [{ id: 'phys_hit', pos: at(e) }];
-    case 'phys_break': return [{ id: 'phys_break', pos: at(e) }];
-    case 'saw_start': return [{ id: 'saw_start' }];
-    case 'saw_stop': return [{ id: 'saw_stop' }];
-    case 'saw_hit': return [{ id: 'saw_hit', pos: at(e), gain: 0.7 }];
-    case 'saw_kick': return [{ id: 'saw_kick', pos: at(e) }];
-    case 'saw_stall': return [{ id: 'saw_stall' }];
-    case 'saw_restart': return [{ id: 'saw_restart' }];
-    case 'impact': return [{ id: 'impact', pos: at(e), gain: 0.6 }];
-    case 'hurt': return [{ id: 'hurt', gain: Math.min(1, 0.5 + (e.amount || 10) / 30) }];
-    case 'player_died': return [{ id: 'player_die' }];
+    case 'fire':
+      if (e.mod === 'doublebarrel' && e.weapon === 'scattergun')
+        return [{ id: 'scatter_fire' }, { id: 'scatter_fire', delay: 0.06, gain: 0.85 }, { id: 'pump', delay: 0.55 }]; // both barrels, a beat apart
+      return e.weapon === 'arc' && e.charge > 0.04
+        ? [{ id: 'arc_bolt', gain: 0.7 + 0.3 * e.charge }]
+        : (WEAPON_FIRE[e.weapon] || WEAPON_FIRE.flare).map((s) => ({ ...s })); // a charged lamp is a different, bigger sound
+    case 'charge_start':
+      return [{ id: e.weapon === 'arc' ? 'arc_charge' : 'fist_charge' }];
+    case 'charge_full':
+      return [{ id: e.weapon === 'arc' ? 'charge_full' : 'fist_charge', gain: e.weapon === 'arc' ? 1 : 0.6 }];
+    case 'swing':
+      return [{ id: e.heavy || HEAVY_SWING.has(e.kind) ? 'swing_heavy' : 'swing', gain: e.kind === 'bash' ? 0.8 : 1 }];
+    case 'melee_hit':
+      return [
+        { id: e.kind === 'heavy' || HEAVY_SWING.has(e.kind) ? 'melee_hit_heavy' : 'melee_hit', pos: at(e) },
+        ...(e.riposte ? [{ id: 'parry', gain: 0.6, delay: 0.02 }] : []),
+      ];
+    case 'parry':
+      return [{ id: 'parry' }];
+    case 'guard_up':
+      return [{ id: 'guard_up' }];
+    case 'block':
+      return [{ id: 'block' }];
+    case 'guard_break':
+      return [{ id: 'guard_break' }];
+    case 'snipe_tell':
+      return [{ id: 'snipe_tell', pos: at(e) }]; // the Marksman's line of light
+    case 'snipe_shot':
+      return [{ id: 'snipe_shot', pos: [e.x0, e.z0] }];
+    case 'mender_start':
+      return [{ id: 'mender_hum', pos: at(e), gain: 0.8 }];
+    case 'burn':
+      return [{ id: e.frost ? 'chill_crack' : 'burn_start', pos: at(e) }];
+    case 'load_cycle':
+      return [{ id: 'load_click', gain: 0.7 }]; // ammunition loads: the key that turns the gun to its next load
+    case 'load_none':
+      return [{ id: 'dry_click', gain: 0.5 }];
+    case 'load_empty':
+      return [{ id: 'load_click', gain: 0.45 }];
+    case 'load_hit':
+      return [{ id: e.fx === 'ignite' ? 'ignite_hiss' : e.fx === 'chill' ? 'chill_crack' : 'quench_hiss', pos: at(e), gain: 0.8 }];
+    case 'pin':
+      return [{ id: 'pin_thunk', pos: at(e) }];
+    case 'dry':
+      return [{ id: 'dry_click' }];
+    case 'weapon_switch':
+      return [{ id: 'weapon_switch' }];
+    case 'explode':
+      return [{ id: (e.r ?? 0) > 4 ? 'rocket_boom' : 'flare_boom', pos: at(e) }];
+    case 'headshot':
+      return [{ id: 'head_tick', pos: at(e) }];
+    case 'grav_grab':
+      return [{ id: 'grav_grab' }];
+    case 'grav_drop':
+      return [{ id: 'grav_drop', gain: 0.8 }];
+    case 'grav_throw':
+      return [{ id: 'grav_throw' }];
+    case 'grav_punt':
+      return [{ id: 'grav_punt', gain: e.hit ? 1 : 0.55 }];
+    case 'grav_punt_prop':
+      return [{ id: 'grav_throw', gain: 0.6, pos: at(e) }];
+    case 'grav_catch':
+      return [{ id: 'grav_catch', pos: at(e) }];
+    case 'shot_reflect':
+      return [{ id: 'shot_reflect', pos: at(e) }];
+    case 'shove_impact':
+      return [{ id: 'shove_impact', pos: at(e) }];
+    case 'phys_hit':
+      return [{ id: 'phys_hit', pos: at(e) }];
+    case 'phys_break':
+      return [{ id: 'phys_break', pos: at(e) }];
+    case 'saw_start':
+      return [{ id: 'saw_start' }];
+    case 'saw_stop':
+      return [{ id: 'saw_stop' }];
+    case 'saw_hit':
+      return [{ id: 'saw_hit', pos: at(e), gain: 0.7 }];
+    case 'saw_kick':
+      return [{ id: 'saw_kick', pos: at(e) }];
+    case 'saw_stall':
+      return [{ id: 'saw_stall' }];
+    case 'saw_restart':
+      return [{ id: 'saw_restart' }];
+    case 'impact':
+      return [{ id: 'impact', pos: at(e), gain: 0.6 }];
+    case 'hurt':
+      return [{ id: 'hurt', gain: Math.min(1, 0.5 + (e.amount || 10) / 30) }];
+    case 'player_died':
+      return [{ id: 'player_die' }];
     case 'pickup': {
       const t = PICKUPS[e.kind]?.type;
-      return [{ id: t === 'health' ? 'pickup_health' : t === 'ammo' ? 'pickup_ammo' : t === 'armor' ? 'pickup_armor' : t === 'key' ? 'pickup_key' : 'pickup_ammo' }];
+      return [
+        { id: t === 'health' ? 'pickup_health' : t === 'ammo' ? 'pickup_ammo' : t === 'armor' ? 'pickup_armor' : t === 'key' ? 'pickup_key' : 'pickup_ammo' },
+      ];
     }
-    case 'weapon_pickup': return [{ id: 'pickup_ammo' }, { id: 'pump', delay: 0.15 }];
-    case 'door_open': return [{ id: e.breath ? 'gate_in' : 'door_open', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];       // a breathing gate sighs all the time: quieter than a door somebody opened
-    case 'door_close': return [{ id: e.breath ? 'gate_out' : 'door_close', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];
-    case 'door_breath': return [{ id: 'door_locked', pos: at(e), gain: 0.5 }];
-    case 'door_listen': return [{ id: 'door_locked', pos: at(e), gain: 0.6 }];
-    case 'spore_warn': return [{ id: 'spore_swell', pos: at(e), gain: 0.8 }];
-    case 'spore_bloom': return [{ id: 'spore_puff', pos: at(e) }];
-    case 'door_locked': return [{ id: 'door_locked', pos: at(e) }];
-    case 'secret': return [{ id: 'secret' }];
-    case 'enemy_alert': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e) }];
-    case 'enemy_windup': return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
-    case 'enemy_lunge': return [{ id: 'gaunt_lunge', pos: at(e) }];
-    case 'enemy_dodge': return [{ id: 'step_outdoor', pos: at(e), gain: 1.3 }, { id: 'step_outdoor', pos: at(e), delay: 0.12 }];          // PT-076 (brain.js): the scuff of a dash out of your sights
-    case 'enemy_lurch': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 1.2 }];                                        // the groan before a Tollbearer surges
-    case 'enemy_cower': return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.7 }];                                        // a hurt creature's cry as it turns and runs
-    case 'enemy_call_windup': return [{ id: 'bell_charge', pos: at(e) }];                                                                   // a Bellhand lifts its bell to ring for help...
-    case 'enemy_call': return [{ id: 'bell_alert', pos: at(e), gain: 1.4 }, { id: 'bell_alert', pos: at(e), gain: 0.9, delay: 0.35 }];      // ...and rings it, twice
-    case 'enemy_strike': return [{ id: 'strike', pos: at(e) }];
-    case 'armor_hit': return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
-    case 'shield_hit': return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];
-    case 'node_severed': return e.kind === 'vat' ? [] : [{ id: 'node_sever', pos: at(e) }];                      // a vat bursts (enemy_died) instead of ringing off
-    case 'warden_crash': return [{ id: 'warden_crash', pos: at(e) }];
-    case 'sexton_channel': return [{ id: 'sexton_channel', pos: at(e) }];
-    case 'enemy_revived': return [{ id: 'revive', pos: at(e) }];
-    case 'pulse': return [{ id: 'tone_pulse', pos: at(e) }];
-    case 'pulse_hit': return [{ id: 'pulse_hit' }];
-    case 'pulse_back': return [{ id: 'pulse_back', pos: at(e) }];                         // PT-039: the Sub-Cantor's ring turns at the wall and comes home
-    case 'switch': return [{ id: 'switch_click', pos: at(e) }];
-    case 'switch_dead': return [{ id: 'switch_dead', pos: at(e) }];
-    case 'dry_feed': return [{ id: 'switch_click', gain: 0.8 }];
-    case 'switch_need': return [{ id: 'switch_dead', pos: at(e) }];
-    case 'lights': return [{ id: 'lift_thunk', gain: 0.9 }, { id: 'gate_unlock', delay: 0.15 }];
-    case 'door_remote': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
-    case 'sector_start': return [{ id: 'lift_rumble', pos: at(e) }];
-    case 'sector_stop': return [{ id: 'lift_thunk', pos: at(e) }];
-    case 'car_depart': return [{ id: 'lift_rumble', pos: at(e) }];          // PT-045 (E8b): a car pulls out / comes to rest: the sound of a lift
-    case 'car_arrive': return [{ id: 'lift_thunk', pos: at(e) }];
-    case 'load_warn': return [{ id: 'load_creak', pos: at(e) }];
-    case 'load_land': return [{ id: 'load_crash', pos: at(e) }];
-    case 'load_hit': return [{ id: 'pulse_hit' }];
-    case 'vent_launch': return [{ id: 'vent_launch', pos: at(e) }];
-    case 'air_land': return [{ id: 'air_land', gain: Math.min(1, 0.4 + (e.speed ?? 0) * 0.12) }];
-    case 'void_fall': return [{ id: 'void_fall' }];
-    case 'mirror_turn': return [{ id: 'mirror_turn', pos: at(e) }];                                                   // PT-033: the Mirror Array
-    case 'receiver_lit': return [{ id: 'receiver_lit', pos: at(e) }];
-    case 'receiver_dark': return [{ id: 'receiver_dark', pos: at(e), gain: 0.6 }];
-    case 'door_cycling': return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];                                       // PT-033: airlocks and vacuum
-    case 'sweep_tell': return [{ id: 'sweep_tell', pos: at(e) }];                                                   // PT-033: the Gate Warden's sweep
-    case 'sweep_hit': return [{ id: 'sweep_hit', pos: at(e), gain: 0.9 }];
-    case 'seal_shatter': return [{ id: 'seal_shatter', pos: at(e) }];
-    case 'vacuum_enter': return [{ id: 'vacuum_rush' }];
-    case 'vacuum_leave': return [{ id: 'air_return' }];
-    case 'wade': return e.kind === 's' || e.kind === 'd' ? [] : [{ id: 'splash' }];                       // a spore bed is not water
-    case 'alarm': return [{ id: 'alarm_bell' }];
-    case 'enemy_spawn': return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
-    case 'exit_unlock': return [{ id: 'gate_unlock' }];
-    case 'exit_locked': return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
-    case 'enemy_shot': return [{ id: e.kind === 'gill' ? 'gill_spit' : e.kind === 'chorister' ? 'chorister_note' : e.kind === 'graftmother' ? 'mother_spit' : e.kind === 'grandcantor' ? 'horn_blast' : 'toll_shot', pos: at(e) }];
-    case 'suppress': return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
-    case 'graft': return [{ id: 'graft_hit', gain: 0.9 }];
-    case 'chime_note': return [{ id: 'chime_' + (e.note | 0), pos: at(e), gain: e.who === 'tree' ? 0.7 : 1 }];                                // PT-038 (E6): the five notes
-    case 'chime_seq': return [{ id: 'chime_ok', gain: 0.9 }];
-    case 'chime_play': return [{ id: 'chime_play', pos: at(e), gain: 0.8 }];
-    case 'lamp': return [{ id: e.on ? 'lamp_on' : 'lamp_off', gain: 0.8 }];                                                            // PT-038: the hand lantern
-    case 'lamp_out': return [{ id: 'lamp_out', gain: 0.9 }];
-    case 'lamp_dry': return [{ id: 'lamp_dry', gain: 0.7 }];                                                                 // PT-038: a Zealot's lance landed and the graft took
-    case 'ward_hit': return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
-    case 'brood_swell': return [{ id: 'brood_swell', pos: at(e) }];
-    case 'brood_birth': return [{ id: 'brood_birth', pos: at(e) }];
-    case 'vat_swell': return [{ id: 'vat_swell', pos: at(e) }];
-    case 'vat_birth': return [{ id: 'vat_birth', pos: at(e) }];
-    case 'tear_windup': return [{ id: 'tear_windup', pos: at(e) }];
-    case 'tear_lob': return [{ id: 'tear_lob', pos: at(e) }];
-    case 'tear_land': return [{ id: 'tear_land', pos: at(e) }];
-    case 'shot_impact': return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
-    case 'enemy_hit': return [{ id: 'enemy_hit', pos: at(e) }];
-    case 'resonant_ring': return [{ id: 'resonant_ring', pos: at(e), gain: 0.55 }];                                      // PT-043: the Resonant's chord on the beat
-    case 'bell_strike': return [{ id: 'bell_strike', pos: at(e) }];                                                    // the Root Bell's clapper strikes (the end of a swing, the Last Note)
-    case 'bell_slam': return [{ id: 'bell_slam', pos: at(e) }];
-    case 'bell_crush': return [{ id: 'bell_crush', pos: at(e) }];
-    case 'bell_fall': return [{ id: 'bell_fall', pos: at(e) }];
-    case 'bell_last': return [{ id: 'bell_last', pos: at(e) }];
-    case 'spike_warn': return [{ id: 'spike_warn', pos: at(e), gain: 0.8 }];
-    case 'spike_strike': return [{ id: 'spike_strike', pos: at(e) }];
-    case 'cue': return [{ id: e.name ?? 'bell_strike' }];                                                              // a map's `{ sound: name }` action (script.js)
-    case 'tremor': return [{ id: 'tremor_rumble', gain: Math.min(1, 0.4 + (e.amount ?? 1) * 0.3) }];
-    case 'resonator_ring': return [{ id: 'resonator_ring', pos: at(e) }];                                                 // PT-037: a standing fork rings
-    case 'folk_fear': return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }];                                              // PT-037: a Vael civilian startled
-    case 'innocent': return [{ id: 'innocent_toll', delay: 0.5 }];                                                       // PT-037: and the count of the one who was never an enemy
-    case 'enemy_died': return [{ id: e.kind === 'vaelfolk' ? 'folk_die' : e.kind === 'gill' ? 'gill_die' : e.kind === 'chorister' ? 'chorister_die' : e.kind === 'graftmother' ? 'mother_die' : e.kind === 'bulwark' ? 'bulwark_die' : e.kind === 'weeping' ? 'weeping_die' : e.kind === 'acolyte' ? 'acolyte_die' : e.kind === 'vat' ? 'vat_burst' : e.kind === 'reed' ? 'reed_die' : e.kind === 'grandcantor' ? 'grandcantor_die' : e.kind === 'gatewarden' ? 'gatewarden_die' : e.kind === 'zealot' ? 'zealot_die' : e.kind === 'subcantor' ? 'subcantor_die' : e.kind === 'resonant' ? 'resonant_die' : e.kind === 'hivecantor' ? 'hivecantor_die' : e.kind === 'rootbell' ? 'rootbell_die' : e.kind === 'marksman' ? 'marksman_die' : e.kind === 'mender' ? 'mender_die' : e.kind === 'rootanchor' ? 'anchor_die' : e.kind === 'seal' ? 'seal_die' : 'enemy_die', pos: at(e) }];
-    case 'level_complete': return [{ id: 'level_complete' }];
-    default: return [];
+    case 'weapon_pickup':
+      return [{ id: 'pickup_ammo' }, { id: 'pump', delay: 0.15 }];
+    case 'door_open':
+      // a breathing gate sighs all the time: quieter than a door somebody opened
+      return [{ id: e.breath ? 'gate_in' : 'door_open', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];
+    case 'door_close':
+      return [{ id: e.breath ? 'gate_out' : 'door_close', pos: at(e), ...(e.breath ? { gain: 0.6 } : {}) }];
+    case 'door_breath':
+      return [{ id: 'door_locked', pos: at(e), gain: 0.5 }];
+    case 'door_listen':
+      return [{ id: 'door_locked', pos: at(e), gain: 0.6 }];
+    case 'spore_warn':
+      return [{ id: 'spore_swell', pos: at(e), gain: 0.8 }];
+    case 'spore_bloom':
+      return [{ id: 'spore_puff', pos: at(e) }];
+    case 'door_locked':
+      return [{ id: 'door_locked', pos: at(e) }];
+    case 'secret':
+      return [{ id: 'secret' }];
+    case 'enemy_alert':
+      return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e) }];
+    case 'enemy_windup':
+      return [{ id: ENEMY_WINDUP[e.kind] || 'wheeze_windup', pos: at(e) }];
+    case 'enemy_lunge':
+      return [{ id: 'gaunt_lunge', pos: at(e) }];
+    case 'enemy_dodge':
+      return [
+        { id: 'step_outdoor', pos: at(e), gain: 1.3 },
+        { id: 'step_outdoor', pos: at(e), delay: 0.12 },
+      ]; // the scuff of a dash out of your sights
+    case 'enemy_lurch':
+      return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 1.2 }]; // the groan before a Tollbearer surges
+    case 'enemy_cower':
+      return [{ id: ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.7 }]; // a hurt creature's cry as it turns and runs
+    case 'enemy_call_windup':
+      return [{ id: 'bell_charge', pos: at(e) }]; // a Bellhand lifts its bell to ring for help...
+    case 'enemy_call':
+      return [
+        { id: 'bell_alert', pos: at(e), gain: 1.4 },
+        { id: 'bell_alert', pos: at(e), gain: 0.9, delay: 0.35 },
+      ]; // ...and rings it, twice
+    case 'enemy_strike':
+      return [{ id: 'strike', pos: at(e) }];
+    case 'armor_hit':
+      return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
+    case 'shield_hit':
+      return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];
+    case 'node_severed':
+      return e.kind === 'vat' ? [] : [{ id: 'node_sever', pos: at(e) }]; // a vat bursts (enemy_died) instead of ringing off
+    case 'warden_crash':
+      return [{ id: 'warden_crash', pos: at(e) }];
+    case 'sexton_channel':
+      return [{ id: 'sexton_channel', pos: at(e) }];
+    case 'enemy_revived':
+      return [{ id: 'revive', pos: at(e) }];
+    case 'pulse':
+      return [{ id: 'tone_pulse', pos: at(e) }];
+    case 'pulse_hit':
+      return [{ id: 'pulse_hit' }];
+    case 'pulse_back':
+      return [{ id: 'pulse_back', pos: at(e) }]; // the Sub-Cantor's ring turns at the wall and comes home
+    case 'switch':
+      return [{ id: 'switch_click', pos: at(e) }];
+    case 'switch_dead':
+      return [{ id: 'switch_dead', pos: at(e) }];
+    case 'dry_feed':
+      return [{ id: 'switch_click', gain: 0.8 }];
+    case 'switch_need':
+      return [{ id: 'switch_dead', pos: at(e) }];
+    case 'lights':
+      return [
+        { id: 'lift_thunk', gain: 0.9 },
+        { id: 'gate_unlock', delay: 0.15 },
+      ];
+    case 'door_remote':
+      return [{ id: 'door_locked', pos: at(e), gain: 0.7 }];
+    case 'sector_start':
+      return [{ id: 'lift_rumble', pos: at(e) }];
+    case 'sector_stop':
+      return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'car_depart':
+      return [{ id: 'lift_rumble', pos: at(e) }]; // a car pulls out / comes to rest: the sound of a lift
+    case 'car_arrive':
+      return [{ id: 'lift_thunk', pos: at(e) }];
+    case 'load_warn':
+      return [{ id: 'load_creak', pos: at(e) }];
+    case 'load_land':
+      return [{ id: 'load_crash', pos: at(e) }];
+    case 'load_hit':
+      return [{ id: 'pulse_hit' }];
+    case 'vent_launch':
+      return [{ id: 'vent_launch', pos: at(e) }];
+    case 'air_land':
+      return [{ id: 'air_land', gain: Math.min(1, 0.4 + (e.speed ?? 0) * 0.12) }];
+    case 'void_fall':
+      return [{ id: 'void_fall' }];
+    case 'mirror_turn':
+      return [{ id: 'mirror_turn', pos: at(e) }]; // the Mirror Array
+    case 'receiver_lit':
+      return [{ id: 'receiver_lit', pos: at(e) }];
+    case 'receiver_dark':
+      return [{ id: 'receiver_dark', pos: at(e), gain: 0.6 }];
+    case 'door_cycling':
+      return [{ id: 'door_locked', pos: at(e), gain: 0.7 }]; // airlocks and vacuum
+    case 'sweep_tell':
+      return [{ id: 'sweep_tell', pos: at(e) }]; // the Gate Warden's sweep
+    case 'sweep_hit':
+      return [{ id: 'sweep_hit', pos: at(e), gain: 0.9 }];
+    case 'seal_shatter':
+      return [{ id: 'seal_shatter', pos: at(e) }];
+    case 'vacuum_enter':
+      return [{ id: 'vacuum_rush' }];
+    case 'vacuum_leave':
+      return [{ id: 'air_return' }];
+    case 'wade':
+      return e.kind === 's' || e.kind === 'd' ? [] : [{ id: 'splash' }]; // a spore bed is not water
+    case 'alarm':
+      return [{ id: 'alarm_bell' }];
+    case 'enemy_spawn':
+      return e.brood ? [] : [{ id: e.kind === 'gill' ? 'mother_hatch' : ENEMY_ALERT[e.kind] || 'toll_alert', pos: at(e), gain: 0.8 }];
+    case 'exit_unlock':
+      return [{ id: 'gate_unlock' }];
+    case 'exit_locked':
+      return [{ id: 'door_locked', pos: at(e), gain: 0.8 }];
+    case 'enemy_shot':
+      return [
+        {
+          id:
+            e.kind === 'gill'
+              ? 'gill_spit'
+              : e.kind === 'chorister'
+                ? 'chorister_note'
+                : e.kind === 'graftmother'
+                  ? 'mother_spit'
+                  : e.kind === 'grandcantor'
+                    ? 'horn_blast'
+                    : 'toll_shot',
+          pos: at(e),
+        },
+      ];
+    case 'suppress':
+      return [{ id: 'shot_whiz', pos: at(e), gain: 0.8 }];
+    case 'graft':
+      return [{ id: 'graft_hit', gain: 0.9 }];
+    case 'chime_note':
+      return [{ id: 'chime_' + (e.note | 0), pos: at(e), gain: e.who === 'tree' ? 0.7 : 1 }]; // the five notes
+    case 'chime_seq':
+      return [{ id: 'chime_ok', gain: 0.9 }];
+    case 'chime_play':
+      return [{ id: 'chime_play', pos: at(e), gain: 0.8 }];
+    case 'lamp':
+      return [{ id: e.on ? 'lamp_on' : 'lamp_off', gain: 0.8 }]; // the hand lantern
+    case 'lamp_out':
+      return [{ id: 'lamp_out', gain: 0.9 }];
+    case 'lamp_dry':
+      return [{ id: 'lamp_dry', gain: 0.7 }]; // a Zealot's lance landed and the graft took
+    case 'ward_hit':
+      return [{ id: 'ward_ping', pos: at(e), gain: 0.5 }];
+    case 'brood_swell':
+      return [{ id: 'brood_swell', pos: at(e) }];
+    case 'brood_birth':
+      return [{ id: 'brood_birth', pos: at(e) }];
+    case 'vat_swell':
+      return [{ id: 'vat_swell', pos: at(e) }];
+    case 'vat_birth':
+      return [{ id: 'vat_birth', pos: at(e) }];
+    case 'tear_windup':
+      return [{ id: 'tear_windup', pos: at(e) }];
+    case 'tear_lob':
+      return [{ id: 'tear_lob', pos: at(e) }];
+    case 'tear_land':
+      return [{ id: 'tear_land', pos: at(e) }];
+    case 'shot_impact':
+      return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
+    case 'enemy_hit':
+      return [{ id: 'enemy_hit', pos: at(e) }];
+    case 'resonant_ring':
+      return [{ id: 'resonant_ring', pos: at(e), gain: 0.55 }]; // the Resonant's chord on the beat
+    case 'bell_strike':
+      return [{ id: 'bell_strike', pos: at(e) }]; // the Root Bell's clapper strikes (the end of a swing, the Last Note)
+    case 'bell_slam':
+      return [{ id: 'bell_slam', pos: at(e) }];
+    case 'bell_crush':
+      return [{ id: 'bell_crush', pos: at(e) }];
+    case 'bell_fall':
+      return [{ id: 'bell_fall', pos: at(e) }];
+    case 'bell_last':
+      return [{ id: 'bell_last', pos: at(e) }];
+    case 'spike_warn':
+      return [{ id: 'spike_warn', pos: at(e), gain: 0.8 }];
+    case 'spike_strike':
+      return [{ id: 'spike_strike', pos: at(e) }];
+    case 'cue':
+      return [{ id: e.name ?? 'bell_strike' }]; // a map's `{ sound: name }` action (script.js)
+    case 'tremor':
+      return [{ id: 'tremor_rumble', gain: Math.min(1, 0.4 + (e.amount ?? 1) * 0.3) }];
+    case 'resonator_ring':
+      return [{ id: 'resonator_ring', pos: at(e) }]; // a standing fork rings
+    case 'folk_fear':
+      return [{ id: 'folk_fear', pos: at(e), gain: 0.9 }]; // a Vael civilian startled
+    case 'innocent':
+      return [{ id: 'innocent_toll', delay: 0.5 }]; // and the count of the one who was never an enemy
+    case 'enemy_died':
+      return [
+        {
+          id:
+            e.kind === 'vaelfolk'
+              ? 'folk_die'
+              : e.kind === 'gill'
+                ? 'gill_die'
+                : e.kind === 'chorister'
+                  ? 'chorister_die'
+                  : e.kind === 'graftmother'
+                    ? 'mother_die'
+                    : e.kind === 'bulwark'
+                      ? 'bulwark_die'
+                      : e.kind === 'weeping'
+                        ? 'weeping_die'
+                        : e.kind === 'acolyte'
+                          ? 'acolyte_die'
+                          : e.kind === 'vat'
+                            ? 'vat_burst'
+                            : e.kind === 'reed'
+                              ? 'reed_die'
+                              : e.kind === 'grandcantor'
+                                ? 'grandcantor_die'
+                                : e.kind === 'gatewarden'
+                                  ? 'gatewarden_die'
+                                  : e.kind === 'zealot'
+                                    ? 'zealot_die'
+                                    : e.kind === 'subcantor'
+                                      ? 'subcantor_die'
+                                      : e.kind === 'resonant'
+                                        ? 'resonant_die'
+                                        : e.kind === 'hivecantor'
+                                          ? 'hivecantor_die'
+                                          : e.kind === 'rootbell'
+                                            ? 'rootbell_die'
+                                            : e.kind === 'marksman'
+                                              ? 'marksman_die'
+                                              : e.kind === 'mender'
+                                                ? 'mender_die'
+                                                : e.kind === 'rootanchor'
+                                                  ? 'anchor_die'
+                                                  : e.kind === 'seal'
+                                                    ? 'seal_die'
+                                                    : 'enemy_die',
+          pos: at(e),
+        },
+      ];
+    case 'level_complete':
+      return [{ id: 'level_complete' }];
+    default:
+      return [];
   }
 }
 
 /** stereo placement helper (also used by tests): -1 = hard left, +1 = hard right, for a listener at (lx, lz) facing yaw */
 export function panFor(lx, lz, yaw, x, z) {
-  const dx = x - lx, dz = z - lz, d = Math.hypot(dx, dz) || 1;
-  const rx = Math.cos(yaw), rz = -Math.sin(yaw);          // listener's right vector (matches the sim's convention)
+  const dx = x - lx,
+    dz = z - lz,
+    d = Math.hypot(dx, dz) || 1;
+  const rx = Math.cos(yaw),
+    rz = -Math.sin(yaw); // listener's right vector (matches the sim's convention)
   return (dx * rx + dz * rz) / d;
 }

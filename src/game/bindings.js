@@ -3,14 +3,43 @@ import { ACTIONS, DEFAULT_BINDINGS } from '../engine/input.js';
 import { SLOT_KEYS } from '../engine/defs.js';
 
 export const ACTION_LABELS = {
-  forward: 'Move forward', back: 'Move back', left: 'Strafe left', right: 'Strafe right', turnLeft: 'Turn left', turnRight: 'Turn right', lookUp: 'Look up', lookDown: 'Look down',
-  fire: 'Fire', aim: 'Aim down sights', sprint: 'Sprint', use: 'Use / open', weapon1: 'Weapon 1', weapon2: 'Weapon 2', weapon3: 'Weapon 3', weapon4: 'Weapon 4', weapon5: 'Weapon 5', weapon6: 'Melee slot (press again to cycle)', weapon7: 'Weapon 7 (carbine)', weapon8: 'Weapon 8 (line-thrower)', weapon9: 'Weapon 9 (tuning-fork)', weapon10: 'Weapon 0 (mortar)', weaponLast: 'Last weapon (hold: weapon wheel)', melee: 'Quick melee', lamp: 'Hand lantern (dark places)', load: 'Next load for this gun (slag, rime, penetrator)', weaponNext: 'Next weapon', weaponPrev: 'Previous weapon', map: 'Automap', pause: 'Pause',
+  forward: 'Move forward',
+  back: 'Move back',
+  left: 'Strafe left',
+  right: 'Strafe right',
+  turnLeft: 'Turn left',
+  turnRight: 'Turn right',
+  lookUp: 'Look up',
+  lookDown: 'Look down',
+  fire: 'Fire',
+  aim: 'Aim down sights',
+  sprint: 'Sprint',
+  use: 'Use / open',
+  weapon1: 'Weapon 1',
+  weapon2: 'Weapon 2',
+  weapon3: 'Weapon 3',
+  weapon4: 'Weapon 4',
+  weapon5: 'Weapon 5',
+  weapon6: 'Melee slot (press again to cycle)',
+  weapon7: 'Weapon 7 (carbine)',
+  weapon8: 'Weapon 8 (line-thrower)',
+  weapon9: 'Weapon 9 (tuning-fork)',
+  weapon10: 'Weapon 0 (mortar)',
+  weaponLast: 'Last weapon (hold: weapon wheel)',
+  melee: 'Quick melee',
+  lamp: 'Hand lantern (dark places)',
+  load: 'Next load for this gun (slag, rime, penetrator)',
+  weaponNext: 'Next weapon',
+  weaponPrev: 'Previous weapon',
+  map: 'Automap',
+  pause: 'Pause',
 };
 export const SLOTS = 2;
 /** one-line controls reminder built from the CURRENT bindings (title, pause, and the first minute of a run) */
 export function legendText(b) {
   const k = (a) => prettyCode(b[a]?.[0]);
-  const weapons = SLOT_KEYS.map((s, i) => k('weapon' + (i + 1)) + (s === 'melee' ? ' (melee)' : '')).join(' ');                  // every slot of defs.js, the mortar's 0 included (PT-047 D5)
+  // every slot of defs.js, the mortar's 0 included
+  const weapons = SLOT_KEYS.map((s, i) => k('weapon' + (i + 1)) + (s === 'melee' ? ' (melee)' : '')).join(' ');
   return `Move ${['forward', 'left', 'back', 'right'].map(k).join('')} · Look mouse · Fire ${k('fire')} · Aim ${k('aim')} · Sprint ${k('sprint')} · Use ${k('use')} · Weapons ${weapons} / wheel · Quick melee ${k('melee')} · Last weapon ${k('weaponLast')} (hold: wheel) · Map ${k('map')} · Pause ${k('pause')}`;
 }
 /** Escape cancels a capture and is how browsers release the mouse, so it cannot be assigned to an action. */
@@ -20,7 +49,30 @@ export function prettyCode(code) {
   if (!code) return '—';
   if (/^Key[A-Z]$/.test(code)) return code.slice(3);
   if (/^Digit\d$/.test(code)) return code.slice(5);
-  const names = { Mouse0: 'Mouse L', Mouse1: 'Mouse M', Mouse2: 'Mouse R', Mouse3: 'Mouse 4', Mouse4: 'Mouse 5', WheelUp: 'Wheel ↑', WheelDown: 'Wheel ↓', ShiftLeft: 'L-Shift', ShiftRight: 'R-Shift', ControlLeft: 'L-Ctrl', ControlRight: 'R-Ctrl', AltLeft: 'L-Alt', AltRight: 'R-Alt', Space: 'Space', Tab: 'Tab', Enter: 'Enter', Backspace: 'Backspace', ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→', Escape: 'Esc' };
+  const names = {
+    Mouse0: 'Mouse L',
+    Mouse1: 'Mouse M',
+    Mouse2: 'Mouse R',
+    Mouse3: 'Mouse 4',
+    Mouse4: 'Mouse 5',
+    WheelUp: 'Wheel ↑',
+    WheelDown: 'Wheel ↓',
+    ShiftLeft: 'L-Shift',
+    ShiftRight: 'R-Shift',
+    ControlLeft: 'L-Ctrl',
+    ControlRight: 'R-Ctrl',
+    AltLeft: 'L-Alt',
+    AltRight: 'R-Alt',
+    Space: 'Space',
+    Tab: 'Tab',
+    Enter: 'Enter',
+    Backspace: 'Backspace',
+    ArrowUp: '↑',
+    ArrowDown: '↓',
+    ArrowLeft: '←',
+    ArrowRight: '→',
+    Escape: 'Esc',
+  };
   return names[code] || code;
 }
 
@@ -33,14 +85,18 @@ export function applyRebind(bindings, action, slot, code) {
   if (!ACTIONS.includes(action)) return { ok: false, reason: 'unknown action ' + action, bindings };
   if (!code || RESERVED.has(code)) return { ok: false, reason: `${prettyCode(code)} cannot be assigned`, bindings };
   if (!(slot >= 0 && slot < SLOTS)) return { ok: false, reason: 'bad slot', bindings };
-  const b = JSON.parse(JSON.stringify(bindings)), displaced = [];
+  const b = JSON.parse(JSON.stringify(bindings)),
+    displaced = [];
   for (const a of ACTIONS) {
     if (a === action) continue;
     const keep = (b[a] || []).filter((c) => c !== code);
-    if (keep.length !== (b[a] || []).length) { displaced.push(a); b[a] = keep; }
+    if (keep.length !== (b[a] || []).length) {
+      displaced.push(a);
+      b[a] = keep;
+    }
   }
   if (displaced.includes('pause') && b.pause.length === 0) return { ok: false, reason: 'Pause needs at least one key', bindings };
-  const list = (b[action] || []).filter((c, i) => i !== slot && c !== code);       // drop the same code elsewhere in this action, keep the other slot
+  const list = (b[action] || []).filter((c, i) => i !== slot && c !== code); // drop the same code elsewhere in this action, keep the other slot
   const other = list[0];
   b[action] = slot === 0 ? [code, ...(other ? [other] : [])] : [...(other ? [other] : []), code];
   return { ok: true, bindings: b, displaced };

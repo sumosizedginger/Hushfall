@@ -1,4 +1,5 @@
-// PT-071 (R20, first run): the line a new player gets once, after the controls reminder of their first level. Pure: it names the keys (or the pad's buttons) the player actually has.
+// the line a new player gets once, after the controls reminder of their first level. Pure: it names the keys (or the pad's buttons) the player
+// actually has.
 import { prettyCode } from './bindings.js';
 import { padGlyph } from './gamepad.js';
 

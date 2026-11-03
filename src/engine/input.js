@@ -2,64 +2,223 @@
 // Keyboard/mouse and the automation bot/test hook all go through the same press()/release()/addYaw() path.
 import { TICK } from './defs.js';
 
-export const ACTIONS = ['forward', 'back', 'left', 'right', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'fire', 'aim', 'sprint', 'use', 'weapon1', 'weapon2', 'weapon3', 'weapon4', 'weapon5', 'weapon6', 'weapon7', 'weapon8', 'weapon9', 'weapon10', 'weaponLast', 'melee', 'lamp', 'load', 'weaponNext', 'weaponPrev', 'map', 'pause'];
+export const ACTIONS = [
+  'forward',
+  'back',
+  'left',
+  'right',
+  'turnLeft',
+  'turnRight',
+  'lookUp',
+  'lookDown',
+  'fire',
+  'aim',
+  'sprint',
+  'use',
+  'weapon1',
+  'weapon2',
+  'weapon3',
+  'weapon4',
+  'weapon5',
+  'weapon6',
+  'weapon7',
+  'weapon8',
+  'weapon9',
+  'weapon10',
+  'weaponLast',
+  'melee',
+  'lamp',
+  'load',
+  'weaponNext',
+  'weaponPrev',
+  'map',
+  'pause',
+];
 // Fire has no Ctrl default: Ctrl+W/T/N are browser shortcuts
 export const DEFAULT_BINDINGS = {
-  forward: ['KeyW'], back: ['KeyS'], left: ['KeyA'], right: ['KeyD'],
-  turnLeft: ['ArrowLeft'], turnRight: ['ArrowRight'], lookUp: ['ArrowUp'], lookDown: ['ArrowDown'],
-  fire: ['Mouse0', 'KeyF'], aim: ['Mouse2'], sprint: ['ShiftLeft', 'ShiftRight'], use: ['KeyE', 'Space'], weapon1: ['Digit1'], weapon2: ['Digit2'], weapon3: ['Digit3'], weapon4: ['Digit4'], weapon5: ['Digit5'], weapon6: ['Digit6'], weapon7: ['Digit7'], weapon8: ['Digit8'], weapon9: ['Digit9'], weapon10: ['Digit0'], weaponLast: ['KeyQ'], melee: ['KeyV'], lamp: ['KeyL'], load: ['KeyT'], weaponNext: ['WheelDown'], weaponPrev: ['WheelUp'], map: ['Tab'], pause: ['Escape', 'KeyP'],
+  forward: ['KeyW'],
+  back: ['KeyS'],
+  left: ['KeyA'],
+  right: ['KeyD'],
+  turnLeft: ['ArrowLeft'],
+  turnRight: ['ArrowRight'],
+  lookUp: ['ArrowUp'],
+  lookDown: ['ArrowDown'],
+  fire: ['Mouse0', 'KeyF'],
+  aim: ['Mouse2'],
+  sprint: ['ShiftLeft', 'ShiftRight'],
+  use: ['KeyE', 'Space'],
+  weapon1: ['Digit1'],
+  weapon2: ['Digit2'],
+  weapon3: ['Digit3'],
+  weapon4: ['Digit4'],
+  weapon5: ['Digit5'],
+  weapon6: ['Digit6'],
+  weapon7: ['Digit7'],
+  weapon8: ['Digit8'],
+  weapon9: ['Digit9'],
+  weapon10: ['Digit0'],
+  weaponLast: ['KeyQ'],
+  melee: ['KeyV'],
+  lamp: ['KeyL'],
+  load: ['KeyT'],
+  weaponNext: ['WheelDown'],
+  weaponPrev: ['WheelUp'],
+  map: ['Tab'],
+  pause: ['Escape', 'KeyP'],
 };
-const TURN_RATE = 2.2, LOOK_RATE = 1.6;              // rad/s for keyboard turning
+const TURN_RATE = 2.2,
+  LOOK_RATE = 1.6; // rad/s for keyboard turning
 
 export class InputState {
-  constructor(bindings = DEFAULT_BINDINGS) { this.setBindings(bindings); this.down = new Set(); this.edge = new Set(); this.tapped = new Set(); this.toggles = new Set(); this.yaw = 0; this.pitch = 0; this.analog = [0, 0]; }
+  constructor(bindings = DEFAULT_BINDINGS) {
+    this.setBindings(bindings);
+    this.down = new Set();
+    this.edge = new Set();
+    this.tapped = new Set();
+    this.toggles = new Set();
+    this.yaw = 0;
+    this.pitch = 0;
+    this.analog = [0, 0];
+  }
   setBindings(b) {
-    this.bindings = JSON.parse(JSON.stringify(b)); this.byCode = new Map();
+    this.bindings = JSON.parse(JSON.stringify(b));
+    this.byCode = new Map();
     for (const [action, codes] of Object.entries(this.bindings)) for (const c of codes) this.byCode.set(c, action);
   }
   /** Rebind an action to `codes`. A code already used by another action is taken from it; returns the displaced action names. */
   rebind(action, codes) {
     if (!ACTIONS.includes(action)) throw new Error('unknown action ' + action);
-    const b = JSON.parse(JSON.stringify(this.bindings)), displaced = [];
-    for (const [a, cs] of Object.entries(b)) if (a !== action) { const keep = cs.filter((c) => !codes.includes(c)); if (keep.length !== cs.length) displaced.push(a); b[a] = keep; }
-    b[action] = [...codes]; this.setBindings(b); return displaced;
+    const b = JSON.parse(JSON.stringify(this.bindings)),
+      displaced = [];
+    for (const [a, cs] of Object.entries(b))
+      if (a !== action) {
+        const keep = cs.filter((c) => !codes.includes(c));
+        if (keep.length !== cs.length) displaced.push(a);
+        b[a] = keep;
+      }
+    b[action] = [...codes];
+    this.setBindings(b);
+    return displaced;
   }
   // device path
-  keyDown(code) { const a = this.byCode.get(code); if (a) this.press(a); }
-  keyUp(code) { const a = this.byCode.get(code); if (a) this.release(a); }
-  addMouse(dx, dy, sensitivity = 0.0022) { this.yaw -= dx * sensitivity; this.pitch -= dy * sensitivity; }
+  keyDown(code) {
+    const a = this.byCode.get(code);
+    if (a) this.press(a);
+  }
+  keyUp(code) {
+    const a = this.byCode.get(code);
+    if (a) this.release(a);
+  }
+  addMouse(dx, dy, sensitivity = 0.0022) {
+    this.yaw -= dx * sensitivity;
+    this.pitch -= dy * sensitivity;
+  }
   // semantic path (also used by the device path)
   /** Toggle mode makes press() flip the action on/off and ignores release() (accessibility: no held buttons). */
-  setToggle(action, on) { if (on) this.toggles.add(action); else { this.toggles.delete(action); this.down.delete(action); } }
+  setToggle(action, on) {
+    if (on) this.toggles.add(action);
+    else {
+      this.toggles.delete(action);
+      this.down.delete(action);
+    }
+  }
   press(action) {
     if (!ACTIONS.includes(action)) throw new Error('unknown action ' + action);
-    if (this.toggles.has(action)) { if (this.down.has(action)) this.down.delete(action); else { this.down.add(action); this.edge.add(action); this.tapped.add(action); } return; }
-    if (!this.down.has(action)) this.edge.add(action); this.down.add(action); this.tapped.add(action);
+    if (this.toggles.has(action)) {
+      if (this.down.has(action)) this.down.delete(action);
+      else {
+        this.down.add(action);
+        this.edge.add(action);
+        this.tapped.add(action);
+      }
+      return;
+    }
+    if (!this.down.has(action)) this.edge.add(action);
+    this.down.add(action);
+    this.tapped.add(action);
   }
-  release(action) { if (!this.toggles.has(action)) this.down.delete(action); }
+  release(action) {
+    if (!this.toggles.has(action)) this.down.delete(action);
+  }
   /** a stick: lateral and forward deflection, -1..1 (added to the keys, then clamped; the sim scales speed by it) */
-  setAnalog(x, forward) { this.analog = [x, forward]; }
-  addYaw(rad) { this.yaw += rad; }
-  addPitch(rad) { this.pitch += rad; }
-  releaseAll() { this.down.clear(); this.edge.clear(); this.tapped.clear(); this.yaw = this.pitch = 0; this.analog = [0, 0]; }
-  /** The look collected since the last tick, not yet in the simulation: the camera is drawn with it, so the view moves in the frame the hand moves (the shot still goes where the view is: the tick applies this before it fires). `alpha` = how far into the next tick the clock is, for the held turn keys. */
+  setAnalog(x, forward) {
+    this.analog = [x, forward];
+  }
+  addYaw(rad) {
+    this.yaw += rad;
+  }
+  addPitch(rad) {
+    this.pitch += rad;
+  }
+  releaseAll() {
+    this.down.clear();
+    this.edge.clear();
+    this.tapped.clear();
+    this.yaw = this.pitch = 0;
+    this.analog = [0, 0];
+  }
+  /**
+   * The look collected since the last tick, not yet in the simulation: the camera is drawn with it, so the view moves in the frame the hand moves
+   * (the shot still goes where the view is: the tick applies this before it fires). `alpha` = how far into the next tick the clock is, for the held
+   * turn keys.
+   */
   pendingLook(alpha = 0) {
     const d = this.down;
-    return { yaw: this.yaw + ((d.has('turnLeft') ? 1 : 0) - (d.has('turnRight') ? 1 : 0)) * TURN_RATE * TICK * alpha, pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK * alpha };
+    return {
+      yaw: this.yaw + ((d.has('turnLeft') ? 1 : 0) - (d.has('turnRight') ? 1 : 0)) * TURN_RATE * TICK * alpha,
+      pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK * alpha,
+    };
   }
   /** One command per sim tick. Edge actions (use, weapon, pause) fire once per press. */
   sample() {
-    if (this.toggles.has('sprint') && !this.down.has('forward') && !this.tapped.has('forward')) this.down.delete('sprint');   // toggled sprint ends when you stop moving
-    const d = new Set([...this.down, ...this.tapped]);        // tap latch: a press shorter than one tick still registers once
+    // toggled sprint ends when you stop moving
+    if (this.toggles.has('sprint') && !this.down.has('forward') && !this.tapped.has('forward')) this.down.delete('sprint');
+    const d = new Set([...this.down, ...this.tapped]); // tap latch: a press shorter than one tick still registers once
     const cmd = {
-      move: [Math.max(-1, Math.min(1, (d.has('right') ? 1 : 0) - (d.has('left') ? 1 : 0) + this.analog[0])), Math.max(-1, Math.min(1, (d.has('forward') ? 1 : 0) - (d.has('back') ? 1 : 0) + this.analog[1]))],
+      move: [
+        Math.max(-1, Math.min(1, (d.has('right') ? 1 : 0) - (d.has('left') ? 1 : 0) + this.analog[0])),
+        Math.max(-1, Math.min(1, (d.has('forward') ? 1 : 0) - (d.has('back') ? 1 : 0) + this.analog[1])),
+      ],
       yaw: this.yaw + ((d.has('turnLeft') ? 1 : 0) - (d.has('turnRight') ? 1 : 0)) * TURN_RATE * TICK,
       pitch: this.pitch + ((d.has('lookUp') ? 1 : 0) - (d.has('lookDown') ? 1 : 0)) * LOOK_RATE * TICK,
-      fire: d.has('fire'), aim: d.has('aim'), sprint: d.has('sprint'), use: this.edge.has('use'), pause: this.edge.has('pause'), map: this.edge.has('map'), melee: this.edge.has('melee'), lamp: this.edge.has('lamp'), load: this.edge.has('load'), weaponLast: this.edge.has('weaponLast'),
-      weapon: this.edge.has('weapon1') ? 0 : this.edge.has('weapon2') ? 1 : this.edge.has('weapon3') ? 2 : this.edge.has('weapon4') ? 3 : this.edge.has('weapon5') ? 4 : this.edge.has('weapon6') ? 5 : this.edge.has('weapon7') ? 6 : this.edge.has('weapon8') ? 7 : this.edge.has('weapon9') ? 8 : this.edge.has('weapon10') ? 9 : null,
+      fire: d.has('fire'),
+      aim: d.has('aim'),
+      sprint: d.has('sprint'),
+      use: this.edge.has('use'),
+      pause: this.edge.has('pause'),
+      map: this.edge.has('map'),
+      melee: this.edge.has('melee'),
+      lamp: this.edge.has('lamp'),
+      load: this.edge.has('load'),
+      weaponLast: this.edge.has('weaponLast'),
+      weapon: this.edge.has('weapon1')
+        ? 0
+        : this.edge.has('weapon2')
+          ? 1
+          : this.edge.has('weapon3')
+            ? 2
+            : this.edge.has('weapon4')
+              ? 3
+              : this.edge.has('weapon5')
+                ? 4
+                : this.edge.has('weapon6')
+                  ? 5
+                  : this.edge.has('weapon7')
+                    ? 6
+                    : this.edge.has('weapon8')
+                      ? 7
+                      : this.edge.has('weapon9')
+                        ? 8
+                        : this.edge.has('weapon10')
+                          ? 9
+                          : null,
       weaponStep: (this.edge.has('weaponNext') ? 1 : 0) - (this.edge.has('weaponPrev') ? 1 : 0),
     };
-    this.yaw = 0; this.pitch = 0; this.edge.clear(); this.tapped.clear();
+    this.yaw = 0;
+    this.pitch = 0;
+    this.edge.clear();
+    this.tapped.clear();
     return cmd;
   }
 }
