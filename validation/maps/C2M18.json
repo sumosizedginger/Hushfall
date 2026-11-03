@@ -1,23 +1,23 @@
 {
   "mapId": "C2M18",
-  "mapVersion": 1,
+  "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "40dc707",
+  "codeVersion": "04daba9",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "7b81915a7b852934",
+  "mapSha": "ad45bbe6d3c6c9e7",
   "assetVersion": "0fd1ea95586c4e78",
-  "engineSha": "2ada63ee432a9533",
+  "engineSha": "4767fce2cadbed7f",
   "sources": {
-    "engine": "2ada63ee432a9533",
-    "render": "9e01092ceb75ff7b",
+    "engine": "4767fce2cadbed7f",
+    "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "34c405c843e5c792",
+    "audio": "9e87f0bab73e6574",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
-  "routesSha": "79f6e6af9272c5a5",
+  "routesSha": "f2d0f9cc245d5960",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9320,
-      "finalHash": "17a783ce",
+      "finalHash": "c372833d",
       "kills": 53,
       "secrets": 0,
       "items": 2,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 10040,
-      "finalHash": "4c9e954d",
+      "finalHash": "01a522a0",
       "kills": 52,
       "secrets": 0,
       "items": 4,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 10760,
-      "finalHash": "f25ea4ce",
+      "finalHash": "226c67db",
       "kills": 52,
       "secrets": 0,
       "items": 6,
@@ -66,12 +66,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 11120,
-      "finalHash": "25d1d043",
-      "kills": 54,
-      "secrets": 1,
-      "items": 2,
-      "damageTaken": 13
+      "ticks": 13280,
+      "finalHash": "532c7a03",
+      "kills": 57,
+      "secrets": 2,
+      "items": 4,
+      "damageTaken": 30
     },
     {
       "file": "routes/C2M18.secret.route.json",
@@ -79,25 +79,25 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 12200,
-      "finalHash": "b38da0a8",
-      "kills": 53,
-      "secrets": 1,
-      "items": 3,
-      "damageTaken": 40
+      "ticks": 14000,
+      "finalHash": "0158abe7",
+      "kills": 56,
+      "secrets": 2,
+      "items": 4,
+      "damageTaken": 73
     },
     {
       "file": "routes/C2M18.secret.route.json",
       "difficulty": "hard",
       "seed": 1,
-      "policy": "standing",
+      "policy": "strafing",
       "result": "complete",
-      "ticks": 12560,
-      "finalHash": "0590db87",
-      "kills": 51,
-      "secrets": 1,
+      "ticks": 14720,
+      "finalHash": "284faca9",
+      "kills": 57,
+      "secrets": 2,
       "items": 6,
-      "damageTaken": 116
+      "damageTaken": 130
     }
   ],
   "canonicalRoute": {
@@ -107,21 +107,21 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 10040,
-    "finalHash": "4c9e954d",
+    "finalHash": "01a522a0",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
-    "enemies": 63,
-    "items": 24,
-    "secrets": 1
+    "enemies": 64,
+    "items": 26,
+    "secrets": 2
   },
   "facts": {
-    "enemies": 63,
+    "enemies": 64,
     "enemyKinds": {
       "bellnode": 4,
       "tollbearer": 14,
       "zealot": 9,
-      "chorister": 7,
+      "chorister": 8,
       "gaunt": 11,
       "gill": 6,
       "bellhand": 5,
@@ -147,8 +147,8 @@
       "Β",
       "Γ"
     ],
-    "props": 46,
-    "secrets": 1,
+    "props": 47,
+    "secrets": 2,
     "cells": 10000,
     "gates": 0,
     "spores": 32
@@ -268,13 +268,13 @@
         "seeds": 3,
         "result": "complete",
         "damage": 126,
-        "meanDamage": 126,
+        "meanDamage": 133,
         "seconds": 179.3,
         "kills": 52,
         "failure": null
       }
     },
-    "threats": 69,
+    "threats": 70,
     "gate": [
       {
         "exit": "exit0",
@@ -292,7 +292,7 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 44,
+        "damage": 57,
         "failure": null
       },
       "ammo pickups worth 25% less": {
@@ -320,7 +320,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -335,7 +335,7 @@
       {
         "name": "all secrets reachable",
         "ok": true,
-        "detail": "[{\"id\":\"rib-hollow\",\"reachable\":true}]"
+        "detail": "[{\"id\":\"rib-hollow\",\"reachable\":true},{\"id\":\"vestry\",\"reachable\":true}]"
       },
       {
         "name": "route C2M18.main.route.json on easy reaches the exit",
@@ -355,20 +355,20 @@
       {
         "name": "route C2M18.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "185.3 s"
+        "detail": "221.3 s"
       },
       {
         "name": "route C2M18.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "203.3 s"
+        "detail": "233.3 s"
       },
       {
         "name": "route C2M18.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "209.3 s"
+        "detail": "245.3 s (strafing)"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 44 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 57 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -490,12 +490,12 @@
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":45,\"hard\":126}"
+        "detail": "{\"normal\":45,\"hard\":133}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "16 / 45 / 126 (mean of 3 seeds)"
+        "detail": "16 / 45 / 133 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (3.6x; placeholder until a human plays it)",
@@ -505,7 +505,7 @@
       {
         "name": "quality: enemy count in [30,70]",
         "ok": true,
-        "detail": 63
+        "detail": 64
       },
       {
         "name": "quality: perfect-bot time in [40,900] s",
@@ -535,7 +535,7 @@
       {
         "name": "quality: uses mechanic 'secret'",
         "ok": true,
-        "detail": "1 secrets"
+        "detail": "2 secrets"
       },
       {
         "name": "quality: has at least 4 bellnode",
@@ -555,7 +555,7 @@
       {
         "name": "quality: has at least 3 chorister",
         "ok": true,
-        "detail": 7
+        "detail": 8
       },
       {
         "name": "quality: has at least 5 gaunt",
@@ -605,7 +605,7 @@
       {
         "name": "feel: the measured map is SET-PIECE",
         "ok": true,
-        "detail": "0% roofed, p90 sightline 20 m (SET-PIECE:  <= 39% roofed)"
+        "detail": "0% roofed, p90 sightline 18.5 m (SET-PIECE:  <= 39% roofed)"
       },
       {
         "name": "feel: a set-piece names its reason (quality.reason)",
@@ -630,7 +630,7 @@
       {
         "name": "feel: a main map hides at least one secret",
         "ok": true,
-        "detail": "1 secrets"
+        "detail": "2 secrets"
       },
       {
         "name": "the shared browser check passed",
@@ -639,23 +639,23 @@
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M18.json: 7b81915a7b852934 vs 7b81915a7b852934"
+        "ok": false,
+        "detail": "validation/browser/C2M18.json: 7b81915a7b852934 vs ad45bbe6d3c6c9e7"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
-        "ok": true,
-        "detail": "79f6e6af9272c5a5 vs 79f6e6af9272c5a5"
+        "ok": false,
+        "detail": "79f6e6af9272c5a5 vs f2d0f9cc245d5960"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
@@ -666,5 +666,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 63 enemies, 24 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 64 enemies, 26 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

@@ -18,6 +18,9 @@ const RING = (m) => (m >= 17 && m <= 20) || (m >= 27 && m <= 30) || (m >= 41 && 
 const spokeAt = (x, z) => { const cx = Math.abs(x - C), cz = Math.abs(z - C); return (cx >= 7 && cx <= 9 && cz >= 10 && cz <= 40) || (cz >= 7 && cz <= 9 && cx >= 10 && cx <= 40); };
 for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
   const m = mOf(x, z); if (m > 44) continue;
+  const dx = x - C, dz = z - C, side = Math.abs(dx) >= Math.abs(dz) ? (dx > 0 ? 'e' : 'w') : (dz > 0 ? 's' : 'n');          // PT-082: the rim's width changes side by side, so no reflection of the cathedral matches it
+  const rimW = side === 'e' ? 2 : side === 'n' ? (dx < 0 ? 3 : 4) : side === 's' ? (dx < 0 ? 4 : 3) : (dz <= 0 ? 4 : 3);
+  if (m >= 41 + rimW && m <= 44) { setCell(L, x, z, WALL, 0); continue; }
   if (RING(m) || spokeAt(x, z)) setCell(L, x, z, m >= 41 ? 'Α' : NERVE, prof(m)); else setCell(L, x, z, VOID, 0);
 }
 for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) if (L.g[z][x] === WALL && mOf(x, z) === 45 && (z < 30 || z > 70)) L.g[z][x] = BONE;       // the walls above and below the rim are the cathedral's ribs
@@ -67,6 +70,12 @@ for (const [x, z, k] of HEALTH) PK(k, x, z);
 for (const [x, z] of [[78, 50], [22, 50], [50, 22]]) PK('armor_vest', x, z);
 PK('armor_vest', XS - 1, ZS + 2); PK('ammo_rocket', XS + 1, ZS + 2); PK('ammo_rocket', XS, ZS + 3); PK('health_large', XS, ZS + 1); PK('ammo_round', XS - 2, ZS + 3);
 
+// ---- PT-082 (design/FUN_CHECK.md: concentric squares, mirrored 0.97): the lattice stays, the rim does not mirror itself. The east rim is a narrow ledge, and off it an APSE CHAPEL (roofed, a lamp at the altar) where the
+// cathedral's keepers sat; a cracked wall behind its altar is the second secret, of another kind ----
+for (let z = 26; z <= 42; z++) for (let x = 93; x <= 97; x++) { const u = ((x - 93) / 4.6) ** 2 + ((z + 0.5 - 34) / 8.6) ** 2; if (x <= 94 || u <= 1) setCell(L, x, z, 'Α', 4, 12); }
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'vestry', search: { region: [90, 18, 98, 50], prefer: [97, 34] }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A keeper\'s vestry behind the altar, the wall cracked where the strands pulled at it. A vest and a mend, folded on a stool.' } });
+// ---- end PT-082 ----
 const EXIT = [C, 7];
 // ---- PT-052 R2 (the Director's Plan, design/ROADMAP.md 0.12): the scripted ambushes and the secret the kit builds (tools/mapkit/encounters.mjs; planned by tools/dev/rebuild-map.mjs; the rules: design/DIRECTOR_AUDIT.md) ----
 const ENC = new Encounters(L);
@@ -74,7 +83,7 @@ ENC.dropIn({ at: [36,79], radius: 2, cells: ENC.around([36,79], { n: 3, min: 6, 
 // ---- end PT-052 ----
 
 const MAP = {
-  id: 'C2M18', name: 'Nerve Cathedral', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M18', name: 'Nerve Cathedral', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'nerve', sky: 'hive', beat: true, fog: '#1c0e22', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'NERVE CATHEDRAL', lines: ['A hall with no floor: an island, two rings, a rim and eight bridges over a drop.', 'Every bridge lights a segment at a time. The light comes first.'] },
@@ -131,4 +140,7 @@ for (const [mid, unless] of Object.entries({ "door": ["msg:cut"] })) MAP.message
 MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [28, 97] }, { type: 'pickup', kind: 'health_small', at: [32, 97] });
 // ---- end F8 ----
 
+FUN.apply(MAP);                                                                                  // PT-082: the chapel's secret joins the map
+MAP.entities.push({ type: 'enemy', kind: 'chorister', at: [95, 34] }, { type: 'prop', kind: 'lamppost', at: [94, 30] });          // the keeper and the altar lamp (a pair keeps the id parity)
+{ const s = waypoints.secret; s.splice(16, 0, { op: 'crack', at: [95, 25] }, [95, 24, 0], [95, 26, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;
