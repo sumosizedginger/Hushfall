@@ -72,8 +72,15 @@ ENC.dropIn({ at: [17,50], radius: 2, cells: ENC.around([17,50], { n: 3, min: 6, 
 ENC.dropIn({ at: [72,55], radius: 2, cells: ENC.around([72,55], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+const SQUEEZE = [{axis:'x',cuts:[[3,4], [6,7], [11,12], [17,18], [21,22], [23,24], [31,32], [42,43], [57,58], [63,64], [68,69], [77,78], [82,83], [89,91], [96,97]]}, {axis:'z',cuts:[[7,8], [9,10], [13,14], [21,22], [23,24], [37,38], [41,42], [45,46], [53,54], [57,58], [59,60], [64,65], [71,73], [77,78], [89,90], [94,95], [96,97]]}];          // PT-082: defined here so the fun pass's secret room keeps out of every cut column and row
+const cutAt = (ax, c) => SQUEEZE.find((q) => q.axis === ax).cuts.some(([a, b]) => c >= a && c < b);
+// ---- PT-082 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), clear of the squeeze's cuts ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'split-root', search: { region: [3, 3, 96, 96], prefer: [80, 80], ok: (q) => { for (let x = q.rect[0] - 1; x <= q.rect[2] + 1; x++) if (cutAt('x', x)) return false; for (let z = q.rect[1] - 1; z <= q.rect[3] + 1; z++) if (cutAt('z', z)) return false; return !cutAt('x', q.panel[0]) && !cutAt('z', q.panel[1]); } }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'The rock behind the roots has split, and there is a dry hollow behind it. Someone kept a vest and a mend here, wrapped in a refectory cloth.' } });
+// ---- end PT-082 fun pass ----
+
 const MAP = {
-  id: 'C2M26', name: 'Silent Roots', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M26', name: 'Silent Roots', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'roots', sky: 'root', dark: true, silence: true, fog: '#14120c', fogDensity: 0.014, ambient: 0.5 },
   lantern: { oil: 200, max: 300 }, noiseTell: true,
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 80, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
@@ -123,10 +130,12 @@ ENC.apply(MAP);
 
 // ---- PT-052 Level B: THE SQUEEZE (tools/mapkit/squeeze.mjs). The forest was 100 by 100 cells for 36 creatures (six per thousand cells, the sparsest map): sixteen columns and eighteen rows are taken out where nothing stands and no ramp runs.
 // Everything above this line is in the AUTHORING frame; the shipped map is narrower and its routes are the waypoints with the same cuts (`node tools/dev/write-routes.mjs C2M26`). Kit calls and the lane file stay in the authoring frame.
-MAP.squeeze = [{axis:'x',cuts:[[3,4], [6,7], [11,12], [17,18], [21,22], [23,24], [31,32], [42,43], [57,58], [63,64], [68,69], [77,78], [82,83], [89,91], [96,97]]}, {axis:'z',cuts:[[7,8], [9,10], [13,14], [21,22], [23,24], [37,38], [41,42], [45,46], [53,54], [57,58], [59,60], [64,65], [71,73], [77,78], [89,90], [94,95], [96,97]]}];
+MAP.squeeze = SQUEEZE;
 // ---- end PT-052 Level B squeeze ----
 
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "gate": ["msg:r3"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-082: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(23, 0, { op: 'crack', at: [85, 30] }, [85, 29, 0], [85, 31, 0]); }          // PT-082: the crack detour (authoring frame), kept in the source so write-routes keeps it
 export default MAP;
