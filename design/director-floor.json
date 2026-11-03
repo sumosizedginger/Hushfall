@@ -59,7 +59,7 @@
   "C1E1M02": {
    "density": 29,
    "rangedShare": 16,
-   "ambushes": 4,
+   "ambushes": 5,
    "kinds": 3,
    "loops": 0,
    "topShare": 50,
@@ -67,19 +67,19 @@
    "walk": 1310
   },
   "C1E1M03": {
-   "density": 21,
-   "rangedShare": 24,
+   "density": 22,
+   "rangedShare": 26,
    "ambushes": 3,
    "kinds": 3,
-   "loops": 0,
-   "topShare": 43,
-   "symmetry": 0.84,
+   "loops": 1,
+   "topShare": 41,
+   "symmetry": 0.82,
    "walk": 1790
   },
   "C1E1M04": {
    "density": 28,
    "rangedShare": 20,
-   "ambushes": 3,
+   "ambushes": 4,
    "kinds": 3,
    "loops": 0,
    "topShare": 43,
@@ -123,7 +123,7 @@
    "kinds": 7,
    "loops": 0,
    "topShare": 44,
-   "symmetry": 0.67,
+   "symmetry": 0.66,
    "walk": 1649
   },
   "C1E2M01": {
@@ -133,7 +133,7 @@
    "kinds": 4,
    "loops": 2,
    "topShare": 43,
-   "symmetry": 0.65,
+   "symmetry": 0.63,
    "walk": 1155
   },
   "C1E2M02": {
@@ -163,7 +163,7 @@
    "kinds": 4,
    "loops": 1,
    "topShare": 39,
-   "symmetry": 0.78,
+   "symmetry": 0.77,
    "walk": 1035
   },
   "C1E2M05": {
@@ -173,7 +173,7 @@
    "kinds": 4,
    "loops": 1,
    "topShare": 41,
-   "symmetry": 0.81,
+   "symmetry": 0.78,
    "walk": 766
   },
   "C1E2M06": {
@@ -183,7 +183,7 @@
    "kinds": 4,
    "loops": 3,
    "topShare": 52,
-   "symmetry": 0.78,
+   "symmetry": 0.77,
    "walk": 1634
   },
   "C1E2M07": {
@@ -214,14 +214,14 @@
    "loops": 0,
    "topShare": 32,
    "symmetry": 0.91,
-   "walk": 1248
+   "walk": 1225
   },
   "C1E3M02": {
    "density": 25,
    "rangedShare": 25,
    "ambushes": 2,
    "kinds": 5,
-   "loops": 1,
+   "loops": 2,
    "topShare": 33,
    "symmetry": 0.5,
    "walk": 982
@@ -251,9 +251,9 @@
    "rangedShare": 24,
    "ambushes": 2,
    "kinds": 6,
-   "loops": 0,
+   "loops": 1,
    "topShare": 43,
-   "symmetry": 0.68,
+   "symmetry": 0.64,
    "walk": 840
   },
   "C1E3M06": {
@@ -261,9 +261,9 @@
    "rangedShare": 29,
    "ambushes": 2,
    "kinds": 8,
-   "loops": 0,
+   "loops": 1,
    "topShare": 35,
-   "symmetry": 0.81,
+   "symmetry": 0.78,
    "walk": 1214
   },
   "C1E3M07": {
@@ -273,7 +273,7 @@
    "kinds": 5,
    "loops": 1,
    "topShare": 38,
-   "symmetry": 0.65,
+   "symmetry": 0.63,
    "walk": 644
   },
   "C1E3M08": {
@@ -289,7 +289,7 @@
   "C1E4M01": {
    "density": 25,
    "rangedShare": 36,
-   "ambushes": 0,
+   "ambushes": 1,
    "kinds": 6,
    "loops": 0,
    "topShare": 31,
@@ -343,17 +343,17 @@
    "kinds": 9,
    "loops": 5,
    "topShare": 33,
-   "symmetry": 0.72,
+   "symmetry": 0.71,
    "walk": 3097
   },
   "C1E4M07": {
    "density": 20,
-   "rangedShare": 23,
+   "rangedShare": 26,
    "ambushes": 0,
    "kinds": 10,
    "loops": 0,
    "topShare": 32,
-   "symmetry": 0.85,
+   "symmetry": 0.84,
    "walk": 1577
   },
   "C1E4M08": {
@@ -373,7 +373,7 @@
    "kinds": 4,
    "loops": 1,
    "topShare": 39,
-   "symmetry": 0.57,
+   "symmetry": 0.56,
    "walk": 1483
   },
   "C2M02": {
@@ -389,7 +389,7 @@
   "C2M03": {
    "density": 16,
    "rangedShare": 26,
-   "ambushes": 2,
+   "ambushes": 3,
    "kinds": 7,
    "loops": 2,
    "topShare": 32,
@@ -397,43 +397,43 @@
    "walk": 2161
   },
   "C2M04": {
-   "density": 18,
-   "rangedShare": 22,
+   "density": 19,
+   "rangedShare": 26,
    "ambushes": 2,
    "kinds": 6,
-   "loops": 1,
-   "topShare": 33,
-   "symmetry": 0.91,
-   "walk": 2031
+   "loops": 2,
+   "topShare": 31,
+   "symmetry": 0.49,
+   "walk": 1819
   },
   "C2M05": {
-   "density": 26,
+   "density": 28,
    "rangedShare": 30,
-   "ambushes": 15,
+   "ambushes": 16,
    "kinds": 6,
-   "loops": 0,
-   "topShare": 35,
-   "symmetry": 0.69,
+   "loops": 3,
+   "topShare": 34,
+   "symmetry": 0.41,
    "walk": 1671
   },
   "C2M06": {
-   "density": 17,
-   "rangedShare": 27,
+   "density": 19,
+   "rangedShare": 35,
    "ambushes": 2,
    "kinds": 5,
-   "loops": 0,
-   "topShare": 33,
-   "symmetry": 0.82,
+   "loops": 4,
+   "topShare": 29,
+   "symmetry": 0.51,
    "walk": 1737
   },
   "C2M07": {
-   "density": 23,
-   "rangedShare": 21,
+   "density": 26,
+   "rangedShare": 25,
    "ambushes": 8,
-   "kinds": 6,
-   "loops": 2,
-   "topShare": 29,
-   "symmetry": 0.89,
+   "kinds": 7,
+   "loops": 3,
+   "topShare": 25,
+   "symmetry": 0.52,
    "walk": 1673
   },
   "C2M08": {
@@ -443,7 +443,7 @@
    "kinds": 8,
    "loops": 2,
    "topShare": 33,
-   "symmetry": 0.82,
+   "symmetry": 0.81,
    "walk": 1431
   },
   "C2M09": {
@@ -457,34 +457,34 @@
    "walk": 2794
   },
   "C2M10": {
-   "density": 9,
-   "rangedShare": 21,
+   "density": 14,
+   "rangedShare": 26,
    "ambushes": 1,
    "kinds": 6,
-   "loops": 19,
-   "topShare": 34,
-   "symmetry": 0.81,
-   "walk": 3121
+   "loops": 21,
+   "topShare": 32,
+   "symmetry": 0.63,
+   "walk": 2188
   },
   "C2M11": {
-   "density": 8,
-   "rangedShare": 22,
+   "density": 16,
+   "rangedShare": 30,
    "ambushes": 2,
    "kinds": 6,
    "loops": 2,
-   "topShare": 31,
-   "symmetry": 0.63,
-   "walk": 3851
+   "topShare": 26,
+   "symmetry": 0.62,
+   "walk": 1647
   },
   "C2M12": {
-   "density": 14,
+   "density": 20,
    "rangedShare": 20,
    "ambushes": 3,
    "kinds": 6,
    "loops": 2,
    "topShare": 66,
-   "symmetry": 0.77,
-   "walk": 4319
+   "symmetry": 0.74,
+   "walk": 3094
   },
   "C2M13": {
    "density": 26,
@@ -497,24 +497,24 @@
    "walk": 1614
   },
   "C2M14": {
-   "density": 8,
-   "rangedShare": 23,
+   "density": 15,
+   "rangedShare": 24,
    "ambushes": 2,
    "kinds": 6,
    "loops": 0,
    "topShare": 32,
-   "symmetry": 0.88,
-   "walk": 3819
+   "symmetry": 0.75,
+   "walk": 1712
   },
   "C2M15": {
-   "density": 9,
-   "rangedShare": 18,
-   "ambushes": 0,
+   "density": 22,
+   "rangedShare": 21,
+   "ambushes": 2,
    "kinds": 9,
    "loops": 0,
-   "topShare": 33,
-   "symmetry": 0.96,
-   "walk": 4278
+   "topShare": 24,
+   "symmetry": 0.22,
+   "walk": 1470
   },
   "C2M16": {
    "density": 10,
@@ -531,20 +531,20 @@
    "rangedShare": 33,
    "ambushes": 2,
    "kinds": 10,
-   "loops": 0,
+   "loops": 1,
    "topShare": 30,
    "symmetry": 0.42,
    "walk": 3459
   },
   "C2M18": {
-   "density": 17,
-   "rangedShare": 29,
+   "density": 18,
+   "rangedShare": 30,
    "ambushes": 2,
    "kinds": 10,
    "loops": 25,
    "topShare": 22,
-   "symmetry": 0.97,
-   "walk": 3772
+   "symmetry": 0.95,
+   "walk": 3543
   },
   "C2M19": {
    "density": 25,
@@ -553,38 +553,38 @@
    "kinds": 9,
    "loops": 5,
    "topShare": 34,
-   "symmetry": 0.89,
-   "walk": 2135
+   "symmetry": 0.58,
+   "walk": 2092
   },
   "C2M20": {
-   "density": 20,
+   "density": 24,
    "rangedShare": 38,
    "ambushes": 2,
    "kinds": 8,
    "loops": 0,
    "topShare": 32,
-   "symmetry": 0.99,
-   "walk": 1857
+   "symmetry": 0.92,
+   "walk": 1565
   },
   "C2M21": {
    "density": 13,
-   "rangedShare": 21,
+   "rangedShare": 24,
    "ambushes": 2,
    "kinds": 8,
-   "loops": 9,
-   "topShare": 33,
+   "loops": 10,
+   "topShare": 30,
    "symmetry": 0.87,
    "walk": 3566
   },
   "C2M22": {
-   "density": 6,
+   "density": 8,
    "rangedShare": 8,
    "ambushes": 8,
    "kinds": 7,
    "loops": 0,
    "topShare": 31,
-   "symmetry": 0.93,
-   "walk": 4325
+   "symmetry": 0.81,
+   "walk": 3297
   },
   "C2M23": {
    "density": 23,
@@ -603,18 +603,18 @@
    "kinds": 3,
    "loops": 0,
    "topShare": 50,
-   "symmetry": 0.87,
+   "symmetry": 0.86,
    "walk": 1466
   },
   "C2M25": {
-   "density": 13,
+   "density": 14,
    "rangedShare": 36,
    "ambushes": 2,
    "kinds": 7,
    "loops": 1,
    "topShare": 21,
-   "symmetry": 0.99,
-   "walk": 2101
+   "symmetry": 0.92,
+   "walk": 1944
   },
   "C2M26": {
    "density": 10,
@@ -623,18 +623,18 @@
    "kinds": 8,
    "loops": 12,
    "topShare": 28,
-   "symmetry": 0.85,
+   "symmetry": 0.84,
    "walk": 3776
   },
   "C2M27": {
-   "density": 10,
-   "rangedShare": 22,
+   "density": 13,
+   "rangedShare": 26,
    "ambushes": 2,
    "kinds": 8,
-   "loops": 0,
-   "topShare": 32,
-   "symmetry": 0.93,
-   "walk": 3840
+   "loops": 4,
+   "topShare": 31,
+   "symmetry": 0.91,
+   "walk": 3075
   },
   "C2M29": {
    "density": 11,
@@ -1009,7 +1009,7 @@
    "longestWalkM": 60
   }
  },
- "updated": "2026-10-19",
+ "updated": "2026-11-03",
  "waiting": {
   "C1E4M06": {
    "skip": [

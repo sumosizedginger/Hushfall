@@ -499,6 +499,14 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
+## PT-082 · the fun pass, Campaign 2 · FIXED-IN-CODE (awaiting the owner)
+**The owner's go (2026-11-02, from the Rail Yard):** "lets get you working on the back half of the game and making it something you're fuckin' proud of", then "Lets do Act C and D". Nothing of it has been played or heard in the game. What to look at:
+1. **Maps drawn as places, not diagrams.** Act A: Tuning Fork Fields, the Reliquary Road, the Chitin Aqueduct, the Bellwright Yard. Act B: Echo Markets, Undercantor Halls, Harmonic Gardens, the Ash Basilica. Act C: Vein Rail (a signal station and a round turntable hall round the rail), the Bone Loom (real rooms instead of a grid), the Pulse Foundry (a pattern shop and a cooling pond off the wheel). Act D: Fault Line (the rift is a real crack, ruins on one lip, a terrace over it on the other), Root Bell Descent (every landing its own). Do they feel like somewhere?
+2. **Two secrets of two kinds on nearly every map.** The new one is a cracked wall: shoot it. The Reprise and the Unrung Gate keep theirs as they were.
+3. **Shorter, tighter maps:** the Drowned Choir and the Mourning Halls (short of ammunition on purpose: 36 shells to start) were squeezed. Too cramped, or still too long?
+4. **Music:** four Campaign 2 themes: Threshold (Act A), the Deep (Act B), the Hive (Act C: the fight is in three-four time, one bar a hive beat) and the Root (Act D: the harbour hymn comes back). Does each fit its place, and does the fight music come in at the right moments?
+5. **Left as they were, on purpose:** the bosses, the Nerve Cathedral's lattice over the drop (it is the map's idea), the Unrung Gate (the silent walk is the ending).
+
 ## PT-081 · the fun pass, Episode 1 · IN PROGRESS
 **The owner, 2026-11-01, first play of Marrow Quay after the pass:** "it tells me there are 2 secrets, but I only found 1."
 - **Cause:** the second secret is the NEW kind, a cracked wall that opens to a shot (the rope store, in the lantern-lit nook in the north wall of the yard). Nothing in the game had taught that such walls exist.
