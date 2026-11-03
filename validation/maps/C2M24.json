@@ -1,23 +1,23 @@
 {
   "mapId": "C2M24",
-  "mapVersion": 1,
+  "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "40dc707",
+  "codeVersion": "7ce15a4",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "cbcdd40d0a1702b5",
+  "mapSha": "f49ad6b5be999e45",
   "assetVersion": "0fd1ea95586c4e78",
-  "engineSha": "2ada63ee432a9533",
+  "engineSha": "4767fce2cadbed7f",
   "sources": {
-    "engine": "2ada63ee432a9533",
-    "render": "9e01092ceb75ff7b",
+    "engine": "4767fce2cadbed7f",
+    "render": "2cc55b583e05ce35",
     "game": "3d95c6af30d4f0fb",
-    "audio": "34c405c843e5c792",
+    "audio": "9e87f0bab73e6574",
     "assets": "0fd1ea95586c4e78",
     "verifier": "178a732ec21abcbf",
     "probes": "01942c6dec4649e1"
   },
-  "routesSha": "ca36679598fa2a56",
+  "routesSha": "719fd76e782dee39",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4116,
-      "finalHash": "0ebd4426",
+      "finalHash": "80480cb8",
       "kills": 11,
       "secrets": 0,
       "items": 4,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4370,
-      "finalHash": "8050dc23",
+      "finalHash": "0e7d24d8",
       "kills": 12,
       "secrets": 0,
       "items": 2,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 4412,
-      "finalHash": "39f87cdd",
+      "finalHash": "2c39b660",
       "kills": 12,
       "secrets": 0,
       "items": 4,
@@ -66,10 +66,10 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 5098,
-      "finalHash": "e615e427",
+      "ticks": 6538,
+      "finalHash": "d8854f37",
       "kills": 12,
-      "secrets": 1,
+      "secrets": 2,
       "items": 5,
       "damageTaken": 26
     },
@@ -79,12 +79,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 5098,
-      "finalHash": "3372a4f2",
+      "ticks": 7618,
+      "finalHash": "05314795",
       "kills": 12,
-      "secrets": 1,
-      "items": 3,
-      "damageTaken": 41
+      "secrets": 2,
+      "items": 6,
+      "damageTaken": 64
     },
     {
       "file": "routes/C2M24.secret.route.json",
@@ -92,12 +92,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 5458,
-      "finalHash": "53976fff",
-      "kills": 13,
-      "secrets": 1,
+      "ticks": 6898,
+      "finalHash": "ab4e4390",
+      "kills": 14,
+      "secrets": 2,
       "items": 4,
-      "damageTaken": 46
+      "damageTaken": 48
     }
   ],
   "canonicalRoute": {
@@ -107,13 +107,13 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 4370,
-    "finalHash": "8050dc23",
+    "finalHash": "0e7d24d8",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
     "enemies": 10,
-    "items": 62,
-    "secrets": 1
+    "items": 64,
+    "secrets": 2
   },
   "facts": {
     "enemies": 10,
@@ -141,7 +141,7 @@
       "t"
     ],
     "props": 27,
-    "secrets": 1,
+    "secrets": 2,
     "cells": 5220,
     "gates": 0,
     "spores": 12
@@ -308,7 +308,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -323,7 +323,7 @@
       {
         "name": "all secrets reachable",
         "ok": true,
-        "detail": "[{\"id\":\"alcove\",\"reachable\":true}]"
+        "detail": "[{\"id\":\"alcove\",\"reachable\":true},{\"id\":\"niche\",\"reachable\":true}]"
       },
       {
         "name": "route C2M24.main.route.json on easy reaches the exit",
@@ -343,17 +343,17 @@
       {
         "name": "route C2M24.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "85.0 s"
+        "detail": "109.0 s"
       },
       {
         "name": "route C2M24.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "85.0 s"
+        "detail": "127.0 s"
       },
       {
         "name": "route C2M24.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "91.0 s"
+        "detail": "115.0 s"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 46 damage)",
@@ -503,7 +503,7 @@
       {
         "name": "quality: uses mechanic 'secret'",
         "ok": true,
-        "detail": "1 secrets"
+        "detail": "2 secrets"
       },
       {
         "name": "quality: has at least 1 hivecantor",
@@ -543,7 +543,7 @@
       {
         "name": "feel: the measured map is MIXED",
         "ok": true,
-        "detail": "76% roofed, p90 sightline 23.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
+        "detail": "77% roofed, p90 sightline 23.5 m (MIXED: >= 40% roofed <= 80% roofed, sightline <= 30 m)"
       },
       {
         "name": "feel: the map names the one new thing it introduces (quality.introduces)",
@@ -563,7 +563,7 @@
       {
         "name": "feel: a main map hides at least one secret",
         "ok": true,
-        "detail": "1 secrets"
+        "detail": "2 secrets"
       },
       {
         "name": "the shared browser check passed",
@@ -572,23 +572,23 @@
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M24.json: cbcdd40d0a1702b5 vs cbcdd40d0a1702b5"
+        "ok": false,
+        "detail": "validation/browser/C2M24.json: cbcdd40d0a1702b5 vs f49ad6b5be999e45"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
-        "ok": true,
-        "detail": "ca36679598fa2a56 vs ca36679598fa2a56"
+        "ok": false,
+        "detail": "ca36679598fa2a56 vs 719fd76e782dee39"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src audio changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
@@ -599,5 +599,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v1, 10 enemies, 62 items, 1 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v2, 10 enemies, 64 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

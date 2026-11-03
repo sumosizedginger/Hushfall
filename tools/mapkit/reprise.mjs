@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-export const QUAY = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps/C1E1M01.json'), 'utf8'));
+export const QUAY = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps-src/C2M23.quay.json'), 'utf8'));          // PT-082: the Quay AS IT WAS when the Reprise was made (Marrow Quay's version 7): the shipped Quay has grown a second secret since, and copying it put an unreachable room into the Reprise
 export const QUAY_ROUTE = JSON.parse(fs.readFileSync(path.join(ROOT, 'routes/C1E1M01.main.route.json'), 'utf8'));
 export const QW = QUAY.grid[0].length, QH = QUAY.grid.length;                       // 48 x 34
 
