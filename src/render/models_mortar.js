@@ -128,7 +128,7 @@ export function makeMortar(tex, gunTex, o = {}) {
   flash.position.set(0, 0.17, -0.62);
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.15, 0xff8a28, 0xfff0c0)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.15, 0xff8a28, 0xfff0c0, { blades: 7, cone: 0.9, wide: 1.6 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, bolt, spin: null, spinAxis: 'x', adsY: -0.05, sleeveMat: K.sleeveMat, sights };
 }
 

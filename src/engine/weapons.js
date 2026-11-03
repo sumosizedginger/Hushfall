@@ -1,8 +1,9 @@
 // The player's weapons: damage and what a hit does, blasts, shots, the arc, swings, the fire key.
 // Part of the deterministic simulation (world.js holds the order of a tick): nothing here touches DOM, Three, the clock or Math.random.
+import { surfaceAt } from './surfaces.js';
 import { activeLoad, applyLoadHit, loadedDef, spendLoad } from './ammoloads.js';
 import { strikeChime } from './chimes.js';
-import { AMMO_LOADS, BASH, ENEMIES, FX, GUARD, NOISE, PLAYER, PROPS, SUPPRESS, TICK, WEAPONS } from './defs.js';
+import { AMMO_LOADS, BASH, ENEMIES, FX, GUARD, NOISE, PLAYER, PROPS, SUPPRESS, TICK, WEAPONS, DIFFICULTY } from './defs.js';
 import { maybeDrop } from './drops.js';
 import { noise, wakeEnemy, wardOf } from './enemies.js';
 import { frighten } from './folk.js';
@@ -101,7 +102,14 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     } // an innocent is not a kill, and leaves nothing
     w.stats.kills++;
     if (dealt) emit(w, 'dmg', { ...dealt, killed: true });
-    emit(w, 'enemy_died', { id: e.id, kind: e.kind, x: e.x, z: e.z, weapon: by?.weapon ?? null });
+    emit(w, 'enemy_died', {
+      id: e.id,
+      kind: e.kind,
+      x: e.x,
+      z: e.z,
+      weapon: by?.weapon ?? null,
+      over: Math.round((-e.hp / (def.hp * DIFFICULTY[w.difficulty].enemyHp)) * 100) / 100,
+    });
     maybeDrop(w, e);
     if (def.node) {
       emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z });
@@ -380,7 +388,7 @@ function fireHitscan(w, def, cone) {
       } // the penetrator goes on through one more body
     }
     if (!target && stop && impacts < 3 && i % 3 === 0) {
-      emit(w, 'impact', { x, y, z });
+      emit(w, 'impact', { x, y, z, surface: surfaceAt(w.map, x, y, z) });
       impacts++;
     }
   }
@@ -450,7 +458,7 @@ function fireBolt(w, def, cone) {
       survivors.push(e);
     tryMove(w, e, f[0] * def.knock * mult, f[2] * def.knock * mult, ENEMIES[e.kind].radius);
   });
-  if (stop) emit(w, 'impact', { x, y, z });
+  if (stop) emit(w, 'impact', { x, y, z, surface: surfaceAt(w.map, x, y, z) });
   emit(w, 'bolt', { x0, y0, z0, x1: x, y1: y, z1: z, stuck: stop });
   const pin = def.hit?.pin;
   for (const e of survivors)

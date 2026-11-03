@@ -121,7 +121,7 @@ export function makeLineThrower(tex, gunTex, o = {}) {
   flash.position.z = -0.78;
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.13, 0xff9a30, 0xfff0c0)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.13, 0xff9a30, 0xfff0c0, { blades: 6, cone: 1.8, wide: 1.1 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, bolt, spin, spinAxis: 'x', adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

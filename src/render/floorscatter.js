@@ -6,6 +6,7 @@
 // tally, boot prints, soot and ash, straw). Scattering is DETERMINISTIC (seeded by the map's id), denser along walls and in corners,
 // sparser out in the open, never in water, on a moving floor or on a current, and capped (`FLOORMARKS.cap`), so a load is the same picture every time
 // and the draw cost is one more mesh of at most that many quads.
+import { FLOOR_FAMILY, familyOfFloor } from '../engine/surfaces.js';
 import { FLOOR_SKINS, FX } from '../engine/defs.js';
 
 export const FLOORMARKS = { cap: 1600, base: 0.3, wall: 1.8, open: 0.65, ring: 'floor', atlas: 'decals_floor_atlas' };
@@ -50,57 +51,7 @@ export const MARK_LOOK = {
   soot: { size: [1.6, 2.8], a: [0.65, 0.92] },
   litter: { size: [1.4, 2.4], a: [0.7, 0.92] },
 };
-/** the family of every floor texture the game has (a test fails for a texture that has none) */
-export const FLOOR_FAMILY = {
-  floor_planks_a: 'wood',
-  floor_loft_a: 'wood',
-  floor_deck_a: 'wood',
-  floor_dock_a: 'wood',
-  floor_tideplank_a: 'wood',
-  cobble_wet_a: 'stone',
-  floor_tile_a: 'stone',
-  floor_flag_a: 'stone',
-  floor_slate_a: 'stone',
-  floor_approach_a: 'stone',
-  floor_stair_a: 'stone',
-  floor_gate_a: 'stone',
-  floor_basaltflag_a: 'stone',
-  floor_marble_a: 'stone',
-  floor_mourning_a: 'stone',
-  floor_amphi_a: 'stone',
-  floor_bellstone_a: 'stone',
-  floor_unrung_a: 'stone',
-  floor_prism_a: 'stone',
-  floor_faultrock_a: 'stone',
-  floor_flowstone_a: 'stone',
-  floor_rootwell_a: 'stone',
-  floor_grate_a: 'metal',
-  floor_track_a: 'metal',
-  floor_foundry_a: 'metal',
-  floor_hull_a: 'metal',
-  floor_veinrail_a: 'metal',
-  floor_nervegrid_a: 'metal',
-  floor_reactor_a: 'metal',
-  floor_silt_a: 'earth',
-  floor_saltcrust_a: 'earth',
-  floor_clinker_a: 'earth',
-  floor_slurry_a: 'earth',
-  floor_rime_a: 'earth',
-  floor_glasssand_a: 'earth',
-  floor_moss_a: 'earth',
-  floor_terrace_a: 'earth',
-  floor_rootloam_a: 'earth',
-  floor_carpet_a: 'soft',
-  floor_quiet_a: 'soft',
-  floor_gill_a: 'organic',
-  floor_flesh_a: 'organic',
-  floor_hivetrench_a: 'organic',
-  floor_chitin_a: 'organic',
-  floor_crystal_a: 'organic',
-  floor_throat_a: 'organic',
-  floor_loom_a: 'organic',
-  floor_loomweave_a: 'organic',
-};
+export { FLOOR_FAMILY };
 /**
  * each family's weights over the marks, and a tint (multiplied into the atlas colours, so a puddle in a gill garden is slime and a seam in a loft is
  * old wood)
@@ -116,7 +67,7 @@ export const FAMILY_MARKS = {
   soft: { w: { prints: 2, soot: 2, litter: 3, dust: 2 }, tint: [0.9, 0.85, 0.8] },
   organic: { w: { litter: 3, puddle: 3, puddleLong: 1.5, crack: 0.5, dust: 0.6, prints: 0.5, soot: 1 }, tint: [0.75, 0.9, 0.72] },
 };
-export const familyOf = (tex) => FLOOR_FAMILY[tex] ?? 'stone';
+export const familyOf = familyOfFloor;
 
 /** a small seeded generator (the same sequence for the same seed, in node and in the browser) */
 function rng(seed) {

@@ -37,6 +37,8 @@ export const defaultSettings = () => ({
   rawMouse: true, // ask for the mouse without the system's acceleration where the browser offers it
   mouseInvertY: false,
   adsSens: 1, // invert the mouse; the sensitivity through the sights, as a share of the one that matches the zoom
+  hitMarks: true, // a mark at the crosshair and a tick for every blow you land
+  gore: 'full', // full | reduced: a big enough blow bursts a body, or it never does
   headBob: 'full', // full | gentle | off (reduced motion turns it off whatever this says)
   crosshair: defaultCrosshair(), // / V2: style, size, colour, opacity of the crosshair (crosshair.js)
 });
@@ -112,6 +114,8 @@ export function sanitizeSettings(raw) {
   s.reducedMotion = raw.reducedMotion === true;
   s.captions = raw.captions === true;
   s.firstRunSeen = raw.firstRunSeen === true;
+  s.hitMarks = raw.hitMarks !== false;
+  s.gore = raw.gore === 'reduced' ? 'reduced' : 'full';
   s.rawMouse = raw.rawMouse !== false;
   s.mouseInvertY = raw.mouseInvertY === true;
   s.adsSens = clamp(raw.adsSens, 0.4, 1.6, d.adsSens);

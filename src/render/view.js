@@ -1,5 +1,7 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
+import { ImpactFx } from './impactfx.js';
+import { shotFeel, FLINCH, flinchAt, flinchStrength, fallTurn, bursts } from './feel.js';
 import * as THREE from 'three';
 import { makeHandLantern, makePickupOil, makePickupCrate } from './models_c2.js';
 import { makeFlareCannon, makeScattergun, makePickup, makeCrate, makeBarrel } from './models.js';
@@ -38,7 +40,7 @@ import { BRAIN } from '../engine/brain.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
 import { gunFactor } from './gunlight.js';
-import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf, PITCH_LIMIT } from '../engine/defs.js';
+import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf, PITCH_LIMIT, DECALS } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
 import { makeVentView, updateVentView, makeLoadView, updateLoadView } from './airfx.js';
@@ -228,6 +230,9 @@ export class GameView {
     this.fireLight = new THREE.PointLight(0xffa040, 0, POLISH_LIGHT.fireRange, 2);
     scene.add(this.fireLight); // look polish 7: your shot lights the room (a constant light count: it is always there, at 0 between shots)
     this.tells = new Tells(scene);
+    this.impacts = new ImpactFx(scene, () => this.rnd());
+    this.casingQ = [];
+    this.gore = 'full';
     this.popGeo = new THREE.IcosahedronGeometry(POLISH_LIGHT.pop.r, 1);
     this.popMat = new THREE.MeshBasicMaterial({
       color: POLISH_LIGHT.pop.color,
@@ -257,8 +262,8 @@ export class GameView {
       this.lampModel.scale.setScalar(0.72);
       this.lampModel.position.set(-0.4, -0.3, -0.62);
       ws.add(this.lampModel);
-    // the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light
-    // count means no shader recompile) and a brass lantern held low at the left of the weapon view
+      // the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light
+      // count means no shader recompile) and a brass lantern held low at the left of the weapon view
     }
     this.WPOS = new THREE.Vector3(0.2, -0.2, -0.46);
     for (const gtex of [tex.guns_atlas, tex.flarecannon_atlas])
@@ -406,7 +411,8 @@ export class GameView {
     if (this.floorMarks) this.floorMarks.mesh.visible = level < 1;
     this.lightBudget = level >= 2 ? FX_LIGHTS : LIGHT_BUDGET;
   }
-  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false, headBob = 'full' }) {
+  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false, headBob = 'full', gore = 'full' }) {
+    this.gore = gore;
     this.comfort = comfortFor({ reducedMotion, headBob }); // every camera motion and flash the settings can calm (render only: the sim is untouched)
     this.post.uniforms.uOutline.value = outline ? 1 : 0;
     this.post.uniforms.uPaint.value = paint ? 1 : 0;
@@ -496,53 +502,31 @@ export class GameView {
       },
     };
     for (const e of events) {
+      if (e.type === 'dmg' && !e.killed) this.flinch(e);
+      else if (e.type === 'enemy_died') this.killed(e);
+      else if (e.type === 'enemy_revived') this.revived(e);
       if (e.type === 'hurt') {
         const dir = Number.isFinite(e.fx) && Number.isFinite(e.fz),
           p = this.world?.player;
         this.hurtFlash.hit(e.amount, dir ? 0.45 : 1);
         if (dir && p) this.hitMarks.hit(e.fx, e.fz, e.amount, p.x, p.z, p.yaw);
-      // look polish 10: a blow with a source points at it (hitdir.js) and flushes the edges less // the screen flash follows the size of the hit
-      // (hurtflash.js); p.hurt stays sim state
+        // look polish 10: a blow with a source points at it (hitdir.js) and flushes the edges less // the screen flash follows the size of the hit
+        // (hurtflash.js); p.hurt stays sim state
       }
       for (const spec of decalsForEvent(e, dctx)) this.decals.add(spec); // a hit, a death, a blast, a bullet: the room keeps it
       if (e.type === 'fire') {
-        const sg = e.weapon === 'scattergun',
-          rv = e.weapon === 'rivet',
-          hp = e.weapon === 'harpoon',
-          ar = e.weapon === 'arc',
-          cb = e.weapon === 'carbine',
-          lt = e.weapon === 'linethrower' || e.weapon === 'mortar',
-          ch = e.charge ?? 0;
-        this.recoil = sg && e.mod === 'doublebarrel' ? 2.6 : sg ? 1.6 : rv ? 0.35 : hp ? 2.2 : cb ? 0.5 : lt ? 2.6 : ar ? 0.15 + 1.4 * ch : 1;
-        this.flashT = sg ? 0.09 : rv ? 0.045 : cb ? 0.04 : lt ? 0.1 : ar ? 0.07 + 0.12 * ch : 0.07;
-        if (sg || hp) this.pumpT = 0.9;
-        if (rv || hp || lt) this.spinKick = 1;
-        this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, sg ? 0.3 : hp ? 0.42 : rv ? 0.05 : cb ? 0.08 : lt ? 0.55 : ar ? 0.06 + 0.5 * ch : 0.2);
-        // the kick: heavy guns shake the view, the rivets barely
-        this.shakeT = Math.max(this.shakeT || 0, sg || hp || lt ? 0.3 : ar && ch > 0 ? 0.35 : 0.14);
-        this.fireLight.color.setHex(e.load === 'slag' ? 0xff7a2a : e.load === 'rime' ? 0x9fdcff : sg ? 0xffb060 : hp ? 0xcffff0 : ar ? 0x6ffff0 : 0xffa848);
-        this.fireK = sg || lt ? 1.25 : hp ? 0.9 : rv || cb ? 0.6 : ar ? 0.5 + ch : 1;
-        this.muzzleLight.color.setHex(
-          e.load === 'slag'
-            ? 0xff7a2a
-            : e.load === 'rime'
-              ? 0x9fdcff
-              : e.load === 'pen'
-                ? 0xfff2c8
-                : sg
-                  ? 0xffc070
-                  : rv
-                    ? 0xffe090
-                    : cb
-                      ? 0xffd090
-                      : lt
-                        ? 0xff9030
-                        : hp
-                          ? 0xcffff0
-                          : ar
-                            ? 0x6ffff0
-                            : 0xff9040,
-        ); // each gun lights the room its own colour (a load its own:)
+        const F = shotFeel(e.weapon, { charge: e.charge ?? 0, mod: e.mod ?? null, load: e.load ?? null });
+        this.recoil = F.recoil;
+        this.recoilRate = F.recover;
+        this.flashT = F.flash;
+        if (F.pump) this.pumpT = 0.9;
+        if (F.spin) this.spinKick = 1;
+        this.shakeAmp = Math.max(this.shakeT > 0 ? this.shakeAmp : 0, F.shake); // the kick: heavy guns shake the view, the rivets barely
+        this.shakeT = Math.max(this.shakeT || 0, F.shakeT);
+        this.fireLight.color.setHex(F.fire); // each gun lights the room its own colour (a load its own)
+        this.fireK = F.light;
+        this.muzzleLight.color.setHex(F.muzzle);
+        if (F.casing) this.casingQ.push({ kind: F.casing, t: F.casingAt });
       } else if (e.type === 'enemy_hit')
         this.addPop(e); // look polish 7: a burst of light where the shot met the body
       else if (e.type === 'snipe_shot')
@@ -717,17 +701,7 @@ export class GameView {
       } else if (e.type === 'bolt') this.addBolt(e);
       else if (e.type === 'arc') this.addArc(e);
       else if (e.type === 'impact') {
-        for (let i = 0; i < 4; i++) {
-          const m = new THREE.Mesh(this.debGeo, this.dustMat);
-          m.scale.setScalar(0.6);
-          m.position.set(e.x, e.y, e.z);
-          this.scene.add(m);
-          this.debris.push({
-            m,
-            v: new THREE.Vector3(this.rnd() - 0.5, this.rnd() * 0.6 + 0.2, this.rnd() - 0.5).multiplyScalar(2.6),
-            life: 0.3 + this.rnd() * 0.2,
-          });
-        }
+        this.impacts.burst(e.surface ?? 'stone', e.x, e.y, e.z);
       } else if (e.type === 'shake') {
         this.shakeT = 0.5;
         this.shakeAmp = e.amount ?? 1;
@@ -1115,13 +1089,25 @@ export class GameView {
       ); // ENEMY ACTIONS: the windup's glint (tells.js) // asleep dim, awake teal, hunting amber-white, striking white
       const look = live && e.state !== 'idle' ? wrapA(Math.atan2(w.player.x - v.root.position.x, w.player.z - v.root.position.z) - yawNow) : 0,
         swingOn = e.attackT >= 0;
+      // the flick of a hit, and the sway of a body the blow has stunned
+      let hitF = 0,
+        hitS = 0;
+      if (live && v.hitT != null) {
+        v.hitT += dt;
+        const h = flinchAt(v.hitT, v.hitK);
+        if (v.hitT > FLINCH.fall) v.hitT = null;
+        hitF = h * (Math.sin(yawNow) * v.hitDx + Math.cos(yawNow) * v.hitDz);
+        hitS = -h * (Math.cos(yawNow) * v.hitDx - Math.sin(yawNow) * v.hitDz);
+      }
+      const stag = live && !def.node && (e.stunT ?? 0) > 0 ? 0.14 * Math.min(1, e.stunT * 4) * (1 + 0.3 * Math.sin(t * 9)) : 0;
       v.pose({
         t,
         walk: Math.max(e.walk, 0.6 * mv.turn),
         phase: e.phase + mv.ph,
         look,
-        leanF: mv.lf,
-        leanS: mv.ls,
+        leanF: mv.lf + hitF - stag,
+        leanS: mv.ls + hitS,
+        ...(v.fall ? { fall: v.fall } : {}),
         ...(swingOn ? { strike: def.attack.windup, dur: def.attack.duration } : {}),
         attack,
         lunge,
@@ -1146,7 +1132,15 @@ export class GameView {
       // a body that has finished falling is as still as a sleeper, so it is frozen the same way (it stays; a Sexton that raises it thaws it)
       const steady = Math.abs((e.y ?? 0) - (s.y ?? e.y ?? 0)) < 1e-4,
         still = e.state === 'idle' || (e.state === 'dead' && e.dead >= 1);
-      if (still && !v.frozen && steady) {
+      if (v.gibbed) {
+        v.root.visible = false;
+        if (v.frozen) {
+          this.scene.remove(v.frozen);
+          v.frozen.traverse((o) => o.isMesh && o.geometry.dispose());
+          v.frozen = null;
+          this.scene.add(v.root);
+        }
+      } else if (still && !v.frozen && steady) {
         v.root.updateMatrixWorld(true);
         const f = v.root.clone(true);
         this.scene.add(f);
@@ -1178,7 +1172,7 @@ export class GameView {
         this.enemyViews.delete(id);
         freeRig(v.root);
         if (v.frozen) freeRig(v.frozen);
-      // H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
+        // H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
       }
     {
       const discs = [];
@@ -1724,6 +1718,20 @@ export class GameView {
       }
     }
     // debris + explosion light
+    this.impacts.update(w, dt);
+    for (let i = this.casingQ.length - 1; i >= 0; i--) {
+      const c = this.casingQ[i];
+      c.t -= dt;
+      if (c.t > 0) continue;
+      this.casingQ.splice(i, 1);
+      const yaw = this.cam.rotation.y,
+        P = this.cam.position,
+        rx = Math.cos(yaw),
+        rz = -Math.sin(yaw),
+        fx = -Math.sin(yaw),
+        fz = -Math.cos(yaw);
+      this.impacts.casing(c.kind, P.x + rx * 0.2 + fx * 0.35, P.y - 0.24, P.z + rz * 0.2 + fz * 0.35, rx, rz, w.player.vx, w.player.vz);
+    }
     for (let i = this.debris.length - 1; i >= 0; i--) {
       const d = this.debris[i];
       d.life -= dt;
@@ -1766,7 +1774,7 @@ export class GameView {
       l.intensity *= lw.w[i];
     });
     // weapon overlay
-    this.recoil = Math.max(0, this.recoil - dt * 4.5);
+    this.recoil = Math.max(0, this.recoil - dt * (this.recoilRate ?? 4.5));
     this.flashT = Math.max(0, this.flashT - dt);
     {
       const on = this.flashT > 0 && !this.cine,
@@ -1850,8 +1858,8 @@ export class GameView {
         rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.6 * a));
         if (rig.flash.children[0]?.userData.muzzle) rig.flash.rotation.z = this.rnd() * 6.283;
       }
-    // look polish 7: a painted flash (gunkit.js muzzleFlash), turned at random every frame it shows; smaller in the sights // small in the sights: it
-    // must not hide the target
+      // look polish 7: a painted flash (gunkit.js muzzleFlash), turned at random every frame it shows; smaller in the sights // small in the sights: it
+      // must not hide the target
     }
     if (rig.spin) {
       this.spinKick = Math.max(0, (this.spinKick || 0) - dt * 6);
@@ -1894,6 +1902,51 @@ export class GameView {
    * same view
    */
   /** look polish 7: a burst of light on the body a shot hit, on the side toward the eye, about two thirds of the way up (render only) */
+  /** a blow landed on a live body: it flicks away from it, by how much of its health the blow took (render only) */
+  flinch(e) {
+    const v = this.enemyViews.get(e.id),
+      w = this.world,
+      en = w?.enemies.find((q) => q.id === e.id);
+    if (!v || !en || !w) return;
+    const dx = en.x - w.player.x,
+      dz = en.z - w.player.z,
+      d = Math.hypot(dx, dz) || 1,
+      stacked = v.hitT != null && v.hitT < FLINCH.rise ? v.hitK : 0;
+    v.hitK = Math.min(FLINCH.max, stacked + flinchStrength(e.amount ?? 0, ENEMIES[en.kind]?.hp ?? 50));
+    v.hitT = 0;
+    v.hitDx = dx / d;
+    v.hitDz = dz / d;
+  }
+  /** a body dies: it falls away from the blow, and a big enough blow bursts it into its parts */
+  killed(e) {
+    const v = this.enemyViews.get(e.id),
+      w = this.world,
+      def = ENEMIES[e.kind];
+    if (!w || !def) return;
+    const dx0 = e.x - w.player.x,
+      dz0 = e.z - w.player.z,
+      d = Math.hypot(dx0, dz0) || 1,
+      dx = dx0 / d,
+      dz = dz0 / d;
+    if (!v) return;
+    v.hitT = null;
+    v.fall = fallTurn(dx, dz, v.root.rotation.y);
+    if (bursts({ weapon: e.weapon, over: e.over ?? 0, def, gore: this.gore })) {
+      const y = v.root.position.y;
+      this.impacts.burstBody(v.rig ?? v.root, e.x, y, e.z, dx, dz);
+      this.impacts.spray(e.x, y + (def.height ?? 1.8) * 0.5, e.z, DECALS.human.includes(e.kind) ? 0x7a1a14 : 0x2ad0a8);
+      v.gibbed = true;
+      v.root.visible = false;
+    }
+  }
+  /** a body stood up again: whatever it was, it is whole */
+  revived(e) {
+    const v = this.enemyViews.get(e.id);
+    if (!v) return;
+    v.gibbed = false;
+    v.fall = 0;
+    if (!v.frozen) v.root.visible = true;
+  }
   addPop(e) {
     const def = ENEMIES[e.kind ?? this.world?.enemies.find((q) => q.id === e.id)?.kind];
     if (!def || !this.popGeo) return;
@@ -1949,6 +2002,7 @@ export class GameView {
     this.post.uniforms.uExposure.value = 2.2 * look.exposure * (this.brightness ?? 1);
   }
   dispose() {
+    this.impacts?.dispose();
     const freeMeshes = (o) => {
       if (o.isMesh) {
         o.geometry?.dispose();

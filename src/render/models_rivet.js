@@ -104,7 +104,7 @@ export function makeRivetDriver(tex, gunTex, o = {}) {
   flash.position.z = -0.62;
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.08, 0xffa030, 0xfff0c0)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.08, 0xffa030, 0xfff0c0, { blades: 4, cone: 0.8 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, spin, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

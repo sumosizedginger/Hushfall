@@ -30,6 +30,9 @@ body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px
 #hitmark.on{animation:hitm .24s ease-out}
 #hitmark.kill::before,#hitmark.kill::after{background:var(--red);width:3px}
 #hitmark.plate::before,#hitmark.plate::after{background:#8a98a0}
+#hitmark.kill::before,#hitmark.kill::after{height:36px;margin-top:-18px}#hitmark.kill.on{animation-duration:.34s}
+#hitmark.crit::before,#hitmark.crit::after{background:#ffd45a;width:3px;height:32px;margin-top:-16px}
+body.no-hitmarks #hitmark{display:none}
 @keyframes hitm{0%{opacity:1;transform:scale(1.35)}100%{opacity:0;transform:scale(.8)}}
 #cross-note{position:fixed;left:50%;top:calc(50% + 36px);transform:translateX(-50%);pointer-events:none;letter-spacing:.3em;font-size:13px;color:var(--teal);text-shadow:1px 1px 0 #000,0 0 6px #000;opacity:0;z-index:2}
 #cross-note.on{animation:cnote .8s ease-out}
@@ -399,6 +402,8 @@ SOFTWARE.</pre></div></details>
     <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
     <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
     <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
+    <label>Hit marks and ticks (a mark at the crosshair and a tick for every blow you land) <input id="set-hitmarks" type="checkbox"></label>
+    <label>Gore <select id="set-gore"><option value="full">Full (a big enough blow bursts a body)</option><option value="reduced">Reduced (bodies stay whole)</option></select></label>
     <label>Text size <select id="set-textsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
     <label>Reduce flashing and shaking <input id="set-reducedmotion" type="checkbox"></label>
     <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>

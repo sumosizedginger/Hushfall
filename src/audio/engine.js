@@ -1,5 +1,7 @@
 // AudioEngine: owns the WebAudio graph and turns sim state + drained events into sound. It only READS the world.
 // Browsers keep an AudioContext suspended until a user gesture: unlock() is called from real input events and is idempotent.
+import { surfaceAt } from '../engine/surfaces.js';
+import { impulse, ROOMS, DUCKS, roomFor, STEP_OF_FAMILY } from './rooms.js';
 import { zoneBeat } from '../engine/hive.js';
 import { SFX, seededRandom } from './synth.js';
 import { soundsForEvent } from './events.js';
@@ -64,26 +66,30 @@ export class AudioEngine {
     comp.attack.value = 0.003;
     comp.release.value = 0.2;
     this.master.connect(comp);
-    comp.connect(c.destination);
+    const limit = c.createDynamicsCompressor(); // nothing past the ceiling, however many things go off at once
+    limit.threshold.value = -2;
+    limit.knee.value = 0;
+    limit.ratio.value = 20;
+    limit.attack.value = 0.001;
+    limit.release.value = 0.08;
+    comp.connect(limit);
+    limit.connect(c.destination);
     this.sfxBus = c.createGain();
     this.sfxBus.connect(this.master);
     this.musicLP = c.createBiquadFilter();
     this.musicLP.type = 'lowpass';
     this.musicLP.frequency.value = 18000;
     this.musicBus = c.createGain();
-    this.musicLP.connect(this.musicBus);
+    this.musicDuck = c.createGain(); // gives way when something has to be heard over the music (DUCKS in rooms.js)
+    this.musicLP.connect(this.musicDuck);
+    this.musicDuck.connect(this.musicBus);
     this.musicBus.connect(this.master);
     this.ambBus = c.createGain();
     this.ambBus.connect(this.master);
-    // shared reverb: a synthetic decaying-noise impulse; sends are tiny outdoors, larger indoors
-    const len = Math.floor(c.sampleRate * 1.7),
-      imp = c.createBuffer(2, len, c.sampleRate);
-    for (let ch = 0; ch < 2; ch++) {
-      const d = imp.getChannelData(ch);
-      for (let i = 0; i < len; i++) d[i] = (this.rand() * 2 - 1) * Math.pow(1 - i / len, 3);
-    }
+    // the room: an impulse per family of place (rooms.js), built the first time it is needed
+    this.roomBuffers = new Map();
     this.reverb = c.createConvolver();
-    this.reverb.buffer = imp;
+    this.setRoom('town');
     this.reverbSend = c.createGain();
     this.reverbSend.gain.value = 0.25;
     this.reverbWet = c.createGain();
@@ -94,6 +100,34 @@ export class AudioEngine {
     this.music = new Music(c, this.musicLP);
     this.ambience = new Ambience(c, this.ambBus);
     this.applySettings(this.settings);
+  }
+
+  /** the player has walked into another kind of room */
+  setRoom(room) {
+    if (room === this.room || !this.ctx || !this.reverb) return;
+    this.room = room;
+    let buf = this.roomBuffers.get(room);
+    if (!buf) {
+      const c = this.ctx,
+        chans = impulse(this.rand, c.sampleRate, room);
+      buf = c.createBuffer(2, chans[0].length, c.sampleRate);
+      chans.forEach((d, i) => buf.copyToChannel(d, i));
+      this.roomBuffers.set(room, buf);
+    }
+    this.reverb.buffer = buf;
+    const R = ROOMS[room];
+    this.reverbWet?.gain?.setTargetAtTime?.(R.wet, this.ctx.currentTime, 0.3);
+  }
+
+  /** the music steps back for a moment, so what matters can be heard */
+  duck(kind) {
+    const D = DUCKS[kind],
+      g = this.musicDuck?.gain;
+    if (!D || !g?.setTargetAtTime) return;
+    const t = this.ctx.currentTime;
+    g.cancelScheduledValues?.(t);
+    g.setTargetAtTime(D.k, t, 0.02);
+    g.setTargetAtTime(1, t + D.s, 0.3);
   }
 
   applySettings(s) {
@@ -112,6 +146,10 @@ export class AudioEngine {
   play(id, { pos, gain = 1, delay = 0 } = {}) {
     const fn = SFX[id];
     if (!fn) return false;
+    if (id === 'dry_click') {
+      if (this.clock - (this.lastDry ?? -9) < 0.25) return false;
+      this.lastDry = this.clock;
+    }
     if (!this.ctx || this.ctx.state !== 'running') {
       this.stats.dropped++;
       return false;
@@ -154,12 +192,18 @@ export class AudioEngine {
 
   handleEvents(events) {
     for (const e of events) {
+      if (e.type === 'dmg' && this.settings?.hitMarks === false) continue;
       for (const s of soundsForEvent(e)) this.play(s.id, { pos: s.pos, gain: s.gain, delay: s.delay });
       if (e.type === 'player_died') {
         this.dead = true;
         this._applyMuffle();
       }
-      if (e.type === 'hurt') this.intensity.hurt(e.amount); // being hurt pushes the music up
+      if (e.type === 'hurt') {
+        this.intensity.hurt(e.amount); // being hurt pushes the music up
+        this.duck('hurt');
+      } else if (e.type === 'explode') this.duck('explode');
+      else if (e.type === 'enemy_windup') this.duck('windup');
+      else if (e.type === 'message') this.duck('message');
       if (e.type === 'enemy_died' && !e.folk && weightOf(e.kind) >= 2.5) this.music?.kill?.(); // a big one died: a bell on the next beat
       if (e.type === 'silence') {
         this.hushT = this.clock + 1.4;
@@ -276,15 +320,27 @@ export class AudioEngine {
       this.applySettings(this.settings);
       this._applyMuffle();
     }
-    const interior = map.isInterior(p.x, p.z);
-    this.reverbSend.gain.setTargetAtTime(interior ? 0.28 : 0.1, c.currentTime, 0.4);
+    const interior = map.isInterior(p.x, p.z),
+      room = roomFor(map.atmosphere?.look ?? 'harbour', interior);
+    this.setRoom(room);
+    this.reverbSend.gain.setTargetAtTime(ROOMS[room].send, c.currentTime, 0.4);
     // footsteps: one per head-bob cycle, when actually moving
     const speed = Math.hypot(p.vx, p.vz),
       stepIdx = Math.floor(p.bob / Math.PI);
     if (stepIdx !== this.lastStep) {
-      if (speed > 1.2 && world.status === 'playing') this.play(interior ? 'step_plank' : 'step_outdoor', { gain: p.sprinting ? 1.15 : 0.8 });
+      if (speed > 1.2 && world.status === 'playing')
+        this.play(STEP_OF_FAMILY[surfaceAt(map, p.x, p.y, p.z)] ?? 'step_plank', { gain: p.sprinting ? 1.15 : 0.8 });
       this.lastStep = stepIdx;
     }
+    // a run has a cost you can hear, and a drop has a landing
+    if (p.sprinting) this.sprintT = (this.sprintT ?? 0) + dt;
+    else {
+      if ((this.sprintT ?? 0) > 2.5 && world.status === 'playing') this.play('sprint_breath', { gain: 0.5 });
+      this.sprintT = 0;
+    }
+    if (this.lastY != null && !p.air && this.lastY - p.y > 0.7 && !map.sectors?.length)
+      this.play('land_thud', { gain: Math.min(1, 0.4 + (this.lastY - p.y) * 0.2) });
+    this.lastY = p.y;
     // nearest alien growth (pods) and awake enemies
     let hush = 0;
     for (const pr of map.props) if (pr.kind === 'pod') hush = Math.max(hush, clamp(1 - Math.hypot(pr.x - p.x, pr.z - p.z) / 9, 0, 1));

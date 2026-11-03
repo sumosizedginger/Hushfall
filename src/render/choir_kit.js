@@ -436,6 +436,7 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
   root.traverse((o) => {
     if (o.isMesh) o.frustumCulled = true;
   });
+  rig.rotation.order = 'YXZ';
   const ground = makeRigGrounder(root, rig, opts.maxLift ?? 3),
     smooth = inertializer(J);
   let lean = null;
@@ -447,6 +448,9 @@ export function makeCreature(atlasTex, build, pose, opts = {}) {
     } // (the lean of the last frame comes off first: a pose that does not write the rig's rotation must not collect it)
     pose(p, J, R);
     smooth(p.cut ? NaN : p.t);
+    if (p.fall)
+      rig.rotation.y = p.fall * ease(clamp01(p.dead ?? 0)); // a body falls away from the blow that killed it (a topple is about the rig's own x: y after x)
+    else if (rig.rotation.y) rig.rotation.y = 0;
     if (p.leanF || p.leanS) {
       lean = [rig.rotation.x, rig.rotation.z];
       rig.rotation.x += p.leanF ?? 0;

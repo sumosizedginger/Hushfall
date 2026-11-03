@@ -53,7 +53,7 @@ export function smooth(geom) {
  * round the muzzle (the view turns the whole flash a random amount each shot, so no two are alike) and a white-hot core. All additive, none writes
  * depth. r = the old outer ball's radius.
  */
-export function muzzleFlash(r, color, hot = 0xfff4d0) {
+export function muzzleFlash(r, color, hot = 0xfff4d0, { blades = 5, cone = 1, wide = 1 } = {}) {
   const g = new THREE.Group(),
     add = (geom, c, op) => {
       const m = new THREE.Mesh(
@@ -70,14 +70,14 @@ export function muzzleFlash(r, color, hot = 0xfff4d0) {
     [0.78, 0.18],
   ])
     add(new THREE.SphereGeometry(r * k, 16, 10), color, op); // the glow in three soft bands (one sphere showed a hard rim)
-  const cone = add(new THREE.ConeGeometry(r * 0.62, r * 3.2, 14, 1, true), color, 0.4);
-  cone.rotation.x = -Math.PI / 2;
-  cone.position.z = -r * 1.5; // the flame thrown down the line of fire
+  const flame = add(new THREE.ConeGeometry(r * 0.62 * wide, r * 3.2 * cone, 14, 1, true), color, 0.4);
+  flame.rotation.x = -Math.PI / 2;
+  flame.position.z = -r * 1.5 * cone; // the flame thrown down the line of fire
   const blade = new THREE.BufferGeometry();
   blade.setAttribute('position', new THREE.Float32BufferAttribute([-r * 0.26, 0, 0, r * 0.26, 0, 0, 0, r * 2.1, 0], 3));
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < blades; i++) {
     const m = add(blade, i % 2 ? hot : color, 0.62);
-    m.rotation.z = i * ((Math.PI * 2) / 5) + (i % 2) * 0.35;
+    m.rotation.z = i * ((Math.PI * 2) / blades) + (i % 2) * 0.35;
     m.scale.y = i % 2 ? 0.66 : 1;
   }
   add(new THREE.SphereGeometry(r * 0.5, 12, 8), hot, 1);

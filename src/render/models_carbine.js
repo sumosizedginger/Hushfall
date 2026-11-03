@@ -116,7 +116,7 @@ export function makeCarbine(tex, gunTex, o = {}) {
   flash.position.z = -0.92;
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.06, 0xffb040, 0xfff4c8)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.06, 0xffb040, 0xfff4c8, { blades: 3, cone: 1.5, wide: 0.7 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump: null, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

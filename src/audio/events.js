@@ -6,8 +6,7 @@ import { PICKUPS } from '../engine/defs.js';
 export const SILENT_EVENTS = {
   enemy_alert_idle: 'reserved',
   cinematic: 'shell-only: a map trigger named a story scene; the shell plays it (cinematics.js) and its own cues carry the sounds',
-  choice:
-    'shell-only: a remembered choice was made (a wing of the Undercantor Halls); the shell keeps it in progress.choices and nothing is heard',
+  choice: 'shell-only: a remembered choice was made (a wing of the Undercantor Halls); the shell keeps it in progress.choices and nothing is heard',
   chime_played: 'view-only: the tree has finished its phrase; its notes carry the sounds (chimes.js)',
   sweep_end: 'view-only: the Gate Warden beam goes out; the tell and the hit carry the sounds (sweep.js)',
   spore_fade: 'view-only: a spore bed stops blooming; the bloom and its warning carry the sounds (breath.js)',
@@ -25,18 +24,21 @@ export const SILENT_EVENTS = {
   beat_off: 'view-only: the Hive Cantor is dead and the beat stops; the lights and the audio engine read w.beatOff (hive.js)',
   mender_stop: "view-only: the Mender's tether lets go; mender_start carries the sound",
   saw_rev: 'the saw engine is a sustained voice now (sawvoice.js), driven from p.saw every frame: the retriggered rev is gone',
-  dmg: 'bookkeeping for the stats database: which gun and which attack dealt a blow; the hit itself sounds through enemy_hit / enemy_died',
   silence: 'the audio engine cuts the score, the ambience and every sound for a held second when it reads this',
 };
 export const RADIO_SOUND = 'radio';
 
+const IMPACT_OF = { wood: 'impact_wood', metal: 'impact_metal', earth: 'impact_soft', soft: 'impact_soft', organic: 'impact_wet', water: 'impact_splash' };
 const WEAPON_FIRE = {
   flare: [{ id: 'flare_fire' }],
   rivet: [{ id: 'rivet_fire', gain: 0.8 }],
-  scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }],
+  scattergun: [{ id: 'scatter_fire' }, { id: 'pump', delay: 0.42 }, { id: 'case_drop', delay: 0.85, gain: 0.5 }],
   harpoon: [{ id: 'harpoon_fire' }, { id: 'harpoon_cycle', delay: 0.62 }],
   arc: [{ id: 'arc_fire', gain: 0.9 }],
-  carbine: [{ id: 'carbine_fire', gain: 0.85 }],
+  carbine: [
+    { id: 'carbine_fire', gain: 0.85 },
+    { id: 'case_drop', delay: 0.5, gain: 0.12 },
+  ],
   linethrower: [{ id: 'rocket_fire' }],
   mortar: [{ id: 'mortar_fire' }],
 };
@@ -177,7 +179,7 @@ export function soundsForEvent(e) {
     case 'saw_restart':
       return [{ id: 'saw_restart' }];
     case 'impact':
-      return [{ id: 'impact', pos: at(e), gain: 0.6 }];
+      return [{ id: IMPACT_OF[e.surface] ?? 'impact', pos: at(e), gain: 0.6 }];
     case 'hurt':
       return [{ id: 'hurt', gain: Math.min(1, 0.5 + (e.amount || 10) / 30) }];
     case 'player_died':
@@ -362,6 +364,8 @@ export function soundsForEvent(e) {
       return [{ id: 'shot_impact', pos: at(e), gain: 0.7 }];
     case 'enemy_hit':
       return [{ id: 'enemy_hit', pos: at(e) }];
+    case 'dmg':
+      return [e.killed ? { id: 'kill_tick', gain: 0.9 } : { id: 'hit_tick', gain: Math.min(1, 0.35 + (e.amount ?? 0) / 50) }]; // the blow landed: a tick that does not fade with distance (the setting turns it off)
     case 'resonant_ring':
       return [{ id: 'resonant_ring', pos: at(e), gain: 0.55 }]; // the Resonant's chord on the beat
     case 'bell_strike':

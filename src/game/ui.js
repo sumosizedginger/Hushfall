@@ -131,6 +131,8 @@ export class UI {
     $('set-mouseinvert').onchange = (e) => this.h.setSetting('mouseInvertY', e.target.checked);
     $('set-rawmouse').onchange = (e) => this.h.setSetting('rawMouse', e.target.checked);
     $('set-headbob').onchange = (e) => this.h.setSetting('headBob', e.target.value);
+    $('set-hitmarks').onchange = (e) => this.h.setSetting('hitMarks', e.target.checked);
+    $('set-gore').onchange = (e) => this.h.setSetting('gore', e.target.value);
     $('set-vol').oninput = (e) => this.h.setSetting('masterVolume', Number(e.target.value));
     $('set-sfx').oninput = (e) => this.h.setSetting('sfxVolume', Number(e.target.value));
     $('set-music').oninput = (e) => this.h.setSetting('musicVolume', Number(e.target.value));
@@ -336,6 +338,8 @@ export class UI {
     $('set-mouseinvert').checked = !!s.mouseInvertY;
     $('set-rawmouse').checked = s.rawMouse !== false;
     $('set-headbob').value = s.headBob ?? 'full';
+    $('set-hitmarks').checked = s.hitMarks !== false;
+    $('set-gore').value = s.gore ?? 'full';
     $('set-fov').value = s.fov;
     this.showFov(s.fov);
     $('set-bright').value = s.brightness;
@@ -692,6 +696,8 @@ export class UI {
         if (!e.folk) mark = 'kill';
       } else if (e.type === 'armor_hit') {
         if (mark !== 'kill') mark = 'plate';
+      } else if (e.type === 'headshot') {
+        if (mark !== 'kill') mark = e.killed ? 'kill' : 'crit';
       } else if (e.type === 'enemy_hit' || e.type === 'melee_hit') {
         if (!mark) mark = 'hit';
         if (e.riposte) this.crossNote('RIPOSTE', '#ffd45a');
@@ -959,7 +965,7 @@ export class UI {
           : BD.echoReeds && nodes > 0
             ? `${nodes} ${nodes === 1 ? 'REED SINGS' : 'REEDS SING'}: A SECOND RING`
             : '';
-    // the wording is the boss's: bells ring, feeders feed // the Hive Cantor's shield is its choir (unison): the count is the singers still standing
+      // the wording is the boss's: bells ring, feeders feed // the Hive Cantor's shield is its choir (unison): the count is the singers still standing
     }
     $('hud-kills').textContent = `${w.stats.kills}/${w.stats.total.enemies}`;
     $('hud-secrets').textContent = `${w.stats.secrets}/${w.stats.total.secrets}`;

@@ -1,0 +1,128 @@
+// What a shot hit: the family of a surface, from the map's own tiles. Pure; the sim names the surface in the `impact` event and the view and the audio
+// answer it. Families: wood, stone, metal, earth, soft, organic, water.
+import { WALL_SKINS, FLOOR_SKINS } from './defs.js';
+
+export const WALL_FAMILY = {
+  brick_warm_a: 'stone',
+  tower_stone_a: 'stone',
+  wall_amphi_a: 'stone',
+  wall_approach_a: 'stone',
+  wall_ashstone_a: 'stone',
+  wall_bark_a: 'wood',
+  wall_basalt_a: 'stone',
+  wall_bellinside_a: 'metal',
+  wall_bonecoral_a: 'organic',
+  wall_bonewoven_a: 'organic',
+  wall_bulkhead_a: 'metal',
+  wall_chitin_a: 'organic',
+  wall_citystone_a: 'stone',
+  wall_concrete_a: 'stone',
+  wall_corrugated_a: 'metal',
+  wall_crystal_a: 'stone',
+  wall_deeprock_a: 'stone',
+  wall_dock_a: 'wood',
+  wall_drowned_a: 'stone',
+  wall_fault_a: 'stone',
+  wall_foundry_a: 'metal',
+  wall_gate_a: 'stone',
+  wall_glass_a: 'stone',
+  wall_glasscrust_a: 'stone',
+  wall_heartflesh_a: 'organic',
+  wall_hivegorge_a: 'organic',
+  wall_hull_a: 'metal',
+  wall_iron_a: 'metal',
+  wall_kiln_a: 'stone',
+  wall_lattice_a: 'metal',
+  wall_loft_a: 'wood',
+  wall_loom_a: 'organic',
+  wall_marblebronze_a: 'stone',
+  wall_mourning_a: 'stone',
+  wall_nerve_a: 'organic',
+  wall_orchard_a: 'wood',
+  wall_ossuary_a: 'organic',
+  wall_plaster_a: 'stone',
+  wall_quiet_a: 'soft',
+  wall_reactor_a: 'metal',
+  wall_reliquary_a: 'stone',
+  wall_resin_a: 'organic',
+  wall_rib_a: 'organic',
+  wall_rime_a: 'stone',
+  wall_rootbark_a: 'wood',
+  wall_rootwell_a: 'stone',
+  wall_saltbrick_a: 'stone',
+  wall_saltplate_a: 'metal',
+  wall_stair_a: 'stone',
+  wall_throat_a: 'organic',
+  wall_tidestone_a: 'stone',
+  wall_timber_a: 'wood',
+  wall_unrung_a: 'stone',
+  wall_vein_a: 'organic',
+};
+
+/** the family of every floor texture the game has (a test fails for a texture that has none) */
+export const FLOOR_FAMILY = {
+  floor_planks_a: 'wood',
+  floor_loft_a: 'wood',
+  floor_deck_a: 'wood',
+  floor_dock_a: 'wood',
+  floor_tideplank_a: 'wood',
+  cobble_wet_a: 'stone',
+  floor_tile_a: 'stone',
+  floor_flag_a: 'stone',
+  floor_slate_a: 'stone',
+  floor_approach_a: 'stone',
+  floor_stair_a: 'stone',
+  floor_gate_a: 'stone',
+  floor_basaltflag_a: 'stone',
+  floor_marble_a: 'stone',
+  floor_mourning_a: 'stone',
+  floor_amphi_a: 'stone',
+  floor_bellstone_a: 'stone',
+  floor_unrung_a: 'stone',
+  floor_prism_a: 'stone',
+  floor_faultrock_a: 'stone',
+  floor_flowstone_a: 'stone',
+  floor_rootwell_a: 'stone',
+  floor_grate_a: 'metal',
+  floor_track_a: 'metal',
+  floor_foundry_a: 'metal',
+  floor_hull_a: 'metal',
+  floor_veinrail_a: 'metal',
+  floor_nervegrid_a: 'metal',
+  floor_reactor_a: 'metal',
+  floor_silt_a: 'earth',
+  floor_saltcrust_a: 'earth',
+  floor_clinker_a: 'earth',
+  floor_slurry_a: 'earth',
+  floor_rime_a: 'earth',
+  floor_glasssand_a: 'earth',
+  floor_moss_a: 'earth',
+  floor_terrace_a: 'earth',
+  floor_rootloam_a: 'earth',
+  floor_carpet_a: 'soft',
+  floor_quiet_a: 'soft',
+  floor_gill_a: 'organic',
+  floor_flesh_a: 'organic',
+  floor_hivetrench_a: 'organic',
+  floor_chitin_a: 'organic',
+  floor_crystal_a: 'organic',
+  floor_throat_a: 'organic',
+  floor_loom_a: 'organic',
+  floor_loomweave_a: 'organic',
+};
+
+export const SURFACE_FAMILIES = Object.freeze(['wood', 'stone', 'metal', 'earth', 'soft', 'organic', 'water']);
+
+export const familyOfFloor = (tex) => FLOOR_FAMILY[tex] ?? 'stone';
+export const familyOfWall = (tex) => WALL_FAMILY[tex] ?? 'stone';
+
+/** the family of what stopped a shot at (x, y, z). The ray stops one step inside a wall, so a wall cell means the wall; otherwise the floor under it */
+export function surfaceAt(map, x, y, z) {
+  const cx = Math.floor(x / map.cell),
+    cz = Math.floor(z / map.cell),
+    k = map.kind(cx, cz);
+  if (k === 'water' || map.fx?.(cx, cz) === 'w') return 'water';
+  const ch = map.tile(cx, cz);
+  if (k === 'wall') return familyOfWall(WALL_SKINS[ch]);
+  return familyOfFloor(FLOOR_SKINS[ch]?.tex);
+}

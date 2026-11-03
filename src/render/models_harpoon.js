@@ -119,7 +119,7 @@ export function makeHarpoonRifle(tex, gunTex, o = {}) {
   flash.position.z = -1.0;
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.1, 0x6ffff0, 0xf0fffc)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.1, 0x6ffff0, 0xf0fffc, { blades: 2, cone: 2.2, wide: 0.5 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump, spin, spinAxis: 'x', bolt, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }
 

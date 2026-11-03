@@ -165,6 +165,6 @@ export function makeScattergun(tex, gunTex, o = {}) {
   flash.position.z = -0.78;
   flash.visible = false;
   g.add(flash);
-  flash.add(muzzleFlash(0.16, 0xffa030, 0xfff0c0)); // look polish 7 (gunkit.js)
+  flash.add(muzzleFlash(0.16, 0xffa030, 0xfff0c0, { blades: 8, cone: 0.6, wide: 1.5 })); // look polish 7 (gunkit.js)
   return { group: g, flash, pump, adsY: -0.048, sleeveMat: K.sleeveMat, sights };
 }

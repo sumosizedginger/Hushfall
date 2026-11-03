@@ -275,7 +275,8 @@ const ui = new UI({
       g.view?.setEffects(v !== false ? g.governor.effects : 0);
     }
     if (k === 'crosshair') ui.applyCrosshair(v);
-    if (k === 'textSize' || k === 'reducedMotion') applyComfort();
+    if (k === 'textSize' || k === 'reducedMotion' || k === 'hitMarks') applyComfort();
+    if (k === 'hitMarks') audio.applySettings(settings);
     if (k === 'captions' && !v) g.captions.clear();
     if (k === 'playLog') {
       if (v) logMeta();
@@ -285,7 +286,8 @@ const ui = new UI({
       ui.setMinimap(v);
       g.miniModel = null;
     }
-    if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion' || k === 'headBob') && g.view) g.view.setLook(settings);
+    if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion' || k === 'headBob' || k === 'gore') && g.view)
+      g.view.setLook(settings);
   },
 });
 g.input.setToggle('aim', settings.aimToggle);
@@ -318,6 +320,7 @@ function applyComfort() {
   c.toggle('ui-large', settings.textSize === 'large');
   c.toggle('ui-larger', settings.textSize === 'larger');
   c.toggle('reduced-motion', !!settings.reducedMotion);
+  c.toggle('no-hitmarks', settings.hitMarks === false);
 }
 
 /* * one finished attempt at a map goes into the play log, if the player turned the log on (never twice for one attempt) */

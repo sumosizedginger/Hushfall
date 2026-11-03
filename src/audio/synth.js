@@ -96,14 +96,34 @@ function bell(ctx, out, t, freq, { decay = 1.4, gain = 0.25, ratio = 3.5, index 
   m.stop(t + decay + 0.1);
 }
 const thump = (ctx, out, t, f0, f1, d, gain) => tone(ctx, out, t, { type: 'sine', f0, f1, a: 0.003, d, gain });
+/** the front of a shot: a couple of milliseconds of everything */
+const crack = (ctx, out, t, gain, off = 0) => noise(ctx, out, t, { dur: 0.004, a: 0.0005, gain, type: 'highpass', f0: 500, off });
+/** the sound of the shot coming back off whatever is near */
+const slap = (ctx, out, t, at, gain, f0, off = 0) => noise(ctx, out, t + at, { dur: 0.09, a: 0.004, gain, type: 'bandpass', f0, q: 0.8, off });
+const DRIVE = new Map();
+/** a soft clip the whole of a sound goes through: it grows heavier and louder without ever passing full scale */
+function drive(ctx, out, k) {
+  if (!DRIVE.has(k)) {
+    const n = 1024,
+      curve = new Float32Array(n);
+    for (let i = 0; i < n; i++) curve[i] = Math.tanh(((i / (n - 1)) * 2 - 1) * k) / Math.tanh(k);
+    DRIVE.set(k, curve);
+  }
+  const w = ctx.createWaveShaper();
+  w.curve = DRIVE.get(k);
+  w.connect(out);
+  return w;
+}
 
 // ------------------------------------------------------------------ recipes
 export const SFX = {
   // --- weapons ---
   flare_fire(c, out, t, o) {
-    // dull cannon thump, a flash of hiss, a fizzing tail
-    thump(c, out, t, 150, 42, 0.28, 0.75);
-    noise(c, out, t, { dur: 0.35, gain: 0.5, type: 'bandpass', f0: 1400, f1: 300, q: 0.9, off: o.r() });
+    // a dull cannon thump, a flash of hiss, a fizzing tail
+    const d = drive(c, out, 1.6);
+    crack(c, d, t, 0.3, o.r());
+    thump(c, d, t, 150, 42, 0.28, 0.75);
+    noise(c, d, t, { dur: 0.35, gain: 0.5, type: 'bandpass', f0: 1400, f1: 300, q: 0.9, off: o.r() });
     noise(c, out, t + 0.05, { dur: 0.7, a: 0.04, gain: 0.14, type: 'highpass', f0: 3500, f1: 2500, off: o.r() });
     return 0.8;
   },
@@ -115,13 +135,17 @@ export const SFX = {
     return 1.1;
   },
   scatter_fire(c, out, t, o) {
-    // heavy short blast with a metallic ring
-    thump(c, out, t, 115, 38, 0.3, 0.65);
-    noise(c, out, t, { dur: 0.4, gain: 0.62, type: 'lowpass', f0: 7000, f1: 380, q: 0.5, off: o.r() });
-    noise(c, out, t, { dur: 0.12, gain: 0.28, type: 'highpass', f0: 2500, off: o.r() });
+    // the heavy one: a crack, a chest-deep thump under it, a burst of everything falling away, a ring from the barrel, the room answering
+    const d = drive(c, out, 2.2);
+    crack(c, d, t, 0.55, o.r());
+    thump(c, d, t, 115, 38, 0.3, 0.7);
+    thump(c, d, t, 62, 34, 0.42, 0.4);
+    noise(c, d, t, { dur: 0.4, gain: 0.66, type: 'lowpass', f0: 7000, f1: 380, q: 0.5, off: o.r() });
+    noise(c, d, t, { dur: 0.12, gain: 0.28, type: 'highpass', f0: 2500, off: o.r() });
     tone(c, out, t + 0.01, { f0: 910, d: 0.18, gain: 0.07 });
     tone(c, out, t + 0.01, { f0: 1373, d: 0.14, gain: 0.05 });
-    return 0.6;
+    slap(c, out, t, 0.09, 0.1, 900, o.r());
+    return 0.65;
   },
   pump(c, out, t, o) {
     // fore-end slide: two clacks and a low thunk
@@ -132,13 +156,16 @@ export const SFX = {
     return 0.35;
   },
   harpoon_fire(c, out, t, o) {
-    // a long gun: a flat supersonic crack over a deep thump, the line zipping off its reel, a ring from the bolt leaving the steel
-    thump(c, out, t, 95, 30, 0.42, 0.55);
-    noise(c, out, t, { dur: 0.07, gain: 0.36, type: 'highpass', f0: 2200, off: o.r() });
-    noise(c, out, t, { dur: 0.5, gain: 0.28, type: 'lowpass', f0: 5200, f1: 240, q: 0.5, off: o.r() });
+    // a long gun: a flat supersonic crack over a deep thump, the line zipping off its reel, a ring from the bolt leaving, the shot coming back
+    const d = drive(c, out, 1.9);
+    crack(c, d, t, 0.6, o.r());
+    thump(c, d, t, 95, 30, 0.42, 0.6);
+    noise(c, d, t, { dur: 0.07, gain: 0.36, type: 'highpass', f0: 2200, off: o.r() });
+    noise(c, d, t, { dur: 0.5, gain: 0.28, type: 'lowpass', f0: 5200, f1: 240, q: 0.5, off: o.r() });
     tone(c, out, t, { type: 'triangle', f0: 2600, f1: 420, d: 0.14, gain: 0.12 });
     noise(c, out, t + 0.03, { dur: 0.36, a: 0.02, gain: 0.1, type: 'bandpass', f0: 1200, f1: 3200, q: 3, off: o.r() });
     bell(c, out, t + 0.01, 1180, { decay: 0.5, gain: 0.1, ratio: 3.1, index: 1.4 });
+    slap(c, out, t, 0.14, 0.12, 1100, o.r());
     return 0.85;
   },
   harpoon_cycle(c, out, t, o) {
@@ -260,6 +287,83 @@ export const SFX = {
     thump(c, out, t + 0.1, 200, 130, 0.08, 0.25);
     return 0.25;
   },
+  hit_tick(c, out, t, o) {
+    tone(c, out, t, { type: 'triangle', f0: 1900 + o.r() * 120, f1: 1500, d: 0.035, gain: 0.16 });
+    noise(c, out, t, { dur: 0.015, gain: 0.08, type: 'highpass', f0: 3500, off: o.r() });
+    return 0.06;
+  },
+  kill_tick(c, out, t, o) {
+    tone(c, out, t, { type: 'triangle', f0: 1250, f1: 900, d: 0.09, gain: 0.26 });
+    tone(c, out, t + 0.03, { type: 'sine', f0: 620, f1: 420, d: 0.14, gain: 0.22 });
+    noise(c, out, t, { dur: 0.03, gain: 0.1, type: 'highpass', f0: 2500, off: o.r() });
+    return 0.2;
+  },
+  impact_wood(c, out, t, o) {
+    noise(c, out, t, { dur: 0.05, gain: 0.26, type: 'bandpass', f0: 900 + o.r() * 300, q: 1.2, off: o.r() });
+    tone(c, out, t, { type: 'triangle', f0: 420 + o.r() * 90, f1: 240, d: 0.05, gain: 0.14 });
+    return 0.1;
+  },
+  impact_metal(c, out, t, o) {
+    noise(c, out, t, { dur: 0.03, gain: 0.24, type: 'highpass', f0: 3200, off: o.r() });
+    tone(c, out, t, { f0: 1900 + o.r() * 900, d: 0.11, gain: 0.08 });
+    tone(c, out, t, { f0: 3050 + o.r() * 700, d: 0.07, gain: 0.05 });
+    return 0.16;
+  },
+  impact_soft(c, out, t, o) {
+    noise(c, out, t, { dur: 0.06, gain: 0.22, type: 'lowpass', f0: 800 + o.r() * 300, off: o.r() });
+    return 0.1;
+  },
+  impact_wet(c, out, t, o) {
+    noise(c, out, t, { dur: 0.08, gain: 0.24, type: 'lowpass', f0: 1500, f1: 400, off: o.r() });
+    tone(c, out, t, { f0: 320, f1: 130, d: 0.07, gain: 0.1 });
+    return 0.14;
+  },
+  impact_splash(c, out, t, o) {
+    noise(c, out, t, { dur: 0.16, gain: 0.2, type: 'bandpass', f0: 2600, f1: 1100, q: 0.7, off: o.r() });
+    tone(c, out, t + 0.02, { f0: 700, f1: 1500, d: 0.06, gain: 0.04 });
+    return 0.2;
+  },
+  case_drop(c, out, t, o) {
+    tone(c, out, t, { f0: 3400 + o.r() * 500, d: 0.03, gain: 0.05 });
+    tone(c, out, t + 0.07, { f0: 3700 + o.r() * 500, d: 0.02, gain: 0.03 });
+    return 0.12;
+  },
+  sprint_breath(c, out, t, o) {
+    noise(c, out, t, { dur: 0.35, a: 0.08, gain: 0.05, type: 'bandpass', f0: 1200, f1: 700, q: 1, off: o.r() });
+    noise(c, out, t + 0.55, { dur: 0.3, a: 0.08, gain: 0.035, type: 'bandpass', f0: 900, f1: 600, q: 1, off: o.r() });
+    return 0.9;
+  },
+  land_thud(c, out, t, o) {
+    thump(c, out, t, 110, 45, 0.14, 0.4);
+    noise(c, out, t, { dur: 0.06, gain: 0.12, type: 'lowpass', f0: 900, off: o.r() });
+    return 0.2;
+  },
+  step_stone(c, out, t, o) {
+    noise(c, out, t, { dur: 0.05, gain: 0.14, type: 'bandpass', f0: 1500 + o.r() * 400, q: 0.9, off: o.r() });
+    thump(c, out, t, 120, 70, 0.04, 0.12);
+    return 0.1;
+  },
+  step_metal(c, out, t, o) {
+    noise(c, out, t, { dur: 0.04, gain: 0.1, type: 'bandpass', f0: 2200 + o.r() * 500, q: 1.4, off: o.r() });
+    thump(c, out, t, 150, 90, 0.05, 0.14);
+    tone(c, out, t, { f0: 640 + o.r() * 80, d: 0.09, gain: 0.03 });
+    tone(c, out, t, { f0: 1270 + o.r() * 120, d: 0.06, gain: 0.018 });
+    return 0.14;
+  },
+  step_soft(c, out, t, o) {
+    noise(c, out, t, { dur: 0.07, gain: 0.08, type: 'lowpass', f0: 700, off: o.r() });
+    thump(c, out, t, 90, 60, 0.05, 0.08);
+    return 0.1;
+  },
+  step_wet(c, out, t, o) {
+    noise(c, out, t, { dur: 0.08, gain: 0.1, type: 'lowpass', f0: 1300, f1: 450, off: o.r() });
+    tone(c, out, t + 0.01, { f0: 260 + o.r() * 60, f1: 130, d: 0.05, gain: 0.05 });
+    return 0.12;
+  },
+  step_water(c, out, t, o) {
+    noise(c, out, t, { dur: 0.14, a: 0.01, gain: 0.12, type: 'bandpass', f0: 1800 + o.r() * 500, f1: 800, q: 0.7, off: o.r() });
+    return 0.18;
+  },
   impact(c, out, t, o) {
     noise(c, out, t, { dur: 0.06, gain: 0.3, type: 'bandpass', f0: 2200 + o.r() * 800, q: 1.5, off: o.r() });
     tone(c, out, t, { f0: 600 + o.r() * 300, f1: 300, d: 0.05, gain: 0.08 });
@@ -369,10 +473,13 @@ export const SFX = {
     return 0.45;
   },
   rivet_fire(c, out, t, o) {
+    // a hard pneumatic clack, the pin going home, a breath of air
     const f = 1500 + o.r() * 700;
+    crack(c, out, t, 0.16, o.r());
     tone(c, out, t, { type: 'square', f0: f, f1: f * 0.4, d: 0.035, gain: 0.16, lp: 3600 });
     noise(c, out, t, { dur: 0.05, gain: 0.34, type: 'bandpass', f0: 2400 + o.r() * 800, q: 1.2, off: o.r() });
-    thump(c, out, t, 210, 70, 0.06, 0.32);
+    thump(c, out, t, 210, 70, 0.06, 0.34);
+    noise(c, out, t + 0.03, { dur: 0.04, gain: 0.05, type: 'highpass', f0: 5000, off: o.r() });
     return 0.12;
   },
   // Gate 2 roster: elites and the boss
@@ -1339,25 +1446,31 @@ export const SFX = {
 // the carbine, the line-thrower, the tuning-fork, the chainsaw (first guesses: not yet heard, not yet measured by audio-qa)
 Object.assign(SFX, {
   carbine_fire(c, out, t, o) {
-    // a rifle: a short sharp crack over a small thump; it repeats about eight times a second
-    thump(c, out, t, 170, 55, 0.1, 0.4);
-    noise(c, out, t, { dur: 0.05, gain: 0.38, type: 'highpass', f0: 2600, off: o.r() });
-    noise(c, out, t, { dur: 0.16, gain: 0.28, type: 'lowpass', f0: 5200, f1: 420, q: 0.5, off: o.r() });
+    // a rifle: a short sharp crack over a small thump, the bolt going home; it repeats about eight times a second
+    const d = drive(c, out, 1.5);
+    crack(c, d, t, 0.32, o.r());
+    thump(c, d, t, 170, 55, 0.1, 0.42);
+    noise(c, d, t, { dur: 0.05, gain: 0.38, type: 'highpass', f0: 2600, off: o.r() });
+    noise(c, d, t, { dur: 0.16, gain: 0.28, type: 'lowpass', f0: 5200, f1: 420, q: 0.5, off: o.r() });
     tone(c, out, t, { type: 'triangle', f0: 2100, f1: 520, d: 0.06, gain: 0.07 });
+    tone(c, out, t + 0.04, { type: 'square', f0: 2900, f1: 2200, d: 0.012, gain: 0.03, lp: 5000 });
     return 0.2;
   },
   rocket_fire(c, out, t, o) {
     // the line-thrower: a deep thump, a long rising whoosh, the line hissing out behind it
-    thump(c, out, t, 90, 30, 0.4, 0.55);
-    noise(c, out, t, { dur: 0.7, a: 0.03, gain: 0.4, type: 'bandpass', f0: 500, f1: 3200, q: 0.8, off: o.r() });
+    const d = drive(c, out, 1.5);
+    crack(c, d, t, 0.25, o.r());
+    thump(c, d, t, 90, 30, 0.4, 0.6);
+    noise(c, d, t, { dur: 0.7, a: 0.03, gain: 0.4, type: 'bandpass', f0: 500, f1: 3200, q: 0.8, off: o.r() });
     noise(c, out, t + 0.02, { dur: 1.0, a: 0.1, gain: 0.16, type: 'highpass', f0: 2500, f1: 1800, off: o.r() });
     tone(c, out, t, { type: 'sawtooth', f0: 140, f1: 380, d: 0.5, gain: 0.09, lp: 900 });
     return 1.1;
   },
   mortar_fire(c, out, t, o) {
     // the bell-breaker: a deep cough out of a bell-mouthed tube, a ring of brass, the bomb whistling up and over
-    thump(c, out, t, 70, 24, 0.5, 0.5);
-    noise(c, out, t, { dur: 0.22, gain: 0.3, type: 'lowpass', f0: 2200, f1: 260, q: 0.6, off: o.r() });
+    const d = drive(c, out, 1.4);
+    thump(c, d, t, 70, 24, 0.5, 0.55);
+    noise(c, d, t, { dur: 0.22, gain: 0.3, type: 'lowpass', f0: 2200, f1: 260, q: 0.6, off: o.r() });
     bell(c, out, t + 0.01, 233, { decay: 0.9, gain: 0.16, ratio: 2.4, index: 1.3 });
     tone(c, out, t + 0.1, { type: 'sine', f0: 700, f1: 1400, a: 0.05, d: 0.9, gain: 0.05, vib: 4 });
     noise(c, out, t + 0.12, { dur: 0.9, a: 0.3, gain: 0.07, type: 'bandpass', f0: 1800, f1: 900, q: 1.6, off: o.r() });
