@@ -19,8 +19,11 @@ const sector = (a) => Math.floor(a / SEC);
 const lineDist = (x, z, a0) => Math.abs(Math.sin((aOf(x, z) - a0) * Math.PI / 180)) * rOf(x, z);
 for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) {
   const r = rOf(x, z), a = aOf(x, z), k = sector(a);
-  if (r < RI) { setCell(L, x, z, VOID, 0); continue; }
-  if (r > RO) continue;
+  // PT-082 (design/FUN_CHECK.md: a ring, mirrored 0.99): every landing its own outline. The second has a root cellar bitten out of its outer wall, the fourth is narrow and its inner lip has crumbled into the drop (clear of
+  // where the vents land), the fifth has a shrine in its outer wall; the vents, the heights and the walls between the landings are as they were
+  const ri = k === 3 && a >= 202 && a <= 216 ? RI + 3 : RI, ro = k === 1 ? (a >= 76 && a <= 94 ? RO + 2.5 : RO - 2) : k === 3 ? RO - 3 : k === 4 ? (a >= 262 && a <= 278 ? RO + 3 : RO - 2) : k === 0 && a >= 40 && a <= 52 ? RO + 2.5 : RO;
+  if (r < ri) { setCell(L, x, z, VOID, 0); continue; }
+  if (r > ro) continue;
   // the radial walls: on the boundary lines, between one landing and the next
   let wall = false; for (let b = 0; b < K; b++) if (lineDist(x, z, b * SEC) <= 1.0 && Math.abs(((a - b * SEC + 540) % 360) - 180) > 90) wall = true;
   if (wall && r >= RI + 3) { L.g[z][x] = ROOT; continue; }
@@ -84,8 +87,14 @@ ENC.dropIn({ at: [33,68], radius: 2, cells: ENC.around([33,68], { n: 3, min: 6, 
 ENC.dropIn({ at: [13,24], radius: 2, cells: ENC.around([13,24], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'root-cellar', search: { region: [3, 3, 76, 76], prefer: [44, 77], lane: laneOf('C2M25') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'Behind the cracked root, a cellar the well\'s builders dug and left: a vest and a mend in a niche of black wood.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M25', name: 'Root Bell Descent', version: 1, ceilingHeight: 4.2, par: { time: 540 },
+  id: 'C2M25', name: 'Root Bell Descent', version: 2, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'descent', sky: 'root', dark: true, fog: '#0c1410', fogDensity: 0.012, ambient: 0.5 },
   lantern: { oil: 120, max: 240 }, lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 36, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower'] },
@@ -136,4 +145,6 @@ ENC.apply(MAP);
 // ---- PT-070 unless (the story pass): reminders that are silent once the thing they remind of has happened
 for (const [mid, unless] of Object.entries({ "door-shut": ["msg:door-open"] })) MAP.messages.find((m) => m.id === mid).unless = unless;
 // ---- end PT-070 unless
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(6, 0, { op: 'crack', at: [49, 76] }, [50, 76, 0], [48, 76, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;
