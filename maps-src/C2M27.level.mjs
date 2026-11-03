@@ -17,6 +17,12 @@ for (let z = SZ0; z <= SZ1; z++) for (let x = 4; x <= 123; x++) setCell(L, x, z,
 for (let z = RZ0; z <= RZ1; z++) for (let x = 4; x <= 123; x++) setCell(L, x, z, SHELF, 0);
 for (let z = SZ0; z <= SZ1; z++) for (let x = 4; x <= 123; x++) L.g[z][x] = 'Ι';                                                    // the south road is a different stone
 for (const [x0, x1] of [[6, 8], [118, 120]]) for (let k = 0; k < 3; k++) for (let x = x0; x <= x1; x++) { setCell(L, x, RZ0 + k, SHELF, 3 - k); setCell(L, x, RZ1 - k, SHELF, 3 - k); }       // four stairs out of the rift, at both ends
+// PT-082 (design/FUN_CHECK.md: two long strips, mirrored 0.93): the rift is a real crack, its middle a drop (the void rule: hurt, back on the last ledge), with a ledge three cells wide along the foot of each wall; the north lip has
+// the ruins of the houses that stood there (open to the road, swept by the front like the road), the south lip a terrace a metre and a half over the road where the shooters stand over the crack
+for (let z = RZ0 + 3; z <= RZ1 - 3; z++) for (let x = 10; x <= 116; x++) setCell(L, x, z, '_', 0);
+const RUINS = [[24, 30], [46, 51], [95, 100]], TERRACE = [51, 70];
+for (const [x0, x1] of RUINS) { for (let z = 1; z <= NZ0 - 1; z++) for (let x = x0; x <= x1; x++) setCell(L, x, z, ROAD, ROAD_H); setCell(L, x0 + 2, NZ0 - 1, WALL, 0); setCell(L, x1 - 1, 1, WALL, 0); }
+for (let z = SZ1 + 1; z <= SZ1 + 3; z++) for (let x = TERRACE[0]; x <= TERRACE[1]; x++) setCell(L, x, z, 'Ι', x === TERRACE[0] ? ROAD_H + 1 : x === TERRACE[0] + 1 ? ROAD_H + 2 : ROAD_H + 3);
 // the north road is broken in the middle: a stretch of the rift's own floor, with no way along it for the player (a wall of fallen rock across the road)
 for (let z = NZ0; z <= NZ1; z++) for (let x = 64; x <= 70; x++) setCell(L, x, z, WALL, 0);
 for (let z = SZ0; z <= SZ1; z++) for (let x = 86; x <= 92; x++) setCell(L, x, z, WALL, 0);
@@ -34,7 +40,7 @@ bridge('bridge1', 38, 'north', SZ0 + 2); bridge('bridge2', 78, 'south', NZ1 - 2)
 // the front: a strip of both roads falls every twelve seconds, three times, from the west end (a metre a second); the view shakes before every other one
 const loads = [];
 const hasFloor = (r) => { for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) if (L.g[z][x] === ROAD || L.g[z][x] === 'Ι') return true; return false; };
-for (let k = 0; k < 20; k++) { const x0 = 4 + 6 * k, x1 = Math.min(123, x0 + 5); const nr = [x0, NZ0, x1, NZ1], sr = [x0, SZ0, x1, SZ1]; if (hasFloor(nr)) loads.push({ rect: nr, period: 6, start: 45 + 12 * k, count: 3, ...(k % 2 === 0 ? { tremor: 0.5 } : {}) }); if (hasFloor(sr)) loads.push({ rect: sr, period: 6, start: 45 + 12 * k, count: 3 }); }
+for (let k = 0; k < 20; k++) { const x0 = 4 + 6 * k, x1 = Math.min(123, x0 + 5); const nr = [x0, RUINS.some(([a, b]) => a <= x1 && b >= x0) ? 1 : NZ0, x1, NZ1], sr = [x0, SZ0, x1, TERRACE[0] <= x1 && TERRACE[1] >= x0 ? SZ1 + 3 : SZ1]; if (hasFloor(nr)) loads.push({ rect: nr, period: 6, start: 45 + 12 * k, count: 3, ...(k % 2 === 0 ? { tremor: 0.5 } : {}) }); if (hasFloor(sr)) loads.push({ rect: sr, period: 6, start: 45 + 12 * k, count: 3 }); }
 // the far lip: the lever on the north wall of the north road, near the east end; the exit is locked until it is thrown
 const LEVER = { at: [114, NZ0], wall: 'north' }, EXIT = [122, 8];
 // the secret: a seam in the wall of the north road in the first stretch
@@ -52,7 +58,7 @@ const R = (list, kind, extra = {}) => list.forEach(([x, z]) => E(kind, x, z, ext
 R([[16, 7], [30, 10], [46, 8], [58, 6]], 'tollbearer'); R([[22, 6], [52, 10]], 'gaunt'); R([[34, 8], [60, 9]], 'zealot'); R([[42, 6]], 'chorister');
 R([[48, 32], [58, 30], [70, 33], [82, 31]], 'tollbearer'); R([[54, 34], [66, 30], [76, 34]], 'gaunt'); R([[62, 32]], 'zealot'); R([[72, 29]], 'chorister');
 R([[84, 8], [96, 10], [108, 7], [116, 9]], 'tollbearer'); R([[88, 6], [102, 11], [112, 6]], 'gaunt'); R([[92, 9], [110, 10]], 'zealot'); R([[100, 8]], 'chorister');
-R([[40, 20], [70, 20], [100, 20]], 'gill'); R([[96, 31], [112, 33]], 'bellhand'); E('bulwark', 104, 9, { facing: 0 }); E('sexton', 118, 32); R([[110, 32], [120, 30]], 'zealot');
+R([[40, 14], [70, 26], [100, 14]], 'gill'); R([[96, 31], [112, 33]], 'bellhand'); E('bulwark', 104, 9, { facing: 0 }); E('sexton', 118, 32); R([[110, 32], [120, 30]], 'zealot');
 for (const [x, z, k] of [[10, 8, 'health_small'], [24, 8, 'health_small'], [38, 9, 'health_small'], [48, 31, 'health_large'], [60, 31, 'health_small'], [72, 31, 'health_small'], [84, 9, 'health_large'], [98, 9, 'health_small'], [108, 8, 'health_large'], [114, 9, 'health_small'], [120, 8, 'health_small']]) PK(k, x, z);
 for (const [x, z] of [[30, 8], [70, 31], [110, 9]]) PK('armor_vest', x, z);
 SEC.cells.slice(0, 5).forEach(([x, z], i) => PK(['armor_vest', 'ammo_rocket', 'ammo_rocket', 'health_large', 'ammo_round'][i], x, z));
@@ -63,8 +69,14 @@ ENC.dropIn({ at: [40,30], radius: 2, cells: ENC.around([40,30], { n: 3, min: 6, 
 ENC.dropIn({ at: [59,31], radius: 2, cells: ENC.around([59,31], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'cellar', search: { region: [3, 3, 124, 40], prefer: [110, 40], lane: laneOf('C2M27') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A house cellar under the south road, the wall split by the quake. A vest and a mend on a shelf of empty jars.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M27', name: 'Fault Line', version: 1, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M27', name: 'Fault Line', version: 2, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'fault', sky: 'root', fog: '#20100a', fogDensity: 0.008 },
   noiseTell: true,                                                                                                                   // PT-071 R19: the noise readout of Silent Roots returns, combined with the falling front: everything on both roads is asleep, and the front is behind you
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
@@ -118,4 +130,7 @@ for (const [mid, unless] of Object.entries({ "exit": ["msg:far-lip"] })) MAP.mes
 MAP.entities ??= []; MAP.entities.push({ type: 'pickup', kind: 'ammo_crate', at: [21, 2] });
 // ---- end F8 ----
 
+MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [58, 38] }, { type: 'enemy', kind: 'chorister', at: [66, 38] });          // PT-082: the terrace's shooters (a pair keeps the parity of every later id)
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(27, 0, { op: 'crack', at: [110, 37] }, [110, 38, 0], [110, 36, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;
