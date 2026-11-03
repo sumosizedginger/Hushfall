@@ -9,6 +9,7 @@ import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, placer } from '../tools/mapkit/c2.mjs';
+import { blob } from '../tools/mapkit/cave.mjs';
 import { makeCar } from '../src/engine/cars.js';
 
 const W = 128, H = 96, L = new Level(W, H, { fill: 'δ' }); L.usedHeights = true; L.usedCeil = true;
@@ -26,13 +27,20 @@ for (let z = 28; z < 68; z++) for (let x = 36; x < 92; x++) setCell(L, x, z, VOI
 // ---- the stations: a room beside each stop, its dock the row or column that touches the sweep ---------------------------------------------------------------------------------------------------------------------------------------------------
 const room = (r, ch, h, wall = WALL) => { for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) setCell(L, x, z, ch, h); for (let z = r[1] - 1; z <= r[3] + 1; z++) for (let x = r[0] - 1; x <= r[2] + 1; x++) if (!(x >= r[0] && x <= r[2] && z >= r[1] && z <= r[3]) && L.g[z][x] === WALL) L.g[z][x] = wall; };
 const SR = [48, 72, 80, 88], WR = [12, 38, 31, 58], ER = [96, 38, 115, 58];                                              // south (the start), west, east (the exit)
-room(SR, S_FLOOR, 0, BONE); room(WR, W_FLOOR, 4, BONE); room(ER, E_FLOOR, 8, BONE);
+room(SR, S_FLOOR, 0, BONE);                                                                                    // PT-082: the west and east stations are no longer mirror boxes (below)
 // ledges for the singers: a metre and a half up, a half-step stair at each end
 const ledge = (r, h) => { for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) setCell(L, x, z, L.g[z][x], h); };
-for (const [x0, x1, z, base] of [[100, 112, 39, 8], [100, 112, 57, 8]]) { for (let x = x0; x <= x1; x++) { const k = Math.min(x - x0, x1 - x, 3); setCell(L, x, z, E_FLOOR, base + k); setCell(L, x, z + (z < 48 ? 1 : -1), E_FLOOR, base + Math.max(0, k - 1)); } }
-for (const [x0, x1, z, base] of [[16, 28, 39, 4], [16, 28, 57, 4]]) { for (let x = x0; x <= x1; x++) { const k = Math.min(x - x0, x1 - x, 3); setCell(L, x, z, W_FLOOR, base + k); setCell(L, x, z + (z < 48 ? 1 : -1), W_FLOOR, base + Math.max(0, k - 1)); } }
+// ---- PT-082: THE SIGNAL STATION (west): the platform at the dock, a concourse running west to the siding wall, and a signal cabin 1.5 m up over the concourse where the singers stand (a stair at its east end) --------------------------
+const fillR = (r, ch, h) => { for (let z = r[1]; z <= r[3]; z++) for (let x = r[0]; x <= r[2]; x++) setCell(L, x, z, ch, h); };
+fillR([25, 37, 31, 55], W_FLOOR, 4); fillR([12, 43, 24, 51], W_FLOOR, 4); fillR([13, 37, 21, 42], W_FLOOR, 7); setCell(L, 22, 39, W_FLOOR, 6); setCell(L, 23, 39, W_FLOOR, 5); setCell(L, 24, 39, W_FLOOR, 4);
+for (const z of [38, 40]) for (const [x, h] of [[22, 6], [23, 5], [24, 4]]) setCell(L, x, z, W_FLOOR, h);
+// ---- THE TURNTABLE HALL (east, the exit): a round hall at +4 m, the turntable a half step up in the middle, the north and south arcs a half step up where the singers stand ---------------------------------------------------------------------------
+fillR([96, 44, 98, 52], E_FLOOR, 8);
+for (let z = 36; z <= 60; z++) for (let x = 95; x <= 117; x++) { const u = ((x + 0.5 - 106) / 9.5) ** 2 + ((z + 0.5 - 48) / 10.5) ** 2; if (u > 1) continue; const r = Math.hypot(x + 0.5 - 106, z + 0.5 - 48); setCell(L, x, z, E_FLOOR, r < 3.2 ? 9 : Math.abs(z + 0.5 - 48) > 7.5 ? 9 : 8); }
+for (let z = 1; z < H - 1; z++) for (let x = 1; x < W - 1; x++) if (L.g[z][x] === WALL && (x < 33 || x > 95)) { let t = false; for (let b = -1; b <= 1; b++) for (let a = -1; a <= 1; a++) if (L.g[z + b][x + a] === W_FLOOR || L.g[z + b][x + a] === E_FLOOR) t = true; if (t) L.g[z][x] = BONE; }
+
 // ---- the hub: an island on a pier that meets the rail at the north ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (let z = 36; z <= 56; z++) for (let x = 54; x <= 73; x++) setCell(L, x, z, HUB_FLOOR, 12);
+for (const [x, z] of blob(L, 64, 46, 10.5, 10, { seed: 2020, rough: 0.22, ch: HUB_FLOOR, h: 12, solid: VOID })) void x, z;          // PT-082: the hub is an island the cave left, not a square
 for (let z = 28; z <= 35; z++) for (let x = 62; x <= 65; x++) setCell(L, x, z, HUB_FLOOR, 12);                         // the pier: its end is the dock of the hub stop (the sweep ends at row 27)
 for (let z = 46; z <= 47; z++) for (let x = 62; x <= 65; x++) L.g[z][x] = 'ε';                                       // the relay stack: a wall of copper with the lever on its south face
 // ---- the secret: a cache behind the west room's west wall -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,9 +53,9 @@ for (const [x, z] of [[50, 74], [78, 74], [50, 86], [78, 86], [64, 74], [14, 40]
 for (const [x, z] of [[56, 74], [72, 80], [18, 44], [26, 52], [104, 44], [108, 52], [60, 42], [68, 52]]) PR('pillar', x, z);
 const R = (list, kind, extra = {}) => list.forEach(([x, z]) => E(kind, x, z, extra));
 R([[50, 86], [78, 86], [48, 80]], 'gaunt'); R([[78, 80]], 'tollbearer');
-R([[16, 42], [28, 54]], 'tollbearer', { variant: 'hived' }); R([[24, 40], [24, 56]], 'chorister'); R([[20, 46]], 'zealot');
+R([[16, 46], [28, 54]], 'tollbearer', { variant: 'hived' }); R([[15, 39], [19, 40]], 'chorister'); R([[20, 46]], 'zealot');
 R([[58, 44], [70, 44], [60, 52], [68, 50], [58, 48], [70, 54]], 'tollbearer'); R([[56, 42], [72, 46]], 'gaunt'); R([[56, 50]], 'bellhand'); R([[60, 54]], 'tollbearer', { variant: 'hived' }); R([[66, 40]], 'zealot'); E('bulwark', 64, 52, { facing: 0 }); E('sexton', 58, 38);
-R([[106, 40], [112, 56]], 'chorister'); R([[102, 46], [108, 50]], 'tollbearer', { variant: 'hived' }); R([[110, 52]], 'zealot'); R([[112, 46]], 'gaunt');
+R([[104, 40], [110, 55]], 'chorister'); R([[102, 46], [108, 50]], 'tollbearer', { variant: 'hived' }); R([[110, 52]], 'zealot'); R([[112, 46]], 'gaunt');
 R([[30, 40], [30, 56], [31, 48], [97, 40], [97, 56], [97, 48], [56, 38], [72, 54], [62, 30]], 'gill');
 for (const [x, z, k] of [[60, 80, 'health_small'], [64, 74, 'health_small'], [20, 46, 'health_large'], [24, 50, 'health_small'], [60, 46, 'health_large'], [66, 52, 'health_small'], [62, 31, 'health_small'], [104, 50, 'health_large'], [100, 48, 'health_large'], [98, 46, 'health_small'], [98, 50, 'health_small'], [108, 48, 'health_large']]) PK(k, x, z);
 for (const [x, z] of [[62, 82], [28, 48], [96, 48]]) PK('armor_vest', x, z);
@@ -59,8 +67,14 @@ ENC.dropIn({ at: [65,44], radius: 2, cells: ENC.around([65,44], { n: 3, min: 6, 
 ENC.dropIn({ at: [64,38], radius: 2, cells: ENC.around([64,38], { n: 3, min: 6, max: 10 }), kind: 'g' });
 // ---- end PT-052 ----
 
+// ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
+const FUN = new Encounters(L, { prefix: 'fun' });
+FUN.secretRoom({ id: 'lamproom', search: { region: [3, 3, 124, 92], prefer: [112, 40], lane: laneOf('C2M20') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'The turntable\'s lamp room, bricked up and cracked. A vest and a mend among the spare wicks.' } });
+// ---- end PT-081 fun pass ----
+
+
 const MAP = {
-  id: 'C2M20', name: 'Vein Rail', version: 1, ceilingHeight: 4.2, par: { time: 540 },
+  id: 'C2M20', name: 'Vein Rail', version: 2, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'veins', sky: 'hive', beat: true, fog: '#2a1418', fogDensity: 0.008 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'VEIN RAIL', lines: ['A rail round a drop, and two cars that never stop going round.', 'The island in the middle is the hub. The only way onto it is the car.'] },
@@ -110,4 +124,6 @@ for (const [mid, unless] of Object.entries({ "exit": ["msg:relay"] })) MAP.messa
 // ---- PT-076 (the brain, 2026-10-26): an armour vest and a large mend ON the lane, before the place the route bot died on Hard once the creatures had a brain. A PAIR, so the parity of every later id is unchanged.
 MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [64, 36] }, { type: 'pickup', kind: 'health_large', at: [64, 40] });
 // ---- end PT-076
+FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
+{ const s = waypoints.secret; s.splice(20, 0, { op: 'crack', at: [109, 37] }, [109, 36, 0], [109, 38, 0]); }          // PT-082: the crack detour (add-secret-route.mjs), kept in the source so write-routes keeps it
 export default MAP;
