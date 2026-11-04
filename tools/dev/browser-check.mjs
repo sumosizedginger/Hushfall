@@ -73,6 +73,10 @@ try {
   await sleep(700);
   const audioState = await T('t.state().audio.state');
   check('a real click unlocks audio (context running)', audioState === 'running', audioState);
+  // PT-083 U1: the first new game offers the training yard, once; "Straight in" goes on as before
+  check('the first new game offers the training yard', await page.$eval('#training-offer', (e) => !e.classList.contains('hidden')));
+  await page.click('#btn-offer-skip');
+  await sleep(300);
   // PT-063 (R13): a fresh profile sees the COLD OPEN before the first level (the epilogue's machinery: cards typed over the title picture, the last
   // over the tower plate); Esc skips it and the game starts
   for (let i = 0; i < 24 && (await T('t.state()')).mode !== 'epilogue'; i++) await sleep(250);
