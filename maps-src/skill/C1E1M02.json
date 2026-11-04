@@ -1,5 +1,14 @@
 {
- "all": [],
+ "all": [
+  {
+   "kind": "tollbearer",
+   "at": [
+    28,
+    33
+   ],
+   "facing": 3.142
+  }
+ ],
  "hard": [
   {
    "kind": "bellhand",
@@ -40,14 +49,6 @@
     35
    ],
    "facing": -1.571
-  },
-  {
-   "kind": "bellhand",
-   "at": [
-    24,
-    38
-   ],
-   "facing": 3.142
   }
  ],
  "easy": [

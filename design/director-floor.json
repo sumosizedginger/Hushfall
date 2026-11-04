@@ -58,11 +58,11 @@
   },
   "C1E1M02": {
    "density": 28,
-   "rangedShare": 16,
+   "rangedShare": 15,
    "ambushes": 5,
    "kinds": 3,
    "loops": 1,
-   "topShare": 50,
+   "topShare": 51,
    "symmetry": 0.42,
    "walk": 1310
   },
@@ -1135,7 +1135,7 @@
   }
  },
  "lowered": {
-  "C1E1M02": "PT-083 D3: the second level of the game was harder than the four after it on Normal; two creatures now stand only on Hard",
+  "C1E1M02": "PT-083 D3: the second level of the game was harder than the four after it on Normal; a shooter and a gaunt now stand only on Hard, one slow melee creature breaks the long walk",
   "C2M17": "PT-083 D3: the opener of Act C was the peak of its stretch on Normal; four creatures now stand only on Hard"
  }
 }

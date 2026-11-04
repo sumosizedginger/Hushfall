@@ -1319,6 +1319,13 @@
   },
   {
    "type": "enemy",
+   "kind": "tollbearer",
+   "at": [28, 33],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
    "kind": "bellhand",
    "at": [7, 35],
    "facing": 3.142,
@@ -1350,13 +1357,6 @@
    "kind": "gaunt",
    "at": [33, 35],
    "facing": -1.571,
-   "skill": "hard"
-  },
-  {
-   "type": "enemy",
-   "kind": "bellhand",
-   "at": [24, 38],
-   "facing": 3.142,
    "skill": "hard"
   }
  ],
