@@ -21,6 +21,10 @@ export function hitCylinder(e) {
 
 /** is the world point (x, y, z) inside enemy `e`'s hit volume? `pad` is the thickness of whatever is testing (a pellet: 0.05, a flare: 0.1) */
 export function insideHit(e, x, y, z, pad = 0.05) {
+  // the cheap answer first: a shot's march asks this of every creature at every step, and most are nowhere near (the cylinder's centre is at most hitForward from the feet)
+  const d = ENEMIES[e.kind],
+    reach = (d.hitRadius ?? d.radius) + pad + Math.abs(d.hitForward ?? 0) + 1e-6;
+  if (Math.abs(x - e.x) >= reach || Math.abs(z - e.z) >= reach) return false;
   const c = hitCylinder(e);
   return y > c.y0 && y < c.y1 && Math.hypot(x - c.x, z - c.z) < c.r + pad;
 }

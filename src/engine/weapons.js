@@ -344,11 +344,13 @@ function fireHitscan(w, def, cone) {
           if (map.hasCracks) crackCell(w, Math.floor(x / map.cell), Math.floor(z / map.cell));
           break;
         }
-        for (const pr of map.props)
-          if (PROPS[pr.kind].radius > 0 && Math.hypot(x - pr.x, z - pr.z) < PROPS[pr.kind].radius && y < floorAt(w, pr.x, pr.z) + 1.3) {
+        for (const pr of map.props) {
+          const r = PROPS[pr.kind].radius;
+          if (r > 0 && Math.abs(x - pr.x) < r && Math.abs(z - pr.z) < r && Math.hypot(x - pr.x, z - pr.z) < r && y < floorAt(w, pr.x, pr.z) + 1.3) {
             stop = true;
             if (pr.kind === 'chime' && w.chimes && !struckChimes.has(pr)) struckChimes.add(pr);
           }
+        }
         if (!stop && w.phys && physAt(w, x, y, z)) stop = true;
         if (stop) break;
         for (const e of w.enemies)
