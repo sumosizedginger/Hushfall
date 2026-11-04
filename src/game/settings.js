@@ -38,6 +38,12 @@ export const defaultSettings = () => ({
   mouseInvertY: false,
   adsSens: 1, // invert the mouse; the sensitivity through the sights, as a share of the one that matches the zoom
   checkpoints: true, // keep a checkpoint at a gate, a key, a silenced bell; death goes back to it
+  palette: 'standard', // the colours that carry meaning (render/palette.js)
+  reduceFlashes: false, // what flares brightly, separate from what moves
+  fireToggle: false, // press to hold the trigger down, press to let go
+  guardToggle: false, // the same for a raised guard
+  captionSize: 'normal', // normal | large | larger
+  captionPlate: true, // a dark plate behind captions and subtitles
   hints: true, // the one-line hint the first time a system matters
   hintsSeen: {},
   trainingOffered: false,
@@ -120,6 +126,12 @@ export function sanitizeSettings(raw) {
   s.captions = raw.captions === true;
   s.firstRunSeen = raw.firstRunSeen === true;
   s.checkpoints = raw.checkpoints !== false;
+  s.palette = ['standard', 'deutan', 'protan', 'tritan'].includes(raw.palette) ? raw.palette : d.palette;
+  s.reduceFlashes = raw.reduceFlashes === true;
+  s.fireToggle = raw.fireToggle === true;
+  s.guardToggle = raw.guardToggle === true;
+  s.captionSize = ['normal', 'large', 'larger'].includes(raw.captionSize) ? raw.captionSize : d.captionSize;
+  s.captionPlate = raw.captionPlate !== false;
   s.hints = raw.hints !== false;
   s.hintsSeen =
     raw.hintsSeen && typeof raw.hintsSeen === 'object' && !Array.isArray(raw.hintsSeen)
@@ -164,10 +176,10 @@ export const fovAcross = (vertical, aspect) => Math.round((2 * Math.atan(Math.ta
 export const fovLabel = (vertical, aspect) => `${Math.round(vertical)}° tall, ${fovAcross(vertical, aspect)}° across`;
 /** the settings by tab, for the panel and its Defaults buttons (a test holds every control of the panel to a tab) */
 export const SETTINGS_TABS = {
-  controls: { label: 'Controls', keys: ['aimToggle', 'sprintToggle', 'wheelSlow', 'wheelToggle'] },
+  controls: { label: 'Controls', keys: ['aimToggle', 'sprintToggle', 'fireToggle', 'guardToggle', 'wheelSlow', 'wheelToggle'] },
   mouse: { label: 'Mouse and pad', keys: ['sensitivity', 'adsSens', 'mouseInvertY', 'rawMouse', 'gamepad'] },
   video: { label: 'Video', keys: ['fov', 'headBob', 'brightness', 'internalWidth', 'autoQuality', 'outline', 'paint', 'gore'] },
   audio: { label: 'Audio', keys: ['masterVolume', 'sfxVolume', 'musicVolume', 'hitMarks'] },
-  access: { label: 'Accessibility', keys: ['crosshair', 'textSize', 'reducedMotion', 'captions'] },
+  access: { label: 'Accessibility', keys: ['crosshair', 'textSize', 'reducedMotion', 'reduceFlashes', 'palette', 'captions', 'captionSize', 'captionPlate'] },
   gameplay: { label: 'Gameplay', keys: ['hints', 'journalPause', 'minimap', 'cinematics', 'checkpoints', 'playLog'] },
 };

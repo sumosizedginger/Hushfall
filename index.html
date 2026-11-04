@@ -33,6 +33,7 @@ body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px
 #hitmark.kill::before,#hitmark.kill::after{height:36px;margin-top:-18px}#hitmark.kill.on{animation-duration:.34s}
 #hitmark.crit::before,#hitmark.crit::after{background:#ffd45a;width:3px;height:32px;margin-top:-16px}
 body.no-hitmarks #hitmark{display:none}
+body[data-capsize=large] #captions,body[data-capsize=large] #cine-sub{font-size:1.25em}body[data-capsize=larger] #captions,body[data-capsize=larger] #cine-sub{font-size:1.5em}body.cap-plate #captions,body.cap-plate #cine-sub{background:#000c;padding:4px 10px}
 #screen-maps .panel{width:min(820px,94vw);max-height:88vh;display:flex;flex-direction:column}#maps-list{overflow-y:auto;flex:1;margin:8px 0}#maps-list h3{color:var(--bronze);letter-spacing:.12em;margin:14px 0 4px}#maps-list .m{padding:6px 0;border-top:1px solid #26333a}#maps-list .m>b{color:var(--paper)}#maps-list .m small{color:#9fb4b0;display:block}#maps-list .row button{width:auto;padding:3px 10px;font-size:.88em;margin-right:6px}#maps-list .badge{color:#ffd45a;font-size:.86em}
 .set-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.set-tab-btn{flex:1 1 auto;width:auto;padding:5px 10px;font-size:.92em}.set-tab-btn.on{border-color:var(--teal);color:var(--teal)}.set-tab{display:none}.set-tab.on{display:block}.set-defaults{margin-top:10px;width:auto;font-size:.88em;opacity:.85}
 #training-offer{max-width:520px;margin:8px auto 14px;padding:12px 16px;border:1px solid var(--bronze);background:#0009;line-height:1.5}#training-offer p{margin:0 0 10px}
@@ -397,6 +398,8 @@ SOFTWARE.</pre></div></details>
     <div class="set-tabs"><button class="set-tab-btn on" data-tab="controls">Controls</button><button class="set-tab-btn" data-tab="mouse">Mouse and pad</button><button class="set-tab-btn" data-tab="video">Video</button><button class="set-tab-btn" data-tab="audio">Audio</button><button class="set-tab-btn" data-tab="access">Accessibility</button><button class="set-tab-btn" data-tab="gameplay">Gameplay</button></div>
     <div class="set-tab on" data-tab="controls">
       <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
+      <label>Fire: press to hold the trigger down, press again to let go <input id="set-firetoggle" type="checkbox"></label>
+      <label>Guard: toggle instead of hold <input id="set-guardtoggle" type="checkbox"></label>
       <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
       <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
       <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
@@ -442,8 +445,12 @@ SOFTWARE.</pre></div></details>
       <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
       <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
       <label>Text size <select id="set-textsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
-      <label>Reduce flashing and shaking <input id="set-reducedmotion" type="checkbox"></label>
+      <label>Reduce motion and shaking <input id="set-reducedmotion" type="checkbox"></label>
+      <label>Reduce flashes (muzzle, blasts, the hurt flash) <input id="set-reduceflashes" type="checkbox"></label>
+      <label>Colours that carry meaning <select id="set-palette"><option value="standard">Standard</option><option value="deutan">Red-green (deutan)</option><option value="protan">Red-green (protan)</option><option value="tritan">Blue-yellow (tritan)</option></select></label>
       <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>
+      <label>Caption and subtitle size <select id="set-captionsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
+      <label>A dark plate behind captions and subtitles <input id="set-captionplate" type="checkbox"></label>
       <button class="set-defaults" data-tab="access">Defaults for Accessibility</button>
     </div>
     <div class="set-tab" data-tab="gameplay">

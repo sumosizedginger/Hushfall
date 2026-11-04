@@ -19,7 +19,7 @@ What the game does today, where it lives, how it is held by tests, and what it d
 
 ## What it does not do (and why)
 
-- **No colour-blind palette** for the world: the art is painted in a deliberate limited palette and the threats are told by shape, motion and sound as well (a ring, a shadow on the floor, a tell before every blow); a full alternative palette would be a second art pass.
+- **The world's own colours are not changed by the palette setting**: the art is painted in a deliberate limited palette; what carries meaning (outlines, tells) has a palette, and every state is told by shape, motion and sound as well (a ring, a shadow on the floor, a tell before every blow); a full alternative palette would be a second art pass.
 - **No screen-reader support for the 3D game**, as for any real-time shooter; the menus are ordinary buttons and labels.
 - **No subtitles for the music**: it carries no information.
 - **No remappable mouse buttons beyond the binding list** (all of them are in it).
@@ -28,3 +28,30 @@ What the game does today, where it lives, how it is held by tests, and what it d
 ## For the next change
 
 A new sim event with a sound must be captioned in `src/game/captions.js` (or listed in `NO_CAPTION` with the reason): `tests/captions.test.js` fails until it is. A new HUD text element should sit inside the `zoom` rule list in `index.html` (`#comms,#toasts,...`).
+
+## The Game Accessibility Guidelines, basic and intermediate (PT-083 X6)
+
+Each line is ticked with where it lives, or carries a reason. It is held by `tests/accessibility-pt083.test.js` as far as a test can hold it; nobody who needs these has tried them yet.
+
+| guideline | status |
+|---|---|
+| Controls can be remapped | yes: every action on the keyboard and the pad, quick save and load included. Enter, Space and Esc always work in menus as well |
+| No essential held inputs | yes: toggles for aim, sprint, fire and guard |
+| Sensitivity adjustable | yes: mouse, the sights' own, stick look speed, dead zone, curve |
+| Invert look | yes: mouse and pad |
+| Text size | yes: three steps for the HUD; three for captions and subtitles |
+| Contrast behind text | yes: every HUD reading is on a dark plate; a plate behind captions by default |
+| Subtitles for all speech | yes: every message is text; the story scenes are subtitled |
+| Captions for sounds that matter | yes: optional, with a direction |
+| Colour is not the only cue | yes: `STATE_CUES` in `src/render/palette.js` lists each state and what else tells it |
+| Colour-blind options | yes: three palettes for what carries meaning |
+| Reduce motion | yes: bob, shake, the widening of the view, kicks and sway |
+| Reduce flashes | yes: a setting of its own |
+| Difficulty options | yes: three, described in numbers on the button |
+| Pause anywhere | yes: Esc, and the Journal pauses; story scenes can be skipped |
+| Save often | yes: automatic checkpoints, quick save, and an auto save at every level |
+| Tutorial | yes: the training yard, optional, and one-line hints the first time something matters |
+| Volume controls | yes: master, effects, music |
+| Field of view | yes: labelled in degrees |
+| Screen-reader support | no: the 3D game is real-time; the menus are ordinary buttons and labels |
+| One-handed play | not designed for: rebinding and the toggles help, but aiming needs a hand on the mouse or stick |

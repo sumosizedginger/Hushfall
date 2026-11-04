@@ -306,6 +306,7 @@ const ui = new UI({
     settings[k] = v;
     saveSettings(storage, settings);
     if (k === 'aimToggle') g.input.setToggle('aim', v);
+    if (k === 'fireToggle') g.input.setToggle('fire', v);
     if (k === 'sprintToggle') g.input.setToggle('sprint', v);
     if (k === 'masterVolume' || k === 'sfxVolume' || k === 'musicVolume') audio.applySettings(settings);
     if (k === 'internalWidth') {
@@ -318,7 +319,7 @@ const ui = new UI({
       g.view?.setEffects(v !== false ? g.governor.effects : 0);
     }
     if (k === 'crosshair') ui.applyCrosshair(v);
-    if (k === 'textSize' || k === 'reducedMotion' || k === 'hitMarks') applyComfort();
+    if (k === 'textSize' || k === 'reducedMotion' || k === 'hitMarks' || k === 'captionSize' || k === 'captionPlate') applyComfort();
     if (k === 'hitMarks') audio.applySettings(settings);
     if (k === 'captions' && !v) g.captions.clear();
     if (k === 'playLog') {
@@ -329,7 +330,18 @@ const ui = new UI({
       ui.setMinimap(v);
       g.miniModel = null;
     }
-    if ((k === 'outline' || k === 'paint' || k === 'fov' || k === 'brightness' || k === 'reducedMotion' || k === 'headBob' || k === 'gore') && g.view)
+    if (
+      (k === 'outline' ||
+        k === 'paint' ||
+        k === 'fov' ||
+        k === 'brightness' ||
+        k === 'reducedMotion' ||
+        k === 'headBob' ||
+        k === 'gore' ||
+        k === 'palette' ||
+        k === 'reduceFlashes') &&
+      g.view
+    )
       g.view.setLook(settings);
   },
 });
@@ -364,6 +376,8 @@ function applyComfort() {
   c.toggle('ui-larger', settings.textSize === 'larger');
   c.toggle('reduced-motion', !!settings.reducedMotion);
   c.toggle('no-hitmarks', settings.hitMarks === false);
+  c.toggle('cap-plate', settings.captionPlate !== false);
+  if (document.body?.dataset) document.body.dataset.capsize = settings.captionSize ?? 'normal';
 }
 
 /* * one finished attempt at a map goes into the play log, if the player turned the log on (never twice for one attempt) */
@@ -1112,7 +1126,7 @@ function requestLock(fromClick = false) {
 function stepOnce() {
   if (g.mode !== 'playing') return;
   {
-    const wantToggle = settings.aimToggle && WEAPONS[g.world.player.weapon]?.kind !== 'melee';
+    const wantToggle = WEAPONS[g.world.player.weapon]?.kind === 'melee' ? !!settings.guardToggle : settings.aimToggle;
     if (g.aimToggleOn !== wantToggle) {
       g.input.setToggle('aim', wantToggle);
       g.aimToggleOn = wantToggle;
@@ -1359,12 +1373,12 @@ addEventListener('keydown', (e) => {
     ui.h.nextLevel();
     return;
   }
-  if (e.code === 'F5' && g.mode === 'playing') {
+  if ((g.input.bindings.quickSave || []).includes(e.code) && g.mode === 'playing') {
     e.preventDefault();
     quickSave();
     return;
   }
-  if (e.code === 'F9' && (g.mode === 'playing' || g.mode === 'paused')) {
+  if ((g.input.bindings.quickLoad || []).includes(e.code) && (g.mode === 'playing' || g.mode === 'paused')) {
     e.preventDefault();
     quickLoad();
     return;

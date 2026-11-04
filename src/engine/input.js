@@ -33,6 +33,8 @@ export const ACTIONS = [
   'weaponPrev',
   'map',
   'pause',
+  'quickSave',
+  'quickLoad',
 ];
 // Fire has no Ctrl default: Ctrl+W/T/N are browser shortcuts
 export const DEFAULT_BINDINGS = {
@@ -66,6 +68,8 @@ export const DEFAULT_BINDINGS = {
   weaponPrev: ['WheelUp'],
   map: ['Tab'],
   pause: ['Escape', 'KeyP'],
+  quickSave: ['F5'],
+  quickLoad: ['F9'],
 };
 const TURN_RATE = 2.2,
   LOOK_RATE = 1.6; // rad/s for keyboard turning

@@ -37,6 +37,7 @@ export class Tells {
     const mat = (c, op) =>
       new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
     this.mats = { melee: [mat(TELL.melee, 0.9), mat(TELL.melee, 0.35)], ranged: [mat(TELL.ranged, 0.9), mat(TELL.ranged, 0.35)] };
+    this.ring = new THREE.RingGeometry(0.2, 0.235, 24);
     this.star = new THREE.PlaneGeometry(0.62, 0.07);
     this.core = new THREE.SphereGeometry(0.075, 10, 6);
   }
@@ -46,14 +47,21 @@ export class Tells {
       b = new THREE.Mesh(this.star, this.mats.melee[0]),
       c = new THREE.Mesh(this.core, this.mats.melee[1]);
     b.rotation.z = Math.PI / 2;
-    for (const m of [a, b, c]) {
+    const d = new THREE.Mesh(this.ring, this.mats.ranged[0]); // a shot's star is inside a ring: told by shape as well as colour
+    d.visible = false;
+    for (const m of [a, b, c, d]) {
       m.renderOrder = 6;
       m.frustumCulled = false;
     }
-    g.add(a, b, c);
+    g.add(a, b, c, d);
     g.visible = false;
     this.scene.add(g);
-    return { g, a, b, c };
+    return { g, a, b, c, d };
+  }
+  /** the player's palette: the two colours of a tell */
+  setColors(melee, ranged) {
+    for (const m of this.mats.melee) m.color.setHex(melee);
+    for (const m of this.mats.ranged) m.color.setHex(ranged);
   }
   begin() {
     this.n = 0;
@@ -68,6 +76,7 @@ export class Tells {
       sc = TELL.size[0] + (TELL.size[1] - TELL.size[0]) * k * k;
     s.a.material = s.b.material = m[0];
     s.c.material = m[1];
+    s.d.visible = !!t.ranged;
     s.g.position.set(x + Math.sin(yaw) * TELL.fwd, y + height * TELL.up, z + Math.cos(yaw) * TELL.fwd);
     s.g.quaternion.copy(cam.quaternion);
     s.g.scale.setScalar(sc);
@@ -81,6 +90,7 @@ export class Tells {
   dispose() {
     for (const s of this.pool) this.scene.remove(s.g);
     this.star.dispose();
+    this.ring.dispose();
     this.core.dispose();
     for (const [a, b] of Object.values(this.mats)) {
       a.dispose();

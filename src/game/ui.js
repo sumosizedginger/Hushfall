@@ -127,6 +127,12 @@ export class UI {
       this.h.newGame(this._offerFor, { skipOffer: true });
     };
     $('set-hints').onchange = (e) => this.h.setSetting('hints', e.target.checked);
+    $('set-firetoggle').onchange = (e) => this.h.setSetting('fireToggle', e.target.checked);
+    $('set-guardtoggle').onchange = (e) => this.h.setSetting('guardToggle', e.target.checked);
+    $('set-reduceflashes').onchange = (e) => this.h.setSetting('reduceFlashes', e.target.checked);
+    $('set-palette').onchange = (e) => this.h.setSetting('palette', e.target.value);
+    $('set-captionsize').onchange = (e) => this.h.setSetting('captionSize', e.target.value);
+    $('set-captionplate').onchange = (e) => this.h.setSetting('captionPlate', e.target.checked);
     $('screen-credits').onclick = () => this.h.closeCredits();
     $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress();
@@ -361,6 +367,12 @@ export class UI {
     $('set-headbob').value = s.headBob ?? 'full';
     $('set-hitmarks').checked = s.hitMarks !== false;
     $('set-hints').checked = s.hints !== false;
+    $('set-firetoggle').checked = !!s.fireToggle;
+    $('set-guardtoggle').checked = !!s.guardToggle;
+    $('set-reduceflashes').checked = !!s.reduceFlashes;
+    $('set-palette').value = s.palette ?? 'standard';
+    $('set-captionsize').value = s.captionSize ?? 'normal';
+    $('set-captionplate').checked = s.captionPlate !== false;
     $('set-checkpoints').checked = s.checkpoints !== false;
     $('set-gore').value = s.gore ?? 'full';
     $('set-fov').value = s.fov;

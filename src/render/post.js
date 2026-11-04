@@ -11,7 +11,7 @@ uniform sampler2D tColor, tDepth, tPaper, tWeapon;
 uniform vec2 uRes, uWRes;
 uniform float uWeapon;
 uniform vec4 uHit[4];          // look polish 10 (hitdir.js): where blows came from: (sin, cos) of the bearing from straight ahead, strength, half-width in radians
-uniform vec3 uShadowTint, uLightTint;
+uniform vec3 uShadowTint, uLightTint, uHostile;
 uniform float uShoulder, uShoulderPre;          // the tone shoulder (src/render/tonecurve.js is its node twin: never edit one without the other)
 uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug, uFrost;
 varying vec2 vUv;
@@ -60,7 +60,7 @@ void main() {
     float d2 = max(abs(l + r - 2.0 * c), abs(u + d - 2.0 * c));
     edge = max(edge, smoothstep(uCreaseLo, uCreaseHi, d2) * (1.0 - ent));
     edge *= clamp(mix(0.6 + p1 * 0.9, 0.45 + p1 * 1.1, ent), 0.0, 1.0);   // hand-inked, slightly broken line (the level: less broken, so a line is read, not lost in the paper tooth; entities: as they always were)
-    col = mix(col, mix(vec3(0.035, 0.04, 0.06), vec3(0.22, 0.025, 0.03), hostile), edge * 0.94);
+    col = mix(col, mix(vec3(0.035, 0.04, 0.06), uHostile, hostile), edge * 0.94);
     if (uDebug > 0.5) { gl_FragColor = vec4(vec3(edge), 1.0); return; }          // dev measurement only: the ink mask (tools/dev/shoot-outlines.mjs)
   }
 
@@ -121,6 +121,7 @@ export class PostPass {
       uNear: { value: near },
       uFar: { value: far },
       uExposure: { value: 2.2 },
+      uHostile: { value: new THREE.Vector3(0.22, 0.025, 0.03) },
       uShoulder: { value: 1 },
       uShoulderPre: { value: 0.55 },
       uLevels: { value: 10 },

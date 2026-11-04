@@ -3,6 +3,8 @@ import { ACTIONS, DEFAULT_BINDINGS } from '../engine/input.js';
 import { SLOT_KEYS } from '../engine/defs.js';
 
 export const ACTION_LABELS = {
+  quickSave: 'Quick save',
+  quickLoad: 'Quick load',
   forward: 'Move forward',
   back: 'Move back',
   left: 'Strafe left',

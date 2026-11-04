@@ -1,5 +1,6 @@
 // GameView: read-only projection of sim state into a Three.js scene (+ weapon overlay + painterly post pass).
 // It never mutates the world. Effects (explosions, muzzle flash) are driven by drained sim events.
+import { paletteOf } from './palette.js';
 import { ImpactFx } from './impactfx.js';
 import { shotFeel, FLINCH, flinchAt, flinchStrength, fallTurn, bursts } from './feel.js';
 import * as THREE from 'three';
@@ -70,11 +71,13 @@ const lerp = (a, b, t) => a + (b - a) * t;
  * what the comfort settings make of every camera motion and flash (1 = as built): head bob, the shake, the view's own kicks (recoil, a swing), the
  * widening of the view (sprint, air, a parry, a hit), the weapon's sway, the hurt flash, the muzzle light. reduced motion stills all of them.
  */
-export function comfortFor({ reducedMotion = false, headBob = 'full' } = {}) {
+export function comfortFor({ reducedMotion = false, headBob = 'full', reduceFlashes = false } = {}) {
   const bob = headBob === 'off' ? 0 : headBob === 'gentle' ? 0.5 : 1;
-  return reducedMotion
-    ? { bob: 0, shake: 0, kick: 0.25, fov: 0, sway: 0.25, hurt: 0.35, muzzle: 0.4 }
-    : { bob, shake: 1, kick: 1, fov: 1, sway: 1, hurt: 1, muzzle: 1 };
+  const c = reducedMotion
+    ? { bob: 0, shake: 0, kick: 0.25, fov: 0, sway: 0.25, hurt: 0.35, muzzle: 0.4, boom: 1, flashMesh: true }
+    : { bob, shake: 1, kick: 1, fov: 1, sway: 1, hurt: 1, muzzle: 1, boom: 1, flashMesh: true };
+  // a separate choice from motion: what flares brightly, whether or not the camera moves
+  return reduceFlashes ? { ...c, hurt: Math.min(c.hurt, 0.35), muzzle: Math.min(c.muzzle, 0.25), boom: 0.35, flashMesh: false } : c;
 }
 const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const freeRig = (root) =>
@@ -411,9 +414,25 @@ export class GameView {
     if (this.floorMarks) this.floorMarks.mesh.visible = level < 1;
     this.lightBudget = level >= 2 ? FX_LIGHTS : LIGHT_BUDGET;
   }
-  setLook({ outline, paint, fov = VIEW.fov, brightness = 1, reducedMotion = false, headBob = 'full', gore = 'full' }) {
+  setLook({
+    outline,
+    paint,
+    fov = VIEW.fov,
+    brightness = 1,
+    reducedMotion = false,
+    headBob = 'full',
+    gore = 'full',
+    palette = 'standard',
+    reduceFlashes = false,
+  }) {
     this.gore = gore;
-    this.comfort = comfortFor({ reducedMotion, headBob }); // every camera motion and flash the settings can calm (render only: the sim is untouched)
+    {
+      const P = paletteOf(palette);
+      this.post.uniforms.uHostile.value.set(...P.hostile);
+      this.tells?.setColors(P.melee, P.ranged);
+    }
+    // every camera motion and flash the settings can calm (render only: the sim is untouched)
+    this.comfort = comfortFor({ reducedMotion, headBob, reduceFlashes });
     this.post.uniforms.uOutline.value = outline ? 1 : 0;
     this.post.uniforms.uPaint.value = paint ? 1 : 0;
     this.brightness = brightness;
@@ -1172,7 +1191,8 @@ export class GameView {
         this.enemyViews.delete(id);
         freeRig(v.root);
         if (v.frozen) freeRig(v.frozen);
-        // H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and stay
+        // H-L4: a creature the sim dropped (born corpses beyond the cap) frees its rig's geometry and materials; textures are the shared atlas and
+        // stay
       }
     {
       const discs = [];
@@ -1746,7 +1766,7 @@ export class GameView {
       } // lands on the terrain under it, not on world y = 0
     }
     this.boomT += dt;
-    this.boomLight.intensity = this.boomT < 0.5 ? 140 * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
+    this.boomLight.intensity = this.boomT < 0.5 ? 140 * C.boom * this.boomK * (1 - this.boomT / 0.5) ** 2 : 0;
     // static lights: flicker, and keep only the nearest few enabled (constant count => no shader recompiles)
     const cp = this.cam.position,
       wp = (this._wp ??= new THREE.Vector3()); // (a scratch vector and scratch arrays: nothing is allocated per frame here)
@@ -1853,12 +1873,13 @@ export class GameView {
     rig.group.position.set(wpose.pos[0], wpose.pos[1], wpose.pos[2]);
     rig.group.rotation.set(wpose.rot[0], wpose.rot[1], wpose.rot[2]);
     if (rig.flash) {
-      rig.flash.visible = this.flashT > 0;
+      rig.flash.visible = this.flashT > 0 && C.flashMesh;
       if (rig.flash.visible) {
         rig.flash.scale.setScalar(((shown === 'scattergun' ? 1.1 : shown === 'arc' ? 0.9 + this.lastCharge : 0.8) + this.rnd() * 0.6) * (1 - 0.6 * a));
         if (rig.flash.children[0]?.userData.muzzle) rig.flash.rotation.z = this.rnd() * 6.283;
       }
-      // look polish 7: a painted flash (gunkit.js muzzleFlash), turned at random every frame it shows; smaller in the sights // small in the sights: it
+      // look polish 7: a painted flash (gunkit.js muzzleFlash), turned at random every frame it shows; smaller in the sights // small in the sights:
+      // it
       // must not hide the target
     }
     if (rig.spin) {
