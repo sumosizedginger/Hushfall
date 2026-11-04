@@ -12,7 +12,13 @@ import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..');
 const server = await createServer({ root, logLevel: 'error', server: { port: 5253, strictPort: true } });
 await server.listen();
-const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await puppeteer.launch({
+  headless: true,
+  // on software GL under load the page draws so few frames that a half-second stick push may never be polled: GPU=1 uses the graphics card
+  args: process.env.GPU
+    ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11']
+    : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+});
 const page = await browser.newPage();
 await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
@@ -70,6 +76,11 @@ R.focusAfterDpad = await page.evaluate(() => document.activeElement?.id || docum
 await tap(0, 200);
 await sleep(2500);
 R.modeAfterCross = (await T('t.state()')).mode;
+// whatever Cross opened (the title has grown buttons since this was written), Circle leaves it
+await tap(1, 200);
+await sleep(400);
+R.focusAfterCircle = await page.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
+await page.evaluate(() => [...document.querySelectorAll('.screen:not(#screen-title)')].forEach((s) => s.classList.add('hidden')));
 // -- in the game, real time
 await T("t.newGame('normal', 3, { mapId: 'C1E2M02', realtime: true })");
 await T('t.clearOverlays()');
