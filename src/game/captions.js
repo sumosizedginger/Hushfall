@@ -184,9 +184,14 @@ export function captionFor(e, player) {
   return { text, danger: !!c.danger };
 }
 
+const lifeOf = (i) => (i.danger ? 5 : 3.4);
+/** the words without the direction captionFor adds: a creature that moves round you is still the same line */
+const withoutWhere = (text) => text.replace(/, (?:close|ahead|behind|(?:ahead |behind )?(?:left|right))$/, '');
+
 /**
- * the lines on the screen: at most three, each for 3.4 s (5 s for a threat); the same words inside 1.2 s are one line, kept fresh; a threat is never
- * pushed out by something that is only news
+ * the lines on the screen: at most three, each for 3.4 s (5 s for a threat) after its last sound; the same thing said again while its line is up is that
+ * line, kept fresh and saying where it is now (PT-085: merging only inside 1.2 s stacked "Gaunt strikes" three times over); a threat is never pushed out
+ * by something that is only news
  */
 export class CaptionFeed {
   constructor() {
@@ -194,8 +199,10 @@ export class CaptionFeed {
   }
   push(cap, now) {
     if (!cap) return;
-    const same = this.items.find((i) => i.text === cap.text && now - i.at < 1.2);
+    const what = withoutWhere(cap.text),
+      same = this.items.find((i) => withoutWhere(i.text) === what && now - i.at < lifeOf(i));
     if (same) {
+      same.text = cap.text;
       same.at = now;
       return;
     }
@@ -206,7 +213,7 @@ export class CaptionFeed {
     }
   }
   lines(now) {
-    this.items = this.items.filter((i) => now - i.at < (i.danger ? 5 : 3.4));
+    this.items = this.items.filter((i) => now - i.at < lifeOf(i));
     return this.items.map((i) => ({ text: i.text, danger: i.danger }));
   }
   clear() {

@@ -839,7 +839,7 @@ export class UI {
     el.classList.toggle('hidden', !text);
   }
   /** a controls reminder that appears after `delay` ms and stays `dur` ms (cancelled by clearOverlays) */
-  /* * the sound captions (captions.js): up to three lines above the controls tip; redrawn only when the words change */
+  /* * the sound captions (captions.js): up to three lines in the top band, never over the picture's middle (PT-085); redrawn only when the words change */
   captions(lines) {
     const sig = lines.map((l) => (l.danger ? '!' : '') + l.text).join('|');
     if (sig === this._capSig) return;

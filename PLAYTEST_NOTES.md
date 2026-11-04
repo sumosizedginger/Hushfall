@@ -660,3 +660,16 @@ GUARD: the map lint now fails on this (`placement: every door closes something`,
 
 NOT VERIFIED: nothing of this has been seen in a browser or played; the page's look, the new doors' look and how Easy feels are the owner's to judge. The real-game evidence of every map is stale until the next regeneration.
 LESSON: `tools/dev/low.ps1` defaulted to `D:\Doom`, so a job started from the working copy ran in the owner's checkout, tested the old maps and rewrote nine evidence files there (restored). It now runs in the checkout it lives in.
+
+## PT-085 · the sound captions covered what you were shooting at · FIXED-IN-CODE (awaiting the owner)
+The owner, playing, 2026-11-04: "the subtitles, they're like literally right in the middle of the screen, we need to move them to the top of the screen rather than the bottom of the screen, because when a new enemy attacks me, all I see is that damned black bar saying "It's attacking you!" over and over, and I can't see what I'm shooting."
+
+Which bar: the game has no line with those words; I took it to be the sound captions (`#captions`, the Settings tick "Sound captions", off by default): "Gaunt strikes, ahead", "Bellhand fires, left". If it was something else, this did not fix it.
+CAUSE, three faults in one bar:
+- PLACE: it was anchored 196 px up from the bottom, centred, and grew upward: three lines reach about 290 px, which in a 720 px window is 70 px under the crosshair, where a creature's body is.
+- REPEATS: the feed merged the same words only inside 1.2 s, while a threat stays up for 5 s. A creature striking every 1.5 s stacked "Gaunt strikes, ahead" three times over, and a new direction was a new line.
+- BLACK: two plates on top of each other (92% behind each line, 80% behind the block, with its own padding). The setting "A dark plate behind captions and subtitles" took away only the second, and the caption size setting never reached the lines at all (each line had its own size in px).
+FIXED: the captions sit in the top band (`index.html`), at the top of the screen between the objective and message column and the corner map, centred when the window has the room, under the boss bar when one is up, and clear of all of them at every window size, corner-map setting and text size I checked by calculation. One thing said again while its line is up is that same line, kept fresh and saying where the creature is now; another creature is another line. One thinner plate (69%) behind each line, and the setting really removes it (the words have a shadow, and a threat is amber either way); the size setting really sizes them.
+Left where they are, unasked: the scene subtitles (in the letterbox, over nothing you are shooting), the pickup card (bottom 24%), the one-time tips (150 px up), the door prompt under the crosshair.
+GUARD: `tests/captions.test.js` (three new tests, each failing on the old code): reads the real CSS and works out the box for six window sizes x three map settings x three text sizes; the one-line feed; the plate and size settings.
+NOT VERIFIED: not seen in a browser (the owner was playing on this machine, and any browser job needs their yes). The geometry is arithmetic on the stylesheet, not a picture. The real-game evidence of every map was already stale from PT-084 and stays so until the next regeneration.
