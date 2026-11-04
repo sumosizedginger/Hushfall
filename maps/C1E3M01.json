@@ -217,13 +217,6 @@
     },
     {
      "spawn": {
-      "kind": "chorister",
-      "at": [58, 17],
-      "hunt": true
-     }
-    },
-    {
-     "spawn": {
       "kind": "bellhand",
       "at": [62, 24],
       "hunt": true
@@ -248,13 +241,6 @@
      "spawn": {
       "kind": "gaunt",
       "at": [25, 8],
-      "hunt": true
-     }
-    },
-    {
-     "spawn": {
-      "kind": "chorister",
-      "at": [25, 16],
       "hunt": true
      }
     }
@@ -765,13 +751,6 @@
   },
   {
    "type": "enemy",
-   "kind": "chorister",
-   "at": [30, 15],
-   "facing": 0.165,
-   "extra": true
-  },
-  {
-   "type": "enemy",
    "kind": "gaunt",
    "at": [25, 20],
    "facing": 1.571,
@@ -786,10 +765,17 @@
   },
   {
    "type": "enemy",
+   "kind": "chorister",
+   "at": [30, 15],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
    "kind": "tollbearer",
    "at": [45, 14],
    "facing": 0,
-   "extra": true
+   "skill": "hard"
   }
  ],
  "par": {

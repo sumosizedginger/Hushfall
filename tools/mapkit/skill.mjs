@@ -58,6 +58,12 @@ export function applySkill(map, side = readSidecar(map.id)) {
   }
   for (const c of side.all ?? [])
     map.entities.push({ type: 'enemy', kind: c.kind, at: [...c.at], ...(c.facing != null ? { facing: c.facing } : {}), extra: true });
+  // a creature the map already had, kept for Hard only (D3: an opener that was the peak of its stretch)
+  for (const [x, z] of side.hardOnly ?? []) {
+    const e = map.entities.find((q) => q.type === 'enemy' && q.at[0] === x && q.at[1] === z);
+    if (!e) throw new Error(`${map.id} skill sidecar: no creature at ${x},${z} to keep for Hard`);
+    e.skill = 'hard';
+  }
   for (const c of side.hard ?? [])
     map.entities.push({ type: 'enemy', kind: c.kind, at: [...c.at], ...(c.facing != null ? { facing: c.facing } : {}), skill: 'hard' });
   return map;

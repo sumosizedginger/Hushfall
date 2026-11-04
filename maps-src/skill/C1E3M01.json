@@ -19,14 +19,6 @@
  ],
  "all": [
   {
-   "kind": "chorister",
-   "at": [
-    30,
-    15
-   ],
-   "facing": 0.165
-  },
-  {
    "kind": "gaunt",
    "at": [
     25,
@@ -41,6 +33,16 @@
     16
    ],
    "facing": 0
+  }
+ ],
+ "hard": [
+  {
+   "kind": "chorister",
+   "at": [
+    30,
+    15
+   ],
+   "facing": 0.165
   },
   {
    "kind": "tollbearer",
@@ -51,7 +53,6 @@
    "facing": 0
   }
  ],
- "hard": [],
  "easy": [
   [
    44,
@@ -86,13 +87,6 @@
      ]
     },
     {
-     "kind": "chorister",
-     "at": [
-      58,
-      17
-     ]
-    },
-    {
      "kind": "bellhand",
      "at": [
       62,
@@ -120,13 +114,6 @@
      "at": [
       25,
       8
-     ]
-    },
-    {
-     "kind": "chorister",
-     "at": [
-      25,
-      16
      ]
     }
    ]

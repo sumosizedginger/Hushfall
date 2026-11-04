@@ -653,7 +653,8 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [112, 39],
-   "facing": -1.658
+   "facing": -1.658,
+   "skill": "hard"
   },
   {
    "type": "enemy",
@@ -684,7 +685,8 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [127, 22],
-   "facing": -1.503
+   "facing": -1.503,
+   "skill": "hard"
   },
   {
    "type": "enemy",
@@ -835,7 +837,8 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [103, 29],
-   "facing": -1.56
+   "facing": -1.56,
+   "skill": "hard"
   },
   {
    "type": "enemy",
@@ -848,7 +851,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [102, 30],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "hard"
   },
   {
    "type": "enemy",

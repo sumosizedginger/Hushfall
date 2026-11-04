@@ -57,12 +57,12 @@
    "walk": 719
   },
   "C1E1M02": {
-   "density": 30,
-   "rangedShare": 18,
+   "density": 28,
+   "rangedShare": 16,
    "ambushes": 5,
    "kinds": 3,
    "loops": 1,
-   "topShare": 48,
+   "topShare": 50,
    "symmetry": 0.42,
    "walk": 1310
   },
@@ -527,12 +527,12 @@
    "walk": 1835
   },
   "C2M17": {
-   "density": 16,
+   "density": 14,
    "rangedShare": 33,
    "ambushes": 2,
-   "kinds": 10,
+   "kinds": 9,
    "loops": 1,
-   "topShare": 30,
+   "topShare": 32,
    "symmetry": 0.42,
    "walk": 3459
   },
@@ -1133,5 +1133,9 @@
    ],
    "why": "the Approach is 148 x 60 with 54 creatures (16 per thousand cells against a floor of 18): a squeeze of it was tried (tools/dev/squeeze-map.mjs) and was restored because the hard seeds were completed by neither fighter; the second ambush is in; the density waits for a better bot"
   }
+ },
+ "lowered": {
+  "C1E1M02": "PT-083 D3: the second level of the game was harder than the four after it on Normal; two creatures now stand only on Hard",
+  "C2M17": "PT-083 D3: the opener of Act C was the peak of its stretch on Normal; four creatures now stand only on Hard"
  }
 }

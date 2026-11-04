@@ -95,7 +95,8 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
   for (const id of mapIds) {
     const m = parseMap(JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8'))),
       entry = (report.maps[id] = {});
-    await T(`t.newGame('normal', 3, { mapId: '${id}' })`);
+    // on Hard: every placed creature stands there (PT-083: a map's Hard-only creatures must be measured too)
+    await T(`t.newGame('hard', 3, { mapId: '${id}' })`);
     await T('t.setup_player({ hp: 100000 })');
     await T('t.tick(2)');
     // 1. asleep: every sleeper is one merged mesh baked at the height it stands on
@@ -120,7 +121,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
     entry.awake.worstBuried = Math.min(entry.awake.worstBuried, a2.worstBuried);
     entry.awake.worstFloat = Math.max(entry.awake.worstFloat, a2.worstFloat);
     // 3. pose matrix: force every drawn state onto the highest and lowest floor of each kind (through the real view path), render without ticking
-    await T(`t.newGame('normal', 3, { mapId: '${id}' })`);
+    await T(`t.newGame('hard', 3, { mapId: '${id}' })`);
     await T('t.setup_player({ hp: 100000 })');
     await T('t.tick(2)');
     rs = await rows();
@@ -185,7 +186,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
           drawnWidthX: r3(r.max[0] - r.min[0]),
         };
     // 4. the death blend and the corpses it leaves, from the real AI/sim path (a body is drawn for the rest of the level)
-    await T(`t.newGame('normal', 3, { mapId: '${id}' })`);
+    await T(`t.newGame('hard', 3, { mapId: '${id}' })`);
     await T('t.setup_player({ hp: 100000 })');
     await T('t.tick(2)');
     await T(
@@ -205,7 +206,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
 
     // screenshots of the encounters the owner reported: the highest floor with enemies, awake and chasing, then the corpse it leaves
     if (shot && entry.enemies > 0) {
-      await T(`t.newGame('normal', 3, { mapId: '${id}' })`);
+      await T(`t.newGame('hard', 3, { mapId: '${id}' })`);
       await T('t.setup_player({ hp: 100000 })');
       await T('t.tick(2)');
       const cand = (await rows())

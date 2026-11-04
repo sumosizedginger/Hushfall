@@ -20,7 +20,8 @@ for (const slot of manifest.maps.filter((m) => m.kind === 'main')) {
   for (const d of ['easy', 'normal', 'hard']) {
     const q = via[d] ?? {};
     r[d] = {
-      damage: q.fighter?.damage ?? q.fighter?.damageTaken ?? q.damage ?? null,
+      // the mean over the seeds: one run's damage is chaotic (Rail Yard's first run: 182 on Normal, 36 on Hard)
+      damage: q.fighter?.meanDamage ?? q.fighter?.damage ?? q.fighter?.damageTaken ?? q.damage ?? null,
       seeds: q.fighter?.completedSeeds ?? null,
       slack: q.ammo?.capacity && q.ammo?.fired ? Math.round((q.ammo.capacity / q.ammo.fired) * 10) / 10 : null,
     };
