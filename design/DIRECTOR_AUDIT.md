@@ -7,7 +7,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | map | name | walk | enemies | dens | kinds | top% | rng% | lvl% | sym | loops | empty | keys | secr | ambush | botMin | first | gap | tier | flags |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | C1E1M01 | Marrow Quay | 725 | 16 | 22 | 3 | 50 | 19 | 0 | 0.61 | 0 | 0 | 1 | 2 | 1 | 1.3 | 2 | 73 | A encounters and roster | thin roster, flat, few ambushes, no loop |
-| C1E1M02 | Customs Hall | 1335 | 38 | 28 | 3 | 50 | 16 | 44 | 0.42 | 1 | 0 | 2 | 2 | 5 | 2.1 | 0 | 160 | A- light pass | thin roster |
+| C1E1M02 | Customs Hall | 1335 | 39 | 29 | 3 | 51 | 15 | 44 | 0.42 | 1 | 0 | 2 | 2 | 5 | 2.1 | 0 | 160 | A encounters and roster | one-note tollbearer, thin roster |
 | C1E1M03 | Fishmarket Rows | 1790 | 43 | 24 | 3 | 37 | 28 | 14 | 0.82 | 1 | 0 | 1 | 2 | 4 | 3.1 | 0 | 102 | A- light pass | thin roster |
 | C1E1M04 | The Drowned Chandlery | 1562 | 44 | 28 | 3 | 43 | 20 | 27 | 0.49 | 0 | 0 | 1 | 2 | 5 | 2.4 | 3 | 175 | A- light pass | thin roster, no loop |
 | C1E1M05 | Lamplighter Hill | 2440 | 47 | 19 | 4 | 32 | 30 | 79 | 0.88 | 9 | 0 | 0 | 2 | 2 | 2.3 | 0 | 56 | A- light pass |  |
@@ -75,7 +75,7 @@ Columns: walk = walkable cells; density = enemies per 1000 walkable cells; top% 
 | C2S01 | The Silent Orchard | 1827 | 0 | 0 | 0 | 0 | 0 | 12 | 0.87 | 0 | 0 | 0 | 0 | 0 | 0.8 | - | - | KEEP (no combat) |  |
 | C2S02 | Ines's Lamp | 218 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0.3 | - | - | KEEP (no combat) | symmetrical |
 
-Tally: A encounters and roster 11, A- light pass 21, KEEP (boss or set piece: judge by play) 20, KEEP (no combat) 7, C exemplar 4, KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) 1, B structural 2, KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) 1, KEEP (a stand: its creatures come from triggers) 1
+Tally: A encounters and roster 12, A- light pass 20, KEEP (boss or set piece: judge by play) 20, KEEP (no combat) 7, C exemplar 4, KEEP (designed: an elite gauntlet: five elite fights, the bot gates take no more; judge by play) 1, B structural 2, KEEP (designed: the trough of the campaign: short, quiet and melee on purpose; judge by play) 1, KEEP (a stand: its creatures come from triggers) 1
 
 ## The rules
 ```json

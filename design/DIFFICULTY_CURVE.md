@@ -4,15 +4,14 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 
 ## Flagged
 
-- C1E1M02 Customs Hall: 93 damage on Normal against about 61 around it
 - C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 91 around it
-- C1E3M01 Landing Scar: 130 damage on Normal against about 63 around it
 - C1E3M06 The Choir Loft: 119 damage on Normal against about 67 around it
 - C1E4M03 Cold Dock: 130 damage on Normal against about 70 around it
 - C1E4M08 Gate Warden: 115 damage on Normal against about 69 around it
 - C2M05 The Reliquary Road: 93 damage on Normal against about 58 around it
 - C2M08 Threshold Ascent: 78 damage on Normal against about 49 around it
-- C2M17 The Hive-Song Approach: 123 damage on Normal against about 53 around it
+- C2M15 Ash Basilica: 92 damage on Normal against about 57 around it
+- C2M17 The Hive-Song Approach: 83 damage on Normal against about 53 around it
 - C2M22 Mourning Halls: 98 damage on Normal against about 61 around it
 - C2M23 The Reprise: 119 damage on Normal against about 64 around it
 - C2M27 Fault Line: 87 damage on Normal against about 39 around it
@@ -22,7 +21,7 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 | map | name | damage easy | damage normal | damage hard | ammo x easy | ammo x normal | ammo x hard |
 |---|---|---|---|---|---|---|---|
 | C1E1M01 | Marrow Quay | 13 | 17 | 76 | 5.8 | 3.2 | 2.4 |
-| C1E1M02 | Customs Hall | 33 | 93 | 109 | 6.4 | 3.3 | 2.5 |
+| C1E1M02 | Customs Hall | 28 | 63 | 108 | 6.1 | 3.1 | 2.8 |
 | C1E1M03 | Fishmarket Rows | 47 | 63 | 123 | 3.4 | 3.3 | 2.6 |
 | C1E1M04 | The Drowned Chandlery | 17 | 95 | 117 | 4.5 | 2.6 | 2.3 |
 | C1E1M05 | Lamplighter Hill | 21 | 70 | 129 | 4 | 2.8 | 1.8 |
@@ -37,7 +36,7 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 | C1E2M06 | Pump Cathedral | 32 | 77 | 157 | 5.5 | 4.3 | 2.9 |
 | C1E2M07 | Slurry Undercroft | 3 | 49 | 91 | 5.6 | 3.2 | 2.8 |
 | C1E2M08 | The Grafting Floor | 16 | 69 | 129 | 11.7 | 5.2 | 4 |
-| C1E3M01 | Landing Scar | 31 | 130 | 137 | 8.7 | 5.9 | 3.3 |
+| C1E3M01 | Landing Scar | 29 | 92 | 125 | 9.3 | 5.5 | 3.7 |
 | C1E3M02 | Ribbed Corridors | 31 | 82 | 107 | 10.6 | 6.3 | 4.3 |
 | C1E3M03 | Gill Gardens | 38 | 48 | 143 | 7.1 | 5.2 | 5.3 |
 | C1E3M04 | Marrow Nave | 15 | 50 | 126 | 6.2 | 4.1 | 2.8 |
@@ -69,7 +68,7 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 | C2M14 | Harmonic Gardens | 19 | 74 | 98 | 3.3 | 2.9 | 2.3 |
 | C2M15 | Ash Basilica | 31 | 92 | 106 | 3.7 | 2.7 | 1.8 |
 | C2M16 | Sounding Deep Heart | 11 | 39 | 69 | 5.8 | 3.2 | 2.3 |
-| C2M17 | The Hive-Song Approach | 25 | 123 | 133 | 3.3 | 3.6 | 2.5 |
+| C2M17 | The Hive-Song Approach | 33 | 83 | 133 | 3 | 3.2 | 2.5 |
 | C2M18 | Nerve Cathedral | 14 | 45 | 140 | 2.7 | 2.8 | 2 |
 | C2M19 | Bone Loom | 12 | 21 | 234 | 4.3 | 4.3 | 3 |
 | C2M20 | Vein Rail | 33 | 46 | 110 | 9.8 | 5.7 | 3.6 |
