@@ -25,9 +25,15 @@ const writeSide = (s) => {
   fs.mkdirSync(path.dirname(sidecarFile(id)), { recursive: true });
   fs.writeFileSync(sidecarFile(id), JSON.stringify(s, null, 1) + '\n');
 };
-const base = readSidecar(id) ?? {};
-writeSide({ ...base, all: [], hard: [], easy: [] });
-compileNow();
+const base = readSidecar(id) ?? {},
+  ambushOnly = flags.includes('--ambush');
+if (!ambushOnly) {
+  writeSide({ ...base, all: [], hard: [], easy: [] });
+  compileNow();
+} else {
+  writeSide({ ...base, ambush: [] });
+  compileNow();
+}
 
 const row = auditAll().find((r) => r.id === id),
   doc = readFloorDoc(),
@@ -204,10 +210,51 @@ function gates(strict = false) {
     return { ok: false, out: String(e.stdout ?? '') + String(e.stderr ?? '') };
   }
 }
+// where two creatures can come from: open floor, out of sight of the place they are called from, not far by the floor
+function hiddenNear(c, chosen) {
+  let best = null,
+    bestScore = -1;
+  for (let dz = -16; dz <= 16; dz++)
+    for (let dx = -16; dx <= 16; dx++) {
+      const x = c[0] + dx,
+        z = c[1] + dz,
+        d = Math.hypot(dx, dz);
+      if (d < 7 || d > 16 || x < 1 || z < 1 || x >= map.w - 1 || z >= map.h - 1) continue;
+      if (!openFloor(x, z) || secretCells.has(x + ',' + z) || near([x, z], 1) || sees([x, z], c)) continue;
+      if (chosen.some((q) => Math.hypot(q[0] - x, q[1] - z) < 2.5)) continue;
+      const score = 16 - d;
+      if (score > bestScore) {
+        bestScore = score;
+        best = [x, z];
+      }
+    }
+  return best;
+}
+let ambush = [];
+if (ambushOnly && bestRun > 90 && bestCells.length) {
+  const stops = bestRun > 150 ? [0.3, 0.65] : [0.45];
+  for (const f of stops) {
+    const c = bestCells[Math.floor(bestCells.length * f)],
+      spawn = [];
+    for (let i = 0; i < 3; i++) {
+      const s = hiddenNear(c, chosen);
+      if (!s) break;
+      chosen.push(s);
+      spawn.push({ kind: nextKind(), at: s });
+    }
+    if (spawn.length) ambush.push({ at: c, radius: 3, spawn });
+  }
+}
 const apply = () => {
-  writeSide({ ...base, all, hard, easy });
+  if (ambushOnly) writeSide({ ...base, ambush });
+  else writeSide({ ...base, all, hard, easy });
   compileNow();
 };
+if (ambushOnly) {
+  all = [];
+  hard = [];
+  easy = [];
+}
 apply();
 let g = gates(),
   tries = 0;
@@ -219,7 +266,12 @@ while (!g.ok && tries < 9) {
     easyBad = /\beasy\b/i.test(text),
     hardBad = /\bhard\b/i.test(text);
   // back off what the failure names; when it names nothing (a normal run, a placement), what is new on every difficulty goes first
-  if (hardBad && hard.length) hard = hard.slice(0, even(hard.length - 2));
+  if (ambushOnly) {
+    const last = ambush.at(-1);
+    if (!last) break;
+    if (last.spawn.length > 1) last.spawn.pop();
+    else ambush.pop();
+  } else if (hardBad && hard.length) hard = hard.slice(0, even(hard.length - 2));
   else if (easyBad && easy.length) easy = easy.slice(0, Math.floor(easy.length * 0.6));
   else if (all.length) all = all.slice(0, even(all.length - 2));
   else if (hard.length) hard = hard.slice(0, even(hard.length - 2));
@@ -233,11 +285,12 @@ if (!g.ok) {
   all = [];
   hard = [];
   easy = [];
+  ambush = [];
   apply();
   g = gates(true);
 }
 console.log(
-  `${g.ok ? 'PASS' : 'FAIL'} ${id}: walk ${row.walk}, ${row.enemies} creatures, quiet ${Math.round(bestRun)} m; kept all ${all.length}, hard ${hard.length}, easy ${easy.length} (${tries} back-offs)`,
+  `${g.ok ? 'PASS' : 'FAIL'} ${id}: walk ${row.walk}, ${row.enemies} creatures, quiet ${Math.round(bestRun)} m; kept all ${all.length}, hard ${hard.length}, easy ${easy.length}, ambush ${ambush.map((a) => a.spawn.length).join('+') || 0} (${tries} back-offs)`,
 );
 if (!g.ok)
   console.log(

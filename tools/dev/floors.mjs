@@ -26,6 +26,7 @@ export function failing(row, route, map, doc = readFloorDoc()) {
     gates =
       (row.keys ?? 0) > 0 ||
       (row.switches ?? 0) > 0 ||
+      (map.doors ?? []).some((d) => d.soundlock || d.interlock || d.breath) ||
       (map.exits ?? []).some((e) => e.locked) ||
       (map.triggers ?? []).some((t) => JSON.stringify(t.do ?? '').includes('"open"') || JSON.stringify(t.do ?? '').includes('unlock'));
   const fail = (k, detail) => {

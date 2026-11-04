@@ -25,13 +25,30 @@ export function applySkill(map, side = readSidecar(map.id)) {
   if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
   // a key hunt: the door locked, the key where it was put with a light by it, and what the player says finding it
   for (const k of side.keys ?? []) {
-    const d = (map.doors ?? []).find((q) => q.at[0] === k.door[0] && q.at[1] === k.door[1]);
-    if (!d) throw new Error(`${map.id}: no door at [${k.door}] for a key`);
-    d.key = k.key;
+    if (k.lever) {
+      const sw = map.entities.find((e) => e.type === 'switch' && e.id === k.lever);
+      if (!sw) throw new Error(`${map.id}: no lever ${k.lever} for a key`);
+      sw.needs = [k.key];
+    } else {
+      const d = (map.doors ?? []).find((q) => q.at[0] === k.door[0] && q.at[1] === k.door[1]);
+      if (!d) throw new Error(`${map.id}: no door at [${k.door}] for a key`);
+      d.key = k.key;
+    }
     map.entities.push({ type: 'pickup', kind: 'key_' + k.key, at: [...k.at], extra: true });
     if (k.lamp) map.entities.push({ type: 'prop', kind: 'lantern', at: [...k.lamp], extra: true });
     map.messages = [...(map.messages ?? []).filter((m) => m.id !== 'keyhunt'), { id: 'keyhunt', at: [...k.at], radius: 3, speaker: 'INES', text: k.line }];
   }
+  // an ambush on a walk that had nothing on it: creatures that know where you are, from round a corner, when you reach the place
+  map.triggers = (map.triggers ?? []).filter((t) => !String(t.id).startsWith('skill-'));
+  (side.ambush ?? []).forEach((a, i) =>
+    map.triggers.push({
+      id: 'skill-' + i,
+      when: 'enter',
+      at: [...a.at],
+      radius: a.radius ?? 3,
+      do: a.spawn.map((s) => ({ spawn: { kind: s.kind, at: [...s.at], hunt: true } })),
+    }),
+  );
   // pickups a pass has added (in pairs: an odd number flips the steering side of every creature spawned later)
   for (const p of side.pickups ?? []) map.entities.push({ type: 'pickup', kind: p.kind, at: [...p.at], extra: true });
   for (const [x, z] of side.easy ?? []) {

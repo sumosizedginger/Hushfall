@@ -958,12 +958,27 @@
     {
      "shake": 1
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
    "type": "exit",
    "at": [46, 7],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [57, 28],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [58, 28],
+   "extra": true
   }
  ],
  "scenery": [
@@ -1078,6 +1093,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A sapper's cut under the fort, given up half-way. Somebody left their kit in it."
+  },
+  {
+   "id": "keyhunt",
+   "at": [57, 28],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "An iron key on a cord. Whoever kept the latch kept this close."
   }
  ],
  "objective": "The gate is shut: its lever is in the hut at the north end of the east terrace",

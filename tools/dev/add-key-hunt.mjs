@@ -1,6 +1,7 @@
 // A key hunt for a map that has a plain door on its way (PT-083 L0, node only). It finds the door the main route passes, a lit place off the road before that door for the key, writes both into the
 // map's sidecar (maps-src/skill/<ID>.json), compiles, and puts a walk to the key into every route of the map, before the first waypoint the shut door cuts off.
-//   node tools/dev/add-key-hunt.mjs <ID> <brass|iron|bell> "<what the player says finding it>"
+//   node tools/dev/add-key-hunt.mjs <ID> <brass|iron|bell> "<what the player says finding it>" [--lever=<switch id>]
+// With --lever the key goes to a lever on the road instead of a door (Campaign 2 has no plain doors; its gates are levers): the lever wants the key, and the walk goes before the switch op.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -8,7 +9,8 @@ import { loadMapFile, loadRouteFile, runRoute } from '../../src/engine/harness.j
 import { sidecarFile, readSidecar } from '../mapkit/skill.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
-const [id, key, line] = process.argv.slice(2);
+const [id, key, line] = process.argv.slice(2),
+  leverId = process.argv.find((a) => a.startsWith('--lever='))?.slice(8);
 if (!id || !key || !line) throw new Error('usage: add-key-hunt.mjs <ID> <key> "<line>"');
 const compile = () => execFileSync(process.execPath, ['tools/mapkit/compile.mjs', id], { cwd: root, stdio: 'ignore' });
 const srcMap = JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8')),
@@ -31,7 +33,18 @@ runRoute(map, loadRouteFile(mainFile), {
 });
 const plain = (srcMap.doors ?? []).filter((d) => !d.remote && !d.breath && !d.secret && !d.interlock && !d.soundlock && !d.key && !d.open && !d.sealed);
 // the door the road goes through, as far along the road as possible but not in its first quarter
-const onRoad = plain.map((d) => ({ d, at: seen.get(d.at.join(',')) })).filter((q) => q.at != null && q.at > laneOrder.length * 0.25);
+const leverEnt = leverId && srcMap.entities.find((e) => e.type === 'switch' && e.id === leverId);
+if (leverId && !leverEnt) throw new Error(id + ': no lever ' + leverId);
+const leverAt = leverEnt
+  ? laneOrder.reduce(
+      (b, c, i) =>
+        Math.hypot(c[0] - leverEnt.at[0], c[1] - leverEnt.at[1]) < Math.hypot(laneOrder[b][0] - leverEnt.at[0], laneOrder[b][1] - leverEnt.at[1]) ? i : b,
+      0,
+    )
+  : -1;
+const onRoad = leverEnt
+  ? [{ d: { at: [-1, -1] }, at: leverAt }]
+  : plain.map((d) => ({ d, at: seen.get(d.at.join(',')) })).filter((q) => q.at != null && q.at > laneOrder.length * 0.25);
 if (!onRoad.length) {
   console.error(`${id}: no plain door on the road`);
   process.exit(2);
@@ -45,8 +58,8 @@ const walk = (x, z) => {
 // everything that can be reached with this door shut
 const reach = new Set();
 {
-  const sx = Math.floor(map.spawn.x / S),
-    sz = Math.floor(map.spawn.z / S),
+  const sx = leverEnt ? laneOrder[leverAt][0] : Math.floor(map.spawn.x / S),
+    sz = leverEnt ? laneOrder[leverAt][1] : Math.floor(map.spawn.z / S),
     q = [[sx, sz]];
   reach.add(sx + ',' + sz);
   while (q.length) {
@@ -62,6 +75,8 @@ const reach = new Set();
         k = nx + ',' + nz;
       if (reach.has(k) || !walk(nx, nz) || secretCells.has(k)) continue;
       if (nx === door.at[0] && nz === door.at[1]) continue;
+      // a lever's key must be reachable with every gate a script opens still shut
+      if (leverEnt && (srcMap.doors ?? []).some((d) => (d.remote || d.breath || d.soundlock || d.interlock) && d.at[0] === nx && d.at[1] === nz)) continue;
       if (map.secretPanelAt?.(nx, nz)) continue;
       reach.add(k);
       q.push([nx, nz]);
@@ -103,7 +118,7 @@ const lamp = [
   .map(([dx, dz]) => [best[0] + dx, best[1] + dz])
   .find(([x, z]) => reach.has(x + ',' + z) && !seen.has(x + ',' + z));
 const side = readSidecar(id) ?? {};
-side.keys = [{ door: door.at, key, at: best, lamp: lamp ?? null, line }];
+side.keys = [{ ...(leverEnt ? { lever: leverId } : { door: door.at }), key, at: best, lamp: lamp ?? null, line }];
 fs.mkdirSync(path.dirname(sidecarFile(id)), { recursive: true });
 fs.writeFileSync(sidecarFile(id), JSON.stringify(side, null, 1) + '\n');
 compile();
@@ -113,7 +128,7 @@ for (const f of fs.readdirSync(path.join(root, 'routes')).filter((n) => n.starts
   const file = path.join(root, 'routes', f),
     ops = JSON.parse(fs.readFileSync(file, 'utf8'));
   if (ops.some((o) => o.op === 'goto' && o.at?.[0] === best[0] && o.at?.[1] === best[1])) continue;
-  const k = ops.findIndex((o) => Array.isArray(o.at) && !reach.has(o.at.join(',')));
+  const k = leverEnt ? ops.findIndex((o) => o.op === 'switch' && o.id === leverId) : ops.findIndex((o) => Array.isArray(o.at) && !reach.has(o.at.join(',')));
   if (k < 0) continue;
   ops.splice(k, 0, { op: 'goto', at: best });
   fs.writeFileSync(file, JSON.stringify(ops, null, 1) + '\n');

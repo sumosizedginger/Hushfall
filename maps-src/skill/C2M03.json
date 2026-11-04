@@ -22,5 +22,20 @@
    46,
    7
   ]
+ ],
+ "keys": [
+  {
+   "lever": "latch",
+   "key": "iron",
+   "at": [
+    57,
+    28
+   ],
+   "lamp": [
+    58,
+    28
+   ],
+   "line": "An iron key on a cord. Whoever kept the latch kept this close."
+  }
  ]
 }

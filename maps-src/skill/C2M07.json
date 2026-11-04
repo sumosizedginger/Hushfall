@@ -47,5 +47,20 @@
    49,
    5
   ]
+ ],
+ "keys": [
+  {
+   "lever": "quench",
+   "key": "brass",
+   "at": [
+    17,
+    19
+   ],
+   "lamp": [
+    18,
+    19
+   ],
+   "line": "The quench lever's brass pin, hung well away from the lever. Someone did not want it thrown in a hurry."
+  }
  ]
 }

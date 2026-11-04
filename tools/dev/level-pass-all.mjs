@@ -20,7 +20,10 @@ const queue = [...ids];
 let bad = 0;
 const one = (id) =>
   new Promise((resolve) => {
-    const child = spawn(process.execPath, ['tools/dev/level-pass.mjs', id], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(process.execPath, ['tools/dev/level-pass.mjs', id, ...args.filter((a) => a === '--ambush')], {
+      cwd: root,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
     try {
       os.setPriority(child.pid, os.constants.priority.PRIORITY_LOW);
     } catch {

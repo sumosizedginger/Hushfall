@@ -4,6 +4,7 @@
 // routes/<ID>.<name>.route.json
 // An entry is [x, z] (a goto followed by a kill), [x, z, 0] (a goto only) or a route op object (written as it is: { op: 'switch', id }, { op: 'use',
 // at }, { op: 'lamp', on: false }, ...).
+import { readSidecar } from '../mapkit/skill.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -27,8 +28,14 @@ for (const [name, list] of Object.entries(mod.waypoints)) {
       if (w[2] !== 0) ops.push({ op: 'kill' });
     } else ops.push(w);
   }
+  // a key hunt on a lever (tools/dev/add-key-hunt.mjs): the walk to the key comes before the switch; the key's cell is in the shipped frame, so this is done after the squeeze
   // a squeezed map (tools/mapkit/squeeze.mjs): the waypoints are in the authoring frame, the shipped route is in the squeezed one
   const shipped = mod.default?.squeeze ? squeezeRoute(ops, mod.default.squeeze) : ops;
+  for (const k of readSidecar(id)?.keys ?? []) {
+    if (!k.lever) continue;
+    const i = shipped.findIndex((o) => o.op === 'switch' && o.id === k.lever);
+    if (i >= 0) shipped.splice(i, 0, { op: 'goto', at: [...k.at] });
+  }
   fs.writeFileSync(path.join(root, 'routes', `${id}.${name}.route.json`), JSON.stringify(shipped));
   console.log(`wrote routes/${id}.${name}.route.json (${ops.length} ops)`);
 }

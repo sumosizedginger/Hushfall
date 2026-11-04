@@ -1108,12 +1108,27 @@
     {
      "shake": 1.5
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
    "type": "exit",
    "at": [9, 5],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [17, 19],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [18, 19],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1239,6 +1254,13 @@
    "radius": 1.5,
    "speaker": "INES",
    "text": "A bellwright's cupboard: carbine rounds with hard tips, a vest, and a small bell with no name in it yet."
+  },
+  {
+   "id": "keyhunt",
+   "at": [17, 19],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The quench lever's brass pin, hung well away from the lever. Someone did not want it thrown in a hurry."
   }
  ],
  "objective": "The kiln house and its lever unbar the yard gate in the coal yard. Break the bells before they crack",
