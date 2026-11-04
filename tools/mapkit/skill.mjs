@@ -19,6 +19,7 @@ export function applySkill(map, side = readSidecar(map.id)) {
   map.entities = map.entities.filter((e) => e.skill !== 'hard');
   for (const e of map.entities) delete e.skill;
   if (!side) return map;
+  if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
   for (const [x, z] of side.easy ?? []) {
     const e = map.entities.find((q) => q.type === 'enemy' && q.at[0] === x && q.at[1] === z);
     if (!e) throw new Error(`${map.id}: no creature at [${x}, ${z}] to leave out on Easy`);

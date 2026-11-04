@@ -18,6 +18,9 @@ const usable = (p) => (p.type === 'ammo' || p.type === 'weapon') && FOUGHT.has(p
  * rounds a player can have over the whole level from a cold start: the entry loadout plus every ammo and weapon pickup on the map, at that
  * difficulty's pickup rate
  */
+/** how much more ammunition than the perfect bot fires a map must offer: people miss, and Hard is meant to be lean */
+const SLACK = { easy: { type: 1.5, total: 1.5 }, normal: { type: 1.5, total: 1.5 }, hard: { type: 1.15, total: 1.2 } };
+
 export function ammoCapacity(map, difficulty) {
   const dm = DIFFICULTY[difficulty],
     start = Object.values(map.entryLoadout?.ammo ?? PLAYER.startAmmo).reduce((a, b) => a + b, 0);
@@ -207,16 +210,16 @@ export function viabilityChecks(v, par, { safe = false } = {}) {
       if (fired >= 5) {
         const cap = v[d].ammo.capacityBy[type] ?? 0;
         c.push({
-          name: `ammo ${d}: ${type} rounds available (${cap}) are at least 1.5x what the perfect bot fires (${fired})`,
-          ok: cap >= fired * 1.5,
+          name: `ammo ${d}: ${type} rounds available (${cap}) are at least ${SLACK[d].type}x what the perfect bot fires (${fired})`,
+          ok: cap >= fired * SLACK[d].type,
           detail: 'x' + (cap / fired).toFixed(2),
         });
       }
   for (const d of DIFFS)
     if (v[d].ammo)
       c.push({
-        name: `ammo ${d}: rounds available (${v[d].ammo.capacity}) are at least 1.5x what the perfect bot fires (${v[d].ammo.fired}): humans miss`,
-        ok: v[d].ammo.capacity >= v[d].ammo.fired * 1.5,
+        name: `ammo ${d}: rounds available (${v[d].ammo.capacity}) are at least ${SLACK[d].total}x what the perfect bot fires (${v[d].ammo.fired}): humans miss`,
+        ok: v[d].ammo.capacity >= v[d].ammo.fired * SLACK[d].total,
         detail: 'x' + (v[d].ammo.capacity / Math.max(1, v[d].ammo.fired)).toFixed(2),
       });
   for (const d of DIFFS)

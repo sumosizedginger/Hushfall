@@ -1690,6 +1690,7 @@
   "introduces": "the hunted crossing: a hunting party released behind you across open ground, and toxic brine channels that slow and burn (crossed on planks, or waded at a cost); and the Harpoon rifle, the long gun that the open ground asks for"
  },
  "drops": {
-  "scale": 1
+  "scale": 1,
+  "hard": 1.4
  }
 }

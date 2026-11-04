@@ -86,7 +86,15 @@ export function maybeDrop(w, e) {
   const need = 1 - (w.player.ammo[type] || 0) / ammoCap(type, w.upgrades),
     base = DROPS.chance[e.kind] ?? DROPS.chance.default;
   const rule = DIFFICULTY[w.difficulty].drop;
-  let chance = Math.min(0.95, base * (DROPS.weight[type] ?? 1) * (DROPS.need.floor + DROPS.need.slope * need) * (map.drops.scale ?? 1) * rule.chance);
+  let chance = Math.min(
+    0.95,
+    base *
+      (DROPS.weight[type] ?? 1) *
+      (DROPS.need.floor + DROPS.need.slope * need) *
+      (map.drops.scale ?? 1) *
+      rule.chance *
+      (w.difficulty === 'hard' ? (map.drops.hard ?? 1) : 1),
+  );
   if (base >= 1) chance = 1;
   const pity = need >= DROPS.pityNeed && d.dry >= rule.pity;
   if (!pity && nextRandom(d) >= chance) {

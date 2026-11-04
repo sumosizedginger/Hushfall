@@ -1273,6 +1273,7 @@
   "introduces": "the vertical route: a cage lift is the only way up, and the exit is two climbs away (south gallery lever, north gallery hatch) under Bellhand fire from both galleries"
  },
  "drops": {
-  "scale": 1
+  "scale": 1,
+  "hard": 1.3
  }
 }
