@@ -4,10 +4,13 @@ export const CELL = 2; // metres per map cell
 export const DEFAULT_CEILING = 3.6;
 
 export const DIFFICULTY = {
-  easy: { name: 'Easy', enemyHp: 0.75, enemyDamage: 0.6, ammoPickup: 1.5, reaction: 1.3 },
-  normal: { name: 'Normal', enemyHp: 1, enemyDamage: 1, ammoPickup: 1, reaction: 1 },
-  hard: { name: 'Hard', enemyHp: 1.2, enemyDamage: 1.25, ammoPickup: 0.8, reaction: 0.85 },
+  // drop: what a difficulty does to the ammunition the dead leave. chance x the chance per kill, pity = dry kills before a box is certain, magnet x how far a box slides to you
+  easy: { name: 'Easy', enemyHp: 0.75, enemyDamage: 0.6, ammoPickup: 1.5, reaction: 1.3, rank: 0, drop: { chance: 1.3, pity: 3, magnet: 1.4 } },
+  normal: { name: 'Normal', enemyHp: 1, enemyDamage: 1, ammoPickup: 1, reaction: 1, rank: 1, drop: { chance: 1, pity: 5, magnet: 1 } },
+  hard: { name: 'Hard', enemyHp: 1.2, enemyDamage: 1.25, ammoPickup: 0.8, reaction: 0.85, rank: 2, drop: { chance: 0.75, pity: 8, magnet: 0.6 } },
 };
+/** does this entity stand on this difficulty? An entity may say skill: 'normal' (not on Easy) or 'hard' (only on Hard) */
+export const inSkill = (e, difficulty) => !e.skill || DIFFICULTY[e.skill].rank <= DIFFICULTY[difficulty].rank;
 
 export const PLAYER = {
   radius: 0.32,

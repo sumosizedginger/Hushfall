@@ -29,6 +29,12 @@ export function difficultyCopy(key) {
       `Creatures hit for ${pct(d.enemyDamage)} of the standard damage and carry ${pct(d.enemyHp)} of the standard health.`,
       `Ammunition pickups hold ${pct(d.ammoPickup)} of the standard amount.`,
       `Creatures ${wait(d.reaction)}.`,
+      `The dead leave ammunition ${d.drop.chance === 1 ? 'at the standard rate' : d.drop.chance > 1 ? `${pct(d.drop.chance - 1)} more often` : `${pct(1 - d.drop.chance)} less often`}, and a box is certain after ${d.drop.pity} dry kills.`,
+      key === 'hard'
+        ? 'More creatures stand in every map.'
+        : key === 'easy'
+          ? 'Fewer creatures stand in every map.'
+          : 'Every creature stands where it was placed.',
     ],
   };
 }

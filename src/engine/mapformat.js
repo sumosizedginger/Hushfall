@@ -28,6 +28,7 @@ import {
   FX,
   WALL_SKINS,
   FLOOR_SKINS,
+  inSkill,
 } from './defs.js';
 
 import { makeCar, carState, boardingCells } from './cars.js';
@@ -285,9 +286,9 @@ export class MapData {
   doorAxis(cx, cz) {
     return this.isWall(cx - 1, cz) && this.isWall(cx + 1, cz) ? 'x' : 'z';
   }
-  counts() {
+  counts(difficulty = 'normal') {
     return {
-      enemies: this.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful).length,
+      enemies: this.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful && inSkill(e, difficulty)).length,
       items: this.entities.filter((e) => e.type === 'pickup' && !PICKUPS[e.kind]?.key).length,
       secrets: this.secrets.length,
     };
@@ -555,6 +556,9 @@ function validateMapChecks(src) {
 
 /** Gate 2 production-kit validation: terrain layers, sectors, closets, switches, triggers, exits and every action they run. */
 function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
+  for (const e of ents)
+    if (e.skill != null && !(e.type === 'enemy' && (e.skill === 'normal' || e.skill === 'hard')))
+      err(`entity at ${e.at}: skill must be 'normal' or 'hard', on a creature`);
   const layer = (name, rows, allowed) => {
     if (rows == null) return false;
     if (!Array.isArray(rows) || rows.length !== h || rows.some((r) => typeof r !== 'string' || r.length !== w)) {

@@ -74,7 +74,7 @@ export function auditMap(src) {
       const k = map.kind(x, z);
       return k === 'floor' || k === 'outdoor' || k === 'door';
     };
-  const enemies = map.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful),
+  const enemies = map.entities.filter((e) => e.type === 'enemy' && !ENEMIES[e.kind]?.peaceful && e.skill !== 'hard'),
     total = enemies.length; // the peaceful Vael are no combatants: they count in no share and no density
   const heights = new Map();
   let cells = 0;

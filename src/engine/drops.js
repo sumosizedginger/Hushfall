@@ -4,7 +4,7 @@
 // map that has no `drops` is byte for byte what it was and
 // the fights of one that has are not shifted by it. Lazy state: `w.drops = { rngState, dry, seen, firedAt }` (it is saved with the world like the
 // rest).
-import { DROPS, AMMO_MAX, WEAPONS, ENEMIES, PICKUPS, FX, STEP, TICK } from './defs.js';
+import { DROPS, AMMO_MAX, WEAPONS, ENEMIES, PICKUPS, FX, STEP, TICK, DIFFICULTY } from './defs.js';
 import { nextRandom, initialRngState } from './rng.js';
 import { ammoCap } from './progress.js';
 import { floorAt, fxAt } from './terrain.js';
@@ -85,9 +85,10 @@ export function maybeDrop(w, e) {
   if (!type) return null;
   const need = 1 - (w.player.ammo[type] || 0) / ammoCap(type, w.upgrades),
     base = DROPS.chance[e.kind] ?? DROPS.chance.default;
-  let chance = Math.min(0.95, base * (DROPS.weight[type] ?? 1) * (DROPS.need.floor + DROPS.need.slope * need) * (map.drops.scale ?? 1));
+  const rule = DIFFICULTY[w.difficulty].drop;
+  let chance = Math.min(0.95, base * (DROPS.weight[type] ?? 1) * (DROPS.need.floor + DROPS.need.slope * need) * (map.drops.scale ?? 1) * rule.chance);
   if (base >= 1) chance = 1;
-  const pity = need >= DROPS.pityNeed && d.dry >= DROPS.pity;
+  const pity = need >= DROPS.pityNeed && d.dry >= rule.pity;
   if (!pity && nextRandom(d) >= chance) {
     d.dry++;
     return null;
@@ -109,13 +110,14 @@ export function updateDrops(w, dt) {
   if (!w.map.drops || !w.pickups.length) return;
   const p = w.player,
     M = DROPS.magnet,
+    reach = M.r * DIFFICULTY[w.difficulty].drop.magnet,
     S = w.map.cell;
   for (const it of w.pickups) {
     if (!it.drop) continue;
     const dx = p.x - it.x,
       dz = p.z - it.z,
       dist = Math.hypot(dx, dz);
-    if (dist > M.r || dist < M.stop || Math.abs((it.y ?? 0) - (p.y ?? 0)) > STEP + 0.3) continue;
+    if (dist > reach || dist < M.stop || Math.abs((it.y ?? 0) - (p.y ?? 0)) > STEP + 0.3) continue;
     const step = Math.min(M.speed * dt, dist - M.stop),
       nx = it.x + (dx / dist) * step,
       nz = it.z + (dz / dist) * step;

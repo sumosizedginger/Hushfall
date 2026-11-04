@@ -239,8 +239,14 @@ test('a drop-fed map plays: drops happen, they are taken, the run is the same tw
     assert.equal(a.result, 'complete', difficulty);
     assert.equal(a.hash, b.hash, 'deterministic');
     assert.ok(a.events.filter((e) => e.type === 'drop').length >= 8, 'drops happened');
-    assert.ok(Object.values(a.world.stats.gained).reduce((x, y) => x + y, 0) > 100, 'and were taken');
+    assert.ok(Object.values(a.world.stats.gained).reduce((x, y) => x + y, 0) > (difficulty === 'hard' ? 20 : 100), 'and were taken');
   }
+  const taken = (difficulty) =>
+    [1, 2, 3].reduce((n, seed) => n + Object.values(runRoute(map, route, { seed, difficulty }).world.stats.gained).reduce((x, y) => x + y, 0), 0);
+  const easy = taken('easy'),
+    normal = taken('normal'),
+    hard = taken('hard');
+  assert.ok(easy > normal && normal > hard, `Easy feeds you the most and Hard the least: ${easy} > ${normal} > ${hard}`);
 });
 
 test("the Locker's caps still rule: a drop never takes a gun above its cap, and the shipped caps are untouched", () => {

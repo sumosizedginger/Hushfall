@@ -3,7 +3,7 @@
 // This file makes a world and holds the order of a tick; the systems are simcore.js, player.js, weapons.js, enemies.js and place.js.
 import { gateOpen } from './breath.js';
 import { makeChimes } from './chimes.js';
-import { ALL_WEAPONS, DIFFICULTY, ENEMIES, LANTERN, MELEE_ORDER, PLAYER, TICK } from './defs.js';
+import { ALL_WEAPONS, DIFFICULTY, ENEMIES, LANTERN, MELEE_ORDER, PLAYER, TICK, inSkill } from './defs.js';
 import { updateCreatures } from './enemies.js';
 import { spawnPhys } from './gravity.js';
 import { noticePlace, settleTick, takePickups, updateAmmoDrops, updateBeams, updateDoors, updateScripts } from './place.js';
@@ -184,13 +184,17 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
     secretsFound: [],
     messagesSeen: [],
     explored: new Array(map.w * map.h).fill(0),
-    stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts() },
+    stats: { kills: 0, items: 0, secrets: 0, damageTaken: 0, shots: 0, total: map.counts(difficulty) },
     endStats: null,
   });
   hidden(w, 'map', map);
   hidden(w, 'events', []);
   for (const e of map.entities) {
     if (e.type === 'enemy') {
+      if (!inSkill(e, difficulty)) {
+        w.nextId++; // left out on this difficulty; every other creature keeps its id
+        continue;
+      }
       const en = spawnEnemy(w, e.kind, e.x, e.z, typeof e.facing === 'number' ? e.facing : Math.PI);
       if (e.group) en.group = e.group;
       if (e.variant) en.variant = e.variant;
