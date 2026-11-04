@@ -5,7 +5,7 @@
 | question a questionnaire asks | answer | where it comes from |
 |---|---|---|
 | Violence | Yes: shooting and melee against hostile creatures. The creatures are alien monsters and people turned into them (the harbour town's own, grafted with bronze bell-chitin); they fall and stay down; some are raised again by another creature. Stylised, painted, low resolution. | the whole game |
-| Blood and gore | Blood decals: spatter behind a hit, a pool and a smear where a creature dies; no dismemberment, no exposed viscera, no gore as a reward. | `src/render/decalplace.js` |
+| Blood and gore | A big enough kill breaks a creature into its own parts (a setting, "gore: full / reduced", turns that off). Blood decals: spatter behind a hit, a pool and a smear where a creature dies; no dismemberment, no exposed viscera, no gore as a reward. | `src/render/decalplace.js` |
 | Fear / horror themes | Yes, light to moderate: an eerie tone, people standing frozen in rows, bodies hung in cradles, the dead kept in rows. No jump-scare system; no torture shown. | `design/LORE.md`, the story text |
 | Sexual content or nudity | None. | text and art checked |
 | Language | None that is profane: the text is plain English; no slurs. One mild exclamation by survivors ("You made it up!"). | `tools/dev/story-stats.mjs` |

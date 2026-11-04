@@ -499,6 +499,44 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 ## PT-074 · the look polish · the owner's first verdict · OPEN (four levels played)
 **Reported (2026-10-26):** "for the 4 levels I've played the visuals look fuckin' amazing." The ten items are `design/LOOK_POLISH.md`. Still to hear: the rest of the levels; whether the darker spaces between lamps read as mood or as too dark anywhere; the muzzle light and the impact burst in motion.
 
+## PT-083 · the release quality plan · FIXED-IN-CODE (awaiting the owner and a friend)
+
+Nobody has played any of this. The tests prove the game runs and the bot can finish it; they cannot say whether it is good. Best played on `npm run dev` from a fresh browser profile so the first-time things show.
+
+**THE MOUSE (start here).** It should now feel attached to your hand, with no float at all. Settings: raw mouse input (on by default), invert Y, a separate sights sensitivity. If it still feels wrong in any way, say how.
+
+**Your first hour (best done by the friend, who has never seen it):**
+1. New game: you are offered the Training Yard once. Ten rooms, each door opens when you have done what the room asks. Clear? Too long? Skippable?
+2. In the campaign, one line with your own key appears the first time a load, a parry, a dark room or a charge gun matters. Too many? Too few?
+3. Settings are in six tabs, each with its own defaults button. Can you find things?
+4. Die: Retry should put you back at the last gate, key or boss phase in under 3 seconds, not the start of the level (a setting keeps the old way).
+
+**Combat feel:**
+5. A tick and a crosshair mark on every blow you land, stronger on a head hit, a different mark on a kill. A setting turns them off.
+6. Creatures flinch from where you hit them and fall away from the killing blow. A big enough kill (blast, harpoon, axe, saw, mortar) bursts the body: the setting "gore: full / reduced" stops that. Too much? Too cartoonish?
+7. Sparks on metal, chips on stone, splinters on wood, a splash in water, spatter on Vael. Shells and casings fly from the guns.
+
+**Sound (I cannot hear any of it; measured only):**
+8. Each gun is built in layers and the room you are in colours it: a hall, a cave, open air, a metal hull, the dead air of vacuum. Music ducks under messages and big blasts; you breathe when you sprint. Does it mix, or does anything shout or vanish?
+9. Listen for the case dropping and the sprint's breath: I raised both over the audibility floor by numbers alone.
+
+**Difficulty:**
+10. Easy should feed you and leave a few creatures out; Hard should run you lean with about a quarter more creatures where the bot gates allowed it. HARD NOW KILLS THE PERFECT BOT sometimes, even on the first map (I took two Hard extras back off Marrow Quay and the Cradle Annex for that). Is it hard in a good way?
+11. After a finale, the title offers the campaign again on Hard with the guns you finished with.
+
+**Levels:**
+12. 21 of the 62 main maps now have a key hunt. Three are new on levers (the Bellwright Yard, the Cantor Outpost, the Reliquary Road): the lever refuses you until you find the key off the road. Was the key findable?
+13. Ambushes on walks that used to be empty: Fishmarket Rows, the Chandlery, Signal House, Landing Scar, the Cantor Outpost, Harmonic Gardens, the Pulse Foundry. Fair or cheap?
+14. Ways round on ten maps that used to be one line. 20 maps still miss a floor of the plan, each with a written reason in `design/level-floors.json`; several reasons are only "the bot gates refused more", and if a map feels thin, tell me: the gates may be wrong and you are not.
+15. Each map has a named moment in the same file. Did you notice them?
+
+**Look:**
+16. The guns are darker and worn, the flare cannon signal orange instead of toy yellow. Creature rim light is stronger. The title's menu now has a dark band behind it so its small lines can be read: does it spoil the picture?
+
+**Replay and access:** map select from the title with best rank, time, secrets, par, challenges and documents found per difficulty; three colour palettes; reduce flashes; toggle fire and guard; caption size; quick save F5.
+
+**Not checked by anyone:** Firefox and Safari (Firefox is not on this machine and I did not download one), a laptop's integrated graphics, your friend's machine. If either of you turns on the play log it records frame times on the device; export it and bring it back.
+
 ## PT-082 · the fun pass, Campaign 2 · FIXED-IN-CODE (awaiting the owner)
 **The owner's go (2026-11-02, from the Rail Yard):** "lets get you working on the back half of the game and making it something you're fuckin' proud of", then "Lets do Act C and D". Nothing of it has been played or heard in the game. What to look at:
 1. **Maps drawn as places, not diagrams.** Act A: Tuning Fork Fields, the Reliquary Road, the Chitin Aqueduct, the Bellwright Yard. Act B: Echo Markets, Undercantor Halls, Harmonic Gardens, the Ash Basilica. Act C: Vein Rail (a signal station and a round turntable hall round the rail), the Bone Loom (real rooms instead of a grid), the Pulse Foundry (a pattern shop and a cooling pond off the wheel). Act D: Fault Line (the rift is a real crack, ruins on one lip, a terrace over it on the other), Root Bell Descent (every landing its own). Do they feel like somewhere?
