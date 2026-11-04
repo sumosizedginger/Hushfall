@@ -4,17 +4,17 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 
 ## Flagged
 
-- C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 91 around it
-- C1E3M06 The Choir Loft: 119 damage on Normal against about 67 around it
-- C1E4M03 Cold Dock: 130 damage on Normal against about 70 around it
-- C1E4M08 Gate Warden: 115 damage on Normal against about 69 around it
-- C2M05 The Reliquary Road: 93 damage on Normal against about 58 around it
-- C2M08 Threshold Ascent: 78 damage on Normal against about 49 around it
-- C2M15 Ash Basilica: 92 damage on Normal against about 57 around it
-- C2M17 The Hive-Song Approach: 83 damage on Normal against about 53 around it
-- C2M22 Mourning Halls: 98 damage on Normal against about 61 around it
-- C2M23 The Reprise: 119 damage on Normal against about 64 around it
-- C2M27 Fault Line: 87 damage on Normal against about 39 around it
+- C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 91 around it. Why: the finale of the first episode
+- C1E3M06 The Choir Loft: 119 damage on Normal against about 67 around it. Why: the climb at the end of Episode 3, a raked arena of singers
+- C1E4M03 Cold Dock: 130 damage on Normal against about 70 around it. Why: on seed 1, 85 of its 149 damage has no creature named on it and 64 is shots; the bays are in vacuum, the likely source, not separately measured
+- C1E4M08 Gate Warden: 115 damage on Normal against about 69 around it. Why: the boss of Campaign 1
+- C2M05 The Reliquary Road: 93 damage on Normal against about 58 around it. Why: its neighbour C2M06 is unusually low (35); the level itself is about the middle of the act
+- C2M08 Threshold Ascent: 78 damage on Normal against about 49 around it. Why: the finale of Act A
+- C2M15 Ash Basilica: 92 damage on Normal against about 57 around it. Why: the climb before the last map of Act B
+- C2M17 The Hive-Song Approach: 83 damage on Normal against about 53 around it. Why: eased from 123 by this pass; the opener of Act C, and the maps around it are unusually low (21 to 45)
+- C2M22 Mourning Halls: 98 damage on Normal against about 61 around it. Why: the climb before the boss of Act C
+- C2M23 The Reprise: 119 damage on Normal against about 64 around it. Why: the climb before the boss of Act C: the first level again, under the Hive
+- C2M27 Fault Line: 87 damage on Normal against about 39 around it. Why: the climb before the last boss; its neighbours are a stand and a boss, where the bot dodges what it is told a second ahead, so their numbers are low
 
 ## Every map
 

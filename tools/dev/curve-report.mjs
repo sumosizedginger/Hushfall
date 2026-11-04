@@ -28,13 +28,29 @@ for (const slot of manifest.maps.filter((m) => m.kind === 'main')) {
   }
   rows.push(r);
 }
+// why a flagged map stands above its neighbours (D3: a flag is fixed or carries a reason; a bot is not a person, the owner's play outranks these)
+const WHY = {
+  C1E1M08: 'the finale of the first episode',
+  C1E3M06: 'the climb at the end of Episode 3, a raked arena of singers',
+  C1E4M03: 'on seed 1, 85 of its 149 damage has no creature named on it and 64 is shots; the bays are in vacuum, the likely source, not separately measured',
+  C1E4M08: 'the boss of Campaign 1',
+  C2M05: 'its neighbour C2M06 is unusually low (35); the level itself is about the middle of the act',
+  C2M08: 'the finale of Act A',
+  C2M15: 'the climb before the last map of Act B',
+  C2M17: 'eased from 123 by this pass; the opener of Act C, and the maps around it are unusually low (21 to 45)',
+  C2M22: 'the climb before the boss of Act C',
+  C2M23: 'the climb before the boss of Act C: the first level again, under the Hive',
+  C2M27: 'the climb before the last boss; its neighbours are a stand and a boss, where the bot dodges what it is told a second ahead, so their numbers are low',
+};
 const flags = [];
 rows.forEach((r, i) => {
   const near = rows.slice(Math.max(0, i - 3), i + 4).filter((q) => q !== r && Number.isFinite(q.normal.damage));
   if (!near.length || !Number.isFinite(r.normal.damage)) return;
   const mean = near.reduce((a, q) => a + q.normal.damage, 0) / near.length;
   if (mean > 10 && r.normal.damage > 1.5 * mean)
-    flags.push(`${r.id} ${r.name}: ${r.normal.damage} damage on Normal against about ${Math.round(mean)} around it`);
+    flags.push(
+      `${r.id} ${r.name}: ${r.normal.damage} damage on Normal against about ${Math.round(mean)} around it${WHY[r.id] ? '. Why: ' + WHY[r.id] : '. NO REASON YET'}`,
+    );
 });
 let calm = [];
 for (const r of rows) {

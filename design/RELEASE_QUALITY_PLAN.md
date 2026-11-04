@@ -46,6 +46,30 @@ Corrections to the cold review, found while building this: (1) the field of view
 
 A plan cannot promise a score. These are the conditions under which a cold reviewer would score each category 8 or better; the owner's and the friend's play decides whether it is true.
 
+### After the build (2026-11-04, scored cold by the builder, so read it with suspicion)
+
+These are what the evidence supports, not what the game is. Nobody has played or heard any of it. "Met" means the machine condition in the table above holds, nothing more.
+
+| # | Category | Was | Now | Machine condition | Evidence, and what is missing |
+|---|---|---|---|---|---|
+| 1 | Core gameplay loop | 7 | 8 | met | phases 3, 5 and 7 are done with the shortfalls below. Only play can say |
+| 2 | Controls | 5 | 8–9 | met | the real page's camera is 5e-14 degrees behind the hand (the simulation trails by up to 1.76). The owner's hand decides |
+| 3 | Camera | 6 | 8 | met | C4, C5, and reduced motion covers every camera motion |
+| 4 | Art | 6 | 7 | met | the silhouette's edge is over its floor on every capture (floor 24, median 34), but the sweep was read at 320 px. The owner's eye |
+| 5 | Feel (juice) | 5 | 7–8 | met | every gun x fire / hit / kill / overkill has a picture and a sound (a test). Whether it feels good has never been felt |
+| 6 | Audio and music | 5 | 7 | met | `audio-qa` green: 218 sounds, 8 themes at four levels, loudness in its families. Measured, not listened to |
+| 7 | UI/UX and onboarding | 5 | 8 | met | the HUD probe is clean at nine sizes; the menu bug was found and fixed. The friend's first hour decides |
+| 8 | Levels and pacing | 5 | 7 | NOT met as hoped | 42 of 62 main maps meet every floor; 20 carry a written exception, and for several the reason is only that the bot gates refused more. Key hunts 21 of 62 |
+| 9 | Difficulty and balance | 5 | 7–8 | met | every gate is green on all three difficulties; median damage to the perfect bot is 22 / 69 / 122; each flag has a reason. Hard now kills the perfect bot often enough that its carried-run test allows replays. A bot is not a person |
+| 10 | Performance | 6 | 7 | NOT met | the worst step is 8.2 ms against a target of 4 (the mean is 0.2 to 0.7); 60 fps at 1080p on the owner's card with all creatures hunting; no laptop and no Firefox or Safari tested |
+| 11 | Code quality | 6 | 8 | met | K1 to K5 tests; 1197 route runs identical across the changes that had to leave play alone |
+| 12 | Stability | 7 | 9 | met | the regeneration, S1 to S4, a 60 minute soak with no growth |
+| 13 | Accessibility | 7 | 8 | met | X1 to X6. No player who needs them has tried them |
+| 14 | Replayability | 7 | 8 | met, Y3 in part | Y1, Y2, Y4, Y5; per-map challenges without the wings |
+| 15 | Overall polish | 5 | 7 | met in part | everything above; the sweep cannot stand in for a person walking the levels |
+
+Below 8 and why, in one line: art, audio and feel have not been judged by a person; levels has 20 exceptions; performance misses its own spike target and has been tried on one machine; polish follows from those.
+
 ## 3. Rules for this work
 
 - **The simulation changes only where an item names it** (D1, D2, the U5 checkpoints, L work). Everything else must leave every route identical, proved by `node tools/dev/route-fingerprint.mjs check` against a baseline saved before the item.
@@ -219,7 +243,7 @@ First run window B2 for the current pictures: the newest captures on disk (2026-
 - [x] **R3 Life in the object-like creatures** (the vat, reed, seal, anchor, the Grand Cantor, the Root Bell): an idle motion, a state-driven glow, eyes or an aperture that follows the player. (b9dd1ea: a test, every creature moves while it stands still; they already did)
 - [x] **R4 Floors.** Confirm the checkerboard shimmer is gone at 480 and 960 wide; fix the filtering where it is not. (ea61e8d)
 - [x] **R5 One language for effects.** Muzzle, impacts, rings, shields and beams share the `glowfx.js` materials and colour rules. (b9dd1ea: a test, rings, shields, beams and muzzle flashes share their materials; they already did)
-- [x] **R6 Title, menus and loading screen** in the same hand as the game. (0993ef7: the title's scrim had been painted under the picture since the look polish; it now lies over it, so the small menu lines can be read. The owner's eye decides the rest)
+- [x] **R6 Title, menus and loading screen** in the same hand as the game. (0993ef7: the title's scrim had been painted under the picture since the look polish; it now lies over it, so the small menu lines can be read. 704e565 and cccfd02: the difficulty note reserves its height, so pointing at a difficulty no longer moves the menu under the pointer, a real bug the browser check found: a real click on "Straight in" could miss. The owner's eye decides the rest)
 
 ### Phase 9. Accessibility (7 to 9)
 
@@ -262,13 +286,13 @@ First run window B2 for the current pictures: the newest captures on disk (2026-
 - [x] **S1 The page's life.** A hidden tab pauses; resizing, an audio device change and full storage are all handled with a message, never a hang. (0b0e25d)
 - [x] **S2 Crash capture** into the play log (kept on the device, exported by the player). (0b0e25d)
 - [x] **S3 Saves.** A fixture for every save version this release can meet, loaded by the suite. (b9dd1ea: every save anyone outside can hold is version 10; fixtures from RC1 and from this build)
-- [ ] **S4 Soak.** 60 minutes in the real page (B4): no growth in memory, objects or GPU resources.
+- [x] **S4 Soak.** 60 minutes in the real page (B4): no growth in memory, objects or GPU resources. (`tools/dev/soak-page.mjs` on the owner's card, four maps: 0 errors, 0 pointer-lock requests, 16.7 ms a frame, the heap a sawtooth of 100 to 140 MB with no climb, textures and programs flat, geometries level off at 644 and 758)
 
 ### Phase 13. The polish sweep and the regeneration
 
-- [ ] **The sweep.** A 1080p capture of every map's vantage points checked against a list: seams, floating props, clipping, z-fighting, stretched textures, placeholder text, typos. Each find fixed.
-- [ ] **The regeneration** (B5) from a clean commit: `npm run regen`. The browser check, every map's real-game run, `verify-map` x68, validate and the whole suite: AGENT_VERIFIED 68 of 68.
-- [ ] **The scorecard (section 2)** re-scored cold, with the evidence for each line.
+- [~] **The sweep.** A 1080p capture of every map's vantage points checked against a list: seams, floating props, clipping, z-fighting, stretched textures, placeholder text, typos. Each find fixed. (PARTLY: 136 frames were captured at 1080p by `tools/dev/sweep-shots.mjs` and read in seven contact sheets at 320 px each. Nothing broken at that scale, and most of the list cannot be seen at that scale: seams, z-fighting, stretched textures and small typos need a person walking the levels)
+- [x] **The regeneration** (B5) from a clean commit: `npm run regen`. The browser check, every map's real-game run, `verify-map` x68, validate and the whole suite: AGENT_VERIFIED 68 of 68. (From the clean commit 70fcc9c: browser check 148 of 148 with no page errors, the real-game run of all 68 maps, `verify-map` x68, AGENT_VERIFIED 68 of 68, 0 pointer-lock requests. The suite found two things, both fixed in 93b0033; Customs Hall's own evidence was then made again, and the suite is green: 1353 of 1353 with the full floors audit, `tests/maps.test.js` 266 of 266 in the regeneration and Customs Hall's 4 of 4 after its change)
+- [x] **The scorecard (section 2)** re-scored cold, with the evidence for each line. (The table "After the build" under section 2)
 
 **THE GAME IS DONE** when phases 1 to 13 are ticked. That is the build the owner and the friend play.
 
