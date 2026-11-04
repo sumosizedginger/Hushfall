@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M19",
- "version": 2,
+ "version": 3,
  "name": "Bone Loom",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -989,7 +989,8 @@
    "kind": "tollbearer",
    "at": [54, 87],
    "variant": "woven",
-   "facing": -1.654
+   "facing": -1.654,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1030,7 +1031,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [23, 87],
-   "facing": -1.802
+   "facing": -1.802,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1066,7 +1068,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [36, 83],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1102,7 +1105,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [73, 57],
-   "facing": -1.201
+   "facing": -1.201,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1144,7 +1148,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [74, 87],
-   "facing": -1.63
+   "facing": -1.63,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1180,7 +1185,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [73, 60],
-   "facing": -1.24
+   "facing": -1.24,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1216,7 +1222,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [76, 86],
-   "facing": -1.614
+   "facing": -1.614,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1252,7 +1259,8 @@
    "type": "enemy",
    "kind": "bulwark",
    "at": [21, 86],
-   "facing": -1.768
+   "facing": -1.768,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1378,6 +1386,104 @@
    "type": "exit",
    "at": [93, 32],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [49, 27],
+   "facing": 2.976,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 26],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [15, 85],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [29, 84],
+   "facing": 1.429,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [51, 89],
+   "facing": -2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 68],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [48, 64],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 54],
+   "facing": 2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [47, 37],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [48, 19],
+   "facing": 0.588,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [50, 5],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [55, 28],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [70, 27],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [81, 27],
+   "facing": 0,
+   "skill": "hard"
   }
  ],
  "scenery": [],

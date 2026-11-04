@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M11",
- "version": 2,
+ "version": 3,
  "name": "Undercantor Halls",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -423,7 +423,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [13, 36],
-   "facing": 0.727
+   "facing": 0.727,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -459,7 +460,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [20, 34],
-   "facing": 0.53
+   "facing": 0.53,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -495,7 +497,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [62, 47],
-   "facing": -1.001
+   "facing": -1.001,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -531,7 +534,8 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [41, 8],
-   "facing": 0
+   "facing": 0,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -857,6 +861,62 @@
    "at": [37, 1],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [37, 45],
+   "facing": -1.406,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 35],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [19, 19],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [40, 3],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [40, 46],
+   "facing": -0.54,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [23, 47],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [16, 38],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 25],
+   "facing": 0.165,
+   "skill": "hard"
   }
  ],
  "scenery": [],

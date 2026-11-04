@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M04",
- "version": 2,
+ "version": 3,
  "name": "Mirror Array",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -651,7 +651,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [42, 23],
-   "facing": -1.285
+   "facing": -1.285,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -729,7 +730,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [53, 49],
-   "facing": -1.912
+   "facing": -1.912,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -860,6 +862,20 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [27, 39]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [46, 22],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [49, 38],
+   "facing": 0,
+   "skill": "hard"
   }
  ],
  "par": {

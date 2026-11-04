@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M03",
- "version": 2,
+ "version": 3,
  "name": "Cold Dock",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -629,7 +629,8 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [41, 33],
-   "facing": 0.054
+   "facing": 0.054,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -710,7 +711,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [58, 56],
-   "facing": -0.82
+   "facing": -0.82,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -786,7 +788,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [69, 42],
-   "facing": -0.767
+   "facing": -0.767,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -919,7 +922,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [39, 22],
-   "facing": 0.083
+   "facing": 0.083,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1071,6 +1075,104 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [43, 38]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [51, 43],
+   "facing": -0.54,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [66, 48],
+   "facing": -2.976,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [39, 39],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [22, 38],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 50],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [38, 19],
+   "facing": 1.03,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [41, 47],
+   "facing": 0.322,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [53, 38],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [69, 36],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [33, 46],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [17, 41],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [36, 37],
+   "facing": -0.381,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [49, 35],
+   "facing": -1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 17],
+   "facing": -1.571,
+   "skill": "hard"
   }
  ],
  "par": {

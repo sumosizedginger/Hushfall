@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M27",
- "version": 2,
+ "version": 3,
  "name": "Fault Line",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -692,7 +692,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [58, 6],
-   "facing": -1.532
+   "facing": -1.532,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -728,7 +729,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [48, 32],
-   "facing": -2.09
+   "facing": -2.09,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -770,7 +772,8 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [62, 32],
-   "facing": -1.976
+   "facing": -1.976,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -806,7 +809,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [88, 6],
-   "facing": -1.546
+   "facing": -1.546,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -848,7 +852,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [70, 26],
-   "facing": -1.845
+   "facing": -1.845,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -884,7 +889,8 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [110, 32],
-   "facing": -1.798
+   "facing": -1.798,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1039,6 +1045,132 @@
    "kind": "chorister",
    "at": [66, 38],
    "facing": -2.034
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [25, 2],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [32, 14],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [33, 10],
+   "facing": 1.736,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [38, 11],
+   "facing": 0.165,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [33, 26],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [42, 25],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [50, 25],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [56, 25],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [65, 25],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [73, 25],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [85, 29],
+   "facing": -1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [76, 15],
+   "facing": 0.54,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [80, 7],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [78, 9],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [86, 8],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [99, 3],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [112, 9],
+   "facing": -1.736,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [114, 13],
+   "facing": 3.142,
+   "extra": true
   }
  ],
  "scenery": [

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M03",
- "version": 2,
+ "version": 3,
  "name": "Gill Gardens",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -323,7 +323,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [41, 17],
-   "facing": -1.41
+   "facing": -1.41,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -384,7 +385,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [49, 21],
-   "facing": -1.526
+   "facing": -1.526,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -402,7 +404,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [55, 21],
-   "facing": -1.532
+   "facing": -1.532,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -495,7 +498,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [52, 23],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -629,7 +633,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [23, 29],
-   "facing": -1.877
+   "facing": -1.877,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -769,6 +774,76 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [52, 28]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 19],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [70, 27],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [18, 17],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [21, 30],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 21],
+   "facing": -1.249,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [43, 16],
+   "facing": -0.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [62, 20],
+   "facing": -1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [68, 22],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [80, 27],
+   "facing": -1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [86, 17],
+   "facing": -0.165,
+   "skill": "hard"
   }
  ],
  "par": {

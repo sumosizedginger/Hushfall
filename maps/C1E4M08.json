@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M08",
- "version": 2,
+ "version": 3,
  "name": "Gate Warden",
  "ceilingHeight": 14,
  "atmosphere": {
@@ -737,6 +737,18 @@
    "at": [69, 29],
    "locked": true,
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [55, 20],
+   "extra": true
+  },
+  {
+   "type": "pickup",
+   "kind": "armor_vest",
+   "at": [56, 23],
+   "extra": true
   }
  ],
  "par": {

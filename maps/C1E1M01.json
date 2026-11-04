@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M01",
- "version": 8,
+ "version": 9,
  "name": "Marrow Quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
@@ -192,7 +192,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [29, 23],
-   "facing": "north"
+   "facing": "north",
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -357,7 +358,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [36, 24],
-   "facing": "east"
+   "facing": "east",
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -554,6 +556,34 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [40, 3]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [21, 17],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [28, 18],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [41, 20],
+   "facing": -2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [37, 20],
+   "facing": 3.142,
+   "skill": "hard"
   }
  ],
  "scenery": [

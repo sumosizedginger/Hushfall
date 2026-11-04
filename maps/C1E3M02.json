@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M02",
- "version": 2,
+ "version": 3,
  "name": "Ribbed Corridors",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -379,13 +379,15 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [56, 13],
-   "facing": -1.344
+   "facing": -1.344,
+   "skill": "normal"
   },
   {
    "type": "enemy",
    "kind": "gaunt",
    "at": [30, 14],
-   "facing": -1.171
+   "facing": -1.171,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -541,7 +543,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [43, 25],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -562,7 +565,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [41, 26],
-   "facing": -1.598
+   "facing": -1.598,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -787,6 +791,34 @@
    "type": "prop",
    "kind": "cradle",
    "at": [33, 35]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [19, 26],
+   "facing": -1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 24],
+   "facing": -1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [36, 19],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [52, 25],
+   "facing": -1.406,
+   "skill": "hard"
   }
  ],
  "par": {

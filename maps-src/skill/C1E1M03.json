@@ -16,5 +16,147 @@
    ],
    "line": "The market warden's key, on its nail. He locked up. Of course he locked up."
   }
+ ],
+ "all": [
+  {
+   "kind": "gaunt",
+   "at": [
+    27,
+    34
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    49,
+    34
+   ],
+   "facing": -1.736
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    16,
+    45
+   ],
+   "facing": 2.356
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    51,
+    27
+   ],
+   "facing": -0.54
+  }
+ ],
+ "hard": [
+  {
+   "kind": "bellhand",
+   "at": [
+    7,
+    9
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    49,
+    8
+   ],
+   "facing": -1.406
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    45,
+    16
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    31,
+    31
+   ],
+   "facing": -2.111
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    13,
+    33
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    24,
+    36
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    5,
+    34
+   ],
+   "facing": -2.82
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    8,
+    45
+   ],
+   "facing": 2.82
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    40,
+    36
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    53,
+    33
+   ],
+   "facing": 3.142
+  }
+ ],
+ "easy": [
+  [
+   15,
+   14
+  ],
+  [
+   28,
+   18
+  ],
+  [
+   60,
+   23
+  ],
+  [
+   62,
+   26
+  ],
+  [
+   4,
+   32
+  ],
+  [
+   27,
+   38
+  ]
  ]
 }

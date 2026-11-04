@@ -16,5 +16,98 @@
    ],
    "line": "Yard master's key. The board behind it has every wagon marked, and then nothing."
   }
+ ],
+ "all": [],
+ "hard": [
+  {
+   "kind": "tollbearer",
+   "at": [
+    21,
+    16
+   ],
+   "facing": -1.406
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    30,
+    22
+   ],
+   "facing": -2.601
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    42,
+    13
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    38,
+    18
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    56,
+    26
+   ],
+   "facing": -1.736
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    56,
+    17
+   ],
+   "facing": -0.322
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    60,
+    15
+   ],
+   "facing": -0.322
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    68,
+    15
+   ],
+   "facing": -0.165
+  }
+ ],
+ "easy": [
+  [
+   20,
+   8
+  ],
+  [
+   24,
+   15
+  ],
+  [
+   27,
+   17
+  ],
+  [
+   24,
+   19
+  ],
+  [
+   69,
+   23
+  ],
+  [
+   35,
+   27
+  ]
  ]
 }

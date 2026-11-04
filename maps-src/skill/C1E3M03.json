@@ -1,0 +1,108 @@
+{
+ "all": [
+  {
+   "kind": "gaunt",
+   "at": [
+    34,
+    19
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    70,
+    27
+   ],
+   "facing": 0
+  }
+ ],
+ "hard": [
+  {
+   "kind": "bellhand",
+   "at": [
+    18,
+    17
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    21,
+    30
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    40,
+    21
+   ],
+   "facing": -1.249
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    43,
+    16
+   ],
+   "facing": -0.142
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    62,
+    20
+   ],
+   "facing": -1.03
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    68,
+    22
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    80,
+    27
+   ],
+   "facing": -1.406
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    86,
+    17
+   ],
+   "facing": -0.165
+  }
+ ],
+ "easy": [
+  [
+   41,
+   17
+  ],
+  [
+   49,
+   21
+  ],
+  [
+   55,
+   21
+  ],
+  [
+   52,
+   23
+  ],
+  [
+   23,
+   29
+  ]
+ ]
+}

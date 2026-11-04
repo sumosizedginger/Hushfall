@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M07",
- "version": 2,
+ "version": 3,
  "name": "Bellwright Yard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -572,7 +572,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [30, 24],
-   "facing": -0.644
+   "facing": -0.644,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -602,7 +603,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [51, 40],
-   "facing": -1.229
+   "facing": -1.229,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -632,7 +634,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [20, 15],
-   "facing": -0.329
+   "facing": -0.329,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -668,7 +671,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [37, 38],
-   "facing": -1.045
+   "facing": -1.045,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -698,7 +702,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [36, 15],
-   "facing": -0.632
+   "facing": -0.632,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -728,7 +733,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [57, 41],
-   "facing": -1.285
+   "facing": -1.285,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -758,7 +764,8 @@
    "type": "enemy",
    "kind": "bulwark",
    "at": [49, 5],
-   "facing": -0.7
+   "facing": -0.7,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1107,6 +1114,20 @@
    "type": "exit",
    "at": [9, 5],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [8, 46],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [22, 45],
+   "facing": 1.571,
+   "skill": "hard"
   }
  ],
  "scenery": [

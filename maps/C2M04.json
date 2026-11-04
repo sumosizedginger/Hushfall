@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M04",
- "version": 2,
+ "version": 3,
  "name": "Tuning Fork Fields",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -486,7 +486,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [18, 26],
-   "facing": -0.375
+   "facing": -0.375,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -528,7 +529,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [30, 49],
-   "facing": -1.19
+   "facing": -1.19,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -570,7 +572,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [48, 45],
-   "facing": -1.256
+   "facing": -1.256,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -612,7 +615,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [40, 38],
-   "facing": -1.03
+   "facing": -1.03,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -654,7 +658,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [44, 32],
-   "facing": -0.965
+   "facing": -0.965,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -937,6 +942,62 @@
    "type": "exit",
    "at": [47, 1],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [19, 40],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [43, 41],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [56, 43],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 32],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 38],
+   "facing": -1.768,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 25],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [42, 19],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [49, 10],
+   "facing": -1.03,
+   "skill": "hard"
   }
  ],
  "scenery": [

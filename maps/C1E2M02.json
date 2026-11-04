@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M02",
- "version": 2,
+ "version": 3,
  "name": "Evaporation Pans",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -323,7 +323,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [20, 10],
-   "facing": -0.848
+   "facing": -0.848,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -369,7 +370,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [41, 12],
-   "facing": -1.241
+   "facing": -1.241,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -520,7 +522,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [19, 18],
-   "facing": -1.158
+   "facing": -1.158,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -681,7 +684,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [13, 22],
-   "facing": -1.279
+   "facing": -1.279,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -986,7 +990,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [32, 28],
-   "facing": -1.674
+   "facing": -1.674,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -1166,7 +1171,8 @@
    "type": "enemy",
    "kind": "marksman",
    "at": [46, 33],
-   "facing": -1.755
+   "facing": -1.755,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1317,7 +1323,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [14, 39],
-   "facing": -2.476
+   "facing": -2.476,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1353,7 +1360,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [64, 41],
-   "facing": -1.827
+   "facing": -1.827,
+   "skill": "normal"
   },
   {
    "type": "prop",

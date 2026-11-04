@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M28",
- "version": 2,
+ "version": 3,
  "name": "Last Tide",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1992,6 +1992,6 @@
     60
    ]
   ],
-  "hard": 1.5
+  "hard": 1.9
  }
 }

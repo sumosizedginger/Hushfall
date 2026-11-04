@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M02",
- "version": 2,
+ "version": 3,
  "name": "Customs Hall",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -451,7 +451,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [25, 13],
-   "facing": -0.617
+   "facing": -0.617,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -603,7 +604,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [28, 20],
-   "facing": -0.806
+   "facing": -0.806,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -788,7 +790,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [30, 31],
-   "facing": -1.122
+   "facing": -1.122,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -893,7 +896,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [42, 36],
-   "facing": -1.368
+   "facing": -1.368,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1160,7 +1164,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [19, 45],
-   "facing": -1.633
+   "facing": -1.633,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1204,7 +1209,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [25, 46],
-   "facing": -1.661
+   "facing": -1.661,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1310,6 +1316,48 @@
    "type": "prop",
    "kind": "shelf",
    "at": [35, 5]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [33, 35],
+   "facing": -1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 38],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [7, 35],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [11, 40],
+   "facing": 1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [28, 46],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [41, 44],
+   "facing": -1.571,
+   "skill": "hard"
   }
  ],
  "par": {

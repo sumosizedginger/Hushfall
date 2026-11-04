@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M03",
- "version": 2,
+ "version": 3,
  "name": "Rail Yard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -315,7 +315,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [20, 8],
-   "facing": -0.938
+   "facing": -0.938,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -473,7 +474,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 15],
-   "facing": -1.363
+   "facing": -1.363,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -526,7 +528,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [27, 17],
-   "facing": -1.48
+   "facing": -1.48,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -597,7 +600,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 19],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -746,7 +750,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [69, 23],
-   "facing": -1.633
+   "facing": -1.633,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -815,7 +820,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [35, 27],
-   "facing": -1.831
+   "facing": -1.831,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1051,6 +1057,62 @@
    "kind": "lantern",
    "at": [50, 32],
    "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [21, 16],
+   "facing": -1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [30, 22],
+   "facing": -2.601,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [42, 13],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [38, 18],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [56, 26],
+   "facing": -1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [56, 17],
+   "facing": -0.322,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [60, 15],
+   "facing": -0.322,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [68, 15],
+   "facing": -0.165,
+   "skill": "hard"
   }
  ],
  "par": {

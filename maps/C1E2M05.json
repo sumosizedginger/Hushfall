@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M05",
- "version": 2,
+ "version": 3,
  "name": "The Cradle Annex",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -331,7 +331,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [48, 17],
-   "facing": -1.455
+   "facing": -1.455,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -530,7 +531,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [50, 22],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -675,7 +677,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [52, 26],
-   "facing": -1.656
+   "facing": -1.656,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -864,6 +867,34 @@
    "kind": "lantern",
    "at": [43, 16],
    "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [25, 21],
+   "facing": -1.429,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [36, 16],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [50, 16],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 29],
+   "facing": 2.111,
+   "skill": "hard"
   }
  ],
  "par": {

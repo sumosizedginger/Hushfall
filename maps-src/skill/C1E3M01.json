@@ -16,5 +16,58 @@
    ],
    "line": "A key, in a ship with no locks of ours. They took it from a door and grew a lock to fit."
   }
+ ],
+ "all": [
+  {
+   "kind": "chorister",
+   "at": [
+    30,
+    15
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    25,
+    20
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    49,
+    16
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    45,
+    14
+   ],
+   "facing": 0
+  }
+ ],
+ "hard": [],
+ "easy": [
+  [
+   44,
+   16
+  ],
+  [
+   58,
+   19
+  ],
+  [
+   50,
+   22
+  ],
+  [
+   58,
+   24
+  ]
  ]
 }

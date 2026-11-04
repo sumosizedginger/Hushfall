@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M20",
- "version": 2,
+ "version": 3,
  "name": "Vein Rail",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -628,7 +628,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [78, 80],
-   "facing": -1.166
+   "facing": -1.166,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -666,7 +667,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [58, 44],
-   "facing": 0.142
+   "facing": 0.142,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -702,7 +704,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [56, 42],
-   "facing": 0.18
+   "facing": 0.18,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -739,7 +742,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [58, 38],
-   "facing": 0.124
+   "facing": 0.124,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -777,7 +781,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [112, 46],
-   "facing": -0.876
+   "facing": -0.876,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -813,7 +818,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [97, 48],
-   "facing": -0.715
+   "facing": -0.715,
+   "skill": "normal"
   },
   {
    "type": "enemy",

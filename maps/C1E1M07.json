@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M07",
- "version": 3,
+ "version": 4,
  "name": "Signal House",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -351,7 +351,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [11, 9],
-   "facing": -0.519
+   "facing": -0.519,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -417,7 +418,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [48, 13],
-   "facing": -1.352
+   "facing": -1.352,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -572,7 +574,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [26, 23],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -632,7 +635,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [53, 24],
-   "facing": -1.591
+   "facing": -1.591,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -758,7 +762,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [50, 31],
-   "facing": -1.739
+   "facing": -1.739,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -894,7 +899,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 36],
-   "facing": -2.171
+   "facing": -2.171,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1069,6 +1075,76 @@
    "type": "pickup",
    "kind": "armor_vest",
    "at": [7, 23]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 19],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [31, 22],
+   "facing": 1.429,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [45, 19],
+   "facing": 3.142,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [25, 17],
+   "facing": 0.165,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [3, 14],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [7, 15],
+   "facing": 2.356,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 28],
+   "facing": -1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 21],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [24, 32],
+   "facing": -1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [8, 36],
+   "facing": 1.03,
+   "skill": "hard"
   }
  ],
  "par": {

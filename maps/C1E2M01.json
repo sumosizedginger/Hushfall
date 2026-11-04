@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M01",
- "version": 4,
+ "version": 5,
  "name": "Brine Gate",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -292,7 +292,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [27, 12],
-   "facing": -1.144
+   "facing": -1.144,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -378,7 +379,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 16],
-   "facing": -1.232
+   "facing": -1.232,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -589,7 +591,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [62, 20],
-   "facing": -1.536
+   "facing": -1.536,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -786,7 +789,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [39, 25],
-   "facing": -1.659
+   "facing": -1.659,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -989,7 +993,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 30],
-   "facing": -2.423
+   "facing": -2.423,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -1099,6 +1104,62 @@
    "kind": "lantern",
    "at": [35, 16],
    "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [14, 10],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [28, 10],
+   "facing": -1.249,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [22, 22],
+   "facing": 2.356,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 21],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [17, 26],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [36, 29],
+   "facing": -2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [51, 16],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [56, 25],
+   "facing": 1.893,
+   "skill": "hard"
   }
  ],
  "par": {

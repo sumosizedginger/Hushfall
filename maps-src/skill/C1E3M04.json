@@ -1,0 +1,54 @@
+{
+ "all": [],
+ "hard": [
+  {
+   "kind": "gaunt",
+   "at": [
+    16,
+    23
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    28,
+    23
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    42,
+    23
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    54,
+    24
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    64,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    74,
+    23
+   ],
+   "facing": 0.165
+  }
+ ],
+ "easy": []
+}

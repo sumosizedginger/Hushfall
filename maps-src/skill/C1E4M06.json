@@ -1,3 +1,6 @@
 {
- "dropsHard": 1.4
+ "dropsHard": 1.4,
+ "all": [],
+ "hard": [],
+ "easy": []
 }

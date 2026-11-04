@@ -16,5 +16,41 @@
    ],
    "line": "The sexton's key to the tower stair. It is warm."
   }
- ]
+ ],
+ "all": [
+  {
+   "kind": "gaunt",
+   "at": [
+    24,
+    46
+   ],
+   "facing": 1.736
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    13,
+    36
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    11,
+    13
+   ],
+   "facing": 0.785
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    34,
+    7
+   ],
+   "facing": 0.644
+  }
+ ],
+ "hard": [],
+ "easy": []
 }

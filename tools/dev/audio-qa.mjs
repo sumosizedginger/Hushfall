@@ -135,6 +135,26 @@ check(
   music.combat.rms > music.calm.rms * 1.25,
   `calm ${music.calm.rms} vs combat ${music.combat.rms}`,
 );
+const THEMES = ['harbour', 'works', 'choir', 'gate', 'threshold', 'deep', 'hive', 'root'],
+  themes = {};
+for (const theme of THEMES) {
+  themes[theme] = {};
+  for (const [level, intensity] of [
+    ['calm', 0],
+    ['noticed', 0.34],
+    ['fighting', 0.67],
+    ['overwhelmed', 1],
+  ]) {
+    const m = await call(`await t.audioMusic(14, ${intensity}, '${theme}')`);
+    if (level === 'calm' || level === 'fighting') fs.writeFileSync(path.join(outDir, `theme_${theme}_${level}.wav`), wav(m.rate, m.b64));
+    themes[theme][level] = { peak: +m.peak.toFixed(3), rms: +m.rms.toFixed(4), nan: m.nan };
+    check(`theme ${theme} ${level} finite`, m.nan === 0, `${m.nan} bad samples`);
+    check(`theme ${theme} ${level} audible`, m.rms > 0.004, `rms ${m.rms.toFixed(4)}`);
+    check(`theme ${theme} ${level} not clipped`, m.peak <= 1.0, `peak ${m.peak.toFixed(3)}`);
+  }
+  check(`theme ${theme}: the fight is louder than the calm`, themes[theme].fighting.rms > themes[theme].calm.rms, JSON.stringify(themes[theme]));
+}
+console.log('themes', JSON.stringify(themes));
 check('no page errors', errors.length === 0, errors.slice(0, 2).join(' | '));
 console.table(rows.map((r) => ({ id: r.id, sec: r.seconds, peak: r.peak, rms: r.rms, loud50ms: r.loudestWindowRms, tail: r.tailRms })));
 console.log('music', JSON.stringify(music));
@@ -157,6 +177,7 @@ fs.writeFileSync(
       scope: 'each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured',
       sfx: rows,
       music,
+      themes,
       failures,
       note: 'objective metrics only; subjective quality needs a human listen (review/audio/*.wav)',
     },
@@ -167,5 +188,7 @@ fs.writeFileSync(
 await reportLock(page);
 await browser.close();
 await server.close();
-console.log(failures.length ? 'FAILURES:\n' + failures.join('\n') : `audio QA OK: ${rows.length} sounds + 2 music renders`);
+console.log(
+  failures.length ? 'FAILURES:\n' + failures.join('\n') : `audio QA OK: ${rows.length} sounds + 2 music renders + ${THEMES.length} themes at four levels`,
+);
 process.exit(failures.length ? 1 : 0);

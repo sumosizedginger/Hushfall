@@ -1,0 +1,91 @@
+{
+ "all": [],
+ "hard": [
+  {
+   "kind": "gaunt",
+   "at": [
+    27,
+    77
+   ],
+   "facing": 3.142
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    25,
+    68
+   ],
+   "facing": -1.03
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    20,
+    53
+   ],
+   "facing": -0.165
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    25,
+    55
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    30,
+    40
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    39,
+    40
+   ],
+   "facing": -2.601
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    20,
+    26
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "gill",
+   "at": [
+    19,
+    10
+   ],
+   "facing": 0.381
+  }
+ ],
+ "easy": [
+  [
+   37,
+   71
+  ],
+  [
+   20,
+   57
+  ],
+  [
+   17,
+   45
+  ],
+  [
+   21,
+   32
+  ],
+  [
+   21,
+   9
+  ]
+ ]
+}

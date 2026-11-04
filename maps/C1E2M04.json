@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M04",
- "version": 2,
+ "version": 3,
  "name": "Kiln Row",
  "ceilingHeight": 3.8,
  "atmosphere": {
@@ -418,7 +418,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [17, 16],
-   "facing": -1.043
+   "facing": -1.043,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -469,7 +470,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [13, 17],
-   "facing": -0.927
+   "facing": -0.927,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -601,7 +603,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [43, 21],
-   "facing": -1.518
+   "facing": -1.518,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -851,7 +854,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 30],
-   "facing": -2.065
+   "facing": -2.065,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -927,7 +931,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [63, 31],
-   "facing": -1.708
+   "facing": -1.708,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1112,6 +1117,48 @@
    "type": "pickup",
    "kind": "ld_slag_rivet",
    "at": [22, 33]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [12, 15],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [21, 27],
+   "facing": 2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [27, 32],
+   "facing": 2.601,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [28, 18],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [50, 13],
+   "facing": -0.927,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [54, 13],
+   "facing": 1.19,
+   "skill": "hard"
   }
  ],
  "par": {

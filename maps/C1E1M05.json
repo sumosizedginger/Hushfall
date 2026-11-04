@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M05",
- "version": 3,
+ "version": 4,
  "name": "Lamplighter Hill",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -323,7 +323,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [32, 12],
-   "facing": -0.577
+   "facing": -0.577,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -379,7 +380,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [44, 17],
-   "facing": -0.811
+   "facing": -0.811,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -456,7 +458,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [48, 24],
-   "facing": -0.957
+   "facing": -0.957,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -507,7 +510,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [30, 29],
-   "facing": -0.785
+   "facing": -0.785,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -568,7 +572,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [10, 37],
-   "facing": -0.322
+   "facing": -0.322,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -660,7 +665,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [34, 44],
-   "facing": -1.219
+   "facing": -1.219,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -721,7 +727,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [20, 50],
-   "facing": -1.268
+   "facing": -1.268,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -972,6 +979,104 @@
    "type": "pickup",
    "kind": "ammo_crate",
    "at": [20, 9]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [20, 40],
+   "facing": -1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [4, 22],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [8, 48],
+   "facing": -0.464,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 43],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [26, 35],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [11, 34],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [8, 25],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [29, 25],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [48, 34],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [32, 23],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [12, 21],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [5, 8],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [21, 18],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [41, 6],
+   "facing": 0,
+   "skill": "hard"
   }
  ],
  "par": {

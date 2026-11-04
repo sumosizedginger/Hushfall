@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M12",
- "version": 2,
+ "version": 3,
  "name": "The Drowned Choir",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1291,7 +1291,8 @@
    "kind": "tollbearer",
    "at": [55, 31],
    "facing": -1.5707963267948966,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1333,7 +1334,8 @@
    "kind": "tollbearer",
    "at": [32, 52],
    "facing": 1.5707963267948966,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1375,7 +1377,8 @@
    "kind": "tollbearer",
    "at": [54, 56],
    "facing": -1.5707963267948966,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1417,7 +1420,8 @@
    "kind": "tollbearer",
    "at": [31, 65],
    "facing": 1.5707963267948966,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1466,7 +1470,8 @@
    "kind": "tollbearer",
    "at": [29, 43],
    "facing": 0,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1508,7 +1513,8 @@
    "kind": "tollbearer",
    "at": [31, 48],
    "facing": 0,
-   "variant": "drowned"
+   "variant": "drowned",
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1545,7 +1551,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [33, 52],
-   "facing": 0.219
+   "facing": 0.219,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1581,7 +1588,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [10, 44],
-   "facing": 0.675
+   "facing": 0.675,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1652,7 +1660,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 52],
-   "facing": 0.625
+   "facing": 0.625,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1736,6 +1745,104 @@
    "type": "pickup",
    "kind": "ammo_flare",
    "at": [43, 37]
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [40, 65],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [40, 57],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [40, 62],
+   "facing": 2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [42, 55],
+   "facing": -2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [40, 48],
+   "facing": 2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [40, 29],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 22],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [35, 20],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [35, 16],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [45, 8],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [46, 12],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [26, 12],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [29, 14],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [37, 14],
+   "facing": -2.976,
+   "skill": "hard"
   }
  ],
  "scenery": [],

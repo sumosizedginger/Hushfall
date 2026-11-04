@@ -1,0 +1,175 @@
+{
+ "all": [
+  {
+   "kind": "gaunt",
+   "at": [
+    25,
+    2
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "zealot",
+   "at": [
+    32,
+    14
+   ],
+   "facing": 3.142
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    33,
+    10
+   ],
+   "facing": 1.736
+  },
+  {
+   "kind": "gill",
+   "at": [
+    38,
+    11
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    33,
+    26
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    42,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    50,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "zealot",
+   "at": [
+    56,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    65,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "gill",
+   "at": [
+    73,
+    25
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    85,
+    29
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    76,
+    15
+   ],
+   "facing": 0.54
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    80,
+    7
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "zealot",
+   "at": [
+    78,
+    9
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    86,
+    8
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "gill",
+   "at": [
+    99,
+    3
+   ],
+   "facing": 0
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    112,
+    9
+   ],
+   "facing": -1.736
+  },
+  {
+   "kind": "chorister",
+   "at": [
+    114,
+    13
+   ],
+   "facing": 3.142
+  }
+ ],
+ "hard": [],
+ "easy": [
+  [
+   58,
+   6
+  ],
+  [
+   48,
+   32
+  ],
+  [
+   62,
+   32
+  ],
+  [
+   88,
+   6
+  ],
+  [
+   70,
+   26
+  ],
+  [
+   110,
+   32
+  ]
+ ]
+}

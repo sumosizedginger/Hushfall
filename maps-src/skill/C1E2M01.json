@@ -16,5 +16,94 @@
    ],
    "line": "Shift foreman's key, left on the bench with his lunch."
   }
+ ],
+ "all": [],
+ "hard": [
+  {
+   "kind": "gaunt",
+   "at": [
+    14,
+    10
+   ],
+   "facing": -0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    28,
+    10
+   ],
+   "facing": -1.249
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    22,
+    22
+   ],
+   "facing": 2.356
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    15,
+    21
+   ],
+   "facing": 1.736
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    17,
+    26
+   ],
+   "facing": 1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    36,
+    29
+   ],
+   "facing": -2.976
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    51,
+    16
+   ],
+   "facing": -0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    56,
+    25
+   ],
+   "facing": 1.893
+  }
+ ],
+ "easy": [
+  [
+   27,
+   12
+  ],
+  [
+   22,
+   16
+  ],
+  [
+   62,
+   20
+  ],
+  [
+   39,
+   25
+  ],
+  [
+   12,
+   30
+  ]
  ]
 }

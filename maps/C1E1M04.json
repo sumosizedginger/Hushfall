@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M04",
- "version": 2,
+ "version": 3,
  "name": "The Drowned Chandlery",
  "ceilingHeight": 3.2,
  "atmosphere": {
@@ -520,7 +520,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 11],
-   "facing": -1.385
+   "facing": -1.385,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -669,7 +670,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [53, 27],
-   "facing": -1.841
+   "facing": -1.841,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -746,7 +748,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [38, 31],
-   "facing": -2.059
+   "facing": -2.059,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -811,7 +814,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [11, 37],
-   "facing": -2.928
+   "facing": -2.928,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -906,7 +910,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [34, 40],
-   "facing": -2.319
+   "facing": -2.319,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -974,7 +979,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [37, 43],
-   "facing": -2.323
+   "facing": -2.323,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1050,7 +1056,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 48],
-   "facing": -2.776
+   "facing": -2.776,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1133,6 +1140,62 @@
    "type": "pickup",
    "kind": "weapon_marlinspike",
    "at": [13, 19]
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [14, 8],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [15, 20],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [18, 21],
+   "facing": -0.896,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [26, 21],
+   "facing": -0.54,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 24],
+   "facing": -0.54,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 26],
+   "facing": -1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [47, 22],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [36, 21],
+   "facing": -0.165,
+   "skill": "hard"
   }
  ],
  "par": {

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M25",
- "version": 2,
+ "version": 3,
  "name": "Root Bell Descent",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -501,7 +501,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [65, 49],
-   "facing": 0.405
+   "facing": 0.405,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -543,7 +544,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 59],
-   "facing": 1.631
+   "facing": 1.631,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -585,7 +587,8 @@
    "type": "enemy",
    "kind": "resonant",
    "at": [41, 10],
-   "facing": 0.531
+   "facing": 0.531,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -627,7 +630,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [28, 63],
-   "facing": 1.744
+   "facing": 1.744,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -829,6 +833,34 @@
    "type": "exit",
    "at": [66, 3],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [56, 64],
+   "facing": -1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [39, 71],
+   "facing": -1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [19, 63],
+   "facing": -2.976,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [8, 48],
+   "facing": 1.406,
+   "extra": true
   }
  ],
  "scenery": [

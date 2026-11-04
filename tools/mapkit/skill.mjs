@@ -32,6 +32,8 @@ export function applySkill(map, side = readSidecar(map.id)) {
     if (k.lamp) map.entities.push({ type: 'prop', kind: 'lantern', at: [...k.lamp], extra: true });
     map.messages = [...(map.messages ?? []).filter((m) => m.id !== 'keyhunt'), { id: 'keyhunt', at: [...k.at], radius: 3, speaker: 'INES', text: k.line }];
   }
+  // pickups a pass has added (in pairs: an odd number flips the steering side of every creature spawned later)
+  for (const p of side.pickups ?? []) map.entities.push({ type: 'pickup', kind: p.kind, at: [...p.at], extra: true });
   for (const [x, z] of side.easy ?? []) {
     const e = map.entities.find((q) => q.type === 'enemy' && q.at[0] === x && q.at[1] === z);
     if (!e) throw new Error(`${map.id}: no creature at [${x}, ${z}] to leave out on Easy`);

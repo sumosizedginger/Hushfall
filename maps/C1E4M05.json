@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M05",
- "version": 2,
+ "version": 3,
  "name": "Drift Orchard",
  "ceilingHeight": 20,
  "atmosphere": {
@@ -543,7 +543,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [47, 80],
-   "facing": 0.1
+   "facing": 0.1,
+   "skill": "normal"
   },
   {
    "type": "enemy",

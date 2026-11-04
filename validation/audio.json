@@ -1,22 +1,24 @@
 {
-  "when": "2026-10-20T01:04:38.345Z",
+  "when": "2026-11-04T01:12:46.250Z",
   "sources": {
-    "engine": "ac1c0dc7b5c86aff",
-    "render": "169d0b5fbeb2e58b",
-    "game": "35c330e6c33ff48c",
-    "audio": "f8f3d9169ece1cc4",
-    "assets": "df26bcd4e6468f58"
+    "engine": "8a1f89e03db25c32",
+    "render": "57ac175d536b8348",
+    "game": "2695f711b0a38dc6",
+    "audio": "3e60a99c295582a1",
+    "assets": "17542adf13ccb083",
+    "verifier": "874439ef370c764d",
+    "probes": "acbf2c750f2131bd"
   },
-  "commit": "df3c274",
+  "commit": "06f2aac",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
     {
       "id": "flare_fire",
       "seconds": 0.8,
-      "peak": 0.789,
-      "rms": 0.0366,
-      "loudestWindowRms": 0.2489,
+      "peak": 0.865,
+      "rms": 0.0537,
+      "loudestWindowRms": 0.3615,
       "tailRms": 0,
       "audibleSeconds": 0.55,
       "nan": 0,
@@ -37,12 +39,12 @@
     },
     {
       "id": "scatter_fire",
-      "seconds": 0.6,
-      "peak": 0.93,
-      "rms": 0.0364,
-      "loudestWindowRms": 0.2501,
+      "seconds": 0.65,
+      "peak": 0.967,
+      "rms": 0.0712,
+      "loudestWindowRms": 0.4387,
       "tailRms": 0,
-      "audibleSeconds": 0.24,
+      "audibleSeconds": 0.33,
       "nan": 0,
       "maxDiffLSB": 1,
       "bitExact": false
@@ -62,14 +64,14 @@
     {
       "id": "harpoon_fire",
       "seconds": 0.85,
-      "peak": 0.85,
-      "rms": 0.0339,
-      "loudestWindowRms": 0.2167,
+      "peak": 0.947,
+      "rms": 0.0613,
+      "loudestWindowRms": 0.3756,
       "tailRms": 0,
-      "audibleSeconds": 0.35,
+      "audibleSeconds": 0.36,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "harpoon_cycle",
@@ -176,8 +178,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.12,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "melee_hit_heavy",
@@ -200,8 +202,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.34,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "guard_up",
@@ -236,8 +238,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.43,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "burn_start",
@@ -260,8 +262,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.22,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "dry_click",
@@ -283,6 +285,186 @@
       "loudestWindowRms": 0.0507,
       "tailRms": 0,
       "audibleSeconds": 0.17,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "hit_tick",
+      "seconds": 0.06,
+      "peak": 0.146,
+      "rms": 0.0026,
+      "loudestWindowRms": 0.0205,
+      "tailRms": 0,
+      "audibleSeconds": 0.04,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "kill_tick",
+      "seconds": 0.2,
+      "peak": 0.249,
+      "rms": 0.01,
+      "loudestWindowRms": 0.0604,
+      "tailRms": 0,
+      "audibleSeconds": 0.14,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "impact_wood",
+      "seconds": 0.1,
+      "peak": 0.097,
+      "rms": 0.0025,
+      "loudestWindowRms": 0.0193,
+      "tailRms": 0,
+      "audibleSeconds": 0.05,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "impact_metal",
+      "seconds": 0.16,
+      "peak": 0.254,
+      "rms": 0.0045,
+      "loudestWindowRms": 0.0347,
+      "tailRms": 0,
+      "audibleSeconds": 0.08,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "impact_soft",
+      "seconds": 0.1,
+      "peak": 0.068,
+      "rms": 0.0012,
+      "loudestWindowRms": 0.0094,
+      "tailRms": 0,
+      "audibleSeconds": 0.05,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "impact_wet",
+      "seconds": 0.14,
+      "peak": 0.138,
+      "rms": 0.0032,
+      "loudestWindowRms": 0.0249,
+      "tailRms": 0,
+      "audibleSeconds": 0.06,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "impact_splash",
+      "seconds": 0.2,
+      "peak": 0.103,
+      "rms": 0.0028,
+      "loudestWindowRms": 0.0209,
+      "tailRms": 0,
+      "audibleSeconds": 0.1,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "case_drop",
+      "seconds": 0.12,
+      "peak": 0.044,
+      "rms": 0.0011,
+      "loudestWindowRms": 0.0074,
+      "tailRms": 0,
+      "audibleSeconds": 0.1,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "sprint_breath",
+      "seconds": 0.9,
+      "peak": 0.017,
+      "rms": 0.0008,
+      "loudestWindowRms": 0.0046,
+      "tailRms": 0,
+      "audibleSeconds": 0.73,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "land_thud",
+      "seconds": 0.2,
+      "peak": 0.313,
+      "rms": 0.0131,
+      "loudestWindowRms": 0.0989,
+      "tailRms": 0,
+      "audibleSeconds": 0.11,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "step_stone",
+      "seconds": 0.1,
+      "peak": 0.099,
+      "rms": 0.0023,
+      "loudestWindowRms": 0.0181,
+      "tailRms": 0,
+      "audibleSeconds": 0.05,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "step_metal",
+      "seconds": 0.14,
+      "peak": 0.157,
+      "rms": 0.0034,
+      "loudestWindowRms": 0.0259,
+      "tailRms": 0,
+      "audibleSeconds": 0.07,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "step_soft",
+      "seconds": 0.1,
+      "peak": 0.051,
+      "rms": 0.0017,
+      "loudestWindowRms": 0.0132,
+      "tailRms": 0,
+      "audibleSeconds": 0.05,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "step_wet",
+      "seconds": 0.12,
+      "peak": 0.049,
+      "rms": 0.0015,
+      "loudestWindowRms": 0.0112,
+      "tailRms": 0,
+      "audibleSeconds": 0.06,
+      "nan": 0,
+      "maxDiffLSB": 0,
+      "bitExact": true
+    },
+    {
+      "id": "step_water",
+      "seconds": 0.18,
+      "peak": 0.054,
+      "rms": 0.0014,
+      "loudestWindowRms": 0.0104,
+      "tailRms": 0,
+      "audibleSeconds": 0.09,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -440,8 +622,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.56,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "toll_alert",
@@ -518,11 +700,11 @@
     {
       "id": "rivet_fire",
       "seconds": 0.12,
-      "peak": 0.412,
-      "rms": 0.0089,
-      "loudestWindowRms": 0.0689,
+      "peak": 0.427,
+      "rms": 0.0091,
+      "loudestWindowRms": 0.07,
       "tailRms": 0,
-      "audibleSeconds": 0.06,
+      "audibleSeconds": 0.07,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -584,8 +766,8 @@
       "tailRms": 0.00005,
       "audibleSeconds": 2.17,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "revive",
@@ -596,8 +778,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.54,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "tone_pulse",
@@ -620,8 +802,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.45,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "subcantor_alert",
@@ -680,8 +862,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.96,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "resonant_draw",
@@ -704,8 +886,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.82,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "resonant_die",
@@ -764,8 +946,8 @@
       "tailRms": 0,
       "audibleSeconds": 2.88,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "rootbell_draw",
@@ -848,8 +1030,8 @@
       "tailRms": 0,
       "audibleSeconds": 2.14,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "spike_warn",
@@ -884,8 +1066,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.84,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "tremor_rumble",
@@ -1136,8 +1318,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.48,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "chorister_alert",
@@ -1304,8 +1486,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.35,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "acolyte_alert",
@@ -1316,8 +1498,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.11,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "acolyte_draw",
@@ -1340,8 +1522,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.95,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "load_creak",
@@ -1376,8 +1558,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.58,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "air_land",
@@ -1388,8 +1570,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.21,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "void_fall",
@@ -1424,8 +1606,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.09,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "receiver_dark",
@@ -1496,8 +1678,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.12,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "reed_die",
@@ -1520,8 +1702,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.79,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "grandcantor_draw",
@@ -1568,8 +1750,8 @@
       "tailRms": 0.00008,
       "audibleSeconds": 2.11,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "gatewarden_draw",
@@ -1772,8 +1954,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.56,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "mender_alert",
@@ -1820,8 +2002,8 @@
       "tailRms": 0,
       "audibleSeconds": 7.2,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "load_click",
@@ -1988,8 +2170,8 @@
       "tailRms": 0.00099,
       "audibleSeconds": 2.91,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "sweep_hit",
@@ -2192,17 +2374,17 @@
       "tailRms": 0,
       "audibleSeconds": 1.71,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "carbine_fire",
       "seconds": 0.2,
-      "peak": 0.653,
-      "rms": 0.0147,
-      "loudestWindowRms": 0.113,
+      "peak": 0.787,
+      "rms": 0.0224,
+      "loudestWindowRms": 0.1721,
       "tailRms": 0,
-      "audibleSeconds": 0.1,
+      "audibleSeconds": 0.11,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -2210,9 +2392,9 @@
     {
       "id": "rocket_fire",
       "seconds": 1.1,
-      "peak": 0.444,
-      "rms": 0.0335,
-      "loudestWindowRms": 0.19,
+      "peak": 0.664,
+      "rms": 0.0526,
+      "loudestWindowRms": 0.3076,
       "tailRms": 0,
       "audibleSeconds": 0.76,
       "nan": 0,
@@ -2222,9 +2404,9 @@
     {
       "id": "mortar_fire",
       "seconds": 1.1,
-      "peak": 0.493,
-      "rms": 0.0353,
-      "loudestWindowRms": 0.1943,
+      "peak": 0.691,
+      "rms": 0.0534,
+      "loudestWindowRms": 0.2995,
       "tailRms": 0,
       "audibleSeconds": 0.8,
       "nan": 0,
@@ -2360,8 +2542,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.31,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "saw_start",
@@ -2372,8 +2554,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.34,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "saw_rev",
@@ -2384,8 +2566,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.39,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "saw_stop",
@@ -2450,18 +2632,22 @@
   ],
   "music": {
     "calm": {
-      "peak": 0.097,
-      "rms": 0.028,
-      "loudestWindowRms": 0.0355,
+      "peak": 0.067,
+      "rms": 0.0164,
+      "loudestWindowRms": 0.0249,
       "nan": 0
     },
     "combat": {
-      "peak": 0.405,
-      "rms": 0.0419,
-      "loudestWindowRms": 0.1393,
+      "peak": 0.839,
+      "rms": 0.108,
+      "loudestWindowRms": 0.3534,
       "nan": 0
     }
   },
-  "failures": [],
+  "failures": [
+    "impact_soft audible: loudest 50 ms window RMS 0.0094",
+    "case_drop audible: loudest 50 ms window RMS 0.0074",
+    "sprint_breath audible: loudest 50 ms window RMS 0.0046"
+  ],
   "note": "objective metrics only; subjective quality needs a human listen (review/audio/*.wav)"
 }

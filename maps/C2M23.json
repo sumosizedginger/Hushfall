@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M23",
- "version": 1,
+ "version": 2,
  "name": "The Reprise",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -599,7 +599,8 @@
    "kind": "tollbearer",
    "at": [69, 23],
    "variant": "crystal",
-   "facing": 1.768
+   "facing": 1.768,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -751,7 +752,8 @@
    "kind": "tollbearer",
    "at": [60, 12],
    "variant": "crystal",
-   "facing": 1.396
+   "facing": 1.396,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1085,7 +1087,8 @@
    "kind": "tollbearer",
    "at": [37, 38],
    "variant": "crystal",
-   "facing": 1.908
+   "facing": 1.908,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1134,7 +1137,8 @@
    "kind": "gill",
    "at": [67, 38],
    "variant": "crystal",
-   "facing": 2.208
+   "facing": 2.208,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1176,7 +1180,8 @@
    "kind": "gaunt",
    "at": [46, 56],
    "variant": "crystal",
-   "facing": 2.24
+   "facing": 2.24,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1225,7 +1230,8 @@
    "kind": "chorister",
    "at": [62, 58],
    "variant": "crystal",
-   "facing": 2.467
+   "facing": 2.467,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1267,7 +1273,8 @@
    "kind": "resonant",
    "at": [36, 56],
    "variant": "crystal",
-   "facing": 2.151
+   "facing": 2.151,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1316,7 +1323,8 @@
    "kind": "gill",
    "at": [64, 39],
    "variant": "crystal",
-   "facing": 2.182
+   "facing": 2.182,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1365,7 +1373,8 @@
    "kind": "tollbearer",
    "at": [28, 82],
    "variant": "crystal",
-   "facing": 2.341
+   "facing": 2.341,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1407,7 +1416,8 @@
    "kind": "gaunt",
    "at": [40, 90],
    "variant": "crystal",
-   "facing": 2.498
+   "facing": 2.498,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1514,6 +1524,62 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [42, 54]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [83, 20],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [81, 16],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [70, 19],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [77, 19],
+   "facing": -2.601,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [73, 17],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [60, 22],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [62, 13],
+   "facing": -1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [53, 15],
+   "facing": 2.356,
+   "skill": "hard"
   }
  ],
  "scenery": [

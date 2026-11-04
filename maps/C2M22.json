@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M22",
- "version": 2,
+ "version": 3,
  "name": "Mourning Halls",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1114,7 +1114,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [65, 12],
-   "facing": -1.598
+   "facing": -1.598,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1126,7 +1127,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [6, 59],
-   "facing": 2.571
+   "facing": 2.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1147,7 +1149,8 @@
    "kind": "tollbearer",
    "at": [58, 52],
    "variant": "hived",
-   "facing": -2.601
+   "facing": -2.601,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1160,7 +1163,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [17, 11],
-   "facing": 1.571
+   "facing": 1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1452,6 +1456,48 @@
    "at": [55, 75],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [10, 11],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [55, 11],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [52, 36],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [57, 60],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [27, 58],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [34, 65],
+   "facing": 0.165,
+   "skill": "hard"
   }
  ],
  "scenery": [],

@@ -310,7 +310,7 @@ export const SFX = {
     return 0.16;
   },
   impact_soft(c, out, t, o) {
-    noise(c, out, t, { dur: 0.06, gain: 0.22, type: 'lowpass', f0: 800 + o.r() * 300, off: o.r() });
+    noise(c, out, t, { dur: 0.06, gain: 0.36, type: 'lowpass', f0: 800 + o.r() * 300, off: o.r() });
     return 0.1;
   },
   impact_wet(c, out, t, o) {
@@ -324,13 +324,13 @@ export const SFX = {
     return 0.2;
   },
   case_drop(c, out, t, o) {
-    tone(c, out, t, { f0: 3400 + o.r() * 500, d: 0.03, gain: 0.05 });
-    tone(c, out, t + 0.07, { f0: 3700 + o.r() * 500, d: 0.02, gain: 0.03 });
+    tone(c, out, t, { f0: 3400 + o.r() * 500, d: 0.03, gain: 0.1 });
+    tone(c, out, t + 0.07, { f0: 3700 + o.r() * 500, d: 0.02, gain: 0.06 });
     return 0.12;
   },
   sprint_breath(c, out, t, o) {
-    noise(c, out, t, { dur: 0.35, a: 0.08, gain: 0.05, type: 'bandpass', f0: 1200, f1: 700, q: 1, off: o.r() });
-    noise(c, out, t + 0.55, { dur: 0.3, a: 0.08, gain: 0.035, type: 'bandpass', f0: 900, f1: 600, q: 1, off: o.r() });
+    noise(c, out, t, { dur: 0.35, a: 0.08, gain: 0.13, type: 'bandpass', f0: 1200, f1: 700, q: 1, off: o.r() });
+    noise(c, out, t + 0.55, { dur: 0.3, a: 0.08, gain: 0.09, type: 'bandpass', f0: 900, f1: 600, q: 1, off: o.r() });
     return 0.9;
   },
   land_thud(c, out, t, o) {

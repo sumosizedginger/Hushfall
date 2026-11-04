@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M02",
- "version": 1,
+ "version": 2,
  "name": "Wreck Belt",
  "atmosphere": {
   "fog": "#0c1618",
@@ -411,7 +411,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [24, 16],
-   "facing": -1.849
+   "facing": -1.849,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -533,7 +534,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [61, 10],
-   "facing": -1.532
+   "facing": -1.532,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -595,7 +597,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [102, 35],
-   "facing": -1.816
+   "facing": -1.816,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -701,7 +704,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [62, 52],
-   "facing": -2.226
+   "facing": -2.226,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -743,7 +747,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [62, 69],
-   "facing": -2.402
+   "facing": -2.402,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -867,6 +872,48 @@
    "type": "pickup",
    "kind": "ld_pen_carbine",
    "at": [67, 54]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [18, 16],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [42, 8],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [54, 14],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [74, 24],
+   "facing": -1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [90, 32],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [82, 44],
+   "facing": 1.571,
+   "skill": "hard"
   }
  ],
  "par": {

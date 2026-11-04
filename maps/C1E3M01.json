@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M01",
- "version": 2,
+ "version": 3,
  "name": "Landing Scar",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -314,7 +314,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [44, 16],
-   "facing": -1.422
+   "facing": -1.422,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -384,7 +385,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [58, 19],
-   "facing": -1.515
+   "facing": -1.515,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -464,7 +466,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [50, 22],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -544,7 +547,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [58, 24],
-   "facing": -1.608
+   "facing": -1.608,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -699,6 +703,34 @@
    "type": "prop",
    "kind": "lantern",
    "at": [30, 10],
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [30, 15],
+   "facing": 0.165,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [25, 20],
+   "facing": 1.571,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 16],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [45, 14],
+   "facing": 0,
    "extra": true
   }
  ],

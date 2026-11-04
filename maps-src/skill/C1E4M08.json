@@ -1,0 +1,21 @@
+{
+ "all": [],
+ "hard": [],
+ "easy": [],
+ "pickups": [
+  {
+   "kind": "ammo_rivet",
+   "at": [
+    55,
+    20
+   ]
+  },
+  {
+   "kind": "armor_vest",
+   "at": [
+    56,
+    23
+   ]
+  }
+ ]
+}

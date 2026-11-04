@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M07",
- "version": 2,
+ "version": 3,
  "name": "The Hollow Stair",
  "ceilingHeight": 40,
  "atmosphere": {
@@ -423,7 +423,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [25, 49],
-   "facing": 1.176
+   "facing": 1.176,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -459,7 +460,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [18, 50],
-   "facing": 1.363
+   "facing": 1.363,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -495,7 +497,8 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [18, 14],
-   "facing": 0.443
+   "facing": 0.443,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -531,7 +534,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [34, 15],
-   "facing": 0.077
+   "facing": 0.077,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -567,7 +571,8 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [50, 29],
-   "facing": -0.48
+   "facing": -0.48,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -854,6 +859,34 @@
      "shake": 0.8
     }
    ]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 45],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [18, 40],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [10, 20],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [15, 19],
+   "facing": 3.142,
+   "skill": "hard"
   }
  ],
  "par": {

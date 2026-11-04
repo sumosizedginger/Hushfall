@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M08",
- "version": 3,
+ "version": 4,
  "name": "Bell Tower of St. Orrin",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1105,6 +1105,34 @@
    "type": "prop",
    "kind": "lantern",
    "at": [20, 53],
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 46],
+   "facing": 1.736,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [13, 36],
+   "facing": 0.165,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [11, 13],
+   "facing": 0.785,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 7],
+   "facing": 0.644,
    "extra": true
   }
  ],

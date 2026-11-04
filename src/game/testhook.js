@@ -756,9 +756,9 @@ export function installTestHook(app) {
       const { rate, samples, duration } = await renderSfx(id, { seconds });
       return { rate, duration, ...pcm(samples) };
     },
-    async audioMusic(seconds = 12, intensity = 0.8) {
+    async audioMusic(seconds = 12, intensity = 0.8, theme = 'harbour') {
       const { renderMusic } = await import('../audio/music.js');
-      const { rate, samples } = await renderMusic({ seconds, intensity });
+      const { rate, samples } = await renderMusic({ seconds, intensity, theme });
       return { rate, ...pcm(samples) };
     },
     automap: async () => {

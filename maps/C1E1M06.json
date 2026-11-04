@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M06",
- "version": 3,
+ "version": 4,
  "name": "Ferry Terminal",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -353,7 +353,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [40, 12],
-   "facing": -1.3
+   "facing": -1.3,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -483,7 +484,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 19],
-   "facing": -1.212
+   "facing": -1.212,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -627,7 +629,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [14, 24],
-   "facing": -1.768
+   "facing": -1.768,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -832,7 +835,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [37, 29],
-   "facing": -1.78
+   "facing": -1.78,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -952,7 +956,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [36, 32],
-   "facing": -1.874
+   "facing": -1.874,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1012,7 +1017,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [49, 34],
-   "facing": -1.831
+   "facing": -1.831,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1242,6 +1248,76 @@
    "kind": "lantern",
    "at": [31, 8],
    "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [13, 29],
+   "facing": 2.467,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [26, 21],
+   "facing": -0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [39, 24],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [39, 29],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 16],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [32, 12],
+   "facing": 2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 14],
+   "facing": -2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [40, 6],
+   "facing": 2.356,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [48, 27],
+   "facing": -2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [52, 19],
+   "facing": 0,
+   "skill": "hard"
   }
  ],
  "par": {

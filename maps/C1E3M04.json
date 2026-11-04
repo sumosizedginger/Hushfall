@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M04",
- "version": 2,
+ "version": 3,
  "name": "Marrow Nave",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -832,6 +832,48 @@
    "type": "prop",
    "kind": "cradle",
    "at": [7, 37]
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [16, 23],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [28, 23],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [42, 23],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [54, 24],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [64, 25],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [74, 23],
+   "facing": 0.165,
+   "skill": "hard"
   }
  ],
  "par": {

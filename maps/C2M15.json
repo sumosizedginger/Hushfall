@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M15",
- "version": 2,
+ "version": 3,
  "name": "Ash Basilica",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -966,6 +966,34 @@
    "type": "exit",
    "at": [37, 3],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [30, 57],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [13, 44],
+   "facing": 0.165,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [18, 43],
+   "facing": 2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [29, 38],
+   "facing": 0.54,
+   "skill": "hard"
   }
  ],
  "scenery": [],

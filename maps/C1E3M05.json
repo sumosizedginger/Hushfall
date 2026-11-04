@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M05",
- "version": 2,
+ "version": 3,
  "name": "Resonance Loom",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -544,7 +544,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 22],
-   "facing": -1.19
+   "facing": -1.19,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -609,7 +610,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [9, 26],
-   "facing": -1.19
+   "facing": -1.19,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -804,7 +806,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 35],
-   "facing": -2.007
+   "facing": -2.007,
+   "skill": "normal"
   },
   {
    "type": "prop",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M06",
- "version": 2,
+ "version": 3,
  "name": "Chitin Aqueduct",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -423,7 +423,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [40, 24],
-   "facing": 0.546
+   "facing": 0.546,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -465,7 +466,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [3, 6],
-   "facing": 0.865
+   "facing": 0.865,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -507,7 +509,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [14, 43],
-   "facing": 1.364
+   "facing": 1.364,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -543,7 +546,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [9, 32],
-   "facing": 1.176
+   "facing": 1.176,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -585,7 +589,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [52, 35],
-   "facing": 0.286
+   "facing": 0.286,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -865,6 +870,62 @@
    "type": "exit",
    "at": [6, 1],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 37],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [13, 41],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [46, 35],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [32, 31],
+   "facing": 3.142,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [18, 29],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [26, 24],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [48, 6],
+   "facing": 1.03,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [15, 15],
+   "facing": 3.142,
+   "skill": "hard"
   }
  ],
  "scenery": [

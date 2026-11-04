@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M14",
- "version": 2,
+ "version": 3,
  "name": "Harmonic Gardens",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -843,7 +843,8 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [32, 35],
-   "facing": 0.291
+   "facing": 0.291,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -879,7 +880,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [55, 34],
-   "facing": -0.424
+   "facing": -0.424,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -915,7 +917,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [27, 37],
-   "facing": 0.464
+   "facing": 0.464,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -951,7 +954,8 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [23, 33],
-   "facing": 0.512
+   "facing": 0.512,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -975,6 +979,34 @@
    "type": "exit",
    "at": [41, 5],
    "dest": "next"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [44, 38],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "zealot",
+   "at": [60, 31],
+   "facing": -2.111,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [39, 33],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "chorister",
+   "at": [37, 22],
+   "facing": 1.571,
+   "extra": true
   }
  ],
  "scenery": [],

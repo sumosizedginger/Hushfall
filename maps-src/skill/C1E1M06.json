@@ -16,5 +16,114 @@
    ],
    "line": "Ticket office key. The last ferry's manifest is under it. I don't read it."
   }
+ ],
+ "all": [],
+ "hard": [
+  {
+   "kind": "gaunt",
+   "at": [
+    13,
+    29
+   ],
+   "facing": 2.467
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    26,
+    21
+   ],
+   "facing": -0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    39,
+    24
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    39,
+    29
+   ],
+   "facing": 3.142
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    49,
+    16
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    32,
+    12
+   ],
+   "facing": 2.111
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    40,
+    14
+   ],
+   "facing": -2.976
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    40,
+    6
+   ],
+   "facing": 2.356
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    48,
+    27
+   ],
+   "facing": -2.976
+  },
+  {
+   "kind": "gaunt",
+   "at": [
+    52,
+    19
+   ],
+   "facing": 0
+  }
+ ],
+ "easy": [
+  [
+   40,
+   12
+  ],
+  [
+   12,
+   19
+  ],
+  [
+   14,
+   24
+  ],
+  [
+   37,
+   29
+  ],
+  [
+   36,
+   32
+  ],
+  [
+   49,
+   34
+  ]
  ]
 }

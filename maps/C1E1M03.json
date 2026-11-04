@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M03",
- "version": 2,
+ "version": 3,
  "name": "Fishmarket Rows",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -348,7 +348,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [15, 14],
-   "facing": -0.833
+   "facing": -0.833,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -459,7 +460,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [28, 18],
-   "facing": -1.326
+   "facing": -1.326,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -611,7 +613,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [60, 23],
-   "facing": -1.553
+   "facing": -1.553,
+   "skill": "normal"
   },
   {
    "type": "player",
@@ -761,7 +764,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [62, 26],
-   "facing": -1.605
+   "facing": -1.605,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -833,7 +837,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [4, 32],
-   "facing": 3.142
+   "facing": 3.142,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1019,7 +1024,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [27, 38],
-   "facing": -2.118
+   "facing": -2.118,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -1292,6 +1298,104 @@
    "kind": "lantern",
    "at": [5, 44],
    "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [27, 34],
+   "facing": 0,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 34],
+   "facing": -1.736,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [16, 45],
+   "facing": 2.356,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [51, 27],
+   "facing": -0.54,
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [7, 9],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 8],
+   "facing": -1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [45, 16],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [31, 31],
+   "facing": -2.111,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [13, 33],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [24, 36],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [5, 34],
+   "facing": -2.82,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [8, 45],
+   "facing": 2.82,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [40, 36],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [53, 33],
+   "facing": 3.142,
+   "skill": "hard"
   }
  ],
  "scenery": [

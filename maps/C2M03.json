@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M03",
- "version": 2,
+ "version": 3,
  "name": "Cantor Outpost",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -482,7 +482,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [46, 88],
-   "facing": 0
+   "facing": 0,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -536,7 +537,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [52, 59],
-   "facing": -0.185
+   "facing": -0.185,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -548,13 +550,15 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [63, 60],
-   "facing": -0.502
+   "facing": -0.502,
+   "skill": "normal"
   },
   {
    "type": "enemy",
    "kind": "bellhand",
    "at": [62, 61],
-   "facing": -0.49
+   "facing": -0.49,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -664,7 +668,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [46, 7],
-   "facing": 0
+   "facing": 0,
+   "skill": "normal"
   },
   {
    "type": "enemy",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M07",
- "version": 2,
+ "version": 3,
  "name": "Slurry Undercroft",
  "ceilingHeight": 3.2,
  "atmosphere": {
@@ -359,7 +359,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 20],
-   "facing": -1.292
+   "facing": -1.292,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -420,7 +421,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [14, 22],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "prop",
@@ -548,7 +550,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 24],
-   "facing": -1.849
+   "facing": -1.849,
+   "skill": "normal"
   },
   {
    "type": "pickup",
@@ -859,6 +862,62 @@
    "kind": "barrel",
    "at": [58, 30],
    "movable": true
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [12, 26],
+   "facing": 2.678,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [18, 17],
+   "facing": 0.54,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [24, 12],
+   "facing": 0.785,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [34, 14],
+   "facing": -1.951,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [34, 28],
+   "facing": -2.976,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [50, 19],
+   "facing": -0.927,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [54, 16],
+   "facing": -0.322,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [64, 19],
+   "facing": -2.111,
+   "skill": "hard"
   }
  ],
  "par": {

@@ -1,0 +1,38 @@
+{
+ "all": [],
+ "hard": [
+  {
+   "kind": "tollbearer",
+   "at": [
+    30,
+    57
+   ],
+   "facing": -1.571
+  },
+  {
+   "kind": "zealot",
+   "at": [
+    13,
+    44
+   ],
+   "facing": 0.165
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    18,
+    43
+   ],
+   "facing": 2.976
+  },
+  {
+   "kind": "bellhand",
+   "at": [
+    29,
+    38
+   ],
+   "facing": 0.54
+  }
+ ],
+ "easy": []
+}

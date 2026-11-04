@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M05",
- "version": 2,
+ "version": 3,
  "name": "The Reliquary Road",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -872,7 +872,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [14, 11],
-   "facing": -1.571
+   "facing": -1.571,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -896,7 +897,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [62, 20],
-   "facing": -1.745
+   "facing": -1.745,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -920,7 +922,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [20, 35],
-   "facing": -2.783
+   "facing": -2.783,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -944,7 +947,8 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [61, 24],
-   "facing": -1.825
+   "facing": -1.825,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -982,7 +986,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [14, 5],
-   "facing": -0.464
+   "facing": -0.464,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1006,7 +1011,8 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [8, 30],
-   "facing": 2.985
+   "facing": 2.985,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1037,7 +1043,8 @@
    "type": "enemy",
    "kind": "gill",
    "at": [34, 20],
-   "facing": -1.944
+   "facing": -1.944,
+   "skill": "normal"
   },
   {
    "type": "enemy",
@@ -1436,6 +1443,90 @@
    "type": "pickup",
    "kind": "health_small",
    "at": [62, 46]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [21, 12],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [34, 11],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [49, 19],
+   "facing": 1.736,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [54, 21],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [33, 17],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [11, 19],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [7, 25],
+   "facing": 0,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [12, 34],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [23, 37],
+   "facing": 1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [39, 34],
+   "facing": 1.406,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "gill",
+   "at": [55, 44],
+   "facing": -1.571,
+   "skill": "hard"
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [49, 48],
+   "facing": -1.292,
+   "skill": "hard"
   }
  ],
  "scenery": [
