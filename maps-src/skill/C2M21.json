@@ -1,5 +1,23 @@
 {
  "all": [],
  "hard": [],
- "easy": []
+ "easy": [],
+ "ambush": [
+  {
+   "at": [
+    13,
+    28
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "chorister",
+     "at": [
+      23,
+      22
+     ]
+    }
+   ]
+  }
+ ]
 }

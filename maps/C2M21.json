@@ -568,6 +568,21 @@
      }
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [13, 28],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [23, 22],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

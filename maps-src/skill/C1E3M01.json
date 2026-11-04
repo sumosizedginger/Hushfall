@@ -69,5 +69,67 @@
    58,
    24
   ]
+ ],
+ "ambush": [
+  {
+   "at": [
+    50,
+    22
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      57,
+      26
+     ]
+    },
+    {
+     "kind": "chorister",
+     "at": [
+      58,
+      17
+     ]
+    },
+    {
+     "kind": "bellhand",
+     "at": [
+      62,
+      24
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    31,
+    12
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "tollbearer",
+     "at": [
+      38,
+      13
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      25,
+      8
+     ]
+    },
+    {
+     "kind": "chorister",
+     "at": [
+      25,
+      16
+     ]
+    }
+   ]
+  }
  ]
 }

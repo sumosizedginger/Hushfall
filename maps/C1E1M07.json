@@ -302,6 +302,35 @@
      }
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [47, 11],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [42, 21],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [39, 21],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [41, 24],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

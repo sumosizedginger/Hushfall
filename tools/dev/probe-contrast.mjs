@@ -118,8 +118,29 @@ try {
         }
       }
     const dL = Math.round(sum / n - rs / Math.max(1, rn));
-    rows.push({ id, look: map.atmosphere?.look ?? 'harbour', kind: e0.kind, n, creature: Math.round(sum / n), behind: Math.round(rs / Math.max(1, rn)), dL });
-    console.log(id, e0.kind, 'creature', Math.round(sum / n), 'behind', Math.round(rs / Math.max(1, rn)), 'dL', dL);
+    // what the eye reads is the silhouette: how far the pixels along its edge (the ink line, the rim) stand from what was there without the creature
+    let en = 0,
+      es = 0;
+    for (let y = 2; y < H * 0.82 - 2; y++)
+      for (let x = 2; x < W - 2; x++) {
+        if (!mask[y * W + x]) continue;
+        if (mask[y * W + x - 2] && mask[y * W + x + 2] && mask[(y - 2) * W + x] && mask[(y + 2) * W + x]) continue;
+        const i = (y * W + x) * 4;
+        es += Math.abs(lum(withIt.data, i) - lum(without.data, i));
+        en++;
+      }
+    const edge = Math.round(es / Math.max(1, en));
+    rows.push({
+      id,
+      look: map.atmosphere?.look ?? 'harbour',
+      kind: e0.kind,
+      n,
+      creature: Math.round(sum / n),
+      behind: Math.round(rs / Math.max(1, rn)),
+      dL,
+      edge,
+    });
+    console.log(id, e0.kind, 'creature', Math.round(sum / n), 'behind', Math.round(rs / Math.max(1, rn)), 'dL', dL, 'edge', edge);
   }
   const asks = await page.evaluate('window.__lockAsks');
   console.log('pointer-lock requests:', asks);

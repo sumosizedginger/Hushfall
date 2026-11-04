@@ -201,6 +201,64 @@
      }
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [50, 22],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [57, 26],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [58, 17],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [62, 24],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-1",
+   "when": "enter",
+   "at": [31, 12],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "tollbearer",
+      "at": [38, 13],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [25, 8],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "chorister",
+      "at": [25, 16],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

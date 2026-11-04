@@ -57,29 +57,29 @@
    "walk": 719
   },
   "C1E1M02": {
-   "density": 29,
-   "rangedShare": 16,
+   "density": 30,
+   "rangedShare": 18,
    "ambushes": 5,
    "kinds": 3,
-   "loops": 0,
-   "topShare": 50,
+   "loops": 1,
+   "topShare": 48,
    "symmetry": 0.42,
    "walk": 1310
   },
   "C1E1M03": {
-   "density": 22,
-   "rangedShare": 26,
-   "ambushes": 3,
+   "density": 24,
+   "rangedShare": 28,
+   "ambushes": 4,
    "kinds": 3,
    "loops": 1,
-   "topShare": 41,
+   "topShare": 37,
    "symmetry": 0.82,
    "walk": 1790
   },
   "C1E1M04": {
    "density": 28,
    "rangedShare": 20,
-   "ambushes": 4,
+   "ambushes": 5,
    "kinds": 3,
    "loops": 0,
    "topShare": 43,
@@ -88,11 +88,11 @@
   },
   "C1E1M05": {
    "density": 19,
-   "rangedShare": 29,
+   "rangedShare": 30,
    "ambushes": 2,
    "kinds": 4,
    "loops": 9,
-   "topShare": 33,
+   "topShare": 32,
    "symmetry": 0.87,
    "walk": 2428
   },
@@ -103,26 +103,26 @@
    "kinds": 4,
    "loops": 0,
    "topShare": 40,
-   "symmetry": 0.83,
+   "symmetry": 0.82,
    "walk": 1635
   },
   "C1E1M07": {
-   "density": 33,
-   "rangedShare": 30,
-   "ambushes": 2,
+   "density": 36,
+   "rangedShare": 34,
+   "ambushes": 3,
    "kinds": 4,
    "loops": 0,
-   "topShare": 38,
+   "topShare": 34,
    "symmetry": 0.64,
    "walk": 1112
   },
   "C1E1M08": {
-   "density": 25,
-   "rangedShare": 12,
+   "density": 27,
+   "rangedShare": 16,
    "ambushes": 0,
    "kinds": 7,
    "loops": 0,
-   "topShare": 44,
+   "topShare": 40,
    "symmetry": 0.66,
    "walk": 1649
   },
@@ -207,13 +207,13 @@
    "walk": 1479
   },
   "C1E3M01": {
-   "density": 21,
-   "rangedShare": 40,
-   "ambushes": 2,
+   "density": 23,
+   "rangedShare": 41,
+   "ambushes": 4,
    "kinds": 5,
-   "loops": 0,
-   "topShare": 32,
-   "symmetry": 0.91,
+   "loops": 1,
+   "topShare": 31,
+   "symmetry": 0.87,
    "walk": 1225
   },
   "C1E3M02": {
@@ -227,12 +227,12 @@
    "walk": 982
   },
   "C1E3M03": {
-   "density": 18,
-   "rangedShare": 28,
+   "density": 19,
+   "rangedShare": 29,
    "ambushes": 2,
    "kinds": 5,
    "loops": 0,
-   "topShare": 34,
+   "topShare": 32,
    "symmetry": 0.68,
    "walk": 1733
   },
@@ -307,8 +307,8 @@
    "walk": 1602
   },
   "C1E4M03": {
-   "density": 16,
-   "rangedShare": 25,
+   "density": 19,
+   "rangedShare": 30,
    "ambushes": 2,
    "kinds": 6,
    "loops": 2,
@@ -389,7 +389,7 @@
   "C2M03": {
    "density": 16,
    "rangedShare": 26,
-   "ambushes": 3,
+   "ambushes": 5,
    "kinds": 7,
    "loops": 2,
    "topShare": 32,
@@ -407,12 +407,12 @@
    "walk": 1819
   },
   "C2M05": {
-   "density": 28,
-   "rangedShare": 30,
+   "density": 29,
+   "rangedShare": 31,
    "ambushes": 16,
    "kinds": 6,
    "loops": 3,
-   "topShare": 34,
+   "topShare": 33,
    "symmetry": 0.41,
    "walk": 1671
   },
@@ -451,7 +451,7 @@
    "rangedShare": 20,
    "ambushes": 2,
    "kinds": 7,
-   "loops": 0,
+   "loops": 1,
    "topShare": 36,
    "symmetry": 0.56,
    "walk": 2794
@@ -467,8 +467,8 @@
    "walk": 2188
   },
   "C2M11": {
-   "density": 16,
-   "rangedShare": 30,
+   "density": 19,
+   "rangedShare": 32,
    "ambushes": 2,
    "kinds": 6,
    "loops": 2,
@@ -497,13 +497,13 @@
    "walk": 1614
   },
   "C2M14": {
-   "density": 15,
-   "rangedShare": 24,
-   "ambushes": 2,
+   "density": 17,
+   "rangedShare": 28,
+   "ambushes": 3,
    "kinds": 6,
    "loops": 0,
-   "topShare": 32,
-   "symmetry": 0.75,
+   "topShare": 28,
+   "symmetry": 0.74,
    "walk": 1712
   },
   "C2M15": {
@@ -511,7 +511,7 @@
    "rangedShare": 21,
    "ambushes": 2,
    "kinds": 9,
-   "loops": 0,
+   "loops": 1,
    "topShare": 24,
    "symmetry": 0.22,
    "walk": 1470
@@ -548,11 +548,11 @@
   },
   "C2M19": {
    "density": 25,
-   "rangedShare": 28,
+   "rangedShare": 29,
    "ambushes": 2,
    "kinds": 9,
    "loops": 5,
-   "topShare": 34,
+   "topShare": 33,
    "symmetry": 0.58,
    "walk": 2092
   },
@@ -569,7 +569,7 @@
   "C2M21": {
    "density": 13,
    "rangedShare": 24,
-   "ambushes": 2,
+   "ambushes": 3,
    "kinds": 8,
    "loops": 10,
    "topShare": 30,
@@ -607,8 +607,8 @@
    "walk": 1466
   },
   "C2M25": {
-   "density": 14,
-   "rangedShare": 36,
+   "density": 16,
+   "rangedShare": 41,
    "ambushes": 2,
    "kinds": 7,
    "loops": 1,
@@ -627,12 +627,12 @@
    "walk": 3776
   },
   "C2M27": {
-   "density": 13,
-   "rangedShare": 26,
+   "density": 19,
+   "rangedShare": 39,
    "ambushes": 2,
    "kinds": 8,
    "loops": 4,
-   "topShare": 31,
+   "topShare": 21,
    "symmetry": 0.91,
    "walk": 3075
   },
@@ -1009,7 +1009,7 @@
    "longestWalkM": 60
   }
  },
- "updated": "2026-11-03",
+ "updated": "2026-11-04",
  "waiting": {
   "C1E4M06": {
    "skip": [

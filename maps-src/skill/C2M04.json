@@ -87,20 +87,5 @@
    44,
    32
   ]
- ],
- "keys": [
-  {
-   "lever": "winch",
-   "key": "iron",
-   "at": [
-    10,
-    24
-   ],
-   "lamp": [
-    11,
-    24
-   ],
-   "line": "The winch-house key, on a nail. It still smells of grease."
-  }
  ]
 }

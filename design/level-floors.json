@@ -1,148 +1,205 @@
 {
-  "excused": {
-    "C1E1M01": {
-      "loop": "the first map: a pier and a town front with one way along it; it teaches walking before it asks for anything"
-    },
-    "C1E1M08": {
-      "loop": "a tower: the climb to the bell is the map"
-    },
-    "C1E2M02": {
-      "mirror": "evaporation pans are laid out in a grid by the people who dug them; the set piece is the open flats"
-    },
-    "C1E2M08": {
-      "density": "a boss arena: the Graft-Mother is the fight and she brings her own"
-    },
-    "C1E3M04": {
-      "loop": "the nave runs one way to the dais: the set piece is the walk toward her",
-      "density": "a set piece: the Mother, her Bulwarks and her brood fill it as they come"
-    },
-    "C1E3M08": {
-      "loop": "the horn narrows to one mouth: the boss is at the end of it"
-    },
-    "C1E4M02": {
-      "mirror": "hulks in a belt: the drift between them is what is laid out, not the rooms",
-      "secrets": "decks over open sky: there is no solid wall to hide a second secret in"
-    },
-    "C1E4M04": {
-      "loop": "a puzzle of screens and mirrors: the doors open one at a time as the beam is turned",
-      "density": "a puzzle map: time here goes on the mirrors"
-    },
-    "C1E4M05": {
-      "mirror": "six islands on a ring round the tree: the ring is the idea",
-      "secrets": "islands over open sky: there is no solid wall to hide a second secret in"
-    },
-    "C1E4M07": {
-      "loop": "a spiral climb round a shaft: up is the only way, and the vents across it are the shortcut"
-    },
-    "C1E4M08": {
-      "mirror": "the oval hall of the Gate Warden: it stands at the centre of its symmetry",
-      "density": "a boss arena"
-    },
-    "C2M16": {
-      "loop": "the Sub-Cantor's amphitheatre: one way in",
-      "density": "a boss arena"
-    },
-    "C2M18": {
-      "mirror": "the lattice over the drop is the map's idea, and a lattice is regular"
-    },
-    "C2M20": {
-      "loop": "a rail: the track is the way, and cars cross what walking cannot",
-      "mirror": "a ring of track round the station"
-    },
-    "C2M22": {
-      "loop": "a procession through the halls, the low point of the story",
-      "density": "the emptiness is the point: Act C's low point, short on ammunition on purpose",
-      "quiet": "the emptiness is the point"
-    },
-    "C2M24": {
-      "loop": "the Hive Cantor's arena",
-      "density": "a boss arena: the choir comes to you"
-    },
-    "C2M25": {
-      "mirror": "a round well, six landings down it; each landing differs, the well does not"
-    },
-    "C2M28": {
-      "mirror": "a round dock: the stand is fought through its four bays",
-      "density": "81 creatures come by script: none stand there when it starts",
-      "quiet": "the wait between two strokes of the bell"
-    },
-    "C2M29": {
-      "loop": "the bell chamber",
-      "density": "a boss arena"
-    },
-    "C2M30": {
-      "loop": "the silent walk",
-      "firstFight": "no fight: the silent walk to the Gate",
-      "density": "no creature: the silent walk",
-      "quiet": "the silent walk",
-      "secrets": "one thing to find on the last walk"
-    },
-    "C2M23": {
-      "secrets": "the Reprise copies the first night: its one secret is the net-loft nook, where it was"
-    }
+ "excused": {
+  "C1E1M01": {
+   "loop": "the first map: a pier and a town front with one way along it; it teaches walking before it asks for anything"
   },
-  "moments": {
-    "C1E1M01": "The bell tower across the water lights teal while you stand on the pier, and the first Tollbearer turns round.",
-    "C1E1M02": "The closets in the customs hall open behind you when you take the key off the desk.",
-    "C1E1M03": "The north hoist drops Gaunts between the stalls while Bellhands toll from the gallery.",
-    "C1E1M04": "You wade down into the flooded cellars with the lights going out behind you.",
-    "C1E1M05": "The switchback terraces, shot at from above, with the funicular car the way to cheat the climb.",
-    "C1E1M06": "The first Warden-Graft lowers its shoulder across the open ferry hall.",
-    "C1E1M07": "The power is out: three fuses, the radio in the dark, and the Signal House lit again when you throw it.",
-    "C1E1M08": "You cut the Cantor's ring of bells and it staggers, then the tower sings back.",
-    "C1E2M01": "The gatehouse is taken from the open, then the way round it opens behind them.",
-    "C1E2M02": "The flats: nothing to hide behind, the Hush on the wind, and the harpoon in your hands for the first time.",
-    "C1E2M03": "Crossing the yard between moving wagons under fire.",
-    "C1E2M04": "A run along the kiln mouths while they breathe out.",
-    "C1E2M05": "The first cradle with a person in it, and then the room wakes.",
-    "C1E2M06": "The catwalks of the pump hall, with the drop under you and the Gills at your height.",
-    "C1E2M07": "The lights die in the undercroft and the flare is the only one you have.",
-    "C1E2M08": "The Graft-Mother with her feeders fed: starve them or she heals.",
-    "C1E3M01": "The crater's rim: crossfire from the hull, and the first Chorister's shots opening your cone.",
-    "C1E3M02": "The ship breathes in, the gate opens, and you have four seconds.",
-    "C1E3M03": "The spores bloom on a clock while snipers hold the ledges above the beds.",
-    "C1E3M04": "The Weeping Mother on her dais, two Bulwarks at her stairs, under the ash sky.",
-    "C1E3M05": "The sound-lock will not open while you are loud, and the platforms over the pit keep their own time.",
-    "C1E3M06": "A raked wedge of pews and singers: you advance a tier at a time.",
-    "C1E3M07": "Four vats on a ring round the furnace, each dropping more until you kill it.",
-    "C1E3M08": "The Grand Cantor's double ring, in the bell of its own throat.",
-    "C1E4M01": "Containers fall past you on the tether, and the sky is all around.",
-    "C1E4M02": "Thrown from hulk to hulk over nothing.",
-    "C1E4M03": "The lock is cycling, the air is leaving, and they are on your side of it.",
-    "C1E4M04": "You turn a mirror a quarter and the beam finds the receiver across the array.",
-    "C1E4M05": "The fruit of the tree is a key, and taking it wakes the pods.",
-    "C1E4M06": "The whole elite roster, rank by rank, up the Gate's marble.",
-    "C1E4M07": "Four landings up a drum over a white ring of light, a lever on each.",
-    "C1E4M08": "You turn the Warden's own beam on its seals, and the Gate opens anyway.",
-    "C2M01": "You step off a black beach under the other sky.",
-    "C2M02": "A plain of glass, and a long way to the next thing you can hide behind.",
-    "C2M03": "Taking the outpost's wall from the fork field.",
-    "C2M04": "The forks answer any shot you fire: you choose where the Tollbearers go.",
-    "C2M05": "The road through the reliquary, the graves opening either side.",
-    "C2M06": "Upstream against the current with the shooters on the banks.",
-    "C2M07": "The yard makes more until you stop it.",
-    "C2M08": "The last climb out of the Threshold with the sky opening.",
-    "C2M09": "The lantern goes on and a city is there.",
-    "C2M10": "A market of peaceful Vael, and the first shot sends them running.",
-    "C2M11": "Two gates and one choice, and the next map remembers.",
-    "C2M12": "The flooded choir singing under the water you stand in.",
-    "C2M13": "Oil running low in a maze of bones, with things that hunt by light.",
-    "C2M14": "Play the chime's phrase back in the dark and the gate opens.",
-    "C2M15": "The basilica's elites in their ash.",
-    "C2M16": "The Sub-Cantor's ring comes back off the wall behind you.",
-    "C2M17": "The Hive's beat under the long approach, the singers keeping time.",
-    "C2M18": "Walking the lattice over the drop, three valves to turn and the nerve lit under you.",
-    "C2M19": "Loom gates on the beat: go on the off-beat or wait.",
-    "C2M20": "Riding the car through the veins while they come along the track.",
-    "C2M21": "A skiff across the foundry's pit, and the wheel turning over it.",
-    "C2M22": "Halls with nothing in them, and then a little.",
-    "C2M23": "Marrow Quay again, mirrored and wrong.",
-    "C2M24": "Kill the choir and only then can you hurt the Hive Cantor.",
-    "C2M25": "Six landings down the well, each thrown from the last.",
-    "C2M26": "Sleepers everywhere: how loud you are is on the screen, and it is up to you when it breaks.",
-    "C2M27": "The fault opens under the road behind you as you run the lip.",
-    "C2M28": "Nine strokes of the bell, and the tide coming in between them.",
-    "C2M29": "The clapper falls, and you stand inside the bell with it.",
-    "C2M30": "Light the lamp at the Gate."
+  "C1E1M03": {
+   "quiet": "92 m: the walk back to the door with the key, through streets already cleared; the ambush on that walk breaks the longer stretch"
+  },
+  "C1E1M04": {
+   "loop": "the way round the counting-house wall at cells 24-31, 35: a real loop, smaller than the 20 cells the audit counts",
+   "quiet": "97 m through the drowned cellars once they are cleared; an ambush already breaks the longer walk and the gates allow no more"
+  },
+  "C1E1M06": {
+   "loop": "the way round the wall at cells 12-18, 21-22: a real loop, smaller than the 20 cells the audit counts"
+  },
+  "C1E1M07": {
+   "quiet": "108 m coming down from the signal room with the house cleared; an ambush already breaks the longer walk and the gates allow no more"
+  },
+  "C1E1M08": {
+   "loop": "a tower: the climb to the bell is the map",
+   "quiet": "640 m is the route bot foraging for shells across a cleared hill, not a road the map asks anyone to walk"
+  },
+  "C1E2M02": {
+   "mirror": "evaporation pans are laid out in a grid by the people who dug them; the set piece is the open flats"
+  },
+  "C1E2M08": {
+   "density": "a boss arena: the Graft-Mother is the fight and she brings her own"
+  },
+  "C1E3M03": {
+   "loop": "ways round the garden beds at cells 64-79, 11 and 73-75, 22-24: real loops, smaller than the 20 cells the audit counts"
+  },
+  "C1E3M04": {
+   "loop": "the nave runs one way to the dais: the set piece is the walk toward her",
+   "density": "a set piece: the Mother, her Bulwarks and her brood fill it as they come"
+  },
+  "C1E3M06": {
+   "density": "14 per thousand: a raked hall with long sight lines; the bot gates refused every larger roster (6 back-offs)"
+  },
+  "C1E3M08": {
+   "loop": "the horn narrows to one mouth: the boss is at the end of it"
+  },
+  "C1E4M01": {
+   "loop": "a tether: climbing one line is the idea, and the small way round at cells 50-53, 13-15 is all the deck has"
+  },
+  "C1E4M02": {
+   "mirror": "hulks in a belt: the drift between them is what is laid out, not the rooms",
+   "secrets": "decks over open sky: there is no solid wall to hide a second secret in"
+  },
+  "C1E4M04": {
+   "loop": "a puzzle of screens and mirrors: the doors open one at a time as the beam is turned",
+   "density": "a puzzle map: time here goes on the mirrors"
+  },
+  "C1E4M05": {
+   "mirror": "six islands on a ring round the tree: the ring is the idea",
+   "secrets": "islands over open sky: there is no solid wall to hide a second secret in"
+  },
+  "C1E4M06": {
+   "density": "13 per thousand: the whole elite roster stands here and each is worth several; the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C1E4M07": {
+   "loop": "a spiral climb round a shaft: up is the only way, and the vents across it are the shortcut"
+  },
+  "C1E4M08": {
+   "mirror": "the oval hall of the Gate Warden: it stands at the centre of its symmetry",
+   "density": "a boss arena"
+  },
+  "C2M02": {
+   "density": "13 per thousand: open steppe with long sight lines; the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C2M03": {
+   "density": "16 per thousand before the six that the ambushes call, which the audit does not count; the bot gates refused more standing creatures (9 back-offs)"
+  },
+  "C2M09": {
+   "density": "16 per thousand: the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C2M10": {
+   "density": "14 per thousand: every loud noise here wakes what sleeps far off, so the room fills in play; the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C2M14": {
+   "quiet": "203 m back through cleared gardens to the next gate; an ambush breaks it once and the gates allow no more (4 back-offs)",
+   "density": "17 per thousand before the two the ambush calls, which the audit does not count"
+  },
+  "C2M16": {
+   "loop": "the Sub-Cantor's amphitheatre: one way in",
+   "density": "a boss arena"
+  },
+  "C2M17": {
+   "density": "16 per thousand: the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C2M18": {
+   "mirror": "the lattice over the drop is the map's idea, and a lattice is regular",
+   "quiet": "127 m across the lattice over the drop: the height is the threat there, and the gates refused an ambush on it"
+  },
+  "C2M20": {
+   "loop": "a rail: the track is the way, and cars cross what walking cannot",
+   "mirror": "a ring of track round the station"
+  },
+  "C2M21": {
+   "density": "13 per thousand: a large foundry round a pit; the bot gates refused every larger roster (9 back-offs)"
+  },
+  "C2M22": {
+   "loop": "a procession through the halls, the low point of the story",
+   "density": "the emptiness is the point: Act C's low point, short on ammunition on purpose",
+   "quiet": "the emptiness is the point"
+  },
+  "C2M23": {
+   "secrets": "the Reprise copies the first night: its one secret is the net-loft nook, where it was"
+  },
+  "C2M24": {
+   "loop": "the Hive Cantor's arena",
+   "density": "a boss arena: the choir comes to you"
+  },
+  "C2M25": {
+   "mirror": "a round well, six landings down it; each landing differs, the well does not",
+   "density": "16 per thousand: a well of landings; the bot gates refused every larger roster (6 back-offs)"
+  },
+  "C2M26": {
+   "quiet": "a map of sleepers in the dark: the quiet is the danger, and a fight on this walk would wake the map",
+   "density": "10 per thousand: sleepers you walk past; noise is the enemy here, not numbers"
+  },
+  "C2M27": {
+   "mirror": "0.91: two halves of one floor either side of the fault; what differs is what falls in play, not the plan"
+  },
+  "C2M28": {
+   "mirror": "a round dock: the stand is fought through its four bays",
+   "density": "81 creatures come by script: none stand there when it starts",
+   "quiet": "the wait between two strokes of the bell"
+  },
+  "C2M29": {
+   "loop": "the bell chamber",
+   "density": "a boss arena"
+  },
+  "C2M30": {
+   "loop": "the silent walk",
+   "firstFight": "no fight: the silent walk to the Gate",
+   "density": "no creature: the silent walk",
+   "quiet": "the silent walk",
+   "secrets": "one thing to find on the last walk"
   }
+ },
+ "moments": {
+  "C1E1M01": "The bell tower across the water lights teal while you stand on the pier, and the first Tollbearer turns round.",
+  "C1E1M02": "The closets in the customs hall open behind you when you take the key off the desk.",
+  "C1E1M03": "The north hoist drops Gaunts between the stalls while Bellhands toll from the gallery.",
+  "C1E1M04": "You wade down into the flooded cellars with the lights going out behind you.",
+  "C1E1M05": "The switchback terraces, shot at from above, with the funicular car the way to cheat the climb.",
+  "C1E1M06": "The first Warden-Graft lowers its shoulder across the open ferry hall.",
+  "C1E1M07": "The power is out: three fuses, the radio in the dark, and the Signal House lit again when you throw it.",
+  "C1E1M08": "You cut the Cantor's ring of bells and it staggers, then the tower sings back.",
+  "C1E2M01": "The gatehouse is taken from the open, then the way round it opens behind them.",
+  "C1E2M02": "The flats: nothing to hide behind, the Hush on the wind, and the harpoon in your hands for the first time.",
+  "C1E2M03": "Crossing the yard between moving wagons under fire.",
+  "C1E2M04": "A run along the kiln mouths while they breathe out.",
+  "C1E2M05": "The first cradle with a person in it, and then the room wakes.",
+  "C1E2M06": "The catwalks of the pump hall, with the drop under you and the Gills at your height.",
+  "C1E2M07": "The lights die in the undercroft and the flare is the only one you have.",
+  "C1E2M08": "The Graft-Mother with her feeders fed: starve them or she heals.",
+  "C1E3M01": "The crater's rim: crossfire from the hull, and the first Chorister's shots opening your cone.",
+  "C1E3M02": "The ship breathes in, the gate opens, and you have four seconds.",
+  "C1E3M03": "The spores bloom on a clock while snipers hold the ledges above the beds.",
+  "C1E3M04": "The Weeping Mother on her dais, two Bulwarks at her stairs, under the ash sky.",
+  "C1E3M05": "The sound-lock will not open while you are loud, and the platforms over the pit keep their own time.",
+  "C1E3M06": "A raked wedge of pews and singers: you advance a tier at a time.",
+  "C1E3M07": "Four vats on a ring round the furnace, each dropping more until you kill it.",
+  "C1E3M08": "The Grand Cantor's double ring, in the bell of its own throat.",
+  "C1E4M01": "Containers fall past you on the tether, and the sky is all around.",
+  "C1E4M02": "Thrown from hulk to hulk over nothing.",
+  "C1E4M03": "The lock is cycling, the air is leaving, and they are on your side of it.",
+  "C1E4M04": "You turn a mirror a quarter and the beam finds the receiver across the array.",
+  "C1E4M05": "The fruit of the tree is a key, and taking it wakes the pods.",
+  "C1E4M06": "The whole elite roster, rank by rank, up the Gate's marble.",
+  "C1E4M07": "Four landings up a drum over a white ring of light, a lever on each.",
+  "C1E4M08": "You turn the Warden's own beam on its seals, and the Gate opens anyway.",
+  "C2M01": "You step off a black beach under the other sky.",
+  "C2M02": "A plain of glass, and a long way to the next thing you can hide behind.",
+  "C2M03": "Taking the outpost's wall from the fork field.",
+  "C2M04": "The forks answer any shot you fire: you choose where the Tollbearers go.",
+  "C2M05": "The road through the reliquary, the graves opening either side.",
+  "C2M06": "Upstream against the current with the shooters on the banks.",
+  "C2M07": "The yard makes more until you stop it.",
+  "C2M08": "The last climb out of the Threshold with the sky opening.",
+  "C2M09": "The lantern goes on and a city is there.",
+  "C2M10": "A market of peaceful Vael, and the first shot sends them running.",
+  "C2M11": "Two gates and one choice, and the next map remembers.",
+  "C2M12": "The flooded choir singing under the water you stand in.",
+  "C2M13": "Oil running low in a maze of bones, with things that hunt by light.",
+  "C2M14": "Play the chime's phrase back in the dark and the gate opens.",
+  "C2M15": "The basilica's elites in their ash.",
+  "C2M16": "The Sub-Cantor's ring comes back off the wall behind you.",
+  "C2M17": "The Hive's beat under the long approach, the singers keeping time.",
+  "C2M18": "Walking the lattice over the drop, three valves to turn and the nerve lit under you.",
+  "C2M19": "Loom gates on the beat: go on the off-beat or wait.",
+  "C2M20": "Riding the car through the veins while they come along the track.",
+  "C2M21": "A skiff across the foundry's pit, and the wheel turning over it.",
+  "C2M22": "Halls with nothing in them, and then a little.",
+  "C2M23": "Marrow Quay again, mirrored and wrong.",
+  "C2M24": "Kill the choir and only then can you hurt the Hive Cantor.",
+  "C2M25": "Six landings down the well, each thrown from the last.",
+  "C2M26": "Sleepers everywhere: how loud you are is on the screen, and it is up to you when it breaks.",
+  "C2M27": "The fault opens under the road behind you as you run the lip.",
+  "C2M28": "Nine strokes of the bell, and the tide coming in between them.",
+  "C2M29": "The clapper falls, and you stand inside the bell with it.",
+  "C2M30": "Light the lamp at the Gate."
+ }
 }

@@ -37,5 +37,67 @@
    ],
    "line": "An iron key on a cord. Whoever kept the latch kept this close."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    52,
+    43
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "chorister",
+     "at": [
+      48,
+      36
+     ]
+    },
+    {
+     "kind": "tollbearer",
+     "at": [
+      45,
+      39
+     ]
+    },
+    {
+     "kind": "bellhand",
+     "at": [
+      42,
+      40
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    50,
+    35
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "bellhand",
+     "at": [
+      50,
+      28
+     ]
+    },
+    {
+     "kind": "gill",
+     "at": [
+      44,
+      31
+     ]
+    },
+    {
+     "kind": "bellhand",
+     "at": [
+      48,
+      42
+     ]
+    }
+   ]
+  }
  ]
 }

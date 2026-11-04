@@ -460,6 +460,28 @@
      "objective": "The plaza: use the tree (E), strike the chimes in its order"
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [44, 42],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [33, 48],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "zealot",
+      "at": [56, 47],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

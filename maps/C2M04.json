@@ -915,9 +915,6 @@
     {
      "shake": 1
     }
-   ],
-   "needs": [
-    "iron"
    ]
   },
   {
@@ -945,18 +942,6 @@
    "type": "exit",
    "at": [47, 1],
    "dest": "next"
-  },
-  {
-   "type": "pickup",
-   "kind": "key_iron",
-   "at": [10, 24],
-   "extra": true
-  },
-  {
-   "type": "prop",
-   "kind": "lantern",
-   "at": [11, 24],
-   "extra": true
   },
   {
    "type": "enemy",
@@ -1141,13 +1126,6 @@
    "radius": 0.1,
    "speaker": "HULL",
    "text": "The gate in the north wall opens. Down the hill, every fork in every field gives one low note, and stops."
-  },
-  {
-   "id": "keyhunt",
-   "at": [10, 24],
-   "radius": 3,
-   "speaker": "INES",
-   "text": "The winch-house key, on a nail. It still smells of grease."
   }
  ],
  "objective": "Climb the hill to the tower on the summit",

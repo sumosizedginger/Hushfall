@@ -1,101 +1,54 @@
 {
- "all": [],
- "hard": [
+ "all": [
   {
    "kind": "tollbearer",
    "at": [
-    21,
-    12
+    9,
+    32
    ],
-   "facing": 1.736
+   "facing": 0.54
   },
   {
    "kind": "bellhand",
-   "at": [
-    34,
-    11
-   ],
-   "facing": 1.571
-  },
-  {
-   "kind": "gill",
-   "at": [
-    49,
-    19
-   ],
-   "facing": 1.736
-  },
-  {
-   "kind": "gaunt",
-   "at": [
-    54,
-    21
-   ],
-   "facing": -1.571
-  },
-  {
-   "kind": "tollbearer",
-   "at": [
-    33,
-    17
-   ],
-   "facing": 0
-  },
-  {
-   "kind": "bellhand",
-   "at": [
-    11,
-    19
-   ],
-   "facing": 1.406
-  },
-  {
-   "kind": "gill",
-   "at": [
-    7,
-    25
-   ],
-   "facing": 0
-  },
-  {
-   "kind": "gaunt",
-   "at": [
-    12,
-    34
-   ],
-   "facing": 1.406
-  },
-  {
-   "kind": "gill",
    "at": [
     23,
-    37
+    26
    ],
-   "facing": 1.571
-  },
-  {
-   "kind": "bellhand",
-   "at": [
-    39,
-    34
-   ],
-   "facing": 1.406
-  },
+   "facing": -0.927
+  }
+ ],
+ "hard": [
   {
    "kind": "gill",
    "at": [
-    55,
-    44
+    35,
+    11
    ],
    "facing": -1.571
   },
   {
+   "kind": "gaunt",
+   "at": [
+    50,
+    10
+   ],
+   "facing": -1.406
+  },
+  {
+   "kind": "tollbearer",
+   "at": [
+    57,
+    15
+   ],
+   "facing": 0
+  },
+  {
    "kind": "bellhand",
    "at": [
-    49,
-    48
+    38,
+    19
    ],
-   "facing": -1.292
+   "facing": 1.571
   }
  ],
  "easy": [
@@ -127,5 +80,20 @@
    34,
    20
   ]
+ ],
+ "keys": [
+  {
+   "lever": "grate",
+   "key": "brass",
+   "at": [
+    19,
+    37
+   ],
+   "lamp": [
+    20,
+    37
+   ],
+   "line": "A reliquary key, worn thin by people who carried it for luck."
+  }
  ]
 }

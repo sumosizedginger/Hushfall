@@ -1,23 +1,23 @@
 {
   "mapId": "C2M05",
-  "mapVersion": 2,
+  "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b4d0e51",
+  "codeVersion": "4813c72",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "8c8cba95604cfcec",
-  "assetVersion": "0fd1ea95586c4e78",
-  "engineSha": "4767fce2cadbed7f",
+  "mapSha": "0c304286325ff57c",
+  "assetVersion": "17542adf13ccb083",
+  "engineSha": "8a1f89e03db25c32",
   "sources": {
-    "engine": "4767fce2cadbed7f",
-    "render": "2cc55b583e05ce35",
-    "game": "3d95c6af30d4f0fb",
-    "audio": "9e87f0bab73e6574",
-    "assets": "0fd1ea95586c4e78",
-    "verifier": "178a732ec21abcbf",
-    "probes": "01942c6dec4649e1"
+    "engine": "8a1f89e03db25c32",
+    "render": "57ac175d536b8348",
+    "game": "dc42506ca70da775",
+    "audio": "c5a2850f1747a821",
+    "assets": "17542adf13ccb083",
+    "verifier": "874439ef370c764d",
+    "probes": "acbf2c750f2131bd"
   },
-  "routesSha": "733d0bee77517834",
+  "routesSha": "09783bac5beb0c67",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -27,12 +27,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 9432,
-      "finalHash": "7b366132",
-      "kills": 45,
+      "ticks": 9130,
+      "finalHash": "3c28cb32",
+      "kills": 40,
       "secrets": 0,
-      "items": 3,
-      "damageTaken": 36
+      "items": 2,
+      "damageTaken": 26
     },
     {
       "file": "routes/C2M05.main.route.json",
@@ -40,12 +40,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 9256,
-      "finalHash": "06ebc1c5",
-      "kills": 45,
+      "ticks": 9885,
+      "finalHash": "1c4367ee",
+      "kills": 47,
       "secrets": 0,
       "items": 3,
-      "damageTaken": 85
+      "damageTaken": 94
     },
     {
       "file": "routes/C2M05.main.route.json",
@@ -53,12 +53,12 @@
       "seed": 1,
       "policy": "strafing",
       "result": "complete",
-      "ticks": 9630,
-      "finalHash": "740fbac5",
-      "kills": 44,
+      "ticks": 10094,
+      "finalHash": "6bb42f05",
+      "kills": 51,
       "secrets": 0,
       "items": 2,
-      "damageTaken": 112
+      "damageTaken": 120
     },
     {
       "file": "routes/C2M05.secret.route.json",
@@ -66,12 +66,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 10229,
-      "finalHash": "0491aa57",
-      "kills": 46,
+      "ticks": 9946,
+      "finalHash": "2b9e5c10",
+      "kills": 41,
       "secrets": 2,
-      "items": 5,
-      "damageTaken": 43
+      "items": 4,
+      "damageTaken": 33
     },
     {
       "file": "routes/C2M05.secret.route.json",
@@ -79,9 +79,9 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 10072,
-      "finalHash": "fda4b974",
-      "kills": 46,
+      "ticks": 10692,
+      "finalHash": "c92c0e35",
+      "kills": 48,
       "secrets": 2,
       "items": 5,
       "damageTaken": 108
@@ -90,42 +90,42 @@
       "file": "routes/C2M05.secret.route.json",
       "difficulty": "hard",
       "seed": 1,
-      "policy": "standing",
+      "policy": "strafing",
       "result": "complete",
-      "ticks": 10732,
-      "finalHash": "978fdf45",
-      "kills": 46,
+      "ticks": 10810,
+      "finalHash": "7d35b269",
+      "kills": 52,
       "secrets": 2,
-      "items": 5,
-      "damageTaken": 150
+      "items": 4,
+      "damageTaken": 149
     }
   ],
   "canonicalRoute": {
-    "sha": "9b73f5b6e27bda92",
+    "sha": "f4884d549b0fdaea",
     "file": "routes/C2M05.main.route.json",
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 9256,
-    "finalHash": "06ebc1c5",
+    "ticks": 9885,
+    "finalHash": "1c4367ee",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
-    "enemies": 47,
+    "enemies": 49,
     "items": 27,
     "secrets": 2
   },
   "facts": {
-    "enemies": 47,
+    "enemies": 53,
     "enemyKinds": {
-      "tollbearer": 13,
-      "gaunt": 16,
-      "bellhand": 12,
+      "tollbearer": 15,
+      "gaunt": 17,
+      "bellhand": 14,
       "sexton": 3,
-      "gill": 2,
+      "gill": 3,
       "bulwark": 1
     },
-    "keys": 0,
+    "keys": 1,
     "closets": 15,
     "triggers": 18,
     "switches": 2,
@@ -145,7 +145,7 @@
       ")",
       "s"
     ],
-    "props": 85,
+    "props": 86,
     "secrets": 2,
     "cells": 4216,
     "gates": 0,
@@ -155,27 +155,27 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 106,
+        "damage": 102,
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 561,
-        "fired": 105,
+        "capacity": 575,
+        "fired": 93,
         "capacityBy": {
-          "flare": 50,
-          "shell": 47,
-          "rivet": 270,
+          "flare": 32,
+          "shell": 69,
+          "rivet": 370,
           "bolt": 34,
-          "cell": 160,
+          "cell": 70,
           "round": 50,
           "rocket": 4
         },
         "firedBy": {
-          "shell": 16,
           "flare": 5,
-          "rivet": 66,
-          "bolt": 14,
-          "cell": 4
+          "rivet": 59,
+          "shell": 13,
+          "bolt": 13,
+          "cell": 3
         },
         "drops": true
       },
@@ -186,10 +186,10 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 36,
-        "meanDamage": 36,
-        "seconds": 157.2,
-        "kills": 45,
+        "damage": 26,
+        "meanDamage": 26,
+        "seconds": 152.2,
+        "kills": 40,
         "failure": null
       }
     },
@@ -200,23 +200,23 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 388,
-        "fired": 123,
+        "capacity": 424,
+        "fired": 136,
         "capacityBy": {
-          "flare": 30,
+          "flare": 26,
           "shell": 50,
-          "rivet": 210,
+          "rivet": 250,
           "bolt": 38,
           "cell": 60,
           "round": 50,
           "rocket": 4
         },
         "firedBy": {
-          "shell": 17,
+          "shell": 16,
           "flare": 5,
-          "rivet": 82,
-          "bolt": 14,
-          "cell": 5
+          "rivet": 93,
+          "bolt": 15,
+          "cell": 7
         },
         "drops": true
       },
@@ -227,10 +227,10 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 85,
-        "meanDamage": 87,
-        "seconds": 154.3,
-        "kills": 45,
+        "damage": 94,
+        "meanDamage": 93,
+        "seconds": 164.8,
+        "kills": 47,
         "failure": null
       }
     },
@@ -241,41 +241,41 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 376,
-        "fired": 121,
+        "capacity": 360,
+        "fired": 122,
         "capacityBy": {
-          "flare": 26,
+          "flare": 23,
           "shell": 45,
           "rivet": 218,
-          "bolt": 31,
-          "cell": 56,
+          "bolt": 34,
+          "cell": 40,
           "round": 50,
           "rocket": 4
         },
         "firedBy": {
           "shell": 18,
-          "rivet": 79,
-          "bolt": 14,
-          "flare": 5,
-          "cell": 5
+          "rivet": 75,
+          "bolt": 16,
+          "flare": 6,
+          "cell": 7
         },
         "drops": true
       },
       "fighter": {
-        "completedSeeds": 2,
+        "completedSeeds": 0,
         "eitherSeeds": 3,
-        "strafedSeeds": 1,
+        "strafedSeeds": 3,
         "policy": "strafing",
         "seeds": 3,
         "result": "complete",
-        "damage": 112,
-        "meanDamage": 164,
-        "seconds": 160.5,
-        "kills": 44,
+        "damage": 120,
+        "meanDamage": 200,
+        "seconds": 168.2,
+        "kills": 51,
         "failure": null
       }
     },
-    "threats": 47,
+    "threats": 53,
     "gate": [
       {
         "exit": "exit0",
@@ -293,12 +293,12 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 48,
+        "damage": 57,
         "failure": null
       },
       "ammo pickups worth 25% less": {
         "result": "complete",
-        "damage": 41,
+        "damage": 46,
         "failure": null
       }
     }
@@ -341,40 +341,40 @@
       {
         "name": "route C2M05.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "157.2 s"
+        "detail": "152.2 s"
       },
       {
         "name": "route C2M05.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "154.3 s"
+        "detail": "164.8 s"
       },
       {
         "name": "route C2M05.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "160.5 s (strafing)"
+        "detail": "168.2 s (strafing)"
       },
       {
         "name": "route C2M05.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "170.5 s"
+        "detail": "165.8 s"
       },
       {
         "name": "route C2M05.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "167.9 s"
+        "detail": "178.2 s"
       },
       {
         "name": "route C2M05.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "178.9 s"
+        "detail": "180.2 s (strafing)"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 48 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 57 damage)",
         "ok": true,
         "detail": "complete"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 41 damage)",
+        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 46 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -384,7 +384,7 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 106 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 102 damage)",
         "ok": true,
         "detail": ""
       },
@@ -399,89 +399,89 @@
         "detail": ""
       },
       {
-        "name": "ammo easy: shell rounds available (47) are at least 1.5x what the perfect bot fires (16)",
+        "name": "ammo easy: flare rounds available (32) are at least 1.5x what the perfect bot fires (5)",
         "ok": true,
-        "detail": "x2.94"
+        "detail": "x6.40"
       },
       {
-        "name": "ammo easy: flare rounds available (50) are at least 1.5x what the perfect bot fires (5)",
+        "name": "ammo easy: rivet rounds available (370) are at least 1.5x what the perfect bot fires (59)",
         "ok": true,
-        "detail": "x10.00"
+        "detail": "x6.27"
       },
       {
-        "name": "ammo easy: rivet rounds available (270) are at least 1.5x what the perfect bot fires (66)",
+        "name": "ammo easy: shell rounds available (69) are at least 1.5x what the perfect bot fires (13)",
         "ok": true,
-        "detail": "x4.09"
+        "detail": "x5.31"
       },
       {
-        "name": "ammo easy: bolt rounds available (34) are at least 1.5x what the perfect bot fires (14)",
+        "name": "ammo easy: bolt rounds available (34) are at least 1.5x what the perfect bot fires (13)",
         "ok": true,
-        "detail": "x2.43"
+        "detail": "x2.62"
       },
       {
-        "name": "ammo normal: shell rounds available (50) are at least 1.5x what the perfect bot fires (17)",
+        "name": "ammo normal: shell rounds available (50) are at least 1.5x what the perfect bot fires (16)",
         "ok": true,
-        "detail": "x2.94"
+        "detail": "x3.13"
       },
       {
-        "name": "ammo normal: flare rounds available (30) are at least 1.5x what the perfect bot fires (5)",
-        "ok": true,
-        "detail": "x6.00"
-      },
-      {
-        "name": "ammo normal: rivet rounds available (210) are at least 1.5x what the perfect bot fires (82)",
-        "ok": true,
-        "detail": "x2.56"
-      },
-      {
-        "name": "ammo normal: bolt rounds available (38) are at least 1.5x what the perfect bot fires (14)",
-        "ok": true,
-        "detail": "x2.71"
-      },
-      {
-        "name": "ammo normal: cell rounds available (60) are at least 1.5x what the perfect bot fires (5)",
-        "ok": true,
-        "detail": "x12.00"
-      },
-      {
-        "name": "ammo hard: shell rounds available (45) are at least 1.5x what the perfect bot fires (18)",
-        "ok": true,
-        "detail": "x2.50"
-      },
-      {
-        "name": "ammo hard: rivet rounds available (218) are at least 1.5x what the perfect bot fires (79)",
-        "ok": true,
-        "detail": "x2.76"
-      },
-      {
-        "name": "ammo hard: bolt rounds available (31) are at least 1.5x what the perfect bot fires (14)",
-        "ok": true,
-        "detail": "x2.21"
-      },
-      {
-        "name": "ammo hard: flare rounds available (26) are at least 1.5x what the perfect bot fires (5)",
+        "name": "ammo normal: flare rounds available (26) are at least 1.5x what the perfect bot fires (5)",
         "ok": true,
         "detail": "x5.20"
       },
       {
-        "name": "ammo hard: cell rounds available (56) are at least 1.5x what the perfect bot fires (5)",
+        "name": "ammo normal: rivet rounds available (250) are at least 1.5x what the perfect bot fires (93)",
         "ok": true,
-        "detail": "x11.20"
+        "detail": "x2.69"
       },
       {
-        "name": "ammo easy: rounds available (561) are at least 1.5x what the perfect bot fires (105): humans miss",
+        "name": "ammo normal: bolt rounds available (38) are at least 1.5x what the perfect bot fires (15)",
         "ok": true,
-        "detail": "x5.34"
+        "detail": "x2.53"
       },
       {
-        "name": "ammo normal: rounds available (388) are at least 1.5x what the perfect bot fires (123): humans miss",
+        "name": "ammo normal: cell rounds available (60) are at least 1.5x what the perfect bot fires (7)",
         "ok": true,
-        "detail": "x3.15"
+        "detail": "x8.57"
       },
       {
-        "name": "ammo hard: rounds available (376) are at least 1.5x what the perfect bot fires (121): humans miss",
+        "name": "ammo hard: shell rounds available (45) are at least 1.15x what the perfect bot fires (18)",
         "ok": true,
-        "detail": "x3.11"
+        "detail": "x2.50"
+      },
+      {
+        "name": "ammo hard: rivet rounds available (218) are at least 1.15x what the perfect bot fires (75)",
+        "ok": true,
+        "detail": "x2.91"
+      },
+      {
+        "name": "ammo hard: bolt rounds available (34) are at least 1.15x what the perfect bot fires (16)",
+        "ok": true,
+        "detail": "x2.13"
+      },
+      {
+        "name": "ammo hard: flare rounds available (23) are at least 1.15x what the perfect bot fires (6)",
+        "ok": true,
+        "detail": "x3.83"
+      },
+      {
+        "name": "ammo hard: cell rounds available (40) are at least 1.15x what the perfect bot fires (7)",
+        "ok": true,
+        "detail": "x5.71"
+      },
+      {
+        "name": "ammo easy: rounds available (575) are at least 1.5x what the perfect bot fires (93): humans miss",
+        "ok": true,
+        "detail": "x6.18"
+      },
+      {
+        "name": "ammo normal: rounds available (424) are at least 1.5x what the perfect bot fires (136): humans miss",
+        "ok": true,
+        "detail": "x3.12"
+      },
+      {
+        "name": "ammo hard: rounds available (360) are at least 1.2x what the perfect bot fires (122): humans miss",
+        "ok": true,
+        "detail": "x2.95"
       },
       {
         "name": "viability easy: a perfect fighter completes the level",
@@ -509,34 +509,34 @@
         "detail": ""
       },
       {
-        "name": "viability hard: the perfect fighter completes on 2 of 3 seeds (3 did, 1 only by strafing)",
+        "name": "viability hard: the perfect fighter completes on 2 of 3 seeds (3 did, 3 only by strafing)",
         "ok": true,
         "detail": ""
       },
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":87,\"hard\":164}"
+        "detail": "{\"normal\":93,\"hard\":200}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "36 / 87 / 164 (mean of 3 seeds)"
+        "detail": "26 / 93 / 200 (mean of 3 seeds)"
       },
       {
-        "name": "par time is 2x-8x the bot's time (3.1x; placeholder until a human plays it)",
+        "name": "par time is 2x-8x the bot's time (2.9x; placeholder until a human plays it)",
         "ok": true,
         "detail": ""
       },
       {
         "name": "quality: enemy count in [26,70]",
         "ok": true,
-        "detail": 47
+        "detail": 53
       },
       {
         "name": "quality: perfect-bot time in [40,800] s",
         "ok": true,
-        "detail": "154.3 s"
+        "detail": "164.8 s"
       },
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
@@ -566,12 +566,12 @@
       {
         "name": "quality: has at least 8 tollbearer",
         "ok": true,
-        "detail": 13
+        "detail": 15
       },
       {
         "name": "quality: has at least 8 gaunt",
         "ok": true,
-        "detail": 16
+        "detail": 17
       },
       {
         "name": "quality: has at least 2 sexton",
@@ -581,7 +581,7 @@
       {
         "name": "quality: has at least 3 bellhand",
         "ok": true,
-        "detail": 12
+        "detail": 14
       },
       {
         "name": "quality: has at least 1 bulwark",
@@ -641,22 +641,22 @@
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
         "ok": false,
-        "detail": "src engine changed, src render changed, src audio changed"
+        "detail": "src engine changed, src render changed, src game changed, src audio changed, src assets changed, src probes changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C2M05.json: 67e41bd9ecb06f70 vs 8c8cba95604cfcec"
+        "detail": "validation/browser/C2M05.json: 67e41bd9ecb06f70 vs 0c304286325ff57c"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
         "ok": false,
-        "detail": "404b1efc1865db09 vs 733d0bee77517834"
+        "detail": "404b1efc1865db09 vs 09783bac5beb0c67"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
         "ok": false,
-        "detail": "src engine changed, src render changed, src audio changed"
+        "detail": "src engine changed, src render changed, src game changed, src audio changed, src assets changed, src probes changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
@@ -667,5 +667,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v2, 47 enemies, 27 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v3, 49 enemies, 27 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }
