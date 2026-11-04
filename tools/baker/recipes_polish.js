@@ -72,17 +72,17 @@ export const recipesPolish = {
         // 2 brass: warm gold, a bright band, engraved lines picked out dark, green verdigris pooled in the low parts
         at(2, () => {
           body([
-            [0, '#f6d27a'],
-            [0.15, '#ffe9a8'],
-            [0.3, '#cfa23e'],
-            [0.75, '#8a6420'],
-            [1, '#4a3410'],
+            [0, '#b8974e'],
+            [0.15, '#d4b56c'],
+            [0.3, '#93722e'],
+            [0.75, '#5e4418'],
+            [1, '#33240a'],
           ]);
           for (const y of [34, 66, 98]) K.stroke(6, y, CELL - 6, y, '#5a400e', 2.2, 0.8);
           for (let k = 0; k < 7; k++) K.dot(12 + k * 17, 66, 3.4, '#5a400e', 0.85);
           K.strokes(0, 84, CELL, 44, 14, { pal: ['#4f9a7a', '#6ab894'], len: [6, 18], wt: [3, 6], a: [0.35, 0.7], jit: 1.5 });
-          wear(8, '#fff4cc');
-          rim('#fff8dc', '#2a1c06');
+          wear(8, '#e0cc94');
+          rim('#e8d6a4', '#2a1c06');
         });
         // 3 hammered copper: red-brown skin dimpled all over (a lit lip and a dark lip to each dimple)
         at(3, () => {
@@ -100,14 +100,14 @@ export const recipesPolish = {
           }
           rim('#ffc08a', '#2a1006');
         });
-        // 4 yellow enamel: a safety yellow, glossy on top, chipped to dark steel at the edges, grease run down from the top
+        // 4 signal enamel: a signal orange gone dull with weather, chipped to dark steel at the edges, grease run down from the top
         at(4, () => {
           body([
-            [0, '#ffe066'],
-            [0.18, '#fff2a6'],
-            [0.32, '#f0c02c'],
-            [0.8, '#b88a10'],
-            [1, '#6a4c08'],
+            [0, '#c9823a'],
+            [0.18, '#e09c54'],
+            [0.32, '#b0682a'],
+            [0.8, '#74401a'],
+            [1, '#3e220c'],
           ]);
           for (let k = 0; k < 16; k++) {
             const x = K.R(0, CELL),

@@ -449,11 +449,11 @@ export const LOOKS = {
     // -> 3, lamps 1.9 -> 2.6, a warmer light grade)
   },
   stair: {
-    hemi: [0x5c6090, 0xc0c8ff, 1.75],
-    sun: [0xe8f0ff, 0.85, [9, 20, -6]],
-    lamp: 1.6,
+    hemi: [0x70708c, 0xd8c8b0, 1.6],
+    sun: [0xfff0dc, 0.95, [9, 20, -6]],
+    lamp: 1.8,
     exposure: 1,
-    grade: GR([0.86, 0.92, 1.2], [1.1, 1.06, 1.0], 1.0),
+    grade: GR([0.92, 0.94, 1.08], [1.12, 1.05, 0.94], 1.0),
     shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
     // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere) // the lamps brighter, so its dark has highlights
     // in it (it measured murky: dark on average AND a narrow spread); a less saturated sky light and a stronger sun, so the drum's ribs and courses
