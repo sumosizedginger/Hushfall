@@ -316,6 +316,9 @@ try {
   await page.keyboard.press('Escape');
   await sleep(300);
   check('Escape opens the pause menu (live)', (await T('t.state().mode')) === 'paused');
+  // the keys are in the Settings box, on its Controls tab (PT-083 U4)
+  await page.click('#settings-box summary');
+  await sleep(150);
   await page.click('#controls-box summary');
   await sleep(150);
   const useSlot = 'button.bind[data-a="use"][data-i="0"]';
@@ -353,7 +356,11 @@ try {
   await T("t.newGame('normal', 1, { realtime: true })");
   await sleep(200);
   await T('t.pause()');
+  // the keys are in the Settings box, on its Controls tab (PT-083 U4)
+  await page.click('#settings-box summary');
+  await sleep(150);
   await page.click('#controls-box summary');
+  await sleep(150);
   await page.click('#btn-reset-keys');
   await sleep(150);
   const reset = await T('t.state().settings.bindings');
