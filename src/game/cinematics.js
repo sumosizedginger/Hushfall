@@ -50,8 +50,8 @@ export function resolvePoint(spec, w, cell = w.map.cell ?? 1) {
       d = Math.hypot(dx, dz) || 1,
       m = Math.min(Number(parts[2]), Math.max(0, d - 2));
     return { x: w.player.x + (dx / d) * m, z: w.player.z + (dz / d) * m, up: parts[3] != null ? Number(parts[3]) : 1.6, level: true };
-  // `towards:<kind>:<metres>:<up>`: that many metres from the player toward the creature (never closer than 2 m to it) // m metres in front of the
-  // player (negative = behind), the way the player's camera faces (yaw 0 looks toward -z)
+    // `towards:<kind>:<metres>:<up>`: that many metres from the player toward the creature (never closer than 2 m to it) // m metres in front of the
+    // player (negative = behind), the way the player's camera faces (yaw 0 looks toward -z)
   }
   if (head === 'exit') {
     const x = w.map.exits?.[0];

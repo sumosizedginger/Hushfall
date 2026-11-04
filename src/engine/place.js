@@ -1,5 +1,6 @@
 // The place: doors, beams, breath and spores, falling loads, cars, pickups, messages, secrets, scripts, the end of the tick.
 // Part of the deterministic simulation (world.js holds the order of a tick): nothing here touches DOM, Three, the clock or Math.random.
+import { noteDone } from './training.js';
 import { addLoad } from './ammoloads.js';
 import { EXPLORE_EVERY_TICKS, updateExplored } from './automap.js';
 import { nextRot, traceBeams } from './beams.js';
@@ -285,6 +286,7 @@ export function updateScripts(w, dt) {
   const map = w.map;
   if (w.chimes) updateChimes(w, dt, emit); // the chime tree's phrase goes on
   if (w.beams) updateBeams(w); // the beams follow the mirrors and the doors
+  if (map.training) noteDone(w);
   updateTriggers(w);
   if (map.range) {
     rangePlayer(w, dt);

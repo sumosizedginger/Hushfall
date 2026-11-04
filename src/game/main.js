@@ -1,4 +1,8 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
+import { loadProfile, saveProfile, recordFinish, mapRows } from './profile.js';
+import { earnsCheckpoint, safeToSave } from './checkpoints.js';
+import { nextHint, keyNamer } from './hints.js';
+import trainingSrc from '../../maps-dev/TRAINING.json';
 import * as THREE from 'three';
 import { loadAll, titleArtUrl, endingArtUrl, endingArt2Url, coldTowerUrl, endingCoastUrl, endingLampDarkUrl } from '../render/textures.js';
 import { GameView } from '../render/view.js';
@@ -18,7 +22,7 @@ import { holdForComms } from './commsqueue.js';
 import { AudioEngine } from '../audio/engine.js';
 import { automapModel } from '../engine/automap.js';
 import { drawAutomap } from './automap.js';
-import { loadSettings, saveSettings } from './settings.js';
+import { loadSettings, saveSettings, SETTINGS_TABS, defaultSettings } from './settings.js';
 import { applyRebind, defaultBindings, prettyCode, legendText } from './bindings.js';
 import { RADIO_SOUND } from '../audio/events.js';
 import { PadDevice, snapshotOf, padGlyph, padLegend, assistScale, rumbleFor, applyPadRebind, defaultPadBindings } from './gamepad.js';
@@ -26,7 +30,7 @@ import { Wheel, WHEEL_SLOTS, easeScale, timeScaleFor, wheelModel, wheelSvg } fro
 import { pickNext, navDir, NavRepeat } from './padmenu.js';
 import { RangeMeter } from './rangemeter.js';
 import { ENDINGS, COLD_OPEN, endingFor, tally, startSequence, stepSequence, pressSequence, skipSequence, viewSequence } from './ending.js';
-import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes } from './record.js';
+import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes, isDocument } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS, placeOf } from './journal.js';
 import { referenceRows } from './stats/schema.js';
@@ -51,6 +55,7 @@ for (const src of Object.values(import.meta.glob('../../maps/*.json', { eager: t
 } // validates at load
 // the dev-only weapons range lives in maps-dev/, never in maps/ (it is not a campaign map and no validation, status or test counts it); loaded only
 // by the dev server
+MAPS.TRAINING = parseMap(trainingSrc); // the training yard is one of no campaign, but it ships
 const devMapsReady = import.meta.env.DEV
   ? Promise.all(
       Object.values(import.meta.glob('../../maps-dev/*.json', { import: 'default' })).map((load) =>
@@ -124,6 +129,7 @@ for (const u of [endingCoastUrl(), endingLampDarkUrl(), endingArt2Url(), coldTow
 
 const FIRST_MAP = 'C1E1M01'; // a new game always starts here (audit A17: it used to re-enter the last map played)
 const g = makeShellState({ storage, settings, firstMap: FIRST_MAP });
+g.profile = loadProfile(storage);
 
 // THE STATS DATABASE (src/game/stats, design/STATS_DATABASE.md): sql.js starts in the background. The game never waits for it; if it cannot start,
 // the stats are off this session and the stats screen says why.
@@ -159,15 +165,52 @@ g.capturePad = null;
 g.wheelMuffled = false; // the controller and the weapon wheel (gamepad.js, wheel.js)
 
 const ui = new UI({
-  newGame: (d) => {
+  newGame: (d, { skipOffer = false } = {}) => {
+    g.replay = false;
+    if (!skipOffer && !settings.trainingOffered) {
+      settings.trainingOffered = true; // asked once, before the first new game
+      saveSettings(storage, settings);
+      ui.offerTraining(d);
+      return;
+    }
     g.progress = newProgress();
     const go = () => startLevel({ difficulty: d, seed: 1 + Math.floor(Math.random() * 1e6) });
     if (!settings.coldOpenSeen && settings.cinematics !== 'off') startColdOpen(go);
     else go();
   }, // the cold open plays before the first level of a new game, once
+  backToCheckpoint: () => {
+    const s = checkpointSave();
+    if (s) applySave(s, 'check');
+    else ui.h.restartLevel();
+  },
+  hasMaps: () => Object.keys(g.profile.maps).length > 0,
+  openMaps: () => {
+    if (g.mode !== 'title') return;
+    ui.mapsScreen(mapRows(CAMPAIGN, MAPS, g.profile, isDocument));
+    ui.show('maps');
+  },
+  closeMaps: () => {
+    if (ui.screen === 'maps') ui.show('title', { canContinue: canContinue() });
+  },
+  replayMap: (id, difficulty) => {
+    g.progress = newProgress();
+    g.replay = true; // on its own: no Continue, no checkpoint, no next map
+    startLevel({ mapId: id, difficulty, seed: 1 + Math.floor(Math.random() * 1e6) });
+  },
+  resetTab: (tab) => {
+    const d = defaultSettings();
+    for (const k of SETTINGS_TABS[tab]?.keys ?? []) ui.h.setSetting(k, d[k]);
+    ui.syncSettings(settings);
+  },
+  training: (thenPlay = null) => {
+    g.afterTraining = thenPlay;
+    startLevel({ mapId: 'TRAINING', difficulty: 'normal', seed: 1 });
+  },
+  keyOf: (a) => keyNamer({ bindings: g.input.bindings, padBindings: settings.padBindings, family: g.pad.family, pad: g.padActive })(a),
   buyUpgrade: (track) => buyUpgrade(track),
   buyMod: (id) => buyModTier(id),
   continueGame: () => {
+    g.replay = false;
     const r = loadFirstSave();
     if (!r) ui.show('title', { canContinue: canContinue(), note: 'No usable save.' });
   },
@@ -494,15 +537,15 @@ async function statsImport(file) {
   );
 }
 
-const canContinue = () => ['quick', 'auto'].some((s) => store.read(s).ok);
+const CONTINUE_SLOTS = ['quick', 'check', 'auto'];
+const canContinue = () => CONTINUE_SLOTS.some((s) => store.read(s).ok);
 const hasQuick = () => store.read('quick').ok;
 /**
  * Continue: the NEWEST readable slot wins (quick-save and auto-save both exist; the auto-save is rewritten at every level entry, so an old F5 must
  * not shadow it, audit A18); a corrupt one falls through to the next
  */
 function loadFirstSave() {
-  const slots = ['quick', 'auto']
-    .map((slot) => [slot, store.read(slot)])
+  const slots = CONTINUE_SLOTS.map((slot) => [slot, store.read(slot)])
     .filter(([, r]) => r.ok)
     .sort((a, b) => (b[1].save.savedAt ?? 0) - (a[1].save.savedAt ?? 0));
   for (const [slot, r] of slots) if (applySave(r.save, slot)) return true;
@@ -511,8 +554,7 @@ function loadFirstSave() {
 // the Record: every message received, replayed from the pause menu and the title ----
 /** the progress the title's Record shows: the newest readable save's (what Continue would load), else whatever this session holds */
 const titleProgress = () => {
-  const slots = ['quick', 'auto']
-    .map((slot) => store.read(slot))
+  const slots = CONTINUE_SLOTS.map((slot) => store.read(slot))
     .filter((r) => r.ok)
     .sort((a, b) => (b.save.savedAt ?? 0) - (a.save.savedAt ?? 0));
   return slots.length ? sanitizeProgress(slots[0].save.progress) : g.progress;
@@ -553,6 +595,29 @@ function closeRecord() {
   if (ui.screen !== 'record') return;
   if (g.recordFrom === 'title') ui.show('title', { canContinue: canContinue() });
   else ui.show('pause', { canLoad: hasQuick() });
+}
+/** a gate, a key, a silenced bell: the game keeps a checkpoint by itself, the moment it is safe to */
+function keepCheckpoint(events) {
+  if (settings.checkpoints === false || g.replay) return;
+  if (earnsCheckpoint(events)) g.checkPending = true;
+  if (!g.checkPending || !safeToSave(g.world, g.checkAt ?? -99)) return;
+  g.checkPending = false;
+  g.checkAt = g.world.time;
+  if (!storeSave(store, 'check', () => makeSave(g.world, 'mid-level', { now: Date.now(), progress: g.progress }))) ui.toast('Checkpoint');
+}
+const checkpointSave = () => {
+  if (settings.checkpoints === false || g.replay) return null;
+  const r = store.read('check');
+  return r.ok && r.save.campaign?.mapId === g.mapId ? r.save : null;
+};
+/** the first time a system matters, a line that names the player's own key; shown once, ever */
+function showHint(events) {
+  if (settings.hints === false || g.world.map.range || !ui.tipFree()) return;
+  const h = nextHint({ world: g.world, events, firing: g.input.down.has('fire'), seen: settings.hintsSeen, keyOf: ui.h.keyOf });
+  if (!h) return;
+  settings.hintsSeen = { ...settings.hintsSeen, [h.id]: true };
+  saveSettings(storage, settings);
+  ui.tip(h.text, 0, 8000);
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
 function recordMessages(ev) {
@@ -635,7 +700,12 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   rangeMeter.reset();
   g.devScale = 1;
   let saveNote = '';
-  if (!world && !map.range) {
+  if (!world) {
+    store.clear('check'); // a checkpoint belongs to one attempt at one map
+    g.checkAt = -99;
+    g.checkPending = false;
+  }
+  if (!world && !map.range && !g.replay) {
     // (the range never overwrites the campaign's Continue; a loaded world is already on disk)
     const err = storeSave(store, 'auto', () => makeSave(g.world, 'level-start', { now: Date.now(), progress: g.progress }));
     // a full store used to throw here, after the old view was disposed and before play began
@@ -1096,6 +1166,8 @@ function stepOnce() {
     if (g.world.map.range) rangeMeter.events(ev);
     g.view.handleEvents(ev);
     ui.events(ev);
+    showHint(ev);
+    keepCheckpoint(ev);
     recordMessages(ev);
     audio.handleEvents(ev);
     rumbleEvents(ev);
@@ -1262,7 +1334,8 @@ addEventListener('keydown', (e) => {
     return;
   } // any key bound to Pause also resumes
   if (g.mode === 'dead' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) {
-    ui.h.restartLevel();
+    if (checkpointSave()) ui.h.backToCheckpoint();
+    else ui.h.restartLevel();
     return;
   }
   // ends the finale's wait for the last transmission (finaleHolds)
@@ -1659,11 +1732,18 @@ function frameBody(now) {
     if (g.timer <= 0) {
       logAttempt('dead');
       g.mode = 'dead';
-      ui.show('dead', { canLoad: hasQuick(), deathLine: deathLine(statsCard()) });
+      ui.show('dead', { canLoad: hasQuick(), canCheck: !!checkpointSave(), deathLine: deathLine(statsCard()) });
     }
   } else if (g.mode === 'ending') {
     g.timer -= dt;
-    if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) {
+    if (g.timer <= 0 && MAPS[g.mapId].training) {
+      settings.trainingDone = true;
+      saveSettings(storage, settings);
+      const then = g.afterTraining;
+      g.afterTraining = null;
+      quitToTitle();
+      if (then) ui.h.newGame(then, { skipOffer: true });
+    } else if (g.timer <= 0 && (MAPS[g.mapId].range || MAPS[g.mapId].dev)) {
       const de = MAPS[g.mapId].devEnding;
       if (de && ENDINGS[de.ending] && g.world.endStats?.dest === de.dest) startEpilogue({ campaign: de.ending, ...ENDINGS[de.ending], dev: true });
       else quitToTitle();
@@ -1671,13 +1751,20 @@ function frameBody(now) {
     else if (g.timer <= 0 && finaleHolds(dt)) {
       /* a campaign's last transmission is still being said: it finishes before the epilogue (round 1, Codex 4) */
     } else if (g.timer <= 0) {
-      g.nextId = nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
+      g.nextId = g.replay ? null : nextMapId(CAMPAIGN, g.mapId, g.world.endStats?.dest, (id) => !!MAPS[id]);
       g.lastEarn = earn(g.progress, g.mapId, g.world.endStats, MAPS[g.mapId].par?.time);
       g.progress = g.lastEarn.progress;
       g.lockerNote = ''; // the rank, the salvage it pays (only the improvement over this map's best), the record
-      commitProgress();
+      g.profile = recordFinish(g.profile, g.mapId, g.difficulty, {
+        end: g.world.endStats,
+        rank: g.lastEarn.result.rank,
+        par: MAPS[g.mapId].par?.time,
+        docs: g.world.map.messages.filter((m) => g.world.messagesSeen.includes(m.id) && isDocument(m.speaker || '')).map((m) => m.id),
+      });
+      saveProfile(storage, g.profile);
+      if (!g.replay) commitProgress();
       logAttempt('complete');
-      const ending = endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest); // a campaign's last map: the epilogue first
+      const ending = g.replay ? null : endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest); // a campaign's last map: the epilogue first
       if (ending) startEpilogue(ending);
       else {
         g.mode = 'complete';
@@ -1725,7 +1812,7 @@ function frameBody(now) {
 /* * the weapons range's readout: shown only while a range map is being played */
 function rangePanel() {
   const w = g.world,
-    on = !!(w && w.map.range && g.mode === 'playing' && rangeEl);
+    on = !!(w && w.map.range && !w.map.training && g.mode === 'playing' && rangeEl);
   rangeEl?.classList.toggle('hidden', !on);
   if (!on) return;
   rangeMeter.update(w);

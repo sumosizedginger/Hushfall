@@ -154,6 +154,9 @@ function wedge(cx, cy, r0, r1, a0, a1) {
  * WHEEL_SLOTS order.
  * An unowned segment is drawn dim and cannot be picked (the shell ignores it). The centre says what the selection is and what it is for.
  */
+/** a gun's or a melee weapon's icon, as the inside of a 40 x 40 svg */
+export const weaponIcon = (id) => ICONS[id] ?? ICONS.melee ?? '';
+
 export function wheelSvg(model) {
   const n = WHEEL_SLOTS.length,
     S = 300,

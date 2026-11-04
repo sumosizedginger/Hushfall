@@ -1,4 +1,5 @@
-// What a shot hit: the family of a surface, from the map's own tiles. Pure; the sim names the surface in the `impact` event and the view and the audio
+// What a shot hit: the family of a surface, from the map's own tiles. Pure; the sim names the surface in the `impact` event and the view and the
+// audio
 // answer it. Families: wood, stone, metal, earth, soft, organic, water.
 import { WALL_SKINS, FLOOR_SKINS } from './defs.js';
 
@@ -116,7 +117,9 @@ export const SURFACE_FAMILIES = Object.freeze(['wood', 'stone', 'metal', 'earth'
 export const familyOfFloor = (tex) => FLOOR_FAMILY[tex] ?? 'stone';
 export const familyOfWall = (tex) => WALL_FAMILY[tex] ?? 'stone';
 
-/** the family of what stopped a shot at (x, y, z). The ray stops one step inside a wall, so a wall cell means the wall; otherwise the floor under it */
+/**
+ * the family of what stopped a shot at (x, y, z). The ray stops one step inside a wall, so a wall cell means the wall; otherwise the floor under it
+ */
 export function surfaceAt(map, x, y, z) {
   const cx = Math.floor(x / map.cell),
     cz = Math.floor(z / map.cell),

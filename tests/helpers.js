@@ -1,8 +1,10 @@
+import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseMap } from '../src/engine/mapformat.js';
 
 export const ROOT = path.resolve(import.meta.dirname, '..');
+const acorn = createRequire(path.join(ROOT, 'package.json'))('acorn');
 // Engine tests run on FROZEN FIXTURES (tests/fixtures): the original hall-and-quay test layout and its routes.
 // They stay stable while the shipped level in maps/ is redesigned. Tests of the shipped level use the shipped* helpers.
 export const mapSrc = (id = 'C1E1M01') => JSON.parse(fs.readFileSync(path.join(ROOT, 'tests/fixtures', id + '.json'), 'utf8'));
@@ -22,13 +24,21 @@ export const shippedSrc = (id = 'C1E1M01') => JSON.parse(fs.readFileSync(path.jo
 export const shippedMap = (id = 'C1E1M01') => parseMap(shippedSrc(id));
 export const shippedRoute = (name) => JSON.parse(fs.readFileSync(path.join(ROOT, 'routes', name + '.route.json'), 'utf8'));
 /** a source file as one line: no comments, one space between tokens, no trailing commas: for a test that checks how the shell is wired, whatever the formatter did with the lines */
-export const flatSource = (rel) =>
-  fs
-    .readFileSync(path.join(ROOT, rel), 'utf8')
-    .replace(/\/\*[\s\S]*?\*\//g, ' ')
-    .replace(/(^|\s)\/\/[^\n]*/g, ' ')
+export const flatSource = (rel) => {
+  const text = fs.readFileSync(path.join(ROOT, rel), 'utf8'),
+    comments = [];
+  acorn.parse(text, { ecmaVersion: 'latest', sourceType: 'module', onComment: comments });
+  let out = '',
+    at = 0;
+  for (const c of comments) {
+    out += text.slice(at, c.start) + ' ';
+    at = c.end;
+  }
+  out += text.slice(at);
+  return out
     .replace(/\s+/g, ' ')
     .replace(/,\s*([)}\]])/g, ' $1')
     .replace(/\(\s+/g, '(')
     .replace(/\s+\)/g, ')')
     .replace(/\s+\./g, '.');
+};

@@ -131,6 +131,7 @@ export function compile(lv) {
     ...(lv.dev ? { dev: true } : {}),
     ...(lv.devEnding ? { devEnding: lv.devEnding } : {}),
     ...(lv.chimes ? { chimes: lv.chimes } : {}), // PT-038: the hand lantern and the chime phrases
+    ...(lv.training ? { training: true } : {}),
     ...(lv.range ? { range: true } : {}), // PT-016: the dev-only weapons range (see maps-dev/)
   };
   // PT-052: a squeezed map (tools/mapkit/squeeze.mjs) is narrowed LAST: everything above is in the authoring frame, the shipped JSON is in the

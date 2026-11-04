@@ -1,4 +1,6 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
+import { weaponIcon } from './wheel.js';
+import { withKeys } from './hints.js';
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, AMMO_LOADS, DIFFICULTY as DIFFS } from '../engine/defs.js';
 import { activeLoad, loadsOf } from '../engine/ammoloads.js';
 import { modMarks } from '../engine/mods.js';
@@ -16,7 +18,7 @@ const PIXEL_LABEL = {
 };
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
 /* * what the later weapons say when they are picked up (the older ones are in TOASTS below) */
-import { describeNext, TRACKS, modRows } from '../engine/progress.js';
+import { describeNext, TRACKS, modRows, ammoCap } from '../engine/progress.js';
 import { RESOLUTIONS, fovLabel } from './settings.js';
 import { ACTION_LABELS, SLOTS, prettyCode, legendText } from './bindings.js';
 import { PAD_ACTIONS, padGlyph } from './gamepad.js';
@@ -106,6 +108,25 @@ export class UI {
     $('btn-record').onclick = () => this.h.openRecord('pause');
     $('btn-record-title').onclick = () => this.h.openRecord('title');
     $('btn-credits-title').onclick = () => this.h.openCredits();
+    $('btn-training').onclick = () => this.h.training();
+    $('btn-maps').onclick = () => this.h.openMaps();
+    $('btn-maps-back').onclick = () => this.h.closeMaps();
+    $('btn-dead-check').onclick = () => this.h.backToCheckpoint();
+    $('set-checkpoints').onchange = (e) => this.h.setSetting('checkpoints', e.target.checked);
+    for (const b of document.querySelectorAll('.set-tab-btn'))
+      b.onclick = () => {
+        for (const q of document.querySelectorAll('.set-tab-btn, .set-tab')) q.classList.toggle('on', q.dataset.tab === b.dataset.tab);
+      };
+    for (const b of document.querySelectorAll('.set-defaults')) b.onclick = () => this.h.resetTab(b.dataset.tab);
+    $('btn-offer-train').onclick = () => {
+      $('training-offer').classList.add('hidden');
+      this.h.training(this._offerFor);
+    };
+    $('btn-offer-skip').onclick = () => {
+      $('training-offer').classList.add('hidden');
+      this.h.newGame(this._offerFor, { skipOffer: true });
+    };
+    $('set-hints').onchange = (e) => this.h.setSetting('hints', e.target.checked);
     $('screen-credits').onclick = () => this.h.closeCredits();
     $('btn-record-close').onclick = () => this.h.closeRecord();
     $('screen-ending').onclick = () => this.h.epiloguePress();
@@ -339,6 +360,8 @@ export class UI {
     $('set-rawmouse').checked = s.rawMouse !== false;
     $('set-headbob').value = s.headBob ?? 'full';
     $('set-hitmarks').checked = s.hitMarks !== false;
+    $('set-hints').checked = s.hints !== false;
+    $('set-checkpoints').checked = s.checkpoints !== false;
     $('set-gore').value = s.gore ?? 'full';
     $('set-fov').value = s.fov;
     this.showFov(s.fov);
@@ -414,6 +437,7 @@ export class UI {
     if (name === 'title') {
       $('btn-continue').style.display = data.canContinue ? '' : 'none';
       $('title-note').textContent = data.note || '';
+      $('btn-maps').style.display = this.h.hasMaps?.() ? '' : 'none';
     }
     if (name === 'pause') {
       $('pause-note').textContent = data.note || '';
@@ -421,6 +445,7 @@ export class UI {
     }
     if (name === 'dead') {
       $('btn-dead-load').style.display = data.canLoad ? '' : 'none';
+      $('btn-dead-check').style.display = data.canCheck ? '' : 'none';
       if ('deathLine' in data) $('dead-stats').textContent = data.deathLine ?? '';
     }
     if (name === 'complete') {
@@ -750,7 +775,7 @@ export class UI {
       box.classList.remove('hidden');
       box.classList.toggle('note', /NOTE|LOG|MANIFEST/.test(e.speaker));
       $('comms-who').textContent = e.speaker;
-      $('comms-text').textContent = e.text;
+      $('comms-text').textContent = withKeys(e.text, this.h.keyOf ?? ((a) => a));
       this.h.playRadio?.();
     }
     if (this.comq.current || this.comq.pending)
@@ -764,7 +789,7 @@ export class UI {
     const c = $('card');
     if (!intro) return c.classList.add('hidden');
     $('card-title').textContent = intro.title;
-    $('card-lines').innerHTML = intro.lines.map((l) => `<div>${escHtml(l)}</div>`).join('');
+    $('card-lines').innerHTML = intro.lines.map((l) => `<div>${escHtml(withKeys(l, this.h.keyOf ?? ((a) => a)))}</div>`).join('');
     c.classList.remove('hidden');
     c.style.animation = 'none';
     void c.offsetWidth;
@@ -832,8 +857,40 @@ export class UI {
   playlogNote(t) {
     $('playlog-note').textContent = t;
   }
+  /** no tip is showing or waiting */
+  /** the map select: every finished map, its best on each difficulty, and a way back into it */
+  mapsScreen(groups) {
+    const esc = escHtml;
+    $('maps-list').innerHTML = groups
+      .map(
+        (g) =>
+          `<h3>${esc(g.title)}</h3>` +
+          g.rows
+            .map((m) => {
+              const best = ['easy', 'normal', 'hard']
+                .map((d) => {
+                  const b = m.diffs[d];
+                  return `${d[0].toUpperCase() + d.slice(1)}: ${b ? `${b.rank}, ${b.time}${m.secretsTotal ? `, secrets ${b.secrets}/${m.secretsTotal}` : ''}` : 'not yet'}`;
+                })
+                .join(' · ');
+              const done = [...new Set(['easy', 'normal', 'hard'].flatMap((d) => m.diffs[d]?.done ?? []))];
+              return `<div class="m"><b>${esc(m.name)}</b>${m.par ? ` <small style="display:inline">par ${m.par}</small>` : ''}<small>${best}</small>${m.docs.total ? `<small>Documents found: ${m.docs.found} of ${m.docs.total}</small>` : ''}${done.length ? `<div class="badge">${done.map(esc).join(' · ')}</div>` : ''}<div class="row">${['easy', 'normal', 'hard'].map((d) => `<button data-replay="${m.id}" data-diff="${d}">${d[0].toUpperCase() + d.slice(1)}</button>`).join('')}</div></div>`;
+            })
+            .join(''),
+      )
+      .join('');
+    for (const b of $('maps-list').querySelectorAll('button[data-replay]')) b.onclick = () => this.h.replayMap(b.dataset.replay, b.dataset.diff);
+  }
+  offerTraining(difficulty) {
+    this._offerFor = difficulty;
+    $('training-offer').classList.remove('hidden');
+  }
+  tipFree() {
+    return !(this._tipUntil > performance.now());
+  }
   tip(text, delay, dur) {
     clearTimeout(this._tipT);
+    this._tipUntil = performance.now() + delay + dur;
     this._tipT = setTimeout(() => {
       const el = $('tips');
       el.textContent = text;
@@ -919,13 +976,16 @@ export class UI {
     }
     {
       const mid = melee ? p.weapon : MELEE_ORDER.includes(p.meleeWeapon) ? p.meleeWeapon : 'fists';
-      $('hud-weapons').innerHTML = SLOT_KEYS.map((id, i) =>
-        id === 'melee'
-          ? `<span class="${melee ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[mid].name.split(' ').pop().toUpperCase()}</span>`
-          : p.weapons.includes(id)
-            ? `<span class="${id === p.weapon ? 'on' : ''}">${(i + 1) % 10} ${WEAPONS[id].name.split(' ').pop().toUpperCase()}</span>`
-            : '',
-      ).join('');
+      const chip = (id, i, on) => {
+        const a = WEAPONS[id].ammo,
+          share = a ? Math.min(1, (p.ammo[a] ?? 0) / Math.max(1, ammoCap(a, w.upgrades))) : null;
+        return `<span class="w${on ? ' on' : ''}${share === 0 ? ' dry' : ''}" title="${WEAPONS[id].name}"><i>${(i + 1) % 10}</i><svg viewBox="0 0 40 40">${weaponIcon(id)}</svg>${share != null ? `<u style="width:${Math.round(share * 88)}%"></u>` : ''}</span>`;
+      };
+      const html = SLOT_KEYS.map((id, i) => (id === 'melee' ? chip(mid, i, melee) : p.weapons.includes(id) ? chip(id, i, id === p.weapon) : '')).join('');
+      if (html !== this._weaponsHtml) {
+        this._weaponsHtml = html;
+        $('hud-weapons').innerHTML = html;
+      }
     }
     $('hud-keys').innerHTML = p.keys
       .map(

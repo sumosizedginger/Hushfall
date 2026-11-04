@@ -1,4 +1,5 @@
-// How a place sounds: a family of room for every look, each a synthesized impulse (decaying noise, darker with distance, with early slaps off the walls). Pure data and a pure builder.
+// How a place sounds: a family of room for every look, each a synthesized impulse (decaying noise, darker with distance, with early slaps off the
+// walls). Pure data and a pure builder.
 export const ROOMS = {
   open: { secs: 0.7, power: 4.5, damp: 0.25, early: [0.11], send: 0.1, wet: 0.5 }, // a slap off something far away, then nothing
   town: { secs: 1.3, power: 3.5, damp: 0.4, early: [0.03, 0.07], send: 0.22, wet: 0.5 }, // rooms of plaster and timber
@@ -74,7 +75,8 @@ export const ROOM_OF_LOOK = {
 export const roomFor = (look, interior) => (interior ? (ROOM_OF_LOOK[look] ?? 'town') : 'open');
 
 /**
- * the two channels of a room's impulse, as plain arrays of samples. The tail is noise under a power curve, and a one-pole lowpass that closes as the tail goes on (`damp`: 0 stays
+ * the two channels of a room's impulse, as plain arrays of samples. The tail is noise under a power curve, and a one-pole lowpass that closes as the
+ * tail goes on (`damp`: 0 stays
  * bright, 1 goes dark fast); `early` puts a discrete slap at each of those seconds.
  */
 export function impulse(rand, sampleRate, room) {

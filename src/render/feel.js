@@ -1,4 +1,5 @@
-// How the guns and the blows FEEL, as data. Pure: render only, the simulation never reads this. A new gun gets a row here or tests/feel.test.js fails.
+// How the guns and the blows FEEL, as data. Pure: render only, the simulation never reads this. A new gun gets a row here or tests/feel.test.js
+// fails.
 export const GUN_FEEL = {
   flare: { recoil: 1, recover: 4.5, flash: 0.07, shake: 0.2, shakeT: 0.14, light: 1, fire: 0xffa848, muzzle: 0xff9040, casing: null },
   scattergun: { recoil: 1.6, recover: 3.2, flash: 0.09, shake: 0.3, shakeT: 0.3, light: 1.25, fire: 0xffb060, muzzle: 0xffc070, casing: 'shell', casingAt: 0.45, pump: true },
@@ -56,7 +57,10 @@ export const GIBS = {
   speed: 4.2,
 };
 
-/** does this kill burst the body? `over` = how far past dead the blow went, as a share of the creature's health. Never a boss, a node or the innocent; never at reduced gore */
+/**
+ * does this kill burst the body? `over` = how far past dead the blow went, as a share of the creature's health. Never a boss, a node or the innocent;
+ * never at reduced gore
+ */
 export function bursts({ weapon, over = 0, def = {}, gore = 'full' }) {
   if (gore !== 'full' || def.boss || def.node || def.peaceful || def.brood || def.spawner || (def.height ?? 2) > 3.2) return false;
   if (over >= GIBS.anything) return true;

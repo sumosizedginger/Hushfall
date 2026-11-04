@@ -8,7 +8,7 @@ html,body{margin:0;height:100%;background:#07080c;overflow:hidden;color:var(--pa
 canvas{display:block;width:100vw;height:100vh}
 #automap{position:fixed;inset:0;pointer-events:none;z-index:4}
 .hidden{display:none!important}
-/* PT-048 / V2 (the owner: "the hollow circle is hard to see. A cross or a solid dot would be better"): a cross of four ticks round a centre dot, near white with a dark outline, so it reads on bright and dark ground alike. src/game/crosshair.js sets data-style and the variables --xc (colour), --xk (size factor) and --xo (opacity) from the player's settings; sizes are in vh, so it does not shrink on a big screen. The states below keep their meanings on the new shape. */
+/* a cross of four ticks round a centre dot, near white with a dark outline, so it reads on bright and dark ground alike. src/game/crosshair.js sets data-style and the variables --xc (colour), --xk (size factor) and --xo (opacity) from the player's settings; sizes are in vh, so it does not shrink on a big screen. The states below keep their meanings on the new shape. */
 #cross{--c:var(--xc,#f4f1e8);--k:var(--xk,1);--th:max(2px,calc(.28vh*var(--k)));--tick:max(6px,calc(.9vh*var(--k)));--sp0:max(3px,calc(.42vh*var(--k)));--sp:var(--sp0);--dot:var(--th);--glow:0 0 0 transparent;position:fixed;left:50%;top:50%;box-sizing:border-box;width:calc(2*(var(--sp) + var(--tick)));height:calc(2*(var(--sp) + var(--tick)));transform:translate(-50%,-50%);pointer-events:none;opacity:var(--xo,.95);background:linear-gradient(var(--c),var(--c)) 50% 0/var(--th) var(--tick) no-repeat,linear-gradient(var(--c),var(--c)) 50% 100%/var(--th) var(--tick) no-repeat,linear-gradient(var(--c),var(--c)) 0 50%/var(--tick) var(--th) no-repeat,linear-gradient(var(--c),var(--c)) 100% 50%/var(--tick) var(--th) no-repeat,radial-gradient(circle closest-side,var(--c) 92%,transparent 100%) 50% 50%/var(--dot) var(--dot) no-repeat;filter:drop-shadow(1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow(0 1px 0 #000) drop-shadow(0 -1px 0 #000) drop-shadow(var(--glow))}
 #cross[data-style=cross]{--dot:0px}
 #cross[data-style=dot]{--tick:0px;--dot:calc(var(--th)*2.4)}
@@ -20,10 +20,10 @@ body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,c
 body[data-stance=sprint] #cross{opacity:0}
 body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
 #cross.ripo{--c:#ffd45a;--glow:0 0 6px #ffd45a;opacity:1}
-#cross.supp{--c:#e0583a;--sp:calc(var(--sp0)*3.6);--glow:0 0 6px #e0583a;opacity:1}                    /* PT-026: a Chorister's fire is going by: your guns open up, so does the crosshair (the ticks spread wide and red) */
-#cross.grab{--c:#6ffff0;--sp:calc(var(--sp0)*2.6);--glow:0 0 6px #6ffff0;opacity:1}                      /* PT-022: the tuning-fork has something in reach it could lift or drag (spread, cyan) */
+#cross.supp{--c:#e0583a;--sp:calc(var(--sp0)*3.6);--glow:0 0 6px #e0583a;opacity:1}                    /* a Chorister's fire is going by: your guns open up, so does the crosshair (the ticks spread wide and red) */
+#cross.grab{--c:#6ffff0;--sp:calc(var(--sp0)*2.6);--glow:0 0 6px #6ffff0;opacity:1}                      /* the tuning-fork has something in reach it could lift or drag (spread, cyan) */
 #cross.held{--c:#6ffff0;--tick:0px;--sp:calc(var(--th)*2.5);--dot:calc(var(--th)*4.5);--glow:0 0 8px #6ffff0;opacity:1}   /* ...and it holds something (a larger solid cyan dot) */
-#screen-crash{z-index:9}#crash-detail{white-space:pre-wrap;max-width:520px;color:#9fb4b0;font-size:11px;margin:10px 0;text-align:left}      /* PT-050 H1: the crash screen (errorlog.js), over everything */
+#screen-crash{z-index:9}#crash-detail{white-space:pre-wrap;max-width:520px;color:#9fb4b0;font-size:11px;margin:10px 0;text-align:left}      /* the crash screen (errorlog.js), over everything */
 #hitmark{position:fixed;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;pointer-events:none;opacity:0;z-index:2}
 #hitmark::before,#hitmark::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:28px;margin:-14px 0 0 -1px;background:var(--paper);transform:rotate(45deg);box-shadow:0 0 0 1px #0008}
 #hitmark::after{transform:rotate(-45deg)}
@@ -33,6 +33,9 @@ body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px
 #hitmark.kill::before,#hitmark.kill::after{height:36px;margin-top:-18px}#hitmark.kill.on{animation-duration:.34s}
 #hitmark.crit::before,#hitmark.crit::after{background:#ffd45a;width:3px;height:32px;margin-top:-16px}
 body.no-hitmarks #hitmark{display:none}
+#screen-maps .panel{width:min(820px,94vw);max-height:88vh;display:flex;flex-direction:column}#maps-list{overflow-y:auto;flex:1;margin:8px 0}#maps-list h3{color:var(--bronze);letter-spacing:.12em;margin:14px 0 4px}#maps-list .m{padding:6px 0;border-top:1px solid #26333a}#maps-list .m>b{color:var(--paper)}#maps-list .m small{color:#9fb4b0;display:block}#maps-list .row button{width:auto;padding:3px 10px;font-size:.88em;margin-right:6px}#maps-list .badge{color:#ffd45a;font-size:.86em}
+.set-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.set-tab-btn{flex:1 1 auto;width:auto;padding:5px 10px;font-size:.92em}.set-tab-btn.on{border-color:var(--teal);color:var(--teal)}.set-tab{display:none}.set-tab.on{display:block}.set-defaults{margin-top:10px;width:auto;font-size:.88em;opacity:.85}
+#training-offer{max-width:520px;margin:8px auto 14px;padding:12px 16px;border:1px solid var(--bronze);background:#0009;line-height:1.5}#training-offer p{margin:0 0 10px}
 @keyframes hitm{0%{opacity:1;transform:scale(1.35)}100%{opacity:0;transform:scale(.8)}}
 #cross-note{position:fixed;left:50%;top:calc(50% + 36px);transform:translateX(-50%);pointer-events:none;letter-spacing:.3em;font-size:13px;color:var(--teal);text-shadow:1px 1px 0 #000,0 0 6px #000;opacity:0;z-index:2}
 #cross-note.on{animation:cnote .8s ease-out}
@@ -63,23 +66,23 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #hud .stat.low b{color:var(--red)}
 #hud .stat.loud b{color:#ff9a5a}#hud #hud-noise b{font-size:20px;letter-spacing:.06em;line-height:1.5}
 #hud .stat.lit b{color:#ffd488;text-shadow:0 0 10px #d98a2a,2px 2px 0 var(--ink)}
-#hud-weapons{display:flex;flex-wrap:wrap;max-width:100%;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:3px 8px;font-size:clamp(12px,1.5vh,17px);font-weight:600;letter-spacing:.06em;color:#a9bdb9;background:#0b0d12d8}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}
+#hud-weapons{display:flex;flex-wrap:wrap;max-width:100%;gap:6px;align-self:flex-end;padding-bottom:4px}#hud-weapons span{border:1px solid var(--slate);padding:3px 8px;font-size:clamp(12px,1.5vh,17px);font-weight:600;letter-spacing:.06em;color:#a9bdb9;background:#0b0d12d8}#hud-weapons span.on{border-color:var(--teal);color:var(--teal)}#hud-weapons span.w{position:relative;display:flex;align-items:center;gap:3px;padding:2px 5px 6px 4px}#hud-weapons span.w i{font-style:normal;font-size:.82em;opacity:.8}#hud-weapons svg{width:clamp(22px,2.9vh,34px);height:clamp(22px,2.9vh,34px);fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}#hud-weapons u{position:absolute;left:3px;right:auto;bottom:2px;height:3px;background:currentColor;opacity:.75;text-decoration:none}#hud-weapons span.dry{color:#d8583f;border-color:#6a2a22}
 #hud-keys{display:flex;gap:6px}#hud-keys i{width:14px;height:22px;border:2px solid var(--ink);border-radius:3px}
 #hud .grow{flex:1}#hud .side{font-size:clamp(12px,1.4vh,16px);color:#9fb4b0;text-align:right;text-shadow:1px 1px 0 var(--ink)}
-#toasts{position:fixed;right:16px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}        /* PT-047 V2: top right (it used to sit in the middle of the picture); the minimap of workstream U will go above it */
-#minimap{position:fixed;right:16px;top:14px;width:clamp(148px,16.5vh,240px);height:auto;aspect-ratio:1;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=large] #minimap{width:clamp(222px,24vh,340px)}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:calc(clamp(148px,16.5vh,240px) + 32px)}body[data-minimap=large] #toasts{top:calc(clamp(222px,24vh,340px) + 36px)}          /* FREEZE F3: the corner map grows with the window's height (it was 148 px in every window) and the toast column keeps clear of it */      /* PT-052 U4: the corner map; the toast column moves under it */
+#toasts{position:fixed;right:16px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}        /* top right (it used to sit in the middle of the picture); the minimap of workstream U will go above it */
+#minimap{position:fixed;right:16px;top:14px;width:clamp(148px,16.5vh,240px);height:auto;aspect-ratio:1;z-index:2;pointer-events:none;image-rendering:pixelated}body[data-minimap=large] #minimap{width:clamp(222px,24vh,340px)}body[data-minimap=off] #minimap,body:not([data-screen=""]) #minimap{display:none}body[data-minimap=small] #toasts{top:calc(clamp(148px,16.5vh,240px) + 32px)}body[data-minimap=large] #toasts{top:calc(clamp(222px,24vh,340px) + 36px)}          /* FREEZE F3: the corner map grows with the window's height (it was 148 px in every window) and the toast column keeps clear of it */      /* the corner map; the toast column moves under it */
 #toasts div{background:#0b0d12e8;border:1px solid var(--slate);padding:5px 14px;font-size:clamp(13px,1.55vh,18px);text-shadow:1px 1px 0 #000;max-width:min(380px,44vw)}
 #comms{position:fixed;left:16px;top:calc(var(--obj-b,0px) + 14px);width:min(560px,46vw);background:#0b0d12ee;border:1px solid var(--slate);border-left:3px solid var(--teal);padding:9px 15px;font-size:clamp(15px,1.85vh,21px);line-height:1.4;pointer-events:none;z-index:3;text-shadow:1px 1px 0 #000}          /* look polish 8: top left under the objective, never over the gun, in type you can read at a glance */
 #comms b{display:block;color:var(--teal);letter-spacing:.16em;font-size:clamp(11px,1.3vh,14px);font-weight:700;margin-bottom:3px}#comms span{color:var(--paper)}
 #comms.note{border-left-color:var(--bronze)}#comms.note b{color:var(--bronze)}
 #card{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:3;animation:cardfade 6.5s ease forwards;text-shadow:2px 2px 0 #000}
-#card::before{content:"";position:absolute;left:0;right:0;top:50%;height:min(48vh,400px);transform:translateY(-50%);z-index:-1;background:linear-gradient(transparent,#000c 28%,#000c 72%,transparent)}      /* PT-047 V2: a dark band behind the two lines so they read on a bright ground */
+#card::before{content:"";position:absolute;left:0;right:0;top:50%;height:min(48vh,400px);transform:translateY(-50%);z-index:-1;background:linear-gradient(transparent,#000c 28%,#000c 72%,transparent)}      /* a dark band behind the two lines so they read on a bright ground */
 #pickup-card{--card:var(--brass);position:fixed;left:50%;bottom:24%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;max-width:min(560px,92vw);padding:10px 20px 10px 12px;background:#0d0f14ee;border:1px solid var(--slate);border-left:4px solid var(--card);pointer-events:none;opacity:0;z-index:3;text-shadow:1px 1px 0 #000}
 #pickup-card.show{animation:pcard 2.6s ease forwards}
 #pickup-card i{display:block;width:46px;height:46px;color:var(--card);flex:none}#pickup-card svg{width:100%;height:100%;display:block}
 #pickup-card b{display:block;font-size:17px;letter-spacing:.08em;color:var(--paper)}#pickup-card span{display:block;font-size:13px;color:#c4d4d0;margin-top:2px}
-@keyframes pcard{0%{opacity:0;transform:translate(-50%,10px)}9%{opacity:1;transform:translate(-50%,0)}82%{opacity:1}100%{opacity:0}}      /* PT-049 U1: the card of a major pickup */
-#screen-journal{flex-direction:column;justify-content:flex-start;align-items:stretch;background:none;pointer-events:none}      /* PT-049 U2: the Map tab shows the full-screen automap behind a thin bar, the Log tab a text panel */
+@keyframes pcard{0%{opacity:0;transform:translate(-50%,10px)}9%{opacity:1;transform:translate(-50%,0)}82%{opacity:1}100%{opacity:0}}      /* the card of a major pickup */
+#screen-journal{flex-direction:column;justify-content:flex-start;align-items:stretch;background:none;pointer-events:none}      /* the Map tab shows the full-screen automap behind a thin bar, the Log tab a text panel */
 #screen-journal:not(.map){background:radial-gradient(ellipse at 50% 42%,#07080ccc,#07080cf5);pointer-events:auto}
 #journal-bar{pointer-events:auto;display:flex;align-items:center;gap:10px;padding:10px 16px;background:#07080ce6;border-bottom:1px solid var(--brass)}#journal-bar button{margin:0;min-width:0;padding:6px 16px}#journal-bar button.on{background:var(--brass);color:var(--ink)}
 #journal-title{flex:1;text-align:center;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);font-size:0.93em}#journal-new{color:var(--teal)}
@@ -87,14 +90,14 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #journal-log .rec{margin:12px 0;padding-left:10px;border-left:3px solid #26333a}#journal-log .rec b{display:block;color:var(--bronze);letter-spacing:.12em;font-size:0.86em}#journal-log .rec p{margin:4px 0 0;color:#c4d4d0;line-height:1.45}#journal-log .rec.doc p{font-style:italic}
 #journal-log .rec.new{border-left-color:var(--teal)}#journal-log .rec.new b::after{content:" \00b7 NEW";color:var(--teal);letter-spacing:.15em;font-size:0.71em}#journal-empty{color:#7f9490;margin:18px 0}
 .jpage h3{margin:14px 0 8px;color:var(--bronze);letter-spacing:.2em;font-size:0.86em;text-transform:uppercase}.jpage h3:first-child{margin-top:0}.jpage .row{display:flex;gap:12px;align-items:baseline;margin:6px 0;color:#c4d4d0}.jpage .row b{min-width:2ch;color:var(--teal)}.jpage .row small,.jpage .beast small{color:#7f9490}.jpage .row span{flex:1}.jpage .goal{margin:8px 0;padding-left:10px;border-left:3px solid var(--teal);color:#e0ece8;line-height:1.45}.jpage .goal.done{border-left-color:#26333a;color:#8da09c}.jpage .swatch{display:inline-block;width:10px;height:10px;border:1px solid #000;margin-right:8px}.jpage .beast{margin:12px 0;padding-left:10px;border-left:3px solid #26333a}.jpage .beast b{display:block;color:var(--bronze);letter-spacing:.1em;font-size:0.86em}.jpage .beast p{margin:4px 0 0;color:#c4d4d0;line-height:1.45}.jpage .gap{margin:14px 0 4px;color:#7f9490}
-/* PT-054: the Log by level (a heading for this level, a fold for each earlier one, the time and place of every line, the number that is also its pin on the Map page) and the Items page (what each thing is for, when and where it was picked up) */
+/* the Log by level (a heading for this level, a fold for each earlier one, the time and place of every line, the number that is also its pin on the Map page) and the Items page (what each thing is for, when and where it was picked up) */
 #journal-log h3.lvl{font-size:0.93em;color:var(--teal)}#journal-log h3.lvl small{color:#7f9490;letter-spacing:.12em;margin-left:8px}#journal-log .rec b .pin{display:inline-block;min-width:1.6em;margin-right:8px;padding:0 4px;text-align:center;font-style:normal;color:var(--teal);border:1px solid var(--teal);border-radius:9px;letter-spacing:0}
 #journal-log .rec .meta{display:block;margin-top:2px;color:#7f9490;font-size:0.79em;letter-spacing:.06em}#journal-log details.lvlbox{margin:14px 0;border-top:1px solid #26333a;padding-top:8px}#journal-log details.lvlbox>summary{cursor:pointer;color:var(--bronze);letter-spacing:.14em;font-size:0.86em;text-transform:uppercase;padding:4px 0}#journal-log details.lvlbox>summary small{color:#7f9490;margin-left:8px}
 #journal-items .item{margin:8px 0 12px}#journal-items .item p,#journal-items p.help{margin:2px 0 0 calc(2ch + 12px);color:#b7c8c4;line-height:1.4;font-size:0.93em}#journal-items .item .meta{display:block;margin:2px 0 0 calc(2ch + 12px);color:#7f9490;font-size:0.79em;letter-spacing:.06em}#journal-items .role{color:var(--bronze);letter-spacing:.1em;font-size:0.79em;text-transform:uppercase;margin-left:6px}#journal-items .item.minor{margin:3px 0}#journal-items .item.minor .row{margin:2px 0}
 #hud .stat.logn b{color:var(--teal)}
 #card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
-#objective{position:fixed;left:16px;top:12px;max-width:min(560px,46vw);font-size:clamp(13px,1.55vh,18px);font-weight:600;color:#d4e0dc;background:#0b0d12d0;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
+#objective{position:fixed;left:16px;top:12px;max-width:min(560px,46vw);font-size:clamp(15px,1.75vh,20px);font-weight:600;color:#d4e0dc;background:#0b0d12d0;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
 #objective:empty{display:none}
 #range-hud{position:fixed;left:16px;bottom:150px;max-width:min(460px,46vw);font-size:12px;line-height:1.5;white-space:pre;color:#c4d4d0;background:#0d0f14c8;border-left:3px solid var(--teal);padding:6px 10px;pointer-events:none;text-shadow:1px 1px 0 #000;z-index:2}
 #range-hud.hidden{display:none}
@@ -104,7 +107,7 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #hint{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);color:#b9ccc8;font-size:clamp(13px,1.5vh,17px);pointer-events:none}
 #use-hint{position:fixed;left:50%;top:58%;transform:translateX(-50%);pointer-events:none;color:var(--paper);background:#0b0d12e0;border:1px solid var(--slate);padding:3px 14px;font-size:clamp(14px,1.6vh,18px);font-weight:600;text-shadow:1px 1px 0 #000}
 #tips{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);pointer-events:none;color:#d4e0dc;background:#0b0d12dc;border:1px solid var(--slate);padding:5px 15px;font-size:clamp(13px,1.5vh,17px);text-align:center;max-width:92vw}
-/* ---- the front end (PT-021 step 4: "the menus are a developer page: dark box, default buttons, the locker as a spreadsheet"). A ledger, not a box: a serif for what you read and choose, the monospace for what you measure, brass rules, lamp-teal for the thing under your hand. Every id and class the shell drives is unchanged; this is CSS (and a little decoration). ---- */
+/* ---- the front end "the menus are a developer page: dark box, default buttons, the locker as a spreadsheet"). A ledger, not a box: a serif for what you read and choose, the monospace for what you measure, brass rules, lamp-teal for the thing under your hand. Every id and class the shell drives is unchanged; this is CSS (and a little decoration). ---- */
 .screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 42%,#07080c99,#07080cf2);z-index:5}
 .panel{position:relative;background:#0c0f14f4 repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 3px);border:1px solid var(--brass);padding:28px 34px 26px;min-width:340px;max-width:92vw;max-height:calc(100vh - 20px);overflow-y:auto;box-shadow:inset 0 0 0 4px #0c0f14,inset 0 0 0 5px #2e3a3c,0 18px 60px #000}
 .legend{color:#8fa4a0;font-size:12px;line-height:1.55;margin:14px 0 4px;max-width:520px}
@@ -168,7 +171,7 @@ button.buy:hover,button.buy:focus-visible{padding-left:14px;border-color:var(--t
 button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:var(--paper);background:none}
 @media (max-width:860px){#screen-complete .panel{grid-template-columns:1fr}#rank-line,#screen-complete #stat-rows,#locker-box,#run-card{grid-column:1;grid-row:auto}}
 @media (max-width:760px){#locker{grid-template-columns:1fr}#screen-title{padding-left:6vw}}
-/* ---- the end of a campaign (PT-036: "we need a real ending beat"). The Gate's picture, one line of the epilogue at a time typed over it, then the tally of the whole campaign. */
+/* ---- the end of a campaign "we need a real ending beat"). The Gate's picture, one line of the epilogue at a time typed over it, then the tally of the whole campaign. */
 #screen-ending{background:#05060a;align-items:flex-end;overflow:hidden;cursor:pointer}
 #ending-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;filter:saturate(1.06) contrast(1.05) brightness(.92);animation:endingdrift 90s ease-out forwards}
 @keyframes endingdrift{from{transform:scale(1)}to{transform:scale(1.1)}}
@@ -206,7 +209,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #tally-next strong{display:block;font:400 clamp(22px,2.8vw,34px) var(--serif);letter-spacing:.3em;text-transform:uppercase;color:var(--paper);margin:6px 0 2px}#tally-next em{color:#c4d0cc;font:italic 15px var(--serif)}
 #ending-tally button{width:auto;min-width:260px;text-align:center;border:1px solid var(--brass);margin-top:10px}
 @media (max-width:700px){#tally-totals{grid-template-columns:1fr}#tally-eps .ep{grid-template-columns:1fr auto}#tally-eps .sec{display:none}}
-/* ---- the Record (PT-037: players want the lore): every message received, replayed by map, in the order of the campaign. */
+/* ---- the Record players want the lore): every message received, replayed by map, in the order of the campaign. */
 #screen-record .panel{width:min(780px,94vw);height:min(88vh,860px);display:flex;flex-direction:column;overflow:hidden}
 #record-sub{color:#8fa4a0;font-size:0.86em;letter-spacing:.08em;margin:-6px 0 12px}
 #record-list{flex:1;overflow-y:auto;padding-right:10px;margin-bottom:8px}
@@ -220,7 +223,7 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #record-list h3.cur{color:var(--teal)}
 #record-empty{color:#8fa4a0;font:italic 16px var(--serif);margin:30px 0}
 #screen-record button{margin-top:6px}
-/* PT-077: YOUR STATS (src/game/stats): what the stats database has recorded, This playthrough or Lifetime. Tables scroll inside their own box, never the page. */
+/* YOUR STATS (src/game/stats): what the stats database has recorded, This playthrough or Lifetime. Tables scroll inside their own box, never the page. */
 #screen-stats .panel{width:min(880px,94vw);height:min(90vh,920px);display:flex;flex-direction:column;overflow:hidden}
 #stats-bar{display:flex;gap:8px;margin:-4px 0 10px}#stats-bar button{width:auto;flex:none;margin:0;padding:6px 14px}#stats-bar button.on{background:var(--brass);color:#07080c}
 #stats-body{flex:1;overflow-y:auto;padding-right:10px;min-height:0}
@@ -230,10 +233,10 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 .st-help{color:#8fa4a0;font-size:0.86em;line-height:1.45;margin:0 0 6px}.st-none{color:#8fa4a0;font:italic 15px var(--serif);margin:8px 0}
 .st-wrap{overflow-x:auto}table.st{border-collapse:collapse;width:100%;font-size:0.93em;color:#c4d4d0}table.st th{text-align:left;font-weight:400;color:#7f9490;font-size:0.79em;letter-spacing:.1em;border-bottom:1px solid #26333a;padding:4px 8px 4px 0}table.st td{border-bottom:1px solid #1d272b;padding:4px 8px 4px 0}table.st .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 #stats-status{font-size:0.86em;margin:8px 0 0}#screen-stats .row button{margin:6px 0 0}#screen-stats #btn-stats-close{margin-top:6px}
-.st-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:6px 0 4px}.st-maps figure{margin:0}.st-map{display:block;width:100%;aspect-ratio:1;background:#0b0d12;border:1px solid #26333a}.st-maps figcaption{font-size:.79em;color:#8fa4a0;margin-top:3px}          /* PT-080: the death maps */
+.st-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:6px 0 4px}.st-maps figure{margin:0}.st-map{display:block;width:100%;aspect-ratio:1;background:#0b0d12;border:1px solid #26333a}.st-maps figcaption{font-size:.79em;color:#8fa4a0;margin-top:3px}          /* the death maps */
 #run-card{grid-column:1;grid-row:4;margin-top:12px}#run-card h3{margin:0 0 4px;font:400 13px var(--serif);letter-spacing:.24em;color:var(--bronze)}#run-card .rows div{font-size:13px}
 #dead-stats{font-size:13px;color:#c4b4ac;margin:-14px 0 22px}
-/* PT-063 (R13): the story scenes. Letterbox bars, a subtitle, a fade to black; the HUD, the toasts and the minimap are gone while one plays. */
+/* (R13): the story scenes. Letterbox bars, a subtitle, a fade to black; the HUD, the toasts and the minimap are gone while one plays. */
 #cine{position:fixed;inset:0;z-index:45;pointer-events:none}
 #cine-top,#cine-bottom{position:absolute;left:0;right:0;height:10.5vh;background:#000}
 #cine-top{top:0}#cine-bottom{bottom:0}
@@ -243,8 +246,8 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #cine-fade{position:absolute;inset:0;background:#000;opacity:0}
 #cine-hint{position:absolute;right:2vw;bottom:3vh;font:12px ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.5}
 body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #pickup-card,body.in-cine #cross,body.in-cine #hitmark,body.in-cine #comms,body.in-cine #cross-note,body.in-cine #objective,body.in-cine #captions,body.in-cine #tips,body.in-cine #boss,body.in-cine #hint,body.in-cine #use-hint,body.in-cine #charge{display:none!important}          /* round 1: a scene owns the picture; the objective box used to show its bronze edge and last line under the letterbox (the retaken C2M24 frame) */
-/* PT-071 R20: text size, captions, the first-run line, key letters */
-/* PT-079 (design/ART_ASSESSMENT.md item 9): the reading screens (the Journal's pages, Your stats, the Record) take their text size from the window's height (their sizes are in em of this), and the player's text size on top */
+/* text size, captions, the first-run line, key letters */
+/* (design/ART_ASSESSMENT.md item 9): the reading screens (the Journal's pages, Your stats, the Record) take their text size from the window's height (their sizes are in em of this), and the player's text size on top */
 .jpage,#journal-bar,#stats-body,#record-list,#record-sub{font-size:calc(clamp(14px,1.5vh,21px) * var(--ui-scale))}
 body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
 #comms,#toasts,#objective,#tips,#captions,#pickup-card,#hud .side,#hud-weapons{zoom:var(--ui-scale)}
@@ -288,6 +291,9 @@ body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
     <div id="difficulty-note" class="sub" aria-live="polite"></div>
     <button id="btn-record-title">The Record</button>
     <button id="btn-stats-title">Your stats</button>
+    <div id="training-offer" class="hidden"><p>New here? The training yard is ten rooms and about ten minutes: moving, the sights, the guard, the lamp, loads and the wheel, each by doing it. You cannot die in it, and you can leave whenever you like.</p><div class="row"><button id="btn-offer-train">Training yard first</button><button id="btn-offer-skip">Straight in</button></div></div>
+    <button id="btn-maps">Maps you have finished</button>
+    <button id="btn-training">Training yard</button>
     <button id="btn-credits-title">Credits</button>
     <details id="testers-box"><summary>For testers</summary><p>This is a release candidate, and nobody outside its maker has played it end to end: the numbers are first guesses and you are the first real test of them. Play a few maps on a difficulty you are comfortable with; why you stopped is the most useful thing you can tell us.</p><p>Settings has an opt-in <b>play log</b> kept on this device only (which maps, how each ended, how long, damage taken, how smoothly it ran, and five optional answers after each map). Nothing is sent: when you are done press <b>Export play log</b> and send the file to whoever gave you this link. A crash shows a Copy button: paste what it copies.</p></details>
     <details id="credits-box"><summary>Credits and licences</summary><div class="credits"><p>HUSHFALL. Every picture, sound, map and line of text in it was made for it: the art is painted by code, the sound is synthesized, nothing is sampled, stock or taken from another game.</p><p>Two pieces of outside software are inside it. It draws its 3D with three.js:</p><pre>The MIT License
@@ -388,49 +394,72 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</pre></div></details>
     <details id="settings-box"><summary>Settings</summary>
-    <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"><input id="set-sens-num" type="number" min="0.1" max="4" step="0.01" class="num"></label>
-    <label>Sensitivity through the sights <input id="set-adssens" type="range" min="0.4" max="1.6" step="0.05"></label>
-    <label>Invert mouse Y <input id="set-mouseinvert" type="checkbox"></label>
-    <label>Raw mouse input (no system acceleration, where the browser offers it) <input id="set-rawmouse" type="checkbox"></label>
-    <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
-    <label>Sound effects <input id="set-sfx" type="range" min="0" max="1" step="0.05"></label>
-    <label>Music <input id="set-music" type="range" min="0" max="1" step="0.05"></label>
-    <label>Field of view <span id="set-fov-val" class="fine"></span> <input id="set-fov" type="range" min="60" max="105" step="1"></label>
-    <label>Head bob <select id="set-headbob"><option value="full">Full</option><option value="gentle">Gentle</option><option value="off">Off</option></select></label>
-    <label>Brightness <input id="set-bright" type="range" min="0.6" max="1.8" step="0.05"></label>
-    <label>Crosshair <select id="set-xh-style"><option value="crossdot">Cross and dot</option><option value="cross">Cross</option><option value="dot">Dot</option><option value="circle">Circle</option></select></label>
-    <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
-    <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
-    <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
-    <label>Hit marks and ticks (a mark at the crosshair and a tick for every blow you land) <input id="set-hitmarks" type="checkbox"></label>
-    <label>Gore <select id="set-gore"><option value="full">Full (a big enough blow bursts a body)</option><option value="reduced">Reduced (bodies stay whole)</option></select></label>
-    <label>Text size <select id="set-textsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
-    <label>Reduce flashing and shaking <input id="set-reducedmotion" type="checkbox"></label>
-    <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>
-    <label>Pixel size (how wide the world is drawn) <select id="set-res"></select></label>
-    <label>Make the pixels chunkier by itself when the game runs slowly <input id="set-autoquality" type="checkbox"></label>
-    <label>Keep a play log on this device (nothing is sent: you export it and send it yourself) <input id="set-playlog" type="checkbox"></label>
-    <div class="row" id="playlog-row"><button id="btn-playlog-export">Export play log</button><button id="btn-playlog-copy">Copy</button><button id="btn-playlog-clear">Clear play log</button></div><div class="sub" id="playlog-note"></div>
-    <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
-    <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
-    <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
-    <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
-    <label>Tab opens the Journal and pauses (off: a live map over the game) <input id="set-journalpause" type="checkbox"></label>
-    <label>Minimap (top right) <select id="set-minimap"><option value="off">off</option><option value="small">small</option><option value="large">large</option></select></label>
-    <label>Story scenes <select id="set-cinematics"><option value="once">the first time</option><option value="always">every time</option><option value="off">off</option></select></label>
-    <label>Controller <input id="set-pad" type="checkbox"></label>
-    <label>Stick look speed <input id="set-padlook" type="range" min="1" max="8" step="0.1"></label>
-    <label>Stick dead zone <input id="set-paddz" type="range" min="0.05" max="0.5" step="0.01"></label>
-    <label>Invert stick Y <input id="set-padinvert" type="checkbox"></label>
-    <label>Aim assist <input id="set-padassist" type="range" min="0" max="1" step="0.05"></label>
-    <label>Vibration <input id="set-padvib" type="checkbox"></label>
-    <label>Button symbols <select id="set-padglyph"><option value="auto">Automatic</option><option value="ps">PlayStation</option><option value="xbox">Xbox</option></select></label>
-    <label>Ink outline <input id="set-outline" type="checkbox"></label>
-    <label>Paint pass <input id="set-paint" type="checkbox"></label>
+    <div class="set-tabs"><button class="set-tab-btn on" data-tab="controls">Controls</button><button class="set-tab-btn" data-tab="mouse">Mouse and pad</button><button class="set-tab-btn" data-tab="video">Video</button><button class="set-tab-btn" data-tab="audio">Audio</button><button class="set-tab-btn" data-tab="access">Accessibility</button><button class="set-tab-btn" data-tab="gameplay">Gameplay</button></div>
+    <div class="set-tab on" data-tab="controls">
+      <label>Aim: toggle instead of hold <input id="set-aimtoggle" type="checkbox"></label>
+      <label>Sprint: toggle instead of hold <input id="set-sprinttoggle" type="checkbox"></label>
+      <label>Weapon wheel: slow time while it is open <input id="set-wheelslow" type="checkbox"></label>
+      <label>Weapon wheel: press to open, press to choose <input id="set-wheeltoggle" type="checkbox"></label>
+      <details id="controls-box"><summary>Controls (click a key to change it)</summary><div id="controls" class="rows"></div><button id="btn-reset-keys">Reset controls to default</button><div class="note" id="bind-note"></div></details>
+      <button class="set-defaults" data-tab="controls">Defaults for Controls</button>
+    </div>
+    <div class="set-tab" data-tab="mouse">
+      <label>Mouse sensitivity <input id="set-sens" type="range" min="0.2" max="3" step="0.05"><input id="set-sens-num" type="number" min="0.1" max="4" step="0.01" class="num"></label>
+      <label>Sensitivity through the sights <input id="set-adssens" type="range" min="0.4" max="1.6" step="0.05"></label>
+      <label>Invert mouse Y <input id="set-mouseinvert" type="checkbox"></label>
+      <label>Raw mouse input (no system acceleration, where the browser offers it) <input id="set-rawmouse" type="checkbox"></label>
+      <label>Controller <input id="set-pad" type="checkbox"></label>
+      <label>Stick look speed <input id="set-padlook" type="range" min="1" max="8" step="0.1"></label>
+      <label>Stick dead zone <input id="set-paddz" type="range" min="0.05" max="0.5" step="0.01"></label>
+      <label>Invert stick Y <input id="set-padinvert" type="checkbox"></label>
+      <label>Aim assist <input id="set-padassist" type="range" min="0" max="1" step="0.05"></label>
+      <label>Vibration <input id="set-padvib" type="checkbox"></label>
+      <label>Button symbols <select id="set-padglyph"><option value="auto">Automatic</option><option value="ps">PlayStation</option><option value="xbox">Xbox</option></select></label>
+      <details id="pad-box"><summary>Controller buttons (click one, then press a button on the pad)</summary><div id="padcontrols" class="rows"></div><button id="btn-reset-pad">Reset controller buttons to default</button><div class="note" id="pad-note"></div></details>
+      <button class="set-defaults" data-tab="mouse">Defaults for Mouse and pad</button>
+    </div>
+    <div class="set-tab" data-tab="video">
+      <label>Field of view <span id="set-fov-val" class="fine"></span> <input id="set-fov" type="range" min="60" max="105" step="1"></label>
+      <label>Head bob <select id="set-headbob"><option value="full">Full</option><option value="gentle">Gentle</option><option value="off">Off</option></select></label>
+      <label>Brightness <input id="set-bright" type="range" min="0.6" max="1.8" step="0.05"></label>
+      <label>Gore <select id="set-gore"><option value="full">Full (a big enough blow bursts a body)</option><option value="reduced">Reduced (bodies stay whole)</option></select></label>
+      <label>Pixel size (how wide the world is drawn) <select id="set-res"></select></label>
+      <label>Make the pixels chunkier by itself when the game runs slowly <input id="set-autoquality" type="checkbox"></label>
+      <label>Ink outline <input id="set-outline" type="checkbox"></label>
+      <label>Paint pass <input id="set-paint" type="checkbox"></label>
+      <button class="set-defaults" data-tab="video">Defaults for Video</button>
+    </div>
+    <div class="set-tab" data-tab="audio">
+      <label>Master volume <input id="set-vol" type="range" min="0" max="1" step="0.05"></label>
+      <label>Sound effects <input id="set-sfx" type="range" min="0" max="1" step="0.05"></label>
+      <label>Music <input id="set-music" type="range" min="0" max="1" step="0.05"></label>
+      <label>Hit marks and ticks (a mark at the crosshair and a tick for every blow you land) <input id="set-hitmarks" type="checkbox"></label>
+      <button class="set-defaults" data-tab="audio">Defaults for Audio</button>
+    </div>
+    <div class="set-tab" data-tab="access">
+      <label>Crosshair <select id="set-xh-style"><option value="crossdot">Cross and dot</option><option value="cross">Cross</option><option value="dot">Dot</option><option value="circle">Circle</option></select></label>
+      <label>Crosshair size <select id="set-xh-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
+      <label>Crosshair colour <select id="set-xh-color"><option value="white">White</option><option value="teal">Teal</option><option value="amber">Amber</option><option value="red">Red</option><option value="green">Green</option></select></label>
+      <label>Crosshair opacity <input id="set-xh-opacity" type="range" min="0.3" max="1" step="0.05"></label>
+      <label>Text size <select id="set-textsize"><option value="normal">Normal</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
+      <label>Reduce flashing and shaking <input id="set-reducedmotion" type="checkbox"></label>
+      <label>Sound captions (words on the screen for the sounds that matter) <input id="set-captions" type="checkbox"></label>
+      <button class="set-defaults" data-tab="access">Defaults for Accessibility</button>
+    </div>
+    <div class="set-tab" data-tab="gameplay">
+      <label>A one-line hint the first time something new matters <input id="set-hints" type="checkbox"></label>
+      <label>Keep a play log on this device (nothing is sent: you export it and send it yourself) <input id="set-playlog" type="checkbox"></label>
+      <div class="row" id="playlog-row"><button id="btn-playlog-export">Export play log</button><button id="btn-playlog-copy">Copy</button><button id="btn-playlog-clear">Clear play log</button></div><div class="sub" id="playlog-note"></div>
+      <label>Tab opens the Journal and pauses (off: a live map over the game) <input id="set-journalpause" type="checkbox"></label>
+      <label>Minimap (top right) <select id="set-minimap"><option value="off">off</option><option value="small">small</option><option value="large">large</option></select></label>
+      <label>Story scenes <select id="set-cinematics"><option value="once">the first time</option><option value="always">every time</option><option value="off">off</option></select></label>
+      <label>Keep a checkpoint at a gate, a key or a silenced bell (death goes back to it) <input id="set-checkpoints" type="checkbox"></label>
+      <button class="set-defaults" data-tab="gameplay">Defaults for Gameplay</button>
+    </div>
     </details>
     <div class="legend" id="legend-pause"></div>
-    <details id="controls-box"><summary>Controls (click a key to change it)</summary><div id="controls" class="rows"></div><button id="btn-reset-keys">Reset controls to default</button><div class="note" id="bind-note"></div></details>
-    <details id="pad-box"><summary>Controller buttons (click one, then press a button on the pad)</summary><div id="padcontrols" class="rows"></div><button id="btn-reset-pad">Reset controller buttons to default</button><div class="note" id="pad-note"></div></details>
+    
+    
     <div class="row"><button id="btn-restart">Restart level</button><button id="btn-quit">Quit to title</button></div>
     <div class="note" id="pause-note"></div>
   </div>
@@ -459,7 +488,7 @@ SOFTWARE.</pre></div></details>
 
 <div id="screen-dead" class="screen hidden">
   <div class="panel"><h2>YOU DIED</h2><div class="sub">The Hush takes another note.</div><div id="dead-stats"></div>
-    <button id="btn-retry">Retry level (Enter)</button><button id="btn-dead-load">Load quick save</button></div>
+    <button id="btn-dead-check">Back to the checkpoint (Enter)</button><button id="btn-retry">Restart the level</button><button id="btn-dead-load">Load quick save</button></div>
 </div>
 
 <div id="screen-complete" class="screen hidden">
@@ -473,6 +502,7 @@ SOFTWARE.</pre></div></details>
   <div id="ending-tally" class="hidden"><h2 id="tally-title"></h2><div class="sub" id="tally-sub"></div><div id="tally-eps"></div><div id="tally-totals" class="rows"></div><div id="tally-note"></div><div id="tally-story"></div><div id="tally-next"></div><button id="btn-ending">Continue</button></div>
   <div id="ending-hint">Enter to go on · Esc to skip</div>
 </div>
+<div id="screen-maps" class="screen hidden"><div class="panel"><h2>Maps you have finished</h2><div class="sub">Play any of them again, on its own, with the guns it was built for. Your campaign and its saves are left alone.</div><div id="maps-list"></div><button id="btn-maps-back">Back</button></div></div>
 <div id="screen-credits" class="screen hidden"><div id="credits-roll"></div><div id="credits-hint">Esc, Enter or a click goes back</div></div>
 <script type="module" src="/src/game/main.js"></script>
 </body></html>

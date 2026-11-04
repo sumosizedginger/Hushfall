@@ -136,9 +136,7 @@ export function installTestHook(app) {
       if (!keepProgress) g.progress = sanitizeProgress(null);
       // a new game starts a fresh campaign, as the real button does: a choice made in C2M11 leaked into the next map's world of the same page session
       // and made the browser's state hash differ from the node sim's on every later Campaign Two map
-      app.startLevel(
-        { difficulty, seed, ...(mapId ? { mapId } : {}) },
-      );
+      app.startLevel({ difficulty, seed, ...(mapId ? { mapId } : {}) });
       g.manual = !realtime;
       return snap();
     },

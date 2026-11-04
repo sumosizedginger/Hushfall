@@ -31,6 +31,11 @@ export function makeShellState({ storage, settings, firstMap }) {
     artKey: undefined,
     holdSkip: undefined,
     commsHold: undefined,
+    replay: false, // a finished map played again from the map select: no Continue, no checkpoint, no next map
+    profile: undefined, // the best on every map, across every campaign run (profile.js)
+    afterTraining: null, // the difficulty a new game waits on while the training yard is walked
+    checkAt: undefined,
+    checkPending: undefined,
 
     // input: the keyboard, the mouse and the pad all reach the simulation through `input`
     input: new InputState(settings.bindings),

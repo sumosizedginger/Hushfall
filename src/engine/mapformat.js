@@ -205,6 +205,7 @@ export class MapData {
     this.dark = src.atmosphere?.dark === true;
     this.lantern = src.lantern ?? null; // a dark place and the hand lantern that is carried in it ({ oil, max, eternal }; null = none)
     this.drops = src.drops ?? null; // { scale }: this map's ammunition comes from the dead (src/engine/drops.js), not from boxes on the road
+    this.training = !!src.training; // the training yard: its doors wait on what it has seen you do (training.js)
     this.range = !!src.range; // the dev-only weapons range (never a campaign map): the player cannot die, is refilled and healed (range.js)
     this.entryLoadout = src.entryLoadout ?? null; // what the player has when this level is started cold (not arriving from the previous map)
     this.props = this.entities.filter((e) => e.type === 'prop' && !e.movable); // the STATIC props (collision, nav, the merged level mesh)
@@ -550,15 +551,15 @@ function validateMapChecks(src) {
   }
   if (src.intro != null && (typeof src.intro.title !== 'string' || !Array.isArray(src.intro.lines))) err('intro needs a title and lines[]');
   for (const d of doors) if (d.key && !keyPickups.has(d.key)) err(`door ${d.at} needs '${d.key}' but no such key pickup exists`);
+  for (const e of ents)
+    if (e.skill != null && !(e.type === 'enemy' && (e.skill === 'normal' || e.skill === 'hard')))
+      err(`entity at ${e.at}: skill must be 'normal' or 'hard', on a creature`);
   validateKit(src, { w, h, tile, walkable, err, ents, msgIds });
   return errors.length ? { ok: false, errors } : { ok: true, errors: [] };
 }
 
 /** Gate 2 production-kit validation: terrain layers, sectors, closets, switches, triggers, exits and every action they run. */
 function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
-  for (const e of ents)
-    if (e.skill != null && !(e.type === 'enemy' && (e.skill === 'normal' || e.skill === 'hard')))
-      err(`entity at ${e.at}: skill must be 'normal' or 'hard', on a creature`);
   const layer = (name, rows, allowed) => {
     if (rows == null) return false;
     if (!Array.isArray(rows) || rows.length !== h || rows.some((r) => typeof r !== 'string' || r.length !== w)) {
@@ -1068,6 +1069,8 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
         if (!m || !(Number(m[2]) > 0 && Number(m[2]) <= 1)) err(`${tag}: '${wn}' must be hp:<group><fraction between 0 and 1>`);
         else if (!groups.has(m[1])) err(`${tag}: unknown group in '${wn}'`);
       } // a group has less than that share of its hit points left (phases.js)
+      else if (wn.startsWith('did:') && src.training)
+        continue; // what the training yard has seen you do
       else if (wn === 'lamp:on') {
         if (!src.lantern) err(`${tag}: lamp:on needs a map with a lantern`);
       } // the hand lantern is lit (the Unrung Gate)

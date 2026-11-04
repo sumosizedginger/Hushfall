@@ -181,6 +181,7 @@ export function conditionMet(w, t) {
       def = w.map.sectors.find((q) => q.id === id);
     return !!s && Math.abs(s.h - s.target) < 1e-6 && Math.abs(s.h - (pos === 'high' ? def.high : def.low)) < 1e-6;
   }
+  if (c.startsWith('did:')) return !!w.did?.[c.slice(4)]; // the training yard saw you do it (training.js)
   if (c === 'lamp:on') return !!w.player.lamp?.on; // the hand lantern is lit
   if (c.startsWith('hp:')) return !!hpCondition(w, c); // a group is under a share of its hit points (phases.js)
   return false;

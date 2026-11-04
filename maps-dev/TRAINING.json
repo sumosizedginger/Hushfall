@@ -1,0 +1,603 @@
+{
+ "format": 1,
+ "id": "TRAINING",
+ "version": 1,
+ "name": "The Training Yard",
+ "ceilingHeight": 6,
+ "atmosphere": {
+  "look": "customs",
+  "dark": true,
+  "fog": "#0c0f12",
+  "fogDensity": 0.006
+ },
+ "grid": [
+  "################################################################################################################################################",
+  "################################################################################################################################################",
+  "################################################################################################################################################",
+  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCPPPPPPPPPPPPPPPPPPPPPPPPPPPPCCCCCCCCCCCCCCPPPPPPPPPPPPPPCCCCCCCCCCCCCCIIIIIIIIIIIIIIPPPPPPPPPPPPPPCCCCCCCCCCCCCCC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffDfffffffffffffDtttttttttttttDtttttttttttttDfffffffffffffDtttttttttttttDfffffffffffffDfffffffffffffDtttttttttttttDfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CfffffffffffffCfffffffffffffPtttttttttttttPtttttttttttttCfffffffffffffPtttttttttttttCfffffffffffffIfffffffffffffPtttttttttttttCfffffffffffffC##",
+  "#CCCCCCCCCCCCCCCCCCCCCCCCCCCCPPPPPPPPPPPPPPPPPPPPPPPPPPPPCCCCCCCCCCCCCCPPPPPPPPPPPPPPCCCCCCCCCCCCCCIIIIIIIIIIIIIIPPPPPPPPPPPPPPCCCCCCCCCCCCCCC##",
+  "################################################################################################################################################",
+  "################################################################################################################################################",
+  "################################################################################################################################################"
+ ],
+ "doors": [
+  {
+   "at": [15, 9],
+   "remote": true
+  },
+  {
+   "at": [29, 9],
+   "remote": true
+  },
+  {
+   "at": [43, 9],
+   "remote": true
+  },
+  {
+   "at": [57, 9],
+   "remote": true
+  },
+  {
+   "at": [71, 9],
+   "remote": true
+  },
+  {
+   "at": [85, 9],
+   "remote": true
+  },
+  {
+   "at": [99, 9],
+   "remote": true
+  },
+  {
+   "at": [113, 9],
+   "remote": true
+  },
+  {
+   "at": [127, 9],
+   "remote": true
+  }
+ ],
+ "secrets": [],
+ "triggers": [
+  {
+   "id": "t0",
+   "when": "msg:walked",
+   "do": [
+    {
+     "open": [15, 9]
+    },
+    {
+     "objective": "Hold the run key along this hall"
+    }
+   ]
+  },
+  {
+   "id": "t1",
+   "when": "did:sprint",
+   "do": [
+    {
+     "open": [29, 9]
+    },
+    {
+     "objective": "Use the sights and kill the far one"
+    }
+   ]
+  },
+  {
+   "id": "t2",
+   "when": "dead:sights",
+   "do": [
+    {
+     "open": [43, 9]
+    },
+    {
+     "objective": "Kill this one up close with the scattergun"
+    }
+   ]
+  },
+  {
+   "id": "t3",
+   "when": "dead:close",
+   "do": [
+    {
+     "open": [57, 9]
+    },
+    {
+     "objective": "Guard against its blow"
+    }
+   ]
+  },
+  {
+   "id": "t4",
+   "when": "did:guard",
+   "do": [
+    {
+     "open": [71, 9]
+    },
+    {
+     "objective": "Charge the lamp and let go"
+    }
+   ]
+  },
+  {
+   "id": "t5",
+   "when": "did:charged",
+   "do": [
+    {
+     "open": [85, 9]
+    },
+    {
+     "objective": "Turn a gun to one of its loads"
+    }
+   ]
+  },
+  {
+   "id": "t6",
+   "when": "did:load",
+   "do": [
+    {
+     "open": [99, 9]
+    },
+    {
+     "objective": "Light the lantern"
+    }
+   ]
+  },
+  {
+   "id": "t7",
+   "when": "lamp:on",
+   "do": [
+    {
+     "open": [113, 9]
+    },
+    {
+     "objective": "Change gun with the wheel, or the last-gun key"
+    }
+   ]
+  },
+  {
+   "id": "t8",
+   "when": "did:switch",
+   "do": [
+    {
+     "open": [127, 9]
+    },
+    {
+     "objective": "Walk out when you are ready"
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [4, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [12, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [18, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [26, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [32, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [40, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [46, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [54, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [60, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [68, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [74, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [82, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [88, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [96, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [102, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [110, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [116, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [124, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [130, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [138, 4]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [34, 7]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [34, 8]
+  },
+  {
+   "type": "player",
+   "at": [3, 9],
+   "facing": "east"
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [34, 10]
+  },
+  {
+   "type": "prop",
+   "kind": "crate",
+   "at": [34, 11]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [4, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [12, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [18, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [26, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [32, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [40, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [46, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [54, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [60, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [68, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [74, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [82, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [88, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [96, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [102, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [110, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [116, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [124, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [130, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [138, 15]
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [41, 9],
+   "facing": -1.5707963267948966,
+   "group": "sights"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [54, 9],
+   "facing": -1.5707963267948966,
+   "group": "close"
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [65, 9],
+   "facing": -1.5707963267948966,
+   "hold": "turn",
+   "hp": 5000,
+   "sight": 9
+  },
+  {
+   "type": "enemy",
+   "kind": "tollbearer",
+   "at": [80, 8],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "gaunt",
+   "at": [81, 10],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [79, 11],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "enemy",
+   "kind": "wardengraft",
+   "at": [94, 9],
+   "facing": -1.5707963267948966,
+   "hold": "inert",
+   "hp": 5000
+  },
+  {
+   "type": "exit",
+   "at": [139, 9],
+   "dest": "next"
+  }
+ ],
+ "intro": {
+  "title": "THE TRAINING YARD",
+  "lines": [
+   "Ten rooms. Each door opens when you have done what the room asks.",
+   "You cannot die here. {key:pause} leaves whenever you like."
+  ]
+ },
+ "messages": [
+  {
+   "id": "s0",
+   "at": [3, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "{key:forward} {key:left} {key:back} {key:right} to walk, the mouse to look. Walk to the far end."
+  },
+  {
+   "id": "walked",
+   "at": [13, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "The door has opened. A door with no handle answers to something you did somewhere else."
+  },
+  {
+   "id": "s1",
+   "at": [17, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "Hold {key:sprint} to run. The gun comes down while you run: you cannot fire until you let go and it comes back up."
+  },
+  {
+   "id": "s2",
+   "at": [31, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "Hold {key:aim} for the sights: slower on your feet, steadier on the target, and spread grows when you move. Kill the far one with {key:fire}."
+  },
+  {
+   "id": "s3",
+   "at": [45, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "{key:weapon2} is the scattergun. Wait until it is close and lifts its arm: a close hit knocks it out of its swing."
+  },
+  {
+   "id": "s4",
+   "at": [59, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "{key:weapon6} is your fists. Hold {key:aim} to guard. Raise it just as the blow lands and it is a parry: the next blow of yours hits twice as hard."
+  },
+  {
+   "id": "s5",
+   "at": [73, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "{key:weapon5} is the lamp. Tap for an arc that finds its own targets. Hold {key:fire} to charge, and let go."
+  },
+  {
+   "id": "s6",
+   "at": [87, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "A gun can carry a load. {key:load} turns it to the next one: slag burns, rime chills, penetrators go through plate. A load is found, not given: here they are free."
+  },
+  {
+   "id": "s7",
+   "at": [101, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "Dark. {key:lamp} lights the lantern. Oil runs out, and what hunts by light will see you."
+  },
+  {
+   "id": "s8",
+   "at": [115, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "Tap {key:weaponLast} for your last gun. Hold it for the wheel: time slows while it is open, and you let go on the gun you want."
+  },
+  {
+   "id": "s9",
+   "at": [129, 9],
+   "radius": 3,
+   "speaker": "THE YARD",
+   "text": "{key:map} opens the Journal: the map, what you have read, what each thing you pick up is for. It stops the clock. That is everything. The way out is ahead."
+  }
+ ],
+ "objective": "Walk to the far end of the room",
+ "entryLoadout": {
+  "hp": 100,
+  "armor": 50,
+  "ammo": {
+   "flare": 30,
+   "shell": 40,
+   "rivet": 200,
+   "bolt": 24,
+   "cell": 100,
+   "round": 180,
+   "rocket": 12
+  },
+  "weapons": [
+   "flare",
+   "scattergun",
+   "rivet",
+   "harpoon",
+   "arc",
+   "fists",
+   "carbine",
+   "linethrower",
+   "fork",
+   "mortar"
+  ]
+ },
+ "lantern": {
+  "oil": 60,
+  "max": 90,
+  "eternal": true
+ },
+ "lookZones": [
+  {
+   "rect": [
+    99,
+    3,
+    113,
+    16
+   ],
+   "look": "cellar",
+   "fog": "#020304",
+   "fogDensity": 0.09
+  }
+ ],
+ "training": true,
+ "range": true
+}

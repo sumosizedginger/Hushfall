@@ -1,5 +1,7 @@
-// The small things that fly: chips and sparks where a shot stopped, spent cases, the parts of a burst body. Render only: nothing here touches the sim.
-// Chips and cases are one instanced mesh each, a fixed pool with no allocation per frame; the parts of a body share the rig's own geometry and materials.
+// The small things that fly: chips and sparks where a shot stopped, spent cases, the parts of a burst body. Render only: nothing here touches the
+// sim.
+// Chips and cases are one instanced mesh each, a fixed pool with no allocation per frame; the parts of a body share the rig's own geometry and
+// materials.
 import * as THREE from 'three';
 import { SURFACE_BURST, CASINGS, GIBS } from './feel.js';
 import { debrisFloor, spawnGround } from './debris.js';
@@ -111,7 +113,8 @@ export class ImpactFx {
   }
 
   /**
-   * a body bursts: the rig's meshes fly apart from where they stand now. (dx, dz) is the blow's direction. The meshes are new objects over the rig's own geometry and
+   * a body bursts: the rig's meshes fly apart from where they stand now. (dx, dz) is the blow's direction. The meshes are new objects over the rig's
+   * own geometry and
    * materials, so the ink and the paint are the creature's own.
    */
   burstBody(rig, x, y, z, dx, dz) {

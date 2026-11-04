@@ -37,6 +37,11 @@ export const defaultSettings = () => ({
   rawMouse: true, // ask for the mouse without the system's acceleration where the browser offers it
   mouseInvertY: false,
   adsSens: 1, // invert the mouse; the sensitivity through the sights, as a share of the one that matches the zoom
+  checkpoints: true, // keep a checkpoint at a gate, a key, a silenced bell; death goes back to it
+  hints: true, // the one-line hint the first time a system matters
+  hintsSeen: {},
+  trainingOffered: false,
+  trainingDone: false,
   hitMarks: true, // a mark at the crosshair and a tick for every blow you land
   gore: 'full', // full | reduced: a big enough blow bursts a body, or it never does
   headBob: 'full', // full | gentle | off (reduced motion turns it off whatever this says)
@@ -114,6 +119,18 @@ export function sanitizeSettings(raw) {
   s.reducedMotion = raw.reducedMotion === true;
   s.captions = raw.captions === true;
   s.firstRunSeen = raw.firstRunSeen === true;
+  s.checkpoints = raw.checkpoints !== false;
+  s.hints = raw.hints !== false;
+  s.hintsSeen =
+    raw.hintsSeen && typeof raw.hintsSeen === 'object' && !Array.isArray(raw.hintsSeen)
+      ? Object.fromEntries(
+          Object.keys(raw.hintsSeen)
+            .filter((k) => raw.hintsSeen[k] === true)
+            .map((k) => [k, true]),
+        )
+      : {};
+  s.trainingOffered = raw.trainingOffered === true;
+  s.trainingDone = raw.trainingDone === true;
   s.hitMarks = raw.hitMarks !== false;
   s.gore = raw.gore === 'reduced' ? 'reduced' : 'full';
   s.rawMouse = raw.rawMouse !== false;
@@ -145,3 +162,12 @@ export function saveSettings(storage, s) {
 /** the field of view setting is the VERTICAL angle (three.js); what it spans across a window of this shape, in degrees */
 export const fovAcross = (vertical, aspect) => Math.round((2 * Math.atan(Math.tan((vertical * Math.PI) / 360) * aspect) * 180) / Math.PI);
 export const fovLabel = (vertical, aspect) => `${Math.round(vertical)}° tall, ${fovAcross(vertical, aspect)}° across`;
+/** the settings by tab, for the panel and its Defaults buttons (a test holds every control of the panel to a tab) */
+export const SETTINGS_TABS = {
+  controls: { label: 'Controls', keys: ['aimToggle', 'sprintToggle', 'wheelSlow', 'wheelToggle'] },
+  mouse: { label: 'Mouse and pad', keys: ['sensitivity', 'adsSens', 'mouseInvertY', 'rawMouse', 'gamepad'] },
+  video: { label: 'Video', keys: ['fov', 'headBob', 'brightness', 'internalWidth', 'autoQuality', 'outline', 'paint', 'gore'] },
+  audio: { label: 'Audio', keys: ['masterVolume', 'sfxVolume', 'musicVolume', 'hitMarks'] },
+  access: { label: 'Accessibility', keys: ['crosshair', 'textSize', 'reducedMotion', 'captions'] },
+  gameplay: { label: 'Gameplay', keys: ['hints', 'journalPause', 'minimap', 'cinematics', 'checkpoints', 'playLog'] },
+};

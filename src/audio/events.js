@@ -365,7 +365,8 @@ export function soundsForEvent(e) {
     case 'enemy_hit':
       return [{ id: 'enemy_hit', pos: at(e) }];
     case 'dmg':
-      return [e.killed ? { id: 'kill_tick', gain: 0.9 } : { id: 'hit_tick', gain: Math.min(1, 0.35 + (e.amount ?? 0) / 50) }]; // the blow landed: a tick that does not fade with distance (the setting turns it off)
+      // the blow landed: a tick that does not fade with distance (the setting turns it off)
+      return [e.killed ? { id: 'kill_tick', gain: 0.9 } : { id: 'hit_tick', gain: Math.min(1, 0.35 + (e.amount ?? 0) / 50) }];
     case 'resonant_ring':
       return [{ id: 'resonant_ring', pos: at(e), gain: 0.55 }]; // the Resonant's chord on the beat
     case 'bell_strike':
