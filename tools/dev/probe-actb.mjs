@@ -6,12 +6,14 @@
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..'),
   port = 5291;
 const server = await createServer({ root, logLevel: 'error', server: { port, strictPort: true } });
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.evaluateOnNewDocument(() => {
   navigator.getGamepads = () => [null, null, null, null];
 });
@@ -101,6 +103,7 @@ for (const id of ['C2M09', 'C2M10', 'C2M11', 'C2M12', 'C2S01', 'C2M13', 'C2M14',
   check('the Ossuary is dark with a held lantern and an oil gauge', !!lp.lamp && lp.hud.shown && /OIL/.test(lp.hud.label), JSON.stringify(lp.hud));
 }
 console.log(JSON.stringify({ checks, errors }, null, 1));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(checks.every((c) => c.ok) && !errors.length ? 0 : 1);

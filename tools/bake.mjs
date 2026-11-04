@@ -7,6 +7,7 @@ import { PNG } from 'pngjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { refuseLock } from './dev/lockguard.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const PREVIEW = process.env.BAKE_PREVIEW ? path.resolve(process.env.BAKE_PREVIEW) : null,
@@ -29,6 +30,7 @@ const browser = await puppeteer.launch({
 const errors = [];
 async function job(id, bg) {
   const page = await browser.newPage();
+  await refuseLock(page);
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text());

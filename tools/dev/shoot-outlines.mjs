@@ -9,6 +9,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
+import { refuseLock, reportLock } from './lockguard.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const out = path.resolve(process.argv[2] ?? path.join(root, 'review/outlines/now')),
@@ -42,6 +43,7 @@ await server.listen();
 const actualPort = server.config.server.port;
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
@@ -143,6 +145,7 @@ fs.writeFileSync(
   ),
 );
 console.log(JSON.stringify({ errors }));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(errors.length ? 1 : 0);

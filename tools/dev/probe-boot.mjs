@@ -8,6 +8,7 @@
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..'),
   ids = process.argv.slice(2).length ? process.argv.slice(2) : ['HIVE', 'HIVEBOSS', 'BELLBOSS', 'HIVEEND'];
 const port = 5285,
@@ -18,6 +19,7 @@ const browser = await puppeteer.launch({
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'],
 });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.evaluateOnNewDocument(() => {
   navigator.getGamepads = () => [null, null, null, null];
 });
@@ -58,6 +60,7 @@ for (const id of ids) {
 const fails = out.checks.filter((q) => !q.pass);
 out.failed = fails.length;
 console.log(JSON.stringify(out, null, 1));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(fails.length || errors.length ? 1 : 0);

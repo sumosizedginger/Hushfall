@@ -117,8 +117,8 @@ async function runMap(spec) {
         for (let i = 0; i < 24; i++) {
           const p = await T('t.step_cinematic(0.5)');
           if (!p?.active || (p.fade < 0.1 && (p.text ?? '').length >= 12)) break;
-        // round 1 (Gemini, Grok, Codex: the C2M24 frame was black): the first frame of a scene is its fade-in; step on until the black has cleared
-        // and a subtitle is up (at most 12 s of scene), then take the picture
+          // round 1 (Gemini, Grok, Codex: the C2M24 frame was black): the first frame of a scene is its fade-in; step on until the black has cleared
+          // and a subtitle is up (at most 12 s of scene), then take the picture
         }
         await shot('scene', { hp: r.player?.hp }, true);
       }

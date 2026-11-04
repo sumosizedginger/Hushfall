@@ -7,6 +7,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import { refuseLock, reportLock } from './lockguard.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const outDir = path.join(root, 'review/audio');
@@ -67,6 +68,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port: 523
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 page.on('console', (m) => {
@@ -162,6 +164,7 @@ fs.writeFileSync(
     2,
   ),
 );
+await reportLock(page);
 await browser.close();
 await server.close();
 console.log(failures.length ? 'FAILURES:\n' + failures.join('\n') : `audio QA OK: ${rows.length} sounds + 2 music renders`);

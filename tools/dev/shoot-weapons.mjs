@@ -4,6 +4,7 @@ import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..');
 const out = path.join(root, 'review/engine-skeleton');
 fs.mkdirSync(out, { recursive: true });
@@ -11,6 +12,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port: 524
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
@@ -77,6 +79,7 @@ await shot('pickups');
 console.log(
   JSON.stringify({ errors, hud: await page.$eval('#hud-weapons', (e) => e.textContent), label: await page.$eval('#hud-ammo-label', (e) => e.textContent) }),
 );
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(errors.length ? 1 : 0);

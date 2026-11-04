@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { refuseLock, reportLock } from './lockguard.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const outDir = path.join(root, 'gemini-playthrough/images');
@@ -22,6 +23,7 @@ const browser = await puppeteer.launch({
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
 });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 
 const errors = [];
@@ -282,6 +284,7 @@ try {
 } catch (err) {
   console.error('Playthrough encountered error:', err);
 } finally {
+  await reportLock(page);
   await browser.close();
   await server.close();
 }

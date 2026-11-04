@@ -8,6 +8,7 @@ import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
 import { savePng } from './savepng.mjs';
+import { refuseLock, reportLock } from './lockguard.mjs';
 
 const args = process.argv.slice(2),
   flags = Object.fromEntries(
@@ -34,6 +35,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port, str
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
@@ -62,6 +64,7 @@ for (const [id, kind] of shots) {
   await savePng(page, path.join(out, `${id}-${kind}.png`));
 }
 console.log(JSON.stringify({ errors }));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(errors.length ? 1 : 0);

@@ -6,11 +6,13 @@
 import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..');
 const server = await createServer({ root, logLevel: 'error', server: { port: 5268, strictPort: true } });
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
@@ -108,6 +110,7 @@ await T('t.setup_clearEnemies(); t.clearOverlays()');
   );
 }
 console.log(JSON.stringify(R, null, 1));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(errors.length || !ok ? 1 : 0);

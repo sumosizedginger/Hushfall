@@ -47,7 +47,7 @@ for (const [i, planText] of plans.entries()) {
           ok: rr.result === 'complete',
           detail: rr.failure || rr.result,
         });
-      // hard on two seeds: tests/placement-pt023.test.js plays every route on hard seed 2 // every route of the map, as verify-map plays them
+        // hard on two seeds: tests/placement-pt023.test.js plays every route on hard seed 2 // every route of the map, as verify-map plays them
       }
   const bad = checks
     .filter((c) => !c.ok)

@@ -8,6 +8,7 @@ import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
+import { refuseLock, reportLock } from '../dev/lockguard.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const outDir = path.join(root, 'review', 'look-bible');
@@ -40,6 +41,7 @@ for (const id of ids) {
     continue;
   }
   const page = await browser.newPage();
+  await refuseLock(page);
   page.on('pageerror', (e) => errors.push(id + ': ' + String(e)));
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(id + ': ' + m.text());
@@ -57,6 +59,7 @@ for (const id of ids) {
   }
   await page.close();
 }
+await reportLock(page);
 await browser.close();
 await server.close();
 if (errors.length) {

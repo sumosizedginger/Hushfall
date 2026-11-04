@@ -45,9 +45,9 @@ await page.evaluateOnNewDocument(() => {
     window.__lockAsks++;
     return Promise.reject(new DOMException('refused by the tool', 'NotAllowedError'));
   };
-// (the pointer lock is refused before any page script runs: the owner's mouse is never taken) // a controller plugged into the machine (a DualSense
-// with a stick at rest) steers the page in its real-time sections: this check is about the keyboard and the mouse (tools/dev/probe-pad.mjs installs
-// its own fake pad)
+  // (the pointer lock is refused before any page script runs: the owner's mouse is never taken) // a controller plugged into the machine (a DualSense
+  // with a stick at rest) steers the page in its real-time sections: this check is about the keyboard and the mouse (tools/dev/probe-pad.mjs installs
+  // its own fake pad)
 });
 await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e));

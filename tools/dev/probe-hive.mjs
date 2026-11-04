@@ -12,12 +12,14 @@ import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..');
 const port = 5283,
   server = await createServer({ root, logLevel: 'error', server: { port, strictPort: true } });
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.evaluateOnNewDocument(() => {
   navigator.getGamepads = () => [null, null, null, null];
 });
@@ -180,6 +182,7 @@ ok('no page error', errors.length === 0, errors.slice(0, 3));
 const fails = out.checks.filter((q) => !q.pass);
 out.failed = fails.length;
 console.log(JSON.stringify(out, null, 1));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(fails.length || errors.length ? 1 : 0);

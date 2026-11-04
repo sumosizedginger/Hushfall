@@ -9,6 +9,7 @@ import { createServer } from 'vite';
 import puppeteer from 'puppeteer';
 import fs from 'node:fs';
 import path from 'node:path';
+import { refuseLock, reportLock } from './lockguard.mjs';
 const root = path.resolve(import.meta.dirname, '../..'),
   out = path.resolve(process.argv[2] ?? path.join(root, 'review/preview'));
 const want = new Set((process.argv[3] ?? 'hub,bestiary,looks,scenery,lineup,variants').split(','));
@@ -18,6 +19,7 @@ const port = 5281,
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.evaluateOnNewDocument(() => {
   navigator.getGamepads = () => [null, null, null, null];
 });
@@ -407,6 +409,7 @@ if (want.has('end')) {
   await shot('end-7-epilogue-card-5', 200);
 }
 console.log(JSON.stringify(R, null, 1));
+await reportLock(page);
 await browser.close();
 await server.close();
 process.exit(errors.length ? 1 : 0);

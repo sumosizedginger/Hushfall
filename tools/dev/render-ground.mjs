@@ -10,6 +10,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { runRenderCensus } from './render-census.mjs';
 import { sourceShas } from '../textsha.mjs';
+import { refuseLock, reportLock } from './lockguard.mjs';
 
 const arg = (k, d) => {
   const i = process.argv.indexOf('--' + k);
@@ -32,6 +33,7 @@ const server = await createServer({ root, logLevel: 'error', server: { port, str
 await server.listen();
 const browser = await puppeteer.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
+await refuseLock(page);
 await page.setViewport({ width: 1280, height: 720 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e));
 page.on('console', (m) => {
@@ -76,6 +78,7 @@ fs.writeFileSync(
     2,
   ),
 );
+await reportLock(page);
 await browser.close();
 await server.close();
 const failed = checks.filter((c) => !c.ok);

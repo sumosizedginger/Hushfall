@@ -54,6 +54,17 @@ try {
   /* no git here: the git-based tests skip */
 }
 
+test('every tool that launches Chrome refuses the pointer lock before any page script runs', () => {
+  const walk = (d) =>
+    fs
+      .readdirSync(path.join(ROOT, d), { withFileTypes: true })
+      .flatMap((e) => (e.isDirectory() ? (e.name === 'desktop' ? [] : walk(d + '/' + e.name)) : e.name.endsWith('.mjs') ? [d + '/' + e.name] : []));
+  for (const f of walk('tools')) {
+    const s = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    if (s.includes('puppeteer.launch(')) assert.ok(/refuseLock\(|requestPointerLock/.test(s), f);
+  }
+});
+
 test('the root of the repository holds only what AGENTS.md names', { skip: !tracked && 'no git' }, () => {
   const top = [...new Set(tracked.map((f) => f.split('/')[0]))].sort();
   assert.deepEqual(
