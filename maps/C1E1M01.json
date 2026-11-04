@@ -570,20 +570,6 @@
    "at": [28, 18],
    "facing": 3.142,
    "skill": "hard"
-  },
-  {
-   "type": "enemy",
-   "kind": "bellhand",
-   "at": [41, 20],
-   "facing": -2.111,
-   "skill": "hard"
-  },
-  {
-   "type": "enemy",
-   "kind": "gaunt",
-   "at": [37, 20],
-   "facing": 3.142,
-   "skill": "hard"
   }
  ],
  "scenery": [

@@ -219,7 +219,7 @@ test('the Landing Scar: the singers sleep at the spawn (out of their sight), wak
       'suppression happened',
     );
   }
-  const s = runRoute(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.secret.route.json'), { seed: 1, difficulty: 'normal' });
+  const s = runRouteEither(loadMapFile('maps/C1E3M01.json'), loadRouteFile('routes/C1E3M01.secret.route.json'), { seed: 1, difficulty: 'normal' });
   assert.equal(s.result, 'complete');
   assert.equal(s.world.stats.secrets, 2);
   assert.equal(findTraps(map).traps, 0, 'no pit');

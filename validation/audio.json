@@ -1,15 +1,15 @@
 {
-  "when": "2026-11-04T01:12:46.250Z",
+  "when": "2026-11-04T05:26:41.100Z",
   "sources": {
-    "engine": "8a1f89e03db25c32",
+    "engine": "2da762cbe589046f",
     "render": "57ac175d536b8348",
-    "game": "2695f711b0a38dc6",
-    "audio": "3e60a99c295582a1",
+    "game": "78d7a11f958d60e4",
+    "audio": "c5a2850f1747a821",
     "assets": "17542adf13ccb083",
     "verifier": "874439ef370c764d",
     "probes": "acbf2c750f2131bd"
   },
-  "commit": "06f2aac",
+  "commit": "0993ef7",
   "env": "headless Chrome 154, OfflineAudioContext 44.1 kHz mono",
   "scope": "each recipe rendered ALONE offline; the live master chain, overlap and music-vs-effects balance are not measured",
   "sfx": [
@@ -340,9 +340,9 @@
     {
       "id": "impact_soft",
       "seconds": 0.1,
-      "peak": 0.068,
-      "rms": 0.0012,
-      "loudestWindowRms": 0.0094,
+      "peak": 0.11,
+      "rms": 0.0019,
+      "loudestWindowRms": 0.015,
       "tailRms": 0,
       "audibleSeconds": 0.05,
       "nan": 0,
@@ -376,9 +376,9 @@
     {
       "id": "case_drop",
       "seconds": 0.12,
-      "peak": 0.044,
-      "rms": 0.0011,
-      "loudestWindowRms": 0.0074,
+      "peak": 0.088,
+      "rms": 0.0021,
+      "loudestWindowRms": 0.0141,
       "tailRms": 0,
       "audibleSeconds": 0.1,
       "nan": 0,
@@ -388,11 +388,11 @@
     {
       "id": "sprint_breath",
       "seconds": 0.9,
-      "peak": 0.017,
-      "rms": 0.0008,
-      "loudestWindowRms": 0.0046,
+      "peak": 0.042,
+      "rms": 0.002,
+      "loudestWindowRms": 0.0114,
       "tailRms": 0,
-      "audibleSeconds": 0.73,
+      "audibleSeconds": 0.76,
       "nan": 0,
       "maxDiffLSB": 0,
       "bitExact": true
@@ -502,8 +502,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.94,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "step_plank",
@@ -622,8 +622,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.56,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "toll_alert",
@@ -766,8 +766,8 @@
       "tailRms": 0.00005,
       "audibleSeconds": 2.17,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "revive",
@@ -790,8 +790,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.81,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "pulse_back",
@@ -862,8 +862,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.96,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "resonant_draw",
@@ -1030,8 +1030,8 @@
       "tailRms": 0,
       "audibleSeconds": 2.14,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "spike_warn",
@@ -1102,8 +1102,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.99,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "cantor_call",
@@ -1318,8 +1318,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.48,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "chorister_alert",
@@ -1330,8 +1330,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.41,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "chorister_draw",
@@ -1522,8 +1522,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.95,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "load_creak",
@@ -1558,8 +1558,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.58,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "air_land",
@@ -1570,8 +1570,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.21,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "void_fall",
@@ -1606,8 +1606,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.09,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "receiver_dark",
@@ -1690,8 +1690,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.04,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "grandcantor_alert",
@@ -1702,8 +1702,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.79,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "grandcantor_draw",
@@ -1954,8 +1954,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.56,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mender_alert",
@@ -2254,8 +2254,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.27,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mother_hatch",
@@ -2374,8 +2374,8 @@
       "tailRms": 0,
       "audibleSeconds": 1.71,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "carbine_fire",
@@ -2398,8 +2398,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.76,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "mortar_fire",
@@ -2542,8 +2542,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.31,
       "nan": 0,
-      "maxDiffLSB": 1,
-      "bitExact": false
+      "maxDiffLSB": 0,
+      "bitExact": true
     },
     {
       "id": "saw_start",
@@ -2554,8 +2554,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.34,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "saw_rev",
@@ -2566,8 +2566,8 @@
       "tailRms": 0,
       "audibleSeconds": 0.39,
       "nan": 0,
-      "maxDiffLSB": 0,
-      "bitExact": true
+      "maxDiffLSB": 1,
+      "bitExact": false
     },
     {
       "id": "saw_stop",
@@ -2644,10 +2644,184 @@
       "nan": 0
     }
   },
-  "failures": [
-    "impact_soft audible: loudest 50 ms window RMS 0.0094",
-    "case_drop audible: loudest 50 ms window RMS 0.0074",
-    "sprint_breath audible: loudest 50 ms window RMS 0.0046"
-  ],
+  "themes": {
+    "harbour": {
+      "calm": {
+        "peak": 0.067,
+        "rms": 0.0164,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.501,
+        "rms": 0.0563,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.596,
+        "rms": 0.0733,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.839,
+        "rms": 0.108,
+        "nan": 0
+      }
+    },
+    "works": {
+      "calm": {
+        "peak": 0.055,
+        "rms": 0.0112,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.506,
+        "rms": 0.0562,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.603,
+        "rms": 0.0736,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.849,
+        "rms": 0.1083,
+        "nan": 0
+      }
+    },
+    "choir": {
+      "calm": {
+        "peak": 0.054,
+        "rms": 0.0139,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.521,
+        "rms": 0.0553,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.617,
+        "rms": 0.0732,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.871,
+        "rms": 0.1066,
+        "nan": 0
+      }
+    },
+    "gate": {
+      "calm": {
+        "peak": 0.083,
+        "rms": 0.0246,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.53,
+        "rms": 0.0567,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.622,
+        "rms": 0.0758,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.882,
+        "rms": 0.1114,
+        "nan": 0
+      }
+    },
+    "threshold": {
+      "calm": {
+        "peak": 0.071,
+        "rms": 0.0204,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.509,
+        "rms": 0.0566,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.606,
+        "rms": 0.0737,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.85,
+        "rms": 0.1088,
+        "nan": 0
+      }
+    },
+    "deep": {
+      "calm": {
+        "peak": 0.049,
+        "rms": 0.0132,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.501,
+        "rms": 0.0557,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.596,
+        "rms": 0.0722,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.832,
+        "rms": 0.106,
+        "nan": 0
+      }
+    },
+    "hive": {
+      "calm": {
+        "peak": 0.051,
+        "rms": 0.013,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.515,
+        "rms": 0.0563,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.612,
+        "rms": 0.0745,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.861,
+        "rms": 0.1087,
+        "nan": 0
+      }
+    },
+    "root": {
+      "calm": {
+        "peak": 0.055,
+        "rms": 0.0104,
+        "nan": 0
+      },
+      "noticed": {
+        "peak": 0.496,
+        "rms": 0.0571,
+        "nan": 0
+      },
+      "fighting": {
+        "peak": 0.59,
+        "rms": 0.0761,
+        "nan": 0
+      },
+      "overwhelmed": {
+        "peak": 0.828,
+        "rms": 0.1113,
+        "nan": 0
+      }
+    }
+  },
+  "failures": [],
   "note": "objective metrics only; subjective quality needs a human listen (review/audio/*.wav)"
 }

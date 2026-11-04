@@ -37,7 +37,7 @@ test('the message box sits top left under the objective, never over the gun, and
   assert.match(rule('#comms'), /left:16px;top:calc\(var\(--obj-b,0px\) \+ 14px\)/);
   assert.ok(!/bottom:/.test(rule('#comms')), 'not anchored to the bottom of the picture any more');
   assert.match(rule('#comms'), /font-size:clamp\(15px,1\.85vh,21px\)/);
-  assert.match(rule('#objective'), /font-size:clamp\(13px,1\.55vh,18px\)/);
+  assert.match(rule('#objective'), /font-size:clamp\(15px,1\.75vh,20px\)/);
   const ui = fs.readFileSync(path.join(ROOT, 'src/game/ui.js'), 'utf8');
   assert.match(ui, /setProperty\?\.\('--obj-b'/);
 });

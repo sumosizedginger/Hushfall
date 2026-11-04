@@ -22,13 +22,13 @@ export const FAMILIES = [
   ],
   [
     'melee and guard',
-    /^(swing|swing_heavy|fist_charge|melee_hit|melee_hit_heavy|parry|guard_up|block|guard_break|saw_(hit|kick|stall)|shove_impact|head_tick)$/,
+    /^(swing|swing_heavy|fist_charge|melee_hit|melee_hit_heavy|parry|guard_up|block|guard_break|saw_(hit|kick|stall)|shove_impact|head_tick|hit_tick|kill_tick)$/,
   ],
   ['the lamp and the loads', /^(lamp_|load_click|ignite_hiss|chill_crack|quench_hiss)/],
-  ['pickups, the player and the interface', /^(pickup_|ui_click|level_complete|weapon_switch|dry_click|player_die)/],
+  ['pickups, the player and the interface', /^(pickup_|ui_click|level_complete|weapon_switch|dry_click|player_die|sprint_breath|land_thud)/],
   [
     'hits and impacts',
-    /^(impact|hurt|burn_start|pin_thunk|shot_impact|enemy_hit|armor_ping|shield_ping|ward_ping|phys_hit|phys_break|spike_strike|pulse_hit|sweep_hit|graft_hit|seal_shatter|strike|node_sever)$/,
+    /^(impact|impact_(wood|metal|soft|wet|splash)|case_drop|hurt|burn_start|pin_thunk|shot_impact|enemy_hit|armor_ping|shield_ping|ward_ping|phys_hit|phys_break|spike_strike|pulse_hit|sweep_hit|graft_hit|seal_shatter|strike|node_sever)$/,
   ],
   [
     'bosses, elites and set pieces',

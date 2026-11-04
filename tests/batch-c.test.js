@@ -9,7 +9,7 @@ import { createWorld, doorAtCell } from '../src/engine/world.js';
 import { runActions } from '../src/engine/script.js';
 import { inVacuum, lockBusy } from '../src/engine/airlock.js';
 import { analyseReach } from '../src/engine/reach.js';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { LOCK } from '../src/engine/defs.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -84,7 +84,7 @@ test('everything is reachable (the four barracks too), there is no trap, and the
   assert.equal(r.exitReachable, true);
   assert.deepEqual(r.unreachable, []);
   for (const difficulty of ['easy', 'normal', 'hard']) {
-    const run = runRoute(loadMapFile('maps/C1E4M03.json'), loadRouteFile('routes/C1E4M03.main.route.json'), { seed: 1, difficulty });
+    const run = runRouteEither(loadMapFile('maps/C1E4M03.json'), loadRouteFile('routes/C1E4M03.main.route.json'), { seed: 1, difficulty });
     assert.equal(run.result, 'complete', `${difficulty}: ${run.failure}`);
   }
 });

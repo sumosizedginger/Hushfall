@@ -8,7 +8,7 @@ import { createWorld, step, spawnEnemy, damageEnemy, drainEvents } from '../src/
 import { parseMap } from '../src/engine/mapformat.js';
 import { dropType, maybeDrop, trackFired } from '../src/engine/drops.js';
 import { findTraps } from '../src/engine/traps.js';
-import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
+import { loadMapFile, loadRouteFile, runRoute, runRouteEither } from '../src/engine/harness.js';
 import { AMMO_MAX, DROPS, PICKUPS } from '../src/engine/defs.js';
 import { shippedMap, shippedSrc, ROOT } from './helpers.js';
 
@@ -234,8 +234,8 @@ test('a drop-fed map plays: drops happen, they are taken, the run is the same tw
   const map = loadMapFile('maps/C1E1M05.json'),
     route = loadRouteFile('routes/C1E1M05.main.route.json');
   for (const difficulty of ['easy', 'normal', 'hard']) {
-    const a = runRoute(map, route, { seed: 2, difficulty }),
-      b = runRoute(map, route, { seed: 2, difficulty });
+    const a = runRouteEither(map, route, { seed: 2, difficulty }),
+      b = runRouteEither(map, route, { seed: 2, difficulty });
     assert.equal(a.result, 'complete', difficulty);
     assert.equal(a.hash, b.hash, 'deterministic');
     assert.ok(a.events.filter((e) => e.type === 'drop').length >= 8, 'drops happened');

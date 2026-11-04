@@ -18,40 +18,7 @@
   }
  ],
  "all": [],
- "hard": [
-  {
-   "kind": "gaunt",
-   "at": [
-    25,
-    21
-   ],
-   "facing": -1.429
-  },
-  {
-   "kind": "bellhand",
-   "at": [
-    36,
-    16
-   ],
-   "facing": 0.165
-  },
-  {
-   "kind": "gill",
-   "at": [
-    50,
-    16
-   ],
-   "facing": 0
-  },
-  {
-   "kind": "tollbearer",
-   "at": [
-    55,
-    29
-   ],
-   "facing": 2.111
-  }
- ],
+ "hard": [],
  "easy": [
   [
    48,

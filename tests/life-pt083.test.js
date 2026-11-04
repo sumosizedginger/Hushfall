@@ -38,8 +38,8 @@ test('S2: a crash goes into the play log, at most ten of them, and only when the
 
 test('the sidecar: creatures on every difficulty, on Hard only, and left out on Easy; nothing else moves id', () => {
   const src = shippedSrc('C1E1M01');
-  delete src.version;
-  const first = src.entities.find((e) => e.type === 'enemy' && !e.group),
+  src.version = 1;
+  const first = src.entities.find((e) => e.type === 'enemy' && !e.group && !e.extra && e.skill !== 'hard'),
     plainFloor = src.entities.find((e) => e.type === 'player').at,
     map = applySkill(JSON.parse(JSON.stringify(src)), {
       all: [{ kind: 'gaunt', at: [plainFloor[0] + 1, plainFloor[1]] }],
@@ -49,7 +49,7 @@ test('the sidecar: creatures on every difficulty, on Hard only, and left out on 
   assert.ok(validateMap(map).ok, (validateMap(map).errors ?? []).join('; '));
   const m = parseMap(map),
     count = (d) => createWorld(m, { seed: 1, difficulty: d }).enemies.length,
-    base = src.entities.filter((e) => e.type === 'enemy').length;
+    base = src.entities.filter((e) => e.type === 'enemy' && e.skill !== 'hard' && !e.extra).length;
   assert.equal(count('normal'), base + 1);
   assert.equal(count('hard'), base + 2);
   assert.equal(count('easy'), base, 'one left out, one added');

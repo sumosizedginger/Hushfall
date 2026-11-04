@@ -180,7 +180,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     }
     const outDir = process.env.MAP_OUT ? path.resolve(process.env.MAP_OUT) : path.join(root, 'maps');
     fs.mkdirSync(outDir, { recursive: true });
-    applySkill(map);
+    if (process.env.SQUEEZE !== 'off') applySkill(map);
     fs.writeFileSync(path.join(outDir, lv.id + '.json'), pretty(map));
     console.log(
       `ok   ${lv.id} ${lv.name}: ${map.grid[0].length}x${map.grid.length}, ${map.entities.filter((e) => e.type === 'enemy').length} enemies -> ${path.relative(root, outDir)}/${lv.id}.json`,

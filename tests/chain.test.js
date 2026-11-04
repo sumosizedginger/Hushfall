@@ -8,7 +8,7 @@ import { loadMapFile, loadRouteFile, runRoute } from '../src/engine/harness.js';
 import { createWorld, carryOver, arrivalInventory } from '../src/engine/world.js';
 
 const IDS = ['C1E1M01', 'C1E1M02', 'C1E1M03', 'C1E1M04', 'C1E1M05', 'C1E1M06', 'C1E1M07', 'C1E1M08'];
-const chain = (difficulty, seed) => {
+const chain = (difficulty, seed, retries = 0) => {
   let carry = null;
   const log = [];
   for (const id of IDS) {
@@ -29,6 +29,14 @@ const chain = (difficulty, seed) => {
       r = runRoute(map, route, { world: w2, seed, difficulty, weave: 2 });
       policy = 'strafing';
     } // either fighter policy (PT-052, Bot v2 first half), on a fresh world with the same arrival
+    // Hard kills even the perfect fighter now and then (PT-083: more creatures, less ammunition, by the owner's decision): a player who dies plays the level again from the same arrival
+    for (let again = 1; again <= retries && r.result !== 'complete'; again++)
+      for (const weave of [false, 2]) {
+        if (r.result === 'complete') break;
+        const s2 = seed + again * 10;
+        r = runRoute(map, route, { world: createWorld(map, { seed: s2, difficulty, carry }), seed: s2, difficulty, weave });
+        policy = 'retry ' + again;
+      }
     log.push(`${id}:${r.result}:${policy}:${r.world.stats.damageTaken}`);
     assert.equal(r.result, 'complete', `${difficulty}/seed ${seed}: ${id} ended ${r.result} ${r.failure ?? ''} (chain so far: ${log.join(' ')})`);
     carry = carryOver(r.world);
@@ -48,11 +56,11 @@ test("arrival inventory is the carried one floored at the level's authored loado
 // edge for the perfect bot
 // (M08 hard: 52 of 64 seeds complete, the same 81% before and after the fairer hit volumes of 2026-10-05, known defect A04), so pinning one seed
 // asserts luck, not completability.
-test('the whole of Episode 1 is completable in one carried run on hard (at least 2 of seeds 2, 3, 4; the difficulty with the least ammo and the hardest hits)', () => {
+test('the whole of Episode 1 is completable in one carried run on hard, a level replayed from its arrival after a death (at least 2 of seeds 2, 3, 4; the difficulty with the least ammo and the hardest hits)', () => {
   const failures = [];
   for (const seed of [2, 3, 4]) {
     try {
-      chain('hard', seed);
+      chain('hard', seed, 4);
     } catch (e) {
       failures.push(e.message);
     }

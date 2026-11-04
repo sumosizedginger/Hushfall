@@ -16,22 +16,6 @@
     18
    ],
    "facing": 3.142
-  },
-  {
-   "kind": "bellhand",
-   "at": [
-    41,
-    20
-   ],
-   "facing": -2.111
-  },
-  {
-   "kind": "gaunt",
-   "at": [
-    37,
-    20
-   ],
-   "facing": 3.142
   }
  ],
  "easy": [

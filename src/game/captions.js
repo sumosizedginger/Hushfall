@@ -83,6 +83,7 @@ export const CAPTIONS = {
 export const NO_CAPTION = {
   "the player's own action or feedback (the screen, the gun and the HUD already show it)": [
     'fire',
+    'dmg',
     'charge_start',
     'charge_full',
     'swing',

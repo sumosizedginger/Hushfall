@@ -354,6 +354,7 @@ function loadWorldUnsafe(save, mapLoader) {
   const c = save?.campaign;
   if (!c || typeof c !== 'object') return { ok: false, reason: 'corrupt', detail: 'no campaign' };
   if (!own(DIFFICULTY, c.difficulty)) return { ok: false, reason: 'corrupt', detail: 'unknown difficulty ' + String(c.difficulty) };
+  if (save.world && !own(DIFFICULTY, save.world.difficulty)) return { ok: false, reason: 'corrupt', detail: 'unknown difficulty in the world' };
   if (!num(c.seed)) return { ok: false, reason: 'corrupt', detail: 'seed is not a number' };
   const carry = carryErrors(save.carry);
   if (carry.length) return { ok: false, reason: 'corrupt', detail: carry.join('; ') };

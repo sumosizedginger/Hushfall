@@ -3,6 +3,7 @@
 // coordinate east of a cut moved, rects and lists and the drops list too, a pair of numbers under a key the tool does not know is REPORTED), the
 // routes, and the one real squeezed map, Glass Steppe: the shipped JSON is exactly what the
 // squeeze makes of the unsqueezed compile, and both of its routes still reach the exit on every difficulty.
+import { applySkill } from '../tools/mapkit/skill.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -224,7 +225,7 @@ test('Glass Steppe, the first squeezed map: the shipped JSON is what the squeeze
     assert.equal(shipped.grid[0].length, 132 - spec.cuts.reduce((n, [a, b]) => n + b - a, 0));
     const again = squeezeMap(wide, spec);
     assert.deepEqual(again.warnings, []);
-    assert.deepEqual(JSON.parse(JSON.stringify(again.map)), shipped, 'the committed map is the squeeze of the drawing');
+    assert.deepEqual(applySkill(JSON.parse(JSON.stringify(again.map))), shipped, 'the committed map is the squeeze of the drawing, with its sidecar');
     const map = loadMapFile(path.join(ROOT, 'maps', 'C2M02.json'));
     for (const name of ['main', 'secret'])
       for (const difficulty of ['easy', 'normal', 'hard']) {
@@ -280,7 +281,7 @@ test('every squeezed map: the shipped JSON is the squeeze of the drawing, every 
         shipped = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', id + '.json'), 'utf8')),
         again = squeezeMap(wide, sq);
       assert.deepEqual(again.warnings, []);
-      assert.deepEqual(JSON.parse(JSON.stringify(again.map)), shipped, id + ': the committed map is the squeeze of the drawing');
+      assert.deepEqual(applySkill(JSON.parse(JSON.stringify(again.map))), shipped, id + ': the committed map is the squeeze of the drawing, with its sidecar');
       assert.ok(shipped.grid.length < wide.grid.length && shipped.grid[0].length < wide.grid[0].length, id + ' is smaller both ways');
       // no cut column has a ramp or a stair running through it, and no cut touches the wall behind a lever or an exit (the rules of the scan, checked
       // on the cuts the source holds)

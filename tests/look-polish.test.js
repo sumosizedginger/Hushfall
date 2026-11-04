@@ -195,7 +195,8 @@ test('creatures: hostile ones write alpha 0, peaceful ones PEACE_ALPHA; a lit ma
   const post = fs.readFileSync(path.join(ROOT, 'src/render/post.js'), 'utf8');
   assert.match(post, /float hostile = \(1\.0 - step\(0\.15, aMin\)\)/);
   assert.ok(PEACE_ALPHA > 0.15 && PEACE_ALPHA < 0.5, 'peaceful pixels are entities (under 0.5) but not hostile (over 0.15)');
-  assert.match(post, /mix\(vec3\(0\.035, 0\.04, 0\.06\), vec3\(0\.22, 0\.025, 0\.03\), hostile\)/);
+  assert.match(post, /mix\(vec3\(0\.035, 0\.04, 0\.06\), uHostile, hostile\)/);
+  assert.match(post, /uHostile: \{ value: new THREE\.Vector3\(0\.22, 0\.025, 0\.03\) \}/, 'red by default (the palette setting changes it)');
 });
 
 test("light and colour: the view scales the place's general light down and its lamps up, lights the room with the shot, and the grade pushes the place's tints", async () => {
