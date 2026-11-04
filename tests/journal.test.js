@@ -119,7 +119,7 @@ test('the wiring: Tab opens the Journal and pauses (the sim is not stepped), the
     /if \(cmd\.map\) \{ if \(settings\.journalPause !== false\) \{ openJournal\(\); return; \} g\.mapOpen = !g\.mapOpen; \}/.test(main),
     'stepOnce opens the Journal, or toggles the live map when the setting is off',
   );
-  const open = main.slice(main.indexOf('function openJournal()'), main.indexOf('function resume()'));
+  const open = main.slice(main.indexOf('function openJournal('), main.indexOf('function resume()'));
   assert.ok(
     open.includes("g.mode = 'paused'") && open.includes('document.exitPointerLock') && open.includes('journalLog(') && open.includes('openTab('),
     'it pauses like the pause menu',

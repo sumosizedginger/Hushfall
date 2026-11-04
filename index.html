@@ -149,8 +149,33 @@ button.bind:hover,button.bind:focus-visible{padding-left:8px;border-color:var(--
 button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2a2a}
 #controls{margin-bottom:10px}
 .note{color:#e0a060;min-height:1.4em;margin-top:8px;font-size:12px}
-#screen-pause{justify-content:flex-start;background:linear-gradient(90deg,#07080cf6 0,#07080cec min(460px,100vw),#07080c80 100%)}
+#screen-pause{justify-content:flex-start;background:linear-gradient(90deg,#07080cf6 0,#07080cf0 62%,#07080cb8 100%)}
 #screen-pause .panel{height:100vh;max-height:100vh;width:min(460px,100vw);border:0;border-right:1px solid var(--brass);box-shadow:inset -4px 0 0 #0c0f14,inset -5px 0 0 #2e3a3c,14px 0 50px #000a;padding:34px 30px 24px}
+#screen-pause .panel{flex:0 0 auto}
+#pause-where{margin:-6px 0 14px;padding-bottom:10px;border-bottom:1px solid #2e3a3c}
+.pw-name{font:400 20px/1.25 var(--serif);color:var(--paper);letter-spacing:.05em}
+.pw-line{font-size:calc(12px * var(--ui-scale));color:#9fb4b0;letter-spacing:.04em;margin-top:3px}
+#pause-info{flex:1 1 0;min-width:0;height:100vh;overflow-y:auto;box-sizing:border-box;padding:34px 44px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px 40px;align-content:start;text-align:left;color:var(--paper);font-size:calc(clamp(13px,1.45vh,18px) * var(--ui-scale))}
+#pause-info section{min-width:0}
+#pause-info h3{font:400 13px/1.2 var(--serif);letter-spacing:.22em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid var(--brass);padding-bottom:6px;margin:0 0 8px}
+#pause-info .rows div{padding:4px 0;gap:14px}
+#pause-info .rows span{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+#pause-info .rows em{font-style:normal;color:#9fb4b0;margin-left:6px}
+#pause-info .rows strong{color:var(--paper);font-weight:400;font-size:1.25em}
+#pause-info .rows .on b,#pause-info .rows .on span{color:var(--paper)}
+.pi-arms b{white-space:pre}
+.pi-title{font:400 24px/1.2 var(--serif);letter-spacing:.04em;margin-bottom:4px}
+.pi-sub{color:#9fb4b0;font-size:.9em;line-height:1.4;margin-top:2px}
+.pi-line{margin:8px 0 0;font-family:var(--serif);font-style:italic;line-height:1.4;color:#c9d4cf}
+.pi-goal{margin:0;line-height:1.45}
+.pi-bar{display:inline-block;vertical-align:middle;width:56px;height:5px;margin-left:8px;background:#1d272b}
+.pi-bar u{display:block;height:100%;background:var(--bronze);text-decoration:none}
+.pi-checks{list-style:none;margin:8px 0 0;padding:0;color:#7f9490}
+.pi-checks li{padding:2px 0}.pi-checks li::before{content:'\2013';display:inline-block;width:1.3em}
+.pi-checks li.done{color:var(--paper)}.pi-checks li.done::before{content:'\2713';color:var(--bronze)}
+.pi-heard{margin-bottom:8px}.pi-heard b{color:var(--bronze);font-weight:400;letter-spacing:.05em}.pi-heard b em{font-style:normal;color:#7f9490;margin-left:6px}
+.pi-heard p{margin:2px 0 0;line-height:1.4}.pi-heard.new p{color:#fff}
+@media (max-width:1000px){#pause-info{display:none}}
 #screen-dead{background:radial-gradient(ellipse at 50% 56%,#3a0c0acc,#07080cf5)}
 #screen-dead .panel{background:none;border:0;box-shadow:none;text-align:center;min-width:360px}
 #screen-dead h2{font-size:clamp(38px,6vw,66px);letter-spacing:.3em;color:#d8483a;border:0;text-shadow:3px 3px 0 #000;padding:0;margin-bottom:6px}
@@ -350,7 +375,9 @@ SOFTWARE.</pre></div></details>
 <div id="screen-pause" class="screen hidden">
   <div class="panel">
     <h2>PAUSED</h2>
+    <div id="pause-where"></div>
     <button id="btn-resume">Resume</button>
+    <button id="btn-pause-journal">Journal: map, objectives, log, items, creatures</button>
     <div class="row"><button id="btn-save">Quick save</button><button id="btn-load">Quick load</button></div>
     <button id="btn-record">The Record</button>
     <button id="btn-stats">Your stats</button>
@@ -472,6 +499,7 @@ SOFTWARE.</pre></div></details>
     <div class="row"><button id="btn-restart">Restart level</button><button id="btn-quit">Quit to title</button></div>
     <div class="note" id="pause-note"></div>
   </div>
+  <aside id="pause-info" aria-label="This level"></aside>
 </div>
 
 <div id="screen-record" class="screen hidden">

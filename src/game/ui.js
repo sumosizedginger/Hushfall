@@ -1,4 +1,5 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
+import { pauseInfoHtml, pauseWhereHtml } from './pauseinfo.js';
 import { weaponIcon } from './wheel.js';
 import { withKeys } from './hints.js';
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, AMMO_LOADS, DIFFICULTY as DIFFS } from '../engine/defs.js';
@@ -80,6 +81,7 @@ export class UI {
     $('btn-journal-close').onclick = () => this.h.resume();
     $('btn-journal-record').onclick = () => this.h.openRecord('pause');
     $('btn-resume').onclick = () => this.h.resume();
+    $('btn-pause-journal').onclick = () => this.h.pauseJournal();
     $('btn-save').onclick = () => this.h.quickSave();
     $('btn-load').onclick = () => this.h.quickLoad();
     $('btn-reset-keys').onclick = () => this.h.resetBindings();
@@ -456,6 +458,9 @@ export class UI {
     if (name === 'pause') {
       $('pause-note').textContent = data.note || '';
       $('btn-load').style.display = data.canLoad ? '' : 'none';
+      const info = this.h.pauseInfo?.();
+      $('pause-where').innerHTML = info ? pauseWhereHtml(info) : '';
+      $('pause-info').innerHTML = info ? pauseInfoHtml(info) : '';
     }
     if (name === 'dead') {
       $('btn-dead-load').style.display = data.canLoad ? '' : 'none';

@@ -61,6 +61,7 @@ export function makeShellState({ storage, settings, firstMap }) {
     mapOpen: false,
     unread: new Set(),
     journalTab: 'map',
+    journalFromPause: false, // the Journal was opened from the pause menu: it closes back to it
     journalPins: undefined,
     objectives: [],
     recordFrom: undefined,

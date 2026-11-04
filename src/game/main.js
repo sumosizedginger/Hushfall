@@ -33,6 +33,7 @@ import { ENDINGS, COLD_OPEN, endingFor, tally, startSequence, stepSequence, pres
 import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCounts, recordScenes, isDocument } from './record.js';
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS, placeOf } from './journal.js';
+import { pauseInfo } from './pauseinfo.js';
 import { referenceRows } from './stats/schema.js';
 import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
@@ -183,6 +184,20 @@ const ui = new UI({
     if (s) applySave(s, 'check');
     else ui.h.restartLevel();
   },
+  // the pause screen's page: where you are, this run, you, your arms, your best, what was said, the campaign (pauseinfo.js)
+  pauseInfo: () =>
+    g.world
+      ? pauseInfo({
+          world: g.world,
+          map: MAPS[g.mapId],
+          manifest: CAMPAIGN,
+          mapId: g.mapId,
+          profile: g.profile,
+          progress: g.progress,
+          unread: g.unread,
+        })
+      : null,
+  pauseJournal: () => openJournal(true),
   hasMaps: () => Object.keys(g.profile.maps).length > 0,
   canAgain: () => !!g.profile.again,
   playAgain: () => {
@@ -1055,8 +1070,9 @@ function pause() {
  * Tab opens the Journal and PAUSES (no clock change for text, decided 2026-10-15): it opens on the Log when a message has not been read, otherwise on
  * the Map; what was unread has now been put in front of the player
  */
-function openJournal() {
-  if (g.mode !== 'playing' || !g.world) return;
+function openJournal(fromPause = false) {
+  if (g.mode !== (fromPause ? 'paused' : 'playing') || !g.world) return;
+  g.journalFromPause = fromPause; // closed, it goes back to where it was opened from
   cancelWheel();
   audio.setMuffled(true);
   g.mode = 'paused';
@@ -1083,6 +1099,11 @@ function openJournal() {
 }
 function resume() {
   if (g.mode !== 'paused') return;
+  if (g.journalFromPause && ui.screen === 'journal') {
+    g.journalFromPause = false;
+    ui.show('pause', { canLoad: hasQuick() });
+    return;
+  } // a Journal opened from the pause menu closes back to the menu, never into the fight
   audio.setMuffled(false);
   g.mode = 'playing';
   ui.show(null);
