@@ -2,20 +2,20 @@
   "mapId": "C2M23",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "40dc707",
+  "codeVersion": "aaaf4ca",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "4cccd43c4b041142",
   "assetVersion": "0fd1ea95586c4e78",
-  "engineSha": "2ada63ee432a9533",
+  "engineSha": "b852b6a87edd900a",
   "sources": {
-    "engine": "2ada63ee432a9533",
-    "render": "9e01092ceb75ff7b",
-    "game": "3d95c6af30d4f0fb",
-    "audio": "34c405c843e5c792",
+    "engine": "b852b6a87edd900a",
+    "render": "1cd38bb1ea3e95a8",
+    "game": "2883336eef8c66fc",
+    "audio": "feec2da3e2d33505",
     "assets": "0fd1ea95586c4e78",
-    "verifier": "178a732ec21abcbf",
-    "probes": "01942c6dec4649e1"
+    "verifier": "874439ef370c764d",
+    "probes": "ab8a14d37c52d239"
   },
   "routesSha": "15f958d99dbca198",
   "loads": true,
@@ -27,12 +27,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 11563,
-      "finalHash": "f3352eb3",
-      "kills": 59,
+      "ticks": 10200,
+      "finalHash": "76f619ec",
+      "kills": 60,
       "secrets": 0,
-      "items": 8,
-      "damageTaken": 45
+      "items": 9,
+      "damageTaken": 63
     },
     {
       "file": "routes/C2M23.main.route.json",
@@ -53,8 +53,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 14655,
-      "finalHash": "d204c3a0",
+      "ticks": 14670,
+      "finalHash": "4cc3fa42",
       "kills": 67,
       "secrets": 0,
       "items": 11,
@@ -162,23 +162,23 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 766,
-        "fired": 306,
+        "capacity": 931,
+        "fired": 184,
         "capacityBy": {
-          "flare": 44,
-          "shell": 87,
-          "rivet": 412,
-          "bolt": 24,
-          "cell": 199,
+          "flare": 36,
+          "shell": 94,
+          "rivet": 626,
+          "bolt": 36,
+          "cell": 139,
           "round": 50,
           "rocket": 6
         },
         "firedBy": {
-          "flare": 17,
-          "rivet": 244,
-          "bolt": 11,
-          "shell": 23,
-          "cell": 11
+          "flare": 10,
+          "rivet": 126,
+          "bolt": 14,
+          "shell": 18,
+          "cell": 16
         },
         "drops": true
       },
@@ -189,10 +189,10 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 45,
-        "meanDamage": 52,
-        "seconds": 192.7,
-        "kills": 59,
+        "damage": 63,
+        "meanDamage": 55,
+        "seconds": 170,
+        "kills": 60,
         "failure": null
       }
     },
@@ -244,20 +244,20 @@
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 748,
-        "fired": 274,
+        "capacity": 624,
+        "fired": 268,
         "capacityBy": {
-          "flare": 29,
-          "shell": 54,
-          "rivet": 514,
-          "bolt": 21,
-          "cell": 130,
+          "flare": 35,
+          "shell": 39,
+          "rivet": 418,
+          "bolt": 18,
+          "cell": 114,
           "round": 50,
           "rocket": 6
         },
         "firedBy": {
-          "flare": 12,
-          "rivet": 201,
+          "flare": 13,
+          "rivet": 194,
           "bolt": 13,
           "shell": 23,
           "cell": 25
@@ -273,7 +273,7 @@
         "result": "complete",
         "damage": 180,
         "meanDamage": 124,
-        "seconds": 244.3,
+        "seconds": 244.5,
         "kills": 67,
         "failure": null
       }
@@ -324,7 +324,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -344,7 +344,7 @@
       {
         "name": "route C2M23.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "192.7 s"
+        "detail": "170.0 s"
       },
       {
         "name": "route C2M23.main.route.json on normal reaches the exit",
@@ -354,7 +354,7 @@
       {
         "name": "route C2M23.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "244.3 s"
+        "detail": "244.5 s"
       },
       {
         "name": "route C2M23.secret.route.json on easy reaches the exit",
@@ -402,29 +402,29 @@
         "detail": ""
       },
       {
-        "name": "ammo easy: flare rounds available (44) are at least 1.5x what the perfect bot fires (17)",
+        "name": "ammo easy: flare rounds available (36) are at least 1.5x what the perfect bot fires (10)",
         "ok": true,
-        "detail": "x2.59"
+        "detail": "x3.60"
       },
       {
-        "name": "ammo easy: rivet rounds available (412) are at least 1.5x what the perfect bot fires (244)",
+        "name": "ammo easy: rivet rounds available (626) are at least 1.5x what the perfect bot fires (126)",
         "ok": true,
-        "detail": "x1.69"
+        "detail": "x4.97"
       },
       {
-        "name": "ammo easy: bolt rounds available (24) are at least 1.5x what the perfect bot fires (11)",
+        "name": "ammo easy: bolt rounds available (36) are at least 1.5x what the perfect bot fires (14)",
         "ok": true,
-        "detail": "x2.18"
+        "detail": "x2.57"
       },
       {
-        "name": "ammo easy: shell rounds available (87) are at least 1.5x what the perfect bot fires (23)",
+        "name": "ammo easy: shell rounds available (94) are at least 1.5x what the perfect bot fires (18)",
         "ok": true,
-        "detail": "x3.78"
+        "detail": "x5.22"
       },
       {
-        "name": "ammo easy: cell rounds available (199) are at least 1.5x what the perfect bot fires (11)",
+        "name": "ammo easy: cell rounds available (139) are at least 1.5x what the perfect bot fires (16)",
         "ok": true,
-        "detail": "x18.09"
+        "detail": "x8.69"
       },
       {
         "name": "ammo normal: flare rounds available (32) are at least 1.5x what the perfect bot fires (11)",
@@ -452,34 +452,34 @@
         "detail": "x11.54"
       },
       {
-        "name": "ammo hard: flare rounds available (29) are at least 1.5x what the perfect bot fires (12)",
+        "name": "ammo hard: flare rounds available (35) are at least 1.15x what the perfect bot fires (13)",
         "ok": true,
-        "detail": "x2.42"
+        "detail": "x2.69"
       },
       {
-        "name": "ammo hard: rivet rounds available (514) are at least 1.5x what the perfect bot fires (201)",
+        "name": "ammo hard: rivet rounds available (418) are at least 1.15x what the perfect bot fires (194)",
         "ok": true,
-        "detail": "x2.56"
+        "detail": "x2.15"
       },
       {
-        "name": "ammo hard: bolt rounds available (21) are at least 1.5x what the perfect bot fires (13)",
+        "name": "ammo hard: bolt rounds available (18) are at least 1.15x what the perfect bot fires (13)",
         "ok": true,
-        "detail": "x1.62"
+        "detail": "x1.38"
       },
       {
-        "name": "ammo hard: shell rounds available (54) are at least 1.5x what the perfect bot fires (23)",
+        "name": "ammo hard: shell rounds available (39) are at least 1.15x what the perfect bot fires (23)",
         "ok": true,
-        "detail": "x2.35"
+        "detail": "x1.70"
       },
       {
-        "name": "ammo hard: cell rounds available (130) are at least 1.5x what the perfect bot fires (25)",
+        "name": "ammo hard: cell rounds available (114) are at least 1.15x what the perfect bot fires (25)",
         "ok": true,
-        "detail": "x5.20"
+        "detail": "x4.56"
       },
       {
-        "name": "ammo easy: rounds available (766) are at least 1.5x what the perfect bot fires (306): humans miss",
+        "name": "ammo easy: rounds available (931) are at least 1.5x what the perfect bot fires (184): humans miss",
         "ok": true,
-        "detail": "x2.50"
+        "detail": "x5.06"
       },
       {
         "name": "ammo normal: rounds available (556) are at least 1.5x what the perfect bot fires (191): humans miss",
@@ -487,9 +487,9 @@
         "detail": "x2.91"
       },
       {
-        "name": "ammo hard: rounds available (748) are at least 1.5x what the perfect bot fires (274): humans miss",
+        "name": "ammo hard: rounds available (624) are at least 1.2x what the perfect bot fires (268): humans miss",
         "ok": true,
-        "detail": "x2.73"
+        "detail": "x2.33"
       },
       {
         "name": "viability easy: a perfect fighter completes the level",
@@ -529,7 +529,7 @@
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "52 / 119 / 124 (mean of 3 seeds)"
+        "detail": "55 / 119 / 124 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (3.4x; placeholder until a human plays it)",
@@ -673,8 +673,8 @@
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src game changed, src audio changed, src probes changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
@@ -688,8 +688,8 @@
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src render changed, src game changed, src audio changed, src probes changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",

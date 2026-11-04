@@ -110,6 +110,8 @@ for (const [x, z] of S.at('$')) PK('health_large', x, z); for (const [x, z] of S
 PK('armor_vest', 13, 63); PK('health_large', 15, 63); PK('ammo_shell', 13, 65); PK('ammo_rivet', 15, 65); PK('ammo_flare', 14, 63); PK('ammo_bolt', 14, 65);           // the crypt
 PK('ld_pen_rivet', 43, 40); PK('health_large', 42, 39);                                                                                                // the cell
 const ENC = new Encounters(L);
+// PT-083 L2: the level floors
+ENC.bypass({ from: [26, 23], to: [30, 9] }); // a sacristy passage
 ENC.dropIn({ at: [32, 36], radius: 2, cells: [[31, 32], [33, 33]], kind: 'g' });                                           // sextons' boys out of the north arm's vault as you cross the chock
 ENC.dropIn({ at: [42, 9], radius: 2.5, cells: [[33, 12], [38, 12]], kind: 'g' });                                          // and two more at the altar, the house's last word
 const MAP = {

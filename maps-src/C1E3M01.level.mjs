@@ -71,6 +71,8 @@ ENC.dropIn({ at: [24,22], radius: 2, cells: ENC.around([24,22], { n: 3, min: 6, 
 
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
+// PT-083 L2: the level floors
+FUN.bypass({ from: [6, 10], to: [31, 10] }); // a tear along the hull: a way round the crater's crossfire
 FUN.secretRoom({ id: 'hull-pocket', search: { region: [3, 3, 80, 40], prefer: [39, 30], lane: laneOf('C1E3M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A pocket where the hull plating folded over. Somebody crawled in here to hide and left their kit.' } });
 // ---- end PT-081 fun pass ----
 

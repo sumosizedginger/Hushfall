@@ -77,6 +77,8 @@ const spawnAt = (list, group) => list.map(([r, d, kind]) => { const [x, z] = pol
 const wave1 = spawnAt([[9.5, 20, 'gaunt'], [9.5, 60, 'gaunt'], [9.5, 100, 'tollbearer'], [9.5, 140, 'gaunt'], [9.5, 180, 'tollbearer'], [9.5, 220, 'gaunt']], 'beds1');
 const wave2 = spawnAt([[9.5, 30, 'tollbearer'], [9.5, 90, 'gaunt'], [9.5, 150, 'tollbearer'], [9.5, 210, 'gaunt'], [9.5, 270, 'tollbearer'], [9.5, 330, 'gaunt'], [13, 120, 'bellhand']], 'beds2');
 const ENC = new Encounters(L);
+// PT-083 L2: the level floors
+ENC.bypass({ from: [41, 66], to: [44, 60] }); // a gardeners' way behind the hedges
 const MAP = {
   id: 'C2M14', name: 'Harmonic Gardens', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'gardens', sky: 'deep', fog: '#0c1812', fogDensity: 0.01 },

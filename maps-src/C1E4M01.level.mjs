@@ -161,6 +161,8 @@ if (SECRET) { const [qx, qz] = SECRET.centre; for (const [k, dx, dz] of [['ammo_
 const exitCell = [CX - 1, CZ - 1];
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
+// PT-083 L2: the level floors
+FUN.bypass({ from: [48, 13], to: [53, 17] }); // a maintenance crawl
 FUN.secretRoom({ id: 'tether-locker', search: { region: [3, 3, 68, 68], prefer: [45, 40], lane: laneOf('C1E4M01') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A maintenance locker on the tether, sealed when the cars stopped. Somebody meant to come back.' } });
 FUN.dropIn({ at: [26, 27], radius: 2, cells: FUN.around([26, 27], { n: 3, min: 5, max: 9 }), kind: 'b' });          // the 119 m walk round the ring with nothing awake: three Bellhands come off the cables
 // ---- end PT-081 fun pass ----

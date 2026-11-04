@@ -62,6 +62,8 @@ const ENC = new Encounters(L);
 
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
+// PT-083 L2: the level floors
+FUN.bypass({ from: [62, 12], to: [80, 12] }); // a root tunnel behind the beds
 FUN.secretRoom({ id: 'chute-cache', search: { region: [3, 3, 96, 40], prefer: [47, 16], lane: laneOf('C1E3M03') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'The gardens\' waste chute, sealed with resin. There is something made by people inside.' } });
 FUN.bypass({ from: [60, 28], to: [60, 25] });          // a cut between two beds: the route walks 19 cells round
 FUN.platform({ search: { region: [30, 18, 46, 32], lane: laneOf('C1E3M03') }, w: 4, d: 3 });          // a raised bed to fight from

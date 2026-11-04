@@ -80,6 +80,8 @@ console.log('C1E1M02 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 
 // ---- PT-081 (design/FUN_CHECK.md, standard 7: secrets of more than one kind) ----
 const E = new Encounters(L);
+// PT-083 L2: the level floors
+E.bypass({ from: [47, 31], to: [46, 25] }); // a way round the hall's east side
 E.secretRoom({ id: 'seized-goods', search: { region: [3, 3, 60, 49], prefer: [55, 30], lane: laneOf('C1E1M02') }, open: 'shoot', rewards: ['v', 'r', 'H'], message: { speaker: 'INES', text: 'Seized goods, bricked up and never logged. Customs kept a few things for itself.' } });          // PT-081: a second secret of another kind, a cracked wall
 E.dropIn({ at: [40, 31], radius: 2, cells: E.around([40, 31], { n: 2, min: 5, max: 9 }), kind: 'g' });          // PT-081 (the 160 m walk with nothing awake: up the stair, along the gallery to the brass door): two Gaunts come over the balustrade
 E.bypass({ from: [20, 46], to: [24, 48] });          // PT-081: a servants' passage from the vestibule into the hall: the route walks 60 cells round

@@ -82,6 +82,8 @@ ENC.dropIn({ at: [37,50], radius: 2, cells: ENC.around([37,50], { n: 3, min: 6, 
 
 // ---- PT-081 fun pass (design/FUN_CHECK.md): a second secret of another kind (a cracked wall), and what the map's standard needs: loops (a bypass) and height (a platform) ----
 const FUN = new Encounters(L, { prefix: 'fun' });
+// PT-083 L2: the level floors
+FUN.bypass({ from: [26, 34], to: [26, 53] }); // the old gatehouse passage
 FUN.secretRoom({ id: 'seam', search: { region: [3, 3, 100, 88], prefer: [45, 69], lane: laneOf('C2M09') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'A seam in the rock the miners never finished. A vest and a mend wrapped in oilcloth, waiting for them.' } });
 // ---- end PT-081 fun pass ----
 

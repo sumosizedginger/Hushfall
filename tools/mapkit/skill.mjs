@@ -16,7 +16,7 @@ export const readSidecar = (id) => {
 
 /** the map with its sidecar in force (idempotent: anything an earlier pass marked goes first) */
 export function applySkill(map, side = readSidecar(map.id)) {
-  map.entities = map.entities.filter((e) => e.skill !== 'hard');
+  map.entities = map.entities.filter((e) => e.skill !== 'hard' && !e.extra);
   for (const e of map.entities) delete e.skill;
   if (!side) return map;
   if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
@@ -25,6 +25,8 @@ export function applySkill(map, side = readSidecar(map.id)) {
     if (!e) throw new Error(`${map.id}: no creature at [${x}, ${z}] to leave out on Easy`);
     e.skill = 'normal';
   }
+  for (const c of side.all ?? [])
+    map.entities.push({ type: 'enemy', kind: c.kind, at: [...c.at], ...(c.facing != null ? { facing: c.facing } : {}), extra: true });
   for (const c of side.hard ?? [])
     map.entities.push({ type: 'enemy', kind: c.kind, at: [...c.at], ...(c.facing != null ? { facing: c.facing } : {}), skill: 'hard' });
   return map;
@@ -35,7 +37,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.met
     const file = path.join(root, 'maps', id + '.json'),
       map = JSON.parse(fs.readFileSync(file, 'utf8'));
     applySkill(map);
-    fs.writeFileSync(file, JSON.stringify(map, null, 1));
+    fs.writeFileSync(file, JSON.stringify(map, null, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1, $2]'));
     console.log(id, 'hard', map.entities.filter((e) => e.skill === 'hard').length, 'easy cuts', map.entities.filter((e) => e.skill === 'normal').length);
   }
 }
