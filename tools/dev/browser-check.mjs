@@ -75,6 +75,11 @@ try {
   check('a real click unlocks audio (context running)', audioState === 'running', audioState);
   // PT-083 U1: the first new game offers the training yard, once; "Straight in" goes on as before
   check('the first new game offers the training yard', await page.$eval('#training-offer', (e) => !e.classList.contains('hidden')));
+  const r0 = await page.$eval('#btn-offer-skip', (e) => e.getBoundingClientRect().top);
+  await page.hover('#btn-hard');
+  await sleep(100);
+  const r1 = await page.$eval('#btn-offer-skip', (e) => e.getBoundingClientRect().top);
+  check('pointing at a difficulty moves nothing on the menu', Math.abs(r1 - r0) < 0.5, `${r0} -> ${r1}`);
   await page.click('#btn-offer-skip');
   await sleep(300);
   // PT-063 (R13): a fresh profile sees the COLD OPEN before the first level (the epilogue's machinery: cards typed over the title picture, the last
