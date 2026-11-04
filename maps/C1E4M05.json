@@ -543,8 +543,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [47, 80],
-   "facing": 0.1,
-   "skill": "normal"
+   "facing": 0.1
   },
   {
    "type": "enemy",

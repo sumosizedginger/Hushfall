@@ -1,0 +1,6 @@
+{
+ "_": "A door that may be walked round, map by map, with the reason. tools/maplint.mjs and tests/doors-close.test.js read this; anything not listed fails.",
+ "C2M05": {
+  "4,35": "The Ossuary Stair's grate, bolted on the low side: a shortcut the player opens from the far side at the end of the long road, and a message says so. It saves the walk back to the start; nothing is skipped by not opening it."
+ }
+}

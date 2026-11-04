@@ -423,8 +423,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [25, 49],
-   "facing": 1.176,
-   "skill": "normal"
+   "facing": 1.176
   },
   {
    "type": "enemy",
@@ -460,8 +459,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [18, 50],
-   "facing": 1.363,
-   "skill": "normal"
+   "facing": 1.363
   },
   {
    "type": "enemy",
@@ -497,8 +495,7 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [18, 14],
-   "facing": 0.443,
-   "skill": "normal"
+   "facing": 0.443
   },
   {
    "type": "enemy",
@@ -534,8 +531,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [34, 15],
-   "facing": 0.077,
-   "skill": "normal"
+   "facing": 0.077
   },
   {
    "type": "enemy",
@@ -571,8 +567,7 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [50, 29],
-   "facing": -0.48,
-   "skill": "normal"
+   "facing": -0.48
   },
   {
    "type": "enemy",

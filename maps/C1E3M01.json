@@ -358,8 +358,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [44, 16],
-   "facing": -1.422,
-   "skill": "normal"
+   "facing": -1.422
   },
   {
    "type": "enemy",
@@ -429,8 +428,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [58, 19],
-   "facing": -1.515,
-   "skill": "normal"
+   "facing": -1.515
   },
   {
    "type": "pickup",
@@ -510,8 +508,7 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [50, 22],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -591,8 +588,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [58, 24],
-   "facing": -1.608,
-   "skill": "normal"
+   "facing": -1.608
   },
   {
    "type": "prop",

@@ -359,8 +359,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 20],
-   "facing": -1.292,
-   "skill": "normal"
+   "facing": -1.292
   },
   {
    "type": "pickup",
@@ -421,8 +420,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [14, 22],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "prop",
@@ -550,8 +548,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 24],
-   "facing": -1.849,
-   "skill": "normal"
+   "facing": -1.849
   },
   {
    "type": "pickup",

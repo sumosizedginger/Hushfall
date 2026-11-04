@@ -8,11 +8,11 @@
    "key": "brass",
    "at": [
     4,
-    44
+    40
    ],
    "lamp": [
-    5,
-    44
+    4,
+    39
    ],
    "line": "The market warden's key, on its nail. He locked up. Of course he locked up."
   }
@@ -133,32 +133,6 @@
    "facing": 3.142
   }
  ],
- "easy": [
-  [
-   15,
-   14
-  ],
-  [
-   28,
-   18
-  ],
-  [
-   60,
-   23
-  ],
-  [
-   62,
-   26
-  ],
-  [
-   4,
-   32
-  ],
-  [
-   27,
-   38
-  ]
- ],
  "ambush": [
   {
    "at": [
@@ -170,25 +144,42 @@
     {
      "kind": "gaunt",
      "at": [
-      20,
-      42
+      5,
+      29
      ]
     },
     {
      "kind": "bellhand",
      "at": [
-      12,
-      45
+      4,
+      30
      ]
     },
     {
      "kind": "bellhand",
      "at": [
-      8,
-      42
+      4,
+      28
      ]
     }
    ]
+  }
+ ],
+ "walls": [
+  [
+   4,
+   41
+  ]
+ ],
+ "bump": 1,
+ "doors": [
+  {
+   "at": [
+    5,
+    41
+   ],
+   "key": "brass",
+   "why": "the west corridor ran round the warden's brass door: it now ends at a second one, and the key hangs just before it"
   }
  ]
 }

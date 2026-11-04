@@ -863,8 +863,7 @@
    "kind": "tollbearer",
    "at": [78, 34],
    "variant": "hived",
-   "facing": -1.352,
-   "skill": "normal"
+   "facing": -1.352
   },
   {
    "type": "enemy",
@@ -904,8 +903,7 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [74, 57],
-   "facing": -1.673,
-   "skill": "normal"
+   "facing": -1.673
   },
   {
    "type": "enemy",
@@ -941,8 +939,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [9, 44],
-   "facing": -0.464,
-   "skill": "normal"
+   "facing": -0.464
   },
   {
    "type": "enemy",
@@ -978,8 +975,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [32, 32],
-   "facing": -0.965,
-   "skill": "normal"
+   "facing": -0.965
   },
   {
    "type": "enemy",
@@ -1015,8 +1011,7 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [50, 23],
-   "facing": -1.02,
-   "skill": "normal"
+   "facing": -1.02
   },
   {
    "type": "enemy",
@@ -1052,8 +1047,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [36, 57],
-   "facing": -1.8,
-   "skill": "normal"
+   "facing": -1.8
   },
   {
    "type": "enemy",
@@ -1089,8 +1083,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [56, 68],
-   "facing": -1.916,
-   "skill": "normal"
+   "facing": -1.916
   },
   {
    "type": "enemy",
@@ -1126,8 +1119,7 @@
    "type": "enemy",
    "kind": "zealot",
    "at": [22, 56],
-   "facing": -1.93,
-   "skill": "normal"
+   "facing": -1.93
   },
   {
    "type": "enemy",
@@ -1163,8 +1155,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [9, 50],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -1200,8 +1191,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [41, 44],
-   "facing": -1.401,
-   "skill": "normal"
+   "facing": -1.401
   },
   {
    "type": "enemy",

@@ -501,8 +501,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [65, 49],
-   "facing": 0.405,
-   "skill": "normal"
+   "facing": 0.405
   },
   {
    "type": "enemy",
@@ -544,8 +543,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 59],
-   "facing": 1.631,
-   "skill": "normal"
+   "facing": 1.631
   },
   {
    "type": "enemy",
@@ -587,8 +585,7 @@
    "type": "enemy",
    "kind": "resonant",
    "at": [41, 10],
-   "facing": 0.531,
-   "skill": "normal"
+   "facing": 0.531
   },
   {
    "type": "enemy",
@@ -630,8 +627,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [28, 63],
-   "facing": 1.744,
-   "skill": "normal"
+   "facing": 1.744
   },
   {
    "type": "enemy",

@@ -84,26 +84,22 @@
    "facing": 1.893
   }
  ],
- "easy": [
-  [
-   27,
-   12
-  ],
-  [
-   22,
-   16
-  ],
-  [
-   62,
-   20
-  ],
-  [
-   39,
-   25
-  ],
-  [
-   12,
-   30
-  ]
- ]
+ "doors": [
+  {
+   "at": [
+    9,
+    27
+   ],
+   "why": "the west passage ran round the door"
+  },
+  {
+   "at": [
+    23,
+    18
+   ],
+   "key": "brass",
+   "why": "the foreman's room had a plain door behind the brass one"
+  }
+ ],
+ "bump": 1
 }

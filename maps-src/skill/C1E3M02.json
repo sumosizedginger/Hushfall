@@ -34,22 +34,14 @@
    "facing": -1.406
   }
  ],
- "easy": [
-  [
-   56,
-   13
-  ],
-  [
-   30,
-   14
-  ],
-  [
-   43,
-   25
-  ],
-  [
-   41,
-   26
-  ]
- ]
+ "doors": [
+  {
+   "at": [
+    45,
+    17
+   ],
+   "why": "the service tunnel ran round both gates"
+  }
+ ],
+ "bump": 1
 }

@@ -39,12 +39,10 @@ test('S2: a crash goes into the play log, at most ten of them, and only when the
 test('the sidecar: creatures on every difficulty, on Hard only, and left out on Easy; nothing else moves id', () => {
   const src = shippedSrc('C1E1M01');
   src.version = 1;
-  const first = src.entities.find((e) => e.type === 'enemy' && !e.group && !e.extra && e.skill !== 'hard'),
-    plainFloor = src.entities.find((e) => e.type === 'player').at,
+  const plainFloor = src.entities.find((e) => e.type === 'player').at,
     map = applySkill(JSON.parse(JSON.stringify(src)), {
       all: [{ kind: 'gaunt', at: [plainFloor[0] + 1, plainFloor[1]] }],
       hard: [{ kind: 'gaunt', at: [plainFloor[0] + 2, plainFloor[1]] }],
-      easy: [first.at],
     });
   assert.ok(validateMap(map).ok, (validateMap(map).errors ?? []).join('; '));
   const m = parseMap(map),
@@ -52,12 +50,12 @@ test('the sidecar: creatures on every difficulty, on Hard only, and left out on 
     base = src.entities.filter((e) => e.type === 'enemy' && e.skill !== 'hard' && !e.extra).length;
   assert.equal(count('normal'), base + 1);
   assert.equal(count('hard'), base + 2);
-  assert.equal(count('easy'), base, 'one left out, one added');
+  assert.equal(count('easy'), base + 1, 'Easy has every creature Normal has');
   const ids = (d) => Object.fromEntries(createWorld(m, { seed: 1, difficulty: d }).enemies.map((e) => [e.x + ',' + e.z, e.id]));
   const n = ids('normal'),
     e = ids('easy');
   for (const k of Object.keys(e)) assert.equal(e[k], n[k], 'a creature keeps its id on Easy');
-  assert.equal(createWorld(m, { seed: 1, difficulty: 'easy' }).stats.total.enemies, base, 'and the kill total counts what stands');
+  assert.equal(createWorld(m, { seed: 1, difficulty: 'easy' }).stats.total.enemies, base + 1, 'and the kill total counts what stands');
   const twice = applySkill(JSON.parse(JSON.stringify(map)), { all: [{ kind: 'gaunt', at: [plainFloor[0] + 1, plainFloor[1]] }] });
   assert.equal(twice.version, map.version, 'a second pass does not raise the version again');
   assert.equal(applySkill(JSON.parse(JSON.stringify(map)), null).entities.filter((q) => q.skill || q.extra).length, 0, 'it can be taken off again');

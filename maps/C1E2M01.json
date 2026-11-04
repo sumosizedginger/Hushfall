@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M01",
- "version": 5,
+ "version": 6,
  "name": "Brine Gate",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -38,7 +38,7 @@
   "K.K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
   "K.K.......KllmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRffffffffR#",
   "K.KKKKKKKK.llmmmlllllllllllllllllllllllllllLLLfffffffffffffffffffRRRRRRRRRR#",
-  "K..........llmmmlKKKKDKKKKKKKKlllllllllllllLLLfffffffffffffffffffL##########",
+  "K........D.llmmmlKKKKDKKKKKKKKlllllllllllllLLLfffffffffffffffffffL##########",
   "KKKKKKKKKKKllmmmlKfffffffKfffKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########LllmmmlKfffffffSfffKlllllllllllllLLLfffffffffffffffffffL##########",
   "##########lllmmmlKfffffffKfffKlllllllllllllLLLLLfffLLLfffLLLfffLLL##########",
@@ -184,7 +184,8 @@
    "key": "brass"
   },
   {
-   "at": [23, 18]
+   "at": [23, 18],
+   "key": "brass"
   },
   {
    "at": [10, 22]
@@ -198,6 +199,9 @@
   },
   {
    "at": [21, 27]
+  },
+  {
+   "at": [9, 27]
   }
  ],
  "secrets": [
@@ -292,8 +296,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [27, 12],
-   "facing": -1.144,
-   "skill": "normal"
+   "facing": -1.144
   },
   {
    "type": "pickup",
@@ -379,8 +382,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 16],
-   "facing": -1.232,
-   "skill": "normal"
+   "facing": -1.232
   },
   {
    "type": "enemy",
@@ -591,8 +593,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [62, 20],
-   "facing": -1.536,
-   "skill": "normal"
+   "facing": -1.536
   },
   {
    "type": "pickup",
@@ -789,8 +790,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [39, 25],
-   "facing": -1.659,
-   "skill": "normal"
+   "facing": -1.659
   },
   {
    "type": "prop",
@@ -993,8 +993,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 30],
-   "facing": -2.423,
-   "skill": "normal"
+   "facing": -2.423
   },
   {
    "type": "pickup",

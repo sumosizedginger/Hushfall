@@ -386,8 +386,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [25, 22],
-   "facing": -1.279,
-   "skill": "normal"
+   "facing": -1.279
   },
   {
    "type": "enemy",
@@ -511,8 +510,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [41, 29],
-   "facing": -1.599,
-   "skill": "normal"
+   "facing": -1.599
   },
   {
    "type": "pickup",
@@ -607,8 +605,7 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [36, 38],
-   "facing": -1.883,
-   "skill": "normal"
+   "facing": -1.883
   },
   {
    "type": "pickup",

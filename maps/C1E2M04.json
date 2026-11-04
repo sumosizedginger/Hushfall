@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M04",
- "version": 3,
+ "version": 4,
  "name": "Kiln Row",
  "ceilingHeight": 3.8,
  "atmosphere": {
@@ -36,7 +36,7 @@
   "#########YkkkkkkkkkkkkkkkkkkkkkkDkkkkkkkkDkkkkYYYkYYYYkYYYYYkkkkYffffffffffffff###",
   "##KKKKKKKYkkkkkkkkkkkkkkkkkkkkkkYkkkkkkkkYkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
   "##KffffffYkkkkkkkkkkkffkkkkkkkkkYYYYYYYYYYkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
-  "##KfffffffkkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
+  "##KfffffffYkkkkkkkkkkffkkkkkkkkkY########YkkkkYYYYYYYYYYYYYYkkkkYfffffffffffffY###",
   "##KfffffffYkkkkkkkkkkffkkkkkkkkkYYY######YkkkkYYYYYYYYYYYYYYkkkkYffffffffffffff###",
   "##KfffffffDkkkkkkkkkkffkkkkkkkkkkkY######YkkkkYYYYYYYYYYYYYYkkkkYffffffffffffff###",
   "##KfffffffYkkkkkkkkkkffkkkkkkkkkYkY######YkkkkYYYYYYYYYYYYYYkkkkYffffffffffffff###",
@@ -418,8 +418,7 @@
    "type": "enemy",
    "kind": "sexton",
    "at": [17, 16],
-   "facing": -1.043,
-   "skill": "normal"
+   "facing": -1.043
   },
   {
    "type": "enemy",
@@ -470,8 +469,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [13, 17],
-   "facing": -0.927,
-   "skill": "normal"
+   "facing": -0.927
   },
   {
    "type": "prop",
@@ -603,8 +601,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [43, 21],
-   "facing": -1.518,
-   "skill": "normal"
+   "facing": -1.518
   },
   {
    "type": "prop",
@@ -854,8 +851,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 30],
-   "facing": -2.065,
-   "skill": "normal"
+   "facing": -2.065
   },
   {
    "type": "enemy",
@@ -931,8 +927,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [63, 31],
-   "facing": -1.708,
-   "skill": "normal"
+   "facing": -1.708
   },
   {
    "type": "prop",
@@ -1117,20 +1112,6 @@
    "type": "pickup",
    "kind": "ld_slag_rivet",
    "at": [22, 33]
-  },
-  {
-   "type": "enemy",
-   "kind": "gaunt",
-   "at": [12, 15],
-   "facing": 0,
-   "skill": "hard"
-  },
-  {
-   "type": "enemy",
-   "kind": "bellhand",
-   "at": [21, 27],
-   "facing": 2.976,
-   "skill": "hard"
   },
   {
    "type": "enemy",

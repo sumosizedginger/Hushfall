@@ -353,8 +353,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [40, 12],
-   "facing": -1.3,
-   "skill": "normal"
+   "facing": -1.3
   },
   {
    "type": "prop",
@@ -484,8 +483,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [12, 19],
-   "facing": -1.212,
-   "skill": "normal"
+   "facing": -1.212
   },
   {
    "type": "enemy",
@@ -629,8 +627,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [14, 24],
-   "facing": -1.768,
-   "skill": "normal"
+   "facing": -1.768
   },
   {
    "type": "enemy",
@@ -835,8 +832,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [37, 29],
-   "facing": -1.78,
-   "skill": "normal"
+   "facing": -1.78
   },
   {
    "type": "prop",
@@ -956,8 +952,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [36, 32],
-   "facing": -1.874,
-   "skill": "normal"
+   "facing": -1.874
   },
   {
    "type": "enemy",
@@ -1017,8 +1012,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [49, 34],
-   "facing": -1.831,
-   "skill": "normal"
+   "facing": -1.831
   },
   {
    "type": "enemy",

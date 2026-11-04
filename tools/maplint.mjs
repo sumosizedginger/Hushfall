@@ -9,8 +9,11 @@
 // cell short of the wall and left a trench behind it.
 // Used by tools/verify-map.mjs (so by `npm run map`). Pure: takes a parsed map (src/engine/mapformat.js).
 import { mapFeel } from './dev/map-feel.mjs';
+import fs from 'node:fs';
 import { findTraps } from '../src/engine/traps.js';
+import { doorFaults } from '../src/engine/doorways.js';
 
+const DOOR_EXCEPTIONS = JSON.parse(fs.readFileSync(new URL('../design/door-exceptions.json', import.meta.url), 'utf8'));
 const ROOFED = new Set(['floor', 'door', 'secret']); // = hasCeil in levelmesh.js
 const HUNG = new Set(['lamp', 'pod', 'cradle']); // props that hang from the ceiling height (levelmesh.js: m.position.set(p.x, cy, p.z))
 
@@ -74,6 +77,13 @@ export function mapLintChecks(map) {
           .map((p) => `${p.kind}@${Math.floor(p.x / map.cell)},${Math.floor(p.z / map.cell)}`)
           .join(' ')
       : 'ok',
+  });
+  // a door closes something: nobody gets past it without opening a door, and nobody gets past a key door without a key
+  const doorBad = doorFaults(map, DOOR_EXCEPTIONS[map.id]);
+  checks.push({
+    name: 'placement: every door closes something: with every door shut its two sides do not join, and a key door cannot be got round through plain doors',
+    ok: doorBad.length === 0,
+    detail: doorBad.length ? doorBad.map((d) => `${d.at.join(',')} ${d.fault} (${d.cells} cells)`).join('; ') : 'ok',
   });
   // 3. no trap: nothing the player can step or fall into is a dead end
   const tr = findTraps(map);

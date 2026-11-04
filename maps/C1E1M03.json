@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M03",
- "version": 3,
+ "version": 4,
  "name": "Fishmarket Rows",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -52,7 +52,7 @@
   "###BssBB::::::::::::::::::::::::::::::::::::::::::::::B:##########",
   "###BssBBB::::::::::::::::::::::::::::::::::::::::::::BB:##########",
   "###BssBBBB::::::::::::::::::::::::::::::::::::::::::BBBB##########",
-  "###BssBWWWWWWWDWWWWWWWWW:::BBB:::BBBBBBBSBBBBBBB:::BBBBB##########",
+  "###BBDBWWWWWWWDWWWWWWWWW:::BBB:::BBBBBBBSBBBBBBB:::BBBBB##########",
   "###BssWWfffffffffffffXfW:::###:::#####B:::B#####:::###############",
   "###BssfffffffffffffffWWW##############B:::B#######################",
   "###BssfffffffffffffffXfW##############BBBBB#######################",
@@ -172,6 +172,10 @@
   {
    "at": [14, 41],
    "key": "brass"
+  },
+  {
+   "at": [5, 41],
+   "key": "brass"
   }
  ],
  "secrets": [
@@ -263,21 +267,21 @@
     {
      "spawn": {
       "kind": "gaunt",
-      "at": [20, 42],
+      "at": [5, 29],
       "hunt": true
      }
     },
     {
      "spawn": {
       "kind": "bellhand",
-      "at": [12, 45],
+      "at": [4, 30],
       "hunt": true
      }
     },
     {
      "spawn": {
       "kind": "bellhand",
-      "at": [8, 42],
+      "at": [4, 28],
       "hunt": true
      }
     }
@@ -377,8 +381,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [15, 14],
-   "facing": -0.833,
-   "skill": "normal"
+   "facing": -0.833
   },
   {
    "type": "prop",
@@ -489,8 +492,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [28, 18],
-   "facing": -1.326,
-   "skill": "normal"
+   "facing": -1.326
   },
   {
    "type": "enemy",
@@ -642,8 +644,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [60, 23],
-   "facing": -1.553,
-   "skill": "normal"
+   "facing": -1.553
   },
   {
    "type": "player",
@@ -793,8 +794,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [62, 26],
-   "facing": -1.605,
-   "skill": "normal"
+   "facing": -1.605
   },
   {
    "type": "prop",
@@ -866,8 +866,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [4, 32],
-   "facing": 3.142,
-   "skill": "normal"
+   "facing": 3.142
   },
   {
    "type": "prop",
@@ -1053,8 +1052,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [27, 38],
-   "facing": -2.118,
-   "skill": "normal"
+   "facing": -2.118
   },
   {
    "type": "prop",
@@ -1319,13 +1317,13 @@
   {
    "type": "pickup",
    "kind": "key_brass",
-   "at": [4, 44],
+   "at": [4, 40],
    "extra": true
   },
   {
    "type": "prop",
    "kind": "lantern",
-   "at": [5, 44],
+   "at": [4, 39],
    "extra": true
   },
   {
@@ -1504,7 +1502,7 @@
   },
   {
    "id": "keyhunt",
-   "at": [4, 44],
+   "at": [4, 40],
    "radius": 3,
    "speaker": "INES",
    "text": "The market warden's key, on its nail. He locked up. Of course he locked up."

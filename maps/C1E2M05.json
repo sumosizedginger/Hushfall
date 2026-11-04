@@ -331,8 +331,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [48, 17],
-   "facing": -1.455,
-   "skill": "normal"
+   "facing": -1.455
   },
   {
    "type": "prop",
@@ -531,8 +530,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [50, 22],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -677,8 +675,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [52, 26],
-   "facing": -1.656,
-   "skill": "normal"
+   "facing": -1.656
   },
   {
    "type": "prop",

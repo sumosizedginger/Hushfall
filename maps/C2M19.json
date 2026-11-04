@@ -989,8 +989,7 @@
    "kind": "tollbearer",
    "at": [54, 87],
    "variant": "woven",
-   "facing": -1.654,
-   "skill": "normal"
+   "facing": -1.654
   },
   {
    "type": "enemy",
@@ -1031,8 +1030,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [23, 87],
-   "facing": -1.802,
-   "skill": "normal"
+   "facing": -1.802
   },
   {
    "type": "enemy",
@@ -1068,8 +1066,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [36, 83],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -1105,8 +1102,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [73, 57],
-   "facing": -1.201,
-   "skill": "normal"
+   "facing": -1.201
   },
   {
    "type": "enemy",
@@ -1148,8 +1144,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [74, 87],
-   "facing": -1.63,
-   "skill": "normal"
+   "facing": -1.63
   },
   {
    "type": "enemy",
@@ -1185,8 +1180,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [73, 60],
-   "facing": -1.24,
-   "skill": "normal"
+   "facing": -1.24
   },
   {
    "type": "enemy",
@@ -1222,8 +1216,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [76, 86],
-   "facing": -1.614,
-   "skill": "normal"
+   "facing": -1.614
   },
   {
    "type": "enemy",
@@ -1259,8 +1252,7 @@
    "type": "enemy",
    "kind": "bulwark",
    "at": [21, 86],
-   "facing": -1.768,
-   "skill": "normal"
+   "facing": -1.768
   },
   {
    "type": "enemy",

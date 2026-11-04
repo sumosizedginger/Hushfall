@@ -1,7 +1,7 @@
 // The encounter half of the level floors, for one map (PT-083 L2, L4; D2): it writes maps-src/skill/<ID>.json, compiles the map and holds the result to every node gate, backing off until they pass.
 //   all   creatures on every difficulty: enough to reach the density floor, and two near the middle of a long walk with nothing awake
 //   hard  a quarter more creatures on Hard only (appended last, so no id on Easy or Normal moves)
-//   easy  about one in seven left out on Easy (they keep their ids)
+//   Easy keeps every creature (the owner, 2026-11-04)
 //   node tools/dev/level-pass.mjs <ID> [--no-all] [--no-skill] [--jobs-note]    prints one line: what it kept. Run it from a checkout nobody is editing.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,7 +28,7 @@ const writeSide = (s) => {
 const base = readSidecar(id) ?? {},
   ambushOnly = flags.includes('--ambush');
 if (!ambushOnly) {
-  writeSide({ ...base, all: [], hard: [], easy: [] });
+  writeSide({ ...base, all: [], hard: [] });
   compileNow();
 } else {
   writeSide({ ...base, ambush: [] });
@@ -191,10 +191,6 @@ const plain = src.entities.filter(
   (e) => e.type === 'enemy' && !e.group && !e.hold && !ENEMIES[e.kind]?.boss && !ENEMIES[e.kind]?.node && !ENEMIES[e.kind]?.peaceful,
 );
 let easy = [];
-if (skillOn) {
-  const n = Math.round(row.enemies * 0.15);
-  for (let i = 0; i < n && plain.length; i++) easy.push(plain[Math.floor(((i + 0.5) * plain.length) / n)].at);
-}
 
 function gates(strict = false) {
   let out = '';
@@ -247,7 +243,7 @@ if (ambushOnly && bestRun > 90 && bestCells.length) {
 }
 const apply = () => {
   if (ambushOnly) writeSide({ ...base, ambush });
-  else writeSide({ ...base, all, hard, easy });
+  else writeSide({ ...base, all, hard });
   compileNow();
 };
 if (ambushOnly) {

@@ -330,8 +330,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [21, 29],
-   "facing": -1.67,
-   "skill": "normal"
+   "facing": -1.67
   },
   {
    "type": "enemy",
@@ -361,8 +360,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 34],
-   "facing": -2.003,
-   "skill": "normal"
+   "facing": -2.003
   },
   {
    "type": "enemy",
@@ -420,8 +418,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [41, 36],
-   "facing": -1.831,
-   "skill": "normal"
+   "facing": -1.831
   },
   {
    "type": "enemy",
@@ -486,8 +483,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [66, 27],
-   "facing": -1.553,
-   "skill": "normal"
+   "facing": -1.553
   },
   {
    "type": "enemy",
@@ -517,8 +513,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [76, 26],
-   "facing": -1.54,
-   "skill": "normal"
+   "facing": -1.54
   },
   {
    "type": "enemy",
@@ -548,8 +543,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [86, 28],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -593,8 +587,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [60, 24],
-   "facing": -1.489,
-   "skill": "normal"
+   "facing": -1.489
   },
   {
    "type": "enemy",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M05",
- "version": 3,
+ "version": 4,
  "name": "Resonance Loom",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -28,7 +28,7 @@
   "##########################################################################",
   "#########################MMMMMMMMM########################################",
   "#######################MMMwwwwwwwMMMMMMMMMMMMMMMMMMMMMMMM#################",
-  "#####################MMMwwwwwwwwwwwMMwwwwwwwwwwwwwwwwwwwM#################",
+  "#####################MMMwwwwwwwwwwwMMwwwwwwwwwwwwwDwwwwwM#################",
   "####################MMwwwwwwwwwwwwwwwwMMMMMMMMMMMMMMMMMwM#################",
   "###################MMwwwwwwwwwwwwwwwwwMM##############MwM#################",
   "##################MMwwwwwwwwwwwwwwwwwwwMM#############MwM#################",
@@ -274,6 +274,9 @@
   {
    "at": [58, 28],
    "remote": true
+  },
+  {
+   "at": [50, 17]
   }
  ],
  "secrets": [
@@ -544,8 +547,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 22],
-   "facing": -1.19,
-   "skill": "normal"
+   "facing": -1.19
   },
   {
    "type": "enemy",
@@ -610,8 +612,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [9, 26],
-   "facing": -1.19,
-   "skill": "normal"
+   "facing": -1.19
   },
   {
    "type": "prop",
@@ -806,8 +807,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [19, 35],
-   "facing": -2.007,
-   "skill": "normal"
+   "facing": -2.007
   },
   {
    "type": "prop",

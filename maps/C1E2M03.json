@@ -315,8 +315,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [20, 8],
-   "facing": -0.938,
-   "skill": "normal"
+   "facing": -0.938
   },
   {
    "type": "pickup",
@@ -474,8 +473,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 15],
-   "facing": -1.363,
-   "skill": "normal"
+   "facing": -1.363
   },
   {
    "type": "enemy",
@@ -528,8 +526,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [27, 17],
-   "facing": -1.48,
-   "skill": "normal"
+   "facing": -1.48
   },
   {
    "type": "pickup",
@@ -600,8 +597,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [24, 19],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -750,8 +746,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [69, 23],
-   "facing": -1.633,
-   "skill": "normal"
+   "facing": -1.633
   },
   {
    "type": "prop",
@@ -820,8 +815,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [35, 27],
-   "facing": -1.831,
-   "skill": "normal"
+   "facing": -1.831
   },
   {
    "type": "prop",

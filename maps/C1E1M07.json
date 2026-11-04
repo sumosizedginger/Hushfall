@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M07",
- "version": 4,
+ "version": 5,
  "name": "Signal House",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -32,7 +32,7 @@
   "##InnnnnnnnnnI#WtttttttttW#################T.............T##",
   "##InnnnnnnnnnI#WtttttttttWW################T.............T##",
   "##InnnnnnnnnnI#Wttttttttt.WWW##############T.............T##",
-  "##IInnnnnnnnnI#WWtttttttW...WW############...............T##",
+  "##IInnnnnnnnnI#WWtttttttW.D.WW############...............T##",
   "##IIIIIIIIDIIIWWWWWWDWWWWWW..W###########................T##",
   "########W....................IIIII########...............T##",
   "########W....................IgggI#########T.............T##",
@@ -178,6 +178,9 @@
   },
   {
    "at": [18, 30]
+  },
+  {
+   "at": [26, 15]
   }
  ],
  "secrets": [
@@ -380,8 +383,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [11, 9],
-   "facing": -0.519,
-   "skill": "normal"
+   "facing": -0.519
   },
   {
    "type": "prop",
@@ -447,8 +449,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [48, 13],
-   "facing": -1.352,
-   "skill": "normal"
+   "facing": -1.352
   },
   {
    "type": "enemy",
@@ -603,8 +604,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [26, 23],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "enemy",
@@ -664,8 +664,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [53, 24],
-   "facing": -1.591,
-   "skill": "normal"
+   "facing": -1.591
   },
   {
    "type": "prop",
@@ -791,8 +790,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [50, 31],
-   "facing": -1.739,
-   "skill": "normal"
+   "facing": -1.739
   },
   {
    "type": "prop",
@@ -928,8 +926,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [22, 36],
-   "facing": -2.171,
-   "skill": "normal"
+   "facing": -2.171
   },
   {
    "type": "enemy",

@@ -423,8 +423,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [40, 24],
-   "facing": 0.546,
-   "skill": "normal"
+   "facing": 0.546
   },
   {
    "type": "enemy",
@@ -466,8 +465,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [3, 6],
-   "facing": 0.865,
-   "skill": "normal"
+   "facing": 0.865
   },
   {
    "type": "enemy",
@@ -509,8 +507,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [14, 43],
-   "facing": 1.364,
-   "skill": "normal"
+   "facing": 1.364
   },
   {
    "type": "enemy",
@@ -546,8 +543,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [9, 32],
-   "facing": 1.176,
-   "skill": "normal"
+   "facing": 1.176
   },
   {
    "type": "enemy",
@@ -589,8 +585,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [52, 35],
-   "facing": 0.286,
-   "skill": "normal"
+   "facing": 0.286
   },
   {
    "type": "enemy",

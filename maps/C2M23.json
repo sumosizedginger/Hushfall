@@ -599,8 +599,7 @@
    "kind": "tollbearer",
    "at": [69, 23],
    "variant": "crystal",
-   "facing": 1.768,
-   "skill": "normal"
+   "facing": 1.768
   },
   {
    "type": "enemy",
@@ -752,8 +751,7 @@
    "kind": "tollbearer",
    "at": [60, 12],
    "variant": "crystal",
-   "facing": 1.396,
-   "skill": "normal"
+   "facing": 1.396
   },
   {
    "type": "enemy",
@@ -1087,8 +1085,7 @@
    "kind": "tollbearer",
    "at": [37, 38],
    "variant": "crystal",
-   "facing": 1.908,
-   "skill": "normal"
+   "facing": 1.908
   },
   {
    "type": "enemy",
@@ -1137,8 +1134,7 @@
    "kind": "gill",
    "at": [67, 38],
    "variant": "crystal",
-   "facing": 2.208,
-   "skill": "normal"
+   "facing": 2.208
   },
   {
    "type": "enemy",
@@ -1180,8 +1176,7 @@
    "kind": "gaunt",
    "at": [46, 56],
    "variant": "crystal",
-   "facing": 2.24,
-   "skill": "normal"
+   "facing": 2.24
   },
   {
    "type": "enemy",
@@ -1230,8 +1225,7 @@
    "kind": "chorister",
    "at": [62, 58],
    "variant": "crystal",
-   "facing": 2.467,
-   "skill": "normal"
+   "facing": 2.467
   },
   {
    "type": "enemy",
@@ -1273,8 +1267,7 @@
    "kind": "resonant",
    "at": [36, 56],
    "variant": "crystal",
-   "facing": 2.151,
-   "skill": "normal"
+   "facing": 2.151
   },
   {
    "type": "enemy",
@@ -1323,8 +1316,7 @@
    "kind": "gill",
    "at": [64, 39],
    "variant": "crystal",
-   "facing": 2.182,
-   "skill": "normal"
+   "facing": 2.182
   },
   {
    "type": "enemy",
@@ -1373,8 +1365,7 @@
    "kind": "tollbearer",
    "at": [28, 82],
    "variant": "crystal",
-   "facing": 2.341,
-   "skill": "normal"
+   "facing": 2.341
   },
   {
    "type": "enemy",
@@ -1416,8 +1407,7 @@
    "kind": "gaunt",
    "at": [40, 90],
    "variant": "crystal",
-   "facing": 2.498,
-   "skill": "normal"
+   "facing": 2.498
   },
   {
    "type": "enemy",

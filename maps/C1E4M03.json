@@ -629,8 +629,7 @@
    "type": "enemy",
    "kind": "wardengraft",
    "at": [41, 33],
-   "facing": 0.054,
-   "skill": "normal"
+   "facing": 0.054
   },
   {
    "type": "pickup",
@@ -711,8 +710,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [58, 56],
-   "facing": -0.82,
-   "skill": "normal"
+   "facing": -0.82
   },
   {
    "type": "enemy",
@@ -788,8 +786,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [69, 42],
-   "facing": -0.767,
-   "skill": "normal"
+   "facing": -0.767
   },
   {
    "type": "prop",
@@ -922,8 +919,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [39, 22],
-   "facing": 0.083,
-   "skill": "normal"
+   "facing": 0.083
   },
   {
    "type": "enemy",

@@ -1,18 +1,14 @@
 {
  "all": [],
  "hard": [],
- "easy": [
-  [
-   19,
-   22
-  ],
-  [
-   9,
-   26
-  ],
-  [
-   19,
-   35
-  ]
- ]
+ "doors": [
+  {
+   "at": [
+    50,
+    17
+   ],
+   "why": "the service tunnel ran round the door"
+  }
+ ],
+ "bump": 1
 }

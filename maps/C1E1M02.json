@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M02",
- "version": 3,
+ "version": 4,
  "name": "Customs Hall",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -40,7 +40,7 @@
   "#######################WcccccccccWcccWcccccccccttP##############",
   "###WWWWWWWWWWWW########WcccccccccWcccWcccccccccPtPP#############",
   "###WWfffffffffW########WWWWWWWWWWWWcWWWWWWWWWWWPttP#############",
-  "###WffffffffffW#######PPPPPtttPPPPWDWPPPPtttPPPPPtP#############",
+  "###WffffffffffW#######PPPPPtttPPPPWDWPPPPtttPPPPPDP#############",
   "###fffffffffffWWW#####PtttttttttttttttttttttttttttP#############",
   "###fffffffffffXfW#####PttttttttttttttttttttttttttPP#############",
   "###fffffffffffWWWWWWWWPttttttttttttttttttttttttttt##tt##########",
@@ -60,7 +60,7 @@
   "#CssssssssssssssPtttttPttttttttttttttttttttttttttt##############",
   "#CCsssssssssssssPPPPttPtttttttttttttttttttttttttP###############",
   "#CCCssssssssssssC##PPtPtttttttttttttttttttttttttP###############",
-  "#CCCCsssCCsssCCCC###PtPPtPPPXPPPPXPPPPXPPPPXPPPPP###############",
+  "#CCCCsssCCsssCCCC###PtPPDPPPXPPPPXPPPPXPPPPXPPPPP###############",
   "#####sss##sss#######PttttP#PtP##PtP##PtP##PtP###################",
   "####################PPPPPP#PPP##PPP##PPP##PPP###################"
  ],
@@ -189,6 +189,13 @@
   },
   {
    "at": [22, 43]
+  },
+  {
+   "at": [49, 29],
+   "key": "brass"
+  },
+  {
+   "at": [24, 49]
   }
  ],
  "secrets": [
@@ -451,8 +458,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [25, 13],
-   "facing": -0.617,
-   "skill": "normal"
+   "facing": -0.617
   },
   {
    "type": "prop",
@@ -604,8 +610,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [28, 20],
-   "facing": -0.806,
-   "skill": "normal"
+   "facing": -0.806
   },
   {
    "type": "prop",
@@ -790,8 +795,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [30, 31],
-   "facing": -1.122,
-   "skill": "normal"
+   "facing": -1.122
   },
   {
    "type": "enemy",
@@ -896,8 +900,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [42, 36],
-   "facing": -1.368,
-   "skill": "normal"
+   "facing": -1.368
   },
   {
    "type": "prop",
@@ -1164,8 +1167,7 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [19, 45],
-   "facing": -1.633,
-   "skill": "normal"
+   "facing": -1.633
   },
   {
    "type": "enemy",
@@ -1209,8 +1211,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [25, 46],
-   "facing": -1.661,
-   "skill": "normal"
+   "facing": -1.661
   },
   {
    "type": "prop",

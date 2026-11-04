@@ -51,30 +51,22 @@
    "facing": -1.571
   }
  ],
- "easy": [
-  [
-   25,
-   13
-  ],
-  [
-   28,
-   20
-  ],
-  [
-   30,
-   31
-  ],
-  [
-   42,
-   36
-  ],
-  [
-   19,
-   45
-  ],
-  [
-   25,
-   46
-  ]
- ]
+ "doors": [
+  {
+   "at": [
+    49,
+    29
+   ],
+   "key": "brass",
+   "why": "the way round the hall's east side came out behind the brass door"
+  },
+  {
+   "at": [
+    24,
+    49
+   ],
+   "why": "the servants' passage came out past the vestibule door"
+  }
+ ],
+ "bump": 1
 }

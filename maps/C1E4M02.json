@@ -411,8 +411,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [24, 16],
-   "facing": -1.849,
-   "skill": "normal"
+   "facing": -1.849
   },
   {
    "type": "enemy",
@@ -534,8 +533,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [61, 10],
-   "facing": -1.532,
-   "skill": "normal"
+   "facing": -1.532
   },
   {
    "type": "enemy",
@@ -597,8 +595,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [102, 35],
-   "facing": -1.816,
-   "skill": "normal"
+   "facing": -1.816
   },
   {
    "type": "enemy",
@@ -704,8 +701,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [62, 52],
-   "facing": -2.226,
-   "skill": "normal"
+   "facing": -2.226
   },
   {
    "type": "enemy",
@@ -747,8 +743,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [62, 69],
-   "facing": -2.402,
-   "skill": "normal"
+   "facing": -2.402
   },
   {
    "type": "enemy",

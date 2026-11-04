@@ -540,8 +540,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [46, 88],
-   "facing": 0,
-   "skill": "normal"
+   "facing": 0
   },
   {
    "type": "enemy",
@@ -595,8 +594,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [52, 59],
-   "facing": -0.185,
-   "skill": "normal"
+   "facing": -0.185
   },
   {
    "type": "enemy",
@@ -608,15 +606,13 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [63, 60],
-   "facing": -0.502,
-   "skill": "normal"
+   "facing": -0.502
   },
   {
    "type": "enemy",
    "kind": "bellhand",
    "at": [62, 61],
-   "facing": -0.49,
-   "skill": "normal"
+   "facing": -0.49
   },
   {
    "type": "enemy",
@@ -726,8 +722,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [46, 7],
-   "facing": 0,
-   "skill": "normal"
+   "facing": 0
   },
   {
    "type": "enemy",

@@ -651,8 +651,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [42, 23],
-   "facing": -1.285,
-   "skill": "normal"
+   "facing": -1.285
   },
   {
    "type": "pickup",
@@ -730,8 +729,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [53, 49],
-   "facing": -1.912,
-   "skill": "normal"
+   "facing": -1.912
   },
   {
    "type": "pickup",

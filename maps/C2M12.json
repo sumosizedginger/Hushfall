@@ -1291,8 +1291,7 @@
    "kind": "tollbearer",
    "at": [55, 31],
    "facing": -1.5707963267948966,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1334,8 +1333,7 @@
    "kind": "tollbearer",
    "at": [32, 52],
    "facing": 1.5707963267948966,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1377,8 +1375,7 @@
    "kind": "tollbearer",
    "at": [54, 56],
    "facing": -1.5707963267948966,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1420,8 +1417,7 @@
    "kind": "tollbearer",
    "at": [31, 65],
    "facing": 1.5707963267948966,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1470,8 +1466,7 @@
    "kind": "tollbearer",
    "at": [29, 43],
    "facing": 0,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1513,8 +1508,7 @@
    "kind": "tollbearer",
    "at": [31, 48],
    "facing": 0,
-   "variant": "drowned",
-   "skill": "normal"
+   "variant": "drowned"
   },
   {
    "type": "enemy",
@@ -1551,8 +1545,7 @@
    "type": "enemy",
    "kind": "gill",
    "at": [33, 52],
-   "facing": 0.219,
-   "skill": "normal"
+   "facing": 0.219
   },
   {
    "type": "enemy",
@@ -1588,8 +1581,7 @@
    "type": "enemy",
    "kind": "chorister",
    "at": [10, 44],
-   "facing": 0.675,
-   "skill": "normal"
+   "facing": 0.675
   },
   {
    "type": "enemy",
@@ -1660,8 +1652,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [18, 52],
-   "facing": 0.625,
-   "skill": "normal"
+   "facing": 0.625
   },
   {
    "type": "enemy",

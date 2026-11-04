@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M02",
- "version": 3,
+ "version": 4,
  "name": "Ribbed Corridors",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -28,7 +28,7 @@
   "#############################VggV######################VggV###################",
   "#############################VggV######################VggV###################",
   "###########################n#VggV#VVVVVVVVVVVVVVVVVVVVVVggV###################",
-  "##########################nnnVggVVVnnnnnnnnnnnnnnnnnnnVVggV###################",
+  "##########################nnnVggVVVnnnnnnnnnnDnnnnnnnnVVggV###################",
   "#######################VVVnnnVnnVVnnVVVVVVVVVVVVVVVVVnVVooVVVVVVVVVV##########",
   "#######################VnnnnnnnnnnnnnVV######VooooooooooooooooooooVV##########",
   "##VVVVVVVVVVVVVV#######VnnnnnnnnnnnnnnV######VoooooooooooooooooooooV##########",
@@ -134,6 +134,9 @@
   {
    "at": [67, 26],
    "remote": true
+  },
+  {
+   "at": [45, 17]
   }
  ],
  "secrets": [
@@ -379,15 +382,13 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [56, 13],
-   "facing": -1.344,
-   "skill": "normal"
+   "facing": -1.344
   },
   {
    "type": "enemy",
    "kind": "gaunt",
    "at": [30, 14],
-   "facing": -1.171,
-   "skill": "normal"
+   "facing": -1.171
   },
   {
    "type": "pickup",
@@ -543,8 +544,7 @@
    "type": "enemy",
    "kind": "gaunt",
    "at": [43, 25],
-   "facing": -1.571,
-   "skill": "normal"
+   "facing": -1.571
   },
   {
    "type": "pickup",
@@ -565,8 +565,7 @@
    "type": "enemy",
    "kind": "bellhand",
    "at": [41, 26],
-   "facing": -1.598,
-   "skill": "normal"
+   "facing": -1.598
   },
   {
    "type": "prop",
