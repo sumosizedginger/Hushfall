@@ -19,6 +19,7 @@ export function applySkill(map, side = readSidecar(map.id)) {
   map.entities = map.entities.filter((e) => e.skill !== 'hard' && !e.extra);
   for (const e of map.entities) delete e.skill;
   if (!side) return map;
+  map.version = (map.version ?? 1) + 1; // a map a sidecar changed is not the map a mid-level save was made on
   if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
   // a key hunt: the door locked, the key where it was put with a light by it, and what the player says finding it
   for (const k of side.keys ?? []) {

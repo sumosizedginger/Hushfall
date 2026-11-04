@@ -110,6 +110,7 @@ export class UI {
     $('btn-credits-title').onclick = () => this.h.openCredits();
     $('btn-training').onclick = () => this.h.training();
     $('btn-maps').onclick = () => this.h.openMaps();
+    $('btn-again').onclick = () => this.h.playAgain();
     $('btn-maps-back').onclick = () => this.h.closeMaps();
     $('btn-dead-check').onclick = () => this.h.backToCheckpoint();
     $('set-checkpoints').onchange = (e) => this.h.setSetting('checkpoints', e.target.checked);
@@ -450,6 +451,7 @@ export class UI {
       $('btn-continue').style.display = data.canContinue ? '' : 'none';
       $('title-note').textContent = data.note || '';
       $('btn-maps').style.display = this.h.hasMaps?.() ? '' : 'none';
+      $('btn-again').style.display = this.h.canAgain?.() ? '' : 'none';
     }
     if (name === 'pause') {
       $('pause-note').textContent = data.note || '';

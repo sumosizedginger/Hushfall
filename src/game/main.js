@@ -1,5 +1,5 @@
 // HUSHFALL runtime: state machine (title / playing / paused / dying / ending) around the headless engine + Three.js view.
-import { loadProfile, saveProfile, recordFinish, mapRows } from './profile.js';
+import { loadProfile, saveProfile, recordFinish, mapRows, keepForAgain, againCarry } from './profile.js';
 import { earnsCheckpoint, safeToSave } from './checkpoints.js';
 import { nextHint, keyNamer } from './hints.js';
 import trainingSrc from '../../maps-dev/TRAINING.json';
@@ -39,7 +39,7 @@ import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor } from './captions.js';
 import { firstRunLine } from './firstrun.js';
 import { creditsLines, creditsHeight, creditsState } from './credits.js';
-import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe } from './playlog.js';
+import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe, addCrash } from './playlog.js';
 import { drawMinimap, MINIMAP } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
@@ -184,6 +184,15 @@ const ui = new UI({
     else ui.h.restartLevel();
   },
   hasMaps: () => Object.keys(g.profile.maps).length > 0,
+  canAgain: () => !!g.profile.again,
+  playAgain: () => {
+    const carry = againCarry(g.profile);
+    if (!carry) return;
+    g.replay = false;
+    g.progress = newProgress();
+    g.progress = { ...g.progress, upgrades: { ...carry.upgrades } };
+    startLevel({ difficulty: 'hard', seed: 1 + Math.floor(Math.random() * 1e6), carry });
+  },
   openMaps: () => {
     if (g.mode !== 'title') return;
     ui.mapsScreen(mapRows(CAMPAIGN, MAPS, g.profile, isDocument));
@@ -1406,6 +1415,8 @@ addEventListener('gamepadconnected', () => {
 addEventListener('gamepaddisconnected', () => {
   if (g.mode === 'playing' && g.padActive) pause();
 }); // the pad you were playing with went away: pause, do not let the game run on without you
+// headphones pulled out: the sound goes on through whatever is left
+navigator.mediaDevices?.addEventListener?.('devicechange', () => audio.resume?.());
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) pause();
 });
@@ -1581,7 +1592,8 @@ function pollPad(dt) {
   if (import.meta.env.DEV && g.manual) {
     g.input.setAnalog(0, 0);
     return;
-    // the dev test hook owns the clock: a controller that happens to be plugged into the machine (a stick at rest is never exactly zero) must not steer
+    // the dev test hook owns the clock: a controller that happens to be plugged into the machine (a stick at rest is never exactly zero) must not
+    // steer
     // a bot or a still (found 2026-10-10: every real-game route stalled, the same commits that had passed)
   }
   const list = navigator.getGamepads ? Array.from(navigator.getGamepads()) : [],
@@ -1682,6 +1694,10 @@ function crash(e, n) {
   });
   const list = appendReport(loadErrors(storage), report);
   saveErrors(storage, list);
+  if (settings.playLog) {
+    g.playlog = addCrash(g.playlog, report);
+    saveLog(storage, g.playlog);
+  }
   const aside = quarantineLoaded();
   try {
     g.input.releaseAll();
@@ -1778,7 +1794,11 @@ function frameBody(now) {
       saveProfile(storage, g.profile);
       if (!g.replay) commitProgress();
       logAttempt('complete');
-      const ending = g.replay ? null : endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest); // a campaign's last map: the epilogue first
+      const ending = g.replay ? null : endingFor(CAMPAIGN, g.mapId, g.world.endStats?.dest);
+      if (ending) {
+        g.profile = keepForAgain(g.profile, nextCarry());
+        saveProfile(storage, g.profile);
+      } // a campaign's last map: the epilogue first
       if (ending) startEpilogue(ending);
       else {
         g.mode = 'complete';

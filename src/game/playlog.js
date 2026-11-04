@@ -60,6 +60,17 @@ export class FrameHistogram {
   }
 }
 
+/** the game broke: what the player can send along with the rest of the log */
+export function addCrash(log, report) {
+  return {
+    ...log,
+    crashes: [
+      ...(log.crashes ?? []).slice(-9),
+      { message: text(report?.message ?? report?.error, 160), map: text(report?.map, 12), mode: text(report?.mode, 12) },
+    ],
+  };
+}
+
 /** a fresh log. meta: { renderer, browser } (strings, optional) */
 export function emptyLog(meta = {}, rnd = Math.random, day = '') {
   return {

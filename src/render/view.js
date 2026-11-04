@@ -133,7 +133,7 @@ export const WEAPON_LIGHT = { floor: 0.35 };
  * own muzzle for a moment (fire, a light in the WORLD, not only on the gun); a burst of light where a shot lands on a body; a cold rim of the place's
  * sky round every creature (entityflag.js RIM), weaker where the place is dark
  */
-export const POLISH_LIGHT = { hemi: 0.84, sun: 0.88, lamp: 1.32, fire: 22, fireRange: 11, pop: { r: 0.17, life: 0.11, color: 0xffe2b0 }, rim: [0.035, 0.07] };
+export const POLISH_LIGHT = { hemi: 0.84, sun: 0.88, lamp: 1.32, fire: 22, fireRange: 11, pop: { r: 0.17, life: 0.11, color: 0xffe2b0 }, rim: [0.1, 0.24] };
 export class GameView {
   constructor(renderer, tex, map, world) {
     this.renderer = renderer;

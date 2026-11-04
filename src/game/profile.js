@@ -17,6 +17,12 @@ const num = (x) => (Number.isFinite(x) && x >= 0 ? x : 0);
 export function sanitizeProfile(raw) {
   const out = defaultProfile();
   if (!raw || raw.version !== PROFILE_VERSION || typeof raw.maps !== 'object' || !raw.maps) return out;
+  if (raw.again && Array.isArray(raw.again.weapons) && raw.again.weapons.every((w) => typeof w === 'string'))
+    out.again = {
+      weapons: raw.again.weapons,
+      mods: raw.again.mods && typeof raw.again.mods === 'object' ? raw.again.mods : {},
+      upgrades: raw.again.upgrades && typeof raw.again.upgrades === 'object' ? raw.again.upgrades : {},
+    };
   for (const [id, m] of Object.entries(raw.maps)) {
     if (!m || typeof m !== 'object' || typeof m.byDiff !== 'object' || !m.byDiff) continue;
     const row = { byDiff: {}, docs: Array.isArray(m.docs) ? m.docs.filter((d) => typeof d === 'string') : [] };
@@ -56,6 +62,23 @@ export function saveProfile(storage, profile) {
     return false;
   }
 }
+
+/** what a finished campaign leaves for the next: the guns, the mods and the Locker's tiers */
+export function keepForAgain(profile, carry) {
+  return { ...profile, again: { weapons: [...(carry.weapons ?? [])], mods: { ...(carry.mods ?? {}) }, upgrades: { ...(carry.upgrades ?? {}) } } };
+}
+/** the inventory a campaign played again starts with */
+export const againCarry = (profile) =>
+  profile.again
+    ? {
+        hp: 100,
+        armor: 50,
+        ammo: { flare: 12, shell: 16, rivet: 80 },
+        weapons: [...profile.again.weapons],
+        mods: { ...profile.again.mods },
+        upgrades: { ...profile.again.upgrades },
+      }
+    : null;
 
 /** the challenges a finished run met */
 export function challengesOf(end, par) {

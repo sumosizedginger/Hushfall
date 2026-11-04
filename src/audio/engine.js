@@ -102,6 +102,10 @@ export class AudioEngine {
     this.applySettings(this.settings);
   }
 
+  /** after a change of output device a browser may have suspended the context */
+  resume() {
+    if (this.ctx?.state === 'suspended') this.ctx.resume().catch(() => {});
+  }
   /** the player has walked into another kind of room */
   setRoom(room) {
     if (room === this.room || !this.ctx || !this.reverb) return;
