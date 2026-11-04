@@ -94,3 +94,12 @@ SIM TRUTH: `npm test` (the node suite, headless, about 1,050 tests; `tests/maps.
 
 ## Keeping the code readable (PT-083)
 Prettier (`.prettierrc.json`, width 160) formats `src`, `tools` and `tests`: run `npx prettier --write` on what you touch, then `node tools/dev/tidy-comments.mjs <file>` if a comment runs long. `tests/code-health.test.js` holds the line length, the function lengths, the shell state's declaration (`src/game/state.js`), the linter (`eslint.config.mjs`) and the type checker (`tsconfig.json`, the simulation only). History does not go in comments: a comment says why the code is as it is; who asked and when is in `design/history/CODE_NOTES.md`, `PRODUCTION_LOG.md` and git. `node tools/dev/fp-par.mjs save|check <file>` proves every route unchanged (`FP_QUICK=1` for one seed per route).
+
+## Added by the release quality plan (PT-083)
+
+- **A map's placement by difficulty** is a sidecar, `maps-src/skill/<ID>.json`, in the SHIPPED frame, applied last by the compiler (`tools/mapkit/skill.mjs`): `all` (added on every difficulty), `hard` (added on Hard only), `hardOnly` (a creature the map already has, kept for Hard), `easy` (left out on Easy), `keys` (a door or a lever that needs a key, and where the key lies), `ambush` (a trigger that spawns hunters), `pickups`, `dropsHard`. Added entities go at the end of the list. Adding or removing an odd number flips the steering side of every creature spawned later, so re-run the gates.
+- **The level floors** are `tools/dev/floors.mjs` and `design/level-floors.json` (a floor a map misses needs a written reason). `tests/level-floors.test.js` reads the floors from the map; with `FULL_AUDIT=1` (`npm run verify` and the regeneration) it also replays the routes, so only the full run catches a walk that has become too quiet.
+- **The curve** is `tools/dev/curve-report.mjs` -> `design/DIFFICULTY_CURVE.md`, read from the evidence as a mean over the seeds. A flag with no entry in its `WHY` table says NO REASON YET.
+- **The pointer lock in a test:** `tools/dev/lockguard.mjs` is how a tool that launches Chrome refuses the lock before any page script runs and counts the requests; `tests/repo-layout.test.js` holds every such tool to it.
+- **The census** (`tools/dev/render-census.mjs`) plays each map on Hard, the one difficulty where every placed creature stands.
+- **A timing test** on a shared machine must not fail on one stall: the simulation is deterministic, so `tests/soak.test.js` runs again before it calls a step slow.

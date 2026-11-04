@@ -501,7 +501,7 @@ PROOF: `tests/roster-r8.test.js` (a run never moves against its facing; it opens
 
 ## PT-083 · the release quality plan · FIXED-IN-CODE (awaiting the owner and a friend)
 
-Nobody has played any of this. The tests prove the game runs and the bot can finish it; they cannot say whether it is good. Best played on `npm run dev` from a fresh browser profile so the first-time things show.
+Nobody has played any of this. The tests prove the game runs and the bot can finish it; they cannot say whether it is good. (2026-11-04: three levels were eased on Normal after the last read of the curve, Customs Hall, Landing Scar and The Hive-Song Approach: if one of them now feels thin, say so. `design/DIFFICULTY_CURVE.md` has the numbers.) Best played on `npm run dev` from a fresh browser profile so the first-time things show.
 
 **THE MOUSE (start here).** It should now feel attached to your hand, with no float at all. Settings: raw mouse input (on by default), invert Y, a separate sights sensitivity. If it still feels wrong in any way, say how.
 
