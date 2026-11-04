@@ -1,35 +1,46 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-11-01T16:59:26.660Z",
-  "commit": "40dc707",
+  "when": "2026-11-04T09:10:10.836Z",
+  "commit": "70fcc9c",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "f75fd509ae054929",
-  "routesSha": "b039924e1ede9608",
+  "mapSha": "c21970dbb96e84ec",
+  "routesSha": "6616fda1b8a710ee",
   "sources": {
-    "engine": "2ada63ee432a9533",
-    "render": "9e01092ceb75ff7b",
-    "game": "3d95c6af30d4f0fb",
-    "audio": "34c405c843e5c792",
-    "assets": "0fd1ea95586c4e78",
-    "verifier": "178a732ec21abcbf",
-    "probes": "01942c6dec4649e1"
+    "engine": "2da762cbe589046f",
+    "render": "57ac175d536b8348",
+    "game": "93fba0f7df2063fe",
+    "audio": "c5a2850f1747a821",
+    "assets": "17542adf13ccb083",
+    "verifier": "874439ef370c764d",
+    "probes": "5fa72cb28e29f113"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 10622,
-      "hash": "93e9299b",
-      "nodeTicks": 10622,
-      "nodeHash": "93e9299b",
+      "ticks": 14491,
+      "hash": "efe601b1",
+      "nodeTicks": 14491,
+      "nodeHash": "efe601b1",
       "agree": true,
-      "kills": 47,
+      "kills": 48,
       "secrets": 0,
-      "wallSeconds": 7
+      "wallSeconds": 9
+    },
+    "secret": {
+      "ok": true,
+      "ticks": 12415,
+      "hash": "b5d97cd5",
+      "nodeTicks": 12415,
+      "nodeHash": "b5d97cd5",
+      "agree": true,
+      "kills": 51,
+      "secrets": 2,
+      "wallSeconds": 6
     }
   },
   "hud": {
@@ -38,17 +49,17 @@
     "shield": true
   },
   "census": {
-    "enemies": 41,
+    "enemies": 45,
     "asleep": {
-      "rows": 41,
-      "raised": 34,
+      "rows": 45,
+      "raised": 37,
       "violations": 0,
       "deepest": 0,
       "highest": 0
     },
     "awake": {
-      "rows": 82,
-      "raised": 34,
+      "rows": 90,
+      "raised": 37,
       "violations": 0,
       "deepest": 0,
       "highest": 0.051
@@ -58,18 +69,18 @@
       "raised": 97,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.081
+      "highest": 0.082
     },
     "dying": {
-      "rows": 41,
-      "raised": 34,
+      "rows": 45,
+      "raised": 37,
       "violations": 0,
       "deepest": 0,
       "highest": 0
     },
     "corpses": {
-      "rows": 41,
-      "raised": 34,
+      "rows": 45,
+      "raised": 37,
       "violations": 0,
       "deepest": 0,
       "highest": 0
@@ -83,12 +94,22 @@
     {
       "name": "real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10622 policy=standing wall=7s"
+      "detail": "status=complete failed=null ticks=14491 policy=standing wall=9s"
     },
     {
       "name": "real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10622/93e9299b vs node 10622/93e9299b"
+      "detail": "browser 14491/efe601b1 vs node 14491/efe601b1"
+    },
+    {
+      "name": "real-game route C1E1M08.secret: completes in the browser",
+      "ok": true,
+      "detail": "status=complete failed=null ticks=12415 policy=standing wall=6s"
+    },
+    {
+      "name": "real-game route C1E1M08.secret: browser sim == Node sim (ticks + state hash)",
+      "ok": true,
+      "detail": "browser 12415/b5d97cd5 vs node 12415/b5d97cd5"
     },
     {
       "name": "C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
@@ -98,22 +119,22 @@
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 41 enemies was measured: true"
+      "detail": "45 rows (37 on raised floors), 0 violations, deepest 0 m, highest 0 m; every one of the 45 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "82 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0.051 m; two samples of all 41 enemies: true"
+      "detail": "90 rows (37 on raised floors), 0 violations, deepest 0 m, highest 0.051 m; two samples of all 45 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
       "ok": true,
-      "detail": "139 rows (97 on raised floors), 0 violations, deepest 0 m, highest 0.081 m"
+      "detail": "139 rows (97 on raised floors), 0 violations, deepest 0 m, highest 0.082 m"
     },
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 41 rows (34 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+      "detail": "dying: 45 rows (37 on raised floors), 0 violations, deepest 0 m, highest 0 m || corpses: 45 rows (37 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
@@ -123,7 +144,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.814 m tall on 12 m, shield r 2.959, 6 nodes"
+      "detail": "body 4.806 m tall on 12 m, shield r 2.955, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -133,7 +154,7 @@
     {
       "name": "render truth: the census ran on this map (its enemies were really measured)",
       "ok": true,
-      "detail": "41 enemies measured of 41 placed"
+      "detail": "45 enemies measured of 45 placed"
     },
     {
       "name": "no uncaught exceptions or console errors while this map was played",
@@ -141,5 +162,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 18
+  "wallSeconds": 35
 }

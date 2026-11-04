@@ -1,0 +1,62 @@
+{
+  "note": "reference counts the budget check compares against (x1.25 allowed). Regenerate deliberately with: npm run browsercheck -- --update-baseline",
+  "when": "2026-11-04T09:04:59.618Z",
+  "budget": {
+    "pier": {
+      "calls": 233,
+      "triangles": 54794
+    },
+    "plaza": {
+      "calls": 214,
+      "triangles": 52008
+    },
+    "warehouse": {
+      "calls": 121,
+      "triangles": 34380
+    },
+    "plaza-all-awake": {
+      "calls": 458,
+      "triangles": 52008
+    },
+    "warehouse-all-awake": {
+      "calls": 168,
+      "triangles": 34428
+    },
+    "m03-market": {
+      "calls": 227,
+      "triangles": 76806
+    },
+    "m03-market-all-awake": {
+      "calls": 694,
+      "triangles": 77462
+    },
+    "m05-terrace": {
+      "calls": 133,
+      "triangles": 59526
+    },
+    "m05-terrace-all-awake": {
+      "calls": 357,
+      "triangles": 60438
+    },
+    "m06-quay": {
+      "calls": 212,
+      "triangles": 77292
+    },
+    "m06-quay-all-awake": {
+      "calls": 703,
+      "triangles": 78204
+    },
+    "m07-atrium": {
+      "calls": 260,
+      "triangles": 78028
+    },
+    "m08-chamber": {
+      "calls": 328,
+      "triangles": 82372
+    },
+    "m08-chamber-all-awake": {
+      "calls": 607,
+      "triangles": 82704
+    }
+  }
+}
