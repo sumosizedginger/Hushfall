@@ -58,5 +58,7 @@ test('the sidecar: creatures on every difficulty, on Hard only, and left out on 
     e = ids('easy');
   for (const k of Object.keys(e)) assert.equal(e[k], n[k], 'a creature keeps its id on Easy');
   assert.equal(createWorld(m, { seed: 1, difficulty: 'easy' }).stats.total.enemies, base, 'and the kill total counts what stands');
+  const twice = applySkill(JSON.parse(JSON.stringify(map)), { all: [{ kind: 'gaunt', at: [plainFloor[0] + 1, plainFloor[1]] }] });
+  assert.equal(twice.version, map.version, 'a second pass does not raise the version again');
   assert.equal(applySkill(JSON.parse(JSON.stringify(map)), null).entities.filter((q) => q.skill || q.extra).length, 0, 'it can be taken off again');
 });

@@ -16,10 +16,12 @@ export const readSidecar = (id) => {
 
 /** the map with its sidecar in force (idempotent: anything an earlier pass marked goes first) */
 export function applySkill(map, side = readSidecar(map.id)) {
+  const before = map.entities.some((e) => e.skill || e.extra);
   map.entities = map.entities.filter((e) => e.skill !== 'hard' && !e.extra);
   for (const e of map.entities) delete e.skill;
   if (!side) return map;
-  map.version = (map.version ?? 1) + 1; // a map a sidecar changed is not the map a mid-level save was made on
+  // a map a sidecar changed is not the map a mid-level save was made on (once: a second pass over a map that has no source changes nothing)
+  if (!before) map.version = (map.version ?? 1) + 1;
   if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
   // a key hunt: the door locked, the key where it was put with a light by it, and what the player says finding it
   for (const k of side.keys ?? []) {
