@@ -21,7 +21,8 @@ const args = process.argv.slice(2),
   ids = args.slice(1),
   SECONDS = +(process.env.SECONDS ?? 12),
   W = +(process.env.VW ?? 800),
-  H = +(process.env.VH ?? 450);
+  H = +(process.env.VH ?? 450),
+  RENDER_W = +(process.env.WIDTH ?? 0); // the game's internal render width (480 is the default, 960 the sharp option)
 fs.mkdirSync(out, { recursive: true });
 const results = { when: new Date().toISOString(), seconds: SECONDS, maps: {}, errors: [] };
 const save = () => fs.writeFileSync(path.join(out, 'prof.json'), JSON.stringify(results, null, 1));
@@ -52,6 +53,11 @@ page.on('console', (m) => {
 });
 await page.goto(`http://localhost:${server.config.server.port}/`, { waitUntil: 'domcontentloaded', timeout: 0 });
 await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 240000 });
+if (RENDER_W)
+  await page.evaluate((w) => {
+    window.__width = w;
+    window.__GAME_TEST__.setSetting('autoQuality', false);
+  }, RENDER_W);
 const client = await page.createCDPSession();
 await client.send('Profiler.enable');
 await client.send('Profiler.setSamplingInterval', { interval: 400 });
@@ -84,6 +90,7 @@ for (const id of ids) {
         };
         requestAnimationFrame(loop);
       }
+      if (window.__width) t.setSetting('internalWidth', window.__width);
       t.press('forward');
       window.__turn = setInterval(() => t.addYaw(0.02 * Math.sin(performance.now() / 900)), 50);
     }, id);
