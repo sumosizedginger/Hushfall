@@ -37,6 +37,7 @@ export function runRoute(
     tremor = 0,
     ammoScale = null,
     choices = null,
+    stepper = step,
   } = {},
 ) {
   const w = world || createWorld(map, { seed, difficulty, ammoScale, choices });
@@ -58,7 +59,7 @@ export function runRoute(
   let ticks = 0;
   while (!bot.done && !bot.failed && w.status === 'playing' && ticks < maxTicks) {
     bot.tick();
-    step(w, input.sample());
+    stepper(w, input.sample());
     ticks++;
     events.push(...drainEvents(w));
     if (onTick) onTick(w, ticks);

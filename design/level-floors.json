@@ -62,7 +62,7 @@
   },
   "C1E4M08": {
    "mirror": "the oval hall of the Gate Warden: it stands at the centre of its symmetry",
-   "density": "a boss arena"
+   "density": "a boss arena: the boss and what it calls are the fight"
   },
   "C2M02": {
    "density": "13 per thousand: open steppe with long sight lines; the bot gates refused every larger roster (9 back-offs)"
@@ -82,7 +82,7 @@
   },
   "C2M16": {
    "loop": "the Sub-Cantor's amphitheatre: one way in",
-   "density": "a boss arena"
+   "density": "a boss arena: the boss and what it calls are the fight"
   },
   "C2M17": {
    "density": "16 per thousand: the bot gates refused every larger roster (9 back-offs)"
@@ -127,14 +127,14 @@
    "quiet": "the wait between two strokes of the bell"
   },
   "C2M29": {
-   "loop": "the bell chamber",
-   "density": "a boss arena"
+   "loop": "the bell chamber: one round room, and the fight turns in it",
+   "density": "a boss arena: the boss and what it calls are the fight"
   },
   "C2M30": {
-   "loop": "the silent walk",
+   "loop": "the silent walk to the Gate: nothing else belongs on it",
    "firstFight": "no fight: the silent walk to the Gate",
    "density": "no creature: the silent walk",
-   "quiet": "the silent walk",
+   "quiet": "the silent walk to the Gate: nothing else belongs on it",
    "secrets": "one thing to find on the last walk"
   }
  },

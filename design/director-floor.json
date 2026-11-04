@@ -214,7 +214,7 @@
    "loops": 1,
    "topShare": 31,
    "symmetry": 0.87,
-   "walk": 1225
+   "walk": 1253
   },
   "C1E3M02": {
    "density": 25,
@@ -234,7 +234,7 @@
    "loops": 0,
    "topShare": 32,
    "symmetry": 0.68,
-   "walk": 1733
+   "walk": 1764
   },
   "C1E3M04": {
    "density": 9,
@@ -454,7 +454,7 @@
    "loops": 1,
    "topShare": 36,
    "symmetry": 0.56,
-   "walk": 2794
+   "walk": 2822
   },
   "C2M10": {
    "density": 14,
@@ -612,7 +612,7 @@
    "ambushes": 2,
    "kinds": 7,
    "loops": 1,
-   "topShare": 21,
+   "topShare": 22,
    "symmetry": 0.92,
    "walk": 1944
   },
