@@ -20,6 +20,15 @@ export function applySkill(map, side = readSidecar(map.id)) {
   for (const e of map.entities) delete e.skill;
   if (!side) return map;
   if (side.dropsHard && map.drops) map.drops = { ...map.drops, hard: side.dropsHard };
+  // a key hunt: the door locked, the key where it was put with a light by it, and what the player says finding it
+  for (const k of side.keys ?? []) {
+    const d = (map.doors ?? []).find((q) => q.at[0] === k.door[0] && q.at[1] === k.door[1]);
+    if (!d) throw new Error(`${map.id}: no door at [${k.door}] for a key`);
+    d.key = k.key;
+    map.entities.push({ type: 'pickup', kind: 'key_' + k.key, at: [...k.at], extra: true });
+    if (k.lamp) map.entities.push({ type: 'prop', kind: 'lantern', at: [...k.lamp], extra: true });
+    map.messages = [...(map.messages ?? []).filter((m) => m.id !== 'keyhunt'), { id: 'keyhunt', at: [...k.at], radius: 3, speaker: 'INES', text: k.line }];
+  }
   for (const [x, z] of side.easy ?? []) {
     const e = map.entities.find((q) => q.type === 'enemy' && q.at[0] === x && q.at[1] === z);
     if (!e) throw new Error(`${map.id}: no creature at [${x}, ${z}] to leave out on Easy`);

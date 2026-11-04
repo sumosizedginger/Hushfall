@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    43,
+    7
+   ],
+   "key": "iron",
+   "at": [
+    30,
+    8
+   ],
+   "lamp": [
+    31,
+    8
+   ],
+   "line": "Ticket office key. The last ferry's manifest is under it. I don't read it."
+  }
+ ]
+}

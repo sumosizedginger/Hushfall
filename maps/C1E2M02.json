@@ -177,7 +177,8 @@
    "at": [9, 25]
   },
   {
-   "at": [35, 25]
+   "at": [35, 25],
+   "key": "iron"
   },
   {
    "at": [45, 25]
@@ -1534,6 +1535,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [50, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [34, 37],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [35, 37],
+   "extra": true
   }
  ],
  "par": {
@@ -1624,6 +1637,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "The salt clerk's office. They bricked the door when the pans went quiet."
+  },
+  {
+   "id": "keyhunt",
+   "at": [34, 37],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The pan-master's key. Salt has grown over the bow."
   }
  ],
  "decals": [

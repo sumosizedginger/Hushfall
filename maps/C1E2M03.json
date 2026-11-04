@@ -141,7 +141,8 @@
    "at": [10, 19]
   },
   {
-   "at": [51, 20]
+   "at": [51, 20],
+   "key": "brass"
   },
   {
    "at": [61, 20],
@@ -1038,6 +1039,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [13, 19]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [49, 32],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 32],
+   "extra": true
   }
  ],
  "par": {
@@ -1121,6 +1134,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A signal hut walled into the embankment. The levers still move."
+  },
+  {
+   "id": "keyhunt",
+   "at": [49, 32],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Yard master's key. The board behind it has every wagon marked, and then nothing."
   }
  ],
  "decals": [

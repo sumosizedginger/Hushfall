@@ -104,7 +104,8 @@
  ],
  "doors": [
   {
-   "at": [55, 22]
+   "at": [55, 22],
+   "key": "iron"
   },
   {
    "at": [68, 22],
@@ -687,6 +688,18 @@
    "type": "prop",
    "kind": "cradle",
    "at": [49, 32]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [31, 10],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [30, 10],
+   "extra": true
   }
  ],
  "par": {
@@ -770,6 +783,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A pocket where the hull plating folded over. Somebody crawled in here to hide and left their kit."
+  },
+  {
+   "id": "keyhunt",
+   "at": [31, 10],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A key, in a ship with no locks of ours. They took it from a door and grew a lock to fit."
   }
  ],
  "decals": [

@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    51,
+    20
+   ],
+   "key": "brass",
+   "at": [
+    49,
+    32
+   ],
+   "lamp": [
+    50,
+    32
+   ],
+   "line": "Yard master's key. The board behind it has every wagon marked, and then nothing."
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    45,
+    22
+   ],
+   "key": "iron",
+   "at": [
+    44,
+    16
+   ],
+   "lamp": [
+    43,
+    16
+   ],
+   "line": "An attendant's key. They kept the doors locked, so somebody here still thought in doors."
+  }
+ ]
+}

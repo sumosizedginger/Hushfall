@@ -156,7 +156,8 @@
  ],
  "doors": [
   {
-   "at": [43, 7]
+   "at": [43, 7],
+   "key": "iron"
   }
  ],
  "secrets": [
@@ -1229,6 +1230,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [36, 23]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [30, 8],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [31, 8],
+   "extra": true
   }
  ],
  "par": {
@@ -1305,6 +1318,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A porter's cage under the ramp. The ferry company locked its lost property in here and kept the key."
+  },
+  {
+   "id": "keyhunt",
+   "at": [30, 8],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Ticket office key. The last ferry's manifest is under it. I don't read it."
   }
  ],
  "decals": [

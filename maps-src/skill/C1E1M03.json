@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    14,
+    41
+   ],
+   "key": "brass",
+   "at": [
+    4,
+    44
+   ],
+   "lamp": [
+    5,
+    44
+   ],
+   "line": "The market warden's key, on its nail. He locked up. Of course he locked up."
+  }
+ ]
+}

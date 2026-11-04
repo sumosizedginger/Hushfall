@@ -170,7 +170,8 @@
    "remote": true
   },
   {
-   "at": [14, 41]
+   "at": [14, 41],
+   "key": "brass"
   }
  ],
  "secrets": [
@@ -1279,6 +1280,18 @@
    "type": "pickup",
    "kind": "weapon_boathook",
    "at": [14, 9]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [4, 44],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [5, 44],
+   "extra": true
   }
  ],
  "scenery": [
@@ -1355,6 +1368,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "An ice room, bricked shut when the boats stopped. Cheap mortar. It gave at the first shot."
+  },
+  {
+   "id": "keyhunt",
+   "at": [4, 44],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The market warden's key, on its nail. He locked up. Of course he locked up."
   }
  ],
  "decals": [

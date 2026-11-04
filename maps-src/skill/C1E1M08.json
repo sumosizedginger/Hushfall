@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    40,
+    35
+   ],
+   "key": "bell",
+   "at": [
+    19,
+    53
+   ],
+   "lamp": [
+    20,
+    53
+   ],
+   "line": "The sexton's key to the tower stair. It is warm."
+  }
+ ]
+}

@@ -31,7 +31,7 @@ export function failing(row, route, map, doc = readFloorDoc()) {
   const fail = (k, detail) => {
     if (!ex[k]) out[k] = detail;
   };
-  if (!row.loops) fail('loop', 'no loop');
+  if (!row.loops && !row.roomLoops) fail('loop', 'no loop');
   if (route && (route.firstFightS == null || route.firstFightS > 60)) fail('firstFight', `first fight at ${route.firstFightS ?? 'never'} s`);
   if (route && route.longestWalkM > 90) fail('quiet', `quiet walk of ${route.longestWalkM} m`);
   if (row.symmetry >= 0.9) fail('mirror', `mirror overlap ${row.symmetry}`);

@@ -108,7 +108,8 @@
    "at": [10, 22]
   },
   {
-   "at": [45, 22]
+   "at": [45, 22],
+   "key": "iron"
   }
  ],
  "secrets": [
@@ -851,6 +852,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [34, 22]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [44, 16],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [43, 16],
+   "extra": true
   }
  ],
  "par": {
@@ -927,6 +940,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "The annex linen store. Whoever sealed it was not keeping things out."
+  },
+  {
+   "id": "keyhunt",
+   "at": [44, 16],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "An attendant's key. They kept the doors locked, so somebody here still thought in doors."
   }
  ],
  "growth": [

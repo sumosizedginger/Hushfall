@@ -180,7 +180,8 @@
  ],
  "doors": [
   {
-   "at": [23, 13]
+   "at": [23, 13],
+   "key": "brass"
   },
   {
    "at": [23, 18]
@@ -1086,6 +1087,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [30, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [34, 16],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [35, 16],
+   "extra": true
   }
  ],
  "par": {
@@ -1162,6 +1175,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A gatekeeper's locker, plastered over. The tide tables are still pinned up inside."
+  },
+  {
+   "id": "keyhunt",
+   "at": [34, 16],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "Shift foreman's key, left on the bench with his lunch."
   }
  ],
  "decals": [

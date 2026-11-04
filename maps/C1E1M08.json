@@ -140,7 +140,8 @@
  ],
  "doors": [
   {
-   "at": [40, 35]
+   "at": [40, 35],
+   "key": "bell"
   },
   {
    "at": [44, 44]
@@ -1093,6 +1094,18 @@
    "type": "pickup",
    "kind": "ammo_rocket",
    "at": [21, 29]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_bell",
+   "at": [19, 53],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [20, 53],
+   "extra": true
   }
  ],
  "par": {
@@ -1179,6 +1192,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "The bell-ringers' cupboard. Ropes, gloves, and a flask still half full."
+  },
+  {
+   "id": "keyhunt",
+   "at": [19, 53],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The sexton's key to the tower stair. It is warm."
   }
  ],
  "decals": [

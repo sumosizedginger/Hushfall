@@ -1,3 +1,21 @@
 {
- "dropsHard": 1.4
+ "dropsHard": 1.4,
+ "keys": [
+  {
+   "door": [
+    35,
+    25
+   ],
+   "key": "iron",
+   "at": [
+    34,
+    37
+   ],
+   "lamp": [
+    35,
+    37
+   ],
+   "line": "The pan-master's key. Salt has grown over the bow."
+  }
+ ]
 }

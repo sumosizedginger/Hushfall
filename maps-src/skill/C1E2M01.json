@@ -1,0 +1,20 @@
+{
+ "keys": [
+  {
+   "door": [
+    23,
+    13
+   ],
+   "key": "brass",
+   "at": [
+    34,
+    16
+   ],
+   "lamp": [
+    35,
+    16
+   ],
+   "line": "Shift foreman's key, left on the bench with his lunch."
+  }
+ ]
+}
