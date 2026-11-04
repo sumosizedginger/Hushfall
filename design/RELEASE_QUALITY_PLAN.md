@@ -180,7 +180,7 @@ All synthesized, as the rules say.
   - Box size stays 1.5 / 1 / 0.8.
   - The difficulty text (`difficulty.js`) computes the new facts.
   - Every map's gates re-run on all three difficulties.
-- [x] **D2 Placement by difficulty.** (b46009a, b8bfa82: sidecars `maps-src/skill/<ID>.json`; a quarter more on Hard and about one in seven left out on Easy where the gates allow, less where they do not, none on boss maps)
+- [x] **D2 Placement by difficulty.** (b46009a, b8bfa82: sidecars `maps-src/skill/<ID>.json`; a quarter more on Hard, none on boss maps. REVERSED FOR EASY by the owner, 2026-11-04, after playing it: leaving one creature in seven out made Easy far too easy, so Easy has every creature Normal has, PT-084)
   - An entity may say `skill: 'normal'` (Normal and Hard) or `skill: 'hard'` (Hard only), and the world leaves out what the difficulty excludes.
   - A map with no tags is unchanged: fingerprints prove it.
   - Each main map gets Hard extras (a first guess: 20 to 30% more creatures, more of them ranged or elite) and loses some on Easy (about 15%), placed by a `tune-roster`-style search against the gates.

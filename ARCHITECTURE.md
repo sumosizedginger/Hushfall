@@ -103,3 +103,7 @@ Prettier (`.prettierrc.json`, width 160) formats `src`, `tools` and `tests`: run
 - **The pointer lock in a test:** `tools/dev/lockguard.mjs` is how a tool that launches Chrome refuses the lock before any page script runs and counts the requests; `tests/repo-layout.test.js` holds every such tool to it.
 - **The census** (`tools/dev/render-census.mjs`) plays each map on Hard, the one difficulty where every placed creature stands.
 - **A timing test** on a shared machine must not fail on one stall: the simulation is deterministic, so `tests/soak.test.js` runs again before it calls a step slow.
+
+## Doors (PT-084)
+
+A door must close something. `src/engine/doorways.js` (pure, used by `tools/maplint.mjs` and `tests/doors-close.test.js`) shuts every door and panel and asks whether a door's two sides still join; a key door must also not be got round through plain doors. A way round that only runs from the far side skips nothing and passes. `design/door-exceptions.json` holds the written exceptions. `node tools/dev/door-bypass.mjs [ID]` lists the faults and `node tools/dev/door-picture.mjs <ID>` draws them. A sidecar closes a way round with `doors` ({ at, key?, why }: a new door, or a key on an existing one), `walls` and `bump` (raise the map's version: the grid changed, so a mid-level save resumes from the level's start). Easy has no placement of its own: the sidecar key `easy` is gone.

@@ -4,8 +4,9 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 
 ## Flagged
 
-- C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 91 around it. Why: the finale of the first episode
-- C1E3M06 The Choir Loft: 119 damage on Normal against about 67 around it. Why: the climb at the end of Episode 3, a raked arena of singers
+- C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 82 around it. Why: the finale of the first episode
+- C1E2M03 Rail Yard: 116 damage on Normal against about 77 around it. NO REASON YET
+- C1E3M06 The Choir Loft: 119 damage on Normal against about 66 around it. Why: the climb at the end of Episode 3, a raked arena of singers
 - C1E4M03 Cold Dock: 130 damage on Normal against about 70 around it. Why: on seed 1, 85 of its 149 damage has no creature named on it and 64 is shots; the bays are in vacuum, the likely source, not separately measured
 - C1E4M08 Gate Warden: 115 damage on Normal against about 69 around it. Why: the boss of Campaign 1
 - C2M05 The Reliquary Road: 93 damage on Normal against about 58 around it. Why: its neighbour C2M06 is unusually low (35); the level itself is about the middle of the act
@@ -20,65 +21,65 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 
 | map | name | damage easy | damage normal | damage hard | ammo x easy | ammo x normal | ammo x hard |
 |---|---|---|---|---|---|---|---|
-| C1E1M01 | Marrow Quay | 13 | 17 | 76 | 5.8 | 3.2 | 2.4 |
-| C1E1M02 | Customs Hall | 28 | 63 | 108 | 6.1 | 3.1 | 2.8 |
-| C1E1M03 | Fishmarket Rows | 47 | 63 | 123 | 3.4 | 3.3 | 2.6 |
-| C1E1M04 | The Drowned Chandlery | 17 | 95 | 117 | 4.5 | 2.6 | 2.3 |
-| C1E1M05 | Lamplighter Hill | 21 | 70 | 129 | 4 | 2.8 | 1.8 |
-| C1E1M06 | Ferry Terminal | 13 | 71 | 180 | 7.5 | 5.4 | 4.1 |
-| C1E1M07 | Signal House | 13 | 112 | 144 | 3.4 | 3 | 2.4 |
+| C1E1M01 | Marrow Quay | 16 | 17 | 76 | 4.4 | 3.2 | 2.4 |
+| C1E1M02 | Customs Hall | 59 | 63 | 108 | 4 | 3.1 | 2.8 |
+| C1E1M03 | Fishmarket Rows | 19 | 47 | 147 | 5.1 | 3.3 | 2.1 |
+| C1E1M04 | The Drowned Chandlery | 31 | 95 | 117 | 3.8 | 2.6 | 2.3 |
+| C1E1M05 | Lamplighter Hill | 60 | 70 | 129 | 2.7 | 2.8 | 1.8 |
+| C1E1M06 | Ferry Terminal | 36 | 71 | 180 | 5 | 5.4 | 4.1 |
+| C1E1M07 | Signal House | 31 | 112 | 144 | 3.4 | 3 | 2.4 |
 | C1E1M08 | Bell Tower of St. Orrin | 67 | 157 | 117 | 4.6 | 2.6 | 2.3 |
-| C1E2M01 | Brine Gate | 27 | 53 | 161 | 5.4 | 3.7 | 2.1 |
-| C1E2M02 | Evaporation Pans | 28 | 122 | 125 | 5.2 | 3.4 | 3.7 |
-| C1E2M03 | Rail Yard | 8 | 116 | 136 | 3.9 | 5.1 | 3 |
-| C1E2M04 | Kiln Row | 12 | 33 | 135 | 6.4 | 3.8 | 3.1 |
-| C1E2M05 | The Cradle Annex | 41 | 76 | 112 | 11.9 | 3.6 | 3.2 |
-| C1E2M06 | Pump Cathedral | 32 | 77 | 157 | 5.5 | 4.3 | 2.9 |
-| C1E2M07 | Slurry Undercroft | 3 | 49 | 91 | 5.6 | 3.2 | 2.8 |
+| C1E2M01 | Brine Gate | 11 | 41 | 125 | 7.4 | 4.2 | 3.1 |
+| C1E2M02 | Evaporation Pans | 37 | 84 | 135 | 4.4 | 3.3 | 3.1 |
+| C1E2M03 | Rail Yard | 16 | 116 | 136 | 4.6 | 5.1 | 3 |
+| C1E2M04 | Kiln Row | 16 | 28 | 94 | 5.2 | 4 | 2.2 |
+| C1E2M05 | The Cradle Annex | 47 | 76 | 112 | 7.2 | 3.6 | 3.2 |
+| C1E2M06 | Pump Cathedral | 31 | 77 | 157 | 7.7 | 4.3 | 2.9 |
+| C1E2M07 | Slurry Undercroft | 3 | 49 | 91 | 6.2 | 3.2 | 2.8 |
 | C1E2M08 | The Grafting Floor | 16 | 69 | 129 | 11.7 | 5.2 | 4 |
-| C1E3M01 | Landing Scar | 29 | 92 | 125 | 9.3 | 5.5 | 3.7 |
-| C1E3M02 | Ribbed Corridors | 31 | 82 | 107 | 10.6 | 6.3 | 4.3 |
-| C1E3M03 | Gill Gardens | 38 | 48 | 143 | 7.1 | 5.2 | 5.3 |
+| C1E3M01 | Landing Scar | 44 | 92 | 125 | 8.6 | 5.5 | 3.7 |
+| C1E3M02 | Ribbed Corridors | 48 | 82 | 107 | 10.8 | 6.3 | 4.3 |
+| C1E3M03 | Gill Gardens | 17 | 48 | 143 | 6.3 | 5.2 | 5.3 |
 | C1E3M04 | Marrow Nave | 15 | 50 | 126 | 6.2 | 4.1 | 2.8 |
-| C1E3M05 | Resonance Loom | 27 | 95 | 121 | 9 | 8.5 | 4.5 |
+| C1E3M05 | Resonance Loom | 23 | 92 | 121 | 5.1 | 8.5 | 4.5 |
 | C1E3M06 | The Choir Loft | 31 | 119 | 134 | 5.6 | 4.2 | 2.3 |
-| C1E3M07 | Spore Foundry | 9 | 82 | 145 | 4.1 | 3.2 | 2 |
+| C1E3M07 | Spore Foundry | 26 | 82 | 145 | 4 | 3.2 | 2 |
 | C1E3M08 | The Cantor's Throat | 42 | 109 | 141 | 7.4 | 4.5 | 3 |
-| C1E4M01 | Ascent Tether | 9 | 17 | 99 | 6.4 | 4.1 | 2.8 |
-| C1E4M02 | Wreck Belt | 21 | 80 | 102 | 6.3 | 3.9 | 2 |
-| C1E4M03 | Cold Dock | 44 | 130 | 173 | 9.8 | 5.1 | 3 |
-| C1E4M04 | Mirror Array | 19 | 55 | 90 | 6.7 | 5.4 | 3.7 |
-| C1E4M05 | Drift Orchard | 40 | 93 | 122 | 7.9 | 6.7 | 3.8 |
+| C1E4M01 | Ascent Tether | 3 | 17 | 99 | 5.2 | 4.1 | 2.8 |
+| C1E4M02 | Wreck Belt | 28 | 80 | 102 | 4.7 | 3.9 | 2 |
+| C1E4M03 | Cold Dock | 60 | 130 | 173 | 7.3 | 5.1 | 3 |
+| C1E4M04 | Mirror Array | 22 | 55 | 90 | 5.5 | 5.4 | 3.7 |
+| C1E4M05 | Drift Orchard | 40 | 93 | 122 | 7.6 | 6.7 | 3.8 |
 | C1E4M06 | Gatekeeper's Approach | 44 | 67 | 127 | 6.5 | 4.3 | 3.2 |
-| C1E4M07 | The Hollow Stair | 16 | 47 | 86 | 6.7 | 3.4 | 2.8 |
+| C1E4M07 | The Hollow Stair | 25 | 47 | 86 | 6.2 | 3.4 | 2.8 |
 | C1E4M08 | Gate Warden | 49 | 115 | 182 | 6.1 | 3.3 | 2.3 |
-| C2M01 | Threshold Beach | 37 | 85 | 171 | 6.7 | 4.4 | 2.5 |
+| C2M01 | Threshold Beach | 32 | 85 | 171 | 7.4 | 4.4 | 2.5 |
 | C2M02 | Glass Steppe | 26 | 52 | 85 | 4 | 2.7 | 2.3 |
-| C2M03 | Cantor Outpost | 37 | 72 | 125 | 7.3 | 3.2 | 3 |
-| C2M04 | Tuning Fork Fields | 26 | 53 | 122 | 5.5 | 3.7 | 2.2 |
-| C2M05 | The Reliquary Road | 26 | 93 | 200 | 6.2 | 3.1 | 3 |
-| C2M06 | Chitin Aqueduct | 8 | 35 | 113 | 7.1 | 3.8 | 2.3 |
-| C2M07 | Bellwright Yard | 17 | 59 | 94 | 5.6 | 3.3 | 2.3 |
-| C2M08 | Threshold Ascent | 12 | 78 | 142 | 4.6 | 3.7 | 1.9 |
+| C2M03 | Cantor Outpost | 40 | 72 | 125 | 6.1 | 3.2 | 3 |
+| C2M04 | Tuning Fork Fields | 30 | 53 | 122 | 5.1 | 3.7 | 2.2 |
+| C2M05 | The Reliquary Road | 36 | 93 | 200 | 4.7 | 3.1 | 3 |
+| C2M06 | Chitin Aqueduct | 16 | 35 | 113 | 6 | 3.8 | 2.3 |
+| C2M07 | Bellwright Yard | 28 | 59 | 94 | 5.3 | 3.3 | 2.3 |
+| C2M08 | Threshold Ascent | 22 | 78 | 142 | 4.8 | 3.7 | 1.9 |
 | C2M09 | Sounding Deep Gate | 19 | 28 | 60 | 5.4 | 3 | 3.5 |
 | C2M10 | Echo Markets | 13 | 28 | 55 | 6.4 | 3.8 | 3.2 |
-| C2M11 | Undercantor Halls | 40 | 53 | 107 | 6.5 | 3.4 | 2.2 |
-| C2M12 | The Drowned Choir | 40 | 75 | 100 | 15.3 | 10.3 | 5.7 |
-| C2M13 | Lantern Ossuary | 17 | 25 | 90 | 5.8 | 3.2 | 2 |
-| C2M14 | Harmonic Gardens | 19 | 74 | 98 | 3.3 | 2.9 | 2.3 |
+| C2M11 | Undercantor Halls | 23 | 53 | 107 | 5.2 | 3.4 | 2.2 |
+| C2M12 | The Drowned Choir | 45 | 75 | 100 | 12.5 | 10.3 | 5.7 |
+| C2M13 | Lantern Ossuary | 15 | 25 | 90 | 4.7 | 3.2 | 2 |
+| C2M14 | Harmonic Gardens | 29 | 74 | 98 | 3.3 | 2.9 | 2.3 |
 | C2M15 | Ash Basilica | 31 | 92 | 106 | 3.7 | 2.7 | 1.8 |
 | C2M16 | Sounding Deep Heart | 11 | 39 | 69 | 5.8 | 3.2 | 2.3 |
 | C2M17 | The Hive-Song Approach | 33 | 83 | 133 | 3 | 3.2 | 2.5 |
-| C2M18 | Nerve Cathedral | 14 | 45 | 140 | 2.7 | 2.8 | 2 |
-| C2M19 | Bone Loom | 12 | 21 | 234 | 4.3 | 4.3 | 3 |
-| C2M20 | Vein Rail | 33 | 46 | 110 | 9.8 | 5.7 | 3.6 |
+| C2M18 | Nerve Cathedral | 16 | 45 | 140 | 3.4 | 2.8 | 2 |
+| C2M19 | Bone Loom | 15 | 21 | 234 | 5.6 | 4.3 | 3 |
+| C2M20 | Vein Rail | 26 | 46 | 110 | 8.9 | 5.7 | 3.6 |
 | C2M21 | Pulse Foundry | 25 | 69 | 103 | 5.4 | 4 | 3.2 |
-| C2M22 | Mourning Halls | 9 | 98 | 93 | 2.9 | 2.4 | 1.6 |
-| C2M23 | The Reprise | 28 | 119 | 173 | 4.8 | 2.9 | 2.1 |
+| C2M22 | Mourning Halls | 15 | 98 | 93 | 2.8 | 2.4 | 1.6 |
+| C2M23 | The Reprise | 55 | 119 | 173 | 5.1 | 2.9 | 2.1 |
 | C2M24 | Choir of One | 19 | 44 | 50 | 9.7 | 5.8 | 4.2 |
-| C2M25 | Root Bell Descent | 18 | 67 | 145 | 4.7 | 2.6 | 2.1 |
+| C2M25 | Root Bell Descent | 20 | 67 | 145 | 4 | 2.6 | 2.1 |
 | C2M26 | Silent Roots | 13 | 58 | 111 | 6.3 | 4.2 | 3.9 |
-| C2M27 | Fault Line | 23 | 87 | 129 | 4.6 | 2.6 | 2.3 |
+| C2M27 | Fault Line | 25 | 87 | 129 | 4.5 | 2.6 | 2.3 |
 | C2M28 | Last Tide | 4 | 16 | 48 | 6.8 | 4.2 | 3.2 |
 | C2M29 | The Root Bell | 22 | 47 | 76 | 5.4 | 3.3 | 2.9 |
 | C2M30 | The Unrung Gate | 0 | 0 | 0 | - | - | - |

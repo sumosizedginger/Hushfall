@@ -2,19 +2,19 @@
   "mapId": "C2M04",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "70fcc9c",
+  "codeVersion": "f7645e2",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "94709bf5a15cad17",
+  "mapSha": "42da97dac693ab6a",
   "assetVersion": "17542adf13ccb083",
-  "engineSha": "2da762cbe589046f",
+  "engineSha": "23d10383e1740c72",
   "sources": {
-    "engine": "2da762cbe589046f",
+    "engine": "23d10383e1740c72",
     "render": "57ac175d536b8348",
-    "game": "93fba0f7df2063fe",
+    "game": "87626655d12caee0",
     "audio": "c5a2850f1747a821",
     "assets": "17542adf13ccb083",
-    "verifier": "874439ef370c764d",
+    "verifier": "76eb2a1c8bdfd0d7",
     "probes": "5fa72cb28e29f113"
   },
   "routesSha": "f6fe2e4480b0165d",
@@ -27,12 +27,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 6505,
-      "finalHash": "66226a99",
-      "kills": 31,
+      "ticks": 6868,
+      "finalHash": "2980ef80",
+      "kills": 37,
       "secrets": 0,
       "items": 2,
-      "damageTaken": 28
+      "damageTaken": 29
     },
     {
       "file": "routes/C2M04.main.route.json",
@@ -66,12 +66,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 7045,
-      "finalHash": "da48f5ab",
-      "kills": 31,
+      "ticks": 7379,
+      "finalHash": "e9981c49",
+      "kills": 37,
       "secrets": 2,
       "items": 4,
-      "damageTaken": 27
+      "damageTaken": 26
     },
     {
       "file": "routes/C2M04.secret.route.json",
@@ -158,26 +158,26 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 100,
+        "damage": 106,
         "hpLeft": 0
       },
       "ammo": {
-        "capacity": 508,
-        "fired": 92,
+        "capacity": 533,
+        "fired": 104,
         "capacityBy": {
-          "flare": 44,
+          "flare": 55,
           "shell": 56,
           "rivet": 330,
-          "bolt": 38,
+          "bolt": 52,
           "cell": 40,
           "round": 50,
           "rocket": 4
         },
         "firedBy": {
-          "flare": 5,
-          "rivet": 76,
-          "bolt": 8,
-          "shell": 3
+          "flare": 8,
+          "rivet": 81,
+          "bolt": 11,
+          "shell": 4
         },
         "drops": true
       },
@@ -188,10 +188,10 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 28,
-        "meanDamage": 26,
-        "seconds": 108.4,
-        "kills": 31,
+        "damage": 29,
+        "meanDamage": 30,
+        "seconds": 114.5,
+        "kills": 37,
         "failure": null
       }
     },
@@ -323,7 +323,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -343,7 +343,7 @@
       {
         "name": "route C2M04.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "108.4 s"
+        "detail": "114.5 s"
       },
       {
         "name": "route C2M04.main.route.json on normal reaches the exit",
@@ -358,7 +358,7 @@
       {
         "name": "route C2M04.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "117.4 s"
+        "detail": "123.0 s"
       },
       {
         "name": "route C2M04.secret.route.json on normal reaches the exit",
@@ -386,7 +386,7 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 100 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 106 damage)",
         "ok": true,
         "detail": ""
       },
@@ -401,19 +401,19 @@
         "detail": ""
       },
       {
-        "name": "ammo easy: flare rounds available (44) are at least 1.5x what the perfect bot fires (5)",
+        "name": "ammo easy: flare rounds available (55) are at least 1.5x what the perfect bot fires (8)",
         "ok": true,
-        "detail": "x8.80"
+        "detail": "x6.88"
       },
       {
-        "name": "ammo easy: rivet rounds available (330) are at least 1.5x what the perfect bot fires (76)",
+        "name": "ammo easy: rivet rounds available (330) are at least 1.5x what the perfect bot fires (81)",
         "ok": true,
-        "detail": "x4.34"
+        "detail": "x4.07"
       },
       {
-        "name": "ammo easy: bolt rounds available (38) are at least 1.5x what the perfect bot fires (8)",
+        "name": "ammo easy: bolt rounds available (52) are at least 1.5x what the perfect bot fires (11)",
         "ok": true,
-        "detail": "x4.75"
+        "detail": "x4.73"
       },
       {
         "name": "ammo normal: flare rounds available (38) are at least 1.5x what the perfect bot fires (8)",
@@ -461,9 +461,9 @@
         "detail": "x8.00"
       },
       {
-        "name": "ammo easy: rounds available (508) are at least 1.5x what the perfect bot fires (92): humans miss",
+        "name": "ammo easy: rounds available (533) are at least 1.5x what the perfect bot fires (104): humans miss",
         "ok": true,
-        "detail": "x5.52"
+        "detail": "x5.13"
       },
       {
         "name": "ammo normal: rounds available (432) are at least 1.5x what the perfect bot fires (116): humans miss",
@@ -513,7 +513,7 @@
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "26 / 53 / 122 (mean of 3 seeds)"
+        "detail": "30 / 53 / 122 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (4.0x; placeholder until a human plays it)",
@@ -596,6 +596,11 @@
         "detail": "ok"
       },
       {
+        "name": "placement: every door closes something: with every door shut its two sides do not join, and a key door cannot be got round through plain doors",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
         "name": "placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)",
         "ok": true,
         "detail": "ok"
@@ -642,13 +647,13 @@
       },
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src game changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M04.json: 94709bf5a15cad17 vs 94709bf5a15cad17"
+        "ok": false,
+        "detail": "validation/browser/C2M04.json: 94709bf5a15cad17 vs 42da97dac693ab6a"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -657,8 +662,8 @@
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
-        "ok": true,
-        "detail": "source hashes match"
+        "ok": false,
+        "detail": "src engine changed, src game changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",
