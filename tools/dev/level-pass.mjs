@@ -190,10 +190,15 @@ if (skillOn) {
   for (let i = 0; i < n && plain.length; i++) easy.push(plain[Math.floor(((i + 0.5) * plain.length) / n)].at);
 }
 
-function gates() {
+function gates(strict = false) {
   let out = '';
   try {
-    out = execFileSync(process.execPath, ['tools/dev/fun-gates.mjs', id], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    out = execFileSync(process.execPath, ['tools/dev/fun-gates.mjs', id], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, ...(strict ? {} : { NO_STRICT: '1' }) },
+    });
     return { ok: true, out };
   } catch (e) {
     return { ok: false, out: String(e.stdout ?? '') + String(e.stderr ?? '') };
@@ -206,6 +211,8 @@ const apply = () => {
 apply();
 let g = gates(),
   tries = 0;
+// the quick gates first; the strict per-map tests only on a set that passes them
+if (g.ok) g = gates(true);
 while (!g.ok && tries < 9) {
   tries++;
   const text = g.out,
@@ -220,13 +227,14 @@ while (!g.ok && tries < 9) {
   else break;
   apply();
   g = gates();
+  if (g.ok) g = gates(true);
 }
 if (!g.ok) {
   all = [];
   hard = [];
   easy = [];
   apply();
-  g = gates();
+  g = gates(true);
 }
 console.log(
   `${g.ok ? 'PASS' : 'FAIL'} ${id}: walk ${row.walk}, ${row.enemies} creatures, quiet ${Math.round(bestRun)} m; kept all ${all.length}, hard ${hard.length}, easy ${easy.length} (${tries} back-offs)`,
