@@ -3,15 +3,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { ROOT } from './helpers.js';
+import { ROOT, tempDir } from './helpers.js';
 
 const run = (root, ...args) =>
   spawnSync(process.execPath, [path.join(ROOT, 'tools/validate.mjs'), ...args], { env: { ...process.env, HUSHFALL_ROOT: root }, encoding: 'utf8' });
 function fixture(mutateManifest, evidence = {}) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-camp-'));
+  const dir = tempDir('hf-camp-');
   const m = JSON.parse(fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
   if (mutateManifest) mutateManifest(m);
   fs.writeFileSync(path.join(dir, 'CAMPAIGN_MANIFEST.json'), JSON.stringify(m));

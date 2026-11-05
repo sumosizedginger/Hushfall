@@ -6,7 +6,7 @@ import { tally } from './ending.js';
 import { clock, itemsPage, journalLog } from './journal.js';
 import { CHALLENGES, DIFFS } from './profile.js';
 
-const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+export const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const pct = (v) => `${Math.round(v * 100)}%`;
 const RECENT = 3;
 
@@ -101,10 +101,10 @@ export function pauseInfo({ world: w, map, manifest, mapId, profile = null, prog
   };
 }
 
-const row = (label, value, cls = '') => `<div${cls ? ` class="${cls}"` : ''}><b>${esc(label)}</b><span>${value}</span></div>`;
+export const row = (label, value, cls = '') => `<div${cls ? ` class="${cls}"` : ''}><b>${esc(label)}</b><span>${value}</span></div>`;
 const count = (c) => (c.of ? `${c.have} / ${c.of}` : `${c.have}`);
 const bar = (have, of) => (of > 0 ? `<i class="pi-bar"><u style="width:${Math.min(100, Math.round((have / of) * 100))}%"></u></i>` : '');
-const section = (title, body) => `<section><h3>${esc(title)}</h3>${body}</section>`;
+export const section = (title, body) => `<section><h3>${esc(title)}</h3>${body}</section>`;
 
 /** the heading in the menu itself: it stays on screen at every window size */
 export function pauseWhereHtml(i) {
@@ -115,10 +115,59 @@ export function pauseWhereHtml(i) {
   );
 }
 
+/** what the player holds; the save screen calls it what you carry, and a key never carries into the next map */
+export function youHtml(i, { title = 'You', keys = true } = {}) {
+  const y = i.you;
+  return section(
+    title,
+    `<div class="rows">` +
+      row('Health', `${esc(y.hp)} / ${esc(y.hpMax)}${bar(y.hp, y.hpMax)}`) +
+      row('Armour', `${esc(y.armor.value)} / ${esc(y.armor.cap)}${bar(y.armor.value, y.armor.cap)}`) +
+      (keys ? row('Keys', y.keys.length ? y.keys.map((k) => `<em style="color:${esc(k.color)}">${esc(k.name)}</em>`).join(', ') : 'none') : '') +
+      (y.lamp ? row('Lamp oil', `${esc(y.lamp.oil)} / ${esc(y.lamp.max)}`) : '') +
+      (y.loads.length ? row('Loads', y.loads.map((l) => `${esc(l.name)} ${esc(l.n)}`).join(', ')) : '') +
+      (y.mods.length ? row('Mods', y.mods.map((m) => `${esc(m.name)}${m.tier > 1 ? ' II' : ''}`).join(', ')) : '') +
+      (y.upgrades.length ? row('Upgrades', y.upgrades.map((u) => `${esc(u.name)} ${esc(u.tier)}/${esc(u.max)}`).join(', ')) : '') +
+      `</div>`,
+  );
+}
+
+export const armsHtml = (i) =>
+  section(
+    'Arms',
+    `<div class="rows pi-arms">` +
+      i.arms
+        .map((a) =>
+          row(
+            `${a.key ? a.key + '  ' : ''}${a.name}${a.inHand ? ' (in hand)' : ''}`,
+            a.ammo ? `${esc(a.ammo.have)} / ${esc(a.ammo.cap)}` : '&mdash;',
+            a.inHand ? 'on' : '',
+          ),
+        )
+        .join('') +
+      `</div>`,
+  );
+
+export function campaignHtml(i) {
+  const c = i.campaignRun;
+  return c
+    ? section(
+        'The campaign so far',
+        `<div class="rows">` +
+          row('Maps cleared', `${esc(c.cleared)} / ${esc(c.total)}${bar(c.cleared, c.total)}`) +
+          row('Secret maps found', `${esc(c.secretMapsFound)} / ${esc(c.secretMaps)}`) +
+          row('Creatures killed', esc(c.kills)) +
+          row('Secrets found', esc(c.secrets)) +
+          row('Time played', esc(c.time)) +
+          row('Salvage', esc(c.salvage)) +
+          `</div>`,
+      )
+    : '';
+}
+
 /** the page beside the menu */
 export function pauseInfoHtml(i) {
-  const r = i.run,
-    y = i.you;
+  const r = i.run;
   const where = section(
     'Where you are',
     `<div class="pi-title">${esc(i.name)}</div><div class="pi-sub">${esc(i.campaign)}</div>` +
@@ -147,47 +196,16 @@ export function pauseInfoHtml(i) {
       i.best.others.map((o) => row(`On ${o.name}`, esc(o.rank))).join('') +
       `</div><ul class="pi-checks">${i.best.challenges.map((c) => `<li class="${c.done ? 'done' : ''}">${esc(c.label)}</li>`).join('')}</ul>`,
   );
-  const you = section(
-    'You',
-    `<div class="rows">` +
-      row('Health', `${esc(y.hp)} / ${esc(y.hpMax)}${bar(y.hp, y.hpMax)}`) +
-      row('Armour', `${esc(y.armor.value)} / ${esc(y.armor.cap)}${bar(y.armor.value, y.armor.cap)}`) +
-      row('Keys', y.keys.length ? y.keys.map((k) => `<em style="color:${esc(k.color)}">${esc(k.name)}</em>`).join(', ') : 'none') +
-      (y.lamp ? row('Lamp oil', `${esc(y.lamp.oil)} / ${esc(y.lamp.max)}`) : '') +
-      (y.loads.length ? row('Loads', y.loads.map((l) => `${esc(l.name)} ${esc(l.n)}`).join(', ')) : '') +
-      (y.mods.length ? row('Mods', y.mods.map((m) => `${esc(m.name)}${m.tier > 1 ? ' II' : ''}`).join(', ')) : '') +
-      (y.upgrades.length ? row('Upgrades', y.upgrades.map((u) => `${esc(u.name)} ${esc(u.tier)}/${esc(u.max)}`).join(', ')) : '') +
-      `</div>`,
-  );
-  const arms = section(
-    'Arms',
-    `<div class="rows pi-arms">` +
-      i.arms
-        .map((a) => row(`${a.key ? a.key + '  ' : ''}${a.name}${a.inHand ? ' (in hand)' : ''}`, a.ammo ? `${esc(a.ammo.have)} / ${esc(a.ammo.cap)}` : '&mdash;', a.inHand ? 'on' : ''))
-        .join('') +
-      `</div>`,
-  );
   const heard = section(
     i.unread ? `Last heard (${i.unread} unread)` : 'Last heard',
     i.heard.length
       ? i.heard
-          .map((h) => `<div class="pi-heard${h.isNew ? ' new' : ''}"><b>${esc(h.speaker)}${h.when ? ` <em>${esc(h.when)}</em>` : ''}</b><p>${esc(h.text)}</p></div>`)
+          .map(
+            (h) =>
+              `<div class="pi-heard${h.isNew ? ' new' : ''}"><b>${esc(h.speaker)}${h.when ? ` <em>${esc(h.when)}</em>` : ''}</b><p>${esc(h.text)}</p></div>`,
+          )
           .join('') + (i.heardMore ? `<div class="pi-sub">${esc(i.heardMore)} more in the Journal</div>` : '')
       : `<p class="pi-sub">Nothing yet.</p>`,
   );
-  const c = i.campaignRun;
-  const camp = c
-    ? section(
-        'The campaign so far',
-        `<div class="rows">` +
-          row('Maps cleared', `${esc(c.cleared)} / ${esc(c.total)}${bar(c.cleared, c.total)}`) +
-          row('Secret maps found', `${esc(c.secretMapsFound)} / ${esc(c.secretMaps)}`) +
-          row('Creatures killed', esc(c.kills)) +
-          row('Secrets found', esc(c.secrets)) +
-          row('Time played', esc(c.time)) +
-          row('Salvage', esc(c.salvage)) +
-          `</div>`,
-      )
-    : '';
-  return where + objective + run + you + arms + best + heard + camp;
+  return where + objective + run + youHtml(i) + armsHtml(i) + best + heard + campaignHtml(i);
 }

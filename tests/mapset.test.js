@@ -3,17 +3,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { ROOT } from './helpers.js';
+import { ROOT, tempDir } from './helpers.js';
 import { listMaps, pickMaps, MAP_ID } from '../tools/mapset.mjs';
 import { compile } from '../tools/mapkit/compile.mjs';
 
 const MAP_TOOL = path.join(ROOT, 'tools/map.mjs');
 const scratch = () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-map-'));
+  const dir = tempDir('hf-map-');
   fs.copyFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), path.join(dir, 'CAMPAIGN_MANIFEST.json'));
   fs.mkdirSync(path.join(dir, 'tools/mapkit'), { recursive: true });
   fs.copyFileSync(path.join(ROOT, 'tools/mapkit/builder.mjs'), path.join(dir, 'tools/mapkit/builder.mjs'));

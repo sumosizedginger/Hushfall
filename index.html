@@ -15,7 +15,7 @@ canvas{display:block;width:100vw;height:100vh}
 #cross[data-style=circle]{--tick:0px;--sp:max(3.5px,calc(.5vh*var(--k)));background:none;border:max(1px,calc(.14vh*var(--k))) solid var(--c);border-radius:50%}
 body:not([data-screen=""]) #cross{display:none}
 /* round 1 (Gemini, Grok, Codex: the Journal and the end-of-map panel showed the live message strip, pickup lines and the last pickup card through their dim): a full-panel screen owns the picture; what was said is in the Journal's Log, what was picked up is in its Items. Pause keeps them (a menu over the game). */
-body:is([data-screen=journal],[data-screen=complete],[data-screen=dead],[data-screen=record],[data-screen=stats],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
+body:is([data-screen=journal],[data-screen=complete],[data-screen=saved],[data-screen=dead],[data-screen=record],[data-screen=stats],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
 body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,calc(.3vh*var(--k)));--dot:calc(var(--th)*1.3)}
 body[data-stance=sprint] #cross{opacity:0}
 body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
@@ -149,20 +149,20 @@ button.bind:hover,button.bind:focus-visible{padding-left:8px;border-color:var(--
 button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2a2a}
 #controls{margin-bottom:10px}
 .note{color:#e0a060;min-height:1.4em;margin-top:8px;font-size:12px}
-#screen-pause{justify-content:flex-start;background:linear-gradient(90deg,#07080cf6 0,#07080cf0 62%,#07080cb8 100%)}
-#screen-pause .panel{height:100vh;max-height:100vh;width:min(460px,100vw);border:0;border-right:1px solid var(--brass);box-shadow:inset -4px 0 0 #0c0f14,inset -5px 0 0 #2e3a3c,14px 0 50px #000a;padding:34px 30px 24px}
-#screen-pause .panel{flex:0 0 auto}
-#pause-where{margin:-6px 0 14px;padding-bottom:10px;border-bottom:1px solid #2e3a3c}
+:is(#screen-pause,#screen-saved){justify-content:flex-start;background:linear-gradient(90deg,#07080cf6 0,#07080cf0 62%,#07080cb8 100%)}
+:is(#screen-pause,#screen-saved) .panel{height:100vh;max-height:100vh;width:min(460px,100vw);border:0;border-right:1px solid var(--brass);box-shadow:inset -4px 0 0 #0c0f14,inset -5px 0 0 #2e3a3c,14px 0 50px #000a;padding:34px 30px 24px}
+:is(#screen-pause,#screen-saved) .panel{flex:0 0 auto}
+:is(#pause-where,#saved-where){margin:-6px 0 14px;padding-bottom:10px;border-bottom:1px solid #2e3a3c}
 .pw-name{font:400 20px/1.25 var(--serif);color:var(--paper);letter-spacing:.05em}
 .pw-line{font-size:calc(12px * var(--ui-scale));color:#9fb4b0;letter-spacing:.04em;margin-top:3px}
-#pause-info{flex:1 1 0;min-width:0;height:100vh;overflow-y:auto;box-sizing:border-box;padding:34px 44px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px 40px;align-content:start;text-align:left;color:var(--paper);font-size:calc(clamp(13px,1.45vh,18px) * var(--ui-scale))}
-#pause-info section{min-width:0}
-#pause-info h3{font:400 13px/1.2 var(--serif);letter-spacing:.22em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid var(--brass);padding-bottom:6px;margin:0 0 8px}
-#pause-info .rows div{padding:4px 0;gap:14px}
-#pause-info .rows span{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-#pause-info .rows em{font-style:normal;color:#9fb4b0;margin-left:6px}
-#pause-info .rows strong{color:var(--paper);font-weight:400;font-size:1.25em}
-#pause-info .rows .on b,#pause-info .rows .on span{color:var(--paper)}
+:is(#pause-info,#saved-info){flex:1 1 0;min-width:0;height:100vh;overflow-y:auto;box-sizing:border-box;padding:34px 44px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px 40px;align-content:start;text-align:left;color:var(--paper);font-size:calc(clamp(13px,1.45vh,18px) * var(--ui-scale))}
+:is(#pause-info,#saved-info) section{min-width:0}
+:is(#pause-info,#saved-info) h3{font:400 13px/1.2 var(--serif);letter-spacing:.22em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid var(--brass);padding-bottom:6px;margin:0 0 8px}
+:is(#pause-info,#saved-info) .rows div{padding:4px 0;gap:14px}
+:is(#pause-info,#saved-info) .rows span{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+:is(#pause-info,#saved-info) .rows em{font-style:normal;color:#9fb4b0;margin-left:6px}
+:is(#pause-info,#saved-info) .rows strong{color:var(--paper);font-weight:400;font-size:1.25em}
+:is(#pause-info,#saved-info) .rows .on b,:is(#pause-info,#saved-info) .rows .on span{color:var(--paper)}
 .pi-arms b{white-space:pre}
 .pi-title{font:400 24px/1.2 var(--serif);letter-spacing:.04em;margin-bottom:4px}
 .pi-sub{color:#9fb4b0;font-size:.9em;line-height:1.4;margin-top:2px}
@@ -176,6 +176,7 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 .pi-heard{margin-bottom:8px}.pi-heard b{color:var(--bronze);font-weight:400;letter-spacing:.05em}.pi-heard b em{font-style:normal;color:#7f9490;margin-left:6px}
 .pi-heard p{margin:2px 0 0;line-height:1.4}.pi-heard.new p{color:#fff}
 @media (max-width:1000px){#pause-info{display:none}}
+@media (max-width:1000px){#saved-info{display:none}}
 #screen-dead{background:radial-gradient(ellipse at 50% 56%,#3a0c0acc,#07080cf5)}
 #screen-dead .panel{background:none;border:0;box-shadow:none;text-align:center;min-width:360px}
 #screen-dead h2{font-size:clamp(38px,6vw,66px);letter-spacing:.3em;color:#d8483a;border:0;text-shadow:3px 3px 0 #000;padding:0;margin-bottom:6px}
@@ -290,6 +291,7 @@ body.cap-plate #captions div{background:#0b0d12b0;border:1px solid var(--slate)}
 #hud-keys i::after{content:attr(data-k);display:block;text-align:center;font:700 9px/18px sans-serif;font-style:normal;color:#000;letter-spacing:-.02em}
 #survey{margin-top:12px;text-align:left}#survey h3{margin:0 0 6px}#survey .q{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:3px 0;font-size:13px;color:#c4d4d0}#survey .q span{flex:1}#survey .q button{padding:2px 9px;font-size:12px;margin:0 0 0 4px}#survey .q button.on{background:var(--brass);color:#07080c}#survey-note{width:100%;margin-top:6px;box-sizing:border-box;background:#0d0f14;color:#c4d4d0;border:1px solid var(--slate);padding:5px 8px;font:inherit;font-size:12px}#testers-box{max-width:430px;margin-top:8px;font-size:12px;color:#9fb4b0}#testers-box p{margin:6px 0}
 #screen-credits{background:#05060a;overflow:hidden;cursor:pointer}#credits-roll{position:absolute;left:0;right:0;top:0;text-align:center;padding:0 16px;will-change:transform}#credits-roll div{overflow:hidden;white-space:nowrap}#credits-roll .c-title{font-size:48px;letter-spacing:.24em;color:var(--brass);font-weight:700}#credits-roll .c-role{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass)}#credits-roll .c-name{font-size:19px;color:#e6efec}#credits-roll .c-text{font-size:15px;color:#c4d4d0}#credits-roll .c-small{font-size:13px;color:#8fa6a2;white-space:normal}#credits-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12px;color:#5c716d}
+#saved-line{margin:0 0 14px;line-height:1.45}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
@@ -535,7 +537,12 @@ SOFTWARE.</pre></div></details>
 </div>
 
 <div id="screen-complete" class="screen hidden">
-  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="run-card"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><div id="survey" class="hidden"><h3>FIVE QUICK QUESTIONS (optional)</h3><div id="survey-rows"></div><input id="survey-note" maxlength="200" placeholder="Anything else about this map? (optional)"></div><br><button id="btn-next">Back to title</button><button id="btn-title">Quit to title</button></div>
+  <div class="panel"><h2 id="complete-title"></h2><div id="rank-line"></div><div id="stat-rows" class="rows"></div><div id="run-card"></div><div id="locker-box"><h3>THE LOCKER <small id="locker-salvage"></small></h3><div id="locker" class="rows"></div><div class="note" id="locker-note"></div></div><div class="sub" id="complete-outro" style="margin-top:12px"></div><div class="sub" id="complete-end"></div><div id="survey" class="hidden"><h3>FIVE QUICK QUESTIONS (optional)</h3><div id="survey-rows"></div><input id="survey-note" maxlength="200" placeholder="Anything else about this map? (optional)"></div><br><button id="btn-next">Back to title</button><button id="btn-savepoint">Save game</button></div>
+</div>
+
+<div id="screen-saved" class="screen hidden">
+  <div class="panel"><h2 id="saved-title">SAVED</h2><div id="saved-where"></div><div class="sub" id="saved-line"></div><button id="btn-saved-retry">Try again</button><button id="btn-saved-quit">Quit to title</button><button id="btn-saved-next">Keep playing</button><button id="btn-saved-back">Back to the Locker</button></div>
+  <aside id="saved-info"></aside>
 </div>
 
 <div id="screen-ending" class="screen hidden">

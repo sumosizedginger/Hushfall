@@ -361,8 +361,11 @@ function loadWorldUnsafe(save, mapLoader) {
   const map = mapLoader(c.mapId);
   if (!map) return { ok: false, reason: 'unknown-map', detail: c.mapId };
   const opts = { seed: c.seed, difficulty: c.difficulty, carry: save.carry };
+  // a level's start, rebuilt: the choices made on earlier maps come from the progress, as they do for a level entered from the one before (a save
+  // between C2M11 and C2M12 forgot the gate you took)
+  const atStart = () => createWorld(map, { ...opts, choices: sanitizeProgress(save.progress).choices ?? null });
   if (save.kind === 'mid-level') {
-    if (map.version !== c.mapVersion) return { ok: true, world: createWorld(map, opts), degraded: 'map-changed: resumed from level start' };
+    if (map.version !== c.mapVersion) return { ok: true, world: atStart(), degraded: 'map-changed: resumed from level start' };
     const w = createWorld(map, opts),
       snap = JSON.parse(JSON.stringify(save.world));
     const shape = worldShapeErrors(w, snap);
@@ -375,7 +378,7 @@ function loadWorldUnsafe(save, mapLoader) {
     for (const [k, v] of Object.entries(snap)) if (!hidden.has(k) && !HIDDEN_OR_DANGEROUS.has(k)) w[k] = v;
     return { ok: true, world: w };
   }
-  return { ok: true, world: createWorld(map, opts) };
+  return { ok: true, world: atStart() };
 }
 
 /** Slot storage over any localStorage-like object. */

@@ -6,9 +6,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { ROOT } from './helpers.js';
+import { ROOT, tempDir } from './helpers.js';
 import { sourceShas, routesSha, textSha, setSha, staleSets } from '../tools/textsha.mjs';
 
 // HF_VALIDATOR lets the suite be pointed at an OLD validator to prove it fails there
@@ -42,7 +41,7 @@ const browserOf = (dir, id, over = {}) =>
 
 /** a project root with every source set and, for each id, a map with fully valid evidence (so the baseline status is AGENT_VERIFIED) */
 function project({ ids = ['C1E1M01'] } = {}) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-fresh-'));
+  const dir = tempDir('hf-fresh-');
   put(dir, 'CAMPAIGN_MANIFEST.json', fs.readFileSync(path.join(ROOT, 'CAMPAIGN_MANIFEST.json'), 'utf8'));
   put(dir, 'src/engine/world.js', '// engine');
   put(dir, 'src/render/view.js', '// render');
@@ -213,7 +212,7 @@ test('text hashing folds CRLF (a Windows checkout does not stale everything) but
   assert.equal(setSha(a, 'render'), setSha(b, 'render'), 'LF and CRLF hash the same');
   put(b, 'src/render/view.js', crlf.replace('render', 'render!'));
   assert.notEqual(setSha(a, 'render'), setSha(b, 'render'), 'a real edit is seen');
-  const bare = fs.mkdtempSync(path.join(os.tmpdir(), 'hf-bare-'));
+  const bare = tempDir('hf-bare-');
   assert.deepEqual(sourceShas(bare), {}, 'an empty root has no sets');
   assert.deepEqual(staleSets(bare, undefined, 'browser'), [], 'and nothing to be stale against');
 });

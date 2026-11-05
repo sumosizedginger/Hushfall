@@ -190,7 +190,7 @@ const withoutWhere = (text) => text.replace(/, (?:close|ahead|behind|(?:ahead |b
 
 /**
  * the lines on the screen: at most three, each for 3.4 s (5 s for a threat) after its last sound; the same thing said again while its line is up is that
- * line, kept fresh and saying where it is now (PT-085: merging only inside 1.2 s stacked "Gaunt strikes" three times over); a threat is never pushed out
+ * line, kept fresh and saying where it is now (merging only inside 1.2 s stacked "Gaunt strikes" three times over); a threat is never pushed out
  * by something that is only news
  */
 export class CaptionFeed {

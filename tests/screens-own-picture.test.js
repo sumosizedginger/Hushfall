@@ -16,7 +16,7 @@ test('one rule hides the live overlays under a full-panel screen, and every scre
   const screens = [...rule[1].matchAll(/data-screen=([a-z]+)/g)].map((m) => m[1]),
     els = rule[2].split(',').map((s) => s.trim());
   // (PT-077: Your stats is a full panel too)
-  assert.deepEqual(screens.sort(), ['complete', 'credits', 'dead', 'ending', 'journal', 'record', 'stats']);
+  assert.deepEqual(screens.sort(), ['complete', 'credits', 'dead', 'ending', 'journal', 'record', 'saved', 'stats']);
   for (const s of screens) assert.ok(html.includes(`id="screen-${s}"`), 'screen-' + s + ' exists');
   for (const e of els) {
     assert.match(e, /^#[a-z-]+$/, e);

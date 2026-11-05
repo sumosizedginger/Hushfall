@@ -1,5 +1,6 @@
 // DOM UI: HUD, toasts and modal screens (title, pause, death, intermission). Pure presentation; game logic lives in main.js/engine.
 import { pauseInfoHtml, pauseWhereHtml } from './pauseinfo.js';
+import { SAVED_LINE, notSavedLine, savedPageHtml, savedWhereHtml } from './savepoint.js';
 import { weaponIcon } from './wheel.js';
 import { withKeys } from './hints.js';
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, AMMO_LOADS, DIFFICULTY as DIFFS } from '../engine/defs.js';
@@ -90,7 +91,11 @@ export class UI {
     $('btn-retry').onclick = () => this.h.restartLevel();
     $('btn-dead-load').onclick = () => this.h.quickLoad();
     $('btn-next').onclick = () => this.h.nextLevel();
-    $('btn-title').onclick = () => this.h.quitToTitle();
+    $('btn-savepoint').onclick = () => this.h.savePoint();
+    $('btn-saved-quit').onclick = () => this.h.quitToTitle();
+    $('btn-saved-next').onclick = () => this.h.nextLevel();
+    $('btn-saved-retry').onclick = () => this.h.savePoint();
+    $('btn-saved-back').onclick = () => this.h.savedBack();
     $('record-list').onclick = (e) => {
       const b = e.target?.closest?.('button[data-scene]');
       if (b) this.h.replayScene(b.dataset.scene);
@@ -451,6 +456,7 @@ export class UI {
     $('screen-' + name).classList.remove('hidden');
     if (name === 'title') {
       $('btn-continue').style.display = data.canContinue ? '' : 'none';
+      $('btn-continue').textContent = (data.canContinue && this.h.continueLabel?.()) || 'Continue';
       $('title-note').textContent = data.note || '';
       $('btn-maps').style.display = this.h.hasMaps?.() ? '' : 'none';
       $('btn-again').style.display = this.h.canAgain?.() ? '' : 'none';
@@ -488,19 +494,28 @@ export class UI {
       this.locker(data.progress, data.lockerNote ?? '', data.mods ?? []);
       $('complete-title').textContent = data.mapName + ' cleared';
       $('complete-outro').textContent = data.outro || '';
-      $('complete-end').textContent = data.hasNext
-        ? ''
-        : data.campaignEnd
-          ? 'The Gate is open. Campaign Two is not built yet.'
-          : 'This is the end of the levels built so far.';
+      $('complete-end').textContent = data.campaignEnd && !data.hasNext ? 'That is the end of the game.' : '';
       $('btn-next').textContent = data.hasNext ? 'Next: ' + data.nextName : 'Back to title';
-      $('btn-title').style.display = data.hasNext ? '' : 'none';
+      $('btn-savepoint').style.display = data.hasNext ? '' : 'none';
     }
+    if (name === 'saved') this.savedOpen(data);
     if (name === 'ending') this.endingOpen(data.ending);
     if (name === 'record') this.recordOpen(data.view, data.counts, data.current, data.scenes ?? []);
     if (name === 'journal') this.journalOpen(data);
     if (name === 'credits') this.creditsOpen();
     if (name === 'stats') this.statsOpen(data);
+  }
+  /* * the save screen between levels: `result` is what savepoint.js found when it read the save back */
+  savedOpen({ result, nextName }) {
+    const ok = result.ok;
+    $('saved-title').textContent = ok ? 'SAVED' : 'NOT SAVED';
+    $('saved-where').innerHTML = ok ? savedWhereHtml(result.info) : '';
+    $('saved-line').textContent = ok ? SAVED_LINE : notSavedLine(result.why);
+    $('saved-info').innerHTML = ok ? savedPageHtml(result) : '';
+    $('btn-saved-quit').textContent = ok ? 'Quit to title' : 'Quit to title without saving';
+    $('btn-saved-next').textContent = 'Keep playing: ' + nextName;
+    $('btn-saved-retry').style.display = ok ? 'none' : '';
+    $(ok ? 'btn-saved-quit' : 'btn-saved-retry').focus?.();
   }
   /*
    * YOUR STATS: `html` is stats/page.js statsHtml (escaped there); `scope` 'pt' | 'life'; `hasPt` = there is a playthrough to show; `canImport` only
@@ -839,7 +854,7 @@ export class UI {
     el.classList.toggle('hidden', !text);
   }
   /** a controls reminder that appears after `delay` ms and stays `dur` ms (cancelled by clearOverlays) */
-  /* * the sound captions (captions.js): up to three lines in the top band, never over the picture's middle (PT-085); redrawn only when the words change */
+  /* * the sound captions (captions.js): up to three lines in the top band, never over the picture's middle; redrawn only when the words change */
   captions(lines) {
     const sig = lines.map((l) => (l.danger ? '!' : '') + l.text).join('|');
     if (sig === this._capSig) return;

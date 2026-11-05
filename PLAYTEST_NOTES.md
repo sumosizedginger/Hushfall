@@ -673,3 +673,20 @@ FIXED: the captions sit in the top band (`index.html`), at the top of the screen
 Left where they are, unasked: the scene subtitles (in the letterbox, over nothing you are shooting), the pickup card (bottom 24%), the one-time tips (150 px up), the door prompt under the crosshair.
 GUARD: `tests/captions.test.js` (three new tests, each failing on the old code): reads the real CSS and works out the box for six window sizes x three map settings x three text sizes; the one-line feed; the plate and size settings.
 NOT VERIFIED: not seen in a browser (the owner was playing on this machine, and any browser job needs their yes). The geometry is arithmetic on the stylesheet, not a picture. The real-game evidence of every map was already stale from PT-084 and stays so until the next regeneration.
+
+## PT-086 · a save screen between levels · FIXED-IN-CODE (awaiting the owner)
+The owner, playing, 2026-11-04: "we need to put a save screen on the menu in between levels, so people can stop and pick up at the next level when they have a chance to come back."
+
+The game already wrote the next level's start at the exit of a level, but nothing said so, and the road back in had three faults I found by reading it:
+- CHOICES LOST: a save made at a level's start was rebuilt without the choices the player had made (`loadWorld` passed none). Stopping between The Undercantor Halls C2M11 and C2M12, or Continuing from a level's start anywhere after it, forgot the gate you took.
+- NOT A FRESH START: Continue from such a save skipped the level's title card and the controls reminder, kept the last map's checkpoint and counted as a resumed run in the stats. `startLevel` now takes `atStart`.
+- ENTER SKIPPED THE BUTTON: on the intermission Enter or Space always meant "next level", even on a focused button (a keyboard player could never press Save game or buy at the Locker that way, nor type a space in the survey note).
+BUILT: the intermission's "Quit to title" is now "Save game". It writes the next level's start again, reads it back and loads it exactly as Continue will (`src/game/savepoint.js`), and shows what it found: SAVED, the next map and its place in the campaign, the difficulty, what you carry, your guns and ammunition, the campaign so far, where the save is kept, and three buttons (Quit to title, Keep playing: <map>, Back to the Locker; Esc or the pad's B goes back). If the read-back fails it says NOT SAVED, why, and offers Try again. The title's Continue now names where it will put you ("Continue: Customs Hall, Easy"). No save is offered on a replay or after the last map.
+ALSO: the screen after the last map said "The Gate is open. Campaign Two is not built yet." at the end of Campaign Two; a replay said "This is the end of the levels built so far." Now: "That is the end of the game." at the end, nothing on a replay.
+LIMIT: one campaign save per browser. A friend starting a new game in the same browser overwrites it.
+GUARD: `tests/savepoint.test.js` (8): the whole road on the real save code (bit-identical world), the choices, the failures, the screen through the real UI class on a stand-in page.
+NOT VERIFIED: not seen in a browser or played. How the screen looks, and the pad on it, are the owner's to judge.
+
+From the same play, at Signal House: "the game is playing awesome ... almost seems like a puzzle with the options for different ways to attack rooms too." Confirmed approach: a way round a room stays, behind a door. Judge the later levels against it.
+
+FOUND ON THE WAY, the owner's C drive had 6 GB free and the app warned about memory (the page file could not grow). Claude's data moved to `D:\JUST FOR CLAUDE`. `tests/campaign`, `freshness` and `mapset` left a scratch folder per run in Temp (over 4,000 of them, nearly empty); they now use `tempDir` in `tests/helpers.js` and clean up.

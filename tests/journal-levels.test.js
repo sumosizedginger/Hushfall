@@ -345,7 +345,7 @@ test("the shell wires it: the time and place of every message and every pickup a
       main.includes('foundAdd(g.progress, g.mapId, e.kind, g.world.time'),
     'recorded where the events are handled',
   );
-  assert.ok(main.includes('if (!world) g.progress = attemptReset(g.progress, g.mapId)'), 'a fresh start of the map, not a resumed save, empties the ledger');
+  assert.ok(main.includes('if (atStart) g.progress = attemptReset(g.progress, g.mapId)'), 'a fresh start of the map, not a resumed save, empties the ledger');
   assert.ok(
     main.includes('seen: g.world.messagesSeen, manifest: CAMPAIGN') &&
       main.includes('found: g.progress.found?.[g.mapId] ?? []') &&

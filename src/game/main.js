@@ -34,6 +34,7 @@ import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCount
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS, placeOf } from './journal.js';
 import { pauseInfo } from './pauseinfo.js';
+import { SAVE_POINT_SLOT, continueLabel, readSavePoint } from './savepoint.js';
 import { referenceRows } from './stats/schema.js';
 import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
@@ -256,6 +257,12 @@ const ui = new UI({
   }, // the world remembers what the level began with (also after a load)
   quitToTitle: () => quitToTitle(),
   nextLevel: () => nextLevel(),
+  savePoint: () => openSavePoint(),
+  savedBack: () => closeSavePoint(),
+  continueLabel: () => {
+    const newest = newestSaves()[0];
+    return newest ? continueLabel(newest[1].save, CAMPAIGN) : 'Continue';
+  },
   epiloguePress: () => epiloguePress(),
   openCredits: () => openCredits(),
   closeCredits: () => closeCredits(),
@@ -582,11 +589,12 @@ const hasQuick = () => store.read('quick').ok;
  * Continue: the NEWEST readable slot wins (quick-save and auto-save both exist; the auto-save is rewritten at every level entry, so an old F5 must
  * not shadow it, audit A18); a corrupt one falls through to the next
  */
-function loadFirstSave() {
-  const slots = CONTINUE_SLOTS.map((slot) => [slot, store.read(slot)])
+const newestSaves = () =>
+  CONTINUE_SLOTS.map((slot) => [slot, store.read(slot)])
     .filter(([, r]) => r.ok)
     .sort((a, b) => (b[1].save.savedAt ?? 0) - (a[1].save.savedAt ?? 0));
-  for (const [slot, r] of slots) if (applySave(r.save, slot)) return true;
+function loadFirstSave() {
+  for (const [slot, r] of newestSaves()) if (applySave(r.save, slot)) return true;
   return null;
 }
 // the Record: every message received, replayed from the pause menu and the title ----
@@ -692,7 +700,7 @@ function applySave(save, slot) {
     return false;
   }
   g.progress = sanitizeProgress(save.progress); // the salvage, upgrades and records the save was made with
-  startLevel({ world: r.world, note: r.degraded });
+  startLevel({ world: r.world, note: r.degraded, atStart: save.kind === 'level-start' || !!r.degraded });
   g.loadedSlot = slot;
   g.sinceLoad = 0;
   return true;
@@ -706,7 +714,18 @@ function resize() {
 }
 addEventListener('resize', resize);
 
-function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.seed, carry = null, world = null, note = '', noStats = false } = {}) {
+// atStart: the level is at its beginning, which a save written there is too (Continue from the save between levels used to skip the level's title
+// card, keep the last map's checkpoint and count as a resumed run)
+function startLevel({
+  mapId = FIRST_MAP,
+  difficulty = g.difficulty,
+  seed = g.seed,
+  carry = null,
+  world = null,
+  note = '',
+  noStats = false,
+  atStart = !world,
+} = {}) {
   statsEnd(world ? 'reloaded' : 'restart');
   g.statsLastRun = null; // an attempt still open ends here (a load closes it as 'reloaded': what happened after the save still happened)
   g.cine = null;
@@ -719,12 +738,12 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   const map = MAPS[world ? world.mapId : mapId];
   g.world = world || createWorld(map, { seed, difficulty, carry, choices: g.progress?.choices ?? null });
   g.mapId = g.world.mapId;
-  if (!world) g.progress = attemptReset(g.progress, g.mapId);
+  if (atStart) g.progress = attemptReset(g.progress, g.mapId);
   g.difficulty = g.world.difficulty;
   g.seed = g.world.seed;
   g.objectives = g.world.objective ? [g.world.objective] : [];
   g.miniModel = null;
-  if (!noStats) statsBegin(!!world); // (before the auto-save below, so the save carries the playthrough's number)
+  if (!noStats) statsBegin(!atStart); // (before the auto-save below, so the save carries the playthrough's number)
   g.view = new GameView(renderer, tex, map, g.world);
   resize();
   g.view.setLook(settings);
@@ -738,7 +757,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   rangeMeter.reset();
   g.devScale = 1;
   let saveNote = '';
-  if (!world) {
+  if (atStart) {
     store.clear('check'); // a checkpoint belongs to one attempt at one map
     g.checkAt = -99;
     g.checkPending = false;
@@ -758,7 +777,7 @@ function startLevel({ mapId = FIRST_MAP, difficulty = g.difficulty, seed = g.see
   ui.clearOverlays();
   if (note) ui.toast(note);
   if (saveNote) ui.toast(saveNote);
-  if (!world) {
+  if (atStart) {
     ui.card(map.intro);
     const first = !settings.firstRunSeen,
       // a new profile also gets one line about the objective and the Journal
@@ -799,7 +818,7 @@ function completeData() {
     mapName: m.name,
     outro: m.outro,
     hasNext: !!g.nextId,
-    campaignEnd: !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
+    campaignEnd: !g.replay && !!endingFor(CAMPAIGN, g.mapId, g.world?.endStats?.dest),
     survey: settings.playLog ? { answers: g.survey?.answers ?? {}, note: g.survey?.note ?? '' } : null,
     rank: e.result.rank,
     score: e.result.score,
@@ -815,13 +834,26 @@ function completeData() {
  * purchase (Continue enters the next level)
  */
 function commitProgress() {
-  if (!g.nextId || !g.world) return;
+  if (!g.nextId || !g.world) return null;
   try {
     const w = createWorld(MAPS[g.nextId], { seed: g.seed + 1, difficulty: g.difficulty, carry: nextCarry(), choices: g.progress?.choices ?? null });
-    store.write('auto', makeSave(w, 'level-start', { now: Date.now(), progress: g.progress }));
+    store.write(SAVE_POINT_SLOT, makeSave(w, 'level-start', { now: Date.now(), progress: g.progress }));
+    return null;
   } catch (e) {
     g.lockerNote = 'Progress could not be saved: ' + e.message;
+    return e.message;
   }
+}
+/** the save screen between levels: writes the next level's start again, reads it back the way Continue will, and says what it found */
+function openSavePoint() {
+  if (g.mode !== 'complete' || !g.nextId) return;
+  const failed = commitProgress();
+  statsSave();
+  const result = failed ? { ok: false, why: failed } : readSavePoint({ store, nextId: g.nextId, maps: MAPS, manifest: CAMPAIGN, profile: g.profile });
+  ui.show('saved', { result, nextName: mapName(CAMPAIGN, g.nextId) });
+}
+function closeSavePoint() {
+  if (g.mode === 'complete' && ui.screen === 'saved') ui.show('complete', completeData());
 }
 function buyModTier(id) {
   // tier two of a mod you carry, bought with salvage at the Locker
@@ -1399,8 +1431,17 @@ addEventListener('keydown', (e) => {
     }
     return;
   }
+  if (ui.screen === 'saved') {
+    // Enter and Space press the button that has the focus; nothing here may start the next level unasked
+    if (e.code === 'Escape') {
+      e.preventDefault();
+      closeSavePoint();
+    }
+    return;
+  }
   if (g.mode === 'complete' && (e.code === 'Enter' || e.code === 'Space') && ui.canAct()) {
-    ui.h.nextLevel();
+    // (a key pressed on a focused button or the note is that button's, not "next level": Save game would have been skipped)
+    if (!document.activeElement?.closest?.('button, input, select, summary')) ui.h.nextLevel();
     return;
   }
   if ((g.input.bindings.quickSave || []).includes(e.code) && g.mode === 'playing') {
@@ -1593,6 +1634,7 @@ function padMenu(out, dt) {
     }
   }
   if (out.pressed.includes('Pad0')) items[cur].click();
+  if (ui.screen === 'saved' && out.pressed.includes('Pad1')) closeSavePoint();
   if (g.mode === 'paused' && (out.pressed.includes('Pad1') || (settings.padBindings.pause || []).some((c) => out.pressed.includes(c)))) resume();
 }
 function padPress(a) {
