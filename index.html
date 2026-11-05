@@ -280,7 +280,7 @@ body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #picku
 body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
 #comms,#toasts,#objective,#tips,#captions,#pickup-card,#hud .side,#hud-weapons{zoom:var(--ui-scale)}
 #tips{white-space:pre-line}
-/* PT-085, the owner: the bar sat on what they were shooting at. The top band, between the objective's column and the corner map, centred when the window has the room, under the boss bar when one is up. Percentages, not vw: zoom (the text size) scales px and leaves a percentage of the window alone */
+/* the sound captions never cover what you are shooting at. The top band, between the objective's column and the corner map, centred when the window has the room, under the boss bar when one is up. Percentages, not vw: zoom (the text size) scales px and leaves a percentage of the window alone */
 body[data-minimap=small]{--cap-r:calc(clamp(148px,16.5vh,240px) + 28px)}
 body[data-minimap=large]{--cap-r:calc(clamp(222px,24vh,340px) + 28px)}
 body[data-minimap=off]{--cap-r:calc(min(380px,44%) + 28px)}
