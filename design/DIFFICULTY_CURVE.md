@@ -4,8 +4,8 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 
 ## Flagged
 
-- C1E1M08 Bell Tower of St. Orrin: 157 damage on Normal against about 82 around it. Why: the finale of the first episode
-- C1E2M03 Rail Yard: 116 damage on Normal against about 77 around it. NO REASON YET
+- C1E1M08 Bell Tower of St. Orrin: 144 damage on Normal against about 82 around it. Why: the finale of the first episode
+- C1E2M03 Rail Yard: 116 damage on Normal against about 75 around it. NO REASON YET
 - C1E3M06 The Choir Loft: 119 damage on Normal against about 66 around it. Why: the climb at the end of Episode 3, a raked arena of singers
 - C1E4M03 Cold Dock: 130 damage on Normal against about 70 around it. Why: on seed 1, 85 of its 149 damage has no creature named on it and 64 is shots; the bays are in vacuum, the likely source, not separately measured
 - C1E4M08 Gate Warden: 115 damage on Normal against about 69 around it. Why: the boss of Campaign 1
@@ -28,7 +28,7 @@ How much the perfect fighter was hurt on each main map, and the ammunition it ha
 | C1E1M05 | Lamplighter Hill | 60 | 70 | 129 | 2.7 | 2.8 | 1.8 |
 | C1E1M06 | Ferry Terminal | 36 | 71 | 180 | 5 | 5.4 | 4.1 |
 | C1E1M07 | Signal House | 31 | 112 | 144 | 3.4 | 3 | 2.4 |
-| C1E1M08 | Bell Tower of St. Orrin | 67 | 157 | 117 | 4.6 | 2.6 | 2.3 |
+| C1E1M08 | Bell Tower of St. Orrin | 66 | 144 | 117 | 5.2 | 3.1 | 2.9 |
 | C1E2M01 | Brine Gate | 11 | 41 | 125 | 7.4 | 4.2 | 3.1 |
 | C1E2M02 | Evaporation Pans | 37 | 84 | 135 | 4.4 | 3.3 | 3.1 |
 | C1E2M03 | Rail Yard | 16 | 116 | 136 | 4.6 | 5.1 | 3 |

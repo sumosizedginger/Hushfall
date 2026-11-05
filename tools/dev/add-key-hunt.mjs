@@ -97,6 +97,7 @@ for (const k of reach) {
   if (seen.has(k) || !clear(x, z) || map.kind(x, z) === 'door' || map.sectorAt(x, z) >= 0) continue;
   const near = before.reduce((m, c) => Math.min(m, Math.hypot(c[0] - x, c[1] - z)), 1e9);
   if (near < 3 || near > 12) continue;
+  if (Math.hypot(x - door.at[0], z - door.at[1]) > 30) continue; // on the Bell Tower it chose the first courtyard for a door at the top of the tower
   // far enough off the road to be a small detour, the later along the road the better
   const along = before.findIndex((c) => Math.hypot(c[0] - x, c[1] - z) === near),
     s = near + (along / Math.max(1, before.length)) * 6;

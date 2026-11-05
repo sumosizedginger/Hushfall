@@ -55,7 +55,13 @@ export function minimapView(model, r) {
     const o = rel(l);
     if (Math.abs(o.fx) <= r + 0.5 && Math.abs(o.fz) <= r + 0.5) switches.push({ ...o, used: !!l.used });
   }
-  return { cells, doors, exits, switches, yaw: model.player.yaw, frac: { x: model.player.x / S - pcx, z: model.player.z / S - pcz } };
+  const keys = (model.keyMarks ?? []).map((m) => {
+    const o = rel(m),
+      most = Math.max(Math.abs(o.fx), Math.abs(o.fz)),
+      k = most > r ? r / most : 1;
+    return { fx: o.fx * k, fz: o.fz * k, far: most > r, color: m.color };
+  });
+  return { cells, doors, exits, switches, keys, yaw: model.player.yaw, frac: { x: model.player.x / S - pcx, z: model.player.z / S - pcz } };
 }
 
 /** draw the minimap into `canvas` (sized here to its window) for the mode 'small' | 'large'; 'off' draws nothing and returns false */
@@ -137,6 +143,17 @@ export function drawMinimap(canvas, model, mode = 'small') {
       h = Math.max(3, s * 0.8);
     ctx.fillStyle = l.used ? PAL.leverDone : PAL.lever;
     ctx.fillRect(x - h / 2, z - h / 2, h, h);
+  }
+  for (const m of v.keys ?? []) {
+    const [x, z] = P(m),
+      h = Math.max(3, s * (m.far ? 0.7 : 1));
+    ctx.fillStyle = m.color;
+    ctx.strokeStyle = PAL.ink;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(x, z, h, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
   }
   const fx = -Math.sin(v.yaw),
     fz = -Math.cos(v.yaw),

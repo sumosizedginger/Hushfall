@@ -17,6 +17,65 @@ const STEPS = [
   [-1, -1],
 ];
 
+/** a key further than `most` cells on foot from its door, or further than `far` and left behind in the first half of the road, is a defect */
+export const KEY_WALK = { far: 40, most: 80, early: 0.5 };
+
+/** each key door with its key on the map, in cells on foot with every door open: { at, key, keyAt, walk, spawnToKey, spawnToDoor } (-1: no way on foot, such as a vent) */
+export function keyWalks(map) {
+  const W = map.w,
+    H = map.h;
+  const open = (x, z) => {
+    if (x < 0 || z < 0 || x >= W || z >= H) return false;
+    const k = map.kind(x, z);
+    return k === 'floor' || k === 'outdoor' || k === 'door';
+  };
+  const from = (x0, z0) => {
+    const dist = new Int32Array(W * H).fill(-1),
+      q = [[x0, z0]];
+    dist[z0 * W + x0] = 0;
+    for (let i = 0; i < q.length; i++) {
+      const [x, z] = q[i];
+      for (const [dx, dz] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const nx = x + dx,
+          nz = z + dz;
+        if (!open(nx, nz) || dist[nz * W + nx] >= 0) continue;
+        dist[nz * W + nx] = dist[z * W + x] + 1;
+        q.push([nx, nz]);
+      }
+    }
+    return dist;
+  };
+  const start = from(Math.floor(map.spawn.x / map.cell), Math.floor(map.spawn.z / map.cell)),
+    out = [];
+  for (const [pos, d] of map.doors) {
+    if (!d.key) continue;
+    const at = pos.split(',').map(Number),
+      toDoor = from(at[0], at[1]);
+    for (const e of map.entities) {
+      if (e.type !== 'pickup' || e.kind !== 'key_' + d.key) continue;
+      const [kx, kz] = [Math.floor(e.at[0]), Math.floor(e.at[1])];
+      out.push({
+        at,
+        key: d.key,
+        keyAt: [kx, kz],
+        walk: toDoor[kz * W + kx],
+        spawnToKey: start[kz * W + kx],
+        spawnToDoor: start[at[1] * W + at[0]],
+      });
+    }
+  }
+  return out;
+}
+
+/** the keys that are a long walk back from their door */
+export const keyFaults = (map) =>
+  keyWalks(map).filter((k) => k.walk > KEY_WALK.most || (k.walk > KEY_WALK.far && k.spawnToKey >= 0 && k.spawnToKey < k.spawnToDoor * KEY_WALK.early));
+
 /** the two cells a door joins: across its wall line, whichever pair is open */
 export function doorSides(map, x, z) {
   const open = (cx, cz) => {
@@ -24,8 +83,16 @@ export function doorSides(map, x, z) {
     const k = map.kind(cx, cz);
     return k === 'floor' || k === 'outdoor';
   };
-  if (open(x - 1, z) && open(x + 1, z)) return [[x - 1, z], [x + 1, z]];
-  if (open(x, z - 1) && open(x, z + 1)) return [[x, z - 1], [x, z + 1]];
+  if (open(x - 1, z) && open(x + 1, z))
+    return [
+      [x - 1, z],
+      [x + 1, z],
+    ];
+  if (open(x, z - 1) && open(x, z + 1))
+    return [
+      [x, z - 1],
+      [x, z + 1],
+    ];
   return null;
 }
 
@@ -136,7 +203,16 @@ export function doorBypasses(map, { maxPath = Infinity, through = () => false, w
     // a way round that runs only from the far side (a drop off a terrace back to the field) skips nothing: nobody reaches its start without this door
     if (ways.length === 1 && !fromSpawn(d).has(key(path[0][0], path[0][1]))) continue;
     if (path.length > maxPath) continue;
-    out.push({ at: [x, z], key: d.key ?? null, remote: !!d.remote, both: ways.length === 2, from: path[0], to: path[path.length - 1], cells: path.length, path });
+    out.push({
+      at: [x, z],
+      key: d.key ?? null,
+      remote: !!d.remote,
+      both: ways.length === 2,
+      from: path[0],
+      to: path[path.length - 1],
+      cells: path.length,
+      path,
+    });
   }
   return out;
 }

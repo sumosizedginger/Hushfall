@@ -132,6 +132,21 @@ export function drawAutomap(canvas, model) {
     }
     ctx.textBaseline = 'alphabetic';
   }
+  for (const m of model.keyMarks ?? []) {
+    // the key a tried door wants, in that door's colour
+    const x = ox + (m.x / model.cell) * s,
+      z = oy + (m.z / model.cell) * s,
+      r = Math.max(6, s * 0.7);
+    ctx.fillStyle = m.color;
+    ctx.strokeStyle = m.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(x, z, r * 0.45, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, z, r * 1.3, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   // player arrow: forward in world is (-sin yaw, -cos yaw) on (x, z)
   const px = ox + (model.player.x / model.cell) * s,
     pz = oy + (model.player.z / model.cell) * s,
@@ -155,6 +170,7 @@ export function drawAutomap(canvas, model) {
   ctx.fillStyle = PAL.dim;
   ctx.fillText(
     'LEVER ▪ red / green    EXIT ◆    KEY DOOR ▬ in the key colour' +
+      (model.keyMarks?.length ? '    ◉ the key you need' : '') +
       (model.noise ? '    ○ how far a shot carries' : '') +
       (model.pins?.length ? '    ① where it was said (the Log)' : ''),
     ox,

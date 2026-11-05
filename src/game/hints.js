@@ -53,7 +53,7 @@ export const HINTS = [
   {
     id: 'key',
     when: ({ events }) => events.some((e) => e.type === 'door_locked'),
-    text: (k) => `That door wants a key. ${k('map')} opens the map: a locked door shows in its key's colour.`,
+    text: (k) => `That door wants a key, and the key is now marked on your map. ${k('map')} opens the map: a locked door shows in its key's colour.`,
   },
   {
     id: 'mirror',

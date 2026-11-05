@@ -34,7 +34,20 @@ const mk = (bridge, objects = []) =>
     entities: [{ type: 'player', at: [9, 4] }, { type: 'exit', at: [20, 4] }, ...objects],
   });
 const verdict = (map) =>
-  Object.fromEntries(mapLintChecks(map).map((c) => [c.name.includes('roofed') ? 'roofs' : c.name.includes('trap') ? 'traps' : c.name.includes('every door') ? 'doors' : 'props', c]));
+  Object.fromEntries(
+    mapLintChecks(map).map((c) => [
+      c.name.includes('roofed')
+        ? 'roofs'
+        : c.name.includes('trap')
+          ? 'traps'
+          : c.name.includes('every door')
+            ? 'doors'
+            : c.name.includes('a key is not')
+              ? 'keys'
+              : 'props',
+      c,
+    ]),
+  );
 
 test('a walled room with a door onto open ground passes; an INDOOR-skin bridge across open ground (a floating ceiling slab) fails and says where', () => {
   assert.equal(verdict(mk(null)).roofs.ok, true, 'a room with walls is fine');

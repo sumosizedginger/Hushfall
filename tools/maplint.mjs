@@ -11,7 +11,7 @@
 import { mapFeel } from './dev/map-feel.mjs';
 import fs from 'node:fs';
 import { findTraps } from '../src/engine/traps.js';
-import { doorFaults } from '../src/engine/doorways.js';
+import { doorFaults, keyFaults } from '../src/engine/doorways.js';
 
 const DOOR_EXCEPTIONS = JSON.parse(fs.readFileSync(new URL('../design/door-exceptions.json', import.meta.url), 'utf8'));
 const ROOFED = new Set(['floor', 'door', 'secret']); // = hasCeil in levelmesh.js
@@ -84,6 +84,13 @@ export function mapLintChecks(map) {
     name: 'placement: every door closes something: with every door shut its two sides do not join, and a key door cannot be got round through plain doors',
     ok: doorBad.length === 0,
     detail: doorBad.length ? doorBad.map((d) => `${d.at.join(',')} ${d.fault} (${d.cells} cells)`).join('; ') : 'ok',
+  });
+  // a key is found on the way to its door, not left at the far end of the level
+  const keyBad = keyFaults(map);
+  checks.push({
+    name: 'placement: a key is not a long walk back from its door',
+    ok: keyBad.length === 0,
+    detail: keyBad.length ? keyBad.map((k) => `${k.key} key at ${k.keyAt.join(',')}: ${k.walk} cells from its door at ${k.at.join(',')}`).join('; ') : 'ok',
   });
   // 3. no trap: nothing the player can step or fall into is a dead end
   const tr = findTraps(map);

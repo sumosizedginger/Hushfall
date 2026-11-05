@@ -159,11 +159,13 @@ button.bind.capturing{border-color:var(--teal);color:var(--teal);background:#0d2
 :is(#pause-info,#saved-info) section{min-width:0}
 :is(#pause-info,#saved-info) h3{font:400 13px/1.2 var(--serif);letter-spacing:.22em;text-transform:uppercase;color:var(--bronze);border-bottom:1px solid var(--brass);padding-bottom:6px;margin:0 0 8px}
 :is(#pause-info,#saved-info) .rows div{padding:4px 0;gap:14px}
-:is(#pause-info,#saved-info) .rows span{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+:is(#pause-info,#saved-info) .rows b{flex:none}
+:is(#pause-info,#saved-info) .rows span{text-align:right;font-variant-numeric:tabular-nums;min-width:0}
+:is(#pause-info,#saved-info) .pi-arms b{flex:0 1 auto;min-width:0;white-space:pre-wrap}
+:is(#pause-info,#saved-info) .pi-arms span{flex:none;white-space:nowrap}
 :is(#pause-info,#saved-info) .rows em{font-style:normal;color:#9fb4b0;margin-left:6px}
 :is(#pause-info,#saved-info) .rows strong{color:var(--paper);font-weight:400;font-size:1.25em}
 :is(#pause-info,#saved-info) .rows .on b,:is(#pause-info,#saved-info) .rows .on span{color:var(--paper)}
-.pi-arms b{white-space:pre}
 .pi-title{font:400 24px/1.2 var(--serif);letter-spacing:.04em;margin-bottom:4px}
 .pi-sub{color:#9fb4b0;font-size:.9em;line-height:1.4;margin-top:2px}
 .pi-line{margin:8px 0 0;font-family:var(--serif);font-style:italic;line-height:1.4;color:#c9d4cf}

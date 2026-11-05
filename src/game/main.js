@@ -15,7 +15,7 @@ import { nextMapId, mapName } from './campaign.js';
 import { FixedLoop } from '../engine/loop.js';
 import { parseMap } from '../engine/mapformat.js';
 import { makeSave, loadWorld, SaveStore, storeSave } from '../engine/save.js';
-import { TICK, VIEW, KEYS, WEAPONS, MELEE_ORDER, ENEMIES } from '../engine/defs.js';
+import { TICK, VIEW, WEAPONS, MELEE_ORDER, ENEMIES } from '../engine/defs.js';
 import { newProgress, sanitizeProgress, earn, buy, buyMod } from '../engine/progress.js';
 import { UI, escHtml } from './ui.js';
 import { holdForComms } from './commsqueue.js';
@@ -34,6 +34,7 @@ import { recordAdd, recordAtAdd, foundAdd, attemptReset, recordView, recordCount
 import { guardedFrame, makeReport, appendReport, reportText, loadErrors, saveErrors } from './errorlog.js';
 import { journalLog, openTab, objectivesPage, itemsPage, tabAfter, journalPadStep, JOURNAL_TABS, placeOf } from './journal.js';
 import { pauseInfo } from './pauseinfo.js';
+import { keyMarks, keyObjective, lockedPrompt } from './keymarks.js';
 import { SAVE_POINT_SLOT, continueLabel, readSavePoint } from './savepoint.js';
 import { referenceRows } from './stats/schema.js';
 import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
@@ -682,6 +683,9 @@ function recordMessages(ev) {
       const p = g.world.player,
         S = g.world.map.cell;
       g.progress = foundAdd(g.progress, g.mapId, e.kind, g.world.time, Math.floor(p.x / S), Math.floor(p.z / S));
+    } else if (e.type === 'door_locked' && e.key && !g.keysAsked.has(e.key)) {
+      g.keysAsked.add(e.key);
+      if (keyMarks(g.world, new Set([e.key])).length) g.objectives.push(keyObjective(e.key));
     } else if (e.type === 'objective') {
       g.objectives.push(e.text);
       if (g.objectives.length > 60) g.objectives.shift();
@@ -742,6 +746,7 @@ function startLevel({
   g.difficulty = g.world.difficulty;
   g.seed = g.world.seed;
   g.objectives = g.world.objective ? [g.world.objective] : [];
+  g.keysAsked = new Set();
   g.miniModel = null;
   if (!noStats) statsBegin(!atStart); // (before the auto-save below, so the save carries the playthrough's number)
   g.view = new GameView(renderer, tex, map, g.world);
@@ -1881,6 +1886,7 @@ function frameBody(now) {
   mapCanvas.classList.toggle('hidden', !showMap);
   if (showMap) {
     const mdl = automapModel(g.world);
+    mdl.keyMarks = keyMarks(g.world, g.keysAsked);
     if (ui.screen === 'journal' && g.journalPins?.length) mdl.pins = g.journalPins;
     drawAutomap(mapCanvas, mdl);
   }
@@ -1890,6 +1896,7 @@ function frameBody(now) {
     if (!showMap && g.world && g.mode === 'playing' && mm !== 'off') {
       if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) {
         g.miniModel = automapModel(g.world);
+        g.miniModel.keyMarks = keyMarks(g.world, g.keysAsked);
         drawMinimap(miniCanvas, g.miniModel, mm);
       }
     } else g.miniModel = null;
@@ -1933,7 +1940,11 @@ function doorPrompt(w) {
   if (t?.soundlock && !t.secret && t.target !== 1 && t.open <= 0.05 && w.noise && w.time - w.noise.t < t.soundlock.quiet)
     return 'The lock is listening: be quiet';
   if (!t || t.secret || t.target === 1 || t.open > 0.05) return '';
-  if (t.key && !w.player.keys.includes(t.key)) return `Locked: needs the ${KEYS[t.key]?.name.toLowerCase() || 'key'}`;
+  if (t.key && !w.player.keys.includes(t.key))
+    return lockedPrompt(
+      t.key,
+      keyMarks(w, g.keysAsked).some((m) => m.key === t.key),
+    );
   return `[${g.padActive ? padGlyph(settings.padBindings.use?.[0], g.pad.family) : prettyCode(g.input.bindings.use?.[0])}] open`;
 }
 resize();

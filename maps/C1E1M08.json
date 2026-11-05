@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E1M08",
- "version": 4,
+ "version": 5,
  "name": "Bell Tower of St. Orrin",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1098,7 +1098,7 @@
   {
    "type": "pickup",
    "kind": "key_bell",
-   "at": [19, 53],
+   "at": [42, 6],
    "extra": true
   },
   {
@@ -1223,7 +1223,7 @@
   },
   {
    "id": "keyhunt",
-   "at": [19, 53],
+   "at": [42, 6],
    "radius": 3,
    "speaker": "INES",
    "text": "The sexton's key to the tower stair. It is warm."

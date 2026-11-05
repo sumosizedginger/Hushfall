@@ -690,3 +690,14 @@ NOT VERIFIED: not seen in a browser or played. How the screen looks, and the pad
 From the same play, at Signal House: "the game is playing awesome ... almost seems like a puzzle with the options for different ways to attack rooms too." Confirmed approach: a way round a room stays, behind a door. Judge the later levels against it.
 
 FOUND ON THE WAY, the owner's C drive had 6 GB free and the app warned about memory (the page file could not grow). Claude's data moved to `D:\JUST FOR CLAUDE`. `tests/campaign`, `freshness` and `mapset` left a scratch folder per run in Temp (over 4,000 of them, nearly empty); they now use `tempDir` in `tests/helpers.js` and clean up.
+
+## PT-087 · the Bell Tower's key, and a key you cannot find · FIXED-IN-CODE (awaiting the owner)
+The owner, 2026-11-04, at the locked door of the Bell Tower of St. Orrin C1E1M08, with two screenshots: "I have been up and down this level 3 times and haven't found a key."
+
+CAUSE: mine. `tools/dev/add-key-hunt.mjs` (PT-083) scored a key's place by how far off the road it was, and on this map chose an alcove in the FIRST courtyard, behind a lantern, for a door at the top of the whole spiral: 147 cells on foot, more than twice any other key, with nothing on the way that names it. The bot's route walked all the way back for it, so every gate passed.
+FIXED:
+- The key now lies at the top of the climb, in the corner alcove beside the Sexton, next to the alcove's lantern (42,6): met on the way up, about 30 cells before the door. The old lantern stays in the courtyard (moving it changed the fights there). Both routes fetch the key at its new place; the shorter road cost the bot's Hard run its margin, so the main route also takes the armour just inside the chamber door. The map's version goes up, so a mid-level save on it restarts the level.
+- ON EVERY MAP: try a locked door and its key is marked on the big map and the corner map in the door's colour, on ground you have not walked too (the corner map holds a far key at its edge, so it says which way). The prompt at the door says "(marked on your map)", and the Journal's Objectives gets "Find the bell key". `src/game/keymarks.js`; the simulation is not touched.
+- THE CHECK: `placement: a key is not a long walk back from its door` in the map lint (`keyFaults` in `src/engine/doorways.js`: over 80 cells on foot, or over 40 with the key in the first half of the road). The Bell Tower was the only one of 19 locked doors it flags. `add-key-hunt.mjs` no longer looks further than 30 cells from the door. `tests/keys-findable.test.js`.
+- The pause page: a long gun name ran into the next column (the owner's screenshot); it now wraps inside its own.
+NOT VERIFIED: not seen in a browser or played. Whether the alcove reads as a place to look, and how the marks look, are the owner's to judge.
