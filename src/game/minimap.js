@@ -2,7 +2,40 @@
 // actually seen, north up, the player's arrow in the middle, doors, exits and levers as on the big map. It shows no creature and no pickup: it is
 // where you have been, not where things are. The shell redraws it every few frames (MINIMAP.every) from a model it
 // builds every few frames too; the sim is not touched. `minimapView` is PURE (what part of the model is shown), `drawMinimap` only draws.
-export const MINIMAP = Object.freeze({ every: 6, sizes: { small: { s: 4, r: 18 }, large: { s: 6, r: 18 } } });
+// (Session 2 of design/OPUS_HANDOFF.md, item G5) the corner map is never empty: while fewer than `sparse` explored cells are in view, the walls
+// within the automap's own explore radius are drawn as a dim outline straight from the map data (drawing only: nothing is marked explored, and a
+// secret wall is just a wall). And when the goal has a known spot (the exit the player has seen) outside the window, a tick on the border points at it.
+import { EXPLORE_RADIUS_CELLS } from '../engine/automap.js';
+export const MINIMAP = Object.freeze({ every: 6, sparse: 20, sizes: { small: { s: 4, r: 18 }, large: { s: 6, r: 18 } } });
+
+/** the cells within `R` of the player straight from the map (a secret reads as wall, off the map is wall): [{ cx, cz, kind }] */
+export function nearbyCells(map, player, R = EXPLORE_RADIUS_CELLS) {
+  const S = map.cell,
+    pcx = Math.floor(player.x / S),
+    pcz = Math.floor(player.z / S),
+    out = [];
+  for (let cz = pcz - R; cz <= pcz + R; cz++)
+    for (let cx = pcx - R; cx <= pcx + R; cx++) {
+      const inside = cx >= 0 && cz >= 0 && cx < map.w && cz < map.h,
+        k = inside ? map.kind(cx, cz) : 'wall';
+      out.push({ cx, cz, kind: k === 'secret' ? 'wall' : k });
+    }
+  return out;
+}
+
+/** where the corner map points: the nearest exit the player has seen ({ x, z } in metres), or null (no known spot: no tick) */
+export function objectiveTarget(model) {
+  let best = null,
+    bd = Infinity;
+  for (const e of model.exits ?? []) {
+    const d = (e.x - model.player.x) ** 2 + (e.z - model.player.z) ** 2;
+    if (d < bd) {
+      bd = d;
+      best = { x: e.x, z: e.z };
+    }
+  }
+  return best;
+}
 export const MINIMAP_MODES = Object.freeze(['off', 'small', 'large']);
 export const sanitizeMinimap = (v) => (MINIMAP_MODES.includes(v) ? v : 'small');
 const PAL = {
@@ -11,6 +44,7 @@ const PAL = {
   outdoor: '#4a68a6',
   wall: '#0e1317',
   edge: '#d4e4df',
+  hint: 'rgba(212,228,223,0.3)',
   dots: 'rgba(150,185,180,0.16)',
   brass: '#c9a44c',
   wood: '#8a6a4a',
@@ -61,7 +95,26 @@ export function minimapView(model, r) {
       k = most > r ? r / most : 1;
     return { fx: o.fx * k, fz: o.fz * k, far: most > r, color: m.color };
   });
-  return { cells, doors, exits, switches, keys, yaw: model.player.yaw, frac: { x: model.player.x / S - pcx, z: model.player.z / S - pcz } };
+  const seenAt = new Set(cells.map((c) => c.dx + ',' + c.dz)),
+    sparse = cells.length < MINIMAP.sparse,
+    near = sparse ? (model.near ?? []).map((c) => ({ dx: c.cx - pcx, dz: c.cz - pcz, kind: c.kind })).filter((c) => within(c.dx, c.dz)) : [];
+  let tick = null;
+  if (model.target) {
+    const o = rel(model.target),
+      most = Math.max(Math.abs(o.fx), Math.abs(o.fz));
+    if (most > r + 0.5) tick = { fx: (o.fx * (r + 0.5)) / most, fz: (o.fz * (r + 0.5)) / most };
+  }
+  return {
+    cells,
+    doors,
+    exits,
+    switches,
+    keys,
+    near: near.map((c) => ({ ...c, seen: seenAt.has(c.dx + ',' + c.dz) })),
+    tick,
+    yaw: model.player.yaw,
+    frac: { x: model.player.x / S - pcx, z: model.player.z / S - pcz },
+  };
 }
 
 /** draw the minimap into `canvas` (sized here to its window) for the mode 'small' | 'large'; 'off' draws nothing and returns false */
@@ -115,6 +168,33 @@ export function drawMinimap(canvas, model, mode = 'small') {
     }
   }
   ctx.stroke();
+  if (v.near.length) {
+    // G5: a dim outline of the walls round the player where nothing is explored yet (drawing only)
+    const nearAt = new Map(v.near.map((c) => [c.dx + ',' + c.dz, c.kind]));
+    ctx.strokeStyle = PAL.hint;
+    ctx.beginPath();
+    for (const c of v.near) {
+      if (c.seen || !walkable(c.kind)) continue;
+      for (const [ax, az] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        if (nearAt.get(c.dx + ax + ',' + (c.dz + az)) !== 'wall') continue;
+        const x0 = X(c.dx + (ax > 0 ? 1 : 0)),
+          z0 = X(c.dz + (az > 0 ? 1 : 0));
+        if (ax !== 0) {
+          ctx.moveTo(x0, X(c.dz));
+          ctx.lineTo(x0, X(c.dz + 1));
+        } else {
+          ctx.moveTo(X(c.dx), z0);
+          ctx.lineTo(X(c.dx + 1), z0);
+        }
+      }
+    }
+    ctx.stroke();
+  }
   for (const d of v.doors) {
     ctx.fillStyle = d.key ? (d.keyColor ?? PAL.brass) : PAL.wood;
     const t = Math.max(2, s * (d.open > 0.5 ? 0.3 : 0.7));
@@ -171,5 +251,25 @@ export function drawMinimap(canvas, model, mode = 'small') {
   ctx.strokeStyle = PAL.frame;
   ctx.lineWidth = 2;
   ctx.strokeRect(1, 1, size - 2, size - 2);
+  if (v.tick) {
+    // G5: a small wedge on the border, pointing out toward the goal
+    const [tx, tz] = P(v.tick),
+      x = Math.min(size - 1, Math.max(1, tx)),
+      z = Math.min(size - 1, Math.max(1, tz)),
+      len = Math.hypot(v.tick.fx, v.tick.fz) || 1,
+      ux = v.tick.fx / len,
+      uz = v.tick.fz / len,
+      h = Math.max(4, s * 1.4);
+    ctx.fillStyle = PAL.exit;
+    ctx.strokeStyle = PAL.ink;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, z);
+    ctx.lineTo(x - ux * h - uz * h * 0.6, z - uz * h + ux * h * 0.6);
+    ctx.lineTo(x - ux * h + uz * h * 0.6, z - uz * h - ux * h * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
   return true;
 }

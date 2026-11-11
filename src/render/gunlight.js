@@ -38,6 +38,29 @@ export const GUN_LIGHT = {
   tender: 0.97,
   quiet: 1.32,
 };
+// SEATING THE GUN (Session 2 of design/OPUS_HANDOFF.md, item G4): in a dark place the held gun still wore its own warm, saturated light and read
+// as pasted on. Below `from` the weapon scene's hemisphere ground colour moves toward the place's own ground colour (up to `ground` of the way) and
+// the key light loses saturation (up to `desat`), both growing linearly to the full amount at `full` (the darkest row, dusk). The handoff named
+// "under about 0.6"; at full lights that is dusk alone, and the navy looks the assessment named (deepgate, conductor, descent, rootbell, unrung,
+// drowned, 0.65 to 0.75) would be untouched, so the tint starts at 0.9 and is full at 0.35.
+export const GUN_TINT = Object.freeze({ from: 0.9, full: 0.35, ground: 0.35, desat: 0.2 });
+
+/** how much a gun factor tints the weapon light: null for a bright place, else { ground, desat } growing to GUN_TINT's numbers at `full` */
+export const gunTint = (factor) => {
+  const t = Math.min(1, Math.max(0, (GUN_TINT.from - factor) / (GUN_TINT.from - GUN_TINT.full)));
+  return t > 0 ? { ground: GUN_TINT.ground * t, desat: GUN_TINT.desat * t } : null;
+};
+
+/** a 0xRRGGBB colour moved `t` of the way toward its own grey (Rec. 709 luma) */
+export const desaturateHex = (hex, t) => {
+  const r = (hex >> 16) & 255,
+    g = (hex >> 8) & 255,
+    b = hex & 255,
+    y = 0.2126 * r + 0.7152 * g + 0.0722 * b,
+    m = (c) => Math.min(255, Math.max(0, Math.round(c + (y - c) * t)));
+  return (m(r) << 16) | (m(g) << 8) | m(b);
+};
+
 /** the name of a look row (the rows do not carry it) */
 export const lookName = (look) => Object.keys(LOOKS).find((n) => LOOKS[n] === look) ?? null;
 /** the weapon light's factor for a look at an ambient level, or null when the look has no row (the caller keeps the hemisphere's formula) */

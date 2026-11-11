@@ -45,6 +45,27 @@ test('surface: the shader reads the numbers of SURFACE, in world space, with a f
   assert.throws(() => patchSurface(new THREE.MeshLambertMaterial(), 'sky'));
 });
 
+test('surface (G1): floors and ceilings sample their paint with a mip bias that grows with view distance; walls, risers and trims do not', () => {
+  const { near, far, bias } = SURFACE.calm;
+  assert.ok(near > 0 && far > near && bias > 0, 'the calm numbers');
+  const frag = (kind) => {
+    const m = patchSurface(new THREE.MeshLambertMaterial(), kind, 2),
+      sh = { vertexShader: '#include <common>\n#include <project_vertex>', fragmentShader: '#include <common>\n#include <map_fragment>' };
+    m.onBeforeCompile(sh, null);
+    return sh.fragmentShader;
+  };
+  for (const k of ['floor', 'ceil']) {
+    const f = frag(k);
+    assert.ok(f.includes('texture2D(map, vMapUv, sCalm)') && f.includes('length(vViewPosition)'), k + ' has the bias term');
+    assert.ok(!f.includes('#include <map_fragment>'), k + ' replaces the plain sample');
+    assert.ok(f.includes(String(bias)) && f.includes((far - near).toFixed(1)), k + ' reads SURFACE.calm');
+  }
+  for (const k of ['wall', 'riser', 'trim']) {
+    const f = frag(k);
+    assert.ok(!f.includes('sCalm') && f.includes('#include <map_fragment>'), k + ' keeps the plain sample');
+  }
+});
+
 /** PT-080: drawn-only pieces wholly this far above their floor are out of every body's reach (the player is under 2 m tall) */
 const HEADROOM = 2.6;
 

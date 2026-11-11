@@ -43,7 +43,7 @@ import { captionFor } from './captions.js';
 import { firstRunLine } from './firstrun.js';
 import { creditsLines, creditsHeight, creditsState } from './credits.js';
 import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe, addCrash } from './playlog.js';
-import { drawMinimap, MINIMAP } from './minimap.js';
+import { drawMinimap, MINIMAP, nearbyCells, objectiveTarget } from './minimap.js';
 import { floorAt } from '../engine/terrain.js';
 import { resolveScene, cameraAt, startScene, advanceScene, skipScene, subtitleAt, fadeAt, hasSeen, markSeen } from './cinematics.js';
 import { SCENE, SCENES } from './scenes.js';
@@ -1897,6 +1897,8 @@ function frameBody(now) {
       if (!g.miniModel || g.miniN++ % MINIMAP.every === 0) {
         g.miniModel = automapModel(g.world);
         g.miniModel.keyMarks = keyMarks(g.world, g.keysAsked);
+        g.miniModel.near = nearbyCells(g.world.map, g.world.player);
+        g.miniModel.target = objectiveTarget(g.miniModel);
         drawMinimap(miniCanvas, g.miniModel, mm);
       }
     } else g.miniModel = null;

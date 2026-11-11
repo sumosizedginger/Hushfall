@@ -40,7 +40,7 @@ import { Tells, tellOf } from './tells.js'; // ENEMY ACTIONS: the glint of a win
 import { BRAIN } from '../engine/brain.js';
 import { decalsForEvent, decalsAtLoad } from './decalplace.js';
 import { floorMarks, FLOORMARKS } from './floorscatter.js';
-import { gunFactor } from './gunlight.js';
+import { gunFactor, gunTint, desaturateHex } from './gunlight.js';
 import { PLAYER, ENEMIES, WEAPONS, PHYS, TICK, VIEW, FLOW, VARIANTS, HIVE, LOOKS, lookOf, PITCH_LIMIT, DECALS } from '../engine/defs.js';
 import { floorAt } from '../engine/terrain.js';
 import { sporeState } from '../engine/breath.js';
@@ -2011,11 +2011,14 @@ export class GameView {
       // over in the brightest
       const k = Math.max(0, (look.hemi[2] * this.ambient) / 2.4),
         g = gunFactor(look, this.ambient) ?? WEAPON_LIGHT.floor + (1 - WEAPON_LIGHT.floor) * Math.min(1, k) + 0.12 * Math.min(1, Math.max(0, k - 1));
+      const tint = gunTint(g), // G4: in a dark place the gun's shadow side takes the place's ground colour and its key light greys
+        ground = this.mixHex(0x3a2a30, look.hemi[1], 0.45),
+        keyCol = this.mixHex(0xffe0b0, look.sun[0], 0.35);
       this.weaponHemi.intensity = 1.5 * g;
       this.weaponHemi.color.setHex(this.mixHex(0x9fb8d0, look.hemi[0], 0.45));
-      this.weaponHemi.groundColor.setHex(this.mixHex(0x3a2a30, look.hemi[1], 0.45));
+      this.weaponHemi.groundColor.setHex(tint ? this.mixHex(ground, look.hemi[1], tint.ground) : ground);
       this.weaponKey.intensity = 1.6 * g;
-      this.weaponKey.color.setHex(this.mixHex(0xffe0b0, look.sun[0], 0.35));
+      this.weaponKey.color.setHex(tint ? desaturateHex(keyCol, tint.desat) : keyCol);
     }
     this.post.uniforms.uShoulder.value = look.post?.shoulder ?? 1; // the tone shoulder (a look may name its own)
     this.exposureK = look.exposure;

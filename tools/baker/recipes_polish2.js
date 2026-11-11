@@ -502,7 +502,9 @@ export const recipesPolish2 = {
           const x = c * 64,
             y = r * 64,
             light = (r + c) % 2 === 0;
-          const base = light ? K.pick(['#82775f', '#8a7e66', '#7c715a']) : K.pick(['#3e4346', '#42484c', '#3a4043']); // quiet: a loud checker aliases into a weave at the game's low width
+          const pick = light ? K.pick(['#82775f', '#8a7e66', '#7c715a']) : K.pick(['#3e4346', '#42484c', '#3a4043']); // quiet: a loud checker aliases into a weave at the game's low width
+          // quieter still (item G1, 2026-11-11): each square moves a sixth of the way toward the other's colour, so the value gap closes by about a third
+          const base = mix(pick, light ? '#3e4346' : '#82775f', 1 / 6);
           T.block(x + 2, y + 2, 60, 60, mix(base, '#ffffff', light ? 0.12 : 0.1), base, mix(base, '#000000', 0.35), {
             lip: 3,
             lit: mix(base, '#fff4dc', 0.4),

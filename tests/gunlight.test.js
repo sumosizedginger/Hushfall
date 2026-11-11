@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { LOOKS, lookOf } from '../src/engine/defs.js';
-import { GUN_LIGHT, gunFactor, lookName } from '../src/render/gunlight.js';
+import { GUN_LIGHT, GUN_TINT, gunFactor, gunTint, desaturateHex, lookName } from '../src/render/gunlight.js';
 import { createWorld } from '../src/engine/world.js';
 import { GameView, WEAPON_LIGHT } from '../src/render/view.js';
 import { texProxy, stubRenderer } from './stubs.js';
@@ -49,4 +49,42 @@ test('the view lights the weapon scene from the factor: a dark look gives the gu
   assert.ok(bright > dark * 1.8, `bright ${bright.toFixed(2)} vs dark ${dark.toFixed(2)}`);
   assert.ok(Math.abs(dark - 1.5 * gunFactor(lookOf(shippedMap('C2M24').atmosphere), 1)) < 0.05, 'dark = 1.5 x the factor');
   assert.ok(WEAPON_LIGHT.floor > 0 && WEAPON_LIGHT.floor < 0.6);
+});
+
+test('G4: a bright place gives the gun no tint, the darkest look the full one, and the tint grows steadily between', () => {
+  assert.equal(gunTint(gunFactor(LOOKS.woven, 1)), null, 'a bright look: no tint');
+  assert.equal(gunTint(GUN_TINT.from), null, 'none at the start of the band');
+  const darkest = Math.min(...Object.values(GUN_LIGHT)),
+    full = gunTint(gunFactor(LOOKS[lookName(LOOKS.dusk)], 1));
+  assert.equal(darkest, GUN_LIGHT.dusk);
+  assert.ok(Math.abs(full.ground - GUN_TINT.ground) < 1e-9 && Math.abs(full.desat - GUN_TINT.desat) < 1e-9, 'the darkest look: the full tint');
+  let prev = 0;
+  for (let f = GUN_TINT.from; f >= 0.2; f -= 0.01) {
+    const t = gunTint(f)?.ground ?? 0;
+    assert.ok(t >= prev - 1e-12, 'monotonic at ' + f.toFixed(2));
+    prev = t;
+  }
+  assert.ok(gunTint(gunFactor(LOOKS.deepgate, 1)), 'a navy look is tinted');
+  assert.equal(desaturateHex(0x808080, 1), 0x808080);
+  assert.equal(desaturateHex(0xffe0b0, 0), 0xffe0b0);
+  const g = desaturateHex(0xff0000, 1);
+  assert.ok(((g >> 16) & 255) === ((g >> 8) & 255) && (g & 255) === ((g >> 8) & 255), 'full desaturation is grey');
+});
+
+test('G4 in the view: a dark look greys the key light and pulls the ground toward the place, a bright look leaves both as they were', () => {
+  const lights = (id) => {
+    const map = shippedMap(id),
+      w = createWorld(map, { seed: 1, difficulty: 'normal' }),
+      v = new GameView(stubRenderer(), texProxy(), map, w);
+    v.setSize(640, 360, 640);
+    const look = lookOf(map.atmosphere);
+    v.setPlace(look);
+    const out = { key: v.weaponKey.color.getHex(), ground: v.weaponHemi.groundColor.getHex(), base: v.mixHex(0xffe0b0, look.sun[0], 0.35) };
+    v.dispose();
+    return out;
+  };
+  const bright = lights('C2M19');
+  assert.equal(bright.key, bright.base, 'bright: the key light is untouched');
+  const dark = lights('C2M24');
+  assert.notEqual(dark.key, dark.base, 'dark: the key light is greyed');
 });

@@ -8,10 +8,33 @@
 // texture v runs up from its floor: levelmesh.js face()).
 // Nothing here reads the simulation, and a material that is never compiled (node tests, the software rasteriser) is unchanged.
 // `tests/surface.test.js` holds the GLSL to the numbers below.
-export const SURFACE = Object.freeze({ macro: [0.8, 1.13], f1: 0.19, f2: 0.55, temp: 0.55, foot: { h: 0.85, k: 0.64 } });
+// * CALM (floors and ceilings only, Session 2 of design/OPUS_HANDOFF.md, item G1): a checker tile seen at a grazing angle from mid-distance
+//   shimmers (Customs Hall). Beyond `near` metres the paint is sampled with a mip bias that grows to `bias` at `far`, so the far floor reads as its
+//   broad colour, not as flickering squares. Walls are seen face-on and keep their detail.
+export const SURFACE = Object.freeze({
+  macro: [0.8, 1.13],
+  f1: 0.19,
+  f2: 0.55,
+  temp: 0.55,
+  foot: { h: 0.85, k: 0.64 },
+  calm: { near: 6, far: 18, bias: 2.5 },
+});
 
 const KINDS = new Set(['wall', 'floor', 'ceil', 'riser', 'trim']);
+const CALM_KINDS = new Set(['floor', 'ceil']);
 const glslNum = (x) => (Number.isInteger(x) ? x.toFixed(1) : String(x));
+
+/** the paint sample a floor or ceiling uses in place of three's map_fragment (exported for the test); '' for every other kind */
+export function calmGLSL(kind) {
+  if (!CALM_KINDS.has(kind)) return '';
+  const { near, far, bias } = SURFACE.calm;
+  return `
+#ifdef USE_MAP
+  float sCalm = clamp((length(vViewPosition) - ${glslNum(near)}) / ${glslNum(far - near)}, 0.0, 1.0) * ${glslNum(bias)};
+  vec4 sampledDiffuseColor = texture2D(map, vMapUv, sCalm);
+  diffuseColor *= sampledDiffuseColor;
+#endif`;
+}
 
 /**
  * the GLSL the fragment shader gets (exported for the test): `kind` decides the plane the noise is read in and whether the foot darkens; `cell` is
@@ -52,7 +75,7 @@ export function patchSurface(mat, kind, cell = 2) {
       .replace('#include <project_vertex>', '#include <project_vertex>\nvSurfW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     s.fragmentShader = s.fragmentShader
       .replace('#include <common>', '#include <common>' + NOISE)
-      .replace('#include <map_fragment>', '#include <map_fragment>' + surfaceGLSL(kind, cell));
+      .replace('#include <map_fragment>', (CALM_KINDS.has(kind) ? calmGLSL(kind) : '#include <map_fragment>') + surfaceGLSL(kind, cell));
   };
   mat.customProgramCacheKey = () => (prevKey ? prevKey() : '') + '|surface-' + kind + '-' + cell;
   mat.userData.surface = kind;
