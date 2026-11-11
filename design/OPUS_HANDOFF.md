@@ -278,7 +278,7 @@ Rules for each: tell the player what to do in one objective line at the moment i
 
 Tick a box when its session is committed.
 
-- [ ] Session 1: housekeeping
+- [x] Session 1: housekeeping (2026-11-10: `AGENTS.md` 149 KB -> about 18 KB, not 15: the sections kept word for word already total about 11 KB; 19 tools archived, 135 left; the event catalogue found no gaps)
 - [ ] Session 2: the picture, part one
 - [ ] Session 3: the picture, part two
 - [ ] Session 4: play fixes

@@ -82,3 +82,25 @@ Note (T2): the comment in `vite.config.js` still calls `look.html` "the frozen l
 ## 2026-11-01 (PT-080)
 
 Moved to `D:\Doom_archive\2026-11-01\` (about 40 MB, all output of finished tasks, none read by a tool): `review/gate1` (the Art Gate 1 before/after stills), `review/poses-tb` (the pose-pop study of PT-078), `review/res-test` (render widths), `review/vfx2` (the shield and beam before/after sheet), `review/regen-pt080` (a regeneration that was stopped and replaced) and `review/regen-final` with its `.out` logs (the green regeneration from 40dc707). Kept: `review/art-gate0` (named by `design/ART_GATE0_EVIDENCE.md`).
+
+## 2026-11-10 (Session 1 of design/OPUS_HANDOFF.md, item C8)
+
+Moved to `D:\Doom_archive\2026-11-10\tools-dev\`: one-task tools in `tools/dev` that no npm script, test, other tool, `AGENTS.md`, `design/OPUS_HANDOFF.md` or `ARCHITECTURE.md` names (found by a scan, not by eye; none is hashed by `tools/textsha.mjs`). Each one's work is done and held by the maps, sources or tests it changed. Restore one by copying it back into `tools/dev/`.
+
+| File | What it did |
+|---|---|
+| `bot-compare.mjs` | PT-052: the strafing bot against the standing bot on every map (the answer is in `viability.js`'s either-policy gates) |
+| `clipstats.mjs` | PT-065 V12: clip statistics for the tone shoulder (decided; numbers in `design/LOOK_FIRST_REVIEW.md`) |
+| `gen-manifest.mjs` | the one-time bootstrap of `CAMPAIGN_MANIFEST.json` (refuses to overwrite it) |
+| `place-loads.mjs` | PT-056: placed the ammunition-load caches (the `PT-056` blocks in the map sources are the record) |
+| `place-mods.mjs` | PT-057: placed the weapon mods (the blocks in the map sources are the record) |
+| `playthrough-critic.mjs` | an early scripted play of the Range |
+| `probe-actb.mjs` `probe-ep4.mjs` `probe-hive.mjs` `probe-pt27.mjs` | real-game probes of finished batches (Act B, Episode 4, the Preview, Episode 3 Batch B); the shared browser check holds them now |
+| `probe-sky.mjs` | PT-065 V11: the sky is still between frames (answered) |
+| `probe-swing.mjs` | PT-020: the melee view model's feel in the Range |
+| `probe-tone.mjs` | PT-065: seven exits under five tone curves (decided: k 1.0 / pre 0.55) |
+| `probe-ui.mjs` | the lamp's charge bar in the DOM (an early UI probe) |
+| `prose-pass.mjs` `story-pass-2.mjs` `story-voice.mjs` | PT-061 / PT-070: table-driven story edits, already applied (idempotent; their tables are the record of what changed and why). Passes 3 and 4 stay in `tools/dev` |
+| `shoot-melee.mjs` | stills of a finished task (PT-013 melee) |
+
+Kept although a strict reading of the rule would move them: the general-purpose tools listed on the "More standing tools" line of `AGENTS.md` (route runners, map editors, the squeeze, contact sheets, perf and Chrome probes, `build-range.mjs`, which builds the shipped TRAINING yard), and `shoot-outlines.mjs`, which the ink-mask debug mode in `src/render/post.js` and the dev hook exist for. `src/render/tonecurve.js` still names `probe-tone.mjs` in a comment about where its numbers came from; it stays as it is because an edit to `src` stales the evidence. `tools/dev` holds 135 files.
