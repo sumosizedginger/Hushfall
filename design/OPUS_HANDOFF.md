@@ -288,7 +288,7 @@ Tick a box when its session is committed.
 - [ ] Session 8: floor exceptions, first half
 - [ ] Session 9: floor exceptions, second half
 - [x] Session 10: key hunts (2026-11-12: ten added, all by lever: C1E2M06 C1E3M06 C1E4M07 C2M01 C2M06 C2M09 C2M11 C2M12 C2M13 C2M17; 31 of 62 main maps now)
-- [ ] Session 11: reading load
+- [x] Session 11: reading load (2026-11-12: MEASURED only: 12,127 words over 62 main routes, the top fifteen all Campaign 2 (C2M22 375 most); no line moved: a "document" is only a speaker name, so moving a radio line rewrites the voice: the owner's call)
 - [ ] Session 12+: room accents (note the maps done here)
 
 ## 5. When to stop and ask the owner
