@@ -6,44 +6,47 @@
 // gun's core to about 45 + 0.30 x the scene's luma there (the gun core is about 25 + 43 x the factor): GUN_LIGHT[look]. A look with no row (the dev
 // ranges) keeps the hemisphere's formula. The factor multiplies the old weapon light (1.5 hemisphere, 1.6 key), and follows the level's ambient
 // (lights going out dim the gun).
+// Refitted 2026-11-12 (Session 5 of design/OPUS_HANDOFF.md) from tools/dev/probe-gun.mjs at floor 0.35: the cores ran about 20 above that line (the
+// post pass had changed), so the line was moved up to keep the mean core (83) and only the slope (0.30) was fitted: correlation 0.83 -> 0.92.
 import { LOOKS } from '../engine/defs.js';
 export const GUN_LIGHT = {
-  dusk: 0.35,
-  customs: 1.1,
-  moon: 0.89,
-  cradle: 0.93,
-  steppe: 1.33,
-  deepgate: 0.72,
-  markets: 1.02,
-  halls: 1.21,
-  drowned: 0.75,
-  ossuary: 1.04,
-  gardens: 0.82,
-  basilica: 0.89,
-  heart: 0.79,
-  hive: 0.87,
-  nerve: 0.88,
-  woven: 1.62,
-  veins: 0.95,
-  reactor: 0.86,
-  mourning: 1.11,
-  copy: 1.35,
-  conductor: 0.7,
-  descent: 0.74,
-  roots: 0.83,
-  fault: 0.89,
-  tide: 1.13,
-  rootbell: 0.66,
-  unrung: 0.65,
-  tender: 0.97,
-  quiet: 1.32,
+  dusk: 0.64,
+  customs: 1.05,
+  moon: 0.95,
+  cradle: 0.94,
+  steppe: 1.19,
+  deepgate: 0.7,
+  markets: 1,
+  halls: 1.19,
+  drowned: 0.8,
+  ossuary: 1.31,
+  gardens: 0.85,
+  basilica: 0.88,
+  heart: 0.69,
+  hive: 0.84,
+  nerve: 1.03,
+  woven: 1.33,
+  veins: 1.05,
+  reactor: 0.82,
+  mourning: 0.86,
+  copy: 1.29,
+  conductor: 0.69,
+  descent: 0.88,
+  roots: 0.89,
+  fault: 0.92,
+  tide: 1.03,
+  rootbell: 0.77,
+  unrung: 0.71,
+  tender: 0.86,
+  quiet: 1.21,
 };
 // SEATING THE GUN (Session 2 of design/OPUS_HANDOFF.md, item G4): in a dark place the held gun still wore its own warm, saturated light and read
 // as pasted on. Below `from` the weapon scene's hemisphere ground colour moves toward the place's own ground colour (up to `ground` of the way) and
 // the key light loses saturation (up to `desat`), both growing linearly to the full amount at `full` (the darkest row, dusk). The handoff named
 // "under about 0.6"; at full lights that is dusk alone, and the navy looks the assessment named (deepgate, conductor, descent, rootbell, unrung,
-// drowned, 0.65 to 0.75) would be untouched, so the tint starts at 0.9 and is full at 0.35.
-export const GUN_TINT = Object.freeze({ from: 0.9, full: 0.35, ground: 0.35, desat: 0.2 });
+// drowned) would be untouched, so the tint starts at `from` and is full at the darkest row. (Session 5, 2026-11-12: the rows were refitted from the
+// probe, keeping the mean gun core, so the band moved with them: from 1.0, full at the darkest row, dusk 0.64.)
+export const GUN_TINT = Object.freeze({ from: 1.0, full: Math.min(...Object.values(GUN_LIGHT)), ground: 0.35, desat: 0.2 });
 
 /** how much a gun factor tints the weapon light: null for a bright place, else { ground, desat } growing to GUN_TINT's numbers at `full` */
 export const gunTint = (factor) => {
