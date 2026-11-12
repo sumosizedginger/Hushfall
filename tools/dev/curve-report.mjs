@@ -30,7 +30,12 @@ for (const slot of manifest.maps.filter((m) => m.kind === 'main')) {
 }
 // why a flagged map stands above its neighbours (D3: a flag is fixed or carries a reason; a bot is not a person, the owner's play outranks these)
 const WHY = {
-  C1E1M08: 'the finale of the first episode',
+  C1E1M08:
+    'the finale of the first episode; eased 2026-11-12 (144 to 105 on Normal: the arrival courtyard, a Gaunt and a Tollbearer kept for Hard). Its Hard number is lower than it looks: the standing bot dies there on every seed, so Hard is the mean of the strafing runs that finish',
+  C1E1M05:
+    'not a spike: Easy 60 and Normal 70 differ by under 15 (the handoff read it as an inversion); left alone 2026-11-12',
+  C1E2M03:
+    'eased 2026-11-12 (116 to 76 on Normal): one Bellhand of the throat group kept for Hard and an ungrouped one put beside its post (it wakes on sight, not with the group), so the ranged share holds its floor; the group caught the bot crossing the middle of the yard (84 to 126 damage there on two seeds of three)',
   C1E3M06: 'the climb at the end of Episode 3, a raked arena of singers',
   C1E4M03: 'on seed 1, 85 of its 149 damage has no creature named on it and 64 is shots; the bays are in vacuum, the likely source, not separately measured',
   C1E4M08: 'the boss of Campaign 1',

@@ -906,7 +906,8 @@
    "type": "enemy",
    "kind": "tollbearer",
    "at": [42, 50],
-   "facing": -1.176
+   "facing": -1.176,
+   "skill": "hard"
   },
   {
    "type": "enemy",
@@ -1112,7 +1113,8 @@
    "kind": "gaunt",
    "at": [24, 46],
    "facing": 1.736,
-   "extra": true
+   "extra": true,
+   "skill": "hard"
   },
   {
    "type": "enemy",

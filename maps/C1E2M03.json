@@ -898,7 +898,8 @@
    "kind": "bellhand",
    "at": [56, 34],
    "facing": -1.857,
-   "group": "throat"
+   "group": "throat",
+   "skill": "hard"
   },
   {
    "type": "pickup",
@@ -1050,6 +1051,13 @@
    "type": "prop",
    "kind": "lantern",
    "at": [50, 32],
+   "extra": true
+  },
+  {
+   "type": "enemy",
+   "kind": "bellhand",
+   "at": [57, 35],
+   "facing": -1.857,
    "extra": true
   },
   {
