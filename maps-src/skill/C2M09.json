@@ -15,5 +15,60 @@
    ],
    "line": "A key for the pulpit lever, left in an offering bowl with three of our coins."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    24,
+    44
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      27,
+      33
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      25,
+      30
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    4,
+    18
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      16,
+      30
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      20,
+      31
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      26,
+      36
+     ]
+    }
+   ]
+  }
  ]
 }

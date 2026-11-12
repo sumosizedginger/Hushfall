@@ -15,5 +15,60 @@
    ],
    "line": "A pin from the conductor's lever, left in a hymn rack like a bookmark."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    44,
+    19
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      40,
+      13
+     ]
+    },
+    {
+     "kind": "bellhand",
+     "at": [
+      33,
+      27
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    22,
+    19
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      19,
+      28
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      44,
+      28
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      45,
+      12
+     ]
+    }
+   ]
+  }
  ]
 }

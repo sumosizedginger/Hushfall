@@ -394,6 +394,79 @@
      }
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [36, 22],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [48, 24],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [52, 25],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [50, 8],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-1",
+   "when": "enter",
+   "at": [22, 11],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 8],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [12, 10],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-2",
+   "when": "enter",
+   "at": [6, 18],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [21, 24],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [18, 16],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

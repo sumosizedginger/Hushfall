@@ -49,5 +49,46 @@
    ],
    "line": "The cage key, on the pump-man's coat peg. The coat is still on the peg."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    54,
+    26
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      43,
+      17
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      44,
+      33
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    16,
+    16
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      15,
+      9
+     ]
+    }
+   ]
+  }
  ]
 }

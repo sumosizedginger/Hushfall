@@ -394,6 +394,28 @@
      }
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [28, 3],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [36, 12],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [43, 11],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

@@ -80,5 +80,83 @@
    ],
    "line": "The sluice key, on a hook above the waterline. The hook was hammered in by hand."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    36,
+    22
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      48,
+      24
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      52,
+      25
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      50,
+      8
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    22,
+    11
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      12,
+      8
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      12,
+      10
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    6,
+    18
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      21,
+      24
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      18,
+      16
+     ]
+    }
+   ]
+  }
  ]
 }

@@ -33,5 +33,144 @@
    ],
    "line": "The relay pin, pressed into a wax seal on the housing. The seal has a thumbprint in it, one of ours."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    24,
+    12
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      42,
+      19
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      45,
+      22
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    56,
+    23
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      70,
+      24
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      88,
+      28
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      93,
+      34
+     ]
+    }
+   ]
+  },
+  {
+   "when": [
+    "key:brass",
+    "time:186"
+   ],
+   "at": [
+    127,
+    25
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      129,
+      20
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      136,
+      28
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      131,
+      33
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    104,
+    27
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      85,
+      36
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      92,
+      26
+     ]
+    }
+   ]
+  },
+  {
+   "when": [
+    "key:brass",
+    "time:171"
+   ],
+   "at": [
+    110,
+    30
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      112,
+      28
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      118,
+      33
+     ]
+    }
+   ]
+  }
  ]
 }

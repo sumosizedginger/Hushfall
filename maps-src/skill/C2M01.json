@@ -96,5 +96,99 @@
    ],
    "line": "The winch pin, pushed into the sand above the tide line by someone who expected to come back."
   }
+ ],
+ "ambush": [
+  {
+   "at": [
+    36,
+    28
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      30,
+      13
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      22,
+      22
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    24,
+    9
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      47,
+      27
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      37,
+      24
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    60,
+    27
+   ],
+   "radius": 2,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      75,
+      25
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      74,
+      28
+     ]
+    }
+   ]
+  },
+  {
+   "at": [
+    64,
+    15
+   ],
+   "radius": 3,
+   "spawn": [
+    {
+     "kind": "gaunt",
+     "at": [
+      72,
+      9
+     ]
+    },
+    {
+     "kind": "gaunt",
+     "at": [
+      78,
+      10
+     ]
+    }
+   ]
+  }
  ]
 }

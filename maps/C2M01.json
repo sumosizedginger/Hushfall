@@ -297,6 +297,94 @@
      "wake": "north"
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [36, 28],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [30, 13],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [22, 22],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-1",
+   "when": "enter",
+   "at": [24, 9],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [47, 27],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [37, 24],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-2",
+   "when": "enter",
+   "at": [60, 27],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [75, 25],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [74, 28],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-3",
+   "when": "enter",
+   "at": [64, 15],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [72, 9],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [78, 10],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [

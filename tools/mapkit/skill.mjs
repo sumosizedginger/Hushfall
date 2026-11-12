@@ -83,7 +83,7 @@ export function applySkill(map, side = readSidecar(map.id)) {
   (side.ambush ?? []).forEach((a, i) =>
     map.triggers.push({
       id: 'skill-' + i,
-      when: 'enter',
+      when: a.when ?? 'enter', // a key hunt's walk back may wait for the key: ["key:brass", "time:175"]
       at: [...a.at],
       radius: a.radius ?? 3,
       do: a.spawn.map((s) => ({ spawn: { kind: s.kind, at: [...s.at], hunt: true } })),

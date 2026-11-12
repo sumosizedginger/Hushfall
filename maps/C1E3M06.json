@@ -233,6 +233,57 @@
      "objective": "The conductor's lever: the top tier, east wall, north end"
     }
    ]
+  },
+  {
+   "id": "skill-0",
+   "when": "enter",
+   "at": [44, 19],
+   "radius": 3,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [40, 13],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "bellhand",
+      "at": [33, 27],
+      "hunt": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "skill-1",
+   "when": "enter",
+   "at": [22, 19],
+   "radius": 2,
+   "do": [
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [19, 28],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [44, 28],
+      "hunt": true
+     }
+    },
+    {
+     "spawn": {
+      "kind": "gaunt",
+      "at": [45, 12],
+      "hunt": true
+     }
+    }
+   ]
   }
  ],
  "entities": [
