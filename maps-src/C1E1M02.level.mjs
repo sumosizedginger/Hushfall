@@ -3,6 +3,7 @@
 // Route: landing yard -> (bond store: Riveter driver) -> vestibule -> grand hall -> stairs to the gallery (brass key) -> brass door -> registry -> iron key
 //        -> iron door -> descending stair corridor -> exit. Secret: the Lost Property office behind the vestibule wall.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 
@@ -86,6 +87,13 @@ E.secretRoom({ id: 'seized-goods', search: { region: [3, 3, 60, 49], prefer: [55
 E.dropIn({ at: [40, 31], radius: 2, cells: E.around([40, 31], { n: 2, min: 5, max: 9 }), kind: 'g' });          // PT-081 (the 160 m walk with nothing awake: up the stair, along the gallery to the brass door): two Gaunts come over the balustrade
 E.bypass({ from: [20, 46], to: [24, 48] });          // PT-081: a servants' passage from the vestibule into the hall: the route walks 60 cells round
 // ---- end PT-081 ----
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the long hall was checker tile wall to wall and the stores flagstone wall to wall (five rooms on one floor skin). Flagstone along the walls of the tiled hall, tile along the flagstone stores, wet cobble round the open slate yard. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[35,39],[19,43]], 't', 'f');
+floorBorder(L, [[8,32]], 'f', 't');
+floorBorder(L, [[9,43]], 's', ':');
+// ---- end G3 room accents ----
 
 const layers = L.layers();
 

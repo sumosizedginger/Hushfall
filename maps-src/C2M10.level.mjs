@@ -6,6 +6,7 @@
 // shot, the Zealots and porters sleeping in the lanes wake to it, and the north gate will not open while the hall has been loud in the last six seconds. A civilian shot is an innocent (a message and a rank cost).
 // Two secrets of two kinds: the Silent's back room (a panel in the arcade's west wall) and a sealed house behind the quarter's east wall (shoot the crack).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 import { rng } from '../tools/mapkit/cave.mjs';
@@ -129,6 +130,12 @@ ENC.dropIn({ at: [24, 47], radius: 2.5, cells: [[19, 49], [28, 48], [25, 52]], k
 // square stay under the rock. The town reads as a hall of two halves, and the space contract measures it as MIXED (it was a 100% roofed hall with 23.5 m sightlines, which no class allows). The
 // simulation is the same on either floor (an outdoor cell walks, sees and shoots as a roofed one, the ceiling layer is unchanged): only what is drawn overhead differs.
 for (let z = 42; z < H; z++) for (let x = 0; x < W; x++) if (L.get(x, z) === 'f') L.g[z][x] = 's';
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the market halls were flagstone wall to wall and the yard open slate wall to wall. Basalt flags along the walls of the halls, open flowstone round the yard. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[28,15],[42,15],[36,11]], 'f', ')');
+floorBorder(L, [[13,57]], 's', '@');
+// ---- end G3 room accents ----
+
 const MAP = {
   id: 'C2M10', name: 'Echo Markets', version: 2, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'markets', sky: 'deep', echo: 2, fog: '#1a1410', fogDensity: 0.01 },

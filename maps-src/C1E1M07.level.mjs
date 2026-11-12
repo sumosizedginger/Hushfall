@@ -4,6 +4,7 @@
 // Route: porch -> atrium -> generator cellar (brass fuse) -> dormitory (iron fuse, three closets open when you take it) -> east corridor -> attic gallery (bell fuse, Bellhands on the gantry)
 //        -> back to the radio room: install the fuses. The lights surge, the Vael speak, the sealed hatch opens.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { reroster } from '../tools/mapkit/roster.mjs';
@@ -71,6 +72,12 @@ S.hall([3, 6, 12, 15], { sides: { n: { w: 3, gap: 2, d: 1 }, w: { w: 3, gap: 2, 
 S.chamfer([16, 8, 24, 15], 'nw ne sw se', 1); S.chamfer([2, 21, 7, 25], 'nw ne sw se', 1);
 console.log('C1E1M07 shape:', S.report.bays, 'bays,', S.report.corners, 'corners,', S.report.nibs, 'nibs,', S.report.skipped.length, 'skipped,', S.dressing().length, 'props'); if (process.env.SHAPE_REPORT) console.log(S.report.skipped.join(String.fromCharCode(10)));
 // ---- end PT-021 shaping ----
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the house was planked wall to wall and the pump room grating wall to wall. Loft boards along the walls of the planked rooms, foundry plate round the grating. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[50,23],[19,23]], '.', 'i');
+floorBorder(L, [[36,23]], 'g', 'j');
+// ---- end G3 room accents ----
 
 const layers = L.layers();
 

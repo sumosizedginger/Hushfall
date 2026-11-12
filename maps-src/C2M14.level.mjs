@@ -6,6 +6,7 @@
 // the bowl to the north; a wrong note starts the phrase again; each wall that opens wakes the beds. The Harvesters (Zealots in garden-green) and their pests work the terraces: a puzzle under pressure, with
 // the shooters above you. Two secrets of two kinds: the grove behind the east rim (a panel: the last of the oil) and the lodge's cracked back wall.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { setCell, box, placer } from '../tools/mapkit/c2.mjs';
 import { amphitheatre, skinWalls } from '../tools/mapkit/cave.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
@@ -79,6 +80,13 @@ const wave2 = spawnAt([[9.5, 30, 'tollbearer'], [9.5, 90, 'gaunt'], [9.5, 150, '
 const ENC = new Encounters(L);
 // PT-083 L2: the level floors
 ENC.bypass({ from: [41, 66], to: [44, 60] }); // a gardeners' way behind the hedges
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the beds were moss wall to wall, the walks flowstone, the potting shed planks. A terrace edge round the moss, flagstone along the flowstone walks, loft boards round the shed. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[60,46],[62,38]], '7', '-');
+floorBorder(L, [[41,9],[41,15]], '{', 'f');
+floorBorder(L, [[14,40]], '.', 'i');
+// ---- end G3 room accents ----
+
 const MAP = {
   id: 'C2M14', name: 'Harmonic Gardens', version: 2, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'gardens', sky: 'deep', fog: '#0c1812', fogDensity: 0.01 },
