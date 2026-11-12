@@ -2,22 +2,22 @@
   "mapId": "C2M12",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "f7645e2",
+  "codeVersion": "19a1729",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "77ab703bca4d9a2c",
-  "assetVersion": "17542adf13ccb083",
-  "engineSha": "23d10383e1740c72",
+  "mapSha": "2a0d3cf35d9532b0",
+  "assetVersion": "459f63105c3b6d8e",
+  "engineSha": "635d10562c951ea4",
   "sources": {
-    "engine": "23d10383e1740c72",
-    "render": "57ac175d536b8348",
-    "game": "87626655d12caee0",
+    "engine": "635d10562c951ea4",
+    "render": "2b630c9dd86ba3b3",
+    "game": "bfa8bd9473984574",
     "audio": "c5a2850f1747a821",
-    "assets": "17542adf13ccb083",
-    "verifier": "76eb2a1c8bdfd0d7",
+    "assets": "459f63105c3b6d8e",
+    "verifier": "eccb2f9ca83a6499",
     "probes": "5fa72cb28e29f113"
   },
-  "routesSha": "23040a5de3d3e369",
+  "routesSha": "8c1ab83e694b5788",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -27,8 +27,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 5507,
-      "finalHash": "65963aa5",
+      "ticks": 5632,
+      "finalHash": "f71adc5e",
       "kills": 55,
       "secrets": 0,
       "items": 5,
@@ -40,8 +40,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 6616,
-      "finalHash": "bc6e1f5c",
+      "ticks": 6736,
+      "finalHash": "bc4804a5",
       "kills": 63,
       "secrets": 0,
       "items": 6,
@@ -53,8 +53,8 @@
       "seed": 1,
       "policy": "strafing",
       "result": "complete",
-      "ticks": 8597,
-      "finalHash": "53f54653",
+      "ticks": 8703,
+      "finalHash": "6ec95b2e",
       "kills": 78,
       "secrets": 0,
       "items": 7,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7630,
-      "finalHash": "a61fcb18",
+      "finalHash": "a844fbcc",
       "kills": 56,
       "secrets": 2,
       "items": 7,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7977,
-      "finalHash": "12a52aa7",
+      "finalHash": "128ea96d",
       "kills": 52,
       "secrets": 2,
       "items": 7,
@@ -92,22 +92,22 @@
       "seed": 1,
       "policy": "strafing",
       "result": "complete",
-      "ticks": 11169,
-      "finalHash": "2d7693b3",
-      "kills": 69,
+      "ticks": 11212,
+      "finalHash": "d8a7a871",
+      "kills": 70,
       "secrets": 2,
       "items": 7,
-      "damageTaken": 154
+      "damageTaken": 190
     }
   ],
   "canonicalRoute": {
-    "sha": "8df13e5e4b6dc872",
+    "sha": "c11b942a5f619767",
     "file": "routes/C2M12.main.route.json",
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 6616,
-    "finalHash": "bc6e1f5c",
+    "ticks": 6736,
+    "finalHash": "bc4804a5",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -125,7 +125,7 @@
       "sexton": 1,
       "gaunt": 6
     },
-    "keys": 0,
+    "keys": 1,
     "closets": 0,
     "triggers": 7,
     "switches": 1,
@@ -145,7 +145,7 @@
       "f",
       ")"
     ],
-    "props": 81,
+    "props": 82,
     "secrets": 2,
     "cells": 7224,
     "gates": 0,
@@ -155,8 +155,8 @@
     "easy": {
       "runner": {
         "result": "route-ended",
-        "damage": 4,
-        "hpLeft": 96
+        "damage": 7,
+        "hpLeft": 93
       },
       "ammo": {
         "capacity": 1691,
@@ -187,7 +187,7 @@
         "result": "complete",
         "damage": 46,
         "meanDamage": 45,
-        "seconds": 91.8,
+        "seconds": 93.9,
         "kills": 55,
         "failure": null
       }
@@ -195,8 +195,8 @@
     "normal": {
       "runner": {
         "result": "route-ended",
-        "damage": 16,
-        "hpLeft": 84
+        "damage": 22,
+        "hpLeft": 78
       },
       "ammo": {
         "capacity": 1530,
@@ -227,7 +227,7 @@
         "result": "complete",
         "damage": 78,
         "meanDamage": 75,
-        "seconds": 110.3,
+        "seconds": 112.3,
         "kills": 63,
         "failure": null
       }
@@ -268,7 +268,7 @@
         "result": "complete",
         "damage": 127,
         "meanDamage": 100,
-        "seconds": 143.3,
+        "seconds": 145.1,
         "kills": 78,
         "failure": null
       }
@@ -296,7 +296,7 @@
       },
       "ammo pickups worth 25% less": {
         "result": "complete",
-        "damage": 40,
+        "damage": 55,
         "failure": null
       }
     }
@@ -339,17 +339,17 @@
       {
         "name": "route C2M12.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "91.8 s"
+        "detail": "93.9 s"
       },
       {
         "name": "route C2M12.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "110.3 s"
+        "detail": "112.3 s"
       },
       {
         "name": "route C2M12.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "143.3 s (strafing)"
+        "detail": "145.1 s (strafing)"
       },
       {
         "name": "route C2M12.secret.route.json on easy reaches the exit",
@@ -364,7 +364,7 @@
       {
         "name": "route C2M12.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "186.2 s (strafing)"
+        "detail": "186.9 s (strafing)"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 68 damage)",
@@ -372,7 +372,7 @@
         "detail": "complete"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 40 damage)",
+        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 55 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -382,12 +382,12 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (route-ended, 4 damage)",
+        "name": "viability easy: a passive runner does not walk through (route-ended, 7 damage)",
         "ok": true,
         "detail": ""
       },
       {
-        "name": "viability normal: a passive runner does not walk through (route-ended, 16 damage)",
+        "name": "viability normal: a passive runner does not walk through (route-ended, 22 damage)",
         "ok": true,
         "detail": ""
       },
@@ -512,7 +512,7 @@
         "detail": "45 / 75 / 100 (mean of 3 seeds)"
       },
       {
-        "name": "par time is 2x-8x the bot's time (5.4x; placeholder until a human plays it)",
+        "name": "par time is 2x-8x the bot's time (5.3x; placeholder until a human plays it)",
         "ok": true,
         "detail": ""
       },
@@ -524,7 +524,7 @@
       {
         "name": "quality: perfect-bot time in [40,900] s",
         "ok": true,
-        "detail": "110.3 s"
+        "detail": "112.3 s"
       },
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
@@ -592,6 +592,11 @@
         "detail": "ok"
       },
       {
+        "name": "placement: a key is not a long walk back from its door",
+        "ok": true,
+        "detail": "ok"
+      },
+      {
         "name": "placement: no trap: every cell a player can walk or fall into can still reach an exit (a drop behind a raised platform needs a way back up)",
         "ok": true,
         "detail": "ok"
@@ -639,22 +644,22 @@
       {
         "name": "the shared browser check was generated by THIS engine/render/game/audio/asset code (render-affecting changes invalidate it)",
         "ok": false,
-        "detail": "src engine changed, src game changed"
+        "detail": "src engine changed, src render changed, src game changed, src assets changed"
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": false,
-        "detail": "validation/browser/C2M12.json: 3c33fd0247e3d855 vs 77ab703bca4d9a2c"
+        "detail": "validation/browser/C2M12.json: 3c33fd0247e3d855 vs 2a0d3cf35d9532b0"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
-        "ok": true,
-        "detail": "23040a5de3d3e369 vs 23040a5de3d3e369"
+        "ok": false,
+        "detail": "23040a5de3d3e369 vs 8c1ab83e694b5788"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
         "ok": false,
-        "detail": "src engine changed, src game changed"
+        "detail": "src engine changed, src render changed, src game changed, src assets changed"
       },
       {
         "name": "every route of this map plays in the real game and agrees with the Node sim, and its render-truth census passed",

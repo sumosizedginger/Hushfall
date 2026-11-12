@@ -817,6 +817,9 @@
     {
      "shake": 0.8
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
@@ -854,6 +857,18 @@
      "shake": 0.8
     }
    ]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [10, 18],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [11, 18],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -958,6 +973,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A niche in the drum wall, sealed with bone. A climber's cache: rope, food, shells."
+  },
+  {
+   "id": "keyhunt",
+   "at": [10, 18],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A stair key on a loop of wire. Someone climbed this far with it and no further."
   }
  ],
  "vents": [

@@ -65,5 +65,20 @@
    ],
    "facing": 3.142
   }
+ ],
+ "keys": [
+  {
+   "lever": "sluice",
+   "key": "iron",
+   "at": [
+    6,
+    18
+   ],
+   "lamp": [
+    7,
+    18
+   ],
+   "line": "The sluice key, on a hook above the waterline. The hook was hammered in by hand."
+  }
  ]
 }

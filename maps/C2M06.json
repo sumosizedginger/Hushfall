@@ -859,12 +859,27 @@
     {
      "shake": 1.5
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
    "type": "exit",
    "at": [6, 1],
    "dest": "next"
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [6, 18],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [7, 18],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1039,6 +1054,13 @@
    "radius": 2,
    "speaker": "HULL",
    "text": "The south wall of the basin rings hollow here."
+  },
+  {
+   "id": "keyhunt",
+   "at": [6, 18],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The sluice key, on a hook above the waterline. The hook was hammered in by hand."
   }
  ],
  "objective": "Climb the aqueduct against the current to the siphon at the top",

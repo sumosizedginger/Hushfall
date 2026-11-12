@@ -34,5 +34,20 @@
    ],
    "facing": -1.406
   }
+ ],
+ "keys": [
+  {
+   "lever": "cage-up",
+   "key": "brass",
+   "at": [
+    17,
+    12
+   ],
+   "lamp": [
+    16,
+    12
+   ],
+   "line": "The cage key, on the pump-man's coat peg. The coat is still on the peg."
+  }
  ]
 }

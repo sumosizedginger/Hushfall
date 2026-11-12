@@ -846,6 +846,9 @@
     {
      "message": "winch"
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
@@ -858,6 +861,18 @@
    "type": "pickup",
    "kind": "mod_phosphor",
    "at": [35, 72]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [23, 9],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [24, 9],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1050,6 +1065,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A burial niche, empty and kept ready. Someone has been keeping a vest and a mend here, against the dark."
+  },
+  {
+   "id": "keyhunt",
+   "at": [23, 9],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A winch key in an ossuary niche, laid with the bones as if it had been one of them."
   }
  ],
  "objective": "Go down: round the outer ring, down a spoke, round the middle ring, down again. The exit is at the bottom of the well. Keep the oil",

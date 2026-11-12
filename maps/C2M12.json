@@ -1682,6 +1682,9 @@
     {
      "message": "rope"
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
@@ -1736,6 +1739,18 @@
    "type": "pickup",
    "kind": "ammo_flare",
    "at": [43, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [25, 8],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [26, 8],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1955,6 +1970,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A vestry the water never reached. Robes on hooks, a vest among them, and a mend in a tin."
+  },
+  {
+   "id": "keyhunt",
+   "at": [25, 8],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The rope lever's pin, tied off with the hitch they teach on the Pender boats."
   }
  ],
  "objective": "Walk the causeway up the nave to the sanctuary. The exit is behind the altar, and the choir that keeps the Drowned standing is between",

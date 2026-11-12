@@ -66,5 +66,20 @@
    ],
    "facing": 0.165
   }
+ ],
+ "keys": [
+  {
+   "lever": "seat",
+   "key": "iron",
+   "at": [
+    28,
+    3
+   ],
+   "lamp": [
+    29,
+    3
+   ],
+   "line": "A key on a choir lanyard. The name stitched on it is one of ours, in their hand."
+  }
  ]
 }

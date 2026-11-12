@@ -1,4 +1,19 @@
 {
  "all": [],
- "hard": []
+ "hard": [],
+ "keys": [
+  {
+   "lever": "pulpit",
+   "key": "iron",
+   "at": [
+    4,
+    18
+   ],
+   "lamp": [
+    5,
+    18
+   ],
+   "line": "A key for the pulpit lever, left in an offering bowl with three of our coins."
+  }
+ ]
 }

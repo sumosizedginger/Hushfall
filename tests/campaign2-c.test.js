@@ -179,6 +179,12 @@ test('C2M17: the drum gate is held by TWO relays (an AND), the exit is locked un
     }
     return ev;
   };
+  // Session 10 of design/OPUS_HANDOFF.md (2026-11-12): the north relay wants a key found nearby (maps-src/skill/C2M17.json `keys`)
+  throwSw('relay-n');
+  assert.ok(!w.messagesSeen.includes('relay-n'), 'without its key the north relay does not throw');
+  const relayKey = s.entities.find((e) => e.type === 'switch' && e.id === 'relay-n').needs?.[0];
+  assert.ok(relayKey, 'the north relay names the key it wants');
+  w.player.keys.push(relayKey);
   throwSw('relay-n');
   assert.ok(w.messagesSeen.includes('relay-n'), 'the north relay speaks');
   tryExit();

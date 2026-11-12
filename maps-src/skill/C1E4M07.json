@@ -33,5 +33,20 @@
    ],
    "facing": 3.142
   }
+ ],
+ "keys": [
+  {
+   "lever": "lever-2",
+   "key": "iron",
+   "at": [
+    10,
+    18
+   ],
+   "lamp": [
+    11,
+    18
+   ],
+   "line": "A stair key on a loop of wire. Someone climbed this far with it and no further."
+  }
  ]
 }

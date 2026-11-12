@@ -1,1 +1,164 @@
-[{"op":"goto","at":[41,79]},{"op":"goto","at":[41,75]},{"op":"goto","at":[41,68]},{"op":"kill"},{"op":"goto","at":[41,62]},{"op":"kill"},{"op":"goto","at":[41,55]},{"op":"kill"},{"op":"goto","at":[41,47]},{"op":"kill"},{"op":"goto","at":[41,38]},{"op":"kill"},{"op":"goto","at":[41,29]},{"op":"kill"},{"op":"goto","at":[41,25]},{"op":"kill"},{"op":"goto","at":[41,21]},{"op":"kill"},{"op":"goto","at":[41,18]},{"op":"kill"},{"op":"goto","at":[41,15]},{"op":"kill"},{"op":"goto","at":[41,12]},{"op":"kill"},{"op":"goto","at":[31,10]},{"op":"kill"},{"op":"switch","id":"rope"},{"op":"goto","at":[41,10]},{"op":"kill"},{"op":"goto","at":[41,9]}]
+[
+ {
+  "op": "goto",
+  "at": [
+   41,
+   79
+  ]
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   75
+  ]
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   68
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   62
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   55
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   47
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   38
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   29
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   25
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   21
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   18
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   15
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   12
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   31,
+   10
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   25,
+   8
+  ]
+ },
+ {
+  "op": "switch",
+  "id": "rope"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   10
+  ]
+ },
+ {
+  "op": "kill"
+ },
+ {
+  "op": "goto",
+  "at": [
+   41,
+   9
+  ]
+ }
+]

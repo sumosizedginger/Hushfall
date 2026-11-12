@@ -948,6 +948,9 @@
     {
      "objective": "Riding up. Bellhands on both galleries: use the pillars"
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
@@ -1130,6 +1133,18 @@
    "movable": true
   },
   {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [17, 12],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [16, 12],
+   "extra": true
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [25, 24],
@@ -1232,6 +1247,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "An inspection gallery behind the pumps, bricked up after the floods. Dry in here, at least."
+  },
+  {
+   "id": "keyhunt",
+   "at": [17, 12],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The cage key, on the pump-man's coat peg. The coat is still on the peg."
   }
  ],
  "decals": [

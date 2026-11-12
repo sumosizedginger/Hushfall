@@ -18,5 +18,20 @@
    103,
    29
   ]
+ ],
+ "keys": [
+  {
+   "lever": "relay-n",
+   "key": "brass",
+   "at": [
+    24,
+    12
+   ],
+   "lamp": [
+    25,
+    12
+   ],
+   "line": "The relay pin, pressed into a wax seal on the housing. The seal has a thumbprint in it, one of ours."
+  }
  ]
 }

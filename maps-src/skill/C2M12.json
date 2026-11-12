@@ -113,5 +113,20 @@
    ],
    "facing": -2.976
   }
+ ],
+ "keys": [
+  {
+   "lever": "rope",
+   "key": "brass",
+   "at": [
+    25,
+    8
+   ],
+   "lamp": [
+    26,
+    8
+   ],
+   "line": "The rope lever's pin, tied off with the hitch they teach on the Pender boats."
+  }
  ]
 }

@@ -81,5 +81,20 @@
    ],
    "facing": -1.571
   }
+ ],
+ "keys": [
+  {
+   "lever": "winch",
+   "key": "iron",
+   "at": [
+    23,
+    9
+   ],
+   "lamp": [
+    24,
+    9
+   ],
+   "line": "A winch key in an ossuary niche, laid with the bones as if it had been one of them."
+  }
  ]
 }

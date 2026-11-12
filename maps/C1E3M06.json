@@ -710,12 +710,27 @@
     {
      "shake": 1.2
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
    "type": "pickup",
    "kind": "mod_spinup",
    "at": [14, 28]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [22, 18],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [23, 18],
+   "extra": true
   }
  ],
  "par": {
@@ -785,6 +800,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A closet under the tiers, grown shut. Whoever sang here kept spares."
+  },
+  {
+   "id": "keyhunt",
+   "at": [22, 18],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A pin from the conductor's lever, left in a hymn rack like a bookmark."
   }
  ],
  "objective": "Climb the Loft. The conductor's lever is at the top",

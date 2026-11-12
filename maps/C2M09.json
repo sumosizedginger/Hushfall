@@ -1212,6 +1212,9 @@
     {
      "message": "open"
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
@@ -1223,6 +1226,18 @@
    "type": "pickup",
    "kind": "mod_barbed",
    "at": [61, 21]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [4, 18],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [5, 18],
+   "extra": true
   }
  ],
  "scenery": [
@@ -1371,6 +1386,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A seam in the rock the miners never finished. A vest and a mend wrapped in oilcloth, waiting for them."
+  },
+  {
+   "id": "keyhunt",
+   "at": [4, 18],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A key for the pulpit lever, left in an offering bowl with three of our coins."
   }
  ],
  "objective": "Follow the tunnel with the lantern lit (L). The way down is the ramp on the west of the bowl: the lever is at the bottom, and the gate is the drum",

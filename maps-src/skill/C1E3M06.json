@@ -1,4 +1,19 @@
 {
  "all": [],
- "hard": []
+ "hard": [],
+ "keys": [
+  {
+   "lever": "conductor",
+   "key": "brass",
+   "at": [
+    22,
+    18
+   ],
+   "lamp": [
+    23,
+    18
+   ],
+   "line": "A pin from the conductor's lever, left in a hymn rack like a bookmark."
+  }
+ ]
 }

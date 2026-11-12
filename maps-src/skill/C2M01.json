@@ -81,5 +81,20 @@
    ],
    "facing": -1.571
   }
+ ],
+ "keys": [
+  {
+   "lever": "winch",
+   "key": "brass",
+   "at": [
+    24,
+    9
+   ],
+   "lamp": [
+    25,
+    9
+   ],
+   "line": "The winch pin, pushed into the sand above the tide line by someone who expected to come back."
+  }
  ]
 }

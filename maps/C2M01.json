@@ -844,6 +844,9 @@
     {
      "shake": 1
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
@@ -855,6 +858,18 @@
    "type": "pickup",
    "kind": "mod_doublebarrel",
    "at": [59, 37]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [24, 9],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [25, 9],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1058,6 +1073,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A cleft in the rock with a coat hung in it, and a vest and a mend folded on a ledge for whoever came next."
+  },
+  {
+   "id": "keyhunt",
+   "at": [24, 9],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The winch pin, pushed into the sand above the tide line by someone who expected to come back."
   }
  ],
  "objective": "Leave the landing and cross the beach. The hull in the east cliff is the way on",

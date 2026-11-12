@@ -1030,6 +1030,9 @@
     {
      "objective": "North relay thrown. The south relay is under the last south base"
     }
+   ],
+   "needs": [
+    "brass"
    ]
   },
   {
@@ -1082,6 +1085,18 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [65, 33]
+  },
+  {
+   "type": "pickup",
+   "kind": "key_brass",
+   "at": [24, 12],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [25, 12],
+   "extra": true
   }
  ],
  "scenery": [
@@ -1226,6 +1241,13 @@
    "radius": 2,
    "speaker": "INES",
    "text": "A dry sump behind the cracked wall, where the hive's water used to stand. Somebody stored a vest and a mend in it, above the line."
+  },
+  {
+   "id": "keyhunt",
+   "at": [24, 12],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "The relay pin, pressed into a wax seal on the housing. The seal has a thumbprint in it, one of ours."
   }
  ],
  "objective": "Follow the gorge east. The Choristers sing in bursts and draw breath between: move then, and take cover when they start",

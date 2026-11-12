@@ -850,6 +850,9 @@
     {
      "message": "chair"
     }
+   ],
+   "needs": [
+    "iron"
    ]
   },
   {
@@ -857,6 +860,18 @@
    "at": [37, 1],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "pickup",
+   "kind": "key_iron",
+   "at": [28, 3],
+   "extra": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [29, 3],
+   "extra": true
   },
   {
    "type": "enemy",
@@ -1046,6 +1061,13 @@
    "radius": 0.1,
    "speaker": "HULL",
    "text": "The west gate has opened. It was held by the captains, not by a lock."
+  },
+  {
+   "id": "keyhunt",
+   "at": [28, 3],
+   "radius": 3,
+   "speaker": "INES",
+   "text": "A key on a choir lanyard. The name stitched on it is one of ours, in their hand."
   }
  ],
  "objective": "Climb the grand stair to the colonnade. Two wings lead to the seat: the west is the Songkeepers, the east is the Silent",
