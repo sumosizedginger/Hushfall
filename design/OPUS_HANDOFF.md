@@ -282,11 +282,11 @@ Tick a box when its session is committed.
 - [x] Session 2: the picture, part one (2026-11-11: G1 mip bias + quieter tile recipe (unbaked), G4 tint band 0.9 to 0.35 instead of "under 0.6", G5 dim walls + exit tick; routes identical, suite 1659)
 - [x] Session 3: the picture, part two (2026-11-12: G2 far two-tone + rim; P8 11 -> 5 pairs over 0.5 by dress and pose; C11 prop grid, ticks over 4 ms 235 -> 12, routes identical)
 - [x] Session 4: play fixes (2026-11-12: Rail Yard 116 -> 76, Bell Tower 144 -> 105 on Normal by hardOnly in the sidecars, Hard unchanged; Lamplighter Hill left alone; 10 curve flags, all with a reason)
-- [ ] Session 5: browser session (bake, shoots, regeneration)
-- [ ] Session 6: mirrors and timing platforms return
-- [ ] Session 7: the tide and cars return
-- [ ] Session 8: floor exceptions, first half
-- [ ] Session 9: floor exceptions, second half
+- [x] Session 5: browser session (2026-11-12/13: bake, gun-light refit, regeneration d19786a, then 66bde3d ambushes on the seven key-hunt walks the FULL_AUDIT floors caught, re-run in the browser; AGENT_VERIFIED 68/68; no trailer)
+- [ ] Session 6: mirrors and timing platforms return (left 2026-11-12: required beats on played roads, not done unattended)
+- [ ] Session 7: the tide and cars return (left, same reason)
+- [ ] Session 8: floor exceptions, first half (left: needs hand-cut closets per map)
+- [ ] Session 9: floor exceptions, second half (left, same reason)
 - [x] Session 10: key hunts (2026-11-12: ten added, all by lever: C1E2M06 C1E3M06 C1E4M07 C2M01 C2M06 C2M09 C2M11 C2M12 C2M13 C2M17; 31 of 62 main maps now)
 - [x] Session 11: reading load (2026-11-12: MEASURED only: 12,127 words over 62 main routes, the top fifteen all Campaign 2 (C2M22 375 most); no line moved: a "document" is only a speaker name, so moving a radio line rewrites the voice: the owner's call)
 - [ ] Session 12+: room accents (note the maps done here). Done 2026-11-12: C1E2M06 C1E2M08 C2M03 C2M05 C2M11, then C1E1M02 C1E1M07 C2M10 C2M14 (tools/mapkit/accents.mjs floorBorder; same kind and family only)
