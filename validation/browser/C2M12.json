@@ -1,46 +1,46 @@
 {
   "mapId": "C2M12",
-  "when": "2026-11-04T09:23:22.953Z",
-  "commit": "70fcc9c",
+  "when": "2026-11-12T11:28:52.715Z",
+  "commit": "644678c",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "3c33fd0247e3d855",
-  "routesSha": "23040a5de3d3e369",
+  "mapSha": "2a0d3cf35d9532b0",
+  "routesSha": "8c1ab83e694b5788",
   "sources": {
-    "engine": "2da762cbe589046f",
-    "render": "57ac175d536b8348",
-    "game": "93fba0f7df2063fe",
+    "engine": "635d10562c951ea4",
+    "render": "2b630c9dd86ba3b3",
+    "game": "bfa8bd9473984574",
     "audio": "c5a2850f1747a821",
-    "assets": "17542adf13ccb083",
-    "verifier": "874439ef370c764d",
+    "assets": "459f63105c3b6d8e",
+    "verifier": "eccb2f9ca83a6499",
     "probes": "5fa72cb28e29f113"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 6616,
-      "hash": "bc6e1f5c",
-      "nodeTicks": 6616,
-      "nodeHash": "bc6e1f5c",
+      "ticks": 6736,
+      "hash": "bc4804a5",
+      "nodeTicks": 6736,
+      "nodeHash": "bc4804a5",
       "agree": true,
       "kills": 63,
       "secrets": 0,
-      "wallSeconds": 9
+      "wallSeconds": 5
     },
     "secret": {
       "ok": true,
       "ticks": 7977,
-      "hash": "12a52aa7",
+      "hash": "128ea96d",
       "nodeTicks": 7977,
-      "nodeHash": "12a52aa7",
+      "nodeHash": "128ea96d",
       "agree": true,
       "kills": 52,
       "secrets": 2,
-      "wallSeconds": 9
+      "wallSeconds": 5
     }
   },
   "hud": {
@@ -76,7 +76,7 @@
       "raised": 75,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.043
+      "highest": 0.042
     },
     "corpses": {
       "rows": 75,
@@ -92,22 +92,22 @@
     {
       "name": "real-game route C2M12.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6616 policy=standing wall=9s"
+      "detail": "status=complete failed=null ticks=6736 policy=standing wall=5s"
     },
     {
       "name": "real-game route C2M12.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 6616/bc6e1f5c vs node 6616/bc6e1f5c"
+      "detail": "browser 6736/bc4804a5 vs node 6736/bc4804a5"
     },
     {
       "name": "real-game route C2M12.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7977 policy=standing wall=9s"
+      "detail": "status=complete failed=null ticks=7977 policy=standing wall=5s"
     },
     {
       "name": "real-game route C2M12.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7977/12a52aa7 vs node 7977/12a52aa7"
+      "detail": "browser 7977/128ea96d vs node 7977/128ea96d"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -127,7 +127,7 @@
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 75 rows (75 on raised floors), 0 violations, deepest 0 m, highest 0.043 m || corpses: 75 rows (75 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+      "detail": "dying: 75 rows (75 on raised floors), 0 violations, deepest 0 m, highest 0.042 m || corpses: 75 rows (75 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 47
+  "wallSeconds": 26
 }

@@ -1,31 +1,31 @@
 {
   "mapId": "C2M11",
-  "when": "2026-11-04T09:22:36.281Z",
-  "commit": "70fcc9c",
+  "when": "2026-11-12T11:28:26.869Z",
+  "commit": "644678c",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "7da4954b838fe1b3",
-  "routesSha": "e6fbc85abec6ecf0",
+  "mapSha": "dff49b65551de52a",
+  "routesSha": "d35da682b4b40921",
   "sources": {
-    "engine": "2da762cbe589046f",
-    "render": "57ac175d536b8348",
-    "game": "93fba0f7df2063fe",
+    "engine": "635d10562c951ea4",
+    "render": "2b630c9dd86ba3b3",
+    "game": "bfa8bd9473984574",
     "audio": "c5a2850f1747a821",
-    "assets": "17542adf13ccb083",
-    "verifier": "874439ef370c764d",
+    "assets": "459f63105c3b6d8e",
+    "verifier": "eccb2f9ca83a6499",
     "probes": "5fa72cb28e29f113"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 4538,
-      "hash": "0adbfa68",
-      "nodeTicks": 4538,
-      "nodeHash": "0adbfa68",
+      "ticks": 5013,
+      "hash": "00956e09",
+      "nodeTicks": 5013,
+      "nodeHash": "00956e09",
       "agree": true,
       "kills": 29,
       "secrets": 0,
@@ -33,10 +33,10 @@
     },
     "secret": {
       "ok": true,
-      "ticks": 4206,
-      "hash": "a1891e1c",
-      "nodeTicks": 4206,
-      "nodeHash": "a1891e1c",
+      "ticks": 4684,
+      "hash": "1b251b5c",
+      "nodeTicks": 4684,
+      "nodeHash": "1b251b5c",
       "agree": true,
       "kills": 12,
       "secrets": 2,
@@ -55,7 +55,7 @@
       "raised": 47,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.049
+      "highest": 0.048
     },
     "awake": {
       "rows": 94,
@@ -76,7 +76,7 @@
       "raised": 47,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.037
+      "highest": 0.035
     },
     "corpses": {
       "rows": 47,
@@ -92,27 +92,27 @@
     {
       "name": "real-game route C2M11.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4538 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=5013 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M11.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4538/0adbfa68 vs node 4538/0adbfa68"
+      "detail": "browser 5013/00956e09 vs node 5013/00956e09"
     },
     {
       "name": "real-game route C2M11.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4206 policy=strafing wall=2s"
+      "detail": "status=complete failed=null ticks=4684 policy=strafing wall=2s"
     },
     {
       "name": "real-game route C2M11.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4206/a1891e1c vs node 4206/a1891e1c"
+      "detail": "browser 4684/1b251b5c vs node 4684/1b251b5c"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
       "ok": true,
-      "detail": "47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0.049 m; every one of the 47 enemies was measured: true"
+      "detail": "47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0.048 m; every one of the 47 enemies was measured: true"
     },
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
@@ -127,7 +127,7 @@
     {
       "name": "render truth: dying and dead enemies lie ON their floor on every map, flat and raised (no half-sunk corpses)",
       "ok": true,
-      "detail": "dying: 47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0.037 m || corpses: 47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0 m"
+      "detail": "dying: 47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0.035 m || corpses: 47 rows (47 on raised floors), 0 violations, deepest 0 m, highest 0 m"
     },
     {
       "name": "render truth: sleepers, a staggered enemy, a corpse and a chaser on a MOVING floor stay on it while it travels up and down (funicular car, ramp)",

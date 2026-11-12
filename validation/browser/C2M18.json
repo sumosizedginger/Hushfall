@@ -1,22 +1,22 @@
 {
   "mapId": "C2M18",
-  "when": "2026-11-04T09:25:34.787Z",
-  "commit": "70fcc9c",
+  "when": "2026-11-12T11:30:51.311Z",
+  "commit": "644678c",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "65d67f4a0e3a418f",
+  "mapSha": "2b539a28597c2881",
   "routesSha": "f2d0f9cc245d5960",
   "sources": {
-    "engine": "2da762cbe589046f",
-    "render": "57ac175d536b8348",
-    "game": "93fba0f7df2063fe",
+    "engine": "635d10562c951ea4",
+    "render": "2b630c9dd86ba3b3",
+    "game": "bfa8bd9473984574",
     "audio": "c5a2850f1747a821",
-    "assets": "17542adf13ccb083",
-    "verifier": "874439ef370c764d",
+    "assets": "459f63105c3b6d8e",
+    "verifier": "eccb2f9ca83a6499",
     "probes": "5fa72cb28e29f113"
   },
   "routes": {
@@ -29,7 +29,7 @@
       "agree": true,
       "kills": 52,
       "secrets": 0,
-      "wallSeconds": 7
+      "wallSeconds": 6
     },
     "secret": {
       "ok": true,
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 56,
       "secrets": 2,
-      "wallSeconds": 9
+      "wallSeconds": 7
     }
   },
   "hud": {
@@ -92,7 +92,7 @@
     {
       "name": "real-game route C2M18.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10040 policy=standing wall=7s"
+      "detail": "status=complete failed=null ticks=10040 policy=standing wall=6s"
     },
     {
       "name": "real-game route C2M18.main: browser sim == Node sim (ticks + state hash)",
@@ -102,7 +102,7 @@
     {
       "name": "real-game route C2M18.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=14000 policy=standing wall=9s"
+      "detail": "status=complete failed=null ticks=14000 policy=standing wall=7s"
     },
     {
       "name": "real-game route C2M18.secret: browser sim == Node sim (ticks + state hash)",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 46
+  "wallSeconds": 36
 }
