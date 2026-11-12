@@ -42,6 +42,50 @@ function blocksMove(w, cx, cz, air = false) {
   return cellSolid(w, cx, cz) || w.map.kind(cx, cz) === 'water' || (!air && w.map.hasVoid && w.map.kind(cx, cz) === 'void');
 }
 
+// THE PROP GRID (Session 3 of design/OPUS_HANDOFF.md, item C11): blockedCircle and hasLOS tested every prop on the map for every probe (C2M10: 107
+// props, a 21 ms tick). A map's props never change after it loads, so each is filed once under the cell of its centre, and a probe asks only the
+// cells a prop that could touch it must stand in (its reach plus the largest prop radius). The test made on each candidate is the one made before,
+// so every answer is the same. The grid hangs on the MapData as a non-enumerable property: never in a save.
+const PROP_KEY = (cx, cz) => (cx + 4096) * 8192 + (cz + 4096);
+function propGrid(map) {
+  if (map._propGrid) return map._propGrid;
+  const S = map.cell,
+    solid = new Map(),
+    sight = new Map();
+  let maxSolid = 0,
+    maxSight = 0;
+  for (const p of map.props) {
+    const pr = PROPS[p.kind].radius,
+      k = PROP_KEY(Math.floor(p.x / S), Math.floor(p.z / S));
+    if (pr > 0) {
+      if (!solid.has(k)) solid.set(k, []);
+      solid.get(k).push(p);
+      maxSolid = Math.max(maxSolid, pr);
+    }
+    if (PROPS[p.kind].blocksSight) {
+      if (!sight.has(k)) sight.set(k, []);
+      sight.get(k).push(p);
+      maxSight = Math.max(maxSight, pr);
+    }
+  }
+  hidden(map, '_propGrid', { solid, sight, maxSolid, maxSight });
+  return map._propGrid;
+}
+/** does any prop of the bucket `which` ('solid' | 'sight') pass `hit(p)`, among the props whose centre is within `reach` of (x, z) on each axis? */
+function anyPropNear(map, which, x, z, reach, hit) {
+  const g = propGrid(map),
+    buckets = g[which];
+  if (!buckets.size) return false;
+  const S = map.cell,
+    R = reach + (which === 'solid' ? g.maxSolid : g.maxSight);
+  for (let cz = Math.floor((z - R) / S); cz <= Math.floor((z + R) / S); cz++)
+    for (let cx = Math.floor((x - R) / S); cx <= Math.floor((x + R) / S); cx++) {
+      const b = buckets.get(PROP_KEY(cx, cz));
+      if (b) for (const p of b) if (hit(p)) return true;
+    }
+  return false;
+}
+
 /** `self` = the moving entity (player or enemy): living enemies and the player then block it, so nothing walks through anyone. */
 export function blockedCircle(w, x, z, r, self = null) {
   const S = w.map.cell,
@@ -67,11 +111,15 @@ export function blockedCircle(w, x, z, r, self = null) {
     }
   if (self && !fly && tooHigh(w, self, x, z, r)) return true; // a ledge more than a step above the mover's feet
   const over = air && self.y > groundAt(w, x, z, r) + 2.2; // a body in the air above the height of a prop or a creature passes over it
-  if (!fly && !over)
-    for (const p of w.map.props) {
+  if (
+    !fly &&
+    !over &&
+    anyPropNear(w.map, 'solid', x, z, r, (p) => {
       const pr = PROPS[p.kind].radius;
-      if (pr > 0 && (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2) return true;
-    }
+      return (x - p.x) ** 2 + (z - p.z) ** 2 < (r + pr) ** 2;
+    })
+  )
+    return true;
   if (!fly && w.phys && physBlocks(w, x, z, r, self)) return true; // a movable prop that has come to rest is as solid as a static one
   if (self) {
     for (const e of w.enemies)
@@ -166,7 +214,7 @@ export function hasLOS(w, x0, z0, x1, z1) {
     if (cellSolid(w, Math.floor(x / S), Math.floor(z / S))) return false;
     if (!flat && floorAt(w, x, z) > ya + (yb - ya) * t - 0.1) return false;
     // pillars and stacked crates hide what is behind them
-    for (const p of w.map.props) if (PROPS[p.kind].blocksSight && (x - p.x) ** 2 + (z - p.z) ** 2 < PROPS[p.kind].radius ** 2) return false;
+    if (anyPropNear(w.map, 'sight', x, z, 0, (p) => (x - p.x) ** 2 + (z - p.z) ** 2 < PROPS[p.kind].radius ** 2)) return false;
   }
   return true;
 }

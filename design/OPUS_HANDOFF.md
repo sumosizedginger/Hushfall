@@ -280,7 +280,7 @@ Tick a box when its session is committed.
 
 - [x] Session 1: housekeeping (2026-11-10: `AGENTS.md` 149 KB -> about 18 KB, not 15: the sections kept word for word already total about 11 KB; 19 tools archived, 135 left; the event catalogue found no gaps)
 - [x] Session 2: the picture, part one (2026-11-11: G1 mip bias + quieter tile recipe (unbaked), G4 tint band 0.9 to 0.35 instead of "under 0.6", G5 dim walls + exit tick; routes identical, suite 1659)
-- [ ] Session 3: the picture, part two
+- [x] Session 3: the picture, part two (2026-11-12: G2 far two-tone + rim; P8 11 -> 5 pairs over 0.5 by dress and pose; C11 prop grid, ticks over 4 ms 235 -> 12, routes identical)
 - [ ] Session 4: play fixes
 - [ ] Session 5: browser session (bake, shoots, regeneration)
 - [ ] Session 6: mirrors and timing platforms return

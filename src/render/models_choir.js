@@ -275,25 +275,25 @@ export function bellhand(tex) {
     (R) => {
       R.joint('hips', null, [0, 0.9, 0]);
       // (left slim on purpose: its outline must stay apart from the Tollbearer's and the Sexton's, tests/silhouettes.test.js)
-      legs(R, 'hips', 0.1, { a: 0.47, b: 0.43, r0: 0.09, r1: 0.07, r2: 0.05, cellA: C.trou, cellB: C.trou }, C.coatDk);
+      legs(R, 'hips', 0.19, { a: 0.47, b: 0.43, r0: 0.09, r1: 0.07, r2: 0.05, cellA: C.trou, cellB: C.trou }, C.coatDk); // P8: a wide stance
       R.joint('spine', 'hips', [0, 0.05, 0]);
       R.pleat(
         'spine',
         V2([
           [0.1, 0.84],
-          [0.16, 0.78],
-          [0.2, 0.62],
-          [0.2, 0.4],
-          [0.21, 0.18],
-          [0.24, -0.05],
-          [0.27, -0.26],
+          [0.13, 0.78],
+          [0.15, 0.62],
+          [0.15, 0.4],
+          [0.16, 0.18],
+          [0.18, -0.05],
+          [0.2, -0.26],
         ]),
         12,
         6,
-        0.05,
+        0.04,
         C.coat,
         { scale: [1, 1, 0.75] },
-      ); // the long coat, buttoned to the throat
+      ); // the long coat, buttoned to the throat (P8, 2026-11-12: a thin man in a narrow coat, so the four coat-wearers part by outline)
       R.lathe(
         'spine',
         V2([
@@ -420,25 +420,34 @@ export function sexton(tex) {
         hand(R, C, n, { len: 0.48, finger: 0.16 });
       }
       R.tube(
-        'armAM',
+        'hips',
         [
-          [0, -0.6, 0.02],
-          [0.0, -0.7, 0.04],
-          [0.0, -0.8, 0.06],
+          [-0.2, -0.02, 0.14],
+          [-0.22, -0.12, 0.16],
+          [-0.23, -0.22, 0.17],
         ],
         0.012,
         4,
         C.iron,
-      ); // a censer on a chain
-      R.lump('armAM', 0.1, 0, 0.1, 8, C.bronze, { pos: [0, -0.9, 0.06], name: 'censer' });
+      ); // a censer on a chain, hung from the girdle (P8: the hands are folded)
+      R.lump('hips', 0.1, 0, 0.1, 8, C.bronze, { pos: [-0.23, -0.32, 0.17], name: 'censer' });
       head(R, C, { neckAt: [0, 0.68, 0.04], r: 0.15, tall: 1.2, neck: 0.16, eyes: 'both' });
       R.cone('head', 0.21, 0.42, 7, C.robe, { pos: [0, 0.2, -0.06], rot: [0.25, 0, 0] }); // the hood
     },
     (p, J, R) => {
       const t = p.t;
-      humanoidPose(p, J, { stoop: 0.35, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
+      const h = humanoidPose(p, J, { stoop: 0.35, headX: 0.7, jawOpen: 0.25, hipY: 0.62, stride: 0.45 });
       J.legA.rotation.x *= 0.5;
       J.legB.rotation.x *= 0.5;
+      // P8 (2026-11-12): the hands folded before it like a cleric's, so the middle of the outline is the robe alone, not robe and two hanging arms
+      // (the elbows drawn back so the hands stay close to the body: the hit cylinder's width rule; the striking arm B lets go of the fold for a blow)
+      const fold = 1 - Math.min(1, (h.raise + h.slam) * (1 - h.rec));
+      J.armA.rotation.x = J.armA.rotation.x * 0.3 + 0.35;
+      J.armAM.rotation.x = -1.25;
+      J.armA.rotation.z = 0.2;
+      J.armB.rotation.x += (J.armB.rotation.x * -0.7 + 0.35) * fold;
+      J.armBM.rotation.x += (-1.25 - J.armBM.rotation.x) * fold;
+      J.armB.rotation.z += (-0.2 - J.armB.rotation.z) * fold;
       for (let i = 0; i < 5; i++) {
         const seq = p.attack > 0 ? 0.5 + 0.5 * S(t * 7 - i * 1.1) : 0.15 + 0.1 * S(t * 2 + i);
         J['mouth' + i].scale.setScalar(0.4 + 1.3 * seq);

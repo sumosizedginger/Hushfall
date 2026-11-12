@@ -33,19 +33,14 @@ test('every guarded creature differs from every other by outline (overlap under 
 // the pairs cannot all be brought under 0.5 by pose and prop alone (the Tollbearer slumps toward its
 // bell and trails an arm, the Bellhand is slimmer and leans away, the Chorister is a narrow column with its hands raised: 13 became 11 and the worst
 // pair fell from 0.69 to 0.61). A pair may not get WORSE than its ceiling; a NEW pair over the bar is a failure.
+// P8 (Session 3 of design/OPUS_HANDOFF.md, 2026-11-12): 11 became 5, by dress and pose only (hit volumes unchanged, check-rigs ok): the Bellhand is a
+// thin man in a narrow coat on a wide stance, the Sexton folds its hands and hangs its censer from the girdle. The ceilings below are the new values.
 const CEILING = {
-  '0:bellhand/chorister': 0.63,
-  '0.75:bellhand/sexton': 0.62,
-  '0.75:bellhand/chorister': 0.62,
-  '0.75:tollbearer/sexton': 0.59,
-  '0.75:wardengraft/bellnode': 0.59,
-  '0:sexton/chorister': 0.58,
-  '0:tollbearer/sexton': 0.57,
-  '0.75:tollbearer/bellhand': 0.57,
-  '0:bellhand/sexton': 0.56,
-  '0.75:sexton/chorister': 0.55,
-  '0:tollbearer/bellhand': 0.53,
-  '0:tollbearer/chorister': 0.52,
+  '0.75:bellhand/sexton': 0.59,
+  '0.75:wardengraft/bellnode': 0.58,
+  '0.75:tollbearer/sexton': 0.55,
+  '0.75:sexton/chorister': 0.53,
+  '0:sexton/chorister': 0.52,
 };
 test('no pair of creatures is over the 0.5 bar unless it is on the ratchet list, and none is worse than its ceiling', () => {
   const bad = [];

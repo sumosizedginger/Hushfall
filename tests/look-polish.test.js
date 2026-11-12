@@ -11,7 +11,7 @@ import path from 'node:path';
 import * as THREE from 'three';
 import { SURFACE, surfaceGLSL, patchSurface } from '../src/render/surface.js';
 import { TRIMS, buildTrims } from '../src/render/trims.js';
-import { markEntity, patchEntityFragment, PEACE_ALPHA, RIM } from '../src/render/entityflag.js';
+import { markEntity, patchEntityFragment, PEACE_ALPHA, RIM, FAR } from '../src/render/entityflag.js';
 import { buildLevel } from '../src/render/levelmesh.js';
 import { loadMapFile } from '../src/engine/harness.js';
 import { ROOT, flatSource } from './helpers.js';
@@ -259,4 +259,18 @@ test('the paint: the polish recipes supersede the old ones of the same id, every
     main = fs.readFileSync(path.join(ROOT, 'src/game/main.js'), 'utf8');
   assert.match(html, /#title-art\.hires,#ending-art\.hires\{image-rendering:auto\}/);
   assert.match(main, /classList\.toggle\('hires', im\.naturalWidth >= 640\)/);
+});
+
+test('G2: a lit creature shader carries the far term (two tones and a stronger rim from FAR.near to FAR.far); an unlit one does not', () => {
+  assert.ok(FAR.near > 0 && FAR.far > FAR.near && FAR.dark < 1 && FAR.light > 1 && FAR.rimGain > 1, 'the FAR numbers');
+  const lam = { uniforms: {}, fragmentShader: '#include <common>\nvarying vec3 vViewPosition;\n#include <normal_fragment_begin>\n#include <opaque_fragment>' };
+  patchEntityFragment(lam, { rim: true });
+  const s = lam.fragmentShader;
+  assert.ok(s.includes('float farT = smoothstep(' + FAR.near.toFixed(1) + ', ' + FAR.far.toFixed(1) + ', length(vViewPosition))'), 'the distance ramp');
+  assert.ok(s.includes('texture2D(map, vMapUv, 16.0)') && s.includes('outgoingLight *= mix(1.0, q, farT)'), 'the two tones about the mean');
+  assert.ok(s.includes('mix(1.0, ' + FAR.rimGain.toFixed(1) + ', farT)'), 'the rim grows with distance');
+  assert.ok(s.indexOf('farT') < s.indexOf('rimF'), 'tones before the rim');
+  const basic = { uniforms: {}, fragmentShader: '#include <common>\n#include <opaque_fragment>' };
+  patchEntityFragment(basic, { rim: true });
+  assert.ok(!basic.fragmentShader.includes('farT'), 'an unlit material is untouched');
 });

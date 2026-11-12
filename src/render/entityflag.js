@@ -12,9 +12,25 @@ import * as THREE from 'three';
 export const PEACE_ALPHA = 0.3;
 export const ENTITY_ALPHA = '#include <opaque_fragment>\n  gl_FragColor.a = 0.0;';
 export const RIM = { color: { value: new THREE.Color(0xb8cce0) }, k: { value: 0.05 } };
+// FAR (Session 3 of design/OPUS_HANDOFF.md, item G2): at 12 m a creature was a red-rimmed smudge. From `near` to `far` metres a lit creature's paint
+// is pulled toward two flat tones: each pixel's painted value is compared with the creature's own mean (its atlas read at the top mip level, the
+// atlas being the creature's own) and pushed to `dark` or `light` times that mean, over a soft band of +/- `band`; hue is kept. The rim grows by up
+// to `rimGain` over the same range, never past `rimMax`. Hostile and peaceful creatures alike; an unlit (basic) material is untouched.
+export const FAR = Object.freeze({ near: 9, far: 16, dark: 0.6, light: 1.3, band: 0.18, rimGain: 2.0, rimMax: 0.4 });
+const f = (x) => (Number.isInteger(x) ? x.toFixed(1) : String(x));
 const RIM_GLSL = `
   #ifdef ENTITY_RIM
-  { float rimF = pow(1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0), 2.2); outgoingLight += uRimColor * rimF * uRimK; }
+  float farT = smoothstep(${f(FAR.near)}, ${f(FAR.far)}, length(vViewPosition));
+  #ifdef USE_MAP
+  if (farT > 0.0) {
+    vec3 lumaW = vec3(0.2126, 0.7152, 0.0722);
+    float meanL = max(dot(texture2D(map, vMapUv, 16.0).rgb * diffuse, lumaW), 0.02), hereL = max(dot(diffuseColor.rgb, lumaW), 0.02);
+    float side = smoothstep(${f(1 - FAR.band)}, ${f(1 + FAR.band)}, hereL / meanL);
+    float q = mix(${f(FAR.dark)}, ${f(FAR.light)}, side) * meanL / hereL;
+    outgoingLight *= mix(1.0, q, farT);
+  }
+  #endif
+  { float rimF = pow(1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0), 2.2); outgoingLight += uRimColor * rimF * min(uRimK * mix(1.0, ${f(FAR.rimGain)}, farT), ${f(FAR.rimMax)}); }
   #endif
   #include <opaque_fragment>`;
 
