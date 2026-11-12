@@ -6,6 +6,7 @@
 // In the walls of every leg are CLOSETS, ambushes that open as you pass; Sextons raise what you kill. Two secrets of two kinds: Calder's slab behind the yard's east wall (a panel) and a reliquary niche behind the
 // strings chapel's cracked wall (shoot it).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 import { sketch } from '../tools/mapkit/sketch.mjs';
@@ -129,6 +130,11 @@ const msgs = [
   { id: 'hollow', at: [59, 46], radius: 2, speaker: 'HULL', text: 'The east wall of this yard rings hollow.' },
 ];
 const ENC = new Encounters(L);
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the road chapels were basalt flags wall to wall (seven rooms on one floor skin). Cut flagstone along their walls. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[41,49],[62,22],[15,5],[34,5],[34,27],[20,29],[30,42]], ')', 'f');
+// ---- end G3 room accents ----
 
 const MAP = {
   id: 'C2M05', name: 'The Reliquary Road', version: 2, ceilingHeight: 4.2, par: { time: 480 },

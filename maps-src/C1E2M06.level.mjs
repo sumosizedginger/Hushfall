@@ -8,6 +8,7 @@
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 
 const L = new Level(76, 52);
 
@@ -72,6 +73,13 @@ const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'inspection-gallery', search: { region: [3, 3, 72, 48], prefer: [63, 39], lane: laneOf('C1E2M06') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An inspection gallery behind the pumps, bricked up after the floods. Dry in here, at least.' } });
 FUN.bypass({ from: [29, 7], to: [31, 4] });          // a shortcut: the route walks 134 cells between its ends
 // ---- end PT-081 fun pass ----
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the pump rooms were grating wall to wall and the stores
+// flagstone wall to wall (tools/dev/materials-lint.mjs: eleven rooms on one floor skin). Solid foundry plate along the walls of the grated rooms,
+// tile along the flagstone ones: the same surface family, so nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[55, 25], [26, 25], [44, 12], [44, 39], [44, 25], [15, 36], [20, 9], [20, 42], [15, 14]], 'g', 'j');
+floorBorder(L, [[9, 12], [7, 25]], 'f', 't');
+// ---- end G3 room accents ----
 
 const layers = L.layers();
 

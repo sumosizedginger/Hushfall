@@ -6,6 +6,7 @@
 // Optional: a SECRET stash behind a panel in the approach's south wall: armour and ammunition for the boss.
 // Open air vs roof: everything is `g f` (roofed). Nothing is hung in the open.
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 
@@ -55,6 +56,12 @@ console.log('C1E2M08 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 const FUN = new Encounters(L, { prefix: 'fun' });
 FUN.secretRoom({ id: 'orderly-cupboard', search: { region: [3, 3, 62, 52], prefer: [47, 20], lane: laneOf('C1E2M08') }, open: 'shoot', rewards: ['v', 'H'], message: { speaker: 'INES', text: 'An orderly\'s cupboard, sealed from outside. Medicine, and nobody left to use it.' } });
 // ---- end PT-081 fun pass ----
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the theatre and its wards were flagstone wall to wall (eight rooms on one floor skin). Surgical tile along the walls of the flagstone rooms, foundry plate round the grated one. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[43,40],[43,17],[30,14],[56,14],[57,28],[30,28],[6,29]], 'f', 't');
+floorBorder(L, [[17,29]], 'g', 'j');
+// ---- end G3 room accents ----
 
 const layers = L.layers();
 

@@ -6,6 +6,7 @@
 // Both gates open on the SEAT; its chair's arm is the lever of the exit. Going through a gate RECORDS THE CHOICE (`choose`): C2M12 and the Gardens answer it. Two secrets of two kinds: a cell off the far
 // room (a panel) and a cracked wall off the first room (shoot it).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { placer } from '../tools/mapkit/c2.mjs';
 import { sketch } from '../tools/mapkit/sketch.mjs';
@@ -106,6 +107,13 @@ PK('ld_pen_harpoon', 44, 33); PK('health_large', 43, 32);                       
 const ENC = new Encounters(L);
 ENC.dropIn({ at: [17, 37], radius: 2.5, cells: [[13, 33], [24, 33], [20, 30]], kind: 'g' });
 ENC.dropIn({ at: [17, 18], radius: 2.5, cells: [[14, 22], [24, 23], [20, 15]], kind: 'g' });
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the halls were one stone each, wall to wall (six rooms on one floor skin). Flowstone round the marble hall, open flowstone round the slate cells (both open to the sky), marble round the flowstone ones. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[36,8]], '^', '{');
+floorBorder(L, [[26,46],[57,46],[48,46]], 's', '@');
+floorBorder(L, [[52,17],[61,24]], '{', '^');
+// ---- end G3 room accents ----
 
 const MAP = {
   id: 'C2M11', name: 'Undercantor Halls', version: 2, ceilingHeight: 4.2, par: { time: 540 },

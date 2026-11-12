@@ -4,6 +4,7 @@
 // for not singing at a burying) and two others who stopped. They have no weapon and they do not fight; a latch outside the cage opens it. Freeing them opens the NORTH GATE, which is the way out. The Songkeepers who hold the fort are Bulwark Shells (two) in the court under an Acolyte's ward, and Choristers on the platforms.
 // SHAPE: a star (five points, the south notch is the gate), a round keep in the middle (the big thing), a ditch, a bridge, two terraces 4 m up; heights 0 / 2 / 3 / 5 / 6 m; lids 6 m / 8 m / 9 m. Scale class MIXED (the court and the keep are roofed: about 50%).
 import { Level } from '../tools/mapkit/builder.mjs';
+import { floorBorder } from '../tools/mapkit/accents.mjs';
 import { Encounters } from '../tools/mapkit/encounters.mjs';
 import { laneOf } from '../tools/mapkit/shape.mjs';
 import { setCell, ellipse, box, ramp, placer, ring } from '../tools/mapkit/c2.mjs';
@@ -85,6 +86,11 @@ FUN.secretRoom({ id: 'sap', search: { region: [3, 3, 92, 96], prefer: [49, 75], 
 FUN.dropIn({ at: [46, 45], radius: 2.5, cells: [[41, 37], [51, 37], [45, 41]], kind: 'g' });
 // ---- end PT-081 fun pass ----
 
+
+// ---- G3 room accents (Session 12 of design/OPUS_HANDOFF.md, tools/mapkit/accents.mjs): the five points and the hut were basalt flags wall to wall (six rooms on one floor skin). Cut flagstone along their walls, the stone the Outpost already lays elsewhere. The second skin is of the same surface family, so
+// nothing the simulation does moves (tools/dev/route-fingerprint.mjs: identical) ----
+floorBorder(L, [[46,47],[33,33],[58,33],[41,26],[50,27],[62,60]], ')', 'f');
+// ---- end G3 room accents ----
 
 const MAP = {
   id: 'C2M03', name: 'Cantor Outpost', version: 2, ceilingHeight: 4.2, par: { time: 480 },
