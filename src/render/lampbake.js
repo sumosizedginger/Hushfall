@@ -15,7 +15,22 @@ export const LAMP_BAKE = Object.freeze({
   cap: 2.1, // the brightest a surface is ever baked
   floorMin: 0.22, // no floor a player walks on is baked darker than this
   minLamps: 3, // a map with fewer lamps than this keeps its general light: there would be nothing to see by
+  litAt: 0.12, // a roofed cell counts as reached by a lamp when a lamp gives it this much
+  coverLo: 0.2, // the share of the roofed floor lamps must reach before the general light is turned down at all ...
+  coverHi: 0.75, // ... and the share at which it is turned down in full
+  generalLo: 0.9, // a place whose general light is this low is not darkened further ...
+  generalHi: 1.5, // ... and one this bright takes the full darkening
 });
+
+/**
+ * how much of the full darkening a place gets (0..1): `coverage` = the share of its roofed floor a lamp reaches, `general` = its general light
+ * (the look's hemisphere strength times the map's own ambient: 2.4 is the harbour's)
+ */
+export function dimStrength(coverage, general, cfg = LAMP_BAKE) {
+  const c = Math.min(1, Math.max(0, (coverage - cfg.coverLo) / (cfg.coverHi - cfg.coverLo))),
+    g = Math.min(1, Math.max(0, (general - cfg.generalLo) / (cfg.generalHi - cfg.generalLo)));
+  return c * g;
+}
 
 /** is there a wall cell on the straight line from (x0, z0) to (x1, z1)? `solid(cx, cz)`, `S` the cell size; the two end cells are not tested */
 export function wallBetween(solid, S, x0, z0, x1, z1) {
@@ -110,6 +125,24 @@ export function bakeMeshes(meshes, lights, map, look) {
     },
     dim = lamps.length >= cfg.minLamps;
   stats.dimmed = dim;
+  // HOW MUCH the general light is turned down (first seen 2026-11-14: the Cantor's Throat went black). A room is only darkened as far as its lamps
+  // can answer for it: by the share of the roofed floor a lamp reaches, and less in a place whose general light is already low.
+  if (dim) {
+    let roofedCells = 0,
+      litCells = 0;
+    const probe = { ...cfg, ambient: 0, lampGain: 1 };
+    for (let cz = 0; cz < map.h; cz++)
+      for (let cx = 0; cx < map.w; cx++) {
+        const k = map.kind(cx, cz);
+        if (k !== 'floor' && k !== 'door' && k !== 'secret') continue;
+        roofedCells++;
+        if (lightAt((cx + 0.5) * S, map.floor(cx, cz) + 1, (cz + 0.5) * S, lamps, solid, S, true, probe, true)[0] > cfg.litAt) litCells++;
+      }
+    stats.coverage = roofedCells ? litCells / roofedCells : 0;
+    stats.dimK = dimStrength(stats.coverage, (look?.hemi?.[2] ?? 2.4) * (map.atmosphere?.ambient ?? 1), cfg);
+    cfg.ambient = 1 - (1 - cfg.ambient) * stats.dimK;
+    stats.ambient = cfg.ambient;
+  }
   for (const { geometry: g, surf } of meshes) {
     const pos = g.getAttribute('position'),
       nor = g.getAttribute('normal');

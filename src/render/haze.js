@@ -7,9 +7,9 @@
 
 /** a place's haze under open sky and under a roof; a look may carry its own `haze: { out, in, color }` and `glow` (LOOKS in defs.js) */
 export const HAZE = Object.freeze({
-  out: Object.freeze({ near: 14, far: 70, max: 0.5 }),
-  in: Object.freeze({ near: 10, far: 42, max: 0.26 }),
-  below: Object.freeze({ y: -2.5, band: 3, max: 0.62, from: 4, to: 14 }), // over open sky: what lies under the deck fades into the air
+  out: Object.freeze({ near: 16, far: 80, max: 0.36 }),
+  in: Object.freeze({ near: 12, far: 46, max: 0.18 }),
+  below: Object.freeze({ y: -2.5, band: 3, max: 0.45, from: 4, to: 14 }), // over open sky: what lies under the deck fades into the air
   entity: 0.45, // how much of the haze a creature takes
   ink: 0.8, // how much of the level's ink the haze takes at full strength
   ease: 2.5, // per second: how fast the numbers move when the eye goes under a roof or out from one
