@@ -1077,7 +1077,8 @@
    "kind": "tower",
    "at": [27, -7],
    "y": 10,
-   "scale": 1.6
+   "scale": 1.6,
+   "beacon": true
   }
  ],
  "par": {

@@ -801,7 +801,13 @@ export function buildLevel(map, tex, opts = {}) {
     let m = null;
     if (sc.kind === 'tower') {
       m = makeTower(tex.tower_stone_a, tex.tollbearer_atlas);
-      towerGlow = m.userData.glow;
+      if (sc.beacon) {
+        // a harbour beacon, not a Vael bell (Lamplighter Hill): a warm lamp burns in the lamp room in place of the teal glow
+        m.userData.glow.visible = false;
+        const lamp = new THREE.Mesh(new THREE.IcosahedronGeometry(2.3, 1), new THREE.MeshBasicMaterial({ color: 0xffd27a, fog: false }));
+        lamp.position.y = 34;
+        m.add(lamp);
+      } else towerGlow = m.userData.glow;
     } else if (sc.kind === 'boat') {
       m = makeBoat(tex.boat_hull_a);
       m.position.y = -0.35;

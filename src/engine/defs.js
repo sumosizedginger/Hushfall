@@ -302,12 +302,12 @@ export const LOOKS = {
   },
   hill: {
     hemi: [0xb09cc8, 0x34304c, 2.0],
-    sun: [0xffa060, 1.7, [-12, 6, 5]],
+    sun: [0xffa060, 1.9, [-5, 5, -12]],
     lamp: 1.25,
     exposure: 1,
     grade: GR([0.86, 0.93, 1.13], [1.13, 1.0, 0.86], 1.1),
     shade: { foot: 0.25, ao: 0.3, patch: 0.08 },
-  }, // the hour the lamps are lit (design/VISUAL_AWE_PLAN.md A7, 2026-11-14: it was a flat grey overcast): a low sun from the south-west, long
+  }, // the hour the lamps are lit (design/VISUAL_AWE_PLAN.md A7, 2026-11-14: it was a flat grey overcast): a low sun ahead as you climb (north), long
   // shadows up the terraces, violet air, the survivors' lanterns
   salt: {
     hemi: [0xe0e0dc, 0x6a6458, 2.3],

@@ -66,7 +66,7 @@ const MAP = {
   // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): dusk in place of the grey overcast, and the beacon the intro names stands on the hilltop, north of
   // the last terrace (scenery: drawn only, outside the grid)
   atmosphere: { fog: '#3e2e4c', fogDensity: 0.011, sky: 'dusk', look: 'hill' },
-  scenery: [{ kind: 'tower', at: [27, -7], y: 10, scale: 1.6 }],
+  scenery: [{ kind: 'tower', at: [27, -7], y: 10, scale: 1.6, beacon: true }],
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 18, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'LAMPLIGHTER HILL', lines: ['Somebody up there keeps the lamps lit.', 'Follow them to the beacon.'] },
   outro: 'Next: the Ferry Terminal. What the town could not carry, it left there.',
