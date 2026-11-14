@@ -11,6 +11,7 @@ import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
+import { bakeMeshes } from './lampbake.js';
 import {
   makeCrate,
   makeBarrel,
@@ -429,10 +430,12 @@ export function buildLevel(map, tex) {
     }
     return [t, f?.tint ?? 0xffffff];
   };
+  const lit = []; // the still surfaces of the level, for the lamp bake at the end (lampbake.js)
   const mk = (q, m, color = 0xffffff, emissive = 0x000000, parent = group, surf = 'wall') => {
     if (q.empty) return null;
     const mesh = new THREE.Mesh(q.geometry(), patchSurface(new THREE.MeshLambertMaterial({ map: m, color, emissive, vertexColors: true }), surf, S));
     parent.add(mesh);
+    if (parent === group) lit.push({ geometry: mesh.geometry, surf }); // a moving floor is not baked: it is not where it was built
     return mesh;
   }; // look polish 2: every level surface varies in world space (surface.js)
   for (const [c, q] of walls) mk(q, T(WALL_SKINS[c]));
@@ -543,7 +546,13 @@ export function buildLevel(map, tex) {
   // look polish 2 and 3: skirting, cornices, plinths and copings, pilasters on long walls, door frames with their lamps, lever halos and lamp pools
   // (trims.js: drawn only, the sim never sees them)
   const trims = buildTrims(map, { tex: T, wallTex: (c) => T(WALL_SKINS[c]), patch: (m, k) => patchSurface(m, k, S) });
-  for (const m of trims.meshes) group.add(m);
+  for (const m of trims.meshes) {
+    group.add(m);
+    if (m.material.isMeshLambertMaterial) {
+      m.material.vertexColors = true; // (bakeMeshes gives the geometry its colours)
+      lit.push({ geometry: m.geometry, surf: 'trim' });
+    }
+  }
 
   // doors, closets and secret panels (dynamic meshes; the sim owns their open state)
   for (const d of map.doors.values()) {
@@ -880,9 +889,12 @@ export function buildLevel(map, tex) {
     const gr = buildGrowth(map, tex);
     if (gr) group.add(gr);
   } // the Vael's growth, thick where it started
+  // darkness and pools of light: every lamp of the map, baked once into the still surfaces (design/VISUAL_AWE_PLAN.md A2, lampbake.js)
+  group.updateMatrixWorld(true);
+  const lampBake = bakeMeshes(lit, lights, map, look);
   const dispose = () => {
     for (const t of ownTex) t.dispose();
     ownTex.length = 0;
   }; // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
-  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose, trims: trims.stats };
+  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose, trims: trims.stats, lampBake };
 }
