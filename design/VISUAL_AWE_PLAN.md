@@ -220,11 +220,11 @@ Then the part no number covers: the owner looks at the before / after sheet and 
 
 ## 6. Progress
 
-- [ ] A1 the yardstick (window 1)
-- [ ] A2 darkness and pools of light indoors
-- [ ] A3 sun shadows outdoors
-- [ ] A4 haze and distance
-- [ ] A5 things that glow (window 2)
+- [ ] A1 the yardstick (window 1): node part DONE 2026-11-13 (d7cdd98); the baseline shoot is NOT taken
+- [x] A2 darkness and pools of light indoors (381af5d; unseen)
+- [x] A3 sun shadows outdoors (bb8f313; unseen, never drawn by a GPU)
+- [x] A4 haze and distance (71843c1; the shader is NOT yet compiled by a GPU)
+- [ ] A5 things that glow (window 2): the glow pass DONE (71843c1); light shafts and creature beacons NOT done
 - [ ] A6 a skyline for every level (list the maps done)
 - [ ] A7 the five worst reveals (list the maps done)
 - [ ] A8 walls in three bands, colour on purpose
