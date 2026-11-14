@@ -301,13 +301,14 @@ export const LOOKS = {
     // average AND a narrow spread)
   },
   hill: {
-    hemi: [0xa8b4c8, 0x383440, 2.1],
-    sun: [0xd0d0e0, 0.9, [-9, 12, -3]],
-    lamp: 1.1,
+    hemi: [0xb09cc8, 0x34304c, 2.0],
+    sun: [0xffa060, 1.7, [-12, 6, 5]],
+    lamp: 1.25,
     exposure: 1,
-    grade: GR([0.9, 0.97, 1.1], [1.04, 1.0, 0.94], 0.95),
+    grade: GR([0.86, 0.93, 1.13], [1.13, 1.0, 0.86], 1.1),
     shade: { foot: 0.25, ao: 0.3, patch: 0.08 },
-  }, // overcast, wind, the survivors' lanterns
+  }, // the hour the lamps are lit (design/VISUAL_AWE_PLAN.md A7, 2026-11-14: it was a flat grey overcast): a low sun from the south-west, long
+  // shadows up the terraces, violet air, the survivors' lanterns
   salt: {
     hemi: [0xe0e0dc, 0x6a6458, 2.3],
     sun: [0xffe8c0, 1.9, [-5, 12, -4]],

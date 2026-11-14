@@ -63,7 +63,10 @@ const carCells = [[26, 39], [27, 39], [26, 40], [27, 40], [26, 41], [27, 41], [2
 
 const MAP = {
   id: 'C1E1M05', name: 'Lamplighter Hill', version: 3, ceilingHeight: 4.2, par: { time: 900 },
-  atmosphere: { fog: '#30303e', fogDensity: 0.011, sky: 'overcast', look: 'hill' },
+  // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): dusk in place of the grey overcast, and the beacon the intro names stands on the hilltop, north of
+  // the last terrace (scenery: drawn only, outside the grid)
+  atmosphere: { fog: '#3e2e4c', fogDensity: 0.011, sky: 'dusk', look: 'hill' },
+  scenery: [{ kind: 'tower', at: [27, -7], y: 10, scale: 1.6 }],
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 18, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'LAMPLIGHTER HILL', lines: ['Somebody up there keeps the lamps lit.', 'Follow them to the beacon.'] },
   outro: 'Next: the Ferry Terminal. What the town could not carry, it left there.',

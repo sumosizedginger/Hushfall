@@ -5,9 +5,9 @@
  "name": "Lamplighter Hill",
  "ceilingHeight": 4.2,
  "atmosphere": {
-  "fog": "#30303e",
+  "fog": "#3e2e4c",
   "fogDensity": 0.011,
-  "sky": "overcast",
+  "sky": "dusk",
   "look": "hill"
  },
  "grid": [
@@ -1070,6 +1070,14 @@
    "at": [41, 6],
    "facing": 0,
    "skill": "hard"
+  }
+ ],
+ "scenery": [
+  {
+   "kind": "tower",
+   "at": [27, -7],
+   "y": 10,
+   "scale": 1.6
   }
  ],
  "par": {
