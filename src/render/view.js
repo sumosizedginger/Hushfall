@@ -26,6 +26,7 @@ import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
 import { hazeFor, glowFor, easeHaze } from './haze.js';
+import { SUN_SHADOW, placeSun, setupSunShadow, setSunShadow } from './sunshadow.js';
 import { beatGlow, zoneBeat } from '../engine/hive.js';
 import { eyeColor } from './eyes.js'; // eyes as state
 import { makeCreatureFx } from './creaturefx.js'; // the Marksman's line of light and the Mender's tether
@@ -155,11 +156,13 @@ export class GameView {
     const sun = (this.sun = new THREE.DirectionalLight(0xd8b0e0, 1.3));
     sun.position.set(-8, 14, -6);
     scene.add(sun);
+    scene.add(sun.target); // the sun stands over the map's middle (sunshadow.js placeSun), so its target is part of the scene
     this.ambient = map.atmosphere.ambient ?? 1; // dark levels (Signal House) dim the general light: the lamps carry the scene
     this.post = new PostPass(renderer, tex.paper_grain, NEAR, FAR);
     this.setPlace(lookOf(map.atmosphere)); // the place's light and grade
     const lvl = (this.lvl = buildLevel(map, tex));
     scene.add(lvl.group);
+    this.sunShadow = setupSunShadow(renderer, sun, lvl.group, map); // design/VISUAL_AWE_PLAN.md A3: the sun casts under open sky
     this.creatureFx = map.entities.some(
       (q) => q.type === 'enemy' && (ENEMIES[q.kind]?.snipe || ENEMIES[q.kind]?.heal || ENEMIES[q.kind]?.node || ENEMIES[q.kind]?.boss),
     )
@@ -417,6 +420,7 @@ export class GameView {
     if (this.shadows) this.shadows.mesh.visible = level < 1;
     if (this.floorMarks) this.floorMarks.mesh.visible = level < 1;
     this.lightBudget = level >= 2 ? FX_LIGHTS : LIGHT_BUDGET;
+    if (this.sunShadow?.on) setSunShadow(this.renderer, this.sun, level < 1); // the sun's shadows are the first thing a weak machine drops
   }
   setLook({
     outline,
@@ -1787,6 +1791,11 @@ export class GameView {
         (1 + 0.45 * hiveBeat);
       l.userData.d = wp.distanceToSquared(cp);
     }
+    // the sun's shadow map is redrawn a few times a second (doors and lifts move), never every frame (sunshadow.js)
+    if (this.sunShadow?.on && (this._sunT = (this._sunT ?? 0) + dt) >= SUN_SHADOW.every) {
+      this._sunT = 0;
+      this.renderer.shadowMap.needsUpdate = true;
+    }
     const lamps = this.lvl.lights,
       d2s = (this._d2s ??= []);
     d2s.length = lamps.length;
@@ -2020,7 +2029,8 @@ export class GameView {
     hemi.groundColor.setHex(look.hemi[1]);
     hemi.intensity = look.hemi[2] * this.ambient * POLISH_LIGHT.hemi;
     sun.color.setHex(look.sun[0]);
-    sun.position.set(...look.sun[2]);
+    placeSun(sun, this.map, look.sun[2]); // the same direction as before, stood over the map so its shadow camera sees all of it
+    if (this.sunShadow?.on) this.renderer.shadowMap.needsUpdate = true;
     sun.intensity = look.sun[1] * this.ambient * POLISH_LIGHT.sun;
     RIM.color.value.setHex(this.mixHex(look.hemi[0], 0xffffff, 0.35));
     // look polish 6: the rim round every creature, the place's sky colour, weaker where the place is dark
@@ -2095,6 +2105,7 @@ export class GameView {
     for (const r of this.ripples) r.m.material.dispose();
     for (const m of this.tintCache?.values() ?? []) m.dispose();
     this.post.dispose();
+    this.sun.dispose?.(); // (frees the sun's shadow map)
     this.hiveView?.dispose();
     this.creatureFx?.dispose();
     // H-L1..L3: the textures a view owns (the scene sweep above frees only geometry and materials); the level's own flow clones too (round 1, Gemini
