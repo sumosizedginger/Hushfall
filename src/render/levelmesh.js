@@ -13,6 +13,7 @@ import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
 import { bakeMeshes } from './lampbake.js';
 import { buildShafts } from './shafts.js';
+import { skylinePlan, makeSkylinePiece } from './skyline.js';
 import {
   makeCrate,
   makeBarrel,
@@ -828,6 +829,9 @@ export function buildLevel(map, tex, opts = {}) {
     if (sc.scale) m.scale.setScalar(sc.scale);
     dressing.add(m);
   }
+  // a skyline for a map that has open sky and little scenery of its own: large dark shapes outside the grid (design/VISUAL_AWE_PLAN.md A6)
+  const skyline = skylinePlan(map);
+  for (const p of skyline) dressing.add(makeSkylinePiece(p));
   mergeStatic(dressing);
   for (const e of map.exits) {
     // the gate is set flush against the nearest wall, facing into the room
@@ -900,5 +904,19 @@ export function buildLevel(map, tex, opts = {}) {
     for (const t of ownTex) t.dispose();
     ownTex.length = 0;
   }; // outside audit, Gemini finding 1: a map with currents leaked its six flow clones on every restart
-  return { group, lights, doorViews, towerGlow, sectorViews, fxMats, sporeViews, switchViews, exitViews, dispose, trims: trims.stats, lampBake };
+  return {
+    group,
+    lights,
+    doorViews,
+    towerGlow,
+    sectorViews,
+    fxMats,
+    sporeViews,
+    switchViews,
+    exitViews,
+    dispose,
+    trims: trims.stats,
+    lampBake,
+    skyline: skyline.length,
+  };
 }
