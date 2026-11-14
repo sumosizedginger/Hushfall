@@ -12,6 +12,7 @@ import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
 import { bakeMeshes } from './lampbake.js';
+import { buildShafts } from './shafts.js';
 import {
   makeCrate,
   makeBarrel,
@@ -890,6 +891,8 @@ export function buildLevel(map, tex, opts = {}) {
     const gr = buildGrowth(map, tex);
     if (gr) group.add(gr);
   } // the Vael's growth, thick where it started
+  const shafts = buildShafts(map, look); // lit air where a roofed room opens onto the sun (design/VISUAL_AWE_PLAN.md A5, shafts.js)
+  if (shafts) group.add(shafts);
   // darkness and pools of light: every lamp of the map, baked once into the still surfaces (design/VISUAL_AWE_PLAN.md A2, lampbake.js)
   group.updateMatrixWorld(true);
   const lampBake = opts.lampBake === false ? { lamps: 0, dimmed: false, verts: 0 } : bakeMeshes(lit, lights, map, look);
