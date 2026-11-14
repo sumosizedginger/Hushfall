@@ -1,5 +1,6 @@
 // Painterly post pass: low-res render target -> nearest upscale, depth-based ink outline, paper grain, value banding, grade.
 import * as THREE from 'three';
+import { HAZE, HAZE_UNIFORMS, HAZE_GLSL, GLOW_GLSL, GLOW } from './haze.js';
 
 const vert = /* glsl */ `
 varying vec2 vUv;
@@ -14,6 +15,7 @@ uniform vec4 uHit[4];          // look polish 10 (hitdir.js): where blows came f
 uniform vec3 uShadowTint, uLightTint, uHostile;
 uniform float uShoulder, uShoulderPre;          // the tone shoulder (src/render/tonecurve.js is its node twin: never edit one without the other)
 uniform float uSat, uExposure, uNear, uFar, uLevels, uEdgeLo, uEdgeHi, uCreaseLo, uCreaseHi, uClassic, uOutline, uPaint, uDamage, uDebug, uFrost;
+${HAZE_UNIFORMS}
 varying vec2 vUv;
 
 float invZ(vec2 uv) {
@@ -42,6 +44,8 @@ void main() {
   float p1 = texture2D(tPaper, fc / 128.0).r;
   float p2 = texture2D(tPaper, fc / 96.0 + 0.37).g;
   vec3 col = paint(toSRGB(shoulder(texture2D(tColor, vUv).rgb * uExposure)), p1, p2);
+  // haze: far surfaces fade toward the place's far colour (haze.js builds this from its numbers; hazeAt is its node twin)
+${HAZE_GLSL}
 
   if (uOutline > 0.5) {
     vec2 px = 1.0 / uRes;
@@ -60,9 +64,12 @@ void main() {
     float d2 = max(abs(l + r - 2.0 * c), abs(u + d - 2.0 * c));
     edge = max(edge, smoothstep(uCreaseLo, uCreaseHi, d2) * (1.0 - ent));
     edge *= clamp(mix(0.6 + p1 * 0.9, 0.45 + p1 * 1.1, ent), 0.0, 1.0);   // hand-inked, slightly broken line (the level: less broken, so a line is read, not lost in the paper tooth; entities: as they always were)
-    col = mix(col, mix(vec3(0.035, 0.04, 0.06), uHostile, hostile), edge * 0.94);
+    col = mix(col, mix(vec3(0.035, 0.04, 0.06), uHostile, hostile), edge * 0.94 * (1.0 - haze * ${HAZE.ink} * (1.0 - ent)));   // the level's ink fades into the haze; a creature's line never does
     if (uDebug > 0.5) { gl_FragColor = vec4(vec3(edge), 1.0); return; }          // dev measurement only: the ink mask (tools/dev/shoot-outlines.mjs)
   }
+
+  // glow: what is brighter than the threshold lights the pixels round it (haze.js)
+${GLOW_GLSL}
 
   // THE HELD WEAPON (look polish 1): drawn into its own target at WEAPON_DENSITY times the world's pixels (it was the screen's own resolution: a smooth gun pasted over a chunky world), so it is finer than the world but in the same pixel language. It wears the same
   // painted grade; its ink is a clean line where its opaque silhouette ends (sleeves fading in the sights are not inked). Its colour is premultiplied by its coverage (blended over a clear target).
@@ -92,6 +99,9 @@ void main() {
   }
   gl_FragColor = vec4(col, 1.0);
 }`;
+
+/** the fragment shader as sent to the GPU (tests read it: no node test can compile it) */
+export const POST_FRAG = frag;
 
 // ?outline=classic: the whole picture gets the original ink (to compare)
 const CLASSIC = typeof location !== 'undefined' && new URLSearchParams(location.search).get('outline') === 'classic';
@@ -142,6 +152,14 @@ export class PostPass {
       uShadowTint: { value: new THREE.Vector3(0.9, 1.0, 1.08) },
       uLightTint: { value: new THREE.Vector3(1.07, 1.0, 0.93) },
       uSat: { value: 1 },
+      // haze and glow (haze.js); the view points the two matrices at its camera's own and writes the rest each frame
+      uInvProj: { value: new THREE.Matrix4() },
+      uCamMat: { value: new THREE.Matrix4() },
+      uHazeColor: { value: new THREE.Vector3(0.16, 0.13, 0.27) },
+      uHaze: { value: new THREE.Vector4(HAZE.out.near, HAZE.out.far, 0, 0) },
+      uHazeBelowY: { value: HAZE.below.y },
+      uGlow: { value: 0 },
+      uGlowThr: { value: GLOW.threshold },
     };
     this.scene.add(
       new THREE.Mesh(
@@ -150,6 +168,15 @@ export class PostPass {
       ),
     );
     this.rt = null;
+  }
+  /** the haze in use (haze.js `hazeFor`, eased by the view) and the glow: written every frame */
+  setHaze(h, glow) {
+    const u = this.uniforms;
+    u.uHazeColor.value.set(h.color[0], h.color[1], h.color[2]);
+    u.uHaze.value.set(h.near, h.far, h.max, h.belowMax);
+    u.uHazeBelowY.value = h.belowY;
+    u.uGlow.value = glow.strength;
+    u.uGlowThr.value = glow.threshold;
   }
   /**
    * the place's grade: { shadow: [r,g,b], light: [r,g,b], sat } (LOOKS in defs.js; the exposure is the view's: the player's brightness times the

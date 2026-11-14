@@ -25,6 +25,7 @@ import { mergeStatic } from './merge.js';
 import { debrisFloor, spawnGround } from './debris.js';
 import { PostPass } from './post.js';
 import { lightWeights } from './lightbudget.js';
+import { hazeFor, glowFor, easeHaze } from './haze.js';
 import { beatGlow, zoneBeat } from '../engine/hive.js';
 import { eyeColor } from './eyes.js'; // eyes as state
 import { makeCreatureFx } from './creaturefx.js'; // the Marksman's line of light and the Mender's tether
@@ -227,6 +228,9 @@ export class GameView {
     }
     this.cam = new THREE.PerspectiveCamera(70, 16 / 9, NEAR, FAR);
     this.cam.rotation.order = 'YXZ';
+    // the haze reads a pixel's place in the world back from its depth: it needs the camera's own two matrices (haze.js, post.js)
+    this.post.uniforms.uInvProj.value = this.cam.projectionMatrixInverse;
+    this.post.uniforms.uCamMat.value = this.cam.matrixWorld;
     this.flareLight = new THREE.PointLight(0xff9040, 0, 16, 2);
     this.boomLight = new THREE.PointLight(0xffb060, 0, 20, 2);
     scene.add(this.flareLight, this.boomLight);
@@ -1913,6 +1917,21 @@ export class GameView {
     this.hitMarks.step(dt);
     // the direction stays at full strength under reduced motion: it is information, not an effect
     this.hitMarks.write(this.cam.position.x, this.cam.position.z, w.player.yaw, this.post.uniforms.uHit.value);
+    // haze and glow (design/VISUAL_AWE_PLAN.md A4, A5): the place's far colour by distance, eased when the eye goes under a roof or out from one
+    {
+      const S = w.map.cell,
+        k = w.map.kind(Math.floor(this.cam.position.x / S), Math.floor(this.cam.position.z / S)),
+        roofed = k === 'floor' || k === 'door' || k === 'secret',
+        key = (roofed ? 'in|' : 'out|') + (this.zoneId ?? '') + '|' + (this.fxLevel ?? 0);
+      if (key !== this._hazeKey || this._hazeLook !== this.look) {
+        this._hazeKey = key;
+        this._hazeLook = this.look;
+        this._hazeWant = hazeFor(this.look, { fog: '#' + this.scene.fog.color.getHexString(THREE.SRGBColorSpace) }, roofed, w.map.hasVoid);
+        this._glow = glowFor(this.look, (this.fxLevel ?? 0) < 1);
+        this._haze ??= { ...this._hazeWant, color: [...this._hazeWant.color] };
+      }
+      this.post.setHaze(easeHaze(this._haze, this._hazeWant, dt), this._glow);
+    }
     // look polish 1: the weapon into its own crisp target
     this.post.render(() => this.renderer.render(this.scene, this.cam), this.cine ? null : () => this.renderer.render(this.weaponScene, this.weaponCam));
   }
