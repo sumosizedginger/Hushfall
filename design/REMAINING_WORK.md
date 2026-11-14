@@ -29,7 +29,7 @@ Full instructions: `design/VISUAL_AWE_HANDOFF.md`.
 
 | Item | State | Browser |
 |---|---|---|
-| Hand-rebuild the view on Marrow Nave, Hollow Stair, Bell Tower, Gate Warden | not started; what to do on each is written | one shoot of all four |
+| Hand-rebuild the view on Marrow Nave, Hollow Stair, Bell Tower, Gate Warden | built in node 2026-11-14 (ribs, the tower, looks, hand views; routes identical), NOT seen | one shoot of all four |
 | The next five weakest maps after those | not started | one shoot per batch |
 | Wall bands on tall walls, and a second colour per place (A8) | not started; a shader change | boot check, then a shoot |
 | Grey skies repainted (`sky_overcast`, `sky_bleach`) | not started | a bake |

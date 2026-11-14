@@ -351,6 +351,15 @@ export const LOOKS = {
     grade: GR([0.88, 1.04, 1.02], [1.06, 1.02, 0.9], 0.9),
     shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
   }, // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
+  nave: {
+    hemi: [0x86a89a, 0x241a2e, 1.5],
+    sun: [0xffc490, 1.7, [14, 6, 0]],
+    lamp: 1.35,
+    exposure: 1,
+    grade: GR([0.86, 1.02, 1.06], [1.12, 1.02, 0.86], 1.0),
+    shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
+  }, // Marrow Nave (design/VISUAL_AWE_PLAN.md A7, 2026-11-14): the choir light with a low amber sun from the east, behind the dais, so the
+  // Mother and the ribs stand against the brightest part of the sky
   loom: {
     hemi: [0x7a6a9c, 0x1a1026, 1.25],
     sun: [0xf0d890, 0.35, [-6, 14, -6]],
@@ -456,6 +465,7 @@ export const LOOKS = {
     exposure: 1,
     grade: GR([0.92, 0.94, 1.08], [1.12, 1.05, 0.94], 1.0),
     shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
+    haze: { belowMax: 0.25 }, // the white ring down the shaft is the bright thing of the level: less haze below the deck (A7, 2026-11-14)
     // the Hollow Stair: deep indigo, the light comes up the shaft (a bright ground in the hemisphere) // the lamps brighter, so its dark has highlights
     // in it (it measured murky: dark on average AND a narrow spread); a less saturated sky light and a stronger sun, so the drum's ribs and courses
     // cast shade
@@ -728,12 +738,12 @@ export const LOOKS = {
   },
   gate: {
     hemi: [0xf0f0ff, 0x30303c, 2.4],
-    sun: [0xffffff, 1.6, [-4, 18, -4]],
-    lamp: 0.8,
+    sun: [0xfff0d0, 1.6, [-4, 18, -4]],
+    lamp: 1.3,
     exposure: 1,
-    grade: GR([0.96, 0.96, 1.04], [1.04, 1.02, 1.0], 0.5),
+    grade: GR([0.94, 0.96, 1.06], [1.12, 1.04, 0.88], 0.8),
     shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
-  }, // the Gate: white and black, a ring of light
+  }, // the Gate: pale stone and gold, a ring of light (design/VISUAL_AWE_PLAN.md A7, 2026-11-14: it was grey on grey; warmer lamps and light)
 };
 export const lookOf = (atmosphere) => LOOKS[atmosphere?.look] ?? LOOKS.harbour;
 /**

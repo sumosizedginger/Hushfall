@@ -75,7 +75,10 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E3M04', name: 'Marrow Nave', version: 2, ceilingHeight: 4.2, par: { time: 420 },
-  atmosphere: { fog: '#2c3830', fogDensity: 0.006, sky: 'ash', look: 'choir' },
+  // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): the ship's ribs stand over the nave (bone arches springing from the gallery roofs, over the slate
+  // ribs of the floor at x 31 and 47 and over the dais), so the eye runs down them to the Mother; a low sun from the east behind her (LOOKS.nave)
+  atmosphere: { fog: '#2c3830', fogDensity: 0.006, sky: 'ash', look: 'nave' },
+  scenery: [31, 47, 63].map((x) => ({ kind: 'rib', at: [x, 29], y: 7, scale: 6.2, yaw: Math.PI / 2 })),
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 18, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { 1: { type: 'enemy', kind: 'chorister' }, 3: { type: 'enemy', kind: 'bulwark' }, 4: { type: 'enemy', kind: 'weeping', group: 'mother' } },
   intro: { title: 'MARROW NAVE', lines: ['The ship opened its back to sing.', 'Something is enthroned at the far end.'] },

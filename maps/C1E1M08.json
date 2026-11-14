@@ -6,7 +6,7 @@
  "ceilingHeight": 4.2,
  "atmosphere": {
   "fog": "#1a1428",
-  "fogDensity": 0.014,
+  "fogDensity": 0.01,
   "sky": "night",
   "look": "moon"
  },
@@ -1136,6 +1136,14 @@
    "at": [34, 7],
    "facing": 0.644,
    "extra": true
+  }
+ ],
+ "scenery": [
+  {
+   "kind": "tower",
+   "at": [28, 0],
+   "y": 4,
+   "scale": 1.6
   }
  ],
  "par": {

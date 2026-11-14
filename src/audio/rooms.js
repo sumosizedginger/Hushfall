@@ -23,6 +23,7 @@ export const ROOM_OF_LOOK = {
   cradle: 'hull',
   pump: 'hall',
   choir: 'flesh',
+  nave: 'flesh', // Marrow Nave's own light (A7, 2026-11-14); it sounds as it did under `choir`
   loom: 'flesh',
   loft: 'hall',
   foundry: 'hull',

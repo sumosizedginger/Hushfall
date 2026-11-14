@@ -72,7 +72,10 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 3, ceilingHeight: 4.2, par: { time: 1100 },
-  atmosphere: { fog: '#1a1428', fogDensity: 0.014, sky: 'night', look: 'moon' },
+  // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): the bell tower itself, rising behind the spiral's stone (scenery: drawn only, north of the
+  // carved block, its bell glowing teal); the fog thinned so it reads from the courtyard
+  atmosphere: { fog: '#1a1428', fogDensity: 0.01, sky: 'night', look: 'moon' },
+  scenery: [{ kind: 'tower', at: [28, 0], y: 4, scale: 1.6 }],
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 12, rivet: 80 }, weapons: ['flare', 'scattergun', 'rivet'] },
   legend: { B: { type: 'enemy', kind: 'bellnode' } },
   intro: { title: 'BELL TOWER OF ST. ORRIN', lines: ['The bell has rung for three days.', 'Nobody is pulling the rope.'] },
