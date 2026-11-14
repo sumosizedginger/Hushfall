@@ -16,7 +16,10 @@ const port = 5285,
 await server.listen();
 const browser = await puppeteer.launch({
   headless: true,
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'],
+  // GPU=1 draws on the machine's graphics card (software GL is too slow to keep the clock's pace once shadows and the glow are on)
+  args: process.env.GPU
+    ? ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11', '--autoplay-policy=no-user-gesture-required']
+    : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'],
 });
 const page = await browser.newPage();
 await refuseLock(page);
