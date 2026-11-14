@@ -180,7 +180,7 @@ test('a shaded look bakes brightness into the level mesh; the default look leave
   assert.ok(cellar.n > 1000 && cellar.min < 0.62 && cellar.max > 0.99, JSON.stringify(cellar));
   const src = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', 'C1E1M04.json'), 'utf8'));
   src.atmosphere = { ...src.atmosphere, look: 'harbour' };
-  const lv = buildLevel(parseMap(src), tex);
+  const lv = buildLevel(parseMap(src), tex, { lampBake: false }); // the shading alone: the lamps are baked on top of it (lampbake.js, its own test)
   let dim = 0;
   lv.group.traverse((o) => {
     const c = o.isMesh && o.geometry.getAttribute('color');

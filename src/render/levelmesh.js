@@ -242,7 +242,8 @@ function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed) {
   }
 }
 
-export function buildLevel(map, tex) {
+/** opts.lampBake false leaves the lamps out of the vertex colours (a test of the shading alone; a before / after picture) */
+export function buildLevel(map, tex, opts = {}) {
   const S = map.cell,
     H = map.ceiling,
     group = new THREE.Group(),
@@ -891,7 +892,7 @@ export function buildLevel(map, tex) {
   } // the Vael's growth, thick where it started
   // darkness and pools of light: every lamp of the map, baked once into the still surfaces (design/VISUAL_AWE_PLAN.md A2, lampbake.js)
   group.updateMatrixWorld(true);
-  const lampBake = bakeMeshes(lit, lights, map, look);
+  const lampBake = opts.lampBake === false ? { lamps: 0, dimmed: false, verts: 0 } : bakeMeshes(lit, lights, map, look);
   const dispose = () => {
     for (const t of ownTex) t.dispose();
     ownTex.length = 0;
