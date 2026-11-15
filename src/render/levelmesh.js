@@ -58,15 +58,17 @@ class Quads {
     this.nor = [];
     this.uv = [];
     this.col = [];
+    this.top = []; // per vertex: a wall face's height above its own floor (the three courses of surface.js); 0 for everything else
     this.idx = [];
   }
-  add(p, n, uvs, cols) {
+  add(p, n, uvs, cols, top = 0) {
     const b = this.pos.length / 3;
     for (let i = 0; i < 4; i++) {
       this.pos.push(...p[i]);
       this.nor.push(...n);
       this.uv.push(...uvs[i]);
       this.col.push(...(cols ? cols[i] : [1, 1, 1]));
+      this.top.push(top);
     }
     this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
   }
@@ -79,6 +81,7 @@ class Quads {
     g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3));
     g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
     g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
+    g.setAttribute('sTop', new THREE.Float32BufferAttribute(this.top, 1));
     g.setIndex(this.idx);
     return g;
   }
@@ -96,7 +99,7 @@ const DIRS = [
  * so a wall's texture starts at its own floor: a plaster wainscot sits at the bottom of a wall on a raised gallery too, and walls beside a panel line
  * up with it.
  */
-function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0) {
+function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0, band = 0) {
   const x = cx * S,
     z = cz * S,
     u = (px, pz) => (px + pz) / S;
@@ -124,6 +127,8 @@ function face(q, S, cx, cz, dx, dz, y0, y1, vBase = 0) {
     p,
     [dx, 0, dz],
     p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]),
+    null,
+    band,
   );
 }
 /*
@@ -202,7 +207,7 @@ const flatQuad = (q, S, cx, cz, y, up, shade) => {
  * a wall face in rows with a baked brightness: a dark foot and head, large soft patches (shading.js); the geometry and the UVs are exactly face()'s,
  * only cut into strips
  */
-function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed) {
+function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed, band = 0) {
   const x = cx * S,
     z = cz * S,
     u = (px, pz) => (px + pz) / S;
@@ -240,6 +245,7 @@ function faceShaded(q, S, cx, cz, dx, dz, y0, y1, vBase, foot, patch, seed) {
       [dx, 0, dz],
       p.map((r) => [u(r[0], r[2]), (r[1] - vBase) / S]),
       [k(p0[0], p0[1], ya, ka), k(p1[0], p1[1], ya, ka), k(p1[0], p1[1], yb, kb), k(p0[0], p0[1], yb, kb)],
+      band,
     );
   }
 }
@@ -332,8 +338,11 @@ export function buildLevel(map, tex, opts = {}) {
           const base = nk === 'water' ? WATER_Y : nk === 'void' ? -6 : fl(cx + dx, cz + dz) - 0.05;
           const wq = bucket(walls, WALL_SKINS[skin] ? skin : '#'),
             vb = nk === 'water' ? 0 : fl(cx + dx, cz + dz);
-          if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5);
-          else face(wq, S, cx, cz, dx, dz, base, top, vb);
+          // A8: the face's height above its own floor, for the wall's three courses (surface.js); a wall dropping into water or the void has no
+          // floor to band from
+          const band = nk === 'water' || nk === 'void' ? 0 : top - vb;
+          if (shaded) faceShaded(wq, S, cx, cz, dx, dz, base, top, vb, sh.foot, sh.patch, 5, band);
+          else face(wq, S, cx, cz, dx, dz, base, top, vb, band);
         }
         continue;
       }

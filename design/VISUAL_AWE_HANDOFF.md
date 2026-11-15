@@ -15,7 +15,7 @@ Branch `master` in `D:\Doom`, clean, local commits only (nothing pushed since 07
 | A5 light shafts | done, NOT knowingly seen in a frame | `src/render/shafts.js` |
 | A6 skyline | done automatically for 35 maps, seen on Lamplighter Hill | `src/render/skyline.js` |
 | A7 reveals | 1 of 5: Lamplighter Hill done and seen | see section 3 |
-| A8 wall bands and colour | NOT started | `src/render/surface.js` (a shader change: boot check after) |
+| A8 wall bands and colour | part 1 (bands) BUILT 2026-11-14, node only, boot check pending; part 2 (two colours per look) and part 3 (grey skies, a bake) not started | `src/render/surface.js` (a shader change: boot check after) |
 | A9 final shoot, regeneration | NOT started | |
 
 Pictures (outside git): `D:\Doom_release\awe\before` (68 hero frames from the code before A2), `awe\mid` (68 after A2 to A6), `awe\a7b\C1E1M05.png` (Lamplighter Hill after), with `before.json` and `mid.json` scores.

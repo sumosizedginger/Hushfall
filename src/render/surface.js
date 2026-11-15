@@ -11,6 +11,10 @@
 // * CALM (floors and ceilings only, Session 2 of design/OPUS_HANDOFF.md, item G1): a checker tile seen at a grazing angle from mid-distance
 //   shimmers (Customs Hall). Beyond `near` metres the paint is sampled with a mip bias that grows to `bias` at `far`, so the far floor reads as its
 //   broad colour, not as flickering squares. Walls are seen face-on and keep their detail.
+// * BANDS (walls only, A8 of design/VISUAL_AWE_PLAN.md): a wall face taller than `band.min` metres above its own floor reads as built in three
+//   courses: a darker base (the bottom `band.base` m), the body, and a lighter cap (the top `band.cap` m), each course edge a thin dark line. The
+//   face's height comes in a vertex attribute `sTop` (levelmesh.js face()); a geometry without it reads 0 and gets no bands. The tile is never
+//   taller than one cell (2 m): a wall's v runs one repeat per cell, so the "stretched tile" half of A8 already holds.
 export const SURFACE = Object.freeze({
   macro: [0.8, 1.13],
   f1: 0.19,
@@ -18,6 +22,7 @@ export const SURFACE = Object.freeze({
   temp: 0.55,
   foot: { h: 0.85, k: 0.64 },
   calm: { near: 6, far: 18, bias: 2.5 },
+  band: { min: 4, base: 0.9, baseK: 0.82, cap: 0.6, capK: 1.17, line: 0.05, lineK: 0.62 },
 });
 
 const KINDS = new Set(['wall', 'floor', 'ceil', 'riser', 'trim']);
@@ -56,7 +61,21 @@ export function surfaceGLSL(kind, cell) {
     #endif`
         : ''
     }
+    ${kind === 'wall' ? bandGLSL(cell) : ''}
   }`;
+}
+
+/** the three courses of a tall wall (exported for the test); only a wall's material gets them */
+export function bandGLSL(cell) {
+  const B = SURFACE.band;
+  return `#ifdef USE_MAP
+    if (vSTop > ${glslNum(B.min)}) {
+      float bh = vMapUv.y * ${glslNum(cell)}, bc = vSTop - ${glslNum(B.cap)};
+      diffuseColor.rgb *= bh < ${glslNum(B.base)} ? ${glslNum(B.baseK)} : (bh > bc ? ${glslNum(B.capK)} : 1.0);
+      float bl = min(abs(bh - ${glslNum(B.base)}), abs(bh - bc));
+      diffuseColor.rgb *= mix(${glslNum(B.lineK)}, 1.0, smoothstep(0.0, ${glslNum(B.line)}, bl));
+    }
+    #endif`;
 }
 const NOISE = `
 varying vec3 vSurfW;
@@ -70,11 +89,12 @@ export function patchSurface(mat, kind, cell = 2) {
     prevKey = mat.customProgramCacheKey?.bind(mat);
   mat.onBeforeCompile = (s, r) => {
     prev?.call(mat, s, r);
+    const wall = kind === 'wall';
     s.vertexShader = s.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vSurfW;')
-      .replace('#include <project_vertex>', '#include <project_vertex>\nvSurfW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      .replace('#include <common>', '#include <common>\nvarying vec3 vSurfW;' + (wall ? '\nattribute float sTop;\nvarying float vSTop;' : ''))
+      .replace('#include <project_vertex>', '#include <project_vertex>\nvSurfW = (modelMatrix * vec4(transformed, 1.0)).xyz;' + (wall ? '\nvSTop = sTop;' : ''));
     s.fragmentShader = s.fragmentShader
-      .replace('#include <common>', '#include <common>' + NOISE)
+      .replace('#include <common>', '#include <common>' + NOISE + (wall ? '\nvarying float vSTop;' : ''))
       .replace('#include <map_fragment>', (CALM_KINDS.has(kind) ? calmGLSL(kind) : '#include <map_fragment>') + surfaceGLSL(kind, cell));
   };
   mat.customProgramCacheKey = () => (prevKey ? prevKey() : '') + '|surface-' + kind + '-' + cell;

@@ -66,6 +66,41 @@ test('surface (G1): floors and ceilings sample their paint with a mip bias that 
   }
 });
 
+test('surface (A8): a wall taller than band.min is drawn in three courses read from its sTop attribute; only walls get them, and the level carries the height', () => {
+  const B = SURFACE.band;
+  assert.ok(B.min >= 4 && B.base > 0 && B.cap > 0 && B.base + B.cap < B.min, 'the courses fit inside a banded wall');
+  assert.ok(B.baseK < 1 && B.capK > 1 && B.lineK < 1, 'a darker base, a lighter cap, dark lines');
+  const sh = (kind) => {
+    const m = patchSurface(new THREE.MeshLambertMaterial(), kind, 2),
+      s = { vertexShader: '#include <common>\n#include <project_vertex>', fragmentShader: '#include <common>\n#include <map_fragment>' };
+    m.onBeforeCompile(s, null);
+    return s;
+  };
+  const w = sh('wall');
+  assert.match(w.vertexShader, /attribute float sTop;/);
+  assert.match(w.vertexShader, /vSTop = sTop;/);
+  assert.match(w.fragmentShader, /varying float vSTop;/);
+  assert.ok(w.fragmentShader.includes('vSTop > ' + B.min.toFixed(1)), 'only tall walls');
+  for (const n of [B.base, B.cap, B.baseK, B.capK, B.lineK, B.line]) assert.ok(w.fragmentShader.includes(String(n)), 'reads ' + n);
+  for (const k of ['floor', 'ceil', 'riser', 'trim']) {
+    const s = sh(k);
+    assert.ok(!s.vertexShader.includes('sTop') && !s.fragmentShader.includes('vSTop'), k + ' has no courses');
+  }
+  // the level: wall geometry carries each face's height above its own floor; the tallest walls are banded, the low ones are not
+  const map = loadMapFile(path.join(ROOT, 'maps', 'C1E2M06.json')),
+    lvl = buildLevel(map, texProxy());
+  let hi = 0,
+    lo = Infinity;
+  lvl.group.traverse((o) => {
+    if (!o.isMesh || o.material.userData?.surface !== 'wall') return;
+    const a = o.geometry.getAttribute('sTop');
+    assert.ok(a && a.count === o.geometry.getAttribute('position').count, 'every wall vertex has its height');
+    for (let i = 0; i < a.count; i++) if (a.getX(i) > 0) ((hi = Math.max(hi, a.getX(i))), (lo = Math.min(lo, a.getX(i))));
+  });
+  assert.ok(hi > B.min, 'Pump Cathedral has walls tall enough to band: ' + hi);
+  assert.ok(lo < B.min, 'and lower ones that are not: ' + lo);
+});
+
 /** PT-080: drawn-only pieces wholly this far above their floor are out of every body's reach (the player is under 2 m tall) */
 const HEADROOM = 2.6;
 
