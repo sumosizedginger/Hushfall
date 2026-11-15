@@ -32,6 +32,8 @@ await page.setViewport({ width: 1920, height: 1080 });
 await page.goto(`http://localhost:${server.config.server.port}/`, { waitUntil: 'domcontentloaded', timeout: 0 });
 await page.waitForFunction('window.__GAME_TEST__ && window.__GAME_TEST__.ready', { timeout: 180000 });
 await page.evaluate("window.__GAME_TEST__.setSetting('autoQuality', false)");
+// (WIDTH=800: the store's render width, A9 step 6; unset keeps the game's default, as every hero set so far)
+if (process.env.WIDTH) await page.evaluate(`window.__GAME_TEST__.setSetting('internalWidth', ${+process.env.WIDTH})`);
 const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; return ${code}; })()`);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 for (const id of ids) {
