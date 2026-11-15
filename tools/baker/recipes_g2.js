@@ -515,16 +515,17 @@ export const recipesG2 = {
     draw: R((g, w, h) => {
       g.noStroke();
       g.bleed(0.9, 'out');
-      ['#5a5a70', '#6a6a80', '#7a7a90', '#8a8a9c', '#9a98a8', '#aaa8b4', '#bab6bc'].forEach((c, i) => {
+      // (A8, 2026-11-14: was an even grey-lilac ramp; now darker cloud above and a lit warm band at the horizon)
+      ['#3c3c52', '#4a4a60', '#5a5a70', '#6c6a80', '#8a8496', '#b8a69c', '#dcc0a0'].forEach((c, i) => {
         g.fill(c, 250);
         g.rect(-10, i * 40 - 10, w + 20, 56);
       });
       for (let i = 0; i < 34; i++) {
         const x = g.rnd(0, w),
-          y = g.rnd(10, 230),
+          y = g.rnd(10, 170),
           r = g.rnd(34, 90);
         g.tile((dx) => {
-          g.fill(pick(g, ['#4a4a60', '#8a8aa0', '#b8b4c0', '#6a5a70']), g.rnd(50, 110));
+          g.fill(pick(g, ['#2e2e44', '#5a5a72', '#7a7890', '#4a3e56']), g.rnd(50, 110));
           g.circle(x + dx, y, r);
         });
       }

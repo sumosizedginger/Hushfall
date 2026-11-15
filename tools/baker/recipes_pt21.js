@@ -632,16 +632,17 @@ export const recipesPT21 = {
     draw: R((g, w, h) => {
       g.noStroke();
       g.bleed(0.9, 'out');
-      ['#b4bcbc', '#c2c9c8', '#d0d5d0', '#dcdfd2', '#e6e6d0', '#eae8c8', '#e2dfba'].forEach((c, i) => {
+      // (A8, 2026-11-14: was near-white top to bottom; now a grey-blue glare above and a lit yellow-green band at the horizon)
+      ['#8c989c', '#a0aaac', '#b6bebc', '#cad0c6', '#dcdcc0', '#ece6b4', '#f2e8a6'].forEach((c, i) => {
         g.fill(c, 250);
         g.rect(-10, i * 40 - 10, w + 20, 56);
       });
       for (let i = 0; i < 30; i++) {
         const x = g.rnd(0, w),
-          y = g.rnd(10, 190),
+          y = g.rnd(10, 150),
           r = g.rnd(34, 96);
         g.tile((dx) => {
-          g.fill(pick(g, ['#ffffff', '#c8d0d0', '#eef0e6', '#a8b2b2']), g.rnd(40, 100));
+          g.fill(pick(g, ['#e8ecea', '#9aa6a8', '#c4ccca', '#7e8a8e']), g.rnd(40, 100));
           g.circle(x + dx, y, r);
         });
       }
