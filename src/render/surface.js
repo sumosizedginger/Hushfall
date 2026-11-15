@@ -23,7 +23,8 @@ export const SURFACE = Object.freeze({
   temp: 0.55,
   foot: { h: 0.85, k: 0.64 },
   calm: { near: 6, far: 18, bias: 2.5 },
-  band: { min: 3.5, base: 0.9, baseF: 0.12, baseK: 0.62, cap: 0.6, capF: 0.1, capK: 1.4, line: 0.12, lineK: 0.35 }, // (2026-11-14: fixed 0.9 m / 0.6 m courses were 6 px on a 14 m wall, and over-4 m skipped the 4 m nave walls)
+  // (2026-11-14: fixed 0.9 m / 0.6 m courses were 6 px on a 14 m wall, and over-4 m skipped the 4 m nave walls)
+  band: { min: 3.5, base: 0.9, baseF: 0.12, baseK: 0.62, cap: 0.6, capF: 0.1, capK: 1.4, line: 0.12, lineK: 0.35 },
 });
 
 const KINDS = new Set(['wall', 'floor', 'ceil', 'riser', 'trim']);

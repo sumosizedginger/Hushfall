@@ -227,7 +227,7 @@ Then the part no number covers: the owner looks at the before / after sheet and 
 - [x] A5 things that glow: the glow pass (71843c1) and the light shafts (0820ed3) built; creature beacons are left to the glow pass (their eyes are already unlit and bright). Window 2 NOT run
 - [x] A6 a skyline for every level (64426ae): done AUTOMATICALLY by `src/render/skyline.js` for the 35 maps with open sky and fewer than three scenery pieces of their own; no map file changed. Hand placement and overhead pieces in roofed halls are NOT done
 - [ ] A7 the five worst reveals: C1E1M05 Lamplighter Hill DONE and seen (bc4784a). C1E3M04, C1E4M07, C1E1M08, C1E4M08 done and seen 2026-11-14 (a7c, a7d): Hollow Stair and Gate Warden meet every floor, Nave and Bell Tower miss only the bright floor. Next: five more from the lowest spreads in mid.json
-- [ ] A8 walls in three bands, colour on purpose (bands built 2026-11-14 in `surface.js` + `levelmesh.js`, not yet seen; colour pair and skies left)
+- [ ] A8 walls in three bands, colour on purpose (bands built 2026-11-14 in `surface.js` + `levelmesh.js`, drawn but faint far through haze; colour pair per look set in `defs.js` 2026-11-14 for 46 looks, not yet seen; skies left)
 - [ ] A9 window 3: bake, final shoot, frame rate, regeneration
 
 ## 7. What is uncertain
