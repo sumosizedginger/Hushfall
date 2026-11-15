@@ -68,7 +68,7 @@ test('surface (G1): floors and ceilings sample their paint with a mip bias that 
 
 test('surface (A8): a wall taller than band.min is drawn in three courses read from its sTop attribute; only walls get them, and the level carries the height', () => {
   const B = SURFACE.band;
-  assert.ok(B.min >= 4 && B.base > 0 && B.cap > 0 && B.base + B.cap < B.min, 'the courses fit inside a banded wall');
+  assert.ok(B.min >= 3 && B.base > 0 && B.cap > 0 && B.base + B.cap < B.min && B.baseF + B.capF < 0.5, 'the courses fit inside a banded wall, and scale with a tall one');
   assert.ok(B.baseK < 1 && B.capK > 1 && B.lineK < 1, 'a darker base, a lighter cap, dark lines');
   const sh = (kind) => {
     const m = patchSurface(new THREE.MeshLambertMaterial(), kind, 2),
@@ -80,8 +80,8 @@ test('surface (A8): a wall taller than band.min is drawn in three courses read f
   assert.match(w.vertexShader, /attribute float sTop;/);
   assert.match(w.vertexShader, /vSTop = sTop;/);
   assert.match(w.fragmentShader, /varying float vSTop;/);
-  assert.ok(w.fragmentShader.includes('vSTop > ' + B.min.toFixed(1)), 'only tall walls');
-  for (const n of [B.base, B.cap, B.baseK, B.capK, B.lineK, B.line]) assert.ok(w.fragmentShader.includes(String(n)), 'reads ' + n);
+  assert.ok(w.fragmentShader.includes('vSTop > ' + String(B.min)), 'only tall walls');
+  for (const n of [B.base, B.cap, B.baseF, B.capF, B.baseK, B.capK, B.lineK, B.line]) assert.ok(w.fragmentShader.includes(String(n)), 'reads ' + n);
   for (const k of ['floor', 'ceil', 'riser', 'trim']) {
     const s = sh(k);
     assert.ok(!s.vertexShader.includes('sTop') && !s.fragmentShader.includes('vSTop'), k + ' has no courses');

@@ -12,7 +12,8 @@
 //   shimmers (Customs Hall). Beyond `near` metres the paint is sampled with a mip bias that grows to `bias` at `far`, so the far floor reads as its
 //   broad colour, not as flickering squares. Walls are seen face-on and keep their detail.
 // * BANDS (walls only, A8 of design/VISUAL_AWE_PLAN.md): a wall face taller than `band.min` metres above its own floor reads as built in three
-//   courses: a darker base (the bottom `band.base` m), the body, and a lighter cap (the top `band.cap` m), each course edge a thin dark line. The
+//   courses: a darker base (the bottom `band.baseF` of its height, at least `band.base` m), the body, and a lighter cap (the top `band.capF`, at
+//   least `band.cap` m), each course edge a thin dark line. The
 //   face's height comes in a vertex attribute `sTop` (levelmesh.js face()); a geometry without it reads 0 and gets no bands. The tile is never
 //   taller than one cell (2 m): a wall's v runs one repeat per cell, so the "stretched tile" half of A8 already holds.
 export const SURFACE = Object.freeze({
@@ -22,7 +23,7 @@ export const SURFACE = Object.freeze({
   temp: 0.55,
   foot: { h: 0.85, k: 0.64 },
   calm: { near: 6, far: 18, bias: 2.5 },
-  band: { min: 4, base: 0.9, baseK: 0.62, cap: 0.6, capK: 1.4, line: 0.12, lineK: 0.35 }, // (2026-11-14: 0.82 / 1.17 / 0.05 m / 0.62 vanished under the value steps of post.js)
+  band: { min: 3.5, base: 0.9, baseF: 0.12, baseK: 0.62, cap: 0.6, capF: 0.1, capK: 1.4, line: 0.12, lineK: 0.35 }, // (2026-11-14: fixed 0.9 m / 0.6 m courses were 6 px on a 14 m wall, and over-4 m skipped the 4 m nave walls)
 });
 
 const KINDS = new Set(['wall', 'floor', 'ceil', 'riser', 'trim']);
@@ -70,9 +71,9 @@ export function bandGLSL(cell) {
   const B = SURFACE.band;
   return `#ifdef USE_MAP
     if (vSTop > ${glslNum(B.min)}) {
-      float bh = vMapUv.y * ${glslNum(cell)}, bc = vSTop - ${glslNum(B.cap)};
-      diffuseColor.rgb *= bh < ${glslNum(B.base)} ? ${glslNum(B.baseK)} : (bh > bc ? ${glslNum(B.capK)} : 1.0);
-      float bl = min(abs(bh - ${glslNum(B.base)}), abs(bh - bc));
+      float bh = vMapUv.y * ${glslNum(cell)}, bb = max(${glslNum(B.base)}, vSTop * ${glslNum(B.baseF)}), bc = vSTop - max(${glslNum(B.cap)}, vSTop * ${glslNum(B.capF)});
+      diffuseColor.rgb *= bh < bb ? ${glslNum(B.baseK)} : (bh > bc ? ${glslNum(B.capK)} : 1.0);
+      float bl = min(abs(bh - bb), abs(bh - bc));
       diffuseColor.rgb *= mix(${glslNum(B.lineK)}, 1.0, smoothstep(0.0, ${glslNum(B.line)}, bl));
     }
     #endif`;
