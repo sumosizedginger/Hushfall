@@ -338,8 +338,8 @@ export const LOOKS = {
     sun: [0xff8a4c, 1.1, [-12, 6, -6]],
     lamp: 1.5,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 76% coloured, warm 100 / cool 0, red 94, orange 5): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.88, 1.14], [1.16, 0.98, 0.78], 1.15),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (76% -> 69% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
   }, // Kiln Row: soot and ember, red-brown shade
   cradle: {
@@ -417,8 +417,8 @@ export const LOOKS = {
     sun: [0xff9ab8, 0.4, [-5, 12, -5]],
     lamp: 1.5,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 38% coloured, warm 84 / cool 0, magenta 57, red 27): cool shade under its warm light (its own green kept); saturation +0.12
-    grade: GR([0.86, 0.88, 1.14], [1.14, 0.97, 0.92], 1.22),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (38% -> 18% coloured, a pair gained but half its colour lost). Its pair needs a lamp or a view
+    grade: GR([1.04, 0.88, 0.98], [1.14, 0.97, 0.92], 1.1),
     shade: { foot: 0.4, ao: 0.5, patch: 0.14 },
   }, // the Cantor's Throat: wet pink and red-violet (the grade eased so the bone ribs and the brass bell can read)
   tether: {
@@ -443,8 +443,8 @@ export const LOOKS = {
     sun: [0xe0f0ff, 1.5, [-8, 15, -6]],
     lamp: 0.9,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 32% coloured, warm 1 / cool 99, cyan 60, azure 39): warm light over its cool shade; saturation +0.12
-    grade: GR([0.88, 1, 1.16], [1.15, 1.02, 0.86], 0.82),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (32% -> 19% coloured, a pair gained but half its colour lost). Its pair needs a lamp or a view
+    grade: GR([0.88, 1.0, 1.16], [1.02, 1.02, 1.0], 0.7),
     shade: { foot: 0.25, ao: 0.3, patch: 0.06 },
   }, // the cold vault: pale, blue, still
   mirror: {
@@ -461,8 +461,8 @@ export const LOOKS = {
     sun: [0xffd8a0, 0.3, [-6, 14, -6]],
     lamp: 2.3,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 82% coloured, warm 98 / cool 2, red 81, orange 12): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.92, 1.14], [1.1, 1, 0.86], 0.8),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (82% -> 77% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8),
     shade: { foot: 0.5, ao: 0.5, patch: 0.1 },
   }, // the Quiet Room: smoky bronze, one warm lamp
   dock: {
@@ -522,8 +522,8 @@ export const LOOKS = {
     sun: [0xffd0a0, 1.7, [-10, 9, -6]],
     lamp: 1,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 74% coloured, warm 100 / cool 0, red 66, orange 34): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.96, 1.14], [1.1, 1.04, 0.9], 0.78),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (74% -> 61% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.96, 0.96, 1.04], [1.1, 1.04, 0.9], 0.78),
     shade: { foot: 0.2, ao: 0.26, patch: 0.06 },
   }, // the Glass Steppe: bleached, hard, nothing to hide behind
   outpost: {
@@ -566,8 +566,8 @@ export const LOOKS = {
     sun: [0xff8040, 1.4, [-12, 6, -6]],
     lamp: 1.4,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 97% coloured, warm 100 / cool 0, red 84, orange 16): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.9, 1.14], [1.16, 0.98, 0.78], 1.1),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (97% -> 88% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
   }, // the Bellwright Yard: kiln orange, soot
   ascent: {
@@ -629,8 +629,8 @@ export const LOOKS = {
     sun: [0x8090b0, 0.0, [-6, 14, -6]],
     lamp: 1.7,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 67% coloured, warm 100 / cool 0, red 88, orange 12): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.96, 1.14], [1.12, 1.02, 0.86], 1),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (67% -> 45% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.96, 0.96, 1.04], [1.12, 1.02, 0.86], 1.0),
     shade: { foot: 0.5, ao: 0.6, patch: 0.1 },
   }, // the Lantern Ossuary: almost black, bone white where the lantern reaches
   gardens: {
@@ -675,8 +675,8 @@ export const LOOKS = {
     sun: [0xff9060, 1.1, [-12, 6, -5]],
     lamp: 1.3,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 51% coloured, warm 100 / cool 0, red 67, magenta 33): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.88, 1.14], [1.16, 0.98, 0.84], 1.1),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (51% -> 46% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([1.02, 0.88, 0.94], [1.16, 0.98, 0.84], 1.1),
     shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
   }, // C2M17, the throat: plum shade, amber from the ribs, a red sun behind the tower
   nerve: {
@@ -731,8 +731,8 @@ export const LOOKS = {
     sun: [0xfff0d0, 1.4, [-10, 12, -6]],
     lamp: 1.0,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 64% coloured, warm 83 / cool 8, red 42, orange 22): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 1, 1.14], [1.04, 1.04, 1], 0.9),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (64% -> 59% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.88, 1.0, 1.12], [1.04, 1.04, 1.0], 0.9),
     shade: { foot: 0.25, ao: 0.32, patch: 0.08 },
   }, // C2M23, the copy of the quay: glass-blue light, too clear
   conductor: {
@@ -749,8 +749,8 @@ export const LOOKS = {
     sun: [0x90e0b0, 0.2, [-6, 14, -6]],
     lamp: 1.7,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 67% coloured, warm 82 / cool 0, orange 68, lime 17): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 1.04, 1.14], [1.06, 1.04, 0.9], 0.9),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (67% -> 51% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.86, 1.04, 0.94], [1.06, 1.04, 0.9], 0.9),
     shade: { foot: 0.5, ao: 0.55, patch: 0.12 },
   }, // C2M25, the well: black wet stone, copper going green, a lamp the only warm thing
   roots: {
@@ -758,8 +758,8 @@ export const LOOKS = {
     sun: [0xd8d0b0, 0.3, [-6, 14, -6]],
     lamp: 1.3,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 22% coloured, warm 100 / cool 0, orange 99, red 1): cool shade under its warm light (its own green kept); saturation +0.12
-    grade: GR([0.86, 0.96, 1.14], [1.04, 1.02, 0.96], 0.67),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (22% -> 3% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.96, 0.96, 0.94], [1.04, 1.02, 0.96], 0.55),
     shade: { foot: 0.45, ao: 0.5, patch: 0.1 },
   }, // C2M26, the silent roots: pale, dead, no green
   fault: {
@@ -776,8 +776,8 @@ export const LOOKS = {
     sun: [0xf0e0b0, 0.9, [-8, 12, -5]],
     lamp: 1.2,
     exposure: 1,
-    // A8 pair (2026-11-14; its hero frame: 84% coloured, warm 99 / cool 0, red 46, orange 45): cool shade under its warm light (its own green kept)
-    grade: GR([0.86, 0.98, 1.14], [1.08, 1.04, 0.9], 0.85),
+    // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (84% -> 70% coloured, no pair gained). Its pair needs a lamp or a view
+    grade: GR([0.94, 0.98, 0.96], [1.08, 1.04, 0.9], 0.85),
     shade: { foot: 0.3, ao: 0.36, patch: 0.08 },
   }, // C2M28, the last tide: grey-brown dock, lime and weed
   rootbell: {
