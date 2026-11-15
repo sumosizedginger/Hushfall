@@ -381,7 +381,14 @@ export function makePod(tex, H) {
 }
 
 /** lamp tint = the light of that room: warm oil lamps (hut, loft), cold customs tubes (shed), the pods' teal (warehouse) */
-const LAMP_TINTS = { warm: { bulb: 0xffd48a, light: 0xffb060 }, cool: { bulb: 0xd8f4ff, light: 0xa8dcff }, teal: { bulb: 0xa8ffee, light: 0x50ffd8 } };
+// (A8, 2026-11-14: `blue` and `amber` are the stronger pair the accent lamps of accents.js bring to a place of the other temperature)
+export const LAMP_TINTS = {
+  warm: { bulb: 0xffd48a, light: 0xffb060 },
+  cool: { bulb: 0xd8f4ff, light: 0xa8dcff },
+  teal: { bulb: 0xa8ffee, light: 0x50ffd8 },
+  blue: { bulb: 0xc4d6ff, light: 0x5c8cff },
+  amber: { bulb: 0xffcc80, light: 0xff8a34 },
+};
 /* * a soft ball of light round a bulb: two nested additive spheres, shared materials so they merge with the other props */
 export function halo(g, x, y, z, r, color = 0xffc070) {
   for (const [k, op] of [
@@ -415,7 +422,8 @@ export function makeLamp(H, tint = 'warm') {
   return { group, light };
 }
 
-export function makeLampPost() {
+export function makeLampPost(tint = null) {
+  const T = tint ? (LAMP_TINTS[tint] ?? LAMP_TINTS.warm) : { bulb: 0xffe0a0, light: 0xffc880 }; // (no tint: the post's own colours, unchanged)
   const group = new THREE.Group();
   const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.2, 6), lam({ color: 0x24302f }));
   pole.position.y = 1.6;
@@ -423,11 +431,11 @@ export function makeLampPost() {
   const cage = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.34, 6), lam({ color: 0x1a201f }));
   cage.position.y = 3.3;
   group.add(cage);
-  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: 0xffe0a0 }));
+  const bulb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 0), bas({ color: T.bulb }));
   bulb.position.y = 3.3;
   group.add(bulb);
-  halo(group, 0, 3.3, 0, 0.28, 0xffc880);
-  const light = new THREE.PointLight(0xffc880, 120, 20, 2);
+  halo(group, 0, 3.3, 0, 0.28, T.light);
+  const light = new THREE.PointLight(T.light, 120, 20, 2);
   light.userData.base = 120;
   light.userData.flicker = 'lamp';
   return { group, light };

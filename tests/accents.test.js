@@ -1,36 +1,44 @@
-// G3 room accents (Session 12 of design/OPUS_HANDOFF.md): tools/mapkit/accents.mjs floorBorder lays a second floor skin round a room's edge, only
-// on cells of the room's own skin, only to a skin of the same surface family (so the simulation and its events cannot move), and a seed on a pillar
-// steps to the nearest floor cell.
+// A8 part 2 (2026-11-14): the accent lamps of src/render/accents.js stand where they can be drawn and never where the player walks through a
+// post; levelmesh.js turns each into a lamp and a light; the sim's maps do not carry them.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Level } from '../tools/mapkit/builder.mjs';
-import { floorBorder } from '../tools/mapkit/accents.mjs';
+import path from 'node:path';
+import * as THREE from 'three';
+import { ACCENTS } from '../src/render/accents.js';
+import { LAMP_TINTS } from '../src/render/models.js';
+import { buildLevel } from '../src/render/levelmesh.js';
+import { loadMapFile } from '../src/engine/harness.js';
+import { ROOT } from './helpers.js';
 
-const room = () => {
-  const L = new Level(7, 6);
-  for (let z = 1; z <= 4; z++) for (let x = 1; x <= 5; x++) L.g[z][x] = 'f';
-  L.g[2][3] = 'I'; // a pillar in the middle
-  return L;
-};
+const texProxy = () => new Proxy({}, { get: (o, k) => (o[k] ??= new THREE.Texture()) });
 
-test('the band: every cell of the room that touches a non-floor cell, and nothing else', () => {
-  const L = room(),
-    n = floorBorder(L, [[2, 2]], 'f', 't');
-  const rows = L.g.map((r) => r.join(''));
-  // the cells round the pillar touch it, so they are band too; only (2,3) and (4,3) are inside
-  assert.deepEqual(rows, ['#######', '#ttttt#', '#ttItt#', '#tftft#', '#ttttt#', '#######']);
-  assert.equal(n, rows.join('').split('t').length - 1);
+test('accents: every accent lamp is on an open floor cell of its map, not on a prop; a post stands against a wall; its tint exists', () => {
+  assert.ok(Object.keys(ACCENTS).length > 0);
+  for (const [id, list] of Object.entries(ACCENTS)) {
+    const map = loadMapFile(path.join(ROOT, 'maps', id + '.json'));
+    for (const a of list) {
+      const [cx, cz] = a.at,
+        k = map.kind(cx, cz);
+      assert.ok(k === 'floor' || k === 'outdoor', id + ' on ' + k);
+      assert.ok(!map.props.some((p) => Math.floor(p.at[0]) === cx && Math.floor(p.at[1]) === cz), id + ' on a prop');
+      assert.ok(LAMP_TINTS[a.tint], id + ' tint ' + a.tint);
+      assert.ok(a.kind === 'lamp' || a.kind === 'lamppost', id);
+      if (a.kind === 'lamppost')
+        assert.ok([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dz]) => map.kind(cx + dx, cz + dz) === 'wall'), id + ' post not against a wall');
+      if (a.kind === 'lamp') assert.ok(map.ceilingAt(cx, cz) - map.floor(cx, cz) <= 4.5, id + ' hangs too high');
+      assert.ok(!map.entities.some((e) => e.type === 'prop' && e.kind === a.kind && e.at[0] === cx && e.at[1] === cz), id + ' leaked into the map');
+    }
+  }
 });
 
-test('a skin of another surface family is refused, and so is a seed with no floor near it', () => {
-  assert.throws(() => floorBorder(room(), [[2, 2]], 'f', 'g'), /different surface families/);
-  assert.throws(() => floorBorder(room(), [[2, 2]], 'f', 'Q'), /must both be floor skins/);
-  assert.throws(() => floorBorder(room(), [[2, 2]], 'f', 's'), /different kinds/, "slate is 'outdoor': it would open the sky");
-  const L = new Level(9, 9);
-  assert.throws(() => floorBorder(L, [[4, 4]], 'f', 't'), /no 'f' within three cells/);
-});
-
-test('a seed on a pillar stands for its room', () => {
-  const L = room();
-  assert.ok(floorBorder(L, [[3, 2]], 'f', 't') > 0);
+test('accents: the level gets one more light per accent, at the accent', () => {
+  const id = Object.keys(ACCENTS)[0],
+    map = loadMapFile(path.join(ROOT, 'maps', id + '.json')),
+    lvl = buildLevel(map, texProxy()),
+    a = ACCENTS[id][0],
+    x = (a.at[0] + 0.5) * map.cell,
+    z = (a.at[1] + 0.5) * map.cell;
+  const near = lvl.lights.filter((l) => Math.abs(l.position.x - x) < 0.01 && Math.abs(l.position.z - z) < 0.01);
+  assert.equal(near.length, 1, id + ' accent light');
+  assert.equal(near[0].color.getHex(), new THREE.Color(LAMP_TINTS[a.tint].light).getHex());
 });

@@ -12,6 +12,7 @@ import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
 import { bakeMeshes } from './lampbake.js';
+import { ACCENTS } from './accents.js';
 import { buildShafts } from './shafts.js';
 import { skylinePlan, makeSkylinePiece } from './skyline.js';
 import {
@@ -876,6 +877,20 @@ export function buildLevel(map, tex, opts = {}) {
     group.add(r.group);
     lights.push(r.light);
     exitViews.set(e.id, r);
+  }
+  // A8 accent lamps (accents.js): a lamp of the other temperature where a place had only one; drawn here, never in the sim's map, so routes are
+  // untouched. A lamp hangs from a low roof; under the sky or a high roof it stands on a post.
+  for (const a of ACCENTS[map.id] ?? []) {
+    const [acx, acz] = a.at,
+      ax = (acx + 0.5) * S,
+      az = (acz + 0.5) * S,
+      afy = fl(acx, acz);
+    const r = a.kind === 'lamp' ? makeLamp(ce(acx, acz), a.tint) : makeLampPost(a.tint);
+    r.group.position.set(ax, a.kind === 'lamp' ? ce(acx, acz) : afy, az);
+    r.light.position.set(ax, a.kind === 'lamp' ? ce(acx, acz) - 0.9 : afy + 3.2, az);
+    group.add(r.group);
+    group.add(r.light);
+    lights.push(r.light);
   }
   if (!fxQuads.h.empty) {
     fxMats.h = new THREE.MeshBasicMaterial({ map: tex.floor_ember_a, transparent: true, opacity: 0.9, depthWrite: false });
