@@ -339,6 +339,7 @@ export const LOOKS = {
     lamp: 1.5,
     exposure: 1,
     // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (76% -> 69% coloured, no pair gained). Its pair needs a lamp or a view
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the furnace); its accent lamp shows but the pair rule does not apply
     grade: GR([1.0, 0.88, 0.84], [1.16, 0.98, 0.78], 1.15),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
   }, // Kiln Row: soot and ember, red-brown shade
@@ -462,6 +463,7 @@ export const LOOKS = {
     lamp: 2.3,
     exposure: 1,
     // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (82% -> 77% coloured, no pair gained). Its pair needs a lamp or a view
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the quiet rooms); its accent lamp shows but the pair rule does not apply
     grade: GR([1.0, 0.92, 0.84], [1.1, 1.0, 0.86], 0.8),
     shade: { foot: 0.5, ao: 0.5, patch: 0.1 },
   }, // the Quiet Room: smoky bronze, one warm lamp
@@ -514,6 +516,7 @@ export const LOOKS = {
     lamp: 1,
     exposure: 1,
     // A8 pair (2026-11-14; its hero frame: 97% coloured, warm 99 / cool 1, red 82, orange 15): cool shade under its warm light (its own green kept)
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the burning shore); its accent lamp shows but the pair rule does not apply
     grade: GR([0.86, 0.92, 1.14], [1.18, 1, 0.8], 1.05),
     shade: { foot: 0.25, ao: 0.3, patch: 0.08 },
   }, // Threshold Beach: a red sun low over the surf, violet shade
@@ -567,6 +570,7 @@ export const LOOKS = {
     lamp: 1.4,
     exposure: 1,
     // A8 pair (2026-11-14): tried and put back; the cool shade greyed it (97% -> 88% coloured, no pair gained). Its pair needs a lamp or a view
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the bell foundry); its accent lamp shows but the pair rule does not apply
     grade: GR([1.0, 0.9, 0.86], [1.16, 0.98, 0.78], 1.1),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
   }, // the Bellwright Yard: kiln orange, soot
@@ -694,6 +698,7 @@ export const LOOKS = {
     lamp: 1.2,
     exposure: 1,
     // A8 pair (2026-11-14; its hero frame: 75% coloured, warm 100 / cool 0, orange 77, red 23): cool shade under its warm light (its own green kept)
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the woven warm halls); its accent lamp shows but the pair rule does not apply
     grade: GR([0.86, 0.96, 1.14], [1.1, 1.04, 0.84], 0.95),
     shade: { foot: 0.3, ao: 0.38, patch: 0.1 },
   }, // C2M19, the bone loom: warm cream and old gold
@@ -712,6 +717,7 @@ export const LOOKS = {
     lamp: 2.0,
     exposure: 1,
     // A8 pair (2026-11-14; its hero frame: 93% coloured, warm 100 / cool 0, red 100, orange 0): cool shade under its warm light (its own green kept)
+    // A8 EXCEPTION (the owner, 2026-11-15): one temperature by design (the reactor); its accent lamp shows but the pair rule does not apply
     grade: GR([0.86, 0.9, 1.14], [1.2, 1, 0.76], 1.15),
     shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
     // C2M21, the pulse foundry: copper and orange heat // the lamps brighter, so its dark has highlights in it (it measured murky: dark on average AND
