@@ -225,6 +225,9 @@ test('Glass Steppe, the first squeezed map: the shipped JSON is what the squeeze
     assert.equal(shipped.grid[0].length, 132 - spec.cuts.reduce((n, [a, b]) => n + b - a, 0));
     const again = squeezeMap(wide, spec);
     assert.deepEqual(again.warnings, []);
+    // (A8: an accent lamp of maps-src/accent-lamps.json is added in the shipped frame, after the squeeze, as tools/mapkit/compile.mjs does)
+    const lamps = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps-src', 'accent-lamps.json'), 'utf8'));
+    for (const a of lamps.C2M02 ?? []) again.map.entities.push({ type: 'prop', kind: a.kind, at: [...a.at], tint: a.tint });
     assert.deepEqual(applySkill(JSON.parse(JSON.stringify(again.map))), shipped, 'the committed map is the squeeze of the drawing, with its sidecar');
     const map = loadMapFile(path.join(ROOT, 'maps', 'C2M02.json'));
     for (const name of ['main', 'secret'])

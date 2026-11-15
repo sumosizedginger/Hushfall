@@ -1215,6 +1215,9 @@ try {
     if (awake) {
       await T('t.setup_wakeAll(); t.tick(40)');
     }
+    // A9 (2026-11-15): the sun's shadow map is redrawn on a quarter-second clock (src/render/sunshadow.js), so one frame may carry that pass
+    // and the next not; the first frame here takes any pending redraw, the second is the camera's own frame (the number the baseline holds)
+    await T('t.measureFrame()');
     budget[name] = await T('t.measureFrame()');
   }
   // Gate 2: the heaviest new vantage points (a stall market, the hill terraces, the open quay, the dark house, the boss chamber), asleep and awake
@@ -1235,6 +1238,9 @@ try {
     if (awake) {
       await T('t.setup_wakeAll(); t.tick(40)');
     }
+    // A9 (2026-11-15): the sun's shadow map is redrawn on a quarter-second clock (src/render/sunshadow.js), so one frame may carry that pass
+    // and the next not; the first frame here takes any pending redraw, the second is the camera's own frame (the number the baseline holds)
+    await T('t.measureFrame()');
     budget[name] = await T('t.measureFrame()');
   }
   await T("t.newGame('normal', 1, { mapId: 'C1E1M01' })");
