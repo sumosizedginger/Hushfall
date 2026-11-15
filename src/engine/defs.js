@@ -353,13 +353,13 @@ export const LOOKS = {
   }, // Episode 3, the ship: pale green-grey light, violet shade, the glints are teal
   nave: {
     hemi: [0x86a89a, 0x241a2e, 1.5],
-    sun: [0xffc490, 1.7, [14, 6, 0]],
+    sun: [0xffd0a0, 1.9, [-10, 9, 3]],
     lamp: 1.35,
     exposure: 1,
     grade: GR([0.86, 1.02, 1.06], [1.12, 1.02, 0.86], 1.0),
     shade: { foot: 0.38, ao: 0.45, patch: 0.12 },
-  }, // Marrow Nave (design/VISUAL_AWE_PLAN.md A7, 2026-11-14): the choir light with a low amber sun from the east, behind the dais, so the
-  // Mother and the ribs stand against the brightest part of the sky
+  }, // Marrow Nave (design/VISUAL_AWE_PLAN.md A7, 2026-11-14): the choir light with a warm sun low in the WEST, at the walker's back, so the ship's
+  // ribs read as pale bone down the nave to the Mother (a sun behind the dais, tried first, left the ribs green-grey and the frame without a highlight)
   loom: {
     hemi: [0x7a6a9c, 0x1a1026, 1.25],
     sun: [0xf0d890, 0.35, [-6, 14, -6]],
