@@ -1741,6 +1741,12 @@
    "at": [43, 37]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [40, 73],
+   "tint": "amber"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [25, 8],

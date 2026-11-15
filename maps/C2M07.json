@@ -1112,6 +1112,12 @@
    "dest": "next"
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [27, 48],
+   "tint": "blue"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [17, 19],

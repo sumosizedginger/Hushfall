@@ -14,6 +14,9 @@ const ROOT = path.resolve(import.meta.dirname, '..', '..');
 const looks = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const views = JSON.parse(fs.readFileSync(path.join(ROOT, 'maps-src', 'hero-views.json'), 'utf8'));
 const need = Object.fromEntries(looks.filter((r) => r.needs).map((r) => [r.look, r]));
+// a map with a real accent lamp in its source (maps-src/accent-lamps.json, tools/dev/source-lamps.mjs) gets no drawn one as well
+const realFile = path.join(ROOT, 'maps-src', 'accent-lamps.json'),
+  real = fs.existsSync(realFile) ? JSON.parse(fs.readFileSync(realFile, 'utf8')) : {};
 const tintOf = (r) => (r.cool < 10 ? 'blue' : r.warm < 10 ? 'amber' : r.cool <= r.warm ? 'blue' : 'amber');
 const ROOFED = new Set(['floor', 'door', 'secret']);
 const out = {},
@@ -24,7 +27,7 @@ for (const id of Object.keys(views).sort()) {
   if (!fs.existsSync(file)) continue;
   const map = loadMapFile(file),
     look = need[map.atmosphere?.look ?? 'harbour'];
-  if (!look) continue;
+  if (!look || real[id]) continue;
   const v = { ...views[id], x: views[id].x * map.cell, z: views[id].z * map.cell }, // (hero views are kept in cells; the shoot multiplies by the cell)
     S = map.cell,
     fx = -Math.sin(v.yaw),

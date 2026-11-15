@@ -1380,6 +1380,12 @@
    "dest": "next"
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [20, 79],
+   "tint": "blue"
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [49, 27],

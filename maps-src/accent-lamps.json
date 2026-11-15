@@ -1,0 +1,93 @@
+{
+ "C1E1M02": [
+  {
+   "at": [28, 42],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C1E2M04": [
+  {
+   "at": [28, 21],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C1E3M05": [
+  {
+   "at": [38, 30],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C1E3M06": [
+  {
+   "at": [29, 23],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C1E3M08": [
+  {
+   "at": [58, 22],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C1E4S01": [
+  {
+   "at": [26, 16],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C2M01": [
+  {
+   "at": [23, 29],
+   "kind": "lamppost",
+   "tint": "blue"
+  }
+ ],
+ "C2M02": [
+  {
+   "at": [44, 38],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C2M07": [
+  {
+   "at": [27, 48],
+   "kind": "lamppost",
+   "tint": "blue"
+  }
+ ],
+ "C2M12": [
+  {
+   "at": [40, 73],
+   "kind": "lamp",
+   "tint": "amber"
+  }
+ ],
+ "C2M19": [
+  {
+   "at": [20, 79],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ],
+ "C2M21": [
+  {
+   "at": [14, 19],
+   "kind": "lamppost",
+   "tint": "blue"
+  }
+ ],
+ "C2M22": [
+  {
+   "at": [38, 14],
+   "kind": "lamp",
+   "tint": "blue"
+  }
+ ]
+}

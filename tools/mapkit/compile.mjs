@@ -15,6 +15,8 @@ import { applyRoster } from './roster.mjs';
 import { applySkill } from './skill.mjs';
 import { squeezeMap, squeezeKeep } from './squeeze.mjs';
 export { LEGEND };
+const accentFile = path.join(root, 'maps-src', 'accent-lamps.json');
+const ACCENT_LAMPS = fs.existsSync(accentFile) ? JSON.parse(fs.readFileSync(accentFile, 'utf8')) : {};
 const DIRS = { north: 0, south: Math.PI, east: -Math.PI / 2, west: Math.PI / 2 };
 
 export function compile(lv) {
@@ -143,6 +145,10 @@ export function compile(lv) {
     if (drops?.keep) drops = { ...drops, keep: squeezeKeep(drops.keep, lv.squeeze) };
     for (const w of r.warnings) errors.push(`squeeze: a coordinate pair under '${w}' was not moved (add the key to squeeze.mjs or rename it)`);
   }
+  // A8 (2026-11-14): accent lamps of the other temperature (maps-src/accent-lamps.json, written by tools/dev/source-lamps.mjs), in the SHIPPED
+  // frame, so they are added after the squeeze and left out of an unsqueezed scan compile
+  if (!(lv.squeeze && process.env.SQUEEZE === 'off'))
+    for (const a of ACCENT_LAMPS[lv.id] ?? []) out.entities.push({ type: 'prop', kind: a.kind, at: [...a.at], tint: a.tint });
   let v = validateMap(out);
   if (!v.ok) errors.push(...v.errors);
   // PT-025: a map that says `drops` is fed by the dead, not by boxes on the road: its ammunition boxes in the PUBLIC part of the map (reachable from

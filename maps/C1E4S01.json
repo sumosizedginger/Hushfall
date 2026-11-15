@@ -265,6 +265,12 @@
    "type": "pickup",
    "kind": "ammo_crate",
    "at": [19, 15]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [26, 16],
+   "tint": "blue"
   }
  ],
  "par": {

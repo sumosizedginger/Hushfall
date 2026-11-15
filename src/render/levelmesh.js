@@ -732,7 +732,7 @@ export function buildLevel(map, tex, opts = {}) {
       group.add(r.light);
       lights.push(r.light);
     } else if (p.kind === 'lamppost') {
-      const r = makeLampPost();
+      const r = makeLampPost(p.tint ?? null);
       m = r.group;
       m.position.set(p.x, fy, p.z);
       r.light.position.set(p.x, fy + 3.2, p.z);

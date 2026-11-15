@@ -1246,6 +1246,12 @@
    "type": "prop",
    "kind": "crate",
    "at": [11, 95]
+  },
+  {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [14, 19],
+   "tint": "blue"
   }
  ],
  "scenery": [

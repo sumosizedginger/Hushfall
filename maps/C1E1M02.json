@@ -1319,6 +1319,12 @@
    "at": [35, 5]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [28, 42],
+   "tint": "blue"
+  },
+  {
    "type": "enemy",
    "kind": "tollbearer",
    "at": [28, 33],

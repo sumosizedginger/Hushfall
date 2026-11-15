@@ -948,6 +948,12 @@
    "at": [59, 37]
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [23, 29],
+   "tint": "blue"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [24, 9],

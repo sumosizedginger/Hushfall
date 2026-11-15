@@ -1055,6 +1055,12 @@
    "type": "exit",
    "at": [94, 35],
    "dest": "next"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [44, 38],
+   "tint": "blue"
   }
  ],
  "scenery": [

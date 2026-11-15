@@ -1454,6 +1454,12 @@
    "locked": true
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [38, 14],
+   "tint": "blue"
+  },
+  {
    "type": "enemy",
    "kind": "zealot",
    "at": [10, 11],

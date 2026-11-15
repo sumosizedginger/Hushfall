@@ -772,6 +772,12 @@
    "at": [14, 28]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [29, 23],
+   "tint": "blue"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [22, 18],
