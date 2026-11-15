@@ -619,13 +619,14 @@ export const LOOKS = {
     shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
   }, // the Ash Basilica: ash grey, a fire at the altar
   heart: {
-    hemi: [0xb85a88, 0x0e0614, 1.4],
-    sun: [0xffa0c8, 1.1, [-6, 14, -6]],
+    hemi: [0xb85a88, 0x1e0818, 1.7],
+    sun: [0xff80c0, 0.6, [-6, 14, -6]],
     lamp: 1.9,
     exposure: 1,
-    grade: GR([0.84, 0.94, 1.1], [1.16, 0.96, 0.92], 1.05),
+    grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05),
     shade: { foot: 0.42, ao: 0.5, patch: 0.14 },
-  }, // the Sounding Deep Heart: red-violet, a pulse; deeper, cooler shade so the heart-mass stands out of the pink (A7, 2026-11-14: the frame was flat pink)
+  }, // the Sounding Deep Heart: red-violet, a pulse (A7, 2026-11-14: a cooler, deeper shade was tried and shot; the frame got flatter, spread 64 -> 59,
+  // so it was put back: its frame needs another view or a landmark, not another light)
   tender: {
     hemi: [0xb0c898, 0x2a3a28, 1.4],
     sun: [0xffe8b0, 0.5, [-8, 14, -6]],

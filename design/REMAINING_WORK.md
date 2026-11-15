@@ -30,7 +30,7 @@ Full instructions: `design/VISUAL_AWE_HANDOFF.md`.
 | Item | State | Browser |
 |---|---|---|
 | Hand-rebuild the view on Marrow Nave, Hollow Stair, Bell Tower, Gate Warden | DONE 2026-11-14, shot twice: Hollow Stair and Gate Warden meet every floor; Nave and Bell Tower have a subject but miss the bright floor (a lamp question) | done |
-| The next five weakest maps after those | built in node 2026-11-14 (C2M27, C1E2M06, C2M16, C1E4M01, C1E1M03), NOT seen; dark caves and roofed halls go to A8 | one shoot of the five |
+| The next five weakest maps after those | shot 2026-11-14: Ascent Tether meets every floor (hand view); C2M27, C1E2M06, C2M16, C1E1M03 barely moved with light alone and need hand views; dark caves and roofed halls go to A8 | one shoot per batch |
 | Wall bands on tall walls, and a second colour per place (A8) | not started; a shader change | boot check, then a shoot |
 | Grey skies repainted (`sky_overcast`, `sky_bleach`) | not started | a bake |
 | A short moving capture to judge embers, dust, swinging lamps | not started | one capture |
