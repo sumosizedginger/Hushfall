@@ -14,7 +14,8 @@ if (!outDir) {
   process.exit(2);
 }
 fs.mkdirSync(outDir, { recursive: true });
-const views = JSON.parse(fs.readFileSync(path.join(root, 'maps-src', 'hero-views.json'), 'utf8')),
+// VIEWS=<file>: other views (cells; keys are file names, `map` names the map); DOORS=shut leaves the doors closed
+const views = JSON.parse(fs.readFileSync(process.env.VIEWS ? path.resolve(process.env.VIEWS) : path.join(root, 'maps-src', 'hero-views.json'), 'utf8')),
   ids = (named.length ? named : Object.keys(views)).filter((id) => views[id]).sort();
 const server = await createServer({ root, logLevel: 'error', server: { port: 5660 + (process.pid % 30), strictPort: false } });
 await server.listen();
@@ -38,13 +39,14 @@ const T = (code) => page.evaluate(`(() => { const t = window.__GAME_TEST__; retu
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 for (const id of ids) {
   const v = views[id];
-  await T(`t.newGame('normal', 3, { mapId: '${id}' })`);
+  await T(`t.newGame('normal', 3, { mapId: '${v.map ?? id}' })`);
   await sleep(250);
   const cell = (await T('t.state().map?.cell')) ?? 2;
   await T(
-    `(t.clearOverlays(), t.setup_openDoors(), t.setup_teleport(${v.x * cell}, ${v.z * cell}, ${v.yaw}), t.setup_player({ hp: 100, hurt: 0, pitch: ${v.pitch ?? 0} }), t.render(0.02), 1)`,
+    `(t.clearOverlays(), ${process.env.DOORS === 'shut' ? '' : 't.setup_openDoors(), '}t.setup_teleport(${v.x * cell}, ${v.z * cell}, ${v.yaw}), t.setup_player({ hp: 100, hurt: 0, pitch: ${v.pitch ?? 0} }), t.render(0.02), 1)`,
   );
   await sleep(160);
+  if (v.pre) await T(`(${v.pre}, 1)`); // a view may carry `pre`: page code (with t, the dev hook) run before the frame, for look-dev probes
   await T('(t.clearOverlays(), t.render(0.02), 1)');
   await sleep(40);
   await page.screenshot({ path: path.join(outDir, `${id}.png`), type: 'png' });

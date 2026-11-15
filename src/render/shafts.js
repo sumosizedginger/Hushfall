@@ -21,8 +21,7 @@ const DIRS = [
   [-1, 0],
   [1, 0],
 ];
-const roofed = (k) => k === 'floor' || k === 'door' || k === 'secret',
-  open = (k) => k === 'outdoor';
+const open = (k) => k === 'outdoor';
 
 /**
  * the openings of a map that the sun shines through: `sunDir` = [x, y, z] pointing from the ground to the sun. Each: { cx, cz (the roofed cell),
@@ -38,7 +37,9 @@ export function findOpenings(map, sunDir) {
     S = map.cell;
   for (let cz = 0; cz < map.h; cz++)
     for (let cx = 0; cx < map.w; cx++) {
-      if (!roofed(map.kind(cx, cz))) continue;
+      // only a plain floor cell opens onto the sun: a shaft is built once and drawn through whatever stands there, so a door cell (shut, it is a
+      // slab) and a secret panel (the light would be a tell) are never openings (the owner's play report, 2026-11-15: a pale slanted slab on a shut door)
+      if (map.kind(cx, cz) !== 'floor') continue;
       for (const [dx, dz] of DIRS) {
         // the open cell is at (cx - dx, cz - dz); the light must travel from it into the room
         if (!open(map.kind(cx - dx, cz - dz)) || lx * dx + lz * dz < SHAFTS.facing) continue;
@@ -51,7 +52,7 @@ export function findOpenings(map, sunDir) {
         let len = Math.min(SHAFTS.maxLen, head / Math.tan((elev * Math.PI) / 180));
         for (let t = S * 0.5; t < len; t += S * 0.5) {
           const k = map.kind(Math.floor((ex + lx * t) / S), Math.floor((ez + lz * t) / S));
-          if (k === 'wall') {
+          if (k === 'wall' || k === 'door' || k === 'secret') {
             len = t;
             break;
           }

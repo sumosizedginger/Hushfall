@@ -37,6 +37,24 @@ test('a sun in the east shines through an east-facing opening and not when it st
   assert.equal(findOpenings(toy(), [10, 0.5, 0]).length, 0, 'a sun on the horizon is not drawn');
 });
 
+test('a door or a secret panel in the opening sends no shaft, and a shaft stops at one (the owner, 2026-11-15: a pale slanted slab drawn over a shut door)', () => {
+  for (const k of ['door', 'secret']) {
+    const m = toy(),
+      base = m.kind;
+    m.kind = (cx, cz) => (cx === 3 && cz === 1 ? k : base(cx, cz)); // the upper cell of the opening is a door / a panel
+    const east = findOpenings(m, [10, 8, 0]);
+    assert.equal(east.length, 1, k + ': only the plain floor cell opens');
+    assert.equal(east[0].cz, 2);
+    m.kind = (cx, cz) => (cx === 2 ? k : base(cx, cz)); // a door / a panel across the room, one cell in
+    for (const o of findOpenings(m, [10, 8, 0])) assert.ok(o.len <= 3 + 1e-9, k + ': the light stops at it (the walk is in half cells, as at a wall)');
+  }
+  for (const f of fs.readdirSync(path.join(ROOT, 'maps')).filter((x) => x.endsWith('.json'))) {
+    const map = parseMap(JSON.parse(fs.readFileSync(path.join(ROOT, 'maps', f), 'utf8'))),
+      sun = lookOf(map.atmosphere).sun?.[2];
+    if (sun) for (const o of findOpenings(map, sun)) assert.equal(map.kind(o.cx, o.cz), 'floor', `${f}: a shaft at ${o.cx},${o.cz}`);
+  }
+});
+
 test('a lower sun reaches further across the floor, up to the limit', () => {
   const hi = findOpenings(toy(), [10, 14, 0])[0],
     lo = findOpenings(toy(), [10, 6, 0])[0];

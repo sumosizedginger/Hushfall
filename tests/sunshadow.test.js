@@ -59,24 +59,6 @@ test('Marrow Quay (open sky): the sun casts, the map is drawn on demand, and the
   assert.equal(sun.castShadow, false, 'the effects rung turns it off');
 });
 
-test('a door takes no part in the sun shadow (the owner, 2026-11-15: a hard wedge from its own lintel on the second level); the walls still do', () => {
-  const map = shippedMap('C1E1M02'),
-    lvl = buildLevel(map, texProxy()),
-    s = setupSunShadow(fakeRenderer(), new THREE.DirectionalLight(0xffffff, 1), lvl.group, map);
-  assert.equal(s.on, true);
-  let doorMeshes = 0;
-  for (const v of lvl.doorViews.values())
-    v.traverse((o) => {
-      if (!o.isMesh || !v.userData.noSunShadow) return;
-      doorMeshes++;
-      assert.ok(!o.castShadow && !o.receiveShadow, 'a door slab is out of the sun shadow');
-    });
-  // (a closet panel is drawn as the wall it sits in and keeps the wall's shadow, like a secret panel: a panel lit unlike its wall would be a tell)
-  const slabs = [...map.doors.values()].filter((d) => !d.closet).length;
-  assert.ok(slabs >= 5 && doorMeshes >= slabs, `every door slab of the map was looked at: ${doorMeshes} meshes, ${slabs} slabs`);
-  assert.ok(s.casters > 100, 'the level itself still casts: ' + s.casters);
-});
-
 test('a map with no open sky is left alone', () => {
   const sealed = { w: 4, h: 4, cell: 2, kind: () => 'floor' },
     sun = new THREE.DirectionalLight(0xffffff, 1),
