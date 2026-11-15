@@ -75,7 +75,7 @@ const layers = L.layers();
 
 const MAP = {
   id: 'C1E1M03', name: 'Fishmarket Rows', version: 2, ceilingHeight: 4.2, par: { time: 700 },
-  atmosphere: { fog: '#1a2438', fogDensity: 0.012, sky: 'night', look: 'moon' },
+  atmosphere: { fog: '#1a2438', fogDensity: 0.012, sky: 'night', look: 'market' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 8, shell: 18, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'FISHMARKET ROWS', lines: ['The town tried to run. It ran here.', 'Every lane is a queue that never moved.'] },
   outro: 'Next: the Drowned Chandlery. The cellars flood on the ebb.',

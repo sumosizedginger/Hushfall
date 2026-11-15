@@ -24,6 +24,8 @@ export const ROOM_OF_LOOK = {
   pump: 'hall',
   choir: 'flesh',
   nave: 'flesh', // Marrow Nave's own light (A7, 2026-11-14); it sounds as it did under `choir`
+  pumpnave: 'hall', // Pump Cathedral's own light (A7); its room is the one `pump` gives it
+  market: 'town', // Fishmarket Rows' own light (A7); its room is the one `moon` gives it
   loom: 'flesh',
   loft: 'hall',
   foundry: 'hull',

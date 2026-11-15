@@ -1,6 +1,14 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
+- 2026-11-14, A7, THE NEXT FIVE, node only (the owner's "Yes, next five"; local commit, NOT pushed; NOT SEEN in a browser). CHOSEN from `mid.json`'s lowest spreads, skipping the five done and the maps the reveal recipe cannot help: the lantern caves (`dark: true`: C2M30, C2M26, C2M29) and the fully roofed halls whose frames are dim but read (C2M15 Ash Basilica, C1E3M08 Cantor's Throat, C1E4M04, C1E1M07, C1E3M05, looked at two of them): those are lamp and wall work (A8). Picked: C2M27 Fault Line (spread 50), C1E2M06 Pump Cathedral (55), C2M16 Sounding Deep Heart (64), C1E4M01 Ascent Tether (82), C1E1M03 Fishmarket Rows (86).
+  - Fault Line (`fault`, its own): one rust-brown frame; the shade turned cold blue-violet, the copper sun stronger (1.2 -> 1.6).
+  - Pump Cathedral: one teal-green frame; a new look `pumpnave` (warm key light and lamps against the green shade). `pump` is untouched (C1E2M07 shares it).
+  - Sounding Deep Heart (`heart`, its own): flat pink; darker, cooler shade and a stronger light so the heart-mass stands out.
+  - Ascent Tether: the view stood in a walled tube; now a hand view on the outer open road (38.5, 12.5) looking south up at the cable, pitch 0.25. Look unchanged.
+  - Fishmarket Rows: all blue; a new look `market` (the moon light with the stall lamps brighter and warmer). `moon` untouched (the Bell Tower shares it).
+  - New looks have their rooms in `src/audio/rooms.js` (the room they had before). Routes 90 of 90 identical; `fun-gates` PASS + STRICT PASS on the two maps whose files changed; render tests 38/38; `npm test` 1693 of 1693.
+  - **EXACT NEXT TASK:** one shoot of the five on the owner's yes (`GPU=1` through `low.ps1`: `shoot-hero.mjs <outDir> C2M27 C1E2M06 C2M16 C1E4M01 C1E1M03`), adjust at most twice; then A8.
 - 2026-11-14, A7, THE OTHER FOUR OF THE FIRST FIVE, node only (local commit, NOT pushed; NOTHING SEEN in a browser). Done by the recipe of `design/VISUAL_AWE_HANDOFF.md` section 3, after looking at each map's frame in `D:\Doom_release\awe\mid`.
   - C1E3M04 Marrow Nave: three bone ribs of the ship (scenery `rib`, scale 6.2, yaw 90 degrees) stand across the nave over the floor's slate ribs at x 31 and 47 and over the dais at x 63; each springs from the gallery roofs (y 7 m, feet over z 8.6..14.4 and their mirror, so nothing pokes into the roofed galleries or the floor) and peaks about 44 m up. A new look `nave` (the choir light, an amber sun low in the EAST behind the Mother); `choir` itself is untouched (three other maps share it). Three pieces switch the automatic skyline off for this map, on purpose: the ribs are its skyline.
   - C1E4M07 The Hollow Stair: hand view on the first landing's rim (19.5, 42.5) looking north-east across and down the shaft (pitch -0.25); `LOOKS.stair.haze.belowMax` 0.25 so the white ring below stays bright.

@@ -280,6 +280,14 @@ export const LOOKS = {
     // the harbour at night: blue shade, the lamps are the warm things // the lamps brighter, so its dark has highlights in it (it measured murky: dark
     // on average AND a narrow spread)
   },
+  market: {
+    hemi: [0x6c84b8, 0x181e34, 1.5],
+    sun: [0x9cb4ff, 1.0, [7, 13, -9]],
+    lamp: 2.3,
+    exposure: 1,
+    grade: GR([0.8, 0.94, 1.22], [1.18, 1.02, 0.84], 1.1),
+    shade: { foot: 0.3, ao: 0.4, patch: 0.1 },
+  }, // Fishmarket Rows alone (A7, 2026-11-14: its frame was all blue): the moon light with the stall lamps brighter and warmer
   cellar: {
     hemi: [0x4a7068, 0x141c1c, 1.1],
     sun: [0x80c0b0, 0.2, [-6, 14, -6]],
@@ -343,6 +351,14 @@ export const LOOKS = {
     grade: GR([0.9, 1.04, 0.96], [1.04, 1.02, 0.9], 0.8),
     shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
   }, // pumps and slurry: industrial green-black
+  pumpnave: {
+    hemi: [0x78988a, 0x16201a, 1.4],
+    sun: [0xffe0b0, 0.9, [-4, 16, -2]],
+    lamp: 1.7,
+    exposure: 1,
+    grade: GR([0.86, 1.04, 1.0], [1.16, 1.0, 0.82], 0.9),
+    shade: { foot: 0.4, ao: 0.45, patch: 0.1 },
+  }, // Pump Cathedral alone (A7, 2026-11-14: its frame was one teal-green): the pump light with warm lamps and a warm key light against green shade
   choir: {
     hemi: [0x86a89a, 0x241a2e, 1.6],
     sun: [0xbfe8d8, 0.8, [-9, 12, -6]],
@@ -603,13 +619,13 @@ export const LOOKS = {
     shade: { foot: 0.4, ao: 0.46, patch: 0.1 },
   }, // the Ash Basilica: ash grey, a fire at the altar
   heart: {
-    hemi: [0xb85a88, 0x1e0818, 1.7],
-    sun: [0xff80c0, 0.6, [-6, 14, -6]],
+    hemi: [0xb85a88, 0x0e0614, 1.4],
+    sun: [0xffa0c8, 1.1, [-6, 14, -6]],
     lamp: 1.9,
     exposure: 1,
-    grade: GR([1.06, 0.86, 1.02], [1.14, 0.96, 0.94], 1.05),
+    grade: GR([0.84, 0.94, 1.1], [1.16, 0.96, 0.92], 1.05),
     shade: { foot: 0.42, ao: 0.5, patch: 0.14 },
-  }, // the Sounding Deep Heart: red-violet, a pulse
+  }, // the Sounding Deep Heart: red-violet, a pulse; deeper, cooler shade so the heart-mass stands out of the pink (A7, 2026-11-14: the frame was flat pink)
   tender: {
     hemi: [0xb0c898, 0x2a3a28, 1.4],
     sun: [0xffe8b0, 0.5, [-8, 14, -6]],
@@ -704,12 +720,13 @@ export const LOOKS = {
   }, // C2M26, the silent roots: pale, dead, no green
   fault: {
     hemi: [0xa8704a, 0x180c08, 1.4],
-    sun: [0xff7a2a, 1.2, [-10, 5, -4]],
+    sun: [0xff7a2a, 1.6, [-10, 5, -4]],
     lamp: 1.4,
     exposure: 1,
-    grade: GR([1.04, 0.88, 0.8], [1.2, 0.98, 0.78], 1.1),
+    grade: GR([0.84, 0.86, 1.12], [1.2, 0.98, 0.78], 1.1),
     shade: { foot: 0.38, ao: 0.44, patch: 0.1 },
-  }, // C2M27, the fault line: basalt and a copper light welling up
+  }, // C2M27, the fault line: basalt and a copper light welling up; the shade turned cold blue-violet against it (A7, 2026-11-14: the frame was
+  // one rust-brown)
   tide: {
     hemi: [0xa0a890, 0x2a2e28, 1.9],
     sun: [0xf0e0b0, 0.9, [-8, 12, -5]],
