@@ -831,6 +831,12 @@
    "dest": "next"
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [64, 55],
+   "tint": "blue"
+  },
+  {
    "type": "enemy",
    "kind": "zealot",
    "at": [56, 64],

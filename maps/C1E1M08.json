@@ -1097,6 +1097,12 @@
    "at": [21, 29]
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [27, 53],
+   "tint": "amber"
+  },
+  {
    "type": "pickup",
    "kind": "key_bell",
    "at": [42, 6],

@@ -1516,6 +1516,12 @@
    "at": [42, 54]
   },
   {
+   "type": "prop",
+   "kind": "lamppost",
+   "at": [19, 85],
+   "tint": "blue"
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [83, 20],

@@ -57,7 +57,8 @@ for (const id of ids) {
   };
   const framed = (p) =>
     p && Math.abs(p[0]) < 0.78 && p[1] > -0.55 && p[1] < 0.72 && Math.hypot(p[0], p[1] * 0.6) > 0.12 && !(p[0] > 0.05 && p[1] < -0.15) && !(p[0] < -0.4 && p[1] > 0.6);
-  let pick = null;
+  let pick = null,
+    skip = +(process.env.SKIP ?? 0);
   search: for (const kind of ['lamp', 'lamppost'])
     for (const d of [7, 8, 6, 9, 10, 5, 11, 12, 4, 13, 14, 16])
       for (const s of [-3, 3, -4.5, 4.5, -2, 2, -6, 6, -8, 8]) {
@@ -69,11 +70,13 @@ for (const id of ids) {
         if (kind === 'lamp' && !ROOFED.has(k)) continue;
         if (taken.has(cx + ',' + cz) || Math.abs(map.floor(cx, cz) - vfy) > 3) continue;
         // a post has the sim's 0.3 m collision: out in the floor the bot bumped it and five maps' routes changed, so a post stands against a wall
-        if (kind === 'lamppost' && ![[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => map.kind(cx + a, cz + b) === 'wall')) continue;
+        // FREE=1 allows a free-standing post (then prove the map's routes unchanged with route-fingerprint); SKIP=n takes the (n+1)th candidate
+        if (kind === 'lamppost' && !process.env.FREE && ![[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => map.kind(cx + a, cz + b) === 'wall')) continue;
         const x = (cx + 0.5) * S,
           z = (cz + 0.5) * S,
           bulb = kind === 'lamp' ? map.ceilingAt(cx, cz) - 0.92 : map.floor(cx, cz) + 3.3;
         if (!seen(x, z) || !framed(ndc(x, bulb, z))) continue;
+        if (skip-- > 0) continue;
         pick = { at: [cx, cz], kind, tint: tintOf(look) };
         console.log(id.padEnd(8), look.look.padEnd(10), pick.tint.padEnd(6), kind.padEnd(9), cx + ',' + cz, 'frame', ndc(x, bulb, z).map((n) => n.toFixed(2)).join(','));
         break search;
