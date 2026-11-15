@@ -82,16 +82,20 @@ export function setupSunShadow(renderer, sun, group, map) {
   sun.shadow.normalBias = SUN_SHADOW.normalBias;
   sun.shadow.bias = SUN_SHADOW.bias;
   sun.shadow.intensity = SUN_SHADOW.strength;
-  group.traverse((o) => {
+  // a piece flagged `userData.noSunShadow` (a door) is skipped with everything under it
+  const walk = (o) => {
+    if (o.userData?.noSunShadow) return;
     const m = o.material;
-    if (!o.isMesh || !m || Array.isArray(m) || m.transparent || m.blending === THREE.AdditiveBlending) return;
-    if (m.isMeshLambertMaterial || m.isMeshStandardMaterial || m.isMeshPhongMaterial) {
-      o.castShadow = true;
-      o.receiveShadow = true;
-      out.casters++;
-      out.receivers++;
-    }
-  });
+    if (o.isMesh && m && !Array.isArray(m) && !m.transparent && m.blending !== THREE.AdditiveBlending)
+      if (m.isMeshLambertMaterial || m.isMeshStandardMaterial || m.isMeshPhongMaterial) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+        out.casters++;
+        out.receivers++;
+      }
+    for (const c of o.children) walk(c);
+  };
+  walk(group);
   out.on = true;
   return out;
 }

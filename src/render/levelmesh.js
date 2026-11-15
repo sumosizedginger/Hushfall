@@ -585,7 +585,9 @@ export function buildLevel(map, tex, opts = {}) {
     }
     const m = makeDoorSlab(d.breath ? (tex.door_gill_a ?? T('door_hatch_a')) : T('door_hatch_a'), S, span, map.doorAxis(d.cx, d.cz), !!d.key);
     m.position.set(...pos);
-    m.userData = { base: fy, span: span - 0.05 };
+    // (noSunShadow, 2026-11-15, the owner's play report: under the low sun a slab recessed in its roofed cell took a hard diagonal wedge from its
+    // own lintel and jambs; a door is left out of the sun's shadow, lit evenly as before A3)
+    m.userData = { base: fy, span: span - 0.05, noSunShadow: true };
     group.add(m);
     doorViews.set(d.cx + ',' + d.cz, m);
   }
