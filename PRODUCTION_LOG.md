@@ -1,6 +1,13 @@
 # PRODUCTION LOG
 
 ## CURRENT STATE (read first)
+- 2026-11-14, A7, HAND VIEWS FOR THE FOUR THAT LIGHT ALONE DID NOT MOVE, node only (the owner's "Views for those four"; local commit, NOT pushed; NOT SEEN in a browser). Each chosen from the map's grid and source (`maps-src/hero-views.json`, `by: "hand"`); no map file changed, so no landmark was added (each place already has its subject in reach of the new view).
+  - C1E2M06 Pump Cathedral (29.5, 9.5, yaw -2.8, pitch -0.3): from the north gallery 8 m up, looking south-south-east and down over the sump at the great pump, the east catwalks and the south gallery. Was: the ground floor of the entrance end, looking east into the pump's face.
+  - C2M16 Sounding Deep Heart (62.5, 44.5, yaw west, pitch 0.3): in the east lobe, 14 cells (28 m) from the heart-mass, looking up at it hung over the waist. Was: the exit corridor, 38 cells away, where the fog ate it.
+  - C2M27 Fault Line (50.5, 28.5, yaw -1.05, pitch -0.25): on the south lip, looking east-north-east along the rift and down at the copper shaft (64, 20) and the bridges. Was: on the south road looking west-north-west, away from the glow.
+  - C1E1M03 Fishmarket Rows (9.5, 10.5, yaw -2.16, pitch -0.12): from the west end of the boardwalk, 2 m up, looking south-east over the stall rows and the lanterns at x 30. Was: the south-west corner with no stall lamp in view. The far tower at (80, 6) stays where it is (70+ m in this fog from any view in the market; moving it nearer was left for the frame to ask for).
+  - Routes 72 of 72 identical (no map changed); `npm test` 1693 of 1693.
+  - **EXACT NEXT TASK:** one shoot of these four on the owner's named yes (`GPU=1` through `tools/dev/low.ps1`, `tools/dev/shoot-hero.mjs D:/Doom_release/awe/a7f C2M27 C1E2M06 C2M16 C1E1M03`), score against `mid.json`; then A8 (wall bands).
 - 2026-11-14, A7, THE NEXT FIVE, node only (the owner's "Yes, next five"; local commit, NOT pushed; NOT SEEN in a browser). CHOSEN from `mid.json`'s lowest spreads, skipping the five done and the maps the reveal recipe cannot help: the lantern caves (`dark: true`: C2M30, C2M26, C2M29) and the fully roofed halls whose frames are dim but read (C2M15 Ash Basilica, C1E3M08 Cantor's Throat, C1E4M04, C1E1M07, C1E3M05, looked at two of them): those are lamp and wall work (A8). Picked: C2M27 Fault Line (spread 50), C1E2M06 Pump Cathedral (55), C2M16 Sounding Deep Heart (64), C1E4M01 Ascent Tether (82), C1E1M03 Fishmarket Rows (86).
   - Fault Line (`fault`, its own): one rust-brown frame; the shade turned cold blue-violet, the copper sun stronger (1.2 -> 1.6).
   - Pump Cathedral: one teal-green frame; a new look `pumpnave` (warm key light and lamps against the green shade). `pump` is untouched (C1E2M07 shares it).
