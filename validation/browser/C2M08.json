@@ -1,7 +1,7 @@
 {
   "mapId": "C2M08",
-  "when": "2026-11-12T11:27:10.265Z",
-  "commit": "644678c",
+  "when": "2026-11-15T17:03:26.384Z",
+  "commit": "69883cd",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -11,13 +11,13 @@
   "mapSha": "7751b9e392eef968",
   "routesSha": "96d2e2a10318a0eb",
   "sources": {
-    "engine": "635d10562c951ea4",
-    "render": "2b630c9dd86ba3b3",
+    "engine": "4bdbe685c9468dee",
+    "render": "c8bfb50bd7af3900",
     "game": "bfa8bd9473984574",
-    "audio": "c5a2850f1747a821",
-    "assets": "459f63105c3b6d8e",
+    "audio": "13a17a3273b88347",
+    "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "5fa72cb28e29f113"
+    "probes": "e522068434d07c95"
   },
   "routes": {
     "main": {
@@ -29,7 +29,7 @@
       "agree": true,
       "kills": 33,
       "secrets": 0,
-      "wallSeconds": 4
+      "wallSeconds": 3
     },
     "secret": {
       "ok": true,
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 33,
       "secrets": 2,
-      "wallSeconds": 3
+      "wallSeconds": 4
     }
   },
   "hud": {
@@ -177,7 +177,7 @@
     {
       "name": "real-game route C2M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6860 policy=standing wall=4s"
+      "detail": "status=complete failed=null ticks=6860 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M08.main: browser sim == Node sim (ticks + state hash)",
@@ -187,7 +187,7 @@
     {
       "name": "real-game route C2M08.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7400 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=7400 policy=standing wall=4s"
     },
     {
       "name": "real-game route C2M08.secret: browser sim == Node sim (ticks + state hash)",
@@ -240,5 +240,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 18
+  "wallSeconds": 20
 }

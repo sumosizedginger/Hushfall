@@ -2,20 +2,20 @@
   "mapId": "C1E4S01",
   "mapVersion": 1,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "644678c",
+  "codeVersion": "69883cd",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "f155187f4921e38d",
-  "assetVersion": "459f63105c3b6d8e",
-  "engineSha": "635d10562c951ea4",
+  "mapSha": "f4ccb9cac3d81017",
+  "assetVersion": "9c618a066ecbc4e2",
+  "engineSha": "4bdbe685c9468dee",
   "sources": {
-    "engine": "635d10562c951ea4",
-    "render": "2b630c9dd86ba3b3",
+    "engine": "4bdbe685c9468dee",
+    "render": "c8bfb50bd7af3900",
     "game": "bfa8bd9473984574",
-    "audio": "c5a2850f1747a821",
-    "assets": "459f63105c3b6d8e",
+    "audio": "13a17a3273b88347",
+    "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "5fa72cb28e29f113"
+    "probes": "e522068434d07c95"
   },
   "routesSha": "5314aeb5c0ee4a16",
   "loads": true,
@@ -94,7 +94,7 @@
     "floorSkins": [
       "5"
     ],
-    "props": 15,
+    "props": 16,
     "secrets": 0,
     "cells": 1564,
     "gates": 0,
@@ -196,17 +196,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E4S01.json",
-    "when": "2026-11-12T11:24:45.763Z",
-    "commit": "644678c",
-    "mapSha": "f155187f4921e38d",
+    "when": "2026-11-15T17:00:44.181Z",
+    "commit": "69883cd",
+    "mapSha": "f4ccb9cac3d81017",
     "routesSha": "5314aeb5c0ee4a16",
     "passed": 11,
     "total": 11,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-12T11:15:50.066Z",
-      "commit": "644678c",
+      "when": "2026-11-15T16:50:12.313Z",
+      "commit": "69883cd",
       "passed": 148,
       "total": 148
     }
@@ -352,7 +352,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E4S01.json: f155187f4921e38d vs f155187f4921e38d"
+        "detail": "validation/browser/C1E4S01.json: f4ccb9cac3d81017 vs f4ccb9cac3d81017"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

@@ -2,20 +2,20 @@
   "mapId": "C2M22",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "644678c",
+  "codeVersion": "69883cd",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "44089bd5b359553e",
-  "assetVersion": "459f63105c3b6d8e",
-  "engineSha": "635d10562c951ea4",
+  "mapSha": "52ba316f706d6d8f",
+  "assetVersion": "9c618a066ecbc4e2",
+  "engineSha": "4bdbe685c9468dee",
   "sources": {
-    "engine": "635d10562c951ea4",
-    "render": "2b630c9dd86ba3b3",
+    "engine": "4bdbe685c9468dee",
+    "render": "c8bfb50bd7af3900",
     "game": "bfa8bd9473984574",
-    "audio": "c5a2850f1747a821",
-    "assets": "459f63105c3b6d8e",
+    "audio": "13a17a3273b88347",
+    "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "5fa72cb28e29f113"
+    "probes": "e522068434d07c95"
   },
   "routesSha": "adfc57391fbf58d0",
   "loads": true,
@@ -145,7 +145,7 @@
       "7",
       "Γ"
     ],
-    "props": 74,
+    "props": 75,
     "secrets": 2,
     "cells": 6510,
     "gates": 0,
@@ -305,17 +305,17 @@
   },
   "browser": {
     "file": "validation/browser/C2M22.json",
-    "when": "2026-11-12T11:32:23.364Z",
-    "commit": "644678c",
-    "mapSha": "44089bd5b359553e",
+    "when": "2026-11-15T17:09:07.521Z",
+    "commit": "69883cd",
+    "mapSha": "52ba316f706d6d8f",
     "routesSha": "adfc57391fbf58d0",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-12T11:15:50.066Z",
-      "commit": "644678c",
+      "when": "2026-11-15T16:50:12.313Z",
+      "commit": "69883cd",
       "passed": 148,
       "total": 148
     }
@@ -671,7 +671,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C2M22.json: 44089bd5b359553e vs 44089bd5b359553e"
+        "detail": "validation/browser/C2M22.json: 52ba316f706d6d8f vs 52ba316f706d6d8f"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

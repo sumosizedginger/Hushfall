@@ -2,20 +2,20 @@
   "mapId": "C2M25",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "644678c",
+  "codeVersion": "69883cd",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "dc5f9ba2e9e4bfdb",
-  "assetVersion": "459f63105c3b6d8e",
-  "engineSha": "635d10562c951ea4",
+  "mapSha": "4fdfbadb6cefd2e1",
+  "assetVersion": "9c618a066ecbc4e2",
+  "engineSha": "4bdbe685c9468dee",
   "sources": {
-    "engine": "635d10562c951ea4",
-    "render": "2b630c9dd86ba3b3",
+    "engine": "4bdbe685c9468dee",
+    "render": "c8bfb50bd7af3900",
     "game": "bfa8bd9473984574",
-    "audio": "c5a2850f1747a821",
-    "assets": "459f63105c3b6d8e",
+    "audio": "13a17a3273b88347",
+    "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "5fa72cb28e29f113"
+    "probes": "e522068434d07c95"
   },
   "routesSha": "3f85be24e83a15c1",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 6934,
-      "finalHash": "acf3f1d4",
+      "finalHash": "59d0b057",
       "kills": 38,
       "secrets": 0,
       "items": 5,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7821,
-      "finalHash": "9f0c15e8",
+      "finalHash": "653ac732",
       "kills": 38,
       "secrets": 2,
       "items": 7,
@@ -144,7 +144,7 @@
       "Α",
       "Λ"
     ],
-    "props": 32,
+    "props": 33,
     "secrets": 2,
     "cells": 6400,
     "gates": 0,
@@ -304,17 +304,17 @@
   },
   "browser": {
     "file": "validation/browser/C2M25.json",
-    "when": "2026-11-12T11:33:06.363Z",
-    "commit": "644678c",
-    "mapSha": "dc5f9ba2e9e4bfdb",
+    "when": "2026-11-15T17:09:53.917Z",
+    "commit": "69883cd",
+    "mapSha": "4fdfbadb6cefd2e1",
     "routesSha": "3f85be24e83a15c1",
     "passed": 13,
     "total": 13,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-12T11:15:50.066Z",
-      "commit": "644678c",
+      "when": "2026-11-15T16:50:12.313Z",
+      "commit": "69883cd",
       "passed": 148,
       "total": 148
     }
@@ -665,7 +665,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C2M25.json: dc5f9ba2e9e4bfdb vs dc5f9ba2e9e4bfdb"
+        "detail": "validation/browser/C2M25.json: 4fdfbadb6cefd2e1 vs 4fdfbadb6cefd2e1"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

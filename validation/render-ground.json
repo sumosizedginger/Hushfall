@@ -1,14 +1,14 @@
 {
-  "when": "2026-11-12T11:15:46.262Z",
-  "commit": "644678c",
+  "when": "2026-11-15T16:50:12.030Z",
+  "commit": "69883cd",
   "sources": {
-    "engine": "635d10562c951ea4",
-    "render": "2b630c9dd86ba3b3",
+    "engine": "4bdbe685c9468dee",
+    "render": "c8bfb50bd7af3900",
     "game": "bfa8bd9473984574",
-    "audio": "c5a2850f1747a821",
-    "assets": "459f63105c3b6d8e",
+    "audio": "13a17a3273b88347",
+    "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "5fa72cb28e29f113"
+    "probes": "e522068434d07c95"
   },
   "checks": [
     {
@@ -24,7 +24,7 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "4860 rows (1474 on raised floors), 0 violations, deepest -0.02 m, highest 0.23 m; two samples of all 2430 enemies: true"
+      "detail": "4860 rows (1474 on raised floors), 0 violations, deepest -0.02 m, highest 0.229 m; two samples of all 2430 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
@@ -44,7 +44,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.806 m tall on 12 m, shield r 2.955, 6 nodes"
+      "detail": "body 4.806 m tall on 12 m, shield r 2.954, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -2638,7 +2638,7 @@
           "raised": 8,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.23
+          "worstFloat": 0.229
         },
         "matrix": {
           "n": 69,
@@ -3559,7 +3559,7 @@
         "x": 57,
         "y": 14.4,
         "z": 51,
-        "r": 2.955
+        "r": 2.954
       },
       "farthestBodyCornerFromShieldCentre": 2.839,
       "ring": [
@@ -3862,7 +3862,7 @@
         "hitRadius": 0.6,
         "hitForward": 0,
         "colliderRadius": 0.38,
-        "drawnWidthX": 1.369
+        "drawnWidthX": 1.412
       },
       "gill": {
         "drawnHeight": 1.167,
@@ -4078,7 +4078,7 @@
         "raised": 1474,
         "violations": 0,
         "deepest": -0.02,
-        "highest": 0.23
+        "highest": 0.229
       },
       "matrix": {
         "rows": 7795,
