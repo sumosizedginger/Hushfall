@@ -153,7 +153,7 @@ try {
       while (s.tick < P.tick && s.mode === 'playing') s = await T(`t.stepBot(${Math.min(120, P.tick - s.tick)})`);
       await T('t.clearOverlays()');
     }
-    const frames = c.seconds * FPS,
+    const frames = +(process.env.CLIP_SECONDS ?? c.seconds) * FPS, // (CLIP_SECONDS=20: the A9 motion check)
       ev = [];
     let hp = 100;
     for (let f = 0; f < frames; f++) {
