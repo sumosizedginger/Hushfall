@@ -22,7 +22,7 @@ export const SURFACE = Object.freeze({
   temp: 0.55,
   foot: { h: 0.85, k: 0.64 },
   calm: { near: 6, far: 18, bias: 2.5 },
-  band: { min: 4, base: 0.9, baseK: 0.82, cap: 0.6, capK: 1.17, line: 0.05, lineK: 0.62 },
+  band: { min: 4, base: 0.9, baseK: 0.62, cap: 0.6, capK: 1.4, line: 0.12, lineK: 0.35 }, // (2026-11-14: 0.82 / 1.17 / 0.05 m / 0.62 vanished under the value steps of post.js)
 });
 
 const KINDS = new Set(['wall', 'floor', 'ceil', 'riser', 'trim']);
