@@ -1,5 +1,5 @@
 {
-  "generatedBy": "tools/bake.mjs + tools/dev/refresh-manifest.mjs",
+  "generatedBy": "tools/bake.mjs",
   "env": {
     "p5": "2.3.4",
     "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
@@ -258,8 +258,8 @@
       "width": 512,
       "height": 256,
       "transparent": false,
-      "sha256": "67f1193b53ac4e36e36129c60fa18f3fa41f0db66ce85702c353987f801d2857",
-      "bytes": 226602
+      "sha256": "44a7e609cc5002f5e27830986b42b3c36d5d978a8851a9f7091f39393b73e2db",
+      "bytes": 237719
     },
     "wall_saltbrick_a": {
       "seed": 9101,
@@ -570,8 +570,8 @@
       "width": 512,
       "height": 256,
       "transparent": false,
-      "sha256": "a7be2e1f355af13a1ff4a59bf2c66fe6cf95c110c93c334c66d44b8530c955cc",
-      "bytes": 203299
+      "sha256": "5dfdc42f160c47a8a8633540753d06d26420cafab1c03c7ba59d35329433526a",
+      "bytes": 214339
     },
     "sky_ash": {
       "seed": 8402,
