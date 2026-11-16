@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M23",
- "version": 2,
+ "version": 3,
  "name": "The Reprise",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -496,7 +496,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [94, 18]
+   "at": [94, 18],
+   "facing": 1.83
   },
   {
    "type": "enemy",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M05",
- "version": 3,
+ "version": 4,
  "name": "The Cradle Annex",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -489,7 +489,8 @@
   },
   {
    "type": "player",
-   "at": [5, 22]
+   "at": [5, 22],
+   "facing": -1.31
   },
   {
    "type": "pickup",

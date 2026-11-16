@@ -1157,6 +1157,12 @@
    "at": [13, 19]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [11, 13],
+   "tint": "amber"
+  },
+  {
    "type": "enemy",
    "kind": "bellhand",
    "at": [14, 8],

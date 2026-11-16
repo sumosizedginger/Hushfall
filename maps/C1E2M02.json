@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M02",
- "version": 4,
+ "version": 5,
  "name": "Evaporation Pans",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -823,7 +823,8 @@
   },
   {
    "type": "player",
-   "at": [3, 25]
+   "at": [3, 25],
+   "facing": -1.46
   },
   {
    "type": "enemy",

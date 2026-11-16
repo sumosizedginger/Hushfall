@@ -1747,6 +1747,12 @@
    "tint": "amber"
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [46, 78],
+   "tint": "amber"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [25, 8],

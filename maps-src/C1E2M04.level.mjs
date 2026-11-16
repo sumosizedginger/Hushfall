@@ -82,7 +82,9 @@ FUN.platform({ search: { region: [22, 18, 31, 26], lane: laneOf('C1E2M04') }, w:
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M04', name: 'Kiln Row', version: 2, ceilingHeight: 3.8, par: { time: 420 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
+
+  id: 'C1E2M04', name: 'Kiln Row', version: 3, startFacing: -1.31, ceilingHeight: 3.8, par: { time: 420 },
   atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'ash', look: 'kiln' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Brass damper handle', iron: 'Iron damper handle' },

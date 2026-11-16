@@ -84,6 +84,8 @@ node tools/dev/frame-score.mjs <outDir>
 - **The Drowned Choir (C2M12) hero frame has a large flat pale-green slab across its middle.** It looks like haze over a water plane and may be a drawing fault, not a style choice. Shoot it from two other angles; if the slab is a flat unshaded plane, find what draws it (the water plane under `HAZE.below`, or a wading-water overlay) before touching numbers.
 - **The big scenery is unshaded.** The Marrow Nave's rib arches and the skyline pieces are flat single-colour bands beside textured walls. They would sit better with a vertical gradient (darker at the foot, the place's sky colour at the top) or a skin from an existing atlas. Drawn only; `src/render/skyline.js` and the scenery makers in `src/render/models_c2.js`.
 - **Pump Cathedral's hero view is 55% rusty wall.** Set it by hand (the visual handoff, recipe step 6).
+- **Episode 2's start rooms are one template** (O4): nine box rooms with a centred door and a crate; a turn hides it, a redraw of each start room would end it.
+- **C1E2M02's normal balance is on a knife edge** (O4): the strafing fighter with 25% less ammo dies (158 damage) when the start turns 15 degrees either way.
 - **About ten maps are still dark or flat by score** (the lowest spreads in the latest set: C2M16 42, C2M27 45, C1E3M08 51, C2M15 64). Some are dark by design; a dark place still needs one bright thing in it.
 
 ## 8. Intended exceptions
@@ -103,3 +105,14 @@ node tools/dev/frame-score.mjs <outDir>
 - **Found:** `tools/mapkit/compile.mjs` skipped `startFacing: 0` (a falsy number); it now takes any facing that is not null.
 - **Not done:** O1, O4, O5 need the shoot (the owner's named yes).
 
+
+## 10. O1 and O4 (2026-11-16, the owner's named yes for the shoot)
+
+- **O1, the shoot:** all 68 openings shot after O2/O3 (`D:\Doom_release\awe\open-now`, GPU, 800 wide, doors shut; 0 pointer-lock requests, no page errors). Scores in `open-now-score.json`, labelled sheets `openings-C1.png` / `openings-C2.png` beside them. There is no "before" set: O2/O3 were committed before the shoot. To have one, shoot from 45bd2c3.
+- **O4, judged by eye.** Most "sees little" openings already read as a composed picture (a lit corridor, a lamp, depth) and were left alone. Three faults the numbers did not show:
+  - **Episode 2 opened on the same picture nine times:** a box room seen dead-on, a door in the middle, a crate in front (C1E2M01 to M08, C1E2S01). Each start is turned about 15 degrees so the door sits off-centre, alternating left and right: -1.83 on M01, M02 (only -1.46, see below), M03, M07, S01; -1.31 on M04, M05, M06, M08. This breaks the repeat; the rooms are still one template, which a turn cannot fix (section 7).
+  - **Four openings were mostly black:** C1E1M04, C1E4M04 and C2M12 each get a hanging amber lamp 10 m ahead, 11 degrees off the crosshair. Draw-only: 63 fingerprint runs identical. C2M25 faced a dark wall 9 m east, so it is turned to 0.52 rad, up the open ground the route crosses (sees 1304).
+  - **C2M23 opened on a flat wall over the water;** turned to 1.83 rad (west, 19 degrees off the route; 57 m deep, four skyline pieces).
+- **Gates:** the twelve turned maps pass fun-gates and strict. Two needed a second try: C1E2M05 lost its hard secret run at -1.83 and passes at -1.31. C1E2M02 fails the strict robustness check (strafing fighter, normal, 25% less ammo: dead, 158 damage) at both 15-degree turns and passes at -1.46. Its balance is on a knife edge, like C2M04 and C2M07.
+- **Measured after:** 39 of 68 meet every floor (36 before O4).
+- **Not done:** O5 (the reshoot into `open-after`) needs a fresh yes for that job; then the evidence regeneration (31 maps are now stale).

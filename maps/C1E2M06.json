@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M06",
- "version": 3,
+ "version": 4,
  "name": "Pump Cathedral",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -642,7 +642,8 @@
   },
   {
    "type": "player",
-   "at": [5, 24]
+   "at": [5, 24],
+   "facing": -1.31
   },
   {
    "type": "pickup",

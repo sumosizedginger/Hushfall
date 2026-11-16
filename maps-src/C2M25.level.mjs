@@ -94,7 +94,8 @@ FUN.secretRoom({ id: 'root-cellar', search: { region: [3, 3, 76, 76], prefer: [4
 
 
 const MAP = {
-  id: 'C2M25', name: 'Root Bell Descent', version: 2, ceilingHeight: 4.2, par: { time: 540 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): the start faced a dark wall 9 m east; it looks up the open ground the route crosses
+  id: 'C2M25', name: 'Root Bell Descent', version: 3, startFacing: 0.52, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'descent', sky: 'root', dark: true, fog: '#0c1410', fogDensity: 0.012, ambient: 0.5 },
   lantern: { oil: 120, max: 240 }, lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 36, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower'] },

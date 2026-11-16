@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M08",
- "version": 3,
+ "version": 4,
  "name": "The Grafting Floor",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -631,7 +631,8 @@
   },
   {
    "type": "player",
-   "at": [5, 29]
+   "at": [5, 29],
+   "facing": -1.31
   },
   {
    "type": "pickup",

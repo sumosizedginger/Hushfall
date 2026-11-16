@@ -106,7 +106,9 @@ FUN.bypass({ from: [3, 22], to: [11, 26] });          // a way round the gatehou
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M01', name: 'Brine Gate', version: 4, ceilingHeight: 4.2, par: { time: 600 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
+
+  id: 'C1E2M01', name: 'Brine Gate', version: 5, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'BRINE GATE', lines: ['The works guard themselves the way a port does.', 'With people who were told to stand there.'] },

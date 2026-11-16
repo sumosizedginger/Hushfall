@@ -66,7 +66,9 @@ floorBorder(L, [[17,29]], 'g', 'j');
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2M08', name: 'The Grafting Floor', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
+
+  id: 'C1E2M08', name: 'The Grafting Floor', version: 3, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#2a1a30', fogDensity: 0.016, sky: 'night', ambient: 0.65, look: 'cradle' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE GRAFTING FLOOR', lines: ['Every pipe in the Works ends in this room.', 'Something has been fed here for a very long time.'] },

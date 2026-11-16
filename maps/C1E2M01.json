@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M01",
- "version": 6,
+ "version": 7,
  "name": "Brine Gate",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -609,7 +609,8 @@
   },
   {
    "type": "player",
-   "at": [5, 22]
+   "at": [5, 22],
+   "facing": -1.83
   },
   {
    "type": "pickup",

@@ -71,7 +71,9 @@ ENC.dropIn({ at: [42,45], radius: 2, cells: ENC.around([42,45], { n: 3, min: 6, 
 // ---- end PT-052 ----
 
 const MAP = {
-  id: 'C2M23', name: 'The Reprise', version: 1, ceilingHeight: 4.2, par: { time: 600 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): the start faced a flat wall over the water; it looks west down the long view, 19 degrees off the route
+
+  id: 'C2M23', name: 'The Reprise', version: 2, startFacing: 1.83, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'copy', sky: 'dusk', beat: true, fog: '#2a4058', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 130, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE REPRISE', lines: ['A harbour, a town and a hill, built from what the grafted remember of them.', 'The pier is on the wrong side. The sea is glass. Everything is in the right place.'] },

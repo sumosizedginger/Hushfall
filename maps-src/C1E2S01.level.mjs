@@ -39,7 +39,8 @@ console.log('C1E2S01 shape:', S.report.bays, 'bays,', S.report.corners, 'corners
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E2S01', name: 'The Rime Vault', version: 1, ceilingHeight: 3.4, par: { time: 240 },
+  // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
+  id: 'C1E2S01', name: 'The Rime Vault', version: 2, startFacing: -1.83, ceilingHeight: 3.4, par: { time: 240 },
   atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75, look: 'rime' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coolant valve A', iron: 'Coolant valve B', bell: 'Coolant valve C' },

@@ -116,6 +116,15 @@
    ],
    "kind": "lamp",
    "tint": "amber"
+  },
+  {
+   "at": [
+    46,
+    78
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
   }
  ],
  "C2M19": [
@@ -272,6 +281,28 @@
    "at": [
     34,
     53
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E1M04": [
+  {
+   "at": [
+    11,
+    13
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E4M04": [
+  {
+   "at": [
+    13,
+    32
    ],
    "kind": "lamp",
    "tint": "amber",

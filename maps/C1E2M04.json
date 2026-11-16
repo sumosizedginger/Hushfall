@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M04",
- "version": 4,
+ "version": 5,
  "name": "Kiln Row",
  "ceilingHeight": 3.8,
  "atmosphere": {
@@ -647,7 +647,8 @@
   },
   {
    "type": "player",
-   "at": [5, 23]
+   "at": [5, 23],
+   "facing": -1.31
   },
   {
    "type": "pickup",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M25",
- "version": 3,
+ "version": 4,
  "name": "Root Bell Descent",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -317,7 +317,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [68, 56]
+   "at": [68, 56],
+   "facing": 0.52
   },
   {
    "type": "pickup",

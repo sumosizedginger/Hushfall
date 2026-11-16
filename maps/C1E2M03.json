@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M03",
- "version": 3,
+ "version": 4,
  "name": "Rail Yard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -580,7 +580,8 @@
   },
   {
    "type": "player",
-   "at": [5, 19]
+   "at": [5, 19],
+   "facing": -1.83
   },
   {
    "type": "pickup",

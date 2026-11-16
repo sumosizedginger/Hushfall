@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M07",
- "version": 3,
+ "version": 4,
  "name": "Slurry Undercroft",
  "ceilingHeight": 3.2,
  "atmosphere": {
@@ -409,7 +409,8 @@
   },
   {
    "type": "player",
-   "at": [5, 22]
+   "at": [5, 22],
+   "facing": -1.83
   },
   {
    "type": "pickup",

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2S01",
- "version": 1,
+ "version": 2,
  "name": "The Rime Vault",
  "ceilingHeight": 3.4,
  "atmosphere": {
@@ -369,7 +369,8 @@
   },
   {
    "type": "player",
-   "at": [5, 16]
+   "at": [5, 16],
+   "facing": -1.83
   },
   {
    "type": "prop",
