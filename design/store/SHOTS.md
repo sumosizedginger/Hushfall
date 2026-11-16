@@ -14,6 +14,8 @@ Made from the game itself on the owner's own graphics card (an RTX 3060 Ti class
 | `store\trailer\hushfall-trailer-1080p.mp4` | a 52 second trailer, 1080p, 30 frames a second, H.264 and AAC, 46 MB (FREEZE F17): the title picture, five clips of the real game (Marrow Quay, the Marrow Nave, the Pulse Foundry, a vent launch over the Hollow Stair, the Gate Warden under fire), an end card with three true lines from the copy. The sound is the game's own: see below |
 | `store\title\banner-1280x320.png`, `capsule-630x500.png` (itch.io's cover size), `square-512.png` | crops of the same page at the sizes a store asks for |
 
+**A9 (2026-11-15):** 01 (Marrow Quay), 02 (the Marrow Nave), 05 (the Pulse Foundry) and 06 (the Harmonic Gardens) were replaced by the hero frames of the visual plan (`GPU=1 WIDTH=800 ... tools/dev/shoot-hero.mjs D:/Doom_release/store/work/hero-a9 C1E1M01 C1E3M04 C2M21 C2M14`, from `maps-src/hero-views.json`, doors open); 03 and 04 kept (the new Hollow Stair and Root Bell frames were not better). The six frames before A9 are kept in `store\work\shots-before-a9`.
+
 The frames are the capture tool's frames chosen by eye for readability and variety (a quay, a nave, a stair, a boss, a foundry, a garden: the places, not only the fights). **A frame is chosen only if no stale card or leftover is on screen**; the first run of this job found a real bug that way (the last pickup card of the session replayed after a cinematic; fixed and held by `tests/pickup-cards.test.js`).
 
 ## How to make them again

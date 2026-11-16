@@ -730,6 +730,10 @@ export function installTestHook(app) {
     /** render ONE full frame (world + weapon + post) and report its true draw-call/triangle totals (info auto-reset is off for the duration) */
     measureFrame() {
       const i = app.renderer.info;
+      // the sun's shadow map is redrawn on a quarter-second clock (src/render/sunshadow.js): one frame first takes any pending redraw, and the
+      // clock is set back so the measured frame is the camera's own (A9, 2026-11-15: one vantage in sixteen caught the redraw, a flaky budget)
+      render(0.016);
+      if (g.view) g.view._sunT = 0;
       i.autoReset = false;
       i.reset();
       render(0.016);
