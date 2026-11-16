@@ -1232,6 +1232,12 @@
    "at": [36, 23]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [9, 21],
+   "tint": "amber"
+  },
+  {
    "type": "pickup",
    "kind": "key_iron",
    "at": [30, 8],

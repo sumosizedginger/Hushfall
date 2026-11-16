@@ -1093,6 +1093,12 @@
    "at": [30, 25]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [9, 21],
+   "tint": "amber"
+  },
+  {
    "type": "pickup",
    "kind": "key_brass",
    "at": [34, 16],

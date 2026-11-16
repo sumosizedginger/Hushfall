@@ -1,11 +1,11 @@
 {
   "mapId": "C2S01",
-  "mapVersion": 2,
+  "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "731d2f4378d1a93f",
+  "mapSha": "ab9cc334b852510d",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -27,8 +27,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2905,
-      "finalHash": "a5701fe9",
+      "ticks": 2894,
+      "finalHash": "7eb057cf",
       "kills": 0,
       "secrets": 0,
       "items": 2,
@@ -40,8 +40,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2905,
-      "finalHash": "ba0f6ee1",
+      "ticks": 2894,
+      "finalHash": "ecfad30b",
       "kills": 0,
       "secrets": 0,
       "items": 2,
@@ -53,8 +53,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2905,
-      "finalHash": "d2a8db15",
+      "ticks": 2894,
+      "finalHash": "ac8cea53",
       "kills": 0,
       "secrets": 0,
       "items": 2,
@@ -67,8 +67,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 2905,
-    "finalHash": "ba0f6ee1",
+    "ticks": 2894,
+    "finalHash": "ecfad30b",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -99,7 +99,7 @@
       "@",
       "7"
     ],
-    "props": 15,
+    "props": 16,
     "secrets": 0,
     "cells": 4480,
     "gates": 0,
@@ -135,7 +135,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.4,
+        "seconds": 48.2,
         "kills": 0,
         "failure": null
       }
@@ -169,7 +169,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.4,
+        "seconds": 48.2,
         "kills": 0,
         "failure": null
       }
@@ -203,7 +203,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 48.4,
+        "seconds": 48.2,
         "kills": 0,
         "failure": null
       }
@@ -229,7 +229,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -249,17 +249,17 @@
       {
         "name": "route C2S01.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "48.4 s"
+        "detail": "48.2 s"
       },
       {
         "name": "route C2S01.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "48.4 s"
+        "detail": "48.2 s"
       },
       {
         "name": "route C2S01.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "48.4 s"
+        "detail": "48.2 s"
       },
       {
         "name": "safe room: contains no enemies (placed or scripted)",
@@ -289,7 +289,7 @@
       {
         "name": "quality: perfect-bot time in [5,300] s",
         "ok": true,
-        "detail": "48.4 s"
+        "detail": "48.2 s"
       },
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
@@ -373,8 +373,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2S01.json: 731d2f4378d1a93f vs 731d2f4378d1a93f"
+        "ok": false,
+        "detail": "validation/browser/C2S01.json: 731d2f4378d1a93f vs ab9cc334b852510d"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -395,5 +395,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v2, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v3, 0 enemies, 15 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

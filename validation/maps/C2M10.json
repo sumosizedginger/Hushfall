@@ -1,11 +1,11 @@
 {
   "mapId": "C2M10",
-  "mapVersion": 3,
+  "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "6b91a968378f54fd",
+  "mapSha": "ed53debd567621d0",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -17,7 +17,7 @@
     "verifier": "eccb2f9ca83a6499",
     "probes": "e522068434d07c95"
   },
-  "routesSha": "95fe64a54f8d6147",
+  "routesSha": "96458582a7ea4528",
   "loads": true,
   "validationErrors": [],
   "routes": [
@@ -27,8 +27,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 3912,
-      "finalHash": "47c0f383",
+      "ticks": 3902,
+      "finalHash": "ff102b5a",
       "kills": 22,
       "secrets": 0,
       "items": 1,
@@ -40,12 +40,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 3973,
-      "finalHash": "e6435892",
+      "ticks": 3955,
+      "finalHash": "b9ae4cba",
       "kills": 21,
       "secrets": 0,
       "items": 1,
-      "damageTaken": 35
+      "damageTaken": 38
     },
     {
       "file": "routes/C2M10.main.route.json",
@@ -53,8 +53,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 3799,
-      "finalHash": "5b2efb0d",
+      "ticks": 3789,
+      "finalHash": "c3852e7b",
       "kills": 21,
       "secrets": 0,
       "items": 1,
@@ -66,8 +66,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 6677,
-      "finalHash": "e7b782aa",
+      "ticks": 6710,
+      "finalHash": "06203a7e",
       "kills": 31,
       "secrets": 2,
       "items": 2,
@@ -77,27 +77,27 @@
       "file": "routes/C2M10.secret.route.json",
       "difficulty": "normal",
       "seed": 1,
-      "policy": "strafing",
+      "policy": "standing",
       "result": "complete",
-      "ticks": 6694,
-      "finalHash": "d3a76909",
-      "kills": 31,
+      "ticks": 7191,
+      "finalHash": "fd1f3c76",
+      "kills": 30,
       "secrets": 2,
-      "items": 2,
-      "damageTaken": 14
+      "items": 3,
+      "damageTaken": 52
     },
     {
       "file": "routes/C2M10.secret.route.json",
       "difficulty": "hard",
       "seed": 1,
-      "policy": "strafing",
+      "policy": "standing",
       "result": "complete",
-      "ticks": 7474,
-      "finalHash": "3f3d8a19",
-      "kills": 30,
+      "ticks": 7655,
+      "finalHash": "67846bcc",
+      "kills": 32,
       "secrets": 2,
       "items": 3,
-      "damageTaken": 51
+      "damageTaken": 70
     }
   ],
   "canonicalRoute": {
@@ -106,8 +106,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 3973,
-    "finalHash": "e6435892",
+    "ticks": 3955,
+    "finalHash": "b9ae4cba",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -191,7 +191,7 @@
         "result": "complete",
         "damage": 13,
         "meanDamage": 13,
-        "seconds": 65.2,
+        "seconds": 65,
         "kills": 22,
         "failure": null
       }
@@ -230,9 +230,9 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 35,
-        "meanDamage": 28,
-        "seconds": 66.2,
+        "damage": 38,
+        "meanDamage": 29,
+        "seconds": 65.9,
         "kills": 21,
         "failure": null
       }
@@ -271,8 +271,8 @@
         "seeds": 3,
         "result": "complete",
         "damage": 43,
-        "meanDamage": 55,
-        "seconds": 63.3,
+        "meanDamage": 44,
+        "seconds": 63.1,
         "kills": 21,
         "failure": null
       }
@@ -283,7 +283,7 @@
         "exit": "exit0",
         "result": "bot-failed",
         "failure": "stuck during op 0 (goto) at 73.0,18.3",
-        "ticks": 1871,
+        "ticks": 1892,
         "seeds": [
           "1:bot-failed",
           "2:bot-failed",
@@ -295,12 +295,12 @@
     "robust": {
       "aim error of 0.03 rad": {
         "result": "complete",
-        "damage": 12,
+        "damage": 23,
         "failure": null
       },
       "ammo pickups worth 25% less": {
         "result": "complete",
-        "damage": 25,
+        "damage": 23,
         "failure": null
       }
     }
@@ -323,7 +323,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -343,40 +343,40 @@
       {
         "name": "route C2M10.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "65.2 s"
+        "detail": "65.0 s"
       },
       {
         "name": "route C2M10.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "66.2 s"
+        "detail": "65.9 s"
       },
       {
         "name": "route C2M10.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "63.3 s"
+        "detail": "63.1 s"
       },
       {
         "name": "route C2M10.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "111.3 s"
+        "detail": "111.8 s"
       },
       {
         "name": "route C2M10.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "111.6 s (strafing)"
+        "detail": "119.8 s"
       },
       {
         "name": "route C2M10.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "124.6 s (strafing)"
+        "detail": "127.6 s"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 12 damage)",
+        "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 23 damage)",
         "ok": true,
         "detail": "complete"
       },
       {
-        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 25 damage)",
+        "name": "robustness (normal, strafing fighter): completes with ammo pickups worth 25% less (complete, 23 damage)",
         "ok": true,
         "detail": "complete"
       },
@@ -478,15 +478,15 @@
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":28,\"hard\":55}"
+        "detail": "{\"normal\":29,\"hard\":44}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "13 / 28 / 55 (mean of 3 seeds)"
+        "detail": "13 / 29 / 44 (mean of 3 seeds)"
       },
       {
-        "name": "par time is 2x-8x the bot's time (6.3x; placeholder until a human plays it)",
+        "name": "par time is 2x-8x the bot's time (6.4x; placeholder until a human plays it)",
         "ok": true,
         "detail": ""
       },
@@ -498,7 +498,7 @@
       {
         "name": "quality: perfect-bot time in [40,900] s",
         "ok": true,
-        "detail": "66.2 s"
+        "detail": "65.9 s"
       },
       {
         "name": "quality: uses at least 6 distinct wall/floor skins",
@@ -617,13 +617,13 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M10.json: 6b91a968378f54fd vs 6b91a968378f54fd"
+        "ok": false,
+        "detail": "validation/browser/C2M10.json: 6b91a968378f54fd vs ed53debd567621d0"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
-        "ok": true,
-        "detail": "95fe64a54f8d6147 vs 95fe64a54f8d6147"
+        "ok": false,
+        "detail": "95fe64a54f8d6147 vs 96458582a7ea4528"
       },
       {
         "name": "this map's real-game evidence was generated by THIS engine/render/game/audio/asset code",
@@ -639,5 +639,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v3, 31 enemies, 25 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v4, 31 enemies, 25 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

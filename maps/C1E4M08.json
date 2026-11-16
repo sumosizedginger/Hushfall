@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M08",
- "version": 3,
+ "version": 4,
  "name": "Gate Warden",
  "ceilingHeight": 14,
  "atmosphere": {
@@ -279,7 +279,7 @@
   {
    "type": "player",
    "at": [7, 30],
-   "facing": "east"
+   "facing": "south"
   },
   {
    "type": "pickup",
@@ -737,6 +737,12 @@
    "at": [69, 29],
    "locked": true,
    "dest": "next"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [6, 35],
+   "tint": "amber"
   },
   {
    "type": "pickup",

@@ -128,14 +128,14 @@ FUN.secretRoom({ id: 'warden-alcove', search: { region: [3, 3, 68, 56], prefer: 
 
 
 const MAP = {
-  id: 'C1E4M08', name: 'Gate Warden', version: 2, ceilingHeight: 14, par: { time: 720 },
+  id: 'C1E4M08', name: 'Gate Warden', version: 3, ceilingHeight: 14, par: { time: 720 },
   atmosphere: { fog: '#c8ccdc', fogDensity: 0.0035, sky: 'gate', look: 'gate' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'GATE WARDEN', lines: ['The Gate is behind it. It is the colour of the inside of a bell.', 'It has been here since before there was anything to keep out.'] },
   outro: 'The ring of light folds in on itself, and the Gate is a doorway. What is on the other side has been waiting the whole time.',
   objective: 'The Warden holds the Gate, at the east end of the arena. Three seals shield it',
   ...L.layers(),
-  startFacing: 'east',
+  startFacing: 'south', // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): east was a wall 3 m off; south is the route's first leg and its first creature
   secrets: SECRET ? [{ id: 'rim-panel', panel: SECRET.panel, cells: SECRET.cells }] : [],
   groups: [{ name: 'warden', rect: [WARDEN[0], WARDEN[1], WARDEN[0], WARDEN[1]] }, ...SEALS.map((s) => ({ name: 'seals', rect: [s[0], s[1], s[0], s[1]] }))],
   entities: [...ents, { type: 'exit', at: EXIT, locked: true, dest: 'next' }],

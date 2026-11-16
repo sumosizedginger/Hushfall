@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M13",
- "version": 3,
+ "version": 4,
  "name": "Lantern Ossuary",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -404,7 +404,8 @@
   },
   {
    "type": "player",
-   "at": [38, 72]
+   "at": [38, 72],
+   "facing": "north"
   },
   {
    "type": "prop",

@@ -32,7 +32,8 @@ for (const k of [1, 5]) PK('health_large', ...beds[k]);
 for (const k of [3, 7]) PK('armor_vest', ...beds[k]);
 PK('ammo_cell', 35, 33); PK('ammo_shell', 33, 31); PK('ammo_rivet', 37, 31); PK('ammo_bolt', 35, 29);
 const MAP = {
-  id: 'C2S01', name: 'The Silent Orchard', version: 2, ceilingHeight: 4.2, par: { time: 150 },
+  // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
+  id: 'C2S01', name: 'The Silent Orchard', version: 3, startFacing: 'north', ceilingHeight: 4.2, par: { time: 150 },
   atmosphere: { look: 'tender', sky: 'deep', silence: true, fog: '#1a2a18', fogDensity: 0.006 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE SILENT ORCHARD', lines: ['Ten beds under a roof of small lights.', 'Someone has kept them.'] },

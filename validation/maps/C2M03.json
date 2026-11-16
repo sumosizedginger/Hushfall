@@ -2,10 +2,10 @@
   "mapId": "C2M03",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "d2a48238d795decb",
+  "mapSha": "147a19f01fa08a1d",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -321,7 +321,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -665,8 +665,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M03.json: d2a48238d795decb vs d2a48238d795decb"
+        "ok": false,
+        "detail": "validation/browser/C2M03.json: d2a48238d795decb vs 147a19f01fa08a1d"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

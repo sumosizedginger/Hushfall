@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2S01",
- "version": 2,
+ "version": 3,
  "name": "The Silent Orchard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -238,7 +238,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [35, 58]
+   "at": [35, 58],
+   "facing": "north"
   },
   {
    "type": "prop",
@@ -394,6 +395,12 @@
    "type": "pickup",
    "kind": "ammo_crate",
    "at": [35, 28]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [34, 53],
+   "tint": "amber"
   }
  ],
  "scenery": [],

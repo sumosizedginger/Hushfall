@@ -861,6 +861,12 @@
    "movable": true
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [9, 21],
+   "tint": "amber"
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [12, 26],

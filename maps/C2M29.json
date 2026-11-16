@@ -788,6 +788,12 @@
    "dest": "next",
    "at": [44, 25],
    "locked": true
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [12, 41],
+   "tint": "amber"
   }
  ],
  "scenery": [],

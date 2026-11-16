@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M21",
- "version": 3,
+ "version": 4,
  "name": "Pulse Foundry",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -598,7 +598,8 @@
   },
   {
    "type": "player",
-   "at": [6, 50]
+   "at": [6, 50],
+   "facing": "north"
   },
   {
    "type": "prop",

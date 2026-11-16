@@ -1,114 +1,281 @@
 {
  "C1E1M02": [
   {
-   "at": [28, 42],
+   "at": [
+    28,
+    42
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C1E1M08": [
   {
-   "at": [27, 53],
+   "at": [
+    27,
+    53
+   ],
    "kind": "lamppost",
    "tint": "amber"
   }
  ],
  "C1E2M04": [
   {
-   "at": [28, 21],
+   "at": [
+    28,
+    21
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C1E3M05": [
   {
-   "at": [38, 30],
+   "at": [
+    38,
+    30
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C1E3M06": [
   {
-   "at": [29, 23],
+   "at": [
+    29,
+    23
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C1E3M08": [
   {
-   "at": [58, 22],
+   "at": [
+    58,
+    22
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C1E4S01": [
   {
-   "at": [26, 16],
+   "at": [
+    26,
+    16
+   ],
    "kind": "lamp",
    "tint": "blue"
+  },
+  {
+   "at": [
+    9,
+    16
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
   }
  ],
  "C2M01": [
   {
-   "at": [23, 29],
+   "at": [
+    23,
+    29
+   ],
    "kind": "lamppost",
    "tint": "blue"
   }
  ],
  "C2M02": [
   {
-   "at": [44, 38],
+   "at": [
+    44,
+    38
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C2M07": [
   {
-   "at": [27, 48],
+   "at": [
+    27,
+    48
+   ],
    "kind": "lamppost",
    "tint": "blue"
   }
  ],
  "C2M12": [
   {
-   "at": [40, 73],
+   "at": [
+    40,
+    73
+   ],
    "kind": "lamp",
    "tint": "amber"
   }
  ],
  "C2M19": [
   {
-   "at": [20, 79],
+   "at": [
+    20,
+    79
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C2M21": [
   {
-   "at": [14, 19],
+   "at": [
+    14,
+    19
+   ],
    "kind": "lamppost",
    "tint": "blue"
   }
  ],
  "C2M22": [
   {
-   "at": [38, 14],
+   "at": [
+    38,
+    14
+   ],
    "kind": "lamp",
    "tint": "blue"
   }
  ],
  "C2M23": [
   {
-   "at": [19, 85],
+   "at": [
+    19,
+    85
+   ],
    "kind": "lamppost",
    "tint": "blue"
   }
  ],
  "C2M25": [
   {
-   "at": [64, 55],
+   "at": [
+    64,
+    55
+   ],
    "kind": "lamppost",
    "tint": "blue"
+  }
+ ],
+ "C1E1M06": [
+  {
+   "at": [
+    9,
+    21
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E2M01": [
+  {
+   "at": [
+    9,
+    21
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E2M07": [
+  {
+   "at": [
+    9,
+    21
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E3M07": [
+  {
+   "at": [
+    10,
+    27
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E4M01": [
+  {
+   "at": [
+    15,
+    63
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C2M24": [
+  {
+   "at": [
+    14,
+    27
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C2M29": [
+  {
+   "at": [
+    12,
+    41
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C2M30": [
+  {
+   "at": [
+    13,
+    12
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C1E4M08": [
+  {
+   "at": [
+    6,
+    35
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
+  }
+ ],
+ "C2S01": [
+  {
+   "at": [
+    34,
+    53
+   ],
+   "kind": "lamp",
+   "tint": "amber",
+   "why": "opening"
   }
  ]
 }

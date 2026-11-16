@@ -744,6 +744,12 @@
    "type": "pickup",
    "kind": "health_large",
    "at": [35, 40]
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [10, 27],
+   "tint": "amber"
   }
  ],
  "par": {

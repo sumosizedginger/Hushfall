@@ -89,3 +89,17 @@ node tools/dev/frame-score.mjs <outDir>
 ## 8. Intended exceptions
 
 (Fill in as you go: map, the fault the tool reports, why the opening is right as it is.)
+
+| map | fault | why it stays |
+|---|---|---|
+| C2M04 Tuning Fork Fields | faces a wall (5 m east) | NOT right, held: every facing up the entry corridor (north, -0.52 to 0.3 rad) loses the hard runs (main and secret, both fighters, seeds 1-2). Its hard routes are on a knife edge already. Fix the hard balance first (or the bot's first fight), then turn it north. |
+| C2M07 Bellwright Yard | faces a wall (5 m east) | NOT right, held: every north facing (-0.35 to 0.35 rad) loses the hard secret run on seed 1, and most the hard main on seed 2; the original east facing already dies on the secret route on hard with one of the two fighters (hp 15 at the bell node at 61,32). Same fix as C2M04. No lamp spot in the corridor either. |
+
+## 9. Progress (2026-11-16, node only, nothing seen in a browser yet)
+
+- **O2 (option C), eight turned** (version raised to 3): C1E4M07 1.05 rad (west and a little north, along the route), C1E4M08 south (the route's first leg; east was a wall 3 m off), C2M10 north, C2M13 north, C2M14 north, C2M15 0.52 rad, C2M21 north, C2S01 north. Two held (section 8). C2M10's secret route took one more waypoint (55,18) round the stall block at 49-53,20-23: the turned start put the bot on the block's corner on the way back.
+- **O3 (option A), eleven given something to look at:** a hanging amber lamp 8 to 10 m ahead and about 12 degrees off the crosshair (`maps-src/accent-lamps.json`, `why: 'opening'`) on C1E1M06, C1E2M01, C1E2M07, C1E3M07, C1E4M01, C1E4S01, C2M24, C2M29, C2M30, and after their turn C1E4M08 and C2S01; a landmark on the facing line on C2M03 (a fourth spire, outside the grid east) and C2M25 (a hangrock east). The eleven option-A maps: all 189 fingerprint runs identical.
+- **Measured after:** no opening faces a wall or has nothing to look at except C2M04 and C2M07 (held). 36 of 68 meet every floor (was 25); the rest are "sees little", left for O4, which needs the baseline frames.
+- **Found:** `tools/mapkit/compile.mjs` skipped `startFacing: 0` (a falsy number); it now takes any facing that is not null.
+- **Not done:** O1, O4, O5 need the shoot (the owner's named yes).
+

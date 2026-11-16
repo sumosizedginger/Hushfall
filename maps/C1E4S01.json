@@ -271,6 +271,12 @@
    "kind": "lamp",
    "at": [26, 16],
    "tint": "blue"
+  },
+  {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [9, 16],
+   "tint": "amber"
   }
  ],
  "par": {

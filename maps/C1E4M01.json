@@ -896,6 +896,12 @@
    ]
   },
   {
+   "type": "prop",
+   "kind": "lamp",
+   "at": [15, 63],
+   "tint": "amber"
+  },
+  {
    "type": "enemy",
    "kind": "gaunt",
    "at": [10, 30],

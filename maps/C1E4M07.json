@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M07",
- "version": 3,
+ "version": 4,
  "name": "The Hollow Stair",
  "ceilingHeight": 40,
  "atmosphere": {
@@ -269,7 +269,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [37, 54]
+   "at": [37, 54],
+   "facing": 1.05
   },
   {
    "type": "pickup",

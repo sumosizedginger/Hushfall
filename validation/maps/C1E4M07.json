@@ -1,11 +1,11 @@
 {
   "mapId": "C1E4M07",
-  "mapVersion": 3,
+  "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "d3489a404260cbf8",
+  "mapSha": "dc8124a6add46734",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 6604,
-      "finalHash": "540b11e8",
+      "finalHash": "f5dc6976",
       "kills": 33,
       "secrets": 0,
       "items": 9,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7481,
-      "finalHash": "2f6c0784",
+      "finalHash": "bf6caa60",
       "kills": 33,
       "secrets": 0,
       "items": 10,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8167,
-      "finalHash": "3032d77b",
+      "finalHash": "10dda42a",
       "kills": 37,
       "secrets": 0,
       "items": 10,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7419,
-      "finalHash": "fffe0faf",
+      "finalHash": "f5b0f5e6",
       "kills": 33,
       "secrets": 2,
       "items": 7,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8133,
-      "finalHash": "a4baed0c",
+      "finalHash": "64a7d767",
       "kills": 33,
       "secrets": 2,
       "items": 13,
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9035,
-      "finalHash": "dea294bd",
+      "finalHash": "70ffc75e",
       "kills": 37,
       "secrets": 2,
       "items": 11,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 7481,
-    "finalHash": "2f6c0784",
+    "finalHash": "bf6caa60",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -163,7 +163,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 127,
+        "damage": 121,
         "hpLeft": 0
       },
       "ammo": {
@@ -310,7 +310,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -373,7 +373,7 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 127 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 121 damage)",
         "ok": true,
         "detail": ""
       },
@@ -629,8 +629,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C1E4M07.json: d3489a404260cbf8 vs d3489a404260cbf8"
+        "ok": false,
+        "detail": "validation/browser/C1E4M07.json: d3489a404260cbf8 vs dc8124a6add46734"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -651,5 +651,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v3, 31 enemies, 40 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v4, 31 enemies, 40 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

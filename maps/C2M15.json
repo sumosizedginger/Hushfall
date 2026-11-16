@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M15",
- "version": 4,
+ "version": 5,
  "name": "Ash Basilica",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -419,7 +419,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [31, 66]
+   "at": [31, 66],
+   "facing": 0.52
   },
   {
    "type": "enemy",

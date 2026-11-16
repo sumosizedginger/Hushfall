@@ -137,7 +137,8 @@ floorBorder(L, [[13,57]], 's', '@');
 // ---- end G3 room accents ----
 
 const MAP = {
-  id: 'C2M10', name: 'Echo Markets', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
+  id: 'C2M10', name: 'Echo Markets', version: 3, startFacing: -0.1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'markets', sky: 'deep', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ECHO MARKETS', lines: ['A market town under the roof of the cave, round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },
@@ -183,6 +184,6 @@ export const waypoints = {
 waypoints.secret = (() => {
   const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 11 && w[1] === 38), b = m.findIndex((w) => Array.isArray(w) && w[0] === 33 && w[1] === 12);
   return [...m.slice(0, a + 1), [11, 41, 0], [9, 41, 0], [6, 37, 0], { op: 'use', at: ROOM }, [2, 35, 0], [6, 35, 0], [9, 41, 0], [11, 41, 0], ...m.slice(a + 1, b + 1),
-    [40, 12, 0], [47, 12, 0], [49, 14, 0], [49, 17, 0], D(55, 25), D(55, 32), [60, 32, 0], [62, 31, 0], { op: 'crack', at: SEALED }, [67, 31, 0], [62, 31, 0], D(55, 32), D(55, 25), [49, 17, 0], [49, 14, 0], [47, 12, 0], [40, 11, 0], ...m.slice(b + 1)];
+    [40, 12, 0], [47, 12, 0], [49, 14, 0], [49, 17, 0], D(55, 25), D(55, 32), [60, 32, 0], [62, 31, 0], { op: 'crack', at: SEALED }, [67, 31, 0], [62, 31, 0], D(55, 32), D(55, 25), [55, 18, 0], [49, 17, 0], [49, 14, 0], [47, 12, 0], [40, 11, 0], ...m.slice(b + 1)];
 })();
 export default MAP;

@@ -106,7 +106,7 @@ const MAP = {
     { type: 'switch', id: 'gate', at: [61, 58], wall: 'north', once: true, do: [{ open: [46, 51] }, { message: 'gate' }, { objective: 'The gate is open: across the bridge and into the court' }, { shake: 1.2 }] },
     { type: 'switch', id: 'latch', at: [46, 31], wall: 'north', once: true, do: [{ open: [46, 34] }, { open: [46, 14] }, { message: 'freed' }, { message: 'silent' }, { objective: 'The north gate is open: the corridor to the exit' }, { shake: 1 }] },
     { type: 'exit', at: [46, 7], dest: 'next' }],
-  scenery: [{ kind: 'spire', at: [20, 4] }, { kind: 'spire', at: [74, 8] }, { kind: 'spire', at: [46, -20] }],
+  scenery: [{ kind: 'spire', at: [20, 4] }, { kind: 'spire', at: [74, 8] }, { kind: 'spire', at: [46, -20] }, { kind: 'spire', at: [112, 86], scale: 1.2 }] /* the opening (design/OPENING_VIEWS.md O3): a spire on the line the start faces */,
   messages: [
     { id: 'start', at: [46, 91], radius: 3, speaker: 'INES', text: 'A fort in the glass: five points, a ditch, one bridge. Everything on it faces the gorge. Nobody built it for visitors.' },
     { id: 'terrace', at: [46, 80], radius: 4, speaker: 'HULL', text: 'Bellhands on both terraces, 4 m up, covering the whole gorge. The rocks are the only cover.' },

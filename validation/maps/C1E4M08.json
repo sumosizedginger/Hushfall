@@ -1,11 +1,11 @@
 {
   "mapId": "C1E4M08",
-  "mapVersion": 3,
+  "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "d922e4113540af56",
+  "mapSha": "1fae5b4a97b8eb39",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5354,
-      "finalHash": "0080f27e",
+      "finalHash": "f8acf46d",
       "kills": 18,
       "secrets": 0,
       "items": 3,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7731,
-      "finalHash": "ade416d1",
+      "finalHash": "893c186f",
       "kills": 19,
       "secrets": 0,
       "items": 9,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8065,
-      "finalHash": "89ac489d",
+      "finalHash": "5b78a561",
       "kills": 18,
       "secrets": 0,
       "items": 12,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9435,
-      "finalHash": "fc22663f",
+      "finalHash": "cbda1461",
       "kills": 21,
       "secrets": 2,
       "items": 4,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 10690,
-      "finalHash": "a0d3fc77",
+      "finalHash": "e13ec3fb",
       "kills": 22,
       "secrets": 2,
       "items": 9,
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 12603,
-      "finalHash": "5eeb8985",
+      "finalHash": "fc32fa48",
       "kills": 23,
       "secrets": 2,
       "items": 14,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 7731,
-    "finalHash": "ade416d1",
+    "finalHash": "893c186f",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -143,7 +143,7 @@
       ";",
       "<"
     ],
-    "props": 16,
+    "props": 17,
     "secrets": 2,
     "cells": 4320,
     "gates": 0,
@@ -153,7 +153,7 @@
     "easy": {
       "runner": {
         "result": "dead",
-        "damage": 104,
+        "damage": 107,
         "hpLeft": 0
       },
       "ammo": {
@@ -219,7 +219,7 @@
     "hard": {
       "runner": {
         "result": "dead",
-        "damage": 100,
+        "damage": 114,
         "hpLeft": 0
       },
       "ammo": {
@@ -296,7 +296,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -359,7 +359,7 @@
         "detail": ""
       },
       {
-        "name": "viability easy: a passive runner does not walk through (dead, 104 damage)",
+        "name": "viability easy: a passive runner does not walk through (dead, 107 damage)",
         "ok": true,
         "detail": ""
       },
@@ -369,7 +369,7 @@
         "detail": ""
       },
       {
-        "name": "viability hard: a passive runner does not walk through (dead, 100 damage)",
+        "name": "viability hard: a passive runner does not walk through (dead, 114 damage)",
         "ok": true,
         "detail": ""
       },
@@ -575,8 +575,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C1E4M08.json: d922e4113540af56 vs d922e4113540af56"
+        "ok": false,
+        "detail": "validation/browser/C1E4M08.json: d922e4113540af56 vs 1fae5b4a97b8eb39"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -597,5 +597,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v3, 20 enemies, 49 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v4, 20 enemies, 49 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

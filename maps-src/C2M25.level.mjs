@@ -107,7 +107,7 @@ const MAP = {
   entities: [...P.ents,
     { type: 'switch', id: 'door', at: LEVER.at, wall: LEVER.wall, once: true, do: [{ open: DOORC }, { message: 'door-open' }, { objective: 'The door in the wall of the last landing is open: the exit is beyond it' }] },
     { type: 'exit', at: EX, dest: 'next' }],
-  scenery: [{ kind: 'shaft', at: [C, C], y: 0, scale: 1.0 }],
+  scenery: [{ kind: 'shaft', at: [C, C], y: 0, scale: 1.0 }, { kind: 'hangrock', at: [94, 52] }] /* the opening (design/OPENING_VIEWS.md O3): a landmark on the line the start faces */,
   messages: [
     { id: 'start', at: START, radius: 5, speaker: 'INES', text: 'A well, and a floor at the bottom of it I can see from here, a long way down, by its own copper light. I count six ledges between me and it, and I count thirty metres.' },
     { id: 'vent', at: pol(30, 38), radius: 5, speaker: 'HULL', text: 'The plate at the end of each ledge throws you across the well to the next. It is lit. There is no other way down but a fall.' },

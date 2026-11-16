@@ -60,7 +60,7 @@ export function compile(lv) {
     if (e.type === 'player') spawn = e;
   }
   if (!spawn) errors.push('no player symbol (@) in objects');
-  else if (lv.startFacing) spawn.facing = lv.startFacing;
+  else if (lv.startFacing != null) spawn.facing = lv.startFacing; // (!= null: a facing of 0, north in radians, is a facing)
   // enemies face the player's start unless told otherwise (radians, or a compass word); everything else keeps the map's own facing rules
   for (const e of entities) {
     if (e.type !== 'enemy' || e.facing != null) continue;

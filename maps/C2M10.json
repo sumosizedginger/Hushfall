@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M10",
- "version": 3,
+ "version": 4,
  "name": "Echo Markets",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -330,7 +330,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [35, 63]
+   "at": [35, 63],
+   "facing": -0.1
   },
   {
    "type": "enemy",

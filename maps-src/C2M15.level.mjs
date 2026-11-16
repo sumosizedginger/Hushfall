@@ -115,7 +115,8 @@ ENC.bypass({ from: [26, 23], to: [30, 9] }); // a sacristy passage
 ENC.dropIn({ at: [32, 36], radius: 2, cells: [[31, 32], [33, 33]], kind: 'g' });                                           // sextons' boys out of the north arm's vault as you cross the chock
 ENC.dropIn({ at: [42, 9], radius: 2.5, cells: [[33, 12], [38, 12]], kind: 'g' });                                          // and two more at the altar, the house's last word
 const MAP = {
-  id: 'C2M15', name: 'Ash Basilica', version: 2, ceilingHeight: 4.2, par: { time: 660 },
+  // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
+  id: 'C2M15', name: 'Ash Basilica', version: 3, startFacing: 0.52, ceilingHeight: 4.2, par: { time: 660 },
   atmosphere: { look: 'basilica', fog: '#14100e', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 12, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ASH BASILICA', lines: ['A house of the Song, burned out and kept.', 'Five stations, five rooms. At each one, someone who wants the Grafting to go on.'] },

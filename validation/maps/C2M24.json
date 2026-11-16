@@ -2,10 +2,10 @@
   "mapId": "C2M24",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "b2dd292",
+  "codeVersion": "78ad7f7",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0395411880120666",
+  "mapSha": "3ee72bb5a153a17d",
   "assetVersion": "9c618a066ecbc4e2",
   "engineSha": "4bdbe685c9468dee",
   "sources": {
@@ -140,7 +140,7 @@
       "Π",
       "t"
     ],
-    "props": 27,
+    "props": 28,
     "secrets": 2,
     "cells": 5220,
     "gates": 0,
@@ -308,7 +308,7 @@
     }
   },
   "automated": {
-    "pass": true,
+    "pass": false,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -587,8 +587,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": true,
-        "detail": "validation/browser/C2M24.json: 0395411880120666 vs 0395411880120666"
+        "ok": false,
+        "detail": "validation/browser/C2M24.json: 0395411880120666 vs 3ee72bb5a153a17d"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
