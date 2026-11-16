@@ -1,7 +1,7 @@
 {
   "mapId": "C2M29",
-  "when": "2026-11-15T17:11:26.051Z",
-  "commit": "69883cd",
+  "when": "2026-11-16T05:10:06.523Z",
+  "commit": "b2dd292",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -12,8 +12,8 @@
   "routesSha": "a835642394b52dec",
   "sources": {
     "engine": "4bdbe685c9468dee",
-    "render": "c8bfb50bd7af3900",
-    "game": "bfa8bd9473984574",
+    "render": "510240d763a90d76",
+    "game": "3cd2058af47e4818",
     "audio": "13a17a3273b88347",
     "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 11,
       "secrets": 2,
-      "wallSeconds": 2
+      "wallSeconds": 3
     }
   },
   "hud": {
@@ -62,7 +62,7 @@
       "raised": 8,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.23
+      "highest": 0.229
     },
     "matrix": {
       "rows": 69,
@@ -102,7 +102,7 @@
     {
       "name": "real-game route C2M29.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7250 policy=standing wall=2s"
+      "detail": "status=complete failed=null ticks=7250 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M29.secret: browser sim == Node sim (ticks + state hash)",
@@ -122,7 +122,7 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.23 m; two samples of all 9 enemies: true"
+      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.229 m; two samples of all 9 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 12
+  "wallSeconds": 13
 }

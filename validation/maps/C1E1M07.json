@@ -2,7 +2,7 @@
   "mapId": "C1E1M07",
   "mapVersion": 5,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "69883cd",
+  "codeVersion": "b2dd292",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "5a8fcd57614b058a",
@@ -10,8 +10,8 @@
   "engineSha": "4bdbe685c9468dee",
   "sources": {
     "engine": "4bdbe685c9468dee",
-    "render": "c8bfb50bd7af3900",
-    "game": "bfa8bd9473984574",
+    "render": "510240d763a90d76",
+    "game": "3cd2058af47e4818",
     "audio": "13a17a3273b88347",
     "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
@@ -295,8 +295,8 @@
   },
   "browser": {
     "file": "validation/browser/C1E1M07.json",
-    "when": "2026-11-15T16:53:02.915Z",
-    "commit": "69883cd",
+    "when": "2026-11-16T04:52:54.597Z",
+    "commit": "b2dd292",
     "mapSha": "5a8fcd57614b058a",
     "routesSha": "1bd95a5ec94ab8ad",
     "passed": 13,
@@ -304,8 +304,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-15T16:50:12.313Z",
-      "commit": "69883cd",
+      "when": "2026-11-16T04:50:15.924Z",
+      "commit": "b2dd292",
       "passed": 148,
       "total": 148
     }

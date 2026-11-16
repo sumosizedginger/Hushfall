@@ -2,7 +2,7 @@
   "mapId": "C2M30",
   "mapVersion": 2,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "69883cd",
+  "codeVersion": "b2dd292",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "28b3f48ce83a42d6",
@@ -10,8 +10,8 @@
   "engineSha": "4bdbe685c9468dee",
   "sources": {
     "engine": "4bdbe685c9468dee",
-    "render": "c8bfb50bd7af3900",
-    "game": "bfa8bd9473984574",
+    "render": "510240d763a90d76",
+    "game": "3cd2058af47e4818",
     "audio": "13a17a3273b88347",
     "assets": "9c618a066ecbc4e2",
     "verifier": "eccb2f9ca83a6499",
@@ -240,8 +240,8 @@
   },
   "browser": {
     "file": "validation/browser/C2M30.json",
-    "when": "2026-11-15T17:11:28.747Z",
-    "commit": "69883cd",
+    "when": "2026-11-16T05:10:09.018Z",
+    "commit": "b2dd292",
     "mapSha": "28b3f48ce83a42d6",
     "routesSha": "c76133439a32d794",
     "passed": 13,
@@ -249,8 +249,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-15T16:50:12.313Z",
-      "commit": "69883cd",
+      "when": "2026-11-16T04:50:15.924Z",
+      "commit": "b2dd292",
       "passed": 148,
       "total": 148
     }
