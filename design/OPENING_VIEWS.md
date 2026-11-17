@@ -116,3 +116,11 @@ node tools/dev/frame-score.mjs <outDir>
 - **Gates:** the twelve turned maps pass fun-gates and strict. Two needed a second try: C1E2M05 lost its hard secret run at -1.83 and passes at -1.31. C1E2M02 fails the strict robustness check (strafing fighter, normal, 25% less ammo: dead, 158 damage) at both 15-degree turns and passes at -1.46. Its balance is on a knife edge, like C2M04 and C2M07.
 - **Measured after:** 39 of 68 meet every floor (36 before O4).
 - **Not done:** O5 (the reshoot into `open-after`) needs a fresh yes for that job; then the evidence regeneration (31 maps are now stale).
+
+## 11. O5, the reshoot (2026-11-16, the owner's named yes)
+
+- All 68 reshot into `D:\Doom_release\awe\open-after` (GPU, 800 wide, doors shut; 0 pointer-lock requests, no page errors). Sheets: `openings-after-C1.png`, `openings-after-C2.png`, and `openings-changed.png` (the fourteen O4 openings).
+- **Seen:** the nine Episode 2 rooms now read as a corner of a room with the door off-centre, not a flat elevation. Brine Gate's pump-station room and the Rime Vault still show their table and crate. The Reprise looks down a lit quay to the water. Root Bell Descent looks up open ground past a lamppost, with a creature in view.
+- **Dark share, before -> after:** C1E1M04 65% -> 39%, C1E4M04 81% -> 65%, C2M12 75% -> 41%, C2M25 55% -> 19%. C1E4M04 is still the darkest opening. Its lamp shows, but the room around it stays purple-black. Look at it in play before adding more.
+- **Picture floors (frame-score):** 21 of 68 frames pass before and after. C1E2M03 and C1E2M06 now pass slightly over the "bright" ceiling (15%) because a lit wall comes into the frame. C2M05 and C2M14 (not changed) flipped to ok, which shows how noisy one frame is. The picture floors are a guide, not a verdict (frame-score's own header).
+- **Left:** the evidence regeneration (31 maps stale); C2M04, C2M07 and C1E2M02's balance before they can turn; a redraw of the Episode 2 start rooms (section 7).
