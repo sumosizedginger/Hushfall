@@ -6,7 +6,7 @@
 // within the automap's own explore radius are drawn as a dim outline straight from the map data (drawing only: nothing is marked explored, and a
 // secret wall is just a wall). And when the goal has a known spot (the exit the player has seen) outside the window, a tick on the border points at it.
 import { EXPLORE_RADIUS_CELLS } from '../engine/automap.js';
-export const MINIMAP = Object.freeze({ every: 6, sparse: 20, sizes: { small: { s: 4, r: 18 }, large: { s: 6, r: 18 } } });
+export const MINIMAP = Object.freeze({ every: 6, sparse: 20, sizes: { small: { s: 7, r: 10 }, large: { s: 7, r: 14 } } });
 
 /** the cells within `R` of the player straight from the map (a secret reads as wall, off the map is wall): [{ cx, cz, kind }] */
 export function nearbyCells(map, player, R = EXPLORE_RADIUS_CELLS) {
@@ -42,7 +42,7 @@ const PAL = {
   bg: 'rgba(9,11,16,0.78)',
   floor: '#587a82',
   outdoor: '#4a68a6',
-  wall: '#0e1317',
+  wall: '#323a40', // stone, not black: the shell of every room seen (engine/automap.js) is drawn in it
   edge: '#d4e4df',
   hint: 'rgba(212,228,223,0.3)',
   dots: 'rgba(150,185,180,0.16)',
@@ -70,7 +70,7 @@ export function minimapView(model, r) {
     doors = [],
     exits = [],
     switches = [];
-  for (const c of model.cells) {
+  for (const c of [...(model.shell ?? []), ...model.cells]) {
     const dx = c.cx - pcx,
       dz = c.cz - pcz;
     if (within(dx, dz)) cells.push({ dx, dz, kind: c.kind });

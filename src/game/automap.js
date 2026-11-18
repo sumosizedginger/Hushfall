@@ -30,9 +30,10 @@ export function drawAutomap(canvas, model) {
   const s = Math.max(4, Math.floor(Math.min((W * 0.88) / model.w, (H * 0.78) / model.h))),
     ox = Math.floor((W - s * model.w) / 2),
     oy = Math.floor((H - s * model.h) / 2) + 14;
-  const at = new Map(model.cells.map((c) => [c.cx + ',' + c.cz, c.kind]));
+  const drawn = [...(model.shell ?? []), ...model.cells], // the shell first: the walls round what has been seen (engine/automap.js)
+    at = new Map(drawn.map((c) => [c.cx + ',' + c.cz, c.kind]));
   const walkable = (k) => k === 'floor' || k === 'outdoor' || k === 'door' || k === 'secret-revealed';
-  for (const c of model.cells) {
+  for (const c of drawn) {
     ctx.fillStyle = c.kind === 'wall' ? PAL.wall : c.kind === 'outdoor' ? PAL.outdoor : PAL.floor;
     ctx.fillRect(ox + c.cx * s, oy + c.cz * s, s, s);
   }

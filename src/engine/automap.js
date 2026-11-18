@@ -77,6 +77,30 @@ export function automapModel(w) {
           axis: m.doorAxis(cx, cz),
         });
     }
+  // the room's shell: a wall cell beside an explored walkable cell that the line-of-sight test did not mark (the face of a wall is seen, the cell
+  // behind it rarely is). Without it a room drew as a floor patch with no outline and the corner map read as mostly black (the outside playtest of
+  // 2026-11-18). A secret reads as wall, exactly as when it is explored. Drawing only: nothing here is marked explored or counted.
+  const shell = [],
+    inShell = new Set(),
+    walk = (k) => k === 'floor' || k === 'outdoor' || k === 'door' || k === 'secret-revealed';
+  for (const c of cells) {
+    if (!walk(c.kind)) continue;
+    for (const [dx, dz] of [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ]) {
+      const x = c.cx + dx,
+        z = c.cz + dz,
+        key = z * m.w + x;
+      if (x < 0 || z < 0 || x >= m.w || z >= m.h || seen(x, z) || inShell.has(key)) continue;
+      const k = m.kind(x, z);
+      if (k !== 'wall' && k !== 'secret') continue;
+      inShell.add(key);
+      shell.push({ cx: x, cz: z, kind: 'wall' });
+    }
+  }
   for (const e of m.exits) if (seen(Math.floor(e.x / m.cell), Math.floor(e.z / m.cell))) exits.push({ x: e.x, z: e.z, locked: !!w.exitLocked?.[e.id] });
   const switches = []; // a lever the player has SEEN stays on the map, red until it is thrown, green after
   for (const s of m.switches)
@@ -87,6 +111,7 @@ export function automapModel(w) {
     cell: m.cell,
     name: m.name,
     cells,
+    shell,
     doors,
     exits,
     switches,

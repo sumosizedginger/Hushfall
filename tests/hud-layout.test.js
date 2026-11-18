@@ -43,12 +43,12 @@ test('the message box sits top left under the objective, never over the gun, and
 });
 
 test('the corner map grows with the window and the toast column keeps clear of it, in both sizes', () => {
-  assert.match(html, /#minimap\{[^}]*width:clamp\(148px,16\.5vh,240px\)/);
-  assert.match(html, /body\[data-minimap=large\] #minimap\{width:clamp\(222px,24vh,340px\)\}/);
-  assert.match(html, /body\[data-minimap=small\] #toasts\{top:calc\(clamp\(148px,16\.5vh,240px\) \+ 32px\)\}/);
-  assert.match(html, /body\[data-minimap=large\] #toasts\{top:calc\(clamp\(222px,24vh,340px\) \+ 36px\)\}/);
-  assert.equal((2 * MINIMAP.sizes.small.r + 1) * MINIMAP.sizes.small.s, 148, 'the small map is 148 px in its own pixels: the clamp starts at its natural size');
-  assert.equal((2 * MINIMAP.sizes.large.r + 1) * MINIMAP.sizes.large.s, 222);
+  assert.match(html, /#minimap\{[^}]*width:clamp\(147px,16\.5vh,240px\)/);
+  assert.match(html, /body\[data-minimap=large\] #minimap\{width:clamp\(203px,24vh,340px\)\}/);
+  assert.match(html, /body\[data-minimap=small\] #toasts\{top:calc\(clamp\(147px,16\.5vh,240px\) \+ 32px\)\}/);
+  assert.match(html, /body\[data-minimap=large\] #toasts\{top:calc\(clamp\(203px,24vh,340px\) \+ 36px\)\}/);
+  assert.equal((2 * MINIMAP.sizes.small.r + 1) * MINIMAP.sizes.small.s, 147, 'the small map is 147 px in its own pixels: the clamp starts at its natural size');
+  assert.equal((2 * MINIMAP.sizes.large.r + 1) * MINIMAP.sizes.large.s, 203);
 });
 
 test('the corner map draws a faint dot grid on unexplored ground, brighter floor than before, and nothing on a cell that is explored', () => {
@@ -82,11 +82,13 @@ test('the corner map draws a faint dot grid on unexplored ground, brighter floor
     switches: [],
   };
   assert.equal(drawMinimap(canvas, model, 'small'), true);
-  assert.equal(canvas.width, 148);
+  const { r, s } = MINIMAP.sizes.small,
+    side = 2 * r + 1;
+  assert.equal(canvas.width, side * s);
   const dots = calls.filter(([k, a, fs]) => k === 'fillRect' && a[2] === 1 && a[3] === 1 && /rgba\(150,185,180/.test(String(fs)));
-  assert.ok(dots.length > 150 && dots.length < (37 * 37) / 3, 'a quarter of the unexplored cells carry a dot: ' + dots.length);
-  const explored = new Set(model.cells.map((c) => c.cx - 10 + 18 + ',' + (c.cz - 10 + 18))); // cell offsets from the player's cell (10, 10)
-  for (const [, a] of dots) assert.ok(!explored.has(Math.floor(a[0] / 4) + ',' + Math.floor(a[1] / 4)), 'no dot on an explored cell');
+  assert.ok(dots.length > (side * side) / 9 && dots.length < (side * side) / 3, 'a quarter of the unexplored cells carry a dot: ' + dots.length);
+  const explored = new Set(model.cells.map((c) => c.cx - 10 + r + ',' + (c.cz - 10 + r))); // cell offsets from the player's cell (10, 10)
+  for (const [, a] of dots) assert.ok(!explored.has(Math.floor(a[0] / s) + ',' + Math.floor(a[1] / s)), 'no dot on an explored cell');
   const floor = calls.find(([k, , fs]) => k === 'fillRect' && String(fs).toLowerCase() === '#587a82');
   assert.ok(floor, 'explored floor is drawn in the brighter colour');
   assert.equal(drawMinimap(canvas, model, 'off'), false, 'off draws nothing');

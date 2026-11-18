@@ -3,6 +3,7 @@ import { pauseInfoHtml, pauseWhereHtml } from './pauseinfo.js';
 import { SAVED_LINE, notSavedLine, savedPageHtml, savedWhereHtml } from './savepoint.js';
 import { weaponIcon } from './wheel.js';
 import { withKeys } from './hints.js';
+import { objectiveShown } from './objectivetext.js';
 import { KEYS, PLAYER, AMMO_MAX, DIFFICULTY, WEAPONS, SLOT_KEYS, MELEE_ORDER, ENEMIES, AMMO_LOADS, DIFFICULTY as DIFFS } from '../engine/defs.js';
 import { activeLoad, loadsOf } from '../engine/ammoloads.js';
 import { modMarks } from '../engine/mods.js';
@@ -19,6 +20,8 @@ const PIXEL_LABEL = {
   960: '960: sharp pixels',
 };
 const AMMO_LABEL = { flare: 'FLARES', shell: 'SHELLS', rivet: 'RIVETS', bolt: 'BOLTS', cell: 'CELLS', round: 'ROUNDS', rocket: 'ROCKETS' };
+/** how long the HUD names a new line in the Log before it steps aside (the count stays for the Journal) */
+export const UNREAD_SHOW_MS = 8000;
 /* * what the later weapons say when they are picked up (the older ones are in TOASTS below) */
 import { describeNext, TRACKS, modRows, ammoCap } from '../engine/progress.js';
 import { RESOLUTIONS, fovLabel } from './settings.js';
@@ -319,9 +322,14 @@ export class UI {
   }
   /** the HUD's count of messages not yet read in the Journal (main.js keeps the number) */
   setUnread(n) {
+    // the outside playtest of 2026-11-18: the badge never seemed to clear and sat beside the weapon bar for the whole level. A new line now shows it
+    // for eight seconds and it steps aside; the count stays for the Journal's Log tab and the pause page, and opening the Journal clears it
+    const more = n > (this.unread ?? 0);
     this.unread = n;
-    $('hud-log').classList.toggle('hidden', !n);
     $('hud-log-n').textContent = String(n);
+    clearTimeout(this.unreadTimer);
+    $('hud-log').classList.toggle('hidden', !n || !more);
+    if (n && more) this.unreadTimer = setTimeout(() => $('hud-log').classList.add('hidden'), UNREAD_SHOW_MS);
   }
   /** the crash screen (errorlog.js): over everything, plain words, the report text can be copied for a bug report */
   showCrash({ message, text, halted, aside }) {
@@ -1044,13 +1052,19 @@ export class UI {
             .replace(/[^A-Za-z0-9]/g, '')}" title="${this.keyLabels[k] ?? KEYS[k].name}"></i>`,
       )
       .join('');
-    $('objective').textContent = w.objective ? 'OBJECTIVE  ' + w.objective : '';
+    if (w.objective !== this._objText || w !== this._objW) {
+      this._objW = w;
+      this._objText = w.objective;
+      this._objAt = w.time;
+    }
+    const objNow = objectiveShown(w.objective, w.time - (this._objAt ?? 0)); // whole when new, then its first sentence (objectivetext.js)
+    $('objective').textContent = objNow ? 'OBJECTIVE  ' + objNow : '';
     const boss = w.enemies.find((e) => ENEMIES[e.kind].boss && e.state !== 'dead' && e.state !== 'idle' && !e.hold),
       bossEl = $('boss');
     bossEl.classList.toggle('hidden', !boss);
     $('objective').style.top = boss ? '64px' : ''; // the objective panel must not sit on the boss bar (audit A15)
     {
-      const key = (w.objective ?? '') + (boss ? '|b' : '') + '|' + (globalThis.innerHeight ?? 0);
+      const key = objNow + (boss ? '|b' : '') + '|' + (globalThis.innerHeight ?? 0);
       if (key !== this._objKey) {
         this._objKey = key;
         const ob = $('objective'),

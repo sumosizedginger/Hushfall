@@ -69,6 +69,9 @@ const NEAR = 0.1,
   // the first one left out (LIGHT_FADE m), so a lamp never switches on or off in one frame
   FX_LIGHTS = 4;
 const lerp = (a, b, t) => a + (b - a) * t;
+// the held lantern hangs above the HUD readouts (the outside playtest of 2026-11-18: in the Root Bell fight it hung over health and ammunition).
+// Its box ends at 82% of the screen height with the lamp out (tests/lamp-clear.test.js projects it); the readouts start at about 90%
+export const LAMP_Y = -0.17;
 /*
  * what the comfort settings make of every camera motion and flash (1 = as built): head bob, the shake, the view's own kicks (recoil, a swing), the
  * widening of the view (sprint, air, a parry, a hit), the weapon's sway, the hurt flash, the muzzle light. reduced motion stills all of them.
@@ -269,8 +272,8 @@ export class GameView {
       scene.add(this.handLamp);
       this.lampK = 0;
       this.lampModel = makeHandLantern();
-      this.lampModel.scale.setScalar(0.72);
-      this.lampModel.position.set(-0.4, -0.3, -0.62);
+      this.lampModel.scale.setScalar(0.6);
+      this.lampModel.position.set(-0.44, LAMP_Y, -0.7);
       ws.add(this.lampModel);
       // the hand lantern: one warm light that rides with the eye (it is in the scene for the whole level, at strength 0 when out: a constant light
       // count means no shader recompile) and a brass lantern held low at the left of the weapon view
@@ -999,7 +1002,7 @@ export class GameView {
       const m = this.lampModel;
       m.userData.core.color.setScalar(0.35 + 0.65 * this.lampK * low);
       m.userData.flame.scale.setScalar(0.5 + 0.55 * this.lampK * fl);
-      m.position.y = -0.3 + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK);
+      m.position.y = LAMP_Y + 0.012 * Math.sin(this.time * 1.9) - 0.05 * (1 - this.lampK);
       m.rotation.z = 0.05 * Math.sin(this.time * 1.3);
     }
     this.cam.rotation.set(lookPitch + (p.kick + ck.pitch) * C.kick, lookYaw, (roll + ck.roll) * C.kick);
