@@ -61,6 +61,7 @@ export function makeShellState({ storage, settings, firstMap }) {
     mapOpen: false,
     unread: new Set(),
     journalTab: 'map',
+    hintAt: undefined, // the world time the last lesson (hints.js) was shown: the next waits 20 s of play
     keysAsked: new Set(), // the keys whose locked doors have been tried in this attempt (keymarks.js)
     journalFromPause: false, // the Journal was opened from the pause menu: it closes back to it
     journalPins: undefined,

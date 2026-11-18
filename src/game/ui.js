@@ -834,6 +834,7 @@ export class UI {
   clearOverlays() {
     clearTimeout(this._pumpT);
     clearTimeout(this._tipT);
+    this.controlsHide();
     this.comq.clear();
     $('toasts').replaceChildren();
     $('comms').classList.add('hidden');
@@ -921,6 +922,20 @@ export class UI {
   }
   tipFree() {
     return !(this._tipUntil > performance.now());
+  }
+  /** the controls card (firstrun.js controlsCard): lower left, `delay` ms after the start, for `dur` ms or until controlsHide (the first shot) */
+  controls(text, delay, dur) {
+    this.controlsHide();
+    this._ctlT = setTimeout(() => {
+      const el = $('controls-card');
+      el.textContent = text;
+      el.classList.remove('hidden');
+      this._ctlT = setTimeout(() => this.controlsHide(), dur);
+    }, delay);
+  }
+  controlsHide() {
+    clearTimeout(this._ctlT);
+    $('controls-card')?.classList.add('hidden');
   }
   tip(text, delay, dur) {
     clearTimeout(this._tipT);

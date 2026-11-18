@@ -40,7 +40,7 @@ import { referenceRows } from './stats/schema.js';
 import { statsHtml, runCardHtml, deathLine } from './stats/page.js';
 import { seenKinds, bestiaryPage } from './bestiary.js';
 import { captionFor } from './captions.js';
-import { firstRunLine } from './firstrun.js';
+import { firstRunLine, controlsCard } from './firstrun.js';
 import { creditsLines, creditsHeight, creditsState } from './credits.js';
 import { loadLog, saveLog, clearLog, addLevel, addSurvey, exportText, describe, addCrash } from './playlog.js';
 import { drawMinimap, MINIMAP, nearbyCells, objectiveTarget } from './minimap.js';
@@ -660,10 +660,15 @@ const checkpointSave = () => {
 /** the first time a system matters, a line that names the player's own key; shown once, ever */
 function showHint(events) {
   if (settings.hints === false || g.world.map.range || !ui.tipFree()) return;
-  const h = nextHint({ world: g.world, events, firing: g.input.down.has('fire'), seen: settings.hintsSeen, keyOf: ui.h.keyOf });
-  if (!h) return;
+  // one lesson at a time: at least 20 s of play between two (a hint the player already knows is marked without a word, at any time)
+  const t = g.world.time,
+    spaced = !(t - (g.hintAt ?? -99) < 20 && t >= (g.hintAt ?? -99));
+  const h = nextHint({ world: g.world, events, firing: g.input.down.has('fire'), down: g.input.down, seen: settings.hintsSeen, keyOf: ui.h.keyOf });
+  if (!h || (!h.silent && !spaced)) return;
   settings.hintsSeen = { ...settings.hintsSeen, [h.id]: true };
   saveSettings(storage, settings);
+  if (h.silent) return;
+  g.hintAt = t;
   ui.tip(h.text, 0, 8000);
 }
 /** a message just reached the player: remember it in the run's progress (the range is no part of the campaign) */
@@ -787,11 +792,14 @@ function startLevel({
     const first = !settings.firstRunSeen,
       // a new profile also gets one line about the objective and the Journal
       legend = g.padActive ? padLegend(settings.padBindings, g.pad.family) : legendText(g.input.bindings);
-    ui.tip(
-      first ? legend + '\n' + firstRunLine({ bindings: g.input.bindings, padBindings: settings.padBindings, family: g.pad.family, pad: g.padActive }) : legend,
-      6800,
-      first ? 17000 : 11000,
-    );
+    // the controls card: a new profile's first level and Marrow Quay only, in the lower left corner (never over the picture's middle); firing hides it
+    const card = controlsCard({
+      legend,
+      firstRun: first,
+      mapId: g.mapId,
+      firstLine: first ? firstRunLine({ bindings: g.input.bindings, padBindings: settings.padBindings, family: g.pad.family, pad: g.padActive }) : '',
+    });
+    if (card) ui.controls(card, 4000, first ? 24000 : 16000);
     if (first) {
       settings.firstRunSeen = true;
       saveSettings(storage, settings);
@@ -1243,11 +1251,13 @@ function stepOnce() {
   const ev = drainEvents(g.world);
   if (ev.length) statsTry((S) => S.events(ev, g.world));
   if (g.world.tick % 7200 === 0) statsSave(); // the stats hear every event; saved every two minutes of play as well
+  // a lesson can be due on the world's state alone (a creature awake in front of you), so the hints look every quarter second as well as on events
+  if (ev.length || g.world.tick % 15 === 0) showHint(ev);
+  if (g.input.down.has('fire')) ui.controlsHide(); // the controls card goes the moment you shoot
   if (ev.length) {
     if (g.world.map.range) rangeMeter.events(ev);
     g.view.handleEvents(ev);
     ui.events(ev);
-    showHint(ev);
     keepCheckpoint(ev);
     recordMessages(ev);
     audio.handleEvents(ev);

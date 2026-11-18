@@ -15,7 +15,7 @@ canvas{display:block;width:100vw;height:100vh}
 #cross[data-style=circle]{--tick:0px;--sp:max(3.5px,calc(.5vh*var(--k)));background:none;border:max(1px,calc(.14vh*var(--k))) solid var(--c);border-radius:50%}
 body:not([data-screen=""]) #cross{display:none}
 /* round 1 (Gemini, Grok, Codex: the Journal and the end-of-map panel showed the live message strip, pickup lines and the last pickup card through their dim): a full-panel screen owns the picture; what was said is in the Journal's Log, what was picked up is in its Items. Pause keeps them (a menu over the game). */
-body:is([data-screen=journal],[data-screen=complete],[data-screen=saved],[data-screen=dead],[data-screen=record],[data-screen=stats],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#captions,#cross-note){display:none!important}
+body:is([data-screen=journal],[data-screen=complete],[data-screen=saved],[data-screen=dead],[data-screen=record],[data-screen=stats],[data-screen=ending],[data-screen=credits]) :is(#toasts,#comms,#pickup-card,#tips,#controls-card,#captions,#cross-note){display:none!important}
 body[data-stance=ads] #cross{--tick:max(3px,calc(.45vh*var(--k)));--sp:max(2px,calc(.3vh*var(--k)));--dot:calc(var(--th)*1.3)}
 body[data-stance=sprint] #cross{opacity:0}
 body[data-stance=guard] #cross{--c:var(--bronze);--tick:0px;--sp:15px;border:2px solid var(--bronze);border-radius:3px}
@@ -96,7 +96,7 @@ button:focus,summary:focus,input:focus,select:focus{outline:none;border-color:va
 #journal-log .rec .meta{display:block;margin-top:2px;color:#7f9490;font-size:0.79em;letter-spacing:.06em}#journal-log details.lvlbox{margin:14px 0;border-top:1px solid #26333a;padding-top:8px}#journal-log details.lvlbox>summary{cursor:pointer;color:var(--bronze);letter-spacing:.14em;font-size:0.86em;text-transform:uppercase;padding:4px 0}#journal-log details.lvlbox>summary small{color:#7f9490;margin-left:8px}
 #journal-items .item{margin:8px 0 12px}#journal-items .item p,#journal-items p.help{margin:2px 0 0 calc(2ch + 12px);color:#b7c8c4;line-height:1.4;font-size:0.93em}#journal-items .item .meta{display:block;margin:2px 0 0 calc(2ch + 12px);color:#7f9490;font-size:0.79em;letter-spacing:.06em}#journal-items .role{color:var(--bronze);letter-spacing:.1em;font-size:0.79em;text-transform:uppercase;margin-left:6px}#journal-items .item.minor{margin:3px 0}#journal-items .item.minor .row{margin:2px 0}
 #hud .stat.logn b{color:var(--teal)}
-#card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
+#card h1{font-size:46px;margin:0 0 10px;letter-spacing:.4em;padding:6px .2em 4px .6em;background:#07080ce6;color:#f1e8d4;text-shadow:3px 3px 0 #000}#card div{color:var(--paper);font-size:16px;letter-spacing:.06em;margin:3px 0}
 @keyframes cardfade{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 #objective{position:fixed;left:16px;top:12px;max-width:min(560px,46vw);font-size:clamp(15px,1.75vh,20px);font-weight:600;color:#d4e0dc;background:#0b0d12d0;border-left:3px solid var(--bronze);padding:4px 10px;pointer-events:none;text-shadow:1px 1px 0 #000}
 #objective:empty{display:none}
@@ -275,13 +275,14 @@ button.buy:disabled{opacity:.4;cursor:default;border-color:var(--slate);color:va
 #cine-sub[data-who="INES"] #cine-who{color:var(--bronze)}
 #cine-fade{position:absolute;inset:0;background:#000;opacity:0}
 #cine-hint{position:absolute;right:2vw;bottom:3vh;font:12px ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.5}
-body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #pickup-card,body.in-cine #cross,body.in-cine #hitmark,body.in-cine #comms,body.in-cine #cross-note,body.in-cine #objective,body.in-cine #captions,body.in-cine #tips,body.in-cine #boss,body.in-cine #hint,body.in-cine #use-hint,body.in-cine #charge{display:none!important}          /* round 1: a scene owns the picture; the objective box used to show its bronze edge and last line under the letterbox (the retaken C2M24 frame) */
+body.in-cine #hud,body.in-cine #toasts,body.in-cine #minimap,body.in-cine #pickup-card,body.in-cine #cross,body.in-cine #hitmark,body.in-cine #comms,body.in-cine #cross-note,body.in-cine #objective,body.in-cine #captions,body.in-cine #tips,body.in-cine #controls-card,body.in-cine #boss,body.in-cine #hint,body.in-cine #use-hint,body.in-cine #charge{display:none!important}          /* round 1: a scene owns the picture; the objective box used to show its bronze edge and last line under the letterbox (the retaken C2M24 frame) */
 /* text size, captions, the first-run line, key letters */
 /* (design/ART_ASSESSMENT.md item 9): the reading screens (the Journal's pages, Your stats, the Record) take their text size from the window's height (their sizes are in em of this), and the player's text size on top */
 .jpage,#journal-bar,#stats-body,#record-list,#record-sub{font-size:calc(clamp(14px,1.5vh,21px) * var(--ui-scale))}
 body{--ui-scale:1}body.ui-large{--ui-scale:1.25}body.ui-larger{--ui-scale:1.5}
 #comms,#toasts,#objective,#tips,#captions,#pickup-card,#hud .side,#hud-weapons{zoom:var(--ui-scale)}
 #tips{white-space:pre-line}
+#controls-card{position:fixed;left:16px;bottom:120px;max-width:min(330px,34vw);pointer-events:none;color:#c4d2ce;background:#0b0d12d8;border-left:3px solid var(--slate);padding:7px 12px;font-size:clamp(12px,1.35vh,15px);line-height:1.45;white-space:pre-line;zoom:var(--ui-scale)}          /* the outside playtest of 2026-11-18: the controls sat in the middle for 11 s every level; now a corner column, first level only, gone on the first shot */
 /* the sound captions never cover what you are shooting at. The top band, between the objective's column and the corner map, centred when the window has the room, under the boss bar when one is up. Percentages, not vw: zoom (the text size) scales px and leaves a percentage of the window alone */
 body[data-minimap=small]{--cap-r:calc(clamp(148px,16.5vh,240px) + 28px)}
 body[data-minimap=large]{--cap-r:calc(clamp(222px,24vh,340px) + 28px)}
@@ -297,7 +298,7 @@ body.cap-plate #captions div{background:#0b0d12b0;border:1px solid var(--slate)}
 </style></head>
 <body data-screen="">
 <canvas id="c"></canvas><canvas id="automap" class="hidden"></canvas><div id="wheel" class="hidden"></div><div id="cross"></div><div id="hitmark"></div><div id="cross-note"></div><div id="charge"><i></i></div>
-<canvas id="minimap"></canvas><div id="toasts"></div><div id="pickup-card"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div>
+<canvas id="minimap"></canvas><div id="toasts"></div><div id="pickup-card"></div><div id="comms" class="hidden"><b id="comms-who"></b><span id="comms-text"></span></div><div id="card" class="hidden"><h1 id="card-title"></h1><div id="card-lines"></div></div><div id="hint"></div><div id="objective"></div><div id="boss" class="hidden"><b id="boss-name"></b><div id="boss-bar"><i id="boss-fill"></i></div><small id="boss-note"></small></div><div id="use-hint" class="hidden"></div><div id="tips" class="hidden"></div><div id="controls-card" class="hidden"></div>
 <div id="range-hud" class="hidden"></div>
 <div id="captions" class="hidden"></div>
 <div id="cine" class="hidden"><div id="cine-top"></div><div id="cine-bottom"></div><div id="cine-sub"><b id="cine-who"></b><span id="cine-text"></span></div><div id="cine-fade"></div><div id="cine-hint">Enter or Esc to skip</div></div>

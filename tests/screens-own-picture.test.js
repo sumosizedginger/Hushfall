@@ -22,7 +22,7 @@ test('one rule hides the live overlays under a full-panel screen, and every scre
     assert.match(e, /^#[a-z-]+$/, e);
     assert.ok(html.includes(`id="${e.slice(1)}"`), e + ' exists');
   }
-  assert.deepEqual(els.sort(), ['#captions', '#comms', '#cross-note', '#pickup-card', '#tips', '#toasts']);
+  assert.deepEqual(els.sort(), ['#captions', '#comms', '#controls-card', '#cross-note', '#pickup-card', '#tips', '#toasts']);
 });
 
 test('the pause menu is not in the rule: a menu over the game keeps the strip, and the minimap and crosshair rules above it are untouched', () => {

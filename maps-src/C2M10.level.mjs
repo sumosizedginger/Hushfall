@@ -143,7 +143,7 @@ const MAP = {
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ECHO MARKETS', lines: ['A market town under the roof of the cave, round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },
   outro: 'The north gate opened when the hall had gone quiet. Behind it the stair goes down, and the noise of the market stays behind.',
-  objective: 'Cross the market, south gate to north gate. The north gate will not open while the hall is loud',
+  objective: 'Cross the market to the north gate. It stays shut while the hall is loud',
   ...L.layers(),
   secrets: [{ id: 'store', panel: ROOM, cells: [[1, 33], [2, 33], [3, 33], [1, 34], [2, 34], [3, 34], [1, 35], [2, 35], [3, 35], [1, 36], [2, 36], [3, 36], [1, 37], [2, 37], [3, 37]] },
     { id: 'sealed', panel: SEALED, cells: [[66, 31], [67, 31]], open: 'shoot' }],

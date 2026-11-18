@@ -146,7 +146,7 @@ test('a hint comes the moment it matters, once, in the player own key', () => {
   const running = nextHint({ world: { ...world, player: { ...player, sprinting: true } }, firing: true, keyOf });
   assert.equal(running.id, 'sprint');
   assert.ok(/Shift/.test(running.text), running.text);
-  assert.equal(nextHint({ world: { ...world, player: { ...player, sprinting: true } }, firing: true, seen: { sprint: true }, keyOf }), null, 'once');
+  assert.ok(!nextHint({ world: { ...world, player: { ...player, sprinting: true } }, firing: true, seen: { sprint: true }, keyOf })?.text, 'once');
   assert.equal(nextHint({ world: { ...world, player: { ...player, weapon: 'arc' } }, keyOf }).id, 'arc');
   assert.equal(nextHint({ world, events: [{ type: 'door_locked' }], keyOf }).id, 'key');
   assert.ok(new Set(HINTS.map((h) => h.id)).size === HINTS.length);

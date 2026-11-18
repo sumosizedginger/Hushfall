@@ -3,6 +3,7 @@
  "id": "C1E1M01",
  "version": 9,
  "name": "Marrow Quay",
+ "objective": "Make for the ferry dock, east along the quay",
  "cellSize": 2,
  "ceilingHeight": 3.6,
  "atmosphere": {

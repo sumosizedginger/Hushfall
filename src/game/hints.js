@@ -2,9 +2,57 @@
 // (settings.hintsSeen). The same words go into the Journal's item help.
 import { prettyCode } from './bindings.js';
 import { padGlyph } from './gamepad.js';
+import { ENEMIES, WEAPONS, MELEE_ORDER } from '../engine/defs.js';
 
-/** each hint: `when(ctx)` is true the moment it matters; ctx = { world, events, firing } */
+// the basics, one at a time where they matter (the outside playtest of 2026-11-18: aim, sprint, melee, switching and ammunition were only ever in
+// a legend). A hint with `known` is marked seen silently once the player has shown they know it, so it never lectures.
+const isMelee = (w) => MELEE_ORDER.includes(w) || !!WEAPONS[w]?.melee;
+const hostiles = (world, r) =>
+  world.enemies.filter(
+    (e) => e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind]?.peaceful && Math.hypot(e.x - world.player.x, e.z - world.player.z) < r,
+  );
+
+/** each hint: `when(ctx)` is true the moment it matters; `known(ctx)`, when given, is true once the player plainly knows it; ctx = { world, events, firing, down } */
 export const HINTS = [
+  {
+    id: 'aim',
+    known: ({ world, down }) => down.has('aim') || (world.player.ads ?? 0) > 0.5,
+    when: ({ world }) => !isMelee(world.player.weapon) && hostiles(world, 24).length > 0,
+    text: (k) => `Hold ${k('aim')} to aim down the sights: a tighter shot, a slower step.`,
+  },
+  {
+    id: 'melee',
+    known: ({ world }) => (world.player.swingT ?? -1) >= 0,
+    when: ({ world }) => !isMelee(world.player.weapon) && hostiles(world, 3.2).length > 0,
+    text: (k) => `Too close for the gun? ${k('melee')} strikes without putting it away.`,
+  },
+  {
+    id: 'switch',
+    when: ({ world, events }) =>
+      (world.player.weapons?.length ?? 0) >= 2 &&
+      events.some((e) => e.type === 'weapon_pickup' && !String(e.kind).startsWith('mod_') && !MELEE_ORDER.includes(e.kind)),
+    text: (k) => `A new gun. The bar at the bottom shows what you carry: ${k('weapon1')} to ${k('weapon10')} pick one, ${k('weaponLast')} swaps back.`,
+  },
+  {
+    id: 'ammo',
+    when: ({ world }) => {
+      const t = WEAPONS[world.player.weapon]?.ammo;
+      return !!t && (world.player.ammo?.[t] ?? 99) <= 2;
+    },
+    text: (k) => `Running low. A creature drops ammunition when it falls: walk over it. ${k('melee')} costs nothing.`,
+  },
+  {
+    id: 'folk',
+    when: ({ world }) =>
+      world.enemies.some((e) => e.state === 'calm' && ENEMIES[e.kind]?.peaceful && Math.hypot(e.x - world.player.x, e.z - world.player.z) < 14),
+    text: () => 'Not every Vael here fights. The ones that walk on and never turn on you are no threat, and killing one costs you rank.',
+  },
+  {
+    id: 'run',
+    known: ({ world }) => !!world.player.sprinting,
+    when: ({ world }) => world.time > 30 && hostiles(world, 30).length === 0,
+    text: (k) => `Hold ${k('sprint')} to run. The gun comes back up when you let go.`,
+  },
   {
     id: 'sprint',
     when: ({ world, firing }) => firing && world.player.sprinting,
@@ -67,20 +115,32 @@ export const HINTS = [
   },
 ];
 
-/** the first hint due now that has not been shown: its id and its words, or null */
-export function nextHint({ world, events = [], firing = false, seen = {}, keyOf }) {
+/**
+ * the first hint due now that has not been shown: its id and its words; else { id, silent: true } for a hint the player plainly already knows
+ * (the shell marks it seen without a word); else null
+ */
+export function nextHint({ world, events = [], firing = false, down = new Set(), seen = {}, keyOf }) {
   if (!world?.player) return null;
+  let known = null;
   for (const h of HINTS) {
     if (seen[h.id]) continue;
+    try {
+      if (h.known?.({ world, events, firing, down })) {
+        known ??= { id: h.id, silent: true };
+        continue;
+      }
+    } catch {
+      /* a hint that cannot read the world is not known yet */
+    }
     let due = false;
     try {
-      due = h.when({ world, events, firing });
+      due = h.when({ world, events, firing, down });
     } catch {
       due = false;
     }
     if (due) return { id: h.id, text: h.text(keyOf) };
   }
-  return null;
+  return known;
 }
 
 /** the name of an action's key or button as the player has it */

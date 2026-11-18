@@ -1523,7 +1523,7 @@
    "text": "A stair down, wide, and the murmur of the market already thinner behind me. It was a good market. I did not buy anything."
   }
  ],
- "objective": "Cross the market, south gate to north gate. The north gate will not open while the hall is loud",
+ "objective": "Cross the market to the north gate. It stays shut while the hall is loud",
  "entryLoadout": {
   "hp": 100,
   "armor": 50,
