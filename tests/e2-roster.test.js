@@ -154,19 +154,23 @@ const mother = () => {
   ].map(([x, z]) => put(w, 'feeder', x, z, 0));
   return { w, m, feeders };
 };
-test('the Graft-Mother is shielded while any feeder stands; killing the last one drops the shield and staggers her', () => {
+test('the Graft-Mother\'s face is plated: from in front a blow does a share of its damage, from her flank all of it; the feeders do not shield her (the boss pass of 2026-11-18)', () => {
   const { w, m, feeders } = mother();
   m.hp = 1e6;
-  const d0 = m.hp;
-  damageEnemy(w, m, 100);
-  const shielded = d0 - m.hp;
-  assert.ok(Math.abs(shielded - 100 * ENEMIES.graftmother.shield.reduce) < 1e-6, 'a feeder-fed shield takes ' + shielded.toFixed(2));
-  for (const f of feeders) damageEnemy(w, f, 1e6);
-  assert.ok(feeders.every((f) => f.state === 'dead'));
-  assert.ok(m.stunT > 0, 'staggered when the ring breaks');
-  const d1 = m.hp;
-  damageEnemy(w, m, 100);
-  assert.ok(d1 - m.hp > 90, 'unshielded (and staggered): ' + (d1 - m.hp).toFixed(1));
+  m.yaw = 0;
+  const hit = (dx, dz) => {
+    w.player.x = m.x + dx;
+    w.player.z = m.z + dz;
+    const h0 = m.hp;
+    damageEnemy(w, m, 100);
+    return h0 - m.hp;
+  };
+  const front = hit(0, 6),
+    flank = hit(6, 0);
+  assert.ok(Math.abs(front - 100 * ENEMIES.graftmother.armor.front) < 1e-6, 'plated from in front: ' + front.toFixed(2));
+  assert.ok(Math.abs(flank - 100) < 1e-6, 'all of it from the side: ' + flank.toFixed(2));
+  assert.ok(feeders.some((f) => f.state !== 'dead'), 'with her feeders standing');
+  assert.ok(ENEMIES.graftmother.turnRate < 0.5, 'she turns slower than a strafing player walks round her');
 });
 test('the Graft-Mother spits spores from the start, hatches Gills from her sacs, and has no tone pulses', () => {
   const { w, m } = mother();

@@ -34,12 +34,12 @@ air_land alarm arc armor_hit beat_off bell_crush bell_fall bell_last bell_slam b
 car_arrive car_depart charge_full charge_start chime_note chime_play chime_played chime_seq choice cinematic cue dmg door_breath door_close
 door_cycling door_listen door_locked door_open door_remote drop dry dry_feed enemy_alert enemy_call enemy_call_windup enemy_cower enemy_died
 enemy_dodge enemy_hit enemy_lunge enemy_lurch enemy_revived enemy_shot enemy_spawn enemy_strike enemy_windup exit_lock exit_locked
-exit_unlock explode fire folk_fear graft grav_catch grav_drop grav_grab grav_punt grav_punt_prop grav_throw guard_break guard_up headshot
+exit_unlock explode fire folk_fear fork_struck graft grav_catch grav_drop grav_grab grav_punt grav_punt_prop grav_throw guard_break guard_up headshot
 hurt impact innocent lamp lamp_dry lamp_out level_complete lights load_cycle load_empty load_hit load_land load_none load_warn melee_hit
-mender_start mender_stop message mirror_turn node_severed objective parry phys_break phys_hit phys_respawn pickup pin player_died pool_dry
+mender_start mender_stop message mirror_turn node_severed objective open_hit parry phys_break phys_hit phys_respawn pickup pin player_died pool_dry
 pulse pulse_back pulse_hit receiver_dark receiver_lit resonant_ring resonator_ring saw_hit saw_kick saw_restart saw_rev saw_stall saw_start
 saw_stop seal_shatter secret sector_start sector_stop sexton_channel shake shield_hit shot_impact shot_reflect shove_impact silence
-snipe_shot snipe_tell spike_strike spike_warn spore_bloom spore_fade spore_warn suppress sweep_end sweep_hit sweep_tell swing switch
+snipe_shot snipe_tell song_broken spike_strike spike_warn spore_bloom spore_fade spore_warn suppress sweep_end sweep_hit sweep_tell swing switch
 switch_dead switch_need tear_land tear_lob tear_windup tremor trigger vacuum_enter vacuum_leave vat_birth vat_swell vent_launch void_fall
 wade ward_hit warden_crash weapon_pickup weapon_switch
 `

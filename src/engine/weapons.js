@@ -21,6 +21,22 @@ import * as DM from './dmath.js';
 /** apply damage to an enemy; returns true if this killed it (and emits the death). Callers emit enemy_hit for survivors. */
 export function damageEnemy(w, e, dmg, opts = {}) {
   const def = ENEMIES[e.kind];
+  // a FORK rings: it takes no harm, and every boss that listens stops to hear it (a fork that has just rung rests a while)
+  if (e.fork) {
+    if (dmg > 0 && !opts.burn && w.time >= (e.forkAt ?? 0)) {
+      let rest = 0;
+      for (const c of w.enemies)
+        if (ENEMIES[c.kind].listen && c.state !== 'dead') {
+          c.listenUntil = w.time + ENEMIES[c.kind].listen.t;
+          c.pulseT = -1;
+          rest = Math.max(rest, ENEMIES[c.kind].listen.rest);
+        }
+      e.forkAt = w.time + rest;
+      emit(w, 'fork_struck', { id: e.id, x: e.x, z: e.z });
+    }
+    e.flash = 1;
+    return false;
+  }
   let plated = false; // did the plate turn this blow? (the penetrator load doubles what a plated creature takes)
   if (def.armor && !opts.splash && !opts.pierceArmor && !(def.armor.opens && e.attackT >= 0)) {
     // (a Bulwark Shell's carapace is open while it bashes,) plate on the front arc: only the shooter's side counts, splash and a harpoon bolt ignore
@@ -49,6 +65,26 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z });
     // a staggered Cantor with its shield down takes more // the Cantor sings through its ring
   } else if (def.boss && (e.stunT || 0) > 0) dmg *= 1.5;
+  // GUARDED unless it is listening to a fork (def.guard, def.listen: the Sub-Cantor)
+  if (def.guard) {
+    if ((e.listenUntil ?? -1) > w.time) dmg *= def.listen.mult;
+    else {
+      dmg *= def.guard;
+      emit(w, 'shield_hit', { id: e.id, x: e.x, z: e.z });
+    }
+  }
+  // OPEN while it rears to sing (def.open, the Cantor): more damage, and enough of it inside one windup breaks the song (no ring, a stagger)
+  if (def.open && (e.pulseT ?? -1) >= 0 && !opts.burn) {
+    dmg *= def.open.mult;
+    e.openDmg = (e.openDmg ?? 0) + dmg;
+    emit(w, 'open_hit', { id: e.id, x: e.x, z: e.z });
+    if (e.openDmg >= def.open.break * DIFFICULTY[w.difficulty].enemyHp && e.hp - dmg > 0) {
+      e.pulseT = -1;
+      e.pulseCd = Math.max(e.pulseCd ?? 0, 2.5);
+      e.stunT = def.stagger ?? 2;
+      emit(w, 'song_broken', { id: e.id, kind: e.kind, x: e.x, z: e.z });
+    }
+  }
   if (def.unison) {
     const u = unisonMult(w, def);
     if (u < 1) {
@@ -114,7 +150,7 @@ export function damageEnemy(w, e, dmg, opts = {}) {
     if (def.node) {
       emit(w, 'node_severed', { id: e.id, kind: e.kind, x: e.x, z: e.z });
       for (const c of w.enemies)
-        if (!def.spawner && ENEMIES[c.kind].boss && (ENEMIES[c.kind].shield || ENEMIES[c.kind].echoReeds) && c.state !== 'dead') {
+        if (!def.spawner && ENEMIES[c.kind].boss && (ENEMIES[c.kind].shield || ENEMIES[c.kind].echoReeds || ENEMIES[c.kind].open) && c.state !== 'dead') {
           c.stunT = ENEMIES[c.kind].stagger ?? 2;
           c.pulseT = -1;
           c.pulseCd = Math.max(c.pulseCd, 2.5);

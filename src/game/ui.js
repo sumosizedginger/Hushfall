@@ -1085,6 +1085,12 @@ export class UI {
         ? `SHIELDED: ${nodes} ${nodes === 1 ? NL[0] : NL[1]} ${NL[2]}`
         : boss.stunT > 0
           ? 'STAGGERED'
+          : BD.open && (boss.pulseT ?? -1) >= 0
+            ? 'OPEN: IT SINGS'
+            : BD.listen
+              ? (boss.listenUntil ?? -1) > w.time
+                ? 'LISTENING: OPEN'
+                : 'GUARDED: RING A FORK'
           : BD.echoReeds && nodes > 0
             ? `${nodes} ${nodes === 1 ? 'REED SINGS' : 'REEDS SING'}: A SECOND RING`
             : '';

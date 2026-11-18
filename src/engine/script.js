@@ -97,6 +97,13 @@ export function runAction(w, a) {
     const L = w.player.lamp;
     if (L) L.eternal = v === 'own';
   } // the plain hand lantern, or Ines's own (eternal) lamp, so the lamp yard can feel both holds (mapformat refuses it outside a range map)
+  else if (k === 'lampOut') {
+    const L = w.player.lamp;
+    if (L?.on) {
+      L.on = false;
+      emit(w, 'lamp_out', {});
+    }
+  } // a draught puts the hand lantern out (the Gate breathes on it; the player lights it again)
   else if (k === 'cinematic')
     // a story scene starts here. The sim only ANNOUNCES it (a headless run and the bots ignore the event); the shell stops stepping the world and
     // plays it (src/game/cinematics.js)
@@ -184,6 +191,8 @@ export function conditionMet(w, t) {
   if (c.startsWith('did:')) return !!w.did?.[c.slice(4)]; // the training yard saw you do it (training.js)
   if (c === 'lamp:on') return !!w.player.lamp?.on; // the hand lantern is lit
   if (c.startsWith('hp:')) return !!hpCondition(w, c); // a group is under a share of its hit points (phases.js)
+  // the hand lantern has been held lit for N seconds without going out (the Gate at the end of the game pushes back while it is held)
+  if (c.startsWith('lampheld:')) return !!w.player.lamp?.on && w.time - (w.player.lamp.since ?? w.time) >= Number(c.slice(9));
   return false;
 }
 /** evaluate every unfired trigger; a fired trigger runs its actions once */

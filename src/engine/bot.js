@@ -37,6 +37,8 @@ export class Bot {
     this.skipPickups = undefined;
     /** @type {any} */
     this.anchorSkip = undefined;
+    /** @type {any} */
+    this.flankAt = undefined; // circling a plated boss: when it last checked how far it went, and which way round (fight)
     this.fightTicks = 0;
     this.noFightUntil = 0;
     this.w = world;
@@ -184,11 +186,12 @@ export class Bot {
     let best = null,
       bd = Infinity,
       bossT = null;
-    const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead'),
+    const ringUp = w.enemies.some((n) => ENEMIES[n.kind].node && !n.fork && n.state !== 'dead'),
       conductor = w.enemies.find((n) => ENEMIES[n.kind].unison && n.state !== 'dead'),
       choirG = conductor ? ENEMIES[conductor.kind].unison.group : null;
     for (const e of w.enemies) {
       // (a singer of a living conductor's choir is a target even asleep:)
+      if (e.fork) continue; // a fork is struck on purpose (bossTick), never fought
       if (e.state === 'dead' || ENEMIES[e.kind].peaceful || (e.state === 'idle' && !ENEMIES[e.kind].node && !(choirG && e.group === choirG))) continue;
       if (ringUp && ENEMIES[e.kind].boss) continue; // shielded: cut the ring first
       // a conductor whose choir still sings takes a twentieth of a hit: the singers first
@@ -356,8 +359,25 @@ export class Bot {
       shooter = this.weave && (this.weave === 2 ? this.shootersNear() : !!ENEMIES[t.e.kind].ranged && t.d > 5),
       // strafe in alternating half-second runs while trading with a shooter: slow toll-shots miss a moving target
       weave = shooter && ((w.tick / 36) | 0) % 2 === 0;
-    this.setHeld('right', dodge || weave);
-    this.setHeld('left', shooter && !weave && !dodge); // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
+    // a plated BOSS (the Graft-Mother) is circled while the bot stands inside its plate: a person works round to the flank, the bot strafes one way
+    // and keeps its sights on it; she turns slower than a strafing player walks round her
+    const A = ENEMIES[t.e.kind].boss && ENEMIES[t.e.kind].armor;
+    const flank =
+      !!A && !((t.e.stunT || 0) > 0) && (DM.sin(t.e.yaw) * (p.x - t.e.x) + DM.cos(t.e.yaw) * (p.z - t.e.z)) / (t.d || 1) > A.cos - 0.15;
+    // circling into a wall gets it nowhere: every second and a half it looks at how far it went, and goes the other way round if it barely moved
+    if (flank) {
+      const F = (this.flankAt ??= { t: w.tick, x: p.x, z: p.z, dir: 1 });
+      if (w.tick - F.t >= 90) {
+        if (Math.hypot(p.x - F.x, p.z - F.z) < 1.2) F.dir = -F.dir;
+        F.t = w.tick;
+        F.x = p.x;
+        F.z = p.z;
+      }
+    }
+    const fr = flank && this.flankAt.dir > 0,
+      fl = flank && this.flankAt.dir < 0;
+    this.setHeld('right', (dodge || weave || fr) && !fl);
+    this.setHeld('left', (shooter && !weave && !dodge && !flank) || fl); // a crouching Gaunt or a lowered Warden shoulder is about to dash: sidestep it
   }
   /*
    * weave: 2 strafes while ANY awake shooter is within range, not only while the creature it is fighting is one (a Bellhand's toll-shot is aimed at
@@ -395,8 +415,11 @@ export class Bot {
     // (the Last Note's ring comes every three seconds: a bot with hit points to spare fights through it instead of cowering for good) // a ring costs
     // 13: only the beam is worth hiding from while there is hit points to spare
     const ringsMatter = (!far || p.hp < 45) && !(boss.rb?.last && p.hp >= 45);
+    // a boss that is OPEN while it rears (the Cantor) is answered in the windup, as a person would: shoot it, and take cover once the ring is out.
+    // While its bells still ring the bot is busy with them and keeps the old habit
+    const punish = !!ENEMIES[boss.kind].open && !w.enemies.some((n) => ENEMIES[n.kind].node && n.state !== 'dead') && p.hp >= 40;
     const danger =
-      (ringsMatter && (boss.pulseT ?? -1) >= 0) ||
+      (ringsMatter && (boss.pulseT ?? -1) >= 0 && !punish) ||
       (boss.sweepT ?? -1) >= 0 ||
       (boss.echoT ?? 0) > 0 ||
       // (a ring that has turned back is dangerous while it is still outside the player: it is coming in)
@@ -427,6 +450,21 @@ export class Bot {
         return false;
       } // safe: hold until it passes
     } else this.cover = null;
+    // a boss that LISTENS (the Sub-Cantor) is opened by ringing a fork: while it is guarded and a rested fork is in sight, the bot strikes the fork
+    const LD = ENEMIES[boss.kind].listen;
+    if (LD && !((boss.listenUntil ?? -1) > w.time)) {
+      const fork = w.enemies
+        .filter((f) => f.fork && w.time >= (f.forkAt ?? 0) && hasLOS(w, p.x, p.z, f.x, f.z))
+        .map((f) => ({ e: f, d: Math.hypot(f.x - p.x, f.z - p.z) }))
+        .filter((f) => f.d < 30)
+        .sort((a, b) => a.d - b.d)[0];
+      const near = this.combatTarget();
+      if (fork && !(near && near.e !== boss && near.d < 6)) {
+        this.calm = 0;
+        this.fight(fork);
+        return false;
+      }
+    }
     const t = this.combatTarget();
     if (t) {
       this.calm = 0;
@@ -452,7 +490,7 @@ export class Bot {
       singers = cg
         ? w.enemies.filter((e) => e.group === cg && e.state !== 'dead').sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))
         : [];
-    const nodes = (singers.length ? singers : w.enemies.filter((e) => ENEMIES[e.kind].node && e.state !== 'dead'))
+    const nodes = (singers.length ? singers : w.enemies.filter((e) => ENEMIES[e.kind].node && !e.fork && e.state !== 'dead'))
       .slice()
       .sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z));
     const goal = nodes[0] ?? boss,

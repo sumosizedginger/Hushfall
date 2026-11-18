@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M07",
- "version": 3,
+ "version": 4,
  "name": "Bellwright Yard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -498,7 +498,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [6, 56]
+   "at": [6, 56],
+   "facing": -0.26
   },
   {
    "type": "enemy",
@@ -1112,6 +1113,16 @@
    "dest": "next"
   },
   {
+   "type": "pickup",
+   "kind": "health_large",
+   "at": [47, 25]
+  },
+  {
+   "type": "pickup",
+   "kind": "health_small",
+   "at": [49, 24]
+  },
+  {
    "type": "prop",
    "kind": "lamppost",
    "at": [27, 48],
@@ -1138,7 +1149,7 @@
   },
   {
    "type": "enemy",
-   "kind": "bellhand",
+   "kind": "gaunt",
    "at": [22, 45],
    "facing": 1.571,
    "skill": "hard"

@@ -110,6 +110,7 @@ function updateLamp(w, cmd, dt) {
       emit(w, 'lamp', { on: false });
     } else if (L.oil > 0 || L.eternal) {
       L.on = true;
+      L.since = w.time; // how long it has been held lit (a trigger's lampheld:N)
       emit(w, 'lamp', { on: true });
     } else emit(w, 'lamp_dry', {});
   }

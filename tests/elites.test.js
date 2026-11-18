@@ -227,18 +227,23 @@ const boss = (w, nodes = 2) => {
   }
   return { c, n };
 };
-test('the Cantor takes 5% damage while any bell node stands; killing a node staggers it; with the ring broken it takes full damage', () => {
-  const dealt = (nodes) => {
+test('the Cantor is never shielded; it is OPEN while it rears to sing, a hard blow then breaks the song; a falling bell staggers it (the boss pass of 2026-11-18)', () => {
+  const dealt = (nodes, rearing) => {
     const w = quiet(arena());
     at(w, 8, 10);
     const { c } = boss(w, nodes);
+    if (rearing) c.pulseT = 0.2;
     w.projectiles.push({ id: 1, weapon: 'flare', x: c.x - 0.3, y: 1, z: c.z, vx: 0, vy: 0, vz: 0, life: 0.01 });
     const ev = run(w, 2);
-    return { d: 9999 - c.hp, shield: ev.some((e) => e.type === 'shield_hit') };
+    return { d: 9999 - c.hp, shield: ev.some((e) => e.type === 'shield_hit'), broke: ev.some((e) => e.type === 'song_broken'), c };
   };
-  const shielded = dealt(2),
-    open = dealt(0);
-  assert.ok(open.d > 40 && shielded.d < open.d * 0.1 && shielded.shield, `shielded ${shielded.d.toFixed(1)} vs open ${open.d.toFixed(1)}`);
+  const ringed = dealt(2, false),
+    bare = dealt(0, false),
+    rearing = dealt(0, true);
+  assert.ok(bare.d > 20 && !ringed.shield && Math.abs(ringed.d - bare.d) < 1e-6, `the bells shield nothing: ${ringed.d.toFixed(1)} vs ${bare.d.toFixed(1)}`);
+  assert.ok(rearing.d > bare.d * (ENEMIES.cantor.open.mult - 0.2), `open while it rears (the burn that follows is not multiplied): ${rearing.d} vs ${bare.d}`);
+  assert.equal(rearing.broke, rearing.d >= ENEMIES.cantor.open.break, 'the song breaks on a hard enough blow');
+  if (rearing.broke) assert.ok(rearing.c.stunT > 0 && rearing.c.pulseT === -1, 'no ring, and it staggers');
   const w = quiet(arena());
   at(w, 8, 10);
   const { c, n } = boss(w, 2);
@@ -247,7 +252,7 @@ test('the Cantor takes 5% damage while any bell node stands; killing a node stag
   w.projectiles.push({ id: 2, weapon: 'flare', x: n[0].x, y: 1, z: n[0].z, vx: 0, vy: 0, vz: 0, life: 0.01 });
   const ev = run(w, 3);
   assert.ok(ev.some((e) => e.type === 'node_severed'));
-  assert.ok(c.stunT > 0, 'the Cantor staggers when a node falls');
+  assert.ok(c.stunT > 0, 'the Cantor staggers when a bell falls');
 });
 test('a tone pulse is a ring that hurts once: cover stops it, and so does standing a metre or more above the floor', () => {
   const ring = (w, x, z) => w.pulses.push({ id: 900, x, z, y: 0, r: 0.6, speed: 9.5, dmg: 22, width: 1.3, maxR: 40, hit: false });
@@ -282,10 +287,11 @@ test('a tone pulse is a ring that hurts once: cover stops it, and so does standi
   ring(high, cell(30), cell(10));
   assert.equal(run(high, 60 * 4).filter((e) => e.type === 'pulse_hit').length, 0, 'standing on a 1 m ledge clears the ring (y=' + high.player.y + ')');
 });
-test('the Cantor summons Gaunts from its listed points, keeps its distance, and fans toll-shots once the ring is broken', () => {
+test('the Cantor summons Gaunts from its listed points, keeps its distance, and fans toll-shots once it is angry (under two fifths of its life)', () => {
   const w = quiet(arena());
   at(w, 20, 10);
   const { c } = boss(w, 0);
+  c.hp = 100; // angry: under two fifths of its life (enrageAt)
   c.summons = [
     [cell(34), cell(4)],
     [cell(34), cell(16)],
@@ -297,7 +303,7 @@ test('the Cantor summons Gaunts from its listed points, keeps its distance, and 
   assert.ok(w.enemies.filter((e) => e.kind === 'gaunt').every((g) => g.state === 'chase'));
   assert.ok(
     ev.some((e) => e.type === 'enemy_shot' && e.kind === 'cantor'),
-    'a fan of shots (ring broken)',
+    'a fan of shots (angry)',
   );
   const w2 = quiet(arena());
   at(w2, 20, 10);
@@ -305,7 +311,7 @@ test('the Cantor summons Gaunts from its listed points, keeps its distance, and 
   c2.pulseCd = 99;
   run(w2, 60 * 5);
   assert.ok(Math.hypot(c2.x - w2.player.x, c2.z - w2.player.z) >= 5.5, 'it does not walk into melee range');
-  assert.equal(w2.enemyShots.length, 0, 'no shots while the ring stands');
+  assert.equal(w2.enemyShots.length, 0, 'no shots while it has most of its life');
 });
 test('pulses, stagger and channel state survive a save; a v7 save (before the roster) migrates and plays on', () => {
   const m = arena(),

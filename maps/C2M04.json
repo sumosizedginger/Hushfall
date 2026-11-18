@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M04",
- "version": 3,
+ "version": 4,
  "name": "Tuning Fork Fields",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -312,7 +312,8 @@
  "entities": [
   {
    "type": "player",
-   "at": [5, 59]
+   "at": [5, 59],
+   "facing": -0.52
   },
   {
    "type": "prop",
@@ -975,7 +976,7 @@
   },
   {
    "type": "enemy",
-   "kind": "bellhand",
+   "kind": "gaunt",
    "at": [24, 25],
    "facing": 0,
    "skill": "hard"

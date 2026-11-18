@@ -196,7 +196,8 @@ function updateEnemyShots(w, diff, dt) {
 }
 
 // ---------------------------------------------------------------- elites and the boss
-const isNode = (n) => ENEMIES[n.kind].node && n.state !== 'dead';
+// (a FORK is an instrument, not a node: it holds no shield and it never falls)
+const isNode = (n) => ENEMIES[n.kind].node && !n.fork && n.state !== 'dead';
 
 const nodesAlive = (w) => w.enemies.filter(isNode).length;
 
@@ -386,11 +387,18 @@ function supportStep(w, e, def, dt, sees, dist) {
 /** Cantor: tone pulses (windup -> ring), Gaunt summons, and once the ring is broken, fans of toll-shots. It keeps its distance. */
 function bossStep(w, e, def, diff, dt, sees, dist) {
   const p = w.player,
-    enraged = nodesAlive(w) === 0,
+    // angry once its ring is cut, or (a boss that says enrageAt) below that share of its life
+    enraged = def.enrageAt ? e.hp < def.enrageAt * def.hp * diff.enemyHp : nodesAlive(w) === 0,
     P = def.pulse;
   e.pulseCd = Math.max(0, (e.pulseCd ?? 0) - dt);
   e.shotCd = Math.max(0, (e.shotCd ?? 0) - dt);
   e.summonCd = Math.max(0, (e.summonCd ?? 0) - dt);
+  // LISTENING to a fork (def.listen, the Sub-Cantor): it stands still and makes no sound until the note has died
+  if (def.listen && (e.listenUntil ?? -1) > w.time) {
+    e.pulseT = -1;
+    e.walk *= 0.85;
+    return true;
+  }
   if (e.echoT > 0) {
     e.echoT -= dt;
     if (e.echoT <= 0) {
@@ -440,6 +448,7 @@ function bossStep(w, e, def, diff, dt, sees, dist) {
   }
   if (P && sees && e.pulseCd <= 0) {
     e.pulseT = 0;
+    e.openDmg = 0; // what the player lands in this windup (def.open: enough of it breaks the song)
     emit(w, 'enemy_windup', { id: e.id, kind: e.kind, x: e.x, z: e.z });
     return true;
   }
@@ -1017,7 +1026,7 @@ function updateEnemy(w, e, diff, dt) {
     tz = sees || e.hunt ? p.z : (e.lastZ ?? p.z),
     // a `hunt` creature (a wave out of the dock's gates) always knows where you stand and never goes back to sleep
     tdist = Math.hypot(tx - e.x, tz - e.z);
-  if (!sees && !e.hunt && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) {
+  if (!sees && !e.hunt && !def.boss && !def.bell && !def.hive && e.attackT < 0 && (e.lungeT ?? -1) < 0 && (tdist < 1.2 || e.lost > 8)) { // a boss never sleeps again
     if (e.lost <= 8 && ordinary(e)) {
       // ENEMY ACTIONS: it looks round where it lost you before it gives up (tactics.js `search`)
       const Sr = TACTICS.search;

@@ -159,9 +159,15 @@ export function floorMarks(map, id = map.id ?? `${map.w}x${map.h}`) {
       if (map.kind(cx + dx, cz + dz) === 'wall') n += 0.5;
     return n;
   };
+  // a boss floor that read as empty (the outside playtest of 2026-11-18: the Root Bell, the Drowned Choir, the Choir of One) says so in its
+  // atmosphere: floorMarks { open, rect: [x0, z0, x1, z1] } is how thickly the OPEN floor inside the rectangle (cells) is marked (FLOORMARKS.open
+  // elsewhere). The cap still holds
+  const FM = map.atmosphere?.floorMarks,
+    openAt = (cx, cz) =>
+      FM && (!FM.rect || (cx >= FM.rect[0] && cz >= FM.rect[1] && cx <= FM.rect[2] && cz <= FM.rect[3])) ? (FM.open ?? FLOORMARKS.open) : FLOORMARKS.open;
   for (const [cx, cz, kind] of cells) {
     const walls = wallsAround(cx, cz),
-      p = p0 * (walls >= 1 ? FLOORMARKS.wall * Math.min(1.6, 1 + 0.25 * walls) : FLOORMARKS.open);
+      p = p0 * (walls >= 1 ? FLOORMARKS.wall * Math.min(1.6, 1 + 0.25 * walls) : openAt(cx, cz));
     if (rnd() >= p) continue;
     const fam = FAMILY_MARKS[familyOf(FLOOR_SKINS[skinOf(map, cx, cz)]?.tex)],
       entries = Object.entries(fam.w).filter(([name]) => !MARK_LOOK[name].sky || kind === 'outdoor'),

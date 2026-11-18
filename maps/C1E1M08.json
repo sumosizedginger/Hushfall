@@ -180,7 +180,7 @@
      "message": "chamber"
     },
     {
-     "objective": "Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone"
+     "objective": "Kill the Cantor: hit it as it rears to sing. A broken bell staggers it"
     },
     {
      "shake": 1.2
@@ -1204,14 +1204,14 @@
    "at": [38, 35],
    "radius": 3,
    "speaker": "HULL",
-   "text": "The Cantor's tone does not pass stone: the pillars are cover. Cut the six bells, then the Cantor."
+   "text": "The Cantor's tone does not pass stone: the pillars are cover. When it rears back to sing, it is open: hit it hard then and the song breaks. A bell that breaks staggers it too."
   },
   {
    "id": "ring",
    "at": [28, 18],
    "radius": 2,
    "speaker": "INES",
-   "text": "One bell down. The Cantor staggered when it broke. Keep cutting the ring.",
+   "text": "One bell down, and the Cantor staggered when it broke. Save the others for when you need it still.",
    "unless": [
     "msg:quiet"
    ]

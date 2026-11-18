@@ -1,0 +1,24 @@
+# The ending: my judgement and a proposal (step 7 of the 2026-11-18 playtest list)
+
+The outside playtest said: *"The ending is quiet: restraint or anticlimax, only a human can say."* I read every line the last hour of the game says (`src/game/ending.js`, the cold open, `maps/C2M30.json`, the Campaign One epilogue, the first secret C1E1S01) and judged it the way I would judge a game I was handed. It is a judgement, not a play: nobody has finished Campaign Two blind.
+
+## What the ending is
+- **The setup is planted early and paid exactly.** The cold open names two lights, the harbour lamp and the fog-bell; the first secret has her father say *"Keep it lit, and it holds the tone back from the harbour"* and her answer *"I will keep it lit."* The last scene is her hanging a lamp on a hook beside a door that is a bell, and keeping the promise. Nothing in it is invented at the end.
+- **The order is boss, then coda.** The Root Bell (C2M29) is the last fight; *The Unrung Gate* (C2M30) is a walk with no creature in it, back through quiet versions of earlier places (the Bell's floor, the Hive with its beat stopped, the city under the stone with one lamp lit), to the door. Then nine epilogue cards.
+- **The last beat is a choice of staying.** Signal House asks her to come back up; she refuses, because she promised; the radio stays on; *"something answers the light with one note. It is not the Hush."*
+
+## My judgement: restraint, and the right shape, with one real weakness
+It is restraint, not anticlimax. A game about a sound that turns people, which ends with a woman choosing to sit by a lamp so it never rings again, should end quietly; a final explosion would contradict it. The callbacks land because they are few and exact. I would not rewrite the words.
+
+**The weakness is how little the last input asks.** The player does make the ending happen: at the Gate the objective says *light the lamp (L) and keep it lit*, and a trigger opens the door once the lamp is on (`maps-src/C2M30.level.mjs`, trigger `door`). But it is one key press with no answer from the world, and then the epilogue narrates what the player did not do: *"She hangs the lamp on the hook and lights it."* The lamp that Act B taught as a thing you ration and hold against a sound is, at the one moment it matters most, a switch. That is where a quiet ending turns flat: not the silence, the lack of anything pushing back. The walk before it is also long for a coda if a player does not stop to look; the lines are good, but nothing rises towards the door.
+
+## The proposal (small, in the game's own grammar)
+
+**Built on 2026-11-18 (point 2, the heart of it):** when the player reaches the Gate, the door's breath puts the lamp out (a new `lampOut` trigger action). The player lights it again themselves; while it is held lit the door tries to ring three times, 1.5, 4.5 and 7.5 seconds in, each tremor weaker (`tremor` 0.9, 0.55, 0.25, with the tone pulse sound); held ten seconds (a new `lampheld:N` trigger condition), one high chime answers and the door opens. Put out, the count starts again. `tests/ending-door.test.js` holds it; C2M30's gates pass. Not yet built: points 1, 3 (the cards are unchanged) and 4, which change the words or need new pieces and are better judged after a person has played the new last minute.
+
+1. **The lamp is hung by the player.** At the door, the objective says *"Hang the lamp on the hook."* Use at the hook takes the lantern from her hand (the held lantern model goes away, the hook's lamp appears), so the card that says she hangs it is something the player did.
+2. **Then it has to be lit and held against the door.** L lights it (the input the map already has); the door, which "has stopped ringing and has not stopped shaking", tries to ring: the tone pulse the player has learned (a slow ring, the screen shake, the low note), three times, each weaker. Holding the lamp lit is all it takes (the lantern does not draw on its oil there, as HULL already says), so it is not a test of skill: it is the player doing the promise, and feeling the door give way.
+3. **The answering note plays in the world, then the cards.** The last ring is answered by one high note from beyond the door, heard by the player, not read. Then the epilogue from *"It is holding"* on, with the first five cards (which narrate what the player has just done) cut.
+4. **The walk tightens a little.** The same rooms and lines, with the door's shaking heard from further back and growing as the player nears it (the ambience already has a tension control), so the coda has a direction.
+
+Cost of the rest: a use-target at the door and the hook's lamp, an in-world answering note before the cards, and the tension rising along the walk. No new art, no new creature, the same words. Judge it by the one question that matters for an ending: did the player feel they kept the promise, or did they watch her keep it?

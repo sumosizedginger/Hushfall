@@ -5,7 +5,8 @@
 //   that change is the cue to move. On the shot a bright streak stays for a tenth of a second down the line that was fired.
 // THE NODE MARKER: ONE cue for every node of every boss (a bell node, a feeder, a reed, a seal, a root anchor, a brood vat): a thin ring of
 // white-cyan light round its body at the height of its vulnerable point, pulsing while a boss that it holds a shield for still stands,
-//   steady once the shield is down. A player learns it once and reads every boss with it.
+//   steady once the shield is down (the Cantor holds no shield: its bells pulse while it stands, since breaking one staggers it). A player learns
+//   it once and reads every boss with it.
 // BOSS STAGING: an awake boss is lit from BEHIND (a cool point light on the far side of it from the player, so its silhouette reads against the room)
 // and stands in a faint ground ring the size of its reach (the line past which its blows cannot land).
 // THE MENDER'S TETHER: a soft amber thread from the Mender's lantern to the creature it is mending, pulsing, with a small glow on the one being
@@ -86,7 +87,7 @@ export function makeCreatureFx(scene) {
     const live = new Set(),
       liveT = new Set(),
       liveN = new Set(),
-      held = w.enemies.some((b) => b.state !== 'dead' && ENEMIES[b.kind].boss && ENEMIES[b.kind].shield);
+      held = w.enemies.some((b) => b.state !== 'dead' && ENEMIES[b.kind].boss && (ENEMIES[b.kind].shield || ENEMIES[b.kind].open || ENEMIES[b.kind].listen));
     for (const e of w.enemies) {
       if (e.state === 'dead') continue;
       const def = ENEMIES[e.kind],

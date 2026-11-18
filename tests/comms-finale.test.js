@@ -60,8 +60,8 @@ test('C2M30 through the real queue: before, three of nine were said before the e
     const r = q.update(now);
     if (r.show) shown.push(r.show.id);
   }
-  assert.equal(shown.length, 3, "without a hold only three had begun when the exit fired (the audit's number)");
-  assert.equal(q.pending, 6);
+  assert.equal(shown.length, 5, "without a hold only five had begun when the exit fired (the audit's number was three; since 2026-11-18 the lamp is held ten seconds at the Gate)");
+  assert.equal(q.pending, 4);
   let now = (run.ticks / 60) * 1000,
     h = { held: 0 };
   for (;;) {

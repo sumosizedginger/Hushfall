@@ -79,8 +79,15 @@ export const ACTION_KEYS = [
   'silence',
   'beatOff',
   'lamp',
+  'lampOut',
   'cinematic',
 ]; // a sound cue, a rumble, and the end of the score
+
+/** the 2026-11-18 lantern triggers (lampOut, lampheld:N): only on a map with a lantern, and `bad` says what else is wrong (null: nothing) */
+function lampRules(src, tag, err, bad) {
+  if (!src.lantern) err(`${tag}: the lantern triggers need a map with a lantern`);
+  if (bad) err(`${tag}: ${bad}`);
+}
 
 export class MapError extends Error {
   constructor(errors) {
@@ -965,6 +972,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
     } else if (k === 'cinematic') {
       if (typeof v !== 'string' || !/^[a-z0-9-]{2,32}$/.test(v)) err(`${tag}: cinematic must be the id of a scene (a test checks it exists)`);
     } // a story scene; the sim only announces it, the shell plays it
+    else if (k === 'lampOut') lampRules(src, tag, err, v === true ? null : 'lampOut must be true'); // a draught puts the lantern out (the Gate)
     else if (k === 'beatOff') {
       if (v !== true) err(`${tag}: beatOff must be true`);
     } // the Hive's beat stops (hive.js zoneBeat reads w.beatOff) // from then on the score and the ambience are cut
@@ -1071,9 +1079,8 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
       } // a group has less than that share of its hit points left (phases.js)
       else if (wn.startsWith('did:') && src.training)
         continue; // what the training yard has seen you do
-      else if (wn === 'lamp:on') {
-        if (!src.lantern) err(`${tag}: lamp:on needs a map with a lantern`);
-      } // the hand lantern is lit (the Unrung Gate)
+      // the hand lantern is lit (the Unrung Gate), or held lit N s (the Gate pushes back)
+      else if (wn === 'lamp:on' || wn.startsWith('lampheld:')) lampRules(src, tag, err, wn === 'lamp:on' || Number(wn.slice(9)) > 0 ? null : `bad seconds in '${wn}'`);
       else if (wn.startsWith('lit:')) {
         if (!(src.entities || []).some((q) => q.type === 'prop' && q.kind === 'receiver' && q.id === wn.slice(4))) err(`${tag}: unknown receiver in '${wn}'`);
       } else if (wn.startsWith('time:')) {
@@ -1083,7 +1090,7 @@ function validateKit(src, { w, h, tile, walkable, err, ents, msgIds }) {
         if (!sectorIds.has(id) || !['low', 'high'].includes(pos)) err(`${tag}: bad sector condition '${wn}'`);
       } else if (wn !== 'start')
         err(
-          `${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> | hp:<group><fraction (got '${wn}')`,
+          `${tag}: 'when' must be enter | start | key:<k> | dead:<group> | msg:<id> | time:<s> | sector:<id>:<low|high> | lit:<receiver> | seq:<phrase> | choice:<id>=<value> | hp:<group><fraction | lamp:on | lampheld:<s> (got '${wn}')`,
         );
     }
     if (!Array.isArray(t.do) || !t.do.length) err(`${tag}: needs a non-empty do[] list`);

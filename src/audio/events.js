@@ -16,6 +16,7 @@ export const SILENT_EVENTS = {
   arc: "view-only: the lamp's lightning between the bodies it struck; the fire event carries the sound, enemy_hit the strike",
   bolt: "view-only: the harpoon's streak and the bolt left in the wall; the fire event carries the sound, the impact event the strike",
   objective: 'shown as HUD text',
+  open_hit: 'a blow on a Cantor that rears to sing: the hit itself carries the sound, the boss bar says OPEN',
   trigger: 'bookkeeping: what a trigger DOES makes the sound',
   exit_lock: 'bookkeeping',
   phys_respawn: 'the dev Range only: a broken prop comes back, the view just puts it there',
@@ -237,6 +238,13 @@ export function soundsForEvent(e) {
       return [{ id: 'armor_ping', pos: at(e), gain: 0.7 }];
     case 'shield_hit':
       return [{ id: 'shield_ping', pos: at(e), gain: 0.6 }];
+    case 'fork_struck':
+      return [
+        { id: 'chime_1', pos: at(e), gain: 1.1 },
+        { id: 'chime_3', pos: at(e), gain: 0.8, delay: 0.12 },
+      ]; // the Sub-Cantor's lost note, struck on a fork (a fifth, the tree's own chimes)
+    case 'song_broken':
+      return [{ id: 'node_sever', pos: at(e), gain: 1.2 }]; // the Cantor's song breaks off
     case 'node_severed':
       return e.kind === 'vat' ? [] : [{ id: 'node_sever', pos: at(e) }]; // a vat bursts (enemy_died) instead of ringing off
     case 'warden_crash':

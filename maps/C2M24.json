@@ -9,7 +9,16 @@
   "fog": "#2a1a2c",
   "fogDensity": 0.005,
   "sky": "hive",
-  "beat": true
+  "beat": true,
+  "floorMarks": {
+   "open": 2.6,
+   "rect": [
+    38,
+    14,
+    72,
+    44
+   ]
+  }
  },
  "grid": [
   "θθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθθ",
@@ -897,6 +906,30 @@
    "type": "prop",
    "kind": "lamp",
    "at": [14, 27],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [61, 35],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [48, 34],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [47, 21],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [60, 22],
    "tint": "amber"
   }
  ],

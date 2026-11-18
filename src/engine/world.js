@@ -200,7 +200,7 @@ export function createWorld(map, { seed = 1, difficulty = 'normal', carry = null
       if (e.variant) en.variant = e.variant;
       if (e.onBeat) en.onBeat = true;
       if (e.swing) en.swing = true;
-      if (e.rings) en.rings = true;
+      for (const k of ['rings', 'fork']) if (e[k]) en[k] = true; // a lamp-yard target that rings; a fork the Sub-Cantor listens to
       if (e.spawns) en.spawns = e.spawns;
       if (e.summons) en.summons = e.summons.map(([cx, cz]) => [(cx + 0.5) * map.cell, (cz + 0.5) * map.cell]);
       if (e.hold) holdTarget(en, e);

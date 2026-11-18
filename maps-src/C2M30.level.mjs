@@ -60,9 +60,14 @@ const MAP = {
     msg('page', SEC.cells[1][0], SEC.cells[1][1], 3, 'PELLEW, MARROW GIRL (LOG)', 'Day 16, later. ringing, once in a very long while. I have timed it against my pulse, and my pulse is slower than it was. It is not the water. Whoever finds this: not the water.'),
   ],
   triggers: [
-    { id: 'door', when: ['msg:door', 'lamp:on'], do: [{ exit: { set: 'unlock' } }, { objective: 'The lamp is lit and the door is quiet. Walk through' }] },
+    // THE LAST INPUT (2026-11-18, design/ENDING_REVIEW.md): the lamp is lit, and the door tries to ring three times, each weaker, while it is held lit;
+    // held through the third, the door goes quiet, something beyond it answers with one note, and it opens. Put out, the count starts again
+    { id: 'ring1', when: ['msg:door', 'lampheld:1.5'], do: [{ tremor: 0.9 }, { sound: 'tone_pulse' }, { objective: 'Keep it lit. The door is trying to ring' }] },
+    { id: 'ring2', when: ['msg:door', 'lampheld:4.5'], do: [{ tremor: 0.55 }, { sound: 'tone_pulse' }] },
+    { id: 'ring3', when: ['msg:door', 'lampheld:7.5'], do: [{ tremor: 0.25 }, { sound: 'tone_pulse' }] },
+    { id: 'door', when: ['msg:door', 'lampheld:10'], do: [{ sound: 'chime_4' }, { exit: { set: 'unlock' } }, { objective: 'The door is quiet. Something answered. Walk through' }] },
     { id: 'first', when: 'enter', at: [31, CZ], radius: 5, do: [{ objective: 'Up the stair, through the Hive and the Deep, across the steppe to the Gate' }] },
-    { id: 'gate-arrive', when: 'enter', at: [100, CZ], radius: 3, do: [{ objective: 'The Gate: light the lamp (L) and keep it lit' }, { cinematic: 'the-gate' }] },
+    { id: 'gate-arrive', when: 'enter', at: [100, CZ], radius: 3, do: [{ lampOut: true }, { objective: 'The Gate breathed the lamp out. Light it (L) and keep it lit' }, { cinematic: 'the-gate' }] },
   ],
   quality: { safe: true, enemies: [0, 0], botSeconds: [10, 600], mechanics: ['triggers', 'secret'], skins: 8,
     scaleClass: 'MIXED', tallReason: 'six metres under the roofs: a stair up a shaft and a hall for a door that is also a bell', introduces: 'the lamp at the Gate: the one input of the ending, and the lamp that holds a door shut' },
@@ -70,7 +75,7 @@ const MAP = {
 console.log('C2M30: entities', ents.length);
 const Z = (x, z) => [x, z, 0];
 export const waypoints = {
-  main: [Z(8, CZ), Z(22, CZ), Z(40, CZ), Z(58, CZ), Z(76, CZ), Z(94, CZ), Z(103, CZ), Z(106, CZ), { op: 'wait', seconds: 2 }, Z(109, CZ)],
-  secret: [Z(8, CZ), Z(22, CZ), Z(40, CZ), Z(58, CZ), Z(67, CZ + 3), { op: 'use', at: SEC.panel }, Z(67, CZ + 7), Z(67, CZ + 3), Z(76, CZ), Z(94, CZ), Z(103, CZ), Z(106, CZ), { op: 'wait', seconds: 2 }, Z(109, CZ)],
+  main: [Z(8, CZ), Z(22, CZ), Z(40, CZ), Z(58, CZ), Z(76, CZ), Z(94, CZ), Z(103, CZ), Z(106, CZ), { op: 'wait', seconds: 12 }, Z(109, CZ)],
+  secret: [Z(8, CZ), Z(22, CZ), Z(40, CZ), Z(58, CZ), Z(67, CZ + 3), { op: 'use', at: SEC.panel }, Z(67, CZ + 7), Z(67, CZ + 3), Z(76, CZ), Z(94, CZ), Z(103, CZ), Z(106, CZ), { op: 'wait', seconds: 12 }, Z(109, CZ)],
 };
 export default MAP;

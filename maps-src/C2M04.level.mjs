@@ -111,7 +111,7 @@ ENC.dropIn({ at: [47, 20], radius: 2.5, cells: ENC.around([47, 20], { n: 2, min:
 
 const [qx, qz] = S.one('Q'), [vx, vz] = S.one('V'), EXIT = S.one('X');
 const MAP = {
-  id: 'C2M04', name: 'Tuning Fork Fields', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M04', name: 'Tuning Fork Fields', version: 3, startFacing: -0.52, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#d0c090', fogDensity: 0.005, sky: 'anselm', look: 'fields' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'TUNING FORK FIELDS', lines: ['Every row on this hill is a fork, and every fork has been tuned.', 'What gets struck here is paid for somewhere else.'] },
@@ -165,4 +165,7 @@ waypoints.secret = (() => {
   const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 54 && w[1] === 47), b = m.findIndex((w) => w.op === 'switch' && w.id === 'winch');
   return [...m.slice(0, a + 1), [58, 47, 0], { op: 'use', at: STORE }, [62, 47, 0], [58, 47, 0], ...m.slice(a + 1, b + 1), [6, 34, 0], { op: 'crack', at: CRACK }, [6, 29, 0], [6, 34, 0], ...m.slice(b + 1)];
 })();
+// 2026-11-18 (step 4 of the playtest list): the start looks up the 35 m view north-north-east (startFacing -0.52) instead of at the wall 5 m east
+// (design/OPENING_VIEWS.md section 10). Every turn lost the hard runs: the bot reached the stair-gate fight worn down by the ringing field and the
+// hard-only Bellhand at (24, 25) finished it. That extra is now a Gaunt (maps-src/skill/C2M04.json): Hard keeps its count, loses one gun at the gate.
 export default MAP;

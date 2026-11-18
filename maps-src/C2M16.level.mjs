@@ -3,7 +3,8 @@
 // Song is kept in. The west lobe is the GUARD HALL (three Zealots in a rank, porters, singers, four pillars of flesh for cover); the east lobe is the Sub-Cantor's, a round floor with a low dais in the middle where it stands, four
 // FORKS (`bellnode`, the nodes) at the corners of the lobe holding a note it no longer remembers, and six pillars of flesh round the dais. The SUB-CANTOR (engine PT-039) keeps its distance and never speaks; it breathes out a
 // tone pulse that goes out across the floor TO 22 m, TURNS BACK and comes home to it: the ring that passed you comes round again, so cover that held for the ring going out has to be held for the ring coming in. It is
-// shielded (5%) while any fork stands; once the forks are down it fans toll-shots; it calls Gaunts out of the lobe's edge. When it falls its phrase stops in the middle of a bar. The exit, east of the dais, opens when it is dead.
+// GUARDED (a quarter of every blow, its hand up in front of its face; 2026-11-18, the boss pass). The forks do not break: a blow RINGS one, the note it lost, and it stops to listen, its guard down,
+// for four seconds; a fork that has rung rests nine. Below two fifths of its life it fans toll-shots; it calls Gaunts out of the lobe's edge. When it falls its phrase stops in the middle of a bar. The exit, east of the dais, opens when it is dead.
 // A seam in the guard hall's north wall hides the last cache. Drop-fed ammunition keeps its boxes (a boss map).
 // SHAPE: two blobs and a waist (the cave kit), a dais, pillars; no rectangle but the exit corridor. Scale class SET-PIECE (the lobes are open to the cave's roof: sky_deep; the boss needs the room it keeps).
 import { Level } from '../tools/mapkit/builder.mjs';
@@ -44,7 +45,7 @@ for (const [x, z] of [[20, 34], [20, 54], [30, 30], [30, 58], [42, 40], [42, 48]
 for (const [x, z] of [[8, 46], [14, 44]]) PR('lantern', x, z);
 for (const [dx, dz] of [[-5, -5], [5, -5], [-5, 5], [5, 5]]) PR('lantern', DX + dx, DZ + dz);                                                  // four lanterns round the dais: the conductor is lit
 // ---- the forks: the Sub-Cantor's four nodes, at the corners of its lobe ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for (const [x, z] of [[62, 33], [62, 55], [80, 33], [80, 55]]) E('bellnode', x, z, { group: 'forks' });
+for (const [x, z] of [[62, 33], [62, 55], [80, 33], [80, 55]]) E('bellnode', x, z, { group: 'forks', fork: true });
 // ---- the boss, with its call for Gaunts from the edge of the lobe --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 E('subcantor', DX, DZ, { group: 'subcantor', facing: WEST, summons: [[58, 40], [58, 48], [84, 38], [84, 50], [70, 30], [70, 58]] });
 // ---- the guard hall: ranks of Zealots, porters, singers ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,11 +65,11 @@ FUN.secretRoom({ id: 'vent', search: { region: [3, 3, 50, 86], prefer: [22, 62],
 
 const MAP = {
   id: 'C2M16', name: 'Sounding Deep Heart', version: 2, ceilingHeight: 4.2, par: { time: 600 },
-  atmosphere: { look: 'heart', sky: 'deep', fog: '#1a0610', fogDensity: 0.012 },
+  atmosphere: { look: 'heart', sky: 'deep', fog: '#1a0610', fogDensity: 0.012, floorMarks: { open: 1.7, rect: [55, 28, 88, 60] } }, // the lobe's floor read as empty (2026-11-18)
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 16, shell: 24, rivet: 100, bolt: 12, cell: 50, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'SOUNDING DEEP HEART', lines: ['The bottom of the Deep: a floor like skin, and over it the thing that the Song is kept in.', 'One conductor stands between you and the stair.'] },
   outro: 'The conductor stopped in the middle of a bar. The forks rang on without it, one at a time, and then they stopped too. Beyond the corridor the stair goes down again, and it is cold.',
-  objective: 'Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe: break its four forks to drop its shield, then break it. Its ring comes back',
+  objective: 'Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe. Ring its forks: it stops to listen. Its ring comes back',
   ...L.layers(),
   secrets: [{ id: 'seam', panel: SEC.panel, cells: SEC.cells }],
   groups: [],
@@ -81,7 +82,7 @@ const MAP = {
     { id: 'heart', at: [47, 44], radius: 5, speaker: 'INES', text: 'It hangs from the roof on cords as thick as a mast, and it\'s the size of a house. It\'s beating, once in about as long as it takes to say so.' },
     { id: 'boss', at: [60, 44], radius: 5, speaker: 'INES', text: 'One Vael on a round dais with a rod in one hand and the other up in front of its face. It\'s looking at the forks.' },
     { id: 'ring', at: [56, 44], radius: 5, speaker: 'HULL', text: 'Its breath is a ring across the floor, to the wall and back. A pillar stops it going out and coming in. Stand behind one, and keep standing there until the second one has passed.' },
-    { id: 'shield', at: [58, 44], radius: 4, speaker: 'HULL', text: 'It takes a twentieth of what you hit it with while any fork stands. The forks are at the corners of the lobe and they can be broken.' },
+    { id: 'shield', at: [58, 44], radius: 4, speaker: 'HULL', text: 'Its hand is up: it takes a quarter of what you hit it with. The four forks at the corners of the lobe hold its note. Strike one and it stops to listen, and its guard comes down.' },
     { id: 'hollow', at: [xn, zn + 1], radius: 2, speaker: 'HULL', text: 'The guard hall wall rings hollow in the north, in a seam of paler skin.' },
     { id: 'seam', at: [xn, zn - 3], radius: 3, speaker: 'A SILENT (NOTE)', text: 'For whoever is sent to stop it. It never wanted to be a conductor, and nobody asked. Do not make it suffer: it has been afraid for a long time.' },
     { id: 'dead', at: [1, 1], radius: 0.1, speaker: 'INES', text: 'It said nothing the whole time. Its last note went out across the floor and, for once, did not come back.' },
@@ -90,8 +91,7 @@ const MAP = {
   ],
   triggers: [
     { id: 'hall', when: 'enter', at: [22, 44], radius: 6, do: [{ objective: 'The guard hall: spears in ranks. The waist is east, past the heart' }] },
-    { id: 'lobe', when: 'enter', at: [62, 44], radius: 6, do: [{ objective: 'The Sub-Cantor holds the east lobe: the four forks first, then the conductor' }] },
-    { id: 'forks-down', when: 'dead:forks', do: [{ objective: 'The forks are down and its shield with them. Break the conductor' }] },
+    { id: 'lobe', when: 'enter', at: [62, 44], radius: 6, do: [{ objective: 'Strike a fork at a corner of the lobe; hit the conductor while it listens' }] },
     { id: 'boss-down', when: 'dead:subcantor', do: [{ exit: { set: 'unlock' } }, { objective: 'The conductor is down. The corridor east of the dais is open' }, { message: 'dead' }] },
   ],
   quality: { enemies: [15, 60], botSeconds: [40, 900], mechanics: ['heights', 'triggers', 'secret'], skins: 6, enemyKinds: { subcantor: 1, bellnode: 4, zealot: 3, tollbearer: 5, gaunt: 4, chorister: 2 },

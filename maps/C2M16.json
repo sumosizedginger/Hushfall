@@ -8,7 +8,16 @@
   "look": "heart",
   "sky": "deep",
   "fog": "#1a0610",
-  "fogDensity": 0.012
+  "fogDensity": 0.012,
+  "floorMarks": {
+   "open": 1.7,
+   "rect": [
+    55,
+    28,
+    88,
+    60
+   ]
+  }
  },
  "grid": [
   "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[",
@@ -338,16 +347,7 @@
    "radius": 6,
    "do": [
     {
-     "objective": "The Sub-Cantor holds the east lobe: the four forks first, then the conductor"
-    }
-   ]
-  },
-  {
-   "id": "forks-down",
-   "when": "dead:forks",
-   "do": [
-    {
-     "objective": "The forks are down and its shield with them. Break the conductor"
+     "objective": "Strike a fork at a corner of the lobe; hit the conductor while it listens"
     }
    ]
   },
@@ -489,6 +489,7 @@
    "kind": "bellnode",
    "at": [62, 33],
    "group": "forks",
+   "fork": true,
    "facing": -1.377
   },
   {
@@ -496,6 +497,7 @@
    "kind": "bellnode",
    "at": [62, 55],
    "group": "forks",
+   "fork": true,
    "facing": -1.765
   },
   {
@@ -503,6 +505,7 @@
    "kind": "bellnode",
    "at": [80, 33],
    "group": "forks",
+   "fork": true,
    "facing": -1.423
   },
   {
@@ -510,6 +513,7 @@
    "kind": "bellnode",
    "at": [80, 55],
    "group": "forks",
+   "fork": true,
    "facing": -1.718
   },
   {
@@ -826,6 +830,30 @@
    "at": [91, 44],
    "dest": "next",
    "locked": true
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [78, 51],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [64, 51],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [64, 37],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [78, 37],
+   "tint": "amber"
   }
  ],
  "scenery": [
@@ -895,7 +923,7 @@
    "at": [58, 44],
    "radius": 4,
    "speaker": "HULL",
-   "text": "It takes a twentieth of what you hit it with while any fork stands. The forks are at the corners of the lobe and they can be broken."
+   "text": "Its hand is up: it takes a quarter of what you hit it with. The four forks at the corners of the lobe hold its note. Strike one and it stops to listen, and its guard comes down."
   },
   {
    "id": "hollow",
@@ -940,7 +968,7 @@
    "text": "A dry vent behind the cracked rock, warm from the heart below. A vest and a mend, left by someone who meant to come back."
   }
  ],
- "objective": "Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe: break its four forks to drop its shield, then break it. Its ring comes back",
+ "objective": "Cross the guard hall to the waist. The Sub-Cantor is on its dais in the east lobe. Ring its forks: it stops to listen. Its ring comes back",
  "entryLoadout": {
   "hp": 100,
   "armor": 50,

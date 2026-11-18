@@ -113,19 +113,70 @@
  ],
  "triggers": [
   {
+   "id": "ring1",
+   "when": [
+    "msg:door",
+    "lampheld:1.5"
+   ],
+   "do": [
+    {
+     "tremor": 0.9
+    },
+    {
+     "sound": "tone_pulse"
+    },
+    {
+     "objective": "Keep it lit. The door is trying to ring"
+    }
+   ]
+  },
+  {
+   "id": "ring2",
+   "when": [
+    "msg:door",
+    "lampheld:4.5"
+   ],
+   "do": [
+    {
+     "tremor": 0.55
+    },
+    {
+     "sound": "tone_pulse"
+    }
+   ]
+  },
+  {
+   "id": "ring3",
+   "when": [
+    "msg:door",
+    "lampheld:7.5"
+   ],
+   "do": [
+    {
+     "tremor": 0.25
+    },
+    {
+     "sound": "tone_pulse"
+    }
+   ]
+  },
+  {
    "id": "door",
    "when": [
     "msg:door",
-    "lamp:on"
+    "lampheld:10"
    ],
    "do": [
+    {
+     "sound": "chime_4"
+    },
     {
      "exit": {
       "set": "unlock"
      }
     },
     {
-     "objective": "The lamp is lit and the door is quiet. Walk through"
+     "objective": "The door is quiet. Something answered. Walk through"
     }
    ]
   },
@@ -147,7 +198,10 @@
    "radius": 3,
    "do": [
     {
-     "objective": "The Gate: light the lamp (L) and keep it lit"
+     "lampOut": true
+    },
+    {
+     "objective": "The Gate breathed the lamp out. Light it (L) and keep it lit"
     },
     {
      "cinematic": "the-gate"

@@ -105,7 +105,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 6 degrees (15 loses a robustness run) so the door sits a little off-centre
 
-  id: 'C1E2M02', name: 'Evaporation Pans', version: 3, startFacing: -1.46, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
+  id: 'C1E2M02', name: 'Evaporation Pans', version: 4, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
   atmosphere: { fog: '#b4b2a4', fogDensity: 0.0055, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'EVAPORATION PANS', lines: ['White ground to the horizon, and the horizon is working.', 'Nothing out here is hiding. That is the point.'] },
@@ -160,7 +160,7 @@ MAP.entities.push(...[['ammo_round', 12, 25], ['ammo_round', 27, 25], ['ammo_rou
 // ---- end PT-023 ----
 
 // ---- PT-025 (owner, 2026-10-09: ammunition from the dead instead of boxes on the road): the compiler leaves out this map's ammunition boxes in its PUBLIC part (they stay in its secrets); src/engine/drops.js, DROPS in defs.js ----
-MAP.drops = { scale: 1 };
+MAP.drops = { scale: 1, keep: [[33, 30], [33, 29]] };
 // the dead now feed the player, and with the ammunition always to hand the perfect fighter walked this map taking next to nothing (viability gate: it must take real damage): a Bellhand on the south side of the pump station road, appended last so no id shifts
 MAP.entities.push({ type: 'enemy', kind: 'bellhand', at: [43, 28], facing: -2.555 });
 
@@ -177,3 +177,8 @@ MAP.entities.push({ type: 'pickup', kind: 'armor_vest', at: [46, 25] }, { type: 
 // ---- end PT-076
 FUN.apply(MAP);                                                                                  // PT-081: the fun pass joins the map
 export default MAP;
+
+// ---- 2026-11-18 (step 4 of the playtest list): the start turned the full 15 degrees off the box room's wall (design/OPENING_VIEWS.md section 7).
+// Turned, a wasteful player (the strafing fighter with ammunition worth 25% less) ran dry on the last stretch to the pump station and died to the
+// Bellhands there: a rivet box and a shell box on that stretch, kept by `drops.keep`. A PAIR, so the parity of every later id is unchanged.
+MAP.entities.push({ type: 'pickup', kind: 'ammo_rivet', at: [33, 30] }, { type: 'pickup', kind: 'ammo_shell', at: [33, 29] });

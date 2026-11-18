@@ -2,7 +2,7 @@
 // swapped in (`reroster` reads ROSTER_ID / ROSTER_PLAN), then the viability gates of verify-map are run on it
 // (a passive runner must not get through, the perfect fighter must complete on 3 of 3 seeds on easy and normal and 2 of 3 on hard, damage must rise,
 // the ammunition slack) and the Director's laws are read from its numbers. About half a minute a plan. Node only.
-//   node tools/dev/tune-roster.mjs <ID> '<plan json>' ['<plan json>' ...]
+//   node tools/dev/tune-roster.mjs <ID> '<plan json>' ['<plan json>' ...]   (--swaps: the plans are campaign swap lists, maps-src/roster-swaps.json)
 //   plan = [{ "from": "t", "to": "b", "n": 3, "pick": "range" }, ...]      (the plan the map source passes to reroster, see tools/mapkit/roster.mjs)
 import fs from 'node:fs';
 import os from 'node:os';
@@ -13,7 +13,9 @@ import { evaluateViability, viabilityChecks, levelFacts, qualityChecks } from '.
 import { auditMap, laws } from './director-audit.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
-const [id, ...plans] = process.argv.slice(2);
+const args = process.argv.slice(2),
+  SWAPS = args.includes('--swaps'), // the plan is a campaign swap list (maps-src/roster-swaps.json) instead of the source's own roster plan
+  [id, ...plans] = args.filter((a) => a !== '--swaps');
 if (!id || !plans.length) {
   console.error('usage: tune-roster.mjs <ID> <plan json> [...]');
   process.exit(2);
@@ -24,7 +26,7 @@ for (const [i, planText] of plans.entries()) {
     t0 = Date.now();
   const r = spawnSync(process.execPath, [path.join(root, 'tools/mapkit/compile.mjs'), id], {
     cwd: root,
-    env: { ...process.env, MAP_OUT: dir, ROSTER_ID: id, ROSTER_PLAN: planText },
+    env: { ...process.env, MAP_OUT: dir, ROSTER_ID: id, ...(SWAPS ? { ROSTER_SWAPS: planText } : { ROSTER_PLAN: planText }) },
     encoding: 'utf8',
   });
   if (r.status !== 0) {

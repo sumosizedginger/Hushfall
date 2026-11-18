@@ -17,6 +17,8 @@ import { squeezeMap, squeezeKeep } from './squeeze.mjs';
 export { LEGEND };
 const accentFile = path.join(root, 'maps-src', 'accent-lamps.json');
 const ACCENT_LAMPS = fs.existsSync(accentFile) ? JSON.parse(fs.readFileSync(accentFile, 'utf8')) : {};
+const swapFile = path.join(root, 'maps-src', 'roster-swaps.json');
+const ROSTER_SWAPS = fs.existsSync(swapFile) ? JSON.parse(fs.readFileSync(swapFile, 'utf8')) : {};
 const DIRS = { north: 0, south: Math.PI, east: -Math.PI / 2, west: Math.PI / 2 };
 
 export function compile(lv) {
@@ -72,7 +74,14 @@ export function compile(lv) {
     if (spawn) e.facing = Math.round(Math.atan2(spawn.at[0] - e.at[0], spawn.at[1] - e.at[1]) * 1000) / 1000;
   }
   // PT-052: which kinds stand where (tools/mapkit/roster.mjs): applied to every creature of the finished map, wherever its source placed it
-  if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);
+  // and the campaign-wide swaps (maps-src/roster-swaps.json, 2026-11-18: the outside playtest counted Tollbearers and Gaunts as 60% of every
+  // creature placed while six of the kinds the campaign introduces stood on fewer than fifteen spots). ROSTER_SWAPS with ROSTER_ID tries other
+  // swaps without editing the file (tools/dev/tune-roster.mjs --swaps)
+  {
+    const swaps = process.env.ROSTER_ID === lv.id && process.env.ROSTER_SWAPS ? JSON.parse(process.env.ROSTER_SWAPS) : (ROSTER_SWAPS[lv.id] ?? []).map(({ why, ...s }) => s);
+    if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);
+    if (swaps.length) applyRoster(entities, geo, { plan: swaps, strict: true }, lv.id + ':swaps');
+  }
   for (const g of lv.groups || [])
     for (const e of entities)
       if (e.type === 'enemy' && !e.group && e.at[0] >= g.rect[0] && e.at[1] >= g.rect[1] && e.at[0] <= g.rect[2] && e.at[1] <= g.rect[3]) e.group = g.name;

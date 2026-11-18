@@ -1486,8 +1486,11 @@ ENEMIES.bellnode = {
   attack: { range: 0, reach: 0, windup: 1, duration: 1, cooldown: 1, damage: 0 },
   node: true,
 };
-// Cantor: the boss. Shielded (5% damage) while any bell node stands. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and
-// fans toll-shots once its ring is broken.
+// Cantor: the boss of Episode 1. Sings expanding tone pulses (cover and height stop them), summons Gaunts, and fans toll-shots once it is angry.
+// THE FIGHT (2026-11-18, step 5 of the playtest list: four of seven bosses shared "cut the nodes, then the boss"): it is never shielded. It is
+// OPEN while it rears to sing (`open.mult` times the damage, the tell is the glint at its head), and a hard enough blow in that moment
+// (`open.break` of damage inside one windup) breaks the song: no ring, and it staggers. Each of the six bells in the ring staggers it when it
+// breaks, so the bells are the player's tool, not its armour. It turns angry (faster rings, toll-shots) below `enrageAt` of its life.
 ENEMIES.cantor = {
   name: 'Cantor',
   poise: 8,
@@ -1501,7 +1504,8 @@ ENEMIES.cantor = {
   turnRate: 2,
   attack: { range: 3.0, reach: 3.6, windup: 0.8, duration: 1.6, cooldown: 2.4, damage: 28 },
   boss: true,
-  shield: { reduce: 0.05 },
+  open: { mult: 2.5, break: 40 },
+  enrageAt: 0.4,
   pulse: { cooldown: 5.6, windup: 1.2, speed: 9.5, damage: 22, width: 1.3, maxR: 40, hitHeight: 1.0 },
   enragedPulseCooldown: 3.6,
   shots: { count: 3, spread: 0.26, speed: 9, damage: 15, cooldown: 3.2, aimHeight: 1.2 },
@@ -1549,9 +1553,10 @@ ENEMIES.feeder = {
   node: true,
   feeds: { kinds: ['gill'], count: 1, every: 11, first: 6, swell: 1.2, max: 2, range: 34 },
 };
-// Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end, shielded (6% damage) while any feeder stands. Spits fans of spores (always,
-// wider once her feeders are gone), hatches Drone-Gills from the pods round her,
+// Graft-Mother: the Episode 2 boss. A vast pod-body on the line's end. Spits fans of spores (always), hatches Drone-Gills from the pods round her,
 // and slams anything that reaches her. She barely moves.
+// THE FIGHT (2026-11-18, step 5 of the playtest list): her FACE is plated (`armor`: three tenths of the damage inside the front arc) and she turns slowly,
+// so she is fought from the flanks: the wings where two of her feeders stand. The feeders hatch her guards; they no longer shield her.
 ENEMIES.graftmother = {
   name: 'Graft-Mother',
   poise: 8,
@@ -1563,10 +1568,10 @@ ENEMIES.graftmother = {
   height: 4.2,
   hitRadius: 1.4,
   sight: 70,
-  turnRate: 1.6,
+  turnRate: 0.35,
   attack: { range: 3.6, reach: 4.2, windup: 0.8, duration: 1.6, cooldown: 2.2, damage: 34 },
   boss: true,
-  shield: { reduce: 0.5, y: 2.2, r: 3.1, note: ['FEEDER', 'FEEDERS', 'STILL FEED'] },
+  armor: { front: 0.3, cos: 0.55, stunMult: 1.5 },
   shots: { count: 5, spread: 0.2, speed: 7.5, damage: 11, cooldown: 4.0, aimHeight: 1.2, always: true },
   summon: { kind: 'gill', count: 2, every: 18, max: 4 },
   stagger: 3.0,
@@ -1943,9 +1948,11 @@ ENEMIES.gatewarden = {
  * THE SUB-CANTOR (Act B; the boss of the Sounding Deep Heart): the conductor of ONE district, a lesser Cantor and an afraid one: it keeps its
  * distance (`keepAway`), never speaks, and breathes out a tone pulse whose RING TURNS BACK at `pulse.reflect` m (the wall of its bowl)
  * and comes home to it as its own voice: cover that held for the ring going out must be held again for the ring coming in (the first hit does not
- * spend the ring: `hit` is cleared when it turns). Shielded (5%) while any of its four FORKS (`bellnode`, the nodes that
- * hold the note it no longer remembers) stands; calls Gaunts out of its `summons` cells; fans toll-shots once the forks are down (enraged). Every
- * number a first guess.
+ * spend the ring: `hit` is cleared when it turns). Calls Gaunts out of its `summons` cells; fans toll-shots below `enrageAt` of its life.
+ * THE FIGHT (2026-11-18, step 5 of the playtest list): its hand is up in front of its face, GUARDED (`guard`: a quarter of every blow). Its four
+ * FORKS (bell nodes marked `fork` on the map) hold the note it lost; they do not break. A blow on a fork rings it, and the Sub-Cantor stops to
+ * listen: no ring, no summons, its guard down (`listen.mult`) for `listen.t` s. A fork that has rung rests `listen.rest` s. Every number a first
+ * guess.
  */
 ENEMIES.subcantor = {
   name: 'Sub-Cantor',
@@ -1961,7 +1968,9 @@ ENEMIES.subcantor = {
   keepAway: 9,
   attack: { range: 3.0, reach: 3.5, windup: 0.8, duration: 1.6, cooldown: 2.6, damage: 24 },
   boss: true,
-  shield: { reduce: 0.05, y: 1.9, r: 1.7, note: ['FORK', 'FORKS', 'STILL HOLD THE NOTE'] },
+  guard: 0.25,
+  listen: { t: 4, mult: 2, rest: 9 },
+  enrageAt: 0.4,
   pulse: { cooldown: 7, windup: 1.3, speed: 9, damage: 12, width: 1.3, maxR: 60, hitHeight: 1.0, reflect: 22 },
   enragedPulseCooldown: 5,
   shots: { count: 3, spread: 0.26, speed: 8.5, damage: 7, cooldown: 5.5, aimHeight: 1.2, muzzleY: 2.8 },

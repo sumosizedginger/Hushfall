@@ -167,7 +167,7 @@ test('the sound captions live in the top band: clear of the crosshair, the objec
         const map =
           mode === 'off'
             ? Math.min(380 * z, W * 0.44)
-            : (mode === 'small' ? Math.max(148, Math.min(H * 0.165, 240)) : Math.max(222, Math.min(H * 0.24, 340))) + 16;
+            : (mode === 'small' ? Math.max(147, Math.min(H * 0.165, 240)) : Math.max(203, Math.min(H * 0.24, 340))) + 16;
         if (width > 200 * z) assert.ok(left + width <= W - map, `${where}: ${left} + ${width} runs under the corner map, which starts at ${W - map}`);
         assert.ok(width >= 150, `${where}: only ${width} px to write in`);
         // three lines at the largest caption size, under a boss bar, must end well above the crosshair

@@ -519,7 +519,9 @@ export const recipesE4b = {
         });
     }),
   },
-  // ---- the Gate's floor: black polished stone with white rings inlaid (the arena is round), a fine star of lines
+  // ---- the Gate's floor: black polished stone with pale rings inlaid (the arena is round), a fine star of lines. 2026-11-18 (the outside
+  // playtest: the ring floor read as noise at low resolution, a white ring field tiled every cell): the rings are dimmer and thinner, the star fainter,
+  // fewer glints, so the floor is a quiet ground the Warden and its beam stand out on
   // ----------------------------------------------------------------------------------------------------------------------------------
   floor_gate_a: {
     seed: 9425,
@@ -533,16 +535,16 @@ export const recipesE4b = {
         g.tile((dx, dy) => {
           g.p.push();
           g.p.noFill();
-          g.p.stroke(232, 232, 240, 210);
-          g.p.strokeWeight(r === 120 ? 4 : 2);
+          g.p.stroke(150, 152, 172, r === 120 ? 120 : 70);
+          g.p.strokeWeight(r === 120 ? 3 : 1.5);
           g.p.ellipse(128 + dx - 128, 128 + dy - 128, r, r);
           g.p.pop();
         });
       for (let a = 0; a < 8; a++) {
         const t = (a * Math.PI) / 4;
-        ink(g, 128, 128, 128 + Math.cos(t) * 200, 128 + Math.sin(t) * 200, '#e8e8f0', 1, 90);
+        ink(g, 128, 128, 128 + Math.cos(t) * 200, 128 + Math.sin(t) * 200, '#a8a8c0', 1, 40);
       }
-      for (let i = 0; i < 24; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(1.5, 3), '#ffffff', g.rnd(60, 140));
+      for (let i = 0; i < 10; i++) blot(g, g.rnd(0, 256), g.rnd(0, 256), g.rnd(1.5, 3), '#ffffff', g.rnd(50, 110));
     }),
   },
   // ---- the Gate's sky: black with a few stars; at the horizon a wall of white light, rays standing up out of it

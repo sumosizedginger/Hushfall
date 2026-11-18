@@ -64,7 +64,7 @@ FUN.secretRoom({ id: 'niche', search: { region: [3, 3, 86, 54], prefer: [41, 45]
 
 const MAP = {
   id: 'C2M24', name: 'Choir of One', version: 2, ceilingHeight: 4.2, par: { time: 420 },
-  atmosphere: { look: 'conductor', fog: '#2a1a2c', fogDensity: 0.005, sky: 'hive', beat: true },
+  atmosphere: { look: 'conductor', fog: '#2a1a2c', fogDensity: 0.005, sky: 'hive', beat: true, floorMarks: { open: 2.6, rect: [38, 14, 72, 44] } }, // the bowl's floor read as empty (2026-11-18)
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 28, shell: 24, rivet: 200, bolt: 24, cell: 70, round: 60, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'CHOIR OF ONE', lines: ['A bowl of seats, nine singers, one conductor over the podium.', 'Everything in the Hive keeps time to it.'] },
   outro: 'The conductor stopped in the middle of a bar and the lights on the ribs went still. For the first time in this country nothing is keeping time.',

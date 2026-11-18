@@ -25,7 +25,7 @@ const hall = (kinds) => ({
     ...kinds.map((k, i) => ({ type: 'enemy', kind: k, at: [8 + i * 4, 3] })),
   ],
 });
-test('every node kind has the marker, a dead node loses it, and it stops pulsing when no shielded boss stands', () => {
+test('every node kind has the marker, a dead node loses it, and it stops pulsing when no boss it matters to stands', () => {
   assert.ok(NODES.length >= 6, 'bell node, feeder, vat, reed, seal, root anchor: ' + NODES.join(','));
   const w = createWorld(parseMap(hall([...NODES, 'cantor'])), { seed: 1 }),
     scene = new THREE.Scene(),
@@ -36,12 +36,12 @@ test('every node kind has the marker, a dead node loses it, and it stops pulsing
   const n0 = w.enemies.find((q) => q.kind === NODES[0]);
   const s1 = ring(n0).scale.x;
   fx.update(w, new Map(), 1.2, 1 / 60);
-  assert.notEqual(ring(n0).scale.x, s1, 'pulsing while the Cantor holds its shield');
+  assert.notEqual(ring(n0).scale.x, s1, 'pulsing while the Cantor stands (a bell staggers it)');
   for (const e of w.enemies) if (e.kind === 'cantor') e.state = 'dead';
   fx.update(w, new Map(), 2, 1 / 60);
   const s2 = ring(n0).scale.x;
   fx.update(w, new Map(), 2.3, 1 / 60);
-  assert.equal(ring(n0).scale.x, s2, 'steady once nothing holds a shield');
+  assert.equal(ring(n0).scale.x, s2, 'steady once no boss it matters to stands');
   n0.state = 'dead';
   fx.update(w, new Map(), 3, 1 / 60);
   assert.equal(ring(n0), undefined, 'a severed node loses its marker');

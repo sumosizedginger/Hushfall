@@ -74,7 +74,7 @@ const spawn = (kind, x, z, facing, group) => ({ spawn: { kind, at: [x, z], facin
 const msg = (id, x, z, r, speaker, text) => ({ id, at: [x, z], radius: r, speaker, text });
 const MAP = {
   id: 'C2M29', name: 'The Root Bell', version: 2, ceilingHeight: 4.2, par: { time: 720 },
-  atmosphere: { look: 'rootbell', dark: true, fog: '#080604', fogDensity: 0.018, sky: 'root' },
+  atmosphere: { look: 'rootbell', dark: true, fog: '#080604', fogDensity: 0.018, sky: 'root', floorMarks: { open: 1.7, rect: [26, 24, 62, 60] } }, // the hall's floor read as empty (2026-11-18)
   lantern: { oil: 150, max: 150 },
   lampHolds: { plain: 0.6, own: 0.4 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 12, cell: 60, round: 60, rocket: 8 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine', 'linethrower', 'mortar', 'fork', 'chainsaw', 'boathook', 'marlinspike', 'mallet', 'axe'] },

@@ -103,7 +103,16 @@ export function applyRoster(entities, geo, spec, mapId) {
   for (const step of plan) {
     if (!step.n) continue;
     const cand = entities
-      .filter((e, i) => e.type === 'enemy' && e.kind === step.from && !e.hold && !kept.has(e.at.join(',')) && !taken.has(i))
+      .filter(
+        (e, i) =>
+          e.type === 'enemy' &&
+          e.kind === step.from &&
+          !e.hold &&
+          // the campaign swaps (spec.strict) never touch a creature anything else is tied to: a variant, a summoner, a spawner, one on a beat
+          !(spec.strict && (e.variant || e.summons || e.spawns || e.onBeat)) &&
+          !kept.has(e.at.join(',')) &&
+          !taken.has(i),
+      )
       .map((e) => ({ e, i: entities.indexOf(e) }));
     if (cand.length < step.n) throw new Error(`roster: wanted ${step.n} ${step.from} to change on ${mapId}, the map has ${cand.length}`);
     let picked;
@@ -117,6 +126,13 @@ export function applyRoster(entities, geo, spec, mapId) {
               const d = Math.hypot(lx - x, lz - z);
               if (d >= 6 && d <= 18 && sight([x, z], [lx, lz])) s++;
             }
+            if (!sample.length)
+              // no lane given (the campaign swaps): how much open floor it looks over, sixteen rays out to 18 cells
+              for (let a = 0; a < 16; a++) {
+                let d = 0;
+                for (; d < 18; d++) if (!open(Math.round(x + Math.cos((a * Math.PI) / 8) * d), Math.round(z + Math.sin((a * Math.PI) / 8) * d))) break;
+                s += d;
+              }
             return { ...c, s };
           })
           .sort((p, q) => q.s - p.s || p.e.at[1] - q.e.at[1] || p.e.at[0] - q.e.at[0]);

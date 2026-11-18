@@ -241,6 +241,42 @@
    "kind": "lamp",
    "tint": "amber",
    "why": "opening"
+  },
+  {
+   "at": [
+    61,
+    35
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    48,
+    34
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    47,
+    21
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    60,
+    22
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
   }
  ],
  "C2M29": [
@@ -252,6 +288,42 @@
    "kind": "lamp",
    "tint": "amber",
    "why": "opening"
+  },
+  {
+   "at": [
+    50,
+    48
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    38,
+    48
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    39,
+    37
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    50,
+    36
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
   }
  ],
  "C2M30": [
@@ -307,6 +379,44 @@
    "kind": "lamp",
    "tint": "amber",
    "why": "opening"
+  }
+ ],
+ "C2M16": [
+  {
+   "at": [
+    78,
+    51
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    64,
+    51
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    64,
+    37
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
+  },
+  {
+   "at": [
+    78,
+    37
+   ],
+   "kind": "lantern",
+   "tint": "amber",
+   "why": "boss floor"
   }
  ]
 }

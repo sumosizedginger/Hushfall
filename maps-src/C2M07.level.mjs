@@ -104,7 +104,7 @@ const crack = (i, at, t) => ({ id: 'crack' + i, when: ['time:' + t, 'not:dead:se
 const ENC = new Encounters(L);
 
 const MAP = {
-  id: 'C2M07', name: 'Bellwright Yard', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M07', name: 'Bellwright Yard', version: 3, startFacing: -0.26, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#b08060', fogDensity: 0.007, sky: 'anselm', look: 'bellwright' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BELLWRIGHT YARD', lines: ['The Vael do not cast their bells. They grow them.', 'Every one of these is waiting for someone.'] },
@@ -151,4 +151,9 @@ waypoints.secret = (() => {
   const m = waypoints.main, a = m.findIndex((w) => Array.isArray(w) && w[0] === 14 && w[1] === 46), b = m.findIndex((w) => Array.isArray(w) && w[0] === 57 && w[1] === 29);
   return [...m.slice(0, a + 1), [12, 34, 0], [9, 34, 0], D(6, 30), [6, 23, 0], { op: 'use', at: STORE }, [6, 19, 0], [6, 23, 0], [9, 34, 0], [12, 34, 0], ...m.slice(a + 1, b + 1), [60, 28, 0], { op: 'crack', at: CUPBOARD }, [65, 28, 0], [60, 28, 0], ...m.slice(b + 1)];
 })();
+// 2026-11-18 (step 4 of the playtest list): the start looks up the 22 m view to the north (startFacing -0.26) instead of at the wall 5 m east
+// (design/OPENING_VIEWS.md section 10). Turned, the hard secret run reached the yard-gate fight with too little left (both fighters died at
+// (51, 30)): a large mend and a small one on the last stretch before it, (47, 25) and (49, 24) (a PAIR, so the parity of every later id is
+// unchanged), and the hard-only Bellhand on the first lane at (22, 45) is a Gaunt now (maps-src/skill/C2M07.json): Hard keeps its count.
+MAP.entities.push({ type: 'pickup', kind: 'health_large', at: [47, 25] }, { type: 'pickup', kind: 'health_small', at: [49, 24] });
 export default MAP;

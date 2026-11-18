@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M02",
- "version": 5,
+ "version": 6,
  "name": "Evaporation Pans",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -824,7 +824,7 @@
   {
    "type": "player",
    "at": [3, 25],
-   "facing": -1.46
+   "facing": -1.83
   },
   {
    "type": "enemy",
@@ -1540,6 +1540,16 @@
   },
   {
    "type": "pickup",
+   "kind": "ammo_rivet",
+   "at": [33, 30]
+  },
+  {
+   "type": "pickup",
+   "kind": "ammo_shell",
+   "at": [33, 29]
+  },
+  {
+   "type": "pickup",
    "kind": "key_iron",
    "at": [34, 37],
    "extra": true
@@ -1713,6 +1723,10 @@
  },
  "drops": {
   "scale": 1,
+  "keep": [
+   [33, 30],
+   [33, 29]
+  ],
   "hard": 1.4
  }
 }

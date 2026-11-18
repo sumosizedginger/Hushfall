@@ -1,6 +1,6 @@
 // C1E1M08 BELL TOWER OF ST. ORRIN: the end of Port Marrow. A spiral ascent (counter-clockwise, 12 m of climb) to an open-air ringing chamber and the Cantor.
-// The Cantor is shielded (5% damage) while any of its six bell nodes ring. It sings expanding tone pulses (cover and height stop them), summons Gaunts, and once the ring is broken it fans toll-shots.
-// Sever the ring, kill the Cantor: the belfry hatch (the exit) opens. The door to the chamber seals behind you.
+// The Cantor (2026-11-18, the boss pass: never shielded) is OPEN while it rears to sing: a hard blow then breaks the song and staggers it. Each of its six bells staggers it when it
+// breaks. It sings expanding tone pulses (cover and height stop them), summons Gaunts, and below two fifths of its life it fans toll-shots. Kill it: the belfry hatch (the exit) opens. The door to the chamber seals behind you.
 // Route: courtyard -> tower door (SE) -> south leg (west) -> west leg (north) -> north leg (east) -> east leg (south; a Warden-Graft among pillars) -> chamber door -> the ring, the Cantor, the hatch.
 import { Level } from '../tools/mapkit/builder.mjs';
 import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
@@ -93,12 +93,12 @@ const MAP = {
     { id: 'warden', at: [43, 12], radius: 4, speaker: 'INES', text: 'Another plate-bearer, and the pillars are in the corridor again.' },
     { id: 'sexton', at: [38, 9], radius: 4, speaker: 'INES', text: 'The bell-carrier at the end of the corridor. It will raise anything you leave on the floor. Reach it first.' },
     { id: 'chamber', at: [38, 35], radius: 3, speaker: "INES", text: 'Six bells in a ring, and the Cantor in the middle of them. The whole tower is ringing off it.' },
-    { id: 'cantor-rule', at: [38, 35], radius: 3, speaker: 'HULL', text: 'The Cantor\'s tone does not pass stone: the pillars are cover. Cut the six bells, then the Cantor.' },
-    { id: 'ring', at: [28, 18], radius: 2, speaker: 'INES', text: 'One bell down. The Cantor staggered when it broke. Keep cutting the ring.' },
+    { id: 'cantor-rule', at: [38, 35], radius: 3, speaker: 'HULL', text: 'The Cantor\'s tone does not pass stone: the pillars are cover. When it rears back to sing, it is open: hit it hard then and the song breaks. A bell that breaks staggers it too.' },
+    { id: 'ring', at: [28, 18], radius: 2, speaker: 'INES', text: 'One bell down, and the Cantor staggered when it broke. Save the others for when you need it still.' },
     { id: 'quiet', at: [28, 17], radius: 3, speaker: 'SIGNAL HOUSE', text: 'The tower is silent, Calder, and the signal didn\'t stop. It was only a machine. I have its bearing: the Salt Works. The hatch is open.' },
   ],
   triggers: [
-    { id: 'sealed', when: 'enter', at: [37, 33], radius: 3, do: [{ seal: [40, 35] }, { message: 'chamber' }, { objective: 'Sever the ring: six bell nodes, then the Cantor. Stone breaks the tone' }, { shake: 1.2 }] },
+    { id: 'sealed', when: 'enter', at: [37, 33], radius: 3, do: [{ seal: [40, 35] }, { message: 'chamber' }, { objective: 'Kill the Cantor: hit it as it rears to sing. A broken bell staggers it' }, { shake: 1.2 }] },
     { id: 'cantor-dead', when: 'dead:cantor', do: [{ exit: { set: 'unlock' } }, { unseal: [40, 35] }, { message: 'quiet' }, { objective: 'The Cantor falls. The belfry hatch is open, north side of the chamber' }, { shake: 2 }] },
   ],
   quality: { enemies: [40, 70], botSeconds: [120, 720], mechanics: ['heights', 'triggers'], skins: 6, enemyKinds: { cantor: 1, bellnode: 6, wardengraft: 1, sexton: 1 } },

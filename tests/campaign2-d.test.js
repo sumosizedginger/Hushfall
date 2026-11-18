@@ -389,7 +389,7 @@ test('C2M30, The Unrung Gate: no combat, silent, an eternal lamp, six rooms of t
     'the page that finishes the sentence of the Ossuary',
   );
   const door = s.triggers.find((t) => t.id === 'door');
-  assert.deepEqual(door.when, ['msg:door', 'lamp:on']);
+  assert.deepEqual(door.when, ['msg:door', 'lampheld:10']); // 2026-11-18: lit and HELD ten seconds while the door rings three times (ring1-3)
   assert.equal(s.entities.find((e) => e.type === 'exit').locked, true);
   // the Gate opens for a LIT lamp only: with the lamp put out the walk ends at a locked exit, and lighting it opens the way
   const R = route('C2M30'),

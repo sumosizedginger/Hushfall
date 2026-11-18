@@ -215,11 +215,22 @@
  ],
  "triggers": [
   {
+   "id": "mother-wakes",
+   "when": "enter",
+   "at": [43, 22],
+   "radius": 7,
+   "do": [
+    {
+     "wake": "mother"
+    }
+   ]
+  },
+  {
    "id": "shield-down",
    "when": "dead:feeders",
    "do": [
     {
-     "objective": "The feeders are gone. Kill the Graft-Mother, north end"
+     "objective": "The feeders are gone. Kill the Graft-Mother: get round her plate"
     },
     {
      "shake": 2
@@ -1317,14 +1328,14 @@
    "at": [30, 29],
    "radius": 3,
    "speaker": "INES",
-   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and it's bare."
+   "text": "There. Three cradle feeders, one on each wing and one behind the conveyor. Each hatches a Gill every so often. Break them and nothing new comes."
   },
   {
    "id": "mother",
    "at": [43, 20],
    "radius": 5,
    "speaker": "INES",
-   "text": "It's a pod the size of a room. It spits, and it hatches the small ones from the sacs on its sides. Don't stand in the open."
+   "text": "It's a pod the size of a room, and its face is plate. It turns slowly: get to its sides, or blast it. Don't stand in the open."
   },
   {
    "id": "stash",
@@ -1338,7 +1349,7 @@
    "at": [43, 20],
    "radius": 0.1,
    "speaker": "INES",
-   "text": "The feeders are gone. All of them. Now hit it with everything."
+   "text": "The feeders are gone. All of them. Nothing else is coming out of the walls: it is only her now."
   },
   {
    "id": "broken",
@@ -1386,7 +1397,7 @@
    "power": 1.4
   }
  ],
- "objective": "The Graft-Mother is at the north end. Her three cradle feeders half-shield her and hatch her guards: west, east and behind the conveyor",
+ "objective": "The Graft-Mother is at the north end. Her face is plated: get round her. Her three cradle feeders hatch her guards",
  "entryLoadout": {
   "hp": 100,
   "armor": 0,
@@ -1415,7 +1426,7 @@
    "bellhand": 3
   },
   "scaleClass": "COMPRESSION",
-  "introduces": "the Graft-Mother: a boss that is a pod the size of a room, half-shielded by three cradle feeders that also hatch Drone-Gills, spitting spore fans"
+  "introduces": "the Graft-Mother: a boss that is a pod the size of a room with a plated face, slow to turn, fought from the flanks; three cradle feeders hatch Drone-Gills; spore fans"
  },
  "drops": {
   "scale": 1.3,

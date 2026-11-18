@@ -57,6 +57,8 @@ export const CAPTIONS = {
   alarm: T('An alarm bell rings: everything is awake', { danger: true }),
   mender_start: T('A Mender begins to mend', { where: true }),
   node_severed: T('A node breaks', { where: true }),
+  fork_struck: T('A fork rings its note: the conductor stops to listen', { where: true }),
+  song_broken: T('The song breaks off: the Cantor staggers', { where: true }),
   seal_shatter: T('A seal shatters', { where: true }),
   door_cycling: T('The lock is cycling'),
   door_listen: T('The door is listening: stay quiet', { where: true }),

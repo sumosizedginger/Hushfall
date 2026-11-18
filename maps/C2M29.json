@@ -9,7 +9,16 @@
   "dark": true,
   "fog": "#080604",
   "fogDensity": 0.018,
-  "sky": "root"
+  "sky": "root",
+  "floorMarks": {
+   "open": 1.7,
+   "rect": [
+    26,
+    24,
+    62,
+    60
+   ]
+  }
  },
  "grid": [
   "########################################################################",
@@ -793,6 +802,30 @@
    "type": "prop",
    "kind": "lamp",
    "at": [12, 41],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 48],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [38, 48],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [39, 37],
+   "tint": "amber"
+  },
+  {
+   "type": "prop",
+   "kind": "lantern",
+   "at": [50, 36],
    "tint": "amber"
   }
  ],
