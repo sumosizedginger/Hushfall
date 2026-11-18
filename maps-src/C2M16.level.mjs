@@ -64,7 +64,7 @@ FUN.secretRoom({ id: 'vent', search: { region: [3, 3, 50, 86], prefer: [22, 62],
 
 
 const MAP = {
-  id: 'C2M16', name: 'Sounding Deep Heart', version: 2, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M16', name: 'Sounding Deep Heart', version: 3, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'heart', sky: 'deep', fog: '#1a0610', fogDensity: 0.012, floorMarks: { open: 1.7, rect: [55, 28, 88, 60] } }, // the lobe's floor read as empty (2026-11-18)
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 16, shell: 24, rivet: 100, bolt: 12, cell: 50, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'SOUNDING DEEP HEART', lines: ['The bottom of the Deep: a floor like skin, and over it the thing that the Song is kept in.', 'One conductor stands between you and the stair.'] },

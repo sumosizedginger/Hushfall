@@ -138,7 +138,7 @@ const FUN = new Encounters(L, { prefix: 'fun' });
 
 
 const MAP = {
-  id: 'C1E4M05', name: 'Drift Orchard', version: 2, ceilingHeight: 20, par: { time: 400 },
+  id: 'C1E4M05', name: 'Drift Orchard', version: 3, ceilingHeight: 20, par: { time: 400 },
   atmosphere: { fog: '#cfe4b4', fogDensity: 0.004, sky: 'orbit', ambient: 0.9, look: 'orchard' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'The fruit' },

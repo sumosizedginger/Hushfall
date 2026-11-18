@@ -559,7 +559,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "acolyte",
    "at": [36, 6],
    "facing": -0.54
   },
@@ -661,19 +661,19 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [19, 36],
    "facing": -0.576
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [37, 38],
    "facing": -1.045
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [27, 39],
    "facing": -0.89
   },

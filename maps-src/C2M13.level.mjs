@@ -88,7 +88,7 @@ FUN.secretRoom({ id: 'niche', search: { region: [3, 3, 72, 72], prefer: [37, 70]
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
-  id: 'C2M13', name: 'Lantern Ossuary', version: 3, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M13', name: 'Lantern Ossuary', version: 4, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'ossuary', dark: true, fog: '#050408', fogDensity: 0.02 },
   lantern: { oil: 40, max: 90 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },

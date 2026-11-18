@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M07",
- "version": 4,
+ "version": 5,
  "name": "The Hollow Stair",
  "ceilingHeight": 40,
  "atmosphere": {
@@ -410,7 +410,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [29, 58],
    "facing": 2.034
   },

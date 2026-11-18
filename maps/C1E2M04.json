@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M04",
- "version": 5,
+ "version": 6,
  "name": "Kiln Row",
  "ceilingHeight": 3.8,
  "atmosphere": {
@@ -478,7 +478,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "bellhand",
    "at": [24, 17],
    "facing": -1.265
   },
@@ -883,7 +883,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "wardengraft",
    "at": [56, 30],
    "facing": -1.707
   },
@@ -952,7 +952,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [48, 33],
    "facing": -1.799
   },

@@ -76,7 +76,7 @@ FUN.secretRoom({ id: 'cellar', search: { region: [3, 3, 124, 40], prefer: [110, 
 
 
 const MAP = {
-  id: 'C2M27', name: 'Fault Line', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M27', name: 'Fault Line', version: 3, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'fault', sky: 'root', fog: '#20100a', fogDensity: 0.008 },
   noiseTell: true,                                                                                                                   // PT-071 R19: the noise readout of Silent Roots returns, combined with the falling front: everything on both roads is asleep, and the front is behind you
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },

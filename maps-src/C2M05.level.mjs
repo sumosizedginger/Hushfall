@@ -137,7 +137,7 @@ floorBorder(L, [[41,49],[62,22],[15,5],[34,5],[34,27],[20,29],[30,42]], ')', 'f'
 // ---- end G3 room accents ----
 
 const MAP = {
-  id: 'C2M05', name: 'The Reliquary Road', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M05', name: 'The Reliquary Road', version: 3, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#9a9ab4', fogDensity: 0.006, sky: 'anselm', look: 'reliquary' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE RELIQUARY ROAD', lines: ['The road to the Deep is lined with graves.', 'Every one of them is from somewhere else.'] },

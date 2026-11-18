@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M01",
- "version": 3,
+ "version": 4,
  "name": "Threshold Beach",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -416,7 +416,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "chorister",
    "at": [21, 29],
    "facing": -1.67
   },
@@ -504,13 +504,13 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [41, 36],
    "facing": -1.831
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [43, 29],
    "facing": -1.602
   },

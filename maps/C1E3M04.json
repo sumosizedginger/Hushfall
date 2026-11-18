@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M04",
- "version": 3,
+ "version": 4,
  "name": "Marrow Nave",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -401,7 +401,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [44, 20],
    "facing": -1.344,
    "group": "centre"
@@ -440,7 +440,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [40, 23],
    "facing": -1.401,
    "group": "centre"
@@ -532,7 +532,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "wardengraft",
    "at": [38, 28],
    "facing": -1.541,
    "group": "west"
@@ -715,7 +715,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "chorister",
    "at": [40, 35],
    "facing": -1.741,
    "group": "centre"

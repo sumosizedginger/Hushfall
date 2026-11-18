@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M11",
- "version": 3,
+ "version": 4,
  "name": "Undercantor Halls",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -449,7 +449,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [24, 36],
    "facing": 0.449
   },

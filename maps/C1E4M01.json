@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M01",
- "version": 3,
+ "version": 4,
  "name": "Ascent Tether",
  "ceilingHeight": 30,
  "atmosphere": {
@@ -431,7 +431,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [56, 27],
    "facing": -0.893
   },
@@ -479,7 +479,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "acolyte",
    "at": [20, 44],
    "facing": -0.464
   },

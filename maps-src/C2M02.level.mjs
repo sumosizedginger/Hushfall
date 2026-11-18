@@ -88,7 +88,7 @@ FUN.secretRoom({ id: 'pit', search: { region: [10, 4, 122, 9], prefer: [70, 6], 
 
 
 const MAP = {
-  id: 'C2M02', name: 'Glass Steppe', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M02', name: 'Glass Steppe', version: 3, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#d8b49a', fogDensity: 0.0035, sky: 'anselm', look: 'steppe' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 24, rivet: 90, bolt: 18, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'GLASS STEPPE', lines: ['East of the cliff there was a sea. The floor of it is a plain of glass.', 'There is one road across.'] },

@@ -79,7 +79,7 @@ FUN.secretRoom({ id: 'vestry', search: { region: [3, 3, 96, 100], prefer: [10, 5
 
 
 const MAP = {
-  id: 'C2M12', name: 'The Drowned Choir', version: 2, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M12', name: 'The Drowned Choir', version: 3, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'drowned', sky: 'deep', fog: '#0a1814', fogDensity: 0.016, floorMarks: { open: 1.8 } }, // the nave's floor read as empty (2026-11-18)
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 44, shell: 20, rivet: 90, bolt: 10, cell: 60, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THE DROWNED CHOIR', lines: ['A cathedral the sea took, and the water never left.', 'The choir is still in its stalls.'] },

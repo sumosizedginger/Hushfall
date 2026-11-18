@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M05",
- "version": 3,
+ "version": 4,
  "name": "Drift Orchard",
  "ceilingHeight": 20,
  "atmosphere": {
@@ -572,7 +572,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [38, 79],
    "group": "pods",
    "facing": 0.738

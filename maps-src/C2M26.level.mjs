@@ -80,7 +80,7 @@ FUN.secretRoom({ id: 'split-root', search: { region: [3, 3, 96, 96], prefer: [80
 // ---- end PT-082 fun pass ----
 
 const MAP = {
-  id: 'C2M26', name: 'Silent Roots', version: 2, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M26', name: 'Silent Roots', version: 3, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'roots', sky: 'root', dark: true, silence: true, fog: '#14120c', fogDensity: 0.014, ambient: 0.5 },
   lantern: { oil: 200, max: 300 }, noiseTell: true,
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 30, rivet: 200, bolt: 18, cell: 80, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },

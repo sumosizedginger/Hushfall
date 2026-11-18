@@ -1,0 +1,480 @@
+{
+ "C1E2M02": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 2,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E2M03": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 2,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "marksman",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "bellhand",
+   "n": 2,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3): six kinds on the map put the cap at 35%, so two Gaunts become Bellhands"
+  }
+ ],
+ "C1E2M04": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "bellhand",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3): a fifth kind on the map put the cap at 35%"
+  }
+ ],
+ "C1E2M05": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E2M06": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 3,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E2M07": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 2,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 3,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E3M02": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 2,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E3M03": [
+  {
+   "from": "tollbearer",
+   "to": "marksman",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E3M04": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "chorister",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E3M05": [
+  {
+   "from": "tollbearer",
+   "to": "chorister",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M01": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "acolyte",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M02": [
+  {
+   "from": "tollbearer",
+   "to": "marksman",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M03": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M05": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M06": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "acolyte",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C1E4M07": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M01": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3): a fifth kind on the map put the cap at 35%"
+  },
+  {
+   "from": "tollbearer",
+   "to": "chorister",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3): a fifth kind on the map put the cap at 35%"
+  }
+ ],
+ "C2M02": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 2,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M03": [
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M04": [
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M05": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 3,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M06": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "marksman",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M07": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 3,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "acolyte",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M09": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M10": [
+  {
+   "from": "tollbearer",
+   "to": "wardengraft",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M11": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M12": [
+  {
+   "from": "tollbearer",
+   "to": "sexton",
+   "n": 3,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M13": [
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M14": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M15": [
+  {
+   "from": "tollbearer",
+   "to": "marksman",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M19": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M20": [
+  {
+   "from": "tollbearer",
+   "to": "acolyte",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M21": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M22": [
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M26": [
+  {
+   "from": "gaunt",
+   "to": "gill",
+   "n": 1,
+   "pick": "range",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  },
+  {
+   "from": "gaunt",
+   "to": "mender",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ],
+ "C2M27": [
+  {
+   "from": "tollbearer",
+   "to": "bulwark",
+   "n": 1,
+   "pick": "spread",
+   "why": "the campaign mix (2026-11-18 playtest list, step 3: tools/dev/plan-swaps.mjs)"
+  }
+ ]
+}

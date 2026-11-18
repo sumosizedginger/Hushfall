@@ -74,7 +74,7 @@ FUN.secretRoom({ id: 'nave-reliquary', search: { region: [3, 3, 96, 56], prefer:
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E3M04', name: 'Marrow Nave', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C1E3M04', name: 'Marrow Nave', version: 3, ceilingHeight: 4.2, par: { time: 420 },
   // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): the ship's ribs stand over the nave (bone arches springing from the gallery roofs, over the slate
   // ribs of the floor at x 31 and 47 and over the dais), so the eye runs down them to the Mother; a low sun from the east behind her (LOOKS.nave)
   atmosphere: { fog: '#2c3830', fogDensity: 0.006, sky: 'ash', look: 'nave' },

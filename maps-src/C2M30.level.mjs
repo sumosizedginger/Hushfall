@@ -32,7 +32,7 @@ const layers = L.layers();
 
 const msg = (id, x, z, r, speaker, text) => ({ id, at: [x, z], radius: r, speaker, text });
 const MAP = {
-  id: 'C2M30', name: 'The Unrung Gate', version: 1, ceilingHeight: 6, par: { time: 240 },
+  id: 'C2M30', name: 'The Unrung Gate', version: 2, ceilingHeight: 6, par: { time: 240 },
   atmosphere: { look: 'unrung', dark: true, silence: true, fog: '#2a2a32', fogDensity: 0.012, sky: 'gate_dim' },
   lantern: { oil: 60, max: 60, eternal: true },
   lampHolds: { plain: 0.6, own: 0.4 },

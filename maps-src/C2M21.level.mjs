@@ -109,7 +109,7 @@ FUN.secretRoom({ id: 'stores', search: { region: [84, 1, 98, 16], prefer: [95, 5
 // ---- end PT-082 ----
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
-  id: 'C2M21', name: 'Pulse Foundry', version: 3, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M21', name: 'Pulse Foundry', version: 4, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'reactor', sky: 'ash', beat: true, fog: '#2a1a10', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'PULSE FOUNDRY', lines: ['Three catwalks round a pit of white light, one above another, and a bell in a body at every turn.', 'The valves that open the way are where the biggest ones stand.'] },

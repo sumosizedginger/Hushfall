@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M05",
- "version": 4,
+ "version": 5,
  "name": "The Cradle Annex",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -567,7 +567,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "wardengraft",
    "at": [38, 23],
    "facing": -1.601
   },
@@ -690,7 +690,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [19, 27],
    "facing": -1.914
   },

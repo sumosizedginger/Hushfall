@@ -96,7 +96,7 @@ FUN.bypass({ from: [24, 52], to: [44, 32] });                                   
 
 
 const MAP = {
-  id: 'C2M19', name: 'Bone Loom', version: 2, ceilingHeight: 4.2, par: { time: 660 },
+  id: 'C2M19', name: 'Bone Loom', version: 3, ceilingHeight: 4.2, par: { time: 660 },
   atmosphere: { look: 'woven', fog: '#2a2214', fogDensity: 0.012, beat: true },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'BONE LOOM', lines: ['Nine crossings under a roof of rails, and a cradle hung over every one.', 'The doors breathe on the beat. The way to the key is three of them.'] },

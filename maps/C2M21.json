@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M21",
- "version": 4,
+ "version": 5,
  "name": "Pulse Foundry",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1013,7 +1013,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [45, 76],
    "facing": -2.159
   },

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M03",
- "version": 3,
+ "version": 4,
  "name": "Cold Dock",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -826,7 +826,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [20, 40],
    "facing": 0.654
   },

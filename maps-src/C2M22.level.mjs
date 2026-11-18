@@ -84,7 +84,7 @@ FUN.secretRoom({ id: 'ossuary', search: { region: [3, 3, 80, 96], prefer: [12, 5
 // ---- end PT-082 fun pass ----
 
 const MAP = {
-  id: 'C2M22', name: 'Mourning Halls', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M22', name: 'Mourning Halls', version: 3, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { look: 'mourning', sky: 'overcast', fog: '#262428', fogDensity: 0.012 },
   entryLoadout: { hp: 100, armor: 30, ammo: { flare: 14, shell: 36, rivet: 220, bolt: 10, cell: 30, round: 30, rocket: 3 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'MOURNING HALLS', lines: ['A cloister with a garden of graves, and a chapel at every corner with somebody in it.', 'There is not much left to shoot with. There is not much to shoot.'] },

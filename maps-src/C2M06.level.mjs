@@ -98,7 +98,7 @@ ENC.dropIn({ at: [9, 30], radius: 2.5, cells: [[14, 28], [18, 29], [22, 28]], ki
 ENC.dropIn({ at: [49, 23], radius: 2, cells: [[56, 25], [52, 20], [57, 21]], kind: 'g' });                           // into the gallery from the bridge
 
 const MAP = {
-  id: 'C2M06', name: 'Chitin Aqueduct', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M06', name: 'Chitin Aqueduct', version: 3, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8d0b8', fogDensity: 0.006, sky: 'anselm', look: 'aqueduct' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'CHITIN AQUEDUCT', lines: ['The only water on the world that still moves.', 'It runs toward you, and it is the only way up.'] },

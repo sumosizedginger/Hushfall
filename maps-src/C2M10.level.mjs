@@ -138,7 +138,7 @@ floorBorder(L, [[13,57]], 's', '@');
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
-  id: 'C2M10', name: 'Echo Markets', version: 3, startFacing: -0.1, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M10', name: 'Echo Markets', version: 4, startFacing: -0.1, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'markets', sky: 'deep', echo: 2, fog: '#1a1410', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'ECHO MARKETS', lines: ['A market town under the roof of the cave, round a well.', 'Everyone in it is speaking softly. A shot here carries twice as far.'] },

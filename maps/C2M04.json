@@ -569,7 +569,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [48, 45],
    "facing": -1.256
   },

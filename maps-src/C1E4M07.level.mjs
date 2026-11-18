@@ -177,7 +177,7 @@ FUN.secretRoom({ id: 'stair-niche', search: { region: [3, 3, 62, 62], prefer: [3
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
-  id: 'C1E4M07', name: 'The Hollow Stair', version: 3, startFacing: 1.05, ceilingHeight: 40, par: { time: 600 },
+  id: 'C1E4M07', name: 'The Hollow Stair', version: 4, startFacing: 1.05, ceilingHeight: 40, par: { time: 600 },
   atmosphere: { fog: '#161c44', fogDensity: 0.0032, sky: 'gate', look: 'stair' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE HOLLOW STAIR', lines: ['The Gate is at the top. The stair goes up the inside of the world.', 'Everything that is awake is awake above you.'] },

@@ -1285,7 +1285,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [22, 38],
    "facing": -2.171
   },
@@ -1329,7 +1329,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [60, 39],
    "facing": -1.812
   },

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M15",
- "version": 5,
+ "version": 6,
  "name": "Ash Basilica",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -508,7 +508,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "marksman",
    "at": [52, 11],
    "group": "s5",
    "facing": -0.365

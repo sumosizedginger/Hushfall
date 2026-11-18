@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M02",
- "version": 2,
+ "version": 3,
  "name": "Wreck Belt",
  "atmosphere": {
   "fog": "#0c1618",
@@ -747,7 +747,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "marksman",
    "at": [52, 63],
    "facing": -2.453
   },

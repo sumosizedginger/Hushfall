@@ -129,7 +129,7 @@ FUN.secretRoom({ id: 'rank-cell', search: { region: [3, 3, 86, 114], prefer: [20
 
 
 const MAP = {
-  id: 'C1E4M06', name: "Gatekeeper's Approach", version: 2, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E4M06', name: "Gatekeeper's Approach", version: 3, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#34365a', fogDensity: 0.005, sky: 'gate', ambient: 0.9, look: 'approach' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: "GATEKEEPER'S APPROACH", lines: ['Everything the Vael had left is standing in this hall.', 'The Gate is at the far end, and it is very bright.'] },

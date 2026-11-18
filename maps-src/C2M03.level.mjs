@@ -93,7 +93,7 @@ floorBorder(L, [[46,47],[33,33],[58,33],[41,26],[50,27],[62,60]], ')', 'f');
 // ---- end G3 room accents ----
 
 const MAP = {
-  id: 'C2M03', name: 'Cantor Outpost', version: 2, ceilingHeight: 4.2, par: { time: 480 },
+  id: 'C2M03', name: 'Cantor Outpost', version: 3, ceilingHeight: 4.2, par: { time: 480 },
   atmosphere: { fog: '#a8928c', fogDensity: 0.007, sky: 'anselm', look: 'outpost' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'CANTOR OUTPOST', lines: ['Five points, a ditch and one bridge.', 'Something in the middle of it is being kept.'] },

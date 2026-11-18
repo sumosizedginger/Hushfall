@@ -89,7 +89,7 @@ FUN.secretRoom({ id: 'coat', search: { region: [3, 3, 86, 56], prefer: [68, 17],
 
 
 const MAP = {
-  id: 'C2M01', name: 'Threshold Beach', version: 2, ceilingHeight: 4.2, par: { time: 360 },
+  id: 'C2M01', name: 'Threshold Beach', version: 3, ceilingHeight: 4.2, par: { time: 360 },
   atmosphere: { fog: '#c88a70', fogDensity: 0.006, sky: 'anselm', look: 'threshold' },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'THRESHOLD BEACH', lines: ['The Gate set you down at the edge of the last water on the world.', 'The people who came before you are standing on the sand.'] },

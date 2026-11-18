@@ -92,7 +92,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M03', name: 'Rail Yard', version: 3, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
+  id: 'C1E2M03', name: 'Rail Yard', version: 4, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
   atmosphere: { fog: '#a0a094', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'RAIL YARD', lines: ['The line ends here, at the Works.', 'Everything that came down it was shipped inland on purpose.'] },

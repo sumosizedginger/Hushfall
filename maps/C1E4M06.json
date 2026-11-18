@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E4M06",
- "version": 3,
+ "version": 4,
  "name": "Gatekeeper's Approach",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -774,7 +774,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "acolyte",
    "at": [45, 40],
    "facing": 0
   },
@@ -871,7 +871,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [41, 86],
    "facing": 0.18
   },

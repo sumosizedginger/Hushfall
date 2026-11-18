@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M12",
- "version": 3,
+ "version": 4,
  "name": "The Drowned Choir",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1629,25 +1629,25 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [18, 29],
    "facing": 0.397
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [64, 29],
    "facing": -0.397
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [19, 68],
    "facing": 1.043
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [62, 68],
    "facing": -1.043
   },

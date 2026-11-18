@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M22",
- "version": 3,
+ "version": 4,
  "name": "Mourning Halls",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1085,7 +1085,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [45, 24],
    "group": "garden",
    "facing": -2.439

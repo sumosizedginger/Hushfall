@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M03",
- "version": 4,
+ "version": 5,
  "name": "Rail Yard",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -524,7 +524,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "bellhand",
    "at": [27, 17],
    "facing": -1.48
   },
@@ -557,7 +557,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "bellhand",
    "at": [69, 17],
    "facing": -1.54
   },
@@ -596,7 +596,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [24, 19],
    "facing": -1.571
   },
@@ -716,7 +716,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [53, 22],
    "facing": -1.633,
    "group": "throat"
@@ -745,7 +745,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "marksman",
    "at": [69, 23],
    "facing": -1.633
   },

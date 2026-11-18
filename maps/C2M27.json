@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M27",
- "version": 3,
+ "version": 4,
  "name": "Fault Line",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -738,7 +738,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [70, 33],
    "facing": -1.943
   },

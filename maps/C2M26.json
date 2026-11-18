@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M26",
- "version": 3,
+ "version": 4,
  "name": "Silent Roots",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -693,7 +693,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [22, 37],
    "facing": -0.41
   },
@@ -711,7 +711,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [53, 45],
    "facing": -0.983
   },

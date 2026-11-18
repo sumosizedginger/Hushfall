@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M07",
- "version": 4,
+ "version": 5,
  "name": "Slurry Undercroft",
  "ceilingHeight": 3.2,
  "atmosphere": {
@@ -338,7 +338,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [24, 19],
    "facing": -1.414,
    "group": "z2"
@@ -380,7 +380,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [55, 20],
    "facing": -1.531,
    "group": "z4"
@@ -525,7 +525,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [57, 22],
    "facing": -1.571,
    "group": "z4"
@@ -580,7 +580,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [24, 25],
    "facing": -1.727,
    "group": "z2"
@@ -664,14 +664,14 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [22, 31],
    "facing": -2.058,
    "group": "z2"
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "wardengraft",
    "at": [31, 31],
    "facing": -1.904,
    "group": "z2"

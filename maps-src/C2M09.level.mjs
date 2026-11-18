@@ -89,7 +89,7 @@ FUN.secretRoom({ id: 'seam', search: { region: [3, 3, 100, 88], prefer: [45, 69]
 
 
 const MAP = {
-  id: 'C2M09', name: 'Sounding Deep Gate', version: 2, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C2M09', name: 'Sounding Deep Gate', version: 3, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { look: 'deepgate', sky: 'deep', dark: true, fog: '#06080e', fogDensity: 0.012 },
   lantern: { oil: 50, max: 90 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },

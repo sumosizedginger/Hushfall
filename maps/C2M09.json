@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M09",
- "version": 3,
+ "version": 4,
  "name": "Sounding Deep Gate",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1126,7 +1126,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [50, 58],
    "facing": -2.304
   },

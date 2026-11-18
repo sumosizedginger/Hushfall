@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M02",
- "version": 4,
+ "version": 5,
  "name": "Ribbed Corridors",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -283,7 +283,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "wardengraft",
    "at": [44, 6],
    "facing": -1.127,
    "group": "gallery"
@@ -521,7 +521,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [61, 24],
    "facing": -1.553,
    "group": "heart"
@@ -601,7 +601,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [52, 27],
    "facing": -1.612,
    "group": "heart"

@@ -74,7 +74,7 @@ FUN.secretRoom({ id: 'lamproom', search: { region: [3, 3, 124, 92], prefer: [112
 
 
 const MAP = {
-  id: 'C2M20', name: 'Vein Rail', version: 2, ceilingHeight: 4.2, par: { time: 540 },
+  id: 'C2M20', name: 'Vein Rail', version: 3, ceilingHeight: 4.2, par: { time: 540 },
   atmosphere: { look: 'veins', sky: 'hive', beat: true, fog: '#2a1418', fogDensity: 0.008 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 20, shell: 24, rivet: 100, bolt: 18, cell: 50, round: 50, rocket: 6 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'VEIN RAIL', lines: ['A rail round a drop, and two cars that never stop going round.', 'The island in the middle is the hub. The only way onto it is the car.'] },

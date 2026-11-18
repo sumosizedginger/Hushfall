@@ -71,7 +71,7 @@ E.secretRoom({ id: 'ringers-cupboard', search: { region: [3, 3, 50, 58], prefer:
 const layers = L.layers();
 
 const MAP = {
-  id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 3, ceilingHeight: 4.2, par: { time: 1100 },
+  id: 'C1E1M08', name: 'Bell Tower of St. Orrin', version: 4, ceilingHeight: 4.2, par: { time: 1100 },
   // design/VISUAL_AWE_PLAN.md A7 (2026-11-14): the bell tower itself, rising behind the spiral's stone (scenery: drawn only, north of the
   // carved block, its bell glowing teal); the fog thinned so it reads from the courtyard
   atmosphere: { fog: '#1a1428', fogDensity: 0.01, sky: 'night', look: 'moon' },

@@ -89,7 +89,7 @@ floorBorder(L, [[14,40]], '.', 'i');
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O2, 2026-11-16): the start faced a wall; it faces the way the route goes
-  id: 'C2M14', name: 'Harmonic Gardens', version: 3, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C2M14', name: 'Harmonic Gardens', version: 4, startFacing: 'north', ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { look: 'gardens', sky: 'deep', fog: '#0c1812', fogDensity: 0.01 },
   entryLoadout: { hp: 100, armor: 50, ammo: { flare: 14, shell: 20, rivet: 90, bolt: 10, cell: 40, round: 50, rocket: 4 }, weapons: ['flare', 'scattergun', 'rivet', 'harpoon', 'arc', 'carbine'] },
   intro: { title: 'HARMONIC GARDENS', lines: ['A garden sunk in a bowl of terraces, and a tree at the bottom of it.', 'Every plant in it was grown to ring.'] },

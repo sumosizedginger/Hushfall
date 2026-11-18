@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M06",
- "version": 3,
+ "version": 4,
  "name": "Chitin Aqueduct",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -488,7 +488,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "marksman",
    "at": [12, 20],
    "facing": 0.953
   },
@@ -548,7 +548,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [20, 11],
    "facing": 0.734
   },

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M06",
- "version": 4,
+ "version": 5,
  "name": "Pump Cathedral",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -398,7 +398,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [47, 8],
    "facing": -1.207
   },
@@ -583,7 +583,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [22, 20],
    "facing": -1.34
   },
@@ -888,7 +888,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "sexton",
    "at": [32, 40],
    "facing": -2.106
   },

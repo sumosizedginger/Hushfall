@@ -138,7 +138,7 @@ const FUN = new Encounters(L, { prefix: 'fun' });
 
 
 const MAP = {
-  id: 'C1E4M02', name: 'Wreck Belt', version: 1, par: { time: 480 },
+  id: 'C1E4M02', name: 'Wreck Belt', version: 2, par: { time: 480 },
   atmosphere: { fog: '#0c1618', fogDensity: 0.005, sky: 'orbit', look: 'wreck' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'The fuse' },

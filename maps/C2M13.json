@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M13",
- "version": 4,
+ "version": 5,
  "name": "Lantern Ossuary",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -579,7 +579,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "mender",
    "at": [30, 67],
    "facing": 3.4033920413889422
   },

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M20",
- "version": 3,
+ "version": 4,
  "name": "Vein Rail",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -682,7 +682,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "acolyte",
    "at": [68, 50],
    "facing": -0.111
   },

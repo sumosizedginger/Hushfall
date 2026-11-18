@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M05",
- "version": 3,
+ "version": 4,
  "name": "The Reliquary Road",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -924,7 +924,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [31, 42],
    "facing": -2.569
   },
@@ -942,7 +942,7 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [61, 24],
    "facing": -1.825
   },
@@ -960,14 +960,14 @@
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [48, 50],
    "group": "guard",
    "facing": -2.383
   },
   {
    "type": "enemy",
-   "kind": "gaunt",
+   "kind": "gill",
    "at": [57, 50],
    "group": "guard",
    "facing": -2.274

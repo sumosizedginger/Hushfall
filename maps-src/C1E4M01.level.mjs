@@ -169,7 +169,7 @@ FUN.dropIn({ at: [26, 27], radius: 2, cells: FUN.around([26, 27], { n: 3, min: 5
 
 
 const MAP = {
-  id: 'C1E4M01', name: 'Ascent Tether', version: 2, ceilingHeight: 30, par: { time: 480 },
+  id: 'C1E4M01', name: 'Ascent Tether', version: 3, ceilingHeight: 30, par: { time: 480 },
   atmosphere: { fog: '#161c28', fogDensity: 0.004, sky: 'orbit', look: 'tether' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'ASCENT TETHER', lines: ['The last of the world is the foot of this cable.', 'The only way up is the road round it.'] },

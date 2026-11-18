@@ -65,7 +65,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M05', name: 'The Cradle Annex', version: 3, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
+  id: 'C1E2M05', name: 'The Cradle Annex', version: 4, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
   growth: [{ at: [50, 22], r: 26, power: 1.1 }],                                                       // PT-021: the growth started at the graft table and has spread down the aisle (render only: thick here, a wet front at 26 m)
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },

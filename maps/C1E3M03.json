@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E3M03",
- "version": 3,
+ "version": 4,
  "name": "Gill Gardens",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -437,7 +437,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "marksman",
    "at": [66, 22],
    "facing": -1.555,
    "group": "dais"

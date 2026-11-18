@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C2M19",
- "version": 3,
+ "version": 4,
  "name": "Bone Loom",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -1034,7 +1034,7 @@
   },
   {
    "type": "enemy",
-   "kind": "tollbearer",
+   "kind": "bulwark",
    "at": [73, 35],
    "facing": -0.949
   },
