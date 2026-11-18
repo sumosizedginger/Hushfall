@@ -47,6 +47,12 @@ test('aim: taught when a creature is awake in front of you, never when you alrea
   assert.equal(nextHint({ world: world({ enemies: [foe(0, -15, 'idle')] }), seen: { run: true }, keyOf }), null, 'a sleeping creature teaches nothing');
 });
 
+test('aim and melee only for a creature in the picture (the first browser check: the melee lesson came while the player looked out to sea)', () => {
+  assert.equal(nextHint({ world: world({ enemies: [foe(0, 2)] }), keyOf }), null, 'right behind you');
+  assert.equal(nextHint({ world: world({ enemies: [foe(2.5, 0.2)] }), keyOf }), null, 'at your side');
+  assert.equal(nextHint({ world: world({ enemies: [foe(1, -2)] }), seen: { aim: true }, keyOf }).id, 'melee', 'in front');
+});
+
 test('melee when one is close; ammunition when the gun runs low; switching on a new gun', () => {
   const seen = { aim: true };
   assert.equal(nextHint({ world: world({ enemies: [foe(0, -2)] }), seen, keyOf }).id, 'melee');

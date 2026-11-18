@@ -11,19 +11,29 @@ const hostiles = (world, r) =>
   world.enemies.filter(
     (e) => e.state !== 'dead' && e.state !== 'idle' && !ENEMIES[e.kind]?.peaceful && Math.hypot(e.x - world.player.x, e.z - world.player.z) < r,
   );
+// in the picture: within 50 degrees of where the player looks (forward = (-sin yaw, -cos yaw)). The first browser check, 2026-11-17: the melee
+// lesson came while the player looked out to sea with the creature at their side, and "too close for the gun?" meant nothing
+const inFront = (world, e) => {
+  const p = world.player,
+    dx = e.x - p.x,
+    dz = e.z - p.z,
+    d = Math.hypot(dx, dz) || 1;
+  return (-Math.sin(p.yaw ?? 0) * dx - Math.cos(p.yaw ?? 0) * dz) / d > Math.cos((50 * Math.PI) / 180);
+};
+const facing = (world, r) => hostiles(world, r).filter((e) => inFront(world, e));
 
 /** each hint: `when(ctx)` is true the moment it matters; `known(ctx)`, when given, is true once the player plainly knows it; ctx = { world, events, firing, down } */
 export const HINTS = [
   {
     id: 'aim',
     known: ({ world, down }) => down.has('aim') || (world.player.ads ?? 0) > 0.5,
-    when: ({ world }) => !isMelee(world.player.weapon) && hostiles(world, 24).length > 0,
+    when: ({ world }) => !isMelee(world.player.weapon) && facing(world, 24).length > 0,
     text: (k) => `Hold ${k('aim')} to aim down the sights: a tighter shot, a slower step.`,
   },
   {
     id: 'melee',
     known: ({ world }) => (world.player.swingT ?? -1) >= 0,
-    when: ({ world }) => !isMelee(world.player.weapon) && hostiles(world, 3.2).length > 0,
+    when: ({ world }) => !isMelee(world.player.weapon) && facing(world, 3.2).length > 0,
     text: (k) => `Too close for the gun? ${k('melee')} strikes without putting it away.`,
   },
   {
