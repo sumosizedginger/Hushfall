@@ -25,7 +25,7 @@ const wagon = (z0, z1) => { const cells = []; for (let z = z0; z <= z1; z++) for
 const wn = wagon(6, 9), wc = wagon(13, 21), ws = wagon(25, 28);
 
 // ---- the signal cabin (arrival) ---------------------------------------------------------------------------------------------------------------------------------------
-L.room([3, 16, 9, 22], { floor: 'f', wall: 'K' }); L.door(10, 19);
+L.room([3, 16, 9, 22], { floor: 'f', wall: 'K' }); L.door(10, 21); // the door off the middle of the wall (2026-11-19, the visual pass; it stood at z 19)
 
 // ---- the tool locker (secret) behind the shed's north wall -----------------------------------------------------------------------------------------------------------
 L.room([24, 2, 28, 4], { floor: 'f', wall: 'K' }); L.secretPanel(26, 5);
@@ -95,7 +95,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M03', name: 'Rail Yard', version: 5, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
+  id: 'C1E2M03', name: 'Rail Yard', version: 6, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
   atmosphere: { fog: '#a0a094', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'RAIL YARD', lines: ['The line ends here, at the Works.', 'Everything that came down it was shipped inland on purpose.'] },

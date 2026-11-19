@@ -13,7 +13,7 @@ import { floorBorder } from '../tools/mapkit/accents.mjs';
 const L = new Level(76, 52);
 
 // ---- the entrance hall and the nave (iron walls, a grate floor, one absolute 13 m ceiling so the catwalks have air above them) -------------------------------------------------
-L.room([3, 21, 11, 28], { floor: 'f', wall: 'L' }); L.door(12, 24);
+L.room([3, 21, 11, 28], { floor: 'f', wall: 'L' }); L.door(12, 25); // the door off the middle of the wall (2026-11-19, the visual pass; it stood at z 24)
 L.room([13, 7, 57, 43], { floor: 'g', wall: 'I' }); L.ceiling([13, 7, 57, 43], 13);
 L.fx([26, 17, 44, 33], 'w');                                                                    // the sump: wading water round the great pump
 L.rect([32, 22, 38, 28], 'I'); L.fx([32, 22, 38, 28], '.');                                                                  // the great pump: a solid iron column in the sump
@@ -88,7 +88,7 @@ const layers = L.layers();
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
-  id: 'C1E2M06', name: 'Pump Cathedral', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E2M06', name: 'Pump Cathedral', version: 6, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pumpnave' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60, cell: 30 }, weapons: ['flare', 'scattergun', 'rivet', 'arc'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },

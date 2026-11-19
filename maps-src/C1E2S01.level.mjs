@@ -6,7 +6,7 @@ import { Shape, laneOf } from '../tools/mapkit/shape.mjs';
 
 const L = new Level(52, 34);
 // the antechamber (arrival), the hall (racks of cold storage, three alcoves), the vault (behind a remote door)
-L.room([3, 13, 9, 19], { floor: 'r', wall: 'Z' }); L.door(10, 16);
+L.room([3, 13, 9, 19], { floor: 'r', wall: 'Z' }); L.door(10, 14); // the door off the middle of the wall (2026-11-19, the visual pass; it stood at z 16)
 L.room([11, 8, 31, 24], { floor: 'r', wall: 'Z' });
 L.room([14, 4, 16, 6], { floor: 'r', wall: 'Z' }); L.door(15, 7);                                       // valve A (north west)
 L.room([26, 4, 28, 6], { floor: 'r', wall: 'Z' }); L.door(27, 7);                                       // valve B (north east)
@@ -43,7 +43,7 @@ const layers = L.layers();
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
-  id: 'C1E2S01', name: 'The Rime Vault', version: 3, startFacing: -1.83, ceilingHeight: 3.4, par: { time: 240 },
+  id: 'C1E2S01', name: 'The Rime Vault', version: 4, startFacing: -1.83, ceilingHeight: 3.4, par: { time: 240 },
   atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75, look: 'rime' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coolant valve A', iron: 'Coolant valve B', bell: 'Coolant valve C' },

@@ -12,7 +12,7 @@ import { laneOf } from '../tools/mapkit/shape.mjs';
 const L = new Level(72, 44);
 
 // ---- the airlock, the aisle (three bays, resin walls, grate floor), the graft table room ----------------------------------------------------------------------------------------
-L.room([3, 19, 9, 25], { floor: 'f', wall: 'K' }); L.door(10, 22);
+L.room([3, 19, 9, 25], { floor: 'f', wall: 'K' }); L.door(10, 23); // the door off the middle of the wall (2026-11-19, the visual pass; it stood at z 22)
 L.room([11, 16, 44, 28], { floor: 'g', wall: 'R' });
 L.rect([21, 16, 22, 19], 'R'); L.rect([21, 25, 22, 28], 'R'); L.rect([33, 16, 34, 19], 'R'); L.rect([33, 25, 34, 28], 'R');          // two walls across the aisle with a five-wide arch each
 for (const [x, z, cz] of [[26, 15, 14], [30, 15, 14]]) { L.closet(x, z); L.rect([x, cz, x, cz], 'f'); }   // two ambush closets: a cubby behind each shut panel (they open when the pods hatch)
@@ -68,7 +68,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M05', name: 'The Cradle Annex', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
+  id: 'C1E2M05', name: 'The Cradle Annex', version: 6, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
   growth: [{ at: [50, 22], r: 26, power: 1.1 }],                                                       // PT-021: the growth started at the graft table and has spread down the aisle (render only: thick here, a wet front at 26 m)
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },

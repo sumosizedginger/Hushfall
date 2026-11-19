@@ -13,7 +13,7 @@ import { Encounters } from '../tools/mapkit/encounters.mjs';
 const L = new Level(66, 56);
 
 // ---- the airlock, the approach, the grafting floor ---------------------------------------------------------------------------------------------------------------------------
-L.room([3, 26, 9, 32], { floor: 'f', wall: 'K' }); L.door(10, 29);
+L.room([3, 26, 9, 32], { floor: 'f', wall: 'K' }); L.door(10, 31); // the door off the middle of the wall (2026-11-19, the visual pass; it stood at z 29)
 L.room([11, 24, 24, 34], { floor: 'g', wall: 'R' }); L.door(25, 29);
 L.room([26, 8, 60, 46], { floor: 'f', wall: 'Y' });
 // the line's machinery: a long conveyor down the middle, four machine blocks, and short walls round the Mother's dais that break the north sightlines
@@ -71,7 +71,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M08', name: 'The Grafting Floor', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C1E2M08', name: 'The Grafting Floor', version: 6, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#2a1a30', fogDensity: 0.016, sky: 'night', ambient: 0.65, look: 'cradle' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE GRAFTING FLOOR', lines: ['Every pipe in the Works ends in this room.', 'Something has been fed here for a very long time.'] },

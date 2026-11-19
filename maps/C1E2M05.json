@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M05",
- "version": 6,
+ "version": 7,
  "name": "The Cradle Annex",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -34,8 +34,8 @@
   "##KfffffffRggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##KfffffffRggggggggggggggggggggggggggggggggggYffffffYYYYYffffffY########",
   "##KfffffffRggggggggggggggggggggggggggggggggggYffffffYYYYYffffffY########",
-  "##KfffffffDggggggggggggggggggggggggggggggggggDffffffYYYYYffffffY########",
-  "##KfffffffRggggggggggggggggggggggggggggggggggYffffffYYYYYffffffY########",
+  "##KfffffffRggggggggggggggggggggggggggggggggggDffffffYYYYYffffffY########",
+  "##KfffffffDggggggggggggggggggggggggggggggggggYffffffYYYYYffffffY########",
   "##KfffffffRggggggggggggggggggggggggggggggggggYffffffYYYYYffffffY########",
   "##KfffffffRggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
   "##KKKKKKKKRggggggggggRRggggggggggRRggggggggggYfffffffffffffffffY########",
@@ -105,11 +105,11 @@
  ],
  "doors": [
   {
-   "at": [10, 22]
-  },
-  {
    "at": [45, 22],
    "key": "iron"
+  },
+  {
+   "at": [10, 23]
   }
  ],
  "secrets": [

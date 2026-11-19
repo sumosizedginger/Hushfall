@@ -12,6 +12,7 @@ import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
 import { wallRaise } from './walltops.js';
+import { floorCourses, COURSE } from './floorcourses.js';
 import { CEIL, BAY, INLAY, inInlay, ceilingFamilies, buildCeilingStructure, lanternBays, bayPanes, PART_TINT } from './ceilings.js';
 import { bakeMeshes } from './lampbake.js';
 import { ACCENTS } from './accents.js';
@@ -484,6 +485,28 @@ export function buildLevel(map, tex, opts = {}) {
   }
   // the inlays under the bays (ceilings.js INLAY)
   for (const [fam, q] of inlays) mk(q, tex[INLAY.tex[fam]] ?? T('floor_tile_a'), INLAY.tint[fam] ?? 0xc8c0b4, 0x000000, group, 'floor');
+  // the courses of a large floor: its kerb and its joints, in the floor's own texture, darker (floorcourses.js)
+  const courses = new Map();
+  for (const r of floorCourses(map, (cx, cz) => inlayOf.has(cx + ',' + cz))) {
+    const key = r.skin + '|' + r.part,
+      p = [
+        [r.x0, r.y, r.z0],
+        [r.x0, r.y, r.z1],
+        [r.x1, r.y, r.z1],
+        [r.x1, r.y, r.z0],
+      ];
+    bucket(courses, key).add(
+      p,
+      [0, 1, 0],
+      // a panel is laid the other way round (its planks, flags or grating turned a quarter), which reads where a shade of tint is lost
+      p.map((v) => (r.part === 'panel' ? [v[2] / S, v[0] / S] : [v[0] / S, v[2] / S])),
+    );
+  }
+  for (const [key, q] of courses) {
+    const [c, part] = key.split('|'),
+      [t, tint] = skinTex(c);
+    mk(q, t, new THREE.Color(tint).multiplyScalar(COURSE.tint[part]), 0x000000, group, 'floor');
+  }
   for (const [c, q] of risers) {
     const [t] = skinTex(c);
     mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser');

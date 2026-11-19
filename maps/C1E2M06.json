@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M06",
- "version": 6,
+ "version": 7,
  "name": "Pump Cathedral",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -35,8 +35,8 @@
   "##LtttttttIIIjgggggggggjjgggggggjjjjjjjggjjggjKKjgggggggggjj################",
   "##LtfffffftIIjgggggggggggggggggjIIIIIIIjggggggjjjgjjjgggggggj###############",
   "##LtffffffftIjgggggggggggggggggjIIIIIIIjgggggggjIjIIIjggggjj################",
-  "##LtffffffftDjgggggggggggggggggjIIIIIIIjggggggggjgjjjggggjI#################",
-  "##LtffffffftIjgggggggggggggggggjIIIIIIIjgggggggggggggggggjI#################",
+  "##LtffffffftIjgggggggggggggggggjIIIIIIIjggggggggjgjjjggggjI#################",
+  "##LtffffffftDjgggggggggggggggggjIIIIIIIjgggggggggggggggggjI#################",
   "##LtffffffftIjgggggggggggggggggjIIIIIIIjggggggggggjjjggggjI#################",
   "##LtfffffftIIjgggggggggggggggggjIIIIIIIjgggggggggjIIIjggggjj################",
   "##LtttttttIIIjgggggggggjjggggggjIIIIIIIjggggggjjggjjjggggggj################",
@@ -228,7 +228,7 @@
  ],
  "doors": [
   {
-   "at": [12, 24]
+   "at": [12, 25]
   }
  ],
  "secrets": [

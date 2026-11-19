@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2M08",
- "version": 6,
+ "version": 7,
  "name": "The Grafting Floor",
  "ceilingHeight": 4.2,
  "atmosphere": {
@@ -41,9 +41,9 @@
   "##KttttttRRjggggggggggggjYtffffffffffffftIIIIItffffffffffffftY####",
   "##KtffffftRjggggggggggggjYtffffffffttffftIIIIItfffttfffffffftY####",
   "##KtffffftRjggggggggggggjYtffffffftIItfftIIIIItfftIItffffffftY####",
-  "##KtffffftDjggggggggggggjDtffffffftIItfftIIIIItfftIItfffffffftt###",
+  "##KtffffftRjggggggggggggjDtffffffftIItfftIIIIItfftIItfffffffftt###",
   "##KtffffftRjggggggggggggjYtffffffffttffftIIIIItfffttfffffffffft###",
-  "##KtffffftRjggggggggggggjYtffftttttffffftIIIIItffffftttttfffftt###",
+  "##KtffffftDjggggggggggggjYtffftttttffffftIIIIItffffftttttfffftt###",
   "##KttttttRRjggggggggggggjYtfftIIIIItfffftIIIIItfffftIIIIItfftY####",
   "##KKKKKKKKRjggggggggggggjYtfftIIIIItfffftIIIIItfffftIIIIItfftY####",
   "##########RRjjjjjjjjjjjjYYtfftIIIIItfffftIIIIItfffftIIIIItfftY####",
@@ -187,10 +187,10 @@
  ],
  "doors": [
   {
-   "at": [10, 29]
+   "at": [25, 29]
   },
   {
-   "at": [25, 29]
+   "at": [10, 31]
   }
  ],
  "secrets": [

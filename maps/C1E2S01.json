@@ -1,7 +1,7 @@
 {
  "format": 1,
  "id": "C1E2S01",
- "version": 3,
+ "version": 4,
  "name": "The Rime Vault",
  "ceilingHeight": 3.4,
  "atmosphere": {
@@ -31,9 +31,9 @@
   "##########ZrrrrrrrrrrrrrrrrrrrrrZffffffffffZZ#######",
   "##ZZZZZZZZZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
   "##ZZrrrrrZZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
-  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
+  "##ZrrrrrrrDrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
   "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZffffffffffff#######",
-  "##ZrrrrrrrDrrrrrrrrrrrrrrrrrrrrrDffffffffffff#######",
+  "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrDffffffffffff#######",
   "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZffffffffffff#######",
   "##ZrrrrrrrZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
   "##ZZrrrrrZZrrrrrrrrrrrrrrrrrrrrrZfffffffffffZ#######",
@@ -132,7 +132,7 @@
    "at": [27, 7]
   },
   {
-   "at": [10, 16]
+   "at": [10, 14]
   },
   {
    "at": [32, 16],
