@@ -1,7 +1,7 @@
 {
   "mapId": "C2M30",
-  "when": "2026-11-19T02:15:17.550Z",
-  "commit": "0ed48a6",
+  "when": "2026-11-19T04:30:36.780Z",
+  "commit": "47cd5b1",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -12,7 +12,7 @@
   "routesSha": "6738d1b0008c5b73",
   "sources": {
     "engine": "c22fda04da583133",
-    "render": "88bfba2af6d4e2f6",
+    "render": "21f8b945fb4e6b7b",
     "game": "96ca72446d14a739",
     "audio": "7fdb82de394b5a5b",
     "assets": "13c28db8754bc179",
