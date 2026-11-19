@@ -12,7 +12,7 @@ import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
 import { wallRaise } from './walltops.js';
-import { CEIL, BAY, ceilingFamilies, buildCeilingStructure, lanternBays, bayPanes, PART_TINT } from './ceilings.js';
+import { CEIL, BAY, INLAY, inInlay, ceilingFamilies, buildCeilingStructure, lanternBays, bayPanes, PART_TINT } from './ceilings.js';
 import { bakeMeshes } from './lampbake.js';
 import { ACCENTS } from './accents.js';
 import { buildShafts } from './shafts.js';
@@ -326,7 +326,14 @@ export function buildLevel(map, tex, opts = {}) {
   // and the lantern bays: the middle of a large room lifted, with a band of light round the lift (ceilings.js)
   const bays = lanternBays(map, ceilFams, { ce, fl }),
     inBay = new Set();
-  for (const b of bays) for (let z = b.z0; z < b.z1; z++) for (let x = b.x0; x < b.x1; x++) inBay.add(x + ',' + z);
+  const inlayOf = new Map(); // cell -> the family of the bay whose floor inlay it is
+  for (const b of bays)
+    for (let z = b.z0; z < b.z1; z++)
+      for (let x = b.x0; x < b.x1; x++) {
+        inBay.add(x + ',' + z);
+        if (inInlay(b, x, z)) inlayOf.set(x + ',' + z, b.family);
+      }
+  const inlays = new Map();
   const sporeBed = map.pulses.map(() => new Quads()),
     // a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js) // the sea reaches past the fog: no black gap at the
     // horizon from a high vantage
@@ -364,7 +371,16 @@ export function buildLevel(map, tex, opts = {}) {
         const sd = map.sectors[si],
           depth = sd.high - sd.low + 0.6;
         for (const [dx, dz] of DIRS) face(bucket(sectorQ[si].skirt, fs), S, cx, cz, dx, dz, -depth, 0);
-      } else flatQuad(bucket(floors, fs), S, cx, cz, y, true, shaded ? floorShade(3) : undefined);
+      } else
+        flatQuad(
+          bucket(inlayOf.has(cx + ',' + cz) ? inlays : floors, inlayOf.get(cx + ',' + cz) ?? fs),
+          S,
+          cx,
+          cz,
+          y,
+          true,
+          shaded ? floorShade(3) : undefined,
+        );
       if (hasCeil(k)) {
         if (!inBay.has(cx + ',' + cz))
           flatQuad(bucket(ceils, ceilFams.get(cx + ',' + cz) ?? 'timber'), S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
@@ -466,6 +482,8 @@ export function buildLevel(map, tex, opts = {}) {
     const outdoor = FLOOR_SKINS[c]?.kind === 'outdoor';
     mk(q, t, outdoor ? (c === ':' ? 0xdde4ee : tint) : tint, outdoor ? (c === ':' ? 0x1c222b : c === 'p' ? 0x0e1116 : 0x101418) : 0x000000, group, 'floor');
   }
+  // the inlays under the bays (ceilings.js INLAY)
+  for (const [fam, q] of inlays) mk(q, tex[INLAY.tex[fam]] ?? T('floor_tile_a'), INLAY.tint[fam] ?? 0xc8c0b4, 0x000000, group, 'floor');
   for (const [c, q] of risers) {
     const [t] = skinTex(c);
     mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser');

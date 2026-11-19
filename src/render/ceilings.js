@@ -316,3 +316,12 @@ export function bayPanes(b, S) {
   for (const g of geos) g.dispose();
   return merged;
 }
+
+// the floor under a bay (the room's centre, under its lifted roof): an inlay in a stone of the family, with a border of the room's own floor, so a
+// big room has a middle (drawn only: footsteps still sound the cell's own floor)
+export const INLAY = Object.freeze({
+  tex: { timber: 'floor_tile_a', stone: 'floor_marble_a', iron: 'floor_grate_a', organic: 'floor_chitin_a', cave: 'floor_rootwell_a', pale: 'floor_prism_a' },
+  tint: { timber: 0xc8b8a0, stone: 0xd0ccc4, iron: 0xa0a4aa, organic: 0xb09a8c, cave: 0x9a948a, pale: 0xe0dcd2 },
+});
+/** is cell (x, z) the inlay of bay `b` (its cells less a one-cell border)? */
+export const inInlay = (b, x, z) => x > b.x0 && x < b.x1 - 1 && z > b.z0 && z < b.z1 - 1;
