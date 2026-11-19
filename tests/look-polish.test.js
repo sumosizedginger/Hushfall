@@ -217,11 +217,13 @@ test("the level: every surface material has the treatment, ceilings wear their o
   for (const k of ['wall', 'floor', 'ceil', 'riser', 'trim']) assert.ok(kinds.has(k), 'a ' + k + ' surface');
   assert.ok(trims >= 3, trims + ' trim meshes');
   assert.ok(lvl.trims.skirt > 0 && lvl.trims.cornice > 0);
-  let ceil = null;
+  const ceilMaps = new Set();
   lvl.group.traverse((o) => {
-    if (o.isMesh && o.material.userData?.surface === 'ceil') ceil = o.material;
+    if (o.isMesh && o.material.userData?.surface === 'ceil') ceilMaps.add(o.material.map);
   });
-  assert.equal(ceil.map, tex.ceiling_a, 'ceilings wear ceiling_a');
+  // the customs house is timber (ceiling_a) with an iron annexe: each family wears its own ceiling (ceilings.js, 2026-11-18)
+  assert.ok(ceilMaps.has(tex.ceiling_a), 'its timber rooms wear ceiling_a');
+  assert.ok(ceilMaps.has(tex.wall_iron_a), 'its iron rooms wear iron plate');
   assert.equal(fs.readFileSync(file, 'utf8'), before);
 });
 

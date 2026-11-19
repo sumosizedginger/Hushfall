@@ -11,6 +11,7 @@ import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
+import { CEIL, BAY, ceilingFamilies, buildCeilingStructure, lanternBays, bayPanes, PART_TINT } from './ceilings.js';
 import { bakeMeshes } from './lampbake.js';
 import { ACCENTS } from './accents.js';
 import { buildShafts } from './shafts.js';
@@ -309,7 +310,7 @@ export function buildLevel(map, tex, opts = {}) {
   const walls = new Map(),
     floors = new Map(),
     risers = new Map(),
-    ceil = new Quads(),
+    ceils = new Map(), // family -> the ceiling quads of that family (ceilings.js)
     ceilSteps = new Quads(),
     fascia = new Quads();
   const bucket = (m, key) => {
@@ -319,6 +320,12 @@ export function buildLevel(map, tex, opts = {}) {
   };
   const fxQuads = { w: new Quads(), x: new Quads(), h: new Quads(), '>': new Quads(), '<': new Quads(), '^': new Quads(), v: new Quads() },
     wsize = 3000;
+  // the ceiling family of every roofed cell (2026-11-18: one texture used to roof every map)
+  const ceilFams = ceilingFamilies(map, (cx, cz) => hasCeil(map.kind(cx, cz)));
+  // and the lantern bays: the middle of a large room lifted, with a band of light round the lift (ceilings.js)
+  const bays = lanternBays(map, ceilFams, { ce, fl }),
+    inBay = new Set();
+  for (const b of bays) for (let z = b.z0; z < b.z1; z++) for (let x = b.x0; x < b.x1; x++) inBay.add(x + ',' + z);
   const sporeBed = map.pulses.map(() => new Quads()),
     // a bed and a knee-high mist per spore region (the view swells them on the clock, breath.js) // the sea reaches past the fog: no black gap at the
     // horizon from a high vantage
@@ -358,7 +365,8 @@ export function buildLevel(map, tex, opts = {}) {
         for (const [dx, dz] of DIRS) face(bucket(sectorQ[si].skirt, fs), S, cx, cz, dx, dz, -depth, 0);
       } else flatQuad(bucket(floors, fs), S, cx, cz, y, true, shaded ? floorShade(3) : undefined);
       if (hasCeil(k)) {
-        flatQuad(ceil, S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
+        if (!inBay.has(cx + ',' + cz))
+          flatQuad(bucket(ceils, ceilFams.get(cx + ',' + cz) ?? 'timber'), S, cx, cz, ce(cx, cz), false, shaded ? floorShade(11) : undefined);
         for (const [dx, dz] of DIRS) {
           const nk = map.kind(cx + dx, cz + dz);
           if (hasCeil(nk) && ce(cx + dx, cz + dz) < ce(cx, cz) - 1e-6) face(ceilSteps, S, cx + dx, cz + dz, -dx, -dz, ce(cx + dx, cz + dz), ce(cx, cz));
@@ -462,8 +470,35 @@ export function buildLevel(map, tex, opts = {}) {
     mk(q, t, 0x9aa0a8, 0x080a0c, group, 'riser');
   }
   const ceilTex = tex.ceiling_a ?? T('floor_planks_a'); // look polish 2: ceilings have their own boards (they wore the floor's planks)
-  mk(ceil, ceilTex, tex.ceiling_a ? 0xa89888 : 0x8a7a6a, 0x000000, group, 'ceil');
+  // each family its own ceiling (ceilings.js); a texture the build lacks falls back to the old boards
+  for (const [fam, q] of ceils) {
+    const F = CEIL.families[fam] ?? CEIL.families.timber;
+    mk(q, tex[F.tex] ?? ceilTex, tex[F.tex] ? F.tint : 0xa89888, 0x000000, group, 'ceil');
+  }
   mk(ceilSteps, ceilTex, tex.ceiling_a ? 0x887a6e : 0x6a5e52, 0x000000, group, 'riser');
+  // the bays: the lifted roof in the family's ceiling, its four sides solid below and above a band of light
+  for (const b of bays) {
+    const F = CEIL.families[b.family] ?? CEIL.families.timber,
+      roof = new Quads(),
+      sides = new Quads(),
+      top = b.y + BAY.rise;
+    for (let z = b.z0; z < b.z1; z++) for (let x = b.x0; x < b.x1; x++) flatQuad(roof, S, x, z, top, false);
+    const side = (rx, rz, dx, dz) => {
+      face(sides, S, rx, rz, dx, dz, b.y, top, b.y); // the whole side; the panes stand a hair inside it
+    };
+    for (let x = b.x0; x < b.x1; x++) {
+      side(x, b.z0 - 1, 0, 1);
+      side(x, b.z1, 0, -1);
+    }
+    for (let z = b.z0; z < b.z1; z++) {
+      side(b.x0 - 1, z, 1, 0);
+      side(b.x1, z, -1, 0);
+    }
+    const ft = tex[F.tex] ?? ceilTex;
+    mk(roof, ft, F.tint, 0x000000, group, 'ceil');
+    mk(sides, ft, F.tint, 0x000000, group, 'ceil');
+    group.add(new THREE.Mesh(bayPanes(b, S), new THREE.MeshBasicMaterial({ color: BAY.glow[b.family] ?? 0xe6d2b0 })));
+  }
   mk(fascia, T('floor_planks_a'), 0x5a6068, 0x000000, group, 'riser');
   // sector meshes (lifts, ramps): a group per sector, moved along y by the view
   map.sectors.forEach((sd, i) => {
@@ -529,30 +564,17 @@ export function buildLevel(map, tex, opts = {}) {
     group.add(m);
   }
 
-  // ceiling beams along x through each interior row run (only where the ceiling height is constant along the run)
-  const beamMat = patchSurface(new THREE.MeshLambertMaterial({ map: tex.crate_wood_a, color: 0x8a7a6a }), 'trim', S);
-  for (let cz = 1; cz < map.h - 1; cz += 2) {
-    let start = null,
-      startCe = 0;
-    for (let cx = 0; cx <= map.w; cx++) {
-      const inside = cx < map.w && map.kind(cx, cz) === 'floor' && (start === null || Math.abs(ce(cx, cz) - startCe) < 1e-6);
-      if (inside && start === null) {
-        start = cx;
-        startCe = ce(cx, cz);
-      }
-      if (!inside && start !== null) {
-        const len = (cx - start) * S;
-        if (len >= 2 * S) {
-          const b = new THREE.Mesh(new THREE.BoxGeometry(len, 0.34, 0.34), beamMat);
-          b.position.set(start * S + len / 2, startCe - 0.17, (cz + 0.5) * S);
-          group.add(b);
-        }
-        start = null;
-        if (cx < map.w && map.kind(cx, cz) === 'floor') {
-          start = cx;
-          startCe = ce(cx, cz);
-        }
-      }
+  // the overhead structure of each ceiling family: timber beams, stone ribs, iron girders and pipes, the Vael's sagging ribs and cords, the cave's
+  // teeth, the Gate builders' coffers (ceilings.js; drawn only, never lower than CEIL.clear over a floor)
+  {
+    const partTex = { beam: 'crate_wood_a' };
+    for (const p of buildCeilingStructure(map, ceilFams, { ce, fl, S })) {
+      const F = CEIL.families[p.family];
+      const m = new THREE.Mesh(
+        p.geometry,
+        patchSurface(new THREE.MeshLambertMaterial({ map: tex[partTex[p.part] ?? F.tex] ?? ceilTex, color: PART_TINT[p.part] ?? 0x8a7a6a }), 'trim', S),
+      );
+      group.add(m);
     }
   }
 
