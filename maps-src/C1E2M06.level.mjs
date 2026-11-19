@@ -33,6 +33,9 @@ const cage = []; for (let z = 24; z <= 26; z++) for (let x = 50; x <= 52; x++) c
 L.room([6, 10, 11, 14], { floor: 'f', wall: 'L' }); L.secretPanel(12, 12);
 
 // ---- objects --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a waist-high counter across the south half, a second counter on the north side.
+L.height([6, 26, 8, 26], 2); L.height([8, 22, 9, 22], 2);
 L.put(5, 24, '@');
 L.putAll('f', [[4, 22], [4, 27]]); L.put(3, 24, 'F'); L.putAll('m', [[6, 22], [6, 27]]); L.putAll('e', [[8, 23], [8, 25]]); L.putAll('r', [[3, 22], [3, 27]]); L.put(7, 24, 'h');
 // the ground nave: gangs in the aisles, pillars, the cradle rail overhead (machinery), lanterns; ammunition on the aisle lane z=24..25
@@ -85,7 +88,7 @@ const layers = L.layers();
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
-  id: 'C1E2M06', name: 'Pump Cathedral', version: 4, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E2M06', name: 'Pump Cathedral', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#3a4a4a', fogDensity: 0.01, sky: 'overcast', look: 'pumpnave' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60, cell: 30 }, weapons: ['flare', 'scattergun', 'rivet', 'arc'] },
   intro: { title: 'PUMP CATHEDRAL', lines: ['They built a church for a pump.', 'It has been drawing something up out of the sea.'] },

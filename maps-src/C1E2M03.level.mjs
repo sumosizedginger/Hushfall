@@ -40,6 +40,9 @@ L.rect([51, 16, 57, 24], 'K'); L.rect([52, 17, 56, 23], 'f'); L.door(51, 20);
 L.rect([61, 10, 77, 30], 'L'); L.rect([62, 11, 76, 29], 'f'); L.door(61, 20, { remote: true });
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: the signalman's desk raised in the north-west, a waist-high bench in the south-east.
+L.height([3, 16, 4, 18], 1); L.height([7, 21, 7, 21], 2);
 L.put(5, 19, '@'); L.put(75, 20, '>');
 // the cabin: a table, a shelf, lamps, a little ammunition
 L.putAll('f', [[4, 17], [4, 21]]); L.put(3, 19, 'F'); L.putAll('m', [[6, 17], [6, 21]]); L.putAll('e', [[8, 18], [8, 20]]); L.putAll('r', [[3, 17], [3, 21]]); L.put(7, 19, 'h');
@@ -92,7 +95,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M03', name: 'Rail Yard', version: 4, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
+  id: 'C1E2M03', name: 'Rail Yard', version: 5, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 400 },
   atmosphere: { fog: '#a0a094', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'RAIL YARD', lines: ['The line ends here, at the Works.', 'Everything that came down it was shipped inland on purpose.'] },

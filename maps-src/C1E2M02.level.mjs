@@ -29,6 +29,9 @@ L.rect([45, 19, 50, 24], 'K'); L.rect([46, 20, 49, 23], 'f'); L.secretPanel(45, 
 L.rect([62, 19, 71, 31], 'L'); L.rect([63, 20, 70, 30], 'f'); L.door(62, 25, { remote: true });
 
 // ---- objects -------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a platform under the north cradles, a crate counter by the south ropes, the south corners filled.
+L.height([3, 21, 8, 22], 1); L.height([6, 27, 6, 27], 2); L.rect([2, 29, 2, 29], 'K'); L.rect([8, 29, 8, 29], 'K');
 L.put(3, 25, '@');
 // the hut: empty cradles on the rail, ropes, pods against the wall, lamps, a little ammunition. The party that is released later is made here
 L.putAll('O', [[4, 22], [4, 28]]); L.putAll('D', [[7, 22], [7, 28]]); L.putAll('d', [[5, 23], [5, 27]]); L.putAll('m', [[5, 22], [5, 28]]);
@@ -105,7 +108,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 6 degrees (15 loses a robustness run) so the door sits a little off-centre
 
-  id: 'C1E2M02', name: 'Evaporation Pans', version: 4, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
+  id: 'C1E2M02', name: 'Evaporation Pans', version: 5, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 360 },                      // par: still a placeholder until the owner sets it from their clear times
   atmosphere: { fog: '#b4b2a4', fogDensity: 0.0055, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'EVAPORATION PANS', lines: ['White ground to the horizon, and the horizon is working.', 'Nothing out here is hiding. That is the point.'] },

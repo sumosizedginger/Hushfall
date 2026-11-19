@@ -22,6 +22,9 @@ for (const r of [[30, 20, 34, 24], [52, 20, 56, 24], [30, 32, 34, 36], [52, 32, 
 L.room([16, 36, 20, 38], { floor: 'f', wall: 'R' }); L.secretPanel(18, 35);                                    // the stash
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a raised walk along the west wall, one counter in the north half.
+L.height([3, 26, 3, 32], 1); L.height([7, 27, 7, 27], 2);
 L.put(5, 29, '@');
 L.putAll('D', [[6, 27], [6, 31]]); L.putAll('f', [[4, 27], [4, 31]]); L.put(3, 29, 'F'); L.putAll('m', [[5, 26], [5, 32]]); L.putAll('e', [[8, 28], [8, 30]]); L.putAll('r', [[3, 27], [3, 31]]); L.put(7, 29, 'h');
 // the approach: a gang, machinery, lanterns; ammunition on the lane z=28..30
@@ -68,7 +71,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M08', name: 'The Grafting Floor', version: 4, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 420 },
+  id: 'C1E2M08', name: 'The Grafting Floor', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 420 },
   atmosphere: { fog: '#2a1a30', fogDensity: 0.016, sky: 'night', ambient: 0.65, look: 'cradle' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'THE GRAFTING FLOOR', lines: ['Every pipe in the Works ends in this room.', 'Something has been fed here for a very long time.'] },

@@ -26,6 +26,9 @@ for (const r of [[46, 14, 47, 14], [46, 15, 46, 15], [61, 14, 62, 14], [62, 15, 
 L.room([16, 12, 20, 14], { floor: 'f', wall: 'R' }); L.secretPanel(18, 15);                                                      // the store (secret)
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a bench along the north wall under the lamp, two waist-high counters staggered either side of the aisle.
+L.height([3, 19, 4, 19], 1); L.height([7, 20, 8, 20], 2); L.height([8, 24, 8, 24], 2);
 L.put(5, 22, '@');
 // the airlock: two inert pods already hang here (the first thing wrong, within 12 m of the spawn), a bench, lamps, a little ammunition
 L.putAll('D', [[6, 20], [6, 24]]); L.putAll('f', [[4, 20], [4, 24]]); L.put(3, 22, 'F'); L.putAll('m', [[5, 19], [5, 25]]); L.putAll('e', [[8, 21], [8, 23]]); L.putAll('r', [[3, 20], [3, 24]]); L.put(7, 22, 'h');
@@ -65,7 +68,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M05', name: 'The Cradle Annex', version: 4, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
+  id: 'C1E2M05', name: 'The Cradle Annex', version: 5, startFacing: -1.31, ceilingHeight: 4.2, par: { time: 300 },
   atmosphere: { fog: '#1c2a2a', fogDensity: 0.02, sky: 'night', ambient: 0.55, look: 'cradle' },
   growth: [{ at: [50, 22], r: 26, power: 1.1 }],                                                       // PT-021: the growth started at the graft table and has spread down the aisle (render only: thick here, a wet front at 26 m)
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },

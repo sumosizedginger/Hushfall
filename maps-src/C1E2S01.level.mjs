@@ -14,6 +14,9 @@ L.room([24, 26, 26, 28], { floor: 'r', wall: 'Z' }); L.door(25, 25);            
 L.room([33, 11, 43, 21], { floor: 'f', wall: 'Z' }); L.door(32, 16, { remote: true });                   // the vault
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a cold-store counter in the south, a raised shelf floor in the north.
+L.height([6, 18, 7, 18], 2); L.height([4, 13, 6, 14], 1);
 L.put(5, 16, '@'); L.put(42, 16, '>');
 L.putAll('M', [[5, 14], [5, 18], [14, 12], [14, 20], [22, 12], [22, 20], [30, 12], [30, 20]]); L.putAll('F', [[3, 15], [3, 17]]); L.put(7, 16, 'f');
 // the hall: racks of cold storage in rows (shelves, crates), a long table, lanterns
@@ -40,7 +43,7 @@ const layers = L.layers();
 
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
-  id: 'C1E2S01', name: 'The Rime Vault', version: 2, startFacing: -1.83, ceilingHeight: 3.4, par: { time: 240 },
+  id: 'C1E2S01', name: 'The Rime Vault', version: 3, startFacing: -1.83, ceilingHeight: 3.4, par: { time: 240 },
   atmosphere: { fog: '#8aa0b0', fogDensity: 0.013, sky: 'overcast', ambient: 0.75, look: 'rime' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Coolant valve A', iron: 'Coolant valve B', bell: 'Coolant valve C' },

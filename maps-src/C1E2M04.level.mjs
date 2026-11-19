@@ -28,6 +28,9 @@ L.room([65, 14, 77, 32], { floor: 'f', wall: 'Y' }); L.door(64, 16);
 L.room([52, 35, 54, 38], { floor: 'k', wall: 'Y' }); L.secretPanel(53, 34);                                                     // the secret tunnel under the gallery's south wall
 
 // ---- objects ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a raised south bay for the gate crew, a counter by the north door jamb.
+L.height([3, 25, 8, 26], 1); L.height([7, 21, 8, 21], 2);
 L.put(5, 23, '@');
 L.put(53, 37, '$');
 // the gatehouse: a bench, a lamp, a little ammunition
@@ -84,7 +87,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M04', name: 'Kiln Row', version: 4, startFacing: -1.31, ceilingHeight: 3.8, par: { time: 420 },
+  id: 'C1E2M04', name: 'Kiln Row', version: 5, startFacing: -1.31, ceilingHeight: 3.8, par: { time: 420 },
   atmosphere: { fog: '#4a3226', fogDensity: 0.012, sky: 'ash', look: 'kiln' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   keyLabels: { brass: 'Brass damper handle', iron: 'Iron damper handle' },

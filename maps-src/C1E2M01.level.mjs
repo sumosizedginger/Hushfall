@@ -44,6 +44,9 @@ L.rect([17, 27, 25, 31], 'K'); L.rect([18, 28, 24, 30], 'f'); L.door(21, 27);
 L.rect([25, 27, 29, 31], 'K'); L.rect([26, 28, 28, 30], 'f'); L.secretPanel(25, 29);        // the valve room: east wall of the pump house
 
 // ---- objects -----------------------------------------------------------------------------------------------------------------------
+// THE START ROOM REDRAWN (2026-11-18, the visual pass): Episode 2 opened in one template nine times (a 7 x 7 box, the door centred, the props in mirror
+// image). Here it is broken by its own use, off the lane from the spawn to the door: a loading dock along the back wall where the cradles hang, its two ends walled in, a crate counter by the north cradle (a corner by the door changed what the pan sees through it, and Hard was lost).
+L.height([3, 19, 4, 25], 1); L.rect([3, 19, 3, 19], 'K'); L.rect([3, 25, 3, 25], 'K'); L.height([6, 20, 7, 20], 2);
 L.put(5, 22, '@'); L.put(72, 22, '>');
 // the first room: two cradles on the rail (the machinery of the Works, on screen from the start), a little ammunition
 L.putAll('O', [[4, 20], [4, 24]]); L.putAll('e', [[8, 20], [8, 24]]); L.put(7, 22, 'h');
@@ -108,7 +111,7 @@ const layers = L.layers();
 const MAP = {
   // the opening (design/OPENING_VIEWS.md O4, 2026-11-16): Episode 2's nine starts all stared dead-on at the door; turned 15 degrees so the door sits off-centre
 
-  id: 'C1E2M01', name: 'Brine Gate', version: 5, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 600 },
+  id: 'C1E2M01', name: 'Brine Gate', version: 6, startFacing: -1.83, ceilingHeight: 4.2, par: { time: 600 },
   atmosphere: { fog: '#9a9a8c', fogDensity: 0.008, sky: 'bleach', look: 'salt' },
   entryLoadout: { hp: 100, armor: 0, ammo: { flare: 10, shell: 14, rivet: 60 }, weapons: ['flare', 'scattergun', 'rivet'] },
   intro: { title: 'BRINE GATE', lines: ['The works guard themselves the way a port does.', 'With people who were told to stand there.'] },
