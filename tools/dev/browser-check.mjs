@@ -522,7 +522,7 @@ try {
       onStep: async () => {
         if (id === 'C1E1M08') {
           sawBoss = sawBoss || (await visible('boss'));
-          sawShield = sawShield || (await text('boss-note')).includes('SHIELDED');
+          sawShield = sawShield || (await text('boss-note')).length > 0; // the boss note (OPEN, STAGGERED: the Cantor holds no shield since 2026-11-18)
         }
         sawObjective = sawObjective || (await text('objective')).startsWith('OBJECTIVE');
         // (a pickup shows a card, PT-049 U1, or a toast)
@@ -542,7 +542,7 @@ try {
     g2report[id + '.' + name] = { ok: p.ok, ticks: p.ticks, hash: p.hash, nodeTicks: p.nodeTicks, nodeHash: p.nodeHash, kills: p.kills, secrets: p.secrets };
   }
   check(
-    'Gate 2 HUD: the objective line was shown, the boss bar (with the shield note) appeared in the Cantor fight, and a fuse pickup was named as a fuse',
+    'Gate 2 HUD: the objective line was shown, the boss bar (with its note) appeared in the Cantor fight, and a fuse pickup was named as a fuse',
     sawObjective && sawBoss && sawShield && sawFuse,
     JSON.stringify({ sawObjective, sawBoss, sawShield, sawFuse }),
   );

@@ -305,7 +305,11 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
       c.bodyCentreOffsetFromSim = r3(Math.hypot(cx - boss.sim.x, cz - boss.sim.z));
       if (c.bodyCentreOffsetFromSim > boss.hit.radius)
         c.problems.push(`rendered body centre is ${c.bodyCentreOffsetFromSim} m from the sim position (hit radius ${boss.hit.radius})`);
-      if (!probe.shield) c.problems.push('no shield is drawn while the ring stands');
+      const shielded = !!CURRENT_ENEMIES[boss.kind].shield; // the Cantor and the Graft-Mother hold none since the boss pass of 2026-11-18
+      if (!shielded) {
+        if (probe.shield) c.problems.push('a shield is drawn round a boss that has none');
+        if (probe.beams.length) c.problems.push('ring links are drawn to a boss that has no shield');
+      } else if (!probe.shield) c.problems.push('no shield is drawn while the ring stands');
       else {
         const s = probe.shield;
         c.shield = { x: r3(s.x), y: r3(s.y), z: r3(s.z), r: r3(s.r) };
@@ -329,7 +333,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
         distFromBoss: r3(Math.hypot(n.sim.x - boss.sim.x, n.sim.z - boss.sim.z)),
         groundDelta: r3(n.ground - boss.ground),
       }));
-      for (const n of nodes) {
+      for (const n of shielded ? nodes : []) {
         const beam = probe.beams.find((b) => b.key === 'nk' + n.id);
         if (!beam) {
           c.problems.push(`node ${n.id} has no link drawn`);
@@ -395,7 +399,11 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
       c.bodyCentreOffsetFromSim = r3(Math.hypot(cx - boss.sim.x, cz - boss.sim.z));
       if (c.bodyCentreOffsetFromSim > boss.hit.radius)
         c.problems.push(`rendered body centre is ${c.bodyCentreOffsetFromSim} m from the sim position (hit radius ${boss.hit.radius})`);
-      if (!probe.shield) c.problems.push('no shield is drawn while the ring stands');
+      const shielded = !!CURRENT_ENEMIES[boss.kind].shield; // the Cantor and the Graft-Mother hold none since the boss pass of 2026-11-18
+      if (!shielded) {
+        if (probe.shield) c.problems.push('a shield is drawn round a boss that has none');
+        if (probe.beams.length) c.problems.push('ring links are drawn to a boss that has no shield');
+      } else if (!probe.shield) c.problems.push('no shield is drawn while the ring stands');
       else {
         const s = probe.shield;
         c.shield = { x: r3(s.x), y: r3(s.y), z: r3(s.z), r: r3(s.r) };
@@ -419,7 +427,7 @@ export async function runRenderCensus({ T, root, check, shot = null, log = conso
         distFromBoss: r3(Math.hypot(n.sim.x - boss.sim.x, n.sim.z - boss.sim.z)),
         groundDelta: r3(n.ground - boss.ground),
       }));
-      for (const n of nodes) {
+      for (const n of shielded ? nodes : []) {
         const beam = probe.beams.find((b) => b.key === 'nk' + n.id);
         if (!beam) {
           c.problems.push(`node ${n.id} has no link drawn`);
