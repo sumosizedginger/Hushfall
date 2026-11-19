@@ -11,6 +11,7 @@ import { wallRows, cornerAO, patchFactor } from './shading.js';
 import { buildGrowth } from './growth.js';
 import { patchSurface } from './surface.js';
 import { buildTrims } from './trims.js';
+import { wallRaise } from './walltops.js';
 import { CEIL, BAY, ceilingFamilies, buildCeilingStructure, lanternBays, bayPanes, PART_TINT } from './ceilings.js';
 import { bakeMeshes } from './lampbake.js';
 import { ACCENTS } from './accents.js';
@@ -304,7 +305,7 @@ export function buildLevel(map, tex, opts = {}) {
       if (k === 'wall') continue;
       t = Math.max(t, hasCeil(k) ? ce(nx, nz) : fl(nx, nz) + H);
     }
-    return t;
+    return t === -Infinity ? t : t + wallRaise(map, cx, cz, hasCeil, fl); // an outdoor street wall steps against the sky (walltops.js)
   };
 
   const walls = new Map(),

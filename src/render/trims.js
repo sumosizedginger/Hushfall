@@ -15,6 +15,7 @@
 import * as THREE from 'three';
 import { WALL_SKINS, KEYS } from '../engine/defs.js';
 import { buildDressing } from './dressing.js';
+import { wallRaise } from './walltops.js';
 
 export const TRIMS = Object.freeze({
   skirt: { h: 0.3, d: 0.07, tint: 0x6c645c },
@@ -251,7 +252,7 @@ export function buildTrims(map, { tex, wallTex, patch = null }) {
       if (k2 === 'wall') continue;
       wt = Math.max(wt, roofed(k2) ? ce(cx + ex, cz + ez) : fl(cx + ex, cz + ez) + H);
     }
-    return wt;
+    return wt === -Infinity ? wt : wt + wallRaise(map, cx, cz, roofed, fl); // stepped as the level mesh steps it (walltops.js)
   };
   /**
    * what band a wall face carries: null, or { cat, f, top, skin } (a closet or secret panel carries the band across like the wall it pretends to be:
