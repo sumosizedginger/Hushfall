@@ -87,7 +87,8 @@ for (const m of maps) {
   const src = JSON.parse(fs.readFileSync(path.join(root, 'maps', id + '.json'), 'utf8')),
     kinds = (src.entities ?? []).filter((e) => e.type === 'enemy').map((e) => e.kind);
   const hasBoss = kinds.some((k) => ENEMIES[k]?.boss),
-    hasNodes = kinds.some((k) => ENEMIES[k]?.node);
+    // a boss that holds a SHIELD while its nodes stand (since the boss pass of 2026-11-18 the Cantor and the Graft-Mother hold none)
+    hasNodes = kinds.some((k) => ENEMIES[k]?.node) && kinds.some((k) => ENEMIES[k]?.boss && ENEMIES[k]?.shield);
   const hud = { objective: false, boss: false, shield: false },
     routes = {};
   for (const name of m.routes) {
@@ -115,7 +116,7 @@ for (const m of maps) {
   if (!m.routes.length) check(`${id} has a canonical route to play in the real game`, false, `routes/${id}.main.route.json is missing`);
   if (hasBoss)
     check(
-      `${id}: the boss bar appeared during the route${hasNodes ? ' and said the Cantor is shielded while its ring stands' : ''}`,
+      `${id}: the boss bar appeared during the route${hasNodes ? ' and said the boss is shielded while its nodes stand' : ''}`,
       hud.boss && (!hasNodes || hud.shield),
       JSON.stringify(hud),
     );
