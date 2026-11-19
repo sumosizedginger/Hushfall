@@ -2,7 +2,7 @@
   "mapId": "C2M02",
   "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "47cd5b1",
+  "codeVersion": "7466d2f",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "6990b76fa351b76f",
@@ -306,8 +306,8 @@
   },
   "browser": {
     "file": "validation/browser/C2M02.json",
-    "when": "2026-11-19T04:19:35.922Z",
-    "commit": "47cd5b1",
+    "when": "2026-11-19T06:18:05.613Z",
+    "commit": "7466d2f",
     "mapSha": "6990b76fa351b76f",
     "routesSha": "1d0d728927dda8e0",
     "passed": 13,
@@ -315,8 +315,8 @@
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-19T04:08:36.279Z",
-      "commit": "47cd5b1",
+      "when": "2026-11-19T06:07:06.178Z",
+      "commit": "7466d2f",
       "passed": 148,
       "total": 148
     }

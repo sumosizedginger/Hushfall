@@ -1,7 +1,7 @@
 {
   "mapId": "C2M09",
-  "when": "2026-11-19T04:22:36.883Z",
-  "commit": "47cd5b1",
+  "when": "2026-11-19T06:20:40.201Z",
+  "commit": "7466d2f",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -29,7 +29,7 @@
       "agree": true,
       "kills": 52,
       "secrets": 0,
-      "wallSeconds": 7
+      "wallSeconds": 5
     },
     "secret": {
       "ok": true,
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 52,
       "secrets": 2,
-      "wallSeconds": 8
+      "wallSeconds": 6
     }
   },
   "hud": {
@@ -92,7 +92,7 @@
     {
       "name": "real-game route C2M09.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9152 policy=standing wall=7s"
+      "detail": "status=complete failed=null ticks=9152 policy=standing wall=5s"
     },
     {
       "name": "real-game route C2M09.main: browser sim == Node sim (ticks + state hash)",
@@ -102,7 +102,7 @@
     {
       "name": "real-game route C2M09.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=12084 policy=standing wall=8s"
+      "detail": "status=complete failed=null ticks=12084 policy=standing wall=6s"
     },
     {
       "name": "real-game route C2M09.secret: browser sim == Node sim (ticks + state hash)",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 34
+  "wallSeconds": 29
 }

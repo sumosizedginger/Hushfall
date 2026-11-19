@@ -1,6 +1,6 @@
 {
-  "when": "2026-11-19T04:08:35.942Z",
-  "commit": "47cd5b1",
+  "when": "2026-11-19T06:07:05.974Z",
+  "commit": "7466d2f",
   "sources": {
     "engine": "c22fda04da583133",
     "render": "21f8b945fb4e6b7b",
@@ -24,7 +24,7 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "4860 rows (1474 on raised floors), 0 violations, deepest -0.02 m, highest 0.23 m; two samples of all 2430 enemies: true"
+      "detail": "4860 rows (1474 on raised floors), 0 violations, deepest -0.02 m, highest 0.229 m; two samples of all 2430 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
@@ -2638,7 +2638,7 @@
           "raised": 8,
           "bad": [],
           "worstBuried": 0,
-          "worstFloat": 0.23
+          "worstFloat": 0.229
         },
         "matrix": {
           "n": 69,
@@ -4064,7 +4064,7 @@
         "raised": 1474,
         "violations": 0,
         "deepest": -0.02,
-        "highest": 0.23
+        "highest": 0.229
       },
       "matrix": {
         "rows": 8356,

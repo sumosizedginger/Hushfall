@@ -1,7 +1,7 @@
 {
   "mapId": "C2M29",
-  "when": "2026-11-19T04:30:33.615Z",
-  "commit": "47cd5b1",
+  "when": "2026-11-19T06:28:18.366Z",
+  "commit": "7466d2f",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -62,7 +62,7 @@
       "raised": 8,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.23
+      "highest": 0.229
     },
     "matrix": {
       "rows": 69,
@@ -122,7 +122,7 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.23 m; two samples of all 9 enemies: true"
+      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.229 m; two samples of all 9 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 14
+  "wallSeconds": 13
 }

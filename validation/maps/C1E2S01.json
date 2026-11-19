@@ -1,11 +1,11 @@
 {
   "mapId": "C1E2S01",
-  "mapVersion": 2,
+  "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "47cd5b1",
+  "codeVersion": "7466d2f",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "a76a9464a0870baa",
+  "mapSha": "44f346ea9f494bdb",
   "assetVersion": "13c28db8754bc179",
   "engineSha": "c22fda04da583133",
   "sources": {
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "cc879ed1",
+      "finalHash": "e038cc20",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "d37b1b09",
+      "finalHash": "03a75080",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 2248,
-      "finalHash": "6cc326d4",
+      "finalHash": "0077fa7d",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -68,7 +68,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 2248,
-    "finalHash": "d37b1b09",
+    "finalHash": "03a75080",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -85,7 +85,7 @@
     "switches": 1,
     "sectors": 0,
     "heights": true,
-    "maxFloor": 0.5,
+    "maxFloor": 1,
     "fxCells": 0,
     "skins": 4,
     "wallSkins": [
@@ -198,17 +198,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E2S01.json",
-    "when": "2026-11-19T04:14:13.385Z",
-    "commit": "47cd5b1",
-    "mapSha": "a76a9464a0870baa",
+    "when": "2026-11-19T06:12:39.353Z",
+    "commit": "7466d2f",
+    "mapSha": "44f346ea9f494bdb",
     "routesSha": "cd168db75190657f",
     "passed": 11,
     "total": 11,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-19T04:08:36.279Z",
-      "commit": "47cd5b1",
+      "when": "2026-11-19T06:07:06.178Z",
+      "commit": "7466d2f",
       "passed": 148,
       "total": 148
     }
@@ -359,7 +359,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2S01.json: a76a9464a0870baa vs a76a9464a0870baa"
+        "detail": "validation/browser/C1E2S01.json: 44f346ea9f494bdb vs 44f346ea9f494bdb"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -380,5 +380,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v2, 0 enemies, 21 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v3, 0 enemies, 21 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

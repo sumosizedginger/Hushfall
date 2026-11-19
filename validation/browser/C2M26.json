@@ -1,7 +1,7 @@
 {
   "mapId": "C2M26",
-  "when": "2026-11-19T04:29:13.398Z",
-  "commit": "47cd5b1",
+  "when": "2026-11-19T06:27:00.880Z",
+  "commit": "7466d2f",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
@@ -29,7 +29,7 @@
       "agree": true,
       "kills": 30,
       "secrets": 0,
-      "wallSeconds": 4
+      "wallSeconds": 3
     },
     "secret": {
       "ok": true,
@@ -92,7 +92,7 @@
     {
       "name": "real-game route C2M26.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7279 policy=standing wall=4s"
+      "detail": "status=complete failed=null ticks=7279 policy=standing wall=3s"
     },
     {
       "name": "real-game route C2M26.main: browser sim == Node sim (ticks + state hash)",
@@ -155,5 +155,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 20
+  "wallSeconds": 18
 }
