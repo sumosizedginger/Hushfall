@@ -1,31 +1,31 @@
 {
   "mapId": "C2M27",
-  "when": "2026-11-16T05:09:24.781Z",
-  "commit": "b2dd292",
+  "when": "2026-11-19T02:14:31.529Z",
+  "commit": "0ed48a6",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "2375e5ddc8b71c36",
+  "mapSha": "f057c4c123d13b41",
   "routesSha": "e167b85ebdced4b2",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 7683,
-      "hash": "87896612",
-      "nodeTicks": 7683,
-      "nodeHash": "87896612",
+      "ticks": 7965,
+      "hash": "1d49fd65",
+      "nodeTicks": 7965,
+      "nodeHash": "1d49fd65",
       "agree": true,
       "kills": 51,
       "secrets": 0,
@@ -33,10 +33,10 @@
     },
     "secret": {
       "ok": true,
-      "ticks": 9535,
-      "hash": "fd40758f",
-      "nodeTicks": 9535,
-      "nodeHash": "fd40758f",
+      "ticks": 9745,
+      "hash": "a1d437d8",
+      "nodeTicks": 9745,
+      "nodeHash": "a1d437d8",
       "agree": true,
       "kills": 58,
       "secrets": 2,
@@ -219,22 +219,22 @@
     {
       "name": "real-game route C2M27.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7683 policy=standing wall=5s"
+      "detail": "status=complete failed=null ticks=7965 policy=standing wall=5s"
     },
     {
       "name": "real-game route C2M27.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7683/87896612 vs node 7683/87896612"
+      "detail": "browser 7965/1d49fd65 vs node 7965/1d49fd65"
     },
     {
       "name": "real-game route C2M27.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9535 policy=standing wall=6s"
+      "detail": "status=complete failed=null ticks=9745 policy=standing wall=6s"
     },
     {
       "name": "real-game route C2M27.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 9535/fd40758f vs node 9535/fd40758f"
+      "detail": "browser 9745/a1d437d8 vs node 9745/a1d437d8"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",

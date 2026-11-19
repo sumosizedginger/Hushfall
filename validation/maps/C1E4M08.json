@@ -2,20 +2,20 @@
   "mapId": "C1E4M08",
   "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "78ad7f7",
+  "codeVersion": "0ed48a6",
   "dirtyTree": true,
   "dirtySource": false,
   "mapSha": "1fae5b4a97b8eb39",
-  "assetVersion": "9c618a066ecbc4e2",
-  "engineSha": "4bdbe685c9468dee",
+  "assetVersion": "13c28db8754bc179",
+  "engineSha": "c22fda04da583133",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routesSha": "dce84bda0237ed30",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5354,
-      "finalHash": "f8acf46d",
+      "finalHash": "37e7cf7b",
       "kills": 18,
       "secrets": 0,
       "items": 3,
@@ -40,12 +40,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 7731,
-      "finalHash": "893c186f",
+      "ticks": 7732,
+      "finalHash": "90a225a5",
       "kills": 19,
       "secrets": 0,
       "items": 9,
-      "damageTaken": 134
+      "damageTaken": 139
     },
     {
       "file": "routes/C1E4M08.main.route.json",
@@ -54,7 +54,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 8065,
-      "finalHash": "5b78a561",
+      "finalHash": "9e370822",
       "kills": 18,
       "secrets": 0,
       "items": 12,
@@ -66,12 +66,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 9435,
-      "finalHash": "cbda1461",
-      "kills": 21,
+      "ticks": 9568,
+      "finalHash": "6ee705c5",
+      "kills": 22,
       "secrets": 2,
-      "items": 4,
-      "damageTaken": 35
+      "items": 5,
+      "damageTaken": 44
     },
     {
       "file": "routes/C1E4M08.secret.route.json",
@@ -79,12 +79,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 10690,
-      "finalHash": "e13ec3fb",
+      "ticks": 10748,
+      "finalHash": "41810b4e",
       "kills": 22,
       "secrets": 2,
       "items": 9,
-      "damageTaken": 87
+      "damageTaken": 72
     },
     {
       "file": "routes/C1E4M08.secret.route.json",
@@ -92,12 +92,12 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 12603,
-      "finalHash": "fc32fa48",
-      "kills": 23,
+      "ticks": 13176,
+      "finalHash": "d6ab1556",
+      "kills": 24,
       "secrets": 2,
-      "items": 14,
-      "damageTaken": 163
+      "items": 15,
+      "damageTaken": 145
     }
   ],
   "canonicalRoute": {
@@ -106,8 +106,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 7731,
-    "finalHash": "893c186f",
+    "ticks": 7732,
+    "finalHash": "90a225a5",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -209,9 +209,9 @@
         "policy": "standing",
         "seeds": 3,
         "result": "complete",
-        "damage": 134,
-        "meanDamage": 115,
-        "seconds": 128.8,
+        "damage": 139,
+        "meanDamage": 120,
+        "seconds": 128.9,
         "kills": 19,
         "failure": null
       }
@@ -280,23 +280,23 @@
   },
   "browser": {
     "file": "validation/browser/C1E4M08.json",
-    "when": "2026-11-16T04:59:53.244Z",
-    "commit": "b2dd292",
-    "mapSha": "d922e4113540af56",
+    "when": "2026-11-19T02:04:16.227Z",
+    "commit": "0ed48a6",
+    "mapSha": "1fae5b4a97b8eb39",
     "routesSha": "dce84bda0237ed30",
     "passed": 14,
     "total": 14,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-16T04:50:15.924Z",
-      "commit": "b2dd292",
+      "when": "2026-11-19T01:54:26.955Z",
+      "commit": "0ed48a6",
       "passed": 148,
       "total": 148
     }
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -321,7 +321,7 @@
       {
         "name": "route C1E4M08.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "128.8 s"
+        "detail": "128.9 s"
       },
       {
         "name": "route C1E4M08.main.route.json on hard reaches the exit",
@@ -331,17 +331,17 @@
       {
         "name": "route C1E4M08.secret.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "157.3 s"
+        "detail": "159.5 s"
       },
       {
         "name": "route C1E4M08.secret.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "178.2 s"
+        "detail": "179.1 s"
       },
       {
         "name": "route C1E4M08.secret.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "210.1 s"
+        "detail": "219.6 s"
       },
       {
         "name": "robustness (normal, strafing fighter): completes with aim error of 0.03 rad (complete, 110 damage)",
@@ -436,12 +436,12 @@
       {
         "name": "viability: a perfect fighter takes real damage on normal and hard (>= 10 / >= 25)",
         "ok": true,
-        "detail": "{\"normal\":115,\"hard\":182}"
+        "detail": "{\"normal\":120,\"hard\":182}"
       },
       {
         "name": "viability: damage rises with difficulty (per map: easy < normal and easy <= hard; the trend over the whole episode is gated by the bundle)",
         "ok": true,
-        "detail": "49 / 115 / 182 (mean of 3 seeds)"
+        "detail": "49 / 120 / 182 (mean of 3 seeds)"
       },
       {
         "name": "par time is 2x-8x the bot's time (5.6x; placeholder until a human plays it)",
@@ -456,7 +456,7 @@
       {
         "name": "quality: perfect-bot time in [60,900] s",
         "ok": true,
-        "detail": "128.8 s"
+        "detail": "128.9 s"
       },
       {
         "name": "quality: uses at least 5 distinct wall/floor skins",
@@ -575,8 +575,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "validation/browser/C1E4M08.json: d922e4113540af56 vs 1fae5b4a97b8eb39"
+        "ok": true,
+        "detail": "validation/browser/C1E4M08.json: 1fae5b4a97b8eb39 vs 1fae5b4a97b8eb39"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

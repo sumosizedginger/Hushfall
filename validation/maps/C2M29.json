@@ -2,20 +2,20 @@
   "mapId": "C2M29",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "78ad7f7",
+  "codeVersion": "0ed48a6",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "348a8b99d5e77b2b",
-  "assetVersion": "9c618a066ecbc4e2",
-  "engineSha": "4bdbe685c9468dee",
+  "mapSha": "0c7ce265a98fee27",
+  "assetVersion": "13c28db8754bc179",
+  "engineSha": "c22fda04da583133",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routesSha": "a835642394b52dec",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5108,
-      "finalHash": "98944a22",
+      "finalHash": "2276e0bc",
       "kills": 11,
       "secrets": 0,
       "items": 6,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7239,
-      "finalHash": "896cfea0",
+      "finalHash": "f257f1ea",
       "kills": 11,
       "secrets": 0,
       "items": 13,
@@ -54,7 +54,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 6806,
-      "finalHash": "535bef2e",
+      "finalHash": "69a6efec",
       "kills": 11,
       "secrets": 0,
       "items": 4,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5274,
-      "finalHash": "5ac47343",
+      "finalHash": "32bbd729",
       "kills": 11,
       "secrets": 2,
       "items": 4,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7250,
-      "finalHash": "4a10f03b",
+      "finalHash": "65c97ac1",
       "kills": 11,
       "secrets": 2,
       "items": 9,
@@ -93,7 +93,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7262,
-      "finalHash": "1ad64354",
+      "finalHash": "b06d6d92",
       "kills": 11,
       "secrets": 2,
       "items": 8,
@@ -107,7 +107,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 7239,
-    "finalHash": "896cfea0",
+    "finalHash": "f257f1ea",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -140,7 +140,7 @@
       "t",
       "Ν"
     ],
-    "props": 11,
+    "props": 15,
     "secrets": 2,
     "cells": 5184,
     "gates": 0,
@@ -298,23 +298,23 @@
   },
   "browser": {
     "file": "validation/browser/C2M29.json",
-    "when": "2026-11-16T05:10:06.523Z",
-    "commit": "b2dd292",
-    "mapSha": "2434969cb156a535",
+    "when": "2026-11-19T02:15:14.819Z",
+    "commit": "0ed48a6",
+    "mapSha": "0c7ce265a98fee27",
     "routesSha": "a835642394b52dec",
     "passed": 14,
     "total": 14,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-16T04:50:15.924Z",
-      "commit": "b2dd292",
+      "when": "2026-11-19T01:54:26.955Z",
+      "commit": "0ed48a6",
       "passed": 148,
       "total": 148
     }
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -623,8 +623,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "validation/browser/C2M29.json: 2434969cb156a535 vs 348a8b99d5e77b2b"
+        "ok": true,
+        "detail": "validation/browser/C2M29.json: 0c7ce265a98fee27 vs 0c7ce265a98fee27"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

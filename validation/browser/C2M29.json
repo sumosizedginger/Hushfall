@@ -1,31 +1,31 @@
 {
   "mapId": "C2M29",
-  "when": "2026-11-16T05:10:06.523Z",
-  "commit": "b2dd292",
+  "when": "2026-11-19T02:15:14.819Z",
+  "commit": "0ed48a6",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "2434969cb156a535",
+  "mapSha": "0c7ce265a98fee27",
   "routesSha": "a835642394b52dec",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routes": {
     "main": {
       "ok": true,
       "ticks": 7239,
-      "hash": "896cfea0",
+      "hash": "f257f1ea",
       "nodeTicks": 7239,
-      "nodeHash": "896cfea0",
+      "nodeHash": "f257f1ea",
       "agree": true,
       "kills": 11,
       "secrets": 0,
@@ -34,9 +34,9 @@
     "secret": {
       "ok": true,
       "ticks": 7250,
-      "hash": "4a10f03b",
+      "hash": "65c97ac1",
       "nodeTicks": 7250,
-      "nodeHash": "4a10f03b",
+      "nodeHash": "65c97ac1",
       "agree": true,
       "kills": 11,
       "secrets": 2,
@@ -62,7 +62,7 @@
       "raised": 8,
       "violations": 0,
       "deepest": 0,
-      "highest": 0.229
+      "highest": 0.23
     },
     "matrix": {
       "rows": 69,
@@ -97,7 +97,7 @@
     {
       "name": "real-game route C2M29.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7239/896cfea0 vs node 7239/896cfea0"
+      "detail": "browser 7239/f257f1ea vs node 7239/f257f1ea"
     },
     {
       "name": "real-game route C2M29.secret: completes in the browser",
@@ -107,10 +107,10 @@
     {
       "name": "real-game route C2M29.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 7250/4a10f03b vs node 7250/4a10f03b"
+      "detail": "browser 7250/65c97ac1 vs node 7250/65c97ac1"
     },
     {
-      "name": "C2M29: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
+      "name": "C2M29: the boss bar appeared during the route and said the boss is shielded while its nodes stand",
       "ok": true,
       "detail": "{\"objective\":true,\"boss\":true,\"shield\":true}"
     },
@@ -122,7 +122,7 @@
     {
       "name": "render truth: every AWAKE enemy (chasing, attacking, lunging, charging) of every shipped map is drawn on its floor",
       "ok": true,
-      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.229 m; two samples of all 9 enemies: true"
+      "detail": "18 rows (8 on raised floors), 0 violations, deepest 0 m, highest 0.23 m; two samples of all 9 enemies: true"
     },
     {
       "name": "render truth: every kind in every pose (stride, windups, crouch, dash, stagger, death blend, resurrection) on its highest and lowest floor stays inside the ground band",

@@ -80,7 +80,8 @@ export function compile(lv) {
   {
     const swaps = process.env.ROSTER_ID === lv.id && process.env.ROSTER_SWAPS ? JSON.parse(process.env.ROSTER_SWAPS) : (ROSTER_SWAPS[lv.id] ?? []).map(({ why, ...s }) => s);
     if (lv.roster) applyRoster(entities, geo, lv.roster, lv.id);
-    if (swaps.length) applyRoster(entities, geo, { plan: swaps, strict: true }, lv.id + ':swaps');
+    // (an empty map with a campaign slot's id, a map:new scaffold, has nothing to swap: the swaps were planned for the shipped map)
+    if (swaps.length && entities.some((e) => e.type === 'enemy')) applyRoster(entities, geo, { plan: swaps, strict: true }, lv.id + ':swaps');
   }
   for (const g of lv.groups || [])
     for (const e of entities)

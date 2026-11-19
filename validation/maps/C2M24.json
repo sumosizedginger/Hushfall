@@ -2,20 +2,20 @@
   "mapId": "C2M24",
   "mapVersion": 3,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "78ad7f7",
+  "codeVersion": "0ed48a6",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "3ee72bb5a153a17d",
-  "assetVersion": "9c618a066ecbc4e2",
-  "engineSha": "4bdbe685c9468dee",
+  "mapSha": "66122136011dad5e",
+  "assetVersion": "13c28db8754bc179",
+  "engineSha": "c22fda04da583133",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routesSha": "719fd76e782dee39",
   "loads": true,
@@ -140,7 +140,7 @@
       "Π",
       "t"
     ],
-    "props": 28,
+    "props": 32,
     "secrets": 2,
     "cells": 5220,
     "gates": 0,
@@ -292,23 +292,23 @@
   },
   "browser": {
     "file": "validation/browser/C2M24.json",
-    "when": "2026-11-16T05:08:22.901Z",
-    "commit": "b2dd292",
-    "mapSha": "0395411880120666",
+    "when": "2026-11-19T02:13:24.090Z",
+    "commit": "0ed48a6",
+    "mapSha": "66122136011dad5e",
     "routesSha": "719fd76e782dee39",
     "passed": 14,
     "total": 14,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-16T04:50:15.924Z",
-      "commit": "b2dd292",
+      "when": "2026-11-19T01:54:26.955Z",
+      "commit": "0ed48a6",
       "passed": 148,
       "total": 148
     }
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -587,8 +587,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "validation/browser/C2M24.json: 0395411880120666 vs 3ee72bb5a153a17d"
+        "ok": true,
+        "detail": "validation/browser/C2M24.json: 66122136011dad5e vs 66122136011dad5e"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",

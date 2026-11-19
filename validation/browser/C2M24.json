@@ -1,23 +1,23 @@
 {
   "mapId": "C2M24",
-  "when": "2026-11-16T05:08:22.901Z",
-  "commit": "b2dd292",
+  "when": "2026-11-19T02:13:24.090Z",
+  "commit": "0ed48a6",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "0395411880120666",
+  "mapSha": "66122136011dad5e",
   "routesSha": "719fd76e782dee39",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routes": {
     "main": {
@@ -40,7 +40,7 @@
       "agree": true,
       "kills": 12,
       "secrets": 2,
-      "wallSeconds": 3
+      "wallSeconds": 2
     }
   },
   "hud": {
@@ -102,7 +102,7 @@
     {
       "name": "real-game route C2M24.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=7618 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=7618 policy=standing wall=2s"
     },
     {
       "name": "real-game route C2M24.secret: browser sim == Node sim (ticks + state hash)",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 11
+  "wallSeconds": 12
 }

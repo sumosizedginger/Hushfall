@@ -1,31 +1,31 @@
 {
   "mapId": "C1E1M08",
-  "when": "2026-11-16T04:53:18.382Z",
-  "commit": "b2dd292",
+  "when": "2026-11-19T01:57:28.532Z",
+  "commit": "0ed48a6",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "fc4ba45085f99853",
+  "mapSha": "8fa519b551f577d4",
   "routesSha": "8598adcd32bc6f0f",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 10691,
-      "hash": "d33a544a",
-      "nodeTicks": 10691,
-      "nodeHash": "d33a544a",
+      "ticks": 10298,
+      "hash": "04ebb1bd",
+      "nodeTicks": 10298,
+      "nodeHash": "04ebb1bd",
       "agree": true,
       "kills": 45,
       "secrets": 0,
@@ -33,20 +33,20 @@
     },
     "secret": {
       "ok": true,
-      "ticks": 10592,
-      "hash": "1e8c806c",
-      "nodeTicks": 10592,
-      "nodeHash": "1e8c806c",
+      "ticks": 10314,
+      "hash": "2b674e38",
+      "nodeTicks": 10314,
+      "nodeHash": "2b674e38",
       "agree": true,
       "kills": 45,
       "secrets": 2,
-      "wallSeconds": 4
+      "wallSeconds": 6
     }
   },
   "hud": {
     "objective": true,
     "boss": true,
-    "shield": true
+    "shield": false
   },
   "census": {
     "enemies": 45,
@@ -94,27 +94,27 @@
     {
       "name": "real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10691 policy=standing wall=6s"
+      "detail": "status=complete failed=null ticks=10298 policy=standing wall=6s"
     },
     {
       "name": "real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10691/d33a544a vs node 10691/d33a544a"
+      "detail": "browser 10298/04ebb1bd vs node 10298/04ebb1bd"
     },
     {
       "name": "real-game route C1E1M08.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10592 policy=standing wall=4s"
+      "detail": "status=complete failed=null ticks=10314 policy=standing wall=6s"
     },
     {
       "name": "real-game route C1E1M08.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 10592/1e8c806c vs node 10592/1e8c806c"
+      "detail": "browser 10314/2b674e38 vs node 10314/2b674e38"
     },
     {
-      "name": "C1E1M08: the boss bar appeared during the route and said the Cantor is shielded while its ring stands",
+      "name": "C1E1M08: the boss bar appeared during the route",
       "ok": true,
-      "detail": "{\"objective\":true,\"boss\":true,\"shield\":true}"
+      "detail": "{\"objective\":true,\"boss\":true,\"shield\":false}"
     },
     {
       "name": "render truth: every SLEEPING enemy (merged mesh) of every shipped map is drawn where the sim stands it, on its floor",
@@ -144,7 +144,7 @@
     {
       "name": "render truth: the Cantor's body, shield and ring nodes occupy the same encounter space, and severing the ring removes the shield and links",
       "ok": true,
-      "detail": "body 4.806 m tall on 12 m, shield r 2.955, 6 nodes"
+      "detail": "body 4.806 m tall on 12 m, shield r undefined, 6 nodes"
     },
     {
       "name": "render truth: the Graft-Mother's body, shield and feeders occupy the same encounter space, and severing the feeders removes the shield and links",
@@ -162,5 +162,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 24
+  "wallSeconds": 26
 }

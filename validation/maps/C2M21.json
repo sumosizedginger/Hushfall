@@ -1,21 +1,21 @@
 {
   "mapId": "C2M21",
-  "mapVersion": 4,
+  "mapVersion": 5,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "78ad7f7",
+  "codeVersion": "0ed48a6",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "0948481fb98a8bac",
-  "assetVersion": "9c618a066ecbc4e2",
-  "engineSha": "4bdbe685c9468dee",
+  "mapSha": "8b42b90bdc4a2187",
+  "assetVersion": "13c28db8754bc179",
+  "engineSha": "c22fda04da583133",
   "sources": {
-    "engine": "4bdbe685c9468dee",
-    "render": "510240d763a90d76",
-    "game": "3cd2058af47e4818",
-    "audio": "13a17a3273b88347",
-    "assets": "9c618a066ecbc4e2",
+    "engine": "c22fda04da583133",
+    "render": "88bfba2af6d4e2f6",
+    "game": "96ca72446d14a739",
+    "audio": "7fdb82de394b5a5b",
+    "assets": "13c28db8754bc179",
     "verifier": "eccb2f9ca83a6499",
-    "probes": "e522068434d07c95"
+    "probes": "3c74d5082cccc5b5"
   },
   "routesSha": "eb3585511c7d6aa0",
   "loads": true,
@@ -28,7 +28,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7612,
-      "finalHash": "2a1b94e4",
+      "finalHash": "960a96bc",
       "kills": 24,
       "secrets": 0,
       "items": 3,
@@ -41,7 +41,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 7612,
-      "finalHash": "398fed7d",
+      "finalHash": "781b81e3",
       "kills": 24,
       "secrets": 0,
       "items": 4,
@@ -54,7 +54,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 7663,
-      "finalHash": "fdd0dc9e",
+      "finalHash": "1ed0eb36",
       "kills": 24,
       "secrets": 0,
       "items": 5,
@@ -67,7 +67,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5427,
-      "finalHash": "492f12de",
+      "finalHash": "fe019d9c",
       "kills": 23,
       "secrets": 0,
       "items": 2,
@@ -80,7 +80,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 5836,
-      "finalHash": "74d4d353",
+      "finalHash": "cedd3b07",
       "kills": 23,
       "secrets": 0,
       "items": 3,
@@ -93,7 +93,7 @@
       "policy": "strafing",
       "result": "complete",
       "ticks": 6591,
-      "finalHash": "078cfe21",
+      "finalHash": "18cf3dc5",
       "kills": 23,
       "secrets": 0,
       "items": 5,
@@ -106,7 +106,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9521,
-      "finalHash": "e9483be3",
+      "finalHash": "ff83aead",
       "kills": 28,
       "secrets": 2,
       "items": 4,
@@ -119,7 +119,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9363,
-      "finalHash": "ad6dc5b7",
+      "finalHash": "ac4c8203",
       "kills": 28,
       "secrets": 2,
       "items": 5,
@@ -132,7 +132,7 @@
       "policy": "standing",
       "result": "complete",
       "ticks": 9648,
-      "finalHash": "bd39656f",
+      "finalHash": "706fba0b",
       "kills": 28,
       "secrets": 2,
       "items": 4,
@@ -146,7 +146,7 @@
     "seed": 1,
     "reachedExit": true,
     "ticks": 5836,
-    "finalHash": "74d4d353",
+    "finalHash": "cedd3b07",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -157,12 +157,12 @@
   "facts": {
     "enemies": 46,
     "enemyKinds": {
-      "tollbearer": 14,
+      "tollbearer": 13,
       "gaunt": 9,
       "chorister": 6,
       "zealot": 4,
       "bellhand": 5,
-      "bulwark": 1,
+      "bulwark": 2,
       "sexton": 2,
       "resonant": 5
     },
@@ -346,23 +346,23 @@
   },
   "browser": {
     "file": "validation/browser/C2M21.json",
-    "when": "2026-11-16T05:07:29.053Z",
-    "commit": "b2dd292",
-    "mapSha": "917d0870fe013952",
+    "when": "2026-11-19T02:12:25.715Z",
+    "commit": "0ed48a6",
+    "mapSha": "8b42b90bdc4a2187",
     "routesSha": "eb3585511c7d6aa0",
     "passed": 15,
     "total": 15,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-16T04:50:15.924Z",
-      "commit": "b2dd292",
+      "when": "2026-11-19T01:54:26.955Z",
+      "commit": "0ed48a6",
       "passed": 148,
       "total": 148
     }
   },
   "automated": {
-    "pass": false,
+    "pass": true,
     "checks": [
       {
         "name": "exit reachable from spawn (keys considered)",
@@ -617,7 +617,7 @@
       {
         "name": "quality: has at least 8 tollbearer",
         "ok": true,
-        "detail": 14
+        "detail": 13
       },
       {
         "name": "quality: has at least 3 gaunt",
@@ -642,7 +642,7 @@
       {
         "name": "quality: has at least 1 bulwark",
         "ok": true,
-        "detail": 1
+        "detail": 2
       },
       {
         "name": "quality: has at least 1 sexton",
@@ -721,8 +721,8 @@
       },
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
-        "ok": false,
-        "detail": "validation/browser/C2M21.json: 917d0870fe013952 vs 0948481fb98a8bac"
+        "ok": true,
+        "detail": "validation/browser/C2M21.json: 8b42b90bdc4a2187 vs 8b42b90bdc4a2187"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -743,5 +743,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v4, 46 enemies, 22 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v5, 46 enemies, 22 items, 2 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }
