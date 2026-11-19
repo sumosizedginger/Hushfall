@@ -21,7 +21,7 @@ export const CEIL = Object.freeze({
     timber: { tex: 'ceiling_a', tint: 0xa89888 },
     stone: { tex: 'floor_flag_a', tint: 0x8c867e },
     iron: { tex: 'wall_iron_a', tint: 0x8a8a90 },
-    organic: { tex: 'wall_rib_a', tint: 0x9a8478 },
+    organic: { tex: 'wall_resin_a', tint: 0xb4aca4 }, // grown, dark, corded (wall_rib_a read as planks in the frames)
     cave: { tex: 'wall_deeprock_a', tint: 0x7a7470 },
     pale: { tex: 'wall_gate_a', tint: 0xb8b4ac },
   },
