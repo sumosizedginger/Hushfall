@@ -1,9 +1,9 @@
 {
-  "when": "2026-11-19T06:07:06.178Z",
-  "commit": "7466d2f",
+  "when": "2026-11-19T15:53:09.694Z",
+  "commit": "5b47a16",
   "sources": {
     "engine": "c22fda04da583133",
-    "render": "21f8b945fb4e6b7b",
+    "render": "a8b7fc9149f2840f",
     "game": "96ca72446d14a739",
     "audio": "7fdb82de394b5a5b",
     "assets": "13c28db8754bc179",
@@ -503,7 +503,7 @@
     {
       "name": "real click on Normal starts a game and the live loop advances the sim",
       "ok": true,
-      "detail": "mode=playing tick=24"
+      "detail": "mode=playing tick=26"
     },
     {
       "name": "a fresh run shows the level title card",
@@ -538,7 +538,7 @@
     {
       "name": "holding a real W key moves the player (live input)",
       "ok": true,
-      "detail": "moved 6.16 m"
+      "detail": "moved 6.26 m"
     },
     {
       "name": "real mouse click fires the flare cannon (ammo consumed)",
@@ -548,7 +548,7 @@
     {
       "name": "firing plays the flare cannon sound through the live audio engine",
       "ok": true,
-      "detail": "played=32 last=hurt,strike,toll_soft,wheeze_windup,toll_soft,hurt,strike,radio,step_plank,step_plank,step_plank,flare_fire"
+      "detail": "played=32 last=toll_soft,toll_soft,wheeze_windup,hurt,strike,wheeze_windup,radio,step_plank,step_plank,step_plank,flare_fire,step_plank"
     },
     {
       "name": "Escape pauses (live)",
@@ -563,7 +563,7 @@
     {
       "name": "holding real Shift+W sprints faster than W alone",
       "ok": true,
-      "detail": "walk 4.24 m, sprint 6.61 m, ratio 1.56"
+      "detail": "walk 4.13 m, sprint 6.76 m, ratio 1.64"
     },
     {
       "name": "firing is blocked while sprinting (real click during real sprint)",
@@ -668,7 +668,7 @@
     {
       "name": "the route was audible: many sounds played incl. explosion, key, door, death, footsteps",
       "ok": true,
-      "detail": "played=280 distinct(last40)=bell_charge,flare_fire,flare_boom,burn_start,toll_shot,toll_soft,kill_tick,enemy_die,step_stone,pickup_ammo,hurt,shot_impact,creak,gaunt_screech,pickup_health,door_open,step_outdoor,step_plank,pump,toll_alert,weapon_switch,door_close,bell_alert,radio,pickup_key,hit_tick,impact,scatter_fire,case_drop,impact_wood,level_complete"
+      "detail": "played=280 distinct(last40)=bell_charge,flare_fire,flare_boom,burn_start,toll_shot,kill_tick,enemy_die,step_stone,pickup_ammo,hurt,shot_impact,creak,gaunt_screech,pickup_health,door_open,step_outdoor,step_plank,pump,toll_alert,weapon_switch,door_close,bell_alert,toll_soft,radio,pickup_key,hit_tick,impact,scatter_fire,case_drop,impact_wood,level_complete"
     },
     {
       "name": "intermission screen shows end-level statistics",
@@ -733,7 +733,7 @@
     {
       "name": "Gate 2 real-game route C1E1M02.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=9007 policy=standing wall=9s"
+      "detail": "status=complete failed=null ticks=9007 policy=standing wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M02.secret: browser sim == Node sim (ticks + state hash)",
@@ -743,7 +743,7 @@
     {
       "name": "Gate 2 real-game route C1E1M03.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10753 policy=standing wall=10s"
+      "detail": "status=complete failed=null ticks=10753 policy=standing wall=11s"
     },
     {
       "name": "Gate 2 real-game route C1E1M03.main: browser sim == Node sim (ticks + state hash)",
@@ -753,7 +753,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8496 policy=standing wall=13s"
+      "detail": "status=complete failed=null ticks=8496 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.main: browser sim == Node sim (ticks + state hash)",
@@ -763,7 +763,7 @@
     {
       "name": "Gate 2 real-game route C1E1M04.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=6496 policy=standing wall=7s"
+      "detail": "status=complete failed=null ticks=6496 policy=standing wall=8s"
     },
     {
       "name": "Gate 2 real-game route C1E1M04.secret: browser sim == Node sim (ticks + state hash)",
@@ -773,7 +773,7 @@
     {
       "name": "Gate 2 real-game route C1E1M05.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=8406 policy=standing wall=10s"
+      "detail": "status=complete failed=null ticks=8406 policy=standing wall=9s"
     },
     {
       "name": "Gate 2 real-game route C1E1M05.main: browser sim == Node sim (ticks + state hash)",
@@ -793,7 +793,7 @@
     {
       "name": "Gate 2 real-game route C1E1M07.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10390 policy=standing wall=11s"
+      "detail": "status=complete failed=null ticks=10390 policy=standing wall=10s"
     },
     {
       "name": "Gate 2 real-game route C1E1M07.main: browser sim == Node sim (ticks + state hash)",
@@ -803,7 +803,7 @@
     {
       "name": "Gate 2 real-game route C1E1M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=10298 policy=standing wall=13s"
+      "detail": "status=complete failed=null ticks=10298 policy=standing wall=11s"
     },
     {
       "name": "Gate 2 real-game route C1E1M08.main: browser sim == Node sim (ticks + state hash)",
@@ -898,7 +898,7 @@
     {
       "name": "picking up the harpoon rifle equips it: slot 4 on the HUD, BOLTS on the ammo label, a toast that names it, 6 bolts in the sim",
       "ok": true,
-      "detail": "weapon harpoon, bolts 6, hud \"Harpoon rifle 4\", label \"BOLTS\", toast \"Harpoon rifleKey 4. Hold aim to zoom. A bolt goes through plate and bodies.\""
+      "detail": "weapon harpoon, bolts 6, hud \"Harpoon rifle 4\", label \"BOLTS\", toast \"Rivets (+40) Harpoon rifleKey 4. Hold aim to zoom. A bolt goes through plate and\""
     },
     {
       "name": "a harpoon shot in the live game spends one bolt, draws its streak, and the sights zoom to the rifle's own field of view (24 degrees against 46 for the other guns)",
@@ -913,7 +913,7 @@
     {
       "name": "one burst of the lamp in the live game spends one cell, jumps down a line of three bodies (each hit, each for less), draws its lightning and lights the level",
       "ok": true,
-      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 6.6"
+      "detail": "cells 29, hp 78,85,89, arc segments 22, lamp light 6.1"
     },
     {
       "name": "picking up the mortar equips it: key 0 on the HUD, ROCKETS on the ammo label, a toast that names it, 6 rockets in the sim",
@@ -933,12 +933,12 @@
     {
       "name": "spore beds in the live game: blooming = bright with mist and it burns, dormant = dim, no mist, no damage",
       "ok": true,
-      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4869425899443089,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
+      "detail": "bloom {\"bed\":0.9400000000000001,\"mist\":0.4793943794290459,\"mistVisible\":true} hp 96; asleep {\"bed\":0.16,\"mist\":0,\"mistVisible\":false} hp 80 -> 80"
     },
     {
       "name": "the Weeping Mother weeps in the live game: a tear is drawn in the air while the sim has one, then a pool, flat on the floor, at the place the sim put it",
       "ok": true,
-      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.6853935768658052,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
+      "detail": "in the air {\"v\":1,\"s\":1}, pools [{\"opacity\":0.6167628898252464,\"scale\":1.8,\"x\":88.00000000000053,\"y\":0.06,\"z\":57.99999999999989}], sim [{\"x\":88.00000000000053,\"z\":57.99999999999989,\"r\":1.8,\"life\":5.16666666666667}]"
     },
     {
       "name": "the Weeping Mother broods in the live game: her sacs swell on the view while the sim swells, then two Gaunts stand beside her",
@@ -988,7 +988,7 @@
     {
       "name": "debris over a raised floor (M02 gallery, 3 m) stops at that floor, not at world zero (no chip sinks more than a frame's travel below it)",
       "ok": true,
-      "detail": "233 samples, lowest chip 0.070 m relative to its floor, remaining after 0.64 s: 0"
+      "detail": "187 samples, lowest chip 0.052 m relative to its floor, remaining after 0.64 s: 0"
     },
     {
       "name": "outlines: enemy bodies keep the original ink (ink inside a Tollbearer and a Bellhand is within 15% of the original pass; the corner ink is for the level only)",
@@ -1028,17 +1028,17 @@
     {
       "name": "render budget: every vantage (asleep AND all-awake) is within 25% of the recorded baseline for draw calls and triangles",
       "ok": true,
-      "detail": "{\"pier\":[222,233,52854,54794],\"plaza\":[205,214,50092,52008],\"warehouse\":[113,121,31952,34380],\"plaza-all-awake\":[449,458,50092,52008],\"warehouse-all-awake\":[160,168,32000,34428],\"m03-market\":[222,227,71240,76806],\"m03-market-all-awake\":[695,694,72904,77462],\"m05-terrace\":[134,133,52380,59526],\"m05-terrace-all-awake\":[367,357,54804,60438],\"m06-quay\":[215,212,72572,77292],\"m06-quay-all-awake\":[715,703,74996,78204],\"m07-atrium\":[258,260,76996,78028],\"m08-chamber\":[288,328,77602,82372],\"m08-chamber-all-awake\":[570,607,78438,82704]}"
+      "detail": "{\"pier\":[235,233,56450,54794],\"plaza\":[215,214,53608,52008],\"warehouse\":[120,121,34794,34380],\"plaza-all-awake\":[459,458,53608,52008],\"warehouse-all-awake\":[167,168,34842,34428],\"m03-market\":[232,227,80124,76806],\"m03-market-all-awake\":[705,694,81788,77462],\"m05-terrace\":[147,133,64494,59526],\"m05-terrace-all-awake\":[380,357,66918,60438],\"m06-quay\":[225,212,80584,77292],\"m06-quay-all-awake\":[725,703,83008,78204],\"m07-atrium\":[265,260,82928,78028],\"m08-chamber\":[298,328,85134,82372],\"m08-chamber-all-awake\":[580,607,85970,82704]}"
     },
     {
       "name": "render budget: draw calls and triangles stay modest at the heaviest vantage points",
       "ok": true,
-      "detail": "{\"pier\":{\"calls\":222,\"triangles\":52854,\"geometries\":1332,\"textures\":161,\"programs\":37},\"plaza\":{\"calls\":205,\"triangles\":50092,\"geometries\":1332,\"textures\":161,\"programs\":37},\"warehouse\":{\"calls\":113,\"triangles\":31952,\"geometries\":1332,\"textures\":161,\"programs\":37},\"plaza-all-awake\":{\"calls\":449,\"triangles\":50092,\"geometries\":1569,\"textures\":161,\"programs\":37},\"warehouse-all-awake\":{\"calls\":160,\"triangles\":32000,\"geometries\":1569,\"textures\":161,\"programs\":37},\"m03-market\":{\"calls\":222,\"triangles\":71240,\"geometries\":1396,\"textures\":161,\"programs\":38},\"m03-market-all-awake\":{\"calls\":695,\"triangles\":72904,\"geometries\":1807,\"textures\":161,\"programs\":39},\"m05-terrace\":{\"calls\":134,\"triangles\":52380,\"geometries\":1338,\"textures\":161,\"programs\":34},\"m05-terrace-all-awake\":{\"calls\":367,\"triangles\":54804,\"geometries\":1488,\"textures\":161,\"programs\":35},\"m06-quay\":{\"calls\":215,\"triangles\":72572,\"geometries\":1461,\"textures\":161,\"programs\":38},\"m06-quay-all-awake\":{\"calls\":715,\"triangles\":74996,\"geometries\":1886,\"textures\":161,\"programs\":38},\"m07-atrium\":{\"calls\":258,\"triangles\":76996,\"geometries\":1416,\"textures\":161,\"programs\":36},\"m08-chamber\":{\"calls\":288,\"triangles\":77602,\"geometries\":1427,\"textures\":161,\"programs\":38},\"m08-chamber-all-awake\":{\"calls\":570,\"triangles\":78438,\"geometries\":1694,\"textures\":161,\"programs\":38}}"
+      "detail": "{\"pier\":{\"calls\":235,\"triangles\":56450,\"geometries\":1345,\"textures\":163,\"programs\":39},\"plaza\":{\"calls\":215,\"triangles\":53608,\"geometries\":1345,\"textures\":163,\"programs\":39},\"warehouse\":{\"calls\":120,\"triangles\":34794,\"geometries\":1345,\"textures\":163,\"programs\":39},\"plaza-all-awake\":{\"calls\":459,\"triangles\":53608,\"geometries\":1582,\"textures\":163,\"programs\":39},\"warehouse-all-awake\":{\"calls\":167,\"triangles\":34842,\"geometries\":1582,\"textures\":163,\"programs\":39},\"m03-market\":{\"calls\":232,\"triangles\":80124,\"geometries\":1421,\"textures\":163,\"programs\":40},\"m03-market-all-awake\":{\"calls\":705,\"triangles\":81788,\"geometries\":1832,\"textures\":163,\"programs\":41},\"m05-terrace\":{\"calls\":147,\"triangles\":64494,\"geometries\":1353,\"textures\":163,\"programs\":36},\"m05-terrace-all-awake\":{\"calls\":380,\"triangles\":66918,\"geometries\":1503,\"textures\":163,\"programs\":37},\"m06-quay\":{\"calls\":225,\"triangles\":80584,\"geometries\":1474,\"textures\":163,\"programs\":40},\"m06-quay-all-awake\":{\"calls\":725,\"triangles\":83008,\"geometries\":1899,\"textures\":163,\"programs\":40},\"m07-atrium\":{\"calls\":265,\"triangles\":82928,\"geometries\":1425,\"textures\":163,\"programs\":38},\"m08-chamber\":{\"calls\":298,\"triangles\":85134,\"geometries\":1442,\"textures\":163,\"programs\":40},\"m08-chamber-all-awake\":{\"calls\":580,\"triangles\":85970,\"geometries\":1709,\"textures\":163,\"programs\":40}}"
     },
     {
       "name": "render budget ceilings: <= 350 draw calls asleep, <= 900 with every enemy awake (a crowd of 25+ awake rigs in view is the worst case)",
       "ok": true,
-      "detail": "{\"pier\":222,\"plaza\":205,\"warehouse\":113,\"plaza-all-awake\":449,\"warehouse-all-awake\":160,\"m03-market\":222,\"m03-market-all-awake\":695,\"m05-terrace\":134,\"m05-terrace-all-awake\":367,\"m06-quay\":215,\"m06-quay-all-awake\":715,\"m07-atrium\":258,\"m08-chamber\":288,\"m08-chamber-all-awake\":570}"
+      "detail": "{\"pier\":235,\"plaza\":215,\"warehouse\":120,\"plaza-all-awake\":459,\"warehouse-all-awake\":167,\"m03-market\":232,\"m03-market-all-awake\":705,\"m05-terrace\":147,\"m05-terrace-all-awake\":380,\"m06-quay\":225,\"m06-quay-all-awake\":725,\"m07-atrium\":265,\"m08-chamber\":298,\"m08-chamber-all-awake\":580}"
     },
     {
       "name": "looking at a closed door within reach shows how to open it",
@@ -1138,7 +1138,7 @@
     {
       "name": "peaceful Vael in the live game: a calm one and a frightened one are both drawn (a real box, a person tall), and the frightened one is drawn differently (its frill folds); neither is chasing",
       "ok": true,
-      "detail": "calm 1.38 x 2.46 (calm), afraid 1.37 x 2.39 (flee)"
+      "detail": "calm 1.38 x 2.46 (calm), afraid 1.36 x 2.39 (flee)"
     },
     {
       "name": "a fork in the live game: nothing is drawn while it stands quiet, a shot beside it makes the sim ring it and the view draws the ring",
@@ -1168,7 +1168,7 @@
     {
       "name": "the hand lantern in the live game: out, its light is off and the gauge shows the oil; lit, the light is on, the gauge says LIT and the oil burns",
       "ok": true,
-      "detail": "out {\"lamp\":{\"on\":false,\"oil\":45},\"light\":{\"intensity\":0,\"k\":0},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"45\",\"label\":\"OIL · L\"}}; lit {\"lamp\":{\"on\":true,\"oil\":43.966666666666725},\"light\":{\"intensity\":17.065050602437367,\"k\":0.9999950396657},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"44\",\"label\":\"OIL · LIT\"}}"
+      "detail": "out {\"lamp\":{\"on\":false,\"oil\":45},\"light\":{\"intensity\":0,\"k\":0},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"45\",\"label\":\"OIL · L\"}}; lit {\"lamp\":{\"on\":true,\"oil\":43.966666666666725},\"light\":{\"intensity\":17.14319802721557,\"k\":0.9999950197005882},\"model\":true,\"hud\":{\"shown\":true,\"oil\":\"44\",\"label\":\"OIL · LIT\"}}"
     },
     {
       "name": "chimes in the live game: a struck chime flares (drawn bigger than a quiet one), and the tree playing lights one of its fruit and its light",
@@ -1193,17 +1193,17 @@
     {
       "name": "no GPU leak across 12 level restarts (geometries/textures stable)",
       "ok": true,
-      "detail": "geometries 1327->1327, textures 161->161, programs 37->37"
+      "detail": "geometries 1340->1340, textures 163->163, programs 39->39"
     },
     {
       "name": "real-time loop runs frames without exceptions",
       "ok": true,
-      "detail": "frames=900 avg=32.8ms"
+      "detail": "frames=900 avg=33.0ms"
     },
     {
       "name": "no frame stall of 3 s or more in the real-time sample (frame times are UNCLAMPED; software GL, so not a smoothness claim)",
       "ok": true,
-      "detail": "worst 734 ms, p95 19 ms"
+      "detail": "worst 750 ms, p95 20 ms"
     },
     {
       "name": "no uncaught exceptions or console errors",
@@ -1214,16 +1214,16 @@
   "errors": [],
   "perf": {
     "frames": 900,
-    "avgMs": 32.75900000000011,
-    "p95Ms": 18.70000000006985,
-    "worstMs": 734
+    "avgMs": 32.98155555555558,
+    "p95Ms": 19.5,
+    "worstMs": 749.9000000000233
   },
   "gl": {
-    "geometries": 1369,
-    "textures": 161,
+    "geometries": 1382,
+    "textures": 163,
     "calls": 1,
     "triangles": 2,
-    "programs": 38
+    "programs": 40
   },
   "note": "perf numbers are software-GL and are NOT a performance claim"
 }

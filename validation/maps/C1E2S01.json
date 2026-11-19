@@ -1,16 +1,16 @@
 {
   "mapId": "C1E2S01",
-  "mapVersion": 3,
+  "mapVersion": 4,
   "generatedBy": "tools/verify-map.mjs",
-  "codeVersion": "7466d2f",
+  "codeVersion": "5b47a16",
   "dirtyTree": true,
   "dirtySource": false,
-  "mapSha": "44f346ea9f494bdb",
+  "mapSha": "df7163aff4bb848a",
   "assetVersion": "13c28db8754bc179",
   "engineSha": "c22fda04da583133",
   "sources": {
     "engine": "c22fda04da583133",
-    "render": "21f8b945fb4e6b7b",
+    "render": "a8b7fc9149f2840f",
     "game": "96ca72446d14a739",
     "audio": "7fdb82de394b5a5b",
     "assets": "13c28db8754bc179",
@@ -27,8 +27,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2248,
-      "finalHash": "e038cc20",
+      "ticks": 2317,
+      "finalHash": "b7f749c0",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -40,8 +40,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2248,
-      "finalHash": "03a75080",
+      "ticks": 2317,
+      "finalHash": "e36b88cc",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -53,8 +53,8 @@
       "seed": 1,
       "policy": "standing",
       "result": "complete",
-      "ticks": 2248,
-      "finalHash": "0077fa7d",
+      "ticks": 2317,
+      "finalHash": "419917d5",
       "kills": 0,
       "secrets": 0,
       "items": 7,
@@ -67,8 +67,8 @@
     "difficulty": "normal",
     "seed": 1,
     "reachedExit": true,
-    "ticks": 2248,
-    "finalHash": "03a75080",
+    "ticks": 2317,
+    "finalHash": "e36b88cc",
     "proves": "one valid tested path; not balance, fun, or full exploration"
   },
   "counts": {
@@ -128,7 +128,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 37.5,
+        "seconds": 38.6,
         "kills": 0,
         "failure": null
       }
@@ -158,7 +158,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 37.5,
+        "seconds": 38.6,
         "kills": 0,
         "failure": null
       }
@@ -188,7 +188,7 @@
         "result": "complete",
         "damage": 0,
         "meanDamage": 0,
-        "seconds": 37.5,
+        "seconds": 38.6,
         "kills": 0,
         "failure": null
       }
@@ -198,17 +198,17 @@
   },
   "browser": {
     "file": "validation/browser/C1E2S01.json",
-    "when": "2026-11-19T06:12:39.353Z",
-    "commit": "7466d2f",
-    "mapSha": "44f346ea9f494bdb",
+    "when": "2026-11-19T15:58:51.541Z",
+    "commit": "5b47a16",
+    "mapSha": "df7163aff4bb848a",
     "routesSha": "cd168db75190657f",
     "passed": 11,
     "total": 11,
     "allPassed": true,
     "shared": {
       "file": "validation/browser-check.json",
-      "when": "2026-11-19T06:07:06.178Z",
-      "commit": "7466d2f",
+      "when": "2026-11-19T15:53:09.694Z",
+      "commit": "5b47a16",
       "passed": 148,
       "total": 148
     }
@@ -234,17 +234,17 @@
       {
         "name": "route C1E2S01.main.route.json on easy reaches the exit",
         "ok": true,
-        "detail": "37.5 s"
+        "detail": "38.6 s"
       },
       {
         "name": "route C1E2S01.main.route.json on normal reaches the exit",
         "ok": true,
-        "detail": "37.5 s"
+        "detail": "38.6 s"
       },
       {
         "name": "route C1E2S01.main.route.json on hard reaches the exit",
         "ok": true,
-        "detail": "37.5 s"
+        "detail": "38.6 s"
       },
       {
         "name": "safe room: contains no enemies (placed or scripted)",
@@ -274,7 +274,7 @@
       {
         "name": "quality: perfect-bot time in [15,300] s",
         "ok": true,
-        "detail": "37.5 s"
+        "detail": "38.6 s"
       },
       {
         "name": "quality: uses at least 3 distinct wall/floor skins",
@@ -359,7 +359,7 @@
       {
         "name": "this map's real-game evidence ran on THIS map file (sha matches)",
         "ok": true,
-        "detail": "validation/browser/C1E2S01.json: 44f346ea9f494bdb vs 44f346ea9f494bdb"
+        "detail": "validation/browser/C1E2S01.json: df7163aff4bb848a vs df7163aff4bb848a"
       },
       {
         "name": "this map's real-game evidence ran on THIS map's route files",
@@ -380,5 +380,5 @@
   },
   "humanReview": null,
   "knownBlockers": [],
-  "notes": "Generated: map v3, 0 enemies, 21 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
+  "notes": "Generated: map v4, 0 enemies, 21 items, 0 secret(s). Automated evidence only (bot through the real input layer + headless Chrome); no human review, no real-GPU performance, no listening test."
 }

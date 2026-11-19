@@ -1,18 +1,18 @@
 {
   "mapId": "C1E2M08",
-  "when": "2026-11-19T06:12:35.987Z",
-  "commit": "7466d2f",
+  "when": "2026-11-19T15:58:48.255Z",
+  "commit": "5b47a16",
   "dirtySource": false,
   "env": {
     "browser": "headless Chrome",
     "gl": "SwiftShader (software GL)",
     "note": "NOT a real-GPU measurement"
   },
-  "mapSha": "aeaf438f9982f069",
+  "mapSha": "f4066e4f906f3d30",
   "routesSha": "443b07a8cbc83d53",
   "sources": {
     "engine": "c22fda04da583133",
-    "render": "21f8b945fb4e6b7b",
+    "render": "a8b7fc9149f2840f",
     "game": "96ca72446d14a739",
     "audio": "7fdb82de394b5a5b",
     "assets": "13c28db8754bc179",
@@ -22,21 +22,21 @@
   "routes": {
     "main": {
       "ok": true,
-      "ticks": 4010,
-      "hash": "f7fc0506",
-      "nodeTicks": 4010,
-      "nodeHash": "f7fc0506",
+      "ticks": 4501,
+      "hash": "3c2be56d",
+      "nodeTicks": 4501,
+      "nodeHash": "3c2be56d",
       "agree": true,
       "kills": 23,
       "secrets": 0,
-      "wallSeconds": 3
+      "wallSeconds": 4
     },
     "secret": {
       "ok": true,
-      "ticks": 4540,
-      "hash": "ff6f4c4b",
-      "nodeTicks": 4540,
-      "nodeHash": "ff6f4c4b",
+      "ticks": 4595,
+      "hash": "9d6fc21c",
+      "nodeTicks": 4595,
+      "nodeHash": "9d6fc21c",
       "agree": true,
       "kills": 23,
       "secrets": 2,
@@ -92,22 +92,22 @@
     {
       "name": "real-game route C1E2M08.main: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4010 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=4501 policy=standing wall=4s"
     },
     {
       "name": "real-game route C1E2M08.main: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4010/f7fc0506 vs node 4010/f7fc0506"
+      "detail": "browser 4501/3c2be56d vs node 4501/3c2be56d"
     },
     {
       "name": "real-game route C1E2M08.secret: completes in the browser",
       "ok": true,
-      "detail": "status=complete failed=null ticks=4540 policy=standing wall=3s"
+      "detail": "status=complete failed=null ticks=4595 policy=standing wall=3s"
     },
     {
       "name": "real-game route C1E2M08.secret: browser sim == Node sim (ticks + state hash)",
       "ok": true,
-      "detail": "browser 4540/ff6f4c4b vs node 4540/ff6f4c4b"
+      "detail": "browser 4595/9d6fc21c vs node 4595/9d6fc21c"
     },
     {
       "name": "C1E2M08: the boss bar appeared during the route",
@@ -160,5 +160,5 @@
       "detail": ""
     }
   ],
-  "wallSeconds": 19
+  "wallSeconds": 20
 }
